@@ -156,4 +156,9 @@ $(document).ready(function(){
 		oTargetElem.attr('data-fullscreen-target', 'true');
 		$(this).attr('data-fullscreen-toggler-instantiated', 'true');
 	});
+
+	// Processing on datatables refresh
+	$(document).on('init.dt draw.dt', function (oEvent) {
+		CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target), true);
+	});
 });

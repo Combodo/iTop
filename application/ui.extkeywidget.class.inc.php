@@ -944,7 +944,6 @@ HTML
 $('#ac_create_{$this->iId}').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
 $('#dcr_{$this->iId} form').removeAttr('onsubmit');
 $('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);
-CombodoTooltip.InitAllNonInstantiatedTooltips($('#ac_create_{$this->iId}'));
 JS
 		);
 	}

@@ -408,6 +408,12 @@ JS
 			});
 		}
 	});
+	$(document).ajaxSuccess(function(){
+		// Init tooltips from async. markup, small timeout to allow markup to be built if necessary
+		setTimeout(function(){
+			CombodoTooltip.InitAllNonInstantiatedTooltips();
+		}, 1000);
+	});
 JS
 		);
 

@@ -473,9 +473,12 @@
                     oModalElem.modal('show');
 				};
 			{% endblock %}
-			
-			$(document).ready(function(){
-				{% block pPageReadyScripts %}
+
+            $(document).ready(function ()
+            {
+                const oBodyElem = $('body');
+
+                {% block pPageReadyScripts %}
 					// Add proprietary header to identify our XHR calls
 					$(document).ajaxSend(function(oEvent, oXHR, oOptions) {
 						oXHR.setRequestHeader('X-Combodo-Ajax', 'true');
@@ -497,8 +500,7 @@
                             if( (oData.error_message !== undefined) && (oData.error_title !== undefined) )
                             {
                                 ShowErrorDialog(oData.error_message, oData.error_title);
-                            }
-                            else
+                            } else
                             {
                                 ShowErrorDialog();
                             }
@@ -507,26 +509,31 @@
                             ShowErrorDialog();
                         }
                     });
-
-                // Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...) ...
-                CombodoTooltip.InitAllNonInstantiatedTooltips();
-                // ... except for object form which are handled with the following ...
-                $('body').on('form_built', function (oEvent)
+                // All processing that should be done on an ajax return
+                $(document).ajaxSuccess(function ()
                 {
-                    CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target));
-                });
-                // ... and BS modals which are handle with the following
-                $('body').on('loaded.bs.modal', function (oEvent)
-                {
-                    // Little timeout for stuff that need a moment to get ready but don't have a proper event.
+                    // Init tooltips from async. markup, small timeout to allow markup to be built if necessary
                     setTimeout(function ()
                     {
-                        //CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target));
-                    }, 500);
+                        CombodoTooltip.InitAllNonInstantiatedTooltips();
+                    }, 1000);
+                });
+
+                // Enable tooltips based on existing HTML markup, for markup added dynamically after DOM ready (AJAX, ...) see .ajaxSuccess()...
+                CombodoTooltip.InitAllNonInstantiatedTooltips();
+                // ... object form which are handled with the following
+                oBodyElem.on('form_built', function (oEvent)
+                {
+                    CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target), true);
+                });
+                // ... refresh of the dataTables
+                oBodyElem.on('init.dt draw.dt', function (oEvent)
+                {
+                    CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target), true);
                 });
 
                 // Initialize confirmation message handler when a form with touched fields is closed
-                $('body').portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
+                oBodyElem.portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
                 {% endblock %}
 			});
 		</script>
