@@ -2696,4 +2696,79 @@ HTML;
 		return (substr(PHP_OS,0,3) === 'WIN');
 	}
 
+
+	/**
+	 * @param string $sInterface
+	 * @param string $sClassNameFilter
+	 * @param array $aExcludedPath
+	 *
+	 * @return array
+	 */
+	public static function GetClassesForInterface(string $sInterface,string $sClassNameFilter = '', $aExcludedPath = [])
+	{
+		$aMatchingClasses = [];
+
+		if (!utils::IsDevelopmentEnvironment()) {
+			// Try to read from cache
+			$aFilePath = explode("\\", $sInterface);
+			$sInterfaceName = end($aFilePath);
+			$sCacheFileName = utils::GetCachePath()."ImplementingInterfaces/$sInterfaceName.php";
+			if (is_file($sCacheFileName)) {
+				$aMatchingClasses = include $sCacheFileName;
+			}
+		}
+
+		if (empty($aMatchingClasses)) {
+			$aAutoloadClassMaps = [APPROOT.'lib/composer/autoload_classmap.php'];
+			// guess all the autoload class maps from the extensions
+			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
+
+			$aClassMap = [];
+			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+				$aTmpClassMap = include $sAutoloadFile;
+				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+			}
+
+			// Add already loaded classes
+			$aCurrentClasses = array_fill_keys(get_declared_classes(), '');
+			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
+
+			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
+				$bSkipped = false;
+				
+				// Check if our class matches name filter, or is in an excluded path
+				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
+					$bSkipped = true;
+				}
+				else {
+					foreach ($aExcludedPath as $sExcludedPath) {
+						if ($sExcludedPath !== '' && strpos($sPHPFile, $sExcludedPath) !== false) {
+							$bSkipped = true;
+							break;
+						}
+					}
+				}
+				
+				if(!$bSkipped){
+					try {
+						$oRefClass = new ReflectionClass($sPHPClass);
+						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
+							$aMatchingClasses[] = $sPHPClass;
+						}
+					} catch (Exception $e) {
+					}
+				}
+			}
+
+			if (!utils::IsDevelopmentEnvironment()) {
+				// Save to cache
+				$sCacheContent = "<?php\n\nreturn ".var_export($aMatchingClasses, true).";";
+				SetupUtils::builddir(dirname($sCacheFileName));
+				file_put_contents($sCacheFileName, $sCacheContent);
+			}
+		}
+
+		return $aMatchingClasses;
+	}
+
 }

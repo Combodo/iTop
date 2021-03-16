@@ -31,7 +31,7 @@ class UIBlockExtension extends AbstractExtension
 		$aParsers = [];
 
 		$sInterface = "Combodo\\iTop\\Application\\UI\\Base\\iUIBlockFactory";
-		$aFactoryClasses = self::GetClassesForInterface($sInterface);
+		$aFactoryClasses = utils::GetClassesForInterface($sInterface, 'UIBlockFactory');
 
 		foreach ($aFactoryClasses as $sFactoryClass) {
 			$aParsers[] = new UIBlockParser($sFactoryClass);
@@ -40,60 +40,4 @@ class UIBlockExtension extends AbstractExtension
 		return $aParsers;
 	}
 
-	/**
-	 * @param string $sInterface
-	 *
-	 * @return array|mixed
-	 */
-	public static function GetClassesForInterface(string $sInterface)
-	{
-		$aFactoryClasses = [];
-
-		if (!utils::IsDevelopmentEnvironment()) {
-			// Try to read from cache
-			$aFilePath = explode("\\", $sInterface);
-			$sInterfaceName = end($aFilePath);
-			$sCacheFileName = utils::GetCachePath()."ImplementingInterfaces/$sInterfaceName.php";
-			if (is_file($sCacheFileName)) {
-				$aFactoryClasses = include $sCacheFileName;
-			}
-		}
-
-		if (empty($aFactoryClasses)) {
-			$aAutoloadClassMaps = [APPROOT.'lib/composer/autoload_classmap.php'];
-			// guess all the autoload class maps from the extensions
-			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
-
-			$aClassMap = [];
-			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
-				$aTmpClassMap = include $sAutoloadFile;
-				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
-			}
-			$aClassMap = array_keys($aClassMap);
-			// Add already loaded classes
-			$aCurrentClasses = get_declared_classes();
-			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
-
-			foreach ($aClassMap as $sPHPClass) {
-				if (strpos($sPHPClass, 'UIBlockFactory') !== false) {
-					try {
-						$oRefClass = new ReflectionClass($sPHPClass);
-						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
-							$aFactoryClasses[] = $sPHPClass;
-						}
-					} catch (Exception $e) {
-					}
-				}
-			}
-
-			if (!utils::IsDevelopmentEnvironment()) {
-				// Save to cache
-				$sCacheContent = "<?php\n\nreturn ".var_export($aFactoryClasses, true).";";
-				SetupUtils::builddir(dirname($sCacheFileName));
-				file_put_contents($sCacheFileName, $sCacheContent);
-			}
-		}
-
-		return $aFactoryClasses;
-	}
 }
