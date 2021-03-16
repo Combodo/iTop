@@ -87,7 +87,7 @@ try
 
 		case 'refreshDashletCount':
 			$oPage->SetContentType('application/json');
-			$aResult = AjaxRenderController::RefreshCount($sFilter);
+			$aResult = AjaxRenderController::RefreshDashletCount($sFilter);
 			$oPage->add(json_encode($aResult));
 			break;
 
@@ -102,6 +102,7 @@ try
 			$sExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 			$aExtraParams = json_decode($sExtraParams, true);
 			$oFilter = DBObjectSearch::FromOQL($sFilter);
+			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 			$oSet = new CMDBObjectSet($oFilter, [], $aExtraParams);
 			$oBlock = new displayblock($oFilter, 'summary', false, [], $oSet);
 			$oBlock->RenderContent($oPage, $aExtraParams);
@@ -508,13 +509,13 @@ try
 		// ui.linkswidget
 		case 'doAddObjects':
 			$oPage->SetContentType('text/html');
-			$sResult = AjaxRenderController::DoAddObjects($oPage, $sClass, $sFilter);
+			AjaxRenderController::DoAddObjects($oPage, $sClass, $sFilter);
 			break;
 
 		// ui.linkswidget
 		case 'doAddIndirectLinks':
 			$oPage = new JsonPage('');
-			$sResult = AjaxRenderController::DoAddIndirectLinks($oPage, $sClass, $sFilter);
+			AjaxRenderController::DoAddIndirectLinks($oPage, $sClass, $sFilter);
 			break;
 		////////////////////////////////////////////////////////////
 		/// WizardHelper : see the corresponding PHP class, and JS class

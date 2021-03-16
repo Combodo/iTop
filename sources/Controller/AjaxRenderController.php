@@ -10,13 +10,16 @@ use AjaxPage;
 use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
+use AttributeOneWayPassword;
 use BinaryExpression;
 use BulkExport;
 use BulkExportException;
 use CMDBObjectSet;
 use CMDBSource;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntryFactory;
+use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanelHelper;
 use Combodo\iTop\Renderer\BlockRenderer;
 use DBObjectSearch;
 use DBObjectSet;
@@ -25,6 +28,8 @@ use Dict;
 use Exception;
 use ExecutionKPI;
 use Expression;
+use FieldExpression;
+use FunctionExpression;
 use InlineImage;
 use JsonPage;
 use MetaModel;
@@ -234,10 +239,8 @@ class AjaxRenderController
 			// The first column is used for the selection (radio / checkbox) and is not sortable
 			$iSortCol--;
 		}
-		$bDisplayKey = utils::ReadParam('display_key', 'true') == 'true';
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
-		$iListId = utils::ReadParam('list_id', 0);
 
 		// Filter the list to removed linked set since we are not able to display them here
 		$sIdName = "";
@@ -329,6 +332,7 @@ class AjaxRenderController
 				array_push($aResult["data"], $aObj);
 			}
 		}
+		$oKPI->ComputeAndReport('Data fetch and format');
 
 		return $aResult;
 	}
@@ -487,14 +491,12 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param string $sEncoding
+	 * @param string $sStyle
 	 * @param string $sFilter
 	 *
 	 * @return array
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
@@ -504,17 +506,16 @@ class AjaxRenderController
 	{
 		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 		$oFilter = DBObjectSearch::FromOQL($sFilter);
+		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		if (isset($aExtraParams['group_by'])) {
 
 			$sAlias = $oFilter->GetClassAlias();
 			if (isset($aExtraParams['group_by_label'])) {
 				$oGroupByExp = Expression::FromOQL($aExtraParams['group_by']);
-				$sGroupByLabel = $aExtraParams['group_by_label'];
 			} else {
 				// Backward compatibility: group_by is simply a field id
 				$oGroupByExp = new FieldExpression($aExtraParams['group_by'], $sAlias);
-				$sGroupByLabel = MetaModel::GetLabel($oFilter->GetClass(), $aExtraParams['group_by']);
 			}
 
 			// Security filtering
@@ -537,9 +538,7 @@ class AjaxRenderController
 				$aQueryParams = $aExtraParams['query_params'];
 			}
 			$aFunctions = array();
-			$sAggregationFunction = 'count';
 			$sFctVar = '_itop_count_';
-			$sAggregationAttr = '';
 			if (isset($aExtraParams['aggregation_function']) && !empty($aExtraParams['aggregation_attribute'])) {
 				$sAggregationFunction = $aExtraParams['aggregation_function'];
 				$sAggregationAttr = $aExtraParams['aggregation_attribute'];
@@ -549,10 +548,6 @@ class AjaxRenderController
 				$aFunctions = array($sFctVar => $oFctExpr);
 			}
 
-			if (!empty($sAggregationAttr)) {
-				$sClass = $oFilter->GetClass();
-				$sAggregationAttr = MetaModel::GetLabel($sClass, $sAggregationAttr);
-			}
 			$iLimit = 0;
 			if (isset($aExtraParams['limit'])) {
 				$iLimit = intval($aExtraParams['limit']);
@@ -636,10 +631,11 @@ class AjaxRenderController
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function RefreshCount(string $sFilter): array
+	public static function RefreshDashletCount(string $sFilter): array
 	{
 		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 		$oFilter = DBObjectSearch::FromOQL($sFilter);
+		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 
 		$oSet = new CMDBObjectSet($oFilter, [], $aExtraParams);
 		$iCount = $oSet->Count();
@@ -651,7 +647,6 @@ class AjaxRenderController
 	/**
 	 * @param string $sFilter
 	 *
-	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
@@ -682,7 +677,6 @@ class AjaxRenderController
 	/**
 	 * @param string $sFilter
 	 *
-	 * @return string
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException

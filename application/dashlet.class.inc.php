@@ -2052,6 +2052,7 @@ class DashletHeaderDynamic extends Dashlet
 			$aQueryParams = array();
 		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
+		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		$sClass = $oFilter->GetClass();
 
 		$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S(str_replace('_', ':', $sTitle)))
