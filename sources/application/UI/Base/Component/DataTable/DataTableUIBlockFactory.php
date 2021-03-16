@@ -816,7 +816,21 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $oBlock;
 	}
 
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter= ''): FormTable
+	/**
+	 * @param string $sRef
+	 * @param array $aColumns
+	 * @param array $aData
+	 * @param string $sFilter
+	 *
+	 * $aColumns =[
+	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
+	 *           'nameField2' => ['label' => labelFIeld2, 'description' => descriptionField2],
+	 *           'nameField3' => ['label' => labelFIeld3, 'description' => descriptionField3]];
+	 * $aData = [['nameField1' => valueField1, 'nameField2' => valueField2, 'nameField3' => valueField3],...]
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
+	 */
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = ''): FormTable
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
