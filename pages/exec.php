@@ -27,21 +27,39 @@ require_once(APPROOT.'core/metamodel.class.php');
 
 utils::InitTimeZone();
 
-$sModule = utils::ReadParam('exec_module', '');
-if ($sModule == '')
+
+/**
+ * @param string $sPagePath relative path
+ * @param array $aPossibleBasePaths list of possible base paths
+ *
+ * @return string|bool false if invalid path
+ * @uses utils::RealPath()
+ */
+function CheckPageExists(string $sPagePath, array $aPossibleBasePaths)
 {
+	$sTargetPage = false;
+	foreach ($aPossibleBasePaths as $sBasePath) {
+		$sTargetPage = utils::RealPath($sBasePath.'/'.$sPagePath, $sBasePath);
+		if ($sTargetPage !== false) {
+			return $sTargetPage;
+		}
+	}
+
+	return $sTargetPage;
+}
+
+
+$sModule = utils::ReadParam('exec_module', '');
+if ($sModule == '') {
 	echo "Missing argument 'exec_module'";
 	exit;
 }
-$sModule = basename($sModule); // protect against ../.. ...
 
 $sPage = utils::ReadParam('exec_page', '', false, 'raw_data');
-if ($sPage == '')
-{
+if ($sPage == '') {
 	echo "Missing argument 'exec_page'";
 	exit;
 }
-$sPage = basename($sPage); // protect against ../.. ...
 
 $oKPI = new ExecutionKPI();
 Session::Start();
@@ -49,11 +67,20 @@ $sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
 Session::WriteClose();
 $oKPI->ComputeAndReport("Session Start");
 
-$sTargetPage = APPROOT.'env-'.$sEnvironment.'/'.$sModule.'/'.$sPage;
 
-if (!file_exists($sTargetPage))
-{
-	// Do not recall the parameters (security takes precedence)
+// in case module was compiled to symlink, trying multiple paths...
+$sPagePath = $sModule.'/'.$sPage;
+$aPossibleBasePaths = [
+	APPROOT.'env-'.$sEnvironment,
+	APPROOT.'datamodels/2.x',
+	APPROOT.'extensions',
+	APPROOT.'data/'.$sEnvironment.'-modules',
+	APPROOT.'data/downloaded-extensions', // Hub connector
+];
+$sTargetPage = CheckPageExists($sPagePath, $aPossibleBasePaths);
+
+if ($sTargetPage === false) {
+	// Do not recall the page parameters (security takes precedence)
 	echo "Wrong module, page name or environment...";
 	exit;
 }
