@@ -44,7 +44,7 @@ class EditsEntry extends ActivityEntry
 
 	/** @var string $sObjectClass */
 	protected $sObjectClass;
-	/** @var array $aAttributes Array of edited attributes with their code, label and description */
+	/** @var array $aAttributes Array of edited attributes with their code, label and descriptions (an attribute can have several descriptions at once, eg. linkedset items added/removed) */
 	protected $aAttributes;
 
 	/**
@@ -101,21 +101,30 @@ class EditsEntry extends ActivityEntry
 
 	/**
 	 * Add the attribute identified by $sAttCode to the edited attribute.
-	 * Note that if an attribute with the same $sAttCode already exists, it will be replaced.
+	 * Note that if an attribute with the same $sAttCode already exists, it's description will be append to the existing one.
 	 *
 	 * @param string $sAttCode
 	 * @param string $sEditDescriptionAsHtml The description of the edit already in HTML, it MUSt have been sanitized first (Already in
 	 *     HTML because most of the time it comes from CMDBChangeOp::GetDescription())
 	 *
+	 * @return $this
 	 * @throws \Exception
 	 */
 	public function AddAttribute(string $sAttCode, string $sEditDescriptionAsHtml)
 	{
-		$this->aAttributes[$sAttCode] = [
-			'code' => $sAttCode,
-			'label' => MetaModel::GetLabel($this->sObjectClass, $sAttCode),
-			'description' => $sEditDescriptionAsHtml,
-		];
+		// Create it if not already existing
+		if (!array_key_exists($sAttCode, $this->aAttributes)) {
+			$this->aAttributes[$sAttCode] = [
+				'code' => $sAttCode,
+				'label' => MetaModel::GetLabel($this->sObjectClass, $sAttCode),
+				'descriptions' => [],
+			];
+		}
+
+		// Append description
+		$this->aAttributes[$sAttCode]['descriptions'][] = $sEditDescriptionAsHtml;
+
+		return $this;
 	}
 
 	/**
@@ -147,15 +156,15 @@ class EditsEntry extends ActivityEntry
 	 */
 	public function Merge(EditsEntry $oEntry)
 	{
-		if($oEntry->GetObjectClass() !== $this->GetObjectClass())
-		{
+		if ($oEntry->GetObjectClass() !== $this->GetObjectClass()) {
 			throw new Exception("Cannot merge an entry from {$oEntry->GetObjectClass()} into {$this->GetObjectClass()}, they must be for the same class");
 		}
 
 		// Merging attributes
-		foreach($oEntry->GetAttributes() as $sAttCode => $aAttData)
-		{
-			$this->aAttributes[$sAttCode] = $aAttData;
+		foreach ($oEntry->GetAttributes() as $sAttCode => $aAttData) {
+			foreach ($aAttData['descriptions'] as $sDescription) {
+				$this->AddAttribute($sAttCode, $sDescription);
+			}
 		}
 
 		return $this;
@@ -178,7 +187,17 @@ class EditsEntry extends ActivityEntry
 				break;
 
 			case 1:
-				$sDescriptionAsHtml = $aAttributesData[0]['description'];
+				$iDescriptionsCount = count($aAttributesData[0]['descriptions']);
+				switch ($iDescriptionsCount) {
+					case 1:
+						$sDescriptionAsHtml = $aAttributesData[0]['descriptions'][0];
+						break;
+
+					default:
+						$sDescriptionAsHtml = '<span class="ibo-edits-entry--attribute-label" data-attribute-code="'.$aAttributesData[0]['code'].'">'.$aAttributesData[0]['label'].'</span>';
+						break;
+				}
+
 				break;
 
 			default:
