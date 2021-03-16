@@ -133,13 +133,13 @@
 	-webkit-box-shadow: 5px 5px 10px 0px #656565;
 	-o-box-shadow: 5px 5px 10px 0px #656565;
 	box-shadow: 5px 5px 10px 0px #656565;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=10);
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=10);
 	padding-bottom: 1em;
 	background-color: #FFF;
 	padding-top: 1em;
 	position: absolute;
 	top: 50px;
-	left: 100px;
+	left: 190px;
 	width: 400px;
 }
 #hub-installation-progress-text {
