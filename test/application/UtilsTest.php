@@ -172,17 +172,77 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		$this->setUp();
 
 		return [
-			'ForceTrustProxy disabled' => [
-				'bForceTrustProxy' => false,
-				'sExpectedAppRootUrl1' => 'http://example.com/',
+			'ForceTrustProxy 111' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
 				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
 				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
 			],
-			'ForceTrustProxy enabled' => [
-				'bForceTrustProxy' => true,
+			'ForceTrustProxy 101' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 011' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
 				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 110' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 001' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
 				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 000' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => false,
 				'sExpectedAppRootUrl3' => 'http://example.com/',
+			],
+			'BehindReverseProxy ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => true,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
 			],
 		];
 	}
@@ -190,13 +250,14 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	/**
 	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
-	public function testGetAbsoluteUrlAppRootPersistency($bForceTrustProxy,$sExpectedAppRootUrl1, $sExpectedAppRootUrl2, $sExpectedAppRootUrl3)
+	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
 	{
-		utils::GetConfig()->Set('behind_reverse_proxy', true);
+		utils::GetConfig()->Set('behind_reverse_proxy', $bBehindReverseProxy);
 		utils::GetConfig()->Set('app_root_url', '');
 
-		//should match http://example.com/
-		$aServer1 = [
+		//should match http://example.com/ when not trusting the proxy
+		//should match https://proxy.com:4443/ when  trusting the proxy
+		$_SERVER = [
 			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
 			'SERVER_NAME' => 'example.com',
 			'SERVER_PORT' => '80',
@@ -204,28 +265,17 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			'SCRIPT_NAME' => '/index.php',
 			'SCRIPT_FILENAME' => APPROOT.'index.php',
 			'QUERY_STRING' => 'baz=1',
-			'HTTP_X_FORWARDED_PROTOCOL' => null,
-			'HTTP_X_FORWARDED_HOST' => null,
-			'HTTP_X_FORWARDED_PORT' => null,
-			'HTTP_X_FORWARDED_PROTO' => null,
-			'HTTPS' => null,
-		];
-
-		//should match https://proxy.com:4443/
-		$aServer2 = array_merge($aServer1, [
 			'HTTP_X_FORWARDED_HOST' => 'proxy.com',
 			'HTTP_X_FORWARDED_PORT' => '4443',
 			'HTTP_X_FORWARDED_PROTO' => 'https',
-		]);
+			'HTTPS' => null,
+		];
 
-		$_SERVER = $aServer1;
-		$this->assertEquals($sExpectedAppRootUrl1, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy));
+		$this->assertEquals($sExpectedAppRootUrl1, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy1));
 
-		$_SERVER = $aServer2;
-		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot(!$bForceTrustProxy));
+		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy2));
 
-		$_SERVER = $aServer1;
-		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy));
+		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
 	}
 
 
