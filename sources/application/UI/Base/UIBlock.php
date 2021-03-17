@@ -142,7 +142,7 @@ abstract class UIBlock implements iUIBlock
 
 	/**
 	 * @inheritDoc
-	 * @useb-by GetFilesUrlRecursively
+	 * @used-by \Combodo\iTop\Application\UI\Base\UIBlock::GetFilesUrlRecursively
 	 */
 	public function GetJsFilesRelPaths() {
 		return $this->aJsFilesRelPath;
@@ -158,7 +158,7 @@ abstract class UIBlock implements iUIBlock
 
 	/**
 	 * @inheritDoc
-	 * @useb-by GetFilesUrlRecursively
+	 * @used-by \Combodo\iTop\Application\UI\Base\UIBlock::GetFilesUrlRecursively
 	 */
 	public function GetCssFilesRelPaths()
 	{
