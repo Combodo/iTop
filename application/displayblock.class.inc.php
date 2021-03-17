@@ -983,7 +983,7 @@ JS
 			if (isset($this->m_bShowObsoleteData)) {
 				$oGroupBySearch->SetShowObsoleteData($this->m_bShowObsoleteData);
 			}
-			$sCountGroupByQuery = $oGroupBySearch->MakeGroupByQuery(array(), $aGroupBy, false);
+			$sCountGroupByQuery = $oGroupBySearch->MakeGroupByQuery($aQueryParams, $aGroupBy, false);
 			$aCountGroupByResults = CMDBSource::QueryToArray($sCountGroupByQuery);
 			$aCountsQueryResults = array();
 			foreach ($aCountGroupByResults as $aCountGroupBySingleResult) {
