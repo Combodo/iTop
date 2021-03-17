@@ -2332,8 +2332,11 @@ class utils
 	}
 
 	/**
-	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
-	 * @param string $sBasePath for example '/var/www/html/itop/data/'
+	 * @param string $sPath for example `/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz`
+	 *    **Warning**, if path is a symlink, it will be resolved !
+	 *      So `C:\Dev\wamp64\www\itop-dev/env-production/itop-hub-connector/land.php`
+	 *      Will become `C:\Dev\wamp64\www\itop-dev\datamodels\2.x\itop-hub-connector\land.php`
+	 * @param string $sBasePath for example `/var/www/html/itop/data/`
 	 *
 	 * @return bool|string false if path :
 	 *      * invalid
@@ -2341,7 +2344,10 @@ class utils
 	 *      * not contained in base path
 	 *    Otherwise return the real path (see realpath())
 	 *
+	 * @uses \realpath()
+	 * @uses static::StartsWith
 	 * @since 2.6.5 2.7.0 N°2538
+	 * @since 2.7.5 details in PHPDoc about symlink resolution
 	 */
 	final public static function RealPath($sPath, $sBasePath)
 	{
