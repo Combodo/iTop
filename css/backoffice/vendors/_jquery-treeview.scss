@@ -89,9 +89,9 @@ $ibo-vendors-jquery-treeview--filetree--folder-file--height: 15px !default;
 }
 
 .filetree span.folder { 
-  background: url($approot-relative + '/images/folder.gif') 0 0 no-repeat; 
+  background: url($approot-relative + '/images/tv-folder.gif') 0 0 no-repeat;
 }
 
 .filetree span.file { 
-  background: url($approot-relative + '/images/file.gif') 0 0 no-repeat; 
+  background: url($approot-relative + '/images/tv-file.gif') 0 0 no-repeat;
 }
