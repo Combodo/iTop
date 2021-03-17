@@ -6655,6 +6655,45 @@
 				</cells>
 			</definition>
 		</menu>
+    <menu id="Typology" xsi:type="DashboardMenuNode" _delta="if_exists">
+      <rank>80</rank>
+      <parent>Catalogs</parent>
+      <definition>
+        <layout>DashboardLayoutOneCol</layout>
+        <title>Menu:ConfigManagement:Typology</title>
+        <cells>
+          <cell id="0">
+            <rank>0</rank>
+            <dashlets>
+              <dashlet id="2" xsi:type="DashletBadge" _delta="define">
+                <rank>1</rank>
+                <class>Brand</class>
+              </dashlet>
+              <dashlet id="3" xsi:type="DashletBadge" _delta="define">
+                <rank>2</rank>
+                <class>Model</class>
+              </dashlet>
+              <dashlet id="4" xsi:type="DashletBadge" _delta="define">
+                <rank>3</rank>
+                <class>OSFamily</class>
+              </dashlet>
+              <dashlet id="5" xsi:type="DashletBadge" _delta="define">
+                <rank>4</rank>
+                <class>OSVersion</class>
+              </dashlet>
+              <dashlet id="6" xsi:type="DashletBadge" _delta="define">
+                <rank>5</rank>
+                <class>IOSVersion</class>
+              </dashlet>
+              <dashlet id="7" xsi:type="DashletBadge" _delta="define">
+                <rank>6</rank>
+                <class>NetworkDeviceType</class>
+              </dashlet>
+            </dashlets>
+          </cell>
+        </cells>
+      </definition>
+    </menu>
 		<menu id="NewCI" xsi:type="NewObjectMenuNode" _delta="define">
 			<rank>4</rank>
 			<parent>ConfigManagement</parent>
