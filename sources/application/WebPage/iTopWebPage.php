@@ -303,21 +303,6 @@ JS
 JS
 		);
 
-		// TODO 3.0.0: Change CSS class and extract this in backoffice/toolbox.js
-		// Highlight code content created with CKEditor
-		$this->add_ready_script(
-			<<<JS
-		// Highlight code content for AttributeHTML and HTML AttributeText
-        $('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });        
-		// Highlight code content for CaseLogs
-		$('[data-role="ibo-activity-entry--main-information-content"] pre').each(function(i, block) {
-            hljs.highlightBlock(block);
-        });
-JS
-		);
-
 		// TODO 3.0.0: What is this for?
 		$this->add_ready_script(
 			<<< JS
@@ -409,10 +394,11 @@ JS
 		}
 	});
 	$(document).ajaxSuccess(function(){
-		// Init tooltips from async. markup, small timeout to allow markup to be built if necessary
+		// Async. markup, small timeout to allow markup to be built if necessary
 		setTimeout(function(){
 			CombodoTooltip.InitAllNonInstantiatedTooltips();
-		}, 1000);
+			CombodoBackofficeToolbox.InitCodeHighlighting();
+		}, 500);
 	});
 JS
 		);

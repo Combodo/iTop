@@ -82,13 +82,37 @@ const CombodoBackofficeToolbox = {
 	 * @param {object} oElem The jQuery object of the element
 	 * @constructor
 	 */
-	ToggleFullscreenForElement: function(oElem) {
-		if(oElem.hasClass('ibo-is-fullscreen')) {
+	ToggleFullscreenForElement: function (oElem) {
+		if (oElem.hasClass('ibo-is-fullscreen')) {
 			this.ExitFullscreenForElement(oElem);
-		}
-		else {
+		} else {
 			this.EnterFullscreenForElement(oElem);
 		}
+	},
+
+	/**
+	 * Initialize the code highlighting on elements
+	 *
+	 * @param {Object} oContainerElem code highlighting will only be init. on elements within the container
+	 * @param {boolean} bForce Whether the highlighting should be forced or not (if already done)
+	 * @return {void}
+	 * @constructor
+	 */
+	InitCodeHighlighting: function (oContainerElem = null, bForce = false) {
+		if (oContainerElem === null) {
+			oContainerElem = $('body');
+		}
+
+		const sComplementarySelector = bForce ? '' : ':not(.hljs)';
+
+		// AttributeHTML and HTML AttributeText
+		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre'+sComplementarySelector).each(function (iIdx, oElem) {
+			hljs.highlightBlock(oElem);
+		});
+		// CaseLogs
+		oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector).each(function (iIdx, oElem) {
+			hljs.highlightBlock(oElem);
+		});
 	}
 };
 
@@ -106,7 +130,7 @@ CKEDITOR.plugins.add( 'disabler',
 
 	});
 
-// Processing
+// Processing on each pages of the backoffice
 $(document).ready(function(){
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
 	$('[data-tooltip-content]:not([data-tooltip-instantiated="true"])').each(function () {
@@ -161,4 +185,7 @@ $(document).ready(function(){
 	$(document).on('init.dt draw.dt', function (oEvent) {
 		CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target), true);
 	});
+
+	// Code highlighting
+	CombodoBackofficeToolbox.InitCodeHighlighting();
 });
