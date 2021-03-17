@@ -86,6 +86,9 @@ $(function()
 			this.element.find(this.js_selectors.input).on('change', function(oEvent){
 				me._onInputOptionSelected(oEvent, $(this));
 			});
+			this.element.on('open_drawer', function(oEvent){
+				me._onIconClick(oEvent);
+			});
 			// Mostly for outside clicks that should close elements
 			oBodyElem.on('click', function(oEvent){
 				me._onBodyClick(oEvent);

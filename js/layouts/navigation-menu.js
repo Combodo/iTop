@@ -76,6 +76,9 @@ $(function()
 				this.element.find(this.js_selectors.menu_group).on('click', function (oEvent) {
 					me._onMenuGroupClick(oEvent, $(this))
 				});
+				this.element.on('filter_shortcut', function(oEvent){
+					me._filterShortcut();
+				});
 				// Mostly for outside clicks that should close elements
 				oBodyElem.on('click', function (oEvent) {
 					me._onBodyClick(oEvent);
@@ -140,18 +143,16 @@ $(function()
 			},
 			_onBodyKeyUp: function(oEvent)
 			{
-				// Note: We thought about extracting the oEvent.key in a variable to lower case it, but this would be done
-				// on every single key up in the application, which might not be what we want... (time consuming)
-				if((oEvent.altKey === true) && (oEvent.key === 'm' || oEvent.key === 'M'))
+			},
+			_filterShortcut: function()
+			{
+				if(this._getActiveMenuGroupId() === null)
 				{
-					if(this._getActiveMenuGroupId() === null)
-					{
-						const sFirstMenuGroupId = this.element.find(this.js_selectors.menu_group+':first').attr('data-menu-group-id');
-						this._openDrawer(sFirstMenuGroupId);
-					}
-
-					this._focusFilter();
+					const sFirstMenuGroupId = this.element.find(this.js_selectors.menu_group+':first').attr('data-menu-group-id');
+					this._openDrawer(sFirstMenuGroupId);
 				}
+
+				this._focusFilter();
 			},
 
 			_onFilterKeyUp: function(oEvent)

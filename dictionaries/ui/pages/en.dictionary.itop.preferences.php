@@ -20,7 +20,6 @@
 // Navigation menu
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:Title' => 'Preferences',
-
 	'UI:Preferences:UserInterface:Title' => 'User interface',
 	'UI:Preferences:Lists:Title' => 'Lists',
 	'UI:Preferences:RichText:Title' => 'Rich text editor',
@@ -30,6 +29,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Preferences:ActivityPanel:Title' => 'Activity panel',
 	'UI:Preferences:ActivityPanel:EntryFormOpened' => 'Entry form opened by default',
 	'UI:Preferences:ActivityPanel:EntryFormOpened+' => 'Whether the entry form will be opened when displaying an object. If unchecked, you will still be able to open it by clicking the compose button',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Title' => 'Application keyboard shortcuts',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint' => 'Type a keyboard shortcut',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip' => 'Record a keyboard shortcut',
 	'UI:Preferences:Tabs:Title' => 'Tabs',
 	'UI:Preferences:Tabs:Layout:Label' => 'Layout',
 	'UI:Preferences:Tabs:Layout:Horizontal' => 'Horizontal',

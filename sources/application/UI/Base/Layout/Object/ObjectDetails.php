@@ -11,13 +11,15 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
+use iKeyboardShortcut;
 use MetaModel;
 
-class ObjectDetails extends Panel
+class ObjectDetails extends Panel implements iKeyboardShortcut
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-object-details';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
 
 	/** @var string Class name of the object (eg. "UserRequest") */
 	protected $sClassName;
@@ -196,5 +198,18 @@ class ObjectDetails extends Panel
 			$this->sStatusLabel = $oObject->GetStateLabel();
 			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);
 		}
+	}
+	
+	public static function GetShortcutKeys(): array
+	{
+		return [['id' => 'ibo-edit-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject', 'key' => 'e', 'event' => 'edit_object'],
+			['id' => 'ibo-delete-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject', 'key' => 'd', 'event' => 'delete_object'],
+			['id' => 'ibo-new-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject', 'key' => 'n', 'event' => 'new_object'],
+			['id' => 'ibo-save-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject', 'key' => 's', 'event' => 'save_object']];
+	}
+
+	public static function GetShortcutTriggeredElementSelector(): string
+	{
+		return "[data-role='".static::BLOCK_CODE."']";
 	}
 }

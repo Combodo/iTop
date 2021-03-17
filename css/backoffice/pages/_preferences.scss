@@ -8,6 +8,19 @@ $ibo-preferences--user-preferences--picture-placeholder--image--background-color
 $ibo-preferences--user-preferences--picture-placeholder--image--active--border-color: $ibo-color-blue-800;
 $ibo-preferences--user-preferences--picture-placeholder--image--hover--border-color: $ibo-color-blue-600;
 
+$ibo-keyboard-shortcut--shortcut--width: 30% !default;
+
+$ibo-keyboard-shortcut--input--color: $ibo-color-grey-800 !default;
+$ibo-keyboard-shortcut--input--background-color: transparent !default;
+$ibo-keyboard-shortcut--input--border-color: $ibo-color-grey-500 !default;
+$ibo-keyboard-shortcut--input--border-radius: $ibo-border-radius-300 !default;
+$ibo-keyboard-shortcut--input--padding-y: 2px !default;
+$ibo-keyboard-shortcut--input--padding-x: 4px !default;
+$ibo-keyboard-shortcut--input--margin-bottom: 5px !default;
+
+$ibo-keyboard-shortcut--input--is-focus--color: $ibo-color-primary-800 !default;
+$ibo-keyboard-shortcut--input--is-focus--border-color: $ibo-color-primary-600 !default;
+
 #ibo-main-content >.ibo-panel{
   margin-left: $ibo-preferences--panel--margin-x;
   margin-right: $ibo-preferences--panel--margin-x;
@@ -35,4 +48,35 @@ $ibo-preferences--user-preferences--picture-placeholder--image--hover--border-co
 }
 .ibo-preferences--user-preferences--picture-placeholder--image:hover{
   border-color: $ibo-preferences--user-preferences--picture-placeholder--image--hover--border-color;
+}
+
+#ibo-form-for-user-interface-preferences > .ibo-keyboard-shortcut--shortcut{
+  display: table;
+  width: 100%;
+  >*:not(.ibo-button){
+    width: $ibo-keyboard-shortcut--shortcut--width;
+    display: table-cell;
+  }
+}
+
+.ibo-keyboard-shortcut--input, .ibo-keyboard-shortcut--input:focus{
+  display: inline-block;
+  width: auto;
+  text-transform: capitalize;
+  text-align: center;
+  
+  color: $ibo-keyboard-shortcut--input--color;
+  background-color: $ibo-keyboard-shortcut--input--background-color;
+  border: 1px solid $ibo-keyboard-shortcut--input--border-color;
+  border-bottom: 2px solid $ibo-keyboard-shortcut--input--border-color;
+  border-radius: $ibo-keyboard-shortcut--input--border-radius;
+  
+  padding: $ibo-keyboard-shortcut--input--padding-y $ibo-keyboard-shortcut--input--padding-x;
+  margin-bottom: $ibo-keyboard-shortcut--input--margin-bottom;
+  
+  &.ibo-is-focus{
+    text-transform: none;
+    color: $ibo-keyboard-shortcut--input--is-focus--color;
+    border-color: $ibo-keyboard-shortcut--input--is-focus--border-color;
+  }
 }

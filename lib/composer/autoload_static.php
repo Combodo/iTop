@@ -2523,6 +2523,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'iDBObjectSetIterator' => __DIR__ . '/../..' . '/core/dbobjectiterator.php',
         'iDBObjectURLMaker' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',
         'iDisplay' => __DIR__ . '/../..' . '/core/dbobject.class.php',
+        'iKeyboardShortcut' => __DIR__ . '/../..' . '/sources/application/UI/Hook/iKeyboardShortcut.php',
         'iLogFileNameBuilder' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'iLoginExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iLoginFSMExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',

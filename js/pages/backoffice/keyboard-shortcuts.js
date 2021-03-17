@@ -1,6 +1,5 @@
-<?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
+/*
+ * Copyright (C) 2013-2020 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,12 +16,24 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Global search
-Dict::Add('EN US', 'English', 'English', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recents',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet',
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open global search',
-));
+$(function() {
+	$.widget('itop.keyboard_shortcuts',
+		{
+			// default options
+			options:
+				{
+					shortcuts: {}
+				},
+			_create: function(){
+				this._initializeBinds();
+			},
+			_initializeBinds: function (){
+				for(let sShortcutId in this.options.shortcuts){
+					let aShortcut = this.options.shortcuts[sShortcutId];
+					Mousetrap.bind(aShortcut.key, function() {
+						$(aShortcut.triggered_element_selector).trigger(aShortcut.event);
+						},'keyup');
+				};
+			}
+		});
+});

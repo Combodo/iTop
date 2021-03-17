@@ -1,0 +1,24 @@
+{# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+$('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
+    $(this).find('button[name="UI:Menu:Modify"]').click();
+});
+
+
+$('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
+    $(this).find('button[name="UI:Menu:Delete"]').click();
+});
+
+$('#{{ oUIBlock.GetId() }}').on('new_object', function(){
+    $(this).find('button[name="UI:Menu:New"]').click();
+});
+{% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE') %}
+$('#{{ oUIBlock.GetId() }}').on('save_object', function(){
+    $(this).find('button[type="submit"][name=""][value=""]').click();
+});
+{% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_STIMULUS') %}
+$('#{{ oUIBlock.GetId() }}').on('save_object', function(){
+    $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
+});
+{% endif %}

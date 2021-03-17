@@ -80,6 +80,9 @@ $(function()
 			this.element.find(this.js_selectors.compartment_element).on('click', function(oEvent){
 				me._onCompartmentElementClick(oEvent, $(this));
 			});
+			this.element.on('open_drawer', function(oEvent){
+				me._onIconClick(oEvent);
+			});
 			// Mostly for outside clicks that should close elements
 			oBodyElem.on('click', function(oEvent){
 				me._onBodyClick(oEvent);
@@ -134,20 +137,6 @@ $(function()
 		},
 		_onBodyKeyUp: function(oEvent)
 		{
-			// Note: We thought about extracting the oEvent.key in a variable to lower case it, but this would be done
-			// on every single key up in the application, which might not be what we want... (time consuming)
-			if((oEvent.altKey === true) && (oEvent.key === 'h' || oEvent.key === 'H'))
-			{
-				if(this._isDrawerOpened())
-				{
-					this._setFocusOnInput();
-				}
-				// If drawer is closed, we trigger the click on the icon in order for the other widget to behave like they should (eg. close themselves)
-				else
-				{
-					this.element.find(this.js_selectors.icon).trigger('click');
-				}
-			}
 		},
 
 		// Methods

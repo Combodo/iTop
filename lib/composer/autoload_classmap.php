@@ -2293,6 +2293,7 @@ return array(
     'iDBObjectSetIterator' => $baseDir . '/core/dbobjectiterator.php',
     'iDBObjectURLMaker' => $baseDir . '/application/applicationcontext.class.inc.php',
     'iDisplay' => $baseDir . '/core/dbobject.class.php',
+    'iKeyboardShortcut' => $baseDir . '/sources/application/UI/Hook/iKeyboardShortcut.php',
     'iLogFileNameBuilder' => $baseDir . '/core/log.class.inc.php',
     'iLoginExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iLoginFSMExtension' => $baseDir . '/application/applicationextension.inc.php',

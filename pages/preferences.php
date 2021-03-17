@@ -310,6 +310,72 @@ JS
 	
 	//////////////////////////////////////////////////////////////////////////
 	//
+	// User defined keyboard shortcut
+	//
+	//////////////////////////////////////////////////////////////////////////
+
+	// Panel
+	$oKeyboardShortcutBlock = new Panel(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Title'), array(), 'grey', 'ibo_keyboard_shortcuts');
+	// Form
+	$oKeyboardShortcutForm = new Form('ibo-form-for-user-interface-preferences');
+	$oKeyboardShortcutForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_keyboard_shortcuts'))
+		->AddSubBlock($oAppContext->GetForFormBlock());
+
+	$oKeyboardShortcutBlock->AddSubBlock($oKeyboardShortcutForm);
+
+	$sKeyboardShortcutBlockId = $oKeyboardShortcutBlock->GetId();
+	// JS keyboard listener
+	$oP->add_script(
+		<<<JS
+    function recordSequence$sKeyboardShortcutBlockId(fCallback) {
+         Mousetrap.record(function(sequence) {
+            fCallback(sequence.join(' '));
+        });
+    }
+JS
+	);
+	// For each existing shortcut keyboard existing in iTop
+	$aKeyboardShortcuts = utils::GetKeyboardShortcutPref();
+	$sKeyboardShortcutsInputHint = Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint');
+	$sKeyboardShortcutsButtonTooltip = Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip');
+	foreach($aKeyboardShortcuts as $sKeyboardShortcutId => $aKeyboardShortcut){
+			// Recording button
+			$oButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('');
+			$oButton->SetIconClass('fas fa-pen')->SetTooltip($sKeyboardShortcutsButtonTooltip)->SetOnClickJsCode(
+				<<<JS
+let oPanel = $(this).siblings('input');
+var fCallback = function(sVal){
+	oPanel.removeClass('ibo-is-focus').val(sVal);
+}
+oPanel.addClass('ibo-is-focus').val('$sKeyboardShortcutsInputHint')
+recordSequence$sKeyboardShortcutBlockId(fCallback);
+JS
+			);
+			
+			$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S($aKeyboardShortcut['label']), $sKeyboardShortcutId, $aKeyboardShortcut['key'], $sKeyboardShortcutId, 'text');
+			$oInput->GetInput()->AddCSSClasses(['ibo-keyboard-shortcut--input']);
+			$oKeyboardShortcutForm->AddSubBlock(new Html('<div class="ibo-keyboard-shortcut--shortcut">'));
+			$oKeyboardShortcutForm->AddSubBlock($oInput);
+			$oKeyboardShortcutForm->AddSubBlock($oButton);
+			$oKeyboardShortcutForm->AddSubBlock(new Html('</div>'));
+	}
+
+	// Prepare buttons
+	$oKeyboardShortcutToolbar = ToolbarUIBlockFactory::MakeForButton(null, ['ibo-is-fullwidth']);
+	$oKeyboardShortcutForm->AddSubBlock($oKeyboardShortcutToolbar);
+
+	// - Cancel button
+	$oKeyboardShortcutCancelButton = ButtonUIBlockFactory::MakeForCancel();
+	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutCancelButton);
+	$oKeyboardShortcutCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+	// - Submit button
+	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
+	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
+	
+	$oContentLayout->AddMainBlock($oKeyboardShortcutBlock);
+
+	//////////////////////////////////////////////////////////////////////////
+	//
 	// User picture placeholder
 	//
 	//////////////////////////////////////////////////////////////////////////
@@ -642,7 +708,19 @@ try {
 				$sURL = utils::GetAbsoluteUrlAppRoot().'pages/preferences.php?'.$oAppContext->GetForLink();
 				$oPage->add_header('Location: '.$sURL);
 				break;
-
+			case 'apply_keyboard_shortcuts':
+				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut','', array('/lib/', 'node_modules', 'test'));
+				$aShortcutPrefs = [];
+				foreach($aShortcutClasses as $cShortcutPlugin) {
+					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
+						$sKey = utils::ReadParam($aShortcutKey['id'], $aShortcutKey['key'], true,'raw_data');
+						$aShortcutPrefs[$aShortcutKey['id']] = strtolower($sKey);
+					}
+				}
+				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);
+				
+				DisplayPreferences($oPage);
+				break;
 			case 'apply_newsroom_preferences':
 				$iCountProviders = 0;
 				$oUser = UserRights::GetUserObject();

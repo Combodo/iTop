@@ -132,6 +132,9 @@ CKEDITOR.plugins.add( 'disabler',
 
 // Processing on each pages of the backoffice
 $(document).ready(function(){
+	// Initialize global keyboard shortcuts
+	$('body').keyboard_shortcuts({shortcuts: aKeyboardShortcuts});
+	
 	// Enable tooltips based on existing HTML markup, won't work on markup added dynamically after DOM ready (AJAX, ...)
 	$('[data-tooltip-content]:not([data-tooltip-instantiated="true"])').each(function () {
 		CombodoTooltip.InitTooltipFromMarkup($(this));

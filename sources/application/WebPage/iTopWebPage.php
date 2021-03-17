@@ -81,7 +81,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->SetTopBarLayout(TopBarFactory::MakeStandard($this->GetBreadCrumbsNewEntry()));
 
 		utils::InitArchiveMode();
-
+		
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
@@ -134,6 +134,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
 	}
 
@@ -174,6 +177,16 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	protected function InitializeKeyboardShortcuts(): void
+	{
+		$aShortcuts = utils::GetKeyboardShortcutPref();
+		$sShortcuts = json_encode($aShortcuts);
+		$this->add_script("aKeyboardShortcuts = $sShortcuts;");
 	}
 
 	/**
@@ -860,6 +873,8 @@ HTML;
 
 		// Components
 		// Note: For now all components are either included in the layouts above or put in page through the AddUiBlock() API, so there is no need to do anything more.
+
+		$this->InitializeKeyboardShortcuts();
 
 		// Variable content of the page
 		$aData['aPage'] = array_merge(

@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\GlobalSearch;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use iKeyboardShortcut;
 use MetaModel;
 use utils;
 
@@ -32,7 +33,7 @@ use utils;
  * @internal
  * @since 3.0.0
  */
-class GlobalSearch extends UIBlock
+class GlobalSearch extends UIBlock implements iKeyboardShortcut
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-global-search';
@@ -171,5 +172,15 @@ class GlobalSearch extends UIBlock
 	public function GetMaxHistoryResults(): int
 	{
 		return $this->iMaxHistoryResults;
+	}
+
+	public static function GetShortcutKeys(): array
+	{
+		return [['id' => 'ibo-open-global-search', 'label' => 'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer', 'key' => 'g', 'event' => 'open_drawer']];
+	}
+
+	public static function GetShortcutTriggeredElementSelector(): string
+	{
+		return "[data-role='".static::BLOCK_CODE."']";
 	}
 }

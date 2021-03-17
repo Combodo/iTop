@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObjectSearch;
 use Dict;
+use iKeyboardShortcut;
 use MetaModel;
 use UIExtKeyWidget;
 use UserRights;
@@ -43,7 +44,7 @@ use utils;
  * @internal
  * @since 3.0.0
  */
-class NavigationMenu extends UIBlock
+class NavigationMenu extends UIBlock implements iKeyboardShortcut
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-navigation-menu';
@@ -443,5 +444,15 @@ JS;
 		$this->aUserData = $aData;
 
 		return $this;
+	}
+
+	public static function GetShortcutKeys(): array
+	{
+		return [['id' => 'ibo-open-menu-filter', 'label' => 'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter', 'key'=> 'alt+m', 'event' => 'filter_shortcut']];
+	}
+
+	public static function GetShortcutTriggeredElementSelector(): string
+	{
+		return "[data-role='".static::BLOCK_CODE."']";
 	}
 }

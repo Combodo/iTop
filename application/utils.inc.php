@@ -2771,4 +2771,28 @@ HTML;
 		return $aMatchingClasses;
 	}
 
+	/**
+	 * Return keyboard shortcuts config as an array
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetKeyboardShortcutPref(): array
+	{
+		$aResultPref = [];
+		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
+		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut','', array('/lib/', 'node_modules', 'test'));
+
+		foreach($aShortcutClasses as $cShortcutPlugin) {
+			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
+			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
+				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
+				$aResultPref[$aShortcutKey['id']] = ['key' => $sKey, 'label' => $aShortcutKey['label'], 'event' => $aShortcutKey['event'], 'triggered_element_selector' => $sTriggeredElement];
+			}
+		}
+		return $aResultPref;
+	}
 }

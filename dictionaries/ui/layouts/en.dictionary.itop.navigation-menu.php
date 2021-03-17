@@ -28,6 +28,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed',
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture'
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries'
 
 ));
