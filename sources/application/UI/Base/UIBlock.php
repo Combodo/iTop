@@ -142,6 +142,7 @@ abstract class UIBlock implements iUIBlock
 
 	/**
 	 * @inheritDoc
+	 * @useb-by GetFilesUrlRecursively
 	 */
 	public function GetJsFilesRelPaths() {
 		return $this->aJsFilesRelPath;
@@ -157,6 +158,7 @@ abstract class UIBlock implements iUIBlock
 
 	/**
 	 * @inheritDoc
+	 * @useb-by GetFilesUrlRecursively
 	 */
 	public function GetCssFilesRelPaths()
 	{
