@@ -156,6 +156,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:UndefinedObject');
 		$this->add_dict_entries('Enum:Undefined');
 		$this->add_dict_entry('UI:Datatables:Language:Processing');
+		$this->add_dict_entries('UI:Newsroom');
 
 	}
 

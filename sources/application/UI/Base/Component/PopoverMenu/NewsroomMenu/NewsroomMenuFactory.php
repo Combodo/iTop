@@ -93,9 +93,10 @@ class NewsroomMenuFactory
 			'providers' => $aProviderParams,
 			'display_limit' => (int)appUserPreferences::GetPref('newsroom_display_size', 7),
 			'labels' => array(
-				'no_message' => Dict::S('UI:Newsroom:NoNewMessage'),
-				'mark_all_as_read' => Dict::S('UI:Newsroom:MarkAllAsRead'),
-				'view_all' => Dict::S('UI:Newsroom:ViewAllMessages'),
+				'no_notification' => 'UI:Newsroom:NoNewMessage',
+				'x_notifications' => 'UI:Newsroom:XNewMessage',
+				'mark_all_as_read' => 'UI:Newsroom:MarkAllAsRead',
+				'view_all' => 'UI:Newsroom:ViewAllMessages'
 			),
 		);
 		return $aParams;

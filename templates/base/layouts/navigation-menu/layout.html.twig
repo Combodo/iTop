@@ -33,7 +33,7 @@
 		<div class="ibo-navigation-menu--bottom-part">
 			{% if oUIBlock.IsNewsroomEnabled() == true %}
 				<div class="ibo-navigation-menu--notifications">
-					<a class="ibo-navigation-menu--notifications-toggler ibo-is-empty" data-role="ibo-navigation-menu--notifications-toggler">
+					<a class="ibo-navigation-menu--notifications-toggler ibo-is-empty" data-role="ibo-navigation-menu--notifications-toggler" data-tooltip-content="{{ 'UI:Newsroom:NoNewMessage'|dict_s }}" data-tooltip-placement="right" data-tooltip-distance-offset="25">
 						<i class="fas fa-bell"></i>
 						<div class="ibo-navigation-menu--notifications-toggler--new-messages"></div>
 					</a>
@@ -69,7 +69,9 @@
 				{% if oUIBlock.IsNewsroomEnabled() == true %}
 					<div class="ibo-navigation-menu--user-notifications">
 						<a class="ibo-navigation-menu--user-notifications--text ibo-navigation-menu--user-notifications--toggler" data-role="ibo-navigation-menu--notifications-toggler" href="#">
-							{{ '0 notification'|dict_s }}
+                            <span class="ibo-navigation-menu--user-notifications--toggler--message" data-role="ibo-navigation-menu--user-notifications--toggler--message">
+                                {{ 'UI:Newsroom:NoNewMessage'|dict_s }}
+                            </span>
 							<span class="ibo-navigation-menu--user-notifications--toggler--icon">
 								<i class="fas fa-bell"></i>
 								<span class="ibo-navigation-menu--notifications-toggler--new-messages"></span>

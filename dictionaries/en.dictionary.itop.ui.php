@@ -1595,6 +1595,7 @@ Dict::Add('EN US', 'English', 'English', array(
 //
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences',
