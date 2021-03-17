@@ -168,60 +168,114 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		);
 	}
 
-	public function GetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirstProvider() {
+	public function GetAbsoluteUrlAppRootPersistency() {
 		$this->setUp();
 
-		$baseServerVar = [
-			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
-			'SERVER_NAME' => 'example.com',
-			'HTTP_X_FORWARDED_HOST' => null,
-			'SERVER_PORT' => '80',
-			'HTTP_X_FORWARDED_PORT' => null,
-			'REQUEST_URI' => '/index.php?baz=1',
-			'SCRIPT_NAME' => '/index.php',
-			'SCRIPT_FILENAME' => APPROOT.'index.php',
-			'QUERY_STRING' => 'baz=1',
-			'HTTP_X_FORWARDED_PROTO' => null,
-			'HTTP_X_FORWARDED_PROTOCOL' => null,
-			'HTTPS' => null,
-		];
-
 		return [
-			'ForceTrustProxy disabled' => [
-				'bForceTrustProxy' => false,
-				'bConfTrustProxy' => false,
-				'aServerVars' => array_merge($baseServerVar, []),
-				'sExpectedAppRootUrl' => 'http://example.com/',
+			'ForceTrustProxy 111' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
 			],
-			'ForceTrustProxy enabled' => [
-				'bForceTrustProxy' => false,
-				'bConfTrustProxy' => true,
-				'aServerVars' => array_merge($baseServerVar, []),
-				'sExpectedAppRootUrl' => 'http://example.com/',
+			'ForceTrustProxy 101' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 011' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 110' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 001' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 000' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'http://example.com/',
+			],
+			'BehindReverseProxy ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => true,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
 			],
 		];
 	}
 
 	/**
-	 * @dataProvider GetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirstProvider
+	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
-	public function testGetDefaultUrlAppRootPersistWhenTrustProxyActivatedAtFirst($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
+	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
 	{
-		$_SERVER = $aServerVars;
-		utils::GetConfig()->Set('behind_reverse_proxy', $bConfTrustProxy);
-		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
-		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
-		$sPersistedExpectedAppRootUrl = $sAppRootUrl;
+		utils::GetConfig()->Set('behind_reverse_proxy', $bBehindReverseProxy);
+		utils::GetConfig()->Set('app_root_url', '');
 
-		$sAppRootUrl = utils::GetDefaultUrlAppRoot(!$bForceTrustProxy);
-		if ($bForceTrustProxy){
-			$this->assertNotEquals($sExpectedAppRootUrl, $sAppRootUrl);
-		} else {
-			$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
-			$sPersistedExpectedAppRootUrl = $sAppRootUrl;
-		}
+		//should match http://example.com/ when not trusting the proxy
+		//should match https://proxy.com:4443/ when  trusting the proxy
+		$_SERVER = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'SERVER_PORT' => '80',
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+			'HTTP_X_FORWARDED_PORT' => '4443',
+			'HTTP_X_FORWARDED_PROTO' => 'https',
+			'HTTPS' => null,
+		];
 
-		$this->assertEquals($sPersistedExpectedAppRootUrl, utils::GetDefaultUrlAppRoot($bForceTrustProxy));
+		$this->assertEquals($sExpectedAppRootUrl1, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy1));
+
+		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy2));
+
+		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
 	}
 
 
