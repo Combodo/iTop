@@ -5,19 +5,27 @@
  */
 
 
-namespace Combodo\iTop\Application\UI\Base\Component\Badge;
+namespace Combodo\iTop\Application\UI\Base\Component\Pill;
 
 
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
-class Badge extends UIContentBlock
+/**
+ * Class Pill
+ *
+ * @internal
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ * @package Combodo\iTop\Application\UI\Base\Component\Pill
+ */
+class Pill extends UIContentBlock
 {
 	/** @var string */
 	protected $sColor;
 
 	public function __construct(string $sColor)
 	{
-		parent::__construct(null, ["ibo-badge ibo-badge-is-{$sColor}"]);
+		parent::__construct(null, ["ibo-pill ibo-pill-is-{$sColor}"]);
 		$this->SetColor($sColor);
 	}
 
@@ -32,11 +40,12 @@ class Badge extends UIContentBlock
 	/**
 	 * @param string $sColor
 	 *
-	 * @return Badge
+	 * @return Pill
 	 */
-	public function SetColor(string $sColor): Badge
+	public function SetColor(string $sColor): Pill
 	{
 		$this->sColor = $sColor;
+
 		return $this;
 	}
 }

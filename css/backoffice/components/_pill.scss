@@ -1,0 +1,99 @@
+/*!
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* SCSS variables */
+$ibo-pill--margin: 4px 8px !default;
+$ibo-pill--padding: 6px 10px !default;
+$ibo-pill--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-pill-new-state-primary-color: $ibo-color-blue-100 !default;
+$ibo-pill-new-state-secondary-color: $ibo-color-blue-900 !default;
+
+$ibo-pill-neutral-state-primary-color: $ibo-color-blue-100 !default;
+$ibo-pill-neutral-state-secondary-color: $ibo-color-blue-900 !default;
+
+$ibo-pill-waiting-state-primary-color: $ibo-color-orange-100 !default;
+$ibo-pill-waiting-state-secondary-color: $ibo-color-orange-800 !default;
+
+$ibo-pill-success-state-primary-color: $ibo-color-green-100 !default;
+$ibo-pill-success-state-secondary-color: $ibo-color-green-900 !default;
+
+$ibo-pill-failure-state-primary-color: $ibo-color-red-100 !default;
+$ibo-pill-failure-state-secondary-color: $ibo-color-red-800 !default;
+
+$ibo-pill-frozen-state-primary-color: $ibo-color-grey-100 !default;
+$ibo-pill-frozen-state-secondary-color: $ibo-color-grey-700 !default;
+
+/* - For basic badge */
+$ibo-pill-active-state-primary-color: $ibo-color-green-100 !default;
+$ibo-pill-active-state-secondary-color: $ibo-color-green-900 !default;
+
+$ibo-pill-inactive-state-primary-color: $ibo-color-orange-100 !default;
+$ibo-pill-inactive-state-secondary-color: $ibo-color-orange-800 !default;
+
+$ibo-pill-states-colors: (
+        'new': (
+                'primary-color': $ibo-pill-new-state-primary-color,
+                'secondary-color': $ibo-pill-new-state-secondary-color,
+        ),
+        'neutral': (
+                'primary-color': $ibo-pill-neutral-state-primary-color,
+                'secondary-color': $ibo-pill-neutral-state-secondary-color,
+        ),
+        'waiting': (
+                'primary-color': $ibo-pill-waiting-state-primary-color,
+                'secondary-color': $ibo-pill-waiting-state-secondary-color,
+        ),
+        'success': (
+                'primary-color': $ibo-pill-success-state-primary-color,
+                'secondary-color': $ibo-pill-success-state-secondary-color,
+        ),
+        'failure': (
+                'primary-color': $ibo-pill-failure-state-primary-color,
+                'secondary-color': $ibo-pill-failure-state-secondary-color,
+        ),
+        'frozen': (
+                'primary-color': $ibo-pill-frozen-state-primary-color,
+                'secondary-color': $ibo-pill-frozen-state-secondary-color,
+        ),
+        'active': (
+                'primary-color': $ibo-pill-active-state-primary-color,
+                'secondary-color': $ibo-pill-active-state-secondary-color,
+        ),
+        'inactive': (
+                'primary-color': $ibo-pill-inactive-state-primary-color,
+                'secondary-color': $ibo-pill-inactive-state-secondary-color,
+        ),
+);
+
+@each $sType, $aColors in $ibo-pill-states-colors {
+  .ibo-pill-is-#{$sType} {
+    color: map-get($aColors, 'secondary-color');
+    background-color: map-get($aColors, 'primary-color');
+  }
+}
+
+/* Rules */
+.ibo-pill {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: $ibo-pill--margin;
+  padding: $ibo-pill--padding;
+  border-radius: $ibo-pill--border-radius;
+}

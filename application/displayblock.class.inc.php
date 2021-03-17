@@ -6,11 +6,11 @@
 
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Badge\BadgeFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -1016,12 +1016,12 @@ JS
 		$oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
 		foreach ($aStateLabels as $sStateValue => $sStateLabel) {
 			$aCount = $aCounts[$sStateValue];
-			$oBadge = BadgeFactory::MakeForState($sClass, $sStateValue);
+			$oBadge = PillFactory::MakeForState($sClass, $sStateValue);
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
 			$sColor = $oBadge->GetColor();
-			$oBadge->AddHtml("<a class=\"ibo-dashlet-header-dynamic--count ibo-badge-is-{$sColor}\" href=\"$sHyperlink\">$sCountLabel</a>");
-			$oBadge->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-badge-is-{$sColor}\">$sStateLabel</span>");
+			$oBadge->AddHtml("<a class=\"ibo-dashlet-header-dynamic--count ibo-pill-is-{$sColor}\" href=\"$sHyperlink\">$sCountLabel</a>");
+			$oBadge->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-pill-is-{$sColor}\">$sStateLabel</span>");
 			$oBlock->AddSubBlock($oBadge);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
