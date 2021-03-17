@@ -1493,7 +1493,7 @@ JS
 			$oPage->add("</div>");
 			break;
 
-		// TODO 3.0.0: Handle the history pagination
+		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
 		case 'history':
 			$oPage->SetContentType('text/html');
 			$id = (int)utils::ReadParam('id', 0);
@@ -1507,7 +1507,7 @@ JS
 			// widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
-			// TODO 3.0.0: What to do with this?
+		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
 		case 'history_from_filter':
 			$oPage->SetContentType('text/html');
 			$oHistoryFilter = DBSearch::unserialize($sFilter);

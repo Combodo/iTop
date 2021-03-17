@@ -429,14 +429,16 @@ HTML
 	/**
 	 * Display history tab of an object
 	 *
-	 * @param \WebPage $oPage
+	 * @deprecated 3.0.0 will be removed in 3.1, see N°3824
+	 *
 	 * @param bool $bEditMode
 	 * @param int $iLimitCount
 	 * @param int $iLimitStart
 	 *
+	 * @param \WebPage $oPage
+	 *
 	 * @throws \CoreException
 	 *
-	 * @deprecated
 	 */
 	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{

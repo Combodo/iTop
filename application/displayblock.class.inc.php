@@ -1629,6 +1629,8 @@ JS
  * - list produces a table listing the objects
  * - count produces a paragraphs with a sentence saying 'cont' objects found
  * - details display (as  table) the details of each object found (best if only one)
+ *
+ * @deprecated 3.0.0 will be removed in 3.1, see N°3824
  */
 class HistoryBlock extends DisplayBlock
 {

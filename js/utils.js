@@ -564,6 +564,9 @@ function ExportInitButton(sSelector) {
 	});
 }
 
+/**
+ * @deprecated 3.0.0 will be removed in 3.1, see N°3824
+ */
 function DisplayHistory(sSelector, sFilter, iCount, iStart) {
 	$(sSelector).block();
 	var oParams = {operation: 'history_from_filter', filter: sFilter, start: iStart, count: iCount};
