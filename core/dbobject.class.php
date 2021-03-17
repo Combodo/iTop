@@ -947,10 +947,10 @@ abstract class DBObject implements iDisplay
 
     /**
      * Compute the highlightCode
-     * 
-     * @example When TTR, then TTR of a UserRequest is greater thant a defined scale, the item is highlighted in the listings
      *
-     * @interal
+     * @internal
+     *
+     * @example When TTR, then TTR of a UserRequest is greater thant a defined scale, the item is highlighted in the listings
      *
      * @return string|null The Hightlight code (null if none set, meaning rank = 0)
      *
