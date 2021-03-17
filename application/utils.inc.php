@@ -2706,7 +2706,7 @@ HTML;
 	/**
 	 * @param string $sInterface
 	 * @param string $sClassNameFilter
-	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslahes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
+	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslashes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
 	 *
 	 * @return array
 	 * @since 3.0.0
