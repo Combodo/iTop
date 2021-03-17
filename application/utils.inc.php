@@ -2700,11 +2700,12 @@ HTML;
 	/**
 	 * @param string $sInterface
 	 * @param string $sClassNameFilter
-	 * @param array $aExcludedPath
+	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslahes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
 	 *
 	 * @return array
+	 * @since 3.0.0
 	 */
-	public static function GetClassesForInterface(string $sInterface,string $sClassNameFilter = '', $aExcludedPath = [])
+	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
 	{
 		$aMatchingClasses = [];
 
@@ -2742,7 +2743,8 @@ HTML;
 				}
 				else {
 					foreach ($aExcludedPath as $sExcludedPath) {
-						if ($sExcludedPath !== '' && strpos($sPHPFile, $sExcludedPath) !== false) {
+						// Note: We use '#' as delimiters as usual '/' is often used in paths.
+						if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
 							$bSkipped = true;
 							break;
 						}
@@ -2784,15 +2786,17 @@ HTML;
 	{
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
-		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut','', array('/lib/', 'node_modules', 'test'));
+		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
+		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
 
-		foreach($aShortcutClasses as $cShortcutPlugin) {
+		foreach ($aShortcutClasses as $cShortcutPlugin) {
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
 			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
 				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
 				$aResultPref[$aShortcutKey['id']] = ['key' => $sKey, 'label' => $aShortcutKey['label'], 'event' => $aShortcutKey['event'], 'triggered_element_selector' => $sTriggeredElement];
 			}
 		}
+
 		return $aResultPref;
 	}
 }

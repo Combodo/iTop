@@ -709,16 +709,17 @@ try {
 				$oPage->add_header('Location: '.$sURL);
 				break;
 			case 'apply_keyboard_shortcuts':
-				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut','', array('/lib/', 'node_modules', 'test'));
+				// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
+				$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
 				$aShortcutPrefs = [];
-				foreach($aShortcutClasses as $cShortcutPlugin) {
+				foreach ($aShortcutClasses as $cShortcutPlugin) {
 					foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
-						$sKey = utils::ReadParam($aShortcutKey['id'], $aShortcutKey['key'], true,'raw_data');
+						$sKey = utils::ReadParam($aShortcutKey['id'], $aShortcutKey['key'], true, 'raw_data');
 						$aShortcutPrefs[$aShortcutKey['id']] = strtolower($sKey);
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);
-				
+
 				DisplayPreferences($oPage);
 				break;
 			case 'apply_newsroom_preferences':
