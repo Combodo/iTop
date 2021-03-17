@@ -276,17 +276,13 @@ class ApplicationInstaller
 					$sTargetDir = $this->GetTargetDir();
 					$bUseSymbolicLinks = false;
 					$aMiscOptions = $this->oParams->Get('options', array());
-					if (isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks']) {
+					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks']) || MFCompiler::IsUseSymbolicLinksFlagPresent()) {
 						if (function_exists('symlink')) {
 							$bUseSymbolicLinks = true;
 							SetupLog::Info("Using symbolic links instead of copying data model files (for developers only!)");
 						} else {
 							SetupLog::Info("Symbolic links (function symlinks) does not seem to be supported on this platform (OS/PHP version).");
 						}
-					}
-
-					if (MFCompiler::IsUseSymbolicLinksFlagPresent()) {
-						$bUseSymbolicLinks = true;
 					}
 
 					self::DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sTargetEnvironment,
