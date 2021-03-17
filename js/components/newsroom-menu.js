@@ -44,11 +44,13 @@ $(function()
 			$(this.js_selectors.menu_toggler).on('click', function(oEvent) {
 				var oEventTarget = $(oEvent.target);
 				var aEventTargetPos = oEventTarget.position();
+				var aEventTargetOffset = oEventTarget.offset();
 
+				$iHeight = Math.abs(aEventTargetOffset.top - 100);
 				$(me.element).css({
-					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(me.element).height()) + 'px',
+					'max-height': $iHeight + 'px',
+					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  Math.min($(me.element).height(), $iHeight)) + 'px',
 					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px',
-					'max-height' : (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) - 100) + 'px'
 				});
 				$(me.element).popover_menu("togglePopup");
 			});

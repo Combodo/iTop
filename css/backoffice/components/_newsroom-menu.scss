@@ -50,12 +50,13 @@ $ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
   flex-flow: column;
   min-width: $ibo-navigation-menu--notifications-menu--min-width;
   .ibo-navigation-menu--notifications--messages-section{
-    overflow-x: auto;
+    overflow: auto;
   }
 }
 .ibo-navigation-menu--notifications--show-all-messages, .ibo-navigation-menu--notifications-dismiss-all, .ibo-navigation-menu--notifications-show-all-multiple{
   overflow-x: inherit;
   text-align: center;
+  min-height: 45px;
 }
 
 .ibo-navigation-menu--notifications--item--image{
