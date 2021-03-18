@@ -728,6 +728,9 @@ const CombodoTooltip = {
 		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
 			return false;
 		}
+		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){
+			oElem[0]._tippy.destroy();
+		}
 
 		// Content must be reworked before getting into the tooltip
 		// - Should we enable HTML content or keep text as is
