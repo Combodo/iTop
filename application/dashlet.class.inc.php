@@ -849,6 +849,7 @@ class DashletPlainText extends Dashlet
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		$sText = $this->aProperties['text'];
+		$sText = utils::EscapeHtml($sText);
 		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
 		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;
