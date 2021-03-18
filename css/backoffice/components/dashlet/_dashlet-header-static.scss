@@ -20,7 +20,7 @@ $ibo-dashlet-header-static--icon--size: 48px !default;
 
 $ibo-dashlet-header-static--body--separator--top: 50% !default;
 $ibo-dashlet-header-static--body--separator--top: 50% !default;
-$ibo-dashlet-header-static--body--separator--width: 1000% !default;
+$ibo-dashlet-header-static--body--separator--width: 10000px !default;
 $ibo-dashlet-header-static--body--separator--height: 1px !default;
 $ibo-dashlet-header-static--body--separator--border: 2px solid $ibo-color-grey-400 !default;
 $ibo-dashlet-header-static--body--separator-before--right: calc(100% + #{$ibo-dashlet-header-static--icon-container--margin-right}) !default;
@@ -29,7 +29,7 @@ $ibo-dashlet-header-static--body--separator-after--left: calc(100% + #{$ibo-dash
 
 /* Rules */
 .ibo-dashlet-header-static {
-	padding: $ibo-dashlet-header-static--padding-top $ibo-dashlet-header-static--padding-x $ibo-dashlet-header-static--padding-bottom $ibo-dashlet-header-static--padding-x;
+  padding: $ibo-dashlet-header-static--padding-top $ibo-dashlet-header-static--padding-x $ibo-dashlet-header-static--padding-bottom $ibo-dashlet-header-static--padding-x;
   overflow-x: hidden; /* To hide separator extra length */
 }
 
