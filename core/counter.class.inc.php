@@ -71,8 +71,8 @@ final class ItopCounter
 				'key_name'  => $sCounterName,
 				'namespace' => $sSelfClassName,
 			));
-			$oAttDef = MetaModel::GetAttributeDef('KeyValueStore', 'value');
-			$aAttToLoad = array('KeyValueStore' => array('value' => $oAttDef));
+			$oAttDef = MetaModel::GetAttributeDef(KeyValueStore::class, 'value');
+			$aAttToLoad = array(KeyValueStore::class => array('value' => $oAttDef));
 			$sSql = $oFilter->MakeSelectQuery(array(), array(), $aAttToLoad);
 			$hResult = mysqli_query($hDBLink, $sSql);
 			$aCounter = mysqli_fetch_array($hResult, MYSQLI_NUM);
