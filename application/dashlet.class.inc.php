@@ -848,7 +848,7 @@ class DashletPlainText extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$sText = utils::HtmlEntities($this->aProperties['text']);
+		$sText = $this->aProperties['text'];
 		$sText = str_replace(array("\r\n", "\n", "\r"), "<br/>", $sText);
 
 		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;
@@ -1891,7 +1891,7 @@ class DashletHeaderStatic extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$sTitle = utils::HtmlEntities($this->aProperties['title']);
+		$sTitle = $this->aProperties['title'];
 		$sIcon = $this->aProperties['icon'];
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
