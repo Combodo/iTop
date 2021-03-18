@@ -11,7 +11,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 class DashletHeaderStatic extends DashletContainer
 {
 	public const BLOCK_CODE = 'ibo-dashlet-header-static';
-	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/dashlet/dashletheaderstatic';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/dashlet/dashlet-header-static';
 
 	/** @var string */
 	protected $sTitle;
