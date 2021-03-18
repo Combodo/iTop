@@ -26,8 +26,10 @@ class Pill extends UIContentBlock
 
 	/** @var string */
 	protected $sColor;
-	/** @var string URL to go to if the pill is clicked */
+	/** @var null|string URL to go to if the pill is clicked */
 	protected $sUrl;
+	/** @var null|string Text to display as a tooltip */
+	protected $sTooltip;
 
 	/**
 	 * Pill constructor.
@@ -38,7 +40,6 @@ class Pill extends UIContentBlock
 	{
 		parent::__construct();
 		$this->SetColor($sColor);
-		$this->SetUrl('');
 	}
 
 	/**
@@ -62,9 +63,10 @@ class Pill extends UIContentBlock
 	}
 
 	/**
-	 * @return string
+	 * @see static::$sUrl
+	 * @return null|string
 	 */
-	public function GetUrl(): string
+	public function GetUrl(): ?string
 	{
 		return $this->sUrl;
 	}
@@ -72,6 +74,7 @@ class Pill extends UIContentBlock
 	/**
 	 * @param string $sUrl
 	 *
+	 * @see static::$sUrl
 	 * @return $this
 	 */
 	public function SetUrl(string $sUrl)
@@ -82,10 +85,42 @@ class Pill extends UIContentBlock
 	}
 
 	/**
+	 * @see static::$sUrl
 	 * @return bool
 	 */
 	public function HasUrl(): bool
 	{
 		return !empty($this->sUrl);
+	}
+
+	/**
+	 * @see static::$sTooltip
+	 * @return string|null
+	 */
+	public function GetTooltip(): ?string
+	{
+		return $this->sTooltip;
+	}
+
+	/**
+	 * @param string $sTooltip
+	 *
+	 * @see static::$sTooltip
+	 * @return $this
+	 */
+	public function SetTooltip(string $sTooltip)
+	{
+		$this->sTooltip = $sTooltip;
+
+		return $this;
+	}
+
+	/**
+	 * @see static::$sTooltip
+	 * @return bool
+	 */
+	public function HasTooltip(): bool
+	{
+		return !empty($this->sTooltip);
 	}
 }

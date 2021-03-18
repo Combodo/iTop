@@ -4,7 +4,8 @@
 <{{ sTagName }} id="{{ oUIBlock.GetId() }}"
     {% if oUIBlock.HasUrl() %}href="{{ oUIBlock.GetUrl()|raw }}"{% endif %}
     class="ibo-pill ibo-is-{{ oUIBlock.GetColor() }}"
-    data-role="ibo-pill">
+    data-role="ibo-pill"
+    {% if oUIBlock.HasTooltip() %}data-tooltip-content="{{ oUIBlock.GetTooltip() }}" data-tooltip-show-delay="500"{% endif %}>
     {% for oSubBlock in oUIBlock.GetSubBlocks() %}
         {{ render_block(oSubBlock, {aPage: aPage}) }}
     {% endfor %}

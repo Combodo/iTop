@@ -26,6 +26,7 @@
 .ibo-is-fullwidth {
   width: 100%;
 }
+
 /* Used on all ancestors when an element needs to be fullscreen (see .ibo-is-fullscreen) */
 html.ibo-has-fullscreen-descendant{
 	position: fixed !important;
@@ -80,6 +81,10 @@ body.ibo-has-fullscreen-descendant{
 	overflow-x: hidden;
 	text-overflow: ellipsis;
 }
+.ibo-text-truncated-with-ellipsis{
+  @extend %ibo-text-truncated-with-ellipsis;
+}
+
 %ibo-medallion{
 	position: relative;
 	border-radius: var(--ibo-border-radius-full);

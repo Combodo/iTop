@@ -19,6 +19,7 @@
 /* SCSS variables */
 $ibo-pill--margin: 4px 8px !default;
 $ibo-pill--padding: 6px 10px !default;
+$ibo-pill--max-width: 120px !default;
 $ibo-pill--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-pill-new-state-primary-color: $ibo-color-blue-100 !default;
@@ -90,9 +91,8 @@ $ibo-pill-states-colors: (
 
 /* Rules */
 .ibo-pill {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
+  @extend %ibo-fully-centered-content;
+  max-width: $ibo-pill--max-width;
   margin: $ibo-pill--margin;
   padding: $ibo-pill--padding;
   border-radius: $ibo-pill--border-radius;

@@ -1020,8 +1020,9 @@ JS
 			$sCountLabel = $aCount['label'];
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
 				->SetUrl($sHyperlink)
+				->SetTooltip($sStateLabel)
 				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span>")
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label\">$sStateLabel</span>");
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">$sStateLabel</span>");
 			$oBlock->AddSubBlock($oPill);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
