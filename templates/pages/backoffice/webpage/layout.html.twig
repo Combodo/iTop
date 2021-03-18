@@ -40,12 +40,6 @@
 {% block iboPageBodyHtml %}
     <div id="ibo-page-container">
         {{ render_block(oLayout, {aPage: aPage}) }}
-
-        {# TODO: Remove this when modal development is done #}
-        <div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
-        <div style="display:none" title="ex2" id="ex2">Please wait...</div>
-        <div style="display:none" title="dialog" id="ModalDlg"></div>
-        <div style="display:none" id="ajax_content"></div>
     </div>
 {% endblock %}
 
@@ -54,12 +48,14 @@
         {{ render_block(oBlock, {aPage: aPage}) }}
     {% endfor %}
 {% endblock %}
-<script type="text/javascript">
-	var aListJsFiles = [];
-	{% for sJsFile in aPage.aJsFiles %}
-		aListJsFiles.push("{{ sJsFile|raw }}");
-	{% endfor %}
-</script>
+{% if aPage.aJsFiles is not empty %}
+    <script type="text/javascript">
+        var aListJsFiles = [];
+        {% for sJsFile in aPage.aJsFiles %}
+            aListJsFiles.push("{{ sJsFile|raw }}");
+        {% endfor %}
+    </script>
+{% endif %}
 {% block iboPageJsFiles %}
     {% for sJsFile in aPage.aJsFiles %}
         <script type="text/javascript" src="{{ sJsFile|raw|add_itop_version }}"></script>
@@ -67,33 +63,34 @@
 {% endblock %}
 
 {% block iboPageJsInlineScripts %}
-    <script type="text/javascript">
-        {# TODO 3.0.0: How to do this in native JS? #}
-        $(document).ready(function () {
-            {% block iboPageJsInlineOnInit %}
-                {% for sJsInline in aPage.aJsInlineOnInit %}
-                    {{ sJsInline|raw }}
-                {% endfor %}
-            {% endblock %}
-
-            {% block iboPageJsInlineOnDomReady %}
-                setTimeout(function () {
-                    {% for sJsInline in aPage.aJsInlineOnDomReady %}
-                    {{ sJsInline|raw }}
+    {% if aPage.aJsInlineOnInit is not empty or aPage.aJsInlineOnDomReady is not empty %}
+        <script type="text/javascript">
+            {# TODO 3.0.0: How to do this in native JS? #}
+            $(document).ready(function () {
+                {% block iboPageJsInlineOnInit %}
+                    {% for sJsInline in aPage.aJsInlineOnInit %}
+                        {{ sJsInline|raw }}
                     {% endfor %}
-                }, 50);
-            {% endblock %}
-        });
-    </script>
+                {% endblock %}
 
-{% block iboPageJsInlineLive %}
-    {% for sJsInline in aPage.aJsInlineLive %}
-    {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
-    <script type="text/javascript">
-        {{ sJsInline|raw }}
-    </script>
-    {% endfor %}
-{% endblock %}
+                {% block iboPageJsInlineOnDomReady %}
+                    setTimeout(function () {
+                        {% for sJsInline in aPage.aJsInlineOnDomReady %}
+                        {{ sJsInline|raw }}
+                        {% endfor %}
+                    }, 50);
+                {% endblock %}
+            });
+        </script>
+    {% endif %}
+    {% block iboPageJsInlineLive %}
+        {% for sJsInline in aPage.aJsInlineLive %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+                {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
 {% endblock %}
 
 {{ aPage.sCapturedOutput|raw }}
