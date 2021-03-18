@@ -608,18 +608,17 @@ HTML;
 				foreach($aTemp as $sTemp)
 				{
 					$aMatches = array();
-					if (preg_match('/^([+-])?(.+)$/', $sTemp, $aMatches))
-					{
+					if (preg_match('/^([+-])?(.+)$/', $sTemp, $aMatches)) {
 						$bAscending = true;
-						if ($aMatches[1] == '-')
-						{
-							$bAscending  = false;
+						if ($aMatches[1] == '-') {
+							$bAscending = false;
 						}
 						$aOrderBy[$aMatches[2]] = $bAscending;
-					}					
+					}
 				}
 			}
-			
+
+			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
 			$this->m_oSet = new CMDBObjectSet($this->m_oFilter, $aOrderBy, $aQueryParams);
 		}
 		$this->m_oSet->SetShowObsoleteData($this->m_bShowObsoleteData);
@@ -1167,8 +1166,9 @@ JS
 			);
 			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
 			$sTitle = Dict::Format($sFormat, $iTotalCount);
-			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams,
-				$this->m_oFilter->ToOQL());
+
+			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
+			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL());
 
 		} else {
 			// Simply count the number of elements in the set

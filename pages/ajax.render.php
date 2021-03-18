@@ -102,7 +102,11 @@ try
 			$oPage->SetContentType('text/html');
 			$sExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 			$aExtraParams = json_decode($sExtraParams, true);
-			$oFilter = DBObjectSearch::FromOQL($sFilter);
+			$aQueryParams = [];
+			if (isset($aExtraParams['query_params'])) {
+				$aQueryParams = $aExtraParams['query_params'];
+			}
+			$oFilter = DBObjectSearch::FromOQL($sFilter, $aQueryParams);
 			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 			$oSet = new CMDBObjectSet($oFilter, [], $aExtraParams);
 			$oBlock = new displayblock($oFilter, 'summary', false, [], $oSet);

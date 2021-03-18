@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -50,8 +50,8 @@ class BlockList extends UIContentBlock
 	public function GetJSRefresh(): string
 	{
 		return '$("#'.$this->sId.'").block();
-			$.post("ajax.render.php?style=list",
-			{ operation: "refreshDashletList", filter: "'.$this->sFilter.'", extra_params: '.json_encode($this->aExtraParams).' },
+			$.post("ajax.render.php?operation=refreshDashletList",
+			{ style: "list", filter: "'.$this->sFilter.'", extra_params: '.json_encode($this->aExtraParams).' },
 			function(data){
 				$("#'.$this->sId.'")
 				.empty()

@@ -428,28 +428,25 @@ class AjaxRenderController
 				}
 			}
 
-			$aGroupBy = array();
+			$aGroupBy = [];
 			$aGroupBy['grouped_by_1'] = $oGroupByExp;
-			$aQueryParams = array();
-			if (isset($aExtraParams['query_params'])) {
-				$aQueryParams = $aExtraParams['query_params'];
-			}
-			$aFunctions = array();
+
+			$aFunctions = [];
 			$sFctVar = '_itop_count_';
 			if (isset($aExtraParams['aggregation_function']) && !empty($aExtraParams['aggregation_attribute'])) {
 				$sAggregationFunction = $aExtraParams['aggregation_function'];
 				$sAggregationAttr = $aExtraParams['aggregation_attribute'];
 				$oAttrExpr = Expression::FromOQL('`'.$sAlias.'`.`'.$sAggregationAttr.'`');
-				$oFctExpr = new FunctionExpression(strtoupper($sAggregationFunction), array($oAttrExpr));
+				$oFctExpr = new FunctionExpression(strtoupper($sAggregationFunction), [$oAttrExpr]);
 				$sFctVar = '_itop_'.$sAggregationFunction.'_';
-				$aFunctions = array($sFctVar => $oFctExpr);
+				$aFunctions = [$sFctVar => $oFctExpr];
 			}
 
 			$iLimit = 0;
 			if (isset($aExtraParams['limit'])) {
 				$iLimit = intval($aExtraParams['limit']);
 			}
-			$aOrderBy = array();
+			$aOrderBy = [];
 			if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by'])) {
 				switch ($aExtraParams['order_by']) {
 					case 'attribute':
@@ -460,7 +457,10 @@ class AjaxRenderController
 						break;
 				}
 			}
-
+			$aQueryParams = [];
+			if (isset($aExtraParams['query_params'])) {
+				$aQueryParams = $aExtraParams['query_params'];
+			}
 			$sSql = $oFilter->MakeGroupByQuery($aQueryParams, $aGroupBy, true, $aFunctions, $aOrderBy, $iLimit);
 
 			$aRes = CMDBSource::QueryToArray($sSql);
@@ -505,8 +505,11 @@ class AjaxRenderController
 			if (isset($aExtraParams['order_direction']) && isset($aExtraParams['order_by'])) {
 				$aOrderBy = ['order_by' => $aExtraParams['order_by'], 'order_direction' => $aExtraParams['order_direction']];
 			}
-
-			$oSet = new CMDBObjectSet($oFilter, $aOrderBy, $aExtraParams);
+			$aQueryParams = [];
+			if (isset($aExtraParams['query_params'])) {
+				$aQueryParams = $aExtraParams['query_params'];
+			}
+			$oSet = new CMDBObjectSet($oFilter, $aOrderBy, $aQueryParams);
 			$iCount = $oSet->Count();
 			$sFormat = 'UI:CountOfObjects';
 			if (isset($aExtraParams['format'])) {
@@ -533,8 +536,11 @@ class AjaxRenderController
 		$aExtraParams = utils::ReadParam('extra_params', '', false, 'raw_data');
 		$oFilter = DBObjectSearch::FromOQL($sFilter);
 		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
-
-		$oSet = new CMDBObjectSet($oFilter, [], $aExtraParams);
+		$aQueryParams = array();
+		if (isset($aExtraParams['query_params'])) {
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		$oSet = new CMDBObjectSet($oFilter, [], $aQueryParams);
 		$iCount = $oSet->Count();
 		$aResult = ['count' => $iCount];
 
