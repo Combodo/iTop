@@ -2149,52 +2149,7 @@ class MenuBlock extends DisplayBlock
 		$sPopoverMenuId = "ibo-other-action-popover-{$sId}";
 
 		if (!$oPage->IsPrintableVersion()) {
-			if (!empty($aActions)) {
-				if (count($aFavoriteActions) > 0) {
-					$sName = 'UI:Menu:OtherActions';
-				} else {
-					$sName = 'UI:Menu:Actions';
-				}
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
-				// TODO Add Js
-				$oActionsBlock->AddSubBlock($oActionButton)
-					->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
-				$oActionButton->AddCSSClass('ibo-action-button')
-					->SetJsCode(<<<JS
-$("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
-$('#{$sMenuTogglerId}').on('click', function(oEvent) {
-	var oEventTarget = $('#{$sMenuTogglerId}');
-	var aEventTargetPos = oEventTarget.position();
-	var popover = $("#{$sPopoverMenuId}");
-	
-	popover.css({
-		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
-		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
-		'z-index': 10060
-	});
-	popover.popover_menu("togglePopup");
-});
-JS
-					);
-			}
-
-			if ($this->m_sStyle == 'details') {
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
-				$oActionButton->SetTooltip(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)))
-					->AddCSSClass('ibo-action-button');
-				$oActionsBlock->AddSubBlock($oActionButton);
-			}
-
-			if (!$oPage->IsPrintableVersion() && ($sRefreshAction != '')) {
-				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
-				$oActionButton->SetIconClass('fas fa-sync')
-					->SetOnClickJsCode($sRefreshAction)
-					->SetTooltip(Dict::S('UI:Button:Refresh'))
-					->AddCSSClass('ibo-action-button');
-				$oActionsBlock->AddSubBlock($oActionButton);
-			}
-
-			foreach (array_reverse($aFavoriteActions) as $sActionId => $aAction) {
+			foreach ($aFavoriteActions as $sActionId => $aAction) {
 				$sIconClass = '';
 				$sLabel = $aAction['label'];
 				$sUrl = $aAction['url'];
@@ -2233,6 +2188,52 @@ JS
 				$oActionButton->AddCSSClass('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
+
+			if (!$oPage->IsPrintableVersion() && ($sRefreshAction != '')) {
+				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
+				$oActionButton->SetIconClass('fas fa-sync')
+					->SetOnClickJsCode($sRefreshAction)
+					->SetTooltip(Dict::S('UI:Button:Refresh'))
+					->AddCSSClass('ibo-action-button');
+				$oActionsBlock->AddSubBlock($oActionButton);
+			}
+
+			if ($this->m_sStyle == 'details') {
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
+				$oActionButton->SetTooltip(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)))
+					->AddCSSClass('ibo-action-button');
+				$oActionsBlock->AddSubBlock($oActionButton);
+			}
+
+			if (!empty($aActions)) {
+				if (count($aFavoriteActions) > 0) {
+					$sName = 'UI:Menu:OtherActions';
+				} else {
+					$sName = 'UI:Menu:Actions';
+				}
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+				// TODO Add Js
+				$oActionsBlock->AddSubBlock($oActionButton)
+					->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
+				$oActionButton->AddCSSClass('ibo-action-button')
+					->SetJsCode(<<<JS
+$("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
+$('#{$sMenuTogglerId}').on('click', function(oEvent) {
+	var oEventTarget = $('#{$sMenuTogglerId}');
+	var aEventTargetPos = oEventTarget.position();
+	var popover = $("#{$sPopoverMenuId}");
+	
+	popover.css({
+		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
+		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
+		'z-index': 10060
+	});
+	popover.popover_menu("togglePopup");
+});
+JS
+					);
+			}
+
 		}
 
 		return $oRenderBlock;
