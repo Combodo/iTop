@@ -8,19 +8,24 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Dashlet;
 
 
+/**
+ * Class DashletFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Dashlet
+ * @since 3.0.0
+ * @internal
+ */
 class DashletFactory
 {
-	public static function MakeForDashletBadge(
-		string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, ?string $sCreateActionUrl = '',
-		?string $sCreateActionLabel = '', array $aRefreshParams = []
-	)
+	public static function MakeForDashletBadge(string $sClassIconUrl, string $sHyperlink, string $iCount, string $sClassLabel, ?string $sCreateActionUrl = '', ?string $sCreateActionLabel = '', array $aRefreshParams = []): DashletBadge
 	{
 		return new DashletBadge($sClassIconUrl, $sHyperlink, $iCount, $sClassLabel, $sCreateActionUrl, $sCreateActionLabel, $aRefreshParams);
 	}
 
-	public static function MakeForDashletHeaderStatic(string $sTitle, string $sIconUrl)
+	public static function MakeForDashletHeaderStatic(string $sTitle, string $sIconUrl, string $sId = null): DashletHeaderStatic
 	{
-		return new DashletHeaderStatic(null, $sTitle, $sIconUrl);
+		return new DashletHeaderStatic($sTitle, $sIconUrl, $sId);
 	}
 
 	public static function MakeForDashletPlainText(string $sText, string $sId = null): DashletPlainText
