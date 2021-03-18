@@ -1687,11 +1687,11 @@ EOF;
 						$oPage->add("<div class=\"page_header\">\n");
 						if (array_key_exists($sClassName, $aAccelerators))
 						{
-							$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
+							$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
 						}
 						else
 						{
-							$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
+							$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aLeafs), Metamodel::GetName($sClassName))."</h2>\n");
 						}
 						$oPage->add("</div>\n");
 						$oLeafsFilter->AddCondition('id', $aLeafs, 'IN');
@@ -1710,7 +1710,7 @@ EOF;
 					{
 						$oPage->add("<div class=\"search-class-result search-class-$sClassName\">\n");
 						$oPage->add("<div class=\"page_header\">\n");
-						$oPage->add("<h2>".MetaModel::GetClassIcon($sClassName)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
+						$oPage->add('<h2 class="ibo-global-search--result--title">'.MetaModel::GetClassIcon($sClassName).Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', 0, Metamodel::GetName($sClassName)).$sEnlargeButton."</h2>\n");
 						$oPage->add("</div>\n");
 						$oPage->add("</div>\n");
 						$oPage->p('&nbsp;'); // Some space ?

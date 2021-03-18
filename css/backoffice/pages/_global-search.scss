@@ -1,0 +1,12 @@
+$ibo-global-search--result--title--image--max-height: 48px !default;
+$ibo-global-search--result--title--image--max-width: $ibo-global-search--result--title--image--max-height !default;
+$ibo-global-search--result--title--image--margin-right: 8px !default;
+
+.ibo-global-search--result--title{
+  @extend %ibo-font-ral-nor-150;
+  >img{
+    max-height: $ibo-global-search--result--title--image--max-height;
+    max-width: $ibo-global-search--result--title--image--max-width;
+    margin-right: $ibo-global-search--result--title--image--margin-right;
+  }
+}
