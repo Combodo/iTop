@@ -6,7 +6,7 @@
       <parent>WelcomeMenu</parent>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
-        <title/>
+        <title>Menu:WelcomeMenuPage</title>
         <cells>
           <cell id="0">
             <rank>0</rank>
