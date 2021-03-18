@@ -101,14 +101,14 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
 .switch {
   position: relative;
   display: inline-block;
-  width: 30px;
-  height: 24px;
+  width: 36px;
+  height: 20px;
   vertical-align: baseline;
 }
 
 /* Hide default HTML checkbox */
 .switch input {
-	display: none;
+  display: none;
 }
 
 /* The slider */
@@ -119,35 +119,38 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
   left: 0;
   right: 0;
   bottom: 0;
+  background-color: $ibo-color-secondary-600;
+  transition: .4s;
 }
 
 .slider:before {
   position: absolute;
-  right: 5px;
-  bottom: 2px;
-  color: $ibo-color-secondary-800;
-  content: "\f007";
-  font-family: "Font Awesome 5 Free", serif;
-  font-size: $ibo-font-size-100;
-  font-weight: 900;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 3px;
+  bottom: 3px;
+  background-color: $ibo-color-secondary-300;
+  transition: .4s;
 }
 
-.slider:after {
-  position: absolute;
-  left: 5px;
-  bottom: 1px;
-  color: $ibo-color-primary-600;
-  content: "\f1ad";
-  font-family: "Font Awesome 5 Free", serif;
-  font-size: $ibo-font-size-150;
-  font-weight: 900;
+input:checked + .slider {
+  background-color: $ibo-color-primary-600;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px $ibo-color-primary-600;
 }
 
 input:checked + .slider:before {
-  content: "\f1ad";
+  transform: translateX(14.5px);
 }
 
-input:checked + .slider:after {
-  content: "\f007";
+/* Rounded sliders */
+.slider.round {
+  border-radius: 20px;
 }
 
+.slider.round:before {
+  border-radius: 7px;
+}

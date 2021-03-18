@@ -56,3 +56,59 @@ $ibo-dashboard--grid--elements-spacing-y: $ibo-dashlet--elements-spacing-y !defa
     min-height: 40px;
   }
 }
+
+
+// Round Toggle
+/* The switch - the box around the slider */
+.ibo-dashboard--switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 24px;
+  vertical-align: baseline;
+}
+
+/* Hide default HTML checkbox */
+.ibo-dashboard--switch input {
+  display: none;
+}
+
+/* The slider */
+.ibo-dashboard--slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.ibo-dashboard--slider:before {
+  position: absolute;
+  right: 5px;
+  bottom: 2px;
+  color: $ibo-color-secondary-800;
+  content: "\f007";
+  font-family: "Font Awesome 5 Free", serif;
+  font-size: $ibo-font-size-100;
+  font-weight: 900;
+}
+
+.ibo-dashboard--slider:after {
+  position: absolute;
+  left: 5px;
+  bottom: 1px;
+  color: $ibo-color-primary-600;
+  content: "\f1ad";
+  font-family: "Font Awesome 5 Free", serif;
+  font-size: $ibo-font-size-150;
+  font-weight: 900;
+}
+
+input:checked + .ibo-dashboard--slider:before {
+  content: "\f1ad";
+}
+
+input:checked + .ibo-dashboard--slider:after {
+  content: "\f007";
+}

@@ -1033,7 +1033,7 @@ EOF
 		$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
 
 		$sSelectorHtml = '<div id="ibo-dashboard-selector'.$sDivId.'" class="ibo-top-bar--toolbar-dashboard-selector" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
-		$sSelectorHtml .= '<label class="switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="slider"></span></label></input></label>';
+		$sSelectorHtml .= '<label class="ibo-dashboard--switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="ibo-dashboard--slider"></span></label></input></label>';
 		$sSelectorHtml .= '</div>';
 
 		$sFile = addslashes($this->GetDefinitionFile());
