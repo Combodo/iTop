@@ -16,6 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+;
 $(function () {
 	$.widget('itop.dashlet_badge',
 		{
