@@ -23,9 +23,9 @@ class DashletFactory
 		return new DashletHeaderStatic(null, $sTitle, $sIconUrl);
 	}
 
-	public static function MakeForDashletText(string $sId, string $sText)
+	public static function MakeForDashletPlainText(string $sText, string $sId = null): DashletPlainText
 	{
-		return new DashletHeaderStatic($sId, '', '', $sText);
+		return new DashletPlainText($sText, $sId);
 	}
 
 }

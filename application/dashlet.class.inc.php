@@ -853,7 +853,7 @@ class DashletPlainText extends Dashlet
 
 		$sId = 'plaintext_'.($bEditMode ? 'edit_' : '').$this->sId;
 
-		return DashletFactory::MakeForDashletText($sId, $sText);
+		return DashletFactory::MakeForDashletPlainText($sText, $sId);
 	}
 
 	/**

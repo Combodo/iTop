@@ -168,6 +168,7 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletContainer' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletContainer.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletFactory' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletHeaderStatic' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletHeaderStatic.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\Dashlet\\DashletPlainText' => $baseDir . '/sources/application/UI/Base/Component/Dashlet/DashletPlainText.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTable' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTable.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableSettings' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTableSettings.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\DataTable\\DataTableUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/DataTable/DataTableUIBlockFactory.php',
