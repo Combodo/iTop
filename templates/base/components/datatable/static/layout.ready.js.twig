@@ -41,7 +41,7 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     paging: false,
     {% endif %}
     dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
-    lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+    lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     columns: [
         {% for key, column in oUIBlock.GetColumns() %}
         {

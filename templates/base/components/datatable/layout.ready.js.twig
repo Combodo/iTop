@@ -72,7 +72,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollY: maxHeight{{ sListId }},
     scrollX: true,
     scrollCollapse: true,
-    lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'Portal:Datatables:Language:DisplayLength:All'|dict_s }}"]],
+    lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
     {% if( oUIBlock.GetOptions("sort")[0] is defined ) %}
     order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
