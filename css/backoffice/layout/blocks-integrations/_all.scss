@@ -3,9 +3,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+@import "dashlet-within-dashboard";
+@import "add-to-dashboard";
 @import "caselog-entry-form-within-activity-panel";
 @import "panel-with-tab-container";
 @import "panel-with-datatable";
 @import "object-details-with-tab-container";
 @import "medallion-with-blocklist";
-@import "add-to-dashboard";
