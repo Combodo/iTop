@@ -2185,8 +2185,11 @@ class MenuBlock extends DisplayBlock
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sActionId, $sTarget);
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
 				$oActionButton->AddCSSClass('ibo-action-button');
+				if(empty($sLabel)){
+					$oActionButton->SetTooltip(Dict::S($sActionId));
+				}
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 
@@ -2200,9 +2203,8 @@ class MenuBlock extends DisplayBlock
 			}
 
 			if ($this->m_sStyle == 'details') {
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral("{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'fas fa-search', 'UI:SearchFor_Class');
-				$oActionButton->SetTooltip(Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)))
-					->AddCSSClass('ibo-action-button');
+				$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '','UI:SearchFor_Class');
+				$oActionButton->AddCSSClass('ibo-action-button');
 				$oActionsBlock->AddSubBlock($oActionButton);
 			}
 
@@ -2212,7 +2214,7 @@ class MenuBlock extends DisplayBlock
 				} else {
 					$sName = 'UI:Menu:Actions';
 				}
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sMenuTogglerId);
 				// TODO Add Js
 				$oActionsBlock->AddSubBlock($oActionButton)
 					->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));

@@ -1115,7 +1115,7 @@ JS
 		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
 		$sName = 'UI:Dashboard:Actions';
 		$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
-		$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName),$sName, '', false, $sMenuTogglerId);
 		$oActionButton->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler');
 
 		$oToolbar->AddSubBlock($oActionButton);

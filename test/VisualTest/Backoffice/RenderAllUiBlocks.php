@@ -23,6 +23,7 @@
 namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -100,8 +101,8 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 //////////
 // Buttons
 //////////
-$oButtonsTitle = new Html('<h2 id="title-buttons">Buttons examples</h2>');
-$oPage->AddUiBlock($oButtonsTitle);
+$oButtonsJSTitle = new Html('<h2 id="title-buttons">ButtonsJS examples</h2>');
+$oPage->AddUiBlock($oButtonsJSTitle);
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral', 'neutral'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary'));
@@ -122,9 +123,13 @@ $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValida
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral(utils::GetAbsoluteUrlAppRoot(), 'Link neutral dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button'));
+
+$oButtonsURLTitle = new Html('<h2 id="title-buttons">ButtonsURL examples</h2>');
+$oPage->AddUiBlock($oButtonsURLTitle); 
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link neutral'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button', '#'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link primary')->SetColor(Button::ENUM_COLOR_PRIMARY));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button primary', '#')->SetColor(Button::ENUM_COLOR_PRIMARY));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 

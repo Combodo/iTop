@@ -37,15 +37,6 @@ class Button extends UIBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/button/layout';
 
 	// Specific constants
-	/** @var string ENUM_TYPE_BUTTON */
-	public const ENUM_TYPE_BUTTON = 'button';
-	/** @var string ENUM_TYPE_SUBMIT */
-	public const ENUM_TYPE_SUBMIT = 'submit';
-	/** @var string ENUM_TYPE_RESET */
-	public const ENUM_TYPE_RESET = 'reset';
-	/** @var string DEFAULT_TYPE */
-	public const DEFAULT_TYPE = self::ENUM_TYPE_BUTTON;
-
 	/** @var string ENUM_ACTION_TYPE_REGULAR */
 	public const ENUM_ACTION_TYPE_REGULAR = 'regular';
 	/** @var string ENUM_ACTION_TYPE_ALTERNATIVE */
@@ -74,12 +65,6 @@ class Button extends UIBlock
 
 	/** @var string $sLabel */
 	protected $sLabel;
-	/** @var string $sType The HTML type of the button (eg. 'submit', 'button', ...) */
-	protected $sType;
-	/** @var string $sName The HTML name of the button, used by forms */
-	protected $sName;
-	/** @var string $sValue The HTML value of the button, used by forms */
-	protected $sValue;
 	/** @var string $sTooltip */
 	protected $sTooltip;
 	/** @var string $sIconClass */
@@ -88,8 +73,6 @@ class Button extends UIBlock
 	protected $sActionType;
 	/** @var string $sColor */
 	protected $sColor;
-	/** @var bool $bIsDisabled */
-	protected $bIsDisabled;
 	/** @var string $sJsCode */
 	protected $sJsCode;
 	/** @var string $sOnClickJsCode */
@@ -100,9 +83,6 @@ class Button extends UIBlock
 	 *
 	 * @param string $sLabel
 	 * @param string|null $sId
-	 * @param string $sName
-	 * @param string $sValue
-	 * @param string $sType
 	 * @param string $sTooltip
 	 * @param string $sIconClass
 	 * @param string $sActionType
@@ -111,24 +91,19 @@ class Button extends UIBlock
 	 * @param string $sOnClickJsCode
 	 */
 	public function __construct(
-		string $sLabel, string $sId = null, string $sName = '', string $sValue = '', string $sType = self::DEFAULT_TYPE,
-		string $sTooltip = '', string $sIconClass = '',
+		string $sLabel, string $sId = null,	string $sTooltip = '', string $sIconClass = '',
 		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '',
 		string $sOnClickJsCode = ''
 	) {
 		parent::__construct($sId);
 
 		$this->sLabel = $sLabel;
-		$this->sName = $sName;
-		$this->sValue = $sValue;
-		$this->sType = $sType;
 		$this->sTooltip = $sTooltip;
 		$this->sIconClass = $sIconClass;
 		$this->sActionType = $sActionType;
 		$this->sColor = $sColor;
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
-		$this->bIsDisabled = false;
 		$this->aDataAttributes = ['role' => 'ibo-button'];
 	}
 
@@ -151,62 +126,6 @@ class Button extends UIBlock
 		return $this;
 	}
 
-	/**
-	 * @return string
-	 */
-	public function GetType()
-	{
-		return $this->sType;
-	}
-
-	/**
-	 * @param string $sType
-	 *
-	 * @return $this
-	 */
-	public function SetType(string $sType)
-	{
-		$this->sType = $sType;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetName()
-	{
-		return $this->sName;
-	}
-
-	/**
-	 * @param string $sName
-	 *
-	 * @return $this
-	 */
-	public function SetName(string $sName)
-	{
-		$this->sName = $sName;
-		return $this;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetValue()
-	{
-		return $this->sValue;
-	}
-
-	/**
-	 * @param string $sValue
-	 *
-	 * @return $this
-	 */
-	public function SetValue(string $sValue)
-	{
-		$this->sValue = $sValue;
-		return $this;
-	}
 
 	/**
 	 * @return string
@@ -282,25 +201,6 @@ class Button extends UIBlock
 	public function SetColor(string $sColor)
 	{
 		$this->sColor = $sColor;
-		return $this;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function IsDisabled()
-	{
-		return $this->bIsDisabled;
-	}
-
-	/**
-	 * @param bool $bIsDisabled
-	 *
-	 * @return $this
-	 */
-	public function SetIsDisabled(bool $bIsDisabled)
-	{
-		$this->bIsDisabled = $bIsDisabled;
 		return $this;
 	}
 

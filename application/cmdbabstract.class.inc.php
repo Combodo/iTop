@@ -1921,25 +1921,29 @@ HTML
 						// N°3227 button to open predefined queries dialog
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
-						$oPredefQueryButton = ButtonUIBlockFactory::MakeIconLink(
+						$oPredefQueryButton = ButtonUIBlockFactory::MakeIconAction(
 							'fas fa-search',
 							$sSearchQueryLbl,
 							null,
 							null,
-							null,
+							false,
 							$sPredefinedBtnId
 						);
-						$oPredefQueryButton->AddCSSClass('ibo-action-button');
+						$oPredefQueryButton->AddCSSClass('ibo-action-button')
+						->SetOnClickJsCode(
+							<<<JS
+	oACWidget_{$iId}.Search();
+JS
+						);
 						$oPredefQueryRenderer = new BlockRenderer($oPredefQueryButton);
 						$sAdditionalStuff = $oPredefQueryRenderer->RenderHtml();
+						$oPage->add_ready_script($oPredefQueryRenderer->RenderJsInline($oPredefQueryButton::ENUM_JS_TYPE_ON_INIT));
+
 						$oPage->add_ready_script(<<<JS
 // noinspection JSAnnotator
 oACWidget_{$iId} = new ExtKeyWidget('$iId', 'QueryOQL', 'SELECT QueryOQL WHERE is_template = \'yes\'', '$sSearchQueryLbl', true, null, null, true, true, 'oql');
 // noinspection JSAnnotator
 oACWidget_{$iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>Use the search form above to search for objects to be added.</p></div>";
-$("#$sPredefinedBtnId").on('click', function () {
-	oACWidget_{$iId}.Search();
-});
 
 if ($('#ac_dlg_{$iId}').length == 0)
 {
@@ -1961,25 +1965,25 @@ JS
 						$sTestResId = 'query_res_'.$sFieldPrefix.$sAttCode.$sNameSuffix; //$oPage->GetUniqueId();
 						$sBaseUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?expression=';
 						$sTestQueryLbl = Dict::S('UI:Edit:TestQuery');
-						$oTestQueryButton = ButtonUIBlockFactory::MakeIconLink(
+						$oTestQueryButton = ButtonUIBlockFactory::MakeIconAction(
 							'fas fa-play',
 							$sTestQueryLbl,
 							null,
 							null,
-							null,
+							false,
 							$sTestResId
 						);
-						$oTestQueryButton->AddCSSClass('ibo-action-button');
-						$oPage->add_ready_script(<<<JS
-$("#$sTestResId").on('click', function () {
-	var sQueryRaw = $("#$iId").val(),
-		sQueryEncoded = encodeURI(sQueryRaw);
-	window.open('$sBaseUrl' + sQueryEncoded, '_blank');
-});
+						$oTestQueryButton->AddCSSClass('ibo-action-button')
+						->SetOnClickJsCode(
+							<<<JS
+var sQueryRaw = $("#$iId").val(),
+sQueryEncoded = encodeURI(sQueryRaw);
+window.open('$sBaseUrl' + sQueryEncoded, '_blank');
 JS
 						);
 						$oTestQueryRenderer = new BlockRenderer($oTestQueryButton);
 						$sAdditionalStuff .= $oTestQueryRenderer->RenderHtml();
+						$oPage->add_ready_script($oTestQueryRenderer->RenderJsInline($oTestQueryButton::ENUM_JS_TYPE_ON_INIT));
 					} else {
 						$sAdditionalStuff = '';
 					}

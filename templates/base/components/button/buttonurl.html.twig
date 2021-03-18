@@ -1,10 +1,12 @@
-<button id="{{ oUIBlock.GetId() }}"
+<a id="{{ oUIBlock.GetId() }}"
         class="ibo-button ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
         {% if oUIBlock.GetDataAttributes() %}
-                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
-                        data-{{ sName }}="{{ sValue }}"
-                {% endfor %}
+            {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                data-{{ sName }}="{{ sValue }}"
+            {% endfor %}
         {% endif %}
+        href="{{ oUIBlock.GetURL() }}"
+        target="{{ oUIBlock.GetTarget() }}"
         {% if oUIBlock.GetTooltip() is not empty %} data-tooltip-content="{{ oUIBlock.GetTooltip() }}" {% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
@@ -13,4 +15,4 @@
     {% if oUIBlock.GetLabel() is not empty %}
         <span class="ibo-button--label">{{ oUIBlock.GetLabel() }}</span>
     {% endif %}
-</button>
+</a>

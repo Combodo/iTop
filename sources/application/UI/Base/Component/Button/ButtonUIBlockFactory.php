@@ -51,7 +51,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
 	public static function MakeNeutral(string $sLabel, string $sName, ?string $sId = null): Button {
-		$oButton = new Button($sLabel, $sId);
+		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
 			->SetColor(Button::ENUM_COLOR_NEUTRAL)
 			->SetName($sName);
@@ -284,6 +284,32 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
+
+	/**
+	 * @param string $sIconClasses
+	 * @param string $sTooltipText
+	 * @param string|null $sName
+	 * @param string|null $sValue
+	 * @param bool $bIsSubmit
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\ButtonJS
+	 */
+	public static function MakeIconAction(
+		string $sIconClasses,
+		string $sTooltipText = '',
+		string $sName = null,
+		string $sValue = null,
+		bool $bIsSubmit = false,
+		?string $sId = null
+	) {
+		$oButton =  static::MakeForAction('', Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+			$bIsSubmit, $sId);
+		$oButton->SetIconClass($sIconClasses);
+		$oButton->SetTooltip($sTooltipText);
+
+		return $oButton;
+	}
 	//----------------------------------------------------------------------------------------------
 	// Link buttons, mostly used outside forms, to redirect somewhere whilst keeping a button aspect
 	//----------------------------------------------------------------------------------------------
@@ -294,28 +320,23 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sURL
 	 * @param string|null $sLabel
 	 * @param string|null $sIconClasses
-	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sTarget
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
 	public static function MakeLinkNeutral(
-		string $sURL, ?string $sLabel = null, ?string $sIconClasses = null, ?string $sName = null, ?string $sTarget = null,
+		string $sURL, ?string $sLabel = '', ?string $sIconClasses = null, ?string $sTarget = null,
 		?string $sId = null
 	): Button {
+		if (empty($sTarget)) {
+			$sTarget = ButtonURL::DEFAULT_TARGET;
+		}
 		$sType = empty($sIconClasses) ? Button::ENUM_ACTION_TYPE_REGULAR : Button::ENUM_ACTION_TYPE_ALTERNATIVE;
-		$oButton = static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, $sType, null, $sName, false, $sId);
+		$oButton = static::MakeForLink($sLabel, $sURL,Button::ENUM_COLOR_NEUTRAL, $sType,  $sTarget, $sId);
 
 		if (!empty($sIconClasses)) {
 			$oButton->SetIconClass($sIconClasses);
-		}
-
-		if (!empty($sURL)) {
-			if (empty($sTarget)) {
-				$sTarget = "_self";
-			}
-			$oButton->SetOnClickJsCode("window.open('{$sURL}', '{$sTarget}');");
 		}
 
 		return $oButton;
@@ -325,26 +346,21 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @param string $sIconClasses
 	 * @param string $sTooltipText
 	 * @param string|null $sURL
-	 * @param string|null $sName
 	 * @param string|null $sTarget
 	 * @param string|null $sId
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\ButtonURL
 	 */
 	public static function MakeIconLink(
-		string $sIconClasses, string $sTooltipText, ?string $sURL = null, ?string $sName = null, ?string $sTarget = null,
+		string $sIconClasses, string $sTooltipText, ?string $sURL = '', ?string $sTarget = null,
 		?string $sId = null
 	) {
-		$oButton = static::MakeForAction('', Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, null, $sName, false, $sId);
+		if (empty($sTarget)) {
+			$sTarget = ButtonURL::DEFAULT_TARGET;
+		}
+		$oButton = static::MakeForLink('', $sURL,Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sTarget, $sId);
 		$oButton->SetIconClass($sIconClasses);
 		$oButton->SetTooltip($sTooltipText);
-
-		if (!empty($sURL)) {
-			if (empty($sTarget)) {
-				$sTarget = "_self";
-			}
-			$oButton->SetOnClickJsCode("window.open('{$sURL}', '{$sTarget}');");
-		}
 
 		return $oButton;
 	}
@@ -363,7 +379,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sIconClasses, string $sTooltipText, ?string $sURL = null, ?string $sName = null, ?string $sTarget = null,
 		?string $sId = null
 	) {
-		$oButton = static::MakeIconLink($sIconClasses, $sTooltipText, $sURL, $sName, $sTarget, $sId);
+		$oButton = static::MakeIconLink($sIconClasses, $sTooltipText, $sURL,  $sTarget, $sId);
 		$oButton->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
 		$oButton->SetTooltip($sTooltipText);
 		return $oButton;
@@ -384,7 +400,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * @param bool $bIsSubmit
 	 * @param string|null $sId
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\ButtonJS
 	 * @internal
 	 */
 	protected static function MakeForAction(
@@ -396,7 +412,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		$oButton = new Button($sLabel, $sId);
+		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);
 
@@ -410,9 +426,39 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 		// Set as submit button if necessary
 		if ($bIsSubmit === true) {
-			$oButton->SetType(Button::ENUM_TYPE_SUBMIT);
+			$oButton->SetType(ButtonJS::ENUM_TYPE_SUBMIT);
 		}
 
+		return $oButton;
+	}
+
+	/**
+	 * Internal helper
+	 *
+	 * @internal
+	 *
+	 * @param string $sLabel
+	 *
+	 * @param string $sURL
+	 * @param string $sColor See Button::$sColor
+	 * @param string $sActionType See Button::$sActionType
+	 * @param string|null $sTarget
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\ButtonURL
+	 */
+	protected static function MakeForLink(
+		string $sLabel,
+		string $sURL,
+		string $sColor,
+		string $sActionType,
+		string $sTarget = null,
+		?string $sId = null
+	): Button {
+		$oButton = new ButtonURL($sLabel, $sURL, $sId, $sTarget);
+		$oButton->SetActionType($sActionType)
+			->SetColor($sColor);
+		
 		return $oButton;
 	}
 }
