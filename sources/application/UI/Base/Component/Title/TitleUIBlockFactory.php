@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -9,6 +9,8 @@ namespace Combodo\iTop\Application\UI\Base\Component\Title;
 
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Text\Text;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 class TitleUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -17,7 +19,7 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 
 	public static function MakeForPage(string $sTitle, ?string $sId = null)
 	{
-		return new Title($sTitle, 1, $sId);
+		return new Title(new Text($sTitle), 1, $sId);
 	}
 
 	public static function MakeForPageWithIcon(
@@ -25,7 +27,7 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 		?string $sId = null
 	)
 	{
-		$oTitle = new Title($sTitle, 1, $sId);
+		$oTitle = new Title(new Text($sTitle), 1, $sId);
 		$oTitle->SetIcon($sIconUrl, $sIconCoverMethod, $bIsMedallion);
 
 		return $oTitle;
@@ -33,6 +35,11 @@ class TitleUIBlockFactory extends AbstractUIBlockFactory
 
 	public static function MakeNeutral(string $sTitle, int $iLevel = 1, ?string $sId = null)
 	{
-		return new Title($sTitle, $iLevel, $sId);
+		return new Title(new Text($sTitle), $iLevel, $sId);
+	}
+
+	public static function MakeStandard(UIBlock $oTitle, int $iLevel = 1, ?string $sId = null)
+	{
+		return new Title($oTitle, $iLevel, $sId);
 	}
 }

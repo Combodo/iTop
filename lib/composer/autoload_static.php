@@ -449,6 +449,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\QuickCreate\\QuickCreateHelper' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/QuickCreate/QuickCreateHelper.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\Spinner' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Spinner/Spinner.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Spinner\\SpinnerUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Spinner/SpinnerUIBlockFactory.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\Text\\Text' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Text/Text.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\Title' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Title/Title.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Title\\TitleUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Title/TitleUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Toolbar\\Toolbar' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Toolbar/Toolbar.php',

@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
@@ -23,7 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
 
@@ -233,21 +220,19 @@ try
 			$oP->TrashUnexpectedOutput();
 			$oP->output();
 			exit;
-		}
-		else
-		{
+		} else {
 			$sTitle = Dict::S('UI:Audit:AuditErrors');
 			$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
 			$oP->AddUiBlock($oBackButton);
-			$oP->AddUiBlock(new Title($sTitle . $oAuditRule->Get('description')));
-			
-		    $sBlockId = 'audit_errors';
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+
+			$sBlockId = 'audit_errors';
 			$oP->p("<div id=\"$sBlockId\">");
 			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv', array('show_obsolete_data' => true));
 			$oBlock->Display($oP, 1);
-			$oP->p("</div>");    
+			$oP->p("</div>");
 			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
 			$oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block			
 			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
@@ -259,49 +244,49 @@ try
 		break;
 						
 		case 'errors':
-		$sTitle = Dict::S('UI:Audit:AuditErrors');
-		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-		$iCategory = utils::ReadParam('category', '');
-		$iRuleIndex = utils::ReadParam('rule', 0);
-	
-		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
-		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
-		$oDefinitionFilter->UpdateContextFromUser();
-		FilterByContext($oDefinitionFilter, $oAppContext);
-		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
-		$oErrorObjectSet = new CMDBObjectSet($oFilter);
-		$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
-		$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
-		$oP->AddUiBlock($oBackButton);
-		$oP->AddUiBlock(new Title($sTitle . $oAuditRule->Get('description')));
-	    $sBlockId = 'audit_errors';
-		$oP->p("<div id=\"$sBlockId\">");
-		$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
-		$oBlock->Display($oP, 1);
-		$oP->p("</div>");
-		$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
-		$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
-		break;
+			$sTitle = Dict::S('UI:Audit:AuditErrors');
+			$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+			$iCategory = utils::ReadParam('category', '');
+			$iRuleIndex = utils::ReadParam('rule', 0);
+
+			$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
+			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+			$oDefinitionFilter->UpdateContextFromUser();
+			FilterByContext($oDefinitionFilter, $oAppContext);
+			$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+			$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
+			$oErrorObjectSet = new CMDBObjectSet($oFilter);
+			$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
+			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
+			$oP->AddUiBlock($oBackButton);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+			$sBlockId = 'audit_errors';
+			$oP->p("<div id=\"$sBlockId\">");
+			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
+			$oBlock->Display($oP, 1);
+			$oP->p("</div>");
+			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+			$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
+			break;
 		
 		case 'audit':
 		default:
 		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
-		$oP->AddUiBlock(new Title(Dict::S('UI:Audit:InteractiveAudit')));
+		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:InteractiveAudit')));
 		$oTotalBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
 		$oErrorBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
 		$oWorkingBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
 
-		$aCSSClasses = ['ibo-dashlet--is-inline','ibo-dashlet-badge'];
-		
+		$aCSSClasses = ['ibo-dashlet--is-inline', 'ibo-dashlet-badge'];
+
 		$oDashletContainerTotal = new DashletContainer();
 		$oDashletContainerError = new DashletContainer();
 		$oDashletContainerWorking = new DashletContainer();
-		
+
 		$oDashletContainerTotal->AddSubBlock($oTotalBlock)->AddCSSClasses($aCSSClasses);
 		$oDashletContainerError->AddSubBlock($oErrorBlock)->AddCSSClasses($aCSSClasses);
 		$oDashletContainerWorking->AddSubBlock($oWorkingBlock)->AddCSSClasses($aCSSClasses);
-		
+
 		$oDashboardRow = new DashboardRow();
 
 		$oDashboardColumnTotal = new DashboardColumn(false, true);

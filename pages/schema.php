@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
@@ -22,7 +9,6 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
 
 require_once('../approot.inc.php');
@@ -1053,7 +1039,7 @@ $oPage->no_cache();
 $oPage->SetBreadCrumbEntry('ui-tool-datamodel', Dict::S('Menu:DataModelMenu'), Dict::S('Menu:DataModelMenu+'), '',
 	'fas fa-book', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-$oTitle = new Title(Dict::S('UI:Schema:Title'));
+$oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Schema:Title'));
 $oPage->AddUiBlock($oTitle);
 $oLayout->AddSideHtml("<div class='ibo-datamodel-viewer--classes-list'> ");
 DisplayClassesList($oPage, $oLayout, $sContext);

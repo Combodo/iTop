@@ -4961,7 +4961,7 @@ EOF
 					$sSubtitle = Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects),
 						MetaModel::GetName($sClass));
 				}
-				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sSubtitle));
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeStandard(new Html($sSubtitle)));
 
 				foreach ($aObjects as $oObj) {
 					$aKeys[] = $oObj->GetKey();

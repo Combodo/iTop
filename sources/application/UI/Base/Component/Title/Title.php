@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Title;
 
 
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
@@ -14,7 +15,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  *
  * @package Combodo\iTop\Application\UI\Base\Component\Title
  */
-class Title extends UIBlock
+class Title extends UIContentBlock
 {
 	// Overloaded constants
 	/** @inheritDoc */
@@ -31,8 +32,6 @@ class Title extends UIBlock
 	/** @var string */
 	public const DEFAULT_ICON_COVER_METHOD = self::ENUM_ICON_COVER_METHOD_CONTAIN;
 
-	/** @var string */
-	protected $sTitle;
 	/** @var int */
 	protected $iLevel;
 	/** @var string */
@@ -44,22 +43,14 @@ class Title extends UIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function __construct(string $sTitle = '', int $iLevel = 1, ?string $sId = null)
+	public function __construct(UIBlock $oTitle, int $iLevel = 1, ?string $sId = null)
 	{
 		parent::__construct($sId);
-		$this->sTitle = $sTitle;
 		$this->iLevel = $iLevel;
 		$this->sIconUrl = null;
 		$this->sIconCoverMethod = static::DEFAULT_ICON_COVER_METHOD;
 		$this->bIsMedallion = true;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function GetTitle(): string
-	{
-		return $this->sTitle;
+		$this->AddSubBlock($oTitle);
 	}
 
 	/**
