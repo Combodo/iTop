@@ -20,13 +20,25 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
  */
 class Pill extends UIContentBlock
 {
+	// Overloaded constants
+	public const BLOCK_CODE = 'ibo-pill';
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/pill/layout';
+
 	/** @var string */
 	protected $sColor;
+	/** @var string URL to go to if the pill is clicked */
+	protected $sUrl;
 
+	/**
+	 * Pill constructor.
+	 *
+	 * @param string $sColor
+	 */
 	public function __construct(string $sColor)
 	{
-		parent::__construct(null, ["ibo-pill ibo-pill-is-{$sColor}"]);
+		parent::__construct();
 		$this->SetColor($sColor);
+		$this->SetUrl('');
 	}
 
 	/**
@@ -47,5 +59,33 @@ class Pill extends UIContentBlock
 		$this->sColor = $sColor;
 
 		return $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetUrl(): string
+	{
+		return $this->sUrl;
+	}
+
+	/**
+	 * @param string $sUrl
+	 *
+	 * @return $this
+	 */
+	public function SetUrl(string $sUrl)
+	{
+		$this->sUrl = $sUrl;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function HasUrl(): bool
+	{
+		return !empty($this->sUrl);
 	}
 }

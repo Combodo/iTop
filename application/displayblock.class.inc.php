@@ -1016,13 +1016,13 @@ JS
 		$oBlock = new UIContentBlockWithJSRefreshCallback(null, ["ibo-dashlet-header-dynamic--container"]);
 		foreach ($aStateLabels as $sStateValue => $sStateLabel) {
 			$aCount = $aCounts[$sStateValue];
-			$oBadge = PillFactory::MakeForState($sClass, $sStateValue);
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
-			$sColor = $oBadge->GetColor();
-			$oBadge->AddHtml("<a class=\"ibo-dashlet-header-dynamic--count ibo-pill-is-{$sColor}\" href=\"$sHyperlink\">$sCountLabel</a>");
-			$oBadge->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-pill-is-{$sColor}\">$sStateLabel</span>");
-			$oBlock->AddSubBlock($oBadge);
+			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
+				->SetUrl($sHyperlink)
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span>")
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label\">$sStateLabel</span>");
+			$oBlock->AddSubBlock($oPill);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
 		$aRefreshParams = ['filter' => $this->m_oFilter->ToOQL(), "extra_params" => json_encode($aExtraParams)];

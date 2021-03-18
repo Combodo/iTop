@@ -82,7 +82,7 @@ $ibo-pill-states-colors: (
 );
 
 @each $sType, $aColors in $ibo-pill-states-colors {
-  .ibo-pill-is-#{$sType} {
+  .ibo-pill.ibo-is-#{$sType} {
     color: map-get($aColors, 'secondary-color');
     background-color: map-get($aColors, 'primary-color');
   }

@@ -20,7 +20,12 @@ use Combodo\iTop\Application\UI\Helper\UIHelper;
  */
 class PillFactory
 {
-
+	/**
+	 * @param string $sClass
+	 * @param string $sStateCode
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Pill\Pill
+	 */
 	public static function MakeForState(string $sClass, string $sStateCode)
 	{
 		$sColor = UIHelper::GetColorFromStatus($sClass, $sStateCode);
