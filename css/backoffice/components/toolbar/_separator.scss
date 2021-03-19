@@ -1,0 +1,21 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-toolbar-vertical-separator--width: 1px !default;
+$ibo-toolbar-vertical-separator--height: 16px !default;
+$ibo-toolbar-vertical-separator--margin-x: 0.75rem !default;
+$ibo-toolbar-vertical-separator--margin-y: 0 !default;
+$ibo-toolbar-vertical-separator--border-size: 1px !default;
+$ibo-toolbar-vertical-separator--border-color: $ibo-color-grey-500 !default;
+
+/* SCSS Rules */
+.ibo-toolbar-vertical-separator {
+  display: inline-flex;
+  border-right: $ibo-toolbar-vertical-separator--border-size solid $ibo-toolbar-vertical-separator--border-color;
+  width: $ibo-toolbar-vertical-separator--width;
+  height: $ibo-toolbar-vertical-separator--height;
+  margin: $ibo-toolbar-vertical-separator--margin-y $ibo-toolbar-vertical-separator--margin-x;
+}

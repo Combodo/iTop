@@ -1,0 +1,9 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    <span id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }}
+        {% if oUIBlock.GetAdditionalCSSClassesAsString() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}
+        {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+          data-role="ibo-toolbar-vertical-separator">
+    </span>
+{% endapply %}
