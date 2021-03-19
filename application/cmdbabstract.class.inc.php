@@ -3406,6 +3406,9 @@ HTML;
 	/**
 	 * Get the list of actions to be displayed as 'shortcuts' (i.e buttons) instead of inside the Actions popup menu
 	 *
+	 * @api
+	 * @overwritable-hook
+	 *
 	 * @param $sFinalClass string The actual class of the objects for which to display the menu
 	 *
 	 * @return array the list of menu codes (i.e dictionary entries) that can be displayed as shortcuts next to the
