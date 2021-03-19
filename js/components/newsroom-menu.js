@@ -178,7 +178,7 @@ $(function()
 			this._buildMenu(aAllMessages);
 		},
 		_refreshTogglerMessage : function(iItemCount){
-			var sMessage = this.options.labels.no_notification;
+			var sMessage = Dict.S(this.options.labels.no_notification);
 			if(iItemCount > 0){
 				sMessage = Dict.Format(this.options.labels.x_notifications, iItemCount);
 			}
