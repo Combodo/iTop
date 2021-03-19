@@ -488,6 +488,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:OtherActions' => 'Other Actions',
 	'UI:Menu:Transitions' => 'Transitions',
+	'UI:Menu:OtherTransitions' => 'Other Transitions',
 	'UI:Menu:New' => 'New...',
 	'UI:Menu:Add' => 'Add...',
 	'UI:Menu:Manage' => 'Manage...',

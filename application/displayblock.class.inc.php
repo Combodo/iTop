@@ -2195,7 +2195,11 @@ class MenuBlock extends DisplayBlock
 
 			// - Others
 			if (!empty($aTransitionActions)) {
-				$sName = 'UI:Menu:Transitions';
+				if (count($aFavoriteTransitionActions) > 0) {
+					$sName = 'UI:Menu:OtherTransitions';
+				} else {
+					$sName = 'UI:Menu:Transitions';
+				}
 				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-map-signs', Dict::S($sName), $sName, '', false, $sTransitionActionsMenuTogglerId)
 					->AddCSSClasses(['ibo-action-button', 'ibo-transition-action-button'])
 					->SetJsCode(<<<JS
