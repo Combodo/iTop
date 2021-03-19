@@ -1586,7 +1586,7 @@ class UserRights
         $aPortalsConf = PortalDispatcherData::GetData();
         foreach ($aPortalsConf as $sPortalId => $aConf)
         {
-        	/** @var \PortalDispatcher $oDispatcher */
+            /** @var \PortalDispatcher $oDispatcher */
             $sHandlerClass = $aConf['handler'];
             $oDispatcher = new $sHandlerClass($sPortalId);
             if ($oDispatcher->IsUserAllowed())
