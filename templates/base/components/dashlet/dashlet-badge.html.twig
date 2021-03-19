@@ -2,7 +2,8 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
     <div class="ibo-dashlet-badge--body{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" id="{{ oUIBlock.GetId() }}"
-         data-role="ibo-dashlet-badge--body">
+         data-role="ibo-dashlet-badge--body"
+         title="{{ oUIBlock.GetClassLabel() }}">
         <div class="ibo-dashlet-badge--icon-container">
             <img class="ibo-dashlet-badge--icon" src="{{ oUIBlock.GetClassIconUrl() }}">
         </div>
