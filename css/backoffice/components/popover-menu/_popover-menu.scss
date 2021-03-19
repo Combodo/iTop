@@ -21,9 +21,11 @@ $ibo-popover-menu--background-color: $ibo-color-white-100 !default;
 $ibo-popover-menu--border-radius: $ibo-border-radius-300 !default;
 $ibo-popover-menu--padding: 0 !default;
 
+$ibo-popover-menu--toggler-visual-hint--margin-left: 0.5rem !default;
+
 $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !default;
 
-.ibo-popover-menu{
+.ibo-popover-menu {
   display: none;
   padding: $ibo-popover-menu--padding;
   background-color: $ibo-popover-menu--background-color;
@@ -38,8 +40,11 @@ $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !defa
   }
 }
 
+.ibo-popover-menu--toggler-visual-hint {
+  margin-left: $ibo-popover-menu--toggler-visual-hint--margin-left;
+}
 
-.ibo-popover-menu--section{
+.ibo-popover-menu--section {
   display: flex;
   flex-direction: column;
   align-self: flex-start;
@@ -47,10 +52,11 @@ $ibo-popover-menu--section-border-radius: $ibo-popover-menu--border-radius !defa
   width: 100%;
   white-space: nowrap;
   overflow: hidden; /* To avoid first/last entries of the menu to have no border-radius on hover */
-  
-  &:first-child{
+
+  &:first-child {
     border-radius: $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius 0 0;
   }
+
   &:last-child {
     border-radius: 0 0 $ibo-popover-menu--section-border-radius $ibo-popover-menu--section-border-radius;
   }

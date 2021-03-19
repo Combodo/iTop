@@ -1,0 +1,4 @@
+$('#{{ oUIBlock.GetId() }}').popover_menu({
+    toggler: {{ oUIBlock.GetTogglerJSSelector()|json_encode|raw }},
+    add_visual_hint_to_toggler: {{ oUIBlock.HasVisualHintToAddToToggler()|var_export }}
+});

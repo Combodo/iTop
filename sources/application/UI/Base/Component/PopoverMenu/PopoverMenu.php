@@ -37,10 +37,15 @@ class PopoverMenu extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-popover-menu';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/popover-menu/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/popover-menu/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/components/popover-menu.js',
 	];
 
+	/** @var string JS selector for the DOM element that should trigger the menu open/close */
+	protected $sTogglerJSSelector;
+	/** @var bool Whether the menu should add a visual hint (caret down) on the toggler to help the user understand that clicking on the toggler won't do something right away, but will open a menu instead */
+	protected $bAddVisualHintToToggler;
 	/** @var array $aSections */
 	protected $aSections;
 
@@ -52,7 +57,60 @@ class PopoverMenu extends UIBlock
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
+		$this->sTogglerJSSelector = '';
+		$this->bAddVisualHintToToggler = false;
 		$this->aSections = [];
+	}
+
+	/**
+	 * @param string $sSelector
+	 *
+	 * @return $this
+	 * @uses static::$sTogglerJSSelector
+	 */
+	public function SetTogglerJSSelector(string $sSelector)
+	{
+		$this->sTogglerJSSelector = $sSelector;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @uses static::$sTogglerJSSelector
+	 */
+	public function GetTogglerJSSelector(): string
+	{
+		return $this->sTogglerJSSelector;
+	}
+
+	/**
+	 * @return bool
+	 * @uses static::$sTogglerJSSelector
+	 */
+	public function HasToggler(): bool
+	{
+		return !empty($this->sTogglerJSSelector);
+	}
+
+	/**
+	 * @return $this
+	 * @uses static::$bAddVisualHintToToggler
+	 */
+	public function AddVisualHintToToggler()
+	{
+		$this->bAddVisualHintToToggler = true;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 * @uses static::$bAddVisualHintToToggler
+	 */
+	public function HasVisualHintToAddToToggler(): bool
+	{
+		return $this->bAddVisualHintToToggler;
 	}
 
 	/**

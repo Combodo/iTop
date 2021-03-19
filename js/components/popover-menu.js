@@ -33,56 +33,74 @@ $(function()
 				opened: 'ibo-is-opened',
 			},
 			js_selectors:
-			{
-				menu: '[data-role="ibo-popover-menu"]',
-				section: '[data-role="ibo-popover-menu--section"]',
-				item: '[data-role="ibo-popover-menu--item"]',
-			},
+				{
+					menu: '[data-role="ibo-popover-menu"]',
+					section: '[data-role="ibo-popover-menu--section"]',
+					item: '[data-role="ibo-popover-menu--item"]',
+				},
 
 			// the constructor
-			_create: function()
-			{
+			_create: function () {
 				this._bindEvents();
 				this._closePopup();
+
+				if (true === this.options.add_visual_hint_to_toggler) {
+					this._addVisualHintToToggler();
+				}
 			},
 			// events bound via _bind are removed automatically
 			// revert other modifications here
-			_destroy: function()
-			{
+			_destroy: function () {
 			},
-			_bindEvents: function()
-			{
+			_bindEvents: function () {
 				const me = this;
 				const oBodyElem = $('body');
 
-				this.element.find(this.js_selectors.item).on('click', function(oEvent){
+				this.element.find(this.js_selectors.item).on('click', function (oEvent) {
 					me._closePopup();
 				});
-				
+
 				// Mostly for outside clicks that should close elements
-				oBodyElem.on('click', function(oEvent){
+				oBodyElem.on('click', function (oEvent) {
 					me._onBodyClick(oEvent);
 				});
 			},
 
-			// Methods
-			_onBodyClick: function(oEvent)
-			{
-				if($(oEvent.target.closest(this.js_selectors.menu)).length === 0 && $(oEvent.target.closest(this.options.toggler)).length === 0)
-				{
+			// Events callbacks
+			_onBodyClick: function (oEvent) {
+				if ($(oEvent.target.closest(this.js_selectors.menu)).length === 0 && $(oEvent.target.closest(this.options.toggler)).length === 0) {
 					this._closePopup();
 				}
 			},
-			_openPopup: function()
-			{
+
+			// Methods
+			/**
+			 * Add a visual hint (caret) on the toggler
+			 *
+			 * @return {boolean}
+			 * @private
+			 */
+			_addVisualHintToToggler: function () {
+				if ('' === this.options.toggler) {
+					return false;
+				}
+
+				const oTogglerElem = $(this.options.toggler);
+				if (oTogglerElem.length === 0) {
+					return false;
+				}
+
+				oTogglerElem.append($(`<span class="ibo-popover-menu--toggler-visual-hint"><span class="fas fa-caret-down"></span></span>`));
+
+				return true;
+			},
+			_openPopup: function () {
 				this.element.addClass(this.css_classes.opened);
 			},
-			_closePopup: function()
-			{
+			_closePopup: function () {
 				this.element.removeClass(this.css_classes.opened);
 			},
-			openPopup: function()
-			{
+			openPopup: function () {
 				this._openPopup();
 			},
 			closePopup: function()
