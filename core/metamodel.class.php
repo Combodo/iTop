@@ -486,14 +486,46 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
-			return self::$m_aClassParams[$sClass]['style'];
-		}
-		$sParentClass = self::GetParentPersistentClass($sClass);
-		if (strlen($sParentClass) > 0) {
-			return self::GetClassStyle($sParentClass);
+			$oStyle = self::$m_aClassParams[$sClass]['style'];
+		} else {
+			// Create empty style
+			$oStyle = new ormStyle("ibo-class-style--$sClass", "ibo-class-style-alt--$sClass");
 		}
 
-		return null;
+		if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIcon()) > 0)) {
+			// all the parameters are set, no need to search in the parent classes
+			return $oStyle;
+		}
+
+		// Search missing parameters in the parent classes
+		$sParentClass = self::GetParentPersistentClass($sClass);
+		while (strlen($sParentClass) > 0) {
+			$oParentStyle = self::GetClassStyle($sParentClass);
+			if (!is_null($oParentStyle)) {
+				if (strlen($oStyle->GetMainColor()) == 0) {
+					$oStyle->SetMainColor($oParentStyle->GetMainColor());
+					$oStyle->SetStyleClass($oParentStyle->GetStyleClass());
+				}
+				if (strlen($oStyle->GetComplementaryColor()) == 0) {
+					$oStyle->SetComplementaryColor($oParentStyle->GetComplementaryColor());
+					$oStyle->SetAltStyleClass($oParentStyle->GetAltStyleClass());
+				}
+				if (strlen($oStyle->GetIcon()) == 0) {
+					$oStyle->SetIcon($oParentStyle->GetIcon());
+				}
+				if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIcon()) > 0)) {
+					// all the parameters are set, no need to search in the parent classes
+					return $oStyle;
+				}
+			}
+			$sParentClass = self::GetParentPersistentClass($sParentClass);
+		}
+
+		if ((strlen($oStyle->GetMainColor()) == 0) && (strlen($oStyle->GetComplementaryColor()) == 0) && (strlen($oStyle->GetIcon()) == 0)) {
+			return null;
+		}
+
+		return $oStyle;
 	}
 
 	/**
