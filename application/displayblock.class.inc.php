@@ -2143,20 +2143,21 @@ class MenuBlock extends DisplayBlock
 		$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock($iMenuId, $param, $aRegularActions, $sId));
 
 		// Extract favorite actions from their menus
-		$aFavoriteActions = array();
-		$aCallSpec = array($sClass, 'GetShortcutActions');
+		$aFavoriteRegularActions = [];
+		$aFavoriteTransitionActions = [];
+		$aCallSpec = [$sClass, 'GetShortcutActions'];
 		if (is_callable($aCallSpec)) {
 			$aShortcutActions = call_user_func($aCallSpec, $sClass);
 			foreach ($aShortcutActions as $key) {
 				// Regular actions
 				if (isset($aRegularActions[$key])) {
-					$aFavoriteActions[$key] = $aRegularActions[$key];
+					$aFavoriteRegularActions[$key] = $aRegularActions[$key];
 					unset($aRegularActions[$key]);
 				}
 
 				// Transitions
 				if (isset($aTransitionActions[$key])) {
-					$aFavoriteActions[$key] = $aTransitionActions[$key];
+					$aFavoriteTransitionActions[$key] = $aTransitionActions[$key];
 					unset($aTransitionActions[$key]);
 				}
 			}
@@ -2170,7 +2171,55 @@ class MenuBlock extends DisplayBlock
 		$sTransitionActionsPopoverMenuId = "ibo-transition-actions-popover-{$sId}";
 
 		if (!$oPage->IsPrintableVersion()) {
-			foreach ($aFavoriteActions as $sActionId => $aAction) {
+
+			// Transitions actions
+			// - Favorites
+			foreach ($aFavoriteTransitionActions as $sActionId => $aAction) {
+				$sIconClass = '';
+				$sLabel = $aAction['label'];
+				$sUrl = $aAction['url'];
+
+				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
+				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-transition-action-button']);
+
+				if (empty($sLabel)) {
+					$oActionButton->SetTooltip(Dict::S($sActionId));
+				}
+
+				$oActionsToolbar->AddSubBlock($oActionButton);
+			}
+
+			// - Others
+			if (!empty($aTransitionActions)) {
+				$sName = 'UI:Menu:Transitions';
+				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-map-signs', Dict::S($sName), $sName, '', false, $sTransitionActionsMenuTogglerId)
+					->AddCSSClasses(['ibo-action-button', 'ibo-transition-action-button'])
+					->SetJsCode(<<<JS
+$("#{$sTransitionActionsPopoverMenuId}").popover_menu({toggler: "#{$sTransitionActionsMenuTogglerId}"});
+$('#{$sTransitionActionsMenuTogglerId}').on('click', function(oEvent) {
+	var oEventTarget = $('#{$sTransitionActionsMenuTogglerId}');
+	var aEventTargetPos = oEventTarget.position();
+	var popover = $("#{$sTransitionActionsPopoverMenuId}");
+	
+	popover.css({
+		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
+		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
+		'z-index': 10060
+	});
+	popover.popover_menu("togglePopup");
+});
+JS
+					);
+
+				// TODO 3.0.0: Try to handle the JS above in a nicer place or through block options
+				$oActionsToolbar->AddSubBlock($oActionButton)
+					->AddSubBlock($oPage->GetPopoverMenu($sTransitionActionsPopoverMenuId, $aTransitionActions));
+			}
+
+			// Regular actions
+			// - Favorites
+			foreach ($aFavoriteRegularActions as $sActionId => $aAction) {
 				$sIconClass = '';
 				$sLabel = $aAction['label'];
 				$sUrl = $aAction['url'];
@@ -2196,73 +2245,43 @@ class MenuBlock extends DisplayBlock
 						$sIconClass = 'fas fa-share-alt';
 						$sLabel = '';
 						break;
-
-//					case 'iTop::ConfigureList':
-//						$sIconClass = 'fas fa-cog';
-//						$sLabel = '';
-//						$sUrl = '';
-//						break;
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
 				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
-				$oActionButton->AddCSSClass('ibo-action-button');
+				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
 					$oActionButton->SetTooltip(Dict::S($sActionId));
 				}
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}
 
+			// - Refresh
 			if ($sRefreshAction != '') {
 				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
 				$oActionButton->SetIconClass('fas fa-sync')
 					->SetOnClickJsCode($sRefreshAction)
 					->SetTooltip(Dict::S('UI:Button:Refresh'))
-					->AddCSSClass('ibo-action-button');
+					->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}
 
+			// - Search
 			if ($this->m_sStyle == 'details') {
 				$oActionButton = ButtonUIBlockFactory::MakeIconLink('fas fa-search', Dict::Format('UI:SearchFor_Class', MetaModel::GetName($sClass)), "{$sRootUrl}pages/UI.php?operation=search_form&do_search=0&class=$sClass{$sContext}", '', 'UI:SearchFor_Class');
-				$oActionButton->AddCSSClass('ibo-action-button');
+				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}
 
-
-			if (!empty($aTransitionActions)) {
-				$sName = 'UI:Menu:Transitions';
-				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-map-signs', Dict::S($sName), $sName, '', false, $sTransitionActionsMenuTogglerId)
-					->AddCSSClass('ibo-action-button')
-					->SetJsCode(<<<JS
-$("#{$sTransitionActionsPopoverMenuId}").popover_menu({toggler: "#{$sTransitionActionsMenuTogglerId}"});
-$('#{$sTransitionActionsMenuTogglerId}').on('click', function(oEvent) {
-	var oEventTarget = $('#{$sTransitionActionsMenuTogglerId}');
-	var aEventTargetPos = oEventTarget.position();
-	var popover = $("#{$sTransitionActionsPopoverMenuId}");
-	
-	popover.css({
-		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
-		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
-		'z-index': 10060
-	});
-	popover.popover_menu("togglePopup");
-});
-JS
-					);
-
-				// TODO 3.0.0: Try to handle the JS above in a nicer place or through block options
-				$oActionsToolbar->AddSubBlock($oActionButton)
-					->AddSubBlock($oPage->GetPopoverMenu($sTransitionActionsPopoverMenuId, $aTransitionActions));
-			}
-
+			// - Others
 			if (!empty($aRegularActions)) {
-				if (count($aFavoriteActions) > 0) {
+				if (count($aFavoriteRegularActions) > 0) {
 					$sName = 'UI:Menu:OtherActions';
 				} else {
 					$sName = 'UI:Menu:Actions';
 				}
 				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sRegularActionsMenuTogglerId)
-					->AddCSSClass('ibo-action-button')
+					->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
 					->SetJsCode(<<<JS
 $("#{$sRegularActionsPopoverMenuId}").popover_menu({toggler: "#{$sRegularActionsMenuTogglerId}"});
 $('#{$sRegularActionsMenuTogglerId}').on('click', function(oEvent) {
@@ -2284,7 +2303,6 @@ JS
 				$oActionsToolbar->AddSubBlock($oActionButton)
 					->AddSubBlock($oPage->GetPopoverMenu($sRegularActionsPopoverMenuId, $aRegularActions));
 			}
-
 		}
 
 		return $oRenderBlock;
