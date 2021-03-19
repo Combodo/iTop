@@ -2197,7 +2197,7 @@ class MenuBlock extends DisplayBlock
 				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-map-signs', Dict::S($sName), $sName, '', false, $sTransitionActionsMenuTogglerId)
 					->AddCSSClasses(['ibo-action-button', 'ibo-transition-action-button'])
 					->SetJsCode(<<<JS
-$("#{$sTransitionActionsPopoverMenuId}").popover_menu({toggler: "#{$sTransitionActionsMenuTogglerId}"});
+$("#{$sTransitionActionsPopoverMenuId}").popover_menu({toggler: "#{$sTransitionActionsMenuTogglerId}", add_visual_hint_to_toggler: true});
 $('#{$sTransitionActionsMenuTogglerId}').on('click', function(oEvent) {
 	var oEventTarget = $('#{$sTransitionActionsMenuTogglerId}');
 	var aEventTargetPos = oEventTarget.position();
