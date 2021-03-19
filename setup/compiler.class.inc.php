@@ -112,12 +112,18 @@ class MFCompiler
 	}
 
 	/**
-	 * @return bool
+	 * @return bool always false if not in dev env, else true if flag is present, false otherwise
+	 * @uses utils::IsDevelopmentEnvironment()
+	 * @uses \file_exists()
 	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
 	 * @since 3.0.0
 	 */
 	public static function IsUseSymbolicLinksFlagPresent(): bool
 	{
+		if (!utils::IsDevelopmentEnvironment()) {
+			return false;
+		}
+
 		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
 	}
 
