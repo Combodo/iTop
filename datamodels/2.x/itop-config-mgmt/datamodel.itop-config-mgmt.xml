@@ -6547,7 +6547,7 @@
 			<parent>ConfigManagement</parent>
 			<definition>
 				<layout>DashboardLayoutOneCol</layout>
-				<title/>
+        <title>Menu:ConfigManagementOverview</title>
 				<cells>
 					<cell id="0">
 						<rank>0</rank>
