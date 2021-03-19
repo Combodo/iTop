@@ -56,7 +56,6 @@ $(function()
 			// the constructor
 			_create: function () {
 				this.element.addClass('ibo-navigation-menu');
-				$(this.js_selectors.user_menu).popover_menu({'toggler': this.js_selectors.user_menu_toggler});
 				this._bindEvents();
 			},
 			// events bound via _bind are removed automatically

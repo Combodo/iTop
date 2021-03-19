@@ -49,11 +49,11 @@ class PopoverMenuFactory
 	public static function MakeUserMenuForNavigationMenu()
 	{
 		$oMenu = new PopoverMenu('ibo-navigation-menu--user-menu');
+		$oMenu->SetTogglerJSSelector('[data-role="ibo-navigation-menu--user-menu--toggler"]');
 
 		// Allowed portals
 		$aAllowedPortalsItems = static::PrepareAllowedPortalsItemsForUserMenu();
-		if(!empty($aAllowedPortalsItems))
-		{
+		if (!empty($aAllowedPortalsItems)) {
 			$oMenu->AddSection('allowed_portals')
 				->SetItems('allowed_portals', $aAllowedPortalsItems);
 		}
