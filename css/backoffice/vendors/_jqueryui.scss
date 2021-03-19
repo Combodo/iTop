@@ -491,44 +491,6 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	}
 }
 
-// Helper
-
-.ui-helper-hidden {
-	display: none;
-}
-.ui-helper-reset {
-	margin: 0;
-	padding: 0;
-	// border: 0;
-	outline: 0;
-	line-height: 1.3;
-	text-decoration: none;
-	font-size: 100%;
-	list-style: none;
-}
-.ui-helper-clearfix {
-	&:before {
-		content: "";
-		display: table;
-		border-collapse: collapse;
-	}
-	&:after {
-		content: "";
-		display: table;
-		border-collapse: collapse;
-		clear: both;
-	}
-}
-.ui-helper-zfix {
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	position: absolute;
-	opacity: 0;
-	filter: Alpha(Opacity=0);
-}
-
 // Sliders 
 
 .ui-slider {
