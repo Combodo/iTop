@@ -9,6 +9,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent;
 
 require_once('../approot.inc.php');
