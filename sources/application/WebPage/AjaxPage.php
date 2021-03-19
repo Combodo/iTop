@@ -237,19 +237,6 @@ EOF
 			echo "\n</script>\n";
 		}
 
-		//echo $this->s_deferred_content;
-		if (count($this->a_scripts) > 0) {
-			echo "<script type=\"text/javascript\">\n";
-			echo implode("\n", $this->a_scripts);
-			echo "\n</script>\n";
-		}
-		if (count($this->a_linked_scripts) > 0) {
-			echo "<script type=\"text/javascript\">\n";
-			foreach ($this->a_linked_scripts as $sScriptUrl) {
-				echo '$.getScript('.json_encode($sScriptUrl).");\n";
-			}
-			echo "\n</script>\n";
-		}
 		if (!empty($this->s_deferred_content)) {
 			echo "<script type=\"text/javascript\">\n";
 			echo "\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');\n";
@@ -258,14 +245,6 @@ EOF
 		if (!empty($this->m_aReadyScripts)) {
 			echo "<script type=\"text/javascript\">\n";
 			echo $this->m_aReadyScripts; // Ready Scripts are output as simple scripts
-			echo "\n</script>\n";
-		}
-		if (count($this->a_linked_stylesheets) > 0) {
-			echo "<script type=\"text/javascript\">";
-			foreach ($this->a_linked_stylesheets as $aStylesheet) {
-				$sStylesheetUrl = $aStylesheet['link'];
-				echo "if (!$('link[href=\"{$sStylesheetUrl}\"]').length) $('<link href=\"{$sStylesheetUrl}\" rel=\"stylesheet\">').appendTo('head');\n";
-			}
 			echo "\n</script>\n";
 		}
 

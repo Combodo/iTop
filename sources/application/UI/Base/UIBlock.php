@@ -43,7 +43,11 @@ abstract class UIBlock implements iUIBlock
 	public const DEFAULT_GLOBAL_TEMPLATE_REL_PATH = null;
 	/** @var string|null */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = null;
-	/** @var array */
+	/**
+	 * @var array list of external JS file paths to include in the page. Paths are relative to APPROOT
+	 *    **Warning** : if you need to call a JS var defined in one of this file, then this calling code MUST be in {@see DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH}
+	 *         and not in {@see DEFAULT_JS_TEMPLATE_REL_PATH} ! Indeed the later is output before external files loading.
+	 */
 	public const DEFAULT_JS_FILES_REL_PATH = [];
 	/** @var string|null */
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
