@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparatorUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
@@ -2215,6 +2216,12 @@ JS
 				// TODO 3.0.0: Try to handle the JS above in a nicer place or through block options
 				$oActionsToolbar->AddSubBlock($oActionButton)
 					->AddSubBlock($oPage->GetPopoverMenu($sTransitionActionsPopoverMenuId, $aTransitionActions));
+			}
+
+			// Separator between transitions and regulars
+			if ((!empty($aFavoriteTransitionActions) || !empty($aTransitionActions)) &&
+				(!empty($aFavoriteRegularActions) || !empty($aRegularActions))) {
+				$oActionsToolbar->AddSubBlock(ToolbarSeparatorUIBlockFactory::MakeVertical());
 			}
 
 			// Regular actions
