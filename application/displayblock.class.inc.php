@@ -225,32 +225,34 @@ class DisplayBlock
 		];
 
 		$aAllowedGeneralParams = [
-			'show_obsolete_data',
 			/** bool display obsolete data */
-			'currentId',
+			'show_obsolete_data',
 			/** string current block id overridden by $sId argument */
-			'query_params',
+			'currentId',
 			/** array query parameters */
-			'this->id',
+			'query_params',
 			/** int Id of the current object */
-			'this->class',
+			'this->id',
 			/** string class of the current object */
-			'order_by',
+			'this->class',
 			/** string comma separated list of attCodes */
-			'auto_reload',
+			'order_by',
 			/** bool|string|numeric 'fast' (reload faster) or 'standard' (= true or 'true') (reload standard) or reload interval value (numeric) */
-			'c[menu]',
+			'auto_reload',
 			/** string current navigation menu */
-			'c[org_id]',
+			'c[menu]',
 			/** int current filtered organization */
-			'c[menu',
+			'c[org_id]',
 			/** string workaround due to extraparams in menunode */
-			'c[org_id',
+			'c[menu',
 			/** int workaround due to extraparams in menunode */
-			'dashboard_div_id',
+			'c[org_id',
 			/** string dashboard html div id */
+			'dashboard_div_id',
+			/** param true if block is in a dashboard*/
 			'withJSRefreshCallBack',
-			/**param true if block is in a dashboard*/
+			/** true if dashboard page */
+			'from_dashboard_page',
 		];
 
 		if (isset($aAllowedParams[$sStyle])) {

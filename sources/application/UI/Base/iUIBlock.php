@@ -18,7 +18,6 @@
  */
 
 namespace Combodo\iTop\Application\UI\Base;
-use Combodo\iTop\Application\UI\Base\UIException;
 
 
 /**
@@ -91,6 +90,15 @@ interface iUIBlock {
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 */
 	public function GetSubBlocks();
+
+	/**
+	 * Return an array iUIBlock embedded in this iUIBlock
+	 * Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
+	 * This is used to get recursively the CSS and JS templates
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
+	 */
+	public function GetSubBlocksForCSSAndJS();
 
 	/**
 	 * Return an array of iUIBlock to add at the end of the page

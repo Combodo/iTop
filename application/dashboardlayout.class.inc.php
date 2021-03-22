@@ -17,8 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
-use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as UIDashboardLayout;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock as UIDashboardLayout;
 
 /**
  * Dashboard presentation
@@ -117,7 +117,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		$aCells = $this->TrimCellsArray($aCells);
 
 		$oDashboardLayout = new UIDashboardLayout();
-		$oPage->AddUiBlock($oDashboardLayout);
+		//$oPage->AddUiBlock($oDashboardLayout);
 
 		$iCellIdx = 0;
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
@@ -167,7 +167,8 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 				$oDashboardColumn->AddUIBlock(new Html('&nbsp;'));
 			}
 		}
-		return;
+
+		return $oDashboardLayout;
 	}
 
 	/**

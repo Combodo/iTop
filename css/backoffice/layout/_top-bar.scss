@@ -64,36 +64,13 @@ $ibo-top-bar--quick-actions--margin-right: $ibo-top-bar--elements-spacing !defau
 }
 
 .ibo-top-bar--toolbar-dashboard-title {
-	@extend %ibo-full-height-content;
 	@extend %ibo-font-ral-med-250;
-	display: flex;
-	align-items: center;
 }
 
 .ibo-top-bar--toolbar-dashboard-menu-toggler {
 	@extend %ibo-full-height-content;
 	display: flex;
 	align-items: center;
-}
-
-.ibo-top-bar--toolbar-dashboard-selector {
-  @extend %ibo-full-height-content;
-  display: flex;
-  align-items: center;
-  margin-left: 12px;
-  margin-right: 1px;
-
-  &:hover {
-    background-color: $ibo-color-secondary-100;
-    border-radius: $ibo-button--border-radius;
-  }
-
-  .selector-label {
-    display: inline-block;
-    margin-left: 10px;
-    margin-right: 10px;
-    vertical-align: super;
-  }
 }
 
 // Round Toggle

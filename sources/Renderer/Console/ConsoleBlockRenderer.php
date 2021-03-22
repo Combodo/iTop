@@ -98,8 +98,8 @@ class ConsoleBlockRenderer extends BlockRenderer
 		$oPage->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_ON_READY));
 		$oPage->add_style($oBlockRenderer->RenderCssInline());
 
-		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			static::AddCssJsTemplatesToPageRecursively( $oPage, $oSubBlock, $aContextParams);
+		foreach ($oBlock->GetSubBlocksForCSSAndJS() as $oSubBlock) {
+			static::AddCssJsTemplatesToPageRecursively($oPage, $oSubBlock, $aContextParams);
 		}
 	}
 

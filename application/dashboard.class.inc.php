@@ -7,6 +7,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -515,26 +516,13 @@ EOF
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
 		if (!array_key_exists('dashboard_div_id', $aExtraParams)) {
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
-		}
-
-		$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
-
-		$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\">{$sTitleForHTML}</div>";
-		if ($oPage instanceof iTopWebPage) {
-			$oTopBar = $oPage->GetTopBarLayout();
-			$oToolbar = ToolbarUIBlockFactory::MakeStandard();
-			$oTopBar->SetToolbar($oToolbar);
-			$oToolbar->AddHtml($sHtml);
-		} else {
-			$oPage->add_script(<<<JS
-$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML");
-JS
-			);
 		}
 
 		/** @var \DashboardLayoutMultiCol $oLayout */
@@ -547,11 +535,36 @@ JS
 			}
 		}
 
-		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
+		$oDashboard = $oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
+		$oPage->AddUiBlock($oDashboard);
+
+		$bFromDasboardPage = isset($aExtraParams['from_dashboard_page']) ? isset($aExtraParams['from_dashboard_page']) : false;
+
+		if ($bFromDasboardPage) {
+			$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
+			$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\">{$sTitleForHTML}</div>";
+			if ($oPage instanceof iTopWebPage) {
+				$oTopBar = $oPage->GetTopBarLayout();
+				$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+				$oTopBar->SetToolbar($oToolbar);
+
+				$oToolbar->AddHtml($sHtml);
+			} else {
+				$oPage->add_script(<<<JS
+$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML");
+JS
+				);
+			}
+		} else {
+			$oDashboard->SetTitle(Dict::S($this->sTitle));
+		}
+
 		if (!$bEditMode) {
 			$oPage->add_linked_script('../js/dashlet.js');
 			$oPage->add_linked_script('../js/dashboard.js');
 		}
+
+		return $oDashboard;
 	}
 
 	/**
@@ -935,42 +948,30 @@ class RuntimeDashboard extends Dashboard
 		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
-		}
-		else
-		{
+		} else {
 			$aRenderParams = $aExtraParams;
 		}
 
-		parent::Render($oPage, $bEditMode, $aRenderParams);
+		$oDashboard = parent::Render($oPage, $bEditMode, $aRenderParams);
 
-		if (isset($aExtraParams['query_params']['this->object()']))
-		{
+		if (isset($aExtraParams['query_params']['this->object()'])) {
 			/** @var \DBObject $oObj */
 			$oObj = $aExtraParams['query_params']['this->object()'];
 			$aAjaxParams = array('this->class' => get_class($oObj), 'this->id' => $oObj->GetKey());
-		}
-		else
-		{
+			if (isset($aExtraParams['from_dashboard_page'])) {
+				$aAjaxParams['from_dashboard_page'] = $aExtraParams['from_dashboard_page'];
+			}
+		} else {
 			$aAjaxParams = $aExtraParams;
 		}
-		if (!$bEditMode && !$oPage->IsPrintableVersion())
-		{
+		if (!$bEditMode && !$oPage->IsPrintableVersion()) {
 			$sId = $this->GetId();
 			$sDivId = utils::Sanitize($sId, '', 'element_identifier');
-			if ($this->GetAutoReload())
-			{
-				$sFile = addslashes($this->GetDefinitionFile());
-				$sExtraParams = json_encode($aAjaxParams);
+			if ($this->GetAutoReload()) {
 				$iReloadInterval = 1000 * $this->GetAutoReloadInterval();
-				$sReloadURL = $this->GetReloadURL();
-				$oAppContext = new ApplicationContext();
-				$sContext=$oAppContext->GetForPostParams();
-				//$sContext is named "c"  because it use the existing code for context parameters c[org_id] and c[menu]
-
-
 
 				$oPage->add_script(
-<<<JS
+					<<<JS
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
 					clearInterval(AutoReloadDashboardId$sDivId);
@@ -993,7 +994,7 @@ JS
 			else
 			{
 				$oPage->add_script(
-<<<EOF
+					<<<EOF
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
 					clearInterval(AutoReloadDashboardId$sDivId);
@@ -1003,23 +1004,24 @@ EOF
 				);
 			}
 
-			if ($bCanEdit)
-			{
-				$this->RenderSelector($oPage, $aAjaxParams);
-				$this->RenderEditionTools($oPage, $aAjaxParams);
+			if ($bCanEdit) {
+				$this->RenderSelector($oPage, $oDashboard, $aAjaxParams);
+				$this->RenderEditionTools($oPage, $oDashboard, $aAjaxParams);
 			}
 		}
 	}
 
 	/**
 	 * @param WebPage $oPage
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock $oDashboard
+	 * @param bool $bFromDashboardPage
 	 * @param array $aAjaxParams
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	protected function RenderSelector(WebPage $oPage, $aAjaxParams = array())
+	protected function RenderSelector(WebPage $oPage, UIDashboardLayoutBlock $oDashboard, $aAjaxParams = array())
 	{
 		if (!$this->HasCustomDashboard()) {
 			return;
@@ -1032,19 +1034,26 @@ EOF
 		$sSwitchToCustom = Dict::S('UI:Toggle:SwitchToCustomDashboard');
 		$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
 
-		$sSelectorHtml = '<div id="ibo-dashboard-selector'.$sDivId.'" class="ibo-top-bar--toolbar-dashboard-selector" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
+		$sSelectorHtml = '<div id="ibo-dashboard-selector'.$sDivId.'" class="ibo-dashboard--selector" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
 		$sSelectorHtml .= '<label class="ibo-dashboard--switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="ibo-dashboard--slider"></span></label></input></label>';
 		$sSelectorHtml .= '</div>';
 
 		$sFile = addslashes($this->GetDefinitionFile());
 		$sReloadURL = $this->GetReloadURL();
 
-		if ($oPage instanceof iTopWebPage) {
-			$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+		$bFromDashboardPage = isset($aAjaxParams['from_dashboard_page']) ? isset($aAjaxParams['from_dashboard_page']) : false;
+		if ($bFromDashboardPage) {
+			if ($oPage instanceof iTopWebPage) {
+				$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+				$oToolbar->AddHtml($sSelectorHtml);
+			}
+		} else {
+			$oToolbar = $oDashboard->GetToolbar();
 			$oToolbar->AddHtml($sSelectorHtml);
+		}
 
-			$oPage->add_script(
-				<<<JS
+		$oPage->add_script(
+			<<<JS
 			function ToggleDashboardSelector$sDivId()
 			{
 			    var dashboard = $('.ibo-dashboard#$sDivId')
@@ -1064,14 +1073,7 @@ EOF
 				 );
 			}
 JS
-			);
-		} else {
-			$sSelectorHtml = addslashes($sSelectorHtml);
-			$oPage->add_script(<<<JS
-$(".ibo-top-bar--toolbar-dashboard-selector").replaceWith("$sSelectorHtml");
-JS
-			);
-		}
+		);
 	}
 
 	/**
@@ -1101,12 +1103,8 @@ JS
 	 *
 	 * @throws \Exception
 	 */
-	protected function RenderEditionTools(WebPage $oPage, $aExtraParams)
+	protected function RenderEditionTools(WebPage $oPage, UIDashboardLayoutBlock $oDashboard, $aExtraParams)
 	{
-		if (!($oPage instanceof iTopWebPage)) {
-			return;
-		}
-
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
 		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
@@ -1114,9 +1112,35 @@ JS
 		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";
 		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
 		$sName = 'UI:Dashboard:Actions';
-		$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
-		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName),$sName, '', false, $sMenuTogglerId);
-		$oActionButton->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler');
+
+		$bFromDashboardPage = isset($aExtraParams['from_dashboard_page']) ? isset($aExtraParams['from_dashboard_page']) : false;
+		if ($bFromDashboardPage) {
+			if (!($oPage instanceof iTopWebPage)) {
+				// TODO 3.0 change the menu
+				return;
+			}
+			$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+		} else {
+			$oToolbar = $oDashboard->GetToolbar();
+		}
+		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sMenuTogglerId);
+		$oActionButton->AddCSSClasses(['ibo-top-bar--toolbar-dashboard-menu-toggler', 'ibo-action-button']);
+		$oActionButton->SetJsCode(<<<JS
+$("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
+$('#{$sMenuTogglerId}').on('click', function(oEvent) {
+	var oEventTarget = $('#{$sMenuTogglerId}');
+	var aEventTargetPos = oEventTarget.position();
+	var popover = $("#{$sPopoverMenuId}");
+	
+	popover.css({
+		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
+		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
+		'z-index': 10060
+	});
+	popover.popover_menu("togglePopup");
+});
+JS
+		);
 
 		$oToolbar->AddSubBlock($oActionButton);
 
@@ -1138,25 +1162,6 @@ JS
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
 		$oToolbar->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
-		$oActionButton->AddCSSClass('ibo-action-button')
-			->SetJsCode(<<<JS
-$("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
-$('#{$sMenuTogglerId}').on('click', function(oEvent) {
-	var oEventTarget = $('#{$sMenuTogglerId}');
-	var aEventTargetPos = oEventTarget.position();
-	var popover = $("#{$sPopoverMenuId}");
-	
-	popover.css({
-		// 'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) + oEventTarget.height()) + 'px',
-		// 'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width() - popover.width()) + 'px',
-		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
-		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
-		'z-index': 10060
-	});
-	popover.popover_menu("togglePopup");
-});
-JS
-			);
 
 		$sReloadURL = $this->GetReloadURL();
 		$oPage->add_script(

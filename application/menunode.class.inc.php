@@ -1464,6 +1464,7 @@ class DashboardMenuNode extends MenuNode
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
 			$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;
+			$aExtraParams['from_dashboard_page'] = true;
 			$oDashboard->SetReloadURL($this->GetHyperlink($aExtraParams));
 			$oDashboard->Render($oPage, false, $aExtraParams);
 			$oPage->add('</div>');
@@ -1472,26 +1473,18 @@ class DashboardMenuNode extends MenuNode
 			if ($bEdit) {
 				$sId = addslashes($this->sMenuId);
 				$oPage->add_ready_script("EditDashboard('$sId');");
-			}
-			else
-			{
+			} else {
 				$oParentMenu = ApplicationMenu::GetMenuNode($this->iParentIndex);
 				$sParentTitle = $oParentMenu->GetTitle();
 				$sThisTitle = $this->GetTitle();
-				if ($sParentTitle != $sThisTitle)
-				{
+				if ($sParentTitle != $sThisTitle) {
 					$sDescription = $sParentTitle.' / '.$sThisTitle;
-				}
-				else
-				{
+				} else {
 					$sDescription = $sThisTitle;
 				}
-				if ($this->sMenuId == ApplicationMenu::GetDefaultMenuId())
-				{
+				if ($this->sMenuId == ApplicationMenu::GetDefaultMenuId()) {
 					$sIcon = 'fas fa-home';
-				}
-				else
-				{
+				} else {
 					$sIcon = 'fas fa-chart-pie';
 				}
 				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon, iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
