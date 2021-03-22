@@ -42,11 +42,103 @@ class PopoverMenu extends UIBlock
 		'js/components/popover-menu.js',
 	];
 
+	// Specific constants
+	/** @see static::$sContainer */
+	public const ENUM_CONTAINER_BODY = 'body';
+	/** @see static::$sContainer */
+	public const ENUM_CONTAINER_PARENT = 'parent';
+	/** @see static::$sTargetForPositionJSSelector */
+	public const ENUM_TARGET_FOR_POSITION_TOGGLER = 'toggler';
+	/** @see static::$sVerticalPosition */
+	public const ENUM_VERTICAL_POSITION_ABOVE = 'above';
+	/** @see static::$sVerticalPosition */
+	public const ENUM_VERTICAL_POSITION_BELOW = 'below';
+	/**
+	 * @see static::$sHorizontalPosition
+	 *
+	 *                          +--------+
+	 *                          | Target |
+	 *                          +--------+-----------+
+	 *                          |                    |
+	 *                          |        Menu        |
+	 *                          |                    |
+	 *                          +--------------------+
+	 */
+	public const ENUM_HORIZONTAL_POSITION_ALIGN_INNER_LEFT = 'align_inner_left';
+	/**
+	 * @see static::$sHorizontalPosition
+	 *
+	 *                          +--------+
+	 *                          | Target |
+	 *     +--------------------+--------+
+	 *     |                    |
+	 *     |        Menu        |
+	 *     |                    |
+	 *     +--------------------+
+	 */
+	public const ENUM_HORIZONTAL_POSITION_ALIGN_OUTER_LEFT = 'align_outer_left';
+	/**
+	 * @see static::$sHorizontalPosition
+	 *
+	 *                          +--------+
+	 *                          | Target |
+	 *              +-----------+--------+
+	 *              |                    |
+	 *              |        Menu        |
+	 *              |                    |
+	 *              +--------------------+
+	 */
+	public const ENUM_HORIZONTAL_POSITION_ALIGN_INNER_RIGHT = 'align_inner_right';
+	/**
+	 * @see static::$sHorizontalPosition
+	 *
+	 *                          +--------+
+	 *                          | Target |
+	 *                          +--------+--------------------+
+	 *                                   |                    |
+	 *                                   |        Menu        |
+	 *                                   |                    |
+	 *                                   +--------------------+
+	 */
+	public const ENUM_HORIZONTAL_POSITION_ALIGN_OUTER_RIGHT = 'align_outer_right';
+
+	/** @see static::$sContainer */
+	public const DEFAULT_CONTAINER = self::ENUM_CONTAINER_PARENT;
+	/** @see static::$sTargetForPositionJSSelector */
+	public const DEFAULT_TARGET_FOR_POSITION = self::ENUM_TARGET_FOR_POSITION_TOGGLER;
+	/** @see static::$sVerticalPosition */
+	public const DEFAULT_VERTICAL_POSITION = self::ENUM_VERTICAL_POSITION_BELOW;
+	/** @see static::$sHorizontalPosition */
+	public const DEFAULT_HORIZONTAL_POSITION = self::ENUM_HORIZONTAL_POSITION_ALIGN_INNER_RIGHT;
+
 	/** @var string JS selector for the DOM element that should trigger the menu open/close */
 	protected $sTogglerJSSelector;
 	/** @var bool Whether the menu should add a visual hint (caret down) on the toggler to help the user understand that clicking on the toggler won't do something right away, but will open a menu instead */
 	protected $bAddVisualHintToToggler;
-	/** @var array $aSections */
+	/** @var string Container element of the menu. Can be either:
+	 *  * static::ENUM_CONTAINER_PARENT (default, better performance)
+	 *  * static::ENUM_CONTAINER_BODY (use it if the menu gets cut by the hidden overflow of its parent)
+	 */
+	protected $sContainer;
+	/**
+	 * @var string JS selector for the DOM element the menu should be positioned relatively to.
+	 * * static::ENUM_TARGET_FOR_POSITION_TOGGLER (default, a shortcut pointing to the toggler)
+	 * * A JS selector
+	 */
+	protected $sTargetForPositionJSSelector;
+	/** @var string Relative vertical position of the menu from the target. Value can be:
+	 *  * static::ENUM_VERTICAL_POSITION_BELOW for the menu to be directly below the target
+	 *  * static::ENUM_VERTICAL_POSITION_ABOVE for the menu to be directly above the target
+	 *  * A JS expression to be evaluated that must return pixels (eg. (oTargetPos.top + oTarget.outerHeight(true)) + 'px')
+	 */
+	protected $sVerticalPosition;
+	/** @var string Relative horizontal position of the menu from the target. Value can be:
+	 *  * static::ENUM_HORIZONTAL_POSITION_ALIGN_INNER_LEFT for the menu to be aligned with the target's left side
+	 *  * static::ENUM_HORIZONTAL_POSITION_ALIGN_INNER_RIGHT for the menu to be aligned with the target's right side
+	 *  * A JS expression to be evaluated that must return pixels (eg. (oTargetPos.left + oTarget.outerWidth(true) - popover.width()) + 'px')
+	 */
+	protected $sHorizontalPosition;
+	/** @var array */
 	protected $aSections;
 
 	/**
@@ -59,6 +151,10 @@ class PopoverMenu extends UIBlock
 		parent::__construct($sId);
 		$this->sTogglerJSSelector = '';
 		$this->bAddVisualHintToToggler = false;
+		$this->sContainer = static::DEFAULT_CONTAINER;
+		$this->sTargetForPositionJSSelector = static::DEFAULT_TARGET_FOR_POSITION;
+		$this->sVerticalPosition = static::DEFAULT_VERTICAL_POSITION;
+		$this->sHorizontalPosition = static::DEFAULT_HORIZONTAL_POSITION;
 		$this->aSections = [];
 	}
 
@@ -111,6 +207,94 @@ class PopoverMenu extends UIBlock
 	public function HasVisualHintToAddToToggler(): bool
 	{
 		return $this->bAddVisualHintToToggler;
+	}
+
+	/**
+	 * @param string $sContainer
+	 *
+	 * @return $this
+	 * @uses static::$sContainer
+	 */
+	public function SetContainer(string $sContainer)
+	{
+		$this->sContainer = $sContainer;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @uses static::$sContainer
+	 */
+	public function GetContainer(): string
+	{
+		return $this->sContainer;
+	}
+
+	/**
+	 * @param string $sJSSelector
+	 *
+	 * @return $this
+	 * @uses static::$sTargetForPositionJSSelector
+	 */
+	public function SetTargetForPositionJSSelector(string $sJSSelector)
+	{
+		$this->sTargetForPositionJSSelector = $sJSSelector;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @uses static::$sTargetForPositionJSSelector
+	 */
+	public function GetTargetForPositionJSSelector(): string
+	{
+		return $this->sTargetForPositionJSSelector;
+	}
+
+	/**
+	 * @param string $sPosition
+	 *
+	 * @return $this
+	 * @uses static::$sVerticalPosition
+	 */
+	public function SetVerticalPosition(string $sPosition)
+	{
+		$this->sVerticalPosition = $sPosition;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @uses static::$sVerticalPosition
+	 */
+	public function GetVerticalPosition(): string
+	{
+		return $this->sVerticalPosition;
+	}
+
+	/**
+	 * @param string $sPosition
+	 *
+	 * @return $this
+	 * @uses static::$sHorizontalPosition
+	 */
+	public function SetHorizontalPosition(string $sPosition)
+	{
+		$this->sHorizontalPosition = $sPosition;
+
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @uses static::$sHorizontalPosition
+	 */
+	public function GetHorizontalPosition(): string
+	{
+		return $this->sHorizontalPosition;
 	}
 
 	/**

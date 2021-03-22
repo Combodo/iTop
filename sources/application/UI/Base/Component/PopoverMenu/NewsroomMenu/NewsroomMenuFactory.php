@@ -20,7 +20,6 @@
 namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\NewsroomMenu;
 
 use appUserPreferences;
-use Dict;
 use MetaModel;
 use UserRights;
 use utils;
@@ -44,10 +43,10 @@ class NewsroomMenuFactory
 	 */
 	public static function MakeNewsroomMenuForNavigationMenu()
 	{
-			$oMenu = new NewsroomMenu('ibo-navigation-menu--notifications-menu');
-			$oMenu->SetParams(static::PrepareParametersForNewsroomMenu());
-			
-			return $oMenu;
+		$oMenu = new NewsroomMenu('ibo-navigation-menu--notifications-menu');
+		$oMenu->SetParams(static::PrepareParametersForNewsroomMenu());
+
+		return $oMenu;
 	}
 
 	/**

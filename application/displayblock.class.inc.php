@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparatorUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -1805,9 +1806,9 @@ class MenuBlock extends DisplayBlock
 		$oSet = new CMDBObjectSet($this->m_oFilter);
 		$sRefreshAction = $aExtraParams['sRefreshAction'] ?? '';
 
-		/** @var $aRegularActions Any action other than a transition */
+		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
-		/** @var $aTransitionActions Only transitions */
+		/** @var array $aTransitionActions Only transitions */
 		$aTransitionActions = [];
 		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle != 'listInObject') {
 			$oAppContext = new ApplicationContext();
@@ -2201,27 +2202,14 @@ class MenuBlock extends DisplayBlock
 					$sName = 'UI:Menu:Transitions';
 				}
 				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-map-signs', Dict::S($sName), $sName, '', false, $sTransitionActionsMenuTogglerId)
-					->AddCSSClasses(['ibo-action-button', 'ibo-transition-action-button'])
-					->SetJsCode(<<<JS
-$("#{$sTransitionActionsPopoverMenuId}").popover_menu({toggler: "#{$sTransitionActionsMenuTogglerId}", add_visual_hint_to_toggler: true});
-$('#{$sTransitionActionsMenuTogglerId}').on('click', function(oEvent) {
-	var oEventTarget = $('#{$sTransitionActionsMenuTogglerId}');
-	var aEventTargetPos = oEventTarget.position();
-	var popover = $("#{$sTransitionActionsPopoverMenuId}");
-	
-	popover.css({
-		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
-		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
-		'z-index': 10060
-	});
-	popover.popover_menu("togglePopup");
-});
-JS
-					);
+					->AddCSSClasses(['ibo-action-button', 'ibo-transition-action-button']);
 
-				// TODO 3.0.0: Try to handle the JS above in a nicer place or through block options
+				$oTransitionActionsMenu = $oPage->GetPopoverMenu($sTransitionActionsPopoverMenuId, $aTransitionActions)
+					->SetTogglerJSSelector("#$sTransitionActionsMenuTogglerId")
+					->AddVisualHintToToggler();
+
 				$oActionsToolbar->AddSubBlock($oActionButton)
-					->AddSubBlock($oPage->GetPopoverMenu($sTransitionActionsPopoverMenuId, $aTransitionActions));
+					->AddSubBlock($oTransitionActionsMenu);
 			}
 
 			// Separator between transitions and regulars
@@ -2294,27 +2282,14 @@ JS
 					$sName = 'UI:Menu:Actions';
 				}
 				$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sRegularActionsMenuTogglerId)
-					->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button'])
-					->SetJsCode(<<<JS
-$("#{$sRegularActionsPopoverMenuId}").popover_menu({toggler: "#{$sRegularActionsMenuTogglerId}"});
-$('#{$sRegularActionsMenuTogglerId}').on('click', function(oEvent) {
-	var oEventTarget = $('#{$sRegularActionsMenuTogglerId}');
-	var aEventTargetPos = oEventTarget.position();
-	var popover = $("#{$sRegularActionsPopoverMenuId}");
-	
-	popover.css({
-		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
-		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
-		'z-index': 10060
-	});
-	popover.popover_menu("togglePopup");
-});
-JS
-					);
+					->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 
-				// TODO 3.0.0: Try to handle the JS above in a nicer place or through block options
+				$oRegularActionsMenu = $oPage->GetPopoverMenu($sRegularActionsPopoverMenuId, $aRegularActions)
+					->SetTogglerJSSelector("#$sRegularActionsMenuTogglerId")
+					->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+
 				$oActionsToolbar->AddSubBlock($oActionButton)
-					->AddSubBlock($oPage->GetPopoverMenu($sRegularActionsPopoverMenuId, $aRegularActions));
+					->AddSubBlock($oRegularActionsMenu);
 			}
 		}
 

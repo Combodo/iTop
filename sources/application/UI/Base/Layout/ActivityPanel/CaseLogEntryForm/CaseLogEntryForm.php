@@ -299,18 +299,18 @@ class CaseLogEntryForm extends UIContentBlock
 		$aSubBlocks = [];
 		$aSubBlocks[$this->GetTextInput()->GetId()] = $this->GetTextInput();
 
-		foreach ($this->GetExtraActionButtons() as $oExtraActionButton)
-		{
+		foreach ($this->GetExtraActionButtons() as $oExtraActionButton) {
 			$aSubBlocks[$oExtraActionButton->GetId()] = $oExtraActionButton;
 		}
 
-		foreach ($this->GetMainActionButtons() as $oMainActionButton)
-		{
+		foreach ($this->GetMainActionButtons() as $oMainActionButton) {
 			$aSubBlocks[$oMainActionButton->GetId()] = $oMainActionButton;
 		}
 
-		$aSubBlocks[$this->GetSendButtonPopoverMenu()->GetId()] = $this->GetSendButtonPopoverMenu();
-		
+		if ($this->HasSendButtonPopoverMenu()) {
+			$aSubBlocks[$this->GetSendButtonPopoverMenu()->GetId()] = $this->GetSendButtonPopoverMenu();
+		}
+
 		return $aSubBlocks;
 	}
 	

@@ -1123,24 +1123,9 @@ JS
 		} else {
 			$oToolbar = $oDashboard->GetToolbar();
 		}
-		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sMenuTogglerId);
-		$oActionButton->AddCSSClasses(['ibo-top-bar--toolbar-dashboard-menu-toggler', 'ibo-action-button']);
-		$oActionButton->SetJsCode(<<<JS
-$("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
-$('#{$sMenuTogglerId}').on('click', function(oEvent) {
-	var oEventTarget = $('#{$sMenuTogglerId}');
-	var aEventTargetPos = oEventTarget.position();
-	var popover = $("#{$sPopoverMenuId}");
-	
-	popover.css({
-		'top': (aEventTargetPos.top + oEventTarget.outerHeight(true)) + 'px',
-		'left': (aEventTargetPos.left + oEventTarget.outerWidth(true) - popover.width()) + 'px',
-		'z-index': 10060
-	});
-	popover.popover_menu("togglePopup");
-});
-JS
-		);
+		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sMenuTogglerId)
+			->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler')
+			->AddCSSClass('ibo-action-button');
 
 		$oToolbar->AddSubBlock($oActionButton);
 
@@ -1161,7 +1146,11 @@ JS
 
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
-		$oToolbar->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
+		$oActionsMenu = $oPage->GetPopoverMenu($sPopoverMenuId, $aActions)
+			->SetTogglerJSSelector("#$sMenuTogglerId");
+
+		$oToolbar->AddSubBlock($oActionButton)
+			->AddSubBlock($oActionsMenu);
 
 		$sReloadURL = $this->GetReloadURL();
 		$oPage->add_script(

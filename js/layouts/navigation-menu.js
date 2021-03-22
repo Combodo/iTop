@@ -100,11 +100,6 @@ $(function()
 				this.element.find(this.js_selectors.menu_filter_hint_close).on('click', function (oEvent) {
 					me._onFilterHintCloseClick(oEvent);
 				});
-
-				// User info
-				this.element.find(this.js_selectors.user_menu_toggler).on('click', function (oEvent) {
-					me._onUserMenuTogglerClick(oEvent);
-				});
 			},
 
 			// Events callbacks
@@ -193,20 +188,6 @@ $(function()
 
 				// Save state in user preferences
 				SetUserPreference('navigation_menu.show_filter_hint', false, true);
-			},
-
-			_onUserMenuTogglerClick: function(oEvent)
-			{
-				// Avoid anchor glitch
-				oEvent.preventDefault();
-				var oEventTarget = $(oEvent.target);
-				var aEventTargetPos = oEventTarget.position();
-
-				$(this.js_selectors.user_menu_container).css({
-					'top': (aEventTargetPos.top + parseInt(oEventTarget.css('marginTop'), 10) -  $(this.js_selectors.user_menu).height()) + 'px',
-					'left': (aEventTargetPos.left + parseInt(oEventTarget.css('marginLeft'), 10) + oEventTarget.width()) + 'px'
-				});
-				$(this.js_selectors.user_menu).popover_menu('togglePopup');
 			},
 
 			// Methods

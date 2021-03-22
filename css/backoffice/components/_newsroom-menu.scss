@@ -103,7 +103,6 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
 }
 
 .ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu{
-  bottom: 0;
   .ibo-navigation-menu--notifications--item--new-message-indicator{
     display: inline-block;
     margin-right: $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right;

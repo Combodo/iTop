@@ -37,8 +37,10 @@ class CaseLogEntryFormFactory
 		$oCaseLogEntryForm = new CaseLogEntryForm($oObject, $sCaseLogAttCode);
 		$oCaseLogEntryForm->SetSubmitModeFromHostObjectMode($sObjectMode)
 			->AddMainActionButtons(static::PrepareCancelButton())
-			->AddMainActionButtons(static::PrepareSaveButton())
-			->SetSendButtonPopoverMenu(static::PrepareSendActionSelectionPopoverMenu($oObject, $sCaseLogAttCode));
+			->AddMainActionButtons(static::PrepareSaveButton());
+
+		// TODO 3.0.0: Will be fixed by N°3649
+//			->SetSendButtonPopoverMenu(static::PrepareSendActionSelectionPopoverMenu($oObject, $sCaseLogAttCode));
 
 		return $oCaseLogEntryForm;
 	}

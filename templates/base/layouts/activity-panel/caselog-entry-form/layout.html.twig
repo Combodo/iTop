@@ -17,7 +17,9 @@
             {% for FormActionButton in oUIBlock.GetMainActionButtons() %}
                 {{ render_block(FormActionButton, {aPage: aPage}) }}
             {% endfor %}
-            {{ render_block(oUIBlock.GetSendButtonPopoverMenu(), {aPage: aPage}) }}
+            {% if oUIBlock.HasSendButtonPopoverMenu() %}
+                {{ render_block(oUIBlock.GetSendButtonPopoverMenu(), {aPage: aPage}) }}
+            {% endif %}
         </div>
     </div>
     <div class="ibo-caselog-entry-form--text-input" data-role="ibo-caselog-entry-form--text-input">
