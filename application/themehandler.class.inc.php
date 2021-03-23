@@ -808,7 +808,7 @@ CSS;
 	 * Replaces last occurrence of the string
 	 * @return string|string[]
 	 */
-	static function ReplaceLastOccurrence($sSearch, $sReplace, $sSubject)
+	public static function ReplaceLastOccurrence($sSearch, $sReplace, $sSubject)
 	{
 		$iPos = strrpos($sSubject, $sSearch);
 
