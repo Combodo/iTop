@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -205,61 +205,6 @@ EOF
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 
 		return;
-
-		//TODO 3.0.0 check if code below is necessary and how to adapt it ?
-		/////////////////////////////////////////////////////////
-		////////////////// ☢ DANGER ZONE ☢ /////////////////////
-		/////////////////////////////////////////////////////////
-
-		$oKPI = new ExecutionKPI();
-		$s_captured_output = $this->ob_get_clean_safe();
-		if (($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline')) {
-			// inline content != attachment && html => filter all scripts for malicious XSS scripts
-			echo self::FilterXSS($this->s_content);
-		} else {
-			echo $this->s_content;
-		}
-
-		// TODO 3.0.0 Only for designer ?
-		if (!empty($this->m_sMenu)) {
-			$uid = time();
-			echo "<div id=\"accordion_temp_$uid\">\n";
-			echo "<div id=\"accordion\">\n";
-			echo "<!-- Beginning of the accordion menu -->\n";
-			echo self::FilterXSS($this->m_sMenu);
-			echo "<!-- End of the accordion menu-->\n";
-			echo "</div>\n";
-			echo "</div>\n";
-
-			echo "<script type=\"text/javascript\">\n";
-			echo "$('#inner_menu').html($('#accordion_temp_$uid').html());\n";
-			echo "$('#accordion_temp_$uid').remove();\n";
-			echo "\n</script>\n";
-		}
-
-		if (!empty($this->s_deferred_content)) {
-			echo "<script type=\"text/javascript\">\n";
-			echo "\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');\n";
-			echo "\n</script>\n";
-		}
-		if (!empty($this->m_aReadyScripts)) {
-			echo "<script type=\"text/javascript\">\n";
-			echo $this->m_aReadyScripts; // Ready Scripts are output as simple scripts
-			echo "\n</script>\n";
-		}
-
-		if (trim($s_captured_output) != "") {
-			echo self::FilterXSS($s_captured_output);
-		}
-
-		$oKPI->ComputeAndReport('Echoing');
-
-		if (class_exists('DBSearch')) {
-			DBSearch::RecordQueryTrace();
-		}
-		if (class_exists('ExecutionKPI')) {
-			ExecutionKPI::ReportStats();
-		}
 	}
 
 	/**
