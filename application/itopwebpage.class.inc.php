@@ -354,14 +354,15 @@ JS
 		);
 		
 		// Highlight code content created with CKEditor
+		// Note: We check for the <code> tag inside the <pre> tag to only target code from CKEditor, otherwise we might highlight some others things. See N°3810
 		$this->add_ready_script(
 			<<<JS
 		// Highlight code content for HTML AttributeText
-        $("[data-attribute-type='AttributeText'] .HTML pre").each(function(i, block) {
+        $("[data-attribute-type='AttributeText'] .HTML pre > code").parent().each(function(i, block) {
             hljs.highlightBlock(block);
         });        
 		// Highlight code content for CaseLogs
-		$("[data-attribute-type='AttributeCaseLog'] .caselog_entry_html pre").each(function(i, block) {
+		$("[data-attribute-type='AttributeCaseLog'] .caselog_entry_html pre > code").parent().each(function(i, block) {
             hljs.highlightBlock(block);
         });
 JS
