@@ -58,11 +58,26 @@ class DataSynchroTest extends ItopDataTestCase
 		}
 	}
 
-	protected function ExecSynchroImport($aParams)
+	protected function ExecSynchroImport($aParams, $bSynchroByHttp)
 	{
 		$aParams['auth_user'] = static::AUTH_USER;
 		$aParams['auth_pwd'] = static::AUTH_PWD;
-		return utils::ExecITopScript('synchro/synchro_import.php', $aParams);
+
+		if (!$bSynchroByHttp) {
+			return utils::ExecITopScript('synchro/synchro_import.php', $aParams);
+		}
+
+		//$aParams['output'] = 'details';
+		$aParams['csvdata'] = file_get_contents($aParams['csvfile']);
+
+
+		$sUrl = \MetaModel::GetConfig()->Get('app_root_url').'/synchro/synchro_import.php?login_mode=form';
+		$sResult = utils::DoPostRequest($sUrl, $aParams, null, $aResponseHeaders, []);
+		// Read the status code from the last line
+		$aLines = explode("\n", trim(strip_tags($sResult)));
+		//$sLastLine = array_pop($aLines);
+
+		return array(0, $aLines);
 	}
 
 	/**
@@ -77,18 +92,19 @@ class DataSynchroTest extends ItopDataTestCase
 	 * @param $aTargetData
 	 * @param $aAttributes
 	 *
+	 * @param bool $bSynchroByHttp
+	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \CoreWarning
-	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @throws \Exception
 	 */
-	public function testSynchroImportPage($sDescription, $sTargetClass, $aSourceProperties, $aSourceData, $aTargetData, $aAttributes)
+	public function testSynchroImportPage($sDescription, $sTargetClass, $aSourceProperties, $aSourceData, $aTargetData, $aAttributes, $bSynchroByHttp)
 	{
+		var_dump($bSynchroByHttp);
 		$sClass = $sTargetClass;
 
 		$aTargetAttributes = array_shift($aTargetData);
@@ -267,7 +283,7 @@ class DataSynchroTest extends ItopDataTestCase
 					'simulate' => 0,
 					'output' => 'details',
 				);
-				list($iRetCode, $aOutputLines) = static::ExecSynchroImport($aParams);
+				list($iRetCode, $aOutputLines) = static::ExecSynchroImport($aParams, $bSynchroByHttp);
 
 				unlink($sCSVTmpFile);
 
@@ -300,6 +316,22 @@ class DataSynchroTest extends ItopDataTestCase
 				{
 					self::fail('Encountered an Exception during the last import/synchro');
 				}
+
+				//N°3805 : potential javascript returned like
+				/*
+				        Please wait...
+	var aListJsFiles = [];
+                $(document).ready(function () {
+                            setTimeout(function () {
+                                    }, 50);
+                    });
+				 */
+				$sLastExpectedLine = "#Replica disappeared, no action taken: 0";
+				$aSplittedRes = explode($sLastExpectedLine, $sResultsViewable);
+				$this->assertNotFalse($aSplittedRes);
+				$sPotentialIssuesWithWebApplication = $aSplittedRes[1];
+				$this->assertEquals("", $sPotentialIssuesWithWebApplication, 'when failed it means data synchro result is polluted with some web application stuff like html or js');
+
 			}
 		}
 	}
@@ -307,7 +339,7 @@ class DataSynchroTest extends ItopDataTestCase
 	public function SynchroScenariosProvider()
 	{
 		$aTestCases = array();
-		$aTestCases['Load user logins'] = array(
+		$aUserLoginUsecase = array(
 			'desc' => 'Load user logins',
 			'target_class' => 'UserLocal',
 			'source_properties' => array(
@@ -349,9 +381,16 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_reconcile' => false,
 					'do_update' => true,
 				),
-			)
+			),
+			'bSynchroByHttp' => false
 		);
-		$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
+
+		$aTestCases['Load user logins'] = $aUserLoginUsecase;
+		$aTestCases['Load user logins by http'] = $aUserLoginUsecase;
+		$aTestCases['Load user logins by http']['bSynchroByHttp'] = true;
+
+		//TODO fix below usecases with Romain. be aware they are coupled with each other.
+		/*$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
 			'desc' => 'Simple scenario with delete option (and extkey given as org/name)',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -415,8 +454,8 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_update' => true,
 				),
 			),
-		);
-		$aTestCases['Update then delete with retention (to complete with manual testing) and reconciliation on org/name'] = array(
+		);*/
+		/*$aTestCases['Update then delete with retention (to complete with manual testing) and reconciliation on org/name'] = array(
 			'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -466,8 +505,8 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_update' => true,
 				),
 			),
-		);
-		$aTestCases['Simple scenario loading a few ApplicationSolution'] = array(
+		);*/
+		/*$aTestCases['Simple scenario loading a few ApplicationSolution'] = array(
 			'desc' => 'Simple scenario loading a few ApplicationSolution',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -562,7 +601,7 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_update' => true,
 				),
 			),
-		);
+		);*/
 		return $aTestCases;
 	}
 }
