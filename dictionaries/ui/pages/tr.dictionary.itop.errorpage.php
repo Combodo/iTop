@@ -19,7 +19,7 @@
 
 // Navigation menu
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an alpha version that may be unstable or include bugs and unfinished features. If you think this error occurred because of this please send us your feedback!~~',
+	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
 	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
 
 - The R&amp;D Team~~',
