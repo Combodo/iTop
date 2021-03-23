@@ -20,8 +20,6 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Panel;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
-use MetaModel;
-use ormStyle;
 
 /**
  * Class PanelUIBlockFactory
@@ -174,25 +172,5 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		$oPanel->SetColorFromClass($sClass);
 
 		return $oPanel;
-	}
-
-	/**
-	 * @param string $sClass
-	 * @param \Combodo\iTop\Application\UI\Base\Component\Panel\Panel $oPanel
-	 *
-	 * @throws \CoreException
-	 */
-	public static function SetClassColor(string $sClass, Panel $oPanel): void
-	{
-		/** @var ormStyle $oStyle */
-		$sColor = null;
-		$oStyle = MetaModel::GetClassStyle($sClass);
-		if ($oStyle) {
-			$sColor = $oStyle->GetMainColor();
-		}
-		if (strlen($sColor) == 0) {
-			$sColor = Panel::ENUM_COLOR_BLUE;
-		}
-		$oPanel->SetColor($sColor);
 	}
 }
