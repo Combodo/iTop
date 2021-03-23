@@ -502,7 +502,6 @@ abstract class UIBlock implements iUIBlock
 		return $this;
 	}
 
-
 	/**
 	 * @param string $sName
 	 * @param string $sValue
@@ -514,6 +513,15 @@ abstract class UIBlock implements iUIBlock
 		$this->aDataAttributes[$sName] = $sValue;
 
 		return $this;
+	}
+
+	/**
+	 * @return bool
+	 * @uses static::$aDataAttributes
+	 */
+	public function HasDataAttributes(): bool
+	{
+		return !empty($this->aDataAttributes);
 	}
 
 	/**
