@@ -105,7 +105,7 @@ class StaticTable extends UIContentBlock
 	}
 
 	/**
-	 * @param string $sUrlForRefresh
+	 * @param string $sFilter
 	 */
 	public function SetFilter($sFilter): void
 	{

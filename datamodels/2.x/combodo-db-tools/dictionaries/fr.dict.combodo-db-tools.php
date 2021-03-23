@@ -34,12 +34,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:ShowReport' => 'Rapport',
 	'DBTools:IntegrityCheck' => 'Contrôle d\'intégrité',
 	'DBTools:FetchCheck' => 'Contrôle de récupération (long)',
+	'DBTools:SelectAnalysisType' => 'Type d\'analyse',
 
 	'DBTools:Analyze' => 'Analyser',
 	'DBTools:Details' => 'Afficher détails',
 	'DBTools:ShowAll' => 'Afficher toutes les erreurs',
 
 	'DBTools:Inconsistencies' => 'Incohérences de base de données',
+	'DBTools:DetailedErrorTitle' => '%2$s erreur(s) dans la classe %1$s : %3$s',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la tableit  `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clef externe invalide %1$s (colonne: `%2$s.%3$s`)',
