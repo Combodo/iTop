@@ -97,33 +97,3 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Тикеты',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Связанные тикеты',
 ));
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              manual
-            ' => '
-              manual
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              manual
-            +' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              computed
-            ' => '
-              computed
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              computed
-            +' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              not_impacted
-            ' => '
-              not_impacted
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              not_impacted
-            +' => '~~',
-));

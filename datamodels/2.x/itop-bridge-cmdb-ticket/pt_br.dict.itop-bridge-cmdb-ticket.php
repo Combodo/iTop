@@ -97,33 +97,3 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Solicitações',
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Todos as solicitações para este item de configuração',
 ));
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              manual
-            ' => '
-              manual
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              manual
-            +' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              computed
-            ' => '
-              computed
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              computed
-            +' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              not_impacted
-            ' => '
-              not_impacted
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              not_impacted
-            +' => '~~',
-));

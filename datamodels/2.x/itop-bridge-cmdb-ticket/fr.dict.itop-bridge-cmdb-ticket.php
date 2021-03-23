@@ -97,33 +97,3 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '',
 ));
-//
-// Class: lnkFunctionalCIToTicket
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              manual
-            ' => '
-              manual
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              manual
-            +' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              computed
-            ' => '
-              computed
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              computed
-            +' => '~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              not_impacted
-            ' => '
-              not_impacted
-            ~~',
-	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
-              not_impacted
-            +' => '~~',
-));
