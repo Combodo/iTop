@@ -772,8 +772,8 @@ CSS;
 				// Handle shortcut syntax : @import "typo" ;
 				// file matched: _typo.scss
 				$sShortCut = substr($sFilePath, strrpos($sFilePath, '/') + 1);
-				$sFilePath = str_replace($sShortCut, "_$sShortCut.scss", $sFilePath);
-				$sFileURI = str_replace($sShortCut, "_$sShortCut.scss", $sFileURI);
+				$sFilePath = static::ReplaceLastOccurrence($sShortCut, "_$sShortCut.scss", $sFilePath);
+				$sFileURI = static::ReplaceLastOccurrence($sShortCut, "_$sShortCut.scss", $sFileURI);
 				$sImportedFile = realpath($sFilePath);
 			}
 
@@ -797,6 +797,27 @@ CSS;
 				}
 			}
 		}
+	}
+
+	/**
+	 * @param $search
+	 * @param $replace
+	 * @param $subject
+	 *
+	 * @since 3.0.0 N°2982
+	 * Replaces last occurrence of the string
+	 * @return string|string[]
+	 */
+	static function ReplaceLastOccurrence($sSearch, $sReplace, $sSubject)
+	{
+		$iPos = strrpos($sSubject, $sSearch);
+
+		if($iPos !== false)
+		{
+			$sSubject = substr_replace($sSubject, $sReplace, $iPos, strlen($sSearch));
+		}
+
+		return $sSubject;
 	}
 
 	/**

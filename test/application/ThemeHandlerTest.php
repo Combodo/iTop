@@ -652,9 +652,13 @@ SCSS;
 				"sFileToFind" => "css/simple_import2.scss",
 				"aAllImports" => [$sFileToFind5]
 			],
-			"scss with @imports shortcut typography => _typography.scss" => [
+			"scss with @imports shortcut included_file3 => _included_file3.scss" => [
 				"sFileToFind" => "css/shortcut.scss",
 				"aAllImports" => ["css/_included_file3.scss", "css/included_scss/included_file4.scss"]
+			],
+			"scss with @imports shortcut same file and folder names => feature1/_feature1.scss" => [
+				"sFileToFind" => "css/shortcut2.scss",
+				"aAllImports" => ["css/feature1/_feature1.scss"]
 			],
 			"cross_reference & infinite loop" => [
 				"sFileToFind" => "css/cross_reference1.scss",
