@@ -1,20 +1,9 @@
 <?php
-// Copyright (C) 2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -69,12 +58,14 @@ class SpreadsheetBulkExport extends TabularBulkExport
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "spreadsheet_formatted_text", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oCheckBox->SetBeforeInput(false);
 				$oFieldSetFormat->AddSubBlock($oCheckBox);
 				$oFieldSetFormat->AddSubBlock(new Html('<br>'));
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "spreadsheet_no_localize", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oCheckBox->SetBeforeInput(false);
 				$oFieldSetFormat->AddSubBlock($oCheckBox);
 
@@ -88,6 +79,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "spreadsheet_date_format_radio", "default", "spreadsheet_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oRadioDefault->SetBeforeInput(false);
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
@@ -95,6 +87,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "spreadsheet_date_format_radio", "custom", "spreadsheet_date_time_format_custom", "radio");
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oRadioCustom->SetBeforeInput(false);
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 

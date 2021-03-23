@@ -67,8 +67,10 @@ $ibo-input--margin-x: 5px !default;
 
 .ibo-input--label-right {
   margin-right: $ibo-input--margin-x;
+  display: inline;
 }
 
 .ibo-input--label-left {
   margin-leftt: $ibo-input--margin-x;
+  display: inline;
 }

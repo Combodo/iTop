@@ -141,7 +141,8 @@ class CSVBulkExport extends TabularBulkExport
 					$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
-					$oRadio->AddCSSClass('ibo-input--label-right');
+					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
+					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
 					$oFieldSetSeparator->AddSubBlock($oRadio);
 					$oFieldSetSeparator->AddSubBlock(new Html('</br>'));
 				}
@@ -168,6 +169,7 @@ class CSVBulkExport extends TabularBulkExport
 					$oRadio->GetInput()->SetIsChecked(($sVal == $sRawSeparator));
 					$oRadio->SetBeforeInput(false);
 					$oRadio->GetInput()->AddCSSClass('ibo-input--label-right');
+					$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
 					$oFieldSetTextQualifier->AddSubBlock($oRadio);
 					$oFieldSetTextQualifier->AddSubBlock(new Html('</br>'));
 				}
@@ -181,6 +183,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
 				$oCheckBox->SetBeforeInput(false);
 				$oCheckBox->GetInput()->AddCSSClass('ibo-input--label-right');
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetLocalization->AddSubBlock($oCheckBox);
 				$oFieldSetLocalization->AddSubBlock(new Html('</br>'));
 
@@ -201,6 +204,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oCheckBoxMarkup = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "csv_formatted_text", "checkbox");
 				$oCheckBoxMarkup->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
 				$oCheckBoxMarkup->SetBeforeInput(false);
+				$oCheckBoxMarkup->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetMarkup->AddSubBlock($oCheckBoxMarkup);
 
 				//date format
@@ -215,6 +219,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "csv_custom_date_time_format", "default", "csv_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
@@ -222,6 +227,7 @@ class CSVBulkExport extends TabularBulkExport
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "csv_custom_date_time_format", "custom", "csv_date_time_format_custom", "radio");
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
 				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');

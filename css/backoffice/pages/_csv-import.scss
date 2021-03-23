@@ -1,0 +1,45 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+#tabs1-import .ibo-field--label {
+  max-width: 50%;
+}
+
+div.cell_modified {
+  font-weight: bold;
+  color: #004e91;
+}
+
+div.cell_error {
+  font-weight: bold;
+  color: #D81515;
+}
+
+div.cell_error > p {
+  font-weight: bold;
+  color: #D81515;
+}
+
+tr.row_unchanged td {
+  border-bottom: 1px #ccc solid;
+}
+
+.wizContainer table tr.row_error td {
+  border-bottom: 1px #ccc solid;
+  background-color: #fdd;
+}
+
+tr.row_modified td {
+  border-bottom: 1px #ccc solid;
+}
+
+tr.row_added td {
+  border-bottom: 1px #ccc solid;
+}
+
+.ibo-import-csv--download-file {
+  font-size: 4em;
+  color: $ibo-color-primary-400;
+  margin: 20px;
+}

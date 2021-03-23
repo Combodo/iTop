@@ -1,25 +1,6 @@
 <?php
-// Copyright (C) 2015-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-/**
- * Bulk export: Excel (xlsx) export
- *
- * @copyright   Copyright (C) 2015-2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -112,6 +93,7 @@ class ExcelBulkExport extends TabularBulkExport
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "xlsx_formatted_text", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
 				$oCheckBox->SetBeforeInput(false);
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oCheckBox);
 
 				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
@@ -125,6 +107,7 @@ class ExcelBulkExport extends TabularBulkExport
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "excel_date_format_radio", "default", "excel_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
@@ -132,6 +115,7 @@ class ExcelBulkExport extends TabularBulkExport
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "excel_date_format_radio", "custom", "excel_date_time_format_custom", "radio");
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
 

@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -33,7 +33,7 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 				$aCSSClasses = array_merge(explode(' ', $sStyleClass), ['ibo-field-badge']);
 				$oBadge = new FieldBadge(null, $aCSSClasses);
 				$sDecorationClasses = $oStyle->GetDecorationClasses();
-				if (!is_null($sDecorationClasses)) {
+				if (!is_null($sDecorationClasses) && !empty($sDecorationClasses)) {
 					$oBadge->AddHtml("<i class=\"$sDecorationClasses\"></i>&nbsp;");
 				}
 				$oBadge->AddHtml("<span>$sValue</span>");

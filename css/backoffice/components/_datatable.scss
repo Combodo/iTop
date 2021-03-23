@@ -1,3 +1,8 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-datatable--padding-y: 2em !default;
 
 $ibo-datatable-cell-row--line-height: 30px !default;
@@ -51,11 +56,16 @@ $ibo-list-column--max-height: 150px;
 
 // For cancel / OK / next... selection validation buttons
 .ibo-datatable--selection-validation-buttons-toolbar {
-  clear: both;
-  margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
+	clear: both;
+	margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
 }
 
 .ibo-list-column {
-  max-height: $ibo-list-column--max-height;
-  overflow-y: auto;
+	max-height: $ibo-list-column--max-height;
+	overflow-y: auto;
+}
+
+.ibo-datatable .ibo-field-badge {
+	margin: 0;
+	padding: 0px 4px;
 }

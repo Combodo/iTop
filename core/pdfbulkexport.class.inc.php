@@ -57,6 +57,7 @@ class PDFBulkExport extends HTMLBulkExport
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
 				$oSelectFormat->SetBeforeInput(false);
+				$oSelectFormat->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
@@ -69,6 +70,7 @@ class PDFBulkExport extends HTMLBulkExport
 				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_size",
 					Dict::S('Core:BulkExport:PDFPageOrientation'));
 				$oSelectOrientation->SetBeforeInput(false);
+				$oSelectOrientation->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 
 				$aPossibleOrientation = ['P', 'L'];
@@ -89,6 +91,7 @@ class PDFBulkExport extends HTMLBulkExport
 				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "pdf_custom_date_time_format", "default", "pdf_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
@@ -96,6 +99,7 @@ class PDFBulkExport extends HTMLBulkExport
 				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "pdf_custom_date_time_format", "custom", "pdf_date_time_format_custom", "radio");
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioCustom);
 
 				$sJSTooltip = json_encode('<div id="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');

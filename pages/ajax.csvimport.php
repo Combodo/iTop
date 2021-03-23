@@ -1,21 +1,17 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -99,7 +95,7 @@ function GetMappingsForExtKey($sAttCode, AttributeDefinition $oExtKeyAttDef, $bA
  * @param bool $bAdvancedMode Whether or not advanced mode was chosen
  * @param string $sDefaultChoice If set, this will be the item selected by default
  *
- * @return string The HTML code corresponding to the drop-down list for this field
+ * @return Select The block corresponding to the drop-down list for this field
  * @throws \CoreException
  */
 function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMode, $sDefaultChoice)
@@ -107,71 +103,55 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 	$aChoices = array('' => Dict::S('UI:CSVImport:MappingSelectOne'));
 	$aChoices[':none:'] = Dict::S('UI:CSVImport:MappingNotApplicable');
 	$sFieldCode = ''; // Code of the attribute, if there is a match
-	$aMatches  = array();
-	if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches))
-	{
+	$aMatches = array();
+	if (preg_match('/^(.+)\*$/', $sFieldName, $aMatches)) {
 		// Remove any trailing "star" character.
 		// A star character at the end can be used to indicate a mandatory field
 		$sFieldName = $aMatches[1];
-	}
-	else if (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches))
-	{
+	} else if (preg_match('/^(.+)\*->(.+)$/', $sFieldName, $aMatches)) {
 		// Remove any trailing "star" character before the arrow (->)
 		// A star character at the end can be used to indicate a mandatory field
 		$sFieldName = $aMatches[1].'->'.$aMatches[2];
 	}
-	if (($sFieldName == 'id') || ($sFieldName == Dict::S('UI:CSVImport:idField')))
-	{
+	if (($sFieldName == 'id') || ($sFieldName == Dict::S('UI:CSVImport:idField'))) {
 		$sFieldCode = 'id';
 	}
-	if ($bAdvancedMode)
-	{
+	if ($bAdvancedMode) {
 		$aChoices['id'] = Dict::S('UI:CSVImport:idField');
 	}
-	foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
-	{
+	foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
 		$sStar = '';
-		if ($oAttDef->IsExternalKey())
-		{
-			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
-			{
+		if ($oAttDef->IsExternalKey()) {
+			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode)) {
 				$sFieldCode = $sAttCode;
 			}
-			if ($bAdvancedMode)
-			{
+			if ($bAdvancedMode) {
 				$aChoices[$sAttCode] = $oAttDef->GetLabel();
 			}
 			$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
-			if (!$oExtKeyAttDef->IsNullAllowed())
-			{
+			if (!$oExtKeyAttDef->IsNullAllowed()) {
 				$sStar = '*';
 			}
 			// Get fields of the external class that are considered as reconciliation keys
 			$sTargetClass = $oAttDef->GetTargetClass();
-			foreach(MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef)
-			{
+			foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sTargetAttCode => $oTargetAttDef) {
 				// Note: Could not use "MetaModel::GetFriendlyNameAttributeCode($sTargetClass) === $sTargetAttCode" as it would return empty because the friendlyname is composite.
-				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode) || ($oTargetAttDef instanceof AttributeFriendlyName))
-				{
+				if (MetaModel::IsReconcKey($sTargetClass, $sTargetAttCode) || ($oTargetAttDef instanceof AttributeFriendlyName)) {
 					$bExtKey = $oTargetAttDef->IsExternalKey();
 					$aSignatures = array();
 					$aSignatures[] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel();
 					$aSignatures[] = $sAttCode.'->'.$sTargetAttCode;
-					if ($bExtKey)
-					{
+					if ($bExtKey) {
 						$aSignatures[] = $oAttDef->GetLabel().'->'.$oTargetAttDef->GetLabel().'->id';
 						$aSignatures[] = $sAttCode.'->'.$sTargetAttCode.'->id';
 					}
-					if ($bAdvancedMode || !$bExtKey)
-					{
-					
+					if ($bAdvancedMode || !$bExtKey) {
+
 						// When not in advanced mode do not allow to use reconciliation keys (on external keys) if they are themselves external keys !
 						$aChoices[$sAttCode.'->'.$sTargetAttCode] = MetaModel::GetLabel($sClassName, $sAttCode.'->'.$sTargetAttCode, true);
-						foreach ($aSignatures as $sSignature)
-						{
-							if (strcasecmp($sFieldName, $sSignature) == 0)
-							{
-								$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
+						foreach ($aSignatures as $sSignature) {
+							if (strcasecmp($sFieldName, $sSignature) == 0) {
+								$sFieldCode = $sAttCode.'->'.$sTargetAttCode.$sStar;
 							}
 						}
 					}
@@ -181,49 +161,38 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		else if (
 			($oAttDef->IsWritable() && (!$oAttDef->IsLinkset() || ($bAdvancedMode && $oAttDef->IsIndirect())))
 			|| ($oAttDef instanceof AttributeFriendlyName)
-		)
-		{
+		) {
 			$aChoices[$sAttCode] = MetaModel::GetLabel($sClassName, $sAttCode, true);
-			if ( ($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode))
-			{
+			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode)) {
 				$sFieldCode = $sAttCode;
 			}
 		}
 	}
 	asort($aChoices);
 
-	$sHtml = "<select id=\"mapping_{$iFieldIndex}\" name=\"field[$iFieldIndex]\">\n";
+	$oSelect = SelectUIBlockFactory::MakeForSelect("field[$iFieldIndex]", "mapping_{$iFieldIndex}");
 	$bIsIdField = IsIdField($sClassName, $sFieldCode);
-	foreach($aChoices as $sAttCode => $sLabel)
-	{
-		$sSelected = '';
+	foreach ($aChoices as $sAttCode => $sLabel) {
+		$bSelected = false;
 		if ($bIsIdField && (!$bAdvancedMode)) // When not in advanced mode, ID are mapped to n/a
 		{
-			if ($sAttCode == ':none:')
-			{
-				$sSelected = ' selected';
+			if ($sAttCode == ':none:') {
+				$bSelected = true;
 			}
-		}
-		else if (empty($sFieldCode) && (strpos($sFieldName, '->') !== false))
-		{
-			if ($sAttCode == ':none:')
-			{
-				$sSelected = ' selected';
+		} else if (empty($sFieldCode) && (strpos($sFieldName, '->') !== false)) {
+			if ($sAttCode == ':none:') {
+				$bSelected = true;
 			}
+		} else if (is_null($sDefaultChoice) && ($sFieldCode == $sAttCode)) {
+			$bSelected = true;
+		} else if (!is_null($sDefaultChoice) && ($sDefaultChoice == $sAttCode)) {
+			$bSelected = true;
 		}
-		else if (is_null($sDefaultChoice) && ($sFieldCode == $sAttCode))
-		{
-			$sSelected = ' selected';
-		}
-		else if (!is_null($sDefaultChoice) && ($sDefaultChoice == $sAttCode))
-		{
-			$sSelected = ' selected';
-		}
-
-		$sHtml .= "<option value=\"$sAttCode\" $sSelected>$sLabel</option>\n";
+		$oOption = SelectOptionUIBlockFactory::MakeForSelectOption($sAttCode, $sLabel, $bSelected);
+		$oSelect->AddOption($oOption);
 	}
-	$sHtml .= "</select>\n";
-	return $sHtml;
+
+	return $oSelect;
 }
 
 try
@@ -239,259 +208,231 @@ try
 	switch($sOperation)
 	{
 		case 'parser_preview':
-		$oPage = new ajax_page("");
-		$oPage->SetContentType('text/html');
-		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
-		if ($sSeparator == 'tab') $sSeparator = "\t";
-		$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
-		$iLinesToSkip = utils::ReadParam('do_skip_lines', 0);
-		$bFirstLineAsHeader = utils::ReadParam('header_line', true);
-		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
-		$sData = stripslashes(utils::ReadParam('csvdata', true, false, 'raw_data'));
-		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
-		$iMaxIndex= 10; // Display maximum 10 lines for the preview
-		$aData = $oCSVParser->ToArray($iLinesToSkip, null, $iMaxIndex);
-		$iTarget = count($aData);
-		if ($iTarget == 0)
-		{
-			$oPage->p(Dict::S('UI:CSVImport:NoData'));
-		}
-		else
-		{
-			$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
-			$sFormat = '%0'.$sMaxLen.'d';
-			$oPage->p("<h3>".Dict::S('UI:Title:DataPreview')."</h3>\n");
-			$oPage->p("<div style=\"overflow-y:auto\" class=\"white\">\n");
-			$oPage->add("<table cellspacing=\"0\" style=\"overflow-y:auto\">");
-			$index = 1;
-			foreach($aData as $aRow)
-			{
-				$sCSSClass = 'csv_row'.($index % 2);
-				if ( ($bFirstLineAsHeader) && ($index == 1))
-				{
-					$oPage->add("<tr class=\"$sCSSClass\"><td style=\"border-left:#999 3px solid;padding-right:10px;padding-left:10px;\">".sprintf($sFormat, $index)."</td>");
-					foreach ($aRow as $sCell)
-					{
-						$oPage->add('<th>'.htmlentities($sCell, ENT_QUOTES, 'UTF-8').'</th>');
+			$oPage = new AjaxPage("");
+			$oPage->SetContentType('text/html');
+			$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
+			if ($sSeparator == 'tab') {
+				$sSeparator = "\t";
+			}
+			$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
+			$iLinesToSkip = utils::ReadParam('do_skip_lines', 0);
+			$bFirstLineAsHeader = utils::ReadParam('header_line', true);
+			$sEncoding = utils::ReadParam('encoding', 'UTF-8');
+			$sData = stripslashes(utils::ReadParam('csvdata', true, false, 'raw_data'));
+			$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
+			$iMaxIndex = 10; // Display maximum 10 lines for the preview
+			$aData = $oCSVParser->ToArray($iLinesToSkip, null, $iMaxIndex);
+			$iTarget = count($aData);
+			if ($iTarget == 0) {
+				$oPage->p(Dict::S('UI:CSVImport:NoData'));
+			} else {
+				$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
+				$sFormat = '%0'.$sMaxLen.'d';
+
+				$oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:DataPreview'));
+				$oPage->AddSubBlock($oTitle);
+
+				$oContainer = UIContentBlockUIBlockFactory::MakeStandard();
+				$oContainer->AddCSSClass("ibo-is-visible");
+				$oPage->AddSubBlock($oContainer);
+
+				$index = 1;
+				$aColumns = [];
+				$aTableData = [];
+				foreach ($aData as $aRow) {
+					$sCSSClass = 'csv_row'.($index % 2);
+					if (($bFirstLineAsHeader) && ($index == 1)) {
+						$aColumns[] = ["label" => sprintf($sFormat, $index)];
+						foreach ($aRow as $sCell) {
+							$aColumns[] = ["label" => htmlentities($sCell, ENT_QUOTES, 'UTF-8')];
+						}
+						$iNbCols = count($aRow);
+					} else {
+						$aTableRow = [];
+						if ($index == 1) {
+							$iNbCols = count($aRow);
+						}
+						$aTableRow[] = sprintf($sFormat, $index);
+						foreach ($aRow as $sCell) {
+							$aTableRow[] = htmlentities($sCell, ENT_QUOTES, 'UTF-8');
+						}
+						$aTableData[$index] = $aTableRow;
 					}
-					$oPage->add("</tr>\n");
-					$iNbCols = count($aRow);
-									
-				}
-				else
-				{
-					if ($index == 1) $iNbCols = count($aRow);
-					$oPage->add("<tr class=\"$sCSSClass\"><td style=\"border-left:#999 3px solid;padding-right:10px;padding-left:10px;\">".sprintf($sFormat, $index)."</td>");
-					foreach ($aRow as $sCell)
-					{
-						$oPage->add('<td>'.htmlentities($sCell, ENT_QUOTES, 'UTF-8').'</td>');
+					$index++;
+					if ($index > $iMaxIndex) {
+						break;
 					}
-					$oPage->add("</tr>\n");
 				}
-				$index++;
-				if ($index > $iMaxIndex) break;
+				$oTable = DataTableUIBlockFactory::MakeForForm("parser_preview", $aColumns, $aTableData);
+				$oContainer->AddSubBlock($oTable);
+				if ($iNbCols == 1) {
+					$oAlertMessage = \Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory::MakeForFailure(Dict::S('UI:CSVImport:ErrorOnlyOneColumn'));
+					$oPage->AddSubBlock($oAlertMessage);
+				}
 			}
-			$oPage->add("</table>\n");
-			$oPage->add("</div>\n");
-			if($iNbCols == 1)
-			{
-				$oPage->p('<img src="../images/error.png">&nbsp;'.Dict::S('UI:CSVImport:ErrorOnlyOneColumn'));
-			}
-			else
-			{
-				$oPage->p('&nbsp;');
-			}
-		}
-		break;
+			break;
 
 		case 'display_mapping_form':
-		$oPage = new ajax_page("");
-		$oPage->no_cache();
-		$oPage->SetContentType('text/html');
-		$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
-		$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
-		$iLinesToSkip = utils::ReadParam('do_skip_lines', 0);
-		$bFirstLineAsHeader = utils::ReadParam('header_line', false);
-		$sData = stripslashes(utils::ReadParam('csvdata', '', false, 'raw_data'));
-		$sClassName = utils::ReadParam('class_name', '');
-		$bAdvanced = utils::ReadParam('advanced', false);
-		$sEncoding = utils::ReadParam('encoding', 'UTF-8');
+			$oPage = new AjaxPage("");
+			$sSeparator = utils::ReadParam('separator', ',', false, 'raw_data');
+			$sTextQualifier = utils::ReadParam('qualifier', '"', false, 'raw_data');
+			$iLinesToSkip = utils::ReadParam('do_skip_lines', 0);
+			$bFirstLineAsHeader = utils::ReadParam('header_line', false);
+			$sData = stripslashes(utils::ReadParam('csvdata', '', false, 'raw_data'));
+			$sClassName = utils::ReadParam('class_name', '');
+			$bAdvanced = utils::ReadParam('advanced', false);
+			$sEncoding = utils::ReadParam('encoding', 'UTF-8');
 
-		$sInitFieldMapping = utils::ReadParam('init_field_mapping', '', false, 'raw_data');
-		$sInitSearchField = utils::ReadParam('init_search_field', '', false, 'raw_data');
-		$aInitFieldMapping = empty($sInitFieldMapping) ? array() : json_decode($sInitFieldMapping, true);
-		$aInitSearchField = empty($sInitSearchField) ? array() : json_decode($sInitSearchField, true);
+			$sInitFieldMapping = utils::ReadParam('init_field_mapping', '', false, 'raw_data');
+			$sInitSearchField = utils::ReadParam('init_search_field', '', false, 'raw_data');
+			$aInitFieldMapping = empty($sInitFieldMapping) ? array() : json_decode($sInitFieldMapping, true);
+			$aInitSearchField = empty($sInitSearchField) ? array() : json_decode($sInitSearchField, true);
 
-		$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
-		$aData = $oCSVParser->ToArray($iLinesToSkip, null, 3 /* Max: 1 header line + 2 lines of sample data */);
-		$iTarget = count($aData);
-		if ($iTarget == 0)
-		{
-			$oPage->p(Dict::S('UI:CSVImport:NoData'));
-		}
-		else
-		{
-			$oPage->add("<table>");
-			$aFirstLine = $aData[0]; // Use the first row to determine the number of columns
-			$iStartLine = 0;
-			$iNbColumns = count($aFirstLine);
-			if ($bFirstLineAsHeader)
-			{
-				$iStartLine = 1;
-				foreach($aFirstLine as $sField)
-				{
-					$aHeader[] = $sField;
+			$oCSVParser = new CSVParser($sData, $sSeparator, $sTextQualifier, MetaModel::GetConfig()->Get('max_execution_time_per_loop'));
+			$aData = $oCSVParser->ToArray($iLinesToSkip, null, 3 /* Max: 1 header line + 2 lines of sample data */);
+			$iTarget = count($aData);
+			if ($iTarget == 0) {
+				$oPage->p(Dict::S('UI:CSVImport:NoData'));
+			} else {
+				$aFirstLine = $aData[0]; // Use the first row to determine the number of columns
+				$iStartLine = 0;
+				$iNbColumns = count($aFirstLine);
+				if ($bFirstLineAsHeader) {
+					$iStartLine = 1;
+					foreach ($aFirstLine as $sField) {
+						$aHeader[] = $sField;
+					}
+				} else {
+					// Build some conventional name for the fields: field1...fieldn
+					$index = 1;
+					foreach ($aFirstLine as $sField) {
+						$aHeader[] = Dict::Format('UI:CSVImport:FieldName', $index);
+						$index++;
+					}
 				}
-			}
-			else
-			{
-				// Build some conventional name for the fields: field1...fieldn
-				$index= 1;
-				foreach($aFirstLine as $sField)
-				{
-					$aHeader[] = Dict::Format('UI:CSVImport:FieldName', $index);
+				$aColumns = [];
+				$aColumns ["HeaderFields"] = ["label" => Dict::S('UI:CSVImport:HeaderFields')];
+				$aColumns ["HeaderMapipngs"] = ["label" => Dict::S('UI:CSVImport:HeaderMappings')];
+				$aColumns ["HeaderSearch"] = ["label" => Dict::S('UI:CSVImport:HeaderSearch')];
+				$aColumns ["DataLine1"] = ["label" => Dict::S('UI:CSVImport:DataLine1')];
+				$aColumns ["DataLine2"] = ["label" => Dict::S('UI:CSVImport:DataLine2')];
+
+				$aTableData = [];
+				$index = 1;
+				foreach ($aHeader as $sField) {
+					$aTableRow = [];
+					$sDefaultChoice = null;
+					if (isset($aInitFieldMapping[$index])) {
+						$sDefaultChoice = $aInitFieldMapping[$index];
+					}
+					$aTableRow['HeaderFields'] = utils::HtmlEntities($sField);
+					$aTableRow['HeaderMapipngs'] = BlockRenderer::RenderBlockTemplates(GetMappingForField($sClassName, $sField, $index, $bAdvanced, $sDefaultChoice));
+					$aTableRow['HeaderSearch'] = '<input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" />';
+					$aTableRow['DataLine1'] = (isset($aData[$iStartLine][$index - 1]) ? htmlentities($aData[$iStartLine][$index - 1], ENT_QUOTES, 'UTF-8') : '&nbsp;');
+					$aTableRow['DataLine2'] = (isset($aData[$iStartLine + 1][$index - 1]) ? htmlentities($aData[$iStartLine + 1][$index - 1], ENT_QUOTES, 'UTF-8') : '&nbsp;');
+					$aTableData[$index] = $aTableRow;
 					$index++;
 				}
-			}
-			$oPage->add("<table>\n");
-			$oPage->add('<tr>');
-			$oPage->add('<th>'.Dict::S('UI:CSVImport:HeaderFields').'</th><th>'.Dict::S('UI:CSVImport:HeaderMappings').'</th><th>&nbsp;</th><th>'.Dict::S('UI:CSVImport:HeaderSearch').'</th><th>'.Dict::S('UI:CSVImport:DataLine1').'</th><th>'.Dict::S('UI:CSVImport:DataLine2').'</th>');
-			$oPage->add('</tr>');
-			$index = 1;
-			foreach($aHeader as $sField)
-			{
-				$sDefaultChoice = null;
-				if (isset($aInitFieldMapping[$index]))
-				{
-					$sDefaultChoice = $aInitFieldMapping[$index];
-				}
-				$oPage->add('<tr>');
-				$oPage->add('<th>'.utils::HtmlEntities($sField).'</th>');
-				$oPage->add('<td>'.GetMappingForField($sClassName, $sField, $index, $bAdvanced, $sDefaultChoice).'</td>');
-				$oPage->add('<td>&nbsp;</td>');
-				$oPage->add('<td><input id="search_'.$index.'" type="checkbox" name="search_field['.$index.']" value="1" /></td>');
-				$oPage->add('<td>'.(isset($aData[$iStartLine][$index-1]) ? htmlentities($aData[$iStartLine][$index-1], ENT_QUOTES, 'UTF-8') : '&nbsp;').'</td>');
-				$oPage->add('<td>'.(isset($aData[$iStartLine+1][$index-1]) ? htmlentities($aData[$iStartLine+1][$index-1], ENT_QUOTES, 'UTF-8') : '&nbsp;').'</td>');
-				$oPage->add('</tr>');
-				$index++;
-			}
-			$oPage->add("</table>\n");
-
-			if (empty($sInitSearchField))
-			{
-				// Propose a reconciliation scheme
-				//
-				$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
-				$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
-				foreach($aReconciliationKeys as $sAttCode)
-				{
-					if (!MetaModel::IsValidAttCode($sClassName, $sAttCode)) continue;
-					$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
-					if ($oAttDef->IsExternalKey())
-					{
-						// An external key is specified as a reconciliation key: this means that all the reconciliation
-						// keys of this class are proposed to identify the target object
-						$aMoreReconciliationKeys = array_merge($aMoreReconciliationKeys, GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
+				$oTable = DataTableUIBlockFactory::MakeForForm("mapping", $aColumns, $aTableData);
+				$oPage->AddSubBlock($oTable);
+				if (empty($sInitSearchField)) {
+					// Propose a reconciliation scheme
+					//
+					$aReconciliationKeys = MetaModel::GetReconcKeys($sClassName);
+					$aMoreReconciliationKeys = array(); // Store: key => void to automatically remove duplicates
+					foreach ($aReconciliationKeys as $sAttCode) {
+						if (!MetaModel::IsValidAttCode($sClassName, $sAttCode)) {
+							continue;
+						}
+						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+						if ($oAttDef->IsExternalKey()) {
+							// An external key is specified as a reconciliation key: this means that all the reconciliation
+							// keys of this class are proposed to identify the target object
+							$aMoreReconciliationKeys = array_merge($aMoreReconciliationKeys, GetMappingsForExtKey($sAttCode, $oAttDef, $bAdvanced));
+						} elseif ($oAttDef->IsExternalField()) {
+							// An external field is specified as a reconciliation key, translate the field into a field on the target class
+							// since external fields are not writable, and thus never appears in the mapping form
+							$sKeyAttCode = $oAttDef->GetKeyAttCode();
+							$sTargetAttCode = $oAttDef->GetExtAttCode();
+							$aMoreReconciliationKeys[$sKeyAttCode.'->'.$sTargetAttCode] = '';
+						}
 					}
-					elseif($oAttDef->IsExternalField())
-					{
-						// An external field is specified as a reconciliation key, translate the field into a field on the target class
-						// since external fields are not writable, and thus never appears in the mapping form
-						$sKeyAttCode = $oAttDef->GetKeyAttCode();
-						$sTargetAttCode = $oAttDef->GetExtAttCode();
-						$aMoreReconciliationKeys[$sKeyAttCode.'->'.$sTargetAttCode] = '';			
+					$sDefaultKeys = '"'.implode('", "', array_merge($aReconciliationKeys, array_keys($aMoreReconciliationKeys))).'"';
+				} else {
+					// The reconciliation scheme is given (navigating back in the wizard)
+					//
+					$aDefaultKeys = array();
+					foreach ($aInitSearchField as $iSearchField => $void) {
+						$sAttCodeEx = $aInitFieldMapping[$iSearchField];
+						$aDefaultKeys[] = $sAttCodeEx;
+					}
+					$sDefaultKeys = '"'.implode('", "', $aDefaultKeys).'"';
+				}
+
+				// Read only attributes (will be forced to "search")
+				$aReadOnlyKeys = array();
+				foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
+					if (!$oAttDef->IsWritable()) {
+						$aReadOnlyKeys[] = $sAttCode;
 					}
 				}
-				$sDefaultKeys = '"'.implode('", "',array_merge($aReconciliationKeys, array_keys($aMoreReconciliationKeys))).'"';
-			}
-			else
-			{
-				// The reconciliation scheme is given (navigating back in the wizard)
-				//
-				$aDefaultKeys = array();
-				foreach ($aInitSearchField as $iSearchField => $void)
-				{
-					$sAttCodeEx = $aInitFieldMapping[$iSearchField];
-					$aDefaultKeys[] = $sAttCodeEx;
-				}
-				$sDefaultKeys = '"'.implode('", "', $aDefaultKeys).'"';
-			}
+				$sReadOnlyKeys = '"'.implode('", "', $aReadOnlyKeys).'"';
 
-			// Read only attributes (will be forced to "search")
-			$aReadOnlyKeys = array();
-            foreach(MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef)
-            {
-				if(!$oAttDef->IsWritable())
-				{
-					$aReadOnlyKeys[] = $sAttCode;
-				}
-            }
-            $sReadOnlyKeys = '"'.implode('", "', $aReadOnlyKeys).'"';
-
-			$oPage->add_ready_script(
-<<<EOF
+				$oPage->add_ready_script(
+					<<<EOF
 		$('select[name^=field]').change( DoCheckMapping );
 		aDefaultKeys = new Array($sDefaultKeys);
 		aReadOnlyKeys = new Array($sReadOnlyKeys);
 		DoCheckMapping();
 EOF
-);	
-		}
+				);
+			}
 		break;
 
 		case 'get_csv_template':
-		$sClassName = utils::ReadParam('class_name');
-		$sFormat = utils::ReadParam('format', 'csv');
-		if (MetaModel::IsValidClass($sClassName))
-		{
-			$oSearch = new DBObjectSearch($sClassName);
-			$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
-			$oSet = new CMDBObjectSet($oSearch);
-			$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, array('showMandatoryFields' => true));
-	
-			$sClassDisplayName = MetaModel::GetName($sClassName);
-			$sDisposition = utils::ReadParam('disposition', 'inline');
-			if ($sDisposition == 'attachment')
-			{
-				switch($sFormat)
-				{
-					case 'xlsx':
-					$oPage = new ajax_page("");
-					$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-					$oPage->SetContentDisposition('attachment', $sClassDisplayName.'.xlsx');
-					require_once(APPROOT.'/application/excelexporter.class.inc.php');
-					$writer = new XLSXWriter();
-					$writer->setAuthor(UserRights::GetUserFriendlyName());
-					$aHeaders = array( 0 => explode(',', $sResult)); // comma is the default separator
-					$writer->writeSheet($aHeaders, $sClassDisplayName, array());
-					$oPage->add($writer->writeToString());
-					break;
-				
-					case 'csv':
-					default:
-					$oPage = new CSVPage("");
-					$oPage->add_header("Content-type: text/csv; charset=utf-8");
-					$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
-					$oPage->no_cache();		
-					$oPage->add($sResult);
+			$sClassName = utils::ReadParam('class_name');
+			$sFormat = utils::ReadParam('format', 'csv');
+			if (MetaModel::IsValidClass($sClassName)) {
+				$oSearch = new DBObjectSearch($sClassName);
+				$oSearch->AddCondition('id', 0, '='); // Make sure we create an empty set
+				$oSet = new CMDBObjectSet($oSearch);
+				$sResult = cmdbAbstractObject::GetSetAsCSV($oSet, array('showMandatoryFields' => true));
+
+				$sClassDisplayName = MetaModel::GetName($sClassName);
+				$sDisposition = utils::ReadParam('disposition', 'inline');
+				if ($sDisposition == 'attachment') {
+					switch ($sFormat) {
+						case 'xlsx':
+							$oPage = new AjaxPage("");
+							$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+							$oPage->SetContentDisposition('attachment', $sClassDisplayName.'.xlsx');
+							require_once(APPROOT.'/application/excelexporter.class.inc.php');
+							$writer = new XLSXWriter();
+							$writer->setAuthor(UserRights::GetUserFriendlyName());
+							$aHeaders = array(0 => explode(',', $sResult)); // comma is the default separator
+							$writer->writeSheet($aHeaders, $sClassDisplayName, array());
+							$oPage->add($writer->writeToString());
+							break;
+
+						case 'csv':
+						default:
+							$oPage = new CSVPage("");
+							$oPage->add_header("Content-type: text/csv; charset=utf-8");
+							$oPage->add_header("Content-disposition: attachment; filename=\"{$sClassDisplayName}.csv\"");
+							$oPage->add($sResult);
+					}
+				} else {
+					$oPage = new AjaxPage("");
+					$oButtonXls = ButtonUIBlockFactory::MakeIconLink('ibo-import-csv--download-file fas fa-file-csv', $sClassDisplayName.'.csv', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName);
+					$oPage->AddSubBlock($oButtonXls);
+					$oButtonCsv = ButtonUIBlockFactory::MakeIconLink('ibo-import-csv--download-file fas fa-file-excel', $sClassDisplayName.'.xlsx', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName);
+					$oPage->AddSubBlock($oButtonCsv);
+					$oTextArea = new TextArea("", $sResult, "", 100, 5);
 				}
+			} else {
+				$oPage = new AjaxPage("Class $sClassName is not a valid class !");
 			}
-			else
-			{
-				$oPage = new ajax_page("");
-				$oPage->no_cache();
-				$oPage->add('<p style="text-align:center">');
-				$oPage->add('<div style="display:inline-block;margin:0.5em;"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName.'"><img border="0" src="../images/csv.png"><br/>'.$sClassDisplayName.'.csv</a></div>');		
-				$oPage->add('<div style="display:inline-block;margin:0.5em;"><a style="text-decoration:none" href="'.utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName.'"><img border="0" src="../images/xlsx.png"><br/>'.$sClassDisplayName.'.xlsx</a></div>');		
-				$oPage->add('</p>');		
-				$oPage->add('<p><textarea rows="5" cols="100">'.$sResult.'</textarea></p>');
-			}		
-		}
-		else
-		{
-			$oPage = new ajax_page("Class $sClassName is not a valid class !");
-		}
-		break;
+			break;
 	}
 	$oPage->output();
 }
@@ -500,4 +441,3 @@ catch (Exception $e)
 	IssueLog::Error($e->getMessage());
 }
 
-?>
