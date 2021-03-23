@@ -2914,9 +2914,6 @@ EOF;
 	 * @return string : file path of latest precompiled file to use for setup
 	 */
 	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
-		if (utils::IsDevelopmentEnvironment()) {
-			return null;
-		}
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
 		if (!empty($sPrecompiledFileUri)){
