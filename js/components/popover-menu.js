@@ -172,8 +172,19 @@ $(function()
 					this._closePopup();
 				}
 			},
+			/**
+			 * @return {void}
+			 * @param oEvent
+			 * @private
+			 */
 			_onBodyClick: function (oEvent) {
-				if ($(oEvent.target.closest(this.js_selectors.menu)).length === 0 && $(oEvent.target.closest(this.options.toggler)).length === 0) {
+				if (false === this._isOpened()) {
+					return;
+				}
+
+				if ($(oEvent.target.closest(this.js_selectors.menu)).length === 0 &&
+					// Menu without a toggler cannot be closed by an "outside" click, on programatically (same way it was opened in the first place)
+					((true === this._hasToggler()) && ($(oEvent.target.closest(this.options.toggler)).length === 0))) {
 					this._closePopup();
 				}
 			},

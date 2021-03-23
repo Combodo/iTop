@@ -64,13 +64,17 @@
             </div>
         </div>
     </div>
-    {% if oUIBlock.HasAnEditableCaseLogTab() and oUIBlock.IsCaseLogsSubmitAutonomous() %}
+    {% if oUIBlock.IsComposeButtonEnabled() %}
         <a href="#"
+           id="ibo-activity-panel--add-caselog-entry-button"
            class="ibo-activity-panel--add-caselog-entry-button {% if oUIBlock.IsEntryFormOpened() %}ibo-is-hidden{% endif %}"
            data-role="ibo-activity-panel--add-caselog-entry-button"
            data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
             <i class="fas fa-feather"></i>
         </a>
+        {% if oUIBlock.HasComposeMenu() %}
+            {{ render_block(oUIBlock.GetComposeMenu()) }}
+        {% endif %}
     {% endif %}
     <div class="ibo-activity-panel--body" data-role="ibo-activity-panel--body">
         {% if oUIBlock.GetGroupedEntries()|length > 0 %}
@@ -102,3 +106,9 @@
         </span>
     </div>
 </div>
+
+<tr role="row" id="{{ oUIBlock.GetRef() }}_row_{{ oUIBlock.GetRowId() }}"
+        {% for cellName,cellValue in oUIBlock.GetData() %}
+            {% if cellName == 'CSSClass' %}class="{{ cellValue }}"{% endif %}
+        {% endfor %}
+>

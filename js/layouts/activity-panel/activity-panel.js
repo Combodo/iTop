@@ -72,6 +72,8 @@ $(function()
 					authors_count: '[data-role="ibo-activity-panel--tab-toolbar-info-authors-count"]',
 					messages_count: '[data-role="ibo-activity-panel--tab-toolbar-info-messages-count"]',
 					compose_button: '[data-role="ibo-activity-panel--add-caselog-entry-button"]',
+					compose_menu: '#ibo-activity-panel--compose-menu',
+					compose_menu_item: '#ibo-activity-panel--compose-menu [data-role="ibo-popover-menu--item"]',
 					caselog_entry_form: '[data-role="ibo-caselog-entry-form"]',
 					caselog_entry_forms_confirmation_dialog: '[data-role="ibo-activity-panel--entry-forms-confirmation-dialog"]',
 					caselog_entry_forms_confirmation_preference_input: '[data-role="ibo-activity-panel--entry-forms-confirmation-preference-input"]',
@@ -185,6 +187,10 @@ $(function()
 				// - Click on the compose button
 				this.element.find(this.js_selectors.compose_button).on('click', function (oEvent) {
 					me._onComposeButtonClick(oEvent);
+				});
+				// - Click on the compose menu items
+				this.element.find(this.js_selectors.compose_menu_item).on('click', function (oEvent) {
+					me._onComposeMenuItemClick(oEvent, $(this));
 				});
 				// - Draft value ongoing
 				this.element.on('draft.caselog_entry_form.itop', function (oEvent, oData) {
@@ -331,25 +337,37 @@ $(function()
 			 * @return {void}
 			 * @private
 			 */
-			_onComposeButtonClick: function(oEvent)
-			{
+			_onComposeButtonClick: function (oEvent) {
 				oEvent.preventDefault();
 
 				const oActiveTabData = this._GetActiveTabData();
 				// If on a caselog tab, open its form if it has one
 				if ((this.enums.tab_types.caselog === oActiveTabData.type) && this._HasCaseLogEntryFormForTab(oActiveTabData.att_code)) {
+					// Note: Stop propogation to avoid the menu to be opened automatically by the popover handler, we will decide when it can opens below
+					oEvent.stopImmediatePropagation();
+
 					this._ShowCaseLogTab(oActiveTabData.att_code);
 					this._ShowCaseLogsEntryForms();
 					this._SetFocusInCaseLogEntryForm(oActiveTabData.att_code);
 				}
-				// Else, check which *editable* case log tab to go to
-				else {
-					// TODO 3.0.0: Make a tab popover menu selection
-					console.log('TO IMPLEMENT');
+				// Else, the compose menu will open automatically
+			},
+			/**
+			 * @param oEvent {Object}
+			 * @param oItemElem {Object} jQuery object representing the clicked item
+			 * @return {void}
+			 * @private
+			 */
+			_onComposeMenuItemClick: function (oEvent, oItemElem) {
+				oEvent.preventDefault();
 
-					// If only 1 editbale case log, open this one
-					// Else, open a popover menu to choose one
-				}
+				// Change tab
+				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+oItemElem.attr('data-caselog-attribute-code')+'"]')
+					.find(this.js_selectors.tab_title)
+					.trigger('click');
+
+				// Then open editor
+				this.element.find(this.js_selectors.compose_button).trigger('click');
 			},
 			/**
 			 * @param oEvent {Object}

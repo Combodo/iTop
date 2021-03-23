@@ -23,6 +23,8 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel;
 use appUserPreferences;
 use AttributeDateTime;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CaseLogEntry;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm;
@@ -30,6 +32,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
 use Exception;
 use MetaModel;
+use URLPopupMenuItem;
 use utils;
 
 /**
@@ -82,6 +85,8 @@ class ActivityPanel extends UIBlock
 	protected $bHasStates;
 	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
 	protected $aCaseLogTabsEntryForms;
+	/** @var \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu Menu displaying the editable log entry forms the user can go to */
+	protected $oComposeMenu;
 	/** @var bool Whether a confirmation dialog should be prompt when multiple entries are about to be submitted at once */
 	protected $bShowMultipleEntriesSubmitConfirmation;
 
@@ -101,6 +106,7 @@ class ActivityPanel extends UIBlock
 
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
+		$this->InitializeComposeMenu();
 		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_OBJECT_MODE);
 		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
@@ -130,16 +136,18 @@ class ActivityPanel extends UIBlock
 		// Initialize the case log tabs
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
+		$this->InitializeComposeMenu();
 
 		// Get only case logs from the "details" zlist, but if none (2.7 and older) show them all
 		$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass, 'details');
 		if (empty($aCaseLogAttCodes)) {
 			$aCaseLogAttCodes = MetaModel::GetCaseLogs($sObjectClass);
 		}
-		
+
 		foreach ($aCaseLogAttCodes as $sCaseLogAttCode) {
 			$this->AddCaseLogTab($sCaseLogAttCode);
 		}
+
 
 		return $this;
 	}
@@ -545,9 +553,11 @@ class ActivityPanel extends UIBlock
 
 			// Only if not hidden
 			if (false === $bIsHidden) {
+				$sLogLabel = MetaModel::GetLabel(get_class($this->oObject), $sAttCode);
+
 				$this->aCaseLogs[$sAttCode] = [
 					'rank' => count($this->aCaseLogs) + 1,
-					'title' => MetaModel::GetLabel(get_class($this->oObject), $sAttCode),
+					'title' => $sLogLabel,
 					'total_messages_count' => 0,
 					'authors' => [],
 					'is_read_only' => $bIsReadOnly,
@@ -559,6 +569,16 @@ class ActivityPanel extends UIBlock
 				// Otherwise we generate unnecessary transaction IDs that could saturate the system
 				if ((false === $bIsReadOnly) && (false === $this->HasTransactionId()) && (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode)) {
 					$this->sTransactionId = (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode) ? utils::GetNewTransactionId() : null;
+				}
+
+				// Add log to compose button menu only if it is editable
+				if (false === $bIsReadOnly) {
+					$oItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+						new URLPopupMenuItem('log-'.$sAttCode, $sLogLabel, '#')
+					)
+						->AddDataAttribute('caselog-attribute-code', $sAttCode);
+
+					$this->oComposeMenu->AddItem('editable-logs', $oItem);
 				}
 			}
 		}
@@ -719,6 +739,46 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * @return bool Whether the "compose a new entry" button is enabled
+	 * @throws \Exception
+	 */
+	public function IsComposeButtonEnabled(): bool
+	{
+		return $this->HasAnEditableCaseLogTab() && $this->IsCaseLogsSubmitAutonomous();
+	}
+
+	/**
+	 * @return bool Whether there is a menu on the "compose" button to select which log entry form to open
+	 * @uses static::$oComposeMenu
+	 */
+	public function HasComposeMenu(): bool
+	{
+		return $this->oComposeMenu->HasItems();
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu
+	 * @uses static::$oComposeMenu
+	 */
+	public function GetComposeMenu()
+	{
+		return $this->oComposeMenu;
+	}
+
+	/**
+	 * @return $this
+	 * @uses static::$oComposeMenu
+	 */
+	protected function InitializeComposeMenu()
+	{
+		// Note: There is no toggler set on purpose, menu will be toggle depending on the active tab
+		$this->oComposeMenu = new PopoverMenu('ibo-activity-panel--compose-menu');
+		$this->oComposeMenu->SetTogglerJSSelector('#ibo-activity-panel--add-caselog-entry-button');
+
+		return $this;
+	}
+
+	/**
 	 * @return bool True if the entry form shouldbe opened by default, false otherwise. Based on the user pref. or the config. param. by default.
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -795,6 +855,8 @@ class ActivityPanel extends UIBlock
 		foreach ($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
 			$aSubBlocks[$oCaseLogEntryForm->GetId()] = $oCaseLogEntryForm;
 		}
+
+		$aSubBlocks[$this->GetComposeMenu()->GetId()] = $this->GetComposeMenu();
 
 		return $aSubBlocks;
 	}
