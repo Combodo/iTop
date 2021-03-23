@@ -106,11 +106,11 @@ const CombodoBackofficeToolbox = {
 		const sComplementarySelector = bForce ? '' : ':not(.hljs)';
 
 		// AttributeHTML and HTML AttributeText
-		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre'+sComplementarySelector).each(function (iIdx, oElem) {
+		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
 			hljs.highlightBlock(oElem);
 		});
 		// CaseLogs
-		oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector).each(function (iIdx, oElem) {
+		oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
 			hljs.highlightBlock(oElem);
 		});
 	}
