@@ -65,7 +65,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 // Object form
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Fermer cette entrée',
 	'Portal:Form:Close:Warning' => 'Voulez-vous quitter ce formulaire ? Les données saisies seront perdues',
 ));
 

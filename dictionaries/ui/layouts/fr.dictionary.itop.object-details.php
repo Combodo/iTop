@@ -5,8 +5,8 @@
  */
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Edit displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Delete displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Create a new object (with same class as displayed object)~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Save displayed object~~',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Editer l\'objet affiché',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Supprimer l\'objet affiché',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Créer un nouvel objet (avec la même classe que l\'objet affiché)',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Enregistré l\'objet affiché',
 ]);

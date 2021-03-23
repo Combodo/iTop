@@ -19,8 +19,8 @@
 
 // Navigation menu
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an alpha version that may be unstable or include bugs and unfinished features. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+	'UI:ErrorPage:UnstableVersion' => 'Vous utilisez une version instable qui peut contenir des bugs. Si vous pensez que cette erreur est liée merci de nous contacter !',
+	'UI:ErrorPage:KittyDisclaimer' => 'Aucun chatton n\'a été maltraité durant la réalisation de ce GIF et de cette version.
 
-- The R&amp;D Team~~',
+- L\'équipe R&amp;D',
 ));

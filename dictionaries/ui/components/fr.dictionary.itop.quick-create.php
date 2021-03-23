@@ -19,10 +19,10 @@
 
 // Quick create
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
-	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
+	'UI:Component:QuickCreate:Tooltip' => 'Création rapide de n\'importe quel objet',
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Type d\'objet...',
+	'UI:Component:QuickCreate:Recents:Title' => 'Types récents',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Vous n\'avez pas encore créé d\'objet',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'L\'historique est désactivé',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Ouvrir la création rapide',
 ));

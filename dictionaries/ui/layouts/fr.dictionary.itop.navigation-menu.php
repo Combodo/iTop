@@ -19,16 +19,16 @@
 
 // Navigation menu
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey' => 'Alt + M~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~'
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Logo entreprise',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Déplier / Replier',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Déplier / Replier (Filtré sur %1$s)~~',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filtrer...',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Saisir des mots-clés pour filtrer les menus',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey' => 'Alt + M',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Les occurrences dans chaque groupe de menu seront affichées',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Pas de résultat pour ce filtre de menu',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Bonjour %1$s !',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Image de contact de %1$s',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtrer les entrées de menu',
 
 ));

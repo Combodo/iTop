@@ -36,7 +36,7 @@ Soit vous avez attaché un fichier vide,
 Soit demandez à votre administrateur système s\'il reste de la place disque disponible sur le serveur',
 	'Attachments:Render:Icons' => 'Affichage en icônes',
 	'Attachments:Render:Table' => 'Affichage en liste',
-	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
+	'UI:Attachments:DropYourFileHint' => 'Déposez vos fichiers dans cet espace',
 ));
 
 //

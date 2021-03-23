@@ -19,9 +19,9 @@
 
 // Activity panel
 Dict::Add('FR FR', 'French', 'Français', array(
-	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
-	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
+	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Déplier',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Replier',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fermer',
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load previous entries~~',
 
 	// Tabs
@@ -40,6 +40,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	// Compose button
 	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry~~',
+//	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Nouvelle entrée de journal', // attention label du tooltip utilisé dans UI:Preferences:ActivityPanel:EntryFormOpened+ (dictionaries/ui/pages/fr.dictionary.itop.preferences.php)
 
 	// Case log entry
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save~~',
