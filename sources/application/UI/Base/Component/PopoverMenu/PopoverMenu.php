@@ -379,6 +379,15 @@ class PopoverMenu extends UIBlock
 	}
 
 	/**
+	 * @return bool Whether there are some sections, even if they have no items.
+	 * @uses static::$aSections
+	 */
+	public function HasSections(): bool
+	{
+		return !empty($this->aSections);
+	}
+
+	/**
 	 * Add the $oItem in the $sSectionId. If an item with the same ID already exists it will be overwritten.
 	 *
 	 * @param string $sSectionId
@@ -389,9 +398,8 @@ class PopoverMenu extends UIBlock
 	 */
 	public function AddItem(string $sSectionId, PopoverMenuItem $oItem)
 	{
-		if (false === $this->HasSection($sSectionId))
-		{
-			throw new Exception('Could not add an item to the "'.$sSectionId.'" section has it does not seem to exist in the "'.$this->GetId().'" menu.');
+		if (false === $this->HasSection($sSectionId)) {
+			$this->AddSection($sSectionId);
 		}
 
 		$this->aSections[$sSectionId]['aItems'][$oItem->GetId()] = $oItem;
@@ -435,8 +443,7 @@ class PopoverMenu extends UIBlock
 	 */
 	public function SetItems(string $sSectionId, array $aItems)
 	{
-		if (false === $this->HasSection($sSectionId))
-		{
+		if (false === $this->HasSection($sSectionId)) {
 			throw new Exception('Could not set items to the "'.$sSectionId.'" section has it does not seem to exist in the "'.$this->GetId().'" menu.');
 		}
 
@@ -446,14 +453,31 @@ class PopoverMenu extends UIBlock
 	}
 
 	/**
+	 * @return bool Whether there is at least 1 section with some items
+	 * @uses static::$aSections
+	 */
+	public function HasItems(): bool
+	{
+		$bResult = false;
+
+		foreach ($this->GetSections() as $sId => $aData) {
+			if (!empty($aData['aItems'])) {
+				$bResult = true;
+				break;
+			}
+		}
+
+		return $bResult;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function GetSubBlocks()
 	{
 		$aSubBlocks = [];
 
-		foreach($this->aSections as $sSectionId => $aSectionData)
-		{
+		foreach ($this->aSections as $sSectionId => $aSectionData) {
 			foreach($aSectionData['aItems'] as $sItemId => $oItem)
 			{
 				$aSubBlocks[$sItemId] = $oItem;
