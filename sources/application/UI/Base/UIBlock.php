@@ -201,15 +201,6 @@ abstract class UIBlock implements iUIBlock
 	 * @inheritDoc
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 */
-	public function GetSubBlocksForCSSAndJS()
-	{
-		return $this->GetSubBlocks();
-	}
-
-	/**
-	 * @inheritDoc
-	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
-	 */
 	public function GetDeferredBlocks(): array
 	{
 		return [];

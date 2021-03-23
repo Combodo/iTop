@@ -7,7 +7,7 @@
         {{ render_block(oUIBlock.GetToolbar(), {aPage: aPage}) }}
     </div>
     <div class="ibo-dashboard--grid" data-role="ibo-dashboard--grid">
-        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {% for oSubBlock in oUIBlock.GetDashboardRows() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
     </div>

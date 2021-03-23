@@ -50,11 +50,6 @@ class UIDashboardLayoutBlock extends UIBlock
 
 	public function GetSubBlocks()
 	{
-		return $this->aDashboardRows;
-	}
-
-	public function GetSubBlocksForCSSAndJS()
-	{
 		return array_merge($this->aDashboardRows, [$this->oToolbar]);
 	}
 
@@ -77,5 +72,13 @@ class UIDashboardLayoutBlock extends UIBlock
 	public function SetTitle(string $sTitle)
 	{
 		$this->sTitle = $sTitle;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow[]
+	 */
+	public function GetDashboardRows(): array
+	{
+		return $this->aDashboardRows;
 	}
 }
