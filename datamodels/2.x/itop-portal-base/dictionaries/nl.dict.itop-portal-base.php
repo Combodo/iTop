@@ -64,6 +64,11 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'nl', //work with moment.js locales
+));
+
+// Object form
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
 ));
 

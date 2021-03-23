@@ -23,9 +23,6 @@
 //
 // Class: Organization
 //
-
-
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -37,12 +34,10 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -54,7 +49,6 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -62,12 +56,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
-
 //
 // Class: Organization
 //
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Organization' => 'Organisation',
 	'Class:Organization+' => '',
@@ -389,4 +380,209 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UserLocal:info' => 'Informations générales',
 	'Person:personal_info' => 'Informations personnelles',
 	'Person:notifiy' => 'Notification',
+));
+//
+// Class: Organization
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Location
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Contact
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            ' => '
+              yes
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            ' => '
+              no
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            +' => '~~',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:Document/Attribute:status/Value:
+              draft
+            ' => '
+              draft
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              draft
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            ' => '
+              published
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            ' => '
+              obsolete
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            +' => '~~',
 ));

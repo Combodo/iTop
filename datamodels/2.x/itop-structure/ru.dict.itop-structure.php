@@ -15,11 +15,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 //
 // Class: Organization
 //
-
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization' => 'Организация',
 	'Class:Organization+' => 'Организация',
@@ -333,13 +331,216 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:ConfigManagement:Typology' => 'Настройка типологии',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Person:info' => 'Основная информация',
 	'UserLocal:info' => 'Основная информация',
 	'Person:personal_info' => 'Личная информация',
 	'Person:notifiy' => 'Уведомления',
+));
+//
+// Class: Organization
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Location
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Contact
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            ' => '
+              yes
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            ' => '
+              no
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            +' => '~~',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:Document/Attribute:status/Value:
+              draft
+            ' => '
+              draft
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              draft
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            ' => '
+              published
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            ' => '
+              obsolete
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            +' => '~~',
 ));

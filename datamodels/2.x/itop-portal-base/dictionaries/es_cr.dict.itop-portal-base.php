@@ -61,6 +61,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'es', //work with moment.js locales
+));
+
+// Object form
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
 ));
 

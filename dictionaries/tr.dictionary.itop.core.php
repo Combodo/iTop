@@ -41,6 +41,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeLinkedSet' => 'Array of objects~~',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass~~',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
@@ -306,12 +308,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Change:ObjectCreated' => 'Nesne yaratıldı',
 	'Change:ObjectDeleted' => 'Nesne silindi',
 	'Change:ObjectModified' => 'Object modified~~',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s\'nin değeri %2$s olarak atandı (önceki değer: %3$s)',
 	'Change:AttName_SetTo' => '%1$s\'nin değeri %2$s olarak atandı',
 	'Change:Text_AppendedTo_AttName' => '%2$s\'ye %1$s eklendi',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$\'nin değeri deiştirildi, önceki değer: %2$s',
 	'Change:AttName_Changed' => '%1$s değiştirildi',
 	'Change:AttName_EntryAdded' => '%1$s modified, new entry added.~~',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'added %1$s~~',
 	'Change:LinkSet:Removed' => 'removed %1$s~~',
 	'Change:LinkSet:Modified' => 'modified %1$s~~',
@@ -511,6 +517,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail' => 'E-posta bildirimi',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test alıcısı',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Durumu "Test" olması durumundaki alıcı',
 	'Class:ActionEmail/Attribute:from' => 'Kimden~~',
@@ -638,6 +648,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1057,6 +1076,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
 
 //
@@ -1094,3 +1123,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ));
+
+
+

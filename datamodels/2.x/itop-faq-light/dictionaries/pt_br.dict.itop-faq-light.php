@@ -43,11 +43,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Perguntas mais frequentes',
@@ -80,7 +78,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas mais frequentes vinculadas a essa categoria',
 ));
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerencimento Problemas',
 	'Menu:ProblemManagement+' => 'Gerencimento Problemas',

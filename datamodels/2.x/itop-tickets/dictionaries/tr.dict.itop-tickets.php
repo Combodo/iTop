@@ -157,7 +157,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 // Fieldset translation
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-
 	'Ticket:baseinfo' => 'General Information~~',
 	'Ticket:date' => 'Dates~~',
 	'Ticket:contact' => 'Contacts~~',
@@ -171,7 +170,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'WorkOrder:Details' => 'Details~~',
 	'WorkOrder:Moreinfo' => 'More information~~',
 	'Tickets:ResolvedFrom' => 'Automatically resolved from %1$s~~',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set~~',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value~~',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field~~',

@@ -21,7 +21,6 @@
  * @copyright   Copyright (C) 2010-2018 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -29,12 +28,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
-
 //
 // Class: Organization
 //
-
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization' => 'Organização',
 	'Class:Organization+' => '',
@@ -251,6 +247,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:DocumentWeb/Attribute:url' => 'URL',
 	'Class:DocumentWeb/Attribute:url+' => '',
 ));
+
 //
 // Class: Typology
 //
@@ -287,20 +284,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-		'Class:lnkPersonToTeam' => 'Link Pessoa / Equipe',
-		'Class:lnkPersonToTeam+' => '',
-		'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
-		'Class:lnkPersonToTeam/Attribute:team_id+' => '',
-		'Class:lnkPersonToTeam/Attribute:team_name' => 'Nome equipe',
-		'Class:lnkPersonToTeam/Attribute:team_name+' => '',
-		'Class:lnkPersonToTeam/Attribute:person_id' => 'Pessoa',
-		'Class:lnkPersonToTeam/Attribute:person_id+' => '',
-		'Class:lnkPersonToTeam/Attribute:person_name' => 'Nome pessoa',
-		'Class:lnkPersonToTeam/Attribute:person_name+' => '',
-		'Class:lnkPersonToTeam/Attribute:role_id' => 'Função',
-		'Class:lnkPersonToTeam/Attribute:role_id+' => '',
-		'Class:lnkPersonToTeam/Attribute:role_name' => 'Nome função',
-		'Class:lnkPersonToTeam/Attribute:role_name+' => '',
+	'Class:lnkPersonToTeam' => 'Link Pessoa / Equipe',
+	'Class:lnkPersonToTeam+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_id' => 'Equipe',
+	'Class:lnkPersonToTeam/Attribute:team_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:team_name' => 'Nome equipe',
+	'Class:lnkPersonToTeam/Attribute:team_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_id' => 'Pessoa',
+	'Class:lnkPersonToTeam/Attribute:person_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:person_name' => 'Nome pessoa',
+	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id' => 'Função',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nome função',
+	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
 ));
 
 //
@@ -347,13 +344,216 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ConfigManagement:Typology' => 'Configuração tipologia',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Person:info' => 'Informações gerais',
 	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Informação pessoal',
 	'Person:notifiy' => 'Notificação',
+));
+//
+// Class: Organization
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Location
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Contact
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            ' => '
+              yes
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            ' => '
+              no
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            +' => '~~',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'Class:Document/Attribute:status/Value:
+              draft
+            ' => '
+              draft
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              draft
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            ' => '
+              published
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            ' => '
+              obsolete
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            +' => '~~',
 ));

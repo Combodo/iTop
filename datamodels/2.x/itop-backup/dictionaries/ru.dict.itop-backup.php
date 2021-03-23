@@ -19,6 +19,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'bkp-mysqldump-ok' => 'Утилита mysqldump найдена: %1$s',
 	'bkp-mysqldump-notfound' => 'Утилиту mysqldump найти не удалось: %1$s - пожалуйста, убедитесь в том, что она установлена, и путь до директории с бинарными файлами добавлен в PATH, либо измените параметр mysql_bindir в файле конфигурации.',
 	'bkp-mysqldump-issue' => 'Утилита mysqldump на может быть запущена (retcode=%1$d) Пожалуйста, убедитесь в том, что она установлена, и путь до директории с бинарными файлами добавлен в PATH, либо измените параметр mysql_bindir в файле конфигурации.',
+	'bkp-missing-dir' => 'The target directory <code>%1$s</code> could not be found~~',
 	'bkp-free-disk-space' => '<b>%1$s свободно</b> в <code>%2$s</code>',
 	'bkp-dir-not-writeable' => '%1$s недоступен для записи',
 	'bkp-wrong-format-spec' => 'Неправильный формат шаблона названия файлов резервных копий (%1$s). Будет использован шаблон по умолчанию: %2$s',

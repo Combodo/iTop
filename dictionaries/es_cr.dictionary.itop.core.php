@@ -33,6 +33,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Core:AttributeLinkedSet' => 'Arreglo de objetos',
 	'Core:AttributeLinkedSet+' => 'Cualquier tipo de objetos [subclass] de la misma clase',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Panel de Control',
 	'Core:AttributeDashboard+' => 'Panel de control y supervisión',
 
@@ -298,12 +300,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Change:ObjectCreated' => 'Objeto Creado',
 	'Change:ObjectDeleted' => 'Objeto Eliminado',
 	'Change:ObjectModified' => 'Objeto Modificado',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s cambiado en %2$s (valor anterior: %3$s)',
 	'Change:AttName_SetTo' => '%1$s cambiado en %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s agregado a %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s cambiado, valor anterior: %2$s',
 	'Change:AttName_Changed' => '%1$s cambiado',
 	'Change:AttName_EntryAdded' => '%1$s cambiado, nuevo registro agregado: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'Agregado %1$s',
 	'Change:LinkSet:Removed' => 'Removido %1$s',
 	'Change:LinkSet:Modified' => 'Modificado %1$s',
@@ -503,6 +509,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ActionEmail' => 'Notificación por Correo Electrónico',
 	'Class:ActionEmail+' => 'Notificación por Correo Electrónico',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinatario de Prueba',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatario en caso que el Estatus sea "En pruebas"',
 	'Class:ActionEmail/Attribute:from' => 'Remitente~~',
@@ -630,6 +640,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:TriggerOnObjectUpdate+' => 'Disparador al actualizar un objeto de la clase dada [o una clase hija]',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos objetivo',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Campos que serán monitorizados',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1049,6 +1068,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:AsyncTask/Attribute:event_id+' => 'Evento',
 	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
 	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
 
 //
@@ -1086,3 +1115,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
 	'Class:ResourceSystemMenu+' => '~~',
 ));
+
+
+

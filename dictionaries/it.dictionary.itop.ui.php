@@ -84,6 +84,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Query/Attribute:name+' => 'Identificativi della query',
 	'Class:Query/Attribute:description' => 'Descrizione',
 	'Class:Query/Attribute:description+' => 'Descrizione dettagliata della query(scopo, usagoetc.)',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Campi',
 	'Class:QueryOQL/Attribute:fields+' => 'Lista di attributi separati da virgola (o alias.attributo) per l\'esportazione',
 	'Class:QueryOQL' => 'OQL Query',
@@ -388,12 +392,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:Logoff' => 'Log off',
 	'UI:Button:GlobalSearch' => 'Cerca',
 	'UI:Button:Search' => ' Cerca',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Domanda',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Save~~',
 	'UI:Button:Cancel' => 'Cancella',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Applica',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Indietro',
 	'UI:Button:Restart' => ' |<< Riavvia',
 	'UI:Button:Next' => ' Prossimo >> ',
@@ -421,6 +428,9 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Cerca',
 	'UI:ClickToCreateNew' => 'Crea un nuovo %1$s~~',
@@ -453,6 +463,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Errore: gli oggetti sono già stati eliminati!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Non hai i permessi per eseguire una eliminazione collettiva degli oggetti della classe %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Non ti è permesso di eliminare gli oggetti della classe %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Non hai i permessi per eseguire un aggiornamento collettivo degli oggetti della classe %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Errore: l\'oggetto è già stato clonato!',
 	'UI:Error:ObjectAlreadyCreated' => 'Errore: l\'oggetto è già stato creato!',
@@ -461,6 +472,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'L\'applicazione è attualmente in manutenzione',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Conteggio',
 	'UI:GroupBy:Count+' => '',
@@ -488,6 +500,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Loading' => 'Caricamento...',
 	'UI:Menu:Actions' => 'Azioni',
 	'UI:Menu:OtherActions' => 'Altre Azioni',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Nuovo...',
 	'UI:Menu:Add' => 'Aggiungi...',
 	'UI:Menu:Manage' => 'Gestisci...',
@@ -681,8 +695,18 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Audit:HeaderNbObjects' => '# Oggetti',
 	'UI:Audit:HeaderNbErrors' => '# Errori',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Error in the Rule %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Error in the Category %1$s: %2$s.~~',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - Valutazione Query OQL',
 	'UI:RunQuery:QueryExamples' => 'Esempi di Query',
@@ -768,6 +792,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test query~~',
 	'UI:Combo:SelectValue' => '--- seleziona un valore ---',
 	'UI:Label:SelectedObjects' => 'oggetti selezionati: ',
@@ -993,8 +1018,8 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'Menu:RunQueriesMenu' => 'Esegui query', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:RunQueriesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Rubbrica delle Query', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Rubbrica delle Query', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:DataAdministration' => 'Dati di amministrazione', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1160,15 +1185,16 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Configure This List...~~',
 	'UI:ListConfigurationTitle' => 'List Configuration~~',
 	'UI:ColumnsAndSortOrder' => 'Columns and sort order:~~',
 	'UI:UseDefaultSettings' => 'Use the Default Settings~~',
 	'UI:UseSpecificSettings' => 'Use the Following Settings:~~',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Display~~',
+	'UI:Display_X_ItemsPerPage_suffix' => 'items per page~~',
 	'UI:UseSavetheSettings' => 'Save the Settings~~',
 	'UI:OnlyForThisList' => 'Only for this list~~',
 	'UI:ForAllLists' => 'Default for all lists~~',
@@ -1181,13 +1207,15 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class \\"%1$s\\". You may try \\"%2$s\\" instead.~~',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class \\"%1$s\\"~~',
 
-	'UI:Dashboard:Edit' => 'Edit This Page...~~',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.~~',
 	'UI:ExportDashBoard' => 'Export to a file~~',
 	'UI:ImportDashBoard' => 'Import from a file...~~',
 	'UI:ImportDashboardTitle' => 'Import From a File~~',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:~~',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet~~',
@@ -1342,7 +1370,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut~~',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list~~',
 	'UI:ShortcutDelete:Confirm' => 'Please confirm that wou wish to delete the shortcut(s).~~',
-	'Menu:MyShortcuts' => 'My Shortcuts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Le mie scorciatoie', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Shortcut~~',
 	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Name~~',
@@ -1422,6 +1450,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1439,6 +1468,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1550,6 +1580,8 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1578,6 +1610,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 //
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1586,6 +1619,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:DataSources' => 'Sorgente di sincronizzazione dei dati',
@@ -1624,4 +1658,13 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Menu:UserManagement' => 'Gestione utenti',
 	'Menu:Queries' => 'Interrogazioni',
 	'Menu:ConfigurationTools' => 'configurazione',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+ 'UI:Dashboard:Edit' => 'Edit This Page...~~',
+ 'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
 ));

@@ -21,17 +21,13 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
-
 //
 // Class: Organization
 //
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Organization' => 'Organisation',
 	'Class:Organization+' => '',
@@ -353,5 +349,208 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Underretning',
 ));
+//
+// Class: Organization
+//
 
-?>
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Location
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Contact
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            ' => '
+              yes
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            ' => '
+              no
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            +' => '~~',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:Document/Attribute:status/Value:
+              draft
+            ' => '
+              draft
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              draft
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            ' => '
+              published
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            ' => '
+              obsolete
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            +' => '~~',
+));

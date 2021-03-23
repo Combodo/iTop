@@ -48,11 +48,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Veelgestelde vragen',
@@ -85,7 +83,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ\'s',
 	'Class:FAQCategory/Attribute:faq_list+' => 'Alle veelgestelde vragen gerelateerd aan deze categorie',
 ));
-
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:ProblemManagement' => 'Probleem Management',
 	'Menu:ProblemManagement+' => 'Probleem Management',

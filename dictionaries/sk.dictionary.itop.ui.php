@@ -70,6 +70,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Popis',
 	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Polia',
 	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Dopyt',
@@ -375,12 +379,15 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Button:Logoff' => 'Odhlásenie',
 	'UI:Button:GlobalSearch' => 'Globálne Vyhľadávanie',
 	'UI:Button:Search' => ' Vyhľadávanie',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Dopyt ',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => 'Uložiť',
 	'UI:Button:Cancel' => 'Zrušiť',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Použiť',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Späť ',
 	'UI:Button:Restart' => ' |<< Reštart ',
 	'UI:Button:Next' => ' Ďalší >> ',
@@ -408,6 +415,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Vyhľadávanie',
 	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s~~',
@@ -440,6 +450,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Chyba: objekty už boli vymazané!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Nemáte povolenie vykonať hromadné vymazanie objektov triedy %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Nemáte povolenie na vymazanie objektov triedy %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Nemáte povolenie na vykonanie hromadnej aktualizácie objektov triedy %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Chyba: objekt už bol klonovaný!',
 	'UI:Error:ObjectAlreadyCreated' => 'Chyba: objekt už bol vytvorený!',
@@ -448,6 +459,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Počet',
 	'UI:GroupBy:Count+' => '',
@@ -475,6 +487,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Loading' => 'Načitavam...',
 	'UI:Menu:Actions' => 'Akcie',
 	'UI:Menu:OtherActions' => 'Ostatné akcie',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Nové...',
 	'UI:Menu:Add' => 'Pridať...',
 	'UI:Menu:Manage' => 'Manažovať...',
@@ -668,8 +682,18 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Audit:HeaderNbObjects' => '# Objekty',
 	'UI:Audit:HeaderNbErrors' => '# Chyby',
 	'UI:Audit:PercentageOk' => '% OK',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL chyba v pravidle %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL chyba v kategórii %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - Určenie OQL Dopytu',
 	'UI:RunQuery:QueryExamples' => 'Príklad dopytu',
@@ -755,6 +779,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~~~',
 	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Testovací dopyt',
 	'UI:Combo:SelectValue' => '--- výber hodnoty ---',
 	'UI:Label:SelectedObjects' => 'Zvolené objekty: ',
@@ -1148,8 +1173,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Konfigurovať tento zoznam...',
 	'UI:ListConfigurationTitle' => 'Zoznam konfigurácii',
@@ -1170,13 +1195,15 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:OQL:UnknownClassAndFix' => 'Neznáma trieda "%1$s". Môžete skúsiť "%2$s" namiesto toho.',
 	'UI:OQL:UnknownClassNoFix' => 'Neznáma trieda "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Upraviť túto stránku...',
-	'UI:Dashboard:Revert' => 'Vrátiť sa do originálnej verzie...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Každá zmena spravená do originálnej verzie bude stratená. Prosím potvrďte, že to chcete urobiť.',
 	'UI:ExportDashBoard' => 'Exportovať do súboru',
 	'UI:ImportDashBoard' => 'Importovať zo súboru...',
 	'UI:ImportDashboardTitle' => 'Importovať zo súboru',
 	'UI:ImportDashboardText' => 'Zvoľte panel súboru na importovanie:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Vytvoriť a nový Dashlet',
@@ -1411,6 +1438,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1428,6 +1456,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1539,6 +1568,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1567,6 +1598,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 //
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1575,6 +1607,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:DataSources' => 'Synchronizované zdroje dát',
@@ -1613,4 +1646,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Dashboard:Edit' => 'Upraviť túto stránku...',
+ 'UI:Dashboard:Revert' => 'Vrátiť sa do originálnej verzie...',
 ));

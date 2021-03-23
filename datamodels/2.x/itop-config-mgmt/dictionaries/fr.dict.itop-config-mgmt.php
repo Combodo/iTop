@@ -1008,7 +1008,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => '',
 ));
 
+//
+// Class: lnkDocumentToLicence
+//
 
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
+	'Class:lnkDocumentToLicence+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
+	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
+	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
+));
 
 //
 // Class: OSVersion
@@ -1031,7 +1046,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OSFamily' => 'Famille OS',
 	'Class:OSFamily+' => '',
 ));
-
 
 //
 // Class: Brand
@@ -1126,6 +1140,23 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 //
+// Class: lnkDocumentToPatch
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
+	'Class:lnkDocumentToPatch+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
+	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
+));
+
+//
 // Class: lnkSoftwareInstanceToSoftwarePatch
 //
 
@@ -1159,6 +1190,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '',
 ));
 
+//
+// Class: lnkDocumentToSoftware
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
+	'Class:lnkDocumentToSoftware+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
+	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
+	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
+));
 
 //
 // Class: Subnet
@@ -1389,7 +1436,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
 ));
 
-
 //
 // Class: Group
 //
@@ -1445,7 +1491,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-
 // Add translation for Fieldsets
 
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -1462,60 +1507,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Document:PreviewTab' => 'Aperçu',
 ));
 
-
-//
-// Class: lnkDocumentToLicence
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToLicence' => 'Lien Document / Licence',
-	'Class:lnkDocumentToLicence+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence',
-	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Nom Licence',
-	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToLicence/Attribute:document_id+' => '',
-	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Nom Document',
-	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
-));
-
-
-//
-// Class: lnkDocumentToPatch
-//
-
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToPatch' => 'Lien Document / Patch',
-	'Class:lnkDocumentToPatch+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Nom patch',
-	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToPatch/Attribute:document_id+' => '',
-	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Nom document',
-	'Class:lnkDocumentToPatch/Attribute:document_name+' => '',
-));
-
-
-//
-// Class: lnkDocumentToSoftware
-//
-
-Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkDocumentToSoftware' => 'Lien Document / Logiciel',
-	'Class:lnkDocumentToSoftware+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Logiciel',
-	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Nom logiciel',
-	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '',
-	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Nom document',
-	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '',
-));
 
 //
 // Class: lnkDocumentToFunctionalCI
@@ -1584,6 +1575,4 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:Software' => 'Catalogue des logiciels de références',
 	'Menu:Software+' => 'Catalogue des logiciels de références',
 ));
-
-
 ?>

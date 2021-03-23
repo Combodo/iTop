@@ -20,7 +20,6 @@
 * @copyright   Copyright (C) 2010-2021 Combodo SARL
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -28,11 +27,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 //
 // Class: lnkFunctionalCIToTicket
 //
-
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToTicket' => 'Spojení (Funkční konfigurační položka / Tiket)',
 	'Class:lnkFunctionalCIToTicket+' => '',
@@ -71,7 +68,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
-
 //
 // Class: lnkFunctionalCIToService
 //
@@ -100,4 +96,34 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tikety',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+));
+//
+// Class: lnkFunctionalCIToTicket
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              manual
+            ' => '
+              manual
+            ~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              manual
+            +' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              computed
+            ' => '
+              computed
+            ~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              computed
+            +' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              not_impacted
+            ' => '
+              not_impacted
+            ~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              not_impacted
+            +' => '~~',
 ));

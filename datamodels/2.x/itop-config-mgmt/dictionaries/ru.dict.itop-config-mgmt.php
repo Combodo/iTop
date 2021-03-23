@@ -1198,23 +1198,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Связь Документ/Функциональная КЕ',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Функциональная КЕ',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Функциональная КЕ',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Документ',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Документ',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1299,6 +1282,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP-адрес',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC-адрес',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Комментарий',
@@ -1467,6 +1452,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Group/Attribute:type' => 'Тип',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Родительская группа',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Родительская группа',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1495,9 +1481,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => 'Основание, причина и т.п.',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Server:baseinfo' => 'Основное',
@@ -1511,6 +1495,24 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Свободных IP-адресов: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Вот выборка из 10 свободных IP-адресов',
 	'Class:Document:PreviewTab' => 'Просмотр',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Связь Документ/Функциональная КЕ',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Функциональная КЕ',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Функциональная КЕ',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Документ',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Документ',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
 ));
 
 //
@@ -1563,3 +1565,4 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:Software' => 'Каталог ПО',
 	'Menu:Software+' => 'Каталог ПО',
 ));
+?>

@@ -30,6 +30,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Core:AttributeLinkedSet' => 'Pole objektov',
 	'Core:AttributeLinkedSet+' => '',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
@@ -295,12 +297,16 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Change:ObjectCreated' => 'Objekt vytvorený',
 	'Change:ObjectDeleted' => 'Objekt odstránený',
 	'Change:ObjectModified' => 'Objekt upravený',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s nastavené na %2$s (predchádzajúca hodnota: %3$s)',
 	'Change:AttName_SetTo' => '%1$s nastavené na %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s pripojené k %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s upravené, predchádzajúca hodnota: %2$s',
 	'Change:AttName_Changed' => '%1$s upravené',
 	'Change:AttName_EntryAdded' => '%1$s upravené, nový záznam pridaný.',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'Pridané %1$s',
 	'Change:LinkSet:Removed' => 'Odstránené %1$s',
 	'Change:LinkSet:Modified' => 'Upravené %1$s',
@@ -500,6 +506,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ActionEmail' => 'Emailová notifikácia',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testovací príjemca',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'Od~~',
@@ -627,6 +637,15 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1046,7 +1065,56 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));
+
+
+
 
 // Additional language entries not present in English dict
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
@@ -2925,40 +2993,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Portal:SelectLanguage' => 'Zmeň svoj jazyk',
  'Portal:LanguageChangedTo_Lang' => 'Jazyk zmenený na',
  'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
-));
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
-));
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
-));
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
-));
-
-//
-// Class: Action
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
 ));

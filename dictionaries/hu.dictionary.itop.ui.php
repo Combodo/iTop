@@ -71,6 +71,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query~~',
 	'Class:Query/Attribute:description' => 'Description~~',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Fields~~',
 	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Query~~',
@@ -375,12 +379,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:Logoff' => 'Kijelentkezés',
 	'UI:Button:GlobalSearch' => 'Keresés',
 	'UI:Button:Search' => ' Keresés',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Lekérdezés',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => 'Save~~',
 	'UI:Button:Cancel' => 'Mégse',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Alkalmazás',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Vissza',
 	'UI:Button:Restart' => ' |<< Újraindítás',
 	'UI:Button:Next' => ' Következő >>',
@@ -408,6 +415,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Keresés',
 	'UI:ClickToCreateNew' => 'Új %1$s létrehozása~~',
@@ -440,6 +450,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Hiba: az objektum már korában törlésre került!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Az osztály objektumainak tömeges törlése nem engedélyezett %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Az osztály objektumainak törlése nem engedélyezett %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Az osztály objektumainak tömeges frissítése nem engedélyezett %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Hiba: az objektum már klónozott!',
 	'UI:Error:ObjectAlreadyCreated' => 'Hiba: az objekltum már létrehozva!',
@@ -448,6 +459,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Számossága',
 	'UI:GroupBy:Count+' => '',
@@ -475,6 +487,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Loading' => 'Betöltés...',
 	'UI:Menu:Actions' => 'Akciók',
 	'UI:Menu:OtherActions' => 'Egyéb Akciók',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Új...',
 	'UI:Menu:Add' => 'Hozzáad...',
 	'UI:Menu:Manage' => 'Kezel...',
@@ -668,8 +682,18 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Audit:HeaderNbObjects' => '# Objektumok',
 	'UI:Audit:HeaderNbErrors' => '# Hibák',
 	'UI:Audit:PercentageOk' => '% OK',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Error in the Rule %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Error in the Category %1$s: %2$s.~~',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - OQL lekérdezés értékelés',
 	'UI:RunQuery:QueryExamples' => 'Lekérdezés példák',
@@ -755,6 +779,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test query~~',
 	'UI:Combo:SelectValue' => '--- válasszon értéket ---',
 	'UI:Label:SelectedObjects' => 'Kiválasztott objektumok: ',
@@ -1145,15 +1170,16 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Configure This List...~~',
 	'UI:ListConfigurationTitle' => 'List Configuration~~',
 	'UI:ColumnsAndSortOrder' => 'Columns and sort order:~~',
 	'UI:UseDefaultSettings' => 'Use the Default Settings~~',
 	'UI:UseSpecificSettings' => 'Use the Following Settings:~~',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Display~~',
+	'UI:Display_X_ItemsPerPage_suffix' => 'items per page~~',
 	'UI:UseSavetheSettings' => 'Save the Settings~~',
 	'UI:OnlyForThisList' => 'Only for this list~~',
 	'UI:ForAllLists' => 'Default for all lists~~',
@@ -1166,13 +1192,15 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class \\"%1$s\\". You may try \\"%2$s\\" instead.~~',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class \\"%1$s\\"~~',
 
-	'UI:Dashboard:Edit' => 'Edit This Page...~~',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.~~',
 	'UI:ExportDashBoard' => 'Export to a file~~',
 	'UI:ImportDashBoard' => 'Import from a file...~~',
 	'UI:ImportDashboardTitle' => 'Import From a File~~',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:~~',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet~~',
@@ -1407,6 +1435,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1424,6 +1453,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1535,6 +1565,8 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1563,6 +1595,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 //
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1571,6 +1604,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:DataSources' => 'Szinkronizált adatforrások',
@@ -1609,4 +1643,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+ 'UI:Dashboard:Edit' => 'Edit This Page...~~',
+ 'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
 ));

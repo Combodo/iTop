@@ -31,6 +31,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Core:AttributeLinkedSet' => 'Objektum tömbök',
 	'Core:AttributeLinkedSet+' => '',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
@@ -296,12 +298,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Change:ObjectCreated' => 'Objektum létrehozva',
 	'Change:ObjectDeleted' => 'Objektum törölve',
 	'Change:ObjectModified' => 'Objektum módosítva',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s új értéke: %2$s (előző értéke: %3$s)',
 	'Change:AttName_SetTo' => '%1$s új értéke %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s hozzáfűzve %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s módosítva, előző érték: %2$s',
 	'Change:AttName_Changed' => '%1$s módosítva',
 	'Change:AttName_EntryAdded' => '%1$s módosítva, új bejegyzés hozzáadva.',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'added %1$s~~',
 	'Change:LinkSet:Removed' => 'removed %1$s~~',
 	'Change:LinkSet:Modified' => 'modified %1$s~~',
@@ -501,6 +507,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ActionEmail' => 'E-mail értesítés',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Teszt címzett',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'Feladó~~',
@@ -628,6 +638,15 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1047,6 +1066,16 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
 
 //
@@ -1084,3 +1113,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ));
+
+
+

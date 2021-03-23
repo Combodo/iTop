@@ -1205,23 +1205,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1306,6 +1289,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:IPInterface+' => '~~',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP address~~',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC address~~',
 	'Class:IPInterface/Attribute:macaddress+' => '~~',
 	'Class:IPInterface/Attribute:comment' => 'Comment~~',
@@ -1474,6 +1459,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Group/Attribute:type' => 'Típus',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Felérendelt csoport',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Név',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1502,9 +1488,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Server:baseinfo' => 'General information~~',
@@ -1518,6 +1502,24 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Szabad IP-k: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => '10 szabad IP cím kivonata',
 	'Class:Document:PreviewTab' => 'Előnézet',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
+	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 ));
 
 //
@@ -1570,3 +1572,4 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Menu:Software' => 'Software catalog~~',
 	'Menu:Software+' => 'Software catalog~~',
 ));
+?>

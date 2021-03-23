@@ -63,6 +63,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Query/Attribute:name+' => 'Идентифицирует запрос',
 	'Class:Query/Attribute:description' => 'Описание',
 	'Class:Query/Attribute:description+' => 'Длинное описание запроса (назначение, использование и т.д.)',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Экспорт. поля',
 	'Class:QueryOQL/Attribute:fields+' => 'Список атрибутов для экспорта, разделённых запятыми (или alias.attribute)',
 	'Class:QueryOQL' => 'OQL запрос',
@@ -367,12 +371,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Logoff' => 'Выход',
 	'UI:Button:GlobalSearch' => 'Поиск',
 	'UI:Button:Search' => ' Поиск ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Запрос ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Сохранить',
 	'UI:Button:Cancel' => 'Отмена',
 	'UI:Button:Close' => 'Закрыть',
 	'UI:Button:Apply' => 'Применить',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Назад ',
 	'UI:Button:Restart' => ' |<< Перезапустить ',
 	'UI:Button:Next' => ' Вперёд >> ',
@@ -400,6 +407,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Поиск',
 	'UI:ClickToCreateNew' => 'Создать: %1$s',
@@ -432,6 +442,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Ошибка: объект уже удалён!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Вам не разрешено выполнять массовое удаления объектов класса %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Вы не можете удалять объекты класса %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Вам не разрешено выполнять массовое обновление объектов класса %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Ошибка: объект уже клонирован!',
 	'UI:Error:ObjectAlreadyCreated' => 'Ошибка: объект уже создан!',
@@ -440,6 +451,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:InvalidDashboard' => 'Ошибка: недопустимый дашборд',
 	'UI:Error:MaintenanceMode' => 'Приложение в режиме технического обслуживания',
 	'UI:Error:MaintenanceTitle' => 'Техническое обслуживание',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Количество',
 	'UI:GroupBy:Count+' => 'Количество элементов',
@@ -467,6 +479,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Loading' => 'Загрузка...',
 	'UI:Menu:Actions' => 'Действия',
 	'UI:Menu:OtherActions' => 'Другие Действия',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Новый...',
 	'UI:Menu:Add' => 'Добавить...',
 	'UI:Menu:Manage' => 'Управление...',
@@ -660,8 +674,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Audit:HeaderNbObjects' => '# Объекты',
 	'UI:Audit:HeaderNbErrors' => '# Ошибки',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL ошибка в правиле %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL ошибка в категории %1$s: %2$s.~~',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - Оценка запросов OQL',
 	'UI:RunQuery:QueryExamples' => 'Примеры запросов',
@@ -747,6 +771,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Введите первые 3 символа...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Проверить запрос',
 	'UI:Combo:SelectValue' => '--- выбор значения ---',
 	'UI:Label:SelectedObjects' => 'Выбранные объекты: ',
@@ -876,7 +901,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей, имеющих профиль администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'Система',
 
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
@@ -1137,8 +1162,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:PrintResolution:A4Landscape' => 'A4 (альбом)',
 	'UI:PrintResolution:LetterPortrait' => 'Письмо (портрет)',
 	'UI:PrintResolution:LetterLandscape' => 'Письмо (альбом)',
-	'UI:Toggle:StandardDashboard' => 'Стандартный',
-	'UI:Toggle:CustomDashboard' => 'Пользовательский',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Настроить список...',
 	'UI:ListConfigurationTitle' => 'Настройка списка',
@@ -1159,13 +1184,15 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class "%1$s". You may try "%2$s" instead.~~',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class "%1$s"~~',
 
-	'UI:Dashboard:Edit' => 'Редактировать дашборд...',
-	'UI:Dashboard:Revert' => 'Вернуть оригинальную версию...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Будет возвращена оригинальная версия дашборда. Все изменения будут утеряны. Хотите продолжить?',
 	'UI:ExportDashBoard' => 'Экспорт',
 	'UI:ImportDashBoard' => 'Импорт',
 	'UI:ImportDashboardTitle' => 'Импорт из файла',
 	'UI:ImportDashboardText' => 'Выберите файл дашборда для импорта:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Создать новый дашлет',
@@ -1400,6 +1427,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Объект заблокирован, поскольку в настоящее время редактируется пользователем %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Объект в настоящее время редактируется пользователем %1$s. Ваши изменения не будут сохранены, поскольку они могут быть перезаписаны.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'Срок блокировки для предотвращения одновременного изменения объекта истек.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Срок блокировки для предотвращения одновременного изменения объекта истек. Вы больше не можете сохранить свои изменения, поскольку другим пользователям теперь разрешено изменять данный объект.',
 	'UI:ConcurrentLockKilled' => 'Блокировка для предотвращения изменений текущего объекта снята.',
@@ -1417,6 +1445,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ToggleFullScreen' => 'Развернуть / Свернуть',
 	'UI:Button:ResetImage' => 'Восстановить предыдущее изображение',
 	'UI:Button:RemoveImage' => 'Удалить изображение',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'Изменение изображений и файлов не поддерживается в этом режиме.',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1528,6 +1557,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Отфильтровано',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Отфильтровано по %1$s',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1556,6 +1587,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:NoNewMessage' => 'Нет новых сообщений',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Отметить все как прочитанные сообщения',
 	'UI:Newsroom:ViewAllMessages' => 'Посмотреть все сообщения',
 	'UI:Newsroom:Preferences' => 'Настройки новостей',
@@ -1564,6 +1596,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
 ));
+
 
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:DataSources' => 'Синхронизация данных',
@@ -1602,4 +1635,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:UserManagement' => 'Управление пользователями',
 	'Menu:Queries' => 'Запросы OQL',
 	'Menu:ConfigurationTools' => 'Конфигурация',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+ 'UI:Toggle:StandardDashboard' => 'Стандартный',
+ 'UI:Toggle:CustomDashboard' => 'Пользовательский',
+ 'UI:Dashboard:Edit' => 'Редактировать дашборд...',
+ 'UI:Dashboard:Revert' => 'Вернуть оригинальную версию...',
 ));

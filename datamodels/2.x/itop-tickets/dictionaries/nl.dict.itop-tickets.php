@@ -158,7 +158,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Fieldset translation
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-
 	'Ticket:baseinfo' => 'Globale informatie',
 	'Ticket:date' => 'Data',
 	'Ticket:contact' => 'Contacten',
@@ -172,7 +171,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'WorkOrder:Details' => 'Details',
 	'WorkOrder:Moreinfo' => 'Meer informatie',
 	'Tickets:ResolvedFrom' => 'Automatisch afgerond door %1$s',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Stel in op waarde',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Stel in veldwaarde in op een statische waarde',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Doelveld',

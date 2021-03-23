@@ -75,6 +75,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'La aplicación puede ser actualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'La aplicación no puede ser actualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => 'You must use the <a href="%1$s">setup</a> to update the application.<br />Some modified files were detected, a partial update cannot be executed.~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Listo para empezar',

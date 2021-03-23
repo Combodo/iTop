@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -28,11 +27,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 //
 // Class: Organization
 //
-
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Organization' => 'Organizácia',
 	'Class:Organization+' => '',
@@ -346,13 +343,216 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:ConfigManagement:Typology' => 'Konfiguračná typológia',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Person:info' => 'Všeobecné informácie',
 	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
+));
+//
+// Class: Organization
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Organization/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Location
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Location/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+));
+
+//
+// Class: Contact
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ' => '
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              active
+              
+                #689F38
+                #FFFFFF
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ' => '
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            ~~',
+	'Class:Contact/Attribute:status/Value:
+              inactive
+              
+                #E1E7EC
+                #6E7A8A
+                
+              
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            ' => '
+              yes
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              yes
+            +' => '~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            ' => '
+              no
+            ~~',
+	'Class:Contact/Attribute:notify/Value:
+              no
+            +' => '~~',
+));
+
+//
+// Class: Document
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:Document/Attribute:status/Value:
+              draft
+            ' => '
+              draft
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              draft
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            ' => '
+              published
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              published
+            +' => '~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            ' => '
+              obsolete
+            ~~',
+	'Class:Document/Attribute:status/Value:
+              obsolete
+            +' => '~~',
 ));

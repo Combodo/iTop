@@ -20,7 +20,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -28,7 +27,6 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'portal:itop-portal' => 'Standardní portál', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
 	'Page:DefaultTitle' => '%1$s - Uživatelský portál',

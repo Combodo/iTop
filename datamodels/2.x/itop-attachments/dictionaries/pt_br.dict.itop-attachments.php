@@ -41,6 +41,7 @@ Ou você anexou um arquivo vazio,
 ou entre em contato com o seu administrador do iTOP pois o servidor pode estar sem espaço de armazenamento.',
 	'Attachments:Render:Icons' => 'Mostrar como ícones',
 	'Attachments:Render:Table' => 'Mostrar como lista',
+	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 ));
 
 //

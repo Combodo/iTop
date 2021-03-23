@@ -152,7 +152,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 // Fieldset translation
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-
 	'Ticket:baseinfo' => 'Všeobecné informácia',
 	'Ticket:date' => 'Dátumy',
 	'Ticket:contact' => 'Kontakt',
@@ -166,7 +165,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'WorkOrder:Details' => 'Detaily',
 	'WorkOrder:Moreinfo' => 'Viac informácií',
 	'Tickets:ResolvedFrom' => 'Automatically resolved from %1$s~~',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set~~',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value~~',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field~~',

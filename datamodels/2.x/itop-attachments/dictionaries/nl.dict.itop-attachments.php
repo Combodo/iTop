@@ -45,6 +45,7 @@ Either you have pushed an empty file,
 or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => 'Toon als pictogram',
 	'Attachments:Render:Table' => 'Toon als lijst',
+	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 ));
 
 //

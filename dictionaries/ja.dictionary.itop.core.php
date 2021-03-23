@@ -31,6 +31,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:AttributeLinkedSet' => 'オブジェクト配列',
 	'Core:AttributeLinkedSet+' => '同一あるいはサブクラスに属するオブジェクト',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
@@ -296,12 +298,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Change:ObjectCreated' => 'オブジェクトを生成しました',
 	'Change:ObjectDeleted' => 'オブジェクトを削除しました',
 	'Change:ObjectModified' => 'オブジェクトを修正しました',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$sを%2$sに設定しました (変更前の値: %3$s)',
 	'Change:AttName_SetTo' => '%1$s は %2$sにセットされました。',
 	'Change:Text_AppendedTo_AttName' => '%1$sを%2$sに追加しました',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$sを変更しました。更新前の値: %2$s',
 	'Change:AttName_Changed' => '%1$sを変更しました',
 	'Change:AttName_EntryAdded' => '%1$s は、修正されました。新しいエントリーが追加されました。: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => '追加されました %1$s',
 	'Change:LinkSet:Removed' => '削除されました %1$s',
 	'Change:LinkSet:Modified' => '修正されました %1$s',
@@ -501,6 +507,10 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ActionEmail' => 'メール通知',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'テストレシピ',
 	'Class:ActionEmail/Attribute:test_recipient+' => '状態がテストの場合の宛先',
 	'Class:ActionEmail/Attribute:from' => 'From~~',
@@ -628,6 +638,15 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1047,6 +1066,16 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
 
 //
@@ -1084,3 +1113,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ));
+
+
+

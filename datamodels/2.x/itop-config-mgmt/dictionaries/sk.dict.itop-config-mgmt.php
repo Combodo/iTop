@@ -1210,23 +1210,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:lnkDocumentToFunctionalCI' => 'väzba - Dokument / Komponent',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Komponent',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Názov funkčných CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Názov dokumentu',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1481,6 +1464,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Group/Attribute:type' => 'Typ',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Nadradená skupina',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Meno rodiča',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1509,9 +1493,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Server:baseinfo' => 'Všeobecné informácie',
@@ -1525,6 +1507,24 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Voľných IP adries: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Tu je extrakt 10 voľných IP adries',
 	'Class:Document:PreviewTab' => 'Preview~~',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:lnkDocumentToFunctionalCI' => 'väzba - Dokument / Komponent',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Komponent',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Názov funkčných CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Názov dokumentu',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
 ));
 
 //
@@ -1559,6 +1559,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:MobilePhone' => 'Mobilné telefóny',
 	'Menu:MobilePhone+' => '',
 	'Menu:PC' => 'Osobné počítače',
+	'Menu:PC+' => '',
 	'Menu:NewCI' => 'Nové CI',
 	'Menu:NewCI+' => '',
 	'Menu:SearchCIs' => 'Vyhľadať CIs',
@@ -1576,3 +1577,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:Software' => 'Katalóg softvéru',
 	'Menu:Software+' => '',
 ));
+?>

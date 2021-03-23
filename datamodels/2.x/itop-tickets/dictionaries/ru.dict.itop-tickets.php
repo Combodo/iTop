@@ -131,7 +131,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 // Fieldset translation
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-
 	'Ticket:baseinfo' => 'Общая информация',
 	'Ticket:date' => 'Даты',
 	'Ticket:contact' => 'Контакты',
@@ -145,7 +144,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'WorkOrder:Details' => 'Детали',
 	'WorkOrder:Moreinfo' => 'Дополнительная информация',
 	'Tickets:ResolvedFrom' => 'Автоматическое решение из %1$s',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set~~',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value~~',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field~~',

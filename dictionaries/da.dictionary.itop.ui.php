@@ -73,6 +73,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Beskrivelse',
 	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Felter',
 	'Class:QueryOQL/Attribute:fields+' => '',
 	'Class:QueryOQL' => 'OQL forespørgsel',
@@ -377,12 +381,15 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:Logoff' => 'Log ud',
 	'UI:Button:GlobalSearch' => 'Søg',
 	'UI:Button:Search' => ' Søg ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Forespørgsel ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Gem',
 	'UI:Button:Cancel' => 'Afbryd',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Anvend',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Tilbage ',
 	'UI:Button:Restart' => ' |<< Start igen ',
 	'UI:Button:Next' => ' Næste >> ',
@@ -410,6 +417,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Søg',
 	'UI:ClickToCreateNew' => 'Opret nyt objekt af typen %1$s~~',
@@ -442,6 +452,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Fejl: objekterne er allerede slettet!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Du har ikke tilladelse til at foretage en masse sletning af objekter i klassen %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Du har ikke tilladelse til at slette objekter af klassen %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Du har ikke tilladelse til at foretage en masse opdatering af objekter i klassen %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Fejl: objektet er allerede klonet!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fejl: objektet er allerede oprettet!',
@@ -450,6 +461,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Antal',
 	'UI:GroupBy:Count+' => 'Antal af elementer',
@@ -477,6 +489,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Loading' => 'Henter...',
 	'UI:Menu:Actions' => 'Handlinger',
 	'UI:Menu:OtherActions' => 'Andre handlinger',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Ny...',
 	'UI:Menu:Add' => 'Tilføj...',
 	'UI:Menu:Manage' => 'Administrer...',
@@ -670,8 +684,18 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Audit:HeaderNbObjects' => '# Objekt(er)',
 	'UI:Audit:HeaderNbErrors' => '# Fejl',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Fejl i regel %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Fejl i kategorien %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - OQL Query Evaluering',
 	'UI:RunQuery:QueryExamples' => 'Query Eksempler',
@@ -757,6 +781,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test forespørgsel',
 	'UI:Combo:SelectValue' => '--- vælg en værdi ---',
 	'UI:Label:SelectedObjects' => 'Valgte objekter: ',
@@ -885,7 +910,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link mellem %1$s og %2$s',
 
 	'Menu:AdminTools' => 'Admin værktøjer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Administration tools~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => 'Værktøjer kun tilgængelige for brugere med administrator profil', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
 
@@ -935,14 +960,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Data Model', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Data Model~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overview of the Data Model~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Export the results of any query in HTML, CSV or XML~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:NotificationsMenu' => 'Notifikationer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Configuration of the Notifications~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Konfiguration af Notifikationer~~',
 	'UI:NotificationsMenu:Help' => 'Hjælp',
 	'UI:NotificationsMenu:HelpContent' => '<p>I iTop er notifikationer fuldt modificerbare. De er baseret på to sæt af objekter: <i>triggers og handlinger</i>.</p>
@@ -975,30 +1000,30 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
 	'Menu:AuditCategories' => 'Audit Kategorier', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Audit Categories~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:Notifications:Title' => 'Audit Kategorier', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:RunQueriesMenu' => 'Kør forespørgsler', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Run any query~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:QueryMenu' => 'Query parlør', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:DataAdministration' => 'Data administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:DataAdministration+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:UniversalSearchMenu' => 'Universal Søgning', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Search for anything...~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:UserManagementMenu' => 'Bruger styring', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'User management~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ProfilesMenu' => 'Profiler', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profiles~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profiler', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:UserAccountsMenu' => 'Bruger konti', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'User Accounts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UserAccountsMenu:Title' => 'Bruger konti', // Duplicated into itop-welcome-itil (will be removed from here...)	
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
@@ -1148,8 +1173,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Konfigurer denne liste...',
 	'UI:ListConfigurationTitle' => 'Liste Konfiguration',
@@ -1170,13 +1195,15 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:OQL:UnknownClassAndFix' => 'Ukendt klasse "%1$s". Forsøg "%2$s" i stedet for.',
 	'UI:OQL:UnknownClassNoFix' => 'Ukendt klasse "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Rediger denne side...',
-	'UI:Dashboard:Revert' => 'Tilbage til original version...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Enhver ændring foretaget i den oprindelige version vil blive tabt. Bekræft venligst at du ønsker dette.',
 	'UI:ExportDashBoard' => 'Exporter til fil',
 	'UI:ImportDashBoard' => 'Importer fra fil...',
 	'UI:ImportDashboardTitle' => 'Importer Fra Fil',
 	'UI:ImportDashboardText' => 'Vælg en dashboard fil til import:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Opret en ny Dashlet',
@@ -1411,6 +1438,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1428,6 +1456,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1539,6 +1568,8 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1567,6 +1598,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 //
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1575,6 +1607,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:DataSources' => 'Synkroniserings Data Kilder',
@@ -1613,4 +1646,12 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Dashboard:Edit' => 'Rediger denne side...',
+ 'UI:Dashboard:Revert' => 'Tilbage til original version...',
 ));

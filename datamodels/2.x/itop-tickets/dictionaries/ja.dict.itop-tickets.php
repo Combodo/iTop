@@ -139,7 +139,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 // Fieldset translation
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-
 	'Ticket:baseinfo' => '基本情報',
 	'Ticket:date' => '日付',
 	'Ticket:contact' => '連絡先',
@@ -153,7 +152,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'WorkOrder:Details' => '詳細',
 	'WorkOrder:Moreinfo' => '追加情報',
 	'Tickets:ResolvedFrom' => 'Automatically resolved from %1$s~~',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set~~',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value~~',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field~~',

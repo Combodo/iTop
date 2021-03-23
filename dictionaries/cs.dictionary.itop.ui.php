@@ -86,6 +86,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Query/Attribute:name+' => 'Název dotazu',
 	'Class:Query/Attribute:description' => 'Popis',
 	'Class:Query/Attribute:description+' => 'Dlouhý popis dotazu',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Atributy',
 	'Class:QueryOQL/Attribute:fields+' => 'Seznam atributů oddělených čárkami',
 	'Class:QueryOQL' => 'OQL dotaz',
@@ -390,12 +394,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:Logoff' => 'Odhlásit',
 	'UI:Button:GlobalSearch' => 'Hledat',
 	'UI:Button:Search' => ' Hledat ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Query ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Uložit',
 	'UI:Button:Cancel' => 'Zrušit',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Použít',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Zpět ',
 	'UI:Button:Restart' => ' |<< Začít znovu ',
 	'UI:Button:Next' => ' Další >> ',
@@ -423,6 +430,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Hledání',
 	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)~~',
@@ -455,6 +465,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Chyba: objekt byl již odstraněn!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Nemáte oprávnění k hromadnému odstranění objektů třídy %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Nemáte oprávnění k odstranění objektů třídy %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Nemáte oprávnění k hromadné aktualizaci objektů třídy %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Chyba: objekt byl již naklonován!',
 	'UI:Error:ObjectAlreadyCreated' => 'Chyba: objekt byl již vytvořen!',
@@ -463,6 +474,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',
@@ -490,6 +502,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Loading' => 'Načítám...',
 	'UI:Menu:Actions' => 'Akce',
 	'UI:Menu:OtherActions' => 'Další akce',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Nový...',
 	'UI:Menu:Add' => 'Přidat...',
 	'UI:Menu:Manage' => 'Spravovat...',
@@ -683,8 +697,18 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Audit:HeaderNbObjects' => 'Počet objektů',
 	'UI:Audit:HeaderNbErrors' => 'Počet chyb',
 	'UI:Audit:PercentageOk' => '% OK',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL chyba v pravidle %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL chyba v kategorii %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - Vyhodnocení OQL dotazu',
 	'UI:RunQuery:QueryExamples' => 'Příklady dotazů',
@@ -770,6 +794,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'Zadejte první tři znaky...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Otestovat dotaz',
 	'UI:Combo:SelectValue' => '--- vyberte hodnotu ---',
 	'UI:Label:SelectedObjects' => 'Vybrané objekty: ',
@@ -1159,8 +1184,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Konfigurovat tento seznam...',
 	'UI:ListConfigurationTitle' => 'Konfigurace seznamu',
@@ -1181,13 +1206,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:OQL:UnknownClassAndFix' => 'Neznámá třída "%1$s". Můžete zkusit "%2$s".',
 	'UI:OQL:UnknownClassNoFix' => 'Neznámá třída "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Upravit tuto stránku...',
-	'UI:Dashboard:Revert' => 'Vrátit se k původní verzi...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Všechny změny oproti původní verzi budou ztraceny. Potvrďte prosím, že to chcete opravdu udělat.',
 	'UI:ExportDashBoard' => 'Export do souboru',
 	'UI:ImportDashBoard' => 'Import ze souboru',
 	'UI:ImportDashboardTitle' => 'Import ze souboru',
 	'UI:ImportDashboardText' => 'Vyberte šablonu dashboardu k importu:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Vytvořit nový dashlet',
@@ -1422,6 +1449,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Objekt je uzamčen, protože ho nyní upravuje %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Objekt právě upravuje %1$s. Vaše úpravy nemohou být odeslány, protože by byly přepsány.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'Zámek objektu vypršel.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Objekt byl znovu odemčen. Nemůžete odeslat své úpravy, protože objekt mezitím mohl být upraven někým jiným.',
 	'UI:ConcurrentLockKilled' => 'Váš zámek tohoto objektu byl odstraněn někým jiným.',
@@ -1439,6 +1467,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ToggleFullScreen' => 'Přepnout zobrazení',
 	'UI:Button:ResetImage' => 'Obnovit původní obrázek',
 	'UI:Button:RemoveImage' => 'Odebrat obrázek',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'Úprava obrázků není v tomto režimu podporována.',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1550,6 +1579,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1578,6 +1609,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1586,6 +1618,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:DataSources' => 'Zdroje dat pro synchronizaci',
@@ -1624,4 +1657,12 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Dashboard:Edit' => 'Upravit tuto stránku...',
+ 'UI:Dashboard:Revert' => 'Vrátit se k původní verzi...',
 ));

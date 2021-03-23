@@ -153,7 +153,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 // Fieldset translation
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-
 	'Ticket:baseinfo' => 'Informações gerais',
 	'Ticket:date' => 'Datas',
 	'Ticket:contact' => 'Contatos',
@@ -167,7 +166,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'WorkOrder:Details' => 'Detalhes',
 	'WorkOrder:Moreinfo' => 'Mais informações',
 	'Tickets:ResolvedFrom' => 'Resolvido automaticamente de %1$s',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Defina um campo com um valor estático',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Campo alvo',

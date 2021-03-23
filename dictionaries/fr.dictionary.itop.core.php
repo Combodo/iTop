@@ -298,12 +298,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',
 	'Change:ObjectModified' => 'Elément modifié',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s modifié en %2$s (ancienne valeur: %3$s)',
 	'Change:AttName_SetTo' => '%1$s modifié en %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s ajouté à %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifié, ancienne valeur: %2$s',
 	'Change:AttName_Changed' => '%1$s modifié',
 	'Change:AttName_EntryAdded' => '%1$s champ modifié, une nouvelle entrée a été ajoutée: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'ajout de %1$s',
 	'Change:LinkSet:Removed' => 'suppression de %1$s',
 	'Change:LinkSet:Modified' => 'modification de %1$s',
@@ -503,6 +507,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'De (mél)',
@@ -630,6 +638,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObjectUpdate+' => '',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Attributs cible',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1059,18 +1076,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Dernière tentative',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-
-
-));
-
-// Additional language entries not present in English dict
-Dict::Add('FR FR', 'French', 'Français', array(
- 'Core:Context=REST/JSON+' => 'REST/JSON',
- 'Core:Context=Synchro+' => 'Synchro',
- 'Core:Context=Setup+' => 'Setup',
- 'Core:Context=GUI:Console+' => 'GUI:Console',
- 'Core:Context=CRON+' => 'cron',
- 'Core:Context=GUI:Portal+' => 'GUI:Portal',
 ));
 
 //
@@ -1110,3 +1115,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 
+
+
+// Additional language entries not present in English dict
+Dict::Add('FR FR', 'French', 'Français', array(
+ 'Core:Context=REST/JSON+' => 'REST/JSON',
+ 'Core:Context=Synchro+' => 'Synchro',
+ 'Core:Context=Setup+' => 'Setup',
+ 'Core:Context=GUI:Console+' => 'GUI:Console',
+ 'Core:Context=CRON+' => 'cron',
+ 'Core:Context=GUI:Portal+' => 'GUI:Portal',
+));

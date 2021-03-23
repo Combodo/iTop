@@ -28,6 +28,7 @@ Either you have pushed an empty file,
 or ask your iTop administrator if the iTop server disk is full.~~',
 	'Attachments:Render:Icons' => 'Display as icons~~',
 	'Attachments:Render:Table' => 'Display as list~~',
+	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 ));
 
 //

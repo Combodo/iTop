@@ -47,7 +47,6 @@
 //
 // Class: FAQ
 //
-
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',

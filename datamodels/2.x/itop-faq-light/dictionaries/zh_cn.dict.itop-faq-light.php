@@ -42,11 +42,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'FAQ',
@@ -79,7 +77,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => '该类别FAQ 相关的所有常见问题',
 ));
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',

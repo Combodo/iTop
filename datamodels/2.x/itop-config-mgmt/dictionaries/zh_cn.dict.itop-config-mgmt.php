@@ -1210,23 +1210,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToFunctionalCI' => '链接 文档 / 功能项',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => '功能项',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => '功能项名称',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => '文档',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => '文档名称',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1510,9 +1493,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Server:baseinfo' => '基本信息',
@@ -1527,6 +1508,28 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Subnet/Tab:FreeIPs-explain' => '以下是抽取的10个空闲IP',
 	'Class:Document:PreviewTab' => '预览',
 ));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:lnkDocumentToFunctionalCI' => '链接 文档 / 功能项',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => '功能项',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => '功能项名称',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => '文档',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => '文档名称',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+));
+
+//
+// Application Menu
+//
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Application' => '应用',
@@ -1574,3 +1577,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:Software' => '软件清单',
 	'Menu:Software+' => '软件清单',
 ));
+?>

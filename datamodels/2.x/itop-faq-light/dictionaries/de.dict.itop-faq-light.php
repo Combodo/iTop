@@ -25,7 +25,6 @@
 //
 // Class: FAQ
 //
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => '',

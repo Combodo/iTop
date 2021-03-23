@@ -20,7 +20,6 @@
 * @copyright   Copyright (C) 2010-2021 Combodo SARL
 * @license     http://opensource.org/licenses/AGPL-3.0
 */
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -28,11 +27,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
 //
 // Class: lnkFunctionalCIToTicket
 //
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:lnkFunctionalCIToTicket' => 'Lien CI / Ticket',
 	'Class:lnkFunctionalCIToTicket+' => '',
@@ -99,4 +96,34 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FunctionalCI/Attribute:services_list+' => '',
 	'Class:FunctionalCI/Attribute:tickets_list' => 'Tickets',
 	'Class:FunctionalCI/Attribute:tickets_list+' => '',
+));
+//
+// Class: lnkFunctionalCIToTicket
+//
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              manual
+            ' => '
+              manual
+            ~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              manual
+            +' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              computed
+            ' => '
+              computed
+            ~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              computed
+            +' => '~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              not_impacted
+            ' => '
+              not_impacted
+            ~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:impact_code/Value:
+              not_impacted
+            +' => '~~',
 ));

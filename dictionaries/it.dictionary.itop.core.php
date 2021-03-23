@@ -33,6 +33,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Core:AttributeLinkedSet' => 'Array di oggetti',
 	'Core:AttributeLinkedSet+' => 'Ogni tipo di oggetto della stessa classe o sottoclasse',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
@@ -298,12 +300,16 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Change:ObjectCreated' => 'Oggetto creato',
 	'Change:ObjectDeleted' => 'Oggetto cancellato',
 	'Change:ObjectModified' => 'Oggetto modificato',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s settato a %2$s (valore precedente: %3$s)',
 	'Change:AttName_SetTo' => '%1$s settato a  %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s allegato a %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificato, valore precedente: %2$s',
 	'Change:AttName_Changed' => '%1$s modificato',
 	'Change:AttName_EntryAdded' => '%1$s modificato, nuova voce aggiunta: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'added %1$s~~',
 	'Change:LinkSet:Removed' => 'removed %1$s~~',
 	'Change:LinkSet:Modified' => 'modified %1$s~~',
@@ -503,6 +509,10 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ActionEmail' => 'Email di notifica',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Test destinatario',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'Da~~',
@@ -630,6 +640,15 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('IT IT', 'Italian', 'Italiano', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1049,6 +1068,16 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
 
 //
@@ -1086,3 +1115,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ));
+
+
+

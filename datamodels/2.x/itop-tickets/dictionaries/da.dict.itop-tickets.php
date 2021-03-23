@@ -140,7 +140,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 // Fieldset translation
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-
 	'Ticket:baseinfo' => 'Almindelig information',
 	'Ticket:date' => 'Dato',
 	'Ticket:contact' => 'Kontakt',
@@ -199,6 +198,10 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Time To Resolve~~',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer+' => 'Goal based on a SLT of type TTR~~',
 ));
+
+//
+// Class: Document
+//
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Document/Attribute:contracts_list' => 'Kontrakter',

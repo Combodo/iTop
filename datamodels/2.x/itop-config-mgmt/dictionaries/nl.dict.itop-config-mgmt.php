@@ -1217,23 +1217,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Link Document / Functioneel CI',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Naam Functioneel CI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Naam document',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1517,9 +1500,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Server:baseinfo' => 'Globale informatie',
@@ -1533,6 +1514,24 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Beschikbare IP-adressen: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Dit zijn 10 beschikbare IP-adressen',
 	'Class:Document:PreviewTab' => 'Voorbeeld',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Link Document / Functioneel CI',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functioneel CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Naam Functioneel CI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Naam document',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
 ));
 
 //
@@ -1585,3 +1584,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Software' => 'Softwarecatalogus',
 	'Menu:Software+' => 'Softwarecatalogus',
 ));
+?>

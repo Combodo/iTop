@@ -1030,7 +1030,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '',
 ));
 
-
 //
 // Class: OSVersion
 //
@@ -1053,6 +1052,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:OSFamily+' => '',
 ));
 
+//
 // Class: Brand
 //
 
@@ -1213,23 +1213,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Spojení (Dokument / Funkční konfigurační položka)',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Funkční konfigurační položka',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Název funkční konfigurační položky',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Název dokumentu',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1314,6 +1297,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP adresa',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC adresa',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Komentář',
@@ -1527,6 +1512,24 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Document:PreviewTab' => 'Náhled',
 ));
 
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Spojení (Dokument / Funkční konfigurační položka)',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Funkční konfigurační položka',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Název funkční konfigurační položky',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Název dokumentu',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
+));
+
 //
 // Application Menu
 //
@@ -1577,6 +1580,4 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:Software' => 'Katalog softwaru',
 	'Menu:Software+' => 'Katalog softwaru',
 ));
-
-
 ?>

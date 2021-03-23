@@ -84,6 +84,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Query/Attribute:name+' => 'Identificar a consulta',
 	'Class:Query/Attribute:description' => 'Descrição',
 	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso, etc)',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Campos',
 	'Class:QueryOQL/Attribute:fields+' => 'Vírgula separando a lista de atributos (ou alias.attribute) para exportar.',
 	'Class:QueryOQL' => 'Consulta OQL',
@@ -388,12 +392,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Logoff' => 'Sair',
 	'UI:Button:GlobalSearch' => 'Pesquisar',
 	'UI:Button:Search' => ' Pesquisar ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Consultar ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Salvar',
 	'UI:Button:Cancel' => 'Cancelar',
 	'UI:Button:Close' => 'Fechar',
 	'UI:Button:Apply' => 'Aplicar',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Voltar ',
 	'UI:Button:Restart' => ' |<< Reiniciar ',
 	'UI:Button:Next' => ' Próximo >> ',
@@ -421,6 +428,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Pesquisar',
 	'UI:ClickToCreateNew' => 'Criar um(a) %1$s',
@@ -453,6 +463,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Erro: objetos já foram apagados',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Você não tem permissão de executar exclusão em massa dos objetos da classe %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Você não tem permissão para excluir objeto(s) da classe %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Você não tem permissão de executar atualização em massa dos objetos da classe %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erro: o objeto já foi clonado.',
 	'UI:Error:ObjectAlreadyCreated' => 'Erro: o objeto já foi criado.',
@@ -461,6 +472,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:InvalidDashboard' => 'Erro: painel inválido',
 	'UI:Error:MaintenanceMode' => 'A aplicação está em manutenção',
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
@@ -488,6 +500,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Loading' => 'Carregando...',
 	'UI:Menu:Actions' => 'Ações',
 	'UI:Menu:OtherActions' => 'Outras ações',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Novo...',
 	'UI:Menu:Add' => 'Adicionar...',
 	'UI:Menu:Manage' => 'Gerenciar...',
@@ -681,8 +695,18 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Audit:HeaderNbObjects' => '# Objetos',
 	'UI:Audit:HeaderNbErrors' => '# Erros',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL erro na regra %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL erro na categoria %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'Avaliar consultas OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemplos de consultas',
@@ -768,6 +792,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:Attribute/Filter' => 'Filtro',
 	'UI:Schema:DefaultNullValue' => 'Padrão nulo : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Tipo os 3 primeiro caracteres...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Testar consulta',
 	'UI:Combo:SelectValue' => '--- selecione um valor ---',
 	'UI:Label:SelectedObjects' => 'Selected objects: ',
@@ -1159,8 +1184,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PrintResolution:A4Landscape' => 'Paisagem A4',
 	'UI:PrintResolution:LetterPortrait' => 'Carta Retrato',
 	'UI:PrintResolution:LetterLandscape' => 'Carta Retrato',
-	'UI:Toggle:StandardDashboard' => 'Padrão',
-	'UI:Toggle:CustomDashboard' => 'Customizado',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Configurar esta lista...',
 	'UI:ListConfigurationTitle' => 'Listar configuração',
@@ -1181,13 +1206,15 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:OQL:UnknownClassAndFix' => 'Classe desconhecida "%1$s". Você pode tentar "%2$s" em vez.',
 	'UI:OQL:UnknownClassNoFix' => 'Classe desconhecida "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Editar esta página...',
-	'UI:Dashboard:Revert' => 'Reverter para versão original...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Cada alterações feitas na versão original será perdido. Por favor, confirme que você quer fazer isso.',
 	'UI:ExportDashBoard' => 'Exportar para um arquivo',
 	'UI:ImportDashBoard' => 'Importar pelo arquivo...',
 	'UI:ImportDashboardTitle' => 'Importar por um arquivo',
 	'UI:ImportDashboardText' => 'Selecione um arquivo do painel para importar:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Criar um novo Painel',
@@ -1422,6 +1449,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:CurrentObjectIsLockedBy_User' => 'O objeto está bloqueado, pois está sendo modificado por %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'O objeto está sendo modificado por %1$s. Suas modificações não podem ser enviadas, pois seriam sobrescritas.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'O bloqueio para impedir modificações simultâneas do objeto expirou.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'O bloqueio para impedir modificações simultâneas do objeto expirou. Você não pode mais enviar sua modificação, pois outros usuários agora podem modificar este objeto.',
 	'UI:ConcurrentLockKilled' => 'O bloqueio impedindo modificações no objeto atual foi deletado.',
@@ -1439,6 +1467,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ToggleFullScreen' => 'Alternancia Maximizar / Minimizar',
 	'UI:Button:ResetImage' => 'Recupere a imagem anterior',
 	'UI:Button:RemoveImage' => 'Remover a imagem',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'A modificação de imagens ou arquivos não é suportada neste modo.',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1550,6 +1579,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado em %1$s',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1578,6 +1609,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Newsroom:NoNewMessage' => 'Nenhuma mensagem nova',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Marcar todas as mensagens como lidas',
 	'UI:Newsroom:ViewAllMessages' => 'Ver todas as mensagens',
 	'UI:Newsroom:Preferences' => 'Preferências de sala de notícias',
@@ -1586,6 +1618,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Mostrar mensagens de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Exibir até %1$s mensagens no menu %2$s.',
 ));
+
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:DataSources' => 'Fontes de dados de sincronização',
@@ -1624,4 +1657,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:UserManagement' => 'Gerenciamento de usuários',
 	'Menu:Queries' => 'Consultas',
 	'Menu:ConfigurationTools' => 'Configuração',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+ 'UI:Toggle:StandardDashboard' => 'Padrão',
+ 'UI:Toggle:CustomDashboard' => 'Customizado',
+ 'UI:Dashboard:Edit' => 'Editar esta página...',
+ 'UI:Dashboard:Revert' => 'Reverter para versão original...',
 ));

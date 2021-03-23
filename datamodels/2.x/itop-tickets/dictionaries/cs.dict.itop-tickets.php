@@ -155,7 +155,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 // Fieldset translation
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-
 	'Ticket:baseinfo' => 'Obecné informace',
 	'Ticket:date' => 'Data',
 	'Ticket:contact' => 'Kontakty',
@@ -225,4 +224,3 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Document/Attribute:services_list' => 'Služby',
 	'Class:Document/Attribute:services_list+' => '',
 ));
-

@@ -42,11 +42,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:FAQ' => 'FAQ~~',
 	'Class:FAQ+' => 'Frequently asked questions~~',
@@ -79,7 +77,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs~~',
 	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
 ));
-
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:ProblemManagement' => 'Problem Management~~',
 	'Menu:ProblemManagement+' => 'Problem Management~~',

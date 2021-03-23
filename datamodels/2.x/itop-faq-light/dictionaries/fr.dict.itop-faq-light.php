@@ -19,11 +19,9 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //
 // Class: FAQ
 //
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Question fréquement posée',
@@ -56,7 +54,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => '',
 ));
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:ProblemManagement' => 'Gestion des problèmes',
 	'Menu:ProblemManagement+' => 'Gestion des problèmes',

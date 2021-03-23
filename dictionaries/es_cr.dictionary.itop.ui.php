@@ -84,6 +84,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Query/Attribute:name+' => 'Identifica la consulta',
 	'Class:Query/Attribute:description' => 'Descripción',
 	'Class:Query/Attribute:description+' => 'Descripción larga de la consulta (propósito, uso, etc.)',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Campos',
 	'Class:QueryOQL/Attribute:fields+' => 'Lista de atributos separados por coma (o alias.attribute) para exportación',
 	'Class:QueryOQL' => 'Consulta OQL',
@@ -388,12 +392,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:Logoff' => 'Cerrar Sesión',
 	'UI:Button:GlobalSearch' => 'Buscar',
 	'UI:Button:Search' => 'Buscar',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => 'Consultar',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Guardar',
 	'UI:Button:Cancel' => 'Cancelar',
 	'UI:Button:Close' => 'Cerrar',
 	'UI:Button:Apply' => 'Aplicar',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => '<< Anterior',
 	'UI:Button:Restart' => '|<< Reiniciar',
 	'UI:Button:Next' => 'Siguiente >>',
@@ -421,6 +428,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Buscar',
 	'UI:ClickToCreateNew' => 'Crear %1$s',
@@ -453,6 +463,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Error: los objetos ya han sido borrados!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'No esta autorizado a borrar un lote de de objetos de la clase %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'No esta autorizado a borrar objetos del la clase %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'No esta autorizado a actualizar un lote de de objetos de la clase %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Error: el objeto ha sido previamente duplicado!',
 	'UI:Error:ObjectAlreadyCreated' => 'Error: el objeto ha sido previamente creado!',
@@ -461,6 +472,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'La aplicación se encuentra actualmente en mantenimiento',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Cuenta',
 	'UI:GroupBy:Count+' => 'Número de Elementos',
@@ -488,6 +500,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Loading' => 'Cargando',
 	'UI:Menu:Actions' => 'Acciones',
 	'UI:Menu:OtherActions' => 'Otras Acciones',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Nuevo',
 	'UI:Menu:Add' => 'Agregar',
 	'UI:Menu:Manage' => 'Administrar',
@@ -681,8 +695,18 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Audit:HeaderNbObjects' => '# Objetos',
 	'UI:Audit:HeaderNbErrors' => '# Errores',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'Error de OQL en la Regla %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'Error de OQL en la Categoría %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - Evaluación de consultas OQL',
 	'UI:RunQuery:QueryExamples' => 'Explorador de Consultas',
@@ -768,6 +792,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Schema:Attribute/Filter' => 'Filtro',
 	'UI:Schema:DefaultNullValue' => 'Nulo por Omisión : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Escriba los primeros 3 caracteres...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Consulta de Prueba',
 	'UI:Combo:SelectValue' => '--- seleccione un valor ---',
 	'UI:Label:SelectedObjects' => 'Objetos seleccionados: ',
@@ -1161,8 +1186,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Configurar Lista',
 	'UI:ListConfigurationTitle' => 'Configuración de Lista',
@@ -1183,13 +1208,15 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:OQL:UnknownClassAndFix' => 'Clase Desconocida "%1$s". Puede usar "%2$s" en su lugar.',
 	'UI:OQL:UnknownClassNoFix' => 'Clase Desconocida "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Editar esta Página',
-	'UI:Dashboard:Revert' => 'Regresar a Versión Original',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Todos los cambios realizados a la versión original se perderán.  Por favor confime que quiere hacer esto.',
 	'UI:ExportDashBoard' => 'Exportar a un Archivo',
 	'UI:ImportDashBoard' => 'Importar de un Archivo',
 	'UI:ImportDashboardTitle' => 'Importar de un Archivo',
 	'UI:ImportDashboardText' => 'Seleccione el Archivo de Panel de Control a Importar:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Crear Dashlet',
@@ -1424,6 +1451,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 
 	'UI:CurrentObjectIsLockedBy_User' => 'El objeto está bloqueado debido a que está siendo modificado por %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'El objeto está siendo modificado por %1$s. Sus modificaciones no pueden ser guardadas debeido a que serán re-escritas.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'El bloqueo que prevenia modificaciones concurrentes ha expirado',
 	'UI:CurrentObjectLockExpired_Explanation' => 'TEl bloqueo que prevenia modificaciones concurrentes ha expirado. Sus modificaiones no pueden ser guardadas debido a que otros usuario tiene el permiso para modificar este objeto.',
 	'UI:ConcurrentLockKilled' => 'El bloqueo que prevenia modificaciones concurrentes ha sido eliminado.',
@@ -1441,6 +1469,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:ToggleFullScreen' => 'Cambiar Maximizar / Minimizar',
 	'UI:Button:ResetImage' => 'Recuperar imágen previa',
 	'UI:Button:RemoveImage' => 'Remover imágen',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'La modificación de imágenes o archivos no está soportado en este modo.',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1552,6 +1581,8 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtrado',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado en %1$s',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1580,6 +1611,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1588,6 +1620,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
@@ -1626,4 +1659,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:UserManagement' => 'Gestión de usuarios',
 	'Menu:Queries' => 'Consultas',
 	'Menu:ConfigurationTools' => 'Configuración',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Dashboard:Edit' => 'Editar esta Página',
+ 'UI:Dashboard:Revert' => 'Regresar a Versión Original',
 ));

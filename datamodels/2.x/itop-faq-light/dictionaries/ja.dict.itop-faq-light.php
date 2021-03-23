@@ -19,11 +19,9 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
-
 //
 // Class: FAQ
 //
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'よくある質問',
@@ -56,7 +54,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
 	'Class:FAQCategory/Attribute:faq_list+' => '',
 ));
-
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:ProblemManagement' => '問題管理',
 	'Menu:ProblemManagement+' => '問題管理',

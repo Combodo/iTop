@@ -152,7 +152,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Fieldset translation
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-
 	'Ticket:baseinfo' => '基本信息',
 	'Ticket:date' => '日期信息',
 	'Ticket:contact' => '联系人',
@@ -166,7 +165,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'WorkOrder:Details' => '详情',
 	'WorkOrder:Moreinfo' => '更多信息',
 	'Tickets:ResolvedFrom' => '从 %1$s 自动解决',
-
 	'Class:cmdbAbstractObject/Method:Set' => '设置',
 	'Class:cmdbAbstractObject/Method:Set+' => '填写固定值',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => '目标字段',

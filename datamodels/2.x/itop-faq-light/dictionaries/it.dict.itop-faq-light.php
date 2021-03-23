@@ -43,11 +43,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: FAQ
 //
-
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Domande frequenti',

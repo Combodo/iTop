@@ -1212,23 +1212,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Relación Documento y EC Funcional',
-	'Class:lnkDocumentToFunctionalCI+' => 'Relación Documento y EC Funcional',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Documento',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => 'Documento',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Documento',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => 'Documento',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1313,6 +1296,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:IPInterface+' => 'Interfaz IP',
 	'Class:IPInterface/Attribute:ipaddress' => 'Dirección IP',
 	'Class:IPInterface/Attribute:ipaddress+' => 'Dirección IP',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'Dirección MAC',
 	'Class:IPInterface/Attribute:macaddress+' => 'Dirección MAC',
 	'Class:IPInterface/Attribute:comment' => 'Comentario',
@@ -1455,7 +1440,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => 'Solución Aplicativa',
 ));
 
-
 //
 // Class: Group
 //
@@ -1482,6 +1466,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Group/Attribute:type' => 'Tipo',
 	'Class:Group/Attribute:type+' => 'Tipo',
 	'Class:Group/Attribute:parent_id' => 'Grupo Padre',
+
 	'Class:Group/Attribute:parent_id+' => 'Grupo Padre',
 	'Class:Group/Attribute:parent_name' => 'Grupo Padre',
 	'Class:Group/Attribute:parent_name+' => 'Grupo Padre',
@@ -1510,9 +1495,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => 'Motivo',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Server:baseinfo' => 'Información General',
@@ -1526,6 +1509,24 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'IPs Libres: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Aquí está un extracto de 10 direcciones IP Libres',
 	'Class:Document:PreviewTab' => 'Vista Previa',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Relación Documento y EC Funcional',
+	'Class:lnkDocumentToFunctionalCI+' => 'Relación Documento y EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => 'EC Funcional',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Documento',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => 'Documento',
 ));
 
 //
@@ -1578,3 +1579,4 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:Software' => 'Catálogo de Software',
 	'Menu:Software+' => 'Catálogo de Software',
 ));
+?>

@@ -72,6 +72,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Beschreibung',
 	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Felder',
 	'Class:QueryOQL/Attribute:fields+' => '',
 	'Class:QueryOQL' => 'OQL Abfrage',
@@ -376,12 +380,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Logoff' => 'Abmelden',
 	'UI:Button:GlobalSearch' => 'Suche',
 	'UI:Button:Search' => ' Suche ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Abfrage ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Speichern',
 	'UI:Button:Cancel' => 'Abbrechen',
 	'UI:Button:Close' => 'Schließen',
 	'UI:Button:Apply' => 'Anwenden',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Zurück ',
 	'UI:Button:Restart' => ' |<< Neustart ',
 	'UI:Button:Next' => ' Weiter >> ',
@@ -409,6 +416,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Suche',
 	'UI:ClickToCreateNew' => 'Klicken Sie hier, um eine neues Objekt vom Typ %1$s zu erstellen~~',
@@ -441,6 +451,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Fehler: die Objekte wurden bereits gelöscht!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Sie sind nicht berechtigt, mehrere Objekte der Klasse %1$s zu löschen',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Sie sind nicht berechtigt, Objekte der Klasse zu löschen %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Sie sind nicht berechtigt, diese Massenaktualisierung der Objekte der Klasse "%1$s" durchzuführen.',
 	'UI:Error:ObjectAlreadyCloned' => 'Fehler: das Objekt wurde bereits dupliziert!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fehler: das Objekt wurde bereits erstellt!',
@@ -449,6 +460,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
 	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit im Wartungsmodus.',
 	'UI:Error:MaintenanceTitle' => 'Wartung',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
@@ -476,6 +488,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Loading' => 'Laden...',
 	'UI:Menu:Actions' => 'Aktionen',
 	'UI:Menu:OtherActions' => 'Andere Aktionen',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Neu...',
 	'UI:Menu:Add' => 'Hinzufügen...',
 	'UI:Menu:Manage' => 'Verwalten...',
@@ -669,8 +683,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Audit:HeaderNbObjects' => '# Objekte',
 	'UI:Audit:HeaderNbErrors' => '# Fehler',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Fehler in der Regel %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Fehler in der Kategorie %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - OQL-Abfrage-Auswertung',
 	'UI:RunQuery:QueryExamples' => 'Abfragebeispiele',
@@ -756,6 +780,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Schema:Attribute/Filter' => 'Filter',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Geben Sie die ersten 3 Buchstaben ein...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Query testen',
 	'UI:Combo:SelectValue' => '--- wählen Sie einen Wert ---',
 	'UI:Label:SelectedObjects' => 'Ausgewählte Objekte: ',
@@ -988,8 +1013,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Menu:UniversalSearchMenu' => 'Universelle Suche', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...', // Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'User-Management', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'User-Management', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Benutzerverwaltung', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Benutzerverwaltung', // Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:ProfilesMenu' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1146,8 +1171,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:PrintResolution:A4Landscape' => 'A4 Querformat',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Hochformat',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Querformat',
-	'UI:Toggle:StandardDashboard' => 'Standard',
-	'UI:Toggle:CustomDashboard' => 'Angepasst',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Liste konfigurieren...',
 	'UI:ListConfigurationTitle' => 'Listenkonfiguration',
@@ -1168,13 +1193,15 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:OQL:UnknownClassAndFix' => 'Unbekannte Klasse "%1$s". Sie könnten stattdessen "%2$s" versuchen.',
 	'UI:OQL:UnknownClassNoFix' => 'Unbekannte Klasse "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Diese Seite bearbeiten...',
-	'UI:Dashboard:Revert' => 'Auf Originalversion zurücksetzen...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Alle gemachten Änderungen gehen verloren. Bitte bestätigen Sie, daß Sie dies so wünschen.',
 	'UI:ExportDashBoard' => 'In Datei exportieren',
 	'UI:ImportDashBoard' => 'Aus Datei importieren...',
 	'UI:ImportDashboardTitle' => 'Import aus einer Datei',
 	'UI:ImportDashboardText' => 'Wählen Sie eine Dashboard-Datei zum Import:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Neues ashlet erzeugen',
@@ -1409,6 +1436,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Das Objekt ist gesperrt, da es derzeit durch %1$s bearbeitet wird.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Das Objekt wird derzeit durch %1$s bearbeitet. Ihre Änderungen können nicht abgesendet werden, da sie überschrieben würden.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Die Sperre um simultane Änderungen des Objekts zu verhindern ist abgelaufen. Sie können Ihre Änderungen nicht mehr absenden, da andere User jetzt das Objekt verändern können. ',
 	'UI:ConcurrentLockKilled' => 'Die Sperre um simultane Änderungen an dem Objekt zu verhindern ist gelöscht worden. ',
@@ -1426,6 +1454,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ToggleFullScreen' => 'Maximieren / Minimieren',
 	'UI:Button:ResetImage' => 'Vorheriges Bild wiederherstellen',
 	'UI:Button:RemoveImage' => 'Bild löschen',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'Die Modifizierung von Bildern oder Dateien wird in diesem Modus nicht unterstützt.',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1537,6 +1566,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Gefiltert',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltert über %1$s',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1565,6 +1596,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:NoNewMessage' => 'Keine neue Nachricht',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Alle Nachrichten als gelesen markieren',
 	'UI:Newsroom:ViewAllMessages' => 'Alle Nachrichten anzeigen',
 	'UI:Newsroom:Preferences' => 'Newsroom-Einstellungen',
@@ -1573,6 +1605,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
 ));
+
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
@@ -1611,4 +1644,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserManagement' => 'Benutzerverwaltung',
 	'Menu:Queries' => 'OQL Abfragen',
 	'Menu:ConfigurationTools' => 'Konfiguration',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard',
+ 'UI:Toggle:CustomDashboard' => 'Angepasst',
+ 'UI:Dashboard:Edit' => 'Diese Seite bearbeiten...',
+ 'UI:Dashboard:Revert' => 'Auf Originalversion zurücksetzen...',
 ));

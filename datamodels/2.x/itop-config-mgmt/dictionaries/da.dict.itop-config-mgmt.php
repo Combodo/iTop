@@ -1206,23 +1206,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Sammenhæng Dokument/FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokument navn',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1307,6 +1290,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:IPInterface+' => '',
 	'Class:IPInterface/Attribute:ipaddress' => 'IP Adresse',
 	'Class:IPInterface/Attribute:ipaddress+' => '',
+
+
 	'Class:IPInterface/Attribute:macaddress' => 'MAC Adresse',
 	'Class:IPInterface/Attribute:macaddress+' => '',
 	'Class:IPInterface/Attribute:comment' => 'Kommentar',
@@ -1504,9 +1489,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-
-
-
 // Add translation for Fieldsets
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
@@ -1521,6 +1503,24 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Ledige IP: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Her er et udtræk af 10 ledige IP adresser',
 	'Class:Document:PreviewTab' => 'Preview~~',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Sammenhæng Dokument/FunctionalCI',
+	'Class:lnkDocumentToFunctionalCI+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'FunctionalCI',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'FunctionalCI navn',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Dokument',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Dokument navn',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '',
 ));
 
 //
@@ -1573,3 +1573,4 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:Software' => 'Software Katalog',
 	'Menu:Software+' => '',
 ));
+?>

@@ -139,7 +139,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 // Fieldset translation
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-
 	'Ticket:baseinfo' => 'Általános információk',
 	'Ticket:date' => 'Dátum',
 	'Ticket:contact' => 'Kapcsolattartók',
@@ -153,7 +152,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'WorkOrder:Details' => 'Details~~',
 	'WorkOrder:Moreinfo' => 'More information~~',
 	'Tickets:ResolvedFrom' => 'Automatically resolved from %1$s~~',
-
 	'Class:cmdbAbstractObject/Method:Set' => 'Set~~',
 	'Class:cmdbAbstractObject/Method:Set+' => 'Set a field with a static value~~',
 	'Class:cmdbAbstractObject/Method:Set/Param:1' => 'Target Field~~',

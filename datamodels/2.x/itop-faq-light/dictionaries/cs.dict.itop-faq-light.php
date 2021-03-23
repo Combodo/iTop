@@ -48,7 +48,6 @@
 //
 // Class: FAQ
 //
-
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:FAQ' => 'FAQ',
 	'Class:FAQ+' => 'Často kladené dotazy',

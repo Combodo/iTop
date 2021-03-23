@@ -31,6 +31,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'bkp-mysqldump-ok' => 'mysqldump is present: %1$s~~',
 	'bkp-mysqldump-notfound' => 'mysqldump could not be found: %1$s - Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir.~~',
 	'bkp-mysqldump-issue' => 'mysqldump could not be executed (retcode=%1$d): Please make sure it is installed and in the path, or edit the configuration file to tune mysql_bindir~~',
+	'bkp-missing-dir' => 'The target directory <code>%1$s</code> could not be found~~',
+	'bkp-free-disk-space' => '<b>%1$s free</b> in <code>%2$s</code>~~',
 	'bkp-dir-not-writeable' => '%1$s is not writeable~~',
 	'bkp-wrong-format-spec' => 'The current specification to format the file names is wrong (%1$s). A default specification will apply: %2$s~~',
 	'bkp-name-sample' => 'Backup files are named depending on DB identifiers, date and time. Example: %1$s~~',

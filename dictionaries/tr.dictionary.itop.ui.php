@@ -85,6 +85,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query~~',
 	'Class:Query/Attribute:description' => 'Description~~',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Fields~~',
 	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Query~~',
@@ -389,12 +393,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Logoff' => 'Çıkış',
 	'UI:Button:GlobalSearch' => 'Arama',
 	'UI:Button:Search' => ' Arama ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
 	'UI:Button:Query' => ' Sorgu ',
 	'UI:Button:Ok' => 'Tamam',
 	'UI:Button:Save' => 'Save~~',
 	'UI:Button:Cancel' => 'İptal',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Uygula',
+	'UI:Button:Send' => 'Send~~',
 	'UI:Button:Back' => ' << Geri ',
 	'UI:Button:Restart' => ' |<< Restart ~~',
 	'UI:Button:Next' => ' İleri >> ',
@@ -422,6 +429,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Ara',
 	'UI:ClickToCreateNew' => 'Yeni %1$s yarat~~',
@@ -454,6 +464,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Hata: nesne hali hazırda silinmiş!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => '%1$s sınıfına ait nesnelerin toplu silimine yetkiniz yok.',
 	'UI:Error:DeleteNotAllowedOn_Class' => '%1$s sınıfına ait nesnelerin silimine yetkiniz yok.',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => '%1$s sınıfına ait nesnelerin toplu güncellenmesine yetkiniz yok.',
 	'UI:Error:ObjectAlreadyCloned' => 'Hata: nesne hali hazırda klonlanmış!',
 	'UI:Error:ObjectAlreadyCreated' => 'Hata: nesne hali hazırda yaratılmış!',
@@ -462,6 +473,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -489,6 +501,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Loading' => 'Yükleniyor...',
 	'UI:Menu:Actions' => 'İşlemler',
 	'UI:Menu:OtherActions' => 'Diğer İşlemler',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Yeni...',
 	'UI:Menu:Add' => 'Ekle...',
 	'UI:Menu:Manage' => 'Yönet...',
@@ -682,8 +696,18 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Audit:HeaderNbObjects' => 'Nesne Sayısı',
 	'UI:Audit:HeaderNbErrors' => 'Hata sayısı',
 	'UI:Audit:PercentageOk' => '% Tamam',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Error in the Rule %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Error in the Category %1$s: %2$s.~~',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+
 
 	'UI:RunQuery:Title' => 'iTop - OQL Sorgu değerlendirme',
 	'UI:RunQuery:QueryExamples' => 'Sorgu örnekleri',
@@ -769,6 +793,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'İlk 3 karakteri giriniz...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test query~~',
 	'UI:Combo:SelectValue' => '--- değer seçiniz ---',
 	'UI:Label:SelectedObjects' => 'Seçilen nesneler: ',
@@ -1160,15 +1185,16 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Configure This List...~~',
 	'UI:ListConfigurationTitle' => 'List Configuration~~',
 	'UI:ColumnsAndSortOrder' => 'Columns and sort order:~~',
 	'UI:UseDefaultSettings' => 'Use the Default Settings~~',
 	'UI:UseSpecificSettings' => 'Use the Following Settings:~~',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Display~~',
+	'UI:Display_X_ItemsPerPage_suffix' => 'items per page~~',
 	'UI:UseSavetheSettings' => 'Save the Settings~~',
 	'UI:OnlyForThisList' => 'Only for this list~~',
 	'UI:ForAllLists' => 'Default for all lists~~',
@@ -1181,13 +1207,15 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class \\"%1$s\\". You may try \\"%2$s\\" instead.~~',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class \\"%1$s\\"~~',
 
-	'UI:Dashboard:Edit' => 'Edit This Page...~~',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.~~',
 	'UI:ExportDashBoard' => 'Export to a file~~',
 	'UI:ImportDashBoard' => 'Import from a file...~~',
 	'UI:ImportDashboardTitle' => 'Import From a File~~',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:~~',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet~~',
@@ -1422,6 +1450,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1439,6 +1468,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1550,6 +1580,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1578,6 +1610,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1586,6 +1619,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:DataSources' => 'Synchronization Data Sources~~',
@@ -1624,4 +1658,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+ 'UI:Dashboard:Edit' => 'Edit This Page...~~',
+ 'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
 ));

@@ -1212,23 +1212,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 ));
 
 //
-// Class: lnkDocumentToFunctionalCI
-//
-
-Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
-	'Class:lnkDocumentToFunctionalCI+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
-));
-
-//
 // Class: Subnet
 //
 
@@ -1483,6 +1466,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Group/Attribute:type' => 'Tip',
 	'Class:Group/Attribute:type+' => '',
 	'Class:Group/Attribute:parent_id' => 'Bağlı olduğu grup',
+
 	'Class:Group/Attribute:parent_id+' => '',
 	'Class:Group/Attribute:parent_name' => 'Adı',
 	'Class:Group/Attribute:parent_name+' => '',
@@ -1511,9 +1495,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:lnkGroupToCI/Attribute:reason+' => '',
 ));
 
-//
 // Add translation for Fieldsets
-//
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Server:baseinfo' => 'General information~~',
@@ -1527,6 +1509,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Subnet/Tab:FreeIPs-count' => 'Boş IPler: %1$s',
 	'Class:Subnet/Tab:FreeIPs-explain' => 'Boş IP adresleri',
 	'Class:Document:PreviewTab' => 'Ön görünüm',
+));
+
+
+//
+// Class: lnkDocumentToFunctionalCI
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
+	'Class:lnkDocumentToFunctionalCI+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 ));
 
 //
@@ -1579,3 +1579,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Software' => 'Software catalog~~',
 	'Menu:Software+' => 'Software catalog~~',
 ));
+?>

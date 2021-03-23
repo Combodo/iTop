@@ -63,6 +63,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Приложение может быть обновлено',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Приложение не может быть обновлено: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => 'You must use the <a href="%1$s">setup</a> to update the application.<br />Some modified files were detected, a partial update cannot be executed.~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Всё готово к началу',

@@ -35,6 +35,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Core:AttributeLinkedSet' => 'Pole objektů',
 	'Core:AttributeLinkedSet+' => 'Jakékoli objekty stejné třídy, nebo podtřídy',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
@@ -300,12 +302,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Change:ObjectCreated' => 'Objekt vytvořen',
 	'Change:ObjectDeleted' => 'Objekt odstraněn',
 	'Change:ObjectModified' => 'Objekt upraven',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'Atribut %1$s nastaven na hodnotu %2$s (předchozí hodnota: %3$s)',
 	'Change:AttName_SetTo' => 'Atribut %1$s nastaven na hodnotu %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s připojen k %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s upraven, předchozí hodnota: %2$s',
 	'Change:AttName_Changed' => '%1$s upraven',
 	'Change:AttName_EntryAdded' => '%1$s upraven, přidána nová položka.',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'přidán %1$s',
 	'Change:LinkSet:Removed' => 'odstraněn %1$s',
 	'Change:LinkSet:Modified' => 'upraven %1$s',
@@ -505,6 +511,10 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ActionEmail' => 'Emailové upozornění',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Adresát pro test',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Cílová adresa pro případ, kdy je stav nastaven na "Testování"',
 	'Class:ActionEmail/Attribute:from' => 'Odesílatel~~',
@@ -632,6 +642,15 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
 ));
 
 //
@@ -1051,6 +1070,16 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
 ));
 
 //
@@ -1088,3 +1117,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
 	'Class:ResourceSystemMenu+' => '~~',
 ));
+
+
+
