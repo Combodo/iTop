@@ -574,9 +574,9 @@ try {
 		$oForm->AddSubBlock($oTable);
 
 		if ($bSimulate) {
-			$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Restart'))->SetOnClickJsCode("CSVRestart()"));
+			$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Restart'))->SetOnClickJsCode("CSVRestart()"));
 		}
-		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Back'))->SetOnClickJsCode("CSVGoBack()"));
+		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Back'))->SetOnClickJsCode("CSVGoBack()"));
 
 		$bShouldConfirm = false;
 		if ($bSimulate) {
@@ -851,8 +851,8 @@ EOF
 			}
 		}
 
-		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Restart'))->SetOnClickJsCode("CSVRestart()"));
-		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Back'))->SetOnClickJsCode("CSVGoBack()"));
+		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Restart'))->SetOnClickJsCode("CSVRestart()"));
+		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Back'))->SetOnClickJsCode("CSVGoBack()"));
 		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:SimulateImport'), '', '', true));
 
 		$sAlertIncompleteMapping = addslashes(Dict::S('UI:CSVImport:AlertIncompleteMapping'));
@@ -1316,7 +1316,7 @@ EOF
 		$oForm->AddSubBlock($oFieldSetSeparator);
 		$oFieldSetSeparator->AddSubBlock(new Html(""));
 
-		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Back'))->SetOnClickJsCode("GoBack()"));
+		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Back'))->SetOnClickJsCode("GoBack()"));
 		$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), '', "", true));
 
 		$oPage->add_script(
