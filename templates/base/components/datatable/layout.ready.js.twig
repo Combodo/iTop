@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% set sListId = oUIBlock.GetOption('sListId') %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
-	{% set iPageSize = oUIBlock.GetOption("iPageSize") %}
+{% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
 {% set iPageSize = 10 %}
 {% endif %}
@@ -300,29 +300,30 @@ oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, i
 });
 {% endif %}
 
-    {% if oUIBlock.GetOption('sCountSelector') is not empty %}
-        $('#{{ sListId }} [name="selectionCount"]').bind('change', function() {
-            $('{{ oUIBlock.GetOption('sCountSelector') }}').val($('#{{ sListId }} [name="selectionCount"]').val());
-            $('{{ oUIBlock.GetOption('sCountSelector') }}').trigger('change');
-        });
-    {% endif %}
+{% if oUIBlock.GetOption('sCountSelector') is not empty %}
+$('#{{ sListId }} [name="selectionCount"]').bind('change', function () {
+    $('{{ oUIBlock.GetOption('sCountSelector') }}').val($('#{{ sListId }} [name="selectionCount"]').val());
+    $('{{ oUIBlock.GetOption('sCountSelector') }}').trigger('change');
+});
+{% endif %}
 
 {% endif %}
 
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
-    {
-        autoOpen: false,
-        title: "{{ 'UI:ListConfigurationTitle'|dict_s }}",
-        width: 500,
-	    open: function(){
-		    $('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val("none");
-	    },
-        close: function (event, ui) { //save data and refresh
-			if( $('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val() === "none") {
-				$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
+        {
+            autoOpen: false,
+            title: "{{ 'UI:ListConfigurationTitle'|dict_s }}",
+            width: 500,
+            open: function () {
+                $('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val("none");
+            },
+            close: function (event, ui) { //save data and refresh
+                if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val() === "none")
+                {
+                    $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('onDlgCancel');
+                }
             }
-        }
-    });
+        });
 
 $aOptions = {
     sListId: '{{ oUIBlock.GetId() }}',
@@ -337,5 +338,10 @@ $aOptions = {
     oDefaultSettings: {{ oUIBlock.GetOption("oDefaultSettings")|raw }},
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
 };
+
+if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
+{
+    $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('destroy');
+}
 
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings($aOptions);
