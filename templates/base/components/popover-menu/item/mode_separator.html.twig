@@ -1,4 +1,10 @@
 {% extends 'base/components/popover-menu/item/layout.html.twig' %}
 {% block iboPopoverMenuItem %}
-    <hr class="ibo-popover-menu--item ibo-popover-menu--separator">
+    <hr class="ibo-popover-menu--item ibo-popover-menu--separator"
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+    >
 {% endblock %}

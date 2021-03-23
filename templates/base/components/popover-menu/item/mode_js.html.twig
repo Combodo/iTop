@@ -1,7 +1,13 @@
 {% extends 'base/components/popover-menu/item/layout.html.twig' %}
 
 {% block iboPopoverMenuItem %}
-    <a class="ibo-popover-menu--item" data-role="ibo-popover-menu--item" href="{{ oUIBlock.GetUrl() }}" onclick="{{ oUIBlock.GetJsCode()|escape }}">
+    <a class="ibo-popover-menu--item" data-role="ibo-popover-menu--item" href="{{ oUIBlock.GetUrl() }}" onclick="{{ oUIBlock.GetJsCode()|escape }}"
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+    >
         {{ oUIBlock.GetLabel() }}
     </a>
 {% endblock %}
