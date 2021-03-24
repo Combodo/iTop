@@ -9,8 +9,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
@@ -229,12 +228,12 @@ try
 				$sMaxLen = (strlen(''.$iTarget) < 3) ? 3 : strlen(''.$iTarget); // Pad line numbers to the appropriate number of chars, but at least 3
 				$sFormat = '%0'.$sMaxLen.'d';
 
-				$oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:DataPreview'));
-				$oPage->AddSubBlock($oTitle);
+				//$oTitle = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:DataPreview'));
+				//$oPage->AddSubBlock($oTitle);
 
-				$oContainer = UIContentBlockUIBlockFactory::MakeStandard();
-				$oContainer->AddCSSClass("ibo-is-visible");
-				$oPage->AddSubBlock($oContainer);
+				//$oContainer = UIContentBlockUIBlockFactory::MakeStandard();
+				//$oContainer->AddCSSClass("ibo-is-visible");
+				//$oPage->AddSubBlock($oContainer);
 
 				$index = 1;
 				$aColumns = [];
@@ -264,7 +263,7 @@ try
 					}
 				}
 				$oTable = DataTableUIBlockFactory::MakeForForm("parser_preview", $aColumns, $aTableData);
-				$oContainer->AddSubBlock($oTable);
+				$oPage->AddSubBlock($oTable);
 				if ($iNbCols == 1) {
 					$oAlertMessage = \Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory::MakeForFailure(Dict::S('UI:CSVImport:ErrorOnlyOneColumn'));
 					$oPage->AddSubBlock($oAlertMessage);
@@ -334,7 +333,13 @@ try
 					$index++;
 				}
 				$oTable = DataTableUIBlockFactory::MakeForForm("mapping", $aColumns, $aTableData);
-				$oPage->AddSubBlock($oTable);
+
+				$oPanel = PanelUIBlockFactory::MakeNeutral('');
+				$oPanel->AddCSSClass('ibo-datatable-panel');
+				$oPanel->AddCSSClass('mt-5');
+				$oPanel->AddSubBlock($oTable);
+
+				$oPage->AddSubBlock($oPanel);
 				if (empty($sInitSearchField)) {
 					// Propose a reconciliation scheme
 					//
