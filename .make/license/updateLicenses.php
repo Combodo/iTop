@@ -1,10 +1,17 @@
 <?php
 /**
- * script used to sort license file (usefull for autogeneration)
+ * script used to sort license file (useful for autogeneration)
+ * Update license file in `$xmlFilePath`
  *
  * Requirements :
  *  * bash (on Windows, use Git Bash)
+ *  * composer (if you use the phar version, mind to create a `Composer` alias !)
  *  * JQ command //FIXME : how to get it on Windows ?
+ *
+ * Licenses sources :
+ *  * `composer licenses --format json` (see https://getcomposer.org/doc/03-cli.md#licenses)
+ *  * keep every existing nodes with `/licenses/license[11]/product/@scope` not in ['lib', 'datamodels']
+ *    ⚠ If licenses were added manually, they might be removed by this tool ! Be very careful to check for the result before pushing !
  *
  * To launch, simply do `php updateLicenses.php`
  */
