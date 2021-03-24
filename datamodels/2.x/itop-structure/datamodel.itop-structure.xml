@@ -1859,9 +1859,9 @@
       </theme>
       <theme id="test-red" _delta="define">
         <variables>
-          <variable id="ibo-page-banner-background-color">$ibo-color-red-600</variable>
-          <variable id="ibo-page-banner-text-color">$ibo-color-red-100</variable>
-          <variable id="ibo-page-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+          <variable id="ibo-page-banner--background-color">$ibo-color-red-600</variable>
+          <variable id="ibo-page-banner--text-color">$ibo-color-red-100</variable>
+          <variable id="ibo-page-banner--text-content">"THIS IS A TEST INSTANCE"</variable>
         </variables>
         <imports>
         </imports>

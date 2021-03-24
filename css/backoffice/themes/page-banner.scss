@@ -17,9 +17,9 @@
  *  * You should have received a copy of the GNU Affero General Public License
  *  
  */
-$ibo-page-banner-background-color: $ibo-color-red-600 !default;
-$ibo-page-banner-text-color: $ibo-color-red-100 !default;
-$ibo-page-banner-text-content: "THIS IS NOT PRODUCTION INSTANCE" !default;
+$ibo-page-banner--background-color: $ibo-color-red-600 !default;
+$ibo-page-banner--text-color: $ibo-color-red-100 !default;
+$ibo-page-banner--text-content: "THIS IS NOT PRODUCTION INSTANCE" !default;
 
 
 #ibo-page-banner::before {
@@ -28,7 +28,7 @@ $ibo-page-banner-text-content: "THIS IS NOT PRODUCTION INSTANCE" !default;
   padding: 0.2rem;
   text-align: center;
   font-size: 1rem;
-  background: $ibo-page-banner-background-color;
-  color: $ibo-page-banner-text-color;
-  content: $ibo-page-banner-text-content;
+  background: $ibo-page-banner--background-color;
+  color: $ibo-page-banner--text-color;
+  content: $ibo-page-banner--text-content;
 }

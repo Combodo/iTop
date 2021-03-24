@@ -827,17 +827,17 @@ class iTopDesignFormat
 
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]');
 		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'ibo-page-banner-background-color');
+			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
 		}		
 		
 		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]');
 		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'ibo-page-banner-text-color');
+			$oNode->setAttribute('id', 'ibo-page-banner--text-color');
 		}
 
 		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]');
 		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'ibo-page-banner-text-content');
+			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
 		
 		// Add new attribute to theme import nodes
@@ -935,17 +935,17 @@ class iTopDesignFormat
 		// N°3516 Bring back legacy themes
 		// Update test-red theme
 
-		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-background-color"]');
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--background-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'backoffice-environment-banner-background-color');
 		}
 
-		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-color"]');
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'backoffice-environment-banner-text-color');
 		}
 
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-content"]');
+		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-content"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
 		}
