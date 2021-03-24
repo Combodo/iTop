@@ -87,9 +87,9 @@ We would like to give a special thank you to the people from the community who c
  - Couronné, Guy
  - Dvořák, Lukáš
  - Goethals, Stefan
- - Gumble, David
- - Hippler, Lars
- - Khamit, Shamil
+- Gumble, David
+- Kaltefleiter, Lars (a.k.a @larhip)
+- Khamit, Shamil
  - Kincel, Martin
  - Konečný, Kamil
  - Kunin, Vladimir
