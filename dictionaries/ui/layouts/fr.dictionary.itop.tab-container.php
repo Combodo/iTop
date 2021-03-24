@@ -5,6 +5,6 @@
  */
 
 Dict::Add('FR FR', 'French', 'Français', [
-	'UIBlock:Error:AddBlockNotTabForbidden' => 'Cannot add block %1$s to %2$s (only Tab blocks are allowed)~~',
-	'UIBlock:TabContainer:RemoteTabLoad' => 'Click to load this tab~~',
+	'UIBlock:Error:AddBlockNotTabForbidden' => 'Impossible d\'ajouter le bloc %1$s à %2$s (seul les blocs de type Tab sont autorisés) : Veuillez contacter votre administrateur',
+	'UIBlock:TabContainer:RemoteTabLoad' => 'Cliquez pour charger cet onglet',
 ]);
