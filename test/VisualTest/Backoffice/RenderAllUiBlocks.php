@@ -25,6 +25,7 @@ namespace Combodo\iTop\Test\VisualTest\Backoffice;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroup;
 use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -104,7 +105,7 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 //////////
 $oButtonsJSTitle = new Html('<h2 id="title-buttons">ButtonsJS examples</h2>');
 $oPage->AddUiBlock($oButtonsJSTitle);
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral', 'neutral'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeNeutral('Neutral dis.', 'neutral')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPrimaryAction('Primary dis.')->SetIsDisabled(true));
@@ -114,8 +115,8 @@ $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPositiveAction('V
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForPositiveAction('Validation dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForDestructiveAction('Destructive'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForDestructiveAction('Destructive dis.')->SetIsDisabled(true));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral', 'alt-neutral'));
-$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral dis.', 'alt-neutral')->SetIsDisabled(true));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral'));
+$oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary dis.')->SetIsDisabled(true));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary'));
@@ -138,9 +139,9 @@ $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 // ButtonGroup
 //////////////
 
-$oPage->AddUiBlock(new Html('<h2 id="title-button-groups">ButtonGroups examples</h2>'));
+$oPage->AddUiBlock(new Html('<h2 id="title-button-groups">ButtonGroups examples: button + menu</h2>'));
 $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeNeutral('Neutral with options', ''),
+	ButtonUIBlockFactory::MakeNeutral('Neutral with options'),
 	new PopoverMenu()
 ));
 $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
@@ -160,7 +161,7 @@ $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptio
 	new PopoverMenu()
 ));
 $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
-	ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral with options', ''),
+	ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral with options'),
 	new PopoverMenu()
 ));
 $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
@@ -178,6 +179,29 @@ $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptio
 $oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
 	ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive with options'),
 	new PopoverMenu()
+));
+
+$oPage->AddUiBlock(new Html('<h2 id="title-button-groups">ButtonGroups examples: button + button + button</h2>'));
+$oPageContentLayout->AddMainBlock(new ButtonGroup(
+	[
+		ButtonUIBlockFactory::MakeNeutral('Three'),
+		ButtonUIBlockFactory::MakeNeutral('neutral'),
+		ButtonUIBlockFactory::MakeNeutral('button'),
+	]
+));
+$oPageContentLayout->AddMainBlock(new ButtonGroup(
+	[
+		ButtonUIBlockFactory::MakeForPrimaryAction('Three'),
+		ButtonUIBlockFactory::MakeForPrimaryAction('primary'),
+		ButtonUIBlockFactory::MakeForPrimaryAction('button'),
+	]
+));
+$oPageContentLayout->AddMainBlock(new ButtonGroup(
+	[
+		ButtonUIBlockFactory::MakeAlternativeNeutral('Three'),
+		ButtonUIBlockFactory::MakeAlternativeNeutral('primary'),
+		ButtonUIBlockFactory::MakeAlternativeNeutral('alt. button'),
+	]
 ));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
