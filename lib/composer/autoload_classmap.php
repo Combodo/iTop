@@ -158,6 +158,8 @@ return array(
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\Alert' => $baseDir . '/sources/application/UI/Base/Component/Alert/Alert.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\AlertUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Breadcrumbs\\Breadcrumbs' => $baseDir . '/sources/application/UI/Base/Component/Breadcrumbs/Breadcrumbs.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonGroup\\ButtonGroup' => $baseDir . '/sources/application/UI/Base/Component/ButtonGroup/ButtonGroup.php',
+    'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonGroup\\ButtonGroupUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\Button' => $baseDir . '/sources/application/UI/Base/Component/Button/Button.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\ButtonJS' => $baseDir . '/sources/application/UI/Base/Component/Button/ButtonJS.php',
     'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\ButtonUIBlockFactory' => $baseDir . '/sources/application/UI/Base/Component/Button/ButtonUIBlockFactory.php',

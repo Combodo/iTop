@@ -90,11 +90,8 @@ class Button extends UIBlock
 	 * @param string $sJsCode
 	 * @param string $sOnClickJsCode
 	 */
-	public function __construct(
-		string $sLabel, string $sId = null,	string $sTooltip = '', string $sIconClass = '',
-		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '',
-		string $sOnClickJsCode = ''
-	) {
+	public function __construct(string $sLabel, string $sId = null, string $sTooltip = '', string $sIconClass = '', string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '', string $sOnClickJsCode = '')
+	{
 		parent::__construct($sId);
 
 		$this->sLabel = $sLabel;

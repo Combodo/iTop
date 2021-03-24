@@ -25,16 +25,17 @@ namespace Combodo\iTop\Test\VisualTest\Backoffice;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use iTopWebPage;
 use LoginWebPage;
 use MetaModel;
-use utils;
 
 require_once '../../../approot.inc.php';
 require_once APPROOT.'application/startup.inc.php';
@@ -125,11 +126,59 @@ $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestru
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive dis.')->SetIsDisabled(true));
 
 $oButtonsURLTitle = new Html('<h2 id="title-buttons">ButtonsURL examples</h2>');
-$oPage->AddUiBlock($oButtonsURLTitle); 
+$oPage->AddUiBlock($oButtonsURLTitle);
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link neutral'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button', '#'));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeLinkNeutral('#', 'Link primary')->SetColor(Button::ENUM_COLOR_PRIMARY));
 $oPageContentLayout->AddMainBlock(ButtonUIBlockFactory::MakeIconLink('fas fa-thumbs-up', 'Icon link button primary', '#')->SetColor(Button::ENUM_COLOR_PRIMARY));
+
+$oPageContentLayout->AddMainBlock(new Html('<hr/>'));
+
+//////////////
+// ButtonGroup
+//////////////
+
+$oPage->AddUiBlock(new Html('<h2 id="title-button-groups">ButtonGroups examples</h2>'));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeNeutral('Neutral with options', ''),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForPrimaryAction('Primary with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForSecondaryAction('Secondary with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForPositiveAction('Validation with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForDestructiveAction('Destructive with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeAlternativeNeutral('Alt. neutral with options', ''),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForAlternativePrimaryAction('Alt. primary with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('Alt. secondary with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForAlternativeValidationAction('Alt. validation with options'),
+	new PopoverMenu()
+));
+$oPageContentLayout->AddMainBlock(ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu(
+	ButtonUIBlockFactory::MakeForAlternativeDestructiveAction('Alt. destructive with options'),
+	new PopoverMenu()
+));
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 

@@ -388,6 +388,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\Alert' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Alert/Alert.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Alert\\AlertUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Alert/AlertUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Breadcrumbs\\Breadcrumbs' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Breadcrumbs/Breadcrumbs.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonGroup\\ButtonGroup' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/ButtonGroup/ButtonGroup.php',
+        'Combodo\\iTop\\Application\\UI\\Base\\Component\\ButtonGroup\\ButtonGroupUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/ButtonGroup/ButtonGroupUIBlockFactory.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\Button' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Button/Button.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\ButtonJS' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Button/ButtonJS.php',
         'Combodo\\iTop\\Application\\UI\\Base\\Component\\Button\\ButtonUIBlockFactory' => __DIR__ . '/../..' . '/sources/application/UI/Base/Component/Button/ButtonUIBlockFactory.php',
