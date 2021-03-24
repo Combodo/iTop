@@ -6,7 +6,8 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: XML export
@@ -41,21 +42,20 @@ class XMLBulkExport extends BulkExport
 
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:XMLOptions'));
 
-				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
 
 				$oCheckBoxLocalize = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "xml_no_localize", "checkbox");
 				$oCheckBoxLocalize->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
 				$oCheckBoxLocalize->SetBeforeInput(false);
 				$oCheckBoxLocalize->GetInput()->AddCSSClass('ibo-input-checkbox');
-				$oPanel->AddSubBlock($oCheckBoxLocalize);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxLocalize));
 
 				$oCheckBoxLink = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionLinkSets'), "linksets", "1", "xml_linksets", "checkbox");
 				$oCheckBoxLink->GetInput()->SetIsChecked((utils::ReadParam('linksets', 0) == 1));
 				$oCheckBoxLink->SetBeforeInput(false);
 				$oCheckBoxLink->GetInput()->AddCSSClass('ibo-input-checkbox');
-				$oPanel->AddSubBlock($oCheckBoxLink);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxLink));
 
 				return $oPanel;
 				break;

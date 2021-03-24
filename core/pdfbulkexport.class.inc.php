@@ -10,7 +10,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: PDF export, based on the HTML export converted to PDF
@@ -46,13 +47,11 @@ class PDFBulkExport extends HTMLBulkExport
 			case 'pdf_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:PDFOptions'));
 
-				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
 
 				$oFieldSetFormat = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:PDFPageFormat'));
-				$oFieldSetFormat->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetFormat);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetFormat));
 
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
@@ -81,8 +80,7 @@ class PDFBulkExport extends HTMLBulkExport
 
 				//date format
 				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
-				$oFieldSetDate->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetDate);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 

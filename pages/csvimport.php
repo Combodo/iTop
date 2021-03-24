@@ -21,6 +21,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -544,49 +546,36 @@ try {
 			$aDisplayFilters['added'] = Dict::S('UI:CSVImport:ObjectsWereAdded');
 			$aDisplayFilters['errors'] = Dict::S('UI:CSVImport:ObjectsHadErrors');
 		}
-		$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oMulticolumn->AddCSSClasses(['ibo-multi-column', 'ml-1']);
+		$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
+		$oMulticolumn->AddCSSClass('ml-1');
 		$oForm->AddSubBlock($oMulticolumn);
-
-		$oColumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oColumn->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oColumn);
 
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/unchanged.png">&nbsp;'.sprintf($aDisplayFilters['unchanged'], $iUnchanged), '', "1", "show_unchanged", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
-		$oColumn->AddSubBlock($oCheckBoxUnchanged);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('row_unchanged')})");
 
-		$oColumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oColumn->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oColumn);
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
-		$oColumn->AddSubBlock($oCheckBoxUnchanged);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('row_modified')})");
 
-		$oColumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oColumn->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oColumn);
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
-		$oColumn->AddSubBlock($oCheckBoxUnchanged);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('row_added')})");
 
-		$oColumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oColumn->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oColumn);
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/error.png">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors), '', "1", "show_errors", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
-		$oColumn->AddSubBlock($oCheckBoxUnchanged);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
 		$oPage->add_ready_script("$('#show_errors').on('click', function(){ToggleRows('row_error')})");
 
 		$oPanel = PanelUIBlockFactory::MakeNeutral('');
@@ -838,27 +827,18 @@ EOF
 		$oForm->SetOnSubmitJsCode("return CheckValues()");
 		$oContainer->AddSubBlock($oForm);
 
-		$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oMulticolumn->AddCSSClass('ibo-multi-column');
+		$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 		$oForm->AddSubBlock($oMulticolumn);
-
-		$oColumn1 = UIContentBlockUIBlockFactory::MakeStandard();
-		$oColumn1->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oColumn1);
 
 		$oFieldSelectClass = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:SelectClass'), $oClassesSelect);
 		$oFieldSelectClass->AddCSSClass('ibo-field-large');
-		$oColumn1->AddSubBlock($oFieldSelectClass);
-
-		$oColumn2 = UIContentBlockUIBlockFactory::MakeStandard();
-		$oColumn2->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oColumn2);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSelectClass));
 
 		$oAdvancedMode = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('UI:CSVImport:AdvancedMode'), "advanced", 1, '', 'checkbox');
 		$oAdvancedMode->GetInput()->SetIsChecked(($bAdvanced == 1));
 		$oAdvancedMode->SetBeforeInput(false);
 		$oAdvancedMode->GetInput()->AddCSSClass('ibo-input-checkbox');
-		$oColumn2->AddSubBlock($oAdvancedMode);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oAdvancedMode));
 
 		$oDivAdvancedHelp = UIContentBlockUIBlockFactory::MakeStandard("advanced_help")->AddCSSClass('ibo-is-hidden');
 		$oForm->AddSubBlock($oDivAdvancedHelp);
@@ -1222,14 +1202,13 @@ EOF
 		$oContainer = PanelUIBlockFactory::MakeNeutral('');
 		$oForm->AddSubBlock($oContainer);
 
-		$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-		$oMulticolumn->AddCSSClasses(['ibo-multi-column', 'wizContainer']);
+		$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
+		$oMulticolumn->AddCSSClass('wizContainer');
 		$oContainer->AddSubBlock($oMulticolumn);
 
 		//SeparatorCharacter
 		$oFieldSetSeparator = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:SeparatorCharacter'));
-		$oFieldSetSeparator->AddCSSClass('ibo - column');
-		$oMulticolumn->AddSubBlock($oFieldSetSeparator);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetSeparator));
 
 		$aSep = array(
 			';' => Dict::S('UI:CSVImport:SeparatorSemicolon+'),
@@ -1260,8 +1239,7 @@ EOF
 
 		//TextQualifierCharacter
 		$oFieldSetTextQualifier = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:TextQualifierCharacter'));
-		$oFieldSetTextQualifier->AddCSSClass('ibo-column');
-		$oMulticolumn->AddSubBlock($oFieldSetTextQualifier);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
 		$aQualifiers = array(
 			'"' => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
@@ -1281,8 +1259,7 @@ EOF
 
 		//CommentsAndHeader
 		$oFieldSetCommentsAndHeader = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:CommentsAndHeader'));
-		$oFieldSetCommentsAndHeader->AddCSSClass('ibo-column');
-		$oMulticolumn->AddSubBlock($oFieldSetCommentsAndHeader);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetCommentsAndHeader));
 
 		$oCheckBoxHeader = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('UI:CSVImport:TreatFirstLineAsHeader'), "header_line", "1", "box_header", "checkbox");
 		$oCheckBoxHeader->GetInput()->SetIsChecked(($bHeaderLine == 1));
@@ -1303,8 +1280,7 @@ EOF
 
 		//date format
 		$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:DateAndTimeFormats'));
-		$oFieldSetDate->AddCSSClass('ibo-column');
-		$oMulticolumn->AddSubBlock($oFieldSetDate);
+		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 		$sDateTimeFormat = utils::ReadParam('date_time_format', 'default');
 		$sCustomDateTimeFormat = utils::ReadParam('custom_date_time_format', (string)AttributeDateTime::GetFormat(), false, 'raw_data');

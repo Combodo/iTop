@@ -10,7 +10,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: CSV export
@@ -114,14 +115,12 @@ class CSVBulkExport extends TabularBulkExport
 			case 'csv_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:CSVOptions'));
 
-				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
 
 				//SeparatorCharacter
 				$oFieldSetSeparator = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:SeparatorCharacter'));
-				$oFieldSetSeparator->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetSeparator);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetSeparator));
 
 				$sRawSeparator = utils::ReadParam('separator', ',', true, 'raw_data');
 				$sCustomDateTimeFormat = utils::ReadParam('', ',', true, 'raw_data');
@@ -149,8 +148,7 @@ class CSVBulkExport extends TabularBulkExport
 
 				//TextQualifierCharacter
 				$oFieldSetTextQualifier = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:CSVImport:TextQualifierCharacter'));
-				$oFieldSetTextQualifier->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetTextQualifier);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetTextQualifier));
 
 				$sRawQualifier = utils::ReadParam('text-qualifier', '"', true, 'raw_data');
 				$aQualifiers = array(
@@ -176,8 +174,7 @@ class CSVBulkExport extends TabularBulkExport
 
 				//Localization
 				$oFieldSetLocalization = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:CSVLocalization'));
-				$oFieldSetLocalization->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetLocalization);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetLocalization));
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "csv_no_localize", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
@@ -198,8 +195,7 @@ class CSVBulkExport extends TabularBulkExport
 				}
 				//markup
 				$oFieldSetMarkup = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
-				$oFieldSetMarkup->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetMarkup);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetMarkup));
 
 				$oCheckBoxMarkup = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "csv_formatted_text", "checkbox");
 				$oCheckBoxMarkup->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
@@ -209,8 +205,7 @@ class CSVBulkExport extends TabularBulkExport
 
 				//date format
 				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
-				$oFieldSetDate->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetDate);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 

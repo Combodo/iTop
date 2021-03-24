@@ -8,7 +8,8 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: "spreadsheet" export: a simplified HTML export in which the date/time columns are split in two column: date AND time
@@ -48,13 +49,11 @@ class SpreadsheetBulkExport extends TabularBulkExport
 			case 'spreadsheet_options':
 				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:SpreadsheetOptions'));
 
-				$oMulticolumn = UIContentBlockUIBlockFactory::MakeStandard();
-				$oMulticolumn->AddCSSClass('ibo-multi-column');
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
 				$oPanel->AddSubBlock($oMulticolumn);
 
 				$oFieldSetFormat = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
-				$oFieldSetFormat->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetFormat);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetFormat));
 
 				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "spreadsheet_formatted_text", "checkbox");
 				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
@@ -70,8 +69,7 @@ class SpreadsheetBulkExport extends TabularBulkExport
 				$oFieldSetFormat->AddSubBlock($oCheckBox);
 
 				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
-				$oFieldSetDate->AddCSSClass('ibo-column');
-				$oMulticolumn->AddSubBlock($oFieldSetDate);
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
 
