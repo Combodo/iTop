@@ -38,12 +38,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:ShowReport' => 'Relatório',
 	'DBTools:IntegrityCheck' => 'Verificação de integridade',
 	'DBTools:FetchCheck' => 'Verificação de Busca (longo)',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Analisar',
 	'DBTools:Details' => 'Mostrar detalhes',
 	'DBTools:ShowAll' => 'Mostrar todos erros',
 
 	'DBTools:Inconsistencies' => 'Inconsistências na base de dados',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Item orfão em `%1$s`, ele deveria ter seu registro irmão na tabela `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Chave externa inválida %1$s (coluna: `%2$s.%3$s`)',

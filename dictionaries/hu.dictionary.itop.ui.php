@@ -367,6 +367,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 <li>hatékonyan tudja kezelni az egyik legfontosabb IT eszközt, a dokumentációt.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Összes nyitott kérés: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Saját kérések',
 	'UI:WelcomeMenu:OpenIncidents' => 'Nyitott incidensek: %1$d',

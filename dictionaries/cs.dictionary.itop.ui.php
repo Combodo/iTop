@@ -382,6 +382,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 <li>Spravovat Vaše nejdůležitější IT aktivum - Dokumentaci.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otevřené požadavky: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mé požadavky',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otevřené incidenty: %1$d',

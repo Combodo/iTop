@@ -25,12 +25,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'DBTools:ShowReport' => 'Отчёт',
 	'DBTools:IntegrityCheck' => 'Проверка целостности',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Анализировать',
 	'DBTools:Details' => 'Показать подробности',
 	'DBTools:ShowAll' => 'Показать все ошибки',
 
 	'DBTools:Inconsistencies' => 'Несоответствия базы данных',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Сиротская запись в `%1$s`, она должна иметь свой аналог в таблице `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Недопустимый внешний ключ %1$s (столбец: `%2$s.%3$s`)',

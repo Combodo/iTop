@@ -359,6 +359,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 <li>Управлять наиболее важным активом ИТ: документацией.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Открытые запросы: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Мои запросы',
 	'UI:WelcomeMenu:OpenIncidents' => 'Открытые инциденты: %1$d',

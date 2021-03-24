@@ -40,12 +40,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:ShowReport' => 'Rapport',
 	'DBTools:IntegrityCheck' => 'Integriteitscheck',
 	'DBTools:FetchCheck' => 'Opvraag-check (fetch) (long)',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Analyseer',
 	'DBTools:Details' => 'Toon details',
 	'DBTools:ShowAll' => 'Toon alle fouten',
 
 	'DBTools:Inconsistencies' => 'Inconsistenties in database',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Wees-record in "%1$s", het zou een verwant record moeten hebben in de tabel "%2$s"',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Ongeldige externe sleutel %1$s (kolom: "%2$s.%3$s")',

@@ -369,6 +369,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>~~',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mine brugerhenvendelser',
 	'UI:WelcomeMenu:OpenIncidents' => 'Åbne Incidents: %1$d',

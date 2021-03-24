@@ -367,6 +367,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 <li>Manažovať najdôležitejšie aktíva Vášho IT: Dokumentáciu.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otvoriť žiadosť: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje žiadosti',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otvoriť incidenty: %1$d',

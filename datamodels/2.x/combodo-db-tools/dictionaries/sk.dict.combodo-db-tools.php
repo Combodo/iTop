@@ -38,12 +38,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'DBTools:ShowReport' => 'Report~~',
 	'DBTools:IntegrityCheck' => 'Integrity check~~',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Analyze~~',
 	'DBTools:Details' => 'Show Details~~',
 	'DBTools:ShowAll' => 'Show All Errors~~',
 
 	'DBTools:Inconsistencies' => 'Database inconsistencies~~',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Invalid external key %1$s (column: `%2$s.%3$s`)~~',

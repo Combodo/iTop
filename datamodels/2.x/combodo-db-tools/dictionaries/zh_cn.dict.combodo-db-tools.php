@@ -38,12 +38,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:ShowReport' => '报告',
 	'DBTools:IntegrityCheck' => '完整性检查',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => '分析',
 	'DBTools:Details' => '显示详情',
 	'DBTools:ShowAll' => '显示所有错误',
 
 	'DBTools:Inconsistencies' => '数据库不一致',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
 	'DBAnalyzer-Integrity-InvalidExtKey' => '无效的外键 %1$s (列: `%2$s.%3$s`)~~',

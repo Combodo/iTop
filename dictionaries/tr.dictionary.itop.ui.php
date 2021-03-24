@@ -381,6 +381,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 <li>İşletmenin en önemli kaynağı olan dokümantasyonu yönetmesine imkan sağlar.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Açık istekler: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'İsteklerim',
 	'UI:WelcomeMenu:OpenIncidents' => 'Açık Arızalar: %1$d',

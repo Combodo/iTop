@@ -38,12 +38,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'DBTools:ShowReport' => 'Reporte',
 	'DBTools:IntegrityCheck' => 'Verificación de integridad',
 	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Analizar',
 	'DBTools:Details' => 'Mostrar detalles',
 	'DBTools:ShowAll' => 'Mostrar todos los errores',
 
 	'DBTools:Inconsistencies' => 'Inconsistencias de base de datos',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Registro huérfano en `%1$s`, debería tener su contraparte en la tabla `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Llave externa inválida %1$s (columna: `%2$s.%3$s`)',

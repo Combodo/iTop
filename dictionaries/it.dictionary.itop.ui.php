@@ -380,6 +380,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 <li>Gestire la risorsa più importante della tua IT: Documentazione.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Apri le richieste: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Le mie richieste',
 	'UI:WelcomeMenu:OpenIncidents' => 'Apri gli incidenti: %1$d',

@@ -380,6 +380,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 <li>管理IT 中最重要的资产: 文档.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => '所有打开的需求: %1$d',
 	'UI:WelcomeMenu:MyCalls' => '我办理的需求',
 	'UI:WelcomeMenu:OpenIncidents' => '所有打开的事件: %1$d',

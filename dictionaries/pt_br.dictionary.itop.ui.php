@@ -380,6 +380,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <li>gerenciar o ativo mais importante de sua TI: Documentação</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Solicitações abertas: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Minhas solicitações',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes abertos: %1$d',

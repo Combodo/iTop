@@ -35,12 +35,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBTools:ShowReport' => 'Report',
 	'DBTools:IntegrityCheck' => 'Integritätscheck',
 	'DBTools:FetchCheck' => 'Fetch Check (dauert länger)',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Analysiere',
 	'DBTools:Details' => 'Details anzeigen',
 	'DBTools:ShowAll' => 'Alle Fehler anzeigen',
 
 	'DBTools:Inconsistencies' => 'Datenbank-Inkonsistenzen',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Verwaister Eintrag in `%1$s`, er sollte eine Entsprechung in Tabelle `%2$s` haben',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Ungültiger Externer Key %1$s (Spalte: `%2$s.%3$s`)',
