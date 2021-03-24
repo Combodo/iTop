@@ -11,6 +11,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm;
@@ -36,11 +37,16 @@ class CaseLogEntryFormFactory
 	{
 		$oCaseLogEntryForm = new CaseLogEntryForm($oObject, $sCaseLogAttCode);
 		$oCaseLogEntryForm->SetSubmitModeFromHostObjectMode($sObjectMode)
-			->AddMainActionButtons(static::PrepareCancelButton())
-			->AddMainActionButtons(static::PrepareSaveButton());
+			->AddMainActionButtons(static::PrepareCancelButton());
 
-		// TODO 3.0.0: Will be fixed by N°3649
-//			->SetSendButtonPopoverMenu(static::PrepareSendActionSelectionPopoverMenu($oObject, $sCaseLogAttCode));
+		$oSaveButton = static::PrepareSaveButton();
+		$oTransitionsMenu = static::PrepareTransitionsSelectionPopoverMenu($oObject, $sCaseLogAttCode);
+		if (true === $oTransitionsMenu->HasItems()) {
+			$oButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oSaveButton, $oTransitionsMenu);
+			$oCaseLogEntryForm->AddMainActionButtons($oButtonGroup);
+		} else {
+			$oCaseLogEntryForm->AddMainActionButtons($oSaveButton);
+		}
 
 		return $oCaseLogEntryForm;
 	}
@@ -64,7 +70,7 @@ class CaseLogEntryFormFactory
 		return $oButton;
 	}
 
-	protected static function PrepareSendActionSelectionPopoverMenu(DBObject $oObject, string $sCaseLogAttCode): PopoverMenu
+	protected static function PrepareTransitionsSelectionPopoverMenu(DBObject $oObject, string $sCaseLogAttCode): PopoverMenu
 	{
 		$sObjClass = get_class($oObject);
 
@@ -74,19 +80,6 @@ class CaseLogEntryFormFactory
 
 		$sCaseLogEntryFormDataRole = CaseLogEntryForm::BLOCK_CODE;
 
-		// Standard, just save
-		$oMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-			new JSPopupMenuItem(
-				CaseLogEntryForm::BLOCK_CODE.'--add-action--'.$sCaseLogAttCode.'--save',
-				Dict::S('UI:Button:Save'),
-				<<<JS
-$(this).closest('[data-role="{$sCaseLogEntryFormDataRole}"]').trigger('add_to_caselog.caselog_entry_form.itop', {caselog_att_code: '{$sCaseLogAttCode}'});
-JS
-			)
-		);
-		$oMenu->AddItem($sSectionId, $oMenuItem);
-
-		// Transitions
 		// Note: This code is inspired from cmdbAbstract::DisplayModifyForm(), it might be better to factorize it
 		$aTransitions = $oObject->EnumTransitions();
 		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
@@ -100,9 +93,9 @@ JS
 						$oMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
 							new JSPopupMenuItem(
 								CaseLogEntryForm::BLOCK_CODE.'--add-action--'.$sCaseLogAttCode.'--stimulus--'.$sStimulusCode,
-								$aStimuli[$sStimulusCode]->GetLabel(),
+								Dict::Format('UI:Button:SendAnd', $aStimuli[$sStimulusCode]->GetLabel()),
 								<<<JS
-$(this).closest('[data-role="{$sCaseLogEntryFormDataRole}"]').trigger('add_to_caselog.caselog_entry_form.itop', {caselog_att_code: '{$sCaseLogAttCode}', stimulus_code: '{$sStimulusCode}'});
+$(this).closest('[data-role="{$sCaseLogEntryFormDataRole}"]').trigger('save_entry.caselog_entry_form.itop', {stimulus_code: '{$sStimulusCode}'});
 JS
 							)
 						);

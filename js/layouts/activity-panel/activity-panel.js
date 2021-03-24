@@ -205,8 +205,8 @@ $(function()
 					me._onCancelledEntryForm();
 				});
 				// - Entry form submission request
-				this.element.on('request_submission.caselog_entry_form.itop', function () {
-					me._onRequestSubmission();
+				this.element.on('requested_submission.caselog_entry_form.itop', function (oEvent, oData) {
+					me._onRequestSubmission(oEvent, oData);
 				});
 
 				// Entries
@@ -414,7 +414,7 @@ $(function()
 			 * been edited and the user hasn't dismiss the dialog.
 			 * @private
 			 */
-			_onRequestSubmission: function () {
+			_onRequestSubmission: function (oEvent, oData) {
 				// Check lock state
 				if (this.enums.lock_status.locked_by_myself !== this.options.lock_status) {
 					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
@@ -427,7 +427,8 @@ $(function()
 				}
 				// Else push data directly to the server
 				else {
-					this._SendEntriesToServer();
+					let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
+					this._SendEntriesToServer(sStimulusCode);
 				}
 			},
 			_onCaseLogClosedMessageClick: function (oEntryElem) {
@@ -812,9 +813,11 @@ $(function()
 			},
 			/**
 			 * Send the edited case logs entries to the server
+			 * @param sStimulusCode {string} Stimulus code to apply after the entries are saved
+			 * @return {void}
 			 * @private
 			 */
-			_SendEntriesToServer: function () {
+			_SendEntriesToServer: function (sStimulusCode = null) {
 				const me = this;
 				const oEntries = this._GetEntriesFromAllForms();
 
@@ -861,15 +864,10 @@ $(function()
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
-						// TODO 3.0.0: Redirect to transition page if necessary (buttons need to be added)
-						// // Redirect to stimulus
-						// if(sStimulusCode !== null){
-						// 	window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+sObjClass+'&id='+sObjId+'&stimulus='+sStimulusCode;
-						// }
-
-						// TODO 3.0.0: If no stimulus
-						// On done, lock was release, remove message
-						// On done, renew transaction ID
+						// Redirect to stimulus
+						if (null !== sStimulusCode) {
+							window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
+						}
 					})
 					.always(function () {
 						// Always, unfreeze case logs

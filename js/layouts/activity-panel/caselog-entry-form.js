@@ -43,7 +43,7 @@ $(function() {
 				main_actions: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"]',
 				cancel_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="cancel"]',
 				save_button: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"]',
-				save_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"] + [data-role="ibo-popover-menu"]',
+				save_choices_picker: '[data-role="ibo-caselog-entry-form--action-buttons--main-actions"] [data-role="ibo-button"][name="save"] + [data-role="ibo-button"]',
 			},
 			enums:
 			{
@@ -132,6 +132,11 @@ $(function() {
 					me._HideEntryForm();
 				});
 
+				// Form submission
+				this.element.on('save_entry.caselog_entry_form.itop', function (oEvent, oData) {
+					me._RequestSubmission(oData.stimulus_code);
+				});
+
 				// Form enable/disable submission
 				this.element.on('disable_submission.caselog_entry_form.itop', function () {
 					me._DisableSubmission();
@@ -166,8 +171,19 @@ $(function() {
 			_IsSubmitAutonomous: function () {
 				return this.options.submit_mode === this.enums.submit_mode.autonomous;
 			},
-			_RequestSubmission: function () {
-				this.element.trigger('request_submission.caselog_entry_form.itop');
+			/**
+			 * @param sStimulusCode {string} Optional stimulus code to apply after submission
+			 * @return {void}
+			 * @private
+			 */
+			_RequestSubmission: function (sStimulusCode = null) {
+				let oData = {};
+
+				if (null !== sStimulusCode) {
+					oData['stimulus_code'] = sStimulusCode;
+				}
+
+				this.element.trigger('requested_submission.caselog_entry_form.itop', oData);
 			},
 			// - Form
 			_GetCKEditorInstance: function () {
@@ -182,10 +198,10 @@ $(function() {
 				// TODO 3.0.0: This should also clear the form (input, lock, send button, ...)
 			},
 			_DisableSubmission: function () {
-				this.element.find(this.js_selectors.save_button).prop('disabled', true);
+				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', true);
 			},
 			_EnableSubmission: function () {
-				this.element.find(this.js_selectors.save_button).prop('disabled', false);
+				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', false);
 			},
 			_EnterPendingSubmissionState: function () {
 				this._GetCKEditorInstance().setReadOnly(true);
@@ -277,7 +293,7 @@ $(function() {
 				this._UpdateSubmitButtonState();
 			},
 			_UpdateSubmitButtonState: function() {
-				this.element.find(this.js_selectors.save_button).prop('disabled', this._IsInputEmpty());
+				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', this._IsInputEmpty());
 			},
 			_UpdateEditingVisualHint: function() {
 				const sEvent = this._IsInputEmpty() ? 'emptied' : 'draft';

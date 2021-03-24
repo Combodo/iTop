@@ -1,3 +1,4 @@
+{% apply spaceless %}
 <form id="{{ oUIBlock.GetId() }}"
       class="ibo-caselog-entry-form {% if oUIBlock.IsSubmitAutonomous() and (bInitOpened == false) %}ibo-is-closed{% endif %}"
       data-role="ibo-caselog-entry-form"
@@ -17,9 +18,6 @@
             {% for FormActionButton in oUIBlock.GetMainActionButtons() %}
                 {{ render_block(FormActionButton, {aPage: aPage}) }}
             {% endfor %}
-            {% if oUIBlock.HasSendButtonPopoverMenu() %}
-                {{ render_block(oUIBlock.GetSendButtonPopoverMenu(), {aPage: aPage}) }}
-            {% endif %}
         </div>
     </div>
     <div class="ibo-caselog-entry-form--text-input" data-role="ibo-caselog-entry-form--text-input">
@@ -32,3 +30,4 @@
         <span class="ibo-caselog-entry-form--lock-message" data-role="ibo-caselog-entry-form--lock-message"></span>
     </div>
 </form>
+{% endapply %}

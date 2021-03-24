@@ -7,7 +7,6 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
-use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
@@ -46,8 +45,6 @@ class CaseLogEntryForm extends UIContentBlock
 	protected $sSubmitMode;
 	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText $oTextInput The main input to write a case log entry */
 	protected $oTextInput;
-	/** @var \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu Menu for possible options on the send button */
-	protected $oSendButtonPopoverMenu;
 	/** @var array $aMainActionButtons The form main actions (send, cancel, ...) */
 	protected $aMainActionButtons;
 	/** @var array $aExtraActionButtons The form extra actions, can be populated through a public API */
@@ -264,34 +261,6 @@ class CaseLogEntryForm extends UIContentBlock
 	}
 
 	/**
-	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu
-	 */
-	public function GetSendButtonPopoverMenu(): PopoverMenu
-	{
-		return $this->oSendButtonPopoverMenu;
-	}
-
-	/**
-	 * @param \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu $oCaseLogSelectionPopOverMenu
-	 * @return $this
-	 */
-	public function SetSendButtonPopoverMenu(PopoverMenu $oCaseLogSelectionPopOverMenu)
-	{
-		$this->oSendButtonPopoverMenu = $oCaseLogSelectionPopOverMenu;
-		return $this;
-	}
-
-	/**
-	 * Return true is there is a PopoverMenu for the send button
-	 *
-	 * @return bool
-	 */
-	public function HasSendButtonPopoverMenu(): bool
-	{
-		return $this->oSendButtonPopoverMenu !== null;
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public function GetSubBlocks(): array
@@ -305,10 +274,6 @@ class CaseLogEntryForm extends UIContentBlock
 
 		foreach ($this->GetMainActionButtons() as $oMainActionButton) {
 			$aSubBlocks[$oMainActionButton->GetId()] = $oMainActionButton;
-		}
-
-		if ($this->HasSendButtonPopoverMenu()) {
-			$aSubBlocks[$this->GetSendButtonPopoverMenu()->GetId()] = $this->GetSendButtonPopoverMenu();
 		}
 
 		return $aSubBlocks;
