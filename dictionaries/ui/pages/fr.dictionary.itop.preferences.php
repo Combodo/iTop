@@ -23,7 +23,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:UserInterface:Title' => 'Interface utilisateur',
 	'UI:Preferences:Lists:Title' => 'Listes',
 	'UI:Preferences:RichText:Title' => 'Éditeur texte riche',
-	'UI:Preferences:RichText:ToolbarState' => 'Affichage par défaut de la barre d''outil',
+	'UI:Preferences:RichText:ToolbarState' => 'Affichage par défaut de la barre d\'outil',
 	'UI:Preferences:RichText:ToolbarState:Expanded' => 'Déplié',
 	'UI:Preferences:RichText:ToolbarState:Collapsed' => 'Replié',
 	'UI:Preferences:ActivityPanel:Title' => 'Panneau d\'activité',
