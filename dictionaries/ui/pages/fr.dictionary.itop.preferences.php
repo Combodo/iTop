@@ -29,7 +29,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:ActivityPanel:Title' => 'Panneau d\'activité',
 	'UI:Preferences:ActivityPanel:EntryFormOpened' => 'Formulaire de saisie ouvert par défaut',
 	'UI:Preferences:ActivityPanel:EntryFormOpened+' => 'État du formulaire de saisie lors de l\'affichage d\'un objet. Si la case est décochée, le formulaire pourra être ouvert en utilisant l\'icone "Nouvelle entrée".',
-	// 'UI:Preferences:ActivityPanel:EntryFormOpened+' => 'État du formulaire de saisie lors de l\'affichage d\'un objet. Si la case est décochée, le formulaire pourra être ouvert en utilisant l\'icone "Nouvelle entrée".', // pas de label sur ce bouton mais un tooltip, défini dans UI:Layout:ActivityPanel:ComposeButton:Tooltip (dictionaries/ui/layouts/fr.dictionary.itop.activity-panel.php)
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title' => 'Raccourci clavier de l\'application',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint' => 'Saisissez un raccourci clavier',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip' => 'Enregistrer un raccourcir clavier',

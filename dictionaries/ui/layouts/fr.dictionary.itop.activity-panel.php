@@ -40,7 +40,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	// Compose button
 	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Nouvelle entrée de journal',
-//	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Nouvelle entrée de journal', // attention label du tooltip utilisé dans UI:Preferences:ActivityPanel:EntryFormOpened+ (dictionaries/ui/pages/fr.dictionary.itop.preferences.php)
 
 	// Case log entry
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Enregistrement de plusieurs journaux',
