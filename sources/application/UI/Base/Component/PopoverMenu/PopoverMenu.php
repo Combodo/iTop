@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu;
 
 
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Exception;
 
@@ -167,6 +168,34 @@ class PopoverMenu extends UIBlock
 	public function SetTogglerJSSelector(string $sSelector)
 	{
 		$this->sTogglerJSSelector = $sSelector;
+
+		return $this;
+	}
+
+	/**
+	 * Shortcut to avoid passing the '#' in static::SetTogglerJSSelector().
+	 *
+	 * @param string $sId
+	 *
+	 * @return $this
+	 */
+	public function SetTogglerFromId(string $sId)
+	{
+		$this->SetTogglerJSSelector('#'.$sId);
+
+		return $this;
+	}
+
+	/**
+	 * Shortcut to get the toggler JS selector directly from the block
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return $this
+	 */
+	public function SetTogglerFromBlock(iUIBlock $oBlock)
+	{
+		$this->SetTogglerFromId($oBlock->GetId());
 
 		return $this;
 	}
