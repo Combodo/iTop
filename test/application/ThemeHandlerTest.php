@@ -146,7 +146,7 @@ class ThemeHandlerTest extends ItopTestCase
 
 						$aThemeParameters = [
 							'variables' => [],
-							'imports' => [],
+							'imports_utility' => [],
 							'stylesheets' => [],
 							'precompiled_stylesheet' => $sPrecompiledStylesheetUri,
 						];
@@ -166,7 +166,7 @@ class ThemeHandlerTest extends ItopTestCase
 						foreach ($oImports as $oImport)
 						{
 							$sImportId = $oImport->getAttribute('id');
-							$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
+							$aThemeParameters['imports_utility'][$sImportId] = $oImport->GetText();
 							ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
 						}
 
@@ -311,9 +311,9 @@ JSON;
 
 	public function CompileThemesProviderEmptyArray()
 	{
-		$aEmptyImports = '{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
-		$aEmptyStyleSheets='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":[]}';
-		$aEmptyVars='{"variables":[],"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$aEmptyImports = '{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":[],"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$aEmptyStyleSheets='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":[]}';
+		$aEmptyVars='{"variables":[],"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
 		return [
 			"empty imports" => [$aEmptyImports],
 			"empty styles" => [$aEmptyStyleSheets],
@@ -326,8 +326,8 @@ JSON;
 	 */
 	public function CompileThemesProvider()
 	{
-		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
-		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
 		$sImportFilePath = '/branding/css/DO_NOT_CHANGE.css-variables.scss';
 		$sVarChangedMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_varchanged.css";
 		$sStylesheetMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_stylesheet.css";

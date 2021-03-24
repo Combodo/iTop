@@ -833,6 +833,12 @@ class iTopDesignFormat
 
 		$sTestRedBannerTextContentPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]';
 		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'ibo-page-banner-text-content');
+		
+		// Add new attribute to theme import nodes
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
+		foreach ($oNodeList as $oNode) {
+			$oNode->setAttribute('xsi:type', 'utility');
+		}
 
 		// Add Class Style
 		$oNodeList = $oXPath->query("/itop_design/classes//class/properties");
@@ -930,7 +936,13 @@ class iTopDesignFormat
 
 		$sTestRedBannerTextContentPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-content"]';
 		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'backoffice-environment-banner-text-content');
-
+		// Add new attribute to theme import nodes
+		
+		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
+		foreach ($oNodeList as $oNode) {
+			$oNode->removeAttribute('xsi:type');
+		}
+		
 		// Remove class style
 		$oNodeList = $oXPath->query("/itop_design/classes//class/properties");
 		foreach ($oNodeList as $oNode) {

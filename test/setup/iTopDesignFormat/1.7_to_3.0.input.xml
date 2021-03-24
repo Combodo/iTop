@@ -1,5 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <branding>
+    <themes>
+      <theme id="test-red" _delta="define">
+        <variables>
+          <variable id="var1">#C53030</variable>
+        </variables>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+          <import id="scss-variables">../css/scss-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/main.scss</stylesheet>
+          <stylesheet id="custom">../css/custom.scss</stylesheet>
+        </stylesheets>
+      </theme>
+    </themes>
+  </branding>
   <classes>
     <class id="ClassWithLifecycle">
       <properties>

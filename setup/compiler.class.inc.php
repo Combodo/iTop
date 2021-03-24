@@ -2827,7 +2827,8 @@ EOF;
 			$sThemeId = $oTheme->getAttribute('id');
 			$aThemeParameters = array(
 				'variables' => array(),
-				'imports' => array(),
+				'imports_variable' => array(),
+				'imports_utility' => array(),
 				'stylesheets' => array(),
 				'precompiled_stylesheet' => '',
 			);
@@ -2845,7 +2846,14 @@ EOF;
 			foreach($oImports as $oImport)
 			{
 				$sImportId = $oImport->getAttribute('id');
-				$aThemeParameters['imports'][$sImportId] = $oImport->GetText();
+				if($oImport->getAttribute('xsi:type') === 'variable')
+				{
+					$aThemeParameters['imports_variable'][$sImportId] = $oImport->GetText();
+				}
+				else if($oImport->getAttribute('xsi:type') === 'utility')
+				{
+					$aThemeParameters['imports_utility'][$sImportId] = $oImport->GetText();
+				}
 			}
 
 			/** @var \DOMNodeList $oStylesheets */

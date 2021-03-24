@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <branding>
+    <themes>
+      <theme id="test-red" _delta="define">
+        <variables>
+          <variable id="var1">#C53030</variable>
+        </variables>
+        <imports>
+          <import id="scss-variables" xsi:type="utility">../css/scss-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="custom">../css/custom.scss</stylesheet>
+        </stylesheets>
+      </theme>
+    </themes>
+  </branding>
   <classes>
     <class id="ClassWithLifecycle">
       <properties>

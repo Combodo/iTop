@@ -195,7 +195,7 @@ class ThemeHandler
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
-		foreach ($aThemeParameters['imports'] as $sImport)
+		foreach ($aThemeParameters['imports_utility'] as $sImport)
 		{
 			static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 		}
@@ -304,7 +304,15 @@ CSS;
 
 		$oFindStylesheetObject = new FindStylesheetObject();
 
-		foreach ($aThemeParameters['imports'] as $key => $sImport)
+		foreach ($aThemeParameters['imports_variable'] as $key => $sImport)
+		{
+			static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+			$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
+			if (!empty($sFile)){
+				$aSignature['stylesheets'][$key] = md5_file($sFile);
+			}
+		}		
+		foreach ($aThemeParameters['imports_utility'] as $key => $sImport)
 		{
 			static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 			$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
@@ -325,7 +333,7 @@ CSS;
 		$aFiles = $oFindStylesheetObject->GetImportPaths();
 		if (count($aFiles) !== 0) {
 			foreach ($aFiles as $sFileURI => $sFilePath) {
-				$aSignature['imports'][$sFileURI] = md5_file($sFilePath);
+				$aSignature['imports_utility'][$sFileURI] = md5_file($sFilePath);
 			}
 		}
 
@@ -847,10 +855,39 @@ CSS;
 			{
 				$aThemeParametersVariable = array_merge([], $aThemeParameters['variables']);
 			}
+		}		
+		if (array_key_exists('imports_variable', $aThemeParameters))
+		{
+			if (is_array($aThemeParameters['imports_variable']))
+			{
+				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['imports_variable']));
+			}
 		}
 
 		$aThemeParametersVariable['$version'] = $bSetupCompilationTimestamp;
 		return $aThemeParametersVariable;
 	}
+
+	/**
+	 * @param $aVariableFiles
+	 *
+	 * @return array
+	 * @since 3.0.0 N°3593
+	 */
+	public static function GetVariablesFromFile($aVariableFiles){
+		$aVariablesResults = [];
+		foreach ($aVariableFiles as $sVariableFile)
+		{
+			$sFileContent = file_get_contents(APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$sVariableFile);
+			$aVariableMatches = [];
+			
+			preg_match_all( '/\$(.*?):(.*?);/', $sFileContent,$aVariableMatches);
+			$aVariableMatches =  array_combine( $aVariableMatches[1], array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariableMatches[2] ) );
+			$aVariablesResults = array_merge($aVariablesResults, $aVariableMatches);
+		}
+		array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariablesResults );
+		return $aVariablesResults;
+	}
+
 }
 
