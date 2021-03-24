@@ -4,7 +4,7 @@
 
 {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core']} %}
 
-    {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}{% endUITitle %}
+    {% UITitle ForPage {'sTitle':'iTopUpdate:UI:PageTitle'|dict_s} %}{% EndUITitle %}
 
     <div class="ibo-v-spacer">&nbsp;</div>
 
@@ -63,12 +63,12 @@
                 {% EndUIAlert %}
 
                 {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
-                    {% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true} %}
+                    {% UIInput Standard {'sType':'checkbox', 'sId':'doBackup', 'sName':'doBackup', 'sValue':'1', 'IsChecked':true, 'CSSClasses':['ibo-input-checkbox', 'ibo-input--label-left']} %}
                     {{ 'iTopUpdate:UI:DoBackup:Label'|dict_s }}
                 {% EndUIContentBlock %}
 
                 {% UIContentBlock Standard {'aContainerClasses':['ibo-font-ral-nor-150']} %}
-                    {% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'IsChecked':true} %}
+                    {% UIInput Standard {'sType':'checkbox', 'sId':'doFilesArchive', 'sName':'doFilesArchive', 'sValue':'1', 'IsChecked':true, 'CSSClasses':['ibo-input-checkbox', 'ibo-input--label-left']} %}
                     {{ 'iTopUpdate:UI:DoFilesArchive'|dict_s }}
                 {% EndUIContentBlock %}
 
