@@ -45,16 +45,20 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a basis Button component for any purpose
 	 *
 	 * @param string $sLabel
-	 * @param string $sName See {@link Button::$sName}
+	 * @param string|null $sName See {@link Button::$sName}
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
-	public static function MakeNeutral(string $sLabel, string $sName, ?string $sId = null): Button {
+	public static function MakeNeutral(string $sLabel, string $sName = null, ?string $sId = null): Button
+	{
 		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
-			->SetColor(Button::ENUM_COLOR_NEUTRAL)
-			->SetName($sName);
+			->SetColor(Button::ENUM_COLOR_NEUTRAL);
+
+		if (!empty($sName)) {
+			$oButton->SetName($sName);
+		}
 
 		return $oButton;
 	}
@@ -152,17 +156,17 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Button component for any purpose
 	 *
-	 * @param string      $sLabel
-	 * @param string      $sName See Button::$sName
+	 * @param string $sLabel
+	 * @param string|null $sName See Button::$sName
 	 * @param string|null $sValue See Button::$sValue
-	 * @param bool        $bIsSubmit See Button::$sType
+	 * @param bool $bIsSubmit See Button::$sType
 	 * @param string|null $sId
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
 	public static function MakeAlternativeNeutral(
 		string $sLabel,
-		string $sName,
+		string $sName = null,
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
