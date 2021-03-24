@@ -47,7 +47,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'En cliquant sur le bouton "Envoyer", vous allez enregistrer en une seule fois toutes les entrées de journaux mises à jour.',
 
 	// Notification entry
-	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Click to open the notifications tab and get more information~~',
+	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Cliquer pour ouvrir l''onglet de notification et obtenir plus d''informations',
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Temps calme, il n''y a pas encore d''activité',
