@@ -4,6 +4,7 @@
     <themes>
       <theme id="test-red" _delta="define">
         <variables>
+          <variable id="ibo-page-banner-background-color">#C53030</variable>
           <variable id="var1">#C53030</variable>
         </variables>
         <imports>
