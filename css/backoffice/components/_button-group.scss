@@ -17,11 +17,6 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
     position: relative;
   }
 
-  /* Overload the default button left margin for siblings */
-  .ibo-button + .ibo-button {
-    margin-left: 0;
-  }
-
   /* Overload border radius to make it look like a whole */
   .ibo-button:first-child {
     border-radius: $ibo-button-group--border-radius-external $ibo-button-group--border-radius-internal $ibo-button-group--border-radius-internal $ibo-button-group--border-radius-external;
@@ -29,6 +24,15 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
 
   .ibo-button:last-child {
     border-radius: $ibo-button-group--border-radius-internal $ibo-button-group--border-radius-external $ibo-button-group--border-radius-external $ibo-button-group--border-radius-internal;
+  }
+
+  .ibo-button:not(:first-child):not(:last-child){
+    border-radius: $ibo-button-group--border-radius-internal;
+  }
+
+  /* Overload the default button left margin for siblings */
+  .ibo-button + .ibo-button {
+    margin-left: 0;
   }
 
   .ibo-button + .ibo-button::before {
