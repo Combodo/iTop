@@ -106,9 +106,3 @@
         </span>
     </div>
 </div>
-
-<tr role="row" id="{{ oUIBlock.GetRef() }}_row_{{ oUIBlock.GetRowId() }}"
-        {% for cellName,cellValue in oUIBlock.GetData() %}
-            {% if cellName == 'CSSClass' %}class="{{ cellValue }}"{% endif %}
-        {% endfor %}
->
