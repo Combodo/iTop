@@ -367,6 +367,14 @@ Dict::Add('EN US', 'English', 'English', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a modern brand new accessible and responsive backoffice design.</div>
+
+<div>We kept iTop core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your iTop preferences for a personalized experience.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'My requests',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidents: %1$d',

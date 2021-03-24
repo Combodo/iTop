@@ -1,0 +1,45 @@
+$ibo-welcome-popup--image--width: 30% !default;
+
+$ibo-welcome-popup--image--svg--height: 100% !default;
+$ibo-welcome-popup--image--svg--padding: 20px !default;
+
+$ibo-welcome-popup--text--padding: 15px !default;
+
+$ibo-welcome-popup--text--subdiv--padding-bottom: 20px !default;
+$ibo-welcome-popup--text--first-subdiv--padding-bottom: 25px !default;
+
+$ibo-welcome-popup--text--options--bottom: 10px !default;
+
+#welcome_popup{
+  display: flex;
+  
+}
+.ibo-welcome-popup--image{
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  
+  width: $ibo-welcome-popup--image--width;
+  >svg{
+    height: $ibo-welcome-popup--image--svg--height;
+    padding: $ibo-welcome-popup--image--svg--padding;
+  }
+}
+.ibo-welcome-popup--text{
+  flex-grow:1;
+  align-self: center;
+  padding: $ibo-welcome-popup--text--padding;
+  
+  @extend %ibo-font-ral-nor-250;
+  >div>div{
+    padding-bottom: $ibo-welcome-popup--text--subdiv--padding-bottom;
+    &:first-child{
+      @extend %ibo-font-ral-sembol-300;
+      padding-bottom: $ibo-welcome-popup--text--first-subdiv--padding-bottom;
+    }
+  }
+}
+.ibo-welcome-popup--text--options{
+  position: absolute;
+  bottom: $ibo-welcome-popup--text--options--bottom;
+}

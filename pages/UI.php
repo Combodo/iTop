@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
@@ -36,32 +37,8 @@ function DisplayWelcomePopup(WebPage $oP)
 		$bPopup = appUserPreferences::GetPref('welcome_popup', true);
 		if ($bPopup)
 		{
-			$sTemplate = @file_get_contents('../application/templates/welcome_popup.html');
-			if ($sTemplate !== false)
-			{
-				$oTemplate = new DisplayTemplate($sTemplate);
-				$oP->add("<div id=\"welcome_popup\">");
-				$oTemplate->Render($oP, array());
-				$oP->add("<p style=\"float:left\"><input type=\"checkbox\" checked id=\"display_welcome_popup\"/><label for=\"display_welcome_popup\">&nbsp;".Dict::S('UI:DisplayThisMessageAtStartup')."</label></p>\n");
-				$oP->add("<p style=\"float:right\"><input type=\"button\" value=\"".Dict::S('UI:Button:Ok')."\" onClick=\"$('#welcome_popup').dialog('close');\"/>\n");
-				$oP->add("</div>\n");
-				$sTitle = addslashes(Dict::S('UI:WelcomeMenu:Title'));
-				$oP->add_ready_script(
-<<<EOF
-	$('#welcome_popup').dialog( { width:'80%', height: 'auto', title: '$sTitle', autoOpen: true, modal:true,
-								  close: function() {
-								  	var bDisplay = $('#display_welcome_popup:checked').length;
-								  	SetUserPreference('welcome_popup', bDisplay, true); 
-								  }
-								  });
-	if ($('#welcome_popup').height() > ($(window).height()-70))
-	{
-		$('#welcome_popup').height($(window).height()-70);
-	}
-EOF
-);
-				$_SESSION['welcome'] = 'ok';
-			}
+			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup');
+			$_SESSION['welcome'] = 'ok';
 		}
 	}	
 }

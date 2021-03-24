@@ -1,0 +1,16 @@
+console.log('a');
+
+$('#welcome_popup').dialog( { width:'60%', height: 'auto', title: '{{ 'UI:WelcomeMenu:Title'|dict_s }}', autoOpen: true, modal:true,
+    close: function() {
+        var bDisplay = $('#display_welcome_popup:checked').length;
+        SetUserPreference('welcome_popup', bDisplay, true);
+    },
+    buttons: [{
+        text: "{{ 'UI:Button:Ok'|dict_s }}", click: function() {
+            $(this).dialog( "close" ); $(this).remove();
+        }}],
+});
+if ($('#welcome_popup').height() > ($(window).height()-70))
+{
+    $('#welcome_popup').height($(window).height()-70);
+}
