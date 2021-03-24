@@ -206,12 +206,12 @@ $(function() {
 			_EnterPendingSubmissionState: function () {
 				this._GetCKEditorInstance().setReadOnly(true);
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', true);
-				this.element.find(this.js_selectors.save_button).prop('disabled', true);
+				this._DisableSubmission();
 			},
 			_LeavePendingSubmissionState: function () {
 				this._GetCKEditorInstance().setReadOnly(false);
 				this.element.find(this.js_selectors.cancel_button).prop('disabled', false);
-				this.element.find(this.js_selectors.save_button).prop('disabled', false);
+				this._EnableSubmission();
 			},
 			// - Bridged form input
 			/**
@@ -293,7 +293,11 @@ $(function() {
 				this._UpdateSubmitButtonState();
 			},
 			_UpdateSubmitButtonState: function() {
-				this.element.find(this.js_selectors.save_button+', '+this.js_selectors.save_choices_picker).prop('disabled', this._IsInputEmpty());
+				if (this._IsInputEmpty()) {
+					this._DisableSubmission();
+				} else {
+					this._EnableSubmission();
+				}
 			},
 			_UpdateEditingVisualHint: function() {
 				const sEvent = this._IsInputEmpty() ? 'emptied' : 'draft';
