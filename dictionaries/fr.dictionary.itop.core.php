@@ -49,10 +49,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s de la classe %3$s)',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s d\'une sous-classe)',
 
-	'Core:AttributeCaseLog' => 'Log~~',
+	'Core:AttributeCaseLog' => 'Journal',
 	'Core:AttributeCaseLog+' => '',
 
-	'Core:AttributeMetaEnum' => 'Computed enum~~',
+	'Core:AttributeMetaEnum' => 'Liste enumérée consolidée',
 	'Core:AttributeMetaEnum+' => '',
 
 	'Core:AttributeLinkedSetIndirect' => 'Objets liés (1-n)',
@@ -298,16 +298,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Change:ObjectCreated' => 'Elément créé',
 	'Change:ObjectDeleted' => 'Elément effacé',
 	'Change:ObjectModified' => 'Elément modifié',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
+	'Change:TwoAttributesChanged' => '%1$s and %2$s modifiés',
+	'Change:ThreeAttributesChanged' => '%1$s, %2$s et un autre modifiés',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s, %3$s ... modifiés',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s modifié en %2$s (ancienne valeur: %3$s)',
 	'Change:AttName_SetTo' => '%1$s modifié en %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s ajouté à %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifié, ancienne valeur: %2$s',
 	'Change:AttName_Changed' => '%1$s modifié',
 	'Change:AttName_EntryAdded' => '%1$s champ modifié, une nouvelle entrée a été ajoutée: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
+	'Change:State_Changed_NewValue_OldValue' => 'Statut modifié de %2$s à %1$s',
 	'Change:LinkSet:Added' => 'ajout de %1$s',
 	'Change:LinkSet:Removed' => 'suppression de %1$s',
 	'Change:LinkSet:Modified' => 'modification de %1$s',
@@ -507,18 +507,18 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:ActionEmail' => 'Notification par mél',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:status+' => 'Cet état définit qui va être notifié: le /'Destinataire de test/', tous les destinataires (A, Copie and Copie Cachée) ou personne',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Seul le destinataire de test est notifié ',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Tous les destinataires (A, Copie and Copie Cachée) sont notifiés',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'La notification n\'est pas envoyée',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinataire de test',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
 	'Class:ActionEmail/Attribute:from' => 'De (mél)',
-	'Class:ActionEmail/Attribute:from+' => '~~',
+	'Class:ActionEmail/Attribute:from+' => 'Adresse mél qui sera affichés en expéditeur de la notification',
 	'Class:ActionEmail/Attribute:from_label' => 'De (libellé)',
 	'Class:ActionEmail/Attribute:from_label+' => 'Le nom de l\'expéditeur sera inclus dans l\'entête du mél',
 	'Class:ActionEmail/Attribute:reply_to' => 'Répondre à (mél)',
-	'Class:ActionEmail/Attribute:reply_to+' => '~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Adresse mèl qui sera affichée dans le répondre à de la notification',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Répondre à (libellé)',
 	'Class:ActionEmail/Attribute:reply_to_label+' => 'Le nom du destinataire en cas de réponse sera inclus dans l\'entête du mél.',
 	'Class:ActionEmail/Attribute:to' => 'A',
@@ -645,8 +645,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention' => 'Déclencheur (sur objet mentionné)',
+	'Class:TriggerOnObjectMention+' => 'Déclencheur sur un objet mentionné (@xxx) de la classe choisie (ou de ses filles) dans un attribut de type journal',
 ));
 
 //
@@ -792,7 +792,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:SyncDataSourceObsolete' => 'Cette source de données est obsolète. Opération annulée.',
 	'Core:SyncDataSourceAccessRestriction' => 'Seuls les administrateurs et l\'utilisateur spécifié dans la source de données peuvent exécuter cette synchronisation. Opération annulée.',
 	'Core:SyncTooManyMissingReplicas' => 'Tous les réplicas sont absents de l\'import. L\'import a-t-il réellement tourné. Opération annulée.',
-	'Core:SyncSplitModeCLIOnly' => 'The synchronization can be executed in chunks only if run in mode CLI~~',
+	'Core:SyncSplitModeCLIOnly' => 'La synchronization ne peut être exécutée partiellement qu\'en mode ligne de commande',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s replicas, %2$s erreur(s), %3$s avertissement(s).',
 	'Core:SynchroReplica:TargetObject' => 'Objet Synchronisé : %1$s',
 	'Class:AsyncSendEmail' => 'Envoi d\'Email Asynchrone',
@@ -887,8 +887,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:appUserPreferences' => 'Préférences utilisateur',
 	'Class:appUserPreferences/Attribute:userid' => 'Utilisateur',
 	'Class:appUserPreferences/Attribute:preferences' => 'Préférences',
-	'Core:ExecProcess:Code1' => 'Wrong command or command finished with errors (e.g. wrong script name)~~',
-	'Core:ExecProcess:Code255' => 'PHP Error (parsing, or runtime)~~',
+	'Core:ExecProcess:Code1' => 'Mauvaise commande ou commande se finissant avec des erreurs (e.g. mauvais nom de script)',
+	'Core:ExecProcess:Code255' => 'Erreur PHP (analyse de fichier, ou exécution)',
 
 	// Attribute Duration
 	'Core:Duration_Seconds' => '%1$ds',
@@ -1006,7 +1006,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 // Class: DBProperty
 //
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:DBProperty' => 'DB property~~',
+	'Class:DBProperty' => 'Propriété de la base de données',
 	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Nom',
 	'Class:DBProperty/Attribute:name+' => '',
@@ -1061,7 +1061,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:started' => 'Date d\'exécution',
 	'Class:AsyncTask/Attribute:started+' => '',
 	'Class:AsyncTask/Attribute:planned' => 'Date de prochaine exécution',
-	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:planned+' => 'Date panifiée de le prochaine exécution de la tâche',
 	'Class:AsyncTask/Attribute:event_id' => 'Évènement',
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Sous-classe de tâche asynchrone',
