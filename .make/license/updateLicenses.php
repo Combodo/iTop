@@ -1,7 +1,12 @@
 <?php
 /**
  * script used to sort license file (usefull for autogeneration)
- * Example: php 
+ *
+ * Requirements :
+ *  * bash (on Windows, use Git Bash)
+ *  * JQ command //FIXME : how to get it on Windows ?
+ *
+ * To launch, simply do `php updateLicenses.php`
  */
 
 $iTopFolder = __DIR__ . "/../../" ;
