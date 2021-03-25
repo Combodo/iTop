@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
@@ -265,7 +266,7 @@ try
 				$oTable = DataTableUIBlockFactory::MakeForForm("parser_preview", $aColumns, $aTableData);
 				$oPage->AddSubBlock($oTable);
 				if ($iNbCols == 1) {
-					$oAlertMessage = \Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory::MakeForFailure(Dict::S('UI:CSVImport:ErrorOnlyOneColumn'));
+					$oAlertMessage = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:CSVImport:ErrorOnlyOneColumn'));
 					$oPage->AddSubBlock($oAlertMessage);
 				}
 			}

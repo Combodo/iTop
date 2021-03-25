@@ -620,15 +620,16 @@ try {
 		if ($bShouldConfirm) {
 			$sYesButton = Dict::S('UI:Button:Ok');
 			$sNoButton = Dict::S('UI:Button:Cancel');
-			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation");
+			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->AddCSSClass('ibo-hidden');
 			$oPage->AddSubBlock($oDlg);
 			$oDlg->AddSubBlock(new Html($sMessage));
 			$oDlg->AddSubBlock(new Html(htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8')));
 
 			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->AddCSSClass('ibo-hidden');
-			$oPage->AddSubBlock($oDlgConfirm);
+			$oDlg->AddSubBlock($oDlgConfirm);
 
 			$sDlgTitle = htmlentities(Dict::S('UI:CSVImportConfirmTitle'), ENT_QUOTES, 'UTF-8');
+
 			$oPage->add_ready_script(
 				<<<EOF
 	$('#dlg_confirmation').dialog( 
@@ -637,7 +638,7 @@ try {
 			width: 500,
 			modal:true, 
 			autoOpen: false, 
-			tiitle:'$sDlgTitle',
+			title:'$sDlgTitle',
 			buttons:
 			{
 				'$sYesButton': RunImport,
@@ -844,7 +845,7 @@ EOF
 		$oForm->AddSubBlock($oDivAdvancedHelp);
 
 		$oDivMapping = UIContentBlockUIBlockFactory::MakeStandard("mapping")->AddCSSClass('mt-5');
-		$oDivMapping->AddSubBlock(new Html(Dict::S('UI:CSVImport:SelectAClassFirst')));
+		$oDivMapping->AddSubBlock(AlertUIBlockFactory::MakeForInformation(Dict::S('UI:CSVImport:SelectAClassFirst')));
 		$oForm->AddSubBlock($oDivMapping);
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", "4"));
@@ -1224,7 +1225,7 @@ EOF
 			$sSeparator = "\t";
 		}
 		$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
-		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" name="other-separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'"/>';
+		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>';
 
 		foreach ($aSep as $sVal => $sLabel) {
 			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "separator", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
@@ -1245,8 +1246,8 @@ EOF
 			'"' => Dict::S('UI:CSVImport:QualifierDoubleQuote+'),
 			'\'' => Dict::S('UI:CSVImport:QualifierSimpleQuote+'),
 		);
-		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" name="other-text-qualifier" value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'"/>';
-
+		$aQualifiers['other'] = Dict::S('UI:CSVImport:QualifierOther').' <input type="text" size="3" maxlength="1" name="other_qualifier" value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()/>';
+		//	<input type="text" size="3" maxlength="1" name="other_qualifier"  value="'.htmlentities($sOtherTextQualifier, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>
 		foreach ($aQualifiers as $sVal => $sLabel) {
 			$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "text_qualifier", htmlentities($sVal, ENT_QUOTES, 'UTF-8'), $sLabel, "radio");
 			$oRadio->GetInput()->SetIsChecked(($sVal == $sTextQualifier));
