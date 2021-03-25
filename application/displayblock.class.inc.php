@@ -520,7 +520,7 @@ HTML;
 	 * @throws MySQLException
 	 * @throws Exception
 	 */
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null): iUIBlock
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
 	{
 		$sHtml = '';
 		$oBlock = null;
@@ -636,7 +636,8 @@ HTML;
 				// refuse to render if the user is not allowed to see the class.
 				if (! UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES) {
 					$sHtml .= $oPage->GetP(Dict::Format('UI:Error:ReadNotAllowedOn_Class', $this->m_oSet->GetClass()));
-					return $sHtml;
+
+					return new Html($sHtml);
 				}
 		}
 
@@ -1655,7 +1656,7 @@ class HistoryBlock extends DisplayBlock
 		$this->iLimitCount = $iCount;
 	}
 
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null): iUIBlock
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
 	{
 		$sHtml = '';
 		$bTruncated = false;
@@ -1793,7 +1794,7 @@ class MenuBlock extends DisplayBlock
 	 * @throws \OQLException
 	 * @throws \ReflectionException
 	 */
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null): iUIBlock
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
 	{
 		$oRenderBlock = new UIContentBlock();
 
