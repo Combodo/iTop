@@ -294,6 +294,7 @@ return array(
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
+    'Combodo\\iTop\\Controller\\PreferencesController' => $baseDir . '/sources/Controller/PreferencesController.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\Form\\Field\\BlobField' => $baseDir . '/sources/Form/Field/BlobField.php',

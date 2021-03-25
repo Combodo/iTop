@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
+use Combodo\iTop\Controller\PreferencesController;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -2734,6 +2735,24 @@ EOF
 				$aResult['error'] = $e->getMessage();
 			}
 			$oPage->add(json_encode($aResult));
+			break;
+
+		//--------------------------------
+		// Preferences
+		//--------------------------------
+		case 'preferences_set_user_picture':
+			$oPage = new JsonPage();
+			try {
+				$aResult = PreferencesController::SetUserPicture();
+				$aResult['success'] = true;
+			}
+			catch (Exception $oException) {
+				$aResult = [
+					'success' => false,
+					'error_message' => $oException->getMessage(),
+				];
+			}
+			$oPage->SetData($aResult);
 			break;
 
 		//--------------------------------

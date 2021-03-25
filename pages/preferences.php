@@ -402,9 +402,28 @@ JS
 	$oP->add_ready_script(
 		<<<JS
 $('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').on('click',function(){
-SetUserPreference('user_picture_placeholder', $(this).attr('data-image-name'), true);
-$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').removeClass('ibo-is-active');
-$(this).addClass('ibo-is-active');
+	const me = this;
+	
+	// Save new preference
+	$.post(
+		GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
+		{
+			'operation': 'preferences_set_user_picture',
+			'image_filename': $(this).attr('data-image-name')
+		}
+	)
+	.done(function(oData){
+		if(false === oData.success){
+			return;
+		}
+		
+		// Update selection
+		$('[data-role="ibo-preferences--user-preferences--picture-placeholder--image"]').removeClass('ibo-is-active');
+		$(me).addClass('ibo-is-active');
+		
+		// Update navigation menu
+		$('[data-role="ibo-navigation-menu--user-picture--image"]').attr('src', oData.data.image_url);
+	});
 });
 JS
 );

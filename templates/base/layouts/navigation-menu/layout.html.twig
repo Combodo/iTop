@@ -42,11 +42,12 @@
 					</div>
 				</div>
 			{% endif %}
-			<div class="ibo-navigation-menu--user-info">
-				<div class="ibo-navigation-menu--user-picture">
-					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
-						<img class="ibo-navigation-menu--user-picture--image" 
-							 src="{{ oUIBlock.GetUserData().sPictureUrl }}"
+            <div class="ibo-navigation-menu--user-info">
+                <div class="ibo-navigation-menu--user-picture">
+                    <a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+                        <img class="ibo-navigation-menu--user-picture--image"
+                             data-role="ibo-navigation-menu--user-picture--image"
+                             src="{{ oUIBlock.GetUserData().sPictureUrl }}"
 							 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oUIBlock.GetUserData().sFirstname) }}"
 							 data-tooltip-content="{{ oUIBlock.GetUserData().sLogonMessage }}"
 							 data-tooltip-placement="right"
