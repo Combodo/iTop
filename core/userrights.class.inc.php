@@ -1058,33 +1058,6 @@ class UserRights
 	}
 
 	/**
-	 * @param string $sLogin Login of the user from which we return the contact ID
-	 *
-	 * @return string
-	 * @throws \Exception
-	 */
-	public static function GetContactId($sLogin = '')
-	{
-		if (empty($sLogin))
-		{
-			$oUser = self::$m_oUser;
-		}
-		else
-		{
-			$oUser = self::FindUser($sLogin);
-		}
-		if (is_null($oUser))
-		{
-			return '';
-		}
-		if (!MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
-		{
-			return '';
-		}
-		return $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
-	}
-
-	/**
 	 * @param string $sLogin Login of the user from which we return the picture URL
 	 * @param bool $bAllowDefaultPicture Set to false if you want it to return null instead of the default picture URL when the contact has no picture defined. This can be useful when we want to display something else than the default picture (eg. initials)
 	 *
@@ -1112,24 +1085,18 @@ class UserRights
 			$sContactClass = get_class($oContact);
 
 			// Check that Contact object still exists and that Contact class has a picture attribute
-			if(!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE))
-			{
+			if (!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE)) {
 				/** @var \ormDocument $oPicture */
 				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
-				if($oPicture->IsEmpty())
-				{
-					if($bAllowDefaultPicture === true)
-					{
+				if ($oPicture->IsEmpty()) {
+					if ($bAllowDefaultPicture === true) {
 						/** @var \AttributeImage $oAttDef */
 						$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
 						$sPictureUrl = $oAttDef->Get('default_image');
-					}
-					else
-					{
+					} else {
 						$sPictureUrl = null;
 					}
-				}
-				else {
+				} else {
 					if (ContextTag::Check(ContextTag::TAG_PORTAL)) {
 						$sSignature = $oPicture->GetSignature();
 						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
@@ -1147,6 +1114,33 @@ class UserRights
 		}
 
 		return $sPictureUrl;
+	}
+
+	/**
+	 * @param string $sLogin Login of the user from which we return the contact ID
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public static function GetContactId($sLogin = '')
+	{
+		if (empty($sLogin))
+		{
+			$oUser = self::$m_oUser;
+		}
+		else
+		{
+			$oUser = self::FindUser($sLogin);
+		}
+		if (is_null($oUser))
+		{
+			return '';
+		}
+		if (!MetaModel::IsValidAttCode(get_class($oUser), static::DEFAULT_USER_CONTACT_ID_ATTCODE))
+		{
+			return '';
+		}
+		return $oUser->Get(static::DEFAULT_USER_CONTACT_ID_ATTCODE);
 	}
 
 	/**
