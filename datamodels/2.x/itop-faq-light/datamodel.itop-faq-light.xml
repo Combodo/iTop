@@ -208,6 +208,9 @@
   <menus>
     <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>42</rank>
+      <style>
+        <decoration_classes>fas fa-question</decoration_classes>
+      </style>
     </menu>
     <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
       <rank>5</rank>
