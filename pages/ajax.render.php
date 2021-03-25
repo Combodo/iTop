@@ -35,8 +35,7 @@ try
 	$operation = utils::ReadParam('operation', '');
 
 	// Only allow export functions to portal users
-	switch ($operation)
-	{
+	switch ($operation) {
 		case 'export_build_portal':
 		case 'export_cancel':
 		case 'export_download':
@@ -2807,3 +2806,4 @@ EOF
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
+ExecutionKPI::ReportStats();
