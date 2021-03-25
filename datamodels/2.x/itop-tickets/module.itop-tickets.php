@@ -67,5 +67,33 @@ class TicketsInstaller extends ModuleInstallerAPI
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
+		// It's not very clear if it make sense to test a particular version,
+		// as the loading mechanism checks object existence using reconc_keys
+		// and do not recreate them, nor update existing.
+		// Without test, new entries added to the data files, would be automatically loaded
+		if (($sPreviousVersion === '') ||
+			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
+				and version_compare($sPreviousVersion, '3.0.1', '<'))) {
+			$oDataLoader = new XMLDataLoader();
+
+			CMDBObject::SetTrackInfo("Initialization");
+			$oMyChange = CMDBObject::GetCurrentChange();
+
+			$sFileName = '';
+			$oFileConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
+			if (is_object($oFileConfig)) 2
+			{
+				$sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
+				$sFileName = dirname(__FILE__)."/data/{$sLang}.data.itop-tickets.xml";
+				SetupLog::Info("Searching file: $sFileName");
+			}
+			if (!file_exists($sFileName)) {
+				$sFileName = dirname(__FILE__)."/data/en_us.data.itop-tickets.xml";
+			}
+			SetupLog::Info("Loading file: $sFileName");
+			$oDataLoader->StartSession($oMyChange);
+			$oDataLoader->LoadFile($sFileName, false, true);
+			$oDataLoader->EndSession();
+		}
 	}
 }

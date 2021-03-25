@@ -179,10 +179,12 @@ class XMLDataLoader
 	
 	/**
 	 * Helper function to load the objects from a standard XML file into the database
+	 *
 	 * @param $sFilePath string The full path to the XML file to load
 	 * @param $bUpdateKeyCacheOnly bool Set to true to *just* update the keys cache but not reload the objects
+	 * @param bool $bSearch Set to true to create objects only if they do not already exist based on reconciliation keys
 	 */
-	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false)
+	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
 	{
 		global $aKeys;
 		
@@ -298,7 +300,7 @@ class XMLDataLoader
 					}
 				}
 			}
-			$this->StoreObject($sClass, $oTargetObj, $iSrcId, $bUpdateKeyCacheOnly, $bUpdateKeyCacheOnly);
+			$this->StoreObject($sClass, $oTargetObj, $iSrcId, $bSearch || $bUpdateKeyCacheOnly, $bUpdateKeyCacheOnly);
 		}
 		return true;
 	}
