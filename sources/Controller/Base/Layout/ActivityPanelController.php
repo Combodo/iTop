@@ -15,6 +15,14 @@ use InlineImage;
 use MetaModel;
 use utils;
 
+/**
+ * Class ActivityPanelController
+ *
+ * @internal
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 3.0.0
+ * @package Combodo\iTop\Controller\Base\Layout
+ */
 class ActivityPanelController
 {
 	/**
