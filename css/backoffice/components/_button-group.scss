@@ -30,7 +30,7 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
     border-radius: $ibo-button-group--border-radius-internal;
   }
 
-  /* Overload the default button left margin for siblings */
+  /* Overload the default button left margin for siblings with the group */
   .ibo-button + .ibo-button {
     margin-left: 0;
   }
@@ -58,4 +58,11 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
       }
     }
   }
+}
+
+/* Reset siblings spacing */
+.ibo-button-group + .ibo-button-group,
+.ibo-button + .ibo-button-group,
+.ibo-button-group + .ibo-button{
+  margin-left: $ibo-button--sibling-spacing;
 }
