@@ -1,26 +1,6 @@
 <?php
-// Copyright (C) 2014-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Monitor the backup
- *
- * @copyright   Copyright (C) 2021 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -90,7 +70,9 @@ $oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/ace/ext-searchbox.js'
 try {
 	$sOperation = utils::ReadParam('operation', '');
 	$iEditorTopMargin = 2;
-
+	if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()) {
+		$iEditorTopMargin += 6;
+	}
 	$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('config-edit-title')));
 
 	if (MetaModel::GetConfig()->Get('demo_mode')) {
@@ -114,16 +96,19 @@ try {
 			}
 
 			if ($sOperation == 'revert') {
+				$iEditorTopMargin += 5;
 				$oAlert = AlertUIBlockFactory::MakeForWarning('', Dict::S('config-reverted'));
 				$oP->AddUiBlock($oAlert);
 			}
 			if ($sOperation == 'save') {
 				$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 				if (!utils::IsTransactionValid($sTransactionId, true)) {
+					$iEditorTopMargin += 5;
 					$oAlert = AlertUIBlockFactory::MakeForFailure('', 'Error: invalid Transaction ID. The configuration was <b>NOT</b> modified.');
 					$oP->AddUiBlock($oAlert);
 				} else {
 					if ($sConfig == $sOriginalConfig) {
+						$iEditorTopMargin += 5;
 						$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-no-change'));
 						$oP->AddUiBlock($oAlert);
 					} else {
@@ -151,13 +136,16 @@ try {
 
 							if (DBPasswordInNewConfigIsOk($sConfig)) {
 								$oAlert = AlertUIBlockFactory::MakeForSuccess('', Dict::S('config-saved'));
+								$iEditorTopMargin += 5;
 							} else {
 								$oAlert = AlertUIBlockFactory::MakeForInformation('', Dict::S('config-saved-warning-db-password'));
+								$iEditorTopMargin += 5;
 							}
 							$oP->AddUiBlock($oAlert);
 							$sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
 						} catch (Exception $e) {
 							$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());
+							$iEditorTopMargin += 5;
 							$oP->AddUiBlock($oAlert);
 						}
 					}
