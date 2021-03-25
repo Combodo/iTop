@@ -1098,20 +1098,18 @@ class UserRights
 	 */
 	public static function GetContactPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
 	{
+		$sUserPicturesFolder = 'images/user-pictures/';
+
 		// First, the default picture
-		if($bAllowDefaultPicture === true)
-		{
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . 'user-profile-default-256px.png';
-		}
-		else
-		{
+		if ($bAllowDefaultPicture === true) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
+		} else {
 			$sPictureUrl = null;
 		}
 
 		// Then check if the user has a contact attached and if it has an picture defined
 		$sContactId = UserRights::GetContactId($sLogin);
-		if(!empty($sContactId))
-		{
+		if (!empty($sContactId)) {
 			$oContact = MetaModel::GetObject('Contact', $sContactId, false, true);
 			$sContactClass = get_class($oContact);
 
@@ -1133,16 +1131,20 @@ class UserRights
 						$sPictureUrl = null;
 					}
 				}
-				else
-				{
+				else {
 					if (ContextTag::Check(ContextTag::TAG_PORTAL)) {
 						$sSignature = $oPicture->GetSignature();
 						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
-					}
-					else {
+					} else {
 						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), static::DEFAULT_CONTACT_PICTURE_ATTCODE);
 					}
 				}
+			}
+		} // If no contact, check if user has a placeholder in they preferences
+		else {
+			$sPlaceholderPictureFilename = appUserPreferences::GetPref('user_picture_placeholder', null);
+			if (!empty($sPlaceholderPictureFilename)) {
+				$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.$sPlaceholderPictureFilename;
 			}
 		}
 
