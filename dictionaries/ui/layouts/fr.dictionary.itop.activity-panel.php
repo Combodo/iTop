@@ -29,7 +29,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Brouillon',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Journaux',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Afficher / masquer les entrées de journaux sur cet onglet',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Chang. de statut',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Statuts',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Afficher / masquer les changements de statut sur cet onglet',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Modif.',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Afficher / masquer les modifications de statut sur cet onglet',
