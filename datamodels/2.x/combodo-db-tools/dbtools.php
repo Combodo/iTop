@@ -23,7 +23,6 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -70,10 +69,10 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 		}
 	}
 
-	$oPanel = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SelectAnalysisType'));
-	$oP->AddUiBlock($oPanel);
+	$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SelectAnalysisType'));
+	$oP->AddUiBlock($oFieldSet);
 	$oForm = FormUIBlockFactory::MakeStandard();
-	$oPanel->AddSubBlock($oForm);
+	$oFieldSet->AddSubBlock($oForm);
 
 	$oToolbar = ToolbarUIBlockFactory::MakeStandard();
 	$oForm->AddSubBlock($oToolbar);
@@ -142,16 +141,18 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 			DisplayInconsistenciesReport($aResults);
 		}
 
-		$oPanel = PanelUIBlockFactory::MakeForWarning(Dict::S('DBTools:ErrorsFound'));
-		$oPanel->AddCSSClass('ibo-datatable-panel');
-		$oP->AddUiBlock($oPanel);
 
 		if ($iShowId == 0) {
 			// Error List
+			$oPanel = PanelUIBlockFactory::MakeForWarning(Dict::S('DBTools:ErrorsFound'));
+			$oPanel->AddCSSClass('ibo-datatable-panel');
+			$oP->AddUiBlock($oPanel);
 			$oPanel->AddSubBlock(DisplayErrorList($aResults));
 		} else {
 			// Detail List
-			$oPanel->AddSubBlock(DisplayErrorDetails($aResults));
+			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:ErrorsFound'));
+			$oP->AddUiBlock($oFieldSet);
+			$oFieldSet->AddSubBlock(DisplayErrorDetails($aResults));
 		}
 	}
 
@@ -229,7 +230,9 @@ function DisplayErrorDetails($aResults)
 
 			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLquery'));
 			$oCollapsible->AddSubBlock($oFieldSet);
-			$oFieldSet->AddSubBlock(new Html("<pre>{$aError['query']}</pre>"));
+
+			$oCode = UIContentBlockUIBlockFactory::MakeForCode($aError['query']);
+			$oFieldSet->AddSubBlock($oCode);
 
 			if (isset($aError['fixit'])) {
 				$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:FixitSQLquery'));
@@ -237,7 +240,8 @@ function DisplayErrorDetails($aResults)
 
 				$aQueries = $aError['fixit'];
 				foreach ($aQueries as $sFixQuery) {
-					$oFieldSet->AddSubBlock(new Html("<pre>{$sFixQuery}</pre>"));
+					$oCode = UIContentBlockUIBlockFactory::MakeForCode($sFixQuery);
+					$oFieldSet->AddSubBlock($oCode);
 				}
 			}
 
@@ -258,7 +262,8 @@ function DisplayErrorDetails($aResults)
 				}
 				$sQueryResult .= '<br>';
 			}
-			$oFieldSet->AddSubBlock(new Html("<pre>{$sQueryResult}</pre>"));
+			$oCode = UIContentBlockUIBlockFactory::MakeForCode($sQueryResult);
+			$oFieldSet->AddSubBlock($oCode);
 		}
 	}
 

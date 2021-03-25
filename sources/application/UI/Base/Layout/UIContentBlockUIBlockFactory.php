@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout;
 
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 {
@@ -19,4 +20,22 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	{
 		return new UIContentBlock($sId, $aContainerClasses);
 	}
+
+
+	/**
+	 * Used to display a block of code like <pre> but allows line break.
+	 * The \n are replaced by <br>
+	 *
+	 * @param string $sCode
+	 * @param string|null $sId
+	 */
+	public static function MakeForCode(string $sCode, string $sId = null)
+	{
+		$oCode = new UIContentBlock($sId, ['ibo-code']);
+		$sCode = str_replace("\n", '<br>', $sCode);
+		$oCode->AddSubBlock(new Html($sCode));
+
+		return $oCode;
+	}
+
 }

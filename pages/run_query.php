@@ -27,6 +27,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -248,11 +249,11 @@ EOF
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
-		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->ToOQL()).'</pre>'));
+		$oDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->ToOQL())));
 		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
 
 		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
-		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->serialize()).'</pre>'));
+		$oSerializedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode(utils::EscapeHtml($oFilter->serialize())));
 		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
@@ -275,14 +276,14 @@ EOF
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
 			$oCountDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQLCount'));
-			$oCountDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$oCountDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild)));
 			$aMoreInfoBlocks[] = $oCountDevelopedQuerySet;
 		}
 
 		// SQL Count
 		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
 		$oCountResultQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQLCount'));
-		$oCountResultQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$oCountResultQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oCountResultQuerySet;
 
 		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
@@ -290,14 +291,14 @@ EOF
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
 			$oOqlDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQL'));
-			$oOqlDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$oOqlDevelopedQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild)));
 			$aMoreInfoBlocks[] = $oOqlDevelopedQuerySet;
 		}
 
 		// SQL
 		$sSQL = $oFilter->MakeSelectQuery($aOrderBy, $aRealArgs, null, null, 0, 0, false);
 		$oSqlQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQL'));
-		$oSqlQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$oSqlQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oSqlQuerySet;
 
 		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
