@@ -22,7 +22,7 @@ require_once(APPROOT.'/application/application.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(); // Check user rights and prompt if needed, admins only here !
+LoginWebPage::DoLogin(); 
 
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();
