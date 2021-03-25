@@ -461,12 +461,14 @@ $ibo-button-colors: (
 }
 
 .ibo-button {
-	cursor: pointer;
-	@extend %ibo-font-ral-sembol-100;
-  text-transform: uppercase;
+  display: inline-flex;
 	padding: $ibo-button--padding-y $ibo-button--padding-x;
 	border: $ibo-button--border;
 	border-radius: $ibo-button--border-radius;
+	cursor: pointer;
+  text-transform: uppercase;
+	@extend %ibo-font-ral-sembol-100;
+  @extend %ibo-text-truncated-with-ellipsis;
 
 	& ~ .ibo-button {
 		margin-left: $ibo-button--sibling-spacing;

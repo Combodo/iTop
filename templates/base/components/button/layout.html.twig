@@ -5,7 +5,7 @@
                         data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
         {% endif %}
-        {% if oUIBlock.GetTooltip() is not empty %} data-tooltip-content="{{ oUIBlock.GetTooltip() }}" {% endif %}
+        {% if oUIBlock.GetTooltip() is not empty %} data-tooltip-content="{{ oUIBlock.GetTooltip() }}" {% else %} title="{{ oUIBlock.GetLabel() }}" {% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
         <span class="ibo-button--icon {{ oUIBlock.GetIconClass() }}"></span>
