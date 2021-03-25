@@ -4801,4 +4801,34 @@ The User does not acquire any right as a result of the use of the content in the
 The User rights under this Section will end automatically without any notice if the User breaches any of the Terms. In case of termination of the rights hereunder, the User shall cease using content in the Flaticon Content and will destroy every copy, whether total or partial, thereof.
   ]]></text>
   </license>
+  <license>
+    <product scope="npm">popperjs/core</product>
+    <author>Federico Zivolo</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/@popperjs/core/LICENSE.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">bulma-scss</product>
+    <author>Jim Campbell</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/bulma-scss/LICENSE]]></text>
+  </license>
+  <license>
+    <product scope="npm">raleway-webfont</product>
+    <author>Pablo Impallari</author>
+    <license_type>MIT AND OFL-1.1</license_type>
+    <text><![CDATA[/node_modules/raleway-webfont/LICENSE]]></text>
+  </license>
+  <license>
+    <product scope="npm">scrollmagic</product>
+    <author>Jan Paepke</author>
+    <license_type>MIT OR GPL-3.0+</license_type>
+    <text><![CDATA[/node_modules/scrollmagic/LICENSE.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">tippy.js</product>
+    <author>atomiks</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/tippy.js/LICENSE]]></text>
+  </license>
 </licenses>
