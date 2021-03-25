@@ -1085,18 +1085,16 @@ class UserRights
 	}
 
 	/**
-	 * Return the absolute URL of the contact picture
+	 * @param string $sLogin Login of the user from which we return the picture URL
+	 * @param bool $bAllowDefaultPicture Set to false if you want it to return null instead of the default picture URL when the contact has no picture defined. This can be useful when we want to display something else than the default picture (eg. initials)
 	 *
-	 * @param string $sLogin               Login of the user from which we return the picture URL
-	 * @param bool   $bAllowDefaultPicture Set to false if you want it to return null instead of the default picture URL when the contact has no picture defined. This can be useful when we want to display something else than the default picture (eg. initials)
-	 *
-	 * @return null|string
+	 * @return null|string Absolute URL of the user picture (from their contact if they have one, or from the preferences)
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */
-	public static function GetContactPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
+	public static function GetUserPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
 	{
 		$sUserPicturesFolder = 'images/user-pictures/';
 

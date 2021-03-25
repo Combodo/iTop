@@ -422,10 +422,9 @@ JS;
 	protected function ComputeUserData()
 	{
 		// Use a picture set in the preferences is there is none in the user's contact
-		$sPictureUrl = UserRights::GetContactPictureAbsUrl('', false);
-		if(empty($sPictureUrl))
-		{
-			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/' . appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
+		$sPictureUrl = UserRights::GetUserPictureAbsUrl('', false);
+		if (empty($sPictureUrl)) {
+			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'images/user-pictures/'.appUserPreferences::GetPref('user_picture_placeholder', 'user-profile-default-256px.png');
 		}
 
 		// TODO 3.0.0 : what do we show if no contact is linked to the user ?

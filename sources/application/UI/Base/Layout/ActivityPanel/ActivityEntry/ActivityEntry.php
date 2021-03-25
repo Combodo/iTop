@@ -221,7 +221,7 @@ class ActivityEntry extends UIBlock
 		// - Initials
 		$this->sAuthorInitials = UserRights::GetUserInitials($this->sAuthorLogin);
 		// - Picture
-		$this->sAuthorPictureAbsUrl = UserRights::GetContactPictureAbsUrl($this->sAuthorLogin, false);
+		$this->sAuthorPictureAbsUrl = UserRights::GetUserPictureAbsUrl($this->sAuthorLogin, false);
 		if ((null === $this->sAuthorPictureAbsUrl) && (ITOP_APPLICATION_SHORT === $this->sAuthorLogin)) {
 			$this->sAuthorPictureAbsUrl = utils::GetAbsoluteUrlAppRoot().static::DEFAULT_AUTHOR_PICTURE_REL_URL;
 		}

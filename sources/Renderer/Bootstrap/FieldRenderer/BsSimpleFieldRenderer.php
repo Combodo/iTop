@@ -20,17 +20,17 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use utils;
-use Dict;
-use UserRights;
-use AttributeDateTime;
 use AttributeDate;
+use AttributeDateTime;
 use AttributeText;
+use Combodo\iTop\Form\Field\MultipleChoicesField;
+use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Renderer\RenderingOutput;
+use Dict;
 use InlineImage;
 use MetaModel;
-use Combodo\iTop\Renderer\RenderingOutput;
-use Combodo\iTop\Form\Field\TextAreaField;
-use Combodo\iTop\Form\Field\MultipleChoicesField;
+use UserRights;
+use utils;
 
 /**
  * Description of BsSimpleFieldRenderer
@@ -594,7 +594,7 @@ HTML
 						$sEntryContactPictureAbsoluteUrl = null;
 					}
 					else {
-						$sEntryContactPictureAbsoluteUrl = UserRights::GetContactPictureAbsUrl($oEntryUser->Get('login'), false);
+						$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
 					}
 					$aContactPicturesCache[$iEntryUserId] = $sEntryContactPictureAbsoluteUrl;
 				}
