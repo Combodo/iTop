@@ -835,7 +835,7 @@ EOF
 		$oFieldSelectClass->AddCSSClass('ibo-field-large');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSelectClass));
 
-		$oAdvancedMode = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('UI:CSVImport:AdvancedMode'), "advanced", 1, '', 'checkbox');
+		$oAdvancedMode = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('UI:CSVImport:AdvancedMode'), "advanced", 1, "advanced", 'checkbox');
 		$oAdvancedMode->GetInput()->SetIsChecked(($bAdvanced == 1));
 		$oAdvancedMode->SetBeforeInput(false);
 		$oAdvancedMode->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -845,7 +845,8 @@ EOF
 		$oForm->AddSubBlock($oDivAdvancedHelp);
 
 		$oDivMapping = UIContentBlockUIBlockFactory::MakeStandard("mapping")->AddCSSClass('mt-5');
-		$oDivMapping->AddSubBlock(AlertUIBlockFactory::MakeForInformation(Dict::S('UI:CSVImport:SelectAClassFirst')));
+		$oMessage = AlertUIBlockFactory::MakeForInformation(Dict::S('UI:CSVImport:SelectAClassFirst'))->SetIsClosable(false)->SetIsCollapsible(false);
+		$oDivMapping->AddSubBlock($oMessage);
 		$oForm->AddSubBlock($oDivMapping);
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", "4"));
@@ -877,7 +878,8 @@ EOF
 
 		$oPage->add_ready_script(
 			<<<EOF
-	$('#select_class_name').change( function(ev) { DoMapping(); } );
+	$('#select_class_name').on('change', function(ev) { DoMapping(); } );
+	$('#advanced').on('click', function(ev) { DoMapping(); } );
 EOF
 		);
 		if ($sClassName != '')
