@@ -143,6 +143,7 @@
           <!-- This class list is also present in AdminTools group -->
           <class id="SynchroDataSource"/>
           <class id="SynchroAttribute"/>
+          <class id="SynchroReplica"/>
         </classes>
       </group>
       <group id="AdminTools">
@@ -167,6 +168,7 @@
           <!-- SynchroData group -->
           <class id="SynchroDataSource"/>
 					<class id="SynchroAttribute"/>
+					<class id="SynchroReplica"/>
         </classes>
       </group>
     </groups>

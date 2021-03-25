@@ -2017,7 +2017,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	{
 		$aParams = array
 		(
-			'category' => 'core/cmdb,view_in_gui',
+			'category' => 'core/cmdb,view_in_gui,grant_by_profile',
 			'key_type' => 'autoincrement',
 			'name_attcode' => '',
 			'state_attcode' => '',
