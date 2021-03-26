@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "@popperjs/core": "^2.4.4",
+    "bulma-scss": "^0.9.0-1",
+    "datatables.net": "^1.10.12",
+    "datatables.net-fixedheader": "^3.1.2",
+    "datatables.net-responsive": "^2.1.0",
+    "datatables.net-scroller": "^1.4.2",
+    "datatables.net-select": "^1.2.0",
+    "raleway-webfont": "^3.0.1",
+    "scrollmagic": "^2.0.8",
+    "tippy.js": "^6.2.5"
+  }
+}
