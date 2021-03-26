@@ -40,11 +40,12 @@ class DictionariesConsistencyTest extends ItopTestCase
 			'it' => array('IT IT', 'Italian', 'Italiano'),
 			'ja' => array('JA JP', 'Japanese', '日本語'),
 			'nl' => array('NL NL', 'Dutch', 'Nederlands'),
+			'pl' => array('PL PL', 'Polish', 'Polski'),
 			'pt_br' => array('PT BR', 'Brazilian', 'Brazilian'),
 			'ru' => array('RU RU', 'Russian', 'Русский'),
 			'sk' => array('SK SK', 'Slovak', 'Slovenčina'),
 			'tr' => array('TR TR', 'Turkish', 'Türkçe'),
-			'zh_cn' => array('ZH CN', 'Chinese', '简体中文')
+			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
 		);
 
 		if (!preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches))
