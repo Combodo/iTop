@@ -367,7 +367,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Contrôlez l\'actif le plus important de votre SI&nbsp;: la documentation.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
+
+<div>Cette version présente un tout nouveau design moderne, accessible et responsive pour la console de support.</div>
+
+<div>Nous avons conservé les fonctions de base d\''.ITOP_APPLICATION.' que vous aviez apprécié et les avons modernisées pour vous les faire adorer.
+Nous espérons que vous aimerez cette version autant que nous avons eu du plaisir à l\'imaginer et à la créer.</div>
+
+<div>Configurez vos préférences '.ITOP_APPLICATION.' pour une expérience personnalisée.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mes Appels Support',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidents en cours: %1$d',
