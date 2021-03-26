@@ -4,7 +4,10 @@
     },
 
     "autoload": {
-        "psr-4": { "": "src/" }
+        "psr-4": {
+          "": "src/",
+          "Combodo\\iTop\\Test\\TestUtils\\": "testUtils/"
+        }
     }
 
 }

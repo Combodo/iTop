@@ -73,13 +73,10 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		require_once(APPROOT.'/application/startup.inc.php');
+
+		$this->EmulateApplicationStartup();
 
 		require_once(APPROOT.'application/utils.inc.php');
-
-		$sEnv = 'production';
-		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 
 		if (static::USE_TRANSACTION)
 		{
@@ -89,6 +86,37 @@ class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
+	}
+
+	/**
+	 * At the time of the writing, je startup process isn't compatible with a custom env declared within the CLI
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \MySQLException
+	 */
+	public function EmulateApplicationStartup()
+	{
+//		require_once(APPROOT.'/application/startup.inc.php');
+		require_once(APPROOT.'/core/cmdbobject.class.inc.php');
+		require_once(APPROOT.'/application/utils.inc.php');
+		require_once(APPROOT.'/core/contexttag.class.inc.php');
+		if (function_exists('opcache_reset')) {
+			// Zend opcode cache
+			opcache_reset();
+		}
+		if (function_exists('apc_clear_cache')) {
+			// APC(u) cache
+			apc_clear_cache();
+		}
+		if (isset($_SESSION['itop_env'])) {
+			$sEnv = $_SESSION['itop_env'];
+		} else {
+			$sEnv = ITOP_DEFAULT_ENV;
+			$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
+		}
+
+		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
+		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true, false /* $bTraceSourceFiles */, $sEnv);
 	}
 
 	/**
@@ -130,9 +158,9 @@ class ItopDataTestCase extends ItopTestCase
 	{
 		return $this->iTestOrgId;
 	}
-
 	/////////////////////////////////////////////////////////////////////////////
 	/// Database Utilities
+
 	/////////////////////////////////////////////////////////////////////////////
 
 	/**
@@ -430,6 +458,7 @@ class ItopDataTestCase extends ItopTestCase
 		return $oUser;
 	}
 
+
 	/**
 	 * @param \DBObject $oUser
 	 * @param int $iProfileId
@@ -452,7 +481,6 @@ class ItopDataTestCase extends ItopTestCase
 
 		return $oUser;
 	}
-
 
 	/**
 	 * Create a Hypervisor in database
@@ -529,6 +557,7 @@ class ItopDataTestCase extends ItopTestCase
 		return $oVirtualMachine;
 	}
 
+
 	protected function CreateObjectWithTagSet()
 	{
 		$oFaqCategory = MetaModel::GetObject('FAQCategory', 1, false);
@@ -548,7 +577,6 @@ class ItopDataTestCase extends ItopTestCase
 
 		return $oFaq;
 	}
-
 
 	/**
 	 * Add a link between a contact and a CI.

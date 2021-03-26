@@ -84,7 +84,7 @@ function DisplayEvents($aEvents, $sTitle)
 ///////////////////////////////////////////////////////////////////////////////
 
 date_default_timezone_set('Europe/Paris');
-
+chdir(__DIR__);
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once('./test.class.inc.php');

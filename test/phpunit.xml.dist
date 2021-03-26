@@ -16,7 +16,7 @@
 <!--   along with iTop. If not, see <http://www.gnu.org/licenses/> -->
 <!-- -->
 
-<phpunit bootstrap="unittestautoload.php"
+<phpunit bootstrap="testUtils/bootstrap.php"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
          backupGlobals="false"
@@ -71,6 +71,9 @@
         <testsuite name="CoreExtensions">
             <directory>coreExtensions</directory>
         </testsuite>
+        <testsuite name="testFramework">
+          <directory>testFramework</directory>
+        </testsuite>
     </testsuites>
 
     <!-- Code coverage white list -->
@@ -82,4 +85,7 @@
         </whitelist>
     </filter>
 
+    <listeners>
+      <listener class="\Combodo\iTop\Test\TestUtils\PurgeTestEnvDir" file="testUtils/Listener/PurgeTestEnvDir.php" />
+    </listeners>
 </phpunit>
