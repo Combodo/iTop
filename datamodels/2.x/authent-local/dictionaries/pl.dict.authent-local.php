@@ -36,8 +36,8 @@
 //
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
-	'Class:UserLocal' => 'Użytkownik iTop',
-	'Class:UserLocal+' => 'Użytkownik uwierzytelniony przez iTop',
+	'Class:UserLocal' => 'Użytkownik '.ITOP_APPLICATION_SHORT,
+	'Class:UserLocal+' => 'Użytkownik uwierzytelniony przez '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Hasło',
 	'Class:UserLocal/Attribute:password+' => 'Ciąg uwierzytelniania użytkownika',
 

@@ -37,5 +37,5 @@
 
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserExternal' => 'Użytkownik zewnętrzny',
-	'Class:UserExternal+' => 'Użytkownik uwierzytelniony poza iTop',
+	'Class:UserExternal+' => 'Użytkownik uwierzytelniony poza '.ITOP_APPLICATION_SHORT,
 ));

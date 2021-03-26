@@ -34,7 +34,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Attachments:Error:FileTooLarge' => 'Plik jest za duży do przesłania. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'Otrzymany plik jest pusty i nie można go załączyć.
 Albo przesłałeś pusty plik,
-lub zapytaj administratora iTop, czy dysk serwera iTop jest pełny.',
+lub zapytaj administratora '.ITOP_APPLICATION_SHORT.', czy dysk serwera '.ITOP_APPLICATION_SHORT.' jest pełny.',
 	'Attachments:Render:Icons' => 'Wyświetlaj jako ikony',
 	'Attachments:Render:Table' => 'Wyświetl jako listę',
 	'UI:Attachments:DropYourFileHint' => 'Upuść pliki w dowolnym miejscu w tym obszarze',
