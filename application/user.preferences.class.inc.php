@@ -34,7 +34,8 @@ require_once(APPROOT.'/core/userrights.class.inc.php');
  */
 class appUserPreferences extends DBObject
 {
-	private static $oUserPrefs = null; // Local cache
+	/** @var array Associative array of the prefs. of users: <USER_ID> => <PREFS> */
+	private static $aUsersPrefs = []; // Local cache
 
 	/**
 	 * Get the value of the given property/preference
@@ -42,31 +43,35 @@ class appUserPreferences extends DBObject
 	 *
 	 * @param string $sCode Code/Name of the property to set
 	 * @param mixed $defaultValue The default value
+	 * @param string|null $sUserId Added in 3.0.0. ID of the user we want the pref. from, default is the current user
 	 *
 	 * @return mixed The value of the property for the current user
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @since 3.0.0 Added the $sUserId parameter
 	 */
-	public static function GetPref($sCode, $defaultValue)
+	public static function GetPref($sCode, $defaultValue, ?string $sUserId = null)
 	{
-		if (self::$oUserPrefs == null)
-		{
-			self::Load();
+		if (null === $sUserId) {
+			$sUserId = UserRights::GetUserId();
 		}
-		$aPrefs = self::$oUserPrefs->Get('preferences');
-		if (array_key_exists($sCode, $aPrefs))
-		{
+
+		if (false === array_key_exists($sUserId, self::$aUsersPrefs)) {
+			self::Load($sUserId);
+		}
+
+		$aPrefs = self::$aUsersPrefs[$sUserId]->Get('preferences');
+		if (array_key_exists($sCode, $aPrefs)) {
 			return $aPrefs[$sCode];
-		}
-		else
-		{
+		} else {
 			return $defaultValue;
 		}
 	}
 
 	/**
-	 * Set the value for a given preference, and stores it into the database
+	 * Set the value for a given preference for the current user, and stores it into the database
 	 *
 	 * @param string $sCode Code/Name of the property/preference to set
 	 * @param mixed $value Value to set
@@ -78,25 +83,23 @@ class appUserPreferences extends DBObject
 	 */
 	public static function SetPref($sCode, $value)
 	{
-		if (self::$oUserPrefs == null)
-		{
-			self::Load();
+		$sUserId = UserRights::GetUserId();
+		if (false === array_key_exists($sUserId, self::$aUsersPrefs)) {
+			self::Load($sUserId);
 		}
-		$aPrefs = self::$oUserPrefs->Get('preferences');
-		if (array_key_exists($sCode, $aPrefs) && ($aPrefs[$sCode] === $value))
-		{
+
+		$aPrefs = self::$aUsersPrefs[$sUserId]->Get('preferences');
+		if (array_key_exists($sCode, $aPrefs) && ($aPrefs[$sCode] === $value)) {
 			// Do not write it again
-		}
-		else
-		{
+		} else {
 			$aPrefs[$sCode] = $value;
-			self::$oUserPrefs->Set('preferences', $aPrefs);
+			self::$aUsersPrefs[$sUserId]->Set('preferences', $aPrefs);
 			self::Save();
 		}
 	}
 
 	/**
-	 * Clears the value for a given preference (or list of preferences that matches a pattern), and updates the database
+	 * Clears the value for a given preference (or list of preferences that matches a pattern) for the current user, and updates the database
 	 *
 	 * @param string $sCodeOrPattern Code/Pattern of the properties/preferences to reset
 	 * @param boolean $bPattern Whether or not the supplied code is a PCRE pattern
@@ -108,37 +111,33 @@ class appUserPreferences extends DBObject
 	 */
 	public static function UnsetPref($sCodeOrPattern, $bPattern = false)
 	{
-		if (self::$oUserPrefs == null)
-		{
-			self::Load();
+		$sUserId = UserRights::GetUserId();
+		if (false === array_key_exists($sUserId, self::$aUsersPrefs)) {
+			self::Load($sUserId);
 		}
-		$aPrefs = self::$oUserPrefs->Get('preferences');
-		if ($bPattern)
-		{
+
+		$aPrefs = self::$aUsersPrefs[$sUserId]->Get('preferences');
+		if ($bPattern) {
 			// the supplied code is a pattern, clear all preferences that match
-			foreach($aPrefs as $sKey => $void)
-			{
-				if (preg_match($sCodeOrPattern, $sKey))
-				{
+			foreach ($aPrefs as $sKey => $void) {
+				if (preg_match($sCodeOrPattern, $sKey)) {
 					unset($aPrefs[$sKey]);
 				}
 			}
-			self::$oUserPrefs->Set('preferences', $aPrefs);
-		}
-		else
-		{
+			self::$aUsersPrefs[$sUserId]->Set('preferences', $aPrefs);
+		} else {
 			unset($aPrefs[$sCodeOrPattern]);
-			self::$oUserPrefs->Set('preferences', $aPrefs);
+			self::$aUsersPrefs[$sUserId]->Set('preferences', $aPrefs);
 		}
+
 		// Save only if needed
-		if (self::$oUserPrefs->IsModified())
-		{
+		if (self::$aUsersPrefs[$sUserId]->IsModified()) {
 			self::Save();
 		}
 	}
 
 	/**
-	 * Call this function to get all the preferences for the user, packed as a JSON object
+	 * Call this function to get all the preferences for the current user, packed as a JSON object
 	 *
 	 * @return string JSON representation of the preferences
 	 * @throws \CoreException
@@ -147,11 +146,13 @@ class appUserPreferences extends DBObject
 	 */
 	public static function GetAsJSON()
 	{
-		if (self::$oUserPrefs == null)
-		{
-			self::Load();
+		$sUserId = UserRights::GetUserId();
+		if (false === array_key_exists($sUserId, self::$aUsersPrefs)) {
+			self::Load($sUserId);
 		}
-		$aPrefs = self::$oUserPrefs->Get('preferences');
+
+		$aPrefs = self::$aUsersPrefs[$sUserId]->Get('preferences');
+
 		return json_encode($aPrefs);
 	}
 
@@ -162,32 +163,33 @@ class appUserPreferences extends DBObject
 	 */
 	public static function ResetPreferences()
 	{
-		self::$oUserPrefs = null;
+		self::$aUsersPrefs = [];
 	}
 
 	/**
-	 * Call this function to ERASE all the preferences from the current user
+	 * Call this function to ERASE all the preferences from the current user (only in memory, not in DB)
 	 *
 	 * @return void
 	 */
 	public static function ClearPreferences()
 	{
-		self::$oUserPrefs = null;
+		$sUserId = UserRights::GetUserId();
+		unset(self::$aUsersPrefs[$sUserId]);
 	}
 
 	/**
-	 * Save preferences in the DB
+	 * Save preferences of the current user in the DB, for now we don't allow interfering with an other users preferences
 	 *
 	 * @return void;
 	 */
 	protected static function Save()
 	{
-		if (self::$oUserPrefs != null)
-		{
-			if (self::$oUserPrefs->IsModified())
-			{
+		$sUserId = UserRights::GetUserId();
+
+		if (array_key_exists($sUserId, self::$aUsersPrefs)) {
+			if (self::$aUsersPrefs[$sUserId]->IsModified()) {
 				utils::PushArchiveMode(false);
-				self::$oUserPrefs->DBUpdate();
+				self::$aUsersPrefs[$sUserId]->DBUpdate();
 				utils::PopArchiveMode();
 			}
 		}
@@ -197,36 +199,45 @@ class appUserPreferences extends DBObject
 	 * Loads the preferences for the current user, creating the record in the database
 	 * if needed
 	 *
+	 * @param string|null $sUserId Added in 3.0.0. ID of the user to load the prefs for, if null then current user will be used.
+	 *
 	 * @return void;
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @since 3.0.0 Added $sUserId parameter
 	 */
-	protected static function Load()
+	protected static function Load(?string $sUserId = null)
 	{
-		if (self::$oUserPrefs != null) return;
+		// Already in cache
+		if (array_key_exists($sUserId, self::$aUsersPrefs)) {
+			return;
+		}
+
+		if (null === $sUserId) {
+			$sUserId = UserRights::GetUserId();
+		}
+
 		$oSearch = new DBObjectSearch('appUserPreferences');
-		$oSearch->AddCondition('userid', UserRights::GetUserId(), '=');
+		$oSearch->AddCondition('userid', $sUserId, '=');
 		$oSet = new DBObjectSet($oSearch);
 		$oObj = $oSet->Fetch();
-		if ($oObj == null)
-		{
+		if ($oObj == null) {
 			// No prefs (yet) for this user, create the object
 			$oObj = new appUserPreferences();
-			$oObj->Set('userid', UserRights::GetUserId());
+			$oObj->Set('userid', $sUserId);
 			$oObj->Set('preferences', array()); // Default preferences: an empty array
-			try
-			{
+			try {
 				utils::PushArchiveMode(false);
 				$oObj->DBInsert();
 				utils::PopArchiveMode();
 			}
-			catch(Exception $e)
-			{
+			catch (Exception $e) {
 				// Ignore errors
 			}
 		}
-		self::$oUserPrefs = $oObj;
+		self::$aUsersPrefs[$sUserId] = $oObj;
 	}
 
 	/**
