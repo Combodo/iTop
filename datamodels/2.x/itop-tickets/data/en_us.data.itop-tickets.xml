@@ -7,7 +7,6 @@
     <oql>SELECT Person WHERE id=:this-&gt;agent_id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Agent of the Ticket</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="4">
     <name>Agent of the Ticket unless the agent himself triggered the notification</name>
@@ -18,7 +17,6 @@
     <oql>SELECT Person WHERE id=:this-&gt;agent_id AND id != :current_contact_id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Agent of the Ticket unless the agent himself triggered the notification</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="3">
     <name>Caller and Contacts linked to the Ticket</name>
@@ -30,7 +28,6 @@
     </oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Caller and Contacts linked to the Ticket</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="1">
     <name>Caller of the Ticket</name>
@@ -39,7 +36,6 @@
     <oql>SELECT Person WHERE id=:this-&gt;caller_id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Caller of the Ticket</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="2">
     <name>Contacts linked to the Ticket</name>
@@ -48,7 +44,6 @@
     <oql>SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this-&gt;id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Contacts linked to the Ticket</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="7">
     <name>Manager of the Ticket caller</name>
@@ -57,7 +52,6 @@
     <oql>SELECT Person AS manager JOIN Person AS employee ON employee.manager_id = manager.id WHERE employee.id=:this-&gt;caller_id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Manager of the Ticket caller</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="9">
     <name>Person who triggered the notification</name>
@@ -68,7 +62,6 @@
     <oql>SELECT Person WHERE id = :current_contact_id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Person who triggered the notification</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="6">
     <name>Team members of the Ticket</name>
@@ -79,7 +72,6 @@
     </oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Team members of the Ticket</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="5">
     <name>Team members of the Ticket other than the agent</name>
@@ -92,7 +84,6 @@
     </oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Team members of the Ticket other than the agent</friendlyname>
   </QueryOQL>
   <QueryOQL alias="QueryOQL" id="10">
     <name>Team of the Ticket</name>
@@ -101,6 +92,5 @@
     <oql>SELECT Team WHERE id = :this-&gt;team_id</oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
-    <friendlyname>Team of the Ticket</friendlyname>
   </QueryOQL>
 </Set>

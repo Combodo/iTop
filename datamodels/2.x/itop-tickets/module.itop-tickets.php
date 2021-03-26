@@ -73,20 +73,29 @@ class TicketsInstaller extends ModuleInstallerAPI
 		// Without test, new entries added to the data files, would be automatically loaded
 		if (($sPreviousVersion === '') ||
 			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
-				&& version_compare($sPreviousVersion, '3.0.1', '<'))) {
+				&& version_compare($sPreviousVersion, '3.0.0', '<'))) {
 			$oDataLoader = new XMLDataLoader();
 
 			CMDBObject::SetTrackInfo("Initialization");
 			$oMyChange = CMDBObject::GetCurrentChange();
 
-			$sFileName = '';
-			$oFileConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
-			if (is_object($oFileConfig))
-			{
-				$sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
-				$sFileName = dirname(__FILE__)."/data/{$sLang}.data.itop-tickets.xml";
-				SetupLog::Info("Searching file: $sFileName");
+			$sLang = null;
+			// - Try to get app. language from configuration fil (app. upgrade)
+			$sConfigFileName = APPCONF.'production/'.ITOP_CONFIG_FILE;
+			if (file_exists($sConfigFileName)) {
+				$oFileConfig = new Config($sConfigFileName);
+				if (is_object($oFileConfig)) {
+					$sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
+				}
 			}
+
+			// - I still no language, get the default one
+			if (null === $sLang) {
+				$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
+			}
+
+			$sFileName = dirname(__FILE__)."/data/{$sLang}.data.itop-tickets.xml";
+			SetupLog::Info("Searching file: $sFileName");
 			if (!file_exists($sFileName)) {
 				$sFileName = dirname(__FILE__)."/data/en_us.data.itop-tickets.xml";
 			}
