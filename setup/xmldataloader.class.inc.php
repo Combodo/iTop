@@ -165,12 +165,9 @@ class XMLDataLoader
 	 */
 	protected function ClearKeysCache()
 	{
-		if(is_file($this->m_sCacheFileName))
-		{
+		if (is_file($this->m_sCacheFileName)) {
 			unlink($this->m_sCacheFileName);
-		}
-		else
-		{
+		} else {
 			//echo "<p>Hm, it looks like the file does not exist!!!</p>";
 		}
 		$this->m_aKeys = array();

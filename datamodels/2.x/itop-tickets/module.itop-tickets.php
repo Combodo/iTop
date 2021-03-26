@@ -73,7 +73,7 @@ class TicketsInstaller extends ModuleInstallerAPI
 		// Without test, new entries added to the data files, would be automatically loaded
 		if (($sPreviousVersion === '') ||
 			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
-				and version_compare($sPreviousVersion, '3.0.1', '<'))) {
+				&& version_compare($sPreviousVersion, '3.0.1', '<'))) {
 			$oDataLoader = new XMLDataLoader();
 
 			CMDBObject::SetTrackInfo("Initialization");
