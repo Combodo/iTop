@@ -72,7 +72,7 @@ iTop development is sponsored, led and supported by [Combodo][0].
 
 ## Contributors
 
-We would like to give a special thank 🤗 you to the people from the community who contributed to this project, including:
+We would like to give a special thank you 🤗 to the people from the community who contributed to this project, including:
 
 ### Names
 
