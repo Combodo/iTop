@@ -81,7 +81,7 @@ class TicketsInstaller extends ModuleInstallerAPI
 
 			$sFileName = '';
 			$oFileConfig = new Config(APPCONF.'production/'.ITOP_CONFIG_FILE);
-			if (is_object($oFileConfig)) 2
+			if (is_object($oFileConfig))
 			{
 				$sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
 				$sFileName = dirname(__FILE__)."/data/{$sLang}.data.itop-tickets.xml";
