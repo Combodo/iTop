@@ -24,12 +24,11 @@ class StaticTable extends UIContentBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/static/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'lib/datatables/js/jquery.dataTables.min.js',
-		'lib/datatables/js/dataTables.bootstrap.min.js',
-		'lib/datatables/js/dataTables.fixedHeader.min.js',
-		'lib/datatables/js/dataTables.responsive.min.js',
-		'lib/datatables/js/dataTables.scroller.min.js',
-		'lib/datatables/js/dataTables.select.min.js',
+		'node_modules/datatables.net/js/jquery.dataTables.js',
+		'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
+		'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
+		'node_modules/datatables.net-scroller/js/dataTables.scroller.js',
+		'node_modules/datatables.net-select/js/dataTables.select.js',
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',

@@ -91,31 +91,36 @@ $ibo-vendors-datatables--focus--border-color: $ibo-color-primary-600 !default;
 }
 
 .paginate_button {
-  display: inline-block;
-  box-sizing: border-box;
-}
-
-.paginate_button a {
-  @extend %ibo-font-ral-med-100;
-  color: $ibo-vendors-datatables--paginate-button--link--color;
-}
-
-.paginate_button a:hover {
-  color: $ibo-vendors-datatables--paginate-button--link--hover--color;
-}
-
-.paginate_button.disabled a:hover {
-  cursor: default;
-}
-
-.paginate_button.active a {
-  @extend %ibo-font-ral-med-100;
-
-  color: $ibo-vendors-datatables--paginate-button-active--link--color;
-  background-color: $ibo-vendors-datatables--paginate-button-active--link--background-color;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 22px;
+  min-height: 22px;
   padding: $ibo-vendors-datatables--paginate-button-active--link--padding-y $ibo-vendors-datatables--paginate-button-active--link--padding-x;
-  box-shadow: $ibo-vendors-datatables--paginate-button-active--link--box-shadow;
-  border-radius: $ibo-border-radius-300;
+  @extend %ibo-font-ral-med-100;
+}
+
+a.paginate_button {
+  color: $ibo-vendors-datatables--paginate-button--link--color;
+
+  &:hover {
+    color: $ibo-vendors-datatables--paginate-button--link--hover--color;
+  }
+
+  &.disabled {
+    &:hover {
+      cursor: default;
+    }
+  }
+
+  &.current {
+    @extend %ibo-font-ral-sembol-100;
+
+    color: $ibo-vendors-datatables--paginate-button-active--link--color;
+    background-color: $ibo-vendors-datatables--paginate-button-active--link--background-color;
+    box-shadow: $ibo-vendors-datatables--paginate-button-active--link--box-shadow;
+    border-radius: $ibo-border-radius-300;
+  }
 }
 
 .dataTables_info {
