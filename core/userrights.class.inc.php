@@ -655,6 +655,8 @@ class UserRights
 	const DEFAULT_CONTACT_PICTURE_ATTCODE = 'picture';
 
 	public static $m_aCacheUsers;
+	/** @var array Associative array of user's ID => user's picture URL */
+	protected static $m_aCacheContactPictureAbsUrl = [];
 	/** @var UserRightsAddOnAPI $m_oAddOn */
 	protected static $m_oAddOn;
 	protected static $m_oUser;
@@ -1070,8 +1072,14 @@ class UserRights
 	public static function GetUserPictureAbsUrl($sLogin = '', $bAllowDefaultPicture = true)
 	{
 		$sUserPicturesFolder = 'images/user-pictures/';
+		$sUserPicturePlaceholderPrefKey = 'user_picture_placeholder';
 
-		// First, the default picture
+		// First, check cache
+		if (array_key_exists($sLogin, static::$m_aCacheContactPictureAbsUrl)) {
+			return static::$m_aCacheContactPictureAbsUrl[$sLogin];
+		}
+
+		// Then, the default picture
 		if ($bAllowDefaultPicture === true) {
 			$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.'user-profile-default-256px.png';
 		} else {
@@ -1107,11 +1115,14 @@ class UserRights
 			}
 		} // If no contact, check if user has a placeholder in they preferences
 		else {
-			$sPlaceholderPictureFilename = appUserPreferences::GetPref('user_picture_placeholder', null);
+			$sPlaceholderPictureFilename = appUserPreferences::GetPref($sUserPicturePlaceholderPrefKey, null, static::GetUserId($sLogin));
 			if (!empty($sPlaceholderPictureFilename)) {
 				$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.$sPlaceholderPictureFilename;
 			}
 		}
+
+		// Update cache
+		static::$m_aCacheContactPictureAbsUrl[$sLogin] = $sPictureUrl;
 
 		return $sPictureUrl;
 	}
