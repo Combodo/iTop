@@ -42,7 +42,7 @@ If you want to use another license, you may [create an extension][wiki new ext].
 When we first start with Git, we were using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. As
  there was some confusions about branches to use for current developed release and previous maintained release, and also because we were
  using just a very few of the GitFlow commands, we decided to add just a little modification to this branch model : since april 2020
-  we don't have anymore a `master` branch.
+  we don't have a `master` branch anymore.
 
 Here are the branches we use and their meaning : 
 
