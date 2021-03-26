@@ -276,7 +276,7 @@ class ApplicationInstaller
 					$sTargetDir = $this->GetTargetDir();
 					$bUseSymbolicLinks = false;
 					$aMiscOptions = $this->oParams->Get('options', array());
-					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks']) || MFCompiler::IsUseSymbolicLinksFlagPresent()) {
+					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
 						if (function_exists('symlink')) {
 							$bUseSymbolicLinks = true;
 							SetupLog::Info("Using symbolic links instead of copying data model files (for developers only!)");

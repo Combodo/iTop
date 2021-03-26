@@ -176,6 +176,10 @@ class MFCompiler
 	 */
 	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false, $bSkipTempDir = false)
 	{
+		if (!$bUseSymbolicLinks && static::IsUseSymbolicLinksFlagPresent()) {
+			$bUseSymbolicLinks = true;
+		}
+
 		$sFinalTargetDir = $sTargetDir;
 		$bIsAlreadyInMaintenanceMode = SetupUtils::IsInMaintenanceMode();
 		$sConfigFilePath = utils::GetConfigFilePath($this->sEnvironment);
