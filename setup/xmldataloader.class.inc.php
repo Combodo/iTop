@@ -183,6 +183,8 @@ class XMLDataLoader
 	 * @param $sFilePath string The full path to the XML file to load
 	 * @param $bUpdateKeyCacheOnly bool Set to true to *just* update the keys cache but not reload the objects
 	 * @param bool $bSearch Set to true to create objects only if they do not already exist based on reconciliation keys
+	 *
+	 * @since 3.0.0 Added $bSearch parameter
 	 */
 	function LoadFile($sFilePath, $bUpdateKeyCacheOnly = false, bool $bSearch = false)
 	{
