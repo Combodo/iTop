@@ -64,6 +64,7 @@
       "core/querybuilderexpressions.class.inc.php",
       "core/legacy/querybuilderexpressionslegacy.class.inc.php",
       "core/oql/build/PHP/",
+      "core/apc-emulation.php",
       "application/startup.inc.php",
       "application/loginform.class.inc.php",
       "application/loginbasic.class.inc.php",
