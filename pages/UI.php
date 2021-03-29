@@ -1215,7 +1215,7 @@ EOF
 				$aIssues = $e->getIssues();
 
 				$sObjKey = $oObj->GetKey();
-				$sClassIcon = MetaModel::GetClassIcon($sClass);
+				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
