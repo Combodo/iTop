@@ -2833,38 +2833,48 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oPage->Details($aDetails);
 		$oPage->add('</fieldset>');
-		if (strlen($this->Get('dest_class')) > 0)
+
+		$sDestClass = $this->Get('dest_class');
+		$bIsActionAllowed = true;
+
+		if (strlen($sDestClass) > 0)
 		{
-			$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'), false);
-			if (is_object($oDestObj))
-			{
+			$oDestObj = MetaModel::GetObject($sDestClass, $this->Get('dest_id'), false);
+			if (is_object($oDestObj)) {
+				$bIsActionAllowed = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, DBObjectSet::FromObject($oDestObj));
+			} else {
+				$bIsActionAllowed = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, null);
+			}
+
+			if ($bIsActionAllowed) {
 				$oPage->add('<fieldset>');
 				$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
 				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
 				$oPage->add('<fieldset>');
 			}
 		}
-		$oPage->add('</div><div class="ibo-column">');
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
-		$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 
-		$sSQLTable = $oSource->GetDataTable();
-		$aData = $this->LoadExtendedDataFromTable($sSQLTable);
+		if ($bIsActionAllowed) {
+			$oPage->add('</div><div class="ibo-column">');
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
+			$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 
-		$aHeaders = array(
-			'attcode' => array('label' => 'Attribute Code', 'description' => ''),
-			'data' => array('label' => 'Value', 'description' => ''),
-		);
-		$aRows = array();
-		foreach ($aData as $sKey => $value)
-		{
-			$aRows[] = array('attcode' => $sKey, 'data' => $value);
+			$sSQLTable = $oSource->GetDataTable();
+			$aData = $this->LoadExtendedDataFromTable($sSQLTable);
+
+			$aHeaders = array(
+				'attcode' => array('label' => 'Attribute Code', 'description' => ''),
+				'data' => array('label' => 'Value', 'description' => ''),
+			);
+			$aRows = array();
+			foreach ($aData as $sKey => $value) {
+				$aRows[] = array('attcode' => $sKey, 'data' => $value);
+			}
+			$oPage->Table($aHeaders, $aRows);
+			$oPage->add('</fieldset>');
+			$oPage->add('</div></div>');
 		}
-		$oPage->Table($aHeaders, $aRows);
-		$oPage->add('</fieldset>');
-		$oPage->add('</div></div>');
-
 	}
 
 	public function LoadExtendedDataFromTable($sSQLTable)
