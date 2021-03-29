@@ -20,9 +20,9 @@
 // Display DataTable
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Datatables:Language:Processing' => 'Please wait...~~',
-	'UI:Datatables:Language:LengthMenu' => 'Showing _MENU_ out of~~',
+	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
 	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
-	'UI:Datatables:Language:Info' => '_TOTAL_ items~~',
+	'UI:Datatables:Language:Info' => '_TOTAL_ item(s)~~',
 	'UI:Datatables:Language:InfoEmpty' => 'No information~~',
 	'UI:Datatables:Language:EmptyTable' => 'No data available in this table~~',
 	'UI:Datatables:Language:DisplayLength:All' => 'All~~',

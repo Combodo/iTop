@@ -19,9 +19,9 @@
 // Display DataTable
 Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Datatables:Language:Processing' => 'Patientez ...',
-	'UI:Datatables:Language:LengthMenu' => '_MENU_ parmi ',
+	'UI:Datatables:Language:LengthMenu' => '_MENU_ par page',
 	'UI:Datatables:Language:ZeroRecords' => 'Pas de résultat',
-	'UI:Datatables:Language:Info' => '_TOTAL_ résultat(s)',
+	'UI:Datatables:Language:Info' => '_TOTAL_ élément(s)',
 	'UI:Datatables:Language:InfoEmpty' => 'Pas d\'information',
 	'UI:Datatables:Language:EmptyTable' => 'Pas de résultat',
 	'UI:Datatables:Language:DisplayLength:All' => 'Tous',

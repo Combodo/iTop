@@ -3,53 +3,46 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-datatable--padding-y: 2em !default;
-
-$ibo-datatable-cell-row--line-height: 30px !default;
-$ibo-datatable-cell-row--padding-x: 1em !default;
-$ibo-datatable-cell-row--link--color: $ibo-color-primary-600 !default;
-
-$ibo-datatable-row--odd--background-color: $ibo-color-white-200 !default;
-$ibo-datatable-row--even--background-color: $ibo-color-white-100 !default;
-
+$ibo-datatable--toolbar--padding-x: 6px !default;
+$ibo-datatable--toolbar--padding-y: 0 !default;
+$ibo-datatable--toolbar--text-color: $ibo-color-grey-700 !default;
+$ibo-datatable--toolbar--elements-spacing: 1rem !default;
+$ibo-datatable--toolbar--table-spacing: 18px !default;
 
 $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
 $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
-
 $ibo-list-column--max-height: 150px;
 
-.ibo-datatable {
-  padding-bottom: $ibo-datatable--padding-y;
-  padding-top: $ibo-datatable--padding-y;
+.ibo-datatable--toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $ibo-datatable--toolbar--padding-y $ibo-datatable--toolbar--padding-x;
 
-  thead tr th, tbody tr td {
-    line-height: $ibo-datatable-cell-row--line-height;
-    padding-right: $ibo-datatable-cell-row--padding-x;
-    padding-left: $ibo-datatable-cell-row--padding-x;
-    @extend %ibo-font-ral-med-100;
+  color: $ibo-datatable--toolbar--text-color;
+  @extend %ibo-font-ral-med-100;
 
-    a {
-      color: $ibo-datatable-cell-row--link--color;
-    }
+  /* Above the table */
+  &:first-child {
+    margin-bottom: $ibo-datatable--toolbar--table-spacing;
   }
 
-  .ibo-datatable-header.sorting, .ibo-datatable-header.sorting_asc, .ibo-datatable-header.sorting_desc {
-    cursor: pointer;
-  }
-
-  tbody tr:nth-child(odd) {
-    background-color: $ibo-datatable-row--odd--background-color;
-  }
-
-  tbody tr:nth-child(even) {
-    background-color: $ibo-datatable-row--even--background-color;
+  /* below the table */
+  &:not(:first-child) {
+    margin-top: $ibo-datatable--toolbar--table-spacing;
   }
 }
 
-.ibo-datatable thead tr th {
-  position: relative;
+.ibo-datatable--toolbar-left,
+.ibo-datatable--toolbar-right {
+  @extend %ibo-fully-centered-content;
+
+  > *:not(:first-child) {
+    margin-left: $ibo-datatable--toolbar--elements-spacing;
+  }
 }
 
+/* TODO 3.0.0: The lines below need to be refactored / placed in the right places (integrations, dedicated block / page, ...) */
 .ibo-datatable-panel > .ibo-panel--body {
   padding: $ibo-datatable-panel--body--padding;
 }

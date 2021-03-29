@@ -18,10 +18,10 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
         infoFiltered: "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
         emptyTable: "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
         paginate: {
-            first: "<<",
+            first: "<i class=\"fas fa-angle-double-left\"></i>",
             previous: "<i class=\"fas fa-angle-left\"></i>",
             next: "<i class=\"fas fa-angle-right\"></i>",
-            last: ">>"
+            last: "<i class=\"fas fa-angle-double-right\"></i>"
         },
         aria: {
             sortAscending: ": {{ 'UI:Datatables:Language:Sort:Ascending'|dict_s }}",
@@ -40,7 +40,7 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     {% if oUIBlock.GetData()|length <= iPageSize %}
     paging: false,
     {% endif %}
-    dom: "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
+    dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     columns: [
         {% for key, column in oUIBlock.GetColumns() %}

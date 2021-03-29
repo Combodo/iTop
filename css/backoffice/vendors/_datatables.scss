@@ -3,222 +3,141 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-vendors-datatables--toolbar--elements--padding-top: 0.755em !default;
-
-$ibo-vendors-datatables--sorting--opacity: 0.3 !default;
-$ibo-vendors-datatables--sorting--right: 1em !default;
 
 $ibo-vendors-datatables--pagination--color: $ibo-color-grey-800 !default;
 
-$ibo-vendors-datatables--pagination--position-x: 1.21% !default;
-$ibo-vendors-datatables--pagination--position-top: 91.58% !default;
-$ibo-vendors-datatables--pagination--position-bottom: 4.85% !default;
-$ibo-vendors-datatables--pagination--button-margin-x: 0.5em !default;
+$ibo-vendors-datatables--pagination-button--min-size: 20px !default;
+$ibo-vendors-datatables--pagination-button--padding-x: 5px !default;
+$ibo-vendors-datatables--pagination-button--padding-y: 0 !default;
+$ibo-vendors-datatables--pagination-button--border-radius: $ibo-border-radius-300 !default;
+$ibo-vendors-datatables--pagination-button--background-color--on-hover: $ibo-color-grey-100 !default;
+$ibo-vendors-datatables--pagination-button--text-color--is-active: $ibo-color-grey-900 !default;
+$ibo-vendors-datatables--pagination-button--background-color--is-active: $ibo-color-grey-200 !default;
+$ibo-vendors-datatables--pagination-button--box-shadow--is-active: inset 0px 1px 0px rgba(0, 0, 0, 0.15) !default;
+$ibo-vendors-datatables--pagination-button--text-color--is-disabled: $ibo-color-grey-600 !default;
+$ibo-vendors-datatables--pagination-button--background-color--is-disabled: transparent !default;
 
-$ibo-vendors-datatables--select-info--padding-left: 2em !default;
+$ibo-vendors-datatables--page-length-selector--text-color: $ibo-color-grey-900 !default;
+$ibo-vendors-datatables--page-length-selector--background-color: $ibo-color-white-100 !default;
+$ibo-vendors-datatables--page-length-selector--border-color: $ibo-color-grey-500 !default;
+$ibo-vendors-datatables--page-length-selector--border-radius: $ibo-border-radius-300 !default;
+$ibo-vendors-datatables--page-length-selector--border-color--on-focus: $ibo-color-primary-600 !default;
 
-$ibo-vendors-datatables--paginate--padding-top: $ibo-vendors-datatables--toolbar--elements--padding-top !default;
-$ibo-vendors-datatables--paginate--padding-left: 2em !default;
+$ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;
+$ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted: 1 !default;
+$ibo-vendors-datatables--column-sorting-icon--right: 1em !default;
+$ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
+$ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
 
-$ibo-vendors-datatables--paginate-button--link--color: $ibo-color-grey-800 !default;
-$ibo-vendors-datatables--paginate-button--link--hover--color: $ibo-color-blue-grey-200 !default;
+$ibo-vendors-datatables--columns-header--margin-bottom: 4px !default;
+$ibo-vendors-datatables--columns-header--border-bottom: 1px solid $ibo-color-grey-400 !default;
 
-$ibo-vendors-datatables--paginate-button-active--link--color: $ibo-color-grey-900 !default;
-$ibo-vendors-datatables--paginate-button-active--link--background-color: $ibo-color-grey-200 !default;
-$ibo-vendors-datatables--paginate-button-active--link--padding-y: 2px !default;
-$ibo-vendors-datatables--paginate-button-active--link--padding-x: 6px !default;
-$ibo-vendors-datatables--paginate-button-active--link--box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.15) !default;
-$ibo-vendors-datatables--paginate-button-active--link--border-radius: $ibo-border-radius-300 !default;
-
-$ibo-vendors-datatables--toolbar--length--padding-right: 0.5em !default;
-$ibo-vendors-datatables--toolbar--length--select--height: 18px !default;
-$ibo-vendors-datatables--toolbar--length--select--width: unset !default;
-$ibo-vendors-datatables--toolbar--length--select--padding-y: 1px !default;
-$ibo-vendors-datatables--toolbar--length--select--padding-x: 2px !default;
-$ibo-vendors-datatables--toolbar--info--padding-right: 2em !default;
-$ibo-vendors-datatables--toolbar--info--padding-left: 0em !default;
-$ibo-vendors-datatables--toolbar--info--line-height: $ibo-vendors-datatables--toolbar--length--select--height + $ibo-vendors-datatables--toolbar--length--select--padding-y !default;
-
-$ibo-vendors-datatables--color: $ibo-color-grey-900 !default;
-$ibo-vendors-datatables--background-color: $ibo-color-white-100 !default;
-$ibo-vendors-datatables--border-color: $ibo-color-grey-500 !default;
-$ibo-vendors-datatables--border-radius: $ibo-border-radius-300 !default;
-$ibo-vendors-datatables--focus--border-color: $ibo-color-primary-600 !default;
-
-.dataTables_scrollHead thead tr th.sorting::after {
-  position: absolute;
-  font-family: "Font Awesome 5 Free";
-  content: "\f0dc";
-  font-weight: 900;
-  opacity: $ibo-vendors-datatables--sorting--opacity;
-  right: $ibo-vendors-datatables--sorting--right;
-}
-
-.dataTables_scrollHead thead tr th.sorting_desc:after {
-  position: absolute;
-  font-family: "Font Awesome 5 Free";
-  content: "\f0d7";
-  font-weight: 900;
-  right: $ibo-vendors-datatables--sorting--right;
-}
-
-.dataTables_scrollHead thead tr th.sorting_asc:after {
-  position: absolute;
-  font-family: "Font Awesome 5 Free";
-  font-weight: 900;
-  content: "\f0d8";
-  right: $ibo-vendors-datatables--sorting--right;
-}
-
-.pagination {
-  color: $ibo-vendors-datatables--pagination--color;
-
-  left: $ibo-vendors-datatables--pagination--position-x;
-  right: $ibo-vendors-datatables--pagination--position-x;
-  top: $ibo-vendors-datatables--pagination--position-top;
-  bottom: $ibo-vendors-datatables--pagination--position-bottom;
-
-  .paginate_button {
-    margin-left: $ibo-vendors-datatables--pagination--button-margin-x;
-    margin-right: $ibo-vendors-datatables--pagination--button-margin-x;
-  }
-}
+$ibo-vendors-datatables--row--background-color--is-odd: $ibo-color-white-100 !default;
+$ibo-vendors-datatables--row--background-color--is-even: $ibo-color-white-200 !default;
 
 .dataTables_paginate {
-  float: left;
-  padding-top: $ibo-vendors-datatables--paginate--padding-top;
-  padding-left: $ibo-vendors-datatables--paginate--padding-left;
-}
+  @extend %ibo-vertically-centered-content;
+  color: $ibo-vendors-datatables--pagination--color;
 
-.paginate_button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  min-width: 22px;
-  min-height: 22px;
-  padding: $ibo-vendors-datatables--paginate-button-active--link--padding-y $ibo-vendors-datatables--paginate-button-active--link--padding-x;
-  @extend %ibo-font-ral-med-100;
-}
+  /* Important: Those classes are inside the .dataTables_XXX to avoid CSS rules collision with another lib. having ".pagination" classes etc */
+  a.paginate_button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: $ibo-vendors-datatables--pagination-button--padding-y $ibo-vendors-datatables--pagination-button--padding-x;
+    min-width: $ibo-vendors-datatables--pagination-button--min-size; /* "min-width" as we allow the button to get larger (but not higher) when its text content grows */
+    height: $ibo-vendors-datatables--pagination-button--min-size;
+    border-radius: $ibo-vendors-datatables--pagination-button--border-radius;
 
-a.paginate_button {
-  color: $ibo-vendors-datatables--paginate-button--link--color;
+    @extend %ibo-font-ral-med-100;
+    @extend %ibo-hyperlink-inherited-colors;
 
-  &:hover {
-    color: $ibo-vendors-datatables--paginate-button--link--hover--color;
-  }
-
-  &.disabled {
     &:hover {
+      background-color: $ibo-vendors-datatables--pagination-button--background-color--on-hover;
+    }
+
+    &.disabled {
+      color: $ibo-vendors-datatables--pagination-button--text-color--is-disabled;
+      background-color: $ibo-vendors-datatables--pagination-button--background-color--is-disabled;
       cursor: default;
     }
+
+    &.previous,
+    &.next {
+      @extend %ibo-font-ral-med-200;
+    }
+
+    &.current {
+      @extend %ibo-font-ral-sembol-100;
+
+      color: $ibo-vendors-datatables--pagination-button--text-color--is-active;
+      background-color: $ibo-vendors-datatables--pagination-button--background-color--is-active;
+      box-shadow: $ibo-vendors-datatables--pagination-button--box-shadow--is-active;
+    }
   }
-
-  &.current {
-    @extend %ibo-font-ral-sembol-100;
-
-    color: $ibo-vendors-datatables--paginate-button-active--link--color;
-    background-color: $ibo-vendors-datatables--paginate-button-active--link--background-color;
-    box-shadow: $ibo-vendors-datatables--paginate-button-active--link--box-shadow;
-    border-radius: $ibo-border-radius-300;
-  }
-}
-
-.dataTables_info {
-  @extend %ibo-font-ral-med-100;
-  color: $ibo-color-grey-700;
-
-  position: relative;
-  float: right;
-  padding-top: $ibo-vendors-datatables--toolbar--elements--padding-top;
-  padding-right: $ibo-vendors-datatables--toolbar--info--padding-right;
-  padding-left: $ibo-vendors-datatables--toolbar--info--padding-left;
-  line-height: $ibo-vendors-datatables--toolbar--info--line-height;
-}
-
-.select-info {
-  padding-left: $ibo-vendors-datatables--select-info--padding-left;
 }
 
 .dataTables_length {
-  @extend %ibo-font-ral-med-100;
-  color: $ibo-color-grey-700;
-
-  position: relative;
-  float: right;
-  padding-top: $ibo-vendors-datatables--toolbar--elements--padding-top;
-  padding-right: $ibo-vendors-datatables--toolbar--length--padding-right;
-
   select {
-    /*
-    TODO 3.0 refactorise duplicated code
-     @extend .ibo-input;
-      remove because of the with:100% of input-select
-     */
-    @extend .ibo-input-select;
-    @extend %ibo-vertically-centered-content;
-    background-color: $ibo-vendors-datatables--background-color;
-    color: $ibo-vendors-datatables--color;
-    border: 1px solid $ibo-vendors-datatables--border-color;
-    border-radius: $ibo-vendors-datatables--border-radius;
+    /* Extend .ibo-input and overload the properties below */
+    @extend .ibo-input;
 
-    &:focus {
-      border: 1px solid $ibo-vendors-datatables--border-color;
+    /* Note: "[aria-controls]" is only there to take over the .ibo-input properties that will be put later in the compiled CSS */
+    &[aria-controls] {
+      display: inline-flex;
+      width: unset;
+      min-width: 50px;
+      height: 20px;
+      padding: 0 4px;
+    }
+  }
+}
+
+.dataTables_scrollHead {
+  /* Important: Those classes are inside the .dataTables_XXX to avoid CSS rules collision with another lib. having "thead" tags etc */
+  thead tr th {
+    cursor: pointer;
+    @extend %ibo-font-ral-sembol-100;
+
+    &.sorting::after {
+      position: absolute;
+      right: $ibo-vendors-datatables--column-sorting-icon--right;
+      content: $ibo-vendors-datatables--column-sorting-icon--content;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity;
+      @extend %fa-solid-base;
+      line-height: inherit; /* Overload the one from te %fa-solid-base */
     }
 
-    height: $ibo-vendors-datatables--toolbar--length--select--height;
-    width: $ibo-vendors-datatables--toolbar--length--select--width;
-    padding: $ibo-vendors-datatables--toolbar--length--select--padding-y $ibo-vendors-datatables--toolbar--length--select--padding-x;
+    &.sorting_asc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
 
-    @extend %ibo-font-ral-med-100;
+    &.sorting_desc:after {
+      content: $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc;
+      opacity: $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted;
+    }
   }
 }
 
-
-.sort_order {
-  display: inline-flex;
-  width: 16px;
-  height: 12px;
+.dataTables_scrollHeadInner {
+  margin-bottom: $ibo-vendors-datatables--columns-header--margin-bottom;
+  border-bottom: $ibo-vendors-datatables--columns-header--border-bottom;
 }
 
-.sort_none {
-  padding-right: 5px;
-
-  &:after {
-    font-family: "Font Awesome 5 Free";
-    font-weight: 600;
-    text-align: right;
-    content: '\f0dc';
-    color: $ibo-color-blue-grey-500;
-    float: right;
+.dataTable {
+  th, td {
+    position: relative;
+    padding: 10px 12px;
+    @extend %ibo-font-ral-med-100; /* Necessary to set the font-size as its container can have a different one */
   }
-}
 
-.sort_asc {
-  padding-right: 5px;
-
-  &:after {
-    font-family: "Font Awesome 5 Free";
-    font-weight: 600;
-    text-align: right;
-    content: '\f0d8';
-    color: $ibo-color-blue-grey-500;
-    float: right;
+  tr:nth-child(odd) {
+    background-color: $ibo-vendors-datatables--row--background-color--is-odd;
   }
-}
 
-.sort_desc {
-  padding-right: 5px;
-
-  &:after {
-    font-family: "Font Awesome 5 Free";
-    font-weight: 600;
-    text-align: right;
-    content: '\f0d7';
-    color: $ibo-color-blue-grey-500;
-    float: right;
+  tr:nth-child(even) {
+    background-color: $ibo-vendors-datatables--row--background-color--is-even;
   }
-}
-
-.sort_hidden {
-  display: none;
 }

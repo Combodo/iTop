@@ -779,7 +779,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					],
 				],
 			"lengthMenu" => Dict::Format('Portal:Datatables:Language:DisplayLength:All'),
-			"dom" => "<'ibo-datatable-toolbar'pil>t<'ibo-datatable-toolbar'pil>",
+			"dom" => "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
 			"scrollX" => true,
 			"scrollCollapse" => true,
 			"ordering" => true,
