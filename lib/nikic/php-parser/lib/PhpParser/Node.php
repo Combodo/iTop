@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser;
 
@@ -9,91 +9,35 @@ interface Node
      *
      * @return string Type of the node
      */
-    public function getType() : string;
+    public function getType();
 
     /**
      * Gets the names of the sub nodes.
      *
      * @return array Names of sub nodes
      */
-    public function getSubNodeNames() : array;
-
-    /**
-     * Gets line the node started in (alias of getStartLine).
-     *
-     * @return int Start line (or -1 if not available)
-     */
-    public function getLine() : int;
+    public function getSubNodeNames();
 
     /**
      * Gets line the node started in.
      *
-     * Requires the 'startLine' attribute to be enabled in the lexer (enabled by default).
-     *
-     * @return int Start line (or -1 if not available)
+     * @return int Line
      */
-    public function getStartLine() : int;
+    public function getLine();
 
     /**
-     * Gets the line the node ended in.
+     * Sets line the node started in.
      *
-     * Requires the 'endLine' attribute to be enabled in the lexer (enabled by default).
+     * @param int $line Line
      *
-     * @return int End line (or -1 if not available)
+     * @deprecated
      */
-    public function getEndLine() : int;
-
-    /**
-     * Gets the token offset of the first token that is part of this node.
-     *
-     * The offset is an index into the array returned by Lexer::getTokens().
-     *
-     * Requires the 'startTokenPos' attribute to be enabled in the lexer (DISABLED by default).
-     *
-     * @return int Token start position (or -1 if not available)
-     */
-    public function getStartTokenPos() : int;
-
-    /**
-     * Gets the token offset of the last token that is part of this node.
-     *
-     * The offset is an index into the array returned by Lexer::getTokens().
-     *
-     * Requires the 'endTokenPos' attribute to be enabled in the lexer (DISABLED by default).
-     *
-     * @return int Token end position (or -1 if not available)
-     */
-    public function getEndTokenPos() : int;
-
-    /**
-     * Gets the file offset of the first character that is part of this node.
-     *
-     * Requires the 'startFilePos' attribute to be enabled in the lexer (DISABLED by default).
-     *
-     * @return int File start position (or -1 if not available)
-     */
-    public function getStartFilePos() : int;
-
-    /**
-     * Gets the file offset of the last character that is part of this node.
-     *
-     * Requires the 'endFilePos' attribute to be enabled in the lexer (DISABLED by default).
-     *
-     * @return int File end position (or -1 if not available)
-     */
-    public function getEndFilePos() : int;
-
-    /**
-     * Gets all comments directly preceding this node.
-     *
-     * The comments are also available through the "comments" attribute.
-     *
-     * @return Comment[]
-     */
-    public function getComments() : array;
+    public function setLine($line);
 
     /**
      * Gets the doc comment of the node.
+     *
+     * The doc comment has to be the last comment associated with the node.
      *
      * @return null|Comment\Doc Doc comment object or null
      */
@@ -114,7 +58,7 @@ interface Node
      * @param string $key
      * @param mixed  $value
      */
-    public function setAttribute(string $key, $value);
+    public function setAttribute($key, $value);
 
     /**
      * Returns whether an attribute exists.
@@ -123,7 +67,7 @@ interface Node
      *
      * @return bool
      */
-    public function hasAttribute(string $key) : bool;
+    public function hasAttribute($key);
 
     /**
      * Returns the value of an attribute.
@@ -133,19 +77,12 @@ interface Node
      *
      * @return mixed
      */
-    public function getAttribute(string $key, $default = null);
+    public function &getAttribute($key, $default = null);
 
     /**
-     * Returns all the attributes of this node.
+     * Returns all attributes for the given node.
      *
      * @return array
      */
-    public function getAttributes() : array;
-
-    /**
-     * Replaces all the attributes of this node.
-     *
-     * @param array $attributes
-     */
-    public function setAttributes(array $attributes);
+    public function getAttributes();
 }

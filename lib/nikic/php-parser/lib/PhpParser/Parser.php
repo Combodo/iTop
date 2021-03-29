@@ -1,9 +1,8 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser;
 
-interface Parser
-{
+interface Parser {
     /**
      * Parses PHP code into a node tree.
      *
@@ -11,8 +10,8 @@ interface Parser
      * @param ErrorHandler|null $errorHandler Error handler to use for lexer/parser errors, defaults
      *                                        to ErrorHandler\Throwing.
      *
-     * @return Node\Stmt[]|null Array of statements (or null non-throwing error handler is used and
-     *                          the parser was unable to recover from an error).
+     * @return Node[]|null Array of statements (or null if the 'throwOnError' option is disabled and the parser was
+     *                     unable to recover from an error).
      */
-    public function parse(string $code, ErrorHandler $errorHandler = null);
+    public function parse($code, ErrorHandler $errorHandler = null);
 }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Expr;
 
@@ -19,17 +19,13 @@ class Instanceof_ extends Expr
      * @param Name|Expr $class      Class name
      * @param array     $attributes Additional attributes
      */
-    public function __construct(Expr $expr, $class, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct(Expr $expr, $class, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->expr = $expr;
         $this->class = $class;
     }
 
-    public function getSubNodeNames() : array {
-        return ['expr', 'class'];
-    }
-    
-    public function getType() : string {
-        return 'Expr_Instanceof';
+    public function getSubNodeNames() {
+        return array('expr', 'class');
     }
 }

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Expr;
 
@@ -17,15 +17,11 @@ class Error extends Expr
      *
      * @param array $attributes Additional attributes
      */
-    public function __construct(array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct(array $attributes = array()) {
+        parent::__construct($attributes);
     }
 
-    public function getSubNodeNames() : array {
-        return [];
-    }
-    
-    public function getType() : string {
-        return 'Expr_Error';
+    public function getSubNodeNames() {
+        return array();
     }
 }

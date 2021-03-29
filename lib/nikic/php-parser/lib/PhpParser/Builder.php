@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser;
 
@@ -9,5 +9,5 @@ interface Builder
      *
      * @return Node The built node
      */
-    public function getNode() : Node;
+    public function getNode();
 }

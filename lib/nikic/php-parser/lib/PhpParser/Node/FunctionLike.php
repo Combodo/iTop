@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node;
 
@@ -11,33 +11,26 @@ interface FunctionLike extends Node
      *
      * @return bool
      */
-    public function returnsByRef() : bool;
+    public function returnsByRef();
 
     /**
      * List of parameters
      *
-     * @return Param[]
+     * @return Node\Param[]
      */
-    public function getParams() : array;
+    public function getParams();
 
     /**
      * Get the declared return type or null
-     *
-     * @return null|Identifier|Name|NullableType|UnionType
+     * 
+     * @return null|string|Node\Name|Node\NullableType
      */
     public function getReturnType();
 
     /**
      * The function body
      *
-     * @return Stmt[]|null
+     * @return Node\Stmt[]
      */
     public function getStmts();
-
-    /**
-     * Get PHP attribute groups.
-     *
-     * @return AttributeGroup[]
-     */
-    public function getAttrGroups() : array;
 }

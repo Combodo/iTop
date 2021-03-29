@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node;
 
@@ -6,28 +6,24 @@ use PhpParser\NodeAbstract;
 
 class Name extends NodeAbstract
 {
-    /** @var string[] Parts of the name */
+    /**
+     * @var string[] Parts of the name
+     */
     public $parts;
-
-    private static $specialClassNames = [
-        'self'   => true,
-        'parent' => true,
-        'static' => true,
-    ];
 
     /**
      * Constructs a name node.
      *
-     * @param string|string[]|self $name       Name as string, part array or Name instance (copy ctor)
-     * @param array                $attributes Additional attributes
+     * @param string|array|self $name       Name as string, part array or Name instance (copy ctor)
+     * @param array             $attributes Additional attributes
      */
-    public function __construct($name, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct($name, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->parts = self::prepareName($name);
     }
 
-    public function getSubNodeNames() : array {
-        return ['parts'];
+    public function getSubNodeNames() {
+        return array('parts');
     }
 
     /**
@@ -35,7 +31,7 @@ class Name extends NodeAbstract
      *
      * @return string First part of the name
      */
-    public function getFirst() : string {
+    public function getFirst() {
         return $this->parts[0];
     }
 
@@ -44,7 +40,7 @@ class Name extends NodeAbstract
      *
      * @return string Last part of the name
      */
-    public function getLast() : string {
+    public function getLast() {
         return $this->parts[count($this->parts) - 1];
     }
 
@@ -53,8 +49,8 @@ class Name extends NodeAbstract
      *
      * @return bool Whether the name is unqualified
      */
-    public function isUnqualified() : bool {
-        return 1 === count($this->parts);
+    public function isUnqualified() {
+        return 1 == count($this->parts);
     }
 
     /**
@@ -62,7 +58,7 @@ class Name extends NodeAbstract
      *
      * @return bool Whether the name is qualified
      */
-    public function isQualified() : bool {
+    public function isQualified() {
         return 1 < count($this->parts);
     }
 
@@ -71,7 +67,7 @@ class Name extends NodeAbstract
      *
      * @return bool Whether the name is fully qualified
      */
-    public function isFullyQualified() : bool {
+    public function isFullyQualified() {
         return false;
     }
 
@@ -80,48 +76,8 @@ class Name extends NodeAbstract
      *
      * @return bool Whether the name is relative
      */
-    public function isRelative() : bool {
+    public function isRelative() {
         return false;
-    }
-
-    /**
-     * Returns a string representation of the name itself, without taking the name type into
-     * account (e.g., not including a leading backslash for fully qualified names).
-     *
-     * @return string String representation
-     */
-    public function toString() : string {
-        return implode('\\', $this->parts);
-    }
-
-    /**
-     * Returns a string representation of the name as it would occur in code (e.g., including
-     * leading backslash for fully qualified names.
-     *
-     * @return string String representation
-     */
-    public function toCodeString() : string {
-        return $this->toString();
-    }
-
-    /**
-     * Returns lowercased string representation of the name, without taking the name type into
-     * account (e.g., no leading backslash for fully qualified names).
-     *
-     * @return string Lowercased string representation
-     */
-    public function toLowerString() : string {
-        return strtolower(implode('\\', $this->parts));
-    }
-
-    /**
-     * Checks whether the identifier is a special class name (self, parent or static).
-     *
-     * @return bool Whether identifier is a special class name
-     */
-    public function isSpecialClassName() : bool {
-        return count($this->parts) === 1
-            && isset(self::$specialClassNames[strtolower($this->parts[0])]);
     }
 
     /**
@@ -130,7 +86,17 @@ class Name extends NodeAbstract
      *
      * @return string String representation
      */
-    public function __toString() : string {
+    public function toString() {
+        return implode('\\', $this->parts);
+    }
+
+    /**
+     * Returns a string representation of the name by imploding the namespace parts with the
+     * namespace separator.
+     *
+     * @return string String representation
+     */
+    public function __toString() {
         return implode('\\', $this->parts);
     }
 
@@ -150,7 +116,7 @@ class Name extends NodeAbstract
      *
      * @return static|null Sliced name
      */
-    public function slice(int $offset, int $length = null) {
+    public function slice($offset, $length = null) {
         $numParts = count($this->parts);
 
         $realOffset = $offset < 0 ? $offset + $numParts : $offset;
@@ -186,9 +152,9 @@ class Name extends NodeAbstract
      *     Name::concat($namespace, $shortName)
      * where $namespace is a Name node or null will work as expected.
      *
-     * @param string|string[]|self|null $name1      The first name
-     * @param string|string[]|self|null $name2      The second name
-     * @param array                     $attributes Attributes to assign to concatenated name
+     * @param string|array|self|null $name1      The first name
+     * @param string|array|self|null $name2      The second name
+     * @param array                  $attributes Attributes to assign to concatenated name
      *
      * @return static|null Concatenated name
      */
@@ -197,7 +163,7 @@ class Name extends NodeAbstract
             return null;
         } elseif (null === $name1) {
             return new static(self::prepareName($name2), $attributes);
-        } elseif (null === $name2) {
+        } else if (null === $name2) {
             return new static(self::prepareName($name1), $attributes);
         } else {
             return new static(
@@ -210,22 +176,14 @@ class Name extends NodeAbstract
      * Prepares a (string, array or Name node) name for use in name changing methods by converting
      * it to an array.
      *
-     * @param string|string[]|self $name Name to prepare
+     * @param string|array|self $name Name to prepare
      *
-     * @return string[] Prepared name
+     * @return array Prepared name
      */
-    private static function prepareName($name) : array {
+    private static function prepareName($name) {
         if (\is_string($name)) {
-            if ('' === $name) {
-                throw new \InvalidArgumentException('Name cannot be empty');
-            }
-
             return explode('\\', $name);
         } elseif (\is_array($name)) {
-            if (empty($name)) {
-                throw new \InvalidArgumentException('Name cannot be empty');
-            }
-
             return $name;
         } elseif ($name instanceof self) {
             return $name->parts;
@@ -234,9 +192,5 @@ class Name extends NodeAbstract
         throw new \InvalidArgumentException(
             'Expected string, array of parts or Name instance'
         );
-    }
-
-    public function getType() : string {
-        return 'Name';
     }
 }

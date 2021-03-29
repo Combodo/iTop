@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\ErrorHandler;
 
@@ -24,7 +24,7 @@ class Collecting implements ErrorHandler
      *
      * @return Error[]
      */
-    public function getErrors() : array {
+    public function getErrors() {
         return $this->errors;
     }
 
@@ -33,7 +33,7 @@ class Collecting implements ErrorHandler
      *
      * @return bool
      */
-    public function hasErrors() : bool {
+    public function hasErrors() {
         return !empty($this->errors);
     }
 

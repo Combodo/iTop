@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
@@ -15,16 +15,12 @@ class Const_ extends Node\Stmt
      * @param Node\Const_[] $consts     Constant declarations
      * @param array         $attributes Additional attributes
      */
-    public function __construct(array $consts, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct(array $consts, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->consts = $consts;
     }
 
-    public function getSubNodeNames() : array {
-        return ['consts'];
-    }
-    
-    public function getType() : string {
-        return 'Stmt_Const';
+    public function getSubNodeNames() {
+        return array('consts');
     }
 }

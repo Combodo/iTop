@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser;
 
@@ -14,12 +14,12 @@ class Error extends \RuntimeException
      * @param array|int $attributes Attributes of node/token where error occurred
      *                              (or start line of error -- deprecated)
      */
-    public function __construct(string $message, $attributes = []) {
-        $this->rawMessage = $message;
+    public function __construct($message, $attributes = array()) {
+        $this->rawMessage = (string) $message;
         if (is_array($attributes)) {
             $this->attributes = $attributes;
         } else {
-            $this->attributes = ['startLine' => $attributes];
+            $this->attributes = array('startLine' => $attributes);
         }
         $this->updateMessage();
     }
@@ -29,7 +29,7 @@ class Error extends \RuntimeException
      *
      * @return string Error message
      */
-    public function getRawMessage() : string {
+    public function getRawMessage() {
         return $this->rawMessage;
     }
 
@@ -38,8 +38,8 @@ class Error extends \RuntimeException
      *
      * @return int Error start line
      */
-    public function getStartLine() : int {
-        return $this->attributes['startLine'] ?? -1;
+    public function getStartLine() {
+        return isset($this->attributes['startLine']) ? $this->attributes['startLine'] : -1;
     }
 
     /**
@@ -47,21 +47,22 @@ class Error extends \RuntimeException
      *
      * @return int Error end line
      */
-    public function getEndLine() : int {
-        return $this->attributes['endLine'] ?? -1;
+    public function getEndLine() {
+        return isset($this->attributes['endLine']) ? $this->attributes['endLine'] : -1;
     }
+
 
     /**
      * Gets the attributes of the node/token the error occurred at.
      *
      * @return array
      */
-    public function getAttributes() : array {
+    public function getAttributes() {
         return $this->attributes;
     }
 
     /**
-     * Sets the attributes of the node/token the error occurred at.
+     * Sets the attributes of the node/token the error occured at.
      *
      * @param array $attributes
      */
@@ -75,8 +76,8 @@ class Error extends \RuntimeException
      *
      * @param string $message Error message
      */
-    public function setRawMessage(string $message) {
-        $this->rawMessage = $message;
+    public function setRawMessage($message) {
+        $this->rawMessage = (string) $message;
         $this->updateMessage();
     }
 
@@ -85,8 +86,8 @@ class Error extends \RuntimeException
      *
      * @param int $line Error start line
      */
-    public function setStartLine(int $line) {
-        $this->attributes['startLine'] = $line;
+    public function setStartLine($line) {
+        $this->attributes['startLine'] = (int) $line;
         $this->updateMessage();
     }
 
@@ -97,8 +98,8 @@ class Error extends \RuntimeException
      *
      * @return bool
      */
-    public function hasColumnInfo() : bool {
-        return isset($this->attributes['startFilePos'], $this->attributes['endFilePos']);
+    public function hasColumnInfo() {
+        return isset($this->attributes['startFilePos']) && isset($this->attributes['endFilePos']);
     }
 
     /**
@@ -107,7 +108,7 @@ class Error extends \RuntimeException
      * @param string $code Source code of the file
      * @return int
      */
-    public function getStartColumn(string $code) : int {
+    public function getStartColumn($code) {
         if (!$this->hasColumnInfo()) {
             throw new \RuntimeException('Error does not have column information');
         }
@@ -121,7 +122,7 @@ class Error extends \RuntimeException
      * @param string $code Source code of the file
      * @return int
      */
-    public function getEndColumn(string $code) : int {
+    public function getEndColumn($code) {
         if (!$this->hasColumnInfo()) {
             throw new \RuntimeException('Error does not have column information');
         }
@@ -129,14 +130,7 @@ class Error extends \RuntimeException
         return $this->toColumn($code, $this->attributes['endFilePos']);
     }
 
-    /**
-     * Formats message including line and column information.
-     *
-     * @param string $code Source code associated with the error, for calculation of the columns
-     *
-     * @return string Formatted message
-     */
-    public function getMessageWithColumnInfo(string $code) : string {
+    public function getMessageWithColumnInfo($code) {
         return sprintf(
             '%s from %d:%d to %d:%d', $this->getRawMessage(),
             $this->getStartLine(), $this->getStartColumn($code),
@@ -144,15 +138,7 @@ class Error extends \RuntimeException
         );
     }
 
-    /**
-     * Converts a file offset into a column.
-     *
-     * @param string $code Source code that $pos indexes into
-     * @param int    $pos  0-based position in $code
-     *
-     * @return int 1-based column (relative to start of line)
-     */
-    private function toColumn(string $code, int $pos) : int {
+    private function toColumn($code, $pos) {
         if ($pos > strlen($code)) {
             throw new \RuntimeException('Invalid position information');
         }

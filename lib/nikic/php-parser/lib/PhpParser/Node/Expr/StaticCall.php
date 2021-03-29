@@ -1,16 +1,15 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Expr;
 
 use PhpParser\Node;
 use PhpParser\Node\Expr;
-use PhpParser\Node\Identifier;
 
 class StaticCall extends Expr
 {
     /** @var Node\Name|Expr Class name */
     public $class;
-    /** @var Identifier|Expr Method name */
+    /** @var string|Expr Method name */
     public $name;
     /** @var Node\Arg[] Arguments */
     public $args;
@@ -18,23 +17,19 @@ class StaticCall extends Expr
     /**
      * Constructs a static method call node.
      *
-     * @param Node\Name|Expr         $class      Class name
-     * @param string|Identifier|Expr $name       Method name
-     * @param Node\Arg[]             $args       Arguments
-     * @param array                  $attributes Additional attributes
+     * @param Node\Name|Expr $class      Class name
+     * @param string|Expr    $name       Method name
+     * @param Node\Arg[]     $args       Arguments
+     * @param array          $attributes Additional attributes
      */
-    public function __construct($class, $name, array $args = [], array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct($class, $name, array $args = array(), array $attributes = array()) {
+        parent::__construct($attributes);
         $this->class = $class;
-        $this->name = \is_string($name) ? new Identifier($name) : $name;
+        $this->name = $name;
         $this->args = $args;
     }
 
-    public function getSubNodeNames() : array {
-        return ['class', 'name', 'args'];
-    }
-    
-    public function getType() : string {
-        return 'Expr_StaticCall';
+    public function getSubNodeNames() {
+        return array('class', 'name', 'args');
     }
 }

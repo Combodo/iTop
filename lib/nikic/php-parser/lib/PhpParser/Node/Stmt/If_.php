@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
@@ -8,7 +8,7 @@ class If_ extends Node\Stmt
 {
     /** @var Node\Expr Condition expression */
     public $cond;
-    /** @var Node\Stmt[] Statements */
+    /** @var Node[] Statements */
     public $stmts;
     /** @var ElseIf_[] Elseif clauses */
     public $elseifs;
@@ -25,19 +25,15 @@ class If_ extends Node\Stmt
      *                              'else'    => null   : Else clause
      * @param array     $attributes Additional attributes
      */
-    public function __construct(Node\Expr $cond, array $subNodes = [], array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct(Node\Expr $cond, array $subNodes = array(), array $attributes = array()) {
+        parent::__construct($attributes);
         $this->cond = $cond;
-        $this->stmts = $subNodes['stmts'] ?? [];
-        $this->elseifs = $subNodes['elseifs'] ?? [];
-        $this->else = $subNodes['else'] ?? null;
+        $this->stmts = isset($subNodes['stmts']) ? $subNodes['stmts'] : array();
+        $this->elseifs = isset($subNodes['elseifs']) ? $subNodes['elseifs'] : array();
+        $this->else = isset($subNodes['else']) ? $subNodes['else'] : null;
     }
 
-    public function getSubNodeNames() : array {
-        return ['cond', 'stmts', 'elseifs', 'else'];
-    }
-    
-    public function getType() : string {
-        return 'Stmt_If';
+    public function getSubNodeNames() {
+        return array('cond', 'stmts', 'elseifs', 'else');
     }
 }

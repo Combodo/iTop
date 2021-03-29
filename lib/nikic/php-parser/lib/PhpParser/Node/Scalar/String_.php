@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Scalar;
 
@@ -16,7 +16,7 @@ class String_ extends Scalar
     /** @var string String value */
     public $value;
 
-    protected static $replacements = [
+    protected static $replacements = array(
         '\\' => '\\',
         '$'  =>  '$',
         'n'  => "\n",
@@ -25,7 +25,7 @@ class String_ extends Scalar
         'f'  => "\f",
         'v'  => "\v",
         'e'  => "\x1B",
-    ];
+    );
 
     /**
      * Constructs a string scalar node.
@@ -33,13 +33,13 @@ class String_ extends Scalar
      * @param string $value      Value of the string
      * @param array  $attributes Additional attributes
      */
-    public function __construct(string $value, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct($value, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->value = $value;
     }
 
-    public function getSubNodeNames() : array {
-        return ['value'];
+    public function getSubNodeNames() {
+        return array('value');
     }
 
     /**
@@ -52,7 +52,7 @@ class String_ extends Scalar
      *
      * @return string The parsed string
      */
-    public static function parse(string $str, bool $parseUnicodeEscape = true) : string {
+    public static function parse($str, $parseUnicodeEscape = true) {
         $bLength = 0;
         if ('b' === $str[0] || 'B' === $str[0]) {
             $bLength = 1;
@@ -60,8 +60,8 @@ class String_ extends Scalar
 
         if ('\'' === $str[$bLength]) {
             return str_replace(
-                ['\\\\', '\\\''],
-                ['\\', '\''],
+                array('\\\\', '\\\''),
+                array(  '\\',   '\''),
                 substr($str, $bLength + 1, -1)
             );
         } else {
@@ -82,7 +82,7 @@ class String_ extends Scalar
      *
      * @return string String with escape sequences parsed
      */
-    public static function parseEscapeSequences(string $str, $quote, bool $parseUnicodeEscape = true) : string {
+    public static function parseEscapeSequences($str, $quote, $parseUnicodeEscape = true) {
         if (null !== $quote) {
             $str = str_replace('\\' . $quote, $quote, $str);
         }
@@ -100,7 +100,7 @@ class String_ extends Scalar
                 if (isset(self::$replacements[$str])) {
                     return self::$replacements[$str];
                 } elseif ('x' === $str[0] || 'X' === $str[0]) {
-                    return chr(hexdec(substr($str, 1)));
+                    return chr(hexdec($str));
                 } elseif ('u' === $str[0]) {
                     return self::codePointToUtf8(hexdec($matches[2]));
                 } else {
@@ -111,14 +111,7 @@ class String_ extends Scalar
         );
     }
 
-    /**
-     * Converts a Unicode code point to its UTF-8 encoded representation.
-     *
-     * @param int $num Code point
-     *
-     * @return string UTF-8 representation of code point
-     */
-    private static function codePointToUtf8(int $num) : string {
+    private static function codePointToUtf8($num) {
         if ($num <= 0x7F) {
             return chr($num);
         }
@@ -135,7 +128,26 @@ class String_ extends Scalar
         throw new Error('Invalid UTF-8 codepoint escape sequence: Codepoint too large');
     }
 
-    public function getType() : string {
-        return 'Scalar_String';
+    /**
+     * @internal
+     *
+     * Parses a constant doc string.
+     *
+     * @param string $startToken Doc string start token content (<<<SMTHG)
+     * @param string $str        String token content
+     * @param bool $parseUnicodeEscape Whether to parse PHP 7 \u escapes
+     *
+     * @return string Parsed string
+     */
+    public static function parseDocString($startToken, $str, $parseUnicodeEscape = true) {
+        // strip last newline (thanks tokenizer for sticking it into the string!)
+        $str = preg_replace('~(\r\n|\n|\r)\z~', '', $str);
+
+        // nowdoc string
+        if (false !== strpos($startToken, '\'')) {
+            return $str;
+        }
+
+        return self::parseEscapeSequences($str, null, $parseUnicodeEscape);
     }
 }

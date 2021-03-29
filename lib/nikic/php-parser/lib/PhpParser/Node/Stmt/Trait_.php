@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
@@ -9,24 +9,18 @@ class Trait_ extends ClassLike
     /**
      * Constructs a trait node.
      *
-     * @param string|Node\Identifier $name Name
+     * @param string $name       Name
      * @param array  $subNodes   Array of the following optional subnodes:
-     *                           'stmts'      => array(): Statements
-     *                           'attrGroups' => array(): PHP attribute groups
+     *                           'stmts' => array(): Statements
      * @param array  $attributes Additional attributes
      */
-    public function __construct($name, array $subNodes = [], array $attributes = []) {
-        $this->attributes = $attributes;
-        $this->name = \is_string($name) ? new Node\Identifier($name) : $name;
-        $this->stmts = $subNodes['stmts'] ?? [];
-        $this->attrGroups = $subNodes['attrGroups'] ?? [];
+    public function __construct($name, array $subNodes = array(), array $attributes = array()) {
+        parent::__construct($attributes);
+        $this->name = $name;
+        $this->stmts = isset($subNodes['stmts']) ? $subNodes['stmts'] : array();
     }
 
-    public function getSubNodeNames() : array {
-        return ['attrGroups', 'name', 'stmts'];
-    }
-
-    public function getType() : string {
-        return 'Stmt_Trait';
+    public function getSubNodeNames() {
+        return array('name', 'stmts');
     }
 }

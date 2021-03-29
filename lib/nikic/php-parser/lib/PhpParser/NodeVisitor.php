@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser;
 
@@ -32,7 +32,7 @@ interface NodeVisitor
      *
      * @param Node $node Node
      *
-     * @return null|int|Node Replacement node (or special return value)
+     * @return null|int|Node Node
      */
     public function enterNode(Node $node);
 
@@ -53,7 +53,7 @@ interface NodeVisitor
      *
      * @param Node $node Node
      *
-     * @return null|int|Node|Node[] Replacement node (or special return value)
+     * @return null|false|int|Node|Node[] Node
      */
     public function leaveNode(Node $node);
 

@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
@@ -15,16 +15,12 @@ class Global_ extends Node\Stmt
      * @param Node\Expr[] $vars       Variables to unset
      * @param array       $attributes Additional attributes
      */
-    public function __construct(array $vars, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct(array $vars, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->vars = $vars;
     }
 
-    public function getSubNodeNames() : array {
-        return ['vars'];
-    }
-    
-    public function getType() : string {
-        return 'Stmt_Global';
+    public function getSubNodeNames() {
+        return array('vars');
     }
 }

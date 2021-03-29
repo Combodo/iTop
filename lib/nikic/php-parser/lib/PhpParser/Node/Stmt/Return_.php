@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Stmt;
 
@@ -15,16 +15,12 @@ class Return_ extends Node\Stmt
      * @param null|Node\Expr $expr       Expression
      * @param array          $attributes Additional attributes
      */
-    public function __construct(Node\Expr $expr = null, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct(Node\Expr $expr = null, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->expr = $expr;
     }
 
-    public function getSubNodeNames() : array {
-        return ['expr'];
-    }
-    
-    public function getType() : string {
-        return 'Stmt_Return';
+    public function getSubNodeNames() {
+        return array('expr');
     }
 }

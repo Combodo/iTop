@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Scalar;
 
@@ -22,13 +22,13 @@ class LNumber extends Scalar
      * @param int   $value      Value of the number
      * @param array $attributes Additional attributes
      */
-    public function __construct(int $value, array $attributes = []) {
-        $this->attributes = $attributes;
+    public function __construct($value, array $attributes = array()) {
+        parent::__construct($attributes);
         $this->value = $value;
     }
 
-    public function getSubNodeNames() : array {
-        return ['value'];
+    public function getSubNodeNames() {
+        return array('value');
     }
 
     /**
@@ -40,9 +40,7 @@ class LNumber extends Scalar
      *
      * @return LNumber The constructed LNumber, including kind attribute
      */
-    public static function fromString(string $str, array $attributes = [], bool $allowInvalidOctal = false) : LNumber {
-        $str = str_replace('_', '', $str);
-
+    public static function fromString($str, array $attributes = array(), $allowInvalidOctal = false) {
         if ('0' !== $str[0] || '0' === $str) {
             $attributes['kind'] = LNumber::KIND_DEC;
             return new LNumber((int) $str, $attributes);
@@ -65,9 +63,5 @@ class LNumber extends Scalar
         // use intval instead of octdec to get proper cutting behavior with malformed numbers
         $attributes['kind'] = LNumber::KIND_OCT;
         return new LNumber(intval($str, 8), $attributes);
-    }
-    
-    public function getType() : string {
-        return 'Scalar_LNumber';
     }
 }

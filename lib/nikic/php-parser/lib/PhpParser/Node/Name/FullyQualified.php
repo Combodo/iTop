@@ -1,4 +1,4 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Node\Name;
 
@@ -9,7 +9,7 @@ class FullyQualified extends \PhpParser\Node\Name
      *
      * @return bool Whether the name is unqualified
      */
-    public function isUnqualified() : bool {
+    public function isUnqualified() {
         return false;
     }
 
@@ -18,7 +18,7 @@ class FullyQualified extends \PhpParser\Node\Name
      *
      * @return bool Whether the name is qualified
      */
-    public function isQualified() : bool {
+    public function isQualified() {
         return false;
     }
 
@@ -27,7 +27,7 @@ class FullyQualified extends \PhpParser\Node\Name
      *
      * @return bool Whether the name is fully qualified
      */
-    public function isFullyQualified() : bool {
+    public function isFullyQualified() {
         return true;
     }
 
@@ -36,15 +36,7 @@ class FullyQualified extends \PhpParser\Node\Name
      *
      * @return bool Whether the name is relative
      */
-    public function isRelative() : bool {
+    public function isRelative() {
         return false;
-    }
-
-    public function toCodeString() : string {
-        return '\\' . $this->toString();
-    }
-    
-    public function getType() : string {
-        return 'Name_FullyQualified';
     }
 }

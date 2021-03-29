@@ -1,13 +1,12 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Builder;
 
 use PhpParser;
-use PhpParser\BuilderHelpers;
 
-abstract class Declaration implements PhpParser\Builder
+abstract class Declaration extends PhpParser\BuilderAbstract
 {
-    protected $attributes = [];
+    protected $attributes = array();
 
     abstract public function addStmt($stmt);
 
@@ -34,9 +33,9 @@ abstract class Declaration implements PhpParser\Builder
      * @return $this The builder instance (for fluid interface)
      */
     public function setDocComment($docComment) {
-        $this->attributes['comments'] = [
-            BuilderHelpers::normalizeDocComment($docComment)
-        ];
+        $this->attributes['comments'] = array(
+            $this->normalizeDocComment($docComment)
+        );
 
         return $this;
     }

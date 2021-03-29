@@ -1,18 +1,17 @@
-<?php declare(strict_types=1);
+<?php
 
 namespace PhpParser\Builder;
 
 use PhpParser;
-use PhpParser\BuilderHelpers;
 use PhpParser\Node;
 
-class Param implements PhpParser\Builder
+class Param extends PhpParser\BuilderAbstract
 {
     protected $name;
 
     protected $default = null;
 
-    /** @var Node\Identifier|Node\Name|Node\NullableType|null */
+    /** @var string|Node\Name|Node\NullableType|null */
     protected $type = null;
 
     protected $byRef = false;
@@ -24,7 +23,7 @@ class Param implements PhpParser\Builder
      *
      * @param string $name Name of the parameter
      */
-    public function __construct(string $name) {
+    public function __construct($name) {
         $this->name = $name;
     }
 
@@ -36,38 +35,25 @@ class Param implements PhpParser\Builder
      * @return $this The builder instance (for fluid interface)
      */
     public function setDefault($value) {
-        $this->default = BuilderHelpers::normalizeValue($value);
+        $this->default = $this->normalizeValue($value);
 
         return $this;
     }
 
     /**
-     * Sets type for the parameter.
+     * Sets type hint for the parameter.
      *
-     * @param string|Node\Name|Node\NullableType|Node\UnionType $type Parameter type
+     * @param string|Node\Name|Node\NullableType $type Type hint to use
      *
      * @return $this The builder instance (for fluid interface)
      */
-    public function setType($type) {
-        $this->type = BuilderHelpers::normalizeType($type);
-        if ($this->type == 'void') {
+    public function setTypeHint($type) {
+        $this->type = $this->normalizeType($type);
+        if ($this->type === 'void') {
             throw new \LogicException('Parameter type cannot be void');
         }
 
         return $this;
-    }
-
-    /**
-     * Sets type for the parameter.
-     *
-     * @param string|Node\Name|Node\NullableType|Node\UnionType $type Parameter type
-     *
-     * @return $this The builder instance (for fluid interface)
-     *
-     * @deprecated Use setType() instead
-     */
-    public function setTypeHint($type) {
-        return $this->setType($type);
     }
 
     /**
@@ -97,10 +83,9 @@ class Param implements PhpParser\Builder
      *
      * @return Node\Param The built parameter node
      */
-    public function getNode() : Node {
+    public function getNode() {
         return new Node\Param(
-            new Node\Expr\Variable($this->name),
-            $this->default, $this->type, $this->byRef, $this->variadic
+            $this->name, $this->default, $this->type, $this->byRef, $this->variadic
         );
     }
 }
