@@ -23,7 +23,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
-use PHPUnit\Framework\TestCase;
 
 /**
  * @runTestsInSeparateProcesses
@@ -52,8 +51,7 @@ class ConfigTest extends ItopTestCase
 
 		$oConfig = new Config($sConfigFile);
 
-		foreach ($aChanges as $key => $val)
-		{
+		foreach ($aChanges as $key => $val) {
 			$oConfig->Set($key, $val);
 		}
 
@@ -62,7 +60,7 @@ class ConfigTest extends ItopTestCase
 		$this->assertFileExists($sTmpFile);
 		$sFileContent = file_get_contents($sTmpFile);
 
-		$this->assertContains($sExpectedContains, $sFileContent);
+		$this->assertContains($sExpectedContains, $sFileContent, "File content doesn't contain : ".$sExpectedContains);
 	}
 
 	public function ProviderPreserveVarOnWriteToFile()
