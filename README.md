@@ -109,6 +109,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 
 - chifu1234
 - cprobst
+- DudekArtur
 - Karkoff1212
 - Laura
 - Purple Grape
