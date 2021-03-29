@@ -1,5 +1,5 @@
 {
-  "_COMMENT": "This file was generated using the license-checker package. Command used : `license-checker --json --out setup\\licenses\\community-others-npm.json --relativeLicensePath`. See https://www.npmjs.com/package/license-checker",
+  "_COMMENT": "This file was generated using the license-checker package. Command used : `license-checker --json --out setup\\licenses\\additionals-npm.json --relativeLicensePath`. See https://www.npmjs.com/package/license-checker",
   "@popperjs/core@2.4.4": {
     "licenses": "MIT",
     "repository": "https://github.com/popperjs/popper-core",
