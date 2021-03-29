@@ -865,10 +865,10 @@ Public License instead of this License.  But first, please read
     </text>
   </license>
   <license>
-        <product>composer</product>
-        <author>Nils Adermann, Jordi Boggiano</author>
-        <license_type>MIT</license_type>
-        <text><![CDATA[
+    <product>composer</product>
+    <author>Nils Adermann, Jordi Boggiano</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
 Copyright (c) Nils Adermann, Jordi Boggiano
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -889,12 +889,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 ]]></text>
-    </license>
+  </license>
   <license>
-		<product>iTop</product>
-		<author>2010-2021 Combodo SARL</author>
-		<license_type>AGPL v3</license_type>
-		<text><![CDATA[
+    <product>iTop</product>
+    <author>2010-2021 Combodo SARL</author>
+    <license_type>AGPL v3</license_type>
+    <text><![CDATA[
 <h3 style="text-align: center;">iTop - IT Operational Portal</h3>
 <pre>
    Copyright (C) 2010-2018  Combodo SARL
@@ -1588,7 +1588,7 @@ if any, to sign a &quot;copyright disclaimer&quot; for the program, if necessary
 For more information on this, and how to apply and follow the GNU AGPL, see
 &lt;<a href="http://www.gnu.org/licenses/">http://www.gnu.org/licenses/</a>&gt;.</p>
 ]]></text>
-	</license>
+  </license>
   <license>
     <product scope="application">PHP XLSXWriter</product>
     <author>Mark Jones</author>
@@ -1693,10 +1693,10 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.</pre>]]></text>
   </license>
   <license>
-        <product scope="css">font-awesome</product>
-        <author>Travis Chase Dave Gandy Rob Madole Jory Raphael Geremia Taglialatela Brian Talbot Mike Wilkerson</author>
-        <license_type>GPL</license_type>
-        <text><![CDATA[
+    <product scope="css">font-awesome</product>
+    <author>Travis Chase Dave Gandy Rob Madole Jory Raphael Geremia Taglialatela Brian Talbot Mike Wilkerson</author>
+    <license_type>GPL</license_type>
+    <text><![CDATA[
 Font Awesome Free is free, open source, and GPL friendly. You can use it for
 commercial projects, open source projects, or really almost whatever you want.
 Full Font Awesome Free license: https://fontawesome.com/license/free.
@@ -1729,12 +1729,12 @@ trademarks does not indicate endorsement of the trademark holder by Font
 Awesome, nor vice versa. **Please do not use brand logos for any purpose except
 to represent the company, product, or service to which they refer.**
 ]]></text>
-    </license>
+  </license>
   <license>
-          <product scope="datamodels">apereo/phpcas</product>
-          <author>Joachim Fritschi - Adam Franco</author>
-          <license_type>Apache-2.0</license_type>
-          <text><![CDATA[
+    <product scope="datamodels">apereo/phpcas</product>
+    <author>Joachim Fritschi - Adam Franco</author>
+    <license_type>Apache-2.0</license_type>
+    <text><![CDATA[
                                    Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -1937,7 +1937,7 @@ to represent the company, product, or service to which they refer.**
    See the License for the specific language governing permissions and
    limitations under the License.
   ]]></text>
-      </license>
+  </license>
   <license>
     <product scope="js">C3 js</product>
     <author>Masayuki Tanaka</author>
@@ -2467,10 +2467,10 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre>]]></text>
   </license>
   <license>
-        <product scope="js">Selectize.js</product>
-        <author>Brian Reavis</author>
-        <license_type>Apache License v2</license_type>
-        <text><![CDATA[<pre>Apache License
+    <product scope="js">Selectize.js</product>
+    <author>Brian Reavis</author>
+    <license_type>Apache License v2</license_type>
+    <text><![CDATA[<pre>Apache License
 
 Version 2.0, January 2004
 
@@ -2525,12 +2525,12 @@ TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
 
 END OF TERMS AND CONDITIONS
 </pre>]]></text>
-    </license>
+  </license>
   <license>
-		<product scope="js">The jQuery tooltip plugin</product>
-		<author>Craig Thompson</author>
-		<license_type>MIT</license_type>
-		<text><![CDATA[<pre>Copyright 2011 Craig Thomson
+    <product scope="js">The jQuery tooltip plugin</product>
+    <author>Craig Thompson</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[<pre>Copyright 2011 Craig Thomson
 		
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
@@ -2550,12 +2550,12 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>]]></text>
-	</license>
+  </license>
   <license>
-        <product scope="js">ajaxorg/ace</product>
-        <author>Ajax.org B.V.</author>
-        <license_type>BSD 3-clause "New" or "Revised"</license_type>
-        <text><![CDATA[
+    <product scope="js">ajaxorg/ace</product>
+    <author>Ajax.org B.V.</author>
+    <license_type>BSD 3-clause "New" or "Revised"</license_type>
+    <text><![CDATA[
         Copyright (c) 2010, Ajax.org B.V.
 All rights reserved.
 
@@ -2582,12 +2582,12 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ]]></text>
-    </license>
+  </license>
   <license>
-        <product scope="js">clipboard.js</product>
-        <author>Zeno Rocha</author>
-        <license_type>MIT</license_type>
-        <text><![CDATA[
+    <product scope="js">clipboard.js</product>
+    <author>Zeno Rocha</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
         Copyright © 2019 Zeno Rocha <hi@zenorocha.com>
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -2596,7 +2596,7 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]></text>
-    </license>
+  </license>
   <license>
     <product scope="js">fraphael</product>
     <author>Chris Scott</author>
@@ -2625,10 +2625,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     </pre>]]></text>
   </license>
   <license>
-        <product scope="js">jQuery Hotkeys Plugin</product>
-        <author>John Resig</author>
-        <license_type>MIT or GPL Version 2 licenses</license_type>
-        <text><![CDATA[<pre>
+    <product scope="js">jQuery Hotkeys Plugin</product>
+    <author>John Resig</author>
+    <license_type>MIT or GPL Version 2 licenses</license_type>
+    <text><![CDATA[<pre>
  jQuery Hotkeys Plugin
  Copyright 2010, John Resig
  Dual licensed under the MIT or GPL Version 2 licenses.
@@ -2639,7 +2639,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  Original idea by:
  Binny V A, http://www.openjs.com/scripts/events/keyboard_shortcuts/
         </pre>]]></text>
-    </license>
+  </license>
   <license>
     <product scope="js">jQuery Timepicker addon</product>
     <author>Trent Richardson</author>
@@ -2668,10 +2668,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 </pre>]]></text>
   </license>
   <license>
-		<product scope="js">jQuery, jQuery UI</product>
-		<author>the jQuery Foundation</author>
-		<license_type>MIT</license_type>
-		<text><![CDATA[<pre>Copyright 2013 jQuery Foundation and other contributors
+    <product scope="js">jQuery, jQuery UI</product>
+    <author>the jQuery Foundation</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[<pre>Copyright 2013 jQuery Foundation and other contributors
 http://jquery.com/
 
 Permission is hereby granted, free of charge, to any person obtaining
@@ -2692,7 +2692,7 @@ NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
 LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>]]></text>
-	</license>
+  </license>
   <license>
     <product scope="js">jQuery-File-Upload</product>
     <author>Sebastian Tschan</author>
@@ -2721,10 +2721,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</pre>
     ]]></text>
   </license>
   <license>
-          <product scope="lib">combodo/tcpdf</product>
-          <author>Nicola Asuni - Combodo</author>
-	        <license_type>LGPL-3.0-only</license_type>
-          <text><![CDATA[
+    <product scope="lib">combodo/tcpdf</product>
+    <author>Nicola Asuni - Combodo</author>
+    <license_type>LGPL-3.0-only</license_type>
+    <text><![CDATA[
   **********************************************************************
 * TCPDF LICENSE
 **********************************************************************
@@ -3585,12 +3585,12 @@ Public License instead of this License.  But first, please read
 **********************************************************************
 **********************************************************************
   ]]></text>
-      </license>
-	<license>
-		<product scope="lib">nikic/php-parser</product>
-		<author>Nikita Popov</author>
-		<license_type>BSD-3-Clause</license_type>
-		<text><![CDATA[
+  </license>
+  <license>
+    <product scope="lib">nikic/php-parser</product>
+    <author>Nikita Popov</author>
+    <license_type>BSD-3-Clause</license_type>
+    <text><![CDATA[
   Copyright (c) 2011-2018 by Nikita Popov.
 
 Some rights reserved.
@@ -3623,12 +3623,12 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]]></text>
-	</license>
-	<license>
-          <product scope="lib">paragonie/random_compat</product>
-          <author>Paragon Initiative Enterprises</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+  </license>
+  <license>
+    <product scope="lib">paragonie/random_compat</product>
+    <author>Paragon Initiative Enterprises</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   The MIT License (MIT)
 
 Copyright (c) 2015 Paragon Initiative Enterprises
@@ -3651,20 +3651,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">pear/archive_tar</product>
-          <author>Vincent Blavet - Greg Beaver - Michiel Rook</author>
-          <license_type>BSD-3-Clause</license_type>
-          <text><![CDATA[
+    <product scope="lib">pear/archive_tar</product>
+    <author>Vincent Blavet - Greg Beaver - Michiel Rook</author>
+    <license_type>BSD-3-Clause</license_type>
+    <text><![CDATA[
   
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">pear/console_getopt</product>
-          <author>Andrei Zmievski - Stig Bakken - Greg Beaver</author>
-          <license_type>BSD-2-Clause</license_type>
-          <text><![CDATA[
+    <product scope="lib">pear/console_getopt</product>
+    <author>Andrei Zmievski - Stig Bakken - Greg Beaver</author>
+    <license_type>BSD-2-Clause</license_type>
+    <text><![CDATA[
   Copyright (c) 2001-2015, The PEAR developers
 All rights reserved.
 
@@ -3691,20 +3691,20 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">pear/pear-core-minimal</product>
-          <author>Christian Weiske</author>
-          <license_type>BSD-3-Clause</license_type>
-          <text><![CDATA[
+    <product scope="lib">pear/pear-core-minimal</product>
+    <author>Christian Weiske</author>
+    <license_type>BSD-3-Clause</license_type>
+    <text><![CDATA[
   
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">pear/pear_exception</product>
-          <author>Helgi Thormar - Greg Beaver</author>
-          <license_type>BSD-2-Clause</license_type>
-          <text><![CDATA[
+    <product scope="lib">pear/pear_exception</product>
+    <author>Helgi Thormar - Greg Beaver</author>
+    <license_type>BSD-2-Clause</license_type>
+    <text><![CDATA[
   Copyright (c) 1997-2009,
  Stig Bakken <ssb@php.net>,
  Gregory Beaver <cellog@php.net>,
@@ -3733,12 +3733,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">pelago/emogrifier</product>
-          <author>Oliver Klee - Zoli Szab&#xF3; - John Reeve - Jake Hotson - Cameron Brooks - Jaime Prado</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">pelago/emogrifier</product>
+    <author>Oliver Klee - Zoli Szab&#xF3; - John Reeve - Jake Hotson - Cameron Brooks - Jaime Prado</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   MIT License
 
 Copyright (c) 2008-2018 Pelago
@@ -3761,12 +3761,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">psr/cache</product>
-          <author>PHP-FIG</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">psr/cache</product>
+    <author>PHP-FIG</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015 PHP Framework Interoperability Group
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3787,12 +3787,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">psr/container</product>
-          <author>PHP-FIG</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">psr/container</product>
+    <author>PHP-FIG</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   The MIT License (MIT)
 
 Copyright (c) 2013-2016 container-interop
@@ -3815,12 +3815,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">psr/log</product>
-          <author>PHP-FIG</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">psr/log</product>
+    <author>PHP-FIG</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2012 PHP Framework Interoperability Group
 
 Permission is hereby granted, free of charge, to any person obtaining a copy 
@@ -3841,12 +3841,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">psr/simple-cache</product>
-          <author>PHP-FIG</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">psr/simple-cache</product>
+    <author>PHP-FIG</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   # The MIT License (MIT)
 
 Copyright (c) 2016 PHP Framework Interoperability Group
@@ -3869,12 +3869,12 @@ Copyright (c) 2016 PHP Framework Interoperability Group
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 > THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">scssphp/scssphp</product>
-          <author>Anthon Pang - C&#xE9;dric Morin</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">scssphp/scssphp</product>
+    <author>Anthon Pang - C&#xE9;dric Morin</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015 Leaf Corcoran, http://scssphp.github.io/scssphp
  
 Permission is hereby granted, free of charge, to any person obtaining
@@ -3896,12 +3896,12 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">swiftmailer/swiftmailer</product>
-          <author>Chris Corbyn - Fabien Potencier</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">swiftmailer/swiftmailer</product>
+    <author>Chris Corbyn - Fabien Potencier</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2013-2016 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3922,12 +3922,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/cache</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/cache</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2016-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3948,12 +3948,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/class-loader</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/class-loader</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3974,12 +3974,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/config</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/config</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4000,12 +4000,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/console</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/console</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4026,12 +4026,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/css-selector</product>
-          <author>Fabien Potencier - Jean-Fran&#xE7;ois Simon - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/css-selector</product>
+    <author>Fabien Potencier - Jean-Fran&#xE7;ois Simon - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4052,12 +4052,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/debug</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/debug</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4078,12 +4078,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/dependency-injection</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/dependency-injection</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4104,12 +4104,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/dotenv</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/dotenv</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2016-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4130,12 +4130,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/event-dispatcher</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/event-dispatcher</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4156,12 +4156,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/filesystem</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/filesystem</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4182,12 +4182,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/finder</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/finder</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4208,12 +4208,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/framework-bundle</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/framework-bundle</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4234,12 +4234,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/http-foundation</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/http-foundation</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4260,12 +4260,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/http-kernel</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/http-kernel</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4286,12 +4286,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/polyfill-apcu</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/polyfill-apcu</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4312,12 +4312,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/polyfill-ctype</product>
-          <author>Gert de Pagter - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/polyfill-ctype</product>
+    <author>Gert de Pagter - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2018-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4338,12 +4338,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/polyfill-mbstring</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/polyfill-mbstring</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4364,12 +4364,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/polyfill-php56</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/polyfill-php56</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4390,12 +4390,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/polyfill-php70</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/polyfill-php70</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4416,12 +4416,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/polyfill-util</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/polyfill-util</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4442,12 +4442,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/routing</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/routing</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4468,12 +4468,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/stopwatch</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/stopwatch</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4494,12 +4494,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/twig-bridge</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/twig-bridge</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4520,12 +4520,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/twig-bundle</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/twig-bundle</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4546,12 +4546,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/var-dumper</product>
-          <author>Nicolas Grekas - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/var-dumper</product>
+    <author>Nicolas Grekas - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2014-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4572,12 +4572,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/web-profiler-bundle</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/web-profiler-bundle</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4598,12 +4598,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">symfony/yaml</product>
-          <author>Fabien Potencier - Symfony Community</author>
-          <license_type>MIT</license_type>
-          <text><![CDATA[
+    <product scope="lib">symfony/yaml</product>
+    <author>Fabien Potencier - Symfony Community</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[
   Copyright (c) 2004-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4624,12 +4624,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-      </license>
+  </license>
   <license>
-          <product scope="lib">twig/twig</product>
-          <author>Fabien Potencier - Twig Team - Armin Ronacher</author>
-          <license_type>BSD-3-Clause</license_type>
-          <text><![CDATA[
+    <product scope="lib">twig/twig</product>
+    <author>Fabien Potencier - Twig Team - Armin Ronacher</author>
+    <license_type>BSD-3-Clause</license_type>
+    <text><![CDATA[
   Copyright (c) 2009-2019 by the Twig Team.
 
 Some rights reserved.
