@@ -13,6 +13,55 @@
     "publisher": "Jim Campbell",
     "licenseFile": "node_modules\\bulma-scss\\LICENSE"
   },
+  "datatables.net-fixedheader@3.1.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-FixedHeader",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-fixedheader\\Readme.md"
+  },
+  "datatables.net-responsive@2.1.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-Responsive",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-responsive\\Readme.md"
+  },
+  "datatables.net-scroller@1.4.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-Scroller",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-scroller\\Readme.md"
+  },
+  "datatables.net-select@1.2.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables-Select",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-select\\Readme.md"
+  },
+  "datatables.net@1.10.12": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net\\Readme.md"
+  },
+  "datatables.net@1.10.24": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DataTables/Dist-DataTables",
+    "publisher": "SpryMedia Ltd",
+    "url": "http://datatables.net",
+    "licenseFile": "node_modules\\datatables.net-fixedheader\\node_modules\\datatables.net\\License.txt"
+  },
+  "jquery@3.6.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jquery/jquery",
+    "publisher": "OpenJS Foundation and other contributors",
+    "url": "https://github.com/jquery/jquery/blob/3.6.0/AUTHORS.txt",
+    "licenseFile": "node_modules\\jquery\\LICENSE.txt"
+  },
   "raleway-webfont@3.0.1": {
     "licenses": "MIT AND OFL-1.1",
     "repository": "https://github.com/Dilatorily/raleway",

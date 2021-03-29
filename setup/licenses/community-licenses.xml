@@ -2467,33 +2467,6 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 </pre>]]></text>
   </license>
   <license>
-    <product scope="js">DataTables</product>
-    <author>SpryMedia Ltd</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[<pre>
-The MIT License (MIT)
-
-Copyright (C) 2008-2016, SpryMedia Ltd.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.</pre>]]></text>
-  </license>
-  <license>
         <product scope="js">Selectize.js</product>
         <author>Brian Reavis</author>
         <license_type>Apache License v2</license_type>
@@ -4830,5 +4803,35 @@ The User rights under this Section will end automatically without any notice if 
     <author>atomiks</author>
     <license_type>MIT</license_type>
     <text><![CDATA[/node_modules/tippy.js/LICENSE]]></text>
+  </license>
+  <license>
+    <product scope="npm">datatables.net-fixedheader</product>
+    <author>SpryMedia Ltd</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/datatables.net-fixedheader/Readme.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">datatables.net-responsive</product>
+    <author>SpryMedia Ltd</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/datatables.net-responsive/Readme.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">datatables.net-scroller</product>
+    <author>SpryMedia Ltd</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/datatables.net-scroller/Readme.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">datatables.net-select</product>
+    <author>SpryMedia Ltd</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/datatables.net-select/Readme.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">datatables.net</product>
+    <author>SpryMedia Ltd</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/datatables.net/Readme.md]]></text>
   </license>
 </licenses>
