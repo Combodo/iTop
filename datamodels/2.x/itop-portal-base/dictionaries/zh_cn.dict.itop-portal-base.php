@@ -128,25 +128,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Object:Form:Create:Title' => '新建 %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => '正在更新 %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
-	'Brick:Portal:Object:Form:Stimulus:Title' => 'Please, fill the following informations:',
+	'Brick:Portal:Object:Form:Stimulus:Title' => '请填写下列信息:',
 	'Brick:Portal:Object:Form:Message:Saved' => '已保存',
 	'Brick:Portal:Object:Form:Message:ObjectSaved' => '已保存 %1$s~~',
 	'Brick:Portal:Object:Search:Regular:Title' => '选择 %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => '选择 %1$s (%2$s)',
 	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
 	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:CopiedTooltip' => '已复制'
 ));
 
 // CreateBrick brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Create:Name' => '快速创建',
-	'Brick:Portal:Create:ChooseType' => 'Please, choose a type',
+	'Brick:Portal:Create:ChooseType' => '请选择类型',
 ));
 
 // Filter brick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Brick:Portal:Filter:Name' => 'Prefilter a brick',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => '例如. 连接 wifi',
-	'Brick:Portal:Filter:SearchInput:Submit' => '搜素',
+	'Brick:Portal:Filter:SearchInput:Submit' => '搜索',
 ));

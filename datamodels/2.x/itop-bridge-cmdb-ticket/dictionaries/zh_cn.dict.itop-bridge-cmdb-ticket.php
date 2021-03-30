@@ -37,7 +37,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => '工单编号',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Ticket title~~',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => '工单标题',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '~~',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => '配置项',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',

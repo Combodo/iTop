@@ -52,5 +52,5 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => '密码必须至少8 个字符,包含大小写、数字和特殊字符.',
 
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'UserLocal:password:expiration' => '下面的区域需要插件扩展'
 ));
