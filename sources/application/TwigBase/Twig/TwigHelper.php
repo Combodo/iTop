@@ -50,6 +50,12 @@ class TwigHelper
 	public const ENUM_FILE_TYPE_SVG = 'svg';
 
 	/**
+	 * @var string Base path for the backoffice templates
+	 * @since 3.0.0
+	 */
+	public const ENUM_TEMPLATES_BASE_PATH_BACKOFFICE = APPROOT.'templates/';
+
+	/**
 	 * @var string DEFAULT_FILE_TYPE
 	 * @since 3.0.0
 	 */
