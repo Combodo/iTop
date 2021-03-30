@@ -1,4 +1,8 @@
-/* Search forms v2 */
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 .search_box {
 	box-sizing: border-box;
 	position: relative;
@@ -12,26 +16,10 @@
 }
 
 .search_form_handler {
-	//	position: relative;
-	//	z-index: 10;
-	//	width: 100%;
-	//	margin-left: auto;
-	//	margin-right: auto;
-	//	font-size: 12px;
-	//	text-align: left; /* To compensate .search_box:text-align */
-	//	border: 1px solid $search-form-container-bg-color;
-	//transition: width 0.3s ease-in-out;
-
-	/* Sizing reset */
-	* {
-		box-sizing: border-box;
-	}
-
 	/* Hyperlink reset */
 	a {
-		color: inherit;
-		text-decoration: none;
-	}
+    @extend %ibo-hyperlink-inherited-colors;
+  }
 
 	/* Input reset */
 	input[type="text"],
@@ -127,30 +115,6 @@
 
 	}
 
-	.sf_title {
-		transition: opacity 0.3s, background-color 0.3s, color 0.3s linear;
-		padding: 8px 10px;
-		margin: 0;
-		color: $ibo-color-white-200;
-		//background-color: $search-form-container-bg-color;
-		cursor: pointer;
-
-		.sft_hint,
-		.sfobs_hint {
-			font-size: 8pt;
-			font-style: italic;
-		}
-
-		.sft_toggler {
-			margin-left: 0.7em;
-			transition: color 0.2s ease-in-out, transform 0.4s ease-in-out;
-
-			&:hover {
-				color: $ibo-color-grey-100;
-			}
-		}
-	}
-
 	.sf_message {
 		display: none;
 		margin: 8px 8px 0px 8px;
@@ -207,17 +171,15 @@
 			margin-right: 10px;
 			margin-bottom: 5px;
 			vertical-align: top;
-			min-width: 34px;
-			text-align: center;
 
 			&.opened {
 				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
 
 				.sfc_header,
 				.sfm_header {
-					margin-bottom: 7px;
-					//padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
-				}
+          border-bottom: none !important;
+          padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+        }
 			}
 
 			> * {
@@ -233,18 +195,25 @@
 				min-width: 100%;
 				left: 0px;
 				margin-top: -1px;
-
-				.sfc_fg_buttons {
-					white-space: nowrap;
-				}
 			}
+
+      .sfc_fg_buttons,
+      .sfm_buttons{
+        white-space: nowrap;
+      }
 		}
 
-		/* Criteria tags */
-		.search_form_criteria {
-			/* Non editable criteria */
-			&.locked {
-				background-color: $ibo-color-grey-200;
+    .sf_more_criterion,
+    .sf_button {
+      min-width: 34px;
+      text-align: center;
+    }
+
+    /* Criteria tags */
+    .search_form_criteria {
+      /* Non editable criteria */
+      &.locked {
+        background-color: $ibo-color-grey-200;
 
 				.sfc_title {
 					user-select: none;
@@ -256,8 +225,9 @@
 			&.draft {
 				.sfc_header,
 				.sfc_form_group {
-					border-style: dashed;
-				}
+          border-style: dashed;
+          border-color: $ibo-color-grey-600;
+        }
 
 				.sfc_title {
 					font-style: italic;
@@ -273,8 +243,10 @@
 				}
 
 				.sfc_form_group {
-					display: block;
-				}
+          display: block;
+          margin-top: -1px;
+          z-index: -1;
+        }
 			}
 
 			&.opened_left {
@@ -334,12 +306,13 @@
 			}
 
 			.sfc_form_group {
-				/* Form group (operators) is displayed only when the criteria is toggled to opened state */
-				display: none;
-				max-width: 450px;
-				max-height: 520px;
-				overflow-x: auto;
-				overflow-y: hidden;
+        position: absolute;
+        /* Form group (operators) is displayed only when the criteria is toggled to opened state */
+        display: none;
+        max-width: 450px;
+        max-height: 520px;
+        overflow-x: auto;
+        overflow-y: hidden;
 
 				.sfc_fg_operators {
 					font-size: 12px;
@@ -710,7 +683,7 @@
 
 		/* Misc. buttons */
 		.sf_button {
-			cursor: pointer;
+      cursor: pointer;
 
 			> * {
 				background-color: $ibo-color-white-100;
@@ -860,11 +833,11 @@
 	margin-bottom: 8px;
 	
 	.ibo-panel--body {
-		padding: 18px 14px 10px;
-	}
+    padding: 18px 14px 10px;
+    overflow: initial;
+  }
 }
 .ibo-criterion-area{
-	//font-size: $ibo-font-size-150;
 	@extend %ibo-font-ral-med-100;
 }
 #ibo-main-content .search_form_handler .sf_criterion_area{
@@ -874,14 +847,6 @@
 	padding-top: $ibo-panel--spacing-top ;
 }
 
-.ibo-form-group{
-	position: fixed;
-}
-
-.sf_more_criterion.opened > .sfm_content{
-	position: fixed !important;
-	left: auto !important;
-}
 .sfc_fg_button{
 	@extend .ibo-button;
 	@extend .ibo-is-neutral;
