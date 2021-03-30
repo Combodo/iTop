@@ -203,7 +203,7 @@ $(function () {
 			// revert other modifications here
 			_destroy: function() {
 				this.element.removeClass('itop-datatable');
-				$('#sfl_'+me.options.sListId).fieldsorter('destroy');
+				$('#sfl_'+this.options.sListId).fieldsorter('destroy');
 
 			},
 			// _setOptions is called with a hash of all options that are changing
