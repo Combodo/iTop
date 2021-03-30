@@ -798,7 +798,12 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
 		{
-			return array($sClass, array());
+			$sParentClass = static::GetParentClass($sClass);
+			if (is_null($sParentClass)) {
+				return array($sClass, array());
+			} else {
+				return static::GetComplementAttributeSpec($sParentClass);
+			}
 		}
 		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
 		if (is_array($nameRawSpec))
