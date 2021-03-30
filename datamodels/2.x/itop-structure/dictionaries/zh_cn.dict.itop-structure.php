@@ -1,9 +1,9 @@
 <?php
 /**
  * Localized data
- * @author      Benjamin Planque <benjamin.planque@combodo.com>
+ *
  * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license	http://opensource.org/licenses/AGPL-3.0
+ * @license    http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,23 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
+
+
+
+
+// Dictionnary conventions
+// Class:<class_name>
+// Class:<class_name>+
+// Class:<class_name>/Attribute:<attribute_code>
+// Class:<class_name>/Attribute:<attribute_code>+
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>
+// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
+// Class:<class_name>/Stimulus:<stimulus_code>
+// Class:<class_name>/Stimulus:<stimulus_code>+
+// Class:<class_name>/UniquenessRule:<rule_code>
+// Class:<class_name>/UniquenessRule:<rule_code>+
+
+
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -27,9 +44,12 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
+
+
 //
 // Class: Organization
 //
+
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization' => '组织',
 	'Class:Organization+' => '',
