@@ -2835,26 +2835,25 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oPage->add('</fieldset>');
 
 		$sDestClass = $this->Get('dest_class');
-		$bIsActionAllowed = true;
-
+		$bCanDisplayDestObjSections = true;
 		if (strlen($sDestClass) > 0)
 		{
 			$oDestObj = MetaModel::GetObject($sDestClass, $this->Get('dest_id'), false);
 			if (is_object($oDestObj)) {
-				$bIsActionAllowed = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, DBObjectSet::FromObject($oDestObj));
-			} else {
-				$bIsActionAllowed = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, null);
-			}
+				$bCanDisplayDestObjSections = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, DBObjectSet::FromObject($oDestObj));
 
-			if ($bIsActionAllowed) {
-				$oPage->add('<fieldset>');
-				$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
-				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
-				$oPage->add('<fieldset>');
+				if ($bCanDisplayDestObjSections) {
+					$oPage->add('<fieldset>');
+					$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
+					$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
+					$oPage->add('<fieldset>');
+				}
+			} else {
+				$bCanDisplayDestObjSections = false;
 			}
 		}
 
-		if ($bIsActionAllowed) {
+		if ($bCanDisplayDestObjSections) {
 			$oPage->add('</div><div class="ibo-column">');
 			$oPage->add('<fieldset>');
 			$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
