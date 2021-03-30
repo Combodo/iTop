@@ -7,7 +7,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -517,7 +517,7 @@ EOF
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
@@ -1013,7 +1013,7 @@ EOF
 
 	/**
 	 * @param WebPage $oPage
-	 * @param \Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock $oDashboard
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout $oDashboard
 	 * @param bool $bFromDashboardPage
 	 * @param array $aAjaxParams
 	 *
@@ -1021,7 +1021,7 @@ EOF
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	protected function RenderSelector(WebPage $oPage, UIDashboardLayoutBlock $oDashboard, $aAjaxParams = array())
+	protected function RenderSelector(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aAjaxParams = array())
 	{
 		if (!$this->HasCustomDashboard()) {
 			return;
@@ -1103,7 +1103,7 @@ JS
 	 *
 	 * @throws \Exception
 	 */
-	protected function RenderEditionTools(WebPage $oPage, UIDashboardLayoutBlock $oDashboard, $aExtraParams)
+	protected function RenderEditionTools(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aExtraParams)
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');

@@ -17,8 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
-use Combodo\iTop\Application\UI\Base\Layout\Dashboard\UIDashboardLayoutBlock as UIDashboardLayout;
 
 /**
  * Dashboard presentation
@@ -116,7 +116,7 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
 
-		$oDashboardLayout = new UIDashboardLayout();
+		$oDashboardLayout = new DashboardLayoutUIBlock();
 		//$oPage->AddUiBlock($oDashboardLayout);
 
 		$iCellIdx = 0;
