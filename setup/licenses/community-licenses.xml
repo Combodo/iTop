@@ -4808,30 +4808,30 @@ The User rights under this Section will end automatically without any notice if 
     <product scope="npm">datatables.net-fixedheader</product>
     <author>SpryMedia Ltd</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/datatables.net-fixedheader/Readme.md]]></text>
+    <text><![CDATA[/node_modules/datatables.net-fixedheader/License.txt]]></text>
   </license>
   <license>
     <product scope="npm">datatables.net-responsive</product>
     <author>SpryMedia Ltd</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/datatables.net-responsive/Readme.md]]></text>
+    <text><![CDATA[/node_modules/datatables.net-responsive/License.txt]]></text>
   </license>
   <license>
     <product scope="npm">datatables.net-scroller</product>
     <author>SpryMedia Ltd</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/datatables.net-scroller/Readme.md]]></text>
+    <text><![CDATA[/node_modules/datatables.net-scroller/License.txt]]></text>
   </license>
   <license>
     <product scope="npm">datatables.net-select</product>
     <author>SpryMedia Ltd</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/datatables.net-select/Readme.md]]></text>
+    <text><![CDATA[/node_modules/datatables.net-select/License.txt]]></text>
   </license>
   <license>
     <product scope="npm">datatables.net</product>
     <author>SpryMedia Ltd</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/datatables.net/Readme.md]]></text>
+    <text><![CDATA[/node_modules/datatables.net/License.txt]]></text>
   </license>
 </licenses>
