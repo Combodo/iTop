@@ -49,7 +49,8 @@ $(function()
 					menu_filter_hint_close: '[data-role="ibo-navigation-menu--menu-filter-hint-close"]',
 					user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
 					user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
-					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]'
+					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]',
+					menu_node: '[data-role="ibo-navigation-menu--menu-node"]',
 				},
 			filter_throttle_timeout: null,
 
@@ -99,6 +100,11 @@ $(function()
 				// - Hint close
 				this.element.find(this.js_selectors.menu_filter_hint_close).on('click', function (oEvent) {
 					me._onFilterHintCloseClick(oEvent);
+				});
+
+				// External events
+				oBodyElem.on('add_shortcut_node.navigation_menu.itop', function (oEvent, oData) {
+					me._onAddShortcutNode(oData);
 				});
 			},
 
@@ -182,23 +188,24 @@ $(function()
 				// Position focus in the input for better UX
 				this._focusFilter();
 			},
-			_onFilterHintCloseClick: function(oEvent)
-			{
+			_onFilterHintCloseClick: function (oEvent) {
 				this.element.find(this.js_selectors.menu_filter_hint).hide();
 
 				// Save state in user preferences
 				SetUserPreference('navigation_menu.show_filter_hint', false, true);
 			},
 
+			_onAddShortcutNode: function (oData) {
+				this._addShortcut(oData.parent_menu_node_id, oData.new_menu_node_html_rendering);
+			},
+
 			// Methods
-			_checkIfClickShouldCloseDrawer: function(oEvent)
-			{
-				if(
+			_checkIfClickShouldCloseDrawer: function (oEvent) {
+				if (
 					$(oEvent.target.closest(this.js_selectors.menu_drawer)).length === 0
 					&& $(oEvent.target.closest('[data-role="ibo-navigation-menu--menu-group"]')).length === 0
 					&& $(oEvent.target.closest(this.js_selectors.menu_toggler)).length === 0
-				)
-				{
+				) {
 					this._closeDrawer();
 				}
 			},
@@ -352,13 +359,27 @@ $(function()
 						.done(function (data) {
 							if (data.code === "done") {
 								for (const [key, value] of Object.entries(data.counts)) {
-									let menuEntry = me.element.find('[data-menu-id="' + key + '"]');
+									let menuEntry = me.element.find('[data-menu-id="'+key+'"]');
 									menuEntry.html(value);
 									menuEntry.show();
 								}
 							}
 						});
 				}
+			},
+			/**
+			 * @param sParentMenuNodeId {string} ID of the parent menu node the shortcut should be added to
+			 * @param sNewMenuNodeHtmlRendering {string} HTML rendering of the new menu node to add
+			 * @return {boolean}
+			 */
+			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering) {
+				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"] > ul');
+				if (oNewMenuNodeContainerElem.length === 0) {
+					return false;
+				}
+
+				oNewMenuNodeContainerElem.append(sNewMenuNodeHtmlRendering);
+				return true;
 			}
 		});
 });

@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\PreferencesController;
@@ -1221,6 +1222,7 @@ EOF
 			$aContext = $oAppContext->GetAsHash();
 			$sContext = serialize($aContext);
 
+			// Create shortcut
 			/** @var ShortcutOQL $oShortcut */
 			$oShortcut = MetaModel::NewObject("ShortcutOQL");
 			$oShortcut->Set('user_id', UserRights::GetUserId());
@@ -1228,8 +1230,7 @@ EOF
 			$oShortcut->Set("name", $aValues['name']);
 			$oShortcut->Set("oql", $aValues['oql']);
 			$iAutoReload = (int)$aValues['auto_reload_sec'];
-			if (($aValues['auto_reload']) && ($iAutoReload > 0))
-			{
+			if (($aValues['auto_reload']) && ($iAutoReload > 0)) {
 				$oShortcut->Set("auto_reload_sec", max(MetaModel::GetConfig()->Get('min_reload_interval'), $iAutoReload));
 				$oShortcut->Set("auto_reload", 'custom');
 			}
@@ -1239,14 +1240,42 @@ EOF
 
 			$oShortcut->CloneTableSettings($aValues['table_settings']);
 
-			// Add the menu node in the right place
-			//
-			// Mmmm... already done because the newly created menu is read from the DB
-			//         as soon as we invoke DisplayMenu
+			// Add shortcut to current menu
+			// - Init. app. menu
+			ApplicationMenu::LoadAdditionalMenus();
 
-			// Refresh the menu pane
-			$aExtraParams = array();
-			ApplicationMenu::DisplayMenu($oPage, $aExtraParams);
+			// - Find newly created shortcut
+			$aNewShortcutNode = null;
+			$sMenuGroupId = 'MyShortcuts';
+			$sMenuGroupIdx = ApplicationMenu::GetMenuIndexById($sMenuGroupId);
+			if (0 <= $sMenuGroupIdx) {
+				$sNewShortcutId = $sMenuGroupId.'_'.$oShortcut->GetKey();
+				$aShortcutsNodes = ApplicationMenu::GetSubMenuNodes($sMenuGroupIdx);
+				foreach ($aShortcutsNodes as $aShortcutNode) {
+					if ($sNewShortcutId === $aShortcutNode['sId']) {
+						$aNewShortcutNode = $aShortcutNode;
+						break;
+					}
+				}
+			}
+
+			// - If shortcut found, insert it in the navigation menu
+			if (!empty($aNewShortcutNode)) {
+				$sHtml = TwigHelper::RenderTemplate(
+					TwigHelper::GetTwigEnvironment(TwigHelper::ENUM_TEMPLATES_BASE_PATH_BACKOFFICE),
+					['aMenuNode' => $aNewShortcutNode],
+					'base/layouts/navigation-menu/menu-node'
+				);
+
+				// Important: Mind the back ticks to avoid line breaks to break the JS
+				$oPage->add_script(<<<JS
+$('body').trigger('add_shortcut_node.navigation_menu.itop', {
+	parent_menu_node_id: '{$sMenuGroupId}',
+	new_menu_node_html_rendering: `{$sHtml}`
+});
+JS
+				);
+			}
 			break;
 
 		case 'shortcut_rename_dlg':
