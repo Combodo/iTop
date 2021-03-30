@@ -11,9 +11,10 @@ var table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_
     dom: "t",
     "order": [],
     {% if oUIBlock.GetOption("select_mode") is not empty %}
-    {% if oUIBlock.GetOption("select_mode") !="custom" %}
+    {% if oUIBlock.GetOption("select_mode") != "custom" %}
     select: {
-        style: "{{ oUIBlock.GetOption("select_mode") }}"
+        style: "{% if oUIBlock.GetOption("select_mode") == "multiple" %}multi{% else %}single{% endif %}",
+        info: false
     },
     {% endif %}
     columnDefs: [

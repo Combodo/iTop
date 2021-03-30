@@ -59,10 +59,16 @@ $ibo-input-select--action-button--padding-right: 2px !default;
 }
 .ibo-input-selectize {
   min-width: $ibo-input-select-selectize--value--min-midth !important;
-  >div{
+
+  > div {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  > input {
+    background-color: unset;
+    border: unset;
   }
 }
 .ibo-input-select-wrapper{

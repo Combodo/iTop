@@ -258,8 +258,11 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	//by default all the elements are selected
 	$aExtraParams['selectionMode'] = 'negative';
 	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
-	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
-	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
+	$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+	$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+	$oForm->AddSubBlock($oToolbarButtons);
+	$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
+	$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
 
 	$oP->AddUiBlock($oForm);
 }
@@ -1933,7 +1936,7 @@ class UI
 		// Add user filter
 		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");
+		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:ModifyAllPageTitle')));
 
 		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
 	}

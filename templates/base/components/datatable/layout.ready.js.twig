@@ -82,16 +82,20 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     ordering: true,
     {% if oUIBlock.GetOption("select_mode") is not empty %}
     select: {
-        style: "{{ oUIBlock.GetOption("select_mode") }}"
+        style: "{% if oUIBlock.GetOption("select_mode") == "multiple" %}multi{% else %}single{% endif %}",
+        info: false
     },
     rowCallback: function (oRow, oData) {
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
         {
-            if (oSelectedItems{{ sListId }}.indexOf(oData.id) === -1) {
+            if (oSelectedItems{{ sListId }}.indexOf(oData.id) === -1)
+            {
                 $(oRow).select();
                 $(oRow).find('td:first-child input').prop('checked', true);
             }
-        } else {
+        }
+        else
+        {
             if (oSelectedItems{{ sListId }}.indexOf(oData.id) > -1)
             {
                 $(oRow).select();

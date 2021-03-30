@@ -2594,14 +2594,14 @@ JS
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 		}
 
-		$oToolbarTop = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-toolbar-top']);
+		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 
 		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
 		$oCancelButton->AddCSSClasses(['action', 'cancel']);
-		$oToolbarTop->AddSubBlock($oCancelButton);
+		$oToolbarButtons->AddSubBlock($oCancelButton);
 		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
 		$oApplyButton->AddCSSClass('action');
-		$oToolbarTop->AddSubBlock($oApplyButton);
+		$oToolbarButtons->AddSubBlock($oApplyButton);
 
 		$aTransitions = $this->EnumTransitions();
 		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
@@ -2616,7 +2616,7 @@ JS
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClass('action');
 						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
-						$oToolbarTop->AddSubBlock($oButton);
+						$oToolbarButtons->AddSubBlock($oButton);
 						break;
 
 					default:
@@ -2680,16 +2680,22 @@ EOF
 			$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
 			$oObjectDetails = PanelUIBlockFactory::MakeForClass(get_class($this), '');
 			$oObjectDetails->SetTitleBlock($oTitle);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
 		} else {
 			$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
+			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
 		}
 		$oForm->AddSubBlock($oObjectDetails);
+		if (isset($aExtraParams['nbBulkObj'])) {
+			// if bulk modify buttons must be after object display
+			$oForm->AddSubBlock($oToolbarButtons);
+		}
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oObjectDetails);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$oPage->p($sStatesSelection);
-		$oObjectDetails->AddToolbarBlock($oToolbarTop);
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		if (!is_array($aFieldsMap)) {
@@ -4734,8 +4740,6 @@ EOF
 			$oForm = FormUIBlockFactory::MakeStandard('')->SetAction($sFormAction);
 			$oP->AddSubBlock($oForm);
 			$oForm->AddSubBlock($oPanel);
-			$oToolbarTop = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-toolbar-top']);
-			$oPanel->AddToolbarBlock($oToolbarTop);
 			$oPanel->SetTitleBlock($oTitle);
 
 			$oAppContext = new ApplicationContext();
@@ -4747,8 +4751,13 @@ EOF
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('preview_mode', 0));
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
-			$oToolbarTop->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.location.href='$sCancelUrl'"));
-			$oToolbarTop->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:ModifyAll'), '', '', true));
+
+			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+			$oForm->AddSubBlock($oToolbarButtons);
+			$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.location.href='$sCancelUrl'"));
+			$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:ModifyAll'), '', '', true));
+
 			foreach ($_POST as $sKey => $value) {
 				if (preg_match('/attr_(.+)/', $sKey, $aMatches)) {
 					// Beware: some values (like durations) are passed as arrays
