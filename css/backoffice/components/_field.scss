@@ -1,6 +1,6 @@
 /*!
- * copyright   Copyright (C) 2010-2021 Combodo SARL
- * license     http://opensource.org/licenses/AGPL-3.0
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
@@ -119,7 +119,21 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
 .multi_values, .mono_value {
   display: inline-block;
-  padding-left: 5px;
+  padding: 1px 3px;
+  margin-left: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.mono_value {
+  background-color: #3c3;
+}
+
+.multi_values {
+  background-color: #c33;
 }
 
 /* Fullscreen mode */

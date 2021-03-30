@@ -279,19 +279,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
 	 */
-	/*
-	$iBlock = 1; // Zero is not a valid blockid
-	foreach($aResults as $sListClass => $aObjects)
-	{
-		$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
-		$oP->add("</div>\n");
-		$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
-		$oBlock->Display($oP, $iBlock++, array('table_id' => get_class($oObj).'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
-		$oP->P('&nbsp;'); // Some space ?				
-	}
-	*/
+
 	$oP->add("</div>");
 	$oP->add("</div>");
 }
@@ -1972,7 +1960,7 @@ class UI
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('search' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
 
