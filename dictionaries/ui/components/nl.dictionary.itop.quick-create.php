@@ -19,10 +19,10 @@
 
 // Quick create
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
-	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
+	'UI:Component:QuickCreate:Tooltip' => 'Snel een object aanmaken',
+	'UI:Component:QuickCreate:Input:Placeholder' => 'Selecteer een objectsoort…',
+	'UI:Component:QuickCreate:Recents:Title' => 'Recente',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'Je hebt nog geen objecten gemaakt',
+	'UI:Component:QuickCreate:HistoryDisabled' => 'Geschiedenis staat uit',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open snel object aanmaken',
 ));
