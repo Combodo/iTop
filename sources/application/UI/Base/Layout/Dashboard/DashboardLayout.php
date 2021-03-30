@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\Dashboard;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
-class UIDashboardLayoutBlock extends UIBlock
+class DashboardLayout extends UIBlock
 {
 	public const BLOCK_CODE = 'ibo-dashboard';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/dashboard/layout';
@@ -37,9 +37,9 @@ class UIDashboardLayoutBlock extends UIBlock
 	 *
 	 * @param \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow $oDashboardRow
 	 *
-	 * @return UIDashboardLayoutBlock
+	 * @return $this
 	 */
-	public function AddDashboardRow(DashboardRow $oDashboardRow): UIDashboardLayoutBlock
+	public function AddDashboardRow(DashboardRow $oDashboardRow)
 	{
 		$oDashboardRow->SetRowIndex($this->iRows);
 		$this->aDashboardRows[] = $oDashboardRow;
@@ -64,7 +64,7 @@ class UIDashboardLayoutBlock extends UIBlock
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
-	public function GetToolbar(): UIContentBlock
+	public function GetToolbar()
 	{
 		return $this->oToolbar;
 	}
