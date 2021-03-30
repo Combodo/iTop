@@ -1121,6 +1121,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
 	'Class:ResourceSystemMenu+' => '',
 ));
-
-
-
