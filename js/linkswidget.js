@@ -45,14 +45,13 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
+		$('#datatable_'+me.id).DataTable().rows($('#datatable_'+me.id).find('tr.selected')).remove();
 		$('#linkedset_'+me.id+' .selection:checked').each(function () {
 			$(my_id+'_row_'+this.value).remove();
 			let iLink = $(this).attr('data-link-id');
-			if (iLink > 0)
-			{
+			if (iLink > 0) {
 				me.aRemoved.push(iLink);
-				if (me.aModified.hasOwnProperty(iLink))
-				{
+				if (me.aModified.hasOwnProperty(iLink)) {
 					delete me.aModified[iLink];
 				}
 			}

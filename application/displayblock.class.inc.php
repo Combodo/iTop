@@ -1173,7 +1173,8 @@ JS
 			$sTitle = Dict::Format($sFormat, $iTotalCount);
 
 			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
-			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL());
+			$aOption['dom'] = 'pl';
+			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
 
 		} else {
 			// Simply count the number of elements in the set
@@ -2134,7 +2135,6 @@ class MenuBlock extends DisplayBlock
 				if ($bToolkitMenu) {
 					$sLabel = Dict::S('UI:ConfigureThisList');
 					$aRegularActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open'); return false;"];
-					$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock(iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aRegularActions, $sId));
 				}
 				break;
 

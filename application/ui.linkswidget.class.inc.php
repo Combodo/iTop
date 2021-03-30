@@ -382,32 +382,28 @@ JS
 			$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote),
 				false /* Must not be found */);
 			// If successful, it means that we can edit its link
-			if ($oLinkedObj !== null)
-			{
+			if ($oLinkedObj !== null) {
 				$bReadOnly = false;
-            }
-            // Else we retrieve it without restrictions (silos) and will display its link as readonly
-            else
-            {
-                $bReadOnly = true;
-                $oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
-            }
+			} // Else we retrieve it without restrictions (silos) and will display its link as readonly
+			else {
+				$bReadOnly = true;
+				$oLinkedObj = MetaModel::GetObject($this->m_sRemoteClass, $oCurrentLink->Get($this->m_sExtKeyToRemote), false /* Must not be found */, true);
+			}
 
-            if ($oCurrentLink->IsNew())
-            {
-                $key = $iAddedId--;
-            }
-            else
-            {
-                $key = $oCurrentLink->GetKey();
-            }
-            $aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
+			if ($oCurrentLink->IsNew()) {
+				$key = $iAddedId--;
+			} else {
+				$key = $oCurrentLink->GetKey();
+			}
+			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
-		$oBlock->AddSubBlock($this->GetFormTableBlock($this->m_aTableConfig, $aForm));
+		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
+		$oDataTable->SetOptions(['select_mode' => 'custom']);
+		$oBlock->AddSubBlock($oDataTable);
 
 		$oBlock->AddControls();
 
-        return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
+		return ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 	}
 
 	/**

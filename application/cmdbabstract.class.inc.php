@@ -4741,22 +4741,21 @@ EOF
 				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
 				'@class' => $sCSSClass,
 			);
-			if ($bResult && (!$bPreview))
-			{
+			if ($bResult && (!$bPreview)) {
 				$oObj->DBUpdate();
 			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
-		$oP->Table($aHeaders, $aRows);
-		if ($bPreview)
-		{
+		$oDataTable = DataTableUIBlockFactory::MakeForForm(uniqid('form_', true), $aHeaders, $aRows);
+		$oDataTable->SetOptions(['select_mode' => 'custom']);
+		$oP->AddUiBlock($oDataTable);
+		if ($bPreview) {
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/UI.php'; // No parameter in the URL, the only parameter will be the ones passed through the form
 			// Form to submit:
 			$oP->add("<form method=\"post\" action=\"$sFormAction\" enctype=\"multipart/form-data\">\n");
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
-			foreach($aContextData as $sKey => $value)
-			{
+			foreach ($aContextData as $sKey => $value) {
 				$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
 			}
 			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
