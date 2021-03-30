@@ -94,7 +94,7 @@ class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '7.1.3'; // 7 will be supported until the end of 2019 (see http://php.net/supported-versions.php)
-	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
+	const MYSQL_MIN_VERSION = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
