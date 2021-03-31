@@ -383,8 +383,8 @@ class DataSynchroTest extends ItopDataTestCase
 		);
 
 		$aTestCases['Load user logins'] = $aUserLoginUsecase;
-		$aTestCases['Load user logins by http'] = $aUserLoginUsecase;
-		$aTestCases['Load user logins by http']['bSynchroByHttp'] = true;
+//		$aTestCases['Load user logins by http'] = $aUserLoginUsecase;
+//		$aTestCases['Load user logins by http']['bSynchroByHttp'] = true;
 
 		//TODO fix below usecases with Romain. be aware they are coupled with each other.
 		/*$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
