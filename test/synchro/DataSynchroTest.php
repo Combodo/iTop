@@ -60,11 +60,8 @@ class DataSynchroTest extends ItopDataTestCase
 
 	protected function ExecSynchroImport($aParams, $bSynchroByHttp)
 	{
-		$aParams['auth_user'] = static::AUTH_USER;
-		$aParams['auth_pwd'] = static::AUTH_PWD;
-
 		if (!$bSynchroByHttp) {
-			return utils::ExecITopScript('synchro/synchro_import.php', $aParams);
+			return utils::ExecITopScript('synchro/synchro_import.php', $aParams, static::AUTH_USER, static::AUTH_PWD);
 		}
 
 		//$aParams['output'] = 'details';
