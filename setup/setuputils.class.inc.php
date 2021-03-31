@@ -2152,6 +2152,7 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
+			'apcu' => 'APCu in-memory caching will be disabled.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {
