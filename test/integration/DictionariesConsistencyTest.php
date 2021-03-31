@@ -128,7 +128,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 */
 	public function testPlaygroundDictionariesPhpSyntax(): void
 	{
-		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.KO.php', false);
+		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.KO.wrong_php', false);
 		/** @noinspection PhpRedundantOptionalArgumentInspection */
 		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.OK.php', true);
 	}
