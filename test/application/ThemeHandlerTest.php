@@ -223,6 +223,13 @@ class ThemeHandlerTest extends ItopTestCase
 		return @mkdir($dir);
 	}
 
+	public function testGetSignatureWithFileWithoutSignature()
+	{
+		$sTmpFile = tempnam(sys_get_temp_dir(), "sig");
+		file_put_contents($sTmpFile,"ffff");
+		$this->assertEquals("",  ThemeHandler::GetSignature($sTmpFile));
+	}
+
 	public function testGetSignature()
 	{
 		$sSig = ThemeHandler::GetSignature(APPROOT.'test/application/theme-handler/expected/themes/basque-red/main.css');

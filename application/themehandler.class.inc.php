@@ -699,8 +699,9 @@ CSS;
 
 	/**
 	 * @since 3.0.0 N°2982
-	 * Extract the signature for a generated CSS file. The signature MUST be alone one line immediately
-	 * followed (on the next line) by the === SIGNATURE END === pattern
+	 * Extract the signature for a generated CSS file.
+	 * The signature MUST be alone one line immediately followed (on the next line) by the === SIGNATURE END === pattern
+	 * The signature MUST be in the first 100th lines of the file.
 	 *
 	 * Note the signature can be place anywhere in the CSS file (obviously inside a CSS comment !) but the
 	 * function will be faster if the signature is at the beginning of the file (since the file is scanned from the start)
@@ -711,6 +712,7 @@ CSS;
 	 */
 	public static function GetSignature($sFilepath)
 	{
+		$iCount = 0;
 		$sPreviousLine = '';
 		$hFile = @fopen($sFilepath, "r");
 		if ($hFile !== false)
@@ -718,10 +720,11 @@ CSS;
 			$sLine = '';
 			do
 			{
+				$iCount++;
 				$sPreviousLine = $sLine;
 				$sLine = rtrim(fgets($hFile)); // Remove the trailing \n
 			}
-			while (($sLine !== false) && ($sLine != '=== SIGNATURE END ==='));
+			while (($sLine !== false) && ($sLine != '=== SIGNATURE END ===') && ($iCount <= 100));
 			fclose($hFile);
 		}
 		return $sPreviousLine;
