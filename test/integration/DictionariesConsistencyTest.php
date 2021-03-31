@@ -100,10 +100,52 @@ class DictionariesConsistencyTest extends ItopTestCase
 			glob(APPROOT.'dictionaries/*.dict*.php') // framework
 		);
 		$aTestCases = array();
-		foreach ($aDictFiles as $sDictFile)
-		{
+		foreach ($aDictFiles as $sDictFile) {
 			$aTestCases[$sDictFile] = array('sDictFile' => $sDictFile);
 		}
+
 		return $aTestCases;
+	}
+
+	/**
+	 * @dataProvider DictionaryFileProvider
+	 *
+	 * @param string $sDictFile
+	 *
+	 * @uses         CheckDictionarySyntax
+	 */
+	public function testStandardDictionariesPhpSyntax(string $sDictFile): void
+	{
+		$this->CheckDictionarySyntax($sDictFile);
+	}
+
+	/**
+	 * Checks that {@see CheckDictionarySyntax} works as expected by passing 2 test dictionaries
+	 *
+	 * @uses CheckDictionarySyntax
+	 */
+	public function testPlaygroundDictionariesPhpSyntax(): void
+	{
+		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.KO.php', false);
+		/** @noinspection PhpRedundantOptionalArgumentInspection */
+		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.OK.php', true);
+	}
+
+	/**
+	 * @param string $sDictFile complete path for the file to check
+	 * @param bool $bIsSyntaxValid expected assert value
+	 *
+	 * @uses `php -l`
+	 * @uses \assertEquals()
+	 */
+	private function CheckDictionarySyntax(string $sDictFile, $bIsSyntaxValid = true): void
+	{
+		exec("php -l {$sDictFile}", $output, $return);
+
+		var_dump($sDictFile, $return, $output);
+		$bDictFileSyntaxOk = ($return === 0);
+
+		$sMessage = "File `{$sDictFile}` syntax didn't matched expectations\nparsing results=".var_export($output, true);
+		$this->assertEquals($bIsSyntaxValid, $bDictFileSyntaxOk, $sMessage);
 	}
 }
