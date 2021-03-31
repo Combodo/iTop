@@ -112,6 +112,8 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 *
 	 * @param string $sDictFile
 	 *
+	 * @group beforeSetup
+	 *
 	 * @uses         CheckDictionarySyntax
 	 */
 	public function testStandardDictionariesPhpSyntax(string $sDictFile): void
