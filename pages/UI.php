@@ -435,7 +435,15 @@ try
 			{
 				try
 				{
-					$oObj->Reload();
+					// Acces control for final class
+					if (MetaModel::IsValidAttCode($sClass, "finalclass") && MetaModel::GetObject($oObj->Get("finalclass"), $id, false /* MustBeFound */) == null)
+					{
+						throw new ApplicationException("Not allowed to access derived class.");				
+					}
+					else
+					{
+						$oObj->Reload();
+					}
 				}
 				catch(Exception $e)
 				{
