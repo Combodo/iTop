@@ -228,6 +228,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		// Deprecated in 3.0.0  N°2591 Will be removed in 3.1
 		'skip_strong_security' => [
 			'type' => 'bool',
 			'description' => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',
