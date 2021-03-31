@@ -906,7 +906,8 @@ class DashletObjectList extends Dashlet
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$sClass = $oFilter->GetClass();
-		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle))
+			->AddCSSClass('ibo-datatable-panel');
 
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
