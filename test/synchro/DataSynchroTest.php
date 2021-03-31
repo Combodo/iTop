@@ -64,6 +64,9 @@ class DataSynchroTest extends ItopDataTestCase
 			return utils::ExecITopScript('synchro/synchro_import.php', $aParams, static::AUTH_USER, static::AUTH_PWD);
 		}
 
+		$aParams['auth_user'] = static::AUTH_USER;
+		$aParams['auth_pwd'] = static::AUTH_PWD;
+
 		//$aParams['output'] = 'details';
 		$aParams['csvdata'] = file_get_contents($aParams['csvfile']);
 
@@ -161,7 +164,7 @@ class DataSynchroTest extends ItopDataTestCase
 			}
 		}
 
-		// List existing objects (to be ignored in the analysis
+		// List existing objects (to be ignored in the analysis)
 		//
 		$oAllObjects = new DBObjectSet(new DBObjectSearch($sClass));
 		$aExisting = $oAllObjects->ToArray(true);
@@ -314,6 +317,11 @@ class DataSynchroTest extends ItopDataTestCase
 					self::fail('Encountered an Exception during the last import/synchro');
 				}
 
+				$aKeys = ["creation", "update", "deletion"];
+				foreach ($aKeys as $sKey){
+					$this->assertContains("$sKey errors: 0", $sResultsViewable);
+				}
+
 				//N°3805 : potential javascript returned like
 				/*
 				        Please wait...
@@ -326,8 +334,10 @@ class DataSynchroTest extends ItopDataTestCase
 				$sLastExpectedLine = "#Replica disappeared, no action taken: 0";
 				$aSplittedRes = explode($sLastExpectedLine, $sResultsViewable);
 				$this->assertNotFalse($aSplittedRes);
-				$sPotentialIssuesWithWebApplication = $aSplittedRes[1];
-				$this->assertEquals("", $sPotentialIssuesWithWebApplication, 'when failed it means data synchro result is polluted with some web application stuff like html or js');
+				if (count($aSplittedRes)>1){
+					$sPotentialIssuesWithWebApplication = $aSplittedRes[1];
+					$this->assertEquals("", $sPotentialIssuesWithWebApplication, 'when failed it means data synchro result is polluted with some web application stuff like html or js');
+				}
 
 			}
 		}
@@ -356,12 +366,12 @@ class DataSynchroTest extends ItopDataTestCase
 				),
 			),
 			'target_data' => array(
-				array('login'),
+				array('login'), //columns
 				array(
 					// Initial state
 				),
 				array(
-					array('login_A'),
+					array('login_A'), //expected values
 				),
 			),
 			'attributes' => array(
@@ -383,11 +393,11 @@ class DataSynchroTest extends ItopDataTestCase
 		);
 
 		$aTestCases['Load user logins'] = $aUserLoginUsecase;
-//		$aTestCases['Load user logins by http'] = $aUserLoginUsecase;
-//		$aTestCases['Load user logins by http']['bSynchroByHttp'] = true;
+		$aTestCases['Load user logins by http'] = $aUserLoginUsecase;
+		$aTestCases['Load user logins by http']['bSynchroByHttp'] = true;
 
 		//TODO fix below usecases with Romain. be aware they are coupled with each other.
-		/*$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
+		$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
 			'desc' => 'Simple scenario with delete option (and extkey given as org/name)',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -451,7 +461,8 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_update' => true,
 				),
 			),
-		);*/
+			'bSynchroByHttp' => false
+		);
 		/*$aTestCases['Update then delete with retention (to complete with manual testing) and reconciliation on org/name'] = array(
 			'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 			'target_class' => 'ApplicationSolution',
@@ -502,8 +513,9 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_update' => true,
 				),
 			),
+			'bSynchroByHttp' => false
 		);*/
-		/*$aTestCases['Simple scenario loading a few ApplicationSolution'] = array(
+		$aTestCases['Simple scenario loading a few ApplicationSolution'] = array(
 			'desc' => 'Simple scenario loading a few ApplicationSolution',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -598,7 +610,8 @@ class DataSynchroTest extends ItopDataTestCase
 					'do_update' => true,
 				),
 			),
-		);*/
+			'bSynchroByHttp' => false
+		);
 		return $aTestCases;
 	}
 }
