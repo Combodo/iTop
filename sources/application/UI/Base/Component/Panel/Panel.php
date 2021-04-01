@@ -348,7 +348,7 @@ class Panel extends UIContentBlock
 	 */
 	public function IsIconAsMedallion(): bool
 	{
-		return $this->bIconAsMedallion;
+		return $this->HasIcon() && $this->bIconAsMedallion;
 	}
 
 	/**
