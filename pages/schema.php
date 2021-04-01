@@ -881,12 +881,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sAllowedValues = "";
 		$sMoreInfo = "";
 		$sDefaultNullValue = '';
-		$aCols = array();
-		foreach ($oAttDef->GetSQLColumns() as $sCol => $sFieldDesc)
-		{
-			$aCols[] = "$sCol: $sFieldDesc";
-		}
-		if (count($aCols) > 0)
+		if (call_user_func(array(get_class($oAttDef), 'IsBasedOnDBColumns')))
 		{
 
 			$aMoreInfo = array();

@@ -5249,6 +5249,20 @@ class AttributeEnum extends AttributeString
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
+		// Get the definition of the column, including the actual values present in the table
+		return $this->GetSQLColHelper($bFullSpec, true);
+	}
+
+	/**
+	 * A more versatile version of GetSQLCol
+	 * @since 3.0.0
+	 * @param bool $bFullSpec
+	 * @param bool $bIncludeActualValues
+	 * @param string $sSQLTableName The table where to look for the actual values (may be useful for data synchro tables)
+	 * @return string
+	*/
+	protected function GetSQLColHelper($bFullSpec = false, $bIncludeActualValues = false, $sSQLTableName = null)
+	{
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef)
 		{
@@ -5258,6 +5272,19 @@ class AttributeEnum extends AttributeString
 		{
 			$aValues = array();
 		}
+
+		// Preserve the values already present in the database to ease migrations
+		if ($bIncludeActualValues)
+		{
+			if ($sSQLTableName == null)
+			{
+				// No SQL table given, use the one of the attribute
+				$sHostClass = $this->GetHostClass();
+				$sSQLTableName = MetaModel::DBGetTable($sHostClass, $this->GetCode());
+			}
+			$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB($sSQLTableName)));
+		}
+
 		if (count($aValues) > 0)
 		{
 			// The syntax used here do matters
@@ -5274,6 +5301,48 @@ class AttributeEnum extends AttributeString
 				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
+	}
+
+	/**
+	 * @since 3.0.0
+	 * {@inheritDoc}
+	 * @see AttributeDefinition::GetImportColumns()
+	 */
+	public function GetImportColumns()
+	{
+		// Note: this is used by the Data Synchro to build the "data" table
+		// Right now the function is not passed the "target" SQL table, but if we improve this in the future
+		// we may call $this->GetSQLColHelper(true, true, $sDBTable); to take into account the actual 'enum' values
+		// in this table
+		return $this->GetSQLColHelper(true, false);
+	}
+
+	/**
+	 * Get the list of the actual 'enum' values present in the database
+	 * @since 3.0.0
+	 * @return string[]
+	 */
+	protected function GetActualValuesInDB(string $sDBTable)
+	{
+		$aValues = array();
+		try
+		{
+			$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
+			$aValuesInDB = CMDBSource::QueryToArray($sSQL);
+			foreach($aValuesInDB as $aRow)
+			{
+				if ($aRow['value'] !== null)
+				{
+					$aValues[] = $aRow['value'];
+				}
+			}
+		}
+		catch(MySQLException $e)
+		{
+			// Never mind, maybe the table does not exist yet (new installation from scratch)
+			// It seems more efficient to try and ignore errors than to test if the table & column really exists
+		}
+		return CMDBSource::Quote($aValues);
 	}
 
 	protected function GetSQLColSpec()
