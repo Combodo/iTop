@@ -1348,9 +1348,10 @@ EOF
 			}
 			else
 			{
-				foreach ($oAttDef->GetImportColumns() as $sField => $sDBFieldType)
-				{
-					$aColumns[$sField] = $sDBFieldType;
+				if (is_iterable($oAttDef->GetImportColumns())) {
+					foreach ($oAttDef->GetImportColumns() as $sField => $sDBFieldType) {
+						$aColumns[$sField] = $sDBFieldType;
+					}
 				}
 			}
 		}
