@@ -1,7 +1,7 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% set sListId = oUIBlock.GetOption('sListId') %}
-{% set sListIDForVarSuffix = sListId|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
+{% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
 {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
