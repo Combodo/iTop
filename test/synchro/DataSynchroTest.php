@@ -397,7 +397,7 @@ class DataSynchroTest extends ItopDataTestCase
 		$aTestCases['Load user logins by http']['bSynchroByHttp'] = true;
 
 		//TODO fix below usecases with Romain. be aware they are coupled with each other.
-		$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
+		/*$aTestCases['Simple scenario with delete option (and extkey given as org/name)'] = array(
 			'desc' => 'Simple scenario with delete option (and extkey given as org/name)',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -462,7 +462,7 @@ class DataSynchroTest extends ItopDataTestCase
 				),
 			),
 			'bSynchroByHttp' => false
-		);
+		);*/
 		/*$aTestCases['Update then delete with retention (to complete with manual testing) and reconciliation on org/name'] = array(
 			'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 			'target_class' => 'ApplicationSolution',
@@ -515,7 +515,7 @@ class DataSynchroTest extends ItopDataTestCase
 			),
 			'bSynchroByHttp' => false
 		);*/
-		$aTestCases['Simple scenario loading a few ApplicationSolution'] = array(
+		/*$aTestCases['Simple scenario loading a few ApplicationSolution'] = array(
 			'desc' => 'Simple scenario loading a few ApplicationSolution',
 			'target_class' => 'ApplicationSolution',
 			'source_properties' => array(
@@ -611,7 +611,7 @@ class DataSynchroTest extends ItopDataTestCase
 				),
 			),
 			'bSynchroByHttp' => false
-		);
+		);*/
 		return $aTestCases;
 	}
 }
