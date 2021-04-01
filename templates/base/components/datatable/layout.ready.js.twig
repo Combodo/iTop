@@ -1,6 +1,7 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% set sListId = oUIBlock.GetOption('sListId') %}
+{% set sListIDForVarSuffix = sListId|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
 {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
@@ -18,37 +19,37 @@ if ($('#{{ oUIBlock.GetId() }}') != 'undefined' && $.fn.dataTable.isDataTable('#
     $('#{{ oUIBlock.GetId() }}').DataTable().destroy(false);
 }
 //define maxHeight for Datatable
-var maxHeight{{ sListId }} = 300;
+var maxHeight{{ sListIDForVarSuffix }} = 300;
 if ($('#{{ oUIBlock.GetId() }}').closest('.ui-dialog').length > 0)
 {
     //we are in dialogbox
-    maxHeight{{ sListId }} = $('#{{ oUIBlock.GetId() }}').closest('.ui-dialog-content').height();
+    maxHeight{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').closest('.ui-dialog-content').height();
 }
 else
 {
-    maxHeight{{ sListId }} = $(window).height()-$('#ibo-top-container').outerHeight()+$('#ibo-main-content').height()-$('#ibo-main-content').outerHeight();
+    maxHeight{{ sListIDForVarSuffix }} = $(window).height()-$('#ibo-top-container').outerHeight()+$('#ibo-main-content').height()-$('#ibo-main-content').outerHeight();
 }
 
 if ($('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').length > 0)
 {
     //we are in dialogbox
-    maxHeight{{ sListId }} = maxHeight{{ sListId }}-$('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').outerHeight();
+    maxHeight{{ sListIDForVarSuffix }} = maxHeight{{ sListIDForVarSuffix }}-$('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').outerHeight();
 }
 if ($('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').length > 0)
 {
-    maxHeight{{ sListId }} = maxHeight{{ sListId }}-$('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').outerHeight();
+    maxHeight{{ sListIDForVarSuffix }} = maxHeight{{ sListIDForVarSuffix }}-$('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').outerHeight();
 }
-if (maxHeight{{ sListId }} < 300)
+if (maxHeight{{ sListIDForVarSuffix }} < 300)
 {
-    maxHeight{{ sListId }} = 250;
+    maxHeight{{ sListIDForVarSuffix }} = 250;
 }
 else
 {
-    maxHeight{{ sListId }} = maxHeight{{ sListId }} -50;
+    maxHeight{{ sListIDForVarSuffix }} = maxHeight{{ sListIDForVarSuffix }} -50;
 }
 
 
-var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
+var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
         search: "{{ 'UI:Datatables:Language:Search'|dict_s }}",
@@ -69,7 +70,7 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             sortDescending: ": {{ 'UI:Datatables:Language:Sort:Descending'|dict_s }}"
         }
     },
-    scrollY: maxHeight{{ sListId }},
+    scrollY: maxHeight{{ sListIDForVarSuffix }},
     scrollX: true,
     scrollCollapse: true,
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
@@ -199,13 +200,13 @@ var oTable{{ sListId }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     }
 });
 
-$('#{{ oUIBlock.GetId() }}').closest(".dataTables_scrollBody").css('max-height', maxHeight{{ sListId }}-100);
+$('#{{ oUIBlock.GetId() }}').closest(".dataTables_scrollBody").css('max-height', maxHeight{{ sListIDForVarSuffix }}-100);
 
 
 {% if oUIBlock.GetOption("select_mode") is not empty %}
 {% if oUIBlock.GetOption("select_mode") != "single" %}
-oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, indexes) {
-    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+oTable{{ sListIfForVarSuffix }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
     if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
     {
         // Checking input
@@ -238,8 +239,8 @@ oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, index
     }
 });
 
-oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+oTable{{ sListIfForVarSuffix }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
 
     // Checking input
     $('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
@@ -270,8 +271,8 @@ oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, i
     }
 });
 {% else %}
-oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, indexes) {
-    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+oTable{{ sListIfForVarSuffix }}.off('select').on('select', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
     // Checking input
     $('#{{ oUIBlock.GetId() }} tr[role="row"].selected td:first-child input').prop('checked', true);
     // Saving values in temp array
@@ -286,8 +287,8 @@ oTable{{ sListId }}.off('select').on('select', function (oEvent, dt, type, index
     }
 });
 
-oTable{{ sListId }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-    let aData = oTable{{ sListId }}.rows(indexes).data().toArray();
+oTable{{ sListIfForVarSuffix }}.off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
+    let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
 
     // Checking input
     $('#{{ oUIBlock.GetId() }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
