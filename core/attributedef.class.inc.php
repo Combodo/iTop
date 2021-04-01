@@ -5314,7 +5314,7 @@ class AttributeEnum extends AttributeString
 		// Right now the function is not passed the "target" SQL table, but if we improve this in the future
 		// we may call $this->GetSQLColHelper(true, true, $sDBTable); to take into account the actual 'enum' values
 		// in this table
-		return $this->GetSQLColHelper(true, false);
+		return array($this->GetCode() => $this->GetSQLColHelper(true, false));
 	}
 
 	/**
