@@ -135,7 +135,11 @@ class ThemeHandlerTest extends ItopTestCase
 						$sThemeId = $oTheme->getAttribute('id');
 
 						//echo "===  theme: $sThemeId ===\n";
-						$sPreCompiledSig = ThemeHandler::GetSignature(dirname(__FILE__)."/../../datamodels/2.x/".$sPrecompiledStylesheetUri);
+						$sPrecompiledFilePath = dirname(__FILE__)."/../../datamodels/2.x/".$sPrecompiledStylesheetUri;
+						$sPreCompiledSig = ThemeHandler::GetSignature($sPrecompiledFilePath);
+						if (empty(trim($sPreCompiledSig))){
+							var_dump("$sThemeId: $sPrecompiledFilePath => " . realpath($sPrecompiledFilePath));
+						}
 						//echo "  precompiled signature: $sPreCompiledSig\n";
 
 						if (empty($sPreCompiledSig))
