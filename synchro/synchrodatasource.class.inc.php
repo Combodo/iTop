@@ -1109,29 +1109,21 @@ EOF
 						$bOneColIsMissing = true;
 						if ($bVerbose)
 						{
-							if (count($aColumns) > 1)
-							{
+							if (count($aColumns) > 1) {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
 										$aColumns)." will be re-created.'.\n";
-							}
-							else
-							{
+							} else {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
 							}
 						}
-					}
-					elseif (!CMDBSource::IsSameFieldTypes(CMDBSource::GetFieldSpec($sTable, $sColName), $sColumnDef))
-					{
+					} elseif (!CMDBSource::IsSameFieldTypes($sColumnDef, CMDBSource::GetFieldSpec($sTable, $sColName))) {
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
-						if (count($aColumns) > 1)
-						{
+						if (count($aColumns) > 1) {
 							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
 									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
 									$aColumns)." will be re-created.'.\n";
-						}
-						else
-						{
+						} else {
 							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
 									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
 						}
