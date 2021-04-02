@@ -196,7 +196,7 @@ class DataSynchroTest extends ItopDataTestCase
 		}
 
 		//add sleep to make sure expected objects will be found
-		usleep(1000);
+		usleep(10000);
 		foreach($aTargetData as $iRow => $aExpectedObjects)
 		{
 			// Check the status (while ignoring existing objects)
@@ -254,9 +254,9 @@ class DataSynchroTest extends ItopDataTestCase
 				$aErrors[] = "Expected objects NOT found in iTop DB after step $iRow (starting at 0)\n".print_r($aExpectedObjects, true);
 			}
 			if (count($aErrors) > 0) {
-				static::fail(implode("\n", $aErrors));
-			}
-			else {
+				$sAdditionalInfo = (isset($sResultsViewable)) ? $sResultsViewable : "";
+				static::fail(implode("\n", $aErrors) . "\n $sAdditionalInfo");
+			} else {
 				static::assertTrue(true);
 			}
 
@@ -352,7 +352,6 @@ class DataSynchroTest extends ItopDataTestCase
 					$sPotentialIssuesWithWebApplication = $aSplittedRes[1];
 					$this->assertEquals("", $sPotentialIssuesWithWebApplication, 'when failed it means data synchro result is polluted with some web application stuff like html or js');
 				}
-
 			}
 		}
 	}
