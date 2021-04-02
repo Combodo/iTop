@@ -187,7 +187,7 @@ class ThemeHandler
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
-		if (isset($aThemeParameters['stylesheets'])) {
+		if (isset($aThemeParameters['imports_utility'])) {
 			foreach ($aThemeParameters['imports_utility'] as $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 			}

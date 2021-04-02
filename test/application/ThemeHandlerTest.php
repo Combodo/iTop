@@ -179,7 +179,7 @@ class ThemeHandlerTest extends ItopTestCase
 							ThemeHandler::FindStylesheetFile($oStylesheet->GetText(), $aImportsPaths, $oFindStylesheetObject);
 						}
 
-						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetStylesheetFileURIs(), $sThemeId);
+						$aIncludedImages = ThemeHandler::GetIncludedImages($aThemeParameters['variables'], $oFindStylesheetObject->GetAllStylesheetPaths(), $sThemeId);
 						$compiled_json_sig = ThemeHandler::ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages);
 						//echo "  current signature: $compiled_json_sig\n";
 
