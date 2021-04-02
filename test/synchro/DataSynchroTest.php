@@ -414,7 +414,7 @@ class DataSynchroTest extends ItopDataTestCase
 		$this->RunDataSynchroTest($aUserLoginUsecase);
 	}
 
-	public function testWithDeleteOption(){
+	/*public function testWithDeleteOption(){
 		$aUserLoginUsecase = array(
 			'desc' => 'Simple scenario with delete option (and extkey given as org/name)',
 			'target_class' => 'ApplicationSolution',
@@ -482,9 +482,9 @@ class DataSynchroTest extends ItopDataTestCase
 			'bSynchroByHttp' => false
 		);
 		$this->RunDataSynchroTest($aUserLoginUsecase);
-	}
+	}*/
 
-	public function testUpdateThenDeleteWithRetention(){
+	/*public function testUpdateThenDeleteWithRetention(){
 		$aUserLoginUsecase = array(
 			'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 			'target_class' => 'ApplicationSolution',
@@ -538,7 +538,7 @@ class DataSynchroTest extends ItopDataTestCase
 			'bSynchroByHttp' => false
 		);
 		$this->RunDataSynchroTest($aUserLoginUsecase);
-	}
+	}*/
 
 
 	public function testLoadingApplicationSolution(){
