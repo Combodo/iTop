@@ -606,6 +606,10 @@ CSS;
 			{
 				foreach ($aMatches[1] as $path)
 				{
+					$iRemainingClosingParenthesisPos = strpos($path, ')');
+					if ($iRemainingClosingParenthesisPos !== false){
+						$path = substr($path, 0, $iRemainingClosingParenthesisPos);
+					}
 					if (!array_key_exists($path, $aCompleteUrls)
 						&& !array_key_exists($path, $aToCompleteUrls))
 					{

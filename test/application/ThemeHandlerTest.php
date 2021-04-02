@@ -518,6 +518,7 @@ JSON;
 			"\$approot-relative + \"css/ui-lightness/images/toto.png?v=\" + \$version",
 			'$approot-relative + \'css/ui-lightness/images/titi.gif?v=\' + $version1',
 		'"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7?v=" + $version',
+		'$approot-relative + \'node_modules/raleway-webfont/fonts/Raleway-Thin.jpeg\'',
 		];
 
 		$aIncludedUrls['aCompleteUrls'];
