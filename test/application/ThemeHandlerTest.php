@@ -618,42 +618,48 @@ SCSS;
 	 * @throws \Exception
 	 */
 	public function testFindStylesheetFile(string $sFileToFind, array $aAllImports){
-		$aImportsPath = $this->sTmpDir.'/branding/';
-		$aExpectedAllImports =[];
-		if (count($aAllImports)!==0){
-			foreach ($aAllImports as $sFileURI){
-				$aExpectedAllImports [$sFileURI] = $aImportsPath.$sFileURI;
+		$sImportsPath = $this->sTmpDir.'/branding/';
+
+		// Windows compat O:)
+		$sFileToFind = $this->UpdateDirSep($sFileToFind);
+		$sImportsPath = $this->UpdateDirSep($sImportsPath);
+
+		$aExpectedAllImports = [];
+		if (count($aAllImports) !== 0) {
+			foreach ($aAllImports as $sFileURI) {
+				$aExpectedAllImports[$sFileURI] = $this->UpdateDirSep($sImportsPath.$sFileURI);
 			}
 		}
 
 
 		$oFindStylesheetObject = new FindStylesheetObject();
-		ThemeHandler::FindStylesheetFile($sFileToFind, [$aImportsPath], $oFindStylesheetObject);
+		ThemeHandler::FindStylesheetFile($sFileToFind, [$sImportsPath], $oFindStylesheetObject);
 
 		$this->assertEquals([$sFileToFind], $oFindStylesheetObject->GetStylesheetFileURIs());
 		$this->assertEquals($aExpectedAllImports, $oFindStylesheetObject->GetImportPaths());
-		$this->assertEquals($aImportsPath.$sFileToFind, $oFindStylesheetObject->GetLastStyleSheetPath());
+		$this->assertEquals($sImportsPath.$sFileToFind, $oFindStylesheetObject->GetLastStyleSheetPath());
 
 		$aExpectedAllStylesheetPaths = [];
-		foreach (array_merge([$sFileToFind], $aAllImports) as $sFileUri){
-			$aExpectedAllStylesheetPaths [] = $aImportsPath.$sFileUri;
+		foreach (array_merge([$sFileToFind], $aAllImports) as $sFileUri) {
+			$aExpectedAllStylesheetPaths [] = $this->UpdateDirSep($sImportsPath.$sFileUri);
 		}
 		$this->assertEquals($aExpectedAllStylesheetPaths, $oFindStylesheetObject->GetAllStylesheetPaths());
 	}
 
-	public function FindStylesheetFileProvider(){
-		$sFileToFind3 = "css/multi_imports.scss";
-		$sFileToFind4 = "css/included_file1.scss";
-		$sFileToFind5 = "css/included_scss/included_file2.scss";
+	public function FindStylesheetFileProvider()
+	{
+		$sFileToFind3 = 'css/multi_imports.scss';
+		$sFileToFind4 = 'css/included_file1.scss';
+		$sFileToFind5 = 'css/included_scss/included_file2.scss';
 
 		return [
 			"single file to find" => [
 				"sFileToFind" => "css/DO_NOT_CHANGE.light-grey.scss",
-				"aAllImports" => []
+				"aAllImports" => [],
 			],
 			"scss with simple @imports" => [
 				"sFileToFind" => "css/simple_import.scss",
-				"aAllImports" => [$sFileToFind4]
+				"aAllImports" => [$sFileToFind4],
 			],
 			"scss with multi @imports" => [
 				"sFileToFind" => $sFileToFind3,
@@ -669,18 +675,31 @@ SCSS;
 			],
 			"scss with @imports shortcut same file and folder names => feature1/_feature1.scss" => [
 				"sFileToFind" => "css/shortcut2.scss",
-				"aAllImports" => ["css/feature1/_feature1.scss"]
+				"aAllImports" => ["css/feature1/_feature1.scss"],
 			],
 			"cross_reference & infinite loop" => [
 				"sFileToFind" => "css/cross_reference1.scss",
-				"aAllImports" => ["css/cross_reference2.scss"]
+				"aAllImports" => ["css/cross_reference2.scss"],
 			],
 		];
 	}
 
 	/**
+	 * @param string $sPath
+	 *
+	 * @return string replace '/' by appropriate dir separator, depending on OS
+	 *
+	 * @uses DIRECTORY_SEPARATOR
+	 */
+	private function UpdateDirSep(string $sPath)
+	{
+		return str_replace('/', DIRECTORY_SEPARATOR, $sPath);
+	}
+
+	/**
 	 * @param $sPath
 	 * @param $sExpectedCanonicalPath
+	 *
 	 * @dataProvider CanonicalizePathProvider
 	 */
 	public function testCanonicalizePath($sExpectedCanonicalPath, $sPath)
