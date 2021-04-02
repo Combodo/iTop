@@ -541,7 +541,7 @@ class DataSynchroTest extends ItopDataTestCase
 	}*/
 
 
-	public function testLoadingApplicationSolution(){
+	/*public function testLoadingApplicationSolution(){
 		$aUserLoginUsecase= array(
 			'desc' => 'Simple scenario loading a few ApplicationSolution',
 			'target_class' => 'ApplicationSolution',
@@ -640,5 +640,5 @@ class DataSynchroTest extends ItopDataTestCase
 			'bSynchroByHttp' => false
 		);
 		$this->RunDataSynchroTest($aUserLoginUsecase);
-	}
+	}*/
 }
