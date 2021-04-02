@@ -30,6 +30,9 @@ class DataSynchroTest extends ItopDataTestCase
 {
 	protected const AUTH_USER = 'DataSynchroTest';
 	protected const AUTH_PWD = 'sdf234(-fgh;,dfgDFG';
+	const USE_TRANSACTION = false;
+	private $oOrg1;
+	private $oOrg2;
 
 	protected function setUp()
 	{
@@ -56,6 +59,20 @@ class DataSynchroTest extends ItopDataTestCase
 			$oUser->Set('profile_list', $oProfiles);
 			$oUser->DBInsertNoReload();
 		}
+
+		/** @var \Organization $oOrganisation */
+		$sUniqueId1 = microtime();
+		$oOrganisation = $this->createObject('Organization', array(
+			'name' => 'datasynchro_org1_' . $sUniqueId1,
+			'code' => $sUniqueId1
+		));
+		$this->oOrg1 = $oOrganisation;
+		$sUniqueId2 = microtime();
+		$oOrganisation2 = $this->createObject('Organization', array(
+			'name' => 'datasynchro_org2_' . $sUniqueId2,
+			'code' => $sUniqueId2
+		));
+		$this->oOrg2 = $oOrganisation2;
 	}
 
 	protected function ExecSynchroImport($aParams, $bSynchroByHttp)
@@ -178,6 +195,8 @@ class DataSynchroTest extends ItopDataTestCase
 			$oNewTarget->DBInsertNoReload();
 		}
 
+		//add sleep to make sure expected objects will be found
+		usleep(1000);
 		foreach($aTargetData as $iRow => $aExpectedObjects)
 		{
 			// Check the status (while ignoring existing objects)
@@ -314,7 +333,7 @@ class DataSynchroTest extends ItopDataTestCase
 
 				$aKeys = ["creation", "update", "deletion"];
 				foreach ($aKeys as $sKey){
-					$this->assertContains("$sKey errors: 0", $sResultsViewable, $sResultsViewable);
+					$this->assertContains("$sKey errors: 0", $sResultsViewable, "step $iRow : below res should contain '$sKey errors: 0': " . $sResultsViewable);
 				}
 
 				//N°3805 : potential javascript returned like
@@ -415,34 +434,34 @@ class DataSynchroTest extends ItopDataTestCase
 				array(
 					array('obj_A', '<NULL>', 'obj_A', 'active'), // org_id unchanged
 					array('obj_B', '_DUMMY_', 'obj_B', 'active'), // error, '_DUMMY_' unknown
-					array('obj_C', 'SOMECODE', 'obj_C', 'active'),
-					array('obj_D', 'SOMECODE', 'obj_D', 'active'),
-					array('obj_E', 'SOMECODE', 'obj_E', 'active'),
+					array('obj_C', $this->oOrg1->Get('code'), 'obj_C', 'active'),
+					array('obj_D', $this->oOrg1->Get('code'), 'obj_D', 'active'),
+					array('obj_E', $this->oOrg1->Get('code'), 'obj_E', 'active'),
 				),
 				array(
-					array('obj_D', 'SOMECODE', 'obj_D', 'inactive'),
-					array('obj_E', 'SOMECODE', 'obj_E', '<NULL>'),
+					array('obj_D', $this->oOrg1->Get('code'), 'obj_D', 'inactive'),
+					array('obj_E', $this->oOrg1->Get('code'), 'obj_E', '<NULL>'),
 				),
 			),
 			'target_data' => array(
 				array('org_id', 'name', 'status'),
 				array(
 					// Initial state
-					array(2, 'obj_A', 'active'),
-					array(2, 'obj_B', 'active'),
+					array($this->oOrg2->GetKey(), 'obj_A', 'active'),
+					array($this->oOrg2->GetKey(), 'obj_B', 'active'),
 				),
 				array(
-					array(2, 'obj_A', 'active'),
-					array(2, 'obj_B', 'active'),
-					array(1, 'obj_C', 'active'),
-					array(1, 'obj_D', 'active'),
-					array(1, 'obj_E', 'active'),
+					array($this->oOrg2->GetKey(), 'obj_A', 'active'),
+					array($this->oOrg2->GetKey(), 'obj_B', 'active'),
+					array($this->oOrg1->GetKey(), 'obj_C', 'active'),
+					array($this->oOrg1->GetKey(), 'obj_D', 'active'),
+					array($this->oOrg1->GetKey(), 'obj_E', 'active'),
 				),
 				array(
-					array(2, 'obj_A', 'active'),
-					array(2, 'obj_B', 'active'),
-					array(1, 'obj_D', 'inactive'),
-					array(1, 'obj_E', 'active'),
+					array($this->oOrg2->GetKey(), 'obj_A', 'active'),
+					array($this->oOrg2->GetKey(), 'obj_B', 'active'),
+					array($this->oOrg1->GetKey(), 'obj_D', 'inactive'),
+					array($this->oOrg1->GetKey(), 'obj_E', 'active'),
 				),
 			),
 			'attributes' => array(
@@ -466,7 +485,7 @@ class DataSynchroTest extends ItopDataTestCase
 		$this->RunDataSynchroTest($aUserLoginUsecase);
 	}
 
-	/*public function testUpdateThenDeleteWithRetention(){
+	public function testUpdateThenDeleteWithRetention(){
 		$aUserLoginUsecase = array(
 			'desc' => 'Update then delete with retention (to complete with manual testing) and reconciliation on org/name',
 			'target_class' => 'ApplicationSolution',
@@ -483,7 +502,7 @@ class DataSynchroTest extends ItopDataTestCase
 			'source_data' => array(
 				array('primary_key', 'org_id', 'name', 'status'),
 				array(
-					array('obj_A', 'Demo', 'obj_A', 'active'),
+					array('obj_A', $this->oOrg1->Get('name'), 'obj_A', 'active'),
 				),
 				array(
 				),
@@ -494,10 +513,10 @@ class DataSynchroTest extends ItopDataTestCase
 					// Initial state
 				),
 				array(
-					array(3, 'obj_A', 'active'),
+					array($this->oOrg1->GetKey(), 'obj_A', 'active'),
 				),
 				array(
-					array(3, 'obj_A', 'inactive'),
+					array($this->oOrg1->GetKey(), 'obj_A', 'inactive'),
 					// deleted !
 				),
 			),
@@ -520,7 +539,7 @@ class DataSynchroTest extends ItopDataTestCase
 			'bSynchroByHttp' => false
 		);
 		$this->RunDataSynchroTest($aUserLoginUsecase);
-	}*/
+	}
 
 
 	public function testLoadingApplicationSolution(){
