@@ -97,10 +97,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			valueField: 'value',
 			labelField: 'label',
 			searchField: 'label',
-			options:JSON.parse(options),
+			options: JSON.parse(options),
 			maxItems: 1,
 			copyClassesToDropdown: false,
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
+			// To avoid dropdown to be cut by the container's overflow hidden rule
+			dropdownParent: 'body',
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
