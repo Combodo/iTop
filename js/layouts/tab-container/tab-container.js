@@ -108,8 +108,8 @@ $(function()
                 if(window.ResizeObserver)
                 {
                     const oTabsListRO = new ResizeObserver(function(){
-                        // Note: For a reason I don't understand, when called instantly the sub function IsElementVisibleToTheUser() won't be able to retrieve an element using the document.elementFromPoint() function
-                        // As it won't return anything, the function always thinks it's invisible...
+                        // Note: For a reason I don't understand, when called instantly the sub function CombodoGlobalToolbox.IsElementVisibleToTheUser() won't be able to retrieve an element using the document.elementFromPoint() function
+	                    // As it won't return anything, the function always thinks it's invisible...
                         setTimeout(function(){
                             me._onTabContainerResize();
                         }, 200);
@@ -247,14 +247,11 @@ $(function()
             	const sTabId = oTabHeaderElem.attr('data-tab-id');
             	const oMatchingExtraTabElem = this.element.find(this.js_selectors.extra_tab_toggler+'[href="#'+sTabId+'"]');
 
-                if(!IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2))
-                {
-                    oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
-                }
-                else
-                {
-                    oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
-                }
+	            if (!CombodoGlobalToolbox.IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2)) {
+		            oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
+	            } else {
+		            oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
+	            }
             },
             // - Update extra tabs list
             _updateExtraTabsList: function()
