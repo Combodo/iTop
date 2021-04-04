@@ -12,6 +12,7 @@ $ibo-input-select-selectize--value--line-height: $ibo-input--height !default;
 
 $ibo-input-select-wrapper--width: 100% !default;
 
+$ibo-input-select-wrapper--after--right: 8px !default;
 $ibo-input-select-wrapper--after--height: 28px !default;
 $ibo-input-select-wrapper--after--margin-left: -16px !default;
 $ibo-input-select-wrapper--after--margin-top: 1px !default;
@@ -112,12 +113,13 @@ $ibo-input-select--action-button--padding-right: 2px !default;
 }
 
 .ibo-input-select-wrapper--with-buttons::after {
-  position: static;
+  position: absolute;
   content: "\f0d7";
   font-family: "Font Awesome 5 Free";
   font-weight: 600;
   cursor: pointer;
 
+  right: $ibo-input-select-wrapper--after--right;
   height: $ibo-input-select-wrapper--after--height;
   margin-left: $ibo-input-select-wrapper--after--margin-left;
   margin-top: $ibo-input-select-wrapper--after--margin-top;
@@ -126,7 +128,6 @@ $ibo-input-select--action-button--padding-right: 2px !default;
   background-color: $ibo-input-select-wrapper--after--background-color;
   color: $ibo-input-select-wrapper--after--color;
   pointer-events: none;
-  z-index: 100;
 }
 .ibo-input-select--action-buttons{
   position: absolute;
