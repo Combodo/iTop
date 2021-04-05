@@ -426,4 +426,59 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			],
 		];
 	}
+
+	/**
+	 * @dataProvider ToAcronymProvider
+	 * @covers       utils::ToAcronym
+	 *
+	 * @param string $sInput
+	 * @param string $sExceptedAcronym
+	 */
+	public function testToAcronym(string $sInput, string $sExceptedAcronym)
+	{
+		$sTestedAcronym = utils::ToAcronym($sInput);
+		$this->assertEquals($sTestedAcronym, $sExceptedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
+	}
+
+	public function ToAcronymProvider()
+	{
+		return [
+			'One word, upper case letter' => [
+				'Carrie',
+				'C',
+			],
+			'One word, lower case letter' => [
+				'carrie',
+				'C',
+			],
+			'Application name' => [
+				'iTop',
+				'I',
+			],
+			'Several words, upper case letters' => [
+				'Carrie Ann Moss',
+				'CAM',
+			],
+			'Several words, mixed case letters' => [
+				'My name My name',
+				'MM',
+			],
+			'Several words, upper case letters, two first hyphened' => [
+				'Lily-Rose Depp',
+				'LRD',
+			],
+			'Several words, mixed case letters, two first hyphened' => [
+				'Lily-rose Depp',
+				'LD',
+			],
+			'Several words, upper case letetrs, two last hypened' => [
+				'Jada Pinkett-Smith',
+				'JPS',
+			],
+			'Several words, mixed case letters, two last hyphened' => [
+				'Jada Pinkett-smith',
+				'JP',
+			],
+		];
+	}
 }

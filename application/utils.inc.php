@@ -2803,4 +2803,31 @@ HTML;
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
 	}
+
+	/**
+	 * @param string $sInput
+	 *
+	 * @return string First letter of first word + first letter of any other word if capitalized
+	 * @since 3.0.0
+	 */
+	public static function ToAcronym(string $sInput): string
+	{
+		$sAcronym = '';
+		// - Capitalize the first letter no matter what
+		$sReworkedInput = ucfirst($sInput);
+		// - Replace dashes with spaces to interpret all parts of the input
+		$sReworkedInput = str_replace('-', ' ', $sReworkedInput);
+		// - Explode input to check parts individually
+		$aInputParts = explode(' ', $sReworkedInput);
+		foreach ($aInputParts as $sInputPart) {
+			// Keep only upper case first letters
+			// eg. "My first name My last name" => "MM"
+			// eg. "Carrie Anne Moss" => "CAM"
+			if (preg_match('/^\p{Lu}/u', $sInputPart) > 0) {
+				$sAcronym .= mb_substr($sInputPart, 0, 1);
+			}
+		}
+
+		return $sAcronym;
+	}
 }
