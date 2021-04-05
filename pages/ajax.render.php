@@ -2723,13 +2723,20 @@ EOF
 						'class' => $sObjectClass,
 						'id' => $iObjectId,
 						'friendlyname' => $oObject->Get('friendlyname'),
+						'initials' => '',
 					];
 
-					if(!empty($sObjectImageAttCode)) {
+					// Try to retrieve image for contact
+					if (!empty($sObjectImageAttCode)) {
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
-						$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+						if (!$oImage->IsEmpty()) {
+							$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+						}
 					}
+
+					// If no image found, fallback on initials
+					$aMatch['initials'] = array_key_exists('picture_url', $aMatch) ? '' : utils::ToAcronym($oObject->Get('friendlyname'));
 
 					$aMatches[] = $aMatch;
 				}
