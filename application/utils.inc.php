@@ -2392,28 +2392,6 @@ class utils
 	}
 
 	/**
-	 * Check if iTop is in a development environment (VCS vs build number)
-	 *
-	 * @return bool
-	 */
-	public static function IsDevelopmentEnvironment()
-	{
-		return ITOP_REVISION  === 'svn';
-	}
-
-	/**
-	 * Check if debug is enabled in the current environment.
-	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
-	 *
-	 * @return bool
-	 * @since 3.0.0
-	 */
-	public static function IsDebugEnabled()
-	{
-		return utils::ReadParam('debug') === 'true';
-	}
-
-	/**
 	 * @see https://php.net/manual/en/function.finfo-file.php
 	 *
 	 * @param string $sFilePath file full path
@@ -2445,39 +2423,6 @@ class utils
 		@finfo_close($rInfo);
 
 		return $sMimeType;
-	}
-
-	/**
-	 * helper to test if a string starts with another
-	 * @param $haystack
-	 * @param $needle
-	 *
-	 * @return bool
-	 */
-	final public static function StartsWith($haystack, $needle)
-	{
-		if (strlen($needle) > strlen($haystack))
-		{
-			return false;
-		}
-
-		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
-	}
-
-	/**
-	 * helper to test if a string ends with another
-	 * @param $haystack
-	 * @param $needle
-	 *
-	 * @return bool
-	 */
-	final public static function EndsWith($haystack, $needle) {
-		if (strlen($needle) > strlen($haystack))
-		{
-			return false;
-		}
-		
-		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 	}
 
 	/**
@@ -2569,19 +2514,6 @@ class utils
 		return getenv('username');
 	}
 
-	/**
-	 * Transform a snake_case $sInput into a CamelCase string
-	 *
-	 * @since 2.7.0
-	 * @param string $sInput
-	 *
-	 * @return string
-	 */
-	public static function ToCamelCase($sInput)
-	{
-		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
-	}
-
 	public static function FilterXSS($sHTML)
 	{
 		return str_ireplace('<script', '&lt;script', $sHTML);
@@ -2607,14 +2539,6 @@ class utils
 
 		$e = new CoreException($sMessage, null, '', $oException);
 		throw $e;
-	}
-
-	/**
-	 * @since 3.0.0
-	 */
-	public static function IsEasterEggAllowed()
-	{
-		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
 	}
 
 	/**
@@ -2682,15 +2606,6 @@ HTML;
 
 		return array_merge($aDefaultConf, $aRichTextConfig);
 	}
-
-	/**
-	 * @return bool : indicate whether we run under a windows environnement or not
-	 * @since 2.7.4 : N°3412
-	 */
-	public static function IsWindowsEnvironment(){
-		return (substr(PHP_OS,0,3) === 'WIN');
-	}
-
 
 	/**
 	 * @param string $sInterface
@@ -2793,5 +2708,99 @@ HTML;
 		}
 
 		return $aResultPref;
+	}
+
+	//----------------------------------------------
+	// Environment helpers
+	//----------------------------------------------
+
+	/**
+	 * Check if iTop is in a development environment (VCS vs build number)
+	 *
+	 * @return bool
+	 */
+	public static function IsDevelopmentEnvironment()
+	{
+		return ITOP_REVISION === 'svn';
+	}
+
+	/**
+	 * @return bool : indicate whether we run under a windows environnement or not
+	 * @since 2.7.4 : N°3412
+	 */
+	public static function IsWindowsEnvironment()
+	{
+		return (substr(PHP_OS, 0, 3) === 'WIN');
+	}
+
+	/**
+	 * Check if debug is enabled in the current environment.
+	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public static function IsDebugEnabled()
+	{
+		return utils::ReadParam('debug') === 'true';
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public static function IsEasterEggAllowed()
+	{
+		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
+	}
+
+	//----------------------------------------------
+	// String helpers
+	//----------------------------------------------
+
+	/**
+	 * helper to test if a string starts with another
+	 *
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function StartsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack)) {
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+	}
+
+	/**
+	 * helper to test if a string ends with another
+	 *
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function EndsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack)) {
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+	}
+
+	/**
+	 * Transform a snake_case $sInput into a CamelCase string
+	 *
+	 * @param string $sInput
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public static function ToCamelCase($sInput)
+	{
+		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
 	}
 }
