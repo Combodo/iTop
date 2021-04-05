@@ -1258,7 +1258,7 @@ class UserRights
 	}
 
 	/**
-	 * Render the user initials in best effort mode
+	 * Render the user initials in best effort mode (first letter of first word + first letter of any other word if capitalized)
 	 *
 	 * @param string $sLogin Login of the user from which we want to retrieve the initials
 	 *
