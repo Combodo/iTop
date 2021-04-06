@@ -645,7 +645,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:TriggerOnObjectMention' => 'Déclencheur (sur objet mentionné)',
+	'Class:TriggerOnObjectMention' => 'Déclencheur sur mention d\'objet',
 	'Class:TriggerOnObjectMention+' => 'Déclencheur sur un objet mentionné (@xxx) de la classe choisie (ou de ses filles) dans un attribut de type journal',
 ));
 
