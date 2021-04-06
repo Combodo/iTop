@@ -122,6 +122,7 @@ function DisplayDetails($oP, $sClass, $oObj, $id)
 		throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
 	}
 	$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+	$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion()?cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT:cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 	$oObj->DisplayDetails($oP);
 }
 
@@ -420,19 +421,7 @@ try
 				if (!is_null($oObj))
 				{
 					SetObjectBreadCrumbEntry($oObj, $oP);
-//					DisplayDetails($oP, $sClass, $oObj, $id);
-
-					// The object could be listed, check if it is actually allowed to view it
-					$oSet = CMDBObjectSet::FromObject($oObj);
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
-					{
-						throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
-					}
-
-					$sClassLabel = MetaModel::GetName($sClass);
-					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion()?cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT:cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
-					$oObj->DisplayDetails($oP);
+					DisplayDetails($oP, $sClass, $oObj, $id);
 				}				
 			}
 		break;
