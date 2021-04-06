@@ -765,7 +765,7 @@ class DeadLockLog extends LogAPI
  */
 class DeprecatedCallsLog extends LogAPI
 {
-	public const CHANNEL_PHP = 'deprecated-php';
+	public const CHANNEL_PHP = 'deprecated-method';
 	public const CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::CHANNEL_PHP;
 
@@ -791,7 +791,7 @@ class DeprecatedCallsLog extends LogAPI
 		return parent::GetMinLogLevel($sChannel);
 	}
 
-	public static function ErrorFile(?string $sAdditionalMessage = null): void
+	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
 	{
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 		$sCallerFile = $aStack[0]['file'];
@@ -811,7 +811,7 @@ class DeprecatedCallsLog extends LogAPI
 	 * @uses \debug_backtrace()
 	 * @link https://www.php.net/debug_backtrace
 	 */
-	public static function ErrorPhp(?string $sAdditionalMessage = null): void
+	public static function NotifyDeprecatedMethod(?string $sAdditionalMessage = null): void
 	{
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
 		$sCallerObject = $aStack[1]['class'];

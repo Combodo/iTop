@@ -1427,7 +1427,7 @@ class WebPage implements Page
 	 */
 	protected function outputCollapsibleSectionInit()
 	{
-		DeprecatedCallsLog::ErrorPhp();
+		DeprecatedCallsLog::NotifyDeprecatedMethod();
 		if (!$this->bHasCollapsibleSection) {
 			return;
 		}
