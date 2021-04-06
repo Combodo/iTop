@@ -566,7 +566,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObject' => 'Déclencheur sur modification de données',
 	'Class:TriggerOnObject+' => '',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe cible',
-	'Class:TriggerOnObject/Attribute:target_class+' => 'label',
+	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
 	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Requête de filtrage incorrecte: %1$s',
@@ -590,7 +590,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateChange' => 'Déclencheur sur changement d\'état',
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Etat',
-	'Class:TriggerOnStateChange/Attribute:state+' => 'label',
+	'Class:TriggerOnStateChange/Attribute:state+' => '',
 ));
 
 //
