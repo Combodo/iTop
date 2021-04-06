@@ -830,7 +830,7 @@ class DeprecatedCallsLog extends LogAPI
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
 	{
 		if (utils::IsDevelopmentEnvironment()) {
-			trigger_error($sMessage);
+			trigger_error($sMessage, E_USER_DEPRECATED);
 		}
 
 		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
