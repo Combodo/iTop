@@ -1229,6 +1229,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'activity_panel.prefilter_only_current_log' => [
+			'type' => 'bool',
+			'description' => 'Whether the "Logs" filter should only be set to the log from the current tab or to all of them.',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'activity_panel.show_author_name_below_entries' => [
 			'type' => 'bool',
 			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry.',
