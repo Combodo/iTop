@@ -9,6 +9,7 @@ $ibo-input-select-autocomplete--value--min-midth: 150px;
 $ibo-input-select-selectize--value--min-midth: 150px;
 $ibo-input-select-selectize--value--height: 100% !default;
 $ibo-input-select-selectize--value--line-height: $ibo-input--height !default;
+$ibo-input-select-selectize--dropdown--max-height: 50vh !default;
 
 $ibo-input-select-wrapper--width: 100% !default;
 
@@ -160,8 +161,10 @@ $ibo-input-select--action-button--padding-right: 2px !default;
   float: right;
 }
 
-.selectize-dropdown{
-	z-index:2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
+.selectize-dropdown {
+  z-index: 2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
+  max-height: $ibo-input-select-selectize--dropdown--max-height;
+  overflow-y: auto;
 }
 .selectize-dropdown.ui-menu .ui-state-active {
 	margin: unset;
