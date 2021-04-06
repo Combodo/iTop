@@ -813,12 +813,15 @@ class DeprecatedCallsLog extends LogAPI
 	 */
 	public static function NotifyDeprecatedMethod(?string $sAdditionalMessage = null): void
 	{
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 2);
-		$sCallerObject = $aStack[1]['class'];
-		$sCallerMethod = $aStack[1]['function'];
-		$sCallerLine = $aStack[1]['line'];
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
+		$sCallerObject = $aStack[2]['class'];
+		$sCallerMethod = $aStack[2]['function'];
+		$sCallerLine = $aStack[2]['line'];
 
-		$sMessage = "{$sCallerObject}::{$sCallerMethod} L{$sCallerLine}";
+		$sDeprecatedObject = $aStack[1]['class'];
+		$sDeprecatedMethod = $aStack[1]['function'];
+
+		$sMessage = "{$sCallerObject}::{$sCallerMethod} L{$sCallerLine} calling {$sDeprecatedObject}:{$sDeprecatedMethod}";
 
 		if (!is_null($sAdditionalMessage)) {
 			$sMessage .= ' : '.$sAdditionalMessage;
