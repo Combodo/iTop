@@ -769,7 +769,7 @@ class DeprecatedCallsLog extends LogAPI
 	public const CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::CHANNEL_PHP;
 
-	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
+	public const LEVEL_DEFAULT = self::LEVEL_WARNING;
 
 	/** @var \FileLog we want our own instance ! */
 	protected static $m_oFileLog = null;
@@ -802,7 +802,7 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Error($sMessage, static::CHANNEL_FILE);
+		static::Warning($sMessage, static::CHANNEL_FILE);
 	}
 
 	/**
@@ -824,12 +824,12 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Error($sMessage, static::CHANNEL_PHP);
+		static::Warning($sMessage, static::CHANNEL_PHP);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
 	{
-		if ((static::LEVEL_ERROR === $sLevel) && utils::IsDevelopmentEnvironment()) {
+		if (utils::IsDevelopmentEnvironment()) {
 			trigger_error($sMessage);
 		}
 
