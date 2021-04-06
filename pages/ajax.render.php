@@ -2711,11 +2711,11 @@ EOF
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sTargetClass WHERE friendlyname LIKE :needle");
 				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
-				$oSet->SetLimit(5);
+				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
-				while($oObject = $oSet->Fetch()) {
+				while ($oObject = $oSet->Fetch()) {
 					// Note $oObject finalclass might be different than $sTargetClass
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();

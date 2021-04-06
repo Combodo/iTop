@@ -26,6 +26,7 @@ use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use DBObjectSet;
 use DBSearch;
 use FieldExpression;
+use MetaModel;
 use ScalarExpression;
 
 /**
@@ -43,10 +44,22 @@ class SelectObjectField extends Field
 
 	/** @var \DBSearch $oSearch */
 	protected $oSearch;
-	/** @var int $iMaximumComboLength */
+	/**
+	 * @see \Config 'max_combo_length'
+	 * @var int $iMaximumComboLength
+	 */
 	protected $iMaximumComboLength;
-	/** @var int $iMinAutoCompleteChars */
+	/**
+	 * @see \Config 'min_autocomplete_chars'
+	 * @var int $iMinAutoCompleteChars
+	 */
 	protected $iMinAutoCompleteChars;
+	/**
+	 * @see \Config 'max_autocomplete_results'
+	 * @var int
+	 * @since 3.0.0
+	 */
+	protected $iMaxAutoCompleteResults;
 	/** @var bool $bHierarchical */
 	protected $bHierarchical;
 	/** @var int $iControlType */
@@ -61,8 +74,9 @@ class SelectObjectField extends Field
 	{
 		parent::__construct($sId, $onFinalizeCallback);
 		$this->oSearch = null;
-		$this->iMaximumComboLength = null;
-		$this->iMinAutoCompleteChars = 3;
+		$this->iMaximumComboLength = MetaModel::GetConfig()->Get('max_combo_length');
+		$this->iMinAutoCompleteChars = MetaModel::GetConfig()->Get('min_autocomplete_chars');
+		$this->iMaxAutoCompleteResults = MetaModel::GetConfig()->Get('max_autocomplete_results');
 		$this->bHierarchical = false;
 		$this->iControlType = self::CONTROL_SELECT;
 		$this->sSearchEndpoint = null;
@@ -100,6 +114,21 @@ class SelectObjectField extends Field
 	public function SetMinAutoCompleteChars(int $iMinAutoCompleteChars)
 	{
 		$this->iMinAutoCompleteChars = $iMinAutoCompleteChars;
+
+		return $this;
+	}
+
+	/**
+	 * @see static::$iMaxAutoCompleteResults
+	 *
+	 * @param int $iMaxAutoCompleteResults
+	 *
+	 * @return $this;
+	 * @since 3.0.0
+	 */
+	public function SetMaxAutoCompleteResults(int $iMaxAutoCompleteResults)
+	{
+		$this->iMaxAutoCompleteResults = $iMaxAutoCompleteResults;
 
 		return $this;
 	}
@@ -185,6 +214,16 @@ class SelectObjectField extends Field
 	public function GetMinAutoCompleteChars()
 	{
 		return $this->iMinAutoCompleteChars;
+	}
+
+	/**
+	 * @see static::$iMaxAutoCompleteResults
+	 * @return int
+	 * @since 3.0.0
+	 */
+	public function GetMaxAutoCompleteResults(): int
+	{
+		return $this->iMaxAutoCompleteResults;
 	}
 
 	/**

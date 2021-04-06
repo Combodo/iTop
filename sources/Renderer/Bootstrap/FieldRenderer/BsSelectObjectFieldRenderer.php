@@ -266,7 +266,7 @@ EOF
 							},{
 								name: '{$this->oField->GetId()}',
 								source: oAutocompleteSource_{$this->oField->GetId()},
-								limit: 20,
+								limit: {$this->oField->GetMaxAutoCompleteResults()},
 								display: 'name',
 								templates: {
 									suggestion: Handlebars.compile('<div>{{name}}</div>'),

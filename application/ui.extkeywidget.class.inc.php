@@ -748,7 +748,7 @@ JS
 		// Current extkey value, so we can display event if it is not available anymore (eg. archived).
 		$iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
-		$iMax = 150;
+		$iMax = MetaModel::GetConfig()->Get('max_autocomplete_results');
 		$oValuesSet->SetLimit($iMax);
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
@@ -756,9 +756,8 @@ JS
 		$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
 		asort($aValuesContains);
 		$aValues = $aValuesContains;
-		if (sizeof($aValues) < $iMax)
-		{
-			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'contains');
+		if (sizeof($aValues) < $iMax) {
+			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 			asort($aValuesContains);
 			$iSize = sizeof($aValuesContains);
 			foreach ($aValuesContains as $sKey => $sFriendlyName)

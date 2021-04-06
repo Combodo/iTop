@@ -6845,6 +6845,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->GetOptional('min_autocomplete_chars', MetaModel::GetConfig()->Get('min_autocomplete_chars'));
 	}
 
+	/**
+	 * @return int
+	 * @since 3.0.0
+	 */
+	public function GetMaxAutoCompleteResults(): int
+	{
+		return MetaModel::GetConfig()->Get('max_autocomplete_results');
+	}
+
 	public function AllowTargetCreation()
 	{
 		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
@@ -6889,8 +6898,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
@@ -6899,11 +6907,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		// Setting params
 		$oFormField->SetMaximumComboLength($this->GetMaximumComboLength());
 		$oFormField->SetMinAutoCompleteChars($this->GetMinAutoCompleteChars());
+		$oFormField->SetMaxAutoCompleteResults($this->GetMaxAutoCompleteResults());
 		$oFormField->SetHierarchical(MetaModel::IsHierarchicalClass($this->GetTargetClass()));
 		// Setting choices regarding the field dependencies
 		$aFieldDependencies = $this->GetPrerequisiteAttributes();
-		if (!empty($aFieldDependencies))
-		{
+		if (!empty($aFieldDependencies)) {
 			$oTmpAttDef = $this;
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function () use ($oTmpField, $oTmpAttDef, $oObject) {
