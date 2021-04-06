@@ -301,6 +301,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'max_autocomplete_results' => [
+			'type' => 'integer',
+			'description' => 'The maximum number of result elements to display, no matter the total number of results',
+			'default' => 150,
+			'value' => 150,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'allow_menu_on_linkset' => [
 			'type' => 'bool',
 			'description' => 'Display Action menus in view mode on any LinkedSet with edit_mode != none',
