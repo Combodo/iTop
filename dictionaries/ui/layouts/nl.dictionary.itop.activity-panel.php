@@ -52,6 +52,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activiteiten paneel',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Klik om het activiteiten paneel te openen',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activiteitenpaneel',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Klik om het activiteitenpaneel te openen',
 ));

@@ -26,7 +26,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:RichText:ToolbarState' => 'Standaard status werkbalk',
 	'UI:Preferences:RichText:ToolbarState:Expanded' => 'Uitgeklapt~~',
 	'UI:Preferences:RichText:ToolbarState:Collapsed' => 'Ingeklapt~~',
-	'UI:Preferences:ActivityPanel:Title' => 'Activiteiten paneel',
+	'UI:Preferences:ActivityPanel:Title' => 'Activiteitenpaneel',
 	'UI:Preferences:ActivityPanel:EntryFormOpened' => 'Entry form opened by default~~',
 	'UI:Preferences:ActivityPanel:EntryFormOpened+' => 'Whether the entry form will be opened when displaying an object. If unchecked, you will still be able to open it by clicking the compose button~~',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title' => 'Sneltoetsen',
