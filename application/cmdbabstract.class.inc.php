@@ -4665,10 +4665,6 @@ EOF
 	{
 		/** @var string[] $aHeaders */
 		$aHeaders = array(
-			'form::select' => array(
-				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
-				'description' => Dict::S('UI:SelectAllToggle+'),
-			),
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
 			'status' => array(
 				'label' => Dict::S('UI:BulkModifyStatus'),
@@ -4712,11 +4708,8 @@ EOF
 			} else {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 			}
-			$sCSSClass = $bResult ? HILIGHT_CLASS_NONE : HILIGHT_CLASS_CRITICAL;
 			$sChecked = $bResult ? 'checked' : '';
-			$sDisabled = $bResult ? '' : 'disabled';
 			$aRows[] = array(
-				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
 				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
@@ -4727,7 +4720,6 @@ EOF
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
-		$oTable->SetOptions(['select_mode' => 'custom']);
 
 		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
 		$oPanel->AddCSSClass('ibo-datatable-panel');
@@ -4913,32 +4905,28 @@ EOF
 					'label' => 'Consequence',
 					'description' => Dict::S('UI:Delete:Consequence+'),
 				);
-				$oP->table($aDisplayConfig, $aDisplayData);
+				$oP->AddSubBlock(DataTableUIBlockFactory::MakeForForm(preg_replace('/[^a-zA-Z0-9_-]/', '', uniqid('form_', true)), $aDisplayConfig, $aDisplayData));
 			}
 
-			if ($oDeletionPlan->FoundStopper())
-			{
-				if ($oDeletionPlan->FoundSecurityIssue())
-				{
+			if ($oDeletionPlan->FoundStopper()) {
+				if ($oDeletionPlan->FoundSecurityIssue()) {
 					$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
-				}
-				elseif ($oDeletionPlan->FoundManualOperation())
+				} elseif ($oDeletionPlan->FoundManualOperation()) {
+					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+				} else // $bFoundManualOp
 				{
 					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 				}
-				else // $bFoundManualOp
-				{
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-				}
+				$oForm = FormUIBlockFactory::MakeStandard('');
+				$oP->AddSubBlock($oForm);
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));
+				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+				$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+				$oForm->AddSubBlock($oToolbarButtons);
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Back'))->SetOnClickJsCode("window.history.back();"));
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Delete'), null, null, true)->SetIsDisabled(true));
 				$oAppContext = new ApplicationContext();
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id', '', false,
-						'transaction_id')
-					."\">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
+				$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 			}
 			else {
 				if (count($aObjects) == 1) {
@@ -4956,28 +4944,31 @@ EOF
 				$oFilter = new DBObjectSearch($sClass);
 				$oFilter->AddCondition('id', $aKeys, 'IN');
 				$oSet = new CMDBobjectSet($oFilter);
-				$oP->add('<div id="0">');
-				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
-				$oP->add("</div>\n");
-				$oP->add("<form method=\"post\">\n");
-				foreach ($aContextData as $sKey => $value)
-				{
-					$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
+				$oDisplaySet = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard("0");
+				$oP->AddSubBlock($oDisplaySet);
+				$oDisplaySet->AddSubBlock(CMDBAbstractObject::GetDisplaySetBlock($oP, $oSet, array('display_limit' => false, 'menu' => false)));
+
+				$oForm = FormUIBlockFactory::MakeStandard('');
+				$oP->AddSubBlock($oForm);
+				foreach ($aContextData as $sKey => $value) {
+					$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 				}
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
-				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES,
-						'UTF-8')."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				foreach($aObjects as $oObj)
-				{
-					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sCustomOperation));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', $oFilter->Serialize()));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
+				foreach ($aObjects as $oObj) {
+					$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('selectObject[]', $oObj->GetKey()));
 				}
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+
+				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+				$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+				$oForm->AddSubBlock($oToolbarButtons);
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Back'))->SetOnClickJsCode("window.history.back();"));
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Delete'), null, null, true));
 				$oAppContext = new ApplicationContext();
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
+				$oForm->AddSubBlock($oAppContext->GetForFormBlock());
+
 			}
 		}
 		else // if ($bPreview)...
