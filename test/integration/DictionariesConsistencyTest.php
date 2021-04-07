@@ -136,7 +136,6 @@ class DictionariesConsistencyTest extends ItopTestCase
 	{
 		exec("php -l {$sDictFile}", $output, $return);
 
-		var_dump($sDictFile, $return, $output);
 		$bDictFileSyntaxOk = ($return === 0);
 
 		$sMessage = "File `{$sDictFile}` syntax didn't matched expectations\nparsing results=".var_export($output, true);
