@@ -1,32 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * @author	LinProfs <info@linprofs.com>
- * 
- * Linux & Open Source Professionals
- * http://www.linprofs.com
- * 
- * @author Hipska (2018)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
- *
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
- * @licence	http://opensource.org/licenses/AGPL-3.0
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
 //////////////////////////////////////////////////////////////////////
@@ -1673,7 +1650,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Additional language entries not present in English dict
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
- 'UI:PageTitle:ClassProjections' => 'ITOP_APPLICATION_SHORT gebruikersbeheer - klasse-projecties',
  'UI:Toggle:StandardDashboard' => 'Standaard',
  'UI:Toggle:CustomDashboard' => 'Aangepast',
  'UI:Dashboard:Edit' => 'Bewerk deze pagina...',
