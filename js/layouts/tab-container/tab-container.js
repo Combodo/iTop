@@ -75,7 +75,7 @@ $(function()
 		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
 			        this.element.scrollabletabs(oParams);
 		        } else {
-			        this.element.tabs(oParams);
+			        this.element.regulartabs(oParams);
 		        }
 	        },
             // events bound via _bind are removed automatically

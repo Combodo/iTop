@@ -42,6 +42,7 @@ class TabContainer extends UIContentBlock
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/tab-container/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/tab-container/tab-container.js',
+		'js/layouts/tab-container/regular-tabs.js',
 		'js/layouts/tab-container/scrollable-tabs.js'
 	];
 
