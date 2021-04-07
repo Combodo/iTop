@@ -281,8 +281,15 @@ function ToggleField(value, field_id) {
 		$('#'+field_id+' :input').prop('disabled', false);
 	} else {
 		$('#'+field_id).prop('disabled', true);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', true);
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.disable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', true);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').addClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', true);
+		}
 	}
 	$('#'+field_id).trigger('update');
 	$('#'+field_id).trigger('validate');

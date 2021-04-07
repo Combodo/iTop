@@ -1,8 +1,9 @@
-
 {% if oUIBlock.GetOption("select_mode") is not empty %}
-	var oSelectedItems{{ oUIBlock.GetOption('sListId') }} = [];
-	{% if oUIBlock.GetOption("sSelectedRows") is not empty %}
-		oSelectedItems{{ oUIBlock.GetOption('sListId') }} = {{ oUIBlock.GetOption('sSelectedRows')|raw }};
-	{% endif %}
+var oSelectedItems{{ oUIBlock.GetOption('sListId') }} = [];
+{% if oUIBlock.GetOption("sSelectedRows") is not empty %}
+oSelectedItems{{ oUIBlock.GetOption('sListId') }} = {{ oUIBlock.GetOption('sSelectedRows')|raw }};
 {% endif %}
+{% endif %}
+
+var bSelectAllowed{{ oUIBlock.GetId() }} = false;
 

@@ -15,15 +15,16 @@ $(function () {
 					sListId: '',
 					oColumns: {},
 					sSelectMode: '',
+					sSelectedItemsName: "",
 					sViewLink: 'true',
 					iPageSize: -1,
 					oClassAliases: {},
-					sTableId : null,
+					sTableId: null,
 					oData: {},
 					sRenderUrl: 'index.php',
 					oRenderParameters: {},
 					oDefaultSettings: {},
-					oLabels: { moveup: 'Move Up', movedown: 'Move Down' }
+					oLabels: {moveup: 'Move Up', movedown: 'Move Down'}
 				},
 
 			// the constructor
@@ -80,12 +81,14 @@ $(function () {
 					}
 
 					var parentElt = $('#'+me.options.sListId).closest('.dataTables_wrapper').parent();
+					var aOptions = $('#'+me.options.sListId).DataTable().context[0].oInit;
+					window['bSelectAllowed'+me.options.sListId] = false;
 					$('#'+me.options.sListId).DataTable().destroy(true);
 					var sThead = "";
 					if (me.options.sSelectMode != "") {
 						sThead += "<th></th>";
 					}
-					var aOptions = JSON.parse(data);
+					aOptions = $.extend(aOptions, JSON.parse(data));
 					$.each(aOptions['allColumns'], function (i, item) {
 						$.each(item, function (j, champs) {
 							if (champs.checked == 'true') {
@@ -93,14 +96,15 @@ $(function () {
 							}
 						});
 					});
-					$.each(aOptions['columns'], function(i, item) {
-						aOptions["columns"][i]["render"]["display"] = new Function ( "data, type, row" , aOptions["columns"][i]["render"]["display"]);
+					$.each(aOptions['columns'], function (i, item) {
+						aOptions["columns"][i]["render"]["display"] = new Function("data, type, row", aOptions["columns"][i]["render"]["display"]);
 					});
 
-					parentElt.append( "<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">" +
-						"<thead><tr>"+sThead+"</tr></thead></table>" );
-					aOptions["lengthMenu"]= [[oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, -1], [oParams.end, oParams.end*2, oParams.end*3, oParams.end*4, aOptions["lengthMenu"]]];
-					aOptions["ajax"]=eval(aOptions["ajax"]);
+					parentElt.append("<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">"+
+						"<thead><tr>"+sThead+"</tr></thead></table>");
+					aOptions["lengthMenu"] = [[oParams.end, oParams.end * 2, oParams.end * 3, oParams.end * 4, -1], [oParams.end, oParams.end * 2, oParams.end * 3, oParams.end * 4, aOptions["lengthMenu"]]];
+					aOptions["ajax"] = eval(aOptions["ajax"]);
+
 					$('#'+me.options.sListId).DataTable(aOptions);
 
 					me.element.unblock();
