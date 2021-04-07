@@ -2567,7 +2567,7 @@ class utils
 		$aDefaultConf = array(
 			'language'=> $sLanguage,
 			'contentsLanguage' => $sLanguage,
-			'extraPlugins' => 'disabler,codesnippet,mentions',
+			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut',
 		);
 
 		// Mentions
