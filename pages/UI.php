@@ -100,32 +100,6 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 }
 
 /**
- * Displays the details of an object
- *
- * @param WebPage $oP Page for the output
- * @param string $sClass The name of the class of the object
- * @param \cmdbAbstractObject $oObj The object to display
- * @param mixed $id Identifier of the object (name or ID)
- *
- * @throws \CoreException
- * @throws \DictExceptionMissingString
- * @throws \SecurityException
-*/
-function DisplayDetails($oP, $sClass, $oObj, $id)
-{
-	$sClassLabel = MetaModel::GetName($sClass);
-
-	// The object could be listed, check if it is actually allowed to view it
-	$oSet = CMDBObjectSet::FromObject($oObj);
-	if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
-	{
-		throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
-	}
-	$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-	$oObj->DisplayDetails($oP);
-}
-
-/**
  * Display the session messages relative to the object identified by its "message key" (class::id)
  * @param string $sMessageKey
  * @param WebPage $oPage
@@ -420,20 +394,18 @@ try
 				if (!is_null($oObj))
 				{
 					SetObjectBreadCrumbEntry($oObj, $oP);
-//					DisplayDetails($oP, $sClass, $oObj, $id);
 
 					// The object could be listed, check if it is actually allowed to view it
 					$oSet = CMDBObjectSet::FromObject($oObj);
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
-					{
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO) {
 						throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
 					}
 
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion()?cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT:cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT : cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 					$oObj->DisplayDetails($oP);
-				}				
+				}
 			}
 		break;
 
