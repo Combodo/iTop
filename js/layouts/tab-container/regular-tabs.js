@@ -3,6 +3,18 @@ $.widget( "itop.regulartabs", $.ui.tabs, {
 		{
 			tab_container_list: '[data-role="ibo-tab-container--tab-container-list"]'
 		},
+	options:{
+		remotePanelCreated: function( panel, tab ) {
+			if(tab.attr('data-role') === 'ibo-tab-container--tab-header')
+			{
+				panel.prepend('<div class="ibo-tab-container--tab-container--label"><span>' + tab.text() + '</span></div>');
+				let oTempDiv = $('<div>').addClass('ibo-tab--temporary-remote-content')
+				let oPlaceholder = $('<div>').addClass('ibo-tab--temporary-remote-content--placeholder').load(tab.attr('data-placeholder'));
+				oTempDiv.append(oPlaceholder)
+				panel.append(oTempDiv);
+			}
+		},
+	},
 	// jQuery UI overload
 	_processTabs: function() {
 		var that = this,
@@ -82,8 +94,8 @@ $.widget( "itop.regulartabs", $.ui.tabs, {
 					}
 					else {
 						panel.insertAfter( that.tablist );
-
 					}
+					that.options.remotePanelCreated(panel, tab, that.options.remote_tab_load_dict);
 				}
 				panel.attr( "aria-live", "polite" );
 			}
