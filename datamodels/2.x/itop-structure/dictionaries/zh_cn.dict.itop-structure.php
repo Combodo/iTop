@@ -20,10 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
-
-
-
 // Dictionnary conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -35,8 +31,6 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 // Class:<class_name>/UniquenessRule:<rule_code>
 // Class:<class_name>/UniquenessRule:<rule_code>+
-
-
 //////////////////////////////////////////////////////////////////////
 // Note: The classes have been grouped by categories: bizmodel
 //////////////////////////////////////////////////////////////////////
@@ -44,12 +38,9 @@
 // Classes in 'bizmodel'
 //////////////////////////////////////////////////////////////////////
 //
-
-
 //
 // Class: Organization
 //
-
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization' => '组织',
 	'Class:Organization+' => '',
@@ -370,4 +361,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UserLocal:info' => 'General information~~',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
+));
+
+// Themes
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:test-red' => 'Test instance (Red)~~',
 ));

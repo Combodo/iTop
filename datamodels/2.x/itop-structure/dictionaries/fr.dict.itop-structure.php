@@ -383,7 +383,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 ));
 
 // Themes
-Dict::Add('EN US', 'English', 'English', array(
+Dict::Add('FR FR', 'French', 'Français', array(
 	'theme:fullmoon' => 'Full moon 🌕',
 	'theme:test-red' => 'Instance de test (Rouge)',
 ));

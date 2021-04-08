@@ -352,3 +352,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Person:personal_info' => 'Informação pessoal',
 	'Person:notifiy' => 'Notificação',
 ));
+
+// Themes
+Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
+	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

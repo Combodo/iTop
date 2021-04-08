@@ -359,3 +359,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornění',
 ));
+
+// Themes
+Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

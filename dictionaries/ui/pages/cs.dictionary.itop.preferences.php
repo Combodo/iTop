@@ -16,11 +16,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Navigation menu
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Preferences:Title' => 'Preferences~~',
 	'UI:Preferences:UserInterface:Title' => 'User interface~~',
+	'UI:Preferences:General:Title' => 'General~~',
+	'UI:Preferences:General:Theme' => 'Theme~~',
+	'UI:Preferences:General:Theme:DefaultThemeLabel' => '%1$s (default)~~',
 	'UI:Preferences:Lists:Title' => 'Lists~~',
 	'UI:Preferences:RichText:Title' => 'Rich text editor~~',
 	'UI:Preferences:RichText:ToolbarState' => 'Toolbar default state~~',

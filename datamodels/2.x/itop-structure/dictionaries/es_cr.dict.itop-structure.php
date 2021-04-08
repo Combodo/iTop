@@ -353,3 +353,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Person:personal_info' => 'Información Personal',
 	'Person:notifiy' => 'Notificación',
 ));
+
+// Themes
+Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));
