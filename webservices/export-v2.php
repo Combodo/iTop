@@ -348,7 +348,6 @@ EOF
 		<<<EOF
 window.aFormParts = $sJSParts;
 $('#format_selector').on('change init', function() {
-console.warn('yo'+$(this).val());
 	ExportToggleFormat($(this).val());
 }).trigger('init');
 		

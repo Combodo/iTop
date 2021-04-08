@@ -200,12 +200,10 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}');
-        console.warn(this.api().rows('.selected').data().length);
         {% if oUIBlock.GetOption("select_mode") != "single" %}
         this.api().on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }})
             {
-                console.warn('select');
                 let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
                 if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
                 {
@@ -244,7 +242,6 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             if (bSelectAllowed{{ oUIBlock.GetId() }} )
             {
                 let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
-                console.warn('deselect');
                 // Checking input
                 $('#{{ oUIBlock.GetId() }} tbody tr:not(.selected) td:first-child input').prop('checked', false);
                 // Saving values in temp array
