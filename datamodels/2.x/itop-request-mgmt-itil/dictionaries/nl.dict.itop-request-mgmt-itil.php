@@ -3,6 +3,10 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+/*
+ * @author Hipska (2018, 2019)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ */
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',

@@ -3,6 +3,9 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+/*
+ * @author ITOMIG GmbH <martin.raenker@itomig.de>
+ */
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:RequestManagement' => 'Helpdesk',

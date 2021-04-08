@@ -3,6 +3,9 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+/*
+ * @author	Erik Bøg <erik@boegmoeller.dk>
+ */
 
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:RequestManagement' => 'Helpdesk',
