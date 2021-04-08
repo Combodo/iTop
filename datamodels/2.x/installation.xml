@@ -200,7 +200,7 @@
 					<description>Select this option to track "Known Errors" and FAQs in iTop.</description>
 					<modules type="array">
 						<module>itop-faq-light</module>
-						<module>itop-knownerror-light</module>
+						<module>itop-knownerror-mgmt</module>
 					</modules>
 				</choice>
 				<choice>
