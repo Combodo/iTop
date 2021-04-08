@@ -175,11 +175,13 @@ class AjaxRenderController
 				$aExtraParams['list_id'] = $sListId;
 			}
 		}
+
+		$sTableId = utils::ReadParam('list_id', '');
 		$iLength = utils::ReadParam('end', 10);
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
-		$aResult = DataTableUIBlockFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams);
+		$aResult = DataTableUIBlockFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams, $sTableId);
 
 		return $aResult;
 	}

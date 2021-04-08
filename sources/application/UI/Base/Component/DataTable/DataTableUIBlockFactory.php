@@ -650,12 +650,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * @return array
 	 * @throws \Exception
 	 */
-	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams)
+	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams, string $sTableId)
 	{
 		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
 
 		$aOptions = [];
-		$sTableId = $aExtraParams["table_id"];
 		$sListId = $aExtraParams["list_id"];
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
@@ -742,7 +741,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 
-		$aOptions['select'] = ["style"=>$sSelectMode];
+		$aOptions['select'] = ["style" => $sSelectMode, "info" => false];
 
 		$aOptions['pageLength'] = $iLength;
 
