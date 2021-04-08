@@ -58,22 +58,29 @@ class ThemeHandler
 	/**
 	 * Return the ID of the theme currently defined in the config. file
 	 *
+	 * @deprecated 3.0.0, will be removed in 3.1, see N°3898
 	 * @return string
 	 */
 	public static function GetCurrentThemeId()
 	{
-		try
-		{
-			if (is_null(MetaModel::GetConfig()))
-			{
+		static::GetCurrentUserThemeId();
+	}
+
+	/**
+	 * @return string ID of the theme currently defined in the config. file, which applies to all users by default. If non defined, fallback on the default one.
+	 * @since 3.0.0
+	 */
+	public static function GetApplicationThemeId(): string
+	{
+		try {
+			if (is_null(MetaModel::GetConfig())) {
 				throw new CoreException('no config');
 			}
 			$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
 		}
-		catch(CoreException $oCompileException)
-		{
+		catch (CoreException $oCompileException) {
 			// Fallback on our default theme in case the config. is not available yet
-			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
+			$aDefaultTheme = ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
 		}
 
@@ -81,44 +88,115 @@ class ThemeHandler
 	}
 
 	/**
-	 * Return the absolute path of the compiled theme folder.
-	 *
+	 * @return string ID of the theme to use for the current user as per they preferences. If non defined, fallback on the app. theme ID.
+	 * @since 3.0.0
+	 */
+	public static function GetCurrentUserThemeId(): string
+	{
+		try {
+			$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
+		}
+		catch (Exception $oException) {
+			$sThemeId = null;
+		}
+
+		// Fallback on the app. theme
+		if (is_null($sThemeId)) {
+			$sThemeId = static::GetApplicationThemeId();
+		}
+
+		return $sThemeId;
+	}
+
+	/**
 	 * @param string $sThemeId
 	 *
-	 * @return string
+	 * @return string Label of the theme which is either a dict entry ('theme:<THEME_ID>') or the ID if no localized dict. entry found.
+	 * @since 3.0.0
 	 */
-	public static function GetCompiledThemeFolderAbsolutePath($sThemeId)
+	public static function GetThemeLabel(string $sThemeId): string
 	{
-		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/'.$sThemeId.'/';
+		$sDictEntryCode = 'theme:'.$sThemeId;
+		$sDictEntryValue = Dict::S('theme:'.$sThemeId);
+
+		return ($sDictEntryCode === $sDictEntryValue) ? $sThemeId : $sDictEntryValue;
 	}
-	
+
+	/**
+	 * @return array Associative array of <THEME_ID> => <THEME_LABEL>, ordered by labels
+	 * @since 3.0.0
+	 */
+	public static function GetAvailableThemes(): array
+	{
+		$aThemes = [];
+
+		foreach (glob(static::GetCompiledThemesFolderAbsolutePath().'/*') as $sPath) {
+			if (is_dir($sPath)) {
+				$sThemeId = basename($sPath);
+				$sThemeLabel = static::GetThemeLabel($sThemeId);
+
+				$aThemes[$sThemeId] = $sThemeLabel;
+			}
+		}
+		asort($aThemes);
+
+		return $aThemes;
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return bool True if $sThemeId is a valid theme that can be used.
+	 * @since 3.0.0
+	 */
+	public static function IsValidTheme(string $sThemeId): bool
+	{
+		return array_key_exists($sThemeId, static::GetAvailableThemes());
+	}
+
+	/**
+	 * @return string Absolute path to the folder containing all the compiled themes
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledThemesFolderAbsolutePath(): string
+	{
+		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/';
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return string Absolute path to the folder containing the $sThemeId theme
+	 */
+	public static function GetCompiledThemeFolderAbsolutePath(string $sThemeId): string
+	{
+		return static::GetCompiledThemesFolderAbsolutePath().$sThemeId.'/';
+	}
+
 	/**
 	 * Return the absolute URL for the current theme CSS file
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function GetCurrentThemeUrl()
+	public static function GetCurrentThemeUrl(): string
 	{
-		try
-		{
+		try {
 			// Try to compile theme defined in the configuration
-			$sThemeId = static::GetCurrentThemeId();
+			$sThemeId = static::GetCurrentUserThemeId();
 			static::CompileTheme($sThemeId);
 		}
-		catch(CoreException $oCompileException)
-		{
+		catch (CoreException $oCompileException) {
 			// Fallback on our default theme (should always be compilable) in case the previous theme doesn't exists
-			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
+			$aDefaultTheme = ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
 			$sDefaultThemeDirPath = static::GetCompiledThemeFolderAbsolutePath($sThemeId);
-			
+
 			// Create our theme dir if it doesn't exist (XML theme node removed, renamed etc..)
-			if(!is_dir($sDefaultThemeDirPath))
-			{
+			if (!is_dir($sDefaultThemeDirPath)) {
 				SetupUtils::builddir($sDefaultThemeDirPath);
 			}
-			
+
 			static::CompileTheme($sThemeId, false, "", $aDefaultTheme['parameters']);
 		}
 

@@ -76,10 +76,11 @@ function DisplayPreferences($oP)
 	$oUISubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_user_interface', true);
 	$oUIToolbar->AddSubBlock($oUISubmitButton);
 
-	// Language
-	$oLanguageFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:FavoriteLanguage'), 'ibo-fieldset-for-language-preferences');
-	$oLanguageFieldset->AddSubBlock(GetLanguageFieldBlock());
-	$oFirstColumn->AddSubBlock($oLanguageFieldset);
+	// General
+	$oGeneralFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:General:Title'), 'ibo-fieldset-for-language-preferences');
+	$oGeneralFieldset->AddSubBlock(GetLanguageFieldBlock());
+	$oGeneralFieldset->AddSubBlock(GetThemeFieldBlock());
+	$oFirstColumn->AddSubBlock($oGeneralFieldset);
 
 	// Lists
 	$oListsFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:Lists:Title'), 'ibo-fieldset-for-lists-preferences');
@@ -467,12 +468,39 @@ function GetLanguageFieldBlock(): iUIBlock
 	}
 	ksort($aSortedLanguages);
 
-	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:Favorites:SelectYourLanguage'));
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:FavoriteLanguage'));
 	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oSelectInput */
 	$oSelectInput = $oSelect->GetInput();
 	foreach ($aSortedLanguages as $sCode) {
 		$bSelected = ($sCode === Dict::GetUserLanguage());
 		$oSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $aAvailableLanguages[$sCode]['description'].' ('.$aAvailableLanguages[$sCode]['localized_description'].')', $bSelected));
+	}
+
+	return $oSelect;
+}
+
+/**
+ * @return \Combodo\iTop\Application\UI\Base\iUIBlock
+ * @since 3.0.0
+ */
+function GetThemeFieldBlock(): iUIBlock
+{
+	$aAvailableThemes = ThemeHandler::GetAvailableThemes();
+
+	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('theme', Dict::S('UI:Preferences:General:Theme'));
+	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oSelectInput */
+	$oSelectInput = $oSelect->GetInput();
+	foreach ($aAvailableThemes as $sCode => $sLabel) {
+		if (MetaModel::GetConfig()->Get('demo_mode') && ($sCode !== ThemeHandler::GetApplicationThemeId())) {
+			// Demo mode: only the current app. theme is listed in the available choices
+			continue;
+		}
+
+		$bSelected = ($sCode === ThemeHandler::GetCurrentUserThemeId());
+		if (true === $bSelected) {
+			$sLabel = Dict::Format('UI:Preferences:General:Theme:DefaultThemeLabel', $sLabel);
+		}
+		$oSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $sLabel, $bSelected));
 	}
 
 	return $oSelect;
@@ -688,6 +716,12 @@ try {
 				$oUser->AllowWrite(true);
 				$oUser->DBUpdate();
 				utils::PopArchiveMode();
+
+				// Theme
+				$sThemeId = utils::ReadParam('theme', '');
+				if (!empty($sThemeId) && ThemeHandler::IsValidTheme($sThemeId)) {
+					appUserPreferences::SetPref('backoffice_theme', $sThemeId);
+				}
 
 				// List
 				$iDefaultPageSize = (int)utils::ReadParam('default_page_size', -1);
