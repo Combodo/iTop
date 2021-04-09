@@ -354,6 +354,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 // Themes
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

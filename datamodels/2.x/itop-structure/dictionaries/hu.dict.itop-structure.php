@@ -354,6 +354,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 // Themes
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

@@ -354,6 +354,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 // Themes
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

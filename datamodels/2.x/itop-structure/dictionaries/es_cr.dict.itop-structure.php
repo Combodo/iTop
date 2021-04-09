@@ -356,6 +356,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 // Themes
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

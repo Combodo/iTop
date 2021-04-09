@@ -342,6 +342,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 // Themes
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

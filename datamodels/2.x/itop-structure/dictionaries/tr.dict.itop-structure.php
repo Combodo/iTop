@@ -356,6 +356,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 // Themes
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

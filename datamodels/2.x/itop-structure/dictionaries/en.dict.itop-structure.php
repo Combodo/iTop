@@ -374,6 +374,6 @@ Dict::Add('EN US', 'English', 'English', array(
 
 // Themes
 Dict::Add('EN US', 'English', 'English', array(
-	'theme:fullmoon' => 'Full moon 🌕',
+	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Test instance (Red)',
 ));

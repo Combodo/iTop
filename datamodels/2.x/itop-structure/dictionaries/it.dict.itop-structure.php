@@ -354,6 +354,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 
 // Themes
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

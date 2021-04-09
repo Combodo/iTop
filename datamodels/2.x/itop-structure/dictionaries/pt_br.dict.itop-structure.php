@@ -355,6 +355,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 // Themes
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

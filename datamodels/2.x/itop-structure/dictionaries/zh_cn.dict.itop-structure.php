@@ -365,6 +365,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Themes
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

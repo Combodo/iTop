@@ -352,6 +352,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 
 // Themes
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

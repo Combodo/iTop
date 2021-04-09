@@ -362,6 +362,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 // Themes
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'theme:fullmoon' => 'Full moon 🌕~~',
+	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));

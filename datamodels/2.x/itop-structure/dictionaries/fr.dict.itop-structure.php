@@ -384,6 +384,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 // Themes
 Dict::Add('FR FR', 'French', 'Français', array(
-	'theme:fullmoon' => 'Full moon 🌕',
+	'theme:fullmoon' => 'Full moon',
 	'theme:test-red' => 'Instance de test (Rouge)',
 ));
