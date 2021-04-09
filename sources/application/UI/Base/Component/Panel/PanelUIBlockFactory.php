@@ -42,12 +42,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a basis Panel component
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeNeutral(string $sTitle)
+	public static function MakeNeutral(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_NEUTRAL);
 
 		return $oPanel;
@@ -57,12 +61,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component for informational messages
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForInformation(string $sTitle)
+	public static function MakeForInformation(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_INFORMATION);
 
 		return $oPanel;
@@ -72,12 +80,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component for successful messages
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForSuccess(string $sTitle)
+	public static function MakeForSuccess(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_SUCCESS);
 
 		return $oPanel;
@@ -87,12 +99,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component for warning messages
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForWarning(string $sTitle)
+	public static function MakeForWarning(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_WARNING);
 
 		return $oPanel;
@@ -102,12 +118,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component for danger messages
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForDanger(string $sTitle)
+	public static function MakeForDanger(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_DANGER);
 
 		return $oPanel;
@@ -117,12 +137,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component for failure messages
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForFailure(string $sTitle)
+	public static function MakeForFailure(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_FAILURE);
 
 		return $oPanel;
@@ -132,12 +156,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component with primary color scheme
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeWithBrandingPrimaryColor(string $sTitle)
+	public static function MakeWithBrandingPrimaryColor(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_PRIMARY);
 
 		return $oPanel;
@@ -147,12 +175,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 * Make a Panel component with secondary color scheme
 	 *
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeWithBrandingSecondaryColor(string $sTitle)
+	public static function MakeWithBrandingSecondaryColor(string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColor(Panel::ENUM_COLOR_SECONDARY);
 
 		return $oPanel;
@@ -163,12 +195,16 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @param string $sClass Class of the object the panel is for
 	 * @param string $sTitle
+	 * @param string|null $sSubTitle
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Panel\Panel
 	 */
-	public static function MakeForClass(string $sClass, string $sTitle)
+	public static function MakeForClass(string $sClass, string $sTitle, string $sSubTitle = null)
 	{
 		$oPanel = new Panel($sTitle);
+		if (!is_null($sSubTitle)) {
+			$oPanel->SetSubTitle($sSubTitle);
+		}
 		$oPanel->SetColorFromClass($sClass);
 
 		return $oPanel;

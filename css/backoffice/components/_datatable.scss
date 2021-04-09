@@ -8,6 +8,7 @@ $ibo-datatable--toolbar--padding-y: 0 !default;
 $ibo-datatable--toolbar--text-color: $ibo-color-grey-700 !default;
 $ibo-datatable--toolbar--elements-spacing: 1rem !default;
 $ibo-datatable--toolbar--table-spacing: 18px !default;
+$ibo-datatable-panel--table-spacing: 48px !default;
 
 $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
 $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
@@ -47,15 +48,27 @@ $ibo-list-column--max-height: 150px;
   padding: $ibo-datatable-panel--body--padding;
 }
 
+.ibo-datatable-panel {
+  /* Above the table */
+  &:first-child {
+    margin-bottom: $ibo-datatable-panel--table-spacing;
+  }
+
+  /* below the table */
+  &:not(:first-child) {
+    margin-top: $ibo-datatable-panel--table-spacing;
+  }
+}
+
 // For cancel / OK / next... selection validation buttons
 .ibo-datatable--selection-validation-buttons-toolbar {
-	clear: both;
-	margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
+  clear: both;
+  margin-top: $ibo-datatable--selection-validation-buttons-toolbar--margin-top;
 }
 
 .ibo-list-column {
-	max-height: $ibo-list-column--max-height;
-	overflow-y: auto;
+  max-height: $ibo-list-column--max-height;
+  overflow-y: auto;
 }
 
 .ibo-datatable .ibo-field-badge {

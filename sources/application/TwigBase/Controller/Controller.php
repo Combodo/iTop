@@ -367,8 +367,7 @@ abstract class Controller
 	 */
 	public function DisplayPage($aParams = array(), $sTemplateName = null, $sPageType = 'html')
 	{
-		if (empty($sTemplateName))
-		{
+		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
 		}
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
@@ -376,25 +375,21 @@ abstract class Controller
 		$this->AddToPage($this->RenderTemplate($aParams, $sTemplateName, 'html'));
 		$this->AddScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'js'));
 		$this->AddReadyScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'ready.js'));
-		if (!empty($this->m_aAjaxTabs))
-		{
+		$this->AddStyleToPage($this->RenderTemplate($aParams, $sTemplateName, 'css'));
+		if (!empty($this->m_aAjaxTabs)) {
 			$this->m_oPage->AddTabContainer('');
 			$this->m_oPage->SetCurrentTabContainer('');
 		}
-		foreach ($this->m_aAjaxTabs as $sTabCode => $aTabData)
-		{
+		foreach ($this->m_aAjaxTabs as $sTabCode => $aTabData) {
 			$this->AddAjaxTabToPage($sTabCode, $aTabData['label'], $aTabData['url'], $aTabData['cache']);
 		}
-		foreach ($this->m_aLinkedScripts as $sLinkedScript)
-		{
+		foreach ($this->m_aLinkedScripts as $sLinkedScript) {
 			$this->AddLinkedScriptToPage($sLinkedScript);
 		}
-		foreach ($this->m_aLinkedStylesheets as $sLinkedStylesheet)
-		{
+		foreach ($this->m_aLinkedStylesheets as $sLinkedStylesheet) {
 			$this->AddLinkedStylesheetToPage($sLinkedStylesheet);
 		}
-		foreach ($this->m_aSaas as $sSaasRelPath)
-		{
+		foreach ($this->m_aSaas as $sSaasRelPath) {
 			$this->AddSaasToPage($sSaasRelPath);
 		}
 		$this->OutputPage();
@@ -432,8 +427,7 @@ abstract class Controller
 	 */
 	public function DownloadZippedPage($aParams = array(), $sTemplateName = null)
 	{
-		if (empty($sTemplateName))
-		{
+		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
 		}
 		$sReportFolder = str_replace("\\", '/', APPROOT.'log/');
@@ -441,7 +435,10 @@ abstract class Controller
 		$sHTMLReport = $sReportFolder.$sReportFile.'.html';
 		$sZIPReportFile = $sReportFile;
 
-		file_put_contents($sHTMLReport, $this->RenderTemplate($aParams, $sTemplateName, 'html'));
+		ob_start();
+		$this->DisplayPage($aParams, $sTemplateName, self::ENUM_PAGE_TYPE_BASIC_HTML);
+		file_put_contents($sHTMLReport, ob_get_contents());
+		ob_end_clean();
 
 		$this->ZipDownloadRemoveFile(array($sHTMLReport), $sZIPReportFile, true);
 	}
@@ -656,6 +653,11 @@ abstract class Controller
 	private function AddLinkedStylesheetToPage($sLinkedStylesheet)
 	{
 		$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
+	}
+
+	private function AddStyleToPage($sStyle)
+	{
+		$this->m_oPage->add_style($sStyle);
 	}
 
 	private function AddSaasToPage($sSaasRelPath)
