@@ -499,7 +499,7 @@ function GetThemeFieldBlock(): iUIBlock
 		}
 
 		$bSelected = ($sCode === ThemeHandler::GetCurrentUserThemeId());
-		if (true === $bSelected) {
+		if ($sCode === MetaModel::GetConfig()->Get('backoffice_default_theme')) {
 			$sLabel = Dict::Format('UI:Preferences:General:Theme:DefaultThemeLabel', $sLabel);
 		}
 		$oSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $sLabel, $bSelected));
