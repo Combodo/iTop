@@ -93,11 +93,15 @@ class ThemeHandler
 	 */
 	public static function GetCurrentUserThemeId(): string
 	{
+		$sThemeId = null;
+
 		try {
-			$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
+			if (true === MetaModel::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
+				$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
+			}
 		}
 		catch (Exception $oException) {
-			$sThemeId = null;
+			// Do nothing, already handled by $sThemeId null by default
 		}
 
 		// Fallback on the app. theme

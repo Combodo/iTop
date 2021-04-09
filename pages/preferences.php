@@ -79,7 +79,9 @@ function DisplayPreferences($oP)
 	// General
 	$oGeneralFieldset = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Preferences:General:Title'), 'ibo-fieldset-for-language-preferences');
 	$oGeneralFieldset->AddSubBlock(GetLanguageFieldBlock());
-	$oGeneralFieldset->AddSubBlock(GetThemeFieldBlock());
+	if (true === MetaModel::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
+		$oGeneralFieldset->AddSubBlock(GetThemeFieldBlock());
+	}
 	$oFirstColumn->AddSubBlock($oGeneralFieldset);
 
 	// Lists
