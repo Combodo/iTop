@@ -43,7 +43,7 @@ class DataSynchroTest extends ItopDataTestCase
 		$oSet = new DBObjectSet($oSearch);
 		if ($oSet->Count() == 0)
 		{
-			$oProfileSearch = DBSearch::FromOQL('SELECT URP_Profiles WHERE name LIKE "administrator"');
+			$oProfileSearch = DBSearch::FromOQL('SELECT URP_Profiles WHERE id = 1');
 			$oProfileSet = new DBObjectSet($oProfileSearch);
 			$oAdminProfile = $oProfileSet->fetch();
 
