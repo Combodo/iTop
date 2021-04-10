@@ -300,7 +300,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Change:ObjectModified' => 'Elément modifié',
 	'Change:TwoAttributesChanged' => '%1$s and %2$s modifiés',
 	'Change:ThreeAttributesChanged' => '%1$s, %2$s et un autre modifiés',
-	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s, %3$s ... modifiés',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s et %3$s autres modifiés',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s modifié en %2$s (ancienne valeur: %3$s)',
 	'Change:AttName_SetTo' => '%1$s modifié en %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s ajouté à %2$s',
