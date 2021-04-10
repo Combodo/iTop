@@ -96,6 +96,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
   display: table;
   width: 100%;
   color: $ibo-field--value--color;
+  word-break: break-word; /* Avoid value to overflow from its container with very long strings (typically URLs) */
 
   /* Hack to force a table to fit its container without overflow (see N°2127) */
   /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
