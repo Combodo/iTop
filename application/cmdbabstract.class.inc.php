@@ -1846,11 +1846,14 @@ HTML
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(),
-							ENT_QUOTES, 'UTF-8').'"';
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper\" data-validation=\"untouched\"><input title=\"$sHelpText\" class=\"date-pick ibo-input ibo-input-date\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDate::GetFormat()->ToPlaceholder()).'"';
+					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper" data-validation="untouched">
+	<input title="$sHelpText" class="date-pick ibo-input ibo-input-date" type="text" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
+</div>{$sValidationSpan}{$sReloadSpan}
+HTML;
 					break;
 
 				case 'DateTime':
@@ -1859,10 +1862,13 @@ HTML
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
 
-					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(),
-							ENT_QUOTES, 'UTF-8').'"';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper\" data-validation=\"untouched\"><input title=\"$sHelpText\" class=\"datetime-pick ibo-input ibo-input-datetime\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDateTime::GetFormat()->ToPlaceholder()).'"';
+					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
+	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autoomplete="off" />
+</div>{$sValidationSpan}{$sReloadSpan}
+HTML;
 					break;
 
 				case 'Duration':
