@@ -770,18 +770,15 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sTextView = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$this->Get('prevdata').'</div></div>';
-	
+			$sTextView = $this->Get('prevdata');
+
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
 		}
