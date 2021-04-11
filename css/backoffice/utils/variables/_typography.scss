@@ -28,3 +28,17 @@ $ibo-font-size-400: 2rem !default;		/* 24px */
 $ibo-font-size-450: 2.5rem !default;	/* 30px */
 $ibo-font-size-500: 3rem !default;		/* 36px */
 $ibo-font-size-550: 4rem !default;		/* 48px */
+
+:root{
+  --ibo-font-size-50: #{$ibo-font-size-50};
+  --ibo-font-size-100: #{$ibo-font-size-100};
+  --ibo-font-size-150: #{$ibo-font-size-150};
+  --ibo-font-size-200: #{$ibo-font-size-200};
+  --ibo-font-size-250: #{$ibo-font-size-250};
+  --ibo-font-size-300: #{$ibo-font-size-300};
+  --ibo-font-size-350: #{$ibo-font-size-350};
+  --ibo-font-size-400: #{$ibo-font-size-400};
+  --ibo-font-size-450: #{$ibo-font-size-450};
+  --ibo-font-size-500: #{$ibo-font-size-500};
+  --ibo-font-size-550: #{$ibo-font-size-550};
+}
