@@ -2128,9 +2128,11 @@ EOF
 						$sFileName = $oDocument->GetFileName();
 					}
 					$sFileNameForHtml = utils::EscapeHtml($sFileName);
+					$bHasFile = !empty($sFileName);
 
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sRemoveBtnLabelForHtml = utils::EscapeHtml(Dict::S('UI:Button:RemoveDocument'));
+					$sExtraCSSClassesForRemoveButton = $bHasFile ? '' : 'ibo-is-hidden';
 
 					$sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_document">
@@ -2138,7 +2140,7 @@ EOF
 	<input type="hidden" id="do_remove_{$iId}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]" value="0"/>
 	<input name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]" type="hidden" id="{$iId}" value="{$sFileNameForHtml}"/>
 	<span id="name_{$iInputId}" >{$sFileNameForHtml}</span>&#160;&#160;
-	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger ibo-is-hidden" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
+	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger {$sExtraCSSClassesForRemoveButton}" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
 		<span class="fas fa-trash"></span>
 	</button>
 </div>
