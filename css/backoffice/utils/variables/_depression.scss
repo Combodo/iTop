@@ -16,18 +16,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-%ibo-elevation-100{
-	box-shadow: $ibo-elevation-100;
-}
-%ibo-elevation-200{
-	box-shadow: $ibo-elevation-200;
-}
-%ibo-elevation-300{
-	box-shadow: $ibo-elevation-300;
-}
-%ibo-elevation-400{
-	box-shadow: $ibo-elevation-400;
-}
-%ibo-elevation-500{
-	box-shadow: $ibo-elevation-500;
+$ibo-depression-100: inset 0 1px 1px 0 rgba(0, 0, 0, 0.15) !default;
+
+:root{
+	--ibo-elevation-100: #{$ibo-depression-100};
 }
