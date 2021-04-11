@@ -3,6 +3,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/*
+ * IMPORTANT: This is not how vendors should be integrated in the theme, we should include the base stylesheet, THEN only overload what is necessary.
+ * By doing a complete redefinition of the vendor stylesheet like this we won't be able to upgrade the vendor easily...
+ */
+
 $ibo-vendors-jqueryui--ui-dialog--padding-x: 30px !default;
 $ibo-vendors-jqueryui--ui-dialog--border-radius: $ibo-border-radius-500 !default;
 $ibo-vendors-jqueryui--ui-dialog--background-color: $ibo-color-white-100 !default;
@@ -19,13 +24,19 @@ $ibo-vendors-jqueryui--ui-dialog--border: $ibo-vendors-jqueryui--ui-dialog--back
 
 $ibo-vendors-jqueryui--ui-widget-overlay--background-color: $ibo-color-blue-grey-800 !default;
 
-$ibo-vendors-jqueryui--ui-datepicker--padding-top: 34px !default;
+$ibo-vendors-jqueryui--ui-datepicker--padding: 8px !default;
 $ibo-vendors-jqueryui--ui-datepicker--background-color: $ibo-color-white-100 !default;
-$ibo-vendors-jqueryui--ui-datepicker--border-color: $ibo-color-grey-400 !default;
 $ibo-vendors-jqueryui--ui-datepicker--border-radius: $ibo-border-radius-500 !default;
+$ibo-vendors-jqueryui--ui-datepicker--box-shadow: $ibo-elevation-100 !default;
 
-$ibo-vendors-jqueryui--ui-datepicker-header--padding: $ibo-border-radius-500 $ibo-border-radius-500 0 0 !default;
-$ibo-vendors-jqueryui--ui-datepicker-header--border-radius: 4px !default;
+$ibo-vendors-jqueryui--ui-datepicker-header--margin: $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-vendors-jqueryui--ui-datepicker--padding 4px $ibo-vendors-jqueryui--ui-datepicker--padding !default;
+$ibo-vendors-jqueryui--ui-datepicker-header--padding-top: 24px !default;
+
+$ibo-vendors-jqueryui--ui-datepicker-buttons--top: 0 !default;
+$ibo-vendors-jqueryui--ui-datepicker-prev--left: 0 !default;
+$ibo-vendors-jqueryui--ui-datepicker-next--right: 0 !default;
+
+$ibo-vendors-jqueryui--ui-datepicker-year--margin-left: 8px !default;
 
 $ibo-vendors-jqueryui--ui-slider--background-color: $ibo-color-grey-100 !default;
 $ibo-vendors-jqueryui--ui-slider--border-color: $ibo-color-grey-600 !default;
@@ -271,136 +282,88 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 }
 
 // Date picker
+.ui-datepicker {
+  /* Note: We can't put the padding directly here as the jQuery JS code will position it regarding its inner width, not taking the padding here into account, so it is placed in the header/calendar elements */
+  background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
+  border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
+  box-shadow: $ibo-vendors-jqueryui--ui-datepicker--box-shadow;
 
-.ui-datepicker{
-	padding-top: 15px;
-	background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
-	border: solid 1px $ibo-vendors-jqueryui--ui-datepicker--border-color;
-	border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
-	.ui-datepicker-header{
-		height: unset;
-		padding: $ibo-vendors-jqueryui--ui-datepicker-header--border-radius;
-		border-radius: $ibo-vendors-jqueryui--ui-datepicker-header--border-radius;
-		&::before{
-			position: absolute;
-			top: 0;
-			left: 0;
-			display: block;
-			background-color: #2c5382;
-			content: "";
-			width: 100%;
-			height: 8px;
-			padding-bottom: 8px;
-		}
-	}
-	.ui-datepicker-prev {
-		position: absolute;
-		top: 2px;
-		width: 1.8em;
-		height: 1.8em;
-		left: 2px;
-		span {
-			display: block;
-			position: absolute;
-			left: 50%;
-			margin-left: -8px;
-			top: 50%;
-			margin-top: -8px;
-		}
-	}
-	.ui-datepicker-next {
-		position: absolute;
-		top: 2px;
-		width: 1.8em;
-		height: 1.8em;
-		right: 2px;
-		span {
-			display: block;
-			position: absolute;
-			left: 50%;
-			margin-left: -8px;
-			top: 50%;
-			margin-top: -8px;
-		}
-	}
-	.ui-datepicker-prev-hover {
-		top: 1px;
-		left: 1px;
-	}
-	.ui-datepicker-next-hover {
-		top: 1px;
-		right: 1px;
-	}
-	.ui-datepicker-title {
-		margin: 0 2.3em;
-		line-height: 1.8em;
-		text-align: center;
-		select {
-			font-size: 1em;
-			margin: 1px 0;
-		}
-	}
-	select.ui-datepicker-month {
-		width: 45%;
-	}
-	select.ui-datepicker-year {
-		width: 45%;
-	}
-	table {
-		width: 100%;
-		font-size: .9em;
-		border-collapse: collapse;
-		margin: 0 0 .4em;
-	}
-	th {
-		padding: .7em .3em;
-		text-align: center;
-		font-weight: bold;
-		// // border: 0;
-	}
-	td {
-		// // border: 0;
-		padding: 1px;
-		span {
-			display: block;
-			padding: .2em;
-			text-align: right;
-			text-decoration: none;
-		}
-		a {
-			display: block;
-			padding: .2em;
-			text-align: right;
-			text-decoration: none;
-		}
-	}
-	.ui-datepicker-buttonpane {
-		background-image: none;
-		margin: .7em 0 0 0;
-		padding: 0 .2em;
-		border-left: 0;
-		border-right: 0;
-		border-bottom: 0;
-		button {
-			float: right;
-			margin: .5em .2em .4em;
-			cursor: pointer;
-			padding: .2em .6em .3em .6em;
-			width: auto;
-			overflow: visible;
-		}
-		button.ui-datepicker-current {
-			float: left;
-		}
-	}
-	.ui-icon {
-		display: block;
-		text-indent: -99999px;
-		overflow: hidden;
-		background-repeat: no-repeat;
-		left: .5em;
-		top: .3em;
-	}
+  .ui-datepicker-header {
+    position: relative;
+    margin: $ibo-vendors-jqueryui--ui-datepicker-header--margin;
+    padding-top: $ibo-vendors-jqueryui--ui-datepicker-header--padding-top;
+  }
+
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    position: absolute;
+    top: $ibo-vendors-jqueryui--ui-datepicker-buttons--top;
+  }
+
+  .ui-datepicker-prev {
+    left: $ibo-vendors-jqueryui--ui-datepicker-prev--left;
+  }
+
+  .ui-datepicker-next {
+    right: $ibo-vendors-jqueryui--ui-datepicker-next--right;
+  }
+
+  .ui-datepicker-title {
+    display: flex;
+    justify-content: space-evenly;
+
+    select {
+      flex-grow: 1;
+      @extend %ibo-font-ral-nor-100;
+    }
+  }
+
+  .ui-datepicker-year {
+    margin-left: $ibo-vendors-jqueryui--ui-datepicker-year--margin-left;
+  }
+
+  .ui-datepicker-calendar {
+    margin: 0 $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-vendors-jqueryui--ui-datepicker--padding;
+  }
+
+  th {
+    padding: .7em .3em;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  td {
+    padding: 1px;
+
+    span,
+    a {
+      display: block;
+      padding: .2em;
+      text-align: right;
+    }
+  }
+
+  .ui-datepicker-buttonpane {
+    background-image: none;
+    margin: .7em 0 0 0;
+    padding: 0 .2em;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+
+    button {
+      float: right;
+      margin: .5em .2em .4em;
+      cursor: pointer;
+      padding: .2em .6em .3em .6em;
+      width: auto;
+      overflow: visible;
+    }
+
+    button.ui-datepicker-current {
+      float: left;
+    }
+  }
 }
 .ui-datepicker.ui-datepicker-multi {
 	width: auto;
