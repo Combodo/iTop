@@ -215,7 +215,7 @@ class ThemeHandler
 	 * @param boolean $bSetup
 	 * @param string $sSetupCompilationTimestamp : setup compilation timestamp in micro secunds
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
-	 * @param array|null $aImportsPaths Paths where imports can be found. Must end with '/'
+	 * @param array|null $aImportsPaths Folder paths where imports can be found. Must end with '/'
 	 * @param string|null $sWorkingPath Path of the folder used during compilation. Must end with a '/'
 	 *
 	 * @throws \CoreException
@@ -342,11 +342,12 @@ CSS;
 					static::$oCompileCSSService = new CompileCSSService();
 				}
 				//store it again to change $version with latest compiled time
+				SetupLog::Info("Compiling theme $sThemeId...");
 				$sTmpThemeCssContent = static::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
 					$aThemeParametersWithVersion);
+				SetupLog::Info("$sThemeId theme compilation done.");
 				file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
-				SetupLog::Info("Theme $sThemeId file compiled.");
 				return true;
 			}
 		}
@@ -939,7 +940,8 @@ CSS;
 			{
 				$aThemeParametersVariable = array_merge([], $aThemeParameters['variables']);
 			}
-		}		
+		}
+
 		if (array_key_exists('imports_variable', $aThemeParameters))
 		{
 			if (is_array($aThemeParameters['imports_variable']))

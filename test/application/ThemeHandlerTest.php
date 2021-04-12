@@ -27,13 +27,13 @@ class ThemeHandlerTest extends ItopTestCase
 		$this->oCompileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->oCompileCSSServiceMock);
 
-		$this->sTmpDir = $this->tmpdir();
+		$this->sTmpDir = $this->CreateTmpdir();
 		$this->aDirsToCleanup[] = $this->sTmpDir;
 
 		$this->recurseMkdir($this->sTmpDir."/branding/themes/basque-red");
 		$this->sCssPath = $this->sTmpDir.'/branding/themes/basque-red/main.css';
 		$this->sJsonThemeParamFile = $this->sTmpDir.'/branding/themes/basque-red/theme-parameters.json';
-		$this->recurse_copy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
+		$this->RecurseCopy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
 	public function tearDown()
@@ -43,54 +43,8 @@ class ThemeHandlerTest extends ItopTestCase
 		foreach ($this->aDirsToCleanup as $sDir)
 		{
 			echo $sDir;
-			$this->rrmdir($sDir);
+			$this->RecurseRmdir($sDir);
 		}
-	}
-
-	function rrmdir($dir) {
-		if (is_dir($dir)) {
-			$objects = scandir($dir);
-			foreach ($objects as $object) {
-				if ($object != "." && $object != "..") {
-					if (is_dir($dir."/".$object))
-						$this->rrmdir($dir."/".$object);
-					else
-						unlink($dir."/".$object);
-				}
-			}
-			rmdir($dir);
-		}
-	}
-
-	function tmpdir() {
-		$sTmpfile=tempnam(sys_get_temp_dir(),'');
-		if (file_exists($sTmpfile))
-		{
-			unlink($sTmpfile);
-		}
-		mkdir($sTmpfile);
-		if (is_dir($sTmpfile))
-		{
-			return $sTmpfile;
-		}
-
-		return sys_get_temp_dir();
-	}
-
-	public function recurse_copy($src,$dst) {
-		$dir = opendir($src);
-		@mkdir($dst);
-		while(false !== ( $file = readdir($dir)) ) {
-			if (( $file != '.' ) && ( $file != '..' )) {
-				if ( is_dir($src . '/' . $file) ) {
-					$this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
-				}
-				else {
-					copy($src . '/' . $file,$dst . '/' . $file);
-				}
-			}
-		}
-		closedir($dir);
 	}
 
 	/**
@@ -151,8 +105,7 @@ class ThemeHandlerTest extends ItopTestCase
 						$aThemeParameters = [
 							'variables' => [],
 							'imports_utility' => [],
-							'stylesheets' => [],
-							'precompiled_stylesheet' => $sPrecompiledStylesheetUri,
+							'stylesheets' => []
 						];
 
 						/** @var \DOMNodeList $oVariables */
@@ -393,7 +346,7 @@ JSON;
 		$sAbsoluteImagePath = APPROOT.'test/application/theme-handler/copied/testimages/';
 		$this->recurseMkdir($sAbsoluteImagePath);
 		$this->aDirsToCleanup[] = dirname($sAbsoluteImagePath);
-		$this->recurse_copy(APPROOT.'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
+		$this->RecurseCopy(APPROOT.'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
 
 		//change approot-relative in css-variable to use absolute path
 		$sCssVarPath = $this->sTmpDir."/branding/css/DO_NOT_CHANGE.css-variables.scss";
