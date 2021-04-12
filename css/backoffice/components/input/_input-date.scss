@@ -7,9 +7,13 @@ $ibo-input-date--button--padding: 0 !default;
 $ibo-input-date--button--background-color: transparent !default;
 $ibo-input-date--button--color: $ibo-color-grey-800 !default;
 
-.ibo-input-date{
-	display: inline-block;
-	width: $ibo-input-date--width;
+.ibo-input-date-wrapper {
+  position: relative;
+}
+
+.ibo-input-date {
+  display: inline-block;
+  width: $ibo-input-date--width;
 }
 .ibo-input-date + button{
 	position: absolute;
