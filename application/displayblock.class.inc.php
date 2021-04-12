@@ -478,7 +478,7 @@ class DisplayBlock
 					$aValues[$iRow] = $sValue;
 					$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
 					$aLabels[$iRow] = $sHtmlValue;
-					$aGroupBy[$iRow] = (int) $aRow[$sFctVar];
+					$aGroupBy[$iRow] = $aRow[$sFctVar];
 					$iTotalCount += $aRow['_itop_count_'];
 				}
 
