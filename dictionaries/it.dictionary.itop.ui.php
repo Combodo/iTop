@@ -1035,18 +1035,22 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 
 	'Menu:ProfilesMenu' => 'Profili', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profili', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profili',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Account utente', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Account utente', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Account utente',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => '',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Account utente',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'Versione %1$s %2$s',
 	'UI:iTopVersion:Long' => 'Versione %1$s %2$s-%3$s costruita il %4$s',
 	'UI:PropertiesTab' => 'Proprietà',
 
-	'UI:OpenDocumentInNewWindow_' => 'Apri questo documento in una nuova finestra: %1$s',
-	'UI:DownloadDocument_' => 'Scarica questo documento: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Aprire~~',
+	'UI:DownloadDocument_' => 'Scaricare~~',
 	'UI:Document:NoPreview' => 'Non è disponibile un\'anteprima per questo tipo di documento',
 	'UI:Download-CSV' => 'Download %1$s~~',
 

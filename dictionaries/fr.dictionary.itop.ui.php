@@ -1027,18 +1027,22 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'Menu:ProfilesMenu' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profils',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s du %4$s',
 	'UI:PropertiesTab' => 'Propriétés',
 
-	'UI:OpenDocumentInNewWindow_' => 'Ouvrir ce document dans une autre fenêtre: %1$s',
-	'UI:DownloadDocument_' => 'Télécharger ce document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Ouvrir',
+	'UI:DownloadDocument_' => 'Télécharger',
 	'UI:Document:NoPreview' => 'L\'aperçu n\'est pas disponible pour ce type de documents',
 	'UI:Download-CSV' => 'Télécharger %1$s',
 

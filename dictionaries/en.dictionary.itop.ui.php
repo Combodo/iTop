@@ -1029,18 +1029,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'Menu:ProfilesMenu' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiles',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Properties',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open this document in a new window: %1$s',
-	'UI:DownloadDocument_' => 'Download this document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open',
+	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
 	'UI:Download-CSV' => 'Download %1$s',
 

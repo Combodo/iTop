@@ -1023,18 +1023,22 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 
 	'Menu:ProfilesMenu' => 'Profily', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profily', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profily',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Užívateľské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => '',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => 'iTop verzia %1$s',
 	'UI:iTopVersion:Long' => 'iTop verzia %1$s-%2$s postavená na %3$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otvoriť tento dokument v novom okne: %1$s',
-	'UI:DownloadDocument_' => 'Stiahnuť tento dokument: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Otvoriť~~',
+	'UI:DownloadDocument_' => 'Stiahnuť~~',
 	'UI:Document:NoPreview' => 'Žiadny náhľad nie je dostupný pre tento typ dokumentu',
 	'UI:Download-CSV' => 'Stiahnuť %1$s',
 

@@ -1034,18 +1034,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'Menu:ProfilesMenu' => 'Perfis', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Perfis', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Perfis', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Perfis',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Contas usuários',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Contas usuários',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versão %2$s',
 	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s construído %4$s',
 	'UI:PropertiesTab' => 'Propriedades',
 
-	'UI:OpenDocumentInNewWindow_' => 'Abrir este documento em uma nova janela: %1$s',
-	'UI:DownloadDocument_' => 'Baixar este documento: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
+	'UI:DownloadDocument_' => 'Baixar~~',
 	'UI:Document:NoPreview' => 'Nenhuma visualização está disponível para este documento',
 	'UI:Download-CSV' => 'Download %1$s',
 

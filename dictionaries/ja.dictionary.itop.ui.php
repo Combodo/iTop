@@ -1021,18 +1021,22 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'Menu:ProfilesMenu' => 'プロフィール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'プロフィール', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'プロフィール', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'プロフィール',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'ユーザアカウント',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'ユーザアカウント',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'ユーザアカウント',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$sバージョン%2$s',
 	'UI:iTopVersion:Long' => '%1$sバージョン%2$s-%3$s ビルド%4$s',
 	'UI:PropertiesTab' => 'プロパティ',
 
-	'UI:OpenDocumentInNewWindow_' => '新規ウィンドウでこ文章を開く: %1$s',
-	'UI:DownloadDocument_' => 'この文書をダウンロードする: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open~~',
+	'UI:DownloadDocument_' => 'Download~~',
 	'UI:Document:NoPreview' => 'このタイプの文書はプレビューできません。',
 	'UI:Download-CSV' => 'ダウンロード-CSV %1$s',
 

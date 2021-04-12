@@ -1012,18 +1012,22 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Menu:ProfilesMenu' => 'Профили', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Профили пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Профили пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Профили пользователей',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Учетные записи', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Учетные записи',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Учетные записи пользователей',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Учетные записи пользователей',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s версия %2$s',
 	'UI:iTopVersion:Long' => '%1$s версия %2$s-%3$s основан на %4$s',
 	'UI:PropertiesTab' => 'Свойства',
 
-	'UI:OpenDocumentInNewWindow_' => 'Открыть этот документ в новом окне: %1$s',
-	'UI:DownloadDocument_' => 'Скачать этот документ: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Открыть~~',
+	'UI:DownloadDocument_' => 'Скачать~~',
 	'UI:Document:NoPreview' => 'Предварительный просмотр недоступен для документов данного типа',
 	'UI:Download-CSV' => 'Загрузка %1$s~~',
 

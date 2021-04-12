@@ -1036,18 +1036,22 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 
 	'Menu:ProfilesMenu' => 'Perfiles', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Perfiles', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Perfiles', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Perfiles',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Cuentas de Usuario',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Cuentas de Usuario',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Cuentas de Usuario',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versión %2$s',
 	'UI:iTopVersion:Long' => '%1$s versión %2$s-%3$s compilada en %4$s',
 	'UI:PropertiesTab' => 'Propiedades',
 
-	'UI:OpenDocumentInNewWindow_' => 'Abra este documento en una ventana nueva: %1$s',
-	'UI:DownloadDocument_' => 'Descargue este documento: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
+	'UI:DownloadDocument_' => 'Descargar~~',
 	'UI:Document:NoPreview' => 'No hay prevista disponible para este tipo de archivo',
 	'UI:Download-CSV' => 'Descargar %1$s',
 

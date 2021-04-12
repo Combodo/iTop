@@ -1020,18 +1020,22 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 
 	'Menu:ProfilesMenu' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profielen',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Gebruikersaccounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Gebruikersaccounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Gebruikersaccounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Gebruikersaccounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versie %2$s',
 	'UI:iTopVersion:Long' => '%1$s versie %2$s-%3$s uitgegeven op %4$s',
 	'UI:PropertiesTab' => 'Eigenschappen',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open dit document in een nieuw venster: %1$s',
-	'UI:DownloadDocument_' => 'Download dit document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open~~',
+	'UI:DownloadDocument_' => 'Download~~',
 	'UI:Document:NoPreview' => 'Er is geen voorbeeld beschikbaar voor dit soort document',
 	'UI:Download-CSV' => 'Download %1$s',
 

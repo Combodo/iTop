@@ -1034,18 +1034,22 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 
 	'Menu:ProfilesMenu' => 'Profily (Role)', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profily (Role)', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profily (Role)', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profily (Role)',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Uživatelské účty', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Uživatelské účty', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Uživatelské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Uživatelské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Uživatelské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s verze %2$s',
 	'UI:iTopVersion:Long' => '%1$s verze %2$s-%3$s ze dne %4$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otevřít tento dokument v novém okně: %1$s',
-	'UI:DownloadDocument_' => 'Stáhnout tento dokument: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Otevřít~~',
+	'UI:DownloadDocument_' => 'Stáhnout~~',
 	'UI:Document:NoPreview' => 'Pro tento typ dokumentu není k dispozici žádný náhled',
 	'UI:Download-CSV' => 'Stáhnout %1$s',
 

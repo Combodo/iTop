@@ -454,10 +454,18 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 			}
 			else
 			{
-				$sDocView = $oPrevDoc->GetAsHtml();
-				$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
-				$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
-				//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
+				$sFieldAsHtml = $oPrevDoc->GetAsHTML();
+
+				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
+				$sDisplayUrl = $oPrevDoc->GetDisplayURL(get_class($this), $this->GetKey(), 'prevdata');
+
+				$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
+
+				$sDocView = <<<HTML
+{$sFieldAsHtml}<br>
+<a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
+HTML;
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
 			}
 		}

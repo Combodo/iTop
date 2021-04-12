@@ -3228,13 +3228,21 @@ HTML;
 			// Then prepare the value
 			// - The field is visible in the current state of the object
 			if ($oAttDef->GetEditClass() == 'Document') {
+				/** @var \ormDocument $oDocument */
 				$oDocument = $this->Get($sAttCode);
 				if (!$oDocument->IsEmpty()) {
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
-					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					$sFieldAsHtml = $this->GetAsHTML($sAttCode);
+
+					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
+					$sDisplayUrl = $oDocument->GetDisplayURL(get_class($this), $this->GetKey(), $sAttCode);
+
+					$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
+
+					$sDisplayValue = <<<HTML
+{$sFieldAsHtml}<br>
+<a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
+HTML;
 				} else {
 					$sDisplayValue = '';
 				}

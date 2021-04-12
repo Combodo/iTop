@@ -1023,18 +1023,22 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 
 	'Menu:ProfilesMenu' => 'Profiler', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profiles~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiler', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiler',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Bruger konti', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Bruger konti', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Bruger konti',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'User Accounts~~',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Bruger konti',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Egenskaber',
 
-	'UI:OpenDocumentInNewWindow_' => 'Åbn dette dokument i et nyt vindue: %1$s',
-	'UI:DownloadDocument_' => 'Hent dette dokument: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Åben~~',
+	'UI:DownloadDocument_' => 'Hent~~',
 	'UI:Document:NoPreview' => 'Forhåndsvisning er ikke tilgængelig for denne dokumenttype',
 	'UI:Download-CSV' => 'Download %1$s',
 

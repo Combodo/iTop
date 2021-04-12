@@ -1034,18 +1034,22 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Menu:ProfilesMenu' => '角色', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => '角色', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => '角色', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => '角色',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => '用户帐户', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => '用户帐户',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => '用户帐户',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => '用户帐户',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => '属性',
 
-	'UI:OpenDocumentInNewWindow_' => '在新窗口打开文档: %1$s',
-	'UI:DownloadDocument_' => '下载该文档: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open~~',
+	'UI:DownloadDocument_' => 'Download~~',
 	'UI:Document:NoPreview' => '该类文档无法预览',
 	'UI:Download-CSV' => '下载 %1$s',
 

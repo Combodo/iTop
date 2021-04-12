@@ -1035,18 +1035,22 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 
 	'Menu:ProfilesMenu' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiller',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versiyonu %2$s',
 	'UI:iTopVersion:Long' => '%1$s  %4$s tarihli versiyonu %2$s-%3$s',
 	'UI:PropertiesTab' => 'Özellikler',
 
-	'UI:OpenDocumentInNewWindow_' => 'Dokümanı yeni pencerede aç: %1$s',
-	'UI:DownloadDocument_' => 'Dokümanı indir: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Açmak~~',
+	'UI:DownloadDocument_' => 'Indirmek~~',
 	'UI:Document:NoPreview' => 'Bu tip doküman için öngösterim mevcut değil',
 	'UI:Download-CSV' => 'Download %1$s~~',
 

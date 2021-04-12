@@ -1021,18 +1021,22 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 
 	'Menu:ProfilesMenu' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profile',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Benutzerkonten',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Benutzerkonten',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Benutzerkonten',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s Version %2$s',
 	'UI:iTopVersion:Long' => '%1$s Version %2$s-%3$s compiliert am %4$s',
 	'UI:PropertiesTab' => 'Eigenschaften',
 
-	'UI:OpenDocumentInNewWindow_' => 'Dieses Dokument in einem neuen Fenster öffnen: %1$s',
-	'UI:DownloadDocument_' => 'Dieses Dokument herunterladen: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Öffnen~~',
+	'UI:DownloadDocument_' => 'Herunterladen~~',
 	'UI:Document:NoPreview' => 'Für diesen Typ Dokument ist keine Vorschau vorhanden',
 	'UI:Download-CSV' => '%1$s herunterladen',
 

@@ -1018,18 +1018,22 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	'Menu:ProfilesMenu' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profile',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Konta użytkowników', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Konta użytkowników', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Konta użytkowników',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Konta użytkowników',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s wersja %2$s',
 	'UI:iTopVersion:Long' => '%1$s wersja %2$s-%3$s zbudowana na %4$s',
 	'UI:PropertiesTab' => 'Właściwości',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otwórz dokument w nowym oknie: %1$s',
-	'UI:DownloadDocument_' => 'Pobierz dokument: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Otwórz~~',
+	'UI:DownloadDocument_' => 'Pobierz~~',
 	'UI:Document:NoPreview' => 'Brak podglądu tego typu dokumentu',
 	'UI:Download-CSV' => 'Pobierz %1$s',
 
