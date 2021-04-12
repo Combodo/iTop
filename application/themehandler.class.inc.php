@@ -96,7 +96,8 @@ class ThemeHandler
 		$sThemeId = null;
 
 		try {
-			if (true === MetaModel::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
+			$oConf = MetaModel::GetConfig();
+			if ((!is_null($oConf)) && (true === $oConf->Get('user_preferences.allow_backoffice_theme_override'))) {
 				$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
 			}
 		}
