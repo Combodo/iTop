@@ -436,24 +436,19 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
+			/** @var \ormDocument $oPrevDoc */
 			$oPrevDoc = $this->Get('prevdata');
-			if ($oPrevDoc->IsEmpty())
-			{
+			if ($oPrevDoc->IsEmpty()) {
 				$sPrevious = '';
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevious);
-			}
-			else
-			{
+			} else {
 				$sFieldAsHtml = $oPrevDoc->GetAsHTML();
 
 				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
@@ -463,7 +458,7 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
 
 				$sDocView = <<<HTML
-{$sFieldAsHtml}<br>
+{$sFieldAsHtml}
 <a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
 HTML;
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
