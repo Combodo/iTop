@@ -73,10 +73,7 @@ class ThemeHandler
 	public static function GetApplicationThemeId(): string
 	{
 		try {
-			if (is_null(MetaModel::GetConfig())) {
-				throw new CoreException('no config');
-			}
-			$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
+			$sThemeId = utils::GetConfig()->Get('backoffice_default_theme');
 		}
 		catch (CoreException $oCompileException) {
 			// Fallback on our default theme in case the config. is not available yet
@@ -96,8 +93,7 @@ class ThemeHandler
 		$sThemeId = null;
 
 		try {
-			$oConf = MetaModel::GetConfig();
-			if ((!is_null($oConf)) && (true === $oConf->Get('user_preferences.allow_backoffice_theme_override'))) {
+			if (true === utils::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
 				$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
 			}
 		}
@@ -188,7 +184,8 @@ class ThemeHandler
 	{
 		try {
 			// Try to compile theme defined in the configuration
-			$sThemeId = static::GetCurrentUserThemeId();
+			// Note: In maintenance mode we should stick to the app theme (also we don't have access to many PHP classes, including the user preferences)
+			$sThemeId = SetupUtils::IsInMaintenanceMode() ? static::GetApplicationThemeId() : static::GetCurrentUserThemeId();
 			static::CompileTheme($sThemeId);
 		}
 		catch (CoreException $oCompileException) {
