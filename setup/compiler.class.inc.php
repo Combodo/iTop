@@ -2911,9 +2911,31 @@ EOF;
 			$bHasCompiled = static::$oThemeHandlerService->CompileTheme($sThemeId, true, $this->sCompilationTimeStamp, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 
 			if ($bHasCompiled) {
-				SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
-				copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
-			}else {
+				if (utils::GetConfig()->Get('theme_precompilation_enabled')){
+					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
+					{ //help developers to detect & push theme precompilation changes
+						$sInitialPrecompiledFilePath = null;
+						$aRootDirs = $this->oFactory->getRootDirs();
+						if (is_array($aRootDirs) && count($aRootDirs) !== 0) {
+							foreach ($this->oFactory->getRootDirs() as $sRootDir) {
+								$sCurrentFile = $sRootDir. DIRECTORY_SEPARATOR . $sPrecompiledStylesheet;
+								if (is_file($sCurrentFile) && is_writable($sCurrentFile)) {
+									$sInitialPrecompiledFilePath = $sCurrentFile;
+									break;
+								}
+							}
+						}
+
+						if ($sInitialPrecompiledFilePath != null){
+							SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sInitialPrecompiledFilePath for next setup.");
+							copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
+						}
+					}
+
+					SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
+					copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
+				}
+			} else {
 				SetupLog::Info("No theme '$sThemeId' compilation was required during setup.");
 			}
 		}
@@ -2935,6 +2957,10 @@ EOF;
 	 * @return string : file path of latest precompiled file to use for setup
 	 */
 	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
+		if (! utils::GetConfig()->Get('theme_precompilation_enabled')) {
+			return null;
+		}
+
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
 		if (!empty($sPrecompiledFileUri)){

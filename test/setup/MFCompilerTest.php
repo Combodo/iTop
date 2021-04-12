@@ -113,7 +113,10 @@ class MFCompilerTest extends ItopTestCase {
 	 * @param string $sThemeDir
 	 * @param ?string $sExpectedReturn
 	 */
-	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, ?string $sExpectedReturn){
+	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, ?string $sExpectedReturn, bool $bDisableThemePrecompilationViaConf = false){
+		if ($bDisableThemePrecompilationViaConf){
+			utils::GetConfig()->Set('theme_precompilation_enabled', false);
+		}
 		$sRes = $this->oMFCompiler->UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeDir);
 		$this->assertEquals($sExpectedReturn, $sRes);
 	}
@@ -122,6 +125,7 @@ class MFCompilerTest extends ItopTestCase {
 		self::init();
 		return [
 			'no precompiled file at all' => $this->BuildProviderUseCaseArray('', self::$aRessources['sMissingFile'], null),
+			'deactivate precompilation via conf' => $this->BuildProviderUseCaseArray('', self::$aRessources['sPostCompilation1'], null, true),
 			'no precompiled file configured in precompiled_stylesheet XM section' => $this->BuildProviderUseCaseArray('', self::$aRessources['sPostCompilation1'], self::$aRessources['sPostCompilation1']),
 			'missing precompiled file in precompiled_stylesheet section' => $this->BuildProviderUseCaseArray(self::$aRessources['sMissingFile'], self::$aRessources['sPostCompilation1'], self::$aRessources['sPostCompilation1'] ),
 			'no precompiled file generated in previous setup in /data/precompiled_styles' => $this->BuildProviderUseCaseArray(self::$aRessources['sPrecompiledInExtensionFileUri1'], self::$aRessources['sMissingFile'], self::$aRessources['sCopiedExtensionFile1'] ),
@@ -132,13 +136,14 @@ class MFCompilerTest extends ItopTestCase {
 		];
 	}
 
-	private function BuildProviderUseCaseArray(string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, $sExpectedReturn) : array{
+	private function BuildProviderUseCaseArray(string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, $sExpectedReturn, $bDisableThemePrecompilationViaConf = false) : array{
 		return [
 			"sTempTargetDir" => sys_get_temp_dir(),
 			"sPrecompiledFileUri" => $sPrecompiledFileUri,
 			"sPostCompilationLatestPrecompiledFile" => $sPostCompilationLatestPrecompiledFile,
 			"sThemeDir" => "test",
-			"sExpectedReturn" => $sExpectedReturn
+			"sExpectedReturn" => $sExpectedReturn,
+			"bDisableThemePrecompilationViaConf" => $bDisableThemePrecompilationViaConf
 		];
 	}
 
