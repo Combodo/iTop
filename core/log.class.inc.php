@@ -765,9 +765,9 @@ class DeadLockLog extends LogAPI
  */
 class DeprecatedCallsLog extends LogAPI
 {
-	public const CHANNEL_PHP = 'deprecated-method';
-	public const CHANNEL_FILE = 'deprecated-file';
-	public const CHANNEL_DEFAULT = self::CHANNEL_PHP;
+	public const ENUM_CHANNEL_PHP = 'deprecated-method';
+	public const ENUM_CHANNEL_FILE = 'deprecated-file';
+	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP;
 
 	public const LEVEL_DEFAULT = self::LEVEL_WARNING;
 
@@ -802,7 +802,7 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Warning($sMessage, static::CHANNEL_FILE);
+		static::Warning($sMessage, static::ENUM_CHANNEL_FILE);
 	}
 
 	/**
@@ -827,7 +827,7 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Warning($sMessage, static::CHANNEL_PHP);
+		static::Warning($sMessage, static::ENUM_CHANNEL_PHP);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
