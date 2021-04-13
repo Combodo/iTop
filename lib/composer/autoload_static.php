@@ -633,6 +633,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'DefaultWorkingTimeComputer' => __DIR__ . '/../..' . '/core/computing.inc.php',
         'DeleteException' => __DIR__ . '/../..' . '/application/exceptions/DeleteException.php',
         'DeletionPlan' => __DIR__ . '/../..' . '/core/deletionplan.class.inc.php',
+        'DeprecatedCallsLog' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'DesignerBooleanField' => __DIR__ . '/../..' . '/application/forms.class.inc.php',
         'DesignerComboField' => __DIR__ . '/../..' . '/application/forms.class.inc.php',
         'DesignerForm' => __DIR__ . '/../..' . '/application/forms.class.inc.php',

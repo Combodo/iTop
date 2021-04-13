@@ -403,6 +403,7 @@ return array(
     'DefaultWorkingTimeComputer' => $baseDir . '/core/computing.inc.php',
     'DeleteException' => $baseDir . '/application/exceptions/DeleteException.php',
     'DeletionPlan' => $baseDir . '/core/deletionplan.class.inc.php',
+    'DeprecatedCallsLog' => $baseDir . '/core/log.class.inc.php',
     'DesignerBooleanField' => $baseDir . '/application/forms.class.inc.php',
     'DesignerComboField' => $baseDir . '/application/forms.class.inc.php',
     'DesignerForm' => $baseDir . '/application/forms.class.inc.php',
