@@ -116,6 +116,7 @@ $ibo-navigation-menu--menu-filter-input--padding-right: 76px !default;
 $ibo-navigation-menu--menu-filter-clear--top: $ibo-navigation-menu--menu-filter-input--padding-y !default;
 $ibo-navigation-menu--menu-filter-clear--right: $ibo-navigation-menu--menu-filter-input--padding-right - 16px !default;
 $ibo-navigation-menu--menu-filter-clear--padding: 3px 3px !default;
+$ibo-navigation-menu--menu-filter-hotkey--top: 6.5px !default;
 $ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-400 !default;
 
 $ibo-navigation-menu--menu-filter-hint--margin-top: 16px !default;
@@ -575,15 +576,15 @@ $ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
 	@extend %ibo-font-ral-bol-50;
 	@extend %ibo-hyperlink-inherited-colors;
 }
-.ibo-navigation-menu--menu-filter-hotkey{
-	position: absolute;
-	top: $ibo-navigation-menu--menu-filter-input--padding-y;
-	right: $ibo-navigation-menu--menu-filter-input--padding-x;
-	border: $ibo-navigation-menu--menu-filter-hotkey--border;
-	border-radius: $ibo-navigation-menu--menu-filter-input--border-radius;
-	color: $ibo-navigation-menu--menu-filter-input--placeholder-color;
-	padding: 2px 4px;
-	@extend %ibo-font-ral-nor-50;
+.ibo-navigation-menu--menu-filter-hotkey {
+  position: absolute;
+  top: $ibo-navigation-menu--menu-filter-hotkey--top;
+  right: $ibo-navigation-menu--menu-filter-input--padding-x;
+  border: $ibo-navigation-menu--menu-filter-hotkey--border;
+  border-radius: $ibo-navigation-menu--menu-filter-input--border-radius;
+  color: $ibo-navigation-menu--menu-filter-input--placeholder-color;
+  padding: 2px 4px;
+  @extend %ibo-font-ral-nor-50;
 }
 .ibo-navigation-menu--menu-filter-hint{
 	position: relative;
