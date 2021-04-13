@@ -338,14 +338,14 @@ JS
 JS
 	);
 	// For each existing shortcut keyboard existing in iTop
-	$aKeyboardShortcuts = utils::GetKeyboardShortcutPref();
+	$aKeyboardShortcuts = utils::GetAllKeyboardShortcutsPrefs();
 	$sKeyboardShortcutsInputHint = Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint');
 	$sKeyboardShortcutsButtonTooltip = Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip');
-	foreach($aKeyboardShortcuts as $sKeyboardShortcutId => $aKeyboardShortcut){
-			// Recording button
-			$oButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('');
-			$oButton->SetIconClass('fas fa-pen')->SetTooltip($sKeyboardShortcutsButtonTooltip)->SetOnClickJsCode(
-				<<<JS
+	foreach ($aKeyboardShortcuts as $sKeyboardShortcutId => $aKeyboardShortcut) {
+		// Recording button
+		$oButton = ButtonUIBlockFactory::MakeForAlternativeSecondaryAction('');
+		$oButton->SetIconClass('fas fa-pen')->SetTooltip($sKeyboardShortcutsButtonTooltip)->SetOnClickJsCode(
+			<<<JS
 let oPanel = $(this).siblings('input');
 var fCallback = function(sVal){
 	oPanel.removeClass('ibo-is-focus').val(sVal);

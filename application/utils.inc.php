@@ -2684,15 +2684,13 @@ HTML;
 	}
 
 	/**
-	 * Return keyboard shortcuts config as an array
-	 *
-	 * @return array
+	 * @return array All keyboard shortcuts config as an array
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @since 3.0.0
 	 */
-	public static function GetKeyboardShortcutPref(): array
+	public static function GetAllKeyboardShortcutsPrefs(): array
 	{
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
@@ -2703,11 +2701,46 @@ HTML;
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
 			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
 				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
-				$aResultPref[$aShortcutKey['id']] = ['key' => $sKey, 'label' => $aShortcutKey['label'], 'event' => $aShortcutKey['event'], 'triggered_element_selector' => $sTriggeredElement];
+
+				// Format key for display
+				$aKeyParts = explode('+', $sKey);
+				$aFormattedKeyParts = [];
+				foreach ($aKeyParts as $sKeyPart) {
+					$aFormattedKeyParts[] = ucfirst(trim($sKeyPart));
+				}
+				$sFormattedKey = implode(' + ', $aFormattedKeyParts);
+
+				$aResultPref[$aShortcutKey['id']] = [
+					'key' => $sKey,
+					'key_for_display' => $sFormattedKey,
+					'label' => $aShortcutKey['label'],
+					'event' => $aShortcutKey['event'],
+					'triggered_element_selector' => $sTriggeredElement,
+				];
 			}
 		}
 
 		return $aResultPref;
+	}
+
+	/**
+	 * @param string $sShortcutId
+	 *
+	 * @return array The properties of the $sShortcutId shorcut
+	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetKeyboardShortcutPref(string $sShortcutId): array
+	{
+		$aPrefs = static::GetAllKeyboardShortcutsPrefs();
+		if (false === array_key_exists($sShortcutId, $aPrefs)) {
+			throw new Exception('No shortcut identified as "'.$sShortcutId.'" is currently handled by the application.');
+		}
+
+		return $aPrefs[$sShortcutId];
 	}
 
 	//----------------------------------------------

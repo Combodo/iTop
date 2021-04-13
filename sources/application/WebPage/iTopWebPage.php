@@ -185,7 +185,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 */
 	protected function InitializeKeyboardShortcuts(): void
 	{
-		$aShortcuts = utils::GetKeyboardShortcutPref();
+		$aShortcuts = utils::GetAllKeyboardShortcutsPrefs();
 		$sShortcuts = json_encode($aShortcuts);
 		$this->add_script("aKeyboardShortcuts = $sShortcuts;");
 	}
