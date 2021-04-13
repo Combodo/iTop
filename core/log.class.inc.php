@@ -862,13 +862,17 @@ class DeprecatedCallsLog extends LogAPI
 	/**
 	 * @param string|null $sAdditionalMessage
 	 *
-	 * @throws \ConfigException
 	 * @link https://www.php.net/debug_backtrace
 	 * @uses \debug_backtrace()
 	 */
 	public static function NotifyDeprecatedPhpMethod(?string $sAdditionalMessage = null): void
 	{
-		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
 			return;
 		}
 
@@ -899,7 +903,12 @@ class DeprecatedCallsLog extends LogAPI
 			trigger_error($sMessage, E_USER_DEPRECATED);
 		}
 
-		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
+		try {
+			parent::Log($sLevel, $sMessage, $sChannel, $aContext);
+		}
+		catch (ConfigException $e) {
+			// nothing much we can do... and we don't want to crash the caller !
+		}
 	}
 }
 
