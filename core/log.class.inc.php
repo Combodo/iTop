@@ -873,14 +873,18 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-		$sCallerObject = $aStack[2]['class'];
-		$sCallerMethod = $aStack[2]['function'];
-		$sCallerLine = $aStack[2]['line'];
 
 		$sDeprecatedObject = $aStack[1]['class'];
 		$sDeprecatedMethod = $aStack[1]['function'];
+		$sCallerFile = $aStack[1]['file'];
+		$sCallerLine = $aStack[1]['line'];
+		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
 
-		$sMessage = "{$sCallerObject}::{$sCallerMethod} L{$sCallerLine} calling {$sDeprecatedObject}:{$sDeprecatedMethod}";
+		if (array_key_exists(2, $aStack)) {
+			$sCallerObject = $aStack[2]['class'];
+			$sCallerMethod = $aStack[2]['function'];
+			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
+		}
 
 		if (!is_null($sAdditionalMessage)) {
 			$sMessage .= ' : '.$sAdditionalMessage;
