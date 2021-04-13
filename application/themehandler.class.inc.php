@@ -46,11 +46,10 @@ class ThemeHandler
 			'name' => 'fullmoon',
 			'parameters' => [
 				'variables' => [],
-				'imports_variables' => [],
+				'imports' => [],
 				'stylesheets' => [
 					'main' => '../css/backoffice/main.scss',
-				],
-				'imports_utility' => [],
+				]
 			],
 		];
 	}
