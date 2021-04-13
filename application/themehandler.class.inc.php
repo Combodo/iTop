@@ -260,13 +260,19 @@ class ThemeHandler
 			}
 		}
 
-		$aThemeParametersWithVersion = self::CloneThemeParameterAndIncludeVersion($aThemeParameters, $sSetupCompilationTimestampInSecunds);
+		$aThemeParametersWithVersion = self::CloneThemeParameterAndIncludeVersion($aThemeParameters, $sSetupCompilationTimestampInSecunds, $aImportsPaths);
 
 		clearstatcache();
 
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
+		if (isset($aThemeParameters['imports_variable'])) {
+			foreach ($aThemeParameters['imports_variable'] as $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+			}
+		}
+
 		if (isset($aThemeParameters['imports_utility'])) {
 			foreach ($aThemeParameters['imports_utility'] as $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
@@ -373,8 +379,9 @@ CSS;
 		$aSignature = [
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
 			'stylesheets' => [],
-			'imports' => [],
-			'images' => []
+			'imports_variable' => [],
+			'images' => [],
+			'imports_utility' => []
 		];
 
 		$oFindStylesheetObject = new FindStylesheetObject();
@@ -384,16 +391,17 @@ CSS;
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
 				if (!empty($sFile)) {
-					$aSignature['stylesheets'][$key] = md5_file($sFile);
+					$aSignature['imports_variable'][$key] = md5_file($sFile);
 				}
 			}
 		}
+
 		if (isset($aThemeParameters['imports_utility'])) {
 			foreach ($aThemeParameters['imports_utility'] as $key => $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
 				if (!empty($sFile)) {
-					$aSignature['stylesheets'][$key] = md5_file($sFile);
+					$aSignature['imports_utility'][$key] = md5_file($sFile);
 				}
 			}
 		}
@@ -928,10 +936,11 @@ CSS;
 	 * Clone variable array and include $version with bSetupCompilationTimestamp value
 	 * @param $aThemeParameters
 	 * @param $bSetupCompilationTimestamp
+	 * @param $aImportsPaths
 	 *
 	 * @return array
 	 */
-	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp)
+	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp, $aImportsPaths)
 	{
 		$aThemeParametersVariable = [];
 		if (array_key_exists('variables', $aThemeParameters))
@@ -946,7 +955,7 @@ CSS;
 		{
 			if (is_array($aThemeParameters['imports_variable']))
 			{
-				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['imports_variable']));
+				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['imports_variable'], $aImportsPaths));
 			}
 		}
 
@@ -956,20 +965,30 @@ CSS;
 
 	/**
 	 * @param $aVariableFiles
+	 * @param $aImportsPaths
 	 *
 	 * @return array
 	 * @since 3.0.0 N°3593
 	 */
-	public static function GetVariablesFromFile($aVariableFiles){
+	public static function GetVariablesFromFile($aVariableFiles, $aImportsPaths){
 		$aVariablesResults = [];
 		foreach ($aVariableFiles as $sVariableFile)
 		{
-			$sFileContent = file_get_contents(APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$sVariableFile);
-			$aVariableMatches = [];
-			
-			preg_match_all( '/\$(.*?):(.*?);/', $sFileContent,$aVariableMatches);
-			$aVariableMatches =  array_combine( $aVariableMatches[1], array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariableMatches[2] ) );
-			$aVariablesResults = array_merge($aVariablesResults, $aVariableMatches);
+			foreach($aImportsPaths as $sPath) {
+				$sFilePath = $sPath.'/'.$sVariableFile;
+				$sImportedFile = realpath($sFilePath);
+				if ($sImportedFile !== false) {
+					$sFileContent = file_get_contents($sImportedFile);
+					$aVariableMatches = [];
+
+					preg_match_all('/\s*\$(.*?)\s*:\s*[\"\']{0,1}(.*?)[\"\']{0,1}\s*[;!]/', $sFileContent, $aVariableMatches);
+					$aVariableMatches = array_combine($aVariableMatches[1], array_map(function ($sVariableValue) {
+						return $sVariableValue;
+					}, $aVariableMatches[2]));
+					$aVariablesResults = array_merge($aVariablesResults, $aVariableMatches);
+					break;
+				}
+			}
 		}
 		array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariablesResults );
 		return $aVariablesResults;
