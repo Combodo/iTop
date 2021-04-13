@@ -47,7 +47,8 @@ class SLAComputation implements iWorkingTimeComputer
 	 */
 	public static function SelectModule($sClassName)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		if (!class_exists($sClassName)) {
 			throw new CoreException("Could not select this module, '$sClassName' in not a valid class name");
 		}
