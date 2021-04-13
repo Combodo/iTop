@@ -535,30 +535,33 @@ class FileLog
 
 abstract class LogAPI
 {
-	const CHANNEL_DEFAULT   = '';
+	public const CHANNEL_DEFAULT = '';
 
-	const LEVEL_ERROR       = 'Error';
-	const LEVEL_WARNING     = 'Warning';
-	const LEVEL_INFO        = 'Info';
-	const LEVEL_OK          = 'Ok';
-	const LEVEL_DEBUG       = 'Debug';
-	const LEVEL_TRACE       = 'Trace';
+	public const LEVEL_ERROR = 'Error';
+	public const LEVEL_WARNING = 'Warning';
+	public const LEVEL_INFO = 'Info';
+	public const LEVEL_OK = 'Ok';
+	public const LEVEL_DEBUG = 'Debug';
+	public const LEVEL_TRACE = 'Trace';
 	/**
-	 * @var string default log level, can be overrided
-	 * @see GetMinLogLevel
+	 * @var string default log level
+	 * @used-by GetLevelDefault
 	 * @since 2.7.1 N°2977
 	 */
-	const LEVEL_DEFAULT     = self::LEVEL_OK;
+	public const LEVEL_DEFAULT = self::LEVEL_OK;
 
 	protected static $aLevelsPriority = array(
-		self::LEVEL_ERROR   => 400,
+		self::LEVEL_ERROR => 400,
 		self::LEVEL_WARNING => 300,
-		self::LEVEL_INFO    => 200,
-		self::LEVEL_OK      => 200,
-		self::LEVEL_DEBUG   => 100,
-		self::LEVEL_TRACE   =>  50,
+		self::LEVEL_INFO => 200,
+		self::LEVEL_OK => 200,
+		self::LEVEL_DEBUG => 100,
+		self::LEVEL_TRACE => 50,
 	);
 
+	/**
+	 * @var \Config attribute allowing to mock config in the tests
+	 */
 	protected static $m_oMockMetaModelConfig = null;
 
 	public static function Enable($sTargetFile)
@@ -567,7 +570,7 @@ abstract class LogAPI
 		static::$m_oFileLog = new FileLog($sTargetFile);
 	}
 
-	public static function MockStaticObjects($oFileLog, $oMetaModelConfig=null)
+	public static function MockStaticObjects($oFileLog, $oMetaModelConfig = null)
 	{
 		static::$m_oFileLog = $oFileLog;
 		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
@@ -647,19 +650,19 @@ abstract class LogAPI
 	 * @param $sChannel
 	 *
 	 * @return string one of the LEVEL_* const value
-	 * @uses \LogAPI::LEVEL_DEFAULT
+	 * @uses \LogAPI::GetLevelDefault
 	 */
 	protected static function GetMinLogLevel($sChannel)
 	{
-		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig : \MetaModel::GetConfig();
+		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
-			return static::LEVEL_DEFAULT;
+			return static::GetLevelDefault();
 		}
 
 		$sLogLevelMin = $oConfig->Get('log_level_min');
 
 		if (empty($sLogLevelMin)) {
-			return static::LEVEL_DEFAULT;
+			return static::GetLevelDefault();
 		}
 
 		if (!is_array($sLogLevelMin)) {
@@ -674,9 +677,30 @@ abstract class LogAPI
 			return $sLogLevelMin[$sChannel];
 		}
 
-		return static::LEVEL_DEFAULT;
+		return static::GetLevelDefault();
 	}
 
+	/**
+	 * @uses m_oMockMetaModelConfig if defined
+	 * @uses \MetaModel::GetConfig()
+	 */
+	protected static function GetConfig(): ?Config
+	{
+		return static::$m_oMockMetaModelConfig ?? \MetaModel::GetConfig();
+	}
+
+	/**
+	 * A method to override if default log level needs to be computed. Otherwise simply override the {@see LEVEL_DEFAULT} constant
+	 *
+	 * @used-by GetMinLogLevel
+	 * @uses    \LogAPI::LEVEL_DEFAULT
+	 *
+	 * @since 3.0.0 N°3731
+	 */
+	protected static function GetLevelDefault(): string
+	{
+		return static::LEVEL_DEFAULT;
+	}
 }
 
 class SetupLog extends LogAPI
@@ -769,7 +793,7 @@ class DeprecatedCallsLog extends LogAPI
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP;
 
-	public const LEVEL_DEFAULT = self::LEVEL_WARNING;
+	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
 
 	/** @var \FileLog we want our own instance ! */
 	protected static $m_oFileLog = null;
@@ -782,13 +806,13 @@ class DeprecatedCallsLog extends LogAPI
 		parent::Enable($sTargetFile);
 	}
 
-	protected static function GetMinLogLevel($sChannel): string
+	protected static function GetLevelDefault(): string
 	{
 		if (utils::IsDevelopmentEnvironment()) {
-			return static::LEVEL_OK;
+			return static::LEVEL_DEBUG;
 		}
 
-		return parent::GetMinLogLevel($sChannel);
+		return static::LEVEL_DEFAULT;
 	}
 
 	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
