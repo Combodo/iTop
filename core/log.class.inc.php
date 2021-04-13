@@ -606,50 +606,64 @@ abstract class LogAPI
 		static::Log(self::LEVEL_TRACE, $sMessage, $sChannel, $aContext);
 	}
 
+	/**
+	 * @throws \ConfigException if log wrongly configured
+	 */
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
 	{
-		if (! static::$m_oFileLog)
-		{
+		if (!static::$m_oFileLog) {
 			return;
 		}
 
-		if (! isset(self::$aLevelsPriority[$sLevel]))
-		{
+		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
+
 			return;
 		}
 
-		if (is_null($sChannel))
-		{
+		if (is_null($sChannel)) {
 			$sChannel = static::CHANNEL_DEFAULT;
 		}
 
-		$sMinLogLevel = self::GetMinLogLevel($sChannel);
-
-		if ($sMinLogLevel === false || $sMinLogLevel === 'false')
-		{
+		if (!static::IsLogLevelEnabled($sLevel, $sChannel)) {
 			return;
-		}
-		if (is_string($sMinLogLevel))
-		{
-			if (! isset(self::$aLevelsPriority[$sMinLogLevel]))
-			{
-				throw new Exception("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
-			}
-			elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel])
-			{
-				//priority too low regarding the conf, do not log this
-				return;
-			}
 		}
 
 		static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
 	}
 
 	/**
-	 * @param $sChannel
+	 * @throws \ConfigException if log wrongly configured
+	 * @uses GetMinLogLevel
+	 */
+	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel): bool
+	{
+		$sMinLogLevel = self::GetMinLogLevel($sChannel);
+
+		if ($sMinLogLevel === false || $sMinLogLevel === 'false') {
+			return false;
+		}
+		if (!is_string($sMinLogLevel)) {
+			return false;
+		}
+
+		if (!isset(self::$aLevelsPriority[$sMinLogLevel])) {
+			throw new ConfigException("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
+		} elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel]) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string $sChannel
 	 *
-	 * @return string one of the LEVEL_* const value
+	 * @return string one of the LEVEL_* const value : the one configured it if exists, otherwise default log level for this channel
+	 *       Config can be done globally : `'log_level_min' => LogAPI::LEVEL_TRACE,`
+	 *       Or per channel : `'log_level_min' => ['InlineImage' => LogAPI::LEVEL_TRACE, 'UserRequest' => LogAPI::LEVEL_TRACE],`
+	 *
+	 * @uses \LogAPI::GetConfig()
 	 * @uses \LogAPI::GetLevelDefault
 	 */
 	protected static function GetMinLogLevel($sChannel)
@@ -789,9 +803,9 @@ class DeadLockLog extends LogAPI
  */
 class DeprecatedCallsLog extends LogAPI
 {
-	public const ENUM_CHANNEL_PHP = 'deprecated-method';
+	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
-	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP;
+	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
 
 	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
 
@@ -815,8 +829,17 @@ class DeprecatedCallsLog extends LogAPI
 		return static::LEVEL_DEFAULT;
 	}
 
+	/**
+	 * @throws \ConfigException
+	 * @link https://www.php.net/debug_backtrace
+	 * @uses \debug_backtrace()
+	 */
 	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
 	{
+		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+			return;
+		}
+
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
 		$sCallerFile = $aStack[0]['file'];
 
@@ -832,12 +855,17 @@ class DeprecatedCallsLog extends LogAPI
 	/**
 	 * @param string|null $sAdditionalMessage
 	 *
-	 * @uses \debug_backtrace()
+	 * @throws \ConfigException
 	 * @link https://www.php.net/debug_backtrace
+	 * @uses \debug_backtrace()
 	 */
-	public static function NotifyDeprecatedMethod(?string $sAdditionalMessage = null): void
+	public static function NotifyDeprecatedPhpMethod(?string $sAdditionalMessage = null): void
 	{
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT, 3);
+		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
+			return;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
 		$sCallerObject = $aStack[2]['class'];
 		$sCallerMethod = $aStack[2]['function'];
 		$sCallerLine = $aStack[2]['line'];
@@ -851,7 +879,7 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Warning($sMessage, static::ENUM_CHANNEL_PHP);
+		static::Warning($sMessage, static::ENUM_CHANNEL_PHP_METHOD);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
