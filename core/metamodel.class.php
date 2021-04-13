@@ -6438,8 +6438,7 @@ abstract class MetaModel
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
 		{
-			if (self::$m_oConfig->GetLogIssue())
-			{
+			if (self::$m_oConfig->GetLogIssue()) {
 				self::$m_bLogIssue = true;
 				IssueLog::Enable(APPROOT.'log/error.log');
 			}
@@ -6448,6 +6447,7 @@ abstract class MetaModel
 
 			ToolsLog::Enable(APPROOT.'log/tools.log');
 			DeadLockLog::Enable();
+			DeprecatedCallsLog::Enable();
 		}
 		else
 		{

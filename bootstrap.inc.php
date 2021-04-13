@@ -54,9 +54,6 @@ if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false)
 	require_once APPROOT.'/lib/autoload.php';
 }
 
-require_once APPROOT.'core/log.class.inc.php';
-DeprecatedCallsLog::Enable();
-
 //
 // Maintenance mode
 //
