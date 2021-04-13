@@ -444,6 +444,7 @@ HTML
 	 */
 	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
@@ -1155,7 +1156,9 @@ HTML
 	 */
 	public static function GetDisplaySet(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetDisplaySetBlock');
 		$oPage->AddUiBlock(static::GetDisplaySetBlock($oPage, $oSet, $aExtraParams));
+
 		return "";
 	}
 
@@ -1191,11 +1194,10 @@ HTML
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		if (empty($aExtraParams['currentId'])) {
 			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
-		}
-		else
-		{
+		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
 		$aList = array();
@@ -4279,23 +4281,19 @@ HTML;
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$sClass = get_class($this);
 
-		if ($this->IsNew())
-		{
+		if ($this->IsNew()) {
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-		}
-		else
-		{
+		} else {
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 
-		if ($iFlags & OPT_ATT_HIDDEN)
-		{
+		if ($iFlags & OPT_ATT_HIDDEN) {
 			// The case log is hidden do nothing
-		}
-		else
+		} else
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$sAttDefClass = get_class($oAttDef);
@@ -4381,9 +4379,9 @@ HTML
 	 */
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Since iTop 2.4, use DBObject::GetTransitionAttributes() instead');
 		$aTransitions = $this->EnumTransitions();
-		if (!isset($aTransitions[$sStimulus]))
-		{
+		if (!isset($aTransitions[$sStimulus])) {
 			// Invalid stimulus
 			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
 				$this->GetName(), $this->GetStateLabel()));

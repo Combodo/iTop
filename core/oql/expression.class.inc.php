@@ -117,6 +117,8 @@ abstract class Expression {
 	 */
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
+
 		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 	}
 

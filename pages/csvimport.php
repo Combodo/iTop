@@ -58,6 +58,7 @@ try {
 	 */
 	function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetClassesSelectUIBlock');
 		$oSelectBlock = GetClassesSelectUIBlock($sName, $sDefaultValue, $iActionCode);
 
 		return BlockRenderer::RenderBlockTemplates($oSelectBlock);

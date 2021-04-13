@@ -172,6 +172,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_error($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Error');
 		SetupLog::Error($sText);
 	}
 
@@ -180,6 +181,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_warning($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Warning');
 		SetupLog::Warning($sText);
 	}
 
@@ -188,6 +190,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_info($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Info');
 		SetupLog::Info($sText);
 	}
 
@@ -196,6 +199,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_ok($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
 		SetupLog::Ok($sText);
 	}
 
@@ -204,6 +208,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
 		SetupLog::Ok($sText);
 	}
 

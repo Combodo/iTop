@@ -1193,6 +1193,8 @@ class WebPage implements Page
 	 */
 	public function GetUniqueId()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use utils::GetUniqueId() instead');
+
 		return utils::GetUniqueId();
 	}
 
@@ -1465,7 +1467,8 @@ EOD
 	 */
 	public function StartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
 	{
-		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,	$sSectionStateStorageBusinessKey));
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \\Combodo\\iTop\\Application\\UI\\Base\\Component\\CollapsibleSection\\CollapsibleSection');
+		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault, $sSectionStateStorageBusinessKey));
 	}
 
 	/**

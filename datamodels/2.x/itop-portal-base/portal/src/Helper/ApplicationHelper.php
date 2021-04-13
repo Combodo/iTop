@@ -24,6 +24,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use DBObjectSearch;
 use DBObjectSet;
+use DeprecatedCallsLog;
 use Dict;
 use Exception;
 use IssueLog;
@@ -60,6 +61,7 @@ class ApplicationHelper
 	 */
 	public static function LoadClasses($sScannedDir, $sFilePattern, $sType)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		@trigger_error(
 			sprintf(
 				'Usage of legacy LoadClasses is deprecated. You should rely on autoloading (and therefore follow PSR4).',

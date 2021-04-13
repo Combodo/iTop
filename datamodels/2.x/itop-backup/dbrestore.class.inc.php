@@ -111,6 +111,7 @@ class DBRestore extends DBBackup
 	 */
 	public function RestoreFromZip($sZipFile, $sEnvironment = 'production')
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use RestoreFromCompressedBackup instead');
 		$this->RestoreFromCompressedBackup($sZipFile, $sEnvironment);
 	}
 

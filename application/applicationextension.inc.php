@@ -1133,6 +1133,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetNorthPaneHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
@@ -1141,6 +1143,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetSouthPaneHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
@@ -1149,6 +1153,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetBannerHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 

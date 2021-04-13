@@ -128,11 +128,13 @@ class ValueSetObjects extends ValueSetDefinition
 	}
 
 	/**
+	 * @deprecated use SetCondition instead
+	 *
 	 * @param \DBSearch $oFilter
-	 * @deprecated use SetCondition
 	 */
 	public function AddCondition(DBSearch $oFilter)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetCondition instead');
 		$this->SetCondition($oFilter);
 	}
 

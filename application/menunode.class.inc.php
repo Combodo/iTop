@@ -342,15 +342,17 @@ class ApplicationMenu
 	 */
 	public static function DisplayMenu($oPage, $aExtraParams)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetMenuGroups() instead');
 		self::LoadAdditionalMenus();
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;
 		$iActiveAccordion = $iAccordion;
 		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
-		foreach(self::$aRootMenus as $aMenu)
-		{
-			if (!self::CanDisplayMenu($aMenu)) { continue; }
+		foreach (self::$aRootMenus as $aMenu) {
+			if (!self::CanDisplayMenu($aMenu)) {
+				continue;
+			}
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
 			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
@@ -418,13 +420,12 @@ EOF
 	 */
 	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetSubMenuNodes() instead');
 		// Sort the menu based on the rank
 		$bActive = false;
 		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
-		foreach($aMenus as $aMenu)
-		{
-			if (!self::CanDisplayMenu($aMenu))
-			{
+		foreach ($aMenus as $aMenu) {
+			if (!self::CanDisplayMenu($aMenu)) {
 				continue;
 			}
 			$index = $aMenu['index'];

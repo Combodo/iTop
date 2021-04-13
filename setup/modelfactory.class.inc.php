@@ -994,6 +994,8 @@ class ModelFactory
 	 */
 	function HasLoadErrors()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
+
 		return (count(self::$aLoadErrors) > 0);
 	}
 
@@ -1003,6 +1005,8 @@ class ModelFactory
 	 */
 	function GetLoadErrors()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
+
 		return self::$aLoadErrors;
 	}
 

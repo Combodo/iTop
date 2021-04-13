@@ -63,6 +63,7 @@ class ThemeHandler
 	 */
 	public static function GetCurrentThemeId()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		static::GetCurrentUserThemeId();
 	}
 

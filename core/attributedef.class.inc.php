@@ -317,6 +317,8 @@ abstract class AttributeDefinition
 	 */
 	public function ListDBJoins()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return "";
 		// e.g: return array("Site", "infrid", "name");
 	}
@@ -842,9 +844,9 @@ abstract class AttributeDefinition
 	 */
 	public function MakeValue()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$sComputeFunc = $this->Get("compute_func");
-		if (empty($sComputeFunc))
-		{
+		if (empty($sComputeFunc)) {
 			return null;
 		}
 

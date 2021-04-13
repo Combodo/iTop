@@ -1646,6 +1646,7 @@ class HistoryBlock extends DisplayBlock
 	
 	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		parent::__construct($oFilter, $sStyle, $bAsynchronous, $aParams, $oSet);
 		$this->iLimitStart = 0;
 		$this->iLimitCount = 0;

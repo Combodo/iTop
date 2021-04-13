@@ -280,62 +280,97 @@ abstract class DBSearch
 
 	abstract public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function IsAny();
 
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function Describe(){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditionRelTo($aRelInfo){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditions(){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function __DescribeHTML(){return 'deprecated - use ToOQL() instead';}
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function Describe()
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
 
-    /**
-     * @internal
-     * @return mixed
-     */
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditionRelTo($aRelInfo)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditions()
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function __DescribeHTML()
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function ResetCondition();
 
-    /**
-     * add $oExpression as a OR
-     *
-     * @api
-     * @see DBSearch::AddConditionExpression()
-     *
-     * @param Expression $oExpression
+	/**
+	 * add $oExpression as a OR
+	 *
+	 * @api
+	 * @see DBSearch::AddConditionExpression()
+	 *
+	 * @param Expression $oExpression
      *
      * @return mixed
      */

@@ -133,6 +133,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	public function AddToMenu($sHtml)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$this->m_sMenu .= $sHtml;
 	}
 

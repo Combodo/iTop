@@ -1046,6 +1046,7 @@ EOF
 	 */
 	public function SelectTab($sTabContainer, $sTabCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
 
