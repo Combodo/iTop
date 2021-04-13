@@ -143,7 +143,8 @@ class SLAComputationAddOnAPI
 	 */
 	public function Init()
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 	}
 
 	/**
