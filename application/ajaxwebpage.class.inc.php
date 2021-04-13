@@ -5,7 +5,8 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  */
 
-DeprecatedCallsLog::NotifyDeprecatedFile('moved to sources/application/WebPage/AjaxPage.php, now loadable using autoloader');
+// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+//DeprecatedCallsLog::NotifyDeprecatedFile('moved to sources/application/WebPage/AjaxPage.php, now loadable using autoloader');
 
 /**
  * Class ajax_page

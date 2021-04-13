@@ -1420,7 +1420,8 @@ abstract class MetaModel
 	 */
 	final public static function GetFiltersList($sClass)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
 
 		return array_keys(self::$m_aFilterDefs[$sClass]);
@@ -1529,7 +1530,8 @@ abstract class MetaModel
 	 */
 	final public static function IsValidFilterCode($sClass, $sFilterCode)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		if (!array_key_exists($sClass, self::$m_aFilterDefs)) {
 			return false;
 		}
@@ -1841,7 +1843,8 @@ abstract class MetaModel
 	 */
 	public static function GetClassFilterDefs($sClass)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
 
 		return self::$m_aFilterDefs[$sClass];

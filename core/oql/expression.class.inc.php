@@ -117,7 +117,8 @@ abstract class Expression {
 	 */
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
 
 		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 	}
