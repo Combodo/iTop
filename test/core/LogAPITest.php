@@ -51,7 +51,6 @@ class LogAPITest extends ItopTestCase
 		return [
 			[ $this->oMetaModelConfig, "log msg", '' , "Error", "log msg"],
 			[ $this->oMetaModelConfig, "log msg", 'PoudlardChannel' , "Error", "log msg", 'PoudlardChannel'],
-			[  array(), "log msg", '' , "Error", "log msg"], // Bruno?
 		];
 	}
 	
