@@ -844,10 +844,17 @@ class DeprecatedCallsLog extends LogAPI
 			return;
 		}
 
-		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
-		$sCallerFile = $aStack[0]['file'];
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+		$sDeprecatedFile = $aStack[0]['file'];
+		if (array_key_exists(1, $aStack)) {
+			$sCallerFile = $aStack[1]['file'];
+			$sCallerLine = $aStack[1]['line'];
+		} else {
+			$sCallerFile = 'N/A';
+			$sCallerLine = 'N/A';
+		}
 
-		$sMessage = $sCallerFile;
+		$sMessage = "{$sCallerFile} L{$sCallerLine} including/requiring {$sDeprecatedFile}";
 
 		if (!is_null($sAdditionalMessage)) {
 			$sMessage .= ' : '.$sAdditionalMessage;
