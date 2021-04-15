@@ -67,7 +67,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Organization/Attribute:overview' => '概览',
 	'Organization:Overview:FunctionalCIs' => '该组织的所有配置项',
 	'Organization:Overview:FunctionalCIs:subtitle' => '按类型',
-	'Organization:Overview:Users' => '该组织里所有的iTop 用户',
+	'Organization:Overview:Users' => '该组织里所有的 iTop用户',
 ));
 
 //
@@ -159,7 +159,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:location_id+' => '',
 	'Class:Person/Attribute:location_name' => '名称',
 	'Class:Person/Attribute:location_name+' => '',
-	'Class:Person/Attribute:manager_id' => '经理',
+	'Class:Person/Attribute:manager_id' => '直属上级',
 	'Class:Person/Attribute:manager_id+' => '',
 	'Class:Person/Attribute:manager_name' => '名称',
 	'Class:Person/Attribute:manager_name+' => '',
@@ -167,7 +167,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person/Attribute:team_list+' => '这个人归属的所有团队',
 	'Class:Person/Attribute:tickets_list' => '工单',
 	'Class:Person/Attribute:tickets_list+' => '这个人发起的所有工单',
-	'Class:Person/Attribute:manager_id_friendlyname' => '经理姓名',
+	'Class:Person/Attribute:manager_id_friendlyname' => '直属上级姓名',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => '头像',
 	'Class:Person/Attribute:picture+' => '',
@@ -358,7 +358,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Person:info' => '基本信息',
-	'UserLocal:info' => 'General information~~',
+	'UserLocal:info' => '基本信息',
 	'Person:personal_info' => '个人信息',
 	'Person:notifiy' => '通知',
 ));

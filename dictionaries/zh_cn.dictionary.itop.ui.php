@@ -86,8 +86,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Query/Attribute:description+' => '请描述本查询 (目的、用法等等.)',
 	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
-	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
-	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
+	'Class:Query/Attribute:is_template/Value:yes' => '是',
+	'Class:Query/Attribute:is_template/Value:no' => '否',
 	'Class:QueryOQL/Attribute:fields' => '区域',
 	'Class:QueryOQL/Attribute:fields+' => '属性之间使用逗号分隔 (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL 查询',
@@ -349,10 +349,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'BooleanLabel:no' => '否',
 	'UI:Login:Title' => 'iTop 登录',
 	'Menu:WelcomeMenu' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => '欢迎使用iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => '欢迎使用 iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => '欢迎使用iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => '欢迎使用iTop',
+	'Menu:WelcomeMenuPage+' => '欢迎使用 iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => '欢迎使用 iTop',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop 是完全开源的IT 操作门户.</p>
 <ul>它包括:
@@ -534,7 +534,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:SearchValue:CheckAll' => '全选',
 	'UI:SearchValue:UncheckAll' => '反选',
 	'UI:SelectOne' => '-- 请选择 --',
-	'UI:Login:Welcome' => '欢迎使用iTop!',
+	'UI:Login:Welcome' => '欢迎使用 iTop!',
 	'UI:Login:IncorrectLoginPassword' => '用户名或密码错误, 请重试.',
 	'UI:Login:IdentifyYourself' => '请完成身份认证',
 	'UI:Login:UserNamePrompt' => '用户名',
@@ -554,7 +554,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ResetPwd-Error-NoEmail' => '缺少邮箱地址. 请联系管理员.',
 	'UI:ResetPwd-Error-Send' => '邮件发送存在技术原因. 请联系管理员.',
 	'UI:ResetPwd-EmailSent' => '请检查您的收件箱并根据指引进行操作. 如果您没有收到邮件, 请检查您登录时的输入是否存在错误.',
-	'UI:ResetPwd-EmailSubject' => '重置iTop 密码',
+	'UI:ResetPwd-EmailSubject' => '重置 iTop 密码',
 	'UI:ResetPwd-EmailBody' => '<body><p>您已请求重置iTop 密码.</p><p>请点击这个链接 (一次性) <a href="%1$s">来输入新的密码</a></p>.',
 
 	'UI:ResetPwd-Title' => '重置密码',
@@ -570,7 +570,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Login:RetypeNewPasswordPrompt' => '重复新密码',
 	'UI:Login:IncorrectOldPassword' => '错误: 旧密码错误',
 	'UI:LogOffMenu' => '注销',
-	'UI:LogOff:ThankYou' => '感谢使用iTop',
+	'UI:LogOff:ThankYou' => '感谢使用 iTop',
 	'UI:LogOff:ClickHereToLoginAgain' => '点击这里再次登录...',
 	'UI:ChangePwdMenu' => '修改密码...',
 	'UI:Login:PasswordChanged' => '密码已成功设置!',
@@ -844,7 +844,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Delete:PleaseDoTheManualOperations' => '在删除该对象之前, 请先手工完成上述列出的操作',
 	'UI:Delect:Confirm_Object' => '请确认要删除 %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '请确认要删除下列 %2$s 类的 %1$d 个对象.',
-	'UI:WelcomeToITop' => '欢迎使用iTop ',
+	'UI:WelcomeToITop' => '欢迎使用 iTop ',
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s 详细内容',
 	'UI:ErrorPageTitle' => 'iTop - 错误',
 	'UI:ObjectDoesNotExist' => '抱歉, 该对象不存在 (或无权浏览该对象).',
@@ -1048,8 +1048,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => '属性',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open~~',
-	'UI:DownloadDocument_' => 'Download~~',
+	'UI:OpenDocumentInNewWindow_' => '打开',
+	'UI:DownloadDocument_' => '下载',
 	'UI:Document:NoPreview' => '该类文档无法预览',
 	'UI:Download-CSV' => '下载 %1$s',
 
@@ -1069,7 +1069,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ElementsDisplayed' => '过滤',
 	'UI:RelationGroupNumber_N' => 'Group #%1$d',
 	'UI:Relation:ExportAsPDF' => '导出PDF...',
-	'UI:RelationOption:GroupingThreshold' => '分组阀值',
+	'UI:RelationOption:GroupingThreshold' => '分组阈值',
 	'UI:Relation:AdditionalContextInfo' => '其他信息',
 	'UI:Relation:NoneSelected' => '无',
 	'UI:Relation:Zoom' => '放大',
@@ -1093,7 +1093,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PageOrientation_Landscape' => '横向',
 	'UI:RelationTooltip:Redundancy' => '冗余',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# 受影响的项目: %1$d / %2$d',
-	'UI:RelationTooltip:CriticalThreshold_N_of_M' => '阀值: %1$d / %2$d',
+	'UI:RelationTooltip:CriticalThreshold_N_of_M' => '阈值: %1$d / %2$d',
 	'Portal:Title' => 'iTop 用户门户',
 	'Portal:NoRequestMgmt' => '亲爱的 %1$s, 您被重定向到这个页面,因为您的账户已被设置成角色 \'Portal user\'. 并且, iTop 没有安装 \'需求管理\' 功能. 请联系管理员.',
 	'Portal:Refresh' => '刷新',
@@ -1189,8 +1189,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PrintResolution:FullSize' => '全尺寸',
 	'UI:PrintResolution:A4Portrait' => 'A4 纵向',
 	'UI:PrintResolution:A4Landscape' => 'A4 横向',
-	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
-	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
+	'UI:PrintResolution:LetterPortrait' => '纵向信纸',
+	'UI:PrintResolution:LetterLandscape' => '横向信纸',
 	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
 	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
@@ -1213,9 +1213,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:OQL:UnknownClassAndFix' => '未知类别 "%1$s". 您可以试试 "%2$s" .',
 	'UI:OQL:UnknownClassNoFix' => '未知类别 "%1$s"',
 
-	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
-	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
-	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
+	'UI:Dashboard:EditCustom' => '编辑自定义版本...',
+	'UI:Dashboard:CreateCustom' => '新建自定义版本...',
+	'UI:Dashboard:DeleteCustom' => '删除自定义版本...',
 	'UI:Dashboard:RevertConfirm' => '每个地方都会恢复到初始版本. 请确认您要这样做.',
 	'UI:ExportDashBoard' => '导出到文件',
 	'UI:ImportDashBoard' => '从文件导入...',
@@ -1426,8 +1426,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:AddAnExisting_Class' => '添加 %1$s...',
 	'UI:SelectionOf_Class' => '选择 %1$s',
 
-	'UI:AboutBox' => '关于iTop...',
-	'UI:About:Title' => '关于iTop',
+	'UI:AboutBox' => '关于 iTop...',
+	'UI:About:Title' => '关于 iTop',
 	'UI:About:DataModel' => '数据模型',
 	'UI:About:Support' => '支持信息',
 	'UI:About:Licenses' => '许可证',
@@ -1474,15 +1474,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ToggleFullScreen' => '切换 最大化 / 最小化',
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
-	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
+	'UI:Button:UploadImage' => '从硬盘上传图像',
 	'UI:UploadNotSupportedInThisMode' => '本模式下不支持修改文件或图片.',
 
-	'UI:Button:RemoveDocument' => 'Remove the document~~',
+	'UI:Button:RemoveDocument' => '移除文档',
 
 	// Search form
 	'UI:Search:Toggle' => '折叠 / 展开',
 	'UI:Search:AutoSubmit:DisabledHint' => '该类别已禁用自动提交',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> 根据您的设置, 废弃的数据会被隐藏',
 	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则，或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button
@@ -1558,7 +1558,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '小于 / 等于',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => '不同',  // => '≠',
 	//   - Tag Set Widget
-	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
+	'UI:Search:Criteria:Operator:TagSet:Matches' => '匹配',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => '过滤器...',
@@ -1587,7 +1587,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Raw:Filtered' => '已过滤',
 	'UI:Search:Criteria:Raw:FilteredOn' => '基于 %1$s 过滤',
 
-	'UI:StateChanged' => 'State changed~~',
+	'UI:StateChanged' => '状态已改变',
 ));
 
 //
@@ -1616,7 +1616,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:NoNewMessage' => '没有新消息',
-	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
+	'UI:Newsroom:XNewMessage' => '%1$s 条新消息',
 	'UI:Newsroom:MarkAllAsRead' => '标记所有消息为已读',
 	'UI:Newsroom:ViewAllMessages' => '查看全部消息',
 	'UI:Newsroom:Preferences' => '消息选项',
@@ -1631,9 +1631,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
 	'Menu:WelcomeMenu' => '欢迎',
-	'Menu:WelcomeMenu+' => '欢迎使用iTop',
+	'Menu:WelcomeMenu+' => '欢迎使用 iTop',
 	'Menu:WelcomeMenuPage' => '欢迎',
-	'Menu:WelcomeMenuPage+' => '欢迎使用iTop',
+	'Menu:WelcomeMenuPage+' => '欢迎使用 iTop',
 	'Menu:AdminTools' => '管理工具',
 	'Menu:AdminTools+' => '管理工具',
 	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
