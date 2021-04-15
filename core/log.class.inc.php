@@ -740,7 +740,7 @@ class DeadLockLog extends LogAPI
 				return self::CHANNEL_WAIT_TIMEOUT;
 				break;
 			case 1213:
-				return  self::CHANNEL_DEADLOCK_FOUND;
+				return self::CHANNEL_DEADLOCK_FOUND;
 				break;
 			default:
 				return self::CHANNEL_DEFAULT;
@@ -749,17 +749,18 @@ class DeadLockLog extends LogAPI
 	}
 
 	/**
-	 * @param int $iMySQLErrNo will be converted to channel using {@link GetChannelFromMysqlErrorNo}
+	 * @param string $sLevel
 	 * @param string $sMessage
-	 * @param null $iMysqlErroNo
+	 * @param int $iMysqlErrorNumber will be converted to channel using {@link GetChannelFromMysqlErrorNo}
 	 * @param array $aContext
 	 *
 	 * @throws \Exception
+	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
 	 */
-	public static function Log($iMySQLErrNo, $sMessage, $iMysqlErroNo = null, $aContext = array())
+	public static function Log($sLevel, $sMessage, $iMysqlErrorNumber = null, $aContext = array())
 	{
-		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErroNo);
-		parent::Log($iMySQLErrNo, $sMessage, $sChannel, $aContext);
+		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErrorNumber);
+		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
 	}
 }
 
