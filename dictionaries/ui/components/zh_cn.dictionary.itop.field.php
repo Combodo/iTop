@@ -19,5 +19,5 @@
 
 // Global search
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',
+	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => '未知值',
 ));

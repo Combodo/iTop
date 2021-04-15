@@ -1470,15 +1470,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ToggleFullScreen' => '切换 最大化 / 最小化',
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
-	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
+	'UI:Button:UploadImage' => '从硬盘上传图像',
 	'UI:UploadNotSupportedInThisMode' => '本模式下不支持修改文件或图片.',
 
-	'UI:Button:RemoveDocument' => 'Remove the document~~',
+	'UI:Button:RemoveDocument' => '移除文档',
 
 	// Search form
 	'UI:Search:Toggle' => '折叠 / 展开',
 	'UI:Search:AutoSubmit:DisabledHint' => '该类别已禁用自动提交',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> 根据您的设置, 废弃数据已被隐藏',
 	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则，或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button

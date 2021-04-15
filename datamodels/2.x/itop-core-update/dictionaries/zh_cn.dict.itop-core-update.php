@@ -37,7 +37,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:UI:CheckUpdate' => '校验升级文件',
 	'iTopUpdate:UI:ConfirmInstallFile' => '即将安装 %1$s',
 	'iTopUpdate:UI:DoUpdate' => '升级',
-	'iTopUpdate:UI:CurrentVersion' => '当前已安装的版本',
+	'iTopUpdate:UI:CurrentVersion' => '当前安装的版本',
 	'iTopUpdate:UI:NewVersion' => '新安装的版本',
     'iTopUpdate:UI:Back' => '返回',
     'iTopUpdate:UI:Cancel' => '取消',
@@ -49,7 +49,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:Backup' => '升级之前执行备份',
 	'iTopUpdate:UI:DoFilesArchive' => '打包应用文件',
 	'iTopUpdate:UI:UploadArchive' => '请选择要上传的软件包',
-	'iTopUpdate:UI:ServerFile' => 'Path of a package already on the server~~',
+	'iTopUpdate:UI:ServerFile' => '服务器上的软件包路径已存在',
 	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => '升级期间, 应用会变成只读状态.',
 
     'iTopUpdate:UI:Status' => '状态',
@@ -74,8 +74,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:CanCoreUpdate:Failed' => '文件系统检查失败',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => '应用无法升级',
 	'iTopUpdate:UI:CanCoreUpdate:No' => '应用无法升级: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'You must use the <a href="%1$s">setup</a> to update the application.<br />Some modified files were detected, a partial update cannot be executed.~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => '警告: 应用升级可能失败: %1$s',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '您必须使用 <a href="%1$s">安装向导</a> 来升级应用.<br />已检测到部分文件被修改, 无法执行部分升级.',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => '准备开始',
@@ -110,7 +110,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:iTopUpdate+' => '应用升级',
 
     // Missing itop entries
-    'Class:ModuleInstallation/Attribute:installed' => '安装在',
+    'Class:ModuleInstallation/Attribute:installed' => '安装时间',
     'Class:ModuleInstallation/Attribute:name' => '名称',
     'Class:ModuleInstallation/Attribute:version' => '版本',
     'Class:ModuleInstallation/Attribute:comment' => '备注',
