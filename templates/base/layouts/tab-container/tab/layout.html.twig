@@ -1,9 +1,9 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 <div id="{{ oUIBlock.GetId() }}" class="ibo-tab">
-	{% block iboContentBlockContainer %}
-		{% for oSubBlock in oUIBlock.GetSubBlocks() %}
-			{{ render_block(oSubBlock, {aPage: aPage}) }}
-		{% endfor %}
-	{% endblock %}
+    {% block iboContentBlockContainer %}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    {% endblock %}
 </div>
