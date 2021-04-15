@@ -1156,12 +1156,12 @@ class ObjectController extends BrickController
 
 						$aData['msg'] = htmlentities($oDocument->GetFileName(), ENT_QUOTES, 'UTF-8');
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/icons8-image-file.svg';
-						
+
 						// Checking if the instance has attachments
 						if (class_exists('AttachmentPlugIn')) {
 							$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
 						}
-						
+
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
 						$aData['file_size'] = $oDocument->GetFormattedSize();
