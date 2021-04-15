@@ -315,7 +315,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s aangepast, vorige waarde: %2$s',
 	'Change:AttName_Changed' => '%1$s aangepast',
 	'Change:AttName_EntryAdded' => '%1$s aangepast, nieuwe invoer toegevoegd: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'veranderd van %2$s naar %1$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Veranderd van %2$s naar %1$s',
 	'Change:LinkSet:Added' => 'toegevoegd %1$s',
 	'Change:LinkSet:Removed' => 'verwijderd %1$s',
 	'Change:LinkSet:Modified' => 'aangepast %1$s',
