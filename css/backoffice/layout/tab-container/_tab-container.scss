@@ -85,6 +85,10 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   @extend %ibo-hyperlink-inherited-colors
 }
 
+.ibo-tab-container--tab-toggler-label {
+  @extend %ibo-text-truncated-with-ellipsis;
+}
+
 .ibo-tab-container--extra-tabs-container {
   @extend .ibo-tab-container--tab-header;
 

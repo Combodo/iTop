@@ -15,7 +15,9 @@
                                     data-cache="{{ oTab.GetCache() }}"
                                     data-placeholder="{{ oTab.GetPlaceholderAbsPath() }}">
                                     <a href="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler"
-                                       data-role="ibo-tab-container--tab-toggler"><span>{{ oTab.GetTitle() }}</span></a>
+                                       data-role="ibo-tab-container--tab-toggler">
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
+                                    </a>
                                 </li>
                             {% elseif oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
                                 <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
@@ -23,7 +25,7 @@
                                     data-tab-type="{{ oTab.GetType() }}">
                                     <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                        class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler">
-                                        <span>{{ oTab.GetTitle() }}</span>
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
                                     </a>
                                 </li>
                             {% endif %}
