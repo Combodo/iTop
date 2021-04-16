@@ -349,10 +349,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'BooleanLabel:no' => '否',
 	'UI:Login:Title' => 'iTop 登录',
 	'Menu:WelcomeMenu' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => '欢迎使用 iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => '欢迎使用 ITOP_APPLICATION', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => '欢迎', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => '欢迎使用 iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => '欢迎使用 iTop',
+	'Menu:WelcomeMenuPage+' => '欢迎使用 ITOP_APPLICATION', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => '欢迎使用 ITOP_APPLICATION',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop 是完全开源的IT 操作门户.</p>
 <ul>它包括:
@@ -570,7 +570,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Login:RetypeNewPasswordPrompt' => '重复新密码',
 	'UI:Login:IncorrectOldPassword' => '错误: 旧密码错误',
 	'UI:LogOffMenu' => '注销',
-	'UI:LogOff:ThankYou' => '感谢使用 iTop',
+	'UI:LogOff:ThankYou' => '感谢使用 ITOP_APPLICATION',
 	'UI:LogOff:ClickHereToLoginAgain' => '点击这里再次登录...',
 	'UI:ChangePwdMenu' => '修改密码...',
 	'UI:Login:PasswordChanged' => '密码已成功设置!',
@@ -844,7 +844,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Delete:PleaseDoTheManualOperations' => '在删除该对象之前, 请先手工完成上述列出的操作',
 	'UI:Delect:Confirm_Object' => '请确认要删除 %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '请确认要删除下列 %2$s 类的 %1$d 个对象.',
-	'UI:WelcomeToITop' => '欢迎使用 iTop ',
+	'UI:WelcomeToITop' => '欢迎使用 ITOP_APPLICATION ',
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s 详细内容',
 	'UI:ErrorPageTitle' => 'iTop - 错误',
 	'UI:ObjectDoesNotExist' => '抱歉, 该对象不存在 (或无权浏览该对象).',
@@ -1426,8 +1426,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:AddAnExisting_Class' => '添加 %1$s...',
 	'UI:SelectionOf_Class' => '选择 %1$s',
 
-	'UI:AboutBox' => '关于 iTop...',
-	'UI:About:Title' => '关于 iTop',
+	'UI:AboutBox' => '关于 ITOP_APPLICATION...',
+	'UI:About:Title' => '关于 ITOP_APPLICATION',
 	'UI:About:DataModel' => '数据模型',
 	'UI:About:Support' => '支持信息',
 	'UI:About:Licenses' => '许可证',
@@ -1631,9 +1631,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
 	'Menu:WelcomeMenu' => '欢迎',
-	'Menu:WelcomeMenu+' => '欢迎使用 iTop',
+	'Menu:WelcomeMenu+' => '欢迎使用 ITOP_APPLICATION',
 	'Menu:WelcomeMenuPage' => '欢迎',
-	'Menu:WelcomeMenuPage+' => '欢迎使用 iTop',
+	'Menu:WelcomeMenuPage+' => '欢迎使用 ITOP_APPLICATION',
 	'Menu:AdminTools' => '管理工具',
 	'Menu:AdminTools+' => '管理工具',
 	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
