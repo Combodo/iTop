@@ -570,7 +570,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Login:RetypeNewPasswordPrompt' => '重复新密码',
 	'UI:Login:IncorrectOldPassword' => '错误: 旧密码错误',
 	'UI:LogOffMenu' => '注销',
-	'UI:LogOff:ThankYou' => '感谢使用 ITOP_APPLICATION',
+	'UI:LogOff:ThankYou' => '感谢使用 '.ITOP_APPLICATION_SHORT,
 	'UI:LogOff:ClickHereToLoginAgain' => '点击这里再次登录...',
 	'UI:ChangePwdMenu' => '修改密码...',
 	'UI:Login:PasswordChanged' => '密码已成功设置!',
