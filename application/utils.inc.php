@@ -2754,6 +2754,10 @@ HTML;
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
+		if (! defined('ITOP_REVISION')) {
+			return false;
+		}
+		
 		return ITOP_REVISION === 'svn';
 	}
 
