@@ -171,8 +171,8 @@ class MFCompilerTest extends ItopTestCase {
 				'ibo-page-banner--text-color' => '$ibo-color-red-100',
 				'ibo-page-banner--text-content' => '"THIS IS A TEST INSTANCE"',
 			],
-			'imports_variable' => [ 'style2' => 'style2.scss'],
-			'imports_utility' => [ 'style1' => 'style1.scss', 'style3' => 'style3.scss'],
+			'variable_imports' => [ 'style2' => 'style2.scss'],
+			'utility_imports' => [ 'style1' => 'style1.scss', 'style3' => 'style3.scss'],
 			'stylesheets' => [
 				"fullmoon" => '../css/backoffice/main.scss',
                 "environment-banner" => '../css/backoffice/themes/page-banner.scss'

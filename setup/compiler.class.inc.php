@@ -2828,8 +2828,8 @@ EOF;
 			$sThemeId = $oTheme->getAttribute('id');
 			$aThemeParameters = array(
 				'variables' => array(),
-				'imports_variable' => array(),
-				'imports_utility' => array(),
+				'variable_imports' => array(),
+				'utility_imports' => array(),
 				'stylesheets' => array(),
 			);
 
@@ -2848,11 +2848,11 @@ EOF;
 				$sImportId = $oImport->getAttribute('id');
 				if($oImport->getAttribute('xsi:type') === 'variables')
 				{
-					$aThemeParameters['imports_variable'][$sImportId] = $oImport->GetText();
+					$aThemeParameters['variable_imports'][$sImportId] = $oImport->GetText();
 				}
 				else
 				{
-					$aThemeParameters['imports_utility'][$sImportId] = $oImport->GetText();
+					$aThemeParameters['utility_imports'][$sImportId] = $oImport->GetText();
 				}
 			}
 

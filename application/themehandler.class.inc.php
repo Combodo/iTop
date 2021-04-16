@@ -266,14 +266,14 @@ class ThemeHandler
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
-		if (isset($aThemeParameters['imports_variable'])) {
-			foreach ($aThemeParameters['imports_variable'] as $sImport) {
+		if (isset($aThemeParameters['variable_imports'])) {
+			foreach ($aThemeParameters['variable_imports'] as $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 			}
 		}
 
-		if (isset($aThemeParameters['imports_utility'])) {
-			foreach ($aThemeParameters['imports_utility'] as $sImport) {
+		if (isset($aThemeParameters['utility_imports'])) {
+			foreach ($aThemeParameters['utility_imports'] as $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 			}
 		}
@@ -378,29 +378,29 @@ CSS;
 		$aSignature = [
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
 			'stylesheets' => [],
-			'imports_variable' => [],
+			'variable_imports' => [],
 			'images' => [],
-			'imports_utility' => []
+			'utility_imports' => []
 		];
 
 		$oFindStylesheetObject = new FindStylesheetObject();
 
-		if (isset($aThemeParameters['imports_variable'])) {
-			foreach ($aThemeParameters['imports_variable'] as $key => $sImport) {
+		if (isset($aThemeParameters['variable_imports'])) {
+			foreach ($aThemeParameters['variable_imports'] as $key => $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
 				if (!empty($sFile)) {
-					$aSignature['imports_variable'][$key] = md5_file($sFile);
+					$aSignature['variable_imports'][$key] = md5_file($sFile);
 				}
 			}
 		}
 
-		if (isset($aThemeParameters['imports_utility'])) {
-			foreach ($aThemeParameters['imports_utility'] as $key => $sImport) {
+		if (isset($aThemeParameters['utility_imports'])) {
+			foreach ($aThemeParameters['utility_imports'] as $key => $sImport) {
 				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
 				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
 				if (!empty($sFile)) {
-					$aSignature['imports_utility'][$key] = md5_file($sFile);
+					$aSignature['utility_imports'][$key] = md5_file($sFile);
 				}
 			}
 		}
@@ -418,7 +418,7 @@ CSS;
 		$aFiles = $oFindStylesheetObject->GetImportPaths();
 		if (count($aFiles) !== 0) {
 			foreach ($aFiles as $sFileURI => $sFilePath) {
-				$aSignature['imports_utility'][$sFileURI] = md5_file($sFilePath);
+				$aSignature['utility_imports'][$sFileURI] = md5_file($sFilePath);
 			}
 		}
 
@@ -950,11 +950,11 @@ CSS;
 			}
 		}
 
-		if (array_key_exists('imports_variable', $aThemeParameters))
+		if (array_key_exists('variable_imports', $aThemeParameters))
 		{
-			if (is_array($aThemeParameters['imports_variable']))
+			if (is_array($aThemeParameters['variable_imports']))
 			{
-				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['imports_variable'], $aImportsPaths));
+				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['variable_imports'], $aImportsPaths));
 			}
 		}
 
