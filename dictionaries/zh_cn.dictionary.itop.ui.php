@@ -1633,7 +1633,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:WelcomeMenu' => '欢迎',
 	'Menu:WelcomeMenu+' => '欢迎使用 ITOP_APPLICATION',
 	'Menu:WelcomeMenuPage' => '欢迎',
-	'Menu:WelcomeMenuPage+' => '欢迎使用 ITOP_APPLICATION',
+	'Menu:WelcomeMenuPage+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => '管理工具',
 	'Menu:AdminTools+' => '管理工具',
 	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具',
