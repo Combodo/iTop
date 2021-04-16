@@ -1631,7 +1631,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:DataSources' => '同步数据源',
 	'Menu:DataSources+' => '所有同步数据源',
 	'Menu:WelcomeMenu' => '欢迎',
-	'Menu:WelcomeMenu+' => '欢迎使用 ITOP_APPLICATION',
+	'Menu:WelcomeMenu+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => '欢迎',
 	'Menu:WelcomeMenuPage+' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => '管理工具',
