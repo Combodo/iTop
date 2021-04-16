@@ -30,7 +30,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Attachment:Max_Ko' => '(最大文件尺寸: %1$s KB)',
 	'Attachments:NoAttachment' => '没有附件. ',
 	'Attachments:PreviewNotAvailable' => '该附件类型不支持预览.',
-	'Attachments:Error:FileTooLarge' => '上传的文件过大. %1$s~~',
+	'Attachments:Error:FileTooLarge' => '上传的文件过大. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => '收到的文件为空，无法添加. 可能是因为您发送的是空文件,或者咨询 iTop 管理员服务器磁盘是否已满. ',
 
 

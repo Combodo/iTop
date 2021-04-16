@@ -19,10 +19,10 @@
 
 // Quick create
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
-	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
-	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',
-	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => 'You haven\'t create any object yet~~',
-	'UI:Component:QuickCreate:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open quick create~~',
+	'UI:Component:QuickCreate:Tooltip' => '快速创建任意类型的对象',
+	'UI:Component:QuickCreate:Input:Placeholder' => '请选择对象类型...',
+	'UI:Component:QuickCreate:Recents:Title' => '最近',
+	'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder' => '您尚未创建任何对象',
+	'UI:Component:QuickCreate:HistoryDisabled' => '历史记录已禁用',
+	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => '打开快速创建',
 ));
