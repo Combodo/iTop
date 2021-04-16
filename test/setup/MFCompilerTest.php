@@ -115,7 +115,7 @@ class MFCompilerTest extends ItopTestCase {
 	 */
 	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, ?string $sExpectedReturn, bool $bDisableThemePrecompilationViaConf = false){
 		if ($bDisableThemePrecompilationViaConf){
-			utils::GetConfig()->Set('theme_precompilation_enabled', false);
+			utils::GetConfig()->Set('theme.enable_precompilation', false);
 		}
 		$sRes = $this->oMFCompiler->UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeDir);
 		$this->assertEquals($sExpectedReturn, $sRes);
@@ -186,7 +186,7 @@ class MFCompilerTest extends ItopTestCase {
 
 
 		//CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
-		MFCompiler::setThemeHandlerService($oThemeHandlerService);
+		MFCompiler::SetThemeHandlerService($oThemeHandlerService);
 		$this->oMFCompiler->CompileThemes($oBrandingNode, $this->sTmpDir);
 	}
 }

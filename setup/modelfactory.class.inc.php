@@ -1838,7 +1838,7 @@ EOF;
 	/**
 	 * @return mixed
 	 */
-	public function getRootDirs() {
+	public function GetRootDirs() {
 		return $this->aRootDirs;
 	}
 }

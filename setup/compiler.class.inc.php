@@ -2911,13 +2911,13 @@ EOF;
 			$bHasCompiled = static::$oThemeHandlerService->CompileTheme($sThemeId, true, $this->sCompilationTimeStamp, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
 
 			if ($bHasCompiled) {
-				if (utils::GetConfig()->Get('theme_precompilation_enabled')){
+				if (utils::GetConfig()->Get('theme.enable_precompilation')){
 					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
 					{ //help developers to detect & push theme precompilation changes
 						$sInitialPrecompiledFilePath = null;
-						$aRootDirs = $this->oFactory->getRootDirs();
+						$aRootDirs = $this->oFactory->GetRootDirs();
 						if (is_array($aRootDirs) && count($aRootDirs) !== 0) {
-							foreach ($this->oFactory->getRootDirs() as $sRootDir) {
+							foreach ($this->oFactory->GetRootDirs() as $sRootDir) {
 								$sCurrentFile = $sRootDir. DIRECTORY_SEPARATOR . $sPrecompiledStylesheet;
 								if (is_file($sCurrentFile) && is_writable($sCurrentFile)) {
 									$sInitialPrecompiledFilePath = $sCurrentFile;
@@ -2942,7 +2942,7 @@ EOF;
 		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
 	}
 
-	public static function setThemeHandlerService(ThemeHandlerService $oThemeHandlerService): void {
+	public static function SetThemeHandlerService(ThemeHandlerService $oThemeHandlerService): void {
 		self::$oThemeHandlerService = $oThemeHandlerService;
 	}
 
@@ -2957,7 +2957,7 @@ EOF;
 	 * @return string : file path of latest precompiled file to use for setup
 	 */
 	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
-		if (! utils::GetConfig()->Get('theme_precompilation_enabled')) {
+		if (! utils::GetConfig()->Get('theme.enable_precompilation')) {
 			return null;
 		}
 
