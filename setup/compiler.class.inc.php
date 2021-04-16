@@ -53,6 +53,8 @@ class MFCompiler
 {
 	const DATA_PRECOMPILED_FOLDER = 'data' . DIRECTORY_SEPARATOR . 'precompiled_styles' . DIRECTORY_SEPARATOR;
 
+	private static $oThemeHandlerService;
+
 	/** @var \ModelFactory */
 	protected $oFactory;
 
@@ -2792,11 +2794,10 @@ EOF;
 	/**
 	 * @param \MFElement $oBrandingNode
 	 * @param string $sTempTargetDir
-	 * @param string $sFinalTargetDir
 	 *
 	 * @throws \Exception
 	 */
-	protected function CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir)
+	protected function CompileThemes($oBrandingNode, $sTempTargetDir)
 	{
 		// Make sure temp. target dir. ends with a '/'
 		$sTempTargetDir .= '/';
@@ -2827,10 +2828,9 @@ EOF;
 			$sThemeId = $oTheme->getAttribute('id');
 			$aThemeParameters = array(
 				'variables' => array(),
-				'imports_variable' => array(),
-				'imports_utility' => array(),
+				'variable_imports' => array(),
+				'utility_imports' => array(),
 				'stylesheets' => array(),
-				'precompiled_stylesheet' => '',
 			);
 
 			/** @var \DOMNodeList $oVariables */
@@ -2846,13 +2846,13 @@ EOF;
 			foreach($oImports as $oImport)
 			{
 				$sImportId = $oImport->getAttribute('id');
-				if($oImport->getAttribute('xsi:type') === 'variable')
+				if($oImport->getAttribute('xsi:type') === 'variables')
 				{
-					$aThemeParameters['imports_variable'][$sImportId] = $oImport->GetText();
+					$aThemeParameters['variable_imports'][$sImportId] = $oImport->GetText();
 				}
-				else if($oImport->getAttribute('xsi:type') === 'utility')
+				else
 				{
-					$aThemeParameters['imports_utility'][$sImportId] = $oImport->GetText();
+					$aThemeParameters['utility_imports'][$sImportId] = $oImport->GetText();
 				}
 			}
 
@@ -2863,8 +2863,11 @@ EOF;
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
-			$aThemeParameters['precompiled_stylesheet'] = $oTheme->GetChildText('precompiled_stylesheet', '');
-			$aThemes[$sThemeId] = $aThemeParameters;
+
+			$aThemes[$sThemeId] = [
+				'theme_parameters' => $aThemeParameters,
+				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', '')
+			];
 		}
 
 		// Force to have a default theme if none in the DM
@@ -2881,8 +2884,11 @@ EOF;
 
 		// Compile themes
 		$fStart = microtime(true);
-		foreach($aThemes as $sThemeId => $aThemeParameters)
+		foreach($aThemes as $sThemeId => $aThemeInfos)
 		{
+			$aThemeParameters = $aThemeInfos['theme_parameters'];
+			$sPrecompiledStylesheet = $aThemeInfos['precompiled_stylesheet'];
+
 			$sThemeDir = $sThemesDir.$sThemeId;
 			if(!is_dir($sThemeDir))
 			{
@@ -2892,23 +2898,52 @@ EOF;
 			// Check if a precompiled version of the theme is supplied
 			$sPostCompilationLatestPrecompiledFile = $sPostCompilationPrecompiledThemeFolder . $sThemeId . ".css";
 
-			$sPrecompiledFileToUse = $this->UseLatestPrecompiledFile($sTempTargetDir, $aThemeParameters['precompiled_stylesheet'], $sPostCompilationLatestPrecompiledFile, $sThemeId);
+			$sPrecompiledFileToUse = $this->UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledStylesheet, $sPostCompilationLatestPrecompiledFile, $sThemeId);
 			if ($sPrecompiledFileToUse != null){
 				copy($sPrecompiledFileToUse, $sThemeDir.'/main.css');
 				// Make sure that the copy of the precompiled file is older than any other files to force a validation of the signature
 				touch($sThemeDir.'/main.css', 1577836800 /* 2020-01-01 00:00:00 */);
 			}
 
-			$bHasCompiled = ThemeHandler::CompileTheme($sThemeId, true, $this->sCompilationTimeStamp, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
-			if ($bHasCompiled)
-			{
-				SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
-				copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
-			}else {
+			if (!static::$oThemeHandlerService) {
+				static::$oThemeHandlerService = new ThemeHandlerService();
+			}
+			$bHasCompiled = static::$oThemeHandlerService->CompileTheme($sThemeId, true, $this->sCompilationTimeStamp, $aThemeParameters, $aImportsPaths, $sTempTargetDir);
+
+			if ($bHasCompiled) {
+				if (utils::GetConfig()->Get('theme.enable_precompilation')){
+					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
+					{ //help developers to detect & push theme precompilation changes
+						$sInitialPrecompiledFilePath = null;
+						$aRootDirs = $this->oFactory->GetRootDirs();
+						if (is_array($aRootDirs) && count($aRootDirs) !== 0) {
+							foreach ($this->oFactory->GetRootDirs() as $sRootDir) {
+								$sCurrentFile = $sRootDir. DIRECTORY_SEPARATOR . $sPrecompiledStylesheet;
+								if (is_file($sCurrentFile) && is_writable($sCurrentFile)) {
+									$sInitialPrecompiledFilePath = $sCurrentFile;
+									break;
+								}
+							}
+						}
+
+						if ($sInitialPrecompiledFilePath != null){
+							SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sInitialPrecompiledFilePath for next setup.");
+							copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
+						}
+					}
+
+					SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
+					copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
+				}
+			} else {
 				SetupLog::Info("No theme '$sThemeId' compilation was required during setup.");
 			}
 		}
 		$this->Log(sprintf('Themes compilation took: %.3f ms for %d themes.', (microtime(true) - $fStart)*1000.0, count($aThemes)));
+	}
+
+	public static function SetThemeHandlerService(ThemeHandlerService $oThemeHandlerService): void {
+		self::$oThemeHandlerService = $oThemeHandlerService;
 	}
 
 	/**
@@ -2922,6 +2957,10 @@ EOF;
 	 * @return string : file path of latest precompiled file to use for setup
 	 */
 	public function UseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeId) : ?string {
+		if (! utils::GetConfig()->Get('theme.enable_precompilation')) {
+			return null;
+		}
+
 		$bDataXmlPrecompiledFileExists = false;
 		clearstatcache();
 		if (!empty($sPrecompiledFileUri)){
@@ -3003,7 +3042,7 @@ EOF;
 			}
 			
 			// Compile themes 
-			$this->CompileThemes($oBrandingNode, $sTempTargetDir, $sFinalTargetDir);
+			$this->CompileThemes($oBrandingNode, $sTempTargetDir);
 		}
 	}
 

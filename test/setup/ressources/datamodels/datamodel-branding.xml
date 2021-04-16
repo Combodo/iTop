@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+  <branding>
+    <themes>
+      <theme id="fullmoon" _delta="define">
+        <variables>
+          <variable id="ibo-page-banner--background-color">$ibo-color-red-600</variable>
+          <variable id="ibo-page-banner--text-color">$ibo-color-red-100</variable>
+          <variable id="ibo-page-banner--text-content">"THIS IS A TEST INSTANCE"</variable>
+        </variables>
+        <imports>
+          <import id="style1">style1.scss</import>
+          <import id="style2" xsi:type="variables">style2.scss</import>
+          <import id="style3" xsi:type="utilities">style3.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
+          <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
+        </stylesheets>
+        <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
+      </theme>
+    </themes>
+  </branding>
+</itop_design>

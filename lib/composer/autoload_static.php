@@ -2147,6 +2147,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'TemplateString' => __DIR__ . '/../..' . '/core/templatestring.class.inc.php',
         'TemplateStringPlaceholder' => __DIR__ . '/../..' . '/core/templatestring.class.inc.php',
         'ThemeHandler' => __DIR__ . '/../..' . '/application/themehandler.class.inc.php',
+        'ThemeHandlerService' => __DIR__ . '/../..' . '/application/themehandlerservice.class.inc.php',
         'ToolsLog' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'Trigger' => __DIR__ . '/../..' . '/core/trigger.class.inc.php',
         'TriggerOnObject' => __DIR__ . '/../..' . '/core/trigger.class.inc.php',

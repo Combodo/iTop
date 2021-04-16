@@ -8,7 +8,7 @@
           <variable id="var1">#C53030</variable>
         </variables>
         <imports>
-          <import id="scss-variables" xsi:type="utility">../css/scss-variables.scss</import>
+          <import id="scss-variables" xsi:type="utilities">../css/scss-variables.scss</import>
         </imports>
         <stylesheets>
           <stylesheet id="custom">../css/custom.scss</stylesheet>

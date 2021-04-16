@@ -1399,6 +1399,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'theme.enable_precompilation' => [
+			'type' => 'bool',
+			'description' => 'If false, theme compilation will not use any precompiled file setup optimization.)',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 	public function IsProperty($sPropCode)

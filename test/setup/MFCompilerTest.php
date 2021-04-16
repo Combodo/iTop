@@ -18,12 +18,21 @@ class MFCompilerTest extends ItopTestCase {
 	/** @var \MFCompiler  */
 	private $oMFCompiler;
 
-	public function setUp()
-	{
+	private $sTmpDir;
+
+	public function setUp() {
 		parent::setUp();
 		require_once(APPROOT.'setup/compiler.class.inc.php');
+		require_once(APPROOT.'setup/modelfactory.class.inc.php');
+		require_once(__DIR__.'/SubMFCompiler.php');
 
-		$this->oMFCompiler = new MFCompiler($this->createMock(\ModelFactory::class), '');
+		$this->sTmpDir = $this->CreateTmpdir();
+		$this->oMFCompiler = new SubMFCompiler($this->createMock(\ModelFactory::class), '');
+	}
+
+	public function tearDown() {
+		parent::tearDown();
+		$this->RecurseRmdir($this->sTmpDir);
 	}
 
 	public static function Init(){
@@ -104,7 +113,10 @@ class MFCompilerTest extends ItopTestCase {
 	 * @param string $sThemeDir
 	 * @param ?string $sExpectedReturn
 	 */
-	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, ?string $sExpectedReturn){
+	public function testUseLatestPrecompiledFile(string $sTempTargetDir, string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, string $sThemeDir, ?string $sExpectedReturn, bool $bDisableThemePrecompilationViaConf = false){
+		if ($bDisableThemePrecompilationViaConf){
+			utils::GetConfig()->Set('theme.enable_precompilation', false);
+		}
 		$sRes = $this->oMFCompiler->UseLatestPrecompiledFile($sTempTargetDir, $sPrecompiledFileUri, $sPostCompilationLatestPrecompiledFile, $sThemeDir);
 		$this->assertEquals($sExpectedReturn, $sRes);
 	}
@@ -113,6 +125,7 @@ class MFCompilerTest extends ItopTestCase {
 		self::init();
 		return [
 			'no precompiled file at all' => $this->BuildProviderUseCaseArray('', self::$aRessources['sMissingFile'], null),
+			'deactivate precompilation via conf' => $this->BuildProviderUseCaseArray('', self::$aRessources['sPostCompilation1'], null, true),
 			'no precompiled file configured in precompiled_stylesheet XM section' => $this->BuildProviderUseCaseArray('', self::$aRessources['sPostCompilation1'], self::$aRessources['sPostCompilation1']),
 			'missing precompiled file in precompiled_stylesheet section' => $this->BuildProviderUseCaseArray(self::$aRessources['sMissingFile'], self::$aRessources['sPostCompilation1'], self::$aRessources['sPostCompilation1'] ),
 			'no precompiled file generated in previous setup in /data/precompiled_styles' => $this->BuildProviderUseCaseArray(self::$aRessources['sPrecompiledInExtensionFileUri1'], self::$aRessources['sMissingFile'], self::$aRessources['sCopiedExtensionFile1'] ),
@@ -123,15 +136,57 @@ class MFCompilerTest extends ItopTestCase {
 		];
 	}
 
-	private function BuildProviderUseCaseArray(string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, $sExpectedReturn) : array{
+	private function BuildProviderUseCaseArray(string $sPrecompiledFileUri, string $sPostCompilationLatestPrecompiledFile, $sExpectedReturn, $bDisableThemePrecompilationViaConf = false) : array{
 		return [
 			"sTempTargetDir" => sys_get_temp_dir(),
 			"sPrecompiledFileUri" => $sPrecompiledFileUri,
 			"sPostCompilationLatestPrecompiledFile" => $sPostCompilationLatestPrecompiledFile,
 			"sThemeDir" => "test",
-			"sExpectedReturn" => $sExpectedReturn
+			"sExpectedReturn" => $sExpectedReturn,
+			"bDisableThemePrecompilationViaConf" => $bDisableThemePrecompilationViaConf
 		];
 	}
 
+	public function testCompileThemes(){
+		$sXmlDataCustoFilePath = realpath(__DIR__ . '/ressources/datamodels/datamodel-branding.xml');
+		$oDom = new MFDocument();
+		$oDom->load($sXmlDataCustoFilePath);
 
+		/** @var \MFElement $oBrandingNode */
+		$oBrandingNode = $oDom->GetNodes('branding')->item(0);
+
+		$this->RecurseMkdir($this->sTmpDir.'/branding/themes/fullmoon/');
+		file_put_contents($this->sTmpDir.'/branding/themes/fullmoon/main.css', "");
+
+		$aImportsPaths = array(
+			APPROOT.'css/',
+			APPROOT.'css/backoffice/main.scss',
+			$this->sTmpDir.'//',
+		);
+
+
+		$aThemeParameters = [
+			'variables' => [
+				'ibo-page-banner--background-color' => '$ibo-color-red-600',
+				'ibo-page-banner--text-color' => '$ibo-color-red-100',
+				'ibo-page-banner--text-content' => '"THIS IS A TEST INSTANCE"',
+			],
+			'variable_imports' => [ 'style2' => 'style2.scss'],
+			'utility_imports' => [ 'style1' => 'style1.scss', 'style3' => 'style3.scss'],
+			'stylesheets' => [
+				"fullmoon" => '../css/backoffice/main.scss',
+                "environment-banner" => '../css/backoffice/themes/page-banner.scss'
+			],
+		];
+
+		$oThemeHandlerService = $this->createMock(\ThemeHandlerService::class);
+		$oThemeHandlerService->expects($this->exactly(1))
+			->method("CompileTheme")
+			->with("fullmoon", true, $this->oMFCompiler->GetCompilationTimeStamp(), $aThemeParameters, $aImportsPaths, $this->sTmpDir . '/');
+
+
+		//CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
+		MFCompiler::SetThemeHandlerService($oThemeHandlerService);
+		$this->oMFCompiler->CompileThemes($oBrandingNode, $this->sTmpDir);
+	}
 }

@@ -1917,6 +1917,7 @@ return array(
     'TemplateString' => $baseDir . '/core/templatestring.class.inc.php',
     'TemplateStringPlaceholder' => $baseDir . '/core/templatestring.class.inc.php',
     'ThemeHandler' => $baseDir . '/application/themehandler.class.inc.php',
+	'ThemeHandlerService' => $baseDir . '/application/themehandlerservice.class.inc.php',
     'ToolsLog' => $baseDir . '/core/log.class.inc.php',
     'Trigger' => $baseDir . '/core/trigger.class.inc.php',
     'TriggerOnObject' => $baseDir . '/core/trigger.class.inc.php',

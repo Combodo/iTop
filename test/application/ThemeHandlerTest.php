@@ -27,13 +27,13 @@ class ThemeHandlerTest extends ItopTestCase
 		$this->oCompileCSSServiceMock = $this->createMock('CompileCSSService');
 		ThemeHandler::mockCompileCSSService($this->oCompileCSSServiceMock);
 
-		$this->sTmpDir = $this->tmpdir();
+		$this->sTmpDir = $this->CreateTmpdir();
 		$this->aDirsToCleanup[] = $this->sTmpDir;
 
 		$this->recurseMkdir($this->sTmpDir."/branding/themes/basque-red");
 		$this->sCssPath = $this->sTmpDir.'/branding/themes/basque-red/main.css';
 		$this->sJsonThemeParamFile = $this->sTmpDir.'/branding/themes/basque-red/theme-parameters.json';
-		$this->recurse_copy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
+		$this->RecurseCopy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
 	public function tearDown()
@@ -43,54 +43,8 @@ class ThemeHandlerTest extends ItopTestCase
 		foreach ($this->aDirsToCleanup as $sDir)
 		{
 			echo $sDir;
-			$this->rrmdir($sDir);
+			$this->RecurseRmdir($sDir);
 		}
-	}
-
-	function rrmdir($dir) {
-		if (is_dir($dir)) {
-			$objects = scandir($dir);
-			foreach ($objects as $object) {
-				if ($object != "." && $object != "..") {
-					if (is_dir($dir."/".$object))
-						$this->rrmdir($dir."/".$object);
-					else
-						unlink($dir."/".$object);
-				}
-			}
-			rmdir($dir);
-		}
-	}
-
-	function tmpdir() {
-		$sTmpfile=tempnam(sys_get_temp_dir(),'');
-		if (file_exists($sTmpfile))
-		{
-			unlink($sTmpfile);
-		}
-		mkdir($sTmpfile);
-		if (is_dir($sTmpfile))
-		{
-			return $sTmpfile;
-		}
-
-		return sys_get_temp_dir();
-	}
-
-	public function recurse_copy($src,$dst) {
-		$dir = opendir($src);
-		@mkdir($dst);
-		while(false !== ( $file = readdir($dir)) ) {
-			if (( $file != '.' ) && ( $file != '..' )) {
-				if ( is_dir($src . '/' . $file) ) {
-					$this->recurse_copy($src . '/' . $file,$dst . '/' . $file);
-				}
-				else {
-					copy($src . '/' . $file,$dst . '/' . $file);
-				}
-			}
-		}
-		closedir($dir);
 	}
 
 	/**
@@ -107,7 +61,7 @@ class ThemeHandlerTest extends ItopTestCase
 	public function testValidatePrecompiledStyles()
 	{
 		$aErrors = [];
-		$aDataModelFiles=glob(dirname(__FILE__)."/../../datamodels/2.x/**/datamodel*.xml");
+		$aDataModelFiles=glob(APPROOT . utils::GetConfig()->Get('source_dir'). "/**/datamodel*.xml");
 		$aImportsPaths = [APPROOT.'datamodels'];
 
 		foreach ($aDataModelFiles as $sXmlDataCustoFilePath)
@@ -135,7 +89,7 @@ class ThemeHandlerTest extends ItopTestCase
 						$sThemeId = $oTheme->getAttribute('id');
 
 						//echo "===  theme: $sThemeId ===\n";
-						$sPrecompiledFilePath = dirname(__FILE__)."/../../datamodels/2.x/".$sPrecompiledStylesheetUri;
+						$sPrecompiledFilePath = $sSourceDir = APPROOT . utils::GetConfig()->Get('source_dir') . $sPrecompiledStylesheetUri;
 						$sPreCompiledSig = ThemeHandler::GetSignature($sPrecompiledFilePath);
 						if (empty(trim($sPreCompiledSig))){
 							var_dump("$sThemeId: $sPrecompiledFilePath => " . realpath($sPrecompiledFilePath));
@@ -148,12 +102,12 @@ class ThemeHandlerTest extends ItopTestCase
 							continue;
 						}
 
-						$aThemeParameters = [
-							'variables' => [],
-							'imports_utility' => [],
-							'stylesheets' => [],
-							'precompiled_stylesheet' => $sPrecompiledStylesheetUri,
-						];
+						$aThemeParameters = array(
+							'variables' => array(),
+							'variable_imports' => array(),
+							'utility_imports' => array(),
+							'stylesheets' => array(),
+						);
 
 						/** @var \DOMNodeList $oVariables */
 						$oVariables = $oTheme->GetNodes('variables/variable');
@@ -170,8 +124,13 @@ class ThemeHandlerTest extends ItopTestCase
 						foreach ($oImports as $oImport)
 						{
 							$sImportId = $oImport->getAttribute('id');
-							$aThemeParameters['imports_utility'][$sImportId] = $oImport->GetText();
-							ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
+
+							if($oImport->getAttribute('xsi:type') === 'variables'){
+								$aThemeParameters['variable_imports'][$sImportId] = $oImport->GetText();
+							} else {
+								$aThemeParameters['utility_imports'][$sImportId] = $oImport->GetText();
+								ThemeHandler::FindStylesheetFile($oImport->GetText(), $aImportsPaths, $oFindStylesheetObject);
+							}
 						}
 
 						/** @var \DOMNodeList $oStylesheets */
@@ -238,7 +197,7 @@ class ThemeHandlerTest extends ItopTestCase
 	{
 		$sSig = ThemeHandler::GetSignature(APPROOT.'test/application/theme-handler/expected/themes/basque-red/main.css');
 		$sExpectedSig=<<<JSON
-{"variables":"37c31105548fce44fecca5cb34e455c9","stylesheets":{"css-variables":"3c3f5adf98b9dbf893658314436c4b93","jqueryui":"78cfafc3524dac98e61fc2460918d4e5","main":"52d8a7c5530ceb3a4d777364fa4e1eea"},"imports":[],"images":{"css\/ui-lightness\/images\/ui-icons_222222_256x240.png":"3a3c5468f484f07ac4a320d9e22acb8c","css\/ui-lightness\/images\/ui-bg_diagonals-thick_20_666666_40x40.png":"4429d568c67d8dfeb9040273ea0fb8c4","css\/ui-lightness\/images\/ui-icons_E87C1E_256x240.png":"7003dd36cb2aa032c8ec871ce4d4e03d","css\/ui-lightness\/images\/ui-icons_1c94c4_256x240.png":"dbd693dc8e0ef04e90a2f7ac7b390086","css\/ui-lightness\/images\/ui-icons_F26522_256x240.png":"16278ec0c07270be571f4c2e97fcc10c","css\/ui-lightness\/images\/ui-bg_diagonals-thick_18_b81900_40x40.png":"e460a66d4b3e093fc651e62a236267cb","css\/ui-lightness\/images\/ui-icons_ffffff_256x240.png":"41612b0f4a034424f8321c9f824a94da","css\/ui-lightness\/images\/ui-icons_ffd27a_256x240.png":"dda1b6f694b0d196aefc66a1d6d758f6","images\/actions_right.png":"31c8906bd25d27b83a0a2466bf903462","images\/ac-background.gif":"76135f3697b41a15aed787cfd77776c7","images\/green-square.gif":"16ea9a497d72f5e66e4e8ea9ae08024e","images\/tv-item.gif":"719fe2d4566108e73162fb8868d3778c","images\/tv-collapsable.gif":"63a3351ea0d580797c9b8c386aa4f48b","images\/tv-expandable.gif":"a2d1af4128e4a798a7f3390b12a28574","images\/tv-item-last.gif":"2ae7e1d9972ce71e5caa65a086bc5b7e","images\/tv-collapsable-last.gif":"71acaa9d7c2616e9e8b7131a75ca65da","images\/tv-expandable-last.gif":"9d51036b3a8102742709da66789fd0f7","images\/red-header.gif":"c73b8765f0c8c3c183cb6a0c2bb0ec69","images\/green-header.gif":"0e22a09bb8051b2a274b3427ede62e82","images\/orange-header.gif":"ce1f93f0af64431771b4cbd6c99c567b","images\/calendar.png":"ab56e59af3c96ca661821257d376465e","images\/truncated.png":"c6f91108afe8159d417b4dc556cd3b2a","images\/plus.gif":"f00e1e6e1161f48608bb2bbc79b9948c","images\/minus.gif":"6d77c0c0c2f86b6995d1cdf78274eaab","images\/full-screen.png":"b541fadd3f1563856a4b44aeebd9d563","images\/indicator.gif":"03ce3dcc84af110e9da8699a841e5200","images\/delete.png":"93c047549c31a270a037840277cf59d3","images\/info-mini.png":"445c090ed777c5e6a08ac390fa896193","images\/ok.png":"f6973773335fd83d8d2875f9a3c925af","images\/error.png":"1af8a1041016f67669c5fd22dc88c82e","images\/eye-open-555.png":"9940f4e5b1248042c238e1924359fd5e","images\/eye-closed-555.png":"6ad3b0bae791bf61addc9d8ca80a642d","images\/eye-open-fff.png":"b7db2402d4d5c72314c25790a66150d4","images\/eye-closed-fff.png":"f9be7454dbb47b0e0bca3aa370ae7db5"}}
+{"variables":"37c31105548fce44fecca5cb34e455c9","stylesheets":{"jqueryui":"78cfafc3524dac98e61fc2460918d4e5","main":"52d8a7c5530ceb3a4d777364fa4e1eea"},"variable_imports":{"css-variables":"3c3f5adf98b9dbf893658314436c4b93"},"images":{"css\/ui-lightness\/images\/ui-icons_222222_256x240.png":"3a3c5468f484f07ac4a320d9e22acb8c","css\/ui-lightness\/images\/ui-bg_diagonals-thick_20_666666_40x40.png":"4429d568c67d8dfeb9040273ea0fb8c4","css\/ui-lightness\/images\/ui-icons_E87C1E_256x240.png":"7003dd36cb2aa032c8ec871ce4d4e03d","css\/ui-lightness\/images\/ui-icons_1c94c4_256x240.png":"dbd693dc8e0ef04e90a2f7ac7b390086","css\/ui-lightness\/images\/ui-icons_F26522_256x240.png":"16278ec0c07270be571f4c2e97fcc10c","css\/ui-lightness\/images\/ui-bg_diagonals-thick_18_b81900_40x40.png":"e460a66d4b3e093fc651e62a236267cb","css\/ui-lightness\/images\/ui-icons_ffffff_256x240.png":"41612b0f4a034424f8321c9f824a94da","css\/ui-lightness\/images\/ui-icons_ffd27a_256x240.png":"dda1b6f694b0d196aefc66a1d6d758f6","images\/actions_right.png":"31c8906bd25d27b83a0a2466bf903462","images\/ac-background.gif":"76135f3697b41a15aed787cfd77776c7","images\/green-square.gif":"16ea9a497d72f5e66e4e8ea9ae08024e","images\/tv-item.gif":"719fe2d4566108e73162fb8868d3778c","images\/tv-collapsable.gif":"63a3351ea0d580797c9b8c386aa4f48b","images\/tv-expandable.gif":"a2d1af4128e4a798a7f3390b12a28574","images\/tv-item-last.gif":"2ae7e1d9972ce71e5caa65a086bc5b7e","images\/tv-collapsable-last.gif":"71acaa9d7c2616e9e8b7131a75ca65da","images\/tv-expandable-last.gif":"9d51036b3a8102742709da66789fd0f7","images\/red-header.gif":"c73b8765f0c8c3c183cb6a0c2bb0ec69","images\/green-header.gif":"0e22a09bb8051b2a274b3427ede62e82","images\/orange-header.gif":"ce1f93f0af64431771b4cbd6c99c567b","images\/calendar.png":"ab56e59af3c96ca661821257d376465e","images\/truncated.png":"c6f91108afe8159d417b4dc556cd3b2a","images\/plus.gif":"f00e1e6e1161f48608bb2bbc79b9948c","images\/minus.gif":"6d77c0c0c2f86b6995d1cdf78274eaab","images\/full-screen.png":"b541fadd3f1563856a4b44aeebd9d563","images\/indicator.gif":"03ce3dcc84af110e9da8699a841e5200","images\/delete.png":"93c047549c31a270a037840277cf59d3","images\/info-mini.png":"445c090ed777c5e6a08ac390fa896193","images\/ok.png":"f6973773335fd83d8d2875f9a3c925af","images\/error.png":"1af8a1041016f67669c5fd22dc88c82e","images\/eye-open-555.png":"9940f4e5b1248042c238e1924359fd5e","images\/eye-closed-555.png":"6ad3b0bae791bf61addc9d8ca80a642d","images\/eye-open-fff.png":"b7db2402d4d5c72314c25790a66150d4","images\/eye-closed-fff.png":"f9be7454dbb47b0e0bca3aa370ae7db5"},"utility_imports":[]}
 JSON;
 
 		$this->assertEquals($sExpectedSig,  $sSig);
@@ -247,7 +206,7 @@ JSON;
 	public function testGetVarSignature()
 	{
 		$sSignature=<<<JSON
-{"variables":"37c31105548fce44fecca5cb34e455c9","stylesheets":{"css-variables":"934888ebb4991d4c76555be6b6d1d5cc","jqueryui":"78cfafc3524dac98e61fc2460918d4e5","main":"52d8a7c5530ceb3a4d777364fa4e1eea"},"imports":[]}
+{"variables":"37c31105548fce44fecca5cb34e455c9","stylesheets":{"css-variables":"934888ebb4991d4c76555be6b6d1d5cc","jqueryui":"78cfafc3524dac98e61fc2460918d4e5","main":"52d8a7c5530ceb3a4d777364fa4e1eea"},"variable_imports":[],"utility_imports":[]}
 JSON;
 		$var_sig = ThemeHandler::GetVarSignature($sSignature);
 
@@ -322,9 +281,9 @@ JSON;
 
 	public function CompileThemesProviderEmptyArray()
 	{
-		$aEmptyImports = '{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":[],"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
-		$aEmptyStyleSheets='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":[]}';
-		$aEmptyVars='{"variables":[],"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$aEmptyImports = '{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"utility_imports":[],"variable_imports":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$aEmptyStyleSheets='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"utility_imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"variable_imports":[],"stylesheets":[]}';
+		$aEmptyVars='{"variables":[],"utility_imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"variable_imports":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
 		return [
 			"empty imports" => [$aEmptyImports],
 			"empty styles" => [$aEmptyStyleSheets],
@@ -337,8 +296,8 @@ JSON;
 	 */
 	public function CompileThemesProvider()
 	{
-		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
-		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"imports_utility":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"imports_variable":[],"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"}}';
+		$sModifiedVariableThemeParameterJson='{"variables":{"brand-primary1":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"variable_imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"},"utility_imports":[]}';
+		$sInitialThemeParamJson='{"variables":{"brand-primary":"#C53030","hover-background-color":"#F6F6F6","icons-filter":"grayscale(1)","search-form-container-bg-color":"#4A5568"},"variable_imports":{"css-variables":"..\/css\/DO_NOT_CHANGE.css-variables.scss"},"stylesheets":{"jqueryui":"..\/css\/ui-lightness\/DO_NOT_CHANGE.jqueryui.scss","main":"..\/css\/DO_NOT_CHANGE.light-grey.scss"},"utility_imports":[]}';
 		$sImportFilePath = '/branding/css/DO_NOT_CHANGE.css-variables.scss';
 		$sVarChangedMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_varchanged.css";
 		$sStylesheetMainCssPath="test/application/theme-handler/expected/themes/basque-red/main_stylesheet.css";
@@ -393,7 +352,7 @@ JSON;
 		$sAbsoluteImagePath = APPROOT.'test/application/theme-handler/copied/testimages/';
 		$this->recurseMkdir($sAbsoluteImagePath);
 		$this->aDirsToCleanup[] = dirname($sAbsoluteImagePath);
-		$this->recurse_copy(APPROOT.'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
+		$this->RecurseCopy(APPROOT.'test/application/theme-handler/expected/testimages/', $sAbsoluteImagePath);
 
 		//change approot-relative in css-variable to use absolute path
 		$sCssVarPath = $this->sTmpDir."/branding/css/DO_NOT_CHANGE.css-variables.scss";
@@ -453,7 +412,7 @@ JSON;
 			->willReturn("====CSSCOMPILEDCONTENT====");
 
 		$aThemeParameters = json_decode($ThemeParametersJson, true);
-		$this->assertEquals($iCompileCSSFromSASSCount!=0,ThemeHandler::CompileTheme('basque-red', $bSetup, "COMPILATIONTIMESTAMP", $aThemeParameters, [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
+		$this->assertEquals($iCompileCSSFromSASSCount!=0, ThemeHandler::CompileTheme('basque-red', $bSetup, "COMPILATIONTIMESTAMP", $aThemeParameters, [$this->sTmpDir.'/branding/themes/'], $this->sTmpDir));
 
 		if ($iCompileCSSFromSASSCount==1)
 		{
@@ -564,6 +523,46 @@ SCSS;
 		];
 		$this->assertEquals($aExpectedFoundVariables, $aFoundVariables);
 		$this->assertEquals(['gray-darker', 'brand-primary', 'brand-primary-lightest'], $aMissingVariables);
+	}
+
+	public function testGetVariablesFromFile(){
+		$sContent = <<< 'SCSS'
+$approot-relative: "../../../../../" !default; // relative to env-***/branding/themes/***/main.css
+$approot-relative2: "../../" !default; // relative to env-***/branding/themes/***/main.css
+$approot-relative3: '../../' ; // relative to env-***/branding/themes/***/main.css
+$gray-base:              #000 !default;
+$gray-darker:            lighten($gray-base, 13.5%) !default; // #222
+$brand-primary: 	$combodo-orange !default;
+$brand-primary-lightest:	lighten($brand-primary, 15%) !default;
+$content-color: #eeeeee !default; 
+$default-font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif !default;
+$icons-filter: hue-rotate(0deg) !default;
+$toto : titi;
+SCSS;
+
+		file_put_contents($this->sTmpDir . DIRECTORY_SEPARATOR . 'css-variable.scss', $sContent);
+		$aVariables = ThemeHandler::GetVariablesFromFile(
+			[ 'css-variable.scss' ],
+			[ $this->sTmpDir ]
+		);
+
+		$aExpectedVariables = [
+			'approot-relative' => '../../../../../',
+			'approot-relative2' => '../../',
+			'approot-relative3' => '../../',
+			'gray-base' => '#000',
+			'gray-darker' => 'lighten($gray-base, 13.5%)',
+			'brand-primary' => '$combodo-orange',
+			'brand-primary-lightest' => 'lighten($brand-primary, 15%)',
+			'content-color' => '#eeeeee',
+			'default-font-family' => 'Trebuchet MS,Tahoma,Verdana,Arial,sans-serif',
+			'icons-filter' => 'hue-rotate(0deg)',
+			'toto' => 'titi',
+		];
+
+		$this->assertEquals(
+			$aExpectedVariables,
+			$aVariables);
 	}
 
 	/**
