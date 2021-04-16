@@ -64,7 +64,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:Uncompressing' => '扩展解压中...',
 	'iTopHub:InstallationWelcome' => '安装来自 iTop Hub 的扩展',
 	'iTopHub:DBBackupLabel' => '本机备份',
-	'iTopHub:DBBackupSentence' => '在升级之前,备份数据库和 iTop 配置文件',
+	'iTopHub:DBBackupSentence' => '在升级之前,备份数据库和 '.ITOP_APPLICATION_SHORT.' 配置文件',
 	'iTopHub:DeployBtn' => '安装 !',
 	'iTopHub:DatabaseBackupProgress' => '本机备份...',
 
@@ -82,5 +82,4 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationStatus:Installed' => '已安装',
 	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>未</b> 安装.',
 ));
-
 
