@@ -534,7 +534,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:SearchValue:CheckAll' => '全选',
 	'UI:SearchValue:UncheckAll' => '反选',
 	'UI:SelectOne' => '-- 请选择 --',
-	'UI:Login:Welcome' => '欢迎使用 iTop!',
+	'UI:Login:Welcome' => '欢迎使用 '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => '用户名或密码错误, 请重试.',
 	'UI:Login:IdentifyYourself' => '请完成身份认证',
 	'UI:Login:UserNamePrompt' => '用户名',
