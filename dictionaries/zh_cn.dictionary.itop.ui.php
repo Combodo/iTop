@@ -554,7 +554,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ResetPwd-Error-NoEmail' => '缺少邮箱地址. 请联系管理员.',
 	'UI:ResetPwd-Error-Send' => '邮件发送存在技术原因. 请联系管理员.',
 	'UI:ResetPwd-EmailSent' => '请检查您的收件箱并根据指引进行操作. 如果您没有收到邮件, 请检查您登录时的输入是否存在错误.',
-	'UI:ResetPwd-EmailSubject' => '重置 iTop 密码',
+	'UI:ResetPwd-EmailSubject' => '重置 '.ITOP_APPLICATION_SHORT.' 密码',
 	'UI:ResetPwd-EmailBody' => '<body><p>您已请求重置iTop 密码.</p><p>请点击这个链接 (一次性) <a href="%1$s">来输入新的密码</a></p>.',
 
 	'UI:ResetPwd-Title' => '重置密码',
