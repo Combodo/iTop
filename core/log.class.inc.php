@@ -756,6 +756,9 @@ class DeadLockLog extends LogAPI
 	 *
 	 * @throws \Exception
 	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
+	 *
+	 * @since 2.7.1 method creation
+	 * @since 2.7.5 3.0.0 rename param names and fix phpdoc (thanks Hipska !)
 	 */
 	public static function Log($sLevel, $sMessage, $iMysqlErrorNumber = null, $aContext = array())
 	{
