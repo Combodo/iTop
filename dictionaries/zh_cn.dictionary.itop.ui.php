@@ -1426,7 +1426,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:AddAnExisting_Class' => '添加 %1$s...',
 	'UI:SelectionOf_Class' => '选择 %1$s',
 
-	'UI:AboutBox' => '关于 ITOP_APPLICATION...',
+	'UI:AboutBox' => '关于 '.ITOP_APPLICATION_SHORT.'...',
 	'UI:About:Title' => '关于 '.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => '数据模型',
 	'UI:About:Support' => '支持信息',
