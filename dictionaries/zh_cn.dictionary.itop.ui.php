@@ -844,7 +844,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Delete:PleaseDoTheManualOperations' => '在删除该对象之前, 请先手工完成上述列出的操作',
 	'UI:Delect:Confirm_Object' => '请确认要删除 %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '请确认要删除下列 %2$s 类的 %1$d 个对象.',
-	'UI:WelcomeToITop' => '欢迎使用 ITOP_APPLICATION ',
+	'UI:WelcomeToITop' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
 	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s 详细内容',
 	'UI:ErrorPageTitle' => 'iTop - 错误',
 	'UI:ObjectDoesNotExist' => '抱歉, 该对象不存在 (或无权浏览该对象).',
