@@ -843,7 +843,7 @@ class iTopDesignFormat
 		// Add new attribute to theme import nodes
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
 		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('xsi:type', 'utility');
+			$oNode->setAttribute('xsi:type', 'utilities');
 		}
 
 		// Add Class Style

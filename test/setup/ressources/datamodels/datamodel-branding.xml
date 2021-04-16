@@ -11,7 +11,7 @@
         <imports>
           <import id="style1">style1.scss</import>
           <import id="style2" xsi:type="variables">style2.scss</import>
-          <import id="style3" xsi:type="utility">style3.scss</import>
+          <import id="style3" xsi:type="utilities">style3.scss</import>
         </imports>
         <stylesheets>
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
