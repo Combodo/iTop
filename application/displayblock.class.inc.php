@@ -1773,6 +1773,13 @@ EOF
 class MenuBlock extends DisplayBlock
 {
 	/**
+	 * @var string Prefix to use for the ID of the actions toolbar
+	 * @used-by static::GetRenderContent
+	 * @since 3.0.0
+	 */
+	public const ACTIONS_TOOLBAR_ID_PREFIX = 'ibo-actions-toolbar-';
+
+	/**
 	 * Renders the "Actions" popup menu for the given set of objects
 	 *
 	 * Note that the menu links containing (or ending) with a hash (#) will have their fragment
@@ -2146,7 +2153,10 @@ class MenuBlock extends DisplayBlock
 				break;
 
 		}
-		$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock($iMenuId, $param, $aRegularActions, $sId));
+		$oPopupMenuItemsBlock = utils::GetPopupMenuItemsBlock($iMenuId, $param, $aRegularActions, $sId);
+		if($oPopupMenuItemsBlock->HasSubBlocks()) {
+			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
+		}
 
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
@@ -2169,7 +2179,7 @@ class MenuBlock extends DisplayBlock
 			}
 		}
 
-		$oActionsToolbar = ToolbarUIBlockFactory::MakeForAction("ibo-actions-toolbar-{$sId}");
+		$oActionsToolbar = ToolbarUIBlockFactory::MakeForAction(static::ACTIONS_TOOLBAR_ID_PREFIX.$sId);
 		$oRenderBlock->AddSubBlock($oActionsToolbar);
 		$sRegularActionsMenuTogglerId = "ibo-regular-actions-menu-toggler-{$sId}";
 		$sRegularActionsPopoverMenuId = "ibo-regular-actions-popover-{$sId}";
