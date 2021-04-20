@@ -72,6 +72,19 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	}
 
 	/**
+	 * Add $oSubBlock as the first of the sub blocks, while preserving the array indexes
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oSubBlock
+	 *
+	 * @return $this
+	 */
+	public function PrependSubBlock(iUIBlock $oSubBlock)
+	{
+		$this->aSubBlocks = [$oSubBlock->GetId() => $oSubBlock] + $this->aSubBlocks;
+		return $this;
+	}
+
+	/**
 	 * @inheritDoc
 	 */
 	public function RemoveSubBlock(string $sId)
