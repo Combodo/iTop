@@ -236,17 +236,17 @@
         <brick id="faq" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
           <active>true</active>
           <rank>
-			  <default>40</default>
-		  </rank>
+            <default>40</default>
+          </rank>
           <width>12</width>
-			<title>
-              <navigation_menu>Brick:Portal:FAQ:Menu</navigation_menu>
-			  <home>Brick:Portal:FAQ:Title</home>
-			</title>
-			<description>Brick:Portal:FAQ:Title+</description>
-			<decoration_class>
-				<default>fc fc-life-saver fc-2x</default>
-			</decoration_class>
+          <title>
+            <navigation_menu>Brick:Portal:FAQ:Menu</navigation_menu>
+            <home>Brick:Portal:FAQ:Title</home>
+          </title>
+          <description>Brick:Portal:FAQ:Title+</description>
+          <decoration_class>
+            <default>fc fc-life-saver fc-2x</default>
+          </decoration_class>
           <levels>
             <level id="1">
               <class>FAQCategory</class>
@@ -264,10 +264,10 @@
                   <title>Class:FAQ</title>
                   <fields>
                     <field id="error_code"/>
-					<field id="domains"/>
-					<field id="key_words">
-						<hidden>true</hidden>
-					</field>
+                    <field id="domains"/>
+                    <field id="key_words">
+                      <hidden>true</hidden>
+                    </field>
                   </fields>
                   <actions>
                     <action id="view" xsi:type="view"/>
