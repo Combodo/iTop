@@ -107,6 +107,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 */
 	public const DEFAULT_OBJECT_MODE = self::ENUM_OBJECT_MODE_VIEW;
 
+	/**
+	 * @var string Prefix for tags in the subtitle, allows to identify them more easily
+	 * @used-by static::DisplayBareHeader
+	 * @since 3.0.0
+	 */
+	public const HEADER_BLOCKS_SUBTITLE_TAG_PREFIX = 'tag-';
+
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
 	protected $aFieldsMap;
@@ -313,7 +320,8 @@ EOF
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$aHeaderBlocks['toolbar'][] = $oBlock->GetRenderContent($oPage);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage);
+			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
 		$aTags = array();
@@ -419,7 +427,7 @@ EOF
 		}
 
 		foreach ($aTags as $sIconId => $aIconData) {
-			$aHeaderBlocks['subtitle'][] = new Html(<<<HTML
+			$aHeaderBlocks['subtitle'][static::HEADER_BLOCKS_SUBTITLE_TAG_PREFIX.$sIconId] = new Html(<<<HTML
 <span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$aIconData['title']}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
 HTML
 			);
