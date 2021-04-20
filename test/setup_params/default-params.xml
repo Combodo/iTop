@@ -57,7 +57,7 @@
 		<item>itop-request-mgmt</item>
 		<item>itop-portal</item>
 		<item>itop-change-mgmt</item>
-		<item>itop-knownerror-light</item>
+		<item>itop-knownerror-mgmt</item>
 		<item>itop-faq-light</item>
 	</selected_modules>
 	<selected_extensions type="array">
