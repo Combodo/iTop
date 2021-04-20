@@ -13,11 +13,11 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-structure/2.7.0',
+			'itop-structure/2.7.0' || 'itop-config-mgmt/2.7.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
-		'installer' => 'KnownErrorMgmtInstaller',
+		'installer' => 'FAQLightInstaller',
 
 		// Components
 		//
@@ -43,11 +43,11 @@ SetupWebPage::AddModule(
 	)
 );
 
-if (!class_exists('KnownErrorMgmtInstaller'))
+if (!class_exists('FAQLightInstaller'))
 {
 	// Module installation handler
 	//
-	class KnownErrorMgmtInstaller extends ModuleInstallerAPI
+	class FAQLightInstaller extends ModuleInstallerAPI
 	{
 		public static function BeforeWritingConfig(Config $oConfiguration)
 		{
