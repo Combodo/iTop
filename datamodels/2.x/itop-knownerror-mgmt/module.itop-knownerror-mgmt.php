@@ -14,7 +14,6 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-config-mgmt/2.2.0',
-			'itop-portal/2.7.0',
 		),
 		'mandatory' => false,
 		'visible' => true,

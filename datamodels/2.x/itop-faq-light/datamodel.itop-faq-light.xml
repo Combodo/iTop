@@ -231,7 +231,7 @@
     </menu>
   </menus>
   <module_designs>
-    <module_design id="itop-portal" xsi:type="portal">
+    <module_design id="itop-portal" xsi:type="portal" _delta="if_exists">
       <bricks>
         <brick id="faq" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
           <active>true</active>
