@@ -1,24 +1,10 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
-use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
@@ -12643,11 +12629,12 @@ class AttributeCustomFields extends AttributeDefinition
 			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$oForm = new \Combodo\iTop\Form\Form('');
-			$oField = new LabelField('');
-			$oField->SetLabel('Custom field error: '.$e->getMessage());
+			$oField = new \Combodo\iTop\Form\Field\StringField('');
+			$oField->SetReadOnly(true);
+			$oField->SetLabel('Custom field error: ');
+			$oField->SetCurrentValue($e->getMessage());
 			$oForm->AddField($oField);
 			$oForm->Finalize();
 		}
