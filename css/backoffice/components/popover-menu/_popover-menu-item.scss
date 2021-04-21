@@ -28,6 +28,10 @@ $ibo-popover-menu--separator--padding: 0 !default;
 $ibo-popover-menu--separator--margin: 0 !default;
 $ibo-popover-menu--separator--background-color: $ibo-color-grey-200 !default;
 
+$ibo-popover-menu--item--icon--color: $ibo-color-grey-700 !default;
+$ibo-popover-menu--item--icon--font-size: $ibo-font-size-200 !default;
+$ibo-popover-menu--item--icon--padding-right: 5px !default;
+
 .ibo-popover-menu--item{
   padding: $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-right $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-left;
   color: $ibo-popover-menu--item--text-color;
@@ -46,4 +50,10 @@ $ibo-popover-menu--separator--background-color: $ibo-color-grey-200 !default;
     margin: $ibo-popover-menu--separator--margin;
     background-color: $ibo-popover-menu--separator--background-color
   }
+}
+
+.ibo-popover-menu--item--icon{
+  padding-right: $ibo-popover-menu--item--icon--padding-right;
+  color: $ibo-popover-menu--item--icon--color;
+  font-size: $ibo-popover-menu--item--icon--font-size;
 }

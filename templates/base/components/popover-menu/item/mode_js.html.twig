@@ -7,7 +7,13 @@
                     data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
             {% endif %}
+            {% if oUIBlock.GetTooltip() is not empty %}
+                data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
+            {% endif %}
     >
+        {% if oUIBlock.GetIconClass() is not empty %}
+            <i class="ibo-popover-menu--item--icon fa-fw {{ oUIBlock.GetIconClass() }}"></i>
+        {% endif %}
         {{ oUIBlock.GetLabel() }}
     </a>
 {% endblock %}

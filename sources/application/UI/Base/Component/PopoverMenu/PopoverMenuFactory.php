@@ -236,6 +236,12 @@ class PopoverMenuFactory
 				if (!empty($aAction['css_classes'])) {
 					$oPopoverMenuItem->SetCssClasses($aAction['css_classes']);
 				}
+				if (!empty($aAction['icon_class'])) {
+					$oPopoverMenuItem->SetIconClass($aAction['icon_class']);
+				}
+				if (!empty($aAction['tooltip'])) {
+					$oPopoverMenuItem->SetTooltip($aAction['tooltip']);
+				}
 				$aItems[] = $oPopoverMenuItem;
 			}
 

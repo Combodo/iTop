@@ -1392,6 +1392,8 @@ class WebPage implements Page
 				'target' => isset($aAction['target']) ? $aAction['target'] : '',
 				'url' => $aAction['url'],
 				'label' => $aAction['label'],
+				'icon_class' => isset($aAction['icon_class']) ? $aAction['icon_class'] : '',
+				'tooltip' => isset($aAction['tooltip']) ? $aAction['tooltip'] : '',
 			];
 		}
 
