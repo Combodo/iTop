@@ -81,7 +81,7 @@ button.ui-multiselect > span {
 .ui-multiselect-checkboxes {
   @extend .ibo-popover-menu--section;
   position:relative;
-  overflow-y:scroll;
+  overflow-y:scroll !important;
 }
 .ui-multiselect-checkboxes label {
   display: flex;

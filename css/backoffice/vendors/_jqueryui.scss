@@ -530,3 +530,30 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
     top: 0;
   }
 }
+
+// Autocomplete
+
+.ui-autocomplete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: default;
+  z-index: 100;
+}
+.ui-autocomplete-input{
+  @extend .ibo-input;
+  width: auto;
+  display: inline;
+}
+
+.ui-autocomplete-category{
+  @extend .ibo-popover-menu--separator
+}
+// Menu
+
+.ui-menu{
+  @extend .ibo-popover-menu;
+}
+.ui-menu-item{
+  @extend .ibo-popover-menu--item;
+}
