@@ -13,7 +13,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-structure/2.7.0',
+			'itop-structure/2.7.0 || itop-portal/2.7.0' ,
 		),
 		'mandatory' => false,
 		'visible' => true,
