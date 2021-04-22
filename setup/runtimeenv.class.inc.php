@@ -741,42 +741,40 @@ class RunTimeEnvironment
 		//
 		$aAvailableExtensions = array();
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
-		foreach($aSelectedModuleCodes as $sModuleId)
-		{
-			$aModuleData = $aAvailableModules[$sModuleId];
-			$sName = $sModuleId;
-			$sVersion = $aModuleData['version_code'];
-			$aComments = array();
-			$aComments[] = $sShortComment;
-			if ($aModuleData['mandatory'])
-			{
-				$aComments[] = 'Mandatory';
+		if (!empty($aSelectedModuleCodes)) {
+			foreach ($aSelectedModuleCodes as $sModuleId) {
+				$aModuleData = $aAvailableModules[$sModuleId];
+				$sName = $sModuleId;
+				$sVersion = $aModuleData['version_code'];
+				$aComments = array();
+				$aComments[] = $sShortComment;
+				if ($aModuleData['mandatory']) {
+					$aComments[] = 'Mandatory';
+				} else {
+					$aComments[] = 'Optional';
+				}
+				if ($aModuleData['visible']) {
+					$aComments[] = 'Visible (during the setup)';
+				} else {
+					$aComments[] = 'Hidden (selected automatically)';
+				}
+
+				$aDependencies = $aModuleData['dependencies'];
+				if (!empty($aDependencies)) {
+					foreach ($aDependencies as $sDependOn) {
+						$aComments[] = "Depends on module: $sDependOn";
+					}
+				}
+				$sComment = implode("\n", $aComments);
+
+				$oInstallRec = new ModuleInstallation();
+				$oInstallRec->Set('name', $sName);
+				$oInstallRec->Set('version', $sVersion);
+				$oInstallRec->Set('comment', $sComment);
+				$oInstallRec->Set('parent_id', $iMainItopRecord);
+				$oInstallRec->Set('installed', $iInstallationTime);
+				$oInstallRec->DBInsertNoReload();
 			}
-			else
-			{
-				$aComments[] = 'Optional';
-			}
-			if ($aModuleData['visible'])
-			{
-				$aComments[] = 'Visible (during the setup)';
-			}
-			else
-			{
-				$aComments[] = 'Hidden (selected automatically)';
-			}
-			foreach ($aModuleData['dependencies'] as $sDependOn)
-			{
-				$aComments[] = "Depends on module: $sDependOn";
-			}
-			$sComment = implode("\n", $aComments);
-	
-			$oInstallRec = new ModuleInstallation();
-			$oInstallRec->Set('name', $sName);
-			$oInstallRec->Set('version', $sVersion);
-			$oInstallRec->Set('comment', $sComment);
-			$oInstallRec->Set('parent_id', $iMainItopRecord);
-			$oInstallRec->Set('installed', $iInstallationTime);
-			$oInstallRec->DBInsertNoReload();
 		}
 		
 		if ($this->oExtensionsMap)
