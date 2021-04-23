@@ -2892,6 +2892,8 @@ HTML;
 	//----------------------------------------------
 
 	/**
+	 * Note: Only works for backoffice URLs for now
+	 *
 	 * @param string $sText Text containing the mentioned objects to be found
 	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
 	 *
@@ -2899,7 +2901,7 @@ HTML;
 	 *
 	 * [
 	 *   'ClassA' => ['ID1', 'ID2', ...],
-	 *   'ClassB' => ['ID3],
+	 *   'ClassB' => ['ID3'],
 	 * ]
 	 *
 	 * @throws \Exception
@@ -2922,9 +2924,10 @@ HTML;
 		$aMentionedObjects = array();
 		$aMentionMatches = array();
 
-		// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
-		// If we change the sanitizer, we might want to use this regexp as it's easier to read
-		// Note 2: This is only working for backoffice URLs...
+		// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink,
+		// - we can't use the following (simpler) regexp that only checks data attributes on hyperlinks, which would have worked for hyperlinks pointing to any GUIs: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
+		// - instead we use a regexp to match the following pattern '[Some object label](<APP_ROOT_URL>...&class=<OBJECT_CLASS>&id=<OBJECT_ID>...)' which only works for the backoffice
+		// If we change the sanitizer, we might want to switch to the other regexp as it's universal and easier to read
 		$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
 		preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $sText, $aMentionMatches);
 
