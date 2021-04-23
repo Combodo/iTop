@@ -2896,6 +2896,12 @@ HTML;
 	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
 	 *
 	 * @return array Array of object classes / IDs for the ones found in $sText
+	 *
+	 * [
+	 *   'ClassA' => ['ID1', 'ID2', ...],
+	 *   'ClassB' => ['ID3],
+	 * ]
+	 *
 	 * @throws \Exception
 	 * @since 3.0.0
 	 */
