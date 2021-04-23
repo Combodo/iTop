@@ -19,8 +19,7 @@ class MedallionIcon extends UIBlock
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-medallion-icon';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/medallion-icon/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/medallion-icon/layout';
-	
+
 	/** @var string $sImageUrl */
 	private $sImageUrl;
 	/** @var string $sIconClass */
