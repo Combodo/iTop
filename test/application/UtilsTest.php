@@ -440,6 +440,9 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		$this->assertEquals($sTestedAcronym, $sExceptedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
 	}
 
+	/**
+	 * @since 3.0.0
+	 */
 	public function ToAcronymProvider()
 	{
 		return [
@@ -478,6 +481,74 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			'Several words, mixed case letters, two last hyphened' => [
 				'Jada Pinkett-smith',
 				'JP',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetMentionedObjectsFromTextProvider
+	 * @covers       utils::GetMentionedObjectsFromText
+	 *
+	 * @param string $sInput
+	 * @param string $sFormat
+	 * @param array $aExceptedMentionedObjects
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetMentionedObjectsFromText(string $sInput, string $sFormat, array $aExceptedMentionedObjects)
+	{
+		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
+
+		$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
+		$sTestedAsString = print_r($aTestedMentionedObjects, true);
+
+		$this->assertEquals($sTestedAsString, $sExpectedAsString, "Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public function GetMentionedObjectsFromTextProvider(): array
+	{
+		$sAbsUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
+
+		return [
+			'No object' => [
+				"Begining
+				Second line
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[],
+			],
+			'1 UserRequest' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345'],
+				],
+			],
+			'2 UserRequests' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=987654&foo=bar\">R-987654</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345', '987654'],
+				],
+			],
+			'1 UserRequest, 1 Person' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">Claude Monet</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345'],
+					'Person' => ['3'],
+				],
 			],
 		];
 	}

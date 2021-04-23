@@ -90,12 +90,31 @@ class utils
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
-
 	/**
 	 * @var string
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_PLAIN = 'text';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_HTML = 'html';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_MARKDOWN = 'markdown';
+
 	/**
 	 * @var string
 	 * @since 3.0.0
@@ -2866,5 +2885,57 @@ HTML;
 		}
 
 		return $sAcronym;
+	}
+
+	//----------------------------------------------
+	// Text manipulation
+	//----------------------------------------------
+
+	/**
+	 * @param string $sText Text containing the mentioned objects to be found
+	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
+	 *
+	 * @return array Array of object classes / IDs for the ones found in $sText
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetMentionedObjectsFromText(string $sText, string $sFormat = self::ENUM_TEXT_FORMAT_HTML): array
+	{
+		// First transform text so it can be parsed
+		switch ($sFormat) {
+			case static::ENUM_TEXT_FORMAT_HTML:
+				$sText = static::HtmlToText($sText);
+				break;
+
+			default:
+				// Don't transform it
+				break;
+		}
+
+		// Then parse text to find objects
+		$aMentionedObjects = array();
+		$aMentionMatches = array();
+
+		// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
+		// If we change the sanitizer, we might want to use this regexp as it's easier to read
+		// Note 2: This is only working for backoffice URLs...
+		$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
+		preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $sText, $aMentionMatches);
+
+		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
+			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
+			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+
+			// Prepare array for matched class if not already present
+			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
+				$aMentionedObjects[$sMatchedClass] = array();
+			}
+			// Add matched ID if not already there
+			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
+				$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+			}
+		}
+
+		return $aMentionedObjects;
 	}
 }

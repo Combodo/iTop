@@ -3136,39 +3136,15 @@ abstract class DBObject implements iDisplay
 			}
 			//   2 - Find mentioned objects
 			$aMentionedObjects = array();
-			foreach($aUpdatedLogAttCodes as $sAttCode)
-			{
+			foreach ($aUpdatedLogAttCodes as $sAttCode) {
 				/** @var \ormCaseLog $oUpdatedCaseLog */
 				$oUpdatedCaseLog = $this->Get($sAttCode);
-				$aMentionMatches = array();
-				// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
-				// If we change the sanitizer, we might want to use this regexp as it's easier to read
-				// Note 2: This is only working for backoffice URLs...
-				$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
-				preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $oUpdatedCaseLog->GetModifiedEntry(), $aMentionMatches);
-
-				foreach($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch)
-				{
-					$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
-					$sMatchedId = $aMentionMatches[3][$iMatchIdx];
-
-					// Prepare array for matched class if not already present
-					if(!array_key_exists($sMatchedClass, $aMentionedObjects))
-					{
-						$aMentionedObjects[$sMatchedClass] = array();
-					}
-					// Add matched ID if not already there
-					if(!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass]))
-					{
-						$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
-					}
-				}
+				$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry()));
 			}
 			//   3 - Trigger for those objects
-			foreach($aMentionedObjects as $sMentionedClass => $aMentionedIds)
-			{
-				foreach($aMentionedIds as $sMentionedId)
-				{
+			// TODO: This should be refactored and moved into the caselogs loop, otherwise, we won't be able to know which case log triggered the action.
+			foreach ($aMentionedObjects as $sMentionedClass => $aMentionedIds) {
+				foreach ($aMentionedIds as $sMentionedId) {
 					/** @var \DBObject $oMentionedObject */
 					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
 					// Important: Here the "$this->object()$" placeholder is actually the mentioned object and not the current object. The current object can be used through the $source->object()$ placeholder.
