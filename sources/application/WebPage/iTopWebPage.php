@@ -526,6 +526,29 @@ JS
 	}
 
 	/**
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar
+	 * @uses static::$oTopBarLayout
+	 * @since 3.0.0
+	 */
+	public function GetTopBarLayout()
+	{
+		return $this->oTopBarLayout;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar $oTopBarLayout
+	 *
+	 * @return $this
+	 * @uses static::$oTopBarLayout
+	 * @since 3.0.0
+	 */
+	public function SetTopBarLayout(TopBar $oTopBarLayout)
+	{
+		$this->oTopBarLayout = $oTopBarLayout;
+		return $this;
+	}
+
+	/**
 	 * Set the content layout (main content, [side content,] manually added content, ...)
 	 * This function is public as the developer needs to be able to set how the content will be displayed.
 	 *
@@ -1176,26 +1199,6 @@ EOF
 		}
 		$oAlert->AddCSSClass($sCssClasses);
 		$this->AddUiBlock($oAlert);
-	}
-
-
-	/**
-	 * @return TopBar
-	 */
-	public function GetTopBarLayout(): TopBar
-	{
-		return $this->oTopBarLayout;
-	}
-
-	/**
-	 * @param TopBar $oTopBarLayout
-	 *
-	 * @return iTopWebPage
-	 */
-	public function SetTopBarLayout(TopBar $oTopBarLayout): iTopWebPage
-	{
-		$this->oTopBarLayout = $oTopBarLayout;
-		return $this;
 	}
 
 	/**
