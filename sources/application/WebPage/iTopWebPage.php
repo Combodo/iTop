@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenuFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContent;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -41,6 +42,19 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	/** @var \TabManager */
 	protected $m_oTabs;
+	/**
+	 * Navigation menu layout (menu groups, user menu, ...)
+	 *
+	 * @var \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu
+	 * @since 3.0.0
+	 */
+	protected $oNavigationMenuLayout;
+	/**
+	 * Top bar layout (quick create, global search, ...)
+	 *
+	 * @var \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar
+	 * @since 3.0.0
+	 */
 	protected $oTopBarLayout;
 	protected $bBreadCrumbEnabled;
 	protected $sBreadCrumbEntryId;
@@ -78,10 +92,11 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			$this->bBreadCrumbEnabled = false;
 		}
 
+		$this->SetNavigationMenuLayout(NavigationMenuFactory::MakeStandard());
 		$this->SetTopBarLayout(TopBarFactory::MakeStandard($this->GetBreadCrumbsNewEntry()));
 
 		utils::InitArchiveMode();
-		
+
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
@@ -468,7 +483,6 @@ JS
 	}
 
 
-
 	/**
 	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
 	 *
@@ -506,23 +520,33 @@ JS
 		$this->sBreadCrumbEntryUrl = null;
 		$this->sBreadCrumbEntryIcon = null;
 	}
-	
 
 
 	/**
-	 * Return the navigation menu layout (id, menu groups, ...)
-	 *
 	 * @internal
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
+	 * @uses static::$oNavigationMenuLayout
 	 * @since 3.0.0
 	 */
 	protected function GetNavigationMenuLayout()
 	{
-		return NavigationMenuFactory::MakeStandard();
+		return $this->oNavigationMenuLayout;
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu $oNavigationMenuLayout
+	 *
+	 * @return $this
+	 * @uses static::$oNavigationMenuLayout
+	 * @since 3.0.0
+	 */
+	protected function SetNavigationMenuLayout(NavigationMenu $oNavigationMenuLayout)
+	{
+		$this->oNavigationMenuLayout = $oNavigationMenuLayout;
+
+		return $this;
 	}
 
 	/**
