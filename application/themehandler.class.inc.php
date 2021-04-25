@@ -175,6 +175,29 @@ class ThemeHandler
 	}
 
 	/**
+	 * @param string $sThemeId
+	 *
+	 * @return string Absolute path of the compiled file for the $sThemeId theme (Note: It doesn't mean that the theme is actually compiled)
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledThemeFileAbsolutePath(string $sThemeId): string
+	{
+		return static::GetCompiledThemeFolderAbsolutePath($sThemeId).'main.css';
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return string Absolute URL of the compiled file for the $sThemeId theme (Note: It doesn't mean that the theme is actually compiled)
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledThemeFileAbsoluteUrl(string $sThemeId): string
+	{
+		return utils::GetAbsoluteUrlModulesRoot().'branding/themes/'.$sThemeId.'/main.css';
+	}
+
+	/**
 	 * Return the absolute URL for the current theme CSS file
 	 *
 	 * @return string
@@ -186,7 +209,9 @@ class ThemeHandler
 			// Try to compile theme defined in the configuration
 			// Note: In maintenance mode we should stick to the app theme (also we don't have access to many PHP classes, including the user preferences)
 			$sThemeId = SetupUtils::IsInMaintenanceMode() ? static::GetApplicationThemeId() : static::GetCurrentUserThemeId();
-			static::CompileTheme($sThemeId);
+			if (static::ShouldThemeSignatureCheckBeForced($sThemeId)) {
+				static::CompileTheme($sThemeId);
+			}
 		}
 		catch (CoreException $oCompileException) {
 			// Fallback on our default theme (should always be compilable) in case the previous theme doesn't exists
@@ -199,11 +224,34 @@ class ThemeHandler
 				SetupUtils::builddir($sDefaultThemeDirPath);
 			}
 
-			static::CompileTheme($sThemeId, false, "", $aDefaultTheme['parameters']);
+			if (static::ShouldThemeSignatureCheckBeForced($sThemeId)) {
+				static::CompileTheme($sThemeId, false, "", $aDefaultTheme['parameters']);
+			}
 		}
 
-		// Return absolute url to theme compiled css
-		return utils::GetAbsoluteUrlModulesRoot().'branding/themes/'.$sThemeId.'/main.css';
+		return static::GetCompiledThemeFileAbsoluteUrl($sThemeId);
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return bool True if the $sThemeId signature check -and possibly the compilation- should be forced (dev. environment, missing compiled file, ...)
+	 */
+	protected static function ShouldThemeSignatureCheckBeForced(string $sThemeId): bool
+	{
+		if (utils::IsDevelopmentEnvironment()) {
+			return true;
+		}
+
+		if (false === file_exists(static::GetCompiledThemeFileAbsolutePath($sThemeId))) {
+			return true;
+		}
+
+		if (true === utils::GetConfig()->Get('theme.force_signature_check_at_runtime')) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**

@@ -1407,6 +1407,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'theme.force_signature_check_at_runtime' => [
+			'type' => 'bool',
+			'description' => 'If true, checking that the current theme signature matches the compiled file -to recompile it if necessary- will be done for each page. This can slow the application, only use it if you are experiencing issues while customizing a theme.)',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 	public function IsProperty($sPropCode)
