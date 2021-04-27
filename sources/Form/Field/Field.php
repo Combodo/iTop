@@ -1,28 +1,15 @@
 <?php
 
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 namespace Combodo\iTop\Form\Field;
 
 use Closure;
-use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
+use Combodo\iTop\Form\Validator\Validator;
 
 /**
  * Description of Field
@@ -475,9 +462,10 @@ abstract class Field
 	 * @return $this;
 	 * @since 2.7.0
 	 */
-	public function AddMetadata(string $sName, string $sValue)
+	public function AddMetadata(string $sName, ?string $sValue = null)
 	{
 		$this->aMetadata[$sName] = $sValue;
+
 		return $this;
 	}
 
