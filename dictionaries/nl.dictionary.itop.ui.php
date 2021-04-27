@@ -696,6 +696,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'UI:RunQuery:Title' => 'ITOP_APPLICATION_SHORT - Evaluatie van OQL-query',
 	'UI:RunQuery:QueryExamples' => 'Voorbeelden van query\'s',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Doel',
 	'UI:RunQuery:HeaderPurpose+' => 'Uitleg over de query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-expressie',

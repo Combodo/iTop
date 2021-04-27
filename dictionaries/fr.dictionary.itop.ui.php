@@ -1,24 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditCategory' => 'Catégorie d\'audit',
 	'Class:AuditCategory+' => 'Une section de l\'audit',
@@ -707,6 +692,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 
 	'UI:RunQuery:Title' => 'iTop - Evaluation de requêtes OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemples de requêtes',
+	'UI:RunQuery:QueryResults' => 'Résultats de la requête',
 	'UI:RunQuery:HeaderPurpose' => 'Objectif',
 	'UI:RunQuery:HeaderPurpose+' => 'But de la requête',
 	'UI:RunQuery:HeaderOQLExpression' => 'Requête OQL',

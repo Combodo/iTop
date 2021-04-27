@@ -1,7 +1,7 @@
 <?php
 /*
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
@@ -697,6 +697,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Wykonywanie zapytań OQL',
 	'UI:RunQuery:QueryExamples' => 'Przykłady zapytań',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Cel, powód',
 	'UI:RunQuery:HeaderPurpose+' => 'Wyjaśnienie dotyczące zapytania',
 	'UI:RunQuery:HeaderOQLExpression' => 'Wyrażenie OQL',

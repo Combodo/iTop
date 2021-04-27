@@ -1,33 +1,25 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -67,27 +59,28 @@ function ShowExamples($oP, $sExpression)
 	$aDisplayData = array();
 	$oAppContext = new ApplicationContext();
 	$sContext = $oAppContext->GetForForm();
-	foreach($aExamples as $sTopic => $aQueries)
-	{
-		foreach($aQueries as $sDescription => $sOql)
-		{
+	foreach ($aExamples as $sTopic => $aQueries) {
+		foreach ($aQueries as $sDescription => $sOql) {
 			$sHighlight = '';
 			$sDisable = '';
-			if ($sOql == $sExpression)
-			{
+			if ($sOql == $sExpression) {
 				// this one is currently being tested, highlight it
 				$sHighlight = "background-color:yellow;";
 				$sDisable = 'disabled';
 				// and remember we are testing a query of the list
 				$bUsingExample = true;
 			}
+			$oFormButton = FormUIBlockFactory::MakeStandard();
+			$oFormButton->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", $sOql));
+			$oButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Test'), '', '', true);
+			$oButton->SetIsDisabled($sDisable);
+			$oFormButton->AddSubBlock($oButton);
+			$oFormButton->AddSubBlock(new Html($sContext));
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
 				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
 				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
-				//TODO 3.0.0 : buttons are not styled properly yet...
-				// This whole "query examples" may be migrated to TWIG using iTop Twig tags ?
-				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
+				'go' => BlockRenderer::RenderBlockTemplates($oFormButton),
 			);
 		}
 	}
@@ -104,7 +97,7 @@ function ShowExamples($oP, $sExpression)
 
 	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData) {
 		$bShowOpened = $bUsingExample;
-		$oTopic = $oP->GetTableBlock($aDisplayConfig, $aQueriesDisplayData);
+		$oTopic = DataTableUIBlockFactory::MakeForForm('oqlExample', $aDisplayConfig, $aQueriesDisplayData);
 		$oTopicSection = new CollapsibleSection($sTopic, [$oTopic]);
 		$oTopicSection->SetOpenedByDefault($bShowOpened);
 		$oP->AddUiBlock($oTopicSection);
@@ -179,10 +172,9 @@ try
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
 	//--- Query textarea
-	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
-	$oQueryForm->AddSubBlock($oQueryTitle);
+	$oQueryForm->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:ExpressionToEvaluate'), 2));
 	$oQueryTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), 'expression', 120, 8);
-	$oQueryTextArea->SetName('expression');
+	$oQueryTextArea->AddCSSClass('ibo-queryoql');
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
@@ -215,12 +207,16 @@ EOF
 		null,
 		true
 	)->SetTooltip(Dict::S('UI:Button:Evaluate:Title'));
-	$oQueryForm->AddSubBlock($oQuerySubmit);
+	$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+	$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+	$oToolbarButtons->AddCSSClass('mb-5');
+	$oQueryForm->AddSubBlock($oToolbarButtons);
+	$oToolbarButtons->AddSubBlock($oQuerySubmit);
 
 
 	if ($oFilter) {
 		//--- Query filter
-		$oP->add("<h2>Query results</h2>\n");
+		$oP->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryResults'), 2));
 
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oResultBlock->Display($oP, 'runquery');

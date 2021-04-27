@@ -1,4 +1,9 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -692,6 +697,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'UI:RunQuery:Title' => 'iTop - Оценка запросов OQL',
 	'UI:RunQuery:QueryExamples' => 'Примеры запросов',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Цель',
 	'UI:RunQuery:HeaderPurpose+' => 'Объяснение запросов',
 	'UI:RunQuery:HeaderOQLExpression' => 'Выражение OQL',

@@ -708,6 +708,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples' => 'Query Examples',
+	'UI:RunQuery:QueryResults' => 'Query Results',
 	'UI:RunQuery:HeaderPurpose' => 'Purpose',
 	'UI:RunQuery:HeaderPurpose+' => 'Explanation about the query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Expression',

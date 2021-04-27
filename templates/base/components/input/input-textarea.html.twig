@@ -9,6 +9,7 @@
                       data-{{ sName }}="{{ sValue }}"
                   {% endfor %}
               {% endif %}
+            {% if oUIBlock.GetAdditionalCSSClassesAsString() %} class="{{ oUIBlock.GetAdditionalCSSClassesAsString() }}"{% endif %}
             {% if oUIBlock.GetPlaceHolder() %}  placeholder="{{ oUIBlock.GetPlaceHolder() }}" {% endif %}
 	>{{ oUIBlock.GetValue()|raw }}</textarea>
 {% endblock %}
