@@ -19,6 +19,9 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	protected $m_oTabs;
 	private $m_sMenu; // If set, then the menu will be updated
+	/** @var string Scripts to load entries of dictionary */
+	protected $s_dict_scripts;
+
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
 
 	/**
@@ -154,6 +157,24 @@ class AjaxPage extends WebPage implements iTabbedPage
 			header($s_header);
 		}
 
+		// - Generate necessary dict. files
+		// Dict entries for JS
+		if ($this->bAddJSDict) {
+			if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0)) {
+				if (class_exists('Dict')) {
+					// The dictionary may not be available for example during the setup...
+					// Create a specific dictionary file and load it as a JS script
+					$sSignature = $this->get_dict_signature();
+					$sJSFileName = utils::GetCachePath().$sSignature.'.js';
+					if (!file_exists($sJSFileName) && is_writable(utils::GetCachePath())) {
+						file_put_contents($sJSFileName, $this->get_dict_file_content());
+					}
+					// Load the dictionary as the first javascript file, so that other JS file benefit from the translations
+					$this->s_dict_scripts = utils::GetAbsoluteUrlAppRoot().'pages/ajax.document.php?operation=dict&s='.$sSignature;
+				}
+			}
+		}
+
 		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
 
 		// Render the blocks
@@ -185,6 +206,7 @@ EOF
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
+			'sDictScript' => $this->s_dict_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
 			'aJsInlineOnInit' => $this->a_init_scripts,
 			'bEscapeContent' => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
