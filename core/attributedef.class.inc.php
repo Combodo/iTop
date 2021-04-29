@@ -5,7 +5,9 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
+use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -12622,19 +12624,17 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
 	{
-		try
-		{
+		try {
 			$oValue = $oHostObject->Get($this->GetCode());
 			$oHandler = $this->GetHandler($oValue->GetValues());
 			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
-		} catch (Exception $e) {
-			$oForm = new \Combodo\iTop\Form\Form('');
-			$oField = new \Combodo\iTop\Form\Field\StringField('');
-			$oField->SetReadOnly(true);
-			$oField->SetLabel('Custom field error: ');
-			$oField->SetCurrentValue($e->getMessage());
+		}
+		catch (Exception $e) {
+			$oForm = new Form('');
+			$oField = new LabelField('');
+			$oField->SetLabel('Custom field error: '.$e->getMessage());
 			$oForm->AddField($oField);
 			$oForm->Finalize();
 		}

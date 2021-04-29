@@ -64,24 +64,27 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					{
 						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
 						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
+					} else {
+						$oOutput->AddHtml('<input class="form-field-data datetime-pick" size="15" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES,
+								'UTF-8').'" size="30"/>');
 					}
-					else
-					{
-						$oOutput->AddHtml('<input class="form-field-data datetime-pick" size="15" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
-					}
+					$oOutput->AddHtml('<span class="form_validation"></span>');
+					$oOutput->AddHtml('</td>');
+					break;
+
+				case 'Combodo\\iTop\\Form\\Field\\LabelField':
+					$oOutput->AddHtml('<td class="form-field-content">');
+					$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
 					$oOutput->AddHtml('<span class="form_validation"></span>');
 					$oOutput->AddHtml('</td>');
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
 					$oOutput->AddHtml('<td class="form-field-content">');
-					if ($this->oField->GetReadOnly())
-					{
-						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
+					if ($this->oField->GetReadOnly()) {
+						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'"/>');
 						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
-					}
-					else
-					{
+					} else {
 						$oOutput->AddHtml('<input class="form-field-data" type="text" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
 					}
 					$oOutput->AddHtml('<span class="form_validation"></span>');
@@ -92,11 +95,9 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
 					$oOutput->AddHtml('<td class="form-field-content">');
-					if ($this->oField->GetReadOnly())
-					{
-						$oOutput->AddHtml('<textarea disabled="disabled" id="' . $this->oField->GetGlobalId() . '" class="form-field-data resizable" rows="8" cols="40">' . $this->oField->GetCurrentValue() . '</textarea>');
-					}
-					else
+					if ($this->oField->GetReadOnly()) {
+						$oOutput->AddHtml('<textarea disabled="disabled" id="'.$this->oField->GetGlobalId().'" class="form-field-data resizable" rows="8" cols="40">'.$this->oField->GetCurrentValue().'</textarea>');
+					} else
 					{
 						$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" class="form-field-data resizable" rows="8" cols="40">' . $this->oField->GetCurrentValue() . '</textarea>');
 						// Some additional stuff if we are displaying it with a rich editor

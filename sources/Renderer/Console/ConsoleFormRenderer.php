@@ -29,6 +29,7 @@ class ConsoleFormRenderer extends FormRenderer
 	{
 		parent::__construct($oForm);
 		$this->AddSupportedField('HiddenField', 'ConsoleSimpleFieldRenderer');
+		$this->AddSupportedField('LabelField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('StringField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('SelectField', 'ConsoleSimpleFieldRenderer');
 		$this->AddSupportedField('TextAreaField', 'ConsoleSimpleFieldRenderer');
