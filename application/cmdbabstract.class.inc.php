@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -738,29 +739,25 @@ HTML
 				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
 				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
 			}
-			if (array_key_exists($sAttCode, $aRedundancySettings))
-			{
-				foreach($aRedundancySettings[$sAttCode] as $oRedundancyAttDef)
-				{
+			if (array_key_exists($sAttCode, $aRedundancySettings)) {
+				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef) {
 					$sRedundancyAttCode = $oRedundancyAttDef->GetCode();
 					$sValue = $this->Get($sRedundancyAttCode);
 					$iRedundancyFlags = $this->GetFormAttributeFlags($sRedundancyAttCode);
 					$bRedundancyReadOnly = ($iRedundancyFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
 
-					$oPage->add('<fieldset>');
-					$oPage->add('<legend>'.$oRedundancyAttDef->GetLabel().'</legend>');
-					if ($bEditMode && (!$bRedundancyReadOnly))
-					{
+					$oFieldSet = FieldSetUIBlockFactory::MakeStandard($oRedundancyAttDef->GetLabel());
+					$oFieldSet->AddCSSClass('mt-5');
+					$oPage->AddSubBlock($oFieldSet);
+
+					if ($bEditMode && (!$bRedundancyReadOnly)) {
 						$sInputId = $this->m_iFormId.'_'.$sRedundancyAttCode;
-						$oPage->add("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
+						$oFieldSet->AddSubBlock(new Html("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
 								$sRedundancyAttCode, $oRedundancyAttDef, $sValue, '', $sInputId, '', $iFlags,
-								$aArgs).'</span>');
+								$aArgs).'</span>'));
+					} else {
+						$oFieldSet->AddSubBlock(new Html($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId)));
 					}
-					else
-					{
-						$oPage->add($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId));
-					}
-					$oPage->add('</fieldset>');
 				}
 			}
 		}
@@ -2246,16 +2243,10 @@ HTML;
 					break;
 
 				case 'RedundancySetting':
-					$sHTMLValue = '<table>';
-					$sHTMLValue .= '<tr>';
-					$sHTMLValue .= '<td>';
 					$sHTMLValue .= '<div id="'.$iId.'">';
 					$sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
 					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sValidationSpan.$sReloadSpan.'</td>';
-					$sHTMLValue .= '</tr>';
-					$sHTMLValue .= '</table>';
+					$sHTMLValue .= '<div>'.$sValidationSpan.$sReloadSpan.'</div>';
 					$oPage->add_ready_script("$('#$iId :input').on('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
 					break;
 
