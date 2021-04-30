@@ -601,6 +601,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'DBObjectSetComparator' => __DIR__ . '/../..' . '/core/dbobjectset.class.php',
         'DBProperty' => __DIR__ . '/../..' . '/core/dbproperty.class.inc.php',
         'DBSearch' => __DIR__ . '/../..' . '/core/dbsearch.class.php',
+        'DBSearchHelper' => __DIR__ . '/../..' . '/application/DBSearchHelper.php',
         'DBUnionSearch' => __DIR__ . '/../..' . '/core/dbunionsearch.class.php',
         'DailyRotatingLogFileNameBuilder' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'Dashboard' => __DIR__ . '/../..' . '/application/dashboard.class.inc.php',
