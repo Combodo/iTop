@@ -1,5 +1,5 @@
 <?php
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -8,6 +8,8 @@ namespace Combodo\iTop\Application\TwigBase\Twig;
 
 use Combodo\iTop\Application\TwigBase\UI\UIBlockExtension;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use CoreTemplateException;
 use IssueLog;
@@ -109,7 +111,19 @@ class TwigHelper
 	public static function RenderIntoPage(WebPage $oPage, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);
+		$oTwig->addGlobal('UIBlockParent', [$oPage]);
+		$oTwig->addGlobal('oPage', $oPage);
 		$oPage->add(self::RenderTemplate($oTwig, $aParams, $sTemplateName, $sDefaultType));
+		$oPage->add_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'js'));
+		$oPage->add_ready_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'ready.js'));
+	}
+
+	public static function RenderIntoBlock(WebPage $oPage, UIBlock $oBlock, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
+	{
+		$oTwig = self::GetTwigEnvironment($sViewPath);
+		$oTwig->addGlobal('UIBlockParent', [$oBlock]);
+		$oTwig->addGlobal('oPage', $oPage);
+		$oBlock->AddSubBlock(new Html(self::RenderTemplate($oTwig, $aParams, $sTemplateName, $sDefaultType)));
 		$oPage->add_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'js'));
 		$oPage->add_ready_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'ready.js'));
 	}
