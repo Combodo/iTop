@@ -2431,9 +2431,12 @@ abstract class DBObject implements iDisplay
 		return $this->m_aCurrValues;
 	}
 
-	public function GetCurrentValues()
+	/*
+	 * return array
+	 */
+	public function GetLoadedAttributes()
 	{
-		return $this->m_aCurrValues;
+		return array_keys($this->m_aLoadedAtt);
 	}
 
 	/**
