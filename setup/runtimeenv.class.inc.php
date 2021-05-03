@@ -735,48 +735,49 @@ class RunTimeEnvironment
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
-	
-		
+
+
 		// Record installed modules and extensions
 		//
 		$aAvailableExtensions = array();
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
-		if (!empty($aSelectedModuleCodes)) {
-			foreach ($aSelectedModuleCodes as $sModuleId) {
-				$aModuleData = $aAvailableModules[$sModuleId];
-				$sName = $sModuleId;
-				$sVersion = $aModuleData['version_code'];
-				$aComments = array();
-				$aComments[] = $sShortComment;
-				if ($aModuleData['mandatory']) {
-					$aComments[] = 'Mandatory';
-				} else {
-					$aComments[] = 'Optional';
-				}
-				if ($aModuleData['visible']) {
-					$aComments[] = 'Visible (during the setup)';
-				} else {
-					$aComments[] = 'Hidden (selected automatically)';
-				}
-
-				$aDependencies = $aModuleData['dependencies'];
-				if (!empty($aDependencies)) {
-					foreach ($aDependencies as $sDependOn) {
-						$aComments[] = "Depends on module: $sDependOn";
-					}
-				}
-				$sComment = implode("\n", $aComments);
-
-				$oInstallRec = new ModuleInstallation();
-				$oInstallRec->Set('name', $sName);
-				$oInstallRec->Set('version', $sVersion);
-				$oInstallRec->Set('comment', $sComment);
-				$oInstallRec->Set('parent_id', $iMainItopRecord);
-				$oInstallRec->Set('installed', $iInstallationTime);
-				$oInstallRec->DBInsertNoReload();
+		foreach ($aSelectedModuleCodes as $sModuleId) {
+			if (!array_key_exists($sModuleId, $aAvailableModules)) {
+				continue;
 			}
+			$aModuleData = $aAvailableModules[$sModuleId];
+			$sName = $sModuleId;
+			$sVersion = $aModuleData['version_code'];
+			$aComments = array();
+			$aComments[] = $sShortComment;
+			if ($aModuleData['mandatory']) {
+				$aComments[] = 'Mandatory';
+			} else {
+				$aComments[] = 'Optional';
+			}
+			if ($aModuleData['visible']) {
+				$aComments[] = 'Visible (during the setup)';
+			} else {
+				$aComments[] = 'Hidden (selected automatically)';
+			}
+
+			$aDependencies = $aModuleData['dependencies'];
+			if (!empty($aDependencies)) {
+				foreach ($aDependencies as $sDependOn) {
+					$aComments[] = "Depends on module: $sDependOn";
+				}
+			}
+			$sComment = implode("\n", $aComments);
+
+			$oInstallRec = new ModuleInstallation();
+			$oInstallRec->Set('name', $sName);
+			$oInstallRec->Set('version', $sVersion);
+			$oInstallRec->Set('comment', $sComment);
+			$oInstallRec->Set('parent_id', $iMainItopRecord);
+			$oInstallRec->Set('installed', $iInstallationTime);
+			$oInstallRec->DBInsertNoReload();
 		}
-		
+
 		if ($this->oExtensionsMap)
 		{
 			// Mark as chosen the selected extensions code passed to us
