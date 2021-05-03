@@ -391,6 +391,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#ac_dlg_' + this.id).dialog('close');
 		$('#label_' + this.id).addClass('ac_dlg_loading');
 
+
+
 		// Query the server again to get the display name of the selected object
 		var theMap = {
 			sTargetClass: me.sTargetClass,
@@ -415,7 +417,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				var newValue;
 				if ($('#label_'+me.id).length) {
 					newValue = iObjectId;
+					$('#'+me.id).val(iObjectId);
 					$('#label_'+me.id).val(txt);
+					$('#label_'+me.id).data('selected_value', txt);
 					$('#label_'+me.id).removeClass('ac_dlg_loading');
 				} else {
 					// N°3227 if no label_* field present, we just want to pick the attribute value !
