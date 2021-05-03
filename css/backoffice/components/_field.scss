@@ -128,6 +128,11 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   > input[type="checkbox"] {
     margin-left: 5px;
+    float: right;
+  }
+
+  > .multi_values, > .mono_value {
+    float: right;
   }
 }
 
