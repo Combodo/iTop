@@ -1,3 +1,8 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-input-text--min-height: 12rem !default;
 $ibo-input-text--padding-x: 12px !default;
 $ibo-input-text--padding-y: 10px !default;
@@ -10,4 +15,9 @@ $ibo-input-text--padding-y: 10px !default;
 .ibo-input-text--export {
   width: 100%;
   min-height: 15em;
+}
+
+.ibo-queryoql {
+  font-family: $family-code;
+  font-size: $ibo-font-size-150;
 }
