@@ -37,7 +37,7 @@ use URLPopupMenuItem;
 class PopoverMenuItemFactory
 {
 	/**
-	 * Make a standard NavigationMenu layout for backoffice pages
+	 * Make a Pop*over*MenuItem (3.0 UI) from a Pop*up*MenuItem (Extensions API)
 	 *
 	 * @param \ApplicationPopupMenuItem $oItem
 	 *
@@ -64,5 +64,75 @@ class PopoverMenuItemFactory
 		$sTargetClass = $sNamespace.$sTargetClass;
 
 		return new $sTargetClass($oItem);
+	}
+
+	/**
+	 * Make a PopoverMenuItem from an action prepared by \DisplayBlock
+	 *
+	 * @param string $sActionId
+	 * @param array $aActionData
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem
+	 * @throws \Exception
+	 */
+	public static function MakeFromDisplayBlockAction(string $sActionId, array $aActionData)
+	{
+		$aRefactoredItem = [
+			'uid' => $sActionId,
+			'css_classes' => isset($aActionData['css_classes']) ? $aActionData['css_classes'] : [],
+			'on_click' => isset($aActionData['onclick']) ? $aActionData['onclick'] : '',
+			'target' => isset($aActionData['target']) ? $aActionData['target'] : '',
+			'url' => $aActionData['url'],
+			'label' => $aActionData['label'],
+			'icon_class' => isset($aActionData['icon_class']) ? $aActionData['icon_class'] : '',
+			'tooltip' => isset($aActionData['tooltip']) ? $aActionData['tooltip'] : '',
+		];
+
+		if (!empty($aRefactoredItem['on_click'])) {
+			// JS
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new JSPopupMenuItem(
+					$aRefactoredItem['uid'],
+					$aRefactoredItem['label'],
+					$aRefactoredItem['on_click'])
+			);
+		} elseif (!empty($aRefactoredItem['url'])) {
+			// URL
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+				new URLPopupMenuItem(
+					$aRefactoredItem['uid'],
+					$aRefactoredItem['label'],
+					$aRefactoredItem['url'],
+					$aRefactoredItem['target'])
+			);
+		} else {
+			// Separator
+			$oPopoverMenuItem = PopoverMenuItemFactory::MakeSeparator();
+		}
+
+		if (!empty($aRefactoredItem['css_classes'])) {
+			$oPopoverMenuItem->SetCssClasses($aRefactoredItem['css_classes']);
+		}
+		if (!empty($aRefactoredItem['icon_class'])) {
+			$oPopoverMenuItem->SetIconClass($aRefactoredItem['icon_class']);
+		}
+		if (!empty($aRefactoredItem['tooltip'])) {
+			$oPopoverMenuItem->SetTooltip($aRefactoredItem['tooltip']);
+		}
+
+		return $oPopoverMenuItem;
+	}
+
+	/**
+	 * Make a separator item for the popover menu
+	 *
+	 * Note: You don't need to add separators manually if you put the items in dedicated sections of the menu
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\SeparatorPopoverMenuItem
+	 * @since 3.0.0
+	 */
+	public static function MakeSeparator()
+	{
+		return new SeparatorPopoverMenuItem(new SeparatorPopupMenuItem());
 	}
 }
