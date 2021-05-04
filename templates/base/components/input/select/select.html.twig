@@ -4,6 +4,7 @@
 {% block iboInput %}
     <select id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}"
             {% if oUIBlock.GetSubmitOnChange() %}onChange="this.form.submit();"{% endif %}
+            {% if oUIBlock.IsMultiple() %}multiple{% endif %}
             class="{% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
     >
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}

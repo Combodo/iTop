@@ -20,6 +20,8 @@ class TextArea extends AbstractInput
 	protected $iCols;
 	/** @var int */
 	protected $iRows;
+	/** @var bool */
+	protected $bIsDisabled;
 
 	public function __construct(string $sName, ?string $sValue, ?string $sId = null, ?int $iCols = null, ?int $iRows = null)
 	{
@@ -29,6 +31,7 @@ class TextArea extends AbstractInput
 		$this->sValue = $sValue;
 		$this->iCols = $iCols;
 		$this->iRows = $iRows;
+		$this->bIsDisabled = false;
 	}
 
 	public function GetCols(): ?int
@@ -64,4 +67,22 @@ class TextArea extends AbstractInput
 
 		return $this;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsDisabled(): bool
+	{
+		return $this->bIsDisabled;
+	}
+
+	/**
+	 * @param bool $bIsDisabled
+	 */
+	public function SetIsDisabled(bool $bIsDisabled): void
+	{
+		$this->bIsDisabled = $bIsDisabled;
+	}
+
+
 }

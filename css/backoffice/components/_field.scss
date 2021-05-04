@@ -49,6 +49,14 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     max-width: initial;
     width: 100%;
   }
+  .ibo-field-small .ibo-field--label {
+    display: table-cell;
+    vertical-align: top;
+    padding-right: 10px;
+    min-width: 100px;
+    max-width: 145px;
+    width: 30%;
+  }
 }
 .ibo-field-small {
   display: table;

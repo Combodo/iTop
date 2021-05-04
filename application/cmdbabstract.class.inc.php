@@ -2251,17 +2251,9 @@ HTML;
 					break;
 
 				case 'CustomFields':
-					$sHTMLValue = '<table>';
-					$sHTMLValue .= '<tr>';
-					$sHTMLValue .= '<td>';
 					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
 					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sReloadSpan.'</td>'; // No validation span for this one: it does handle its own validation!
-					$sHTMLValue .= '</tr>';
-					$sHTMLValue .= '</table>';
+					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
 					$oForm = $value->GetForm($sFormPrefix);
