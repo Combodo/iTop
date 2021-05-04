@@ -315,6 +315,7 @@ class AjaxRenderController
 			foreach ($aClassAliases as $sAlias => $sClass) {
 				if (isset($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
+					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
 					foreach ($aObject[$sAlias]->GetLoadedAttributes() as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 					}

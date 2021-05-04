@@ -339,7 +339,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
 								'attribute_label' => MetaModel::GetName($sClassName),
-								'render' => $sDisplayFunction,
+								'render' => "return row['".$sClassAlias."/hyperlink'];",
 							];
 
 						}
@@ -574,7 +574,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 									'attribute_code' => $sAttCode,
 									'attribute_type' => '_key_',
 									'attribute_label' => $aData['alias'],
-									"render" => $sRender,
+									"render" => "return row['".$sClassAlias."/hyperlink'];",
 								];
 							}
 						} else {
@@ -714,7 +714,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							$sDisplay = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
 						}
 						$aColumnDefinition["render"] = [
-							"display" => $sDisplay,
+							"display" =>  "return row['".$sClassAlias."/hyperlink'];",
 							"_" => $sClassAlias."/".$sAttCode,
 						];
 					} else {
