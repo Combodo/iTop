@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\Popov
 use Dict;
 use JSPopupMenuItem;
 use MetaModel;
+use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
 use UserRights;
 use utils;
@@ -200,53 +201,47 @@ class PopoverMenuFactory
 		return $aItems;
 	}
 
-	public static function MakeMenuForActions(string $sId, array $aMenuItems): PopoverMenu
+	/**
+	 * Make a menu for the $aActions as prepared by \DisplayBlock
+	 *
+	 * @param string $sId
+	 * @param array $aActions
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu
+	 * @throws \Exception
+	 */
+	public static function MakeMenuForActions(string $sId, array $aActions): PopoverMenu
 	{
+		// Prepare sections and actions
+		$iSectionIndex = 0;
+		$aMenuItems = [];
+		foreach ($aActions as $sActionId => $aAction) {
+			// Skip separators as they are "transformed" into sections
+			if (empty($aAction['url'])) {
+				$iSectionIndex++;
+				continue;
+			}
+
+			$aMenuItems["{$sId}_section_{$iSectionIndex}"][$sActionId] = $aAction;
+		}
+
+		// Prepare actual menu
 		$oMenu = new PopoverMenu($sId);
 
 		$bFirst = true;
 		foreach ($aMenuItems as $sSection => $aActions) {
-			$aItems = [];
+			$oMenu->AddSection($sSection);
 
 			if (!$bFirst) {
-				$aItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-					new \SeparatorPopupMenuItem()
-				);
+				$oMenu->AddItem($sSection, PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
+					new SeparatorPopupMenuItem()
+				));
 			}
 
-			foreach ($aActions as $aAction) {
-				if (!empty($aAction['on_click'])) {
-					// JS
-					$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-						new JSPopupMenuItem(
-							$aAction['uid'],
-							$aAction['label'],
-							$aAction['on_click'])
-					);
-				} else {
-					// URL
-					$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-						new URLPopupMenuItem(
-							$aAction['uid'],
-							$aAction['label'],
-							$aAction['url'],
-							$aAction['target'])
-					);
-				}
-				if (!empty($aAction['css_classes'])) {
-					$oPopoverMenuItem->SetCssClasses($aAction['css_classes']);
-				}
-				if (!empty($aAction['icon_class'])) {
-					$oPopoverMenuItem->SetIconClass($aAction['icon_class']);
-				}
-				if (!empty($aAction['tooltip'])) {
-					$oPopoverMenuItem->SetTooltip($aAction['tooltip']);
-				}
-				$aItems[] = $oPopoverMenuItem;
+			foreach ($aActions as $sActionId => $aAction) {
+				$oMenu->AddItem($sSection, PopoverMenuItemFactory::MakeFromDisplayBlockAction($sActionId, $aAction));
 			}
 
-			$oMenu->AddSection($sSection)
-				->SetItems($sSection, $aItems);
 			$bFirst = false;
 		}
 

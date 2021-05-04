@@ -1366,27 +1366,7 @@ class WebPage implements Page
 			return null;
 		}
 
-		$iSectionIndex = 0;
-		$aMenuItems = [];
-		foreach ($aActions as $sActionId => $aAction) {
-			if (empty($aAction['url'])) {
-				$iSectionIndex++;
-				continue;
-			}
-
-			$aMenuItems["{$sId}_section_{$iSectionIndex}"][] = [
-				'uid' => $sActionId,
-				'css_classes' => isset($aAction['css_classes']) ? $aAction['css_classes'] : [],
-				'on_click' => isset($aAction['onclick']) ? $aAction['onclick'] : '',
-				'target' => isset($aAction['target']) ? $aAction['target'] : '',
-				'url' => $aAction['url'],
-				'label' => $aAction['label'],
-				'icon_class' => isset($aAction['icon_class']) ? $aAction['icon_class'] : '',
-				'tooltip' => isset($aAction['tooltip']) ? $aAction['tooltip'] : '',
-			];
-		}
-
-		return PopoverMenuFactory::MakeMenuForActions($sId, $aMenuItems);
+		return PopoverMenuFactory::MakeMenuForActions($sId, $aActions);
 	}
 
 	/**
