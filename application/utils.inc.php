@@ -2775,7 +2775,7 @@ HTML;
 	{
 		if (! defined('ITOP_REVISION')) {
 			//defensive behaviour: by default we are not in dev environment
-			//can happen even in production (unattended install for example) or with exotical use of iTop
+			//can happen even in production (unattended install for example) or with exotic use of iTop
 			return false;
 		}
 		
