@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
 
@@ -1310,12 +1311,15 @@ class utils
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
-		$oPage->AddUiBlock(static::GetPopupMenuItemsBlock($iMenuId, $param, $aActions, $sDataTableId));
+		$oBlock = new UIContentBlock();
+		static::GetPopupMenuItemsBlock($oBlock, $iMenuId, $param, $aActions, $sDataTableId);
+		$oPage->AddUiBlock($oBlock);
 	}
 
 	/**
 	 * Merge standard menu items with plugin provided menus items
 	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oContainerBlock The UIBlock containing the menu
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions
@@ -1325,9 +1329,8 @@ class utils
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public static function GetPopupMenuItemsBlock($iMenuId, $param, &$aActions, $sDataTableId = null)
+	public static function GetPopupMenuItemsBlock(iUIBlock &$oContainerBlock, $iMenuId, $param, &$aActions, $sDataTableId = null)
 	{
-		$oBlock = new UIContentBlock();
 		// 1st - add standard built-in menu items
 		// 
 		switch($iMenuId)
@@ -1341,9 +1344,9 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
 			$aResult = array();
 			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
@@ -1376,12 +1379,12 @@ class utils
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oBlock->AddCssFileRelPath('css/dragtable.css');
-			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
@@ -1449,13 +1452,11 @@ class utils
 					
 					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
 					{
-						$oBlock->AddJsFileRelPath($sLinkedScript);
+						$oContainerBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
-
-		return $oBlock;
 	}
 
 	/**
