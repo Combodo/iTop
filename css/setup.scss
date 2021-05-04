@@ -341,6 +341,10 @@ body {
   margin-left: auto;
   margin-right: auto;
 
+  pre {
+    white-space: pre-wrap;
+  }
+
   .ibo-title {
     @extend %ibo-vertically-centered-content;
 

@@ -706,12 +706,12 @@ class WizStepLicense extends WizardStep
     {
         $aLicenses = SetupUtils::GetLicenses();
 		$oPage->add_style(
-<<<EOF
-fieldset ul{
+<<<CSS
+fieldset ul {
 	max-height: 18em;
 	overflow: auto;
 }
-EOF
+CSS
 		);
 
 		$oPage->add('<h2>Licenses agreements for the components of '.ITOP_APPLICATION.'</h2>');
