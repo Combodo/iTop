@@ -47,8 +47,7 @@ $ibo-code--padding: 1.25rem 1.5rem !default;
 }
 
 .ibo-code {
-  font-family: $family-code;
-  font-size: $ibo-font-size-150;
   background-color: $ibo-code--background-color;
   padding: $ibo-code--padding;
+  @extend %ibo-font-code-150;
 }

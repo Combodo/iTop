@@ -18,6 +18,5 @@ $ibo-input-text--padding-y: 10px !default;
 }
 
 .ibo-queryoql {
-  font-family: $family-code;
-  font-size: $ibo-font-size-150;
+  @extend %ibo-font-code-150;
 }
