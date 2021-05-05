@@ -31,29 +31,25 @@ class PluginManager
 
 	/**
 	 * @param string $sInterface
-	 * @param bool $bCanInstantiatePlugins internal use, let this value to true
 	 * @param string|null $sFilterInstanceOf [optional] if given, only instance of this string will be returned
+	 * @param bool $bCanInstantiatePlugins internal use, let this value to true
 	 *
 	 * @return array classes=>instance implementing the given interface
 	 */
 	public function EnumPlugins($sInterface, $sFilterInstanceOf = null, $bCanInstantiatePlugins = true)
 	{
 		$aPlugins = array();
-		if (array_key_exists($sInterface, self::$m_aExtensionClasses))
-		{
-			$aAllPlugins = array_values(self::$m_aExtensionClasses[$sInterface]);
+		if (array_key_exists($sInterface, self::$m_aExtensionClasses)) {
+			$aAllPlugins = self::$m_aExtensionClasses[$sInterface];
 
-			if (is_null($sFilterInstanceOf))
-			{
+			if (is_null($sFilterInstanceOf)) {
 				return $aAllPlugins;
 			};
 
 			$aPlugins = array();
-			foreach ($aAllPlugins as $instance)
-			{
-				if ($instance instanceof $sFilterInstanceOf)
-				{
-					$aPlugins[] = $instance;
+			foreach ($aAllPlugins as $sPluginClass => $instance) {
+				if ($instance instanceof $sFilterInstanceOf) {
+					$aPlugins[$sPluginClass] = $instance;
 				}
 			}
 		}
