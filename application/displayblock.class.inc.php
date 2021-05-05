@@ -2127,18 +2127,17 @@ class MenuBlock extends DisplayBlock
 			//it's easier just display configure this list and MENU_OBJLIST_TOOLKIT
 		}
 		$param = null;
-		$iMenuId = null;
 		if (is_null($sId)) {
 			$sId = uniqid();
 		}
 
 		// New extensions based on iPopupMenuItem interface
+		$oPopupMenuItemsBlock = new UIContentBlock();
 		switch ($this->m_sStyle) {
 			case 'list':
 			case 'listInObject':
 				$oSet->Rewind();
 				$param = $oSet;
-				$iMenuId = iPopupMenuExtension::MENU_OBJLIST_ACTIONS;
 				$bToolkitMenu = true;
 				if (isset($aExtraParams['toolkit_menu'])) {
 					$bToolkitMenu = (bool)$aExtraParams['toolkit_menu'];
@@ -2147,18 +2146,17 @@ class MenuBlock extends DisplayBlock
 					$sLabel = Dict::S('UI:ConfigureThisList');
 					$aRegularActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open'); return false;"];
 				}
-			break;
+				utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJLIST_ACTIONS, $param, $aRegularActions, $sId);
+				utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aToolkitActions, $sId);
+				break;
 
 			case 'details':
 				$oSet->Rewind();
 				$param = $oSet->Fetch();
-				$iMenuId = iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS;
+				utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS, $param, $aRegularActions, $sId);
 				break;
 
 		}
-		$oPopupMenuItemsBlock = new UIContentBlock();
-		utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, $iMenuId, $param, $aRegularActions, $sId);
-		utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aToolkitActions, $sId);
 		if ($oPopupMenuItemsBlock->HasSubBlocks()) {
 			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
 		}
