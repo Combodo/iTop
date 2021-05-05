@@ -16,9 +16,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-$ibo-code--background-color: $ibo-color-white-200 !default;
-$ibo-code--padding: 1.25rem 1.5rem !default;
-
 /* Note: We have to wrap it in the ID in order to overload its rules, otherwise, the ID takes over the simple CSS class... */
 #ibo-center-container {
   &.ibo-center-container--with-side-content {
@@ -44,10 +41,4 @@ $ibo-code--padding: 1.25rem 1.5rem !default;
 #ibo-side-content {
   background-color: $ibo-content-block--background-color;
   border-left: $ibo-content-block--border;
-}
-
-.ibo-code {
-  background-color: $ibo-code--background-color;
-  padding: $ibo-code--padding;
-  @extend %ibo-font-code-150;
 }

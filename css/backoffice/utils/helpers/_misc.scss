@@ -16,6 +16,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+/* SCSS variables */
+$ibo-is-code--background-color: $ibo-color-white-200 !default;
+$ibo-is-code--padding: 1.25rem 1.5rem !default;
+
 /**************/
 /* Visibility */
 /**************/
@@ -114,6 +118,12 @@ body.ibo-has-fullscreen-descendant {
   &:active {
     color: inherit;
   }
+}
+
+.ibo-is-code {
+  background-color: $ibo-is-code--background-color;
+  padding: $ibo-is-code--padding;
+  @extend %ibo-font-code-150;
 }
 
 %ibo-medallion {
