@@ -1,0 +1,38 @@
+/*!
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+//==========================================================================
+// Here are the rules that make standard HTML tags fallback to the theme
+// styles so then can be displayed correctly even if they don't have any
+// CSS classes
+//
+// Be very specific about what each piece of code is doing
+// ==========================================================================
+
+// Rules:
+// ---------------
+//   1. If it’s a hack, it goes in _shame.scss not here.
+//   2. See rule #1
+
+fieldset {
+  @extend .ibo-fieldset;
+}
+
+legend {
+  @extend .ibo-fieldset-legend;
+}
