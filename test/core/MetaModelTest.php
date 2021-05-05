@@ -206,27 +206,24 @@ class MetaModelTest extends ItopDataTestCase
 		$pluginInstances = $m_PluginManager->EnumPlugins($interface, $sFilterInstanceOf);
 
 		$this->assertCount(sizeof($expectedResults), $pluginInstances);
-		foreach($pluginInstances as $pluginInstance)
-		{
-			if ($sFilterInstanceOf!==null)
-			{
+		foreach ($pluginInstances as $pluginInstance) {
+			if ($sFilterInstanceOf !== null) {
 				$this->assertTrue($pluginInstance instanceof $sFilterInstanceOf);
 			}
 		}
-		$index=0;
-		foreach($expectedResults as $expectedInterface)
-		{
-			$this->assertTrue(is_a($pluginInstances[$index], $expectedInterface));
+		$index = 0;
+		foreach ($expectedResults as $expectedPHPClass => $expectedInterface) {
+			$this->assertTrue(is_a($pluginInstances[$expectedPHPClass], $expectedInterface));
 			$index++;
 		}
 	}
 
 	public function enumPluginsProvider(){
 		$aInterfaces = [
-			"empty conf" => [ 0, [], [], [], 'Wizzard'],
-			"simple instance retrieval" => [ 1, [Gryffindor::class], [ 'Wizzard' => [ Gryffindor::class]], [], 'Wizzard'],
-			"check instanceof parameter" => [ 1, [Gryffindor::class, Slytherin::class], [ 'Wizzard' => [ Gryffindor::class, Slytherin::class]], [], 'Wizzard'],
-			"try to retrieve a non instanciable object" => [ 1, [Gryffindor::class], [ 'Wizzard' => [ Gryffindor::class, Muggle::class]], [], 'Wizzard', Gryffindor::class ],
+			"empty conf" => [0, [], [], [], 'Wizzard'],
+			"simple instance retrieval" => [1, [Gryffindor::class => Gryffindor::class], ['Wizzard' => [Gryffindor::class]], [], 'Wizzard'],
+			"check instanceof parameter" => [1, [Gryffindor::class => Gryffindor::class, Slytherin::class => Slytherin::class], ['Wizzard' => [Gryffindor::class, Slytherin::class]], [], 'Wizzard'],
+			"try to retrieve a non instanciable object" => [1, [Gryffindor::class => Gryffindor::class], ['Wizzard' => [Gryffindor::class, Muggle::class]], [], 'Wizzard', Gryffindor::class],
 		];
 		return $aInterfaces;
 	}
