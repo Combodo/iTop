@@ -173,7 +173,7 @@ try
 				{
 					if (!array_key_exists('checked', $aData)) {
 						// could happen if max_input_vars too low to handle JSON volume
-						$aData['checked'] = false;
+						$aData['checked'] = 'false';
 					}
 					if ($aData['checked'] == 'true')
 					{
