@@ -332,6 +332,17 @@ class SetupUtils
 			$aResult[] = new CheckResult(CheckResult::INFO,  "Loaded php.ini files: $sPhpIniFile");
 		}
 
+		$iMaxInputVarsCurrent = ini_get('max_input_vars');
+		$iMaxInputVarsRecommended = 5000;
+		if (!is_numeric($iMaxInputVarsCurrent)) {
+			$iMaxInputVarsCurrent = 0;
+		}
+		if ($iMaxInputVarsCurrent < $iMaxInputVarsRecommended) {
+			$aResult[] = new CheckResult(CheckResult::WARNING,  "max_input_vars is set to $iMaxInputVarsCurrent : this is below recommended value of $iMaxInputVarsRecommended");
+		} else {
+			$aResult[] = new CheckResult(CheckResult::INFO,  "max_input_vars is set to $iMaxInputVarsCurrent (recommended value is $iMaxInputVarsRecommended)");
+		}
+
 		// Check the configuration of the sessions persistence, since this is critical for the authentication
 		if (ini_get('session.save_handler') == 'files')
 		{
