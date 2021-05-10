@@ -31,7 +31,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 
 	/**
 	 * @covers       iTopDesignFormat::Convert
-	 * @dataProvider MigrationMethodProvider
+	 * @dataProvider ConvertProvider
 	 *
 	 * @param string $sTargetVersion
 	 * @param string $sInputXmlFileName example "1.7_to_1.6.input"
@@ -39,10 +39,11 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	 *
 	 * @throws \Exception
 	 */
-	public function testMigrationMethod($sTargetVersion, $sInputXmlFileName, $sExpectedXmlFileName)
+	public function testConvert($sTargetVersion, $sXmlFileName)
 	{
-		$sInputXml = $this->GetFileContent($sInputXmlFileName);
-		$sExpectedXml = $this->GetFileContent($sExpectedXmlFileName);
+		$sSamplesRelDirPath = 'Convert-samples/';
+		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
+		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
 
 		$oInputDocument = new DOMDocument();
 		libxml_clear_errors();
@@ -56,19 +57,19 @@ class TestForITopDesignFormatClass extends ItopTestCase
 		$this->assertEquals($sExpectedXml, $sConvertedXml);
 	}
 
+	public function ConvertProvider()
+	{
+		return array(
+			'1.7 to 1.6' => array('1.6', '1.7_to_1.6'),
+			'1.7 to 3.0' => array('3.0', '1.7_to_3.0'),
+			'3.0 to 1.7' => array('1.7', '3.0_to_1.7'),
+		);
+	}
+
 	private function GetFileContent($sFileName)
 	{
 		$sCurrentPath = __DIR__;
 
 		return file_get_contents($sCurrentPath.DIRECTORY_SEPARATOR.$sFileName.'.xml');
-	}
-
-	public function MigrationMethodProvider()
-	{
-		return array(
-			'1.7 to 1.6' => array('1.6', '1.7_to_1.6.input', '1.7_to_1.6.expected'),
-			'1.7 to 3.0' => array('3.0', '1.7_to_3.0.input', '1.7_to_3.0.expected'),
-			'3.0 to 1.7' => array('1.7', '3.0_to_1.7.input', '3.0_to_1.7.expected'),
-		);
 	}
 }
