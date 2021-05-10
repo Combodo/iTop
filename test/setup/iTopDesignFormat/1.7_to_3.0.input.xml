@@ -39,15 +39,7 @@
           <always_load_in_tables>true</always_load_in_tables>
           <values>
             <value id="new">new</value>
-            <value id="waiting_for_approval">waiting_for_approval</value>
-            <value id="approved">approved</value>
-            <value id="rejected">rejected</value>
             <value id="assigned">assigned</value>
-            <value id="pending">pending</value>
-            <value id="escalated_tto">escalated_tto</value>
-            <value id="escalated_ttr">escalated_ttr</value>
-            <value id="resolved">resolved</value>
-            <value id="closed">closed</value>
           </values>
           <sql>status</sql>
           <default_value>new</default_value>

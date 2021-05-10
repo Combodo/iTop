@@ -43,32 +43,8 @@
             <value id="new">
               <code>new</code>
             </value>
-            <value id="waiting_for_approval">
-              <code>waiting_for_approval</code>
-            </value>
-            <value id="approved">
-              <code>approved</code>
-            </value>
-            <value id="rejected">
-              <code>rejected</code>
-            </value>
             <value id="assigned">
               <code>assigned</code>
-            </value>
-            <value id="pending">
-              <code>pending</code>
-            </value>
-            <value id="escalated_tto">
-              <code>escalated_tto</code>
-            </value>
-            <value id="escalated_ttr">
-              <code>escalated_ttr</code>
-            </value>
-            <value id="resolved">
-              <code>resolved</code>
-            </value>
-            <value id="closed">
-              <code>closed</code>
             </value>
           </values>
           <sql>status</sql>
