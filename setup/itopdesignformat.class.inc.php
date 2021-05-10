@@ -784,18 +784,13 @@ class iTopDesignFormat
 			$oFieldsSemanticNodeList = $oXPath->query("fields_semantic", $oPropertiesNode);
 			if ($oFieldsSemanticNodeList->length > 0) {
 				$oSemanticNode = $oFieldsSemanticNodeList->item(0);
-			}
-			else {
+			} else {
 				$oSemanticNode = $oPropertiesNode->ownerDocument->createElement("fields_semantic");
 				$oPropertiesNode->appendChild($oSemanticNode);
 			}
 
-			// Create state_attribute node
-			$oStateNode = $oSemanticNode->ownerDocument->createElement("state_attribute", $oNode->nodeValue);
-			$oSemanticNode->appendChild($oStateNode);
-
-			// Remove current node from lifecycle
-			$this->DeleteNode($oNode);
+			// Move to state_attribute node
+			$this->MoveNode($oNode, $oSemanticNode, "state_attribute");
 		}
 
 		// New Enum values format
@@ -1030,10 +1025,149 @@ class iTopDesignFormat
 	 */
 	protected function DeleteNode($oNode)
 	{
-		if ($oNode->nextSibling && ($oNode->nextSibling instanceof DOMText) && ($oNode->nextSibling->isWhitespaceInElementContent()))
-		{
+		if ($oNode->nextSibling && ($oNode->nextSibling instanceof DOMText) && ($oNode->nextSibling->isWhitespaceInElementContent())) {
 			$oNode->parentNode->removeChild($oNode->nextSibling);
 		}
 		$oNode->parentNode->removeChild($oNode);
+	}
+
+	/**
+	 * Move $oNode under $oParentNode and adds the correct _delta flag to it depending on its original flag (or its ancestors') and its destination parent flag (or its ancestors')
+	 *
+	 * +----------------------+-----------------+---------------+--------------+
+	 * |\  Dest. parent node  |                 |               |              |
+	 * | -------------------- |  In definition  |  In deletion  |  Structural  |
+	 * |    Node to move     \|                 |               |              |
+	 * +----------------------+-----------------+---------------+--------------+
+	 * |                      |  Remove _delta  |  Remove node  |  Set _delta  |
+	 * |     In definition    |  flag from node |  completely   |  flag from   |
+	 * |                      |                 |               |  self or anc.|
+	 * +----------------------+-----------------+---------------+--------------+
+	 * |                      |  Remove node    |  Remove node  |  Set _delta  |
+	 * |     In deletion      |  completely     |  completely   |  flag from   |
+	 * |                      |                 |               |  self        |
+	 * +----------------------+-----------------+---------------+--------------+
+	 * |                      |  Remove _delta  |  Remove node  |  Set _delta  |
+	 * |      Structural      |  from all child |  completely   |  flag from   |
+	 * |                      |  nodes          |               |  self        |
+	 * +----------------------+-----------------+---------------+--------------+
+	 *
+	 * @param \DOMElement $oNode
+	 * @param \DOMElement $oDestParentNode
+	 * @param string|null $sNewNodeName New name for the moved node (eg. "<foo>bar</foo>" => "<shiny_name>bar</shiny_name>"
+	 *
+	 * @since 3.0.0
+	 */
+	protected function MoveNode(DOMElement $oNode, DOMElement $oDestParentNode, ?string $sNewNodeName = null)
+	{
+		// Check if node / dest. parent are currently in definition / deletion from the delta
+		$bIsNodeInDeltaDefinition = $this->IsNodeInDeltaDefinition($oNode);
+		$bIsNodeInDeltaDeletion = $this->IsNodeInDeltaDeletion($oNode);
+		$bIsDestParentNodeInDeltaDefinition = $this->IsNodeInDeltaDefinition($oDestParentNode);
+		$bIsDestParentNodeInDeltaDeletion = $this->IsNodeInDeltaDeletion($oDestParentNode);
+
+		// Prepare the new node
+		if (is_null($sNewNodeName)) {
+			$sNewNodeName = $oNode->nodeName;
+		}
+		$oNewNode = $oDestParentNode->ownerDocument->createElement($sNewNodeName, $oNode->nodeValue);
+
+		// Compute new _delta flag
+		$sNewDeltaFlag = null;
+		$bAppendNodeToDestParentNode = true;
+		if ((false === $bIsDestParentNodeInDeltaDefinition) && (false === $bIsDestParentNodeInDeltaDeletion)) {
+			if ($bIsNodeInDeltaDefinition) {
+				$sNewDeltaFlag = $this->GetDeltaFlagFromSelfOrAncestors($oNode);
+			} else {
+				$sCurrentDeltaFlag = $oNode->getAttribute('_delta');
+				if (!empty($sCurrentDeltaFlag)) {
+					$sNewDeltaFlag = $sCurrentDeltaFlag;
+				}
+			}
+
+		} elseif ($bIsDestParentNodeInDeltaDefinition) {
+			if ($bIsNodeInDeltaDefinition) {
+				// Do nothing, there is no need for a flag
+			} elseif ($bIsNodeInDeltaDeletion) {
+				$bAppendNodeToDestParentNode = false;
+			} else {
+				// Clean _delta flag from all child nodes
+				// TODO
+			}
+		} elseif ($bIsDestParentNodeInDeltaDeletion) {
+			$bAppendNodeToDestParentNode = false;
+		}
+
+		// Update flag
+		if (!is_null($sNewDeltaFlag)) {
+			$oNewNode->setAttribute('_delta', $sNewDeltaFlag);
+		}
+
+		// Move newly created under destination parent
+		if ($bAppendNodeToDestParentNode) {
+			$oDestParentNode->appendChild($oNewNode);
+		}
+
+		// Remove current node from source parent
+		$this->DeleteNode($oNode);
+	}
+
+	/**
+	 * @see \ModelFactory::DELTA_FLAG_IN_DEFINITION_VALUES
+	 *
+	 * @param \DOMElement $oNode
+	 *
+	 * @return bool True if $oNode or one of its ancestors is "in the *delta* definition"
+	 * @since 3.0.0
+	 */
+	protected function IsNodeInDeltaDefinition(DOMElement $oNode): bool
+	{
+		$bIsInDefinition = false;
+		for ($oParent = $oNode; $oParent instanceof DOMElement; $oParent = $oParent->parentNode) {
+			if (in_array($this->GetDeltaFlagFromSelfOrAncestors($oParent), ModelFactory::DELTA_FLAG_IN_DEFINITION_VALUES)) {
+				$bIsInDefinition = true;
+				break;
+			}
+		}
+
+		return $bIsInDefinition;
+	}
+
+	/**
+	 * @see \ModelFactory::DELTA_FLAG_IN_DELETION_VALUES
+	 *
+	 * @param \DOMElement $oNode
+	 *
+	 * @return bool True if $oNode or one of its ancestors is "in the *delta* deletion"
+	 * @since 3.0.0
+	 */
+	protected function IsNodeInDeltaDeletion(DOMElement $oNode): bool
+	{
+		$bIsInDefinition = false;
+		for ($oParent = $oNode; $oParent instanceof DOMElement; $oParent = $oParent->parentNode) {
+			if (in_array($this->GetDeltaFlagFromSelfOrAncestors($oParent), ModelFactory::DELTA_FLAG_IN_DELETION_VALUES)) {
+				$bIsInDefinition = true;
+				break;
+			}
+		}
+
+		return $bIsInDefinition;
+	}
+
+	/**
+	 * @param \DOMElement $oNode
+	 *
+	 * @return string|null The _delta flag of the $oNode or from the closest ancestor with one; if none found null will be returned
+	 * @since 3.0.0
+	 */
+	protected function GetDeltaFlagFromSelfOrAncestors(DOMElement $oNode): ?string
+	{
+		for ($oParent = $oNode; $oParent instanceof DOMElement; $oParent = $oParent->parentNode) {
+			if ($oParent->hasAttribute('_delta')) {
+				return $oParent->getAttribute('_delta');
+			}
+		}
+
+		return null;
 	}
 }

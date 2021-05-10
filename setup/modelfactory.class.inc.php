@@ -503,6 +503,17 @@ class MFDictModule extends MFModule
  */
 class ModelFactory
 {
+	/**
+	 * @var array Values of the _delta flag meaning that a node is "in definition" = currently being added to the delta
+	 * @since 3.0.0
+	 */
+	public const DELTA_FLAG_IN_DEFINITION_VALUES = ['define', 'define_if_not_exists', 'redefine', 'force'];
+	/**
+	 * @var array Values of the _delta flag meaning that a node is "in deletion" = currently being removed from the delta
+	 * @since 3.0.0
+	 */
+	public const DELTA_FLAG_IN_DELETION_VALUES = ['delete', 'delete_if_exists'];
+
 	protected $aRootDirs;
 	protected $oDOMDocument;
 	protected $oRoot;
@@ -682,8 +693,8 @@ class ModelFactory
 			}
 		}
 
-		switch ($sDeltaSpec)
-		{
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		switch ($sDeltaSpec) {
 			case 'if_exists':
 			case 'must_exist':
 			case 'merge':
@@ -692,10 +703,8 @@ class ModelFactory
 				$bIfExists = ($sDeltaSpec == 'if_exists');
 				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
 				$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist, $bIfExists);
-				if ($oTargetNode)
-				{
-					foreach ($oSourceNode->childNodes as $oSourceChild)
-					{
+				if ($oTargetNode) {
+					foreach ($oSourceNode->childNodes as $oSourceChild) {
 						// Continue deeper
 						$this->LoadDelta($oSourceChild, $oTargetNode);
 					}
@@ -1406,16 +1415,14 @@ EOF
 	{
 		$sAlteration = $oNodeClone->getAttribute('_alteration');
 		$oNodeClone->removeAttribute('_alteration');
-		if ($oNodeClone->hasAttribute('_old_id'))
-		{
+		if ($oNodeClone->hasAttribute('_old_id')) {
 			$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
 			$oNodeClone->removeAttribute('_old_id');
 		}
-		switch ($sAlteration)
-		{
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		switch ($sAlteration) {
 			case '':
-				if ($oNodeClone->hasAttribute('id'))
-				{
+				if ($oNodeClone->hasAttribute('id')) {
 					$oNodeClone->setAttribute('_delta', 'must_exist');
 				}
 				break;

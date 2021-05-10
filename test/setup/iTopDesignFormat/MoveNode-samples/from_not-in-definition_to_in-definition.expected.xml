@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <a>
+    <b/>
+    <f _delta="define">
+      <g>I'm a future sibling</g>
+      <c>Not in definition</c>
+    </f>
+  </a>
+</itop_design>
