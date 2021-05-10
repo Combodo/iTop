@@ -31,6 +31,11 @@ class DownloadPage extends AjaxPage
 			header($s_header);
 		}
 
-		echo $this->sContent;
+		if (($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline')) {
+			// inline content != attachment && html => filter all scripts for malicious XSS scripts
+			echo self::FilterXSS($this->sContent);
+		} else {
+			echo $this->sContent;
+		}
 	}
 }
