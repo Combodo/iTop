@@ -24,7 +24,7 @@ class DownloadPage extends AjaxPage
 	 */
 	public function add($sContent)
 	{
-		$this->sContent = $sContent;
+		$this->sContent .= $sContent;
 	}
 
 	/**
