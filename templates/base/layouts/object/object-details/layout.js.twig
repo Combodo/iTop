@@ -5,7 +5,6 @@ $('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
     $(this).find('button[name="UI:Menu:Modify"]').click();
 });
 
-
 $('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
     $(this).find('button[name="UI:Menu:Delete"]').click();
 });
@@ -22,3 +21,14 @@ $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
     $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
 });
 {% endif %}
+
+// Keep URL's hash parameters when clicking on a link of the header
+$('#{{ oUIBlock.GetId() }}').on('click', '[data-role="ibo-panel--header-right"] a', function() {
+    aMatches = /#(.*)$/.exec(window.location.href);
+    if (aMatches != null) {
+        currentHash = aMatches[1];
+        if (/#(.*)$/.test(this.href)) {
+            this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
+        }
+    }
+});

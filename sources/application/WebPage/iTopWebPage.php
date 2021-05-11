@@ -367,21 +367,6 @@ JS
 			SetUserPreference(parent_id+'_'+this.id+'_height', $(this).height(), true); // true => persistent
 		}
 	} );
-	
-	// Shortcut menu actions
-	$('.actions_button a').on('click', function() {
-		aMatches = /#(.*)$/.exec(window.location.href);
-		if (aMatches != null)
-		{
-			currentHash = aMatches[1];
-			if ( /#(.*)$/.test(this.href))
-			{
-				this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
-			}
-		}
-	});
-
-	// End of Tabs handling
 
 	PrepareWidgets();
 
