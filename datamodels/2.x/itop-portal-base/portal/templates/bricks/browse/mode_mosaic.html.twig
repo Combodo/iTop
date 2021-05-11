@@ -397,15 +397,16 @@
 				}
 			}
 		};
-		
+
+		// N°3995: Loader is shown immediately, otherwise when we have a huge amount of items, we can have a bottleneck on the buildMosaic() function, blocking the display of the loader
+		showMosaicLoader();
 		$(document).ready(function(){
 			// Auto collapse item actions popup
 			$('body').on('click', function(){
 				$('#brick_content_mosaic .item-action-wrapper.collapse.in').collapse('hide');
 			});
 			
-			// Build the tree (collapsed)
-			showMosaicLoader();
+			// Build the mosaic (collapsed)
 			buildMosaic(oRawDatas);
 			hideMosaicLoader();
 			registerFilterListeners();

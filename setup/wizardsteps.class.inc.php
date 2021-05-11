@@ -1126,7 +1126,7 @@ class WizStepUpgradeMiscParams extends WizardStep
 
 	public function Display(WebPage $oPage)
 	{
-		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetAbsoluteUrlAppRoot(true)); //Preserve existing configuration.
+		$sApplicationURL = $this->oWizard->GetParameter('application_url', utils::GetAbsoluteUrlAppRoot(true)); //Preserve existing configuration (except for the str_replace based joker $SERVER_NAME$ which is lost)
 		$sDefaultGraphvizPath = (strtolower(substr(PHP_OS, 0, 3)) === 'win') ? 'C:\\Program Files\\Graphviz\\bin\\dot.exe' : '/usr/bin/dot';
 		$sGraphvizPath = $this->oWizard->GetParameter('graphviz_path', $sDefaultGraphvizPath);
 		$oPage->add('<h2>Additional parameters</h2>');
