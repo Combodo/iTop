@@ -883,13 +883,9 @@ class iTopDesignFormat
 			// Move node under lifecycle only if there is such a node
 			$oLifecycleNode = $oXPath->query("../../../lifecycle", $oNode)->item(0);
 			if ($oLifecycleNode !== null) {
-				// Create attribute node
-				$oAttributeNode = $oLifecycleNode->ownerDocument->createElement("attribute", $oNode->nodeValue);
-				$oLifecycleNode->appendChild($oAttributeNode);
+				// Move to attribute node
+				$this->MoveNode($oNode, $oLifecycleNode, "attribute");
 			}
-
-			// Remove current node from semantic in all cases
-			$this->DeleteNode($oNode);
 		}
 		// - Remove semantic node
 		$sPath = "/itop_design//class/properties/fields_semantic";
