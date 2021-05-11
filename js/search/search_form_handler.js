@@ -120,6 +120,13 @@ $(function()
                 'base_oql': this.options.search.base_oql,
                 'criterion': this.options.search.criterion,
             });
+			
+			// If auto submit is enabled, also submit on first display
+			if(this.options.auto_submit === true)
+			{
+				this._submit();
+			}
+			
 		},
 		// called when created, and later when changing options
 		_refresh: function()
