@@ -125,8 +125,7 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
     * ⬆️ `:arrow_up:` when upgrading dependencies
     * ⬇️ `:arrow_down:` when downgrading dependencies
     * ♻️ `:recycle:` code refactoring
-    * 💄 `:lipstick:` Updating the UI and style files.  
-  
+    * 💄 `:lipstick:` Updating the UI and style files.
 
 ## 👥 Pull request
 
@@ -137,3 +136,15 @@ When your code is working, please:
 * create a pull request.
 
 Detailed procedure to work on fork and create PR is available [in GitHub help pages](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
+
+### 🙏 We are thankful
+
+We are thankful for all your contributions to the iTop universe, here are the 2021 stickers that will be sent to every iTop (& extensions) contributors this year. Design might change from one year to another, for the first year we wanted to try a "craft beer label" look.
+
+* Bug hunter: Fix a bug
+* Translator: Add/update translations
+* White hat: Find and/or fix a vulnerability
+* Contributor: Contribute by finding a bug, making an extension or any other way
+* Partner: For Combodo's official partners
+
+![](documentation/contributing-guide/contributing-stickers-side-by-side.png)
