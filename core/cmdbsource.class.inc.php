@@ -39,6 +39,7 @@ class MySQLException extends CoreException
 	 */
 	public function __construct($sIssue, $aContext, $oException = null, $oMysqli = null)
 	{
+
 		if ($oException != null)
 		{
 			$aContext['mysql_errno'] = $oException->getCode();
@@ -58,6 +59,11 @@ class MySQLException extends CoreException
 			$aContext['mysql_error'] = CMDBSource::GetError();
 		}
 		parent::__construct($sIssue, $aContext);
+		//if is connection error, don't log the default message with password in
+		if (mysqli_connect_errno()) {
+			error_log($this->message);
+			error_reporting(0);
+		}
 	}
 }
 
@@ -262,7 +268,7 @@ class CMDBSource
 		}
 		catch(mysqli_sql_exception $e)
 		{
-			throw new MySQLException('Could not connect to the DB server', array('host' => $sServer, 'user' => $sUser), $e);
+			throw new MySQLException('Could not connect to the DB server', array('host' => $sServer, 'user' => $sUser),$e);
 		}
 
 		if ($bTlsEnabled
