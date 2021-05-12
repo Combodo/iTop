@@ -5,7 +5,7 @@
         <div class="ibo-dashlet-header-static--body">
             {% if oUIBlock.GetIconUrl() is not empty %}
                 <div class="ibo-dashlet-header-static--icon-container">
-                    <img class="ibo-dashlet-header-static--icon" src="{{ oUIBlock.GetIconUrl() }}" alt="{{ oUIBlock.GetTitle() }}">
+                    <img class="ibo-dashlet-header-static--icon" src="{{ oUIBlock.GetIconUrl()|raw }}" alt="{{ oUIBlock.GetTitle() }}">
                 </div>
             {% endif %}
             {% if oUIBlock.GetTitle() is not empty %}
