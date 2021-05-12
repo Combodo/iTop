@@ -35,7 +35,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	 * @dataProvider ConvertProvider
 	 *
 	 * @param string $sTargetVersion
-	 * @param string $sInputXmlFileName Example "1.7_to_1.6"
+	 * @param string $sXmlFileName Example "1.7_to_1.6". Corresponding files should exist with the ".input" and ".Expected" suffix
 	 *
 	 * @throws \Exception
 	 */
