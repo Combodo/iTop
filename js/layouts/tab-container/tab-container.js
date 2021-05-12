@@ -52,7 +52,8 @@ $(function()
 		            classes: {
 			            'ui-tabs-panel': 'ibo-tab-container--tab-container',    // For ajax tabs, so their containers have the right CSS classes
 		            },
-		            active: $.bbq.getState( this.element.attr('id'), true ) || 0,
+		            // There we want a number as it is for the jQuery Tabs API
+		            active: this._getTabIndexFromTabId($.bbq.getState(this.element.attr('id'), true)) || 0,
 		            remote_tab_load_dict: this.options.remote_tab_load_dict
 	            };
 	            if ($.bbq) {
@@ -154,69 +155,62 @@ $(function()
 		            $('#'+this.id).DataTable().columns.adjust().draw();
 	            });
 
-	            // Get the index of this tab.
-	            const iIdx = $(oUI.newTab).prevAll().length;
+	            // Get the ID of this tab.
+	            const sTabId = $(oUI.newTab).attr('data-tab-id');
 
 	            // Set the state!
-	            oState[sId] = iIdx;
+	            oState[sId] = sTabId;
 	            $.bbq.pushState(oState);
             },
-            // - Change current tab as necessary when URL hash changes
-            _onHashChange: function()
-            {
-                // Get the index for this tab widget from the hash, based on the
-                // appropriate id property. In jQuery 1.4, you should use e.getState()
-                // instead of $.bbq.getState(). The second, 'true' argument coerces the
-                // string value to a number.
-                const iIdx = $.bbq.getState( this.element.attr('id'), true ) || 0;
+	        // - Change current tab as necessary when URL hash changes
+	        _onHashChange: function () {
+		        // Get the index for this tab widget from the hash, based on the
+		        // appropriate id property. In jQuery 1.4, you should use e.getState()
+		        // instead of $.bbq.getState(). The second, 'true' argument coerces the
+		        // string value to a number.
+		        const sTabId = $.bbq.getState(this.element.attr('id'), true) || this._getTabIdFromTabIndex(0);
 
-                // Select the appropriate tab for this tab widget by triggering the custom
-                // event specified in the .tabs() init above (you could keep track of what
-                // tab each widget is on using .data, and only select a tab if it has
-                // changed).
-                this.element.find(this.js_selectors.tab_toggler).eq(iIdx).triggerHandler('change');
+		        // Select the appropriate tab for this tab widget by triggering the custom
+		        // event specified in the .tabs() init above (you could keep track of what
+		        // tab each widget is on using .data, and only select a tab if it has
+		        // changed).
+		        this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sTabId+'"]').find(this.js_selectors.tab_toggler).triggerHandler('change');
 
-                // Iterate over all truncated lists to find whether they are expanded or not
-                $('a.truncated').each(function()
-                {
-                    const sState = $.bbq.getState( this.id, true ) || 'close';
-                    if (sState === 'open')
-                    {
-                        $(this).trigger('open');
-                    }
-                    else
-                    {
-                        $(this).trigger('close');
-                    }
-                });
-            },
-            // - Define our own click handler for the tabs, overriding the default.
-            _onTabTogglerClick: function(oTabHeaderElem)
-            {
-                if ($.bbq) {
-                    let oState = {};
+		        // Iterate over all truncated lists to find whether they are expanded or not
+		        $('a.truncated').each(function () {
+			        const sState = $.bbq.getState(this.id, true) || 'close';
+			        if (sState === 'open') {
+				        $(this).trigger('open');
+			        } else {
+				        $(this).trigger('close');
+			        }
+		        });
+	        },
+	        // - Define our own click handler for the tabs, overriding the default.
+	        _onTabTogglerClick: function (oTabHeaderElem) {
+		        if ($.bbq) {
+			        let oState = {};
 
-                    // Get the id of this tab widget.
-                    const sId = this.element.attr('id');
+			        // Get the id of this tab widget.
+			        const sId = this.element.attr('id');
 
-                    // Get the index of this tab.
-                    const iIdx = oTabHeaderElem.parent().prevAll().length;
+			        // Get the index of this tab.
+			        const sTabId = oTabHeaderElem.closest(this.js_selectors.tab_header).attr('data-tab-id');
 
-                    // Set the state!
-                    oState[sId] = iIdx;
-                    $.bbq.pushState(oState);
-                }
-            },
+			        // Set the state!
+			        oState[sId] = sTabId;
+			        $.bbq.pushState(oState);
+		        }
+	        },
 	        // - Forward click event to real tab toggler
-            _onExtraTabTogglerClick: function(oExtraTabTogglerElem, oEvent)
-            {
-                // Prevent anchor default behaviour
-                oEvent.preventDefault();
+	        _onExtraTabTogglerClick: function (oExtraTabTogglerElem, oEvent) {
+		        // Prevent anchor default behaviour
+		        oEvent.preventDefault();
 
-                // Trigger click event on real tab toggler (the hidden one)
-                const sTargetTabId = oExtraTabTogglerElem.attr('href').replace(/#/, '');
-                this.element.find(this.js_selectors.tab_header+'[data-tab-id="'+sTargetTabId+'"] '+this.js_selectors.tab_toggler).trigger('click');
-            },
+		        // Trigger click event on real tab toggler (the hidden one)
+		        const sTargetTabId = oExtraTabTogglerElem.attr('href').replace(/#/, '');
+		        this.element.find(this.js_selectors.tab_header+'[data-tab-id="'+sTargetTabId+'"] '+this.js_selectors.tab_toggler).trigger('click');
+	        },
             // - Toggle extra tabs list
             _onExtraTabsListTogglerClick: function(oElem, oEvent)
             {
@@ -253,20 +247,35 @@ $(function()
 		            oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
 	            }
             },
-            // - Update extra tabs list
-            _updateExtraTabsList: function()
-            {
-	            const iVisibleExtraTabsCount = this.element.find(this.js_selectors.extra_tab_toggler+':not(.'+this.css_classes.is_hidden+')').length;
-	            const oExtraTabsContainerElem = this.element.find(this.js_selectors.extra_tabs_container);
+	        // - Update extra tabs list
+	        _updateExtraTabsList: function () {
+		        const iVisibleExtraTabsCount = this.element.find(this.js_selectors.extra_tab_toggler+':not(.'+this.css_classes.is_hidden+')').length;
+		        const oExtraTabsContainerElem = this.element.find(this.js_selectors.extra_tabs_container);
 
-	            if(iVisibleExtraTabsCount > 0)
-	            {
-	            	oExtraTabsContainerElem.removeClass(this.css_classes.is_hidden);
-	            }
-	            else
-	            {
-	            	oExtraTabsContainerElem.addClass(this.css_classes.is_hidden);
-	            }
-            }
+		        if (iVisibleExtraTabsCount > 0) {
+			        oExtraTabsContainerElem.removeClass(this.css_classes.is_hidden);
+		        } else {
+			        oExtraTabsContainerElem.addClass(this.css_classes.is_hidden);
+		        }
+	        },
+	        // - Get tab's "data-tab-id" from tab's index
+	        /**
+	         * @param iIdx {number} Index (starting from 0) of the tab in the container
+	         * @return {string} The [data-tab-id] of the iIdx-th tab (zero based). Can return undefined if it has not [data-tab-id] attribute
+	         * @private
+	         */
+	        _getTabIdFromTabIndex(iIdx) {
+		        return this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header).eq(iIdx).attr('data-tab-id');
+	        },
+	        /**
+	         * @param sId {string} The [data-tab-id] of the tab
+	         * @return {number} The index (zero based) of the tab. If no matching tab, 0 will be returned.
+	         * @private
+	         */
+	        _getTabIndexFromTabId(sId) {
+		        const oTabElem = this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sId+'"]');
+
+		        return oTabElem.length === 0 ? 0 : oTabElem.prevAll.length;
+	        }
         });
 });
