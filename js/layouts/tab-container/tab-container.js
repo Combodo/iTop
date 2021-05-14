@@ -275,7 +275,7 @@ $(function()
 	        _getTabIndexFromTabId(sId) {
 		        const oTabElem = this.element.children(this.js_selectors.tabs_list).children(this.js_selectors.tab_header+'[data-tab-id="'+sId+'"]');
 
-		        return oTabElem.length === 0 ? 0 : oTabElem.prevAll.length;
+		        return oTabElem.length === 0 ? 0 : oTabElem.prevAll().length;
 	        }
         });
 });
