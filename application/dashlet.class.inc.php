@@ -2097,8 +2097,20 @@ class DashletHeaderDynamic extends Dashlet
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
 
-		$oQuery = $this->oModelReflection->GetQuery($sQuery);
-		$sClass = $oQuery->GetClass();
+		$aValueLabels = [];
+		$aValues = [];
+		try {
+			$oQuery = $this->oModelReflection->GetQuery($sQuery);
+			$sClass = $oQuery->GetClass();
+			$aValues = $this->GetValues();
+			foreach ($aValues as $sValue) {
+				$aValueLabels[] = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
+			}
+		}
+		catch (UnknownClassOqlException $e) {
+			$aValueLabels[] = $e->GetUserFriendlyDescription();
+			$aValues[] = 1;
+		}
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
 		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
@@ -2111,20 +2123,18 @@ class DashletHeaderDynamic extends Dashlet
 		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 
 		$iTotal = 0;
-		$aValues = $this->GetValues();
 
 		$sHtml .= '<div class="display_block" id="'.$sBlockId.'">';
 		$sHtml .= '<div class="summary-details">';
 		$sHtml .= '<table><tbody>';
 		$sHtml .= '<tr>';
-		foreach ($aValues as $sValue) {
-			$sValueLabel = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
+		foreach ($aValueLabels as $sValueLabel) {
 			$sHtml .= '	<th>'.$sValueLabel.'</th>';
 		}
 		$sHtml .= '</tr>';
 		$sHtml .= '<tr>';
 		foreach ($aValues as $sValue) {
-			$iCount = (int)rand(2, 100);
+			$iCount = rand(2, 100);
 			$iTotal += $iCount;
 			$sHtml .= '	<td>'.$iCount.'</td>';
 		}
