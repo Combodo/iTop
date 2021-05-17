@@ -9,9 +9,9 @@
           <variable id="ibo-page-banner--text-content">"THIS IS A TEST INSTANCE"</variable>
         </variables>
         <imports>
-          <import id="style1">style1.scss</import>
-          <import id="style2" xsi:type="variables">style2.scss</import>
-          <import id="style3" xsi:type="utilities">style3.scss</import>
+          <import id="ignored-because-lack-xsi-type">ignored-because-lack-xsi-type.scss</import>
+          <import id="ok-because-xsi-type-variables" xsi:type="variables">ok-because-xsi-type-variables.scss</import>
+          <import id="ok-because-xsi-type-utilities" xsi:type="utilities">ok-because-xsi-type-utilities.scss</import>
         </imports>
         <stylesheets>
           <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
