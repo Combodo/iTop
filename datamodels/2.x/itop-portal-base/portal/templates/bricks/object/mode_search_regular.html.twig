@@ -52,7 +52,7 @@
 				"sortable": false,
 				"title": "",
 				"type": "html",
-				"data": "",
+				"data": "id",
 				"render": function(data, type, row){ return '<span class="row_input"><input type="{{ (bMultipleSelect) ? 'checkbox' : 'radio' }}" name="{{ sTargetAttCode }}" /></span>'; }
 		});
 
@@ -217,7 +217,7 @@
 			var aData = oTable.rows(indexes).data().toArray();
 			
 			// Checking input
-			$('#{{ sTableId }} tr[role="row"].selected td:first-child input').prop('checked', true);
+			$('#{{ sTableId }} tr[id].selected td:first-child input').prop('checked', true);
 			// Saving values in temp array
 			for(var i in aData)
 			{
@@ -232,7 +232,7 @@
 			var aData = oTable.rows(indexes).data().toArray();
 			
 			// Checking input
-			$('#{{ sTableId }} tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+			$('#{{ sTableId }} tr[id]:not(.selected) td:first-child input').prop('checked', false);
 			// Saving values in temp array
 			for(var i in aData)
 			{
