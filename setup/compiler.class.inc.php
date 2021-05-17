@@ -53,7 +53,8 @@ class MFCompiler
 {
 	const DATA_PRECOMPILED_FOLDER = 'data' . DIRECTORY_SEPARATOR . 'precompiled_styles' . DIRECTORY_SEPARATOR;
 
-	private static $oThemeHandlerService;
+	/** @var \ThemeHandlerService */
+	protected static $oThemeHandlerService;
 
 	/** @var \ModelFactory */
 	protected $oFactory;
