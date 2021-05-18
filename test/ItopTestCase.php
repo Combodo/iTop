@@ -97,6 +97,9 @@ class ItopTestCase extends TestCase
 		return $sId;
 	}
 
+	/**
+	 * @since 2.7.4 3.0.0
+	 */
 	public function InvokeNonPublicStaticMethod($sObjectClass, $sMethodName, $aArgs)
 	{
 		return $this->InvokeNonPublicMethod($sObjectClass, $sMethodName, null, $aArgs);
@@ -111,6 +114,8 @@ class ItopTestCase extends TestCase
 	 * @return mixed method result
 	 *
 	 * @throws \ReflectionException
+	 *
+	 * @since 2.7.4 3.0.0
 	 */
 	public function InvokeNonPublicMethod($sObjectClass, $sMethodName, $oObject, $aArgs)
 	{
