@@ -270,23 +270,20 @@ $sJSHandlerCode
 		$aFields = array(); // reset
 		foreach(MetaModel::ListAttributeDefs($this->m_sClass) as $sAttCode=>$oAttDef)
 		{
-			$iOptions = (isset($aStates[$this->m_sTargetState]['attribute_list'][$sAttCode])) ? $aStates[$this->m_sTargetState]['attribute_list'][$sAttCode] : 0;				
-			if ( ($sStateAttCode != $sAttCode) &&
-				 (!$oAttDef->IsExternalField()) &&
-				 (($iOptions & (OPT_ATT_HIDDEN | OPT_ATT_READONLY)) == 0) &&
-				 (!isset($aFieldsDone[$sAttCode])) )
-				 
-			{
-				// 'State', external fields, read-only and hidden fields
+			$iOptions = (isset($aStates[$this->m_sTargetState]['attribute_list'][$sAttCode])) ? $aStates[$this->m_sTargetState]['attribute_list'][$sAttCode] : 0;
+			if (($sStateAttCode != $sAttCode) &&
+				(!$oAttDef->IsExternalField()) &&
+				($oAttDef->IsWritable()) &&
+				(($iOptions & (OPT_ATT_HIDDEN | OPT_ATT_READONLY)) == 0) &&
+				(!isset($aFieldsDone[$sAttCode]))) {
+				// 'State', external fields, read-only (both because of the flags or the attribute type) and hidden fields
 				// and fields that are already listed in the wizard
 				// are removed from the 'optional' part of the wizard
 				$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 				$aPrerequisites = $oAttDef->GetPrerequisiteAttributes();
 				$aFields[$sAttCode] = array();
-				foreach($aPrerequisites as $sCode)
-				{
-					if (!isset($aFieldsDone[$sCode]))
-					{
+				foreach ($aPrerequisites as $sCode) {
+					if (!isset($aFieldsDone[$sCode])) {
 						// retain only the dependencies that were not covered
 						// in the 'mandatory' part of the wizard
 						$aFields[$sAttCode][$sCode] = '';
