@@ -26,6 +26,26 @@ namespace Combodo\iTop\Application\UI\Base\Component\Html;
  */
 class HtmlFactory
 {
+	/**
+	 * Make an HTML block without any extra markup.
+	 * The only purpose of this method is to enable devs to use only factories without instantiating base class directly.
+	 *
+	 * @param string $sContent
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html
+	 */
+	public static function MakeRaw(string $sContent): Html
+	{
+		return new Html($sContent);
+	}
+
+	/**
+	 * Make an HTML paragraph with $sContent inside
+	 *
+	 * @param string $sContent
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html
+	 */
 	public static function MakeParagraph(string $sContent): Html
 	{
 		return new Html('<p>'.$sContent.'</p>');
