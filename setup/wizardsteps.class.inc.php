@@ -2168,7 +2168,7 @@ EOF
 		$oPage->add('<div class="closed"><span class="title">Database Parameters</span><ul>');
 		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
-		$oPage->add('<li>DB user password: '.$aInstallParams['database']['pwd'].'</li>');
+		$oPage->add('<li>DB user password: ***</li>');
 		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes'))
 		{
 			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
