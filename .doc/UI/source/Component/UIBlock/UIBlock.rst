@@ -17,7 +17,7 @@ This block has no Twig tag, but the following parameters are common to all the o
 
 .. _UIBlock_parameters:
 
-- Parameters
+:Parameters:
 
 +------------------+--------+----------+----------------------------------------------+
 | *CSSClasses*     | array  | optional | Array of CSS classes to set to the block     |
