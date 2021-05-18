@@ -1,3 +1,6 @@
+.. Copyright (C) 2010-2021 Combodo SARL
+.. http://opensource.org/licenses/AGPL-3.0
+
 UIBlock
 =======
 
@@ -7,8 +10,8 @@ Description
 UIBlock is the root class for all the other blocks.
 
 
-Twig
-----
+Twig Tag
+--------
 
 This block has no Twig tag, but the following parameters are common to all the other Twig blocks.
 

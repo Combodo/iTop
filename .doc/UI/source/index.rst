@@ -1,10 +1,13 @@
-.. iTop UI documentation master file, created by
-   sphinx-quickstart on Wed Apr  7 10:53:55 2021.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. Copyright (C) 2010-2021 Combodo SARL
+.. http://opensource.org/licenses/AGPL-3.0
 
-Welcome to iTop UI's documentation!
-===================================
+.. iTop UI documentation master file, created by
+sphinx-quickstart on Wed Apr  7 10:53:55 2021.
+You can adapt this file completely to your liking, but it should at least
+contain the root `toctree` directive.
+
+Welcome to iTop 3.0 UI's documentation!
+=======================================
 
 .. toctree::
     :maxdepth: 2

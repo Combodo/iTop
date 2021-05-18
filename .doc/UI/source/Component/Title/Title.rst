@@ -1,3 +1,6 @@
+.. Copyright (C) 2010-2021 Combodo SARL
+.. http://opensource.org/licenses/AGPL-3.0
+
 Title
 =====
 
@@ -8,7 +11,7 @@ Display a title.
 Output Result
 -------------
 
-
+.. image:: Title.png
 
 ----
 
@@ -72,4 +75,14 @@ Twig Tag
 
 Examples
 --------
+
+:The following code:
+
+::
+
+    {% UITitle ForPage {sTitle: 'UI:FullTextSearchTitle_Text'|dict_format(sFullText)} %}{% EndUITitle %}
+
+:Will display:
+
+.. image:: Title.png
 
