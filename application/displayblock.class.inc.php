@@ -1992,7 +1992,7 @@ class MenuBlock extends DisplayBlock
 
 						$this->AddMenuSeparator($aRegularActions);
 
-						$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use ($aRegularActions, $aActionParams) {
+						$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
 							$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $data) + $aActionParams;
 						});
 					}
@@ -2096,7 +2096,7 @@ class MenuBlock extends DisplayBlock
 
 			$this->AddMenuSeparator($aRegularActions);
 
-			$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use ($aRegularActions, $aActionParams) {
+			$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
 				if (is_array($data)) {
 					// New plugins can provide javascript handlers via the 'onclick' property
 					//TODO: enable extension of different menus by checking the 'target' property ??
