@@ -2327,19 +2327,34 @@ class MenuBlock extends DisplayBlock
 	 */
 	private function GetEnumAllowedActions(DBObjectSet $oSet, callable $callback)
 	{
+		$aInvalidExtensions = [];
+
 		/** @var \iApplicationUIExtension $oExtensionInstance */
 		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
 			$oSet->Rewind();
 			$aExtEnumAllowedActions = $oExtensionInstance->EnumAllowedActions($oSet);
+
 			if (!is_array($aExtEnumAllowedActions)) {
-				$sExtensionClass = get_class($oExtensionInstance);
-				IssueLog::Warning(
-					"Extension '{$sExtensionClass}' returned non array value for EnumAllowedActions() method impl"
-				);
+				$aInvalidExtensions[] = get_class($oExtensionInstance);
 				continue;
 			}
+
 			foreach ($aExtEnumAllowedActions as $sLabel => $data) {
 				$callback($sLabel, $data);
+			}
+		}
+
+		if (!empty($aInvalidExtensions)) {
+			$sMessage = 'Some extensions returned non array value for EnumAllowedActions() method impl';
+
+			IssueLog::Warning(
+				$sMessage,
+				null,
+				['extensions' => $aInvalidExtensions]
+			);
+
+			if (utils::IsDevelopmentEnvironment()) {
+				throw new CoreUnexpectedValue($sMessage, $aInvalidExtensions);
 			}
 		}
 	}
