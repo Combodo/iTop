@@ -1995,7 +1995,15 @@ class MenuBlock extends DisplayBlock
 						/** @var \iApplicationUIExtension $oExtensionInstance */
 						foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
 							$oSet->Rewind();
-							foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl) {
+							$aExtEnumAllowedActions = $oExtensionInstance->EnumAllowedActions($oSet);
+							if (!is_array($aExtEnumAllowedActions)) {
+								$sExtensionClass = get_class($oExtensionInstance);
+								IssueLog::Warning(
+									"Extension '{$sExtensionClass}' returned non array value for EnumAllowedActions() method impl"
+								);
+								continue;
+							}
+							foreach ($aExtEnumAllowedActions as $sLabel => $sUrl) {
 								$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $sUrl) + $aActionParams;
 							}
 						}
@@ -2103,7 +2111,15 @@ class MenuBlock extends DisplayBlock
 			/** @var \iApplicationUIExtension $oExtensionInstance */
 			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
 				$oSet->Rewind();
-				foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data) {
+				$aExtEnumAllowedActions = $oExtensionInstance->EnumAllowedActions($oSet);
+				if (!is_array($aExtEnumAllowedActions)) {
+					$sExtensionClass = get_class($oExtensionInstance);
+					IssueLog::Warning(
+						"Extension '{$sExtensionClass}' returned non array value for EnumAllowedActions() method impl"
+					);
+					continue;
+				}
+				foreach ($aExtEnumAllowedActions as $sLabel => $data) {
 					if (is_array($data)) {
 						// New plugins can provide javascript handlers via the 'onclick' property
 						//TODO: enable extension of different menus by checking the 'target' property ??
