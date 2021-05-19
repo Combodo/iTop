@@ -181,6 +181,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   .text_decoration {
     margin-right: $ibo-field--value-decoration--spacing-x;
+    font-size: 0.9em; /* Mind the "em" instead of "rem" as we want the decoration to be size relatively to the text itself, not the page */
   }
 }
 
