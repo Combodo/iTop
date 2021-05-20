@@ -510,11 +510,15 @@ HTML
 	 */
 	public function DisplayDashboard($oPage, $sAttCode)
 	{
+		// Retrieve parameters
+		/** @var bool $bIsContainerInEdition True if the container of the dashboard is currently in edition; meaning that the dashboard could not be up-to-date with data changed in the container (eg. when editing an object and adding linkedset items) */
+		$bIsContainerInEdition = (utils::ReadParam('host_container_in_edition', 'false') === 'true');
+
 		$sClass = get_class($this);
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-		if (!$oAttDef instanceof AttributeDashboard)
-		{
+		// Consistency checks
+		if (!$oAttDef instanceof AttributeDashboard) {
 			throw new CoreException(Dict::S('UI:Error:InvalidDashboard'));
 		}
 
@@ -526,6 +530,10 @@ HTML
 
 		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 		$sDivId = $oDashboard->GetId();
+
+		if ($bIsContainerInEdition) {
+			$oPage->AddUiBlock(AlertUIBlockFactory::MakeForInformation(Dict::S('UI:Dashboard:NotUpToDateUntilContainerSaved')));
+		}
 		$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 		$aExtraParams = array(
 			'query_params' => $this->ToArgsForQuery(),
@@ -561,17 +569,12 @@ HTML
 			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
 		}
 		$sClass = get_class($this);
-		foreach($aList as $sAttCode)
-		{
+		foreach($aList as $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef instanceof AttributeDashboard)
-			{
-				if ($bEditMode)
-				{
-					continue;
-				}
+			if ($oAttDef instanceof AttributeDashboard) {
+				$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
 				$oPage->AddAjaxTab($oAttDef->GetLabel(),
-					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(),
+					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
 					true,
 					'Class:'.$sClass.'/Attribute:'.$sAttCode,
 					AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);

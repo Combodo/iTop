@@ -1204,6 +1204,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:ImportDashboardTitle' => 'Import ze souboru',
 	'UI:ImportDashboardText' => 'Vyberte šablonu dashboardu k importu:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Vytvořit nový dashlet',

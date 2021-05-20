@@ -1209,6 +1209,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ImportDashboardTitle' => 'Importeer vanuit een bestand',
 	'UI:ImportDashboardText' => 'Selecteer een bestand van het dashboard om te importeren:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Maak een nieuwe Dashlet aan',
