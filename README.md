@@ -123,8 +123,9 @@ We would like to give a special thank you to the people from the community who c
  - Lassiter, Dennis
  - Lazcano, Federico
  - Lucas, Jonathan
- - Malik, Remie
- - Rosenke, Stephan
+- Malik, Remie
+- Mindêllo de Andrade, Lucas (a.k.a @rokam)
+- Rosenke, Stephan
  - Seki, Shoji
  - Shilov, Vladimir
  - Tulio, Marco
