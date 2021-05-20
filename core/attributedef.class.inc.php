@@ -6808,23 +6808,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return (int)$proposedValue;
 	}
 
-	public function GetPrerequisiteAttributes($sClass = null)
-	{
-		$aAttributes = parent::GetPrerequisiteAttributes($sClass);
-		$oExpression = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression())->GetCriteria();
-		foreach ($oExpression->GetParameters('this') as $sAttCode)
-		{
-			// Skip the id as it cannot change anyway
-			if ($sAttCode =='id') continue;
-
-			if (!in_array($sAttCode, $aAttributes))
-			{
-				$aAttributes[] = $sAttCode;
-			}
-		}
-		return $aAttributes;
-	}
-
 	public function GetMaximumComboLength()
 	{
 		return $this->GetOptional('max_combo_length', MetaModel::GetConfig()->Get('max_combo_length'));
