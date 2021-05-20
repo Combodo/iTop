@@ -17,9 +17,52 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-try
-{
-	ini_set('memory_limit', '256M');
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
+
+try {
+	function ReturnBytes($sVal) {
+		$sVal = trim($sVal);
+		$sLast = strtolower($sVal[strlen($sVal)-1]);
+		switch($sLast) {
+
+			case 'g':
+				$sVal *= 1024;
+			case 'm':
+				$sVal *= 1024;
+			case 'k':
+				$sVal *= 1024;
+		}
+
+		return $sVal;
+	}
+
+	// If php memory_limit is lower than 256M, set 256M. If it's greater do nothing. 
+	if ((ReturnBytes(ini_get('memory_limit'))) < '268435456') {
+        ini_set('memory_limit', '256M');
+    }
+	
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
@@ -1542,4 +1585,3 @@ catch(Exception $e)
 		IssueLog::Error($e->getMessage());
 	}
 }
-?>
