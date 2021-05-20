@@ -1,7 +1,8 @@
 .ibo-block-indirect-links--edit--dialog{
   overflow:hidden !important;
   > form{
-  overflow: auto;
+    overflow: auto;
+    height: 100%
   }
 }
 
