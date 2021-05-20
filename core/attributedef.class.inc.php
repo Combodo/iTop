@@ -11777,13 +11777,12 @@ class AttributeFriendlyName extends AttributeDefinition
 		// Code duplicated with AttributeObsolescenceFlag
 		$aAttributes = $this->GetOptional("depends_on", array());
 		$oExpression = $this->GetOQLExpression();
-		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
-		{
-			if (!in_array($sAttCode, $aAttributes))
-			{
+		foreach ($oExpression->ListRequiredFields() as $sAttCode) {
+			if (!in_array($sAttCode, $aAttributes)) {
 				$aAttributes[] = $sAttCode;
 			}
 		}
+
 		return $aAttributes;
 	}
 
