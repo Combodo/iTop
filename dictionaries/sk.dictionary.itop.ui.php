@@ -1197,6 +1197,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ImportDashboardTitle' => 'Importovať zo súboru',
 	'UI:ImportDashboardText' => 'Zvoľte panel súboru na importovanie:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Vytvoriť a nový Dashlet',

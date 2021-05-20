@@ -1205,6 +1205,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ImportDashboardTitle' => '从文件导入',
 	'UI:ImportDashboardText' => '选择要导入的仪表盘文件:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => '创建新组件',

@@ -1201,6 +1201,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ImportDashboardTitle' => 'Importation depuis un fichier',
 	'UI:ImportDashboardText' => 'Choisissez un fichier de définition de tableau de bord :',
 	'UI:Dashboard:Actions' => 'Actions du tableau de bord',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Ce tableau de bord affiche des informations qui ne reflète pas les modifications en cours.',
 
 
 	'UI:DashletCreation:Title' => 'Créer un Indicateur',

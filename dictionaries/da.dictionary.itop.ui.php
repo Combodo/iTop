@@ -1195,6 +1195,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:ImportDashboardTitle' => 'Importer Fra Fil',
 	'UI:ImportDashboardText' => 'Vælg en dashboard fil til import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Opret en ny Dashlet',

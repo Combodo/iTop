@@ -1208,6 +1208,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:ImportDashboardTitle' => 'Importar de un Archivo',
 	'UI:ImportDashboardText' => 'Seleccione el Archivo de Panel de Control a Importar:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Crear Dashlet',
