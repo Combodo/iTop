@@ -673,11 +673,9 @@ JS
 		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$oPage->add(<<<HTML
 <form id="fr_{$this->iId}" OnSubmit="return oACWidget_{$this->iId}.DoOk();">
-		<div id="dr_{$this->iId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
-		<div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+		<div id="dr_{$this->iId}">
+		<div><p>{$sEmptyList}</p></div>
 		</div>
-		<input type="button" id="btn_cancel_{$this->iId}" value="{$sCancel}" onClick="$('#ac_dlg_{$this->iId}').dialog('close');">&nbsp;&nbsp;
-		<input type="button" id="btn_ok_{$this->iId}_results" value="{$sOK}"  onClick="oACWidget_{$this->iId}.DoOk();">
 		<input type="hidden" id="count_{$this->iId}_results" value="0">
 		</form>
 		</div></div>
@@ -686,7 +684,27 @@ HTML
 
 		$sDialogTitle = addslashes($sTitle);
 		$oPage->add_ready_script(<<<JS
-		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
+		$('#ac_dlg_{$this->iId}').dialog({ 
+				width: $(window).width()*0.8, 
+				height: $(window).height()*0.8, 
+				autoOpen: false, 
+				modal: true, 
+				title: '$sDialogTitle', 
+				resizeStop: oACWidget_{$this->iId}.UpdateSizes, 
+				close: oACWidget_{$this->iId}.OnClose,
+				buttons: [
+							{ text: "$sCancel",
+							 class: "ibo-is-alternative ibo-is-neutral",
+							 click: function() {
+								$(this).dialog('close');
+							} },
+							{ text: "$sOK",
+							 class: "ibo-is-regular ibo-is-primary",
+							 click: function() {
+								oACWidget_{$this->iId}.DoOk();
+							} },
+				],
+		});
 		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
 JS
