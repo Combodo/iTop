@@ -8,7 +8,25 @@ $('#dlg_{{ oUIBlock.sLinkedSetId }}').dialog({
     title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.sLinkedClassName, oUIBlock.sClassName) }}" ,
     autoOpen: false,
     modal: true,
-    resizeStop: oWidget{{ oUIBlock.iInputId }}.UpdateSizes
+    resizeStop: oWidget{{ oUIBlock.iInputId }}.UpdateSizes,
+    buttons: [
+        { 
+            text: "{{ 'UI:Button:Cancel'| dict_s }}",
+            class: "ibo-is-alternative ibo-is-neutral",
+            click: function() {
+                $(this).dialog('close');
+            } 
+        },
+        { 
+            text:  "{{ 'UI:Button:Add'| dict_s }}",
+            class: "ibo-is-regular ibo-is-primary",
+            id: "btn_ok_{{ oUIBlock.sLinkedSetId }}",
+            click: function() {
+                return oWidget{{ oUIBlock.iInputId }}.DoAddObjects();
+            } 
+        },
+    ],
+
 });
 
 $('#SearchFormToAdd_{{ oUIBlock.sLinkedSetId }} form').bind('submit.uilinksWizard', oWidget{{ oUIBlock.iInputId }}.SearchObjectsToAdd);

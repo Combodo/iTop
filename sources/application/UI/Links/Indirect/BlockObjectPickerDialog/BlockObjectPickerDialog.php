@@ -44,15 +44,5 @@ class BlockObjectPickerDialog extends UIContentBlock
 
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("count_{$this->sLinkedSetId}", '0', "count_{$this->sLinkedSetId}"));
 
-		$oToolbar = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-datatable--selection-validation-buttons-toolbar']);
-		$this->AddSubBlock($oToolbar);
-		$oRemoveButton = ButtonUIBlockFactory::MakeForCancel($sCancel, null, null, false);
-		$oRemoveButton->SetOnClickJsCode("$('#dlg_{$this->sLinkedSetId}').dialog('close');");
-		$oToolbar->AddSubBlock($oRemoveButton);
-
-		$oAddButton = ButtonUIBlockFactory::MakeForSecondaryAction($sAdd, null, null, false, "btn_ok_{$this->sLinkedSetId}");
-		$oAddButton->SetIsDisabled(true)
-			->SetOnClickJsCode("return oWidget{$this->iInputId}.DoAddObjects(this.id);");
-		$oToolbar->AddSubBlock($oAddButton);
 	}
 }

@@ -341,7 +341,6 @@ class UILinksWidgetDirect
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->sInputid}" value="0"/>
-    <button type="button" class="cancel">{$sCancel}</button>&nbsp;&nbsp;<button type="button" class="ok" disabled="disabled">{$sAdd}</button>
 </form>
 HTML
 		);
