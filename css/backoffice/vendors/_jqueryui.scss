@@ -16,6 +16,8 @@ $ibo-vendors-jqueryui--ui-dialog-titlebar--height: 50px !default;
 $ibo-vendors-jqueryui--ui-dialog-titlebar--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
 $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-200 !default;
 
+$ibo-vendors-jqueryui--ui-dialog-title--padding-right: 24px !default;
+
 $ibo-vendors-jqueryui--ui-dialog-buttonpane--height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height !default;
 $ibo-vendors-jqueryui--ui-dialog-buttonpane--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
 $ibo-vendors-jqueryui--ui-dialog-buttonpane--border-top: $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom !default;
@@ -75,10 +77,9 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	.ui-dialog-title {
 		float: left;
 		margin: .1em 0;
-		white-space: nowrap;
 		width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
+    padding-right: $ibo-vendors-jqueryui--ui-dialog-title--padding-right; /* To avoid title being visible behind the closing "X" */
+		@extend %ibo-text-truncated-with-ellipsis;
 	}
 	.ui-dialog-titlebar-close {
 		position: absolute;
