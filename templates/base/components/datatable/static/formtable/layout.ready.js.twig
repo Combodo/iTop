@@ -22,7 +22,6 @@ var table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_
     ],
     {% endif %}
 });
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
-{
+if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible')) {
     table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}.columns.adjust().draw();
 }
