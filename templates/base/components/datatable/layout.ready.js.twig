@@ -17,27 +17,6 @@ $('#{{ sListId }}').data('target', 'ibo-datatables--outer');
 if ($('#{{ oUIBlock.GetId() }}') != 'undefined' && $.fn.dataTable.isDataTable('#{{ oUIBlock.GetId() }}')) {
     $('#{{ oUIBlock.GetId() }}').DataTable().destroy(false);
 }
-//define maxHeight for Datatable
-var maxHeight{{ sListIDForVarSuffix }} = 300;
-if ($('#{{ oUIBlock.GetId() }}').closest('.ui-dialog').length > 0) {
-    //we are in dialogbox
-    maxHeight{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').closest('.ui-dialog-content').height();
-} else {
-    maxHeight{{ sListIDForVarSuffix }} = $(window).height()-$('#ibo-top-container').outerHeight()+$('#ibo-main-content').height()-$('#ibo-main-content').outerHeight();
-}
-
-if ($('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').length > 0) {
-    //we are in dialogbox
-    maxHeight{{ sListIDForVarSuffix }} = maxHeight{{ sListIDForVarSuffix }}-$('#{{ oUIBlock.GetId() }}').closest('[data-target=search_results]').parent().find('.ibo-search-form-panel').outerHeight();
-}
-if ($('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').length > 0) {
-    maxHeight{{ sListIDForVarSuffix }} = maxHeight{{ sListIDForVarSuffix }}-$('#{{ oUIBlock.GetId() }}').closest('.ibo-panel--header').outerHeight();
-}
-if (maxHeight{{ sListIDForVarSuffix }} < 300) {
-    maxHeight{{ sListIDForVarSuffix }} = 250;
-} else {
-    maxHeight{{ sListIDForVarSuffix }} = maxHeight{{ sListIDForVarSuffix }} -50;
-}
 
 var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
@@ -60,9 +39,11 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             sortDescending: ": {{ 'UI:Datatables:Language:Sort:Descending'|dict_s }}"
         }
     },
-    scrollY: maxHeight{{ sListIDForVarSuffix }},
     scrollX: true,
-    scrollCollapse: true,
+    {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
+        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+        scrollCollapse: true,
+    {% endif %}
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% if( oUIBlock.GetOptions("sort")[0] is defined ) %}
@@ -302,7 +283,6 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 });
 
 oTable{{ sListIfForVarSuffix }}.select();
-$('#{{ oUIBlock.GetId() }}').closest(".dataTables_scrollBody").css('max-height', maxHeight{{ sListIDForVarSuffix }}-100);
 
 
 
