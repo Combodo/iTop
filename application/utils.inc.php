@@ -601,14 +601,14 @@ class utils
 	/**
 	 * Checks if the memory limit is at least what is required
 	 *
-	 * @param int $memoryLimit set limit in bytes
-	 * @param int $requiredLimit required limit in bytes
+	 * @param int $iMemoryLimit set limit in bytes
+	 * @param int $iRequiredLimit required limit in bytes
 	 *
 	 * @return bool
 	 */
-	public static function IsMemoryLimitOk($memoryLimit, $requiredLimit)
+	public static function IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)
 	{
-		return ($memoryLimit >= $requiredLimit) || ($memoryLimit == -1);
+		return ($iMemoryLimit >= $iRequiredLimit) || ($iMemoryLimit == -1);
 	}
 
 	/**
