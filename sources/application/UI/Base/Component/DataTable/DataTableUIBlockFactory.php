@@ -386,6 +386,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
 		}
 
+		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
+		if (isset($aExtraParams['max_height'])) {
+			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
+		}
+
 		$aOptions['processing'] = true;
 		$aOptions['sTableId'] = $sTableId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
@@ -617,6 +622,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
+		}
+
+		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
+		if (isset($aExtraParams['max_height'])) {
+			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
 		}
 
 		$aOptions['sTableId'] = $sTableId;

@@ -29,7 +29,10 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     scrollX: true,
-    scrollCollapse: true,
+    {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
+        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+        scrollCollapse: true,
+    {% endif %}
     order: [],
     autoWidth: false,
     rowId: "id",
