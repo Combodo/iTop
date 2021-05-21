@@ -442,7 +442,10 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function ConvertToBytesProvider()
 	{
 		return [
+			'123' => ['123', 123],
+			'56k' => ['56k', 56 * 1024],
 			'512M' => ['512M', 512 * 1024 * 1024],
+			'2G' => ['2G', 2 * 1024 * 1024 * 1024],
 		];
 	}
 }
