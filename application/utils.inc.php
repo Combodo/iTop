@@ -637,7 +637,7 @@ class utils
 		}
 		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
 
-		if (($iMemoryLimit >= $iRequiredLimit) || ($iMemoryLimit === -1)) {
+		if (static::IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)) {
 			return null;
 		}
 
