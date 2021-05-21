@@ -426,4 +426,23 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			],
 		];
 	}
+
+	/**
+	 * @param string $sExpressionToConvert
+	 * @param int $iExpectedConvertedValue
+	 *
+	 * @dataProvider ConvertToBytesProvider
+	 */
+	public function testConvertToBytes($sExpressionToConvert, $iExpectedConvertedValue)
+	{
+		$iCurrentConvertedValue = utils::ConvertToBytes($sExpressionToConvert);
+		self::assertEquals($iExpectedConvertedValue, $iCurrentConvertedValue, 'Converted value wasn\'t the one expected !');
+	}
+
+	public function ConvertToBytesProvider()
+	{
+		return [
+			'512M' => ['512M', 512 * 1024 * 1024],
+		];
+	}
 }

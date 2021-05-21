@@ -42,27 +42,6 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 try {
-	function ReturnBytes($sVal) {
-		$sVal = trim($sVal);
-		$sLast = strtolower($sVal[strlen($sVal)-1]);
-		switch($sLast) {
-
-			case 'g':
-				$sVal *= 1024;
-			case 'm':
-				$sVal *= 1024;
-			case 'k':
-				$sVal *= 1024;
-		}
-
-		return $sVal;
-	}
-
-	// If php memory_limit is lower than 256M, set 256M. If it's greater do nothing. 
-	if ((ReturnBytes(ini_get('memory_limit'))) < '268435456') {
-        ini_set('memory_limit', '256M');
-    }
-	
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
@@ -71,10 +50,15 @@ try {
 	require_once(APPROOT.'/application/startup.inc.php');
 	
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+
+	if (utils::SetMinMemoryLimit('256M') === false) {
+		IssueLog::Warning('csvimport : cannot set minimum memory_limit !');
+	}
+
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$iStep = utils::ReadParam('step', 1);
-	
+
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
 	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 
