@@ -608,7 +608,7 @@ class utils
 	 */
 	public static function IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)
 	{
-		return ($iMemoryLimit >= $iRequiredLimit) || ($iMemoryLimit == -1);
+		return ($iMemoryLimit >= $iRequiredLimit) || ($iMemoryLimit === -1);
 	}
 
 	/**
@@ -635,7 +635,7 @@ class utils
 			// In that case, ini_set will not work
 			return false;
 		}
-		$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+		$iMemoryLimit = static::ConvertToBytes($sMemoryLimit);
 
 		if (static::IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)) {
 			return null;
