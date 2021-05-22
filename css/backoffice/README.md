@@ -7,6 +7,8 @@ This is a brief description of the SASS 7-1 system and how to use it.
 SCSS files are structured following the [7-1 pattern](https://sass-guidelin.es/#the-7-1-pattern). \
 @rveitch made a great summary with the following, which can also be found [here](https://gist.github.com/rveitch/84cea9650092119527bc).
 
+_Note: Folders with an * are customizations we made to the original 7-1 pattern to best fit our needs_  
+
 ```
 css/backoffice/
 |
@@ -42,10 +44,19 @@ css/backoffice/
 |   |– _forms.scss       # Forms
 |   ...                  # Etc…
 |
+|- *application/         # Elements that are not usable as a standalone (like componants and layouts are) and very application (the backoffice) specific
+|   |- display-block
+|   |- tabular-fields
+|   ...
+|
 |– pages/
 |   |– _home.scss        # Home specific styles
 |   |– _contact.scss     # Contact specific styles
 |   ...                  # Etc…
+|
+|- *blocks-integrations  # Specific rules for the integration of a block with another one, those kind of rules should never be in the block partial directly
+|   |- _panel-with-datatable.scss   # Changes the negative margins of the datatable so it overlaps the panel's original padding
+|   ...
 |
 |– themes/
 |   |– _theme.scss       # Default theme
@@ -68,6 +79,8 @@ To avoid common errors, files should be imported in the final file in the follow
 - Base
 - Components
 - Layout
+- \*Application
 - Pages
+- \*Block integrations
 - Themes
 - Shame file
