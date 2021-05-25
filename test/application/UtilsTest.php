@@ -54,11 +54,10 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function memoryLimitDataProvider()
 	{
 		return [
-			[true, '-1', 1024],
-			[true, -1, 1024],
-			[true, 1024, 1024],
-			[true, 2048, 1024],
-			[false, 1024, 2048],
+			'current -1, required 1024' => [true, -1, 1024],
+			'current 1024, required 1024' => [true, 1024, 1024],
+			'current 2048, required 1024' => [true, 2048, 1024],
+			'current 1024, required 2048' => [false, 1024, 2048],
 		];
 	}
 

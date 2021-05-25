@@ -601,14 +601,19 @@ class utils
 	/**
 	 * Checks if the memory limit is at least what is required
 	 *
-	 * @param int $iMemoryLimit set limit in bytes
+	 * @param int $iMemoryLimit set limit in bytes, use {@link utils::ConvertToBytes()} to convert current php.ini value
 	 * @param int $iRequiredLimit required limit in bytes
 	 *
 	 * @return bool
 	 */
 	public static function IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)
 	{
-		return ($iMemoryLimit >= $iRequiredLimit) || ($iMemoryLimit === -1);
+		if ($iMemoryLimit === -1) {
+			// -1 means : no limit (see https://www.php.net/manual/fr/ini.core.php#ini.memory-limit)
+			return true;
+		}
+
+		return ($iMemoryLimit >= $iRequiredLimit);
 	}
 
 	/**
