@@ -13,6 +13,8 @@ A UI component is a unitary block used to display information in iTop console.
 
    Alert/Alert
    Title/Title
+   FieldSet/FieldSet
+   Field/Field
    Button/Button
    ButtonGroup/ButtonGroup
    CollapsibleSection/CollapsibleSection
