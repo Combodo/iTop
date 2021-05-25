@@ -17,21 +17,24 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-try
-{
-	ini_set('memory_limit', '256M');
+try {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-	
+
 	require_once(APPROOT.'/application/startup.inc.php');
-	
+
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+
+	if (utils::SetMinMemoryLimit('256M') === false) {
+		IssueLog::Warning('csvimport : cannot set minimum memory_limit !');
+	}
+
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	
 	$iStep = utils::ReadParam('step', 1);
-	
+
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
 	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
 
@@ -1542,4 +1545,3 @@ catch(Exception $e)
 		IssueLog::Error($e->getMessage());
 	}
 }
-?>
