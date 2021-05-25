@@ -31,6 +31,9 @@ class ObjectFactory
 	 */
 	public static function MakeDetails(DBObject $oObject, ?string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
 	{
-		return new ObjectDetails($oObject, $sMode);
+		$oObjectDetails = new ObjectDetails($oObject, $sMode);
+		$oObjectDetails->SetIsHeaderVisibleOnScroll(true);
+
+		return $oObjectDetails;
 	}
 }

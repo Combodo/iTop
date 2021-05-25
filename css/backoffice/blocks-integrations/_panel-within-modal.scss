@@ -1,0 +1,24 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-panel-within-modal--header--top--is-sticky: -1 * $ibo-vendors-jqueryui--ui-dialog-content--padding-y !default;
+
+.ui-dialog-content {
+  /*
+   * Careful: Here we get all the "descendants" instead of the first closest panel in the modal, which could cause some glitches in the future.
+   * For now we decided to stay that way for the following reasons, if that changes in the future keep the repercussions on descendants panels in mind.
+   * - We don't have nested sticky panels (yet)
+   * - We don't want to hardcode the modal's markup selector if not necessary as it could change in the future (and is already different in read-only vs edition)
+   * - Unlike in JS, there no easy way to find the closest descendant
+   */
+  .ibo-panel {
+    /* Sticky header rules */
+    > .ibo-panel--header {
+      &.ibo-is-sticking {
+        top: $ibo-panel-within-modal--header--top--is-sticky;
+      }
+    }
+  }
+}
