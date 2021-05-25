@@ -17,38 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
-use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
-use Combodo\iTop\Renderer\BlockRenderer;
-
 try {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-	
+
 	require_once(APPROOT.'/application/startup.inc.php');
-	
+
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
 	if (utils::SetMinMemoryLimit('256M') === false) {
