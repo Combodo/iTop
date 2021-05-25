@@ -298,6 +298,7 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
             autoOpen: false,
             title: "{{ 'UI:ListConfigurationTitle'|dict_s }}",
             width: 500,
+            modal: true,
             open: function () {
                 $('#datatable_dlg_{{ oUIBlock.GetId() }}').find('[name=action]').val("none");
             },
