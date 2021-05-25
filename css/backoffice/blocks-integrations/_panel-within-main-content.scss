@@ -1,0 +1,29 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-panel-within-main-content--sticky-sentinel-top--top: -1 * $ibo-main-content--padding-top !default;
+$ibo-panel-within-main-content--sticky-sentinel-top--height: $ibo-main-content--padding-top !default;
+
+$ibo-panel-within-main-content--header--top--is-sticky: -1 * $ibo-main-content--padding-top !default;
+
+#ibo-main-content {
+  /*
+   * Careful: Here we get all the "descendants" instead of the first closest panel in the main content, which could cause some glitches in the future.
+   * For now we decided to stay that way for the following reasons, if that changes in the future keep the repercussions on descendants panels in mind.
+   * - We don't have nested sticky panels (yet)
+   * - We don't want to hardcode the main content's markup selector if not necessary as it could change in the future (and is already different in read-only vs edition)
+   * - Unlike in JS, there no easy way to find the closest descendant
+   */
+  .ibo-panel.ibo-has-sticky-header {
+    /* Stickable header rules */
+    > .ibo-sticky-sentinel-top {
+      top: $ibo-panel-within-main-content--sticky-sentinel-top--top;
+      height: $ibo-panel-within-main-content--sticky-sentinel-top--height;
+    }
+    > .ibo-panel--header.ibo-is-sticking {
+      top: $ibo-panel-within-main-content--header--top--is-sticky;
+    }
+  }
+}
