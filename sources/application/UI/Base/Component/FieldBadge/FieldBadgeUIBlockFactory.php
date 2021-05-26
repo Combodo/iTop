@@ -34,9 +34,9 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 				$oBadge = new FieldBadge(null, $aCSSClasses);
 				$sDecorationClasses = $oStyle->GetDecorationClasses();
 				if (!is_null($sDecorationClasses) && !empty($sDecorationClasses)) {
-					$oBadge->AddHtml("<i class=\"$sDecorationClasses\"></i>&nbsp;");
+					$oBadge->AddHtml("<span class=\"ibo-field-badge--decoration\"><i class=\"$sDecorationClasses\"></i></span>");
 				}
-				$oBadge->AddHtml("<span>$sValue</span>");
+				$oBadge->AddHtml("<span class=\"ibo-field-badge--label\">$sValue</span>");
 				// Add custom style
 				// TODO 3.0 To be removed when compilation supports generated CSS
 				$oBadge->AddHtml(<<<HTML
