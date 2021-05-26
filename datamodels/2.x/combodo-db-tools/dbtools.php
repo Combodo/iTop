@@ -31,15 +31,16 @@ const MAX_RESULTS = 10;
  * @param ApplicationContext $oAppContext
  *
  * @return \iTopWebPage
- * @throws CoreException
- * @throws DictExceptionMissingString
- * @throws MySQLException
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ * @throws \MySQLException
  */
 function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppContext)
 {
 	$iShowId = intval(utils::ReadParam('show_id', '0'));
 	$sErrorLabelSelection = utils::ReadParam('error_selection', '');
 	$sClassSelection = utils::ReadParam('class_selection', '');
+	$bVerbose = utils::ReadParam('verbose', 0);
 	if (!empty($sClassSelection))
 	{
 		$aClassSelection = explode(",", $sClassSelection);
@@ -109,10 +110,15 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 
 		if ($iShowId == 3)
 		{
-			DisplayInconsistenciesReport($aResults);
+			DisplayInconsistenciesReport($aResults, $bVerbose);
 		}
 
 		$oP->p(Dict::S('DBTools:ErrorsFound'));
+
+		if ($iShowId > 0) {
+			$oP->p(Dict::S('DBTools:Disclaimer'));
+			$oP->p(Dict::S('DBTools:Indication'));
+		}
 
 		$oP->add('<table class="listResults"><tr><th>'.Dict::S('DBTools:Class').'</th><th>'.Dict::S('DBTools:Count').'</th><th>'.Dict::S('DBTools:Error').'</th></tr>');
 		$bTable = true;
@@ -148,7 +154,7 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 					$oP->p(Dict::S('DBTools:SQLquery'));
 					$sQuery = $aError['query'];
 					$oP->add('<div style="padding: 15px; background: #f1f1f1;">');
-					$oP->add('<code>'.$sQuery.'</code>');
+					$oP->add('<pre>'.$sQuery.'</pre>');
 					$oP->add('</div>');
 
 					if (isset($aError['fixit']))
@@ -163,27 +169,26 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 						$oP->add('<br></div>');
 					}
 
-					$oP->p(Dict::S('DBTools:SQLresult'));
-					$sQueryResult = '';
-					$iCount = count($aError['res']);
-					$iMaxCount = MAX_RESULTS;
-					foreach($aError['res'] as $aRes)
-					{
-						$iMaxCount--;
-						if ($iMaxCount < 0)
-						{
-							$sQueryResult .= 'Displayed '.MAX_RESULTS."/$iCount results.<br>";
-							break;
+					if ($bVerbose) {
+						$oP->p(Dict::S('DBTools:SQLresult'));
+						$sQueryResult = '';
+						$iCount = count($aError['res']);
+						$iMaxCount = MAX_RESULTS;
+						foreach ($aError['res'] as $aRes) {
+							$iMaxCount--;
+							if ($iMaxCount < 0) {
+								$sQueryResult .= 'Displayed '.MAX_RESULTS."/$iCount results.<br>";
+								break;
+							}
+							foreach ($aRes as $sKey => $sValue) {
+								$sQueryResult .= "'$sKey'='$sValue'&nbsp;";
+							}
+							$sQueryResult .= '<br>';
 						}
-						foreach($aRes as $sKey => $sValue)
-						{
-							$sQueryResult .= "'$sKey'='$sValue'&nbsp;";
-						}
-						$sQueryResult .= '<br>';
+						$oP->add('<div style="padding: 15px; background: #f1f1f1;">');
+						$oP->add('<pre>'.$sQueryResult.'</pre>');
+						$oP->add('</div>');
 					}
-					$oP->add('<div style="padding: 15px; background: #f1f1f1;">');
-					$oP->add('<code>'.$sQueryResult.'</code>');
-					$oP->add('</div>');
 				}
 			}
 		}
@@ -194,14 +199,15 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 
 /**
  * @param $aResults
+ * @param bool $bVerbose
  *
  * @return mixed
- * @throws CoreException
- * @throws DictExceptionMissingString
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
  */
-function DisplayInconsistenciesReport($aResults)
+function DisplayInconsistenciesReport($aResults, $bVerbose = false)
 {
-	$sReportFile = DBAnalyzerUtils::GenerateReport($aResults);
+	$sReportFile = DBAnalyzerUtils::GenerateReport($aResults, $bVerbose);
 
 	$sZipReport = "{$sReportFile}.zip";
 	$oArchive = new ZipArchive();
