@@ -156,6 +156,8 @@ $ibo-input-select--action-button--padding-right: 2px !default;
 }
 
 .ibo-input-select--action-button {
+  display: flex;
+  align-items: center;
   padding-left: $ibo-input-select--action-button--padding-left;
   padding-right: $ibo-input-select--action-button--padding-right;
   float: right;
