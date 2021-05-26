@@ -22,7 +22,7 @@ Selectize.define('custom_itop', function(aOptions) {
 			var iIndex;
 			switch (e.keyCode) {
 				case KEY_BACKSPACE:
-					if (e.keyCode === KEY_BACKSPACE && this.$control_input.val() === '' && !this.$activeItems.length) {
+					if (this.$control_input.val() === '' && !this.$activeItems.length) {
 						iIndex = this.caretPos-1;
 						if (iIndex >= 0 && iIndex < this.items.length) {
 							this.clear(true);
@@ -33,14 +33,14 @@ Selectize.define('custom_itop', function(aOptions) {
 				case KEY_RETURN:
 					if (self.isOpen) {
 						//case nothing selected ->delete selection
-						if (!self.$activeOption || self.currentResults.query == "") {
+						if (!self.$activeOption || (self.currentResults.query === '' && !this.$control_input.val() === '')) {
 							self.deleteSelection(e);
 							self.setValue("");
 							return;
 						}
 					}
 			}
-			return original.apply();
+			return original.apply(this, arguments);
 		};
 	})();
 });
@@ -91,7 +91,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (item.additional_field != undefined) {
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
-					return $("<div>").append(val);
+					return $("<div class=\"option\">").append(val);
 				}
 			},
 			valueField: 'value',
