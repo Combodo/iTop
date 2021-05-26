@@ -16,7 +16,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-$family-sans-serif: "Raleway";
+$family-sans-serif: $ibo-font-family-base, $ibo-font-family-fallbacks !default;
 
 $body-overflow-x: hidden !default;
 $body-overflow-y: auto !default;
