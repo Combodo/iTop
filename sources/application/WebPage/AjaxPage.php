@@ -179,17 +179,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
 
 		// Render the blocks
-		// Additional UI widgets to be activated inside the ajax fragment
-		// Important: Testing the content type is not enough because some ajax handlers have not correctly positionned the flag (e.g json response corrupted by the script)
 
-		// TODO 3.0.0 à revoir
-		if (($this->sContentType == 'text/html') && (preg_match('/class="date-pick"/', $this->s_content) || preg_match('/class="datetime-pick"/', $this->s_content))) {
-			$this->add_ready_script(
-				<<<EOF
-PrepareWidgets();
-EOF
-			);
-		}
 		$this->outputCollapsibleSectionInit();
 
 		$aData = [];

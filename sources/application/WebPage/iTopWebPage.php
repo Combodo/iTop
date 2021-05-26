@@ -412,6 +412,8 @@ JS
 		setTimeout(function(){
 			CombodoTooltip.InitAllNonInstantiatedTooltips();
 			CombodoBackofficeToolbox.InitCodeHighlighting();
+			// Initialize date / datetime pickers if needed 
+			PrepareWidgets();
 		}, 500);
 	});
 JS
