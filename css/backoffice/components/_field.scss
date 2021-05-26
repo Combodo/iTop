@@ -52,7 +52,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
 /* Large field = Label on top, value below */
 .ibo-field-large {
-  display: inherit;
+  display: block;
 
   .ibo-field--label {
     position: relative; /* Necessary for fullscreen toggler */
