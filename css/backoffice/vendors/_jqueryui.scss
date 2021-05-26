@@ -563,3 +563,15 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 .ui-menu-item{
   @extend .ibo-popover-menu--item;
 }
+
+// Helper
+
+.ui-helper-hidden-accessible {
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}

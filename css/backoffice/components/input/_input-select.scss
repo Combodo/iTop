@@ -100,14 +100,6 @@ $ibo-input-select--action-button--padding-right: 2px !default;
 .ibo-input-select-wrapper--with-buttons {
   position: relative;
   display: flex;
-
-  > .selectize-control {
-
-  }
-
-  &:hover .ibo-input-select--action-buttons {
-    opacity: 1.0;
-  }
 }
 
 .ibo-input-select-container {
@@ -146,13 +138,6 @@ $ibo-input-select--action-button--padding-right: 2px !default;
   bottom: 0;
   top: 0;
   right: 0;
-
-  opacity: 0.0;
-  -webkit-transition: all 2300ms ease-in-out;
-  -moz-transition: all 200ms ease-in-out;
-  -ms-transition: all 200ms ease-in-out;
-  -o-transition: all 200ms ease-in-out;
-  transition: all 200ms ease-in-out;
 }
 
 .ibo-input-select-wrapper .ibo-input-select--action-buttons{
@@ -177,35 +162,3 @@ $ibo-input-select--action-button--padding-right: 2px !default;
 	background-color: #f5fafd;
 	color: #495c68;
 }
-//from jqueryui.css
-.ui-helper-hidden-accessible {
-  // border: 0;
-  clip: rect(0 0 0 0);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-}
-
-#stuff {
-  opacity: 0.0;
-  -webkit-transition: all 500ms ease-in-out;
-  -moz-transition: all 500ms ease-in-out;
-  -ms-transition: all 500ms ease-in-out;
-  -o-transition: all 500ms ease-in-out;
-  transition: all 500ms ease-in-out;
-}
-
-#hover {
-  width: 80px;
-  height: 20px;
-  background-color: green;
-  margin-bottom: 15px;
-}
-
-#hover:hover + #stuff {
-  opacity: 1.0;
-}
-
