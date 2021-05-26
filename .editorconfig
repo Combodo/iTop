@@ -69,7 +69,16 @@ ij_twig_spaces_inside_comments_delimiters = true
 ij_twig_spaces_inside_delimiters = true
 ij_twig_spaces_inside_variable_delimiters = true
 
-[{*.ant,*.fxml,*.jhm,*.jnlp,*.jrxml,*.rng,*.tld,*.wsdl,*.xml,*.xsd,*.xsl,*.xslt,*.xul,phpunit.xml.dist}]
+[.editorconfig]
+ij_visual_guides = none
+ij_editorconfig_align_group_field_declarations = false
+ij_editorconfig_space_after_colon = false
+ij_editorconfig_space_after_comma = true
+ij_editorconfig_space_before_colon = false
+ij_editorconfig_space_before_comma = false
+ij_editorconfig_spaces_around_assignment_operators = true
+
+[{*.ant, *.fxml, *.jhm, *.jnlp, *.jrxml, *.rng, *.tld, *.wsdl, *.xml, *.xsd, *.xsl, *.xslt, *.xul, phpunit.xml.dist}]
 indent_size = 2
 tab_width = 2
 ij_smart_tabs = true
