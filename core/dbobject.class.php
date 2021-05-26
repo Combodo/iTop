@@ -3123,13 +3123,11 @@ abstract class DBObject implements iDisplay
 				array(), $aParams);
 			while ($oTrigger = $oSet->Fetch())
 			{
-				/** @var \Trigger $oTrigger */
-				try
-				{
+				/** @var \TriggerOnObjectUpdate $oTrigger */
+				try {
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
-				catch(Exception $e)
-				{
+				catch (Exception $e) {
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
