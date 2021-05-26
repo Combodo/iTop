@@ -24,11 +24,12 @@ $ibo-input-select-wrapper--after--color: $ibo-color-grey-900 !default;
 $ibo-input-select--action-button--height: 28px !default;
 $ibo-input-select--action-button--width: 23px !default;
 $ibo-input-select--action-button--margin-top: 0px !default;
-$ibo-input-select--action-button--margin-right: 20px !default;
+$ibo-input-select--action-button--margin-right: 3px !default;
 $ibo-input-select--action-button--background-color: inherit !default;
 $ibo-input-select--action-button--color: $ibo-color-grey-800 !default;
 $ibo-input-select--action-button--padding-x: 2px !default;
 $ibo-input-select--action-button--padding-y: 0px !default;
+$ibo-input-select--select-wrapper--action-button--margin-right: 20px !default;
 
 $ibo-input-select--action-button--padding-left: 6px !default;
 $ibo-input-select--action-button--padding-right: 2px !default;
@@ -113,7 +114,7 @@ $ibo-input-select--action-button--padding-right: 2px !default;
   display: flex;
 }
 
-.ibo-input-select-wrapper--with-buttons::after {
+.ibo-input-select-wrapper--with-buttons:not(.ibo-input-select-autocomplete-wrapper)::after {
   position: absolute;
   content: "\f0d7";
   font-family: "Font Awesome 5 Free";
@@ -152,7 +153,10 @@ $ibo-input-select--action-button--padding-right: 2px !default;
   -ms-transition: all 200ms ease-in-out;
   -o-transition: all 200ms ease-in-out;
   transition: all 200ms ease-in-out;
+}
 
+.ibo-input-select-wrapper .ibo-input-select--action-buttons{
+  margin-right: $ibo-input-select--select-wrapper--action-button--margin-right;
 }
 
 .ibo-input-select--action-button {

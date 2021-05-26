@@ -160,7 +160,8 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		
+		
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
@@ -183,8 +184,12 @@ class UIExtKeyWidget
 		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
+		$bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
+		$sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
-		if (!$oAllowedValues->CountExceeds($iMaxComboLength)) {
+		if (!$bIsAutocomplete) {
 			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
