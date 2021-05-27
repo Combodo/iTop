@@ -143,7 +143,12 @@ class SetupUtils
 		self::CheckPhpVersion($aResult);
 
 		// Check the common directories
-		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
+		if (utils::IsModeCLI()) {
+			$aWritableDirs = ['log', 'data'];
+		} else {
+			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'conf', 'data'];
+		}
+		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
 		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
@@ -411,14 +416,15 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 Add PHP version checks in CLI scripts
 	 */
-	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1) {
+	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1)
+	{
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
 		$aPhpCheckErrors = CheckResult::FilterCheckResultArray($aPhpCheckResults, [CheckResult::ERROR]);
 		if (empty($aPhpCheckErrors)) {
 			return;
 		}
 
-		$sMessageTitle = 'Error: PHP minimum requirements are not met !';
+		$sMessageTitle = 'Error: Requirements are not met !';
 		$oCliPage->p($sMessageTitle);
 		$aPhpCheckErrorsForPrint = CheckResult::FromObjectsToStrings($aPhpCheckErrors);
 		foreach ($aPhpCheckErrorsForPrint as $sError) {
