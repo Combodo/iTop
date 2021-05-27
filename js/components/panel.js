@@ -36,7 +36,6 @@ $(function () {
 					is_sticking: 'ibo-is-sticking',
 					sticky_sentinel: 'ibo-sticky-sentinel',
 					sticky_sentinel_top: 'ibo-sticky-sentinel-top',
-					sticky_sentinel_bottom: 'ibo-sticky-sentinel-bottom',
 				},
 			js_selectors:
 				{
@@ -44,10 +43,9 @@ $(function () {
 					modal_content: '.ui-dialog-content',
 					panel_header: '[data-role="ibo-panel--header"]:first',
 					panel_header_sticky_sentinel_top: '[data-role="ibo-panel--header--sticky-sentinel-top"]',
-					panel_header_sticky_sentinel_bottom: '[data-role="ibo-panel--header--sticky-sentinel-bottom"]',
 				},
-			// {IntersectionObserver} Observer for the sticky header
-			sticky_header_observer: null,
+			// {ScrollMagic.Controller} SM controller for the sticky header
+			sticky_header_controller: null,
 
 			// the constructor
 			_create: function () {
@@ -64,17 +62,14 @@ $(function () {
 				if (this._isHeaderVisibleOnScroll()) {
 					this.element.addClass(this.css_classes.has_sticky_header);
 
-					// Add sentinels to the markup to detect when the element changes between scrolling & sticked states
+					// Add sentinel to the markup to detect when the element changes between scrolling & sticked states
 					$('<div></div>')
 						.addClass(this.css_classes.sticky_sentinel)
 						.addClass(this.css_classes.sticky_sentinel_top)
 						.attr('data-role', 'ibo-panel--header--sticky-sentinel-top')
 						.prependTo(this.element);
-					$('<div></div>')
-						.addClass(this.css_classes.sticky_sentinel)
-						.addClass(this.css_classes.sticky_sentinel_bottom)
-						.attr('data-role', 'ibo-panel--header--sticky-sentinel-bottom')
-						.appendTo(this.element);
+
+					this._updateStickyHeaderHandler();
 				}
 			},
 			_bindEvents: function () {
@@ -82,36 +77,27 @@ $(function () {
 				const oBodyElem = $('body');
 
 				if (this._isHeaderVisibleOnScroll()) {
-					this._observeStickyHeaderChanges();
-
 					// When a modal opens, it could have been for this panel. As the panel is moved into the modal's markup after this JS widget is instantiated
 					// the viewport is not the right one and we need to update it.
 					oBodyElem.on('dialogopen', function(){
-						me._observeStickyHeaderChanges();
+						me._updateStickyHeaderHandler();
 					});
 				}
 			},
 
 			// Stickey header helpers
 			/**
-			 * Instantiate an observer on the header to toggle its "sticky" state and fire an event
+			 * Create or update an handler on the header to toggle its "sticky" state.
+			 * Update is needed when the panel was moved to other DOM node.
 			 * @private
 			 */
-			_observeStickyHeaderChanges: function () {
+			_updateStickyHeaderHandler: function () {
 				const me = this;
 
 				// Determine in which kind of container the panel is
-				let oNewViewportElem = null;
-				// - In a modal
-				if (this.element.closest(this.js_selectors.modal_content).length > 0) {
-					oNewViewportElem = this.element.closest(this.js_selectors.modal_content)[0];
-				}
-				// - In a standard page
-				else if (this.element.closest('#ibo-center-container').length > 0) {
-					oNewViewportElem = this.element.closest('#ibo-center-container')[0];
-				}
+				let oNewViewportElem = this.element.scrollParent()[0];
 
-				// If viewport hasn't changed, there is no need to refresh the observer
+				// If viewport hasn't changed, there is no need to refresh the SM controller
 				if (oNewViewportElem === this.options.viewport_elem) {
 					return;
 				}
@@ -119,37 +105,29 @@ $(function () {
 				// Update the reference viewport
 				this.options.viewport_elem = oNewViewportElem;
 
-				// Clean observer if there was already one
-				if (null !== this.sticky_header_observer) {
-					this.sticky_header_observer.disconnect();
+				// Clean SM controller if there was already one
+				if (null !== this.sticky_header_controller) {
+					this.sticky_header_controller.destroy(true);
 				}
 
-				// Prepare observer options
-				const oOptions = {
-					root: this.options.viewport_elem,
-					threshold: 0,
-				};
+				// Prepare SM controller
+				this.sticky_header_controller = new ScrollMagic.Controller({
+					container: this.options.viewport_elem,
+				});
 
-				// Instantiate observer and callback for the top sentinel
-				this.sticky_header_observer = new IntersectionObserver(function (aEntries, oObserver) {
-					for (const oEntry of aEntries) {
-						const oSentinelInfo = oEntry.boundingClientRect;
-						const oRootInfo = oEntry.rootBounds;
-
-						// Started sticking.
-						if (oSentinelInfo.bottom < oRootInfo.top) {
-							me._onHeaderBecomesSticky();
-
-						}
-
-						// Stopped sticking.
-						if (oSentinelInfo.bottom >= oRootInfo.top &&
-							oSentinelInfo.bottom < oRootInfo.bottom) {
-							me._onHeaderStopsBeingSticky();
-						}
-					}
-				}, oOptions);
-				this.sticky_header_observer.observe(this.element.find(this.js_selectors.panel_header_sticky_sentinel_top)[0]);
+				let oSMScene = new ScrollMagic.Scene({
+					triggerElement: this.element.find(this.js_selectors.panel_header_sticky_sentinel_top)[0],
+					triggerHook: 0,
+					duration: this.element.outerHeight(),
+					offset: this.element.find(this.js_selectors.panel_header_sticky_sentinel_top).outerHeight()
+				})
+					.on('enter', function(){
+						me._onHeaderBecomesSticky();
+					})
+					.on('leave', function(){
+						me._onHeaderStopsBeingSticky();
+					})
+					.addTo(this.sticky_header_controller);
 			},
 			_onHeaderBecomesSticky: function () {
 				this.element.find(this.js_selectors.panel_header).addClass(this.css_classes.is_sticking);
