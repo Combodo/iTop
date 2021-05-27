@@ -1,6 +1,7 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-
+{% set sListId = oUIBlock.GetId() %}
+{% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
     {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
@@ -59,3 +60,14 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endfor %}
     ]
 });
+
+if(window.ResizeObserver){
+    let oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oStaticTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
+        clearTimeout(oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout);
+        oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
+            $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
+        }, 120);
+    });
+    oStaticTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
+}
