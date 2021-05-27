@@ -36,6 +36,16 @@ $ibo-vendors-datatables--columns-header--border-bottom: 1px solid $ibo-color-gre
 $ibo-vendors-datatables--row--background-color--is-odd: $ibo-color-white-100 !default;
 $ibo-vendors-datatables--row--background-color--is-even: $ibo-color-white-200 !default;
 
+$ibo-vendors-datatables--row-highlight--colors:(
+        'red': ($ibo-color-red-100),
+        'danger': ($ibo-color-red-200),
+        'alert': ($ibo-color-red-200),
+        'orange': ($ibo-color-orange-100),
+        'warning': ($ibo-color-orange-200),
+        'blue': ($ibo-color-blue-200),
+        'info': ($ibo-color-blue-200),
+) !default;
+
 .dataTables_paginate {
   @extend %ibo-vertically-centered-content;
   color: $ibo-vendors-datatables--pagination--color;
@@ -139,5 +149,11 @@ $ibo-vendors-datatables--row--background-color--is-even: $ibo-color-white-200 !d
 
   tr:nth-child(even) {
     background-color: $ibo-vendors-datatables--row--background-color--is-even;
+  }
+  @each $sColorLabel, $aAttributes in $ibo-vendors-datatables--row-highlight--colors {
+    $sBgColor: nth($aAttributes, 1);
+    tr.ibo-is-#{$sColorLabel}{
+      background-color: $sBgColor;
+    }
   }
 }
