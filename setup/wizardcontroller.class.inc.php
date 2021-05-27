@@ -105,7 +105,7 @@ class WizardController
 	/**
 	 * Starts the wizard by displaying it in its initial state
 	 */
-	protected function Start()
+	public function Start()
 	{
 		$sCurrentStepClass = $this->sInitialStepClass;
 		$oStep = new $sCurrentStepClass($this, $this->sInitialState);
@@ -121,7 +121,7 @@ class WizardController
 		$sCurrentState = utils::ReadParam('_state', $this->sInitialState);
 		/** @var \WizardStep $oStep */
 		$oStep = new $sCurrentStepClass($this, $sCurrentState);
-		if ($oStep->ValidateParams($sCurrentState))
+		if ($oStep->ValidateParams())
 		{
 			$this->PushStep(array('class' => $sCurrentStepClass, 'state' => $sCurrentState));
 			$aPossibleSteps = $oStep->GetPossibleSteps();
@@ -173,6 +173,7 @@ class WizardController
 				// The configuration file already exists
 				if (!is_writable($sConfigFile))
 				{
+					SetupUtils::EraseSetupToken();
 					$sRelativePath = utils::GetConfigFilePathRelative();
 					$oP = new SetupPage('Installation Cannot Continue');
 					$oP->add("<h2>Fatal error</h2>\n");
@@ -180,7 +181,8 @@ class WizardController
 					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 					$oP->p('<button type="button" onclick="window.location.reload()">Reload</button>');
 					$oP->output();
-					return;
+					// Prevent token creation
+					exit;
 				}
 			}			
 		}

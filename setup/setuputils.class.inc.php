@@ -1826,6 +1826,75 @@ EOF
 	{
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
+
+	/**
+	 * Create and store Setup authentication token
+	 *
+	 * @return string token
+	 */
+	public final static function CreateSetupToken()
+	{
+		if (!is_dir(APPROOT.'data'))
+		{
+			mkdir(APPROOT.'data');
+		}
+		if (!is_dir(APPROOT.'data/setup'))
+		{
+			mkdir(APPROOT.'data/setup');
+		}
+		$sUID = hash('sha256', rand());
+		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		$_SESSION['setup_token'] = $sUID;
+		return $sUID;
+	}
+
+	/**
+	 * Verify Setup authentication token (from the request parameter 'authent')
+	 *
+	 * @param bool $bRemoveToken
+	 *
+	 * @throws \SecurityException
+	 */
+	public final static function CheckSetupToken($bRemoveToken = false)
+	{
+		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
+		$sTokenFile = APPROOT.'data/setup/authent';
+		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile))
+		{
+			throw new SecurityException('Setup operations are not allowed outside of the setup');
+		}
+		if ($bRemoveToken)
+		{
+			@unlink($sTokenFile);
+		}
+	}
+
+	/**
+	 * Check setup transaction and create a new one if necessary
+	 *
+	 * @return bool
+	 */
+	public static function IsSessionSetupTokenValid()
+	{
+		if (isset($_SESSION['setup_token'])) {
+			$sAuth = $_SESSION['setup_token'];
+			$sTokenFile = APPROOT.'data/setup/authent';
+			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static function EraseSetupToken()
+	{
+		$sTokenFile = APPROOT.'data/setup/authent';
+		if (is_file($sTokenFile)) {
+			unlink($sTokenFile);
+		}
+		unset($_SESSION['setup_token']);
+	}
 }
 
 /**
