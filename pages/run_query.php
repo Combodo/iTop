@@ -112,7 +112,6 @@ try
 	if ($sEncoding == 'crypted')
 	{
 		// Translate $sExpression into a oql expression
-		$sClearText = base64_decode($sExpression);
 		$oFilter = DBObjectSearch::unserialize($sExpression);
 		$sExpression = $oFilter->ToOQL();
 	}
