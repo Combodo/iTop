@@ -3,6 +3,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-panel-within-modal--sticky-sentinel-top--top: -1 * $ibo-vendors-jqueryui--ui-dialog-content--padding-y !default;
+$ibo-panel-within-modal--sticky-sentinel-top--height: $ibo-vendors-jqueryui--ui-dialog-content--padding-y !default;
+
 $ibo-panel-within-modal--header--top--is-sticky: -1 * $ibo-vendors-jqueryui--ui-dialog-content--padding-y !default;
 
 .ui-dialog-content {
@@ -13,12 +16,14 @@ $ibo-panel-within-modal--header--top--is-sticky: -1 * $ibo-vendors-jqueryui--ui-
    * - We don't want to hardcode the modal's markup selector if not necessary as it could change in the future (and is already different in read-only vs edition)
    * - Unlike in JS, there no easy way to find the closest descendant
    */
-  .ibo-panel {
+  .ibo-panel.ibo-has-sticky-header {
     /* Sticky header rules */
-    > .ibo-panel--header {
-      &.ibo-is-sticking {
+    > .ibo-sticky-sentinel-top {
+      top: $ibo-panel-within-modal--sticky-sentinel-top--top;
+      height: $ibo-panel-within-modal--sticky-sentinel-top--height;
+    }
+    > .ibo-panel--header.ibo-is-sticking {
         top: $ibo-panel-within-modal--header--top--is-sticky;
-      }
     }
   }
 }

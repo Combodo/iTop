@@ -267,8 +267,8 @@ $ibo-panel-colors: (
 
     /* All transitions should have a specific duration except for the header's "top" property otherwise it feels laggy */
     /* - The header itself */
-    transition-property: $ibo-panel--base-transition-property, top;
-    transition-duration: $ibo-panel--base-transition-duration, 0s;
+    transition-property: $ibo-panel--base-transition-property, top, background-color;
+    transition-duration: $ibo-panel--base-transition-duration, 0s, 0s;
     transition-timing-function: $ibo-panel--base-transition-timing-function;
     /* - Impacted descendants (we don't put "*" as it can get shaky otherwise) */
     .ibo-panel--title,
