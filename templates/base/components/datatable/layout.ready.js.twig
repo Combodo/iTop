@@ -75,17 +75,30 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
                 $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
             }
-            else {
-                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
-            }
             bSelectAllowed{{ oUIBlock.GetId() }} = true;
 
+            // Hiding pagination if only one page
+            if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+            } else {
+                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+            }
+            
             $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
                 //disable select action when there is a link
                 e.stopPropagation();
             });
         },
-    {% endif %}
+    {% else %}
+        drawCallback: function () {
+            // Hiding pagination if only one page
+            if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+            } else {
+                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+            }
+        },
+        {% endif %}
     rowId: "id",
     filter: false,
     retrieve: true,
