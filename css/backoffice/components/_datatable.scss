@@ -50,18 +50,6 @@ $ibo-datatable--sort-order--color: $ibo-color-orange-600 !default;
   padding: $ibo-datatable-panel--body--padding;
 }
 
-.ibo-datatable-panel {
-  /* Above the table */
-  &:first-child {
-    margin-bottom: $ibo-datatable-panel--table-spacing;
-  }
-
-  /* below the table */
-  &:not(:first-child) {
-    margin-top: $ibo-datatable-panel--table-spacing;
-  }
-}
-
 // For cancel / OK / next... selection validation buttons
 .ibo-datatable--selection-validation-buttons-toolbar {
   clear: both;
