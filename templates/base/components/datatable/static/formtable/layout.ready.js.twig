@@ -24,6 +24,14 @@ var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {orderable: false, targets: 0}
     ],
     {% endif %}
+    drawCallback: function () {
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        } else {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
+    }
 });
 if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible')) {
     table{{ sListIDForVarSuffix }}.columns.adjust().draw();

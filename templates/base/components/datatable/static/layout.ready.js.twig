@@ -41,9 +41,6 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     {% if oUIBlock.GetOption("pageLength") is not empty %}
         pageLength: {{ oUIBlock.GetOption("pageLength") }},
     {% endif %}
-    {% if oUIBlock.GetData()|length <= iPageSize %}
-        paging: false,
-    {% endif %}
     {% if oUIBlock.GetOption("dom") is not empty %}
         dom: "<'ibo-datatable-toolbar'{{ oUIBlock.GetOption("dom") }}>t",
     {% else %}
@@ -58,7 +55,15 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
             sortable: true
         },
         {% endfor %}
-    ]
+    ],
+    drawCallback: function () {
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        } else {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
+    }
 });
 
 if(window.ResizeObserver){
