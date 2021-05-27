@@ -319,6 +319,10 @@ class AjaxRenderController
 					foreach ($aObject[$sAlias]->GetLoadedAttributes() as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 					}
+					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
+					if (!empty($sObjHighlightClass)){
+						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
+					}
 				}
 			}
 			if ($sIdName != "") {

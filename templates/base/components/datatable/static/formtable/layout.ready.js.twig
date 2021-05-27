@@ -31,7 +31,12 @@ var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         } else {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
-    }
+    },
+    createdRow: function( row, data, dataIndex ) {
+        if (data['@class'] !== undefined) {
+            $(row).addClass(data['@class']);
+        }
+    },
 });
 if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible')) {
     table{{ sListIDForVarSuffix }}.columns.adjust().draw();
