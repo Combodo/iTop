@@ -186,8 +186,7 @@ try
 catch(Exception $e)
 {
 	header("HTTP/1.0 500 Internal server error.");
-	echo "<p>An error happened while processing the installation:</p>\n";
-	echo '<p>'.$e."</p>\n";
+	echo "<p>An error happened while processing the installation</p>\n";
 	SetupPage::log_error("An error happened while processing the installation: ".$e);
 }
 
@@ -195,7 +194,7 @@ if (function_exists('memory_get_peak_usage'))
 {
 	if ($sOperation == 'file')
 	{
-		SetupPage::log_info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
+		SetupPage::log_info("loading file peak memory usage. ".memory_get_peak_usage());
 	}
 	else
 	{

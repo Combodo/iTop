@@ -2019,6 +2019,7 @@ JS
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		$_SESSION['setup_token'] = $sUID;
 		return $sUID;
 	}
 
@@ -2041,6 +2042,33 @@ JS
 		{
 			@unlink($sTokenFile);
 		}
+	}
+
+	/**
+	 * Check setup transaction and create a new one if necessary
+	 *
+	 * @return bool
+	 */
+	public static function IsSessionSetupTokenValid()
+	{
+		if (isset($_SESSION['setup_token'])) {
+			$sAuth = $_SESSION['setup_token'];
+			$sTokenFile = APPROOT.'data/setup/authent';
+			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	public static function EraseSetupToken()
+	{
+		$sTokenFile = APPROOT.'data/setup/authent';
+		if (is_file($sTokenFile)) {
+			unlink($sTokenFile);
+		}
+		unset($_SESSION['setup_token']);
 	}
 
 	private final static function Log($sText)
