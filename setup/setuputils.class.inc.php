@@ -2006,6 +2006,7 @@ JS
 	 * Create and store Setup authentication token
 	 *
 	 * @return string token
+	 * @since 2.6.5 2.7.0 N°3952
 	 */
 	public final static function CreateSetupToken()
 	{
@@ -2029,6 +2030,7 @@ JS
 	 * @param bool $bRemoveToken
 	 *
 	 * @throws \SecurityException
+	 * @since 2.6.5 2.7.0 N°3952
 	 */
 	public final static function CheckSetupToken($bRemoveToken = false)
 	{
@@ -2048,6 +2050,7 @@ JS
 	 * Check setup transaction and create a new one if necessary
 	 *
 	 * @return bool
+	 * @since 2.6.5 2.7.5 3.0.0 N°3952
 	 */
 	public static function IsSessionSetupTokenValid()
 	{
@@ -2062,6 +2065,9 @@ JS
 		return false;
 	}
 
+	/**
+	 * @since 2.6.5 2.7.5 3.0.0 N°3952
+	 */
 	public static function EraseSetupToken()
 	{
 		$sTokenFile = APPROOT.'data/setup/authent';
