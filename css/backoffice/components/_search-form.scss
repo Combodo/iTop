@@ -859,3 +859,9 @@
 		@extend .ibo-is-alternative;
 	}
 }
+.sfm_tg_title{
+  display: none;
+}
+.ibo-criterion-group:empty ~ .sf_more_criterion .sfm_tg_title{
+  display: unset;
+}
