@@ -306,16 +306,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Change:ObjectCreated' => 'Object aangemaakt',
 	'Change:ObjectDeleted' => 'Object verwijderd',
 	'Change:ObjectModified' => 'Object aangepast',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
+	'Change:TwoAttributesChanged' => '%1$s en %2$s aangepast',
+	'Change:ThreeAttributesChanged' => '%1$s, %2$s en 1 andere aangepast',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s en %3$s andere aangepast',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s veranderd naar %2$s (vorige waarde: %3$s)',
 	'Change:AttName_SetTo' => '%1$s veranderd naar %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s toegevoegd aan %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s aangepast, vorige waarde: %2$s',
 	'Change:AttName_Changed' => '%1$s aangepast',
 	'Change:AttName_EntryAdded' => '%1$s aangepast, nieuwe invoer toegevoegd: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
+	'Change:State_Changed_NewValue_OldValue' => 'Veranderd van %2$s naar %1$s',
 	'Change:LinkSet:Added' => 'toegevoegd %1$s',
 	'Change:LinkSet:Removed' => 'verwijderd %1$s',
 	'Change:LinkSet:Modified' => 'aangepast %1$s',
@@ -515,10 +515,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail' => 'E-mailmelding',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:status+' => 'Status bepaalt wie op de hoogte zal gesteld worden: enkel de testontvanger, iedereen (Aan, CC en BCC) of niemand',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Enkel de testontvanger zal op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemingen zullen op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'De e-mailmelding zal niet verstuurd worden',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',
 	'Class:ActionEmail/Attribute:from' => 'Van (e-mail)',
@@ -562,8 +562,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Trigger/Attribute:action_list+' => 'Acties uitgevoerd nadat de trigger is geactiveerd',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
 	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context' => 'Context',
+	'Class:Trigger/Attribute:context+' => 'In welke context de trigger uitgevoerd kan worden',
 ));
 
 //
@@ -1074,16 +1074,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Uiteindelijke klasse',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
-	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
-	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
-	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
-	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
-	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Resterende pogingen',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Laatste foutcode',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Laatste fout',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Laatste poging',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
 ));
 
 //
@@ -1121,6 +1121,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
 	'Class:ResourceSystemMenu+' => '',
 ));
-
-
-
