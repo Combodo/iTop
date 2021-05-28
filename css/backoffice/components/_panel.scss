@@ -17,8 +17,6 @@
  */
 
 /* SCSS variables */
-$ibo-panel--spacing-top: 24px !default;
-
 /* - Base variables for the block */
 $ibo-panel--base-border-size: 1px !default;
 $ibo-panel--base-border-style: solid !default;
@@ -35,24 +33,26 @@ $ibo-panel--base-transition: $ibo-panel--base-transition-property $ibo-panel--ba
 }
 
 /* - Specific variables for the block */
-$ibo-panel--header--margin-bottom: 4px !default;
-
-$ibo-panel--header--background-color--is-sticking: $ibo-color-grey-100 !default;
-$ibo-panel--header--border--is-sticking: $ibo-panel--base-border !default;
-
-$ibo-panel--header--padding-y--is-sticking: 4px !default;
+$ibo-panel--spacing-top: 24px !default;
 
 $ibo-panel--highlight--width: 100% !default;
 $ibo-panel--highlight--height: 8px !default;
 $ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
 $ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
 
+$ibo-panel--body--z-index: 1 !default;
 $ibo-panel--body--background-color: $ibo-color-white-100 !default;
 $ibo-panel--body--padding-bottom: 24px !default;
 $ibo-panel--body--padding-top: $ibo-panel--body--padding-bottom + $ibo-panel--highlight--height !default;
 $ibo-panel--body--padding-x: 16px !default;
 $ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
 $ibo-panel--body--border: $ibo-panel--base-border !default;
+
+$ibo-panel--header--z-index: $ibo-panel--body--z-index + 1 !default; /* Should always be above the body */
+$ibo-panel--header--margin-bottom: 4px !default;
+$ibo-panel--header--background-color--is-sticking: $ibo-color-grey-100 !default;
+$ibo-panel--header--border--is-sticking: $ibo-panel--base-border !default;
+$ibo-panel--header--padding-y--is-sticking: 4px !default;
 
 $ibo-panel--icon--size: 48px !default;
 $ibo-panel--icon--spacing: 16px !default;
@@ -163,6 +163,8 @@ $ibo-panel-colors: (
 }
 
 .ibo-panel--header {
+  position: relative;
+  z-index: $ibo-panel--header--z-index;
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
@@ -217,6 +219,7 @@ $ibo-panel-colors: (
 
 .ibo-panel--body {
   position: relative;
+  z-index: $ibo-panel--body--z-index;
   padding: $ibo-panel--body--padding-top $ibo-panel--body--padding-x $ibo-panel--body--padding-bottom $ibo-panel--body--padding-x;
   background-color: $ibo-panel--body--background-color;
   border: $ibo-panel--body--border;
@@ -262,8 +265,8 @@ $ibo-panel-colors: (
   // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
   > .ibo-panel--header {
     position: sticky;
-    z-index: 1;
     top: 0; /* Default, stick on the top of the panel. Custom integrations should be done in the "blocks-integrations" partials */
+    border: transparent; /* To avoid visual glitch during transition, otherwise the border looks black first */
 
     /* All transitions should have a specific duration except for the header's "top" property otherwise it feels laggy */
     /* - The header itself */

@@ -26,6 +26,7 @@ $(function () {
 			options: {},
 			css_classes: {
 				is_sticking: 'ibo-is-sticking',
+				is_vertical: 'ibo-is-vertical',
 			},
 			js_selectors: {
 				// Selectors that target any elements in the DOM

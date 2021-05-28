@@ -25,19 +25,6 @@
     {% endif %}
 {% endblock %}
 
-{% block iboPanelHeaderRightActionsHandlers %}
-    // Keep URL's hash parameters when clicking on a link of the header
-    $('#{{ oUIBlock.GetId() }}').on('click', '[data-role="ibo-panel--header-right"] a', function() {
-    aMatches = /#(.*)$/.exec(window.location.href);
-    if (aMatches != null) {
-        currentHash = aMatches[1];
-        if (/#(.*)$/.test(this.href)) {
-            this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
-        }
-    }
-});
-{% endblock %}
-
 {% block iboWidgetInstantiation %}
 $('#{{ oUIBlock.GetId() }}').object_details({
     is_header_visible_on_scroll: {{ oUIBlock.IsHeaderVisibleOnScroll|var_export }}
