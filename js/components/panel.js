@@ -20,7 +20,7 @@
 $(function () {
 	// the widget definition, where 'itop' is the namespace,
 	// 'panel' the widget name
-	$.widget('itop.panel',
+	$.widget('itop.panel', $.itop.ui_block,
 		{
 			// default options
 			options:
@@ -33,17 +33,19 @@ $(function () {
 			css_classes:
 				{
 					has_sticky_header: 'ibo-has-sticky-header',
-					is_sticking: 'ibo-is-sticking',
 					sticky_sentinel: 'ibo-sticky-sentinel',
 					sticky_sentinel_top: 'ibo-sticky-sentinel-top',
 				},
-			js_selectors:
-				{
-					modal: '.ui-dialog',
-					modal_content: '.ui-dialog-content',
+			js_selectors: {
+				global: {},
+				block: {
 					panel_header: '[data-role="ibo-panel--header"]:first',
-					panel_header_sticky_sentinel_top: '[data-role="ibo-panel--header--sticky-sentinel-top"]',
-				},
+					panel_header_sticky_sentinel_top: '[data-role="ibo-panel--header--sticky-sentinel-top"]:first',
+					panel_body: '[data-role="ibo-panel--body"]:first',
+					tab_container: '[data-role="ibo-tab-container"]:first',
+					tab_container_tabs_list: '[data-role="ibo-tab-container--tabs-list"]:first',
+				}
+			},
 			// {ScrollMagic.Controller} SM controller for the sticky header
 			sticky_header_controller: null,
 
@@ -82,6 +84,14 @@ $(function () {
 					oBodyElem.on('dialogopen', function(){
 						me._updateStickyHeaderHandler();
 					});
+
+					// Observe the panel resizes in order to adjust the tabs list; only necessary when header is sticky for now
+					if(window.ResizeObserver) {
+						const oPanelRO = new ResizeObserver(function(){
+							me._updateTabsListPosition();
+						});
+						oPanelRO.observe(this.element[0]);
+					}
 				}
 			},
 
@@ -94,10 +104,8 @@ $(function () {
 			_updateStickyHeaderHandler: function () {
 				const me = this;
 
-				// Determine in which kind of container the panel is
-				let oNewViewportElem = this.element.scrollParent()[0];
-
 				// If viewport hasn't changed, there is no need to refresh the SM controller
+				let oNewViewportElem = this.element.scrollParent()[0];
 				if (oNewViewportElem === this.options.viewport_elem) {
 					return;
 				}
@@ -116,24 +124,74 @@ $(function () {
 				});
 
 				let oSMScene = new ScrollMagic.Scene({
-					triggerElement: this.element.find(this.js_selectors.panel_header_sticky_sentinel_top)[0],
+					// Traduction: As soon as the header's top sentinel...
+					triggerElement: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top)[0],
+					//  ... leaves the viewport...
 					triggerHook: 0,
 					duration: this.element.outerHeight(),
-					offset: this.element.find(this.js_selectors.panel_header_sticky_sentinel_top).outerHeight()
+					offset: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight()
 				})
-					.on('enter', function(){
+					// ... we consider the header as sticking...
+					.on('enter', function () {
 						me._onHeaderBecomesSticky();
 					})
-					.on('leave', function(){
+					// ... and when it comes back in the viewport, it stops.
+					.on('leave', function () {
 						me._onHeaderStopsBeingSticky();
 					})
 					.addTo(this.sticky_header_controller);
 			},
 			_onHeaderBecomesSticky: function () {
-				this.element.find(this.js_selectors.panel_header).addClass(this.css_classes.is_sticking);
+				this.element.find(this.js_selectors.block.panel_header).addClass(this.css_classes.is_sticking);
+				if (this._hasTabContainer()) {
+					this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
+				}
 			},
 			_onHeaderStopsBeingSticky: function () {
-				this.element.find(this.js_selectors.panel_header).removeClass(this.css_classes.is_sticking);
+				this.element.find(this.js_selectors.block.panel_header).removeClass(this.css_classes.is_sticking);
+				if (this._hasTabContainer()) {
+					this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
+				}
+			},
+			/**
+			 * Update the position of the tabs list so it is consistent with the header, which is important when the header is sticky
+			 *
+			 * @param bImmediate {boolean} Should the position be updated immediatly or delayed (typically if we have to wait for a transition to end)
+			 * @private
+			 */
+			_updateTabsListPosition: function(bImmediate = true) {
+				// Vertical tab container is not supported yet
+				if(this._isTabContainerVertical()) {
+					return;
+				}
+
+				const me = this;
+				const oTabsListElem = this.element.find(this.js_selectors.block.tab_container_tabs_list);
+
+				if(this._isHeaderSticking()){
+					// Unfortunately for now the timeout is hardcoded as we don't know how to get notified when the *CSS* transition is done.
+					const iTimeout = bImmediate ? 0 : 300;
+					setTimeout(function(){
+						const oHeaderElem = me.element.find(me.js_selectors.block.panel_header);
+						const oHeaderOffset = oHeaderElem.offset();
+						const iHeaderWidth = oHeaderElem.outerWidth();
+						const iHeaderHeight = oHeaderElem.outerHeight();
+						const iPanelBorderWidth = parseInt(me.element.find(me.js_selectors.block.panel_body).css('border-left-width'));
+
+						oTabsListElem
+							.css('top', oHeaderOffset.top + iHeaderHeight)
+							.css('left', oHeaderOffset.left + iPanelBorderWidth)
+							.css('width', iHeaderWidth - (2 * iPanelBorderWidth))
+							.addClass(me.css_classes.is_sticking);
+					}, iTimeout);
+				} else {
+					// Reset to default style
+					oTabsListElem
+						.css('top', '')
+						.css('left', '')
+						.css('width', '')
+						.removeClass(me.css_classes.is_sticking);
+				}
 			},
 
 			// Helpers
@@ -143,6 +201,30 @@ $(function () {
 			 */
 			_isHeaderVisibleOnScroll: function () {
 				return this.options.is_header_visible_on_scroll;
+			},
+			/**
+			 * @return {boolean} True if the header is currently sticking
+			 * @private
+			 */
+			_isHeaderSticking: function () {
+				return this.element.find(this.js_selectors.block.panel_header).hasClass(this.css_classes.is_sticking);
+			},
+			/**
+			 * @return {boolean} True if the panel has a tab container
+			 * @private
+			 */
+			_hasTabContainer: function () {
+				return this.element.find(this.js_selectors.block.tab_container).length > 0;
+			},
+			/**
+			 * @return {boolean} True if the panel has a tab container and it is vertical, false otherwise
+			 * @private
+			 */
+			_isTabContainerVertical: function () {
+				if(!this._hasTabContainer()) {
+					return false;
+				}
+				return this.element.find(this.js_selectors.block.tab_container).hasClass(this.css_classes.is_vertical);
 			},
 		});
 });

@@ -7,7 +7,7 @@
 $(function()
 {
 	// the widget definition, where 'itop' is the namespace,
-	// 'panel' the widget name
+	// 'object_details' the widget name
 	$.widget( 'itop.object_details', $.itop.panel,
 	{
 		// default options
@@ -31,6 +31,22 @@ $(function()
 		_destroy: function()
 		{
 			this._super();
+		},
+
+		_bindEvents: function ()
+		{
+			this._super();
+
+			// Keep URL's hash parameters when clicking on a link of the header
+			this.element.on('click', '[data-role="ibo-panel--header-right"] a', function() {
+				aMatches = /#(.*)$/.exec(window.location.href);
+				if (aMatches != null) {
+					currentHash = aMatches[1];
+					if (/#(.*)$/.test(this.href)) {
+						this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
+					}
+				}
+			});
 		},
 	});
 });

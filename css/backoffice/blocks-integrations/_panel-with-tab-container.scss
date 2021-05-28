@@ -13,7 +13,9 @@ $ibo-panel-with-tab-container--padding-top: -1 * ($ibo-panel--body--padding-top 
 $ibo-panel-with-tab-container--margin-x: -1 * $ibo-panel--body--padding-x !default;
 $ibo-panel-with-tab-container--margin-bottom: -1 * $ibo-panel--body--padding-bottom !default;
 
-// Note: We use the child ">" selector to ensure this applies only the child tab container, not another one that would be nested
+$ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking: $ibo-font-size-100 !default;
+
+// Note: We use the child ">" selector to ensure this applies only to the child tab container, not another one that would be nested
 .ibo-panel {
 	> .ibo-panel--body {
 		> .ibo-tab-container {
@@ -59,4 +61,27 @@ $ibo-panel-with-tab-container--margin-bottom: -1 * $ibo-panel--body--padding-bot
       }
     }
 	}
+
+  /* Sticky header rules */
+  &.ibo-has-sticky-header {
+    > .ibo-panel--body {
+      > .ibo-tab-container {
+        > .ibo-tab-container--tabs-list.ibo-is-sticking {
+          position: fixed;
+          z-index: 10;
+        }
+
+        &:not(.ibo-is-vertical){
+          > .ibo-tab-container--tabs-list.ibo-is-sticking {
+            padding-left: 0;
+
+            .ibo-tab-container--tab-toggler,
+            .ibo-tab-container--extra-tabs-list-toggler {
+              font-size: $ibo-panel-with-tab-container--tab-toggler--font-size--is-sticking;
+            }
+          }
+        }
+      }
+    }
+  }
 }

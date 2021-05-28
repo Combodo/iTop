@@ -15,6 +15,8 @@ $(function()
             css_classes:
             {
             	is_hidden: 'ibo-is-hidden',
+	            is_transparent: 'ibo-is-transparent',
+	            is_opaque: 'ibo-is-opaque',
 	            is_scrollable: 'ibo-is-scrollable',
 	            tab_container: 'ibo-tab-container',
             },
@@ -106,17 +108,30 @@ $(function()
                     me._onTabTogglerClick($(this));
                 });
                 // Resize of the tab container
-                if(window.ResizeObserver)
-                {
-                    const oTabsListRO = new ResizeObserver(function(){
-                        // Note: For a reason I don't understand, when called instantly the sub function CombodoGlobalToolbox.IsElementVisibleToTheUser() won't be able to retrieve an element using the document.elementFromPoint() function
-	                    // As it won't return anything, the function always thinks it's invisible...
-                        setTimeout(function(){
-                            me._onTabContainerResize();
-                        }, 200);
-
-                    });
-                    oTabsListRO.observe($('.ibo-tab-container--tabs-list')[0]);
+                if(window.IntersectionObserver) {
+                	const oTabsListIntersectObs = new IntersectionObserver(function(aEntries, oTabsListIntersectObs){
+                		aEntries.forEach(oEntry => {
+                			let oTabHeaderElem = $(oEntry.target);
+                			let bIsVisible = oEntry.isIntersecting;
+			                if(bIsVisible) {
+				                oTabHeaderElem.removeClass(me.css_classes.is_transparent);
+				                oTabHeaderElem.css('visibility', '');
+			                }
+			                else {
+				                oTabHeaderElem.removeClass(me.css_classes.is_transparent);
+				                // This is necessary, otherwise link will still be clickable
+				                oTabHeaderElem.css('visibility', 'hidden');
+			                }
+			                me._updateTabHeaderDisplay(oTabHeaderElem, bIsVisible);
+		                });
+                		me._updateExtraTabsList();
+	                }, {
+                		root: $('.ibo-tab-container--tabs-list')[0],
+		                threshold: [1] // Must be completely visible
+	                });
+                	this.element.find(this.js_selectors.tab_header).each(function(){
+		                oTabsListIntersectObs.observe(this);
+	                });
                 }
                 // Click on extra tabs list toggler
                 this.element.find(this.js_selectors.extra_tabs_list_toggler).on('click', function(oEvent){
@@ -233,18 +248,25 @@ $(function()
             /**
              * Update tab header display based on its visibility to the user
              *
-             * @param oTabHeaderElem jQuery element
+             * @param oTabHeaderElem {Object} jQuery element
+             * @param bIsVisible {boolean|null} If null, visibility will be computed automatically. Not that performance might not be great so it's preferable to pass the value when known
              * @private
              */
-            _updateTabHeaderDisplay(oTabHeaderElem)
+            _updateTabHeaderDisplay(oTabHeaderElem, bIsVisible = null)
             {
             	const sTabId = oTabHeaderElem.attr('data-tab-id');
             	const oMatchingExtraTabElem = this.element.find(this.js_selectors.extra_tab_toggler+'[href="#'+sTabId+'"]');
 
-	            if (!CombodoGlobalToolbox.IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2)) {
-		            oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
-	            } else {
+            	// Manually check if the tab header is visible if the info isn't passed
+            	if (bIsVisible === null) {
+            		bIsVisible = CombodoGlobalToolbox.IsElementVisibleToTheUser(oTabHeaderElem[0], true, 2);
+	            }
+
+            	// Hide/show the corresponding extra tab element
+	            if (bIsVisible) {
 		            oMatchingExtraTabElem.addClass(this.css_classes.is_hidden);
+	            } else {
+		            oMatchingExtraTabElem.removeClass(this.css_classes.is_hidden);
 	            }
             },
 	        // - Update extra tabs list
