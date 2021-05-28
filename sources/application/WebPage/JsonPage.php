@@ -7,6 +7,11 @@
 class JsonPage extends WebPage
 {
 	protected $aData = [];
+	/**
+	 * @var bool If true, only static::$aData will be output; otherwise data and scripts will be output in a structured object.
+	 * This can be useful when feeding response to a third party lib that doesn't understand the structured format.
+	 */
+	protected $bOutputDataOnly = false;
 
 	/**
 	 * JsonPage constructor.
@@ -48,6 +53,19 @@ class JsonPage extends WebPage
 		return $this;
 	}
 
+	/**
+	 * @see static::$bOutputDataOnly
+	 * @param bool $bFlag
+	 *
+	 * @return $this
+	 */
+	public function SetOutputDataOnly(bool $bFlag)
+	{
+		$this->bOutputDataOnly = $bFlag;
+
+		return $this;
+	}
+
 	public function output()
 	{
 		$this->add_header('Content-type: application/json');
@@ -58,7 +76,7 @@ class JsonPage extends WebPage
 
 		$aScripts = array_merge($this->a_init_scripts, $this->a_scripts, $this->a_ready_scripts);
 
-		$aJson = [
+		$aJson = $this->bOutputDataOnly ? $this->aData : [
 			'data' => $this->aData,
 			'scripts' => $aScripts,
 		];
