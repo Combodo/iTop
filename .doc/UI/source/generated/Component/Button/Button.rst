@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Button:
+
 Button
 ======
 
@@ -25,39 +27,50 @@ Twig Tag
 
 :Type:
 
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| Neutral                         | Make a basis Button component for any purpose                                                                                    |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForPrimaryAction                | Make a Button component for a primary action, should be used to tell the user this is the main choice                            |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForSecondaryAction              | Make a Button component for a secondary action, should be used to tell the user this is an second hand choice                    |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForPositiveAction               | Make a Button component for a success action, should be used to tell the user he/she going to make a positive action/choice      |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForDestructiveAction            | Make a Button component for a destructive action, should be used to tell the user he/she going to make something that cannot be  |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| AlternativeNeutral              | Make a basis Button component for any purpose                                                                                    |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForAlternativePrimaryAction     | Make a Button component for an alternative primary action, should be used to avoid the user to consider this action as the first |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForAlternativeSecondaryAction   | Make a Button component for an alternative secondary action, should be used to avoid the user to focus on this                   |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForAlternativeValidationAction  | Make a Button component for a validation action, should be used to avoid the user to focus on this                               |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForAlternativeDestructiveAction | Make a Button component for a destructive action, should be used to avoid the user to focus on this                              |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| ForCancel                       | Make a Button component for a cancel, should be used only for UI navigation, not destructive action                              |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| IconAction                      | @param string $sIconClasses                                                                                                      |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| LinkNeutral                     | Make a link Button component to open an URL instead of triggering a form action                                                  |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| IconLink                        | @param string $sIconClasses                                                                                                      |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
-| DestructiveIconLink             | @param string $sIconClasses                                                                                                      |
-+---------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`Neutral <ButtonNeutral>`                                                 | Make a basis Button component for any purpose                                                                                    |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForPrimaryAction <ButtonForPrimaryAction>`                               | Make a Button component for a primary action, should be used to tell the user this is the main choice                            |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForSecondaryAction <ButtonForSecondaryAction>`                           | Make a Button component for a secondary action, should be used to tell the user this is an second hand choice                    |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForPositiveAction <ButtonForPositiveAction>`                             | Make a Button component for a success action, should be used to tell the user he/she going to make a positive action/choice      |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForDestructiveAction <ButtonForDestructiveAction>`                       | Make a Button component for a destructive action, should be used to tell the user he/she going to make something that cannot be  |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`AlternativeNeutral <ButtonAlternativeNeutral>`                           | Make a basis Button component for any purpose                                                                                    |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForAlternativePrimaryAction <ButtonForAlternativePrimaryAction>`         | Make a Button component for an alternative primary action, should be used to avoid the user to consider this action as the first |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForAlternativeSecondaryAction <ButtonForAlternativeSecondaryAction>`     | Make a Button component for an alternative secondary action, should be used to avoid the user to focus on this                   |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForAlternativeValidationAction <ButtonForAlternativeValidationAction>`   | Make a Button component for a validation action, should be used to avoid the user to focus on this                               |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForAlternativeDestructiveAction <ButtonForAlternativeDestructiveAction>` | Make a Button component for a destructive action, should be used to avoid the user to focus on this                              |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`ForCancel <ButtonForCancel>`                                             | Make a Button component for a cancel, should be used only for UI navigation, not destructive action                              |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`IconAction <ButtonIconAction>`                                           | @param string $sIconClasses                                                                                                      |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`LinkNeutral <ButtonLinkNeutral>`                                         | Make a link Button component to open an URL instead of triggering a form action                                                  |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`IconLink <ButtonIconLink>`                                               | @param string $sIconClasses                                                                                                      |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
+| :ref:`DestructiveIconLink <ButtonDestructiveIconLink>`                         | @param string $sIconClasses                                                                                                      |
++--------------------------------------------------------------------------------+----------------------------------------------------------------------------------------------------------------------------------+
 
-:Button *Neutral* parameters:
+.. _ButtonNeutral:
+
+Button Neutral
+^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type Neutral {sLabel:'value', sName:'value', sId:'value'} %}
+
+:parameters:
 
 +--------+--------+-----------+------+----------------------------+
 | sLabel | string | mandatory |      |                            |
@@ -67,7 +80,18 @@ Twig Tag
 | sId    | string | optional  | NULL |                            |
 +--------+--------+-----------+------+----------------------------+
 
-:Button *ForPrimaryAction* parameters:
+.. _ButtonForPrimaryAction:
+
+Button ForPrimaryAction
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForPrimaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -81,7 +105,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForSecondaryAction* parameters:
+.. _ButtonForSecondaryAction:
+
+Button ForSecondaryAction
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForSecondaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -95,7 +130,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForPositiveAction* parameters:
+.. _ButtonForPositiveAction:
+
+Button ForPositiveAction
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForPositiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -109,7 +155,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForDestructiveAction* parameters:
+.. _ButtonForDestructiveAction:
+
+Button ForDestructiveAction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForDestructiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -123,7 +180,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *AlternativeNeutral* parameters:
+.. _ButtonAlternativeNeutral:
+
+Button AlternativeNeutral
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type AlternativeNeutral {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -137,7 +205,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForAlternativePrimaryAction* parameters:
+.. _ButtonForAlternativePrimaryAction:
+
+Button ForAlternativePrimaryAction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForAlternativePrimaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -151,7 +230,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForAlternativeSecondaryAction* parameters:
+.. _ButtonForAlternativeSecondaryAction:
+
+Button ForAlternativeSecondaryAction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForAlternativeSecondaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -165,7 +255,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForAlternativeValidationAction* parameters:
+.. _ButtonForAlternativeValidationAction:
+
+Button ForAlternativeValidationAction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForAlternativeValidationAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -179,7 +280,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForAlternativeDestructiveAction* parameters:
+.. _ButtonForAlternativeDestructiveAction:
+
+Button ForAlternativeDestructiveAction
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForAlternativeDestructiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+-------+---------------------+
 | sLabel    | string | mandatory |       |                     |
@@ -193,7 +305,18 @@ Twig Tag
 | sId       | string | optional  | NULL  |                     |
 +-----------+--------+-----------+-------+---------------------+
 
-:Button *ForCancel* parameters:
+.. _ButtonForCancel:
+
+Button ForCancel
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type ForCancel {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+----------+-------+---------------------+
 | sLabel    | string | optional | NULL  |                     |
@@ -207,7 +330,18 @@ Twig Tag
 | sId       | string | optional | NULL  |                     |
 +-----------+--------+----------+-------+---------------------+
 
-:Button *IconAction* parameters:
+.. _ButtonIconAction:
+
+Button IconAction
+^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type IconAction {sIconClasses:'value', sTooltipText:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+
+:parameters:
 
 +--------------+--------+-----------+-------+--+
 | sIconClasses | string | mandatory |       |  |
@@ -223,7 +357,18 @@ Twig Tag
 | sId          | string | optional  | NULL  |  |
 +--------------+--------+-----------+-------+--+
 
-:Button *LinkNeutral* parameters:
+.. _ButtonLinkNeutral:
+
+Button LinkNeutral
+^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type LinkNeutral {sURL:'value', sLabel:'value', sIconClasses:'value', sTarget:'value', sId:'value'} %}
+
+:parameters:
 
 +--------------+--------+-----------+------+--+
 | sURL         | string | mandatory |      |  |
@@ -237,7 +382,18 @@ Twig Tag
 | sId          | string | optional  | NULL |  |
 +--------------+--------+-----------+------+--+
 
-:Button *IconLink* parameters:
+.. _ButtonIconLink:
+
+Button IconLink
+^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type IconLink {sIconClasses:'value', sTooltipText:'value', sURL:'value', sTarget:'value', sId:'value'} %}
+
+:parameters:
 
 +--------------+--------+-----------+------+--+
 | sIconClasses | string | mandatory |      |  |
@@ -251,7 +407,18 @@ Twig Tag
 | sId          | string | optional  | NULL |  |
 +--------------+--------+-----------+------+--+
 
-:Button *DestructiveIconLink* parameters:
+.. _ButtonDestructiveIconLink:
+
+Button DestructiveIconLink
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButton Type DestructiveIconLink {sIconClasses:'value', sTooltipText:'value', sURL:'value', sName:'value', sTarget:'value', sId:'value'} %}
+
+:parameters:
 
 +--------------+--------+-----------+------+--+
 | sIconClasses | string | mandatory |      |  |
@@ -267,8 +434,8 @@ Twig Tag
 | sId          | string | optional  | NULL |  |
 +--------------+--------+-----------+------+--+
 
-:Button common parameters:
-
+Button common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------+------------------------------------------------------------+
 | ActionType        | string |                                                            |
 +-------------------+--------+------------------------------------------------------------+

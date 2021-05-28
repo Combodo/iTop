@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Input:
+
 Input
 =====
 
@@ -25,15 +27,26 @@ Twig Tag
 
 :Type:
 
-+-------------------+------------------------------------------------------------------------------------+
-| ForHidden         | No comment                                                                         |
-+-------------------+------------------------------------------------------------------------------------+
-| Standard          | No comment                                                                         |
-+-------------------+------------------------------------------------------------------------------------+
-| ForInputWithLabel | @see Field component that is better adapter when dealing with a standard iTop form |
-+-------------------+------------------------------------------------------------------------------------+
++---------------------------------------------------+------------------------------------------------------------------------------------+
+| :ref:`ForHidden <InputForHidden>`                 | No comment                                                                         |
++---------------------------------------------------+------------------------------------------------------------------------------------+
+| :ref:`Standard <InputStandard>`                   | No comment                                                                         |
++---------------------------------------------------+------------------------------------------------------------------------------------+
+| :ref:`ForInputWithLabel <InputForInputWithLabel>` | @see Field component that is better adapter when dealing with a standard iTop form |
++---------------------------------------------------+------------------------------------------------------------------------------------+
 
-:Input *ForHidden* parameters:
+.. _InputForHidden:
+
+Input ForHidden
+^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIInput Type ForHidden {sName:'value', sValue:'value', sId:'value'} %}
+
+:parameters:
 
 +--------+--------+-----------+------+--+
 | sName  | string | mandatory |      |  |
@@ -43,7 +56,18 @@ Twig Tag
 | sId    | string | optional  | NULL |  |
 +--------+--------+-----------+------+--+
 
-:Input *Standard* parameters:
+.. _InputStandard:
+
+Input Standard
+^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIInput Type Standard {sType:'value', sName:'value', sValue:'value', sId:'value'} %}
+
+:parameters:
 
 +--------+--------+-----------+------+--+
 | sType  | string | mandatory |      |  |
@@ -55,7 +79,18 @@ Twig Tag
 | sId    | string | optional  | NULL |  |
 +--------+--------+-----------+------+--+
 
-:Input *ForInputWithLabel* parameters:
+.. _InputForInputWithLabel:
+
+Input ForInputWithLabel
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIInput Type ForInputWithLabel {sLabel:'value', sInputName:'value', sInputValue:'value', sInputId:'value', sInputType:'value'} %}
+
+:parameters:
 
 +-------------+--------+-----------+--------+--+
 | sLabel      | string | mandatory |        |  |
@@ -69,8 +104,8 @@ Twig Tag
 | sInputType  | string | optional  | 'type' |  |
 +-------------+--------+-----------+--------+--+
 
-:Input common parameters:
-
+Input common parameters
+^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------+------------------------------------------------------------+
 | AddCSSClass       | string | CSS class to add to the generated html block               |
 +-------------------+--------+------------------------------------------------------------+

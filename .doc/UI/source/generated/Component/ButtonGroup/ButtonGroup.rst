@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _ButtonGroup:
+
 ButtonGroup
 ===========
 
@@ -25,11 +27,22 @@ Twig Tag
 
 :Type:
 
-+-----------------------+--------------------------------------------------------------------------------------------------+
-| ButtonWithOptionsMenu | Make a button that has a primary action ($oButton) but also an options menu ($oMenu) on the side |
-+-----------------------+--------------------------------------------------------------------------------------------------+
++-----------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
+| :ref:`ButtonWithOptionsMenu <ButtonGroupButtonWithOptionsMenu>` | Make a button that has a primary action ($oButton) but also an options menu ($oMenu) on the side |
++-----------------------------------------------------------------+--------------------------------------------------------------------------------------------------+
 
-:ButtonGroup *ButtonWithOptionsMenu* parameters:
+.. _ButtonGroupButtonWithOptionsMenu:
+
+ButtonGroup ButtonWithOptionsMenu
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIButtonGroup Type ButtonWithOptionsMenu {oButton:value, oMenu:value} %}
+
+:parameters:
 
 +---------+-------------+-----------+--+--+
 | oButton | Button      | mandatory |  |  |
@@ -37,8 +50,8 @@ Twig Tag
 | oMenu   | PopoverMenu | mandatory |  |  |
 +---------+-------------+-----------+--+--+
 
-:ButtonGroup common parameters:
-
+ButtonGroup common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddButton         | Button   |                                                            |
 +-------------------+----------+------------------------------------------------------------+

@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _ToolbarSpacer:
+
 ToolbarSpacer
 =============
 
@@ -25,18 +27,29 @@ Twig Tag
 
 :Type:
 
-+----------+-------------------------+
-| Standard | @param string|null $sId |
-+----------+-------------------------+
++-----------------------------------------+-------------------------+
+| :ref:`Standard <ToolbarSpacerStandard>` | @param string|null $sId |
++-----------------------------------------+-------------------------+
 
-:ToolbarSpacer *Standard* parameters:
+.. _ToolbarSpacerStandard:
+
+ToolbarSpacer Standard
+^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIToolbarSpacer Type Standard {sId:'value'} %}
+
+:parameters:
 
 +-----+--------+----------+------+--+
 | sId | string | optional | NULL |  |
 +-----+--------+----------+------+--+
 
-:ToolbarSpacer common parameters:
-
+ToolbarSpacer common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------+------------------------------------------------------------+
 | AddCSSClass       | string | CSS class to add to the generated html block               |
 +-------------------+--------+------------------------------------------------------------+

@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Toolbar:
+
 Toolbar
 =======
 
@@ -27,21 +29,47 @@ Twig Tag
 
 :Type:
 
-+-----------+------------+
-| ForAction | No comment |
-+-----------+------------+
-| Standard  | No comment |
-+-----------+------------+
-| ForButton | No comment |
-+-----------+------------+
++-------------------------------------+------------+
+| :ref:`ForAction <ToolbarForAction>` | No comment |
++-------------------------------------+------------+
+| :ref:`Standard <ToolbarStandard>`   | No comment |
++-------------------------------------+------------+
+| :ref:`ForButton <ToolbarForButton>` | No comment |
++-------------------------------------+------------+
 
-:Toolbar *ForAction* parameters:
+.. _ToolbarForAction:
+
+Toolbar ForAction
+^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIToolbar ForAction {sId:'value'} %}
+        Content Goes Here
+    {% EndUIToolbar %}
+
+:parameters:
 
 +-----+--------+----------+------+--+
 | sId | string | optional | NULL |  |
 +-----+--------+----------+------+--+
 
-:Toolbar *Standard* parameters:
+.. _ToolbarStandard:
+
+Toolbar Standard
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIToolbar Standard {sId:'value', aContainerClasses:{name:value, name:value}} %}
+        Content Goes Here
+    {% EndUIToolbar %}
+
+:parameters:
 
 +-------------------+--------+----------+----------+--+
 | sId               | string | optional | NULL     |  |
@@ -49,7 +77,20 @@ Twig Tag
 | aContainerClasses | array  | optional | array () |  |
 +-------------------+--------+----------+----------+--+
 
-:Toolbar *ForButton* parameters:
+.. _ToolbarForButton:
+
+Toolbar ForButton
+^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIToolbar ForButton {sId:'value', aContainerClasses:{name:value, name:value}} %}
+        Content Goes Here
+    {% EndUIToolbar %}
+
+:parameters:
 
 +-------------------+--------+----------+----------+--+
 | sId               | string | optional | NULL     |  |
@@ -57,8 +98,8 @@ Twig Tag
 | aContainerClasses | array  | optional | array () |  |
 +-------------------+--------+----------+----------+--+
 
-:Toolbar common parameters:
-
+Toolbar common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

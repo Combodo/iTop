@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Title:
+
 Title
 =====
 
@@ -27,17 +29,30 @@ Twig Tag
 
 :Type:
 
-+-----------------+------------+
-| ForPage         | No comment |
-+-----------------+------------+
-| ForPageWithIcon | No comment |
-+-----------------+------------+
-| Neutral         | No comment |
-+-----------------+------------+
-| Standard        | No comment |
-+-----------------+------------+
++-----------------------------------------------+------------+
+| :ref:`ForPage <TitleForPage>`                 | No comment |
++-----------------------------------------------+------------+
+| :ref:`ForPageWithIcon <TitleForPageWithIcon>` | No comment |
++-----------------------------------------------+------------+
+| :ref:`Neutral <TitleNeutral>`                 | No comment |
++-----------------------------------------------+------------+
+| :ref:`Standard <TitleStandard>`               | No comment |
++-----------------------------------------------+------------+
 
-:Title *ForPage* parameters:
+.. _TitleForPage:
+
+Title ForPage
+^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UITitle ForPage {sTitle:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUITitle %}
+
+:parameters:
 
 +--------+--------+-----------+------+--+
 | sTitle | string | mandatory |      |  |
@@ -45,7 +60,20 @@ Twig Tag
 | sId    | string | optional  | NULL |  |
 +--------+--------+-----------+------+--+
 
-:Title *ForPageWithIcon* parameters:
+.. _TitleForPageWithIcon:
+
+Title ForPageWithIcon
+^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UITitle ForPageWithIcon {sTitle:'value', sIconUrl:'value', sIconCoverMethod:'value', bIsMedallion:true, sId:'value'} %}
+        Content Goes Here
+    {% EndUITitle %}
+
+:parameters:
 
 +------------------+--------+-----------+-----------+--+
 | sTitle           | string | mandatory |           |  |
@@ -59,7 +87,20 @@ Twig Tag
 | sId              | string | optional  | NULL      |  |
 +------------------+--------+-----------+-----------+--+
 
-:Title *Neutral* parameters:
+.. _TitleNeutral:
+
+Title Neutral
+^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UITitle Neutral {sTitle:'value', iLevel:value, sId:'value'} %}
+        Content Goes Here
+    {% EndUITitle %}
+
+:parameters:
 
 +--------+--------+-----------+------+--+
 | sTitle | string | mandatory |      |  |
@@ -69,7 +110,20 @@ Twig Tag
 | sId    | string | optional  | NULL |  |
 +--------+--------+-----------+------+--+
 
-:Title *Standard* parameters:
+.. _TitleStandard:
+
+Title Standard
+^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UITitle Standard {oTitle:value, iLevel:value, sId:'value'} %}
+        Content Goes Here
+    {% EndUITitle %}
+
+:parameters:
 
 +--------+---------+-----------+------+--+
 | oTitle | UIBlock | mandatory |      |  |
@@ -79,8 +133,8 @@ Twig Tag
 | sId    | string  | optional  | NULL |  |
 +--------+---------+-----------+------+--+
 
-:Title common parameters:
-
+Title common parameters
+^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

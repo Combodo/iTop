@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _FileSelect:
+
 FileSelect
 ==========
 
@@ -25,11 +27,22 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
++--------------------------------------+------------+
+| :ref:`Standard <FileSelectStandard>` | No comment |
++--------------------------------------+------------+
 
-:FileSelect *Standard* parameters:
+.. _FileSelectStandard:
+
+FileSelect Standard
+^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIFileSelect Type Standard {sName:'value', sId:'value'} %}
+
+:parameters:
 
 +-------+--------+-----------+------+--+
 | sName | string | mandatory |      |  |
@@ -37,8 +50,8 @@ Twig Tag
 | sId   | string | optional  | NULL |  |
 +-------+--------+-----------+------+--+
 
-:FileSelect common parameters:
-
+FileSelect common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------+------------------------------------------------------------+
 | AddCSSClass       | string | CSS class to add to the generated html block               |
 +-------------------+--------+------------------------------------------------------------+

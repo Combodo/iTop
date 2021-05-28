@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _SelectOption:
+
 SelectOption
 ============
 
@@ -25,11 +27,22 @@ Twig Tag
 
 :Type:
 
-+-----------------+------------+
-| ForSelectOption | No comment |
-+-----------------+------------+
++------------------------------------------------------+------------+
+| :ref:`ForSelectOption <SelectOptionForSelectOption>` | No comment |
++------------------------------------------------------+------------+
 
-:SelectOption *ForSelectOption* parameters:
+.. _SelectOptionForSelectOption:
+
+SelectOption ForSelectOption
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UISelectOption Type ForSelectOption {sValue:'value', sLabel:'value', bSelected:true, sId:'value'} %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sValue    | string | mandatory |      |  |
@@ -41,8 +54,8 @@ Twig Tag
 | sId       | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:SelectOption common parameters:
-
+SelectOption common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------+------------------------------------------------------------+
 | AddCSSClass       | string | CSS class to add to the generated html block               |
 +-------------------+--------+------------------------------------------------------------+

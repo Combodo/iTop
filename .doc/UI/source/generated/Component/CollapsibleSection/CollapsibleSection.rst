@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _CollapsibleSection:
+
 CollapsibleSection
 ==================
 
@@ -27,11 +29,24 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
++----------------------------------------------+------------+
+| :ref:`Standard <CollapsibleSectionStandard>` | No comment |
++----------------------------------------------+------------+
 
-:CollapsibleSection *Standard* parameters:
+.. _CollapsibleSectionStandard:
+
+CollapsibleSection Standard
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UICollapsibleSection Standard {sTitle:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUICollapsibleSection %}
+
+:parameters:
 
 +--------+--------+-----------+------+--+
 | sTitle | string | mandatory |      |  |
@@ -39,8 +54,8 @@ Twig Tag
 | sId    | string | optional  | NULL |  |
 +--------+--------+-----------+------+--+
 
-:CollapsibleSection common parameters:
-
+CollapsibleSection common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

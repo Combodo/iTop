@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Column:
+
 Column
 ======
 
@@ -27,19 +29,45 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
-| ForBlock | No comment |
-+----------+------------+
++----------------------------------+------------+
+| :ref:`Standard <ColumnStandard>` | No comment |
++----------------------------------+------------+
+| :ref:`ForBlock <ColumnForBlock>` | No comment |
++----------------------------------+------------+
 
-:Column *Standard* parameters:
+.. _ColumnStandard:
+
+Column Standard
+^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIColumn Standard {sId:'value'} %}
+        Content Goes Here
+    {% EndUIColumn %}
+
+:parameters:
 
 +-----+--------+----------+------+--+
 | sId | string | optional | NULL |  |
 +-----+--------+----------+------+--+
 
-:Column *ForBlock* parameters:
+.. _ColumnForBlock:
+
+Column ForBlock
+^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIColumn ForBlock {oBlock:value, sId:'value'} %}
+        Content Goes Here
+    {% EndUIColumn %}
+
+:parameters:
 
 +--------+---------+-----------+------+--+
 | oBlock | UIBlock | mandatory |      |  |
@@ -47,8 +75,8 @@ Twig Tag
 | sId    | string  | optional  | NULL |  |
 +--------+---------+-----------+------+--+
 
-:Column common parameters:
-
+Column common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

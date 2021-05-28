@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _FieldBadge:
+
 FieldBadge
 ==========
 
@@ -27,11 +29,24 @@ Twig Tag
 
 :Type:
 
-+----------+-----------------------+
-| ForField | @param string $sValue |
-+----------+-----------------------+
++--------------------------------------+-----------------------+
+| :ref:`ForField <FieldBadgeForField>` | @param string $sValue |
++--------------------------------------+-----------------------+
 
-:FieldBadge *ForField* parameters:
+.. _FieldBadgeForField:
+
+FieldBadge ForField
+^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIFieldBadge ForField {sValue:'value', oStyle:value} %}
+        Content Goes Here
+    {% EndUIFieldBadge %}
+
+:parameters:
 
 +--------+----------+-----------+--+--+
 | sValue | string   | mandatory |  |  |
@@ -39,8 +54,8 @@ Twig Tag
 | oStyle | ormStyle | mandatory |  |  |
 +--------+----------+-----------+--+--+
 
-:FieldBadge common parameters:
-
+FieldBadge common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

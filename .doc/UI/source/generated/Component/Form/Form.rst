@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Form:
+
 Form
 ====
 
@@ -27,18 +29,31 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
++--------------------------------+------------+
+| :ref:`Standard <FormStandard>` | No comment |
++--------------------------------+------------+
 
-:Form *Standard* parameters:
+.. _FormStandard:
+
+Form Standard
+^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIForm Standard {sId:'value'} %}
+        Content Goes Here
+    {% EndUIForm %}
+
+:parameters:
 
 +-----+--------+----------+------+--+
 | sId | string | optional | NULL |  |
 +-----+--------+----------+------+--+
 
-:Form common parameters:
-
+Form common parameters
+^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | Action            | string   |                                                            |
 +-------------------+----------+------------------------------------------------------------+

@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _FieldSet:
+
 FieldSet
 ========
 
@@ -27,11 +29,24 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
++------------------------------------+------------+
+| :ref:`Standard <FieldSetStandard>` | No comment |
++------------------------------------+------------+
 
-:FieldSet *Standard* parameters:
+.. _FieldSetStandard:
+
+FieldSet Standard
+^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIFieldSet Standard {sLegend:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIFieldSet %}
+
+:parameters:
 
 +---------+--------+-----------+------+--+
 | sLegend | string | mandatory |      |  |
@@ -39,8 +54,8 @@ Twig Tag
 | sId     | string | optional  | NULL |  |
 +---------+--------+-----------+------+--+
 
-:FieldSet common parameters:
-
+FieldSet common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

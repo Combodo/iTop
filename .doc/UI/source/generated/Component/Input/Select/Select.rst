@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Select:
+
 Select
 ======
 
@@ -27,13 +29,26 @@ Twig Tag
 
 :Type:
 
-+--------------------+------------------------------------------------------------------------------------------------+
-| ForSelect          | @param string $sName                                                                           |
-+--------------------+------------------------------------------------------------------------------------------------+
-| ForSelectWithLabel | If you need to have a real field with a label, you might use a {@link Field} component instead |
-+--------------------+------------------------------------------------------------------------------------------------+
++------------------------------------------------------+------------------------------------------------------------------------------------------------+
+| :ref:`ForSelect <SelectForSelect>`                   | @param string $sName                                                                           |
++------------------------------------------------------+------------------------------------------------------------------------------------------------+
+| :ref:`ForSelectWithLabel <SelectForSelectWithLabel>` | If you need to have a real field with a label, you might use a {@link Field} component instead |
++------------------------------------------------------+------------------------------------------------------------------------------------------------+
 
-:Select *ForSelect* parameters:
+.. _SelectForSelect:
+
+Select ForSelect
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UISelect ForSelect {sName:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUISelect %}
+
+:parameters:
 
 +-------+--------+-----------+------+--+
 | sName | string | mandatory |      |  |
@@ -41,7 +56,20 @@ Twig Tag
 | sId   | string | optional  | NULL |  |
 +-------+--------+-----------+------+--+
 
-:Select *ForSelectWithLabel* parameters:
+.. _SelectForSelectWithLabel:
+
+Select ForSelectWithLabel
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UISelect ForSelectWithLabel {sName:'value', sLabel:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUISelect %}
+
+:parameters:
 
 +--------+--------+-----------+------+--+
 | sName  | string | mandatory |      |  |
@@ -51,8 +79,8 @@ Twig Tag
 | sId    | string | optional  | NULL |  |
 +--------+--------+-----------+------+--+
 
-:Select common parameters:
-
+Select common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------------+------------------------------------------------------------+
 | AddCSSClass       | string       | CSS class to add to the generated html block               |
 +-------------------+--------------+------------------------------------------------------------+

@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _MultiColumn:
+
 MultiColumn
 ===========
 
@@ -27,18 +29,31 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
++---------------------------------------+------------+
+| :ref:`Standard <MultiColumnStandard>` | No comment |
++---------------------------------------+------------+
 
-:MultiColumn *Standard* parameters:
+.. _MultiColumnStandard:
+
+MultiColumn Standard
+^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIMultiColumn Standard {sId:'value'} %}
+        Content Goes Here
+    {% EndUIMultiColumn %}
+
+:parameters:
 
 +-----+--------+----------+------+--+
 | sId | string | optional | NULL |  |
 +-----+--------+----------+------+--+
 
-:MultiColumn common parameters:
-
+MultiColumn common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

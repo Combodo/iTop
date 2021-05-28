@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _DataTable:
+
 DataTable
 =========
 
@@ -27,21 +29,34 @@ Twig Tag
 
 :Type:
 
-+--------------------+------------------------------+
-| ForResult          | @param \WebPage $oPage       |
-+--------------------+------------------------------+
-| ForObject          | @param \WebPage $oPage       |
-+--------------------+------------------------------+
-| ForRendering       | Make a basis Panel component |
-+--------------------+------------------------------+
-| ForRenderingObject | @param string $sListId       |
-+--------------------+------------------------------+
-| ForStaticData      | No comment                   |
-+--------------------+------------------------------+
-| ForForm            | @param string $sRef          |
-+--------------------+------------------------------+
++---------------------------------------------------------+------------------------------+
+| :ref:`ForResult <DataTableForResult>`                   | @param \WebPage $oPage       |
++---------------------------------------------------------+------------------------------+
+| :ref:`ForObject <DataTableForObject>`                   | @param \WebPage $oPage       |
++---------------------------------------------------------+------------------------------+
+| :ref:`ForRendering <DataTableForRendering>`             | Make a basis Panel component |
++---------------------------------------------------------+------------------------------+
+| :ref:`ForRenderingObject <DataTableForRenderingObject>` | @param string $sListId       |
++---------------------------------------------------------+------------------------------+
+| :ref:`ForStaticData <DataTableForStaticData>`           | No comment                   |
++---------------------------------------------------------+------------------------------+
+| :ref:`ForForm <DataTableForForm>`                       | @param string $sRef          |
++---------------------------------------------------------+------------------------------+
 
-:DataTable *ForResult* parameters:
+.. _DataTableForResult:
+
+DataTable ForResult
+^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIDataTable ForResult {oPage:value, sListId:'value', oSet:value, aExtraParams:value} %}
+        Content Goes Here
+    {% EndUIDataTable %}
+
+:parameters:
 
 +--------------+-------------+-----------+----------+--+
 | oPage        | WebPage     | mandatory |          |  |
@@ -53,7 +68,20 @@ Twig Tag
 | aExtraParams |             | optional  | array () |  |
 +--------------+-------------+-----------+----------+--+
 
-:DataTable *ForObject* parameters:
+.. _DataTableForObject:
+
+DataTable ForObject
+^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIDataTable ForObject {oPage:value, sListId:'value', oSet:value, aExtraParams:value} %}
+        Content Goes Here
+    {% EndUIDataTable %}
+
+:parameters:
 
 +--------------+-------------+-----------+----------+--+
 | oPage        | WebPage     | mandatory |          |  |
@@ -65,7 +93,20 @@ Twig Tag
 | aExtraParams |             | optional  | array () |  |
 +--------------+-------------+-----------+----------+--+
 
-:DataTable *ForRendering* parameters:
+.. _DataTableForRendering:
+
+DataTable ForRendering
+^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIDataTable ForRendering {sListId:'value', oSet:value, aExtraParams:value} %}
+        Content Goes Here
+    {% EndUIDataTable %}
+
+:parameters:
 
 +--------------+-------------+-----------+----------+--+
 | sListId      | string      | mandatory |          |  |
@@ -75,7 +116,20 @@ Twig Tag
 | aExtraParams |             | optional  | array () |  |
 +--------------+-------------+-----------+----------+--+
 
-:DataTable *ForRenderingObject* parameters:
+.. _DataTableForRenderingObject:
+
+DataTable ForRenderingObject
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIDataTable ForRenderingObject {sListId:'value', oSet:value, aExtraParams:value} %}
+        Content Goes Here
+    {% EndUIDataTable %}
+
+:parameters:
 
 +--------------+-------------+-----------+----------+--+
 | sListId      | string      | mandatory |          |  |
@@ -85,7 +139,20 @@ Twig Tag
 | aExtraParams |             | optional  | array () |  |
 +--------------+-------------+-----------+----------+--+
 
-:DataTable *ForStaticData* parameters:
+.. _DataTableForStaticData:
+
+DataTable ForStaticData
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIDataTable ForStaticData {sTitle:'value', aColumns:{name:value, name:value}, aData:{name:value, name:value}, sId:'value', aExtraParams:{name:value, name:value}, sFilter:'value', aOptions:{name:value, name:value}} %}
+        Content Goes Here
+    {% EndUIDataTable %}
+
+:parameters:
 
 +--------------+--------+-----------+----------+--+
 | sTitle       | string | mandatory |          |  |
@@ -103,7 +170,20 @@ Twig Tag
 | aOptions     | array  | optional  | array () |  |
 +--------------+--------+-----------+----------+--+
 
-:DataTable *ForForm* parameters:
+.. _DataTableForForm:
+
+DataTable ForForm
+^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIDataTable ForForm {sRef:'value', aColumns:{name:value, name:value}, aData:{name:value, name:value}, sFilter:'value'} %}
+        Content Goes Here
+    {% EndUIDataTable %}
+
+:parameters:
 
 +----------+--------+-----------+----------+--+
 | sRef     | string | mandatory |          |  |
@@ -115,8 +195,8 @@ Twig Tag
 | sFilter  | string | optional  | ''       |  |
 +----------+--------+-----------+----------+--+
 
-:DataTable common parameters:
-
+DataTable common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

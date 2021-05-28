@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Panel:
+
 Panel
 =====
 
@@ -27,43 +29,40 @@ Twig Tag
 
 :Type:
 
-+----------------------------+---------------------------------------------------------------+
-| Neutral                    | Make a basis Panel component                                  |
-+----------------------------+---------------------------------------------------------------+
-| ForInformation             | Make a Panel component for informational messages             |
-+----------------------------+---------------------------------------------------------------+
-| ForSuccess                 | Make a Panel component for successful messages                |
-+----------------------------+---------------------------------------------------------------+
-| ForWarning                 | Make a Panel component for warning messages                   |
-+----------------------------+---------------------------------------------------------------+
-| ForDanger                  | Make a Panel component for danger messages                    |
-+----------------------------+---------------------------------------------------------------+
-| ForFailure                 | Make a Panel component for failure messages                   |
-+----------------------------+---------------------------------------------------------------+
-| WithBrandingPrimaryColor   | Make a Panel component with primary color scheme              |
-+----------------------------+---------------------------------------------------------------+
-| WithBrandingSecondaryColor | Make a Panel component with secondary color scheme            |
-+----------------------------+---------------------------------------------------------------+
-| ForClass                   | Make a Panel component with the specific $sClass color scheme |
-+----------------------------+---------------------------------------------------------------+
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`Neutral <PanelNeutral>`                                       | Make a basis Panel component                                  |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`ForInformation <PanelForInformation>`                         | Make a Panel component for informational messages             |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`ForSuccess <PanelForSuccess>`                                 | Make a Panel component for successful messages                |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`ForWarning <PanelForWarning>`                                 | Make a Panel component for warning messages                   |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`ForDanger <PanelForDanger>`                                   | Make a Panel component for danger messages                    |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`ForFailure <PanelForFailure>`                                 | Make a Panel component for failure messages                   |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`WithBrandingPrimaryColor <PanelWithBrandingPrimaryColor>`     | Make a Panel component with primary color scheme              |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`WithBrandingSecondaryColor <PanelWithBrandingSecondaryColor>` | Make a Panel component with secondary color scheme            |
++---------------------------------------------------------------------+---------------------------------------------------------------+
+| :ref:`ForClass <PanelForClass>`                                     | Make a Panel component with the specific $sClass color scheme |
++---------------------------------------------------------------------+---------------------------------------------------------------+
 
-:Panel *Neutral* parameters:
+.. _PanelNeutral:
 
-+-----------+--------+-----------+------+--+
-| sTitle    | string | mandatory |      |  |
-+-----------+--------+-----------+------+--+
-| sSubTitle | string | optional  | NULL |  |
-+-----------+--------+-----------+------+--+
+Panel Neutral
+^^^^^^^^^^^^^
 
-:Panel *ForInformation* parameters:
+:syntax:
 
-+-----------+--------+-----------+------+--+
-| sTitle    | string | mandatory |      |  |
-+-----------+--------+-----------+------+--+
-| sSubTitle | string | optional  | NULL |  |
-+-----------+--------+-----------+------+--+
+::
 
-:Panel *ForSuccess* parameters:
+    {% UIPanel Neutral {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sTitle    | string | mandatory |      |  |
@@ -71,7 +70,20 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:Panel *ForWarning* parameters:
+.. _PanelForInformation:
+
+Panel ForInformation
+^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel ForInformation {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sTitle    | string | mandatory |      |  |
@@ -79,7 +91,20 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:Panel *ForDanger* parameters:
+.. _PanelForSuccess:
+
+Panel ForSuccess
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel ForSuccess {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sTitle    | string | mandatory |      |  |
@@ -87,7 +112,20 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:Panel *ForFailure* parameters:
+.. _PanelForWarning:
+
+Panel ForWarning
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel ForWarning {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sTitle    | string | mandatory |      |  |
@@ -95,7 +133,20 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:Panel *WithBrandingPrimaryColor* parameters:
+.. _PanelForDanger:
+
+Panel ForDanger
+^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel ForDanger {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sTitle    | string | mandatory |      |  |
@@ -103,7 +154,20 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:Panel *WithBrandingSecondaryColor* parameters:
+.. _PanelForFailure:
+
+Panel ForFailure
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel ForFailure {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--+
 | sTitle    | string | mandatory |      |  |
@@ -111,7 +175,62 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |  |
 +-----------+--------+-----------+------+--+
 
-:Panel *ForClass* parameters:
+.. _PanelWithBrandingPrimaryColor:
+
+Panel WithBrandingPrimaryColor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel WithBrandingPrimaryColor {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
+
++-----------+--------+-----------+------+--+
+| sTitle    | string | mandatory |      |  |
++-----------+--------+-----------+------+--+
+| sSubTitle | string | optional  | NULL |  |
++-----------+--------+-----------+------+--+
+
+.. _PanelWithBrandingSecondaryColor:
+
+Panel WithBrandingSecondaryColor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel WithBrandingSecondaryColor {sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
+
++-----------+--------+-----------+------+--+
+| sTitle    | string | mandatory |      |  |
++-----------+--------+-----------+------+--+
+| sSubTitle | string | optional  | NULL |  |
++-----------+--------+-----------+------+--+
+
+.. _PanelForClass:
+
+Panel ForClass
+^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIPanel ForClass {sClass:'value', sTitle:'value', sSubTitle:'value'} %}
+        Content Goes Here
+    {% EndUIPanel %}
+
+:parameters:
 
 +-----------+--------+-----------+------+--------------------------------------+
 | sClass    | string | mandatory |      | Class of the object the panel is for |
@@ -121,8 +240,8 @@ Twig Tag
 | sSubTitle | string | optional  | NULL |                                      |
 +-----------+--------+-----------+------+--------------------------------------+
 
-:Panel common parameters:
-
+Panel common parameters
+^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------------+-----------------+------------------------------------------------------------+
 | AddCSSClass             | string          | CSS class to add to the generated html block               |
 +-------------------------+-----------------+------------------------------------------------------------+

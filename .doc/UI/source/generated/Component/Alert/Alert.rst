@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Alert:
+
 Alert
 =====
 
@@ -28,25 +30,38 @@ Twig Tag
 
 :Type:
 
-+----------------------------+-----------------------------------------------------+
-| Neutral                    | Make a basis Alert component                        |
-+----------------------------+-----------------------------------------------------+
-| ForInformation             | Make an Alert component for informational messages  |
-+----------------------------+-----------------------------------------------------+
-| ForSuccess                 | Make an Alert component for successful messages     |
-+----------------------------+-----------------------------------------------------+
-| ForWarning                 | Make an Alert component for warning messages        |
-+----------------------------+-----------------------------------------------------+
-| ForDanger                  | Make an Alert component for danger messages         |
-+----------------------------+-----------------------------------------------------+
-| ForFailure                 | Make an Alert component for failure messages        |
-+----------------------------+-----------------------------------------------------+
-| WithBrandingPrimaryColor   | Make an Alert component with primary color scheme   |
-+----------------------------+-----------------------------------------------------+
-| WithBrandingSecondaryColor | Make an Alert component with secondary color scheme |
-+----------------------------+-----------------------------------------------------+
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`Neutral <AlertNeutral>`                                       | Make a basis Alert component                        |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`ForInformation <AlertForInformation>`                         | Make an Alert component for informational messages  |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`ForSuccess <AlertForSuccess>`                                 | Make an Alert component for successful messages     |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`ForWarning <AlertForWarning>`                                 | Make an Alert component for warning messages        |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`ForDanger <AlertForDanger>`                                   | Make an Alert component for danger messages         |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`ForFailure <AlertForFailure>`                                 | Make an Alert component for failure messages        |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`WithBrandingPrimaryColor <AlertWithBrandingPrimaryColor>`     | Make an Alert component with primary color scheme   |
++---------------------------------------------------------------------+-----------------------------------------------------+
+| :ref:`WithBrandingSecondaryColor <AlertWithBrandingSecondaryColor>` | Make an Alert component with secondary color scheme |
++---------------------------------------------------------------------+-----------------------------------------------------+
 
-:Alert *Neutral* parameters:
+.. _AlertNeutral:
+
+Alert Neutral
+^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert Neutral {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -56,7 +71,20 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *ForInformation* parameters:
+.. _AlertForInformation:
+
+Alert ForInformation
+^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert ForInformation {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -66,7 +94,20 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *ForSuccess* parameters:
+.. _AlertForSuccess:
+
+Alert ForSuccess
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert ForSuccess {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -76,7 +117,20 @@ Twig Tag
 | sId      | string | optional | NULL |                                                 |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *ForWarning* parameters:
+.. _AlertForWarning:
+
+Alert ForWarning
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert ForWarning {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -86,7 +140,20 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *ForDanger* parameters:
+.. _AlertForDanger:
+
+Alert ForDanger
+^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert ForDanger {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -96,7 +163,20 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *ForFailure* parameters:
+.. _AlertForFailure:
+
+Alert ForFailure
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert ForFailure {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -106,7 +186,20 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *WithBrandingPrimaryColor* parameters:
+.. _AlertWithBrandingPrimaryColor:
+
+Alert WithBrandingPrimaryColor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert WithBrandingPrimaryColor {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -116,7 +209,20 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert *WithBrandingSecondaryColor* parameters:
+.. _AlertWithBrandingSecondaryColor:
+
+Alert WithBrandingSecondaryColor
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIAlert WithBrandingSecondaryColor {sTitle:'value', sContent:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIAlert %}
+
+:parameters:
 
 +----------+--------+----------+------+-------------------------------------------------+
 | sTitle   | string | optional | ''   | Title of the alert                              |
@@ -126,8 +232,8 @@ Twig Tag
 | sId      | string | optional | NULL | id of the html block                            |
 +----------+--------+----------+------+-------------------------------------------------+
 
-:Alert common parameters:
-
+Alert common parameters
+^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block                           |
 +-------------------+----------+------------------------------------------------------------------------+

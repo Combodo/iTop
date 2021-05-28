@@ -49,6 +49,34 @@ function DisplayParamsArray(array $aParams, array $aColumns)
 	echo "\n";
 }
 
+function DisplayParamsAsString(array $aParams)
+{
+	$aParamStr = [];
+	foreach ($aParams as $aParam) {
+		$sParam = $aParam['name'].':';
+		switch ($aParam['type']) {
+			case 'string':
+				$sParam .= "'value'";
+				break;
+
+			case 'array':
+				$sParam .= "{name:value, name:value}";
+				break;
+
+			case 'bool':
+				$sParam .= "true";
+				break;
+
+			default:
+				$sParam .= "value";
+				break;
+		}
+		$aParamStr[] = $sParam;
+	}
+
+	return implode(', ', $aParamStr);
+}
+
 function output(string $sClass, string $sClassComment, string $sDir, string $sTag, bool $bHasSubBlocks, array $aDocTypes, array $aDocGeneralParams)
 {
 	if ($bHasSubBlocks) {
@@ -66,6 +94,8 @@ EOF;
 
 	echo ".. Copyright (C) 2010-2021 Combodo SARL\n";
 	echo ".. http://opensource.org/licenses/AGPL-3.0\n";
+	echo "\n";
+	echo ".. _$sClass:\n";
 	echo "\n";
 	echo "$sClass\n";
 	$sLine = str_repeat('=', strlen($sClass));
@@ -96,6 +126,7 @@ EOF;
 	$iMaxComLength = 0;
 	foreach ($aDocTypes as $sType => $aDoc) {
 		$sComment = $aDoc['comment'];
+		$sType = ":ref:`$sType <$sClass$sType>`";
 		$iLength = strlen($sType);
 		if ($iLength > $iMaxLength) {
 			$iMaxLength = $iLength;
@@ -109,6 +140,7 @@ EOF;
 	echo "$sArrayLine\n";
 	foreach ($aDocTypes as $sType => $aDoc) {
 		$sComment = $aDoc['comment'];
+		$sType = ":ref:`$sType <$sClass$sType>`";
 		echo '| '.str_pad($sType, $iMaxLength).' | '.str_pad($sComment, $iMaxComLength)." |\n";
 		echo "$sArrayLine\n";
 	}
@@ -118,7 +150,31 @@ EOF;
 	foreach ($aDocTypes as $sType => $aDoc) {
 		$aParams = $aDoc['params'];
 		if (!empty($aParams)) {
-			echo ":$sClass *$sType* parameters:\n";
+			echo ".. _$sClass$sType:\n";
+			echo "\n";
+			echo "$sClass $sType\n";
+			echo str_repeat("^", strlen("$sClass $sType"));
+			echo "\n";
+			echo "\n";
+			echo ":syntax:\n";
+			echo "\n";
+			echo "::\n";
+			echo "\n";
+			$sParameters = DisplayParamsAsString($aParams);
+			if ($bHasSubBlocks) {
+				$sSyntax = <<<EOF
+    {% $sTag $sType {{$sParameters}} %}
+        Content Goes Here
+    {% End$sTag %}
+EOF;
+			} else {
+				$sSyntax = <<<EOF
+    {% $sTag Type $sType {{$sParameters}} %}
+EOF;
+			}
+			echo "$sSyntax\n";
+			echo "\n";
+			echo ":parameters:\n";
 			echo "\n";
 			$aColumns = [
 				'name' => 0,
@@ -132,7 +188,8 @@ EOF;
 	}
 
 	if (!empty($aDocGeneralParams)) {
-		echo ":$sClass common parameters:\n";
+		echo "$sClass common parameters\n";
+		echo str_repeat("^", strlen("$sClass common parameters"));
 		echo "\n";
 		$aColumns = [
 			'name' => 0,

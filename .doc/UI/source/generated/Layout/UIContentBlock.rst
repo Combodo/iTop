@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _UIContentBlock:
+
 UIContentBlock
 ==============
 
@@ -28,13 +30,26 @@ Twig Tag
 
 :Type:
 
-+----------+-------------------------------------------------------------------+
-| Standard | No comment                                                        |
-+----------+-------------------------------------------------------------------+
-| ForCode  | Used to display a block of code like <pre> but allows line break. |
-+----------+-------------------------------------------------------------------+
++------------------------------------------+-------------------------------------------------------------------+
+| :ref:`Standard <UIContentBlockStandard>` | No comment                                                        |
++------------------------------------------+-------------------------------------------------------------------+
+| :ref:`ForCode <UIContentBlockForCode>`   | Used to display a block of code like <pre> but allows line break. |
++------------------------------------------+-------------------------------------------------------------------+
 
-:UIContentBlock *Standard* parameters:
+.. _UIContentBlockStandard:
+
+UIContentBlock Standard
+^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIContentBlock Standard {sId:'value', aContainerClasses:{name:value, name:value}} %}
+        Content Goes Here
+    {% EndUIContentBlock %}
+
+:parameters:
 
 +-------------------+--------+----------+----------+--+
 | sId               | string | optional | NULL     |  |
@@ -42,7 +57,20 @@ Twig Tag
 | aContainerClasses | array  | optional | array () |  |
 +-------------------+--------+----------+----------+--+
 
-:UIContentBlock *ForCode* parameters:
+.. _UIContentBlockForCode:
+
+UIContentBlock ForCode
+^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UIContentBlock ForCode {sCode:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIContentBlock %}
+
+:parameters:
 
 +-------+--------+-----------+------+--+
 | sCode | string | mandatory |      |  |
@@ -50,8 +78,8 @@ Twig Tag
 | sId   | string | optional  | NULL |  |
 +-------+--------+-----------+------+--+
 
-:UIContentBlock common parameters:
-
+UIContentBlock common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+----------+------------------------------------------------------------+
 | AddCSSClass       | string   | CSS class to add to the generated html block               |
 +-------------------+----------+------------------------------------------------------------+

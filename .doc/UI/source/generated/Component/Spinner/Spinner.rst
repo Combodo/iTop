@@ -1,6 +1,8 @@
 .. Copyright (C) 2010-2021 Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
+.. _Spinner:
+
 Spinner
 =======
 
@@ -25,18 +27,29 @@ Twig Tag
 
 :Type:
 
-+----------+------------+
-| Standard | No comment |
-+----------+------------+
++-----------------------------------+------------+
+| :ref:`Standard <SpinnerStandard>` | No comment |
++-----------------------------------+------------+
 
-:Spinner *Standard* parameters:
+.. _SpinnerStandard:
+
+Spinner Standard
+^^^^^^^^^^^^^^^^
+
+:syntax:
+
+::
+
+    {% UISpinner Type Standard {sId:'value'} %}
+
+:parameters:
 
 +-----+--------+----------+------+--+
 | sId | string | optional | NULL |  |
 +-----+--------+----------+------+--+
 
-:Spinner common parameters:
-
+Spinner common parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^
 +-------------------+--------+------------------------------------------------------------+
 | AddCSSClass       | string | CSS class to add to the generated html block               |
 +-------------------+--------+------------------------------------------------------------+
