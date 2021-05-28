@@ -24,7 +24,7 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 	_create: function() {
 		var me = this;
 		// Initialize a single controller for this tab container
-		this.controller = new ScrollMagic.Controller({'container': '#' + this.element.find(this.js_selectors.tab_container_list).attr('id'), 'refreshInterval' : 200});
+		this.controller = new ScrollMagic.Controller({'container': this.element.scrollParent()[0], 'refreshInterval' : 200});
 		
 		// Add remote tabs to controller after they are loaded
 		var afterloadajax = function (a, b)
