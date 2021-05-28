@@ -19,10 +19,10 @@
 
 // Global search
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application~~',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...~~',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recents~~',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet~~',
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open global search~~',
+	'UI:Component:GlobalSearch:Tooltip' => 'Doorzoek de volledige applicatie',
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Zoek…',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Recente',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Je hebt nog geen enkele zoekopdracht gemaakt',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'Zoekgeschiedenis staat uit',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open globale zoekopdracht',
 ));

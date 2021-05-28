@@ -19,15 +19,14 @@
 
 // Navigation menu
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Bedrijfslogo',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Vergroot / Verberg',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Vergroot / Verberg (Gefilterd op %1$s)',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter…',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
-
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Welkom %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s profielfoto',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
 ));
