@@ -1345,6 +1345,9 @@ class ObjectController extends BrickController
 				}
 				$aAttData['value'] = '<img src="'.$sUrl.'" />';
 			}
+			elseif ($oAttDef instanceof AttributeEnum) {
+				$aAttData['value'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
+			}
 			else
 			{
 				$aAttData['value'] = $oAttDef->GetAsHTML($oObject->Get($oAttDef->GetCode()));
