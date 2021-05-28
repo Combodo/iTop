@@ -572,13 +572,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								} else {
 									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
 								}
+								$sAttLabel = MetaModel::GetName($sClassName);
 								$aColumnDefinition[] = [
 									'description' => $aData['label'],
 									'object_class' => $sClassName,
 									'class_alias' => $sClassAlias,
 									'attribute_code' => $sAttCode,
 									'attribute_type' => '_key_',
-									'attribute_label' => $aData['alias'],
+									'attribute_label' => $sAttLabel,
 									"render" => "return row['".$sClassAlias."/hyperlink'];",
 								];
 							}
