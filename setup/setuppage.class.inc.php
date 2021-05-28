@@ -73,25 +73,25 @@ class SetupPage extends NiceWebPage
 	public function info($sText)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
-		$this->log_info($sText);
+		SetupLog::Info($sText);
 	}
 
 	public function ok($sText)
 	{
 		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
-		$this->log_ok($sText);
+		SetupLog::Ok($sText);
 	}
 
 	public function warning($sText)
 	{
 		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
-		$this->log_warning($sText);
+		SetupLog::Warning($sText);
 	}
 
 	public function error($sText)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
-		$this->log_error($sText);
+		SetupLog::Error($sText);
 	}
 
 	public function form($aData)
@@ -172,6 +172,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_error($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Error');
 		SetupLog::Error($sText);
 	}
 
@@ -180,6 +181,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_warning($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Warning');
 		SetupLog::Warning($sText);
 	}
 
@@ -188,14 +190,16 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log_info($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Info');
 		SetupLog::Info($sText);
 	}
 
 	/**
-	 * deprecated 3.0.0 use SetupLog::Ok
+	 * @deprecated 3.0.0 use SetupLog::Ok
 	 */
 	public static function log_ok($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
 		SetupLog::Ok($sText);
 	}
 
@@ -204,6 +208,7 @@ class SetupPage extends NiceWebPage
 	 */
 	public static function log($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
 		SetupLog::Ok($sText);
 	}
 

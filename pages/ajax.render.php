@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\PreferencesController;
@@ -1165,6 +1166,7 @@ EOF
 					$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
+					$sHtml = str_replace("'", "\'", $sHtml);
 					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
 				}
 				if ($oDashlet->IsFormRedrawNeeded()) {
@@ -1221,6 +1223,7 @@ EOF
 			$aContext = $oAppContext->GetAsHash();
 			$sContext = serialize($aContext);
 
+			// Create shortcut
 			/** @var ShortcutOQL $oShortcut */
 			$oShortcut = MetaModel::NewObject("ShortcutOQL");
 			$oShortcut->Set('user_id', UserRights::GetUserId());
@@ -1228,8 +1231,7 @@ EOF
 			$oShortcut->Set("name", $aValues['name']);
 			$oShortcut->Set("oql", $aValues['oql']);
 			$iAutoReload = (int)$aValues['auto_reload_sec'];
-			if (($aValues['auto_reload']) && ($iAutoReload > 0))
-			{
+			if (($aValues['auto_reload']) && ($iAutoReload > 0)) {
 				$oShortcut->Set("auto_reload_sec", max(MetaModel::GetConfig()->Get('min_reload_interval'), $iAutoReload));
 				$oShortcut->Set("auto_reload", 'custom');
 			}
@@ -1239,14 +1241,42 @@ EOF
 
 			$oShortcut->CloneTableSettings($aValues['table_settings']);
 
-			// Add the menu node in the right place
-			//
-			// Mmmm... already done because the newly created menu is read from the DB
-			//         as soon as we invoke DisplayMenu
+			// Add shortcut to current menu
+			// - Init. app. menu
+			ApplicationMenu::LoadAdditionalMenus();
 
-			// Refresh the menu pane
-			$aExtraParams = array();
-			ApplicationMenu::DisplayMenu($oPage, $aExtraParams);
+			// - Find newly created shortcut
+			$aNewShortcutNode = null;
+			$sMenuGroupId = 'MyShortcuts';
+			$sMenuGroupIdx = ApplicationMenu::GetMenuIndexById($sMenuGroupId);
+			if (0 <= $sMenuGroupIdx) {
+				$sNewShortcutId = $sMenuGroupId.'_'.$oShortcut->GetKey();
+				$aShortcutsNodes = ApplicationMenu::GetSubMenuNodes($sMenuGroupIdx);
+				foreach ($aShortcutsNodes as $aShortcutNode) {
+					if ($sNewShortcutId === $aShortcutNode['sId']) {
+						$aNewShortcutNode = $aShortcutNode;
+						break;
+					}
+				}
+			}
+
+			// - If shortcut found, insert it in the navigation menu
+			if (!empty($aNewShortcutNode)) {
+				$sHtml = TwigHelper::RenderTemplate(
+					TwigHelper::GetTwigEnvironment(TwigHelper::ENUM_TEMPLATES_BASE_PATH_BACKOFFICE),
+					['aMenuNode' => $aNewShortcutNode],
+					'base/layouts/navigation-menu/menu-node'
+				);
+
+				// Important: Mind the back ticks to avoid line breaks to break the JS
+				$oPage->add_script(<<<JS
+$('body').trigger('add_shortcut_node.navigation_menu.itop', {
+	parent_menu_node_id: '{$sMenuGroupId}',
+	new_menu_node_html_rendering: `{$sHtml}`
+});
+JS
+				);
+			}
 			break;
 
 		case 'shortcut_rename_dlg':
@@ -2682,11 +2712,11 @@ EOF
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sTargetClass WHERE friendlyname LIKE :needle");
 				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
-				$oSet->SetLimit(5);
+				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
-				while($oObject = $oSet->Fetch()) {
+				while ($oObject = $oSet->Fetch()) {
 					// Note $oObject finalclass might be different than $sTargetClass
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
@@ -2694,13 +2724,20 @@ EOF
 						'class' => $sObjectClass,
 						'id' => $iObjectId,
 						'friendlyname' => $oObject->Get('friendlyname'),
+						'initials' => '',
 					];
 
-					if(!empty($sObjectImageAttCode)) {
+					// Try to retrieve image for contact
+					if (!empty($sObjectImageAttCode)) {
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
-						$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+						if (!$oImage->IsEmpty()) {
+							$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+						}
 					}
+
+					// If no image found, fallback on initials
+					$aMatch['initials'] = array_key_exists('picture_url', $aMatch) ? '' : utils::ToAcronym($oObject->Get('friendlyname'));
 
 					$aMatches[] = $aMatch;
 				}

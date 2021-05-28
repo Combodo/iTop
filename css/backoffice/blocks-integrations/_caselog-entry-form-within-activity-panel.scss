@@ -1,0 +1,14 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-caselog-entry-form-within-activity-panel--padding-bottom: 14px !default;
+$ibo-caselog-entry-form-within-activity-panel--border-bottom: 1px solid $ibo-color-grey-500 !default;
+
+.ibo-activity-panel--tab-entry-form {
+  .ibo-caselog-entry-form {
+    padding-bottom: $ibo-caselog-entry-form-within-activity-panel--padding-bottom;
+    border-bottom: $ibo-caselog-entry-form-within-activity-panel--border-bottom;
+  }
+}

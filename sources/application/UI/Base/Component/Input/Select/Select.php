@@ -22,11 +22,14 @@ class Select extends UIContentBlock
 	protected $sValue;
 	/** @var bool */
 	protected $bSubmitOnChange = false;
+	/** @var bool */
+	protected $bIsMultiple = false;
 
 
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
+		$this->bIsMultiple = false;
 	}
 
 	public function AddOption(SelectOption $oOption)
@@ -84,7 +87,25 @@ class Select extends UIContentBlock
 	public function SetSubmitOnChange(bool $bSubmitOnChange)
 	{
 		$this->bSubmitOnChange = $bSubmitOnChange;
+
 		return $this;
 	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsMultiple(): bool
+	{
+		return $this->bIsMultiple;
+	}
+
+	/**
+	 * @param bool $bIsMultiple
+	 */
+	public function SetIsMultiple(bool $bIsMultiple): void
+	{
+		$this->bIsMultiple = $bIsMultiple;
+	}
+
 
 }

@@ -16,11 +16,13 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Navigation menu
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:Title' => 'Voorkeuren',
 	'UI:Preferences:UserInterface:Title' => 'Gebruikersinterface',
+	'UI:Preferences:General:Title' => 'Algemeen',
+	'UI:Preferences:General:Theme' => 'Thema',
+	'UI:Preferences:General:Theme:DefaultThemeLabel' => '%1$s (standaard)',
 	'UI:Preferences:Lists:Title' => 'Lijsten',
 	'UI:Preferences:RichText:Title' => 'Rich text editor~~',
 	'UI:Preferences:RichText:ToolbarState' => 'Standaard status werkbalk',

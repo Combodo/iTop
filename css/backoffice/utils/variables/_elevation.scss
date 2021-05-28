@@ -1,0 +1,31 @@
+/*!
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify	
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+$ibo-elevation-100: 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.12) !default;
+$ibo-elevation-200: 0 2px 4px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.15) !default;
+$ibo-elevation-300: 0 3px 6px rgba(0, 0, 0, 0.10), 0 10px 20px rgba(0, 0, 0, 0.15) !default;
+$ibo-elevation-400: 0 5px 10px rgba(0, 0, 0, 0.05), 0 15px 25px rgba(0, 0, 0, 0.15) !default;
+$ibo-elevation-500: 0 20px 40px rgba(0, 0, 0, 0.20) !default;
+
+:root{
+	--ibo-elevation-100: #{$ibo-elevation-100};
+	--ibo-elevation-200: #{$ibo-elevation-200};
+	--ibo-elevation-300: #{$ibo-elevation-300};
+	--ibo-elevation-400: #{$ibo-elevation-400};
+	--ibo-elevation-500: #{$ibo-elevation-500};
+}

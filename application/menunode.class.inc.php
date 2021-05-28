@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -342,15 +329,17 @@ class ApplicationMenu
 	 */
 	public static function DisplayMenu($oPage, $aExtraParams)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetMenuGroups() instead');
 		self::LoadAdditionalMenus();
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;
 		$iActiveAccordion = $iAccordion;
 		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
-		foreach(self::$aRootMenus as $aMenu)
-		{
-			if (!self::CanDisplayMenu($aMenu)) { continue; }
+		foreach (self::$aRootMenus as $aMenu) {
+			if (!self::CanDisplayMenu($aMenu)) {
+				continue;
+			}
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
 			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
@@ -418,13 +407,12 @@ EOF
 	 */
 	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetSubMenuNodes() instead');
 		// Sort the menu based on the rank
 		$bActive = false;
 		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
-		foreach($aMenus as $aMenu)
-		{
-			if (!self::CanDisplayMenu($aMenu))
-			{
+		foreach ($aMenus as $aMenu) {
+			if (!self::CanDisplayMenu($aMenu)) {
 				continue;
 			}
 			$index = $aMenu['index'];
@@ -728,41 +716,7 @@ abstract class MenuNode
 		// Count the entries up to 99
 		$oSearch = DBSearch::FromOQL($sOQL);
 
-		$oAppContext = new ApplicationContext();
-		$sClass = $oSearch->GetClass();
-		foreach ($oAppContext->GetNames() as $key) {
-			// Find the value of the object corresponding to each 'context' parameter
-			$aCallSpec = [$sClass, 'MapContextParam'];
-			$sAttCode = '';
-			if (is_callable($aCallSpec)) {
-				$sAttCode = call_user_func($aCallSpec, $key); // Returns null when there is no mapping for this parameter
-			}
-
-			if (MetaModel::IsValidAttCode($sClass, $sAttCode)) {
-				// Add Hierarchical condition if hierarchical key
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if (isset($oAttDef) && ($oAttDef->IsExternalKey())) {
-					$iDefaultValue = intval($oAppContext->GetCurrentValue($key));
-					if ($iDefaultValue != 0) {
-						try {
-							/** @var AttributeExternalKey $oAttDef */
-							$sTargetClass = $oAttDef->GetTargetClass();
-							$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass($sTargetClass);
-							if ($sHierarchicalKeyCode !== false) {
-								$oFilter = new DBObjectSearch($sTargetClass);
-								$oFilter->AddCondition('id', $iDefaultValue);
-								$oHKFilter = new DBObjectSearch($sTargetClass);
-								$oHKFilter->AddCondition_PointingTo($oFilter, $sHierarchicalKeyCode, TREE_OPERATOR_BELOW);
-								$oSearch->AddCondition_PointingTo($oHKFilter, $sAttCode);
-							}
-						}
-						catch (Exception $e) {
-							// If filtering fails just ignore it
-						}
-					}
-				}
-			}
-		}
+		DBSearchHelper::AddContextFilter($oSearch);
 
 		$oSet = new DBObjectSet($oSearch);
 		$iCount = $oSet->CountWithLimit(99);

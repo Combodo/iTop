@@ -358,3 +358,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Person:personal_info' => 'Persoonlijke informatie',
 	'Person:notifiy' => 'Notificeer',
 ));
+
+// Themes
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

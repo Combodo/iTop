@@ -351,3 +351,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
 ));
+
+// Themes
+Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

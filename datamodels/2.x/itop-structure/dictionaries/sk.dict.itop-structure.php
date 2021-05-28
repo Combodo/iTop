@@ -351,3 +351,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Upozornenie',
 ));
+
+// Themes
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

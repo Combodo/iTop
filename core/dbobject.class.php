@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /**
@@ -2434,15 +2421,22 @@ abstract class DBObject implements iDisplay
 	 *         Reset during {@see DBObject::DBUpdate()}
 	 * @throws Exception
 	 * @uses m_aCurrValues
-     */
+	 */
 	public function ListChanges()
 	{
-		if ($this->m_bIsInDB)
-		{
+		if ($this->m_bIsInDB) {
 			return $this->ListChangedValues($this->m_aCurrValues);
 		}
 
 		return $this->m_aCurrValues;
+	}
+
+	/*
+	 * return array
+	 */
+	public function GetLoadedAttributes()
+	{
+		return array_keys($this->m_aLoadedAtt);
 	}
 
 	/**
@@ -3136,39 +3130,15 @@ abstract class DBObject implements iDisplay
 			}
 			//   2 - Find mentioned objects
 			$aMentionedObjects = array();
-			foreach($aUpdatedLogAttCodes as $sAttCode)
-			{
+			foreach ($aUpdatedLogAttCodes as $sAttCode) {
 				/** @var \ormCaseLog $oUpdatedCaseLog */
 				$oUpdatedCaseLog = $this->Get($sAttCode);
-				$aMentionMatches = array();
-				// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink, we can't use the following (simpler) regexp: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
-				// If we change the sanitizer, we might want to use this regexp as it's easier to read
-				// Note 2: This is only working for backoffice URLs...
-				$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
-				preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $oUpdatedCaseLog->GetModifiedEntry(), $aMentionMatches);
-
-				foreach($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch)
-				{
-					$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
-					$sMatchedId = $aMentionMatches[3][$iMatchIdx];
-
-					// Prepare array for matched class if not already present
-					if(!array_key_exists($sMatchedClass, $aMentionedObjects))
-					{
-						$aMentionedObjects[$sMatchedClass] = array();
-					}
-					// Add matched ID if not already there
-					if(!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass]))
-					{
-						$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
-					}
-				}
+				$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry()));
 			}
 			//   3 - Trigger for those objects
-			foreach($aMentionedObjects as $sMentionedClass => $aMentionedIds)
-			{
-				foreach($aMentionedIds as $sMentionedId)
-				{
+			// TODO: This should be refactored and moved into the caselogs loop, otherwise, we won't be able to know which case log triggered the action.
+			foreach ($aMentionedObjects as $sMentionedClass => $aMentionedIds) {
+				foreach ($aMentionedIds as $sMentionedId) {
 					/** @var \DBObject $oMentionedObject */
 					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
 					// Important: Here the "$this->object()$" placeholder is actually the mentioned object and not the current object. The current object can be used through the $source->object()$ placeholder.
@@ -4718,8 +4688,10 @@ abstract class DBObject implements iDisplay
 	 */
 	public function GetMasterReplica()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$sOQL = "SELECT replica,datasource FROM SynchroReplica AS replica JOIN SynchroDataSource AS datasource ON replica.sync_source_id=datasource.id WHERE replica.dest_class = :dest_class AND replica.dest_id = :dest_id";
 		$oReplicaSet = new DBObjectSet(DBObjectSearch::FromOQL($sOQL), array() /* order by*/, array('dest_class' => get_class($this), 'dest_id' => $this->GetKey()));
+
 		return $oReplicaSet;
 	}
 

@@ -151,6 +151,8 @@ $.widget('itop.set_widget',
 				create: false,
 				placeholder: Dict.S("Core:AttributeSet:placeholder"),
 				inputClass: 'selectize-input ibo-input ibo-input-set ibo-input-selectize',
+				// To avoid dropdown to be cut by the container's overflow hidden rule
+				dropdownParent: 'body',
 				onInitialize: function () {
 					var selectizeWidget = this;
 					setWidget._onInitialize(selectizeWidget);

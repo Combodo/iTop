@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenuFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContent;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -41,6 +42,19 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	/** @var \TabManager */
 	protected $m_oTabs;
+	/**
+	 * Navigation menu layout (menu groups, user menu, ...)
+	 *
+	 * @var \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu
+	 * @since 3.0.0
+	 */
+	protected $oNavigationMenuLayout;
+	/**
+	 * Top bar layout (quick create, global search, ...)
+	 *
+	 * @var \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar
+	 * @since 3.0.0
+	 */
 	protected $oTopBarLayout;
 	protected $bBreadCrumbEnabled;
 	protected $sBreadCrumbEntryId;
@@ -78,10 +92,11 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			$this->bBreadCrumbEnabled = false;
 		}
 
+		$this->SetNavigationMenuLayout(NavigationMenuFactory::MakeStandard());
 		$this->SetTopBarLayout(TopBarFactory::MakeStandard($this->GetBreadCrumbsNewEntry()));
 
 		utils::InitArchiveMode();
-		
+
 		$this->m_aMessages = array();
 		$this->SetRootUrl(utils::GetAbsoluteUrlAppRoot());
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
@@ -185,7 +200,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 */
 	protected function InitializeKeyboardShortcuts(): void
 	{
-		$aShortcuts = utils::GetKeyboardShortcutPref();
+		$aShortcuts = utils::GetAllKeyboardShortcutsPrefs();
 		$sShortcuts = json_encode($aShortcuts);
 		$this->add_script("aKeyboardShortcuts = $sShortcuts;");
 	}
@@ -320,54 +335,6 @@ JS
 		// TODO 3.0.0: What is this for?
 		$this->add_ready_script(
 			<<< JS
-	
-	// Adjust initial size
-	$('.v-resizable').each( function()
-		{
-			var parent_id = $(this).parent().id;
-			// Restore the saved height
-			var iHeight = GetUserPreference(parent_id+'_'+this.id+'_height', undefined);
-			if (iHeight != undefined)
-			{
-				$(this).height(parseInt(iHeight, 10)); // Parse in base 10 !);
-			}
-			// Adjust the child 'item''s height and width to fit
-			var container = $(this);
-			var fixedWidth = container.parent().innerWidth() - 6;
-			// Set the width to fit the parent
-			$(this).width(fixedWidth);
-			var headerHeight = $(this).find('.drag_handle').height();
-			// Now adjust the width and height of the child 'item'
-			container.find('.item').height(container.innerHeight() - headerHeight - 12).width(fixedWidth - 10);
-		}
-	);
-	// Make resizable, vertically only everything that claims to be v-resizable !
-	$('.v-resizable').resizable( { handles: 's', minHeight: $(this).find('.drag_handle').height(), minWidth: $(this).parent().innerWidth() - 6, maxWidth: $(this).parent().innerWidth() - 6, stop: function()
-		{
-			// Adjust the content
-			var container = $(this);
-			var headerHeight = $(this).find('.drag_handle').height();
-			container.find('.item').height(container.innerHeight() - headerHeight - 12);//.width(container.innerWidth());
-			var parent_id = $(this).parent().id;
-			SetUserPreference(parent_id+'_'+this.id+'_height', $(this).height(), true); // true => persistent
-		}
-	} );
-	
-	// Shortcut menu actions
-	$('.actions_button a').on('click', function() {
-		aMatches = /#(.*)$/.exec(window.location.href);
-		if (aMatches != null)
-		{
-			currentHash = aMatches[1];
-			if ( /#(.*)$/.test(this.href))
-			{
-				this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
-			}
-		}
-	});
-
-	// End of Tabs handling
-
 	PrepareWidgets();
 
 	// Make sortable, everything that claims to be sortable
@@ -385,9 +352,6 @@ JS
 	docWidth = $(document).width();
 	// $('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth, height: 'auto', maxHeight: $(window).height() - 50 }); // JQuery UI dialogs
 	ShowDebug();
-	$('#logOffBtn>ul').popupmenu();
-	
-	$('.caselog_header').on('click', function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
 	
 	$(document).ajaxSend(function(event, jqxhr, options) {
 		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
@@ -412,6 +376,8 @@ JS
 		setTimeout(function(){
 			CombodoTooltip.InitAllNonInstantiatedTooltips();
 			CombodoBackofficeToolbox.InitCodeHighlighting();
+			// Initialize date / datetime pickers if needed 
+			PrepareWidgets();
 		}, 500);
 	});
 JS
@@ -468,7 +434,6 @@ JS
 	}
 
 
-
 	/**
 	 * @see static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE, static::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES
 	 *
@@ -506,23 +471,56 @@ JS
 		$this->sBreadCrumbEntryUrl = null;
 		$this->sBreadCrumbEntryIcon = null;
 	}
-	
 
 
 	/**
-	 * Return the navigation menu layout (id, menu groups, ...)
-	 *
 	 * @internal
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
-	 * @throws \MySQLException
+	 * @uses static::$oNavigationMenuLayout
 	 * @since 3.0.0
 	 */
 	protected function GetNavigationMenuLayout()
 	{
-		return NavigationMenuFactory::MakeStandard();
+		return $this->oNavigationMenuLayout;
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu $oNavigationMenuLayout
+	 *
+	 * @return $this
+	 * @uses static::$oNavigationMenuLayout
+	 * @since 3.0.0
+	 */
+	protected function SetNavigationMenuLayout(NavigationMenu $oNavigationMenuLayout)
+	{
+		$this->oNavigationMenuLayout = $oNavigationMenuLayout;
+
+		return $this;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar
+	 * @uses static::$oTopBarLayout
+	 * @since 3.0.0
+	 */
+	public function GetTopBarLayout()
+	{
+		return $this->oTopBarLayout;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar $oTopBarLayout
+	 *
+	 * @return $this
+	 * @uses static::$oTopBarLayout
+	 * @since 3.0.0
+	 */
+	public function SetTopBarLayout(TopBar $oTopBarLayout)
+	{
+		$this->oTopBarLayout = $oTopBarLayout;
+		return $this;
 	}
 
 	/**
@@ -1046,6 +1044,7 @@ EOF
 	 */
 	public function SelectTab($sTabContainer, $sTabCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$this->add_ready_script($this->m_oTabs->SelectTab($sTabContainer, $sTabCode));
 	}
 
@@ -1175,26 +1174,6 @@ EOF
 		}
 		$oAlert->AddCSSClass($sCssClasses);
 		$this->AddUiBlock($oAlert);
-	}
-
-
-	/**
-	 * @return TopBar
-	 */
-	public function GetTopBarLayout(): TopBar
-	{
-		return $this->oTopBarLayout;
-	}
-
-	/**
-	 * @param TopBar $oTopBarLayout
-	 *
-	 * @return iTopWebPage
-	 */
-	public function SetTopBarLayout(TopBar $oTopBarLayout): iTopWebPage
-	{
-		$this->oTopBarLayout = $oTopBarLayout;
-		return $this;
 	}
 
 	/**

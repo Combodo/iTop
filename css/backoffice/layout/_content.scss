@@ -16,23 +16,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-$ibo-code--background-color: $ibo-color-white-200 !default;
-$ibo-code--padding: 1.25rem 1.5rem !default;
-
 /* Note: We have to wrap it in the ID in order to overload its rules, otherwise, the ID takes over the simple CSS class... */
 #ibo-center-container {
   &.ibo-center-container--with-side-content {
     display: flex;
     align-items: stretch;
-    overflow: hidden; /* Only the content areas should scroll */
-
-    > * {
-      height: 100%;
-    }
 
     #ibo-main-content {
       flex-grow: 1; /* To occupy maximum width, side content will handle its width */
-      overflow-x: auto; /* To avoid main content to be too wide when the blocks within it have no width constraints. This way it will occupy only the remaining space left by the side part. */
     }
   }
 }
@@ -44,11 +35,4 @@ $ibo-code--padding: 1.25rem 1.5rem !default;
 #ibo-side-content {
   background-color: $ibo-content-block--background-color;
   border-left: $ibo-content-block--border;
-}
-
-.ibo-code {
-  font-family: $family-code;
-  font-size: $ibo-font-size-150;
-  background-color: $ibo-code--background-color;
-  padding: $ibo-code--padding;
 }

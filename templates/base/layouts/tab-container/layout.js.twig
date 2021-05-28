@@ -2,9 +2,9 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% if not aPage.isPrintable %}
-	$('#{{ oUIBlock.GetId() }}').tab_container({'remote_tab_load_dict':  '{{ 'UIBlock:TabContainer:RemoteTabLoad'|dict_s|escape('js') }}'});
+$('#{{ oUIBlock.GetId() }}').tab_container({'remote_tab_load_dict': '{{ 'UIBlock:TabContainer:RemoteTabLoad'|dict_s|escape('js') }}'});
 {% else %}
-	{% for oTab in oUIBlock.GetSubBlocks() %}
+{% for oTab in oUIBlock.GetSubBlocks() %}
 oHiddeableChapters['tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}'] = '{{ oTab.GetTitle()|escape('js') }}';
 {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
 $.post('{{ oTab.GetUrl()|raw }}', {printable: '1'}, function (data)

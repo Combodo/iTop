@@ -19,23 +19,28 @@
 /* SCSS variables */
 $ibo-panel--spacing-top: 24px !default;
 
+/* - Base variables for the block */
+$ibo-panel--base-border-size: 1px !default;
+$ibo-panel--base-border-style: solid !default;
+$ibo-panel--base-border-color: $ibo-color-grey-400 !default;
+$ibo-panel--base-border: $ibo-panel--base-border-size $ibo-panel--base-border-style $ibo-panel--base-border-color !default;
+
+$ibo-panel--base-transition-property: all !default;
+$ibo-panel--base-transition-duration: 0.15s !default;
+$ibo-panel--base-transition-timing-function: linear !default;
+$ibo-panel--base-transition: $ibo-panel--base-transition-property $ibo-panel--base-transition-duration $ibo-panel--base-transition-timing-function !default;
+
+%ibo-panel--base-transition {
+  transition: $ibo-panel--base-transition;
+}
+
+/* - Specific variables for the block */
 $ibo-panel--header--margin-bottom: 4px !default;
 
-$ibo-panel--icon--size: 48px !default;
-$ibo-panel--icon--spacing: 16px !default;
-$ibo-panel--icon--size-as-medallion: 72px !default;
-$ibo-panel--icon--spacing--as-medallion: 16px !default;
-$ibo-panel--icon--bottom--as-medallion: -24px !default;
-$ibo-panel--icon--background-color--as-medallion: $ibo-color-grey-100 !default;
-$ibo-panel--icon--border--as-medallion: 2px solid $ibo-color-blue-grey-300 !default;
-$ibo-panel--icon--border-radius--as-medallion: $ibo-border-radius-full !default;
+$ibo-panel--header--background-color--is-sticking: $ibo-color-grey-100 !default;
+$ibo-panel--header--border--is-sticking: $ibo-panel--base-border !default;
 
-$ibo-panel--icon-background--size--must-contain: contain !default;
-$ibo-panel--icon-background--size--must-cover: cover !default;
-$ibo-panel--icon-background--size--must-zoomout: 66.67% !default;
-
-$ibo-panel--title--color: $ibo-color-grey-900 !default;
-$ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
+$ibo-panel--header--padding-y--is-sticking: 4px !default;
 
 $ibo-panel--highlight--width: 100% !default;
 $ibo-panel--highlight--height: 8px !default;
@@ -47,54 +52,78 @@ $ibo-panel--body--padding-bottom: 24px !default;
 $ibo-panel--body--padding-top: $ibo-panel--body--padding-bottom + $ibo-panel--highlight--height !default;
 $ibo-panel--body--padding-x: 16px !default;
 $ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
-$ibo-panel--body--border-size: 1px !default;
-$ibo-panel--body--border-color: $ibo-color-grey-400 !default;
+$ibo-panel--body--border: $ibo-panel--base-border !default;
+
+$ibo-panel--icon--size: 48px !default;
+$ibo-panel--icon--spacing: 16px !default;
+$ibo-panel--icon--size-as-medallion: 72px !default;
+$ibo-panel--icon--spacing--as-medallion: 16px !default;
+$ibo-panel--icon--bottom--as-medallion: -24px !default;
+$ibo-panel--icon--background-color--as-medallion: $ibo-color-grey-100 !default;
+$ibo-panel--icon--border--as-medallion: 2px solid $ibo-color-blue-grey-300 !default;
+$ibo-panel--icon--border-radius--as-medallion: $ibo-border-radius-full !default;
+
+$ibo-panel--icon--size-as-medallion--is-sticking: 48px !default;
+$ibo-panel--icon--spacing--as-medallion--is-sticking: $ibo-panel--icon--spacing--as-medallion !default;
+$ibo-panel--icon--bottom--as-medallion--is-sticking: -12px !default;
+$ibo-panel--icon--border--as-medallion--is-sticking: 1px $ibo-panel--base-border-style $ibo-panel--base-border-color !default;
+
+$ibo-panel--icon-background--size--must-contain: contain !default;
+$ibo-panel--icon-background--size--must-cover: cover !default;
+$ibo-panel--icon-background--size--must-zoomout: 66.67% !default;
+
+$ibo-panel--title--font-size--is-sticking: $ibo-font-size-150 !default;
+$ibo-panel--title--color: $ibo-color-grey-900 !default;
+$ibo-panel--subtitle--font-size--is-sticking: $ibo-font-size-100 !default;
+$ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
 
 $ibo-panel--collapsible-toggler--margin-right: 8px !default;
 $ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
 $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
 $ibo-panel-colors: (
-		'primary': $ibo-color-primary-600,
-		'secondary': $ibo-color-secondary-600,
-		'neutral': $ibo-color-grey-600,
-		'information': $ibo-color-information-600,
-		'success': $ibo-color-success-600,
-		'failure': $ibo-color-danger-600,
-		'warning': $ibo-color-warning-600,
-		'danger': $ibo-color-danger-600,
-		'grey' : $ibo-color-grey-600,
-		'blue-grey': $ibo-color-blue-grey-600,
-		'blue': $ibo-color-blue-800,
-		'cyan': $ibo-color-cyan-600,
-		'green': $ibo-color-green-600,
-		'orange' : $ibo-color-orange-600,
-		'red': $ibo-color-red-600,
-		'pink': $ibo-color-pink-600,
+        'primary': $ibo-color-primary-600,
+        'secondary': $ibo-color-secondary-600,
+        'neutral': $ibo-color-grey-600,
+        'information': $ibo-color-information-600,
+        'success': $ibo-color-success-600,
+        'failure': $ibo-color-danger-600,
+        'warning': $ibo-color-warning-600,
+        'danger': $ibo-color-danger-600,
+        'grey' : $ibo-color-grey-600,
+        'blue-grey': $ibo-color-blue-grey-600,
+        'blue': $ibo-color-blue-800,
+        'cyan': $ibo-color-cyan-600,
+        'green': $ibo-color-green-600,
+        'orange' : $ibo-color-orange-600,
+        'red': $ibo-color-red-600,
+        'pink': $ibo-color-pink-600,
 ) !default;
 
 @each $sColor, $sColorValue in $ibo-panel-colors {
-	.ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before {
-		position: absolute;
-		top: 0;
-		left: 0;
-		display: block;
+  .ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
 
-		background-color: $sColorValue;
-		content: "";
+    background-color: $sColorValue;
+    content: "";
 
-		width: $ibo-panel--highlight--width;
-		height: $ibo-panel--highlight--height;
-		padding-bottom: $ibo-panel--highlight--padding-bottom;
-	}
+    width: $ibo-panel--highlight--width;
+    height: $ibo-panel--highlight--height;
+    padding-bottom: $ibo-panel--highlight--padding-bottom;
+  }
 }
 
 /* Rules */
 .ibo-panel + .ibo-panel {
-	margin-top: $ibo-panel--spacing-top;
+  margin-top: $ibo-panel--spacing-top;
 }
 
 .ibo-panel {
+  position: relative;
+
   &.ibo-has-icon {
     .ibo-panel--titles {
       padding-left: $ibo-panel--icon--spacing;
@@ -107,7 +136,7 @@ $ibo-panel-colors: (
         margin-left: $ibo-panel--icon--spacing--as-medallion;
       }
 
-      // Note: Direct child selector is mandatory, otherwise a panel within a panel with a medallion icon will have its icon as a medallion too (eg. dashboard in an object)
+      // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
       > .ibo-panel--header {
         .ibo-panel--header-left {
           .ibo-panel--icon {
@@ -123,6 +152,7 @@ $ibo-panel-colors: (
             border: $ibo-panel--icon--border--as-medallion;
             border-radius: $ibo-panel--icon--border-radius--as-medallion;
           }
+
           .ibo-panel--titles {
             padding-left: calc(#{$ibo-panel--icon--size-as-medallion} + #{$ibo-panel--icon--spacing--as-medallion});
           }
@@ -152,7 +182,6 @@ $ibo-panel-colors: (
   min-height: $ibo-panel--icon--size;
 }
 
-
 .ibo-panel--icon-background {
   width: 100%;
   height: 100%;
@@ -176,28 +205,28 @@ $ibo-panel-colors: (
 .ibo-panel--title {
   display: inline-block;
   color: $ibo-panel--title--color;
-  @extend %ibo-font-ral-sembol-250;
+  @extend %ibo-font-ral-med-350;
   flex-grow: 1;
 }
 
 .ibo-panel--subtitle {
   display: flex;
-  @extend %ibo-font-ral-med-250;
+  @extend %ibo-font-ral-med-150;
   color: $ibo-panel--subtitle--color;
 }
 
 .ibo-panel--body {
-	position: relative;
-	padding: $ibo-panel--body--padding-top $ibo-panel--body--padding-x $ibo-panel--body--padding-bottom $ibo-panel--body--padding-x;
-	background-color: $ibo-panel--body--background-color;
-	border: solid $ibo-panel--body--border-size $ibo-panel--body--border-color;
-	border-radius: $ibo-panel--body--border-radius;
-	overflow: hidden; /* To force highlight color to be cropped by the border radius */
+  position: relative;
+  padding: $ibo-panel--body--padding-top $ibo-panel--body--padding-x $ibo-panel--body--padding-bottom $ibo-panel--body--padding-x;
+  background-color: $ibo-panel--body--background-color;
+  border: $ibo-panel--body--border;
+  border-radius: $ibo-panel--body--border-radius;
+  overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
-	@extend %ibo-font-ral-nor-200;
+  @extend %ibo-font-ral-nor-200;
 }
 
-.ibo-panel--collapsible-toggler{
+.ibo-panel--collapsible-toggler {
   display: inline-block;
   margin-right: $ibo-panel--collapsible-toggler--margin-right;
   font-size: $ibo-panel--collapsible-toggler--font-size;
@@ -205,22 +234,88 @@ $ibo-panel-colors: (
   cursor: pointer;
 }
 
-.ibo-panel--collapsible-toggler--opened{
+.ibo-panel--collapsible-toggler--opened {
   display: block;
 }
 
-.ibo-panel--collapsible-toggler--closed{
+.ibo-panel--collapsible-toggler--closed {
   display: none;
 }
 
+/* Collapsible rules */
 .ibo-panel:not(.ibo-is-opened) {
-  .ibo-panel--collapsible-toggler--closed{
+  .ibo-panel--collapsible-toggler--closed {
     display: block;
   }
-  .ibo-panel--collapsible-toggler--opened{
+
+  .ibo-panel--collapsible-toggler--opened {
     display: none;
   }
-  .ibo-panel--body{
+
+  .ibo-panel--body {
     display: none;
+  }
+}
+
+/* Sticky header rules */
+.ibo-panel.ibo-has-sticky-header {
+  // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
+  > .ibo-panel--header {
+    position: sticky;
+    z-index: 1;
+    top: 0; /* Default, stick on the top of the panel. Custom integrations should be done in the "blocks-integrations" partials */
+
+    /* All transitions should have a specific duration except for the header's "top" property otherwise it feels laggy */
+    /* - The header itself */
+    transition-property: $ibo-panel--base-transition-property, top;
+    transition-duration: $ibo-panel--base-transition-duration, 0s;
+    transition-timing-function: $ibo-panel--base-transition-timing-function;
+    /* - Impacted descendants (we don't put "*" as it can get shaky otherwise) */
+    .ibo-panel--title,
+    .ibo-panel--subtitle,
+    .ibo-panel--icon,
+    .ibo-panel--titles{
+      @extend %ibo-panel--base-transition;
+    }
+
+    /* Transition rules */
+    &.ibo-is-sticking {
+      padding-top: $ibo-panel--header--padding-y--is-sticking;
+      padding-bottom: $ibo-panel--header--padding-y--is-sticking;
+      background-color: $ibo-panel--header--background-color--is-sticking;
+      border: $ibo-panel--header--border--is-sticking;
+      align-items: center;
+
+      .ibo-panel--title {
+        font-size: $ibo-panel--title--font-size--is-sticking;
+      }
+      .ibo-panel--subtitle {
+        font-size: $ibo-panel--subtitle--font-size--is-sticking;
+      }
+
+    }
+
+  }
+
+  &.ibo-has-icon {
+    &.ibo-has-medallion-icon {
+      // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
+      > .ibo-panel--header {
+        /* Transition rules */
+        &.ibo-is-sticking {
+          .ibo-panel--icon {
+            bottom: $ibo-panel--icon--bottom--as-medallion--is-sticking;
+            width: $ibo-panel--icon--size-as-medallion--is-sticking;
+            height: $ibo-panel--icon--size-as-medallion--is-sticking;
+            min-width: $ibo-panel--icon--size-as-medallion--is-sticking;
+            min-height: $ibo-panel--icon--size-as-medallion--is-sticking;
+            border: $ibo-panel--icon--border--as-medallion--is-sticking;
+          }
+          .ibo-panel--titles {
+            padding-left: calc(#{$ibo-panel--icon--size-as-medallion--is-sticking} + #{$ibo-panel--icon--spacing--as-medallion--is-sticking});
+          }
+        }
+      }
+    }
   }
 }

@@ -1,24 +1,45 @@
 {# @copyright   Copyright (C) 2010-2020 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'base/components/panel/layout.js.twig' %}
 
-$('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
-    $(this).find('button[name="UI:Menu:Modify"]').click();
-});
+{% block iboKeyboardShortcutsHandlers %}
+    $('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
+        $(this).find('button[name="UI:Menu:Modify"]').click();
+    });
 
+    $('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
+        $(this).find('button[name="UI:Menu:Delete"]').click();
+    });
 
-$('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
-    $(this).find('button[name="UI:Menu:Delete"]').click();
-});
+    $('#{{ oUIBlock.GetId() }}').on('new_object', function(){
+        $(this).find('button[name="UI:Menu:New"]').click();
+    });
+    {% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE') %}
+    $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
+        $(this).find('button[type="submit"][name=""][value=""]').click();
+    });
+    {% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_STIMULUS') %}
+    $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
+        $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
+    });
+    {% endif %}
+{% endblock %}
 
-$('#{{ oUIBlock.GetId() }}').on('new_object', function(){
-    $(this).find('button[name="UI:Menu:New"]').click();
+{% block iboPanelHeaderRightActionsHandlers %}
+    // Keep URL's hash parameters when clicking on a link of the header
+    $('#{{ oUIBlock.GetId() }}').on('click', '[data-role="ibo-panel--header-right"] a', function() {
+    aMatches = /#(.*)$/.exec(window.location.href);
+    if (aMatches != null) {
+        currentHash = aMatches[1];
+        if (/#(.*)$/.test(this.href)) {
+            this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
+        }
+    }
 });
-{% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE') %}
-$('#{{ oUIBlock.GetId() }}').on('save_object', function(){
-    $(this).find('button[type="submit"][name=""][value=""]').click();
+{% endblock %}
+
+{% block iboWidgetInstantiation %}
+$('#{{ oUIBlock.GetId() }}').object_details({
+    is_header_visible_on_scroll: {{ oUIBlock.IsHeaderVisibleOnScroll|var_export }}
 });
-{% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_STIMULUS') %}
-$('#{{ oUIBlock.GetId() }}').on('save_object', function(){
-    $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
-});
-{% endif %}
+{% endblock %}

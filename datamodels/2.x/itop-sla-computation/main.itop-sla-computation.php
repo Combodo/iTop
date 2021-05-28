@@ -47,12 +47,12 @@ class SLAComputation implements iWorkingTimeComputer
 	 */
 	public static function SelectModule($sClassName)
 	{
-		if (!class_exists($sClassName))
-		{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		if (!class_exists($sClassName)) {
 			throw new CoreException("Could not select this module, '$sClassName' in not a valid class name");
 		}
-		if (($sClassName != 'SLAComputationAddOnAPI') && !is_subclass_of($sClassName, 'SLAComputationAddOnAPI'))
-		{
+		if (($sClassName != 'SLAComputationAddOnAPI') && !is_subclass_of($sClassName, 'SLAComputationAddOnAPI')) {
 			throw new CoreException("Could not select this module, the class '$sClassName' is not derived from SLAComputationAddOnAPI (parent class:".get_parent_class($sClassName)." )");
 		}
 		self::$m_oAddOn = new $sClassName;
@@ -143,6 +143,8 @@ class SLAComputationAddOnAPI
 	 */
 	public function Init()
 	{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 	}
 
 	/**

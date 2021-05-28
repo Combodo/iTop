@@ -10,6 +10,9 @@ $ibo-object-details--icon--background-color--as-medallion: $ibo-color-grey-100 !
 $ibo-object-details--icon--border--as-medallion: 2px solid $ibo-color-blue-grey-300 !default;
 $ibo-object-details--icon--border-radius--as-medallion: $ibo-border-radius-full !default;
 
+$ibo-object-details--icon--size--is-sticking: $ibo-panel--icon--size-as-medallion--is-sticking !default;
+$ibo-object-details--icon--spacing--as-medallion--is-sticking: $ibo-object-details--icon--spacing--as-medallion !default;
+
 $ibo-object-details--status-dot--size: 10px !default;
 $ibo-object-details--status-dot--spacing: 8px !default;
 $ibo-object-details--status-dot--border-radius: $ibo-border-radius-full !default;
@@ -47,14 +50,6 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
         }
       }
     }
-  }
-
-  .ibo-panel--title {
-    @extend %ibo-font-ral-med-350;
-  }
-
-  .ibo-panel--subtitle {
-    @extend %ibo-font-ral-med-150;
   }
 }
 
@@ -120,5 +115,42 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
     height: $ibo-object-details--tag--separator--diameter;
     border-radius: $ibo-object-details--tag--separator--border-radius;
     background-color: $ibo-object-details--tag--separator--background-color;
+  }
+}
+
+/* Sticky header rules */
+.ibo-object-details.ibo-has-sticky-header {
+  // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
+  > .ibo-panel--header {
+    /* All transitions should have a specific duration except for the header's "top" property otherwise it feels laggy */
+    /* - Impacted descendants (we don't put "*" as it can get shaky otherwise) */
+    .ibo-panel--header-left {
+      @extend %ibo-panel--base-transition;
+    }
+
+    /* Transition rules */
+    &.ibo-is-sticking {
+      .ibo-object-details--object-class {
+        display: none; /* Make space by hiding unnecessary info */
+      }
+    }
+  }
+
+  &.ibo-has-icon {
+    &.ibo-has-medallion-icon {
+      // Note: Direct child selector is mandatory, otherwise a panel within a panel with a medallion icon will have its icon as a medallion too (eg. dashboard in an object)
+      > .ibo-panel--header {
+        /* Transition rules */
+        &.ibo-is-sticking {
+          .ibo-panel--header-left {
+            padding-left: $ibo-object-details--icon--size--is-sticking;
+          }
+
+          .ibo-panel--titles {
+            padding-left: $ibo-object-details--icon--spacing--as-medallion--is-sticking;
+          }
+        }
+      }
+    }
   }
 }

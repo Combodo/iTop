@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
 
@@ -90,12 +91,31 @@ class utils
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
-
 	/**
 	 * @var string
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_PLAIN = 'text';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_HTML = 'html';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_MARKDOWN = 'markdown';
+
 	/**
 	 * @var string
 	 * @since 3.0.0
@@ -1174,84 +1194,73 @@ class utils
 	 * Execute the given iTop PHP script, passing it the current credentials
 	 * Only CLI mode is supported, because of the need to hand the credentials over to the next process
 	 * Throws an exception if the execution fails or could not be attempted (config issue)
-	 * @param string $sScript Name and relative path to the file (relative to the iTop root dir)
-	 * @param hash $aArguments Associative array of 'arg' => 'value'
-	 * @return array(iCode, array(output lines))
-	 */
-	/**
-	 * @param string $sScriptName
-	 * @param array $aArguments
 	 *
-	 * @return array
+	 * @param string $sScriptName Name and relative path to the file (relative to the iTop root dir)
+	 * @param array $aArguments Associative array of 'arg' => 'value'
+	 * @param string|null $sAuthUser
+	 * @param string|null $sAuthPwd
+	 *
+	 * @return array(iCode, array(output lines))
+	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
-	public static function ExecITopScript($sScriptName, $aArguments)
+	public static function ExecITopScript(string $sScriptName, array $aArguments, string $sAuthUser = null, string $sAuthPwd = null)
 	{
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		if (in_array('exec', $aDisabled))
-		{
+		if (in_array('exec', $aDisabled)) {
 			throw new Exception("The PHP exec() function has been disabled on this server");
 		}
 
 		$sPHPExec = trim(self::GetConfig()->Get('php_path'));
-		if (strlen($sPHPExec) == 0)
-		{
+		if (strlen($sPHPExec) == 0) {
 			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
 		}
 
-		if (!isset($aArguments['auth_user'])) {
+		if (is_null($sAuthUser)) {
 			$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
-			$aArguments['auth_user'] = $sAuthUser;
-		}
-		if (!isset($aArguments['auth_pwd'])) {
 			$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
-			$aArguments['auth_pwd'] = $sAuthPwd;
 		}
-		if (!isset($aArguments['param_file'])) {
-			$sParamFile = self::ReadParam('param_file', '', 'raw_data');
+		$sParamFile = self::GetParamSourceFile('auth_user');
+		if (is_null($sParamFile)) {
+			$aArguments['auth_user'] = $sAuthUser;
+			$aArguments['auth_pwd'] = $sAuthPwd;
+		} else {
 			$aArguments['param_file'] = $sParamFile;
 		}
 
 		$aArgs = array();
-		foreach($aArguments as $sName => $value)
-		{
+		foreach ($aArguments as $sName => $value) {
 			// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 			//    It suggests to rely on pctnl_* function instead of using escapeshellargs
 			$aArgs[] = "--$sName=".escapeshellarg($value);
 		}
 		$sArgs = implode(' ', $aArgs);
-		
+
 		$sScript = realpath(APPROOT.$sScriptName);
-		if (!file_exists($sScript))
-		{
+		if (!file_exists($sScript)) {
 			throw new Exception("Could not find the script file '$sScriptName' from the directory '".APPROOT."'");
 		}
 
 		$sCommand = '"'.$sPHPExec.'" '.escapeshellarg($sScript).' -- '.$sArgs;
 
-		if (version_compare(phpversion(), '5.3.0', '<'))
-		{
-			if (substr(PHP_OS,0,3) == 'WIN')
-			{
+		if (version_compare(phpversion(), '5.3.0', '<')) {
+			if (substr(PHP_OS, 0, 3) == 'WIN') {
 				// Under Windows, and for PHP 5.2.x, the whole command has to be quoted
 				// Cf PHP doc: http://php.net/manual/fr/function.exec.php, comment from the 27-Dec-2010
 				$sCommand = '"'.$sCommand.'"';
 			}
 		}
 
-		$sLastLine = exec($sCommand, $aOutput, $iRes);
-		if ($iRes == 1)
-		{
+		exec($sCommand, $aOutput, $iRes);
+		if ($iRes == 1) {
 			throw new Exception(Dict::S('Core:ExecProcess:Code1')." - ".$sCommand);
-		}
-		elseif ($iRes == 255)
-		{
+		} elseif ($iRes == 255) {
 			$sErrors = implode("\n", $aOutput);
 			throw new Exception(Dict::S('Core:ExecProcess:Code255')." - ".$sCommand.":\n".$sErrors);
 		}
 
-		//$aOutput[] = $sCommand;
 		return array($iRes, $aOutput);
 	}
 
@@ -1302,12 +1311,15 @@ class utils
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
 	{
-		$oPage->AddUiBlock(static::GetPopupMenuItemsBlock($iMenuId, $param, $aActions, $sDataTableId));
+		$oBlock = new UIContentBlock();
+		static::GetPopupMenuItemsBlock($oBlock, $iMenuId, $param, $aActions, $sDataTableId);
+		$oPage->AddUiBlock($oBlock);
 	}
 
 	/**
 	 * Merge standard menu items with plugin provided menus items
 	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oContainerBlock The UIBlock containing the menu
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions
@@ -1317,9 +1329,8 @@ class utils
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 */
-	public static function GetPopupMenuItemsBlock($iMenuId, $param, &$aActions, $sDataTableId = null)
+	public static function GetPopupMenuItemsBlock(iUIBlock &$oContainerBlock, $iMenuId, $param, &$aActions, $sDataTableId = null)
 	{
-		$oBlock = new UIContentBlock();
 		// 1st - add standard built-in menu items
 		// 
 		switch($iMenuId)
@@ -1333,9 +1344,9 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
 			$aResult = array();
 			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
@@ -1368,12 +1379,12 @@ class utils
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oBlock->AddCssFileRelPath('css/dragtable.css');
-			$oBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
@@ -1441,13 +1452,11 @@ class utils
 					
 					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
 					{
-						$oBlock->AddJsFileRelPath($sLinkedScript);
+						$oContainerBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
-
-		return $oBlock;
 	}
 
 	/**
@@ -2403,28 +2412,6 @@ class utils
 	}
 
 	/**
-	 * Check if iTop is in a development environment (VCS vs build number)
-	 *
-	 * @return bool
-	 */
-	public static function IsDevelopmentEnvironment()
-	{
-		return ITOP_REVISION  === 'svn';
-	}
-
-	/**
-	 * Check if debug is enabled in the current environment.
-	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
-	 *
-	 * @return bool
-	 * @since 3.0.0
-	 */
-	public static function IsDebugEnabled()
-	{
-		return utils::ReadParam('debug') === 'true';
-	}
-
-	/**
 	 * @see https://php.net/manual/en/function.finfo-file.php
 	 *
 	 * @param string $sFilePath file full path
@@ -2456,39 +2443,6 @@ class utils
 		@finfo_close($rInfo);
 
 		return $sMimeType;
-	}
-
-	/**
-	 * helper to test if a string starts with another
-	 * @param $haystack
-	 * @param $needle
-	 *
-	 * @return bool
-	 */
-	final public static function StartsWith($haystack, $needle)
-	{
-		if (strlen($needle) > strlen($haystack))
-		{
-			return false;
-		}
-
-		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
-	}
-
-	/**
-	 * helper to test if a string ends with another
-	 * @param $haystack
-	 * @param $needle
-	 *
-	 * @return bool
-	 */
-	final public static function EndsWith($haystack, $needle) {
-		if (strlen($needle) > strlen($haystack))
-		{
-			return false;
-		}
-		
-		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
 	}
 
 	/**
@@ -2580,19 +2534,6 @@ class utils
 		return getenv('username');
 	}
 
-	/**
-	 * Transform a snake_case $sInput into a CamelCase string
-	 *
-	 * @since 2.7.0
-	 * @param string $sInput
-	 *
-	 * @return string
-	 */
-	public static function ToCamelCase($sInput)
-	{
-		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
-	}
-
 	public static function FilterXSS($sHTML)
 	{
 		return str_ireplace('<script', '&lt;script', $sHTML);
@@ -2621,14 +2562,6 @@ class utils
 	}
 
 	/**
-	 * @since 3.0.0
-	 */
-	public static function IsEasterEggAllowed()
-	{
-		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
-	}
-
-	/**
 	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
 	 *
 	 * @return int The unique ID (in this page)
@@ -2654,7 +2587,7 @@ class utils
 		$aDefaultConf = array(
 			'language'=> $sLanguage,
 			'contentsLanguage' => $sLanguage,
-			'extraPlugins' => 'disabler,codesnippet,mentions',
+			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut',
 		);
 
 		// Mentions
@@ -2668,7 +2601,7 @@ class utils
 				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
 
 				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
-<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');"></span>
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');">{initials}</span>
 HTML;
 				$sMentionItemTemplate = <<<HTML
 <li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
@@ -2693,15 +2626,6 @@ HTML;
 
 		return array_merge($aDefaultConf, $aRichTextConfig);
 	}
-
-	/**
-	 * @return bool : indicate whether we run under a windows environnement or not
-	 * @since 2.7.4 : N°3412
-	 */
-	public static function IsWindowsEnvironment(){
-		return (substr(PHP_OS,0,3) === 'WIN');
-	}
-
 
 	/**
 	 * @param string $sInterface
@@ -2780,15 +2704,13 @@ HTML;
 	}
 
 	/**
-	 * Return keyboard shortcuts config as an array
-	 *
-	 * @return array
+	 * @return array All keyboard shortcuts config as an array
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @since 3.0.0
 	 */
-	public static function GetKeyboardShortcutPref(): array
+	public static function GetAllKeyboardShortcutsPrefs(): array
 	{
 		$aResultPref = [];
 		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
@@ -2799,10 +2721,233 @@ HTML;
 			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
 			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
 				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
-				$aResultPref[$aShortcutKey['id']] = ['key' => $sKey, 'label' => $aShortcutKey['label'], 'event' => $aShortcutKey['event'], 'triggered_element_selector' => $sTriggeredElement];
+
+				// Format key for display
+				$aKeyParts = explode('+', $sKey);
+				$aFormattedKeyParts = [];
+				foreach ($aKeyParts as $sKeyPart) {
+					$aFormattedKeyParts[] = ucfirst(trim($sKeyPart));
+				}
+				$sFormattedKey = implode(' + ', $aFormattedKeyParts);
+
+				$aResultPref[$aShortcutKey['id']] = [
+					'key' => $sKey,
+					'key_for_display' => $sFormattedKey,
+					'label' => $aShortcutKey['label'],
+					'event' => $aShortcutKey['event'],
+					'triggered_element_selector' => $sTriggeredElement,
+				];
 			}
 		}
 
 		return $aResultPref;
+	}
+
+	/**
+	 * @param string $sShortcutId
+	 *
+	 * @return array The properties of the $sShortcutId shorcut
+	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetKeyboardShortcutPref(string $sShortcutId): array
+	{
+		$aPrefs = static::GetAllKeyboardShortcutsPrefs();
+		if (false === array_key_exists($sShortcutId, $aPrefs)) {
+			throw new Exception('No shortcut identified as "'.$sShortcutId.'" is currently handled by the application.');
+		}
+
+		return $aPrefs[$sShortcutId];
+	}
+
+	//----------------------------------------------
+	// Environment helpers
+	//----------------------------------------------
+
+	/**
+	 * Check if iTop is in a development environment (VCS vs build number)
+	 *
+	 * @return bool
+	 */
+	public static function IsDevelopmentEnvironment()
+	{
+		if (! defined('ITOP_REVISION')) {
+			//defensive behaviour: by default we are not in dev environment
+			//can happen even in production (unattended install for example) or with exotic use of iTop
+			return false;
+		}
+		
+		return ITOP_REVISION === 'svn';
+	}
+
+	/**
+	 * @return bool : indicate whether we run under a windows environnement or not
+	 * @since 2.7.4 : N°3412
+	 */
+	public static function IsWindowsEnvironment()
+	{
+		return (substr(PHP_OS, 0, 3) === 'WIN');
+	}
+
+	/**
+	 * Check if debug is enabled in the current environment.
+	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public static function IsDebugEnabled()
+	{
+		return utils::ReadParam('debug') === 'true';
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public static function IsEasterEggAllowed()
+	{
+		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
+	}
+
+	//----------------------------------------------
+	// String helpers
+	//----------------------------------------------
+
+	/**
+	 * helper to test if a string starts with another
+	 *
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function StartsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack)) {
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+	}
+
+	/**
+	 * helper to test if a string ends with another
+	 *
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function EndsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack)) {
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+	}
+
+	/**
+	 * Transform a snake_case $sInput into a CamelCase string
+	 *
+	 * @param string $sInput
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public static function ToCamelCase($sInput)
+	{
+		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
+	}
+
+	/**
+	 * @param string $sInput
+	 *
+	 * @return string First letter of first word + first letter of any other word if capitalized
+	 * @since 3.0.0
+	 */
+	public static function ToAcronym(string $sInput): string
+	{
+		$sAcronym = '';
+		// - Capitalize the first letter no matter what
+		$sReworkedInput = ucfirst($sInput);
+		// - Replace dashes with spaces to interpret all parts of the input
+		$sReworkedInput = str_replace('-', ' ', $sReworkedInput);
+		// - Explode input to check parts individually
+		$aInputParts = explode(' ', $sReworkedInput);
+		foreach ($aInputParts as $sInputPart) {
+			// Keep only upper case first letters
+			// eg. "My first name My last name" => "MM"
+			// eg. "Carrie Anne Moss" => "CAM"
+			if (preg_match('/^\p{Lu}/u', $sInputPart) > 0) {
+				$sAcronym .= mb_substr($sInputPart, 0, 1);
+			}
+		}
+
+		return $sAcronym;
+	}
+
+	//----------------------------------------------
+	// Text manipulation
+	//----------------------------------------------
+
+	/**
+	 * Note: Only works for backoffice URLs for now
+	 *
+	 * @param string $sText Text containing the mentioned objects to be found
+	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
+	 *
+	 * @return array Array of object classes / IDs for the ones found in $sText
+	 *
+	 * [
+	 *   'ClassA' => ['ID1', 'ID2', ...],
+	 *   'ClassB' => ['ID3'],
+	 * ]
+	 *
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetMentionedObjectsFromText(string $sText, string $sFormat = self::ENUM_TEXT_FORMAT_HTML): array
+	{
+		// First transform text so it can be parsed
+		switch ($sFormat) {
+			case static::ENUM_TEXT_FORMAT_HTML:
+				$sText = static::HtmlToText($sText);
+				break;
+
+			default:
+				// Don't transform it
+				break;
+		}
+
+		// Then parse text to find objects
+		$aMentionedObjects = array();
+		$aMentionMatches = array();
+
+		// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink,
+		// - we can't use the following (simpler) regexp that only checks data attributes on hyperlinks, which would have worked for hyperlinks pointing to any GUIs: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
+		// - instead we use a regexp to match the following pattern '[Some object label](<APP_ROOT_URL>...&class=<OBJECT_CLASS>&id=<OBJECT_ID>...)' which only works for the backoffice
+		// If we change the sanitizer, we might want to switch to the other regexp as it's universal and easier to read
+		$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
+		preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $sText, $aMentionMatches);
+
+		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
+			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
+			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+
+			// Prepare array for matched class if not already present
+			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
+				$aMentionedObjects[$sMatchedClass] = array();
+			}
+			// Add matched ID if not already there
+			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
+				$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+			}
+		}
+
+		return $aMentionedObjects;
 	}
 }

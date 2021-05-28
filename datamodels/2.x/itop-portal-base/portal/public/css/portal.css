@@ -1047,7 +1047,7 @@ table .group-actions {
 /*********/
 /* Forms */
 /*********/
-.form_field_label > .control-label[data-tooltip-instanciated="true"]::after {
+.form_field_label > .control-label[data-tooltip-instantiated="true"]::after {
   content: "?";
   padding-left: 3px;
   vertical-align: top;

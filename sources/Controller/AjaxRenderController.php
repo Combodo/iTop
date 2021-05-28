@@ -175,11 +175,13 @@ class AjaxRenderController
 				$aExtraParams['list_id'] = $sListId;
 			}
 		}
+
+		$sTableId = utils::ReadParam('list_id', '');
 		$iLength = utils::ReadParam('end', 10);
 		$aColumns = utils::ReadParam('columns', array(), false, 'raw_data');
 		$sSelectMode = utils::ReadParam('select_mode', '');
 		$aClassAliases = utils::ReadParam('class_aliases', array());
-		$aResult = DataTableUIBlockFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams);
+		$aResult = DataTableUIBlockFactory::GetOptionsForRendering($aColumns, $sSelectMode, $sFilter, $iLength, $aClassAliases, $aExtraParams, $sTableId);
 
 		return $aResult;
 	}
@@ -311,13 +313,15 @@ class AjaxRenderController
 		$aResult["data"] = [];
 		while ($aObject = $oSet->FetchAssoc()) {
 			foreach ($aClassAliases as $sAlias => $sClass) {
-				if (isset($aColumns[$sAlias])) {
-					foreach ($aColumns[$sAlias] as $sAttCode => $oAttDef) {
-						if ($sAttCode == "_key_") {
-							$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetKey();
-						} else {
-							$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
-						}
+				if (isset($aObject[$sAlias])) {
+					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
+					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
+					foreach ($aObject[$sAlias]->GetLoadedAttributes() as $sAttCode) {
+						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+					}
+					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
+					if (!empty($sObjHighlightClass)){
+						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
 					}
 				}
 			}

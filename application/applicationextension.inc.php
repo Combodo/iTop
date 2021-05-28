@@ -777,6 +777,10 @@ abstract class ApplicationPopupMenuItem
 	/** @ignore */
 	protected $sLabel;
 	/** @ignore */
+	protected $sTooltip;	
+	/** @ignore */
+	protected $sIconClass;
+	/** @ignore */
 	protected $aCssClasses;
 
 	/**
@@ -791,6 +795,8 @@ abstract class ApplicationPopupMenuItem
 	{
 		$this->sUID = $sUID;
 		$this->sLabel = $sLabel;
+		$this->sTooltip = '';
+		$this->sIconClass = '';
 		$this->aCssClasses = array();
 	}
 
@@ -845,6 +851,47 @@ abstract class ApplicationPopupMenuItem
 		$this->aCssClasses[] = $sCssClass;
 	}
 
+
+	/**
+	 * @param $sTooltip
+	 * 
+	 * @since 3.0.0
+	 */
+	public function SetTooltip($sTooltip)
+	{
+		$this->sTooltip = $sTooltip;
+	}
+
+	/**
+	 * @return string
+	 * 
+	 * @since 3.0.0
+	 */
+	public function GetTooltip()
+	{
+		return $this->sTooltip;
+	}
+	
+	/**
+	 * @param $sIconClass
+	 * 
+	 * @since 3.0.0
+	 */
+	public function SetIconClass($sIconClass)
+	{
+		$this->sIconClass = $sIconClass;
+	}	
+	
+	/**
+	 * @return string
+	 *
+	 * @since 3.0.0
+	 */
+	public function GetIconClass()
+	{
+		return $this->sIconClass;
+	}
+	
 	/**
 	 * Returns the components to create a popup menu item in HTML
 	 *
@@ -892,7 +939,13 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => $this->GetLabel(), 'url' => $this->GetUrl(), 'target' => $this-> GetTarget(), 'css_classes' => $this->aCssClasses);
+		return array('label' => $this->GetLabel(),
+			'url' => $this->GetUrl(),
+			'target' => $this-> GetTarget(),
+			'css_classes' => $this->aCssClasses,
+			'icon_class' => $this->sIconClass,
+			'tooltip' => $this->sTooltip
+		);
 	}
 	
 	/** @ignore */
@@ -952,6 +1005,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 			'onclick' => $this->GetJsCode().'; return false;',
 			'url' => $this->GetUrl(),
 			'css_classes' => $this->GetCssClasses(),
+			'icon_class' => $this->sIconClass,
+			'tooltip' => $this->sTooltip
 		);
 	}
 
@@ -1133,6 +1188,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetNorthPaneHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
@@ -1141,6 +1198,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetSouthPaneHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
@@ -1149,6 +1208,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetBannerHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 

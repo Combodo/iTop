@@ -798,7 +798,12 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
 		{
-			return array($sClass, array());
+			$sParentClass = static::GetParentClass($sClass);
+			if (is_null($sParentClass)) {
+				return array($sClass, array());
+			} else {
+				return static::GetComplementAttributeSpec($sParentClass);
+			}
 		}
 		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
 		if (is_array($nameRawSpec))
@@ -1055,6 +1060,7 @@ abstract class MetaModel
 	 */
 	final public static function GetFilterCodeOrigin($sClass, $sAttCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
 
 		return self::$m_aFilterOrigins[$sClass][$sAttCode];
@@ -1414,7 +1420,10 @@ abstract class MetaModel
 	 */
 	final public static function GetFiltersList($sClass)
 	{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
+
 		return array_keys(self::$m_aFilterDefs[$sClass]);
 	}
 
@@ -1521,6 +1530,8 @@ abstract class MetaModel
 	 */
 	final public static function IsValidFilterCode($sClass, $sFilterCode)
 	{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		if (!array_key_exists($sClass, self::$m_aFilterDefs)) {
 			return false;
 		}
@@ -1832,7 +1843,10 @@ abstract class MetaModel
 	 */
 	public static function GetClassFilterDefs($sClass)
 	{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
+
 		return self::$m_aFilterDefs[$sClass];
 	}
 
@@ -1847,6 +1861,7 @@ abstract class MetaModel
 	 */
 	final public static function GetClassFilterDef($sClass, $sFilterCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
 		if (!array_key_exists($sFilterCode, self::$m_aFilterDefs[$sClass])) {
 			throw new CoreException("Unknown filter code '$sFilterCode' for class '$sClass'");
@@ -1866,9 +1881,9 @@ abstract class MetaModel
 	 */
 	public static function GetFilterLabel($sClass, $sFilterCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		$oFilter = self::GetClassFilterDef($sClass, $sFilterCode);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			return $oFilter->GetLabel();
 		}
 
@@ -1885,11 +1900,12 @@ abstract class MetaModel
 	 */
 	public static function GetFilterDescription($sClass, $sFilterCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		$oFilter = self::GetClassFilterDef($sClass, $sFilterCode);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			return $oFilter->GetDescription();
 		}
+
 		return "";
 	}
 
@@ -1903,11 +1919,12 @@ abstract class MetaModel
 	 */
 	public static function GetFilterOperators($sClass, $sFilterCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		$oFilter = self::GetClassFilterDef($sClass, $sFilterCode);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			return $oFilter->GetOperators();
 		}
+
 		return array();
 	}
 
@@ -1921,9 +1938,9 @@ abstract class MetaModel
 	 */
 	public static function GetFilterLooseOperator($sClass, $sFilterCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		$oFilter = self::GetClassFilterDef($sClass, $sFilterCode);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			return $oFilter->GetLooseOperator();
 		}
 
@@ -1941,9 +1958,9 @@ abstract class MetaModel
 	 */
 	public static function GetFilterOpDescription($sClass, $sFilterCode, $sOpCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		$oFilter = self::GetClassFilterDef($sClass, $sFilterCode);
-		if ($oFilter)
-		{
+		if ($oFilter) {
 			return $oFilter->GetOpDescription($sOpCode);
 		}
 
@@ -1958,6 +1975,8 @@ abstract class MetaModel
 	 */
 	public static function GetFilterHTMLInput($sFilterCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
+
 		return "<INPUT name=\"$sFilterCode\">";
 	}
 
@@ -2132,24 +2151,21 @@ abstract class MetaModel
 	 */
 	public static function EnumRelations($sClass = '')
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use EnumRelationsEx instead');
 		$aResult = array_keys(self::$m_aRelationInfos);
-		if (!empty($sClass))
-		{
+		if (!empty($sClass)) {
 			// Return only the relations that have a meaning (i.e. for which at least one query is defined)
 			// for the specified class
 			$aClassRelations = array();
-			foreach($aResult as $sRelCode)
-			{
+			foreach ($aResult as $sRelCode) {
 				$aQueriesDown = self::EnumRelationQueries($sClass, $sRelCode);
-				if (count($aQueriesDown) > 0)
-				{
+				if (count($aQueriesDown) > 0) {
 					$aClassRelations[] = $sRelCode;
 				}
 				// Temporary patch: until the impact analysis GUI gets rewritten,
 				// let's consider that "depends on" is equivalent to "impacts/up"
 				// The current patch has been implemented in DBObject and MetaModel
-				if ($sRelCode == 'impacts')
-				{
+				if ($sRelCode == 'impacts') {
 					$aQueriesUp = self::EnumRelationQueries($sClass, 'impacts', false);
 					if (count($aQueriesUp) > 0)
 					{
@@ -5888,6 +5904,7 @@ abstract class MetaModel
 				$aSugFix[$sClass]['*'][] = "DROP VIEW `$sView`";
 			}
 		}
+
 		return array($aErrors, $aSugFix);
 	}
 
@@ -6433,8 +6450,7 @@ abstract class MetaModel
 		// Set log ASAP
 		if (self::$m_oConfig->GetLogGlobal())
 		{
-			if (self::$m_oConfig->GetLogIssue())
-			{
+			if (self::$m_oConfig->GetLogIssue()) {
 				self::$m_bLogIssue = true;
 				IssueLog::Enable(APPROOT.'log/error.log');
 			}
@@ -6443,6 +6459,7 @@ abstract class MetaModel
 
 			ToolsLog::Enable(APPROOT.'log/tools.log');
 			DeadLockLog::Enable();
+			DeprecatedCallsLog::Enable();
 		}
 		else
 		{
@@ -7113,6 +7130,8 @@ abstract class MetaModel
 	 */
 	public static function GetNextKey($sClass)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ItopCounter::incRootClass($sClass) instead');
+
 		return ItopCounter::IncClass($sClass);
 	}
 
@@ -7136,9 +7155,9 @@ abstract class MetaModel
 	 */
 	public static function BulkDelete(DBObjectSearch $oFilter)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		$sSQL = $oFilter->MakeDeleteQuery();
-		if (!self::DBIsReadOnly())
-		{
+		if (!self::DBIsReadOnly()) {
 			CMDBSource::Query($sSQL);
 		}
 	}
@@ -7155,12 +7174,13 @@ abstract class MetaModel
 	 */
 	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		// $aValues is an array of $sAttCode => $value
 		$sSQL = $oFilter->MakeUpdateQuery($aValues);
-		if (!self::DBIsReadOnly())
-		{
+		if (!self::DBIsReadOnly()) {
 			CMDBSource::Query($sSQL);
 		}
+
 		return CMDBSource::AffectedRows();
 	}
 

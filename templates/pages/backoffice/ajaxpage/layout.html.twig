@@ -26,6 +26,16 @@
         {% block iboPageJsFiles %}
             <script type="text/javascript">
             var aFilesToLoad{{ sId }} = [];
+            {# manage Dictionary file if exist #}
+            var sUrlDictFile = '';
+            {% if aPage.sDictScript is not empty %}
+            if ($.inArray('{{ aPage.sDictScript|raw }}', aListJsFiles) == -1)
+            {
+                sUrlDictFile = "{{ aPage.sDictScript|raw }}";
+                aListJsFiles.push(sUrlDictFile);
+            }
+            {% endif %}
+            {# manage the other Js File #}
             {% for sJsFile in aPage.aJsFiles %}
             if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) == -1)
             {
@@ -33,48 +43,100 @@
                 aListJsFiles.push("{{ sJsFile|raw }}");
             }
             {% endfor %}
-				var iCurrentIdx{{ sId }} = 0;
-				var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
-				if(iFilesToLoadCount{{ sId }}>0)
-				{
-					var fLoadScript{{ sId }} = function () {
-						$.when(
-								$.ajax({
-									url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
-									dataType: 'script',
-									cache: true
-								})
-								)
-								.then(function () {
-									iCurrentIdx{{ sId }}++;
-									if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
-									{
-										fLoadScript{{ sId }}();
-									}
-									else
-									{
-										{% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-										{{ sJsInlineOnDomReady|raw }}
-										{% endfor %}
-									}
-                                });
-                    };
+            var iCurrentIdx{{ sId }} = 0;
+            var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
+            if (iFilesToLoadCount{{ sId }}> 0)
+            {
+                var fLoadScript{{ sId }} = function () {
+                    $.when(
+                            $.ajax({
+                                url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
+                                dataType: 'script',
+                                cache: true
+                            })
+                            )
+                            .then(function () {
+                                iCurrentIdx{{ sId }}++;
+                                if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
+                                {
+                                    fLoadScript{{ sId }}();
+                                }
+                                else
+                                {
+                                    {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                                    {{ sJsInlineOnDomReady|raw }}
+                                    {% endfor %}
+                                }
+                            });
+                };
+                {# first load Dictionary if exist #}
+                if (sUrlDictFile != '')
+                {
+                    $.ajax({
+                        url: '{{ aPage.sDictScript|raw }}',
+                        dataType: 'script',
+                        cache: true
+                    }).done(function (data) {
+                        if (Dict != undefined && data.startsWith("var aDictEntries = {\""))
+                        {
+                            eval(data);
+                            $.extend(Dict._entries, aDictEntries);
+                        }
+                    }).then(function () {
+                        fLoadScript{{ sId }}();
+                    });
+                }
+                else
+                {
                     fLoadScript{{ sId }}();
-                } else
+                }
+            }
+            else
+            {
+                {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                {{ sJsInlineOnDomReady|raw }}
+                {% endfor %}
+            }
+            </script>
+        {% endblock %}
+    {% else %}
+        {% block iboPageJsInlineOnDomReady %}
+            {# first load Dictionnary if exist #}
+            {% if aPage.sDictScript is not empty %}
+                <script type="text/javascript">
+                if ($.inArray('{{ aPage.sDictScript|raw }}', aListJsFiles) == -1)
+                {
+                    aListJsFiles.push("{{ aPage.sDictScript|raw }}");
+                    $.ajax({
+                        url: '{{ aPage.sDictScript|raw }}',
+                        dataType: 'script',
+                        cache: true
+                    }).done(function (data) {
+                        if (Dict != undefined && data.startsWith("var aDictEntries = {\""))
+                        {
+                            eval(data);
+                            $.extend(Dict._entries, aDictEntries);
+                        }
+                    }).then(function () {
+                        {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                        {{ sJsInlineOnDomReady|raw }}
+                        {% endfor %}
+                    });
+                }
+                else
                 {
                     {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
                     {{ sJsInlineOnDomReady|raw }}
                     {% endfor %}
                 }
-            </script>
-        {% endblock %}
-    {% else %}
-        {% block iboPageJsInlineOnDomReady %}
-            {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                <script type="text/javascript">
-                {{ sJsInlineOnDomReady|raw }}
                 </script>
-            {% endfor %}
+            {% else %}
+                {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                    <script type="text/javascript">
+                    {{ sJsInlineOnDomReady|raw }}
+                    </script>
+                {% endfor %}
+            {% endif %}
         {% endblock %}
     {% endif %}
 

@@ -22,7 +22,7 @@ Selectize.define('custom_itop', function(aOptions) {
 			var iIndex;
 			switch (e.keyCode) {
 				case KEY_BACKSPACE:
-					if (e.keyCode === KEY_BACKSPACE && this.$control_input.val() === '' && !this.$activeItems.length) {
+					if (this.$control_input.val() === '' && !this.$activeItems.length) {
 						iIndex = this.caretPos-1;
 						if (iIndex >= 0 && iIndex < this.items.length) {
 							this.clear(true);
@@ -33,14 +33,14 @@ Selectize.define('custom_itop', function(aOptions) {
 				case KEY_RETURN:
 					if (self.isOpen) {
 						//case nothing selected ->delete selection
-						if (!self.$activeOption || self.currentResults.query == "") {
+						if (!self.$activeOption || (self.currentResults.query === '' && !this.$control_input.val() === '')) {
 							self.deleteSelection(e);
 							self.setValue("");
 							return;
 						}
 					}
 			}
-			return original.apply();
+			return original.apply(this, arguments);
 		};
 	})();
 });
@@ -91,16 +91,18 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (item.additional_field != undefined) {
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
-					return $("<div>").append(val);
+					return $("<div class=\"option\">").append(val);
 				}
 			},
 			valueField: 'value',
 			labelField: 'label',
 			searchField: 'label',
-			options:JSON.parse(options),
+			options: JSON.parse(options),
 			maxItems: 1,
 			copyClassesToDropdown: false,
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
+			// To avoid dropdown to be cut by the container's overflow hidden rule
+			dropdownParent: 'body',
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
@@ -389,6 +391,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#ac_dlg_' + this.id).dialog('close');
 		$('#label_' + this.id).addClass('ac_dlg_loading');
 
+
+
 		// Query the server again to get the display name of the selected object
 		var theMap = {
 			sTargetClass: me.sTargetClass,
@@ -413,7 +417,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				var newValue;
 				if ($('#label_'+me.id).length) {
 					newValue = iObjectId;
+					$('#'+me.id).val(iObjectId);
 					$('#label_'+me.id).val(txt);
+					$('#label_'+me.id).data('selected_value', txt);
 					$('#label_'+me.id).removeClass('ac_dlg_loading');
 				} else {
 					// N°3227 if no label_* field present, we just want to pick the attribute value !

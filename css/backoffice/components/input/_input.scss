@@ -74,3 +74,7 @@ $ibo-input--margin-x: 5px !default;
   margin-leftt: $ibo-input--margin-x;
   display: inline;
 }
+
+.disabled {
+  background-color: $ibo-input--disabled--background-color;
+}

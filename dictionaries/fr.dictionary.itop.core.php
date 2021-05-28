@@ -300,7 +300,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Change:ObjectModified' => 'Elément modifié',
 	'Change:TwoAttributesChanged' => '%1$s and %2$s modifiés',
 	'Change:ThreeAttributesChanged' => '%1$s, %2$s et un autre modifiés',
-	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s, %3$s ... modifiés',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s et %3$s autres modifiés',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s modifié en %2$s (ancienne valeur: %3$s)',
 	'Change:AttName_SetTo' => '%1$s modifié en %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s ajouté à %2$s',
@@ -566,7 +566,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObject' => 'Déclencheur sur modification de données',
 	'Class:TriggerOnObject+' => '',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe cible',
-	'Class:TriggerOnObject/Attribute:target_class+' => 'label',
+	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
 	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Requête de filtrage incorrecte: %1$s',
@@ -590,7 +590,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnStateChange' => 'Déclencheur sur changement d\'état',
 	'Class:TriggerOnStateChange+' => '',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Etat',
-	'Class:TriggerOnStateChange/Attribute:state+' => 'label',
+	'Class:TriggerOnStateChange/Attribute:state+' => '',
 ));
 
 //
@@ -645,7 +645,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:TriggerOnObjectMention' => 'Déclencheur (sur objet mentionné)',
+	'Class:TriggerOnObjectMention' => 'Déclencheur sur mention d\'objet',
 	'Class:TriggerOnObjectMention+' => 'Déclencheur sur un objet mentionné (@xxx) de la classe choisie (ou de ses filles) dans un attribut de type journal',
 ));
 

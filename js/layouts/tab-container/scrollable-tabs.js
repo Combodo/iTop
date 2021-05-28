@@ -251,7 +251,17 @@ $.widget( "itop.scrollabletabs", $.ui.tabs, {
 				panel = that.element.find( selector );
 				if ( !panel.length ) {
 					panel = that._createPanel( panelId );
-					panel.insertAfter( that.panels[ i - 1 ] || that.tablist );
+					// If we can't attach to an other tab, try to get tab-container-list right after
+					if( that.panels[ i - 1 ] ) {
+						panel.insertAfter( that.panels[ i - 1 ] );
+					}
+					else if( that.element.find(that.js_selectors.tab_container_list) ) {
+						that.element.find(that.js_selectors.tab_container_list).append( panel );
+					}
+					else {
+						panel.insertAfter( that.tablist );
+
+					}
 					that.options.remotePanelCreated(panel, tab, that.options.remote_tab_load_dict);
 				}
 				panel.attr( "aria-live", "polite" );

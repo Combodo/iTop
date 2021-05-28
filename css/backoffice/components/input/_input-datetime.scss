@@ -7,6 +7,10 @@ $ibo-input-datetime--action-button--color: $ibo-input-date--button--color !defau
 $ibo-input-datetime--ui-tpicker-slider--width: auto !default;
 $ibo-input-datetime--ui-tpicker-slider--padding-right: 18px !default;
 
+.ibo-input-datetime-wrapper{
+  position: relative;
+}
+
 .ibo-input-datetime{
 	display: inline-block;
 	width: $ibo-input-datetime--width;

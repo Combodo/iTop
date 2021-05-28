@@ -321,6 +321,8 @@
 			}
 		};
 
+		// N°3995: Loader is shown immediately, otherwise when we have a huge amount of items, we can have a bottleneck on the buildTree() function, blocking the display of the loader
+		showTreeLoader();
 		$(document).ready(function(){
 			// Init expand/collapse all buttons
 			$('#btn-collapse-all').on('click', function (oEvent) {
@@ -405,7 +407,6 @@
 			});
 			
 			// Build the tree (collapsed)
-			showTreeLoader();
 			buildTree(oRawDatas);
 			hideTreeLoader();
 			registerFilterListeners();

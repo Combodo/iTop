@@ -426,4 +426,130 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			],
 		];
 	}
+
+	/**
+	 * @dataProvider ToAcronymProvider
+	 * @covers       utils::ToAcronym
+	 *
+	 * @param string $sInput
+	 * @param string $sExceptedAcronym
+	 */
+	public function testToAcronym(string $sInput, string $sExceptedAcronym)
+	{
+		$sTestedAcronym = utils::ToAcronym($sInput);
+		$this->assertEquals($sTestedAcronym, $sExceptedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public function ToAcronymProvider()
+	{
+		return [
+			'One word, upper case letter' => [
+				'Carrie',
+				'C',
+			],
+			'One word, lower case letter' => [
+				'carrie',
+				'C',
+			],
+			'Application name' => [
+				'iTop',
+				'I',
+			],
+			'Several words, upper case letters' => [
+				'Carrie Ann Moss',
+				'CAM',
+			],
+			'Several words, mixed case letters' => [
+				'My name My name',
+				'MM',
+			],
+			'Several words, upper case letters, two first hyphened' => [
+				'Lily-Rose Depp',
+				'LRD',
+			],
+			'Several words, mixed case letters, two first hyphened' => [
+				'Lily-rose Depp',
+				'LD',
+			],
+			'Several words, upper case letetrs, two last hypened' => [
+				'Jada Pinkett-Smith',
+				'JPS',
+			],
+			'Several words, mixed case letters, two last hyphened' => [
+				'Jada Pinkett-smith',
+				'JP',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetMentionedObjectsFromTextProvider
+	 * @covers       utils::GetMentionedObjectsFromText
+	 *
+	 * @param string $sInput
+	 * @param string $sFormat
+	 * @param array $aExceptedMentionedObjects
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetMentionedObjectsFromText(string $sInput, string $sFormat, array $aExceptedMentionedObjects)
+	{
+		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
+
+		$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
+		$sTestedAsString = print_r($aTestedMentionedObjects, true);
+
+		$this->assertEquals($sTestedAsString, $sExpectedAsString, "Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public function GetMentionedObjectsFromTextProvider(): array
+	{
+		$sAbsUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
+
+		return [
+			'No object' => [
+				"Begining
+				Second line
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[],
+			],
+			'1 UserRequest' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345'],
+				],
+			],
+			'2 UserRequests' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=987654&foo=bar\">R-987654</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345', '987654'],
+				],
+			],
+			'1 UserRequest, 1 Person' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">Claude Monet</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345'],
+					'Person' => ['3'],
+				],
+			],
+		];
+	}
 }

@@ -1,28 +1,18 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Class UILinksWidgetDirect
- *  
+ *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- */ 
-
+ */
 class UILinksWidgetDirect
 {
 	protected $sClass;
@@ -243,23 +233,21 @@ class UILinksWidgetDirect
 	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
 	{
 		$aAttribs = $this->GetTableConfig();
-
 		$oValue->Rewind();
-		$oPage->add('<table class="listContainer" id="'.$this->sInputid.'"><tr><td>');
-
 		$aData = array();
-		while($oLinkObj = $oValue->Fetch())
-		{
+		while ($oLinkObj = $oValue->Fetch()) {
 			$aRow = array();
 			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.$oLinkObj->GetKey().'"/>';
-			foreach($this->aZlist as $sLinkedAttCode)
-			{
+			foreach ($this->aZlist as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 			}
 			$aData[] = $aRow;
 		}
-		$oPage->table($aAttribs, $aData);
-		$oPage->add('</td></tr></table>'); //listcontainer
+		$oDiv = UIContentBlockUIBlockFactory::MakeStandard($this->sInputid, ['listContainer']);
+		$oPage->AddSubBlock($oDiv);
+		$oDatatable = DataTableUIBlockFactory::MakeForForm($this->sInputid, $aAttribs, $aData);
+		$oDatatable->SetOptions(['select_mode' => 'custom']);
+		$oDiv->AddSubBlock($oDatatable);
 		$sInputName = $sFormPrefix.'attr_'.$this->sAttCode;
 		$aLabels = array(
 			'delete' => Dict::S('UI:Button:Delete'),
@@ -349,11 +337,10 @@ class UILinksWidgetDirect
 
 		$oPage->add(<<<HTML
 <form id="ObjectsAddForm_{$this->sInputid}">
-    <div id="SearchResultsToAdd_{$this->sInputid}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
+    <div id="SearchResultsToAdd_{$this->sInputid}">
         <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
     </div>
     <input type="hidden" id="count_{$this->sInputid}" value="0"/>
-    <button type="button" class="cancel">{$sCancel}</button>&nbsp;&nbsp;<button type="button" class="ok" disabled="disabled">{$sAdd}</button>
 </form>
 HTML
 		);

@@ -22,7 +22,16 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Text\Text;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\FieldRenderer;
 use DateTimeFormat;
 use Dict;
@@ -47,58 +56,68 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 		}
 		else
 		{
-			$oOutput->AddHtml('<table class="form-field-container">');
-			$oOutput->AddHtml('<tr>');
-			if ($this->oField->GetLabel() != '')
-			{
-				$oOutput->AddHtml('<td class="form-field-label label"><span><label for="'.$this->oField->GetGlobalId().'">'.$this->oField->GetLabel().'</label></span></td>');
-			}
+			$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
+			$oBlock->AddDataAttribute("input-id",$this->oField->GetGlobalId());
+			$oBlock->AddDataAttribute("input-type",$sFieldClass);
 			switch ($sFieldClass)
 			{
 				case 'Combodo\\iTop\\Form\\Field\\DateTimeField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+
 					$sDateTimeFormat = $this->oField->GetPHPDateTimeFormat();
 					$oFormat = new DateTimeFormat($sDateTimeFormat);
 					$sPlaceHolder = $oFormat->ToPlaceholder();
-					$oOutput->AddHtml('<td class="form-field-content">');
 					if ($this->oField->GetReadOnly())
 					{
-						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
-						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue()));
 					}
 					else
 					{
-						$oOutput->AddHtml('<input class="form-field-data datetime-pick" size="15" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
+						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-wrapper", "ibo-input-datetime-wrapper"]);
+						$oValue->AddSubBlock($oField);
+						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" autocomplete="off"/>'));
+						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					$oOutput->AddHtml('</td>');
+					$oBlock->AddSubBlock($oValue);
+				break;
+
+				case 'Combodo\\iTop\\Form\\Field\\LabelField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",[""]);
+					$oBlock->AddSubBlock($oValue);
+					$oValue->AddSubBlock(new Text($this->oField->GetCurrentValue()));
+					$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
-					$oOutput->AddHtml('<td class="form-field-content">');
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",[""]);
+
 					if ($this->oField->GetReadOnly())
 					{
-						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
-						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'</span>');
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($this->oField->GetCurrentValue()));
 					}
 					else
 					{
-						$oOutput->AddHtml('<input class="form-field-data" type="text" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" size="30"/>');
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeStandard("text","", $this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					$oOutput->AddHtml('</td>');
+					$oBlock->AddSubBlock($oValue);
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
-					$oOutput->AddHtml('<td class="form-field-content">');
+					$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+					$oValue->AddSubBlock($oText);
 					if ($this->oField->GetReadOnly())
 					{
-						$oOutput->AddHtml('<textarea disabled="disabled" id="' . $this->oField->GetGlobalId() . '" class="form-field-data resizable" rows="8" cols="40">' . $this->oField->GetCurrentValue() . '</textarea>');
+						$oText->SetIsDisabled(true);
 					}
 					else
 					{
-						$oOutput->AddHtml('<textarea id="' . $this->oField->GetGlobalId() . '" class="form-field-data resizable" rows="8" cols="40">' . $this->oField->GetCurrentValue() . '</textarea>');
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
@@ -109,7 +128,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 							$oOutput->AddJs(
 <<<EOF
 								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
-							$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig);
+								$('#{$this->oField->GetGlobalId()}').ckeditor(function(){}, $sJsConfig);
 EOF
 							);
 							if (($this->oField->GetObject() !== null) && ($this->oField->GetTransactionId() !== null))
@@ -117,43 +136,45 @@ EOF
 								$oOutput->AddJs(InlineImage::EnableCKEditorImageUpload($this->oField->GetObject(), utils::GetUploadTempId($this->oField->GetTransactionId())));
 							}
 						}
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					$oOutput->AddHtml('</td>');
+					$oBlock->AddSubBlock($oValue);
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
-					$oOutput->AddHtml('<td class="form-field-content">');
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
 					if ($this->oField->GetReadOnly())
 					{
 						$aChoices = $this->oField->GetChoices();
 						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '' ;
-						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
-						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($sCurrentLabel, ENT_QUOTES, 'UTF-8').'</span>');
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($sCurrentLabel));
 					}
 					else
 					{
-						$oOutput->AddHtml('<select class="form-field-data" id="'.$this->oField->GetGlobalId().'" '.(($this->oField->GetMultipleValuesEnabled()) ? 'multiple' : '').'>');
+						$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+						if ($this->oField->GetMultipleValuesEnabled()) {
+							$oSelect->SetIsMultiple(true);
+						}
 						foreach ($this->oField->GetChoices() as $sChoice => $sLabel)
 						{
 							// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-							$sSelectedAtt = ($this->oField->GetCurrentValue() == $sChoice) ? 'selected' : '';
-							$oOutput->AddHtml('<option value="'.htmlentities($sChoice, ENT_QUOTES, 'UTF-8').'" '.$sSelectedAtt.' >'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
+							$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sChoice,$sLabel, ($this->oField->GetCurrentValue() == $sChoice)));
 						}
-						$oOutput->AddHtml('</select>');
+						$oValue->AddSubBlock($oSelect);
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					$oOutput->AddHtml('</td>');
+					$oBlock->AddSubBlock($oValue);
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\RadioField':
-					$oOutput->AddHtml('<td class="form-field-content">');
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
 					if ($this->oField->GetReadOnly())
 					{
 						$aChoices = $this->oField->GetChoices();
 						$sCurrentLabel = isset($aChoices[$this->oField->GetCurrentValue()]) ? $aChoices[$this->oField->GetCurrentValue()] : '' ;
-						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
-						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($sCurrentLabel, ENT_QUOTES, 'UTF-8').'</span>');
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html($sCurrentLabel));
 					}
 					else
 					{
@@ -162,7 +183,6 @@ EOF
 						$bMandatory = $this->oField->GetMandatory();
 						$value = $this->oField->GetCurrentValue();
 						$sId = $this->oField->GetGlobalId();
-						$oOutput->AddHtml('<div>');
 						$aChoices = $this->oField->GetChoices();
 						foreach ($aChoices as $sChoice => $sLabel)
 						{
@@ -176,30 +196,32 @@ EOF
 							{
 								$sSelected = ($value == $sChoice) ? 'checked' : '';
 							}
-							$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$idx}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"".htmlentities($sChoice, ENT_QUOTES, 'UTF-8')."\" $sSelected><label class=\"radio\" for=\"{$sId}_{$idx}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
+							$oRadio=InputUIBlockFactory::MakeForInputWithLabel($sLabel,"radio_".$sId, $sChoice,"{$sId}_{$idx}","radio" );;
+							$oRadio->GetInput()->SetIsChecked($sSelected);
+							$oRadio->SetBeforeInput(false);
+							$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
+							$oValue->AddSubBlock($oRadio);
 							if ($bVertical)
 							{
-								$oOutput->AddHtml("<br>\n");
+								$oValue->AddSubBlock(new Html("<br>"));
 							}
 							$idx++;
 						}
-						$oOutput->AddHtml('</div>');
-						$oOutput->AddHtml("<input type=\"hidden\" id=\"$sId\" name=\"$sId\" value=\"$value\"/>");
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$value,$sId));
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					$oOutput->AddHtml('</td>');
+					$oBlock->AddSubBlock($oValue);
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\DurationField':
-					$oOutput->AddHtml('<td class="form-field-content">');
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
 					$value = $this->oField->GetCurrentValue();
 					if ($this->oField->GetReadOnly())
 					{
-						$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($value, ENT_QUOTES, 'UTF-8') . '"/>');
-						$oOutput->AddHtml('<span class="form-field-data">'.htmlentities(\AttributeDuration::FormatDuration($value), ENT_QUOTES, 'UTF-8').'</span>');
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$value,$this->oField->GetGlobalId()));
+						$oValue->AddSubBlock(new Html(AttributeDuration::FormatDuration($value)));
 					}
-					else
-					{
+					else {
 						$sId = $this->oField->GetGlobalId();
 
 						$aVal = AttributeDuration::SplitDuration($value);
@@ -207,21 +229,22 @@ EOF
 						$sHours = "<input type=\"text\" size=\"2\" name=\"{$sId}[h]\" value=\"{$aVal['hours']}\" id=\"{$sId}_h\"/>";
 						$sMinutes = "<input type=\"text\" size=\"2\" name=\"{$sId}[m]\" value=\"{$aVal['minutes']}\" id=\"{$sId}_m\"/>";
 						$sSeconds = "<input type=\"text\" size=\"2\" name=\"{$sId}[s]\" value=\"{$aVal['seconds']}\" id=\"{$sId}_s\"/>";
-						$oOutput->AddHtml(Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds));
-						$oOutput->AddHtml("<input type=\"hidden\" id=\"{$sId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>");
+						$oTime = UIContentBlockUIBlockFactory::MakeStandard("",["pt-2"]);
+						$oTime->AddSubBlock(new Html(Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds)));
+						$oValue->AddSubBlock($oTime);
+						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$value,$sId));
 
 						$oOutput->AddJs("$('#{$sId}_d').on('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
 						$oOutput->AddJs("$('#{$sId}_h').on('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
 						$oOutput->AddJs("$('#{$sId}_m').on('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
 						$oOutput->AddJs("$('#{$sId}_s').on('keyup change', function(evt, sFormId) { return UpdateDuration('$sId'); });");
 						$oOutput->AddJs("$('#{$sId}').on('update', function(evt, sFormId) { return ToggleDurationField('$sId'); });");
+						$oValue->AddSubBlock(new Html('<span class="form_validation"></span>'));
 					}
-					$oOutput->AddHtml('<span class="form_validation"></span>');
-					$oOutput->AddHtml('</td>');
+					$oBlock->AddSubBlock($oValue);
 					break;
 			}
-			$oOutput->AddHtml('</tr>');
-			$oOutput->AddHtml('</table>');
+			$oOutput->AddHtml(BlockRenderer::RenderBlockTemplates($oBlock));
 		}
 
 		switch ($sFieldClass)
@@ -238,22 +261,25 @@ EOF
 				$oTimeFormat = new DateTimeFormat($sTimeFormat);
 				$sJSTimeFormat = json_encode($oTimeFormat->ToDatePicker());
 				$sJSOk = json_encode(Dict::S('UI:Button:Ok'));
+
 				if ($this->oField->IsDateOnly())
 				{
 					$oOutput->AddJs(
 <<<EOF
-				$("#{$this->oField->GetGlobalId()}").datepicker({
-						showOn: 'button',
-						buttonImage: '../images/calendar.png',
-						buttonImageOnly: true,
-						dateFormat: $sJSDateFormat,
-						constrainInput: false,
-						changeMonth: true,
-						changeYear: true,
-						dayNamesMin: $sJSDaysMin,
-						monthNamesShort: $sJSMonthsShort,
-						firstDay: $iFirstDayOfWeek
-				});
+			var oInput = "#{$this->oField->GetGlobalId()}";
+			$(oInput).addClass('is-widget-ready');
+			
+			$(oInput).datepicker({
+								"showOn":"button",
+								"buttonText":"<i class=\"fas fa-calendar-alt\"><\/i>",
+								"format": $sJSDateFormat,
+								"constrainInput":false,
+								"changeMonth":true,
+								"changeYear":true,
+								"dayNamesMin":$sJSDaysMin,
+								"monthNamesShort": $sJSMonthsShort,
+								"firstDay":$iFirstDayOfWeek}).next("img").wrap("<span>");
+
 EOF
 					);
 				}
@@ -261,40 +287,38 @@ EOF
 				{
 					$oOutput->AddJs(
 <<<EOF
-				$("#{$this->oField->GetGlobalId()}").datetimepicker({
-						showOn: 'button',
-						buttonImage: '../images/calendar.png',
-						buttonImageOnly: true,
-						dateFormat: $sJSDateFormat,
-						constrainInput: false,
-						changeMonth: true,
-						changeYear: true,
-						dayNamesMin: $sJSDaysMin,
-						monthNamesShort: $sJSMonthsShort,
-						firstDay: $iFirstDayOfWeek,
-						// time picker options	
-						timeFormat: $sJSTimeFormat,
-						controlType: 'select',
-						closeText: $sJSOk
+			var oInput = "#{$this->oField->GetGlobalId()}";
+			$(oInput).addClass('is-widget-ready');
+			$('<div class="ibo-input-datetime--action-button"><i class="fas fa-calendar-alt"></i></i>')
+						.insertAfter($(oInput))
+						.on('click', function(){
+							$(oInput)
+								.datetimepicker({
+								showOn: 'button',
+								buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
+								dateFormat: $sJSDateFormat,
+								constrainInput: false,
+								changeMonth: true,
+								changeYear: true,
+								dayNamesMin: $sJSDaysMin,
+								monthNamesShort: $sJSMonthsShort,
+								firstDay: $iFirstDayOfWeek,
+								// time picker options	
+								timeFormat: $sJSTimeFormat,
+								controlType: 'select',
+								closeText: $sJSOk
+						})
+						.datetimepicker('show')
+						.datetimepicker('option', 'onClose', function(dateText,inst){
+							$(oInput).datetimepicker('destroy');
+						})
+						.on('click keypress', function(){
+							$(oInput).datetimepicker('hide');
+						});
 				});
 EOF
 					);
 				}
-				
-				$oOutput->AddJs(
-<<<EOF
-                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
-                    	var me = this;
-
-                        $(this).closest(".field_set").trigger("field_change", {
-                            id: $(me).attr("id"),
-                            name: $(me).closest(".form_field").attr("data-field-id"),
-                            value: $(me).val()
-                        })
-                        .closest('.form_handler').trigger('value_change');
-                    });
-EOF
-				);
 				break;				
 			break;
 			

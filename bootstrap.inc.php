@@ -50,8 +50,7 @@ if (function_exists('microtime')) {
 	$fItopStarted = 1000 * time();
 }
 
-if (! isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false)
-{
+if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
 }
 
@@ -60,8 +59,7 @@ if (! isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false
 //
 
 // Use 'maintenance' parameter to bypass maintenance mode
-if (!isset($bBypassMaintenance))
-{
+if (!isset($bBypassMaintenance)) {
 	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
 }
 

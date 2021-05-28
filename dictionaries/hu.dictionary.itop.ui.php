@@ -1,24 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditCategory' => 'Audit kategória',
 	'Class:AuditCategory+' => '',
@@ -700,6 +685,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 	'UI:RunQuery:Title' => 'iTop - OQL lekérdezés értékelés',
 	'UI:RunQuery:QueryExamples' => 'Lekérdezés példák',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Cél',
 	'UI:RunQuery:HeaderPurpose+' => '',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL kifejezés',
@@ -1020,18 +1006,22 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 
 	'Menu:ProfilesMenu' => 'Profilok', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profilok', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profilok',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Felhasználói fiókok',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => '',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Felhasználói fiókok',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s verzió: %2$s',
 	'UI:iTopVersion:Long' => '%1$s verzió: %2$s-%3$s %4$s',
 	'UI:PropertiesTab' => 'Tulajdonságok',
 
-	'UI:OpenDocumentInNewWindow_' => 'A követekező dokumentum megnyitása új ablakban: %1$s',
-	'UI:DownloadDocument_' => 'A következő dokuemntum letöltése: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Megnyitásához~~',
+	'UI:DownloadDocument_' => 'Letöltés~~',
 	'UI:Document:NoPreview' => 'Nem elérhető előnézet ehhez a dokuemntumhoz',
 	'UI:Download-CSV' => 'Download %1$s~~',
 
@@ -1204,6 +1194,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:ImportDashboardTitle' => 'Import From a File~~',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:~~',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet~~',
@@ -1438,7 +1429,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
-	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',

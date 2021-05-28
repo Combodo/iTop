@@ -20,7 +20,7 @@
 $(function () {
 	// the widget definition, where 'itop' is the namespace,
 	// 'breadcrumbs' the widget name
-	$.widget('itop.collapsibleSection',
+	$.widget('itop.collapsible_section',
 		{
 			// default options
 			options:

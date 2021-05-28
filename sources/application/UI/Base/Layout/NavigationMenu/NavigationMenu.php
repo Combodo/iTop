@@ -437,7 +437,7 @@ JS;
 
 		// Logon message
 		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage+Admin' : 'UI:LoggedAsMessage';
-		
+
 		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactFriendlyname());
 
 		$this->aUserData = $aData;
@@ -445,9 +445,20 @@ JS;
 		return $this;
 	}
 
+	/**
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 */
+	public function GetMenuFilterHotkeyLabel(): string
+	{
+		return utils::GetKeyboardShortcutPref('ibo-open-navigation-menu-filter')['key_for_display'];
+	}
+
 	public static function GetShortcutKeys(): array
 	{
-		return [['id' => 'ibo-open-menu-filter', 'label' => 'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter', 'key'=> 'alt+m', 'event' => 'filter_shortcut']];
+		return [['id' => 'ibo-open-navigation-menu-filter', 'label' => 'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter', 'key' => 'alt+m', 'event' => 'filter_shortcut']];
 	}
 
 	public static function GetShortcutTriggeredElementSelector(): string

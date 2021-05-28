@@ -106,7 +106,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FunctionalCI/Attribute:org_id+' => '',
 	'Class:FunctionalCI/Attribute:organization_name' => '组织名称',
 	'Class:FunctionalCI/Attribute:organization_name+' => '通用名',
-	'Class:FunctionalCI/Attribute:business_criticity' => '业务重要性',
+	'Class:FunctionalCI/Attribute:business_criticity' => '业务级别',
 	'Class:FunctionalCI/Attribute:business_criticity+' => '',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => '高',
 	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => '高',

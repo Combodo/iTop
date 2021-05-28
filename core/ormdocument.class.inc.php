@@ -118,7 +118,8 @@ class ormDocument
 		else
 		{
 			$data = $this->GetData();
-			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8').' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]<br/>';
+			$sSize = utils::BytesToFriendlyFormat(strlen($data));
+			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8').' ('.$sSize.')<br/>';
 		}
 		return $sResult;
 	}

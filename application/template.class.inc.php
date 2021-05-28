@@ -31,14 +31,15 @@ class DisplayTemplate
 	
 	public function __construct($sTemplate)
 	{
-		$this->m_aTags = array (
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		$this->m_aTags = array(
 			'itopblock',
 			'itopcheck',
 			'itoptabs',
 			'itoptab',
 			'itoptoggle',
 			'itopstring',
-			'sqlblock'
+			'sqlblock',
 		);
 		$this->m_sTemplate = $sTemplate;
 	}

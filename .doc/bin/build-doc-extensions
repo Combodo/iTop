@@ -1,6 +1,6 @@
 #!/bin/sh -x
 
-rm -rf /tmp/phpdoc-twig-cache/ &&  rm -rf data/phpdocumentor/output/extensions/ &&  rm -rf data/phpdocumentor/temp/extensions/ && .doc/vendor/bin/phpdoc -c .doc/phpdoc-extensions.dist.xml -vvv
+rm -rf /tmp/phpdoc-twig-cache/ && rm -rf data/phpdocumentor/output/extensions/ && rm -rf data/phpdocumentor/temp/extensions/ && ./vendor/bin/phpdoc -c ./phpdoc-extensions.dist.xml -vvv
 
 # now wee need to lowercase every generated file because dokuwiki can't handle uppercase
-cd data/phpdocumentor/output/extensions/ && for i in $( ls | grep [A-Z] ); do mv -i $i `echo $i | tr 'A-Z' 'a-z'`; done
+cd ../data/phpdocumentor/output/extensions/ && for i in $(ls | grep [A-Z]); do mv -i $i $(echo $i | tr 'A-Z' 'a-z'); done

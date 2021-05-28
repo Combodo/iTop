@@ -31,7 +31,7 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForCode(string $sCode, string $sId = null)
 	{
-		$oCode = new UIContentBlock($sId, ['ibo-code']);
+		$oCode = new UIContentBlock($sId, ['ibo-is-code']);
 		$sCode = str_replace("\n", '<br>', $sCode);
 		$oCode->AddSubBlock(new Html($sCode));
 

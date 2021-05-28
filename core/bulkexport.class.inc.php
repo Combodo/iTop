@@ -376,10 +376,11 @@ abstract class BulkExport
 	}
 
 	/**
-	 * @deprecated since 3.0 replaced by GetFormPart
+	 * @deprecated 3.0.0 use GetFormPart instead
 	 */
 	public function DisplayFormPart(WebPage $oP, $sPartId)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
 		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
 	}
 

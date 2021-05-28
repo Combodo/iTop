@@ -207,10 +207,10 @@ Operators:<br/>
 	
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
-	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=Setup' => '安装向导',
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
-	'Core:Context=GUI:Portal' => 'Portal~~',
+	'Core:Context=GUI:Portal' => '门户',
 ));
 
 
@@ -555,8 +555,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context' => '上下文',
+	'Class:Trigger/Attribute:context+' => '触发场景',
 ));
 
 //
@@ -655,11 +655,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnThresholdReached' => '触发器 (基于阀值)',
-	'Class:TriggerOnThresholdReached+' => '当达到某个阀值时触发',
+	'Class:TriggerOnThresholdReached' => '触发器 (基于阈值)',
+	'Class:TriggerOnThresholdReached+' => '当达到某个阈值时触发',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => '秒表',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阀值',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阈值',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
@@ -726,7 +726,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'SynchroDataSource:Definition' => '定义',
 	'Core:SynchroAttributes' => '属性',
 	'Core:SynchroStatus' => '状态',
-	'Core:Synchro:ErrorsLabel' => 'Errors',
+	'Core:Synchro:ErrorsLabel' => '错误',
 	'Core:Synchro:CreatedLabel' => '已创建',
 	'Core:Synchro:ModifiedLabel' => '已修改',
 	'Core:Synchro:UnchangedLabel' => '保持不变',
@@ -766,7 +766,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.',
-	'Core:SynchroReplica:PublicData' => 'Public Data',
+	'Core:SynchroReplica:PublicData' => '公共数据',
 	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
 	'Core:SynchroReplica:BackToDataSource' => '返回同步数据源: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica',
@@ -800,10 +800,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncSendEmail/Attribute:to' => '收件人',
 	'Class:AsyncSendEmail/Attribute:subject' => '主题',
 	'Class:AsyncSendEmail/Attribute:body' => '正文',
-	'Class:AsyncSendEmail/Attribute:header' => 'Header',
+	'Class:AsyncSendEmail/Attribute:header' => '抬头',
 	'Class:CMDBChangeOpSetAttributeOneWayPassword' => '加密密码',
 	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => '之前的值',
-	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Encrypted Field',
+	'Class:CMDBChangeOpSetAttributeEncrypted' => '加密字段',
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => '之前的值',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Last Entry',
@@ -1067,9 +1067,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
-	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status' => '状态',
 	'Class:AsyncTask/Attribute:status+' => '~~',
-	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => '剩余重试次数',
 	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
 	'Class:AsyncTask/Attribute:last_error_code+' => '~~',

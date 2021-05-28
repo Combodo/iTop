@@ -558,7 +558,7 @@ class TriggerOnObjectUpdate extends TriggerOnObject
  * Class TriggerOnObjectMention
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 2.7.0
+ * @since 3.0.0
  */
 class TriggerOnObjectMention extends TriggerOnObject
 {
@@ -584,37 +584,11 @@ class TriggerOnObjectMention extends TriggerOnObject
 		MetaModel::Init_InheritAttributes();
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
 	}
-
-	// TODO 3.0.0: Clean this up. What was the intention?
-//	public function IsTargetObject($iObjectId, $aChanges = array())
-//	{
-//		if (!parent::IsTargetObject($iObjectId, $aChanges))
-//		{
-//			return false;
-//		}
-//
-//		// Check the attribute
-//		$oAttCodeSet = $this->Get('target_attcodes');
-//		$aAttCodes = $oAttCodeSet->GetValues();
-//		if (empty($aAttCodes))
-//		{
-//			return true;
-//		}
-//
-//		foreach($aAttCodes as $sAttCode)
-//		{
-//			if (array_key_exists($sAttCode, $aChanges))
-//			{
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
 }
 
 /**

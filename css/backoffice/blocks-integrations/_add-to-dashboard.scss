@@ -1,0 +1,16 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+.ibo-details .ibo-prop--apply > span, .ibo-details .ibo-prop--cancel > span {
+  display: unset;
+}
+
+.ibo-details .ibo-prop--apply {
+  display: table-column;
+}
+
+.ibo-details {
+  margin-top: 5px;
+}

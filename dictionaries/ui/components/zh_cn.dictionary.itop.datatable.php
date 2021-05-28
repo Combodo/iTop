@@ -19,13 +19,13 @@
 
 // Display DataTable
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Datatables:Language:Processing' => 'Please wait...~~',
-	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
-	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
-	'UI:Datatables:Language:Info' => '_TOTAL_ item(s)~~',
-	'UI:Datatables:Language:InfoEmpty' => 'No information~~',
-	'UI:Datatables:Language:EmptyTable' => 'No data available in this table~~',
-	'UI:Datatables:Language:DisplayLength:All' => 'All~~',
-	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort~~',
-	'UI:Datatables:Language:Sort:Descending' => 'enable for a descending sort~~',
+	'UI:Datatables:Language:Processing' => '请稍候...',
+	'UI:Datatables:Language:LengthMenu' => '_MENU_ 每页',
+	'UI:Datatables:Language:ZeroRecords' => '未找到相关结果',
+	'UI:Datatables:Language:Info' => '_TOTAL_ 项',
+	'UI:Datatables:Language:InfoEmpty' => '未找到相关信息',
+	'UI:Datatables:Language:EmptyTable' => '表格中暂无数据',
+	'UI:Datatables:Language:DisplayLength:All' => '全部',
+	'UI:Datatables:Language:Sort:Ascending' => '顺序排序',
+	'UI:Datatables:Language:Sort:Descending' => '倒序排序',
 ));

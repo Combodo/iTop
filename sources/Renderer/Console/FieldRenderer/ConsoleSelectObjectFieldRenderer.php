@@ -19,11 +19,20 @@
 
 namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 
+use CaptureWebPage;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
+use Combodo\iTop\Renderer\BlockRenderer;
 use \Dict;
 use \DBObjectSet;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Form\Field\SelectObjectField;
+use UIExtKeyWidget;
 
 /**
  * Class ConsoleSelectObjectFieldRenderer
@@ -39,16 +48,14 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 	{
 		$oOutput = parent::Render();
 
-		$oOutput->AddHtml('<table class="form-field-container">');
-		$oOutput->AddHtml('<tr>');
-		if ($this->oField->GetLabel() != '')
-		{
-			$oOutput->AddHtml('<td class="form-field-label label"><span><label for="'.$this->oField->GetGlobalId().'">'.$this->oField->GetLabel().'</label></span></td>');
-		}
-		$oOutput->AddHtml('<td class="form-field-content">');
+		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
+		$oBlock->SetValueId($this->oField->GetGlobalId());
+		$oBlock->AddDataAttribute("input-id",$this->oField->GetGlobalId());
+
 		$sEditType = 'none';
 		if ($this->oField->GetReadOnly())
 		{
+			$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\readonly");
 			$oSearch = $this->oField->GetSearch()->DeepClone();
 			$oSearch->AddCondition('id', $this->oField->GetCurrentValue());
 			$oSet = new DBObjectSet($oSearch);
@@ -61,15 +68,17 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			{
 				$sCurrentLabel = '';
 			}
-			$oOutput->AddHtml('<input type="hidden" id="'.$this->oField->GetGlobalId().'" value="' . htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8') . '"/>');
-			$oOutput->AddHtml('<span class="form-field-data">'.htmlentities($sCurrentLabel, ENT_QUOTES, 'UTF-8').'</span>');
+			$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+			$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId()));
+			$oValue->AddSubBlock(new Html($sCurrentLabel));
+			$oBlock->SetValue($oValue);
 		}
 		else
 		{
 			$oSearch = $this->oField->GetSearch()->DeepClone();
 			$oSearch->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', true);
 
-			$oSet = new \DBObjectSet($oSearch);
+			$oSet = new DBObjectSet($oSearch);
 			$oSet->ApplyParameters();
 			$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 
@@ -82,6 +91,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			{
 				// Auto-complete
 				//
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Autocomplete");
 				$sEditType = 'autocomplete';
 				$aExtKeyParams = array();
 				$aExtKeyParams['iFieldSize'] = 10;
@@ -89,14 +99,17 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$sFieldName = $this->oField->GetGlobalId();
 				$sFieldId = $sFieldName;
 				$sFormPrefix = '';
-				$oWidget = new \UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
+				$oWidget = new UIExtKeyWidget($sTargetClass, $sFieldId, '', true);
 				$aArgs = array();
 				$sTitle = $this->oField->GetLabel();
-				require_once(APPROOT.'application/capturewebpage.class.inc.php');
-				$oPage = new \CaptureWebPage();
+
+				$oPage = new CaptureWebPage();
 				$sHTMLValue = $oWidget->DisplaySelect($oPage, $iMaxComboLength, false /* $bAllowTargetCreation */, $sTitle, $oSet, $this->oField->GetCurrentValue(), $this->oField->GetMandatory(), $sFieldName, $sFormPrefix, $aArgs);
-				$oOutput->AddHtml($sHTMLValue);
-				$oOutput->AddHtml($oPage->GetHtml());
+				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+				$oValue->AddSubBlock(new Html($sHTMLValue));
+				$oValue->AddSubBlock(new Html($oPage->GetHtml()));
+				$oBlock->AddSubBlock($oValue);
+
 				$oOutput->AddJs($oPage->GetJS());
 				$oOutput->AddJs($oPage->GetReadyJS());
 				foreach ($oPage->GetCSS() as $sCss)
@@ -114,6 +127,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 			}
 			elseif($this->oField->GetControlType() == SelectObjectField::CONTROL_RADIO_VERTICAL)
 			{
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Radio");
 				// Radio buttons (vertical)
 				//
 				$sEditType = 'radio';
@@ -122,6 +136,10 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$bMandatory = $this->oField->GetMandatory();
 				$value = $this->oField->GetCurrentValue();
 				$sId = $this->oField->GetGlobalId();
+
+				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
+				$oBlock->SetValue($oValue);
+
 				$oOutput->AddHtml('<div>');
 				while ($oObject = $oSet->Fetch())
 				{
@@ -137,32 +155,42 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 					{
 						$sSelected = ($value == $iObject) ? 'checked' : '';
 					}
-					$oOutput->AddHtml("<input type=\"radio\" id=\"{$sId}_{$iObject}\" name=\"radio_$sId\" onChange=\"$('#{$sId}').val(this.value).trigger('change');\" value=\"$iObject\" $sSelected><label class=\"radio\" for=\"{$sId}_{$iObject}\">&nbsp;".htmlentities($sLabel, ENT_QUOTES, 'UTF-8')."</label>&nbsp;");
+					$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
+					$oRadioCustom->GetInput()->SetIsChecked($sSelected);
+					$oRadioCustom->SetBeforeInput(false);
+					$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
+					$oValue->AddSubBlock($oRadioCustom);
+					$oOutput->AddJs(
+						<<<EOF
+	                    $("#{$sId}_{$iObject}").off("change").on("change", function(){
+	                        $('#{$sId}').val(this.value).trigger('change');
+	                    });
+EOF
+					);
 					if ($bVertical)
 					{
-						$oOutput->AddHtml("<br>\n");
+						$oValue->AddSubBlock(new Html("<br>"));
 					}
 					$idx++;
 				}
-				$oOutput->AddHtml('</div>');
-				$oOutput->AddHtml("<input type=\"hidden\" id=\"$sId\" name=\"$sId\" value=\"$value\"/>");
+				$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden($sId,$value,$sId));
 			}
 			else
 			{
 				// Drop-down select
 				//
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
 				$sEditType = 'select';
-				$oOutput->AddHtml('<select class="form-field-data" id="'.$this->oField->GetGlobalId().'">');
-				$oOutput->AddHtml('<option value="">'.Dict::S('UI:SelectOne').'</option>');
+				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+				$oBlock->AddSubBlock($oSelect);
+				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne') ));
 				while ($oObject = $oSet->Fetch())
 				{
 					$iObject = $oObject->GetKey();
 					$sLabel = $oObject->Get('friendlyname');
 					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-					$sSelectedAtt = ($this->oField->GetCurrentValue() == $iObject) ? 'selected' : '';
-					$oOutput->AddHtml('<option value="'.$iObject.'" '.$sSelectedAtt.' >'.htmlentities($sLabel, ENT_QUOTES, 'UTF-8').'</option>');
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject,$sLabel, ($this->oField->GetCurrentValue() == $iObject)));
 				}
-				$oOutput->AddHtml('</select>');
 			}
 			$oOutput->AddJs(
 				<<<EOF
@@ -179,12 +207,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 EOF
 			);
 		}
-		$oOutput->AddHtml('<span class="form_validation"></span>');
-		$oOutput->AddHtml('</td>');
-
-		$oOutput->AddHtml('</tr>');
-		$oOutput->AddHtml('</table>');
-
+		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 		// JS Form field widget construct
 		$aValidators = array();
 		foreach ($this->oField->GetValidators() as $oValidator)

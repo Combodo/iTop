@@ -49,102 +49,116 @@ $ibo-tab--temporary-remote-content--button--hover--opacity: 0.5 !default;
 $ibo-tab--temporary-remote-content--button--hover--background-color: $ibo-color-grey-900 !default;
 $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !default;
 
+
 /* Rules */
 .ibo-tab-container--tabs-list {
-	position: relative;
-	@extend %ibo-full-height-content;
-	height: $ibo-tab-container--tabs-list--height;
+  position: relative;
+  @extend %ibo-full-height-content;
+  height: $ibo-tab-container--tabs-list--height;
 
-	background-color: $ibo-tab-container--tabs-list--background-color;
-	@extend %ibo-font-ral-nor-150;
-}
-.ibo-tab-container--tab-header{
-	@extend %ibo-full-height-content;
-
-	color: $ibo-tab-container--tab-header--text-color;
-
-	&:hover{
-		color: $ibo-tab-container--tab-header--text-color--on-hover;
-		background-color: $ibo-tab-container--tab-header--background-color--on-hover;
-	}
-	&.ui-tabs-active{
-		@extend %ibo-font-ral-bol-150;
-		color: $ibo-tab-container--tab-header--text-color--is-active;
-	}
-}
-.ibo-tab-container--tab-toggler{
-	@extend %ibo-fully-centered-content;
-	padding-left: $ibo-tab-container--tab-toggler--padding-x;
-	padding-right: $ibo-tab-container--tab-toggler--padding-x;
-
-	@extend %ibo-text-truncated-with-ellipsis;
-	@extend %ibo-hyperlink-inherited-colors
-}
-.ibo-tab-container--extra-tabs-container{
-	@extend .ibo-tab-container--tab-header;
-
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	right: 0;
-
-	background-color: $ibo-tab-container--extra-tabs-container--background-color;
-}
-.ibo-tab-container--extra-tabs-list-toggler{
-	@extend .ibo-tab-container--tab-toggler;
-
-	padding-left: $ibo-tab-container--extra-tabs-list-toggler--padding-x;
-	padding-right: $ibo-tab-container--extra-tabs-list-toggler--padding-x;
-}
-.ibo-tab-container--extra-tabs-list{
-	position: absolute;
-	z-index: 1;
-	top: calc(100% + 6px);
-	right: 12px;
-	max-height: $ibo-tab-container--extra-tabs-list--max-height;
-	display: flex;
-	flex-direction: column;
-
-	background-color: $ibo-tab-container--extra-tabs-list--background-color;
-	border-radius: $ibo-tab-container--extra-tabs-list--border-radius;
-	@extend %ibo-elevation-100;
-}
-.ibo-tab-container--extra-tab-toggler{
-	padding: $ibo-tab-container--extra-tab-toggler--padding;
-	max-width: $ibo-tab-container--extra-tab-toggler--max-width;
-
-	color: $ibo-tab-container--extra-tab-toggler--text-color;
-	@extend %ibo-text-truncated-with-ellipsis;
-
-	&:hover,
-	&:active{
-		color: $ibo-tab-container--extra-tab-toggler--text-color--on-hover;
-		background-color: $ibo-tab-container--extra-tab-toggler--background-color--on-hover;
-	}
+  background-color: $ibo-tab-container--tabs-list--background-color;
+  @extend %ibo-font-ral-nor-150;
 }
 
-.ibo-tab-container--tab-container{
-	padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
+.ibo-tab-container--tab-header {
+  @extend %ibo-full-height-content;
+
+  color: $ibo-tab-container--tab-header--text-color;
+
+  &:hover {
+    color: $ibo-tab-container--tab-header--text-color--on-hover;
+    background-color: $ibo-tab-container--tab-header--background-color--on-hover;
+  }
+
+  &.ui-tabs-active {
+    @extend %ibo-font-ral-bol-150;
+    color: $ibo-tab-container--tab-header--text-color--is-active;
+  }
 }
 
-.ibo-is-scrollable .ibo-tab-container--tab-container--label{
+.ibo-tab-container--tab-toggler {
+  @extend %ibo-fully-centered-content;
+  padding-left: $ibo-tab-container--tab-toggler--padding-x;
+  padding-right: $ibo-tab-container--tab-toggler--padding-x;
+
+  @extend %ibo-text-truncated-with-ellipsis;
+  @extend %ibo-hyperlink-inherited-colors
+}
+
+.ibo-tab-container--tab-toggler-label {
+  @extend %ibo-text-truncated-with-ellipsis;
+}
+
+.ibo-tab-container--extra-tabs-container {
+  @extend .ibo-tab-container--tab-header;
+
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+
+  background-color: $ibo-tab-container--extra-tabs-container--background-color;
+}
+
+.ibo-tab-container--extra-tabs-list-toggler {
+  @extend .ibo-tab-container--tab-toggler;
+
+  padding-left: $ibo-tab-container--extra-tabs-list-toggler--padding-x;
+  padding-right: $ibo-tab-container--extra-tabs-list-toggler--padding-x;
+}
+
+.ibo-tab-container--extra-tabs-list {
+  position: absolute;
+  z-index: 1;
+  top: calc(100% + 6px);
+  right: 12px;
+  max-height: $ibo-tab-container--extra-tabs-list--max-height;
+  display: flex;
+  flex-direction: column;
+
+  background-color: $ibo-tab-container--extra-tabs-list--background-color;
+  border-radius: $ibo-tab-container--extra-tabs-list--border-radius;
+  @extend %ibo-elevation-100;
+}
+
+.ibo-tab-container--extra-tab-toggler {
+  padding: $ibo-tab-container--extra-tab-toggler--padding;
+  max-width: $ibo-tab-container--extra-tab-toggler--max-width;
+
+  color: $ibo-tab-container--extra-tab-toggler--text-color;
+  @extend %ibo-text-truncated-with-ellipsis;
+
+  &:hover,
+  &:active {
+    color: $ibo-tab-container--extra-tab-toggler--text-color--on-hover;
+    background-color: $ibo-tab-container--extra-tab-toggler--background-color--on-hover;
+  }
+}
+
+.ibo-tab-container--tab-container {
+  padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
+}
+
+.ibo-is-scrollable .ibo-tab-container--tab-container--label {
   display: block;
 }
 
-.ibo-tab-container--tab-container--label{
+.ibo-tab-container--tab-container--label {
   display: none;
-	margin-bottom: $ibo-tab-container--tab-container--label--margin-bottom;
-	overflow-x: hidden;
-	> span{
-		position: relative;
-		padding-left: $ibo-tab-container--tab-container--label--spacing;
-		margin-left: $ibo-tab-container--tab-container--label--span--margin-left;
-		color: $ibo-tab-container--tab-container--label--text-color;
-		
-		@extend %ibo-font-ral-med-250;
-	}
-	> span::before, 
-	> span::after {
+  margin-bottom: $ibo-tab-container--tab-container--label--margin-bottom;
+  overflow-x: hidden;
+
+  > span {
+    position: relative;
+    padding-left: $ibo-tab-container--tab-container--label--spacing;
+    margin-left: $ibo-tab-container--tab-container--label--span--margin-left;
+    color: $ibo-tab-container--tab-container--label--text-color;
+
+    @extend %ibo-font-ral-med-250;
+  }
+
+  > span::before,
+  > span::after {
     content: "";
     display: inline-block;
     position: absolute;
@@ -153,16 +167,18 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
     width: 10000px;
     border-top: $ibo-tab-container--tab-container--label--separator-height solid $ibo-tab-container--tab-container--label--text-color;
   }
-	> span::before{
-		right: 100%;
-	}
-	> span::after{
-		left: 100%;
-		margin-left: $ibo-tab-container--tab-container--label--spacing;
-	}
+
+  > span::before {
+    right: 100%;
+  }
+
+  > span::after {
+    left: 100%;
+    margin-left: $ibo-tab-container--tab-container--label--spacing;
+  }
 }
 
-.ibo-tab--temporary-remote-content{
+.ibo-tab--temporary-remote-content {
   position: relative;
 }
 
@@ -178,7 +194,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   }
 }
 
-.ibo-tab--temporary-remote-content--button{
+.ibo-tab--temporary-remote-content--button {
   position: absolute;
   top: 0;
   display: flex;
@@ -189,13 +205,14 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
 
   height: 100%;
   width: 100%;
-  
+
   cursor: pointer;
   @extend %ibo-font-ral-med-300;
-  
+
   background-color: transparent;
   color: $ibo-tab--temporary-remote-content--button--color;
-  &:hover{
+
+  &:hover {
     opacity: $ibo-tab--temporary-remote-content--button--hover--opacity;
     background-color: $ibo-tab--temporary-remote-content--button--hover--background-color;
     color: $ibo-tab--temporary-remote-content--button--hover--color;

@@ -281,8 +281,15 @@ function ToggleField(value, field_id) {
 		$('#'+field_id+' :input').prop('disabled', false);
 	} else {
 		$('#'+field_id).prop('disabled', true);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', true);
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.disable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', true);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').addClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', true);
+		}
 	}
 	$('#'+field_id).trigger('update');
 	$('#'+field_id).trigger('validate');
@@ -624,49 +631,6 @@ function Format() {
 }
 
 /**
- * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
- *
- * @param oDOMElem DOM element to check
- * @param bCompletely Should oDOMElem be completely visible for the function to return true?
- * @param iThreshold Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
- * @returns {boolean}
- * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
- */
-function IsElementVisibleToTheUser(oDOMElem, bCompletely = false, iThreshold = 0)
-{
-	const oRect = oDOMElem.getBoundingClientRect(),
-		fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
-		fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
-		efp = function (x, y) {
-			return document.elementFromPoint(x, y)
-		};
-
-	// Return false if it's not in the viewport
-	if (oRect.right < 0 || oRect.bottom < 0
-		|| oRect.left > fViewportWidth || oRect.top > fViewportHeight) {
-		return false;
-	}
-
-	if (bCompletely === true) {
-		// Return true if ALL of its four corners are visible
-		return (
-			oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
-			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
-			&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
-			&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
-		);
-	} else {
-		// Return true if ANY of its four corners are visible
-		return (
-			oDOMElem.contains(efp(oRect.left, oRect.top))
-			|| oDOMElem.contains(efp(oRect.right, oRect.top))
-			|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
-			|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
-		);
-	}
-}
-
-/**
  * Enable to access translation keys client side.
  * The called keys needs to be exported using \WebPage::add_dict_entry
  */
@@ -699,7 +663,50 @@ Dict.Format = function () {
  * @api
  * @since 3.0.0
  */
-const CombodoGlobalToolbox = {};
+const CombodoGlobalToolbox = {
+	/**
+	 * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
+	 *
+	 * @param oDOMElem {Object} DOM element to check
+	 * @param bCompletely {boolean} Should oDOMElem be completely visible for the function to return true?
+	 * @param iThreshold {integer} Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
+	 * @returns {boolean}
+	 * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+	 * @since 3.0.0
+	 */
+	IsElementVisibleToTheUser: function (oDOMElem, bCompletely = false, iThreshold = 0) {
+		const oRect = oDOMElem.getBoundingClientRect(),
+			fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
+			fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
+			efp = function (x, y) {
+				return document.elementFromPoint(x, y)
+			};
+
+		// Return false if it's not in the viewport
+		if (oRect.right < 0 || oRect.bottom < 0
+			|| oRect.left > fViewportWidth || oRect.top > fViewportHeight) {
+			return false;
+		}
+
+		if (bCompletely === true) {
+			// Return true if ALL of its four corners are visible
+			return (
+				oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
+				&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
+				&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
+				&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
+			);
+		} else {
+			// Return true if ANY of its four corners are visible
+			return (
+				oDOMElem.contains(efp(oRect.left, oRect.top))
+				|| oDOMElem.contains(efp(oRect.right, oRect.top))
+				|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
+				|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
+			);
+		}
+	}
+};
 
 /**
  * Helper for tooltip instantiation (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)

@@ -462,6 +462,24 @@ class PopoverMenu extends UIBlock
 	}
 
 	/**
+	 * Add all $aItems to the $sSectionId after the existing items
+	 *
+	 * @param string $sSectionId
+	 * @param PopoverMenuItem[] $aItems
+	 *
+	 * @return $this
+	 * @throws \Exception
+	 */
+	public function AddItems(string $sSectionId, array $aItems)
+	{
+		foreach($aItems as $oItem){
+			$this->AddItem($sSectionId, $oItem);
+		}
+
+		return $this;
+	}
+
+	/**
 	 * Set all $aItems at once in the $sSectionId, overwriting all existing.
 	 *
 	 * @param string $sSectionId

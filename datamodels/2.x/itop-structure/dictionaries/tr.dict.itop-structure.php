@@ -353,3 +353,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Notification~~',
 ));
+
+// Themes
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

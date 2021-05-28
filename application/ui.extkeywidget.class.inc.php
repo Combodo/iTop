@@ -160,7 +160,8 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		
+		
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
@@ -183,8 +184,12 @@ class UIExtKeyWidget
 		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
+		$bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
+		$sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
-		if (!$oAllowedValues->CountExceeds($iMaxComboLength)) {
+		if (!$bIsAutocomplete) {
 			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
@@ -673,11 +678,9 @@ JS
 		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$oPage->add(<<<HTML
 <form id="fr_{$this->iId}" OnSubmit="return oACWidget_{$this->iId}.DoOk();">
-		<div id="dr_{$this->iId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
-		<div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+		<div id="dr_{$this->iId}">
+		<div><p>{$sEmptyList}</p></div>
 		</div>
-		<input type="button" id="btn_cancel_{$this->iId}" value="{$sCancel}" onClick="$('#ac_dlg_{$this->iId}').dialog('close');">&nbsp;&nbsp;
-		<input type="button" id="btn_ok_{$this->iId}_results" value="{$sOK}"  onClick="oACWidget_{$this->iId}.DoOk();">
 		<input type="hidden" id="count_{$this->iId}_results" value="0">
 		</form>
 		</div></div>
@@ -686,7 +689,27 @@ HTML
 
 		$sDialogTitle = addslashes($sTitle);
 		$oPage->add_ready_script(<<<JS
-		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
+		$('#ac_dlg_{$this->iId}').dialog({ 
+				width: $(window).width()*0.8, 
+				height: $(window).height()*0.8, 
+				autoOpen: false, 
+				modal: true, 
+				title: '$sDialogTitle', 
+				resizeStop: oACWidget_{$this->iId}.UpdateSizes, 
+				close: oACWidget_{$this->iId}.OnClose,
+				buttons: [
+							{ text: "$sCancel",
+							 class: "ibo-is-alternative ibo-is-neutral",
+							 click: function() {
+								$(this).dialog('close');
+							} },
+							{ text: "$sOK",
+							 class: "ibo-is-regular ibo-is-primary",
+							 click: function() {
+								oACWidget_{$this->iId}.DoOk();
+							} },
+				],
+		});
 		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
 JS
@@ -748,7 +771,7 @@ JS
 		// Current extkey value, so we can display event if it is not available anymore (eg. archived).
 		$iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
-		$iMax = 150;
+		$iMax = MetaModel::GetConfig()->Get('max_autocomplete_results');
 		$oValuesSet->SetLimit($iMax);
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
@@ -756,9 +779,8 @@ JS
 		$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
 		asort($aValuesContains);
 		$aValues = $aValuesContains;
-		if (sizeof($aValues) < $iMax)
-		{
-			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'contains');
+		if (sizeof($aValues) < $iMax) {
+			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 			asort($aValuesContains);
 			$iSize = sizeof($aValuesContains);
 			foreach ($aValuesContains as $sKey => $sFriendlyName)

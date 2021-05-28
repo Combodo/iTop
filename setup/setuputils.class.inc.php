@@ -94,7 +94,7 @@ class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '7.1.3'; // 7 will be supported until the end of 2019 (see http://php.net/supported-versions.php)
-	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
+	const MYSQL_MIN_VERSION = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
@@ -143,7 +143,12 @@ class SetupUtils
 		self::CheckPhpVersion($aResult);
 
 		// Check the common directories
-		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
+		if (utils::IsModeCLI()) {
+			$aWritableDirs = ['log', 'data'];
+		} else {
+			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'conf', 'data'];
+		}
+		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
 		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
@@ -411,14 +416,15 @@ class SetupUtils
 	 *
 	 * @since 3.0.0 N°2214 Add PHP version checks in CLI scripts
 	 */
-	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1) {
+	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1)
+	{
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
 		$aPhpCheckErrors = CheckResult::FilterCheckResultArray($aPhpCheckResults, [CheckResult::ERROR]);
 		if (empty($aPhpCheckErrors)) {
 			return;
 		}
 
-		$sMessageTitle = 'Error: PHP minimum requirements are not met !';
+		$sMessageTitle = 'Error: Requirements are not met !';
 		$oCliPage->p($sMessageTitle);
 		$aPhpCheckErrorsForPrint = CheckResult::FromObjectsToStrings($aPhpCheckErrors);
 		foreach ($aPhpCheckErrorsForPrint as $sError) {

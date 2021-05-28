@@ -120,6 +120,13 @@ $(function()
                 'base_oql': this.options.search.base_oql,
                 'criterion': this.options.search.criterion,
             });
+			
+			// If auto submit is enabled, also submit on first display
+			if(this.options.auto_submit === true)
+			{
+				this._submit();
+			}
+			
 		},
 		// called when created, and later when changing options
 		_refresh: function()
@@ -399,7 +406,7 @@ $(function()
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
-				.append('<a class="sfm_toggler" href="#"><span class="sfm_tg_icon fas fa-plus"></span></a>')
+				.append('<a class="sfm_toggler" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
 				.appendTo(this.elements.more_criterion);
 
 			// Content part
@@ -668,8 +675,8 @@ $(function()
 
 			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
 			var sButtonIcon = (this.options.auto_submit === true) ? 'fas fa-sync' : 'fas fa-search';
-			var oButtonElem = $('<div class="sfb_header"></div>')
-				.append('<a class="fa-fw ' + sButtonIcon + '" title="' + sButtonText + '" href="#"></a>')
+			var oButtonElem = $('<div class="sfb_header" data-tooltip-content="' + sButtonText + '"></div>')
+				.append('<a class="fa-fw ' + sButtonIcon + '"  href="#"></a>')
 				.appendTo(this.elements.submit_button);
 
 			// Bind events

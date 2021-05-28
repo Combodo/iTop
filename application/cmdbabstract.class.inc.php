@@ -13,11 +13,14 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
@@ -104,6 +107,13 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @since 3.0.0
 	 */
 	public const DEFAULT_OBJECT_MODE = self::ENUM_OBJECT_MODE_VIEW;
+
+	/**
+	 * @var string Prefix for tags in the subtitle, allows to identify them more easily
+	 * @used-by static::DisplayBareHeader
+	 * @since 3.0.0
+	 */
+	public const HEADER_BLOCKS_SUBTITLE_TAG_PREFIX = 'tag-';
 
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
@@ -311,7 +321,8 @@ EOF
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$aHeaderBlocks['toolbar'][] = $oBlock->GetRenderContent($oPage);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage);
+			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
 		$aTags = array();
@@ -417,7 +428,7 @@ EOF
 		}
 
 		foreach ($aTags as $sIconId => $aIconData) {
-			$aHeaderBlocks['subtitle'][] = new Html(<<<HTML
+			$aHeaderBlocks['subtitle'][static::HEADER_BLOCKS_SUBTITLE_TAG_PREFIX.$sIconId] = new Html(<<<HTML
 <span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$aIconData['title']}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
 HTML
 			);
@@ -442,6 +453,7 @@ HTML
 	 */
 	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		// history block (with as a tab)
 		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
 		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
@@ -498,11 +510,15 @@ HTML
 	 */
 	public function DisplayDashboard($oPage, $sAttCode)
 	{
+		// Retrieve parameters
+		/** @var bool $bIsContainerInEdition True if the container of the dashboard is currently in edition; meaning that the dashboard could not be up-to-date with data changed in the container (eg. when editing an object and adding linkedset items) */
+		$bIsContainerInEdition = (utils::ReadParam('host_container_in_edition', 'false') === 'true');
+
 		$sClass = get_class($this);
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 
-		if (!$oAttDef instanceof AttributeDashboard)
-		{
+		// Consistency checks
+		if (!$oAttDef instanceof AttributeDashboard) {
 			throw new CoreException(Dict::S('UI:Error:InvalidDashboard'));
 		}
 
@@ -514,6 +530,10 @@ HTML
 
 		$bCanEdit = UserRights::IsAdministrator() || $oAttDef->IsUserEditable();
 		$sDivId = $oDashboard->GetId();
+
+		if ($bIsContainerInEdition) {
+			$oPage->AddUiBlock(AlertUIBlockFactory::MakeForInformation(Dict::S('UI:Dashboard:NotUpToDateUntilContainerSaved')));
+		}
 		$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 		$aExtraParams = array(
 			'query_params' => $this->ToArgsForQuery(),
@@ -549,17 +569,12 @@ HTML
 			$aList = array_keys(MetaModel::ListAttributeDefs(get_class($this)));
 		}
 		$sClass = get_class($this);
-		foreach($aList as $sAttCode)
-		{
+		foreach($aList as $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-			if ($oAttDef instanceof AttributeDashboard)
-			{
-				if ($bEditMode)
-				{
-					continue;
-				}
+			if ($oAttDef instanceof AttributeDashboard) {
+				$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
 				$oPage->AddAjaxTab($oAttDef->GetLabel(),
-					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(),
+					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
 					true,
 					'Class:'.$sClass.'/Attribute:'.$sAttCode,
 					AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
@@ -727,29 +742,25 @@ HTML
 				$oBlock = new DisplayBlock($oLinkSet->GetFilter(), 'list', false);
 				$oBlock->Display($oPage, 'rel_'.$sAttCode, $aParams);
 			}
-			if (array_key_exists($sAttCode, $aRedundancySettings))
-			{
-				foreach($aRedundancySettings[$sAttCode] as $oRedundancyAttDef)
-				{
+			if (array_key_exists($sAttCode, $aRedundancySettings)) {
+				foreach ($aRedundancySettings[$sAttCode] as $oRedundancyAttDef) {
 					$sRedundancyAttCode = $oRedundancyAttDef->GetCode();
 					$sValue = $this->Get($sRedundancyAttCode);
 					$iRedundancyFlags = $this->GetFormAttributeFlags($sRedundancyAttCode);
 					$bRedundancyReadOnly = ($iRedundancyFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
 
-					$oPage->add('<fieldset>');
-					$oPage->add('<legend>'.$oRedundancyAttDef->GetLabel().'</legend>');
-					if ($bEditMode && (!$bRedundancyReadOnly))
-					{
+					$oFieldSet = FieldSetUIBlockFactory::MakeStandard($oRedundancyAttDef->GetLabel());
+					$oFieldSet->AddCSSClass('mt-5');
+					$oPage->AddSubBlock($oFieldSet);
+
+					if ($bEditMode && (!$bRedundancyReadOnly)) {
 						$sInputId = $this->m_iFormId.'_'.$sRedundancyAttCode;
-						$oPage->add("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
+						$oFieldSet->AddSubBlock(new Html("<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass,
 								$sRedundancyAttCode, $oRedundancyAttDef, $sValue, '', $sInputId, '', $iFlags,
-								$aArgs).'</span>');
+								$aArgs).'</span>'));
+					} else {
+						$oFieldSet->AddSubBlock(new Html($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId)));
 					}
-					else
-					{
-						$oPage->add($oRedundancyAttDef->GetDisplayForm($sValue, $oPage, false, $this->m_iFormId));
-					}
-					$oPage->add('</fieldset>');
 				}
 			}
 		}
@@ -1153,7 +1164,9 @@ HTML
 	 */
 	public static function GetDisplaySet(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetDisplaySetBlock');
 		$oPage->AddUiBlock(static::GetDisplaySetBlock($oPage, $oSet, $aExtraParams));
+
 		return "";
 	}
 
@@ -1189,11 +1202,10 @@ HTML
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		if (empty($aExtraParams['currentId'])) {
 			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
-		}
-		else
-		{
+		} else {
 			$iListId = $aExtraParams['currentId'];
 		}
 		$aList = array();
@@ -1844,11 +1856,14 @@ HTML
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDate::GetFormat()->ToPlaceholder(),
-							ENT_QUOTES, 'UTF-8').'"';
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper\" data-validation=\"untouched\"><input title=\"$sHelpText\" class=\"date-pick ibo-input ibo-input-date\" type=\"text\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDate::GetFormat()->ToPlaceholder()).'"';
+					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_date ibo-input-wrapper ibo-input-date-wrapper" data-validation="untouched">
+	<input title="$sHelpText" class="date-pick ibo-input ibo-input-date" type="text" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
+</div>{$sValidationSpan}{$sReloadSpan}
+HTML;
 					break;
 
 				case 'DateTime':
@@ -1857,10 +1872,13 @@ HTML
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
 
-					$sPlaceholderValue = 'placeholder="'.htmlentities(AttributeDateTime::GetFormat()->ToPlaceholder(),
-							ENT_QUOTES, 'UTF-8').'"';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper\" data-validation=\"untouched\"><input title=\"$sHelpText\" class=\"datetime-pick ibo-input ibo-input-datetime\" type=\"text\" size=\"19\" $sPlaceholderValue name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($sDisplayValue,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sPlaceholderValue = 'placeholder="'.utils::EscapeHtml(AttributeDateTime::GetFormat()->ToPlaceholder()).'"';
+					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
+					$sHTMLValue = <<<HTML
+<div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
+	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autoomplete="off" />
+</div>{$sValidationSpan}{$sReloadSpan}
+HTML;
 					break;
 
 				case 'Duration':
@@ -2120,9 +2138,11 @@ EOF
 						$sFileName = $oDocument->GetFileName();
 					}
 					$sFileNameForHtml = utils::EscapeHtml($sFileName);
+					$bHasFile = !empty($sFileName);
 
 					$iMaxFileSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
 					$sRemoveBtnLabelForHtml = utils::EscapeHtml(Dict::S('UI:Button:RemoveDocument'));
+					$sExtraCSSClassesForRemoveButton = $bHasFile ? '' : 'ibo-is-hidden';
 
 					$sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_document">
@@ -2130,7 +2150,7 @@ EOF
 	<input type="hidden" id="do_remove_{$iId}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[remove]" value="0"/>
 	<input name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[filename]" type="hidden" id="{$iId}" value="{$sFileNameForHtml}"/>
 	<span id="name_{$iInputId}" >{$sFileNameForHtml}</span>&#160;&#160;
-	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger ibo-is-hidden" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
+	<button id="remove_attr_{$iId}" class="ibo-button ibo-is-alternative ibo-is-danger {$sExtraCSSClassesForRemoveButton}" data-role="ibo-button" type="button" data-tooltip-content="{$sRemoveBtnLabelForHtml}" onClick="$('#file_{$iId}').val(''); UpdateFileName('{$iId}', '');">
 		<span class="fas fa-trash"></span>
 	</button>
 </div>
@@ -2226,31 +2246,17 @@ HTML;
 					break;
 
 				case 'RedundancySetting':
-					$sHTMLValue = '<table>';
-					$sHTMLValue .= '<tr>';
-					$sHTMLValue .= '<td>';
 					$sHTMLValue .= '<div id="'.$iId.'">';
 					$sHTMLValue .= $oAttDef->GetDisplayForm($value, $oPage, true);
 					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sValidationSpan.$sReloadSpan.'</td>';
-					$sHTMLValue .= '</tr>';
-					$sHTMLValue .= '</table>';
+					$sHTMLValue .= '<div>'.$sValidationSpan.$sReloadSpan.'</div>';
 					$oPage->add_ready_script("$('#$iId :input').on('keyup change validate', function(evt, sFormId) { return ValidateRedundancySettings('$iId',sFormId); } );"); // Custom validation function
 					break;
 
 				case 'CustomFields':
-					$sHTMLValue = '<table>';
-					$sHTMLValue .= '<tr>';
-					$sHTMLValue .= '<td>';
 					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
 					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</div>';
-					$sHTMLValue .= '</td>';
-					$sHTMLValue .= '<td>'.$sReloadSpan.'</td>'; // No validation span for this one: it does handle its own validation!
-					$sHTMLValue .= '</tr>';
-					$sHTMLValue .= '</table>';
+					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
 					$oForm = $value->GetForm($sFormPrefix);
@@ -2498,6 +2504,7 @@ JS
 		$sClass = get_class($this);
 		$sMode = ($iKey > 0) ? static::ENUM_OBJECT_MODE_EDIT : static::ENUM_OBJECT_MODE_CREATE;
 
+
 		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
@@ -2530,13 +2537,6 @@ JS
 			}
 		}
 
-		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
-			$sClassLabel = MetaModel::GetName($sClass);
-			//$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel, $this->GetName());
-
-			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(),
-				$sClassLabel)); // Set title will take care of the encoding
-		}
 		self::$iGlobalFormId++;
 		$this->aFieldsMap = array();
 		$sPrefix = '';
@@ -2595,20 +2595,17 @@ JS
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			$sHeaderTitle = Dict::Format('UI:ModificationTitle_Class_Object', $sClassLabel,
-				$this->GetName());
-
 			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
 		}
 
-		$oToolbarTop = ToolbarUIBlockFactory::MakeStandard(null, ['ibo-toolbar-top']);
+		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 
 		$oCancelButton = ButtonUIBlockFactory::MakeForCancel();
 		$oCancelButton->AddCSSClasses(['action', 'cancel']);
-		$oToolbarTop->AddSubBlock($oCancelButton);
+		$oToolbarButtons->AddSubBlock($oCancelButton);
 		$oApplyButton = ButtonUIBlockFactory::MakeForPrimaryAction($sApplyButton, null, null, true);
 		$oApplyButton->AddCSSClass('action');
-		$oToolbarTop->AddSubBlock($oApplyButton);
+		$oToolbarButtons->AddSubBlock($oApplyButton);
 
 		$aTransitions = $this->EnumTransitions();
 		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
@@ -2623,7 +2620,7 @@ JS
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClass('action');
 						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
-						$oToolbarTop->AddSubBlock($oButton);
+						$oToolbarButtons->AddSubBlock($oButton);
 						break;
 
 					default:
@@ -2681,14 +2678,28 @@ JAVASCRIPT
 EOF
 		);
 
-		$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
+		if (isset($aExtraParams['nbBulkObj'])) {
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+			$sTitle = Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $aExtraParams['nbBulkObj'], $sClass, $aExtraParams['nbBulkObj']);
+			$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
+			$oObjectDetails = PanelUIBlockFactory::MakeForClass(get_class($this), '');
+			$oObjectDetails->SetTitleBlock($oTitle);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+		} else {
+			$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
+			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
+		}
 		$oForm->AddSubBlock($oObjectDetails);
+		if (isset($aExtraParams['nbBulkObj'])) {
+			// if bulk modify buttons must be after object display
+			$oForm->AddSubBlock($oToolbarButtons);
+		}
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB, $sPrefix, $oObjectDetails);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 
 		$oPage->p($sStatesSelection);
-		$oObjectDetails->AddToolbarBlock($oToolbarTop);
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
 		if (!is_array($aFieldsMap)) {
@@ -3213,13 +3224,21 @@ HTML;
 			// Then prepare the value
 			// - The field is visible in the current state of the object
 			if ($oAttDef->GetEditClass() == 'Document') {
+				/** @var \ormDocument $oDocument */
 				$oDocument = $this->Get($sAttCode);
 				if (!$oDocument->IsEmpty()) {
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
-					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					$sFieldAsHtml = $this->GetAsHTML($sAttCode);
+
+					$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
+					$sDisplayUrl = $oDocument->GetDisplayURL(get_class($this), $this->GetKey(), $sAttCode);
+
+					$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
+
+					$sDisplayValue = <<<HTML
+{$sFieldAsHtml}<br>
+<a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
+HTML;
 				} else {
 					$sDisplayValue = '';
 				}
@@ -4256,23 +4275,19 @@ HTML;
 	 */
 	public function DisplayCaseLog(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '', $bEditMode = false)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$sClass = get_class($this);
 
-		if ($this->IsNew())
-		{
+		if ($this->IsNew()) {
 			$iFlags = $this->GetInitialStateAttributeFlags($sAttCode);
-		}
-		else
-		{
+		} else {
 			$iFlags = $this->GetAttributeFlags($sAttCode);
 		}
 
-		if ($iFlags & OPT_ATT_HIDDEN)
-		{
+		if ($iFlags & OPT_ATT_HIDDEN) {
 			// The case log is hidden do nothing
-		}
-		else
+		} else
 		{
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$sAttDefClass = get_class($oAttDef);
@@ -4358,9 +4373,9 @@ HTML
 	 */
 	public function GetExpectedAttributes($sCurrentState, $sStimulus, $bOnlyNewOnes)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Since iTop 2.4, use DBObject::GetTransitionAttributes() instead');
 		$aTransitions = $this->EnumTransitions();
-		if (!isset($aTransitions[$sStimulus]))
-		{
+		if (!isset($aTransitions[$sStimulus])) {
 			// Invalid stimulus
 			throw new ApplicationException(Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulus,
 				$this->GetName(), $this->GetStateLabel()));
@@ -4482,8 +4497,7 @@ HTML
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
 			{
-				if ($a['count'] == $b['count'])
-				{
+				if ($a['count'] == $b['count']) {
 					return 0;
 				}
 
@@ -4493,28 +4507,23 @@ HTML
 			$iFormId = cmdbAbstractObject::GetNextFormId(); // Identifier that prefixes all the form fields
 			$sReadyScript = '';
 			$sFormPrefix = '2_';
-			foreach($aList as $sAttCode => $oAttDef)
-			{
+			foreach ($aList as $sAttCode => $oAttDef) {
 				$aPrerequisites = MetaModel::GetPrerequisiteAttributes($sClass,
 					$sAttCode); // List of attributes that are needed for the current one
-				if (count($aPrerequisites) > 0)
-				{
+				if (count($aPrerequisites) > 0) {
 					// When 'enabling' a field, all its prerequisites must be enabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aPrerequisites)."']";
 					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, true); } );\n");
 				}
 				$aDependents = MetaModel::GetDependentAttributes($sClass,
 					$sAttCode); // List of attributes that are needed for the current one
-				if (count($aDependents) > 0)
-				{
+				if (count($aDependents) > 0) {
 					// When 'disabling' a field, all its dependent fields must be disabled too
 					$sFieldList = "['{$sFormPrefix}".implode("','{$sFormPrefix}", $aDependents)."']";
 					$oP->add_ready_script("$('#enable_{$sFormPrefix}{$sAttCode}').on('change', function(evt, sFormId) { return PropagateCheckBox( this.checked, $sFieldList, false); } );\n");
 				}
-				if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-				{
-					if ($oAttDef->GetEditClass() == 'One Way Password')
-					{
+				if ($oAttDef->IsScalar() && $oAttDef->IsWritable()) {
+					if ($oAttDef->GetEditClass() == 'One Way Password') {
 
 						$sTip = Dict::S('UI:Component:Field:BulkModify:UnknownValues:Tooltip');
 
@@ -4522,12 +4531,9 @@ HTML
 						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'"> ? </div>';
 						$sReadyScript .= 'ToggleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
-					}
-					else
-					{
+					} else {
 						$iCount = count($aValues[$sAttCode]);
-						if ($iCount == 1)
-						{
+						if ($iCount == 1) {
 							// Homogeneous value
 							reset($aValues[$sAttCode]);
 							$aKeys = array_keys($aValues[$sAttCode]);
@@ -4535,22 +4541,18 @@ HTML
 							//echo "<p>current value for $sAttCode : $currValue</p>";
 							$oDummyObj->Set($sAttCode, $currValue);
 							$aComments[$sAttCode] = '';
-							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass))
-							{
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
 								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
 							$aComments[$sAttCode] .= '<div class="mono_value">1</div>';
-						}
-						else
-						{
+						} else {
 							// Non-homogeneous value
 							$aMultiValues = $aValues[$sAttCode];
 							uasort($aMultiValues, 'MyComparison');
 							$iMaxCount = 5;
 							$sTip = "<p><b>".Dict::Format('UI:BulkModify_Count_DistinctValues', $iCount)."</b><ul>";
 							$index = 0;
-							foreach($aMultiValues as $sCurrValue => $aVal)
-							{
+							foreach ($aMultiValues as $sCurrValue => $aVal) {
 								$sDisplayValue = empty($aVal['display']) ? '<i>'.Dict::S('Enum:Undefined').'</i>' : str_replace(array(
 									"\n",
 									"\r",
@@ -4558,8 +4560,7 @@ HTML
 								$sTip .= "<li>".Dict::Format('UI:BulkModify:Value_Exists_N_Times', $sDisplayValue,
 										$aVal['count'])."</li>";
 								$index++;
-								if ($iMaxCount == $index)
-								{
+								if ($iMaxCount == $index) {
 									$sTip .= "<li>".Dict::Format('UI:BulkModify:N_MoreValues',
 											count($aMultiValues) - $iMaxCount)."</li>";
 									break;
@@ -4568,8 +4569,7 @@ HTML
 							$sTip .= "</ul></p>";
 							$sTip = utils::HtmlEntities($sTip);
 
-							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set'))
-							{
+							if (($oAttDef->GetEditClass() == 'TagSet') || ($oAttDef->GetEditClass() == 'Set')) {
 								// Set the value by adding the values to the first one
 								reset($aMultiValues);
 								$aKeys = array_keys($aMultiValues);
@@ -4578,24 +4578,19 @@ HTML
 								/** @var ormTagSet $oTagSet */
 								$oTagSet = $oDummyObj->Get($sAttCode);
 								$oTagSet->SetDisplayPartial(true);
-								foreach($aKeys as $iIndex => $sValues)
-								{
-									if ($iIndex == 0)
-									{
+								foreach ($aKeys as $iIndex => $sValues) {
+									if ($iIndex == 0) {
 										continue;
 									}
 									$aTagCodes = $oAttDef->FromStringToArray($sValues);
 									$oTagSet->GenerateDiffFromArray($aTagCodes);
 								}
 								$oDummyObj->Set($sAttCode, $oTagSet);
-							}
-							else
-							{
+							} else {
 								$oDummyObj->Set($sAttCode, null);
 							}
 							$aComments[$sAttCode] = '';
-							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass))
-							{
+							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
 								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
 							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.'</div>';
@@ -4605,25 +4600,23 @@ HTML
 				}
 			}
 
-			if (MetaModel::HasLifecycle($sClass) && ($oDummyObj->GetState() == ''))
-			{
+			if (MetaModel::HasLifecycle($sClass) && ($oDummyObj->GetState() == '')) {
 				// Hmmm, it's not gonna work like this ! Set a default value for the "state"
 				// Maybe we should use the "state" that is the most common among the objects...
 				$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
 				$aMultiValues = $aValues[$sStateAttCode];
 				uasort($aMultiValues, 'MyComparison');
-				foreach($aMultiValues as $sCurrValue => $aVal)
-				{
+				foreach ($aMultiValues as $sCurrValue => $aVal) {
 					$oDummyObj->Set($sStateAttCode, $sCurrValue);
 					break;
 				}
 				//$oStateAtt = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
 				//$oDummyObj->Set($sStateAttCode, $oStateAtt->GetDefaultValue());
 			}
-			$oP->add("<div class=\"page_header\">\n");
-			$oP->add("<h1>".$oDummyObj->GetIcon()."&nbsp;".Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N',
-					$iAllowedCount, $sClass, $iAllowedCount)."</h1>\n");
-			$oP->add("</div>\n");
+			/*$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+			$sTitle = Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $iAllowedCount, $sClass, $iAllowedCount);
+			$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
+			$oP->AddSubBlock($oTitle);*/
 
 			$oP->add("<div class=\"wizContainer\">\n");
 			$sDisableFields = json_encode($aExcludeAttributes);
@@ -4635,6 +4628,7 @@ HTML
 				'custom_operation' => $sCustomOperation,
 				'custom_button' => Dict::S('UI:Button:PreviewModifications'),
 				'selectObj' => $sSelectedObj,
+				'nbBulkObj' => $iAllowedCount,
 				'preview_mode' => true,
 				'disabled_fields' => $sDisableFields,
 				'disable_plugins' => true,
@@ -4679,10 +4673,6 @@ EOF
 	{
 		/** @var string[] $aHeaders */
 		$aHeaders = array(
-			'form::select' => array(
-				'label' => "<input type=\"checkbox\" onClick=\"CheckAll('.selectList:not(:disabled)', this.checked);\"></input>",
-				'description' => Dict::S('UI:SelectAllToggle+'),
-			),
 			'object' => array('label' => MetaModel::GetName($sClass), 'description' => Dict::S('UI:ModifiedObject')),
 			'status' => array(
 				'label' => Dict::S('UI:BulkModifyStatus'),
@@ -4695,101 +4685,95 @@ EOF
 		);
 		$aRows = array();
 
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h1>".MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Modify_N_ObjectsOf_Class',
-				count($aSelectedObj), MetaModel::GetName($sClass))."</h1>\n");
-		$oP->add("</div>\n");
+
+		$sHeaderTitle = Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), MetaModel::GetName($sClass));
+		$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+		$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sHeaderTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
+
+
 		$oP->set_title(Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass));
-		if (!$bPreview)
-		{
+		if (!$bPreview) {
 			// Not in preview mode, do the update for real
 			$sTransactionId = utils::ReadPostedParam('transaction_id', '', 'transaction_id');
-			if (!utils::IsTransactionValid($sTransactionId, false))
-			{
+			if (!utils::IsTransactionValid($sTransactionId, false)) {
 				throw new Exception(Dict::S('UI:Error:ObjectAlreadyUpdated'));
 			}
 			utils::RemoveTransaction($sTransactionId);
 		}
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		foreach($aSelectedObj as $iId)
-		{
+		foreach ($aSelectedObj as $iId) {
 			set_time_limit(intval($iLoopTimeLimit));
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $iId);
 			$aErrors = $oObj->UpdateObjectFromPostedForm('');
 			$bResult = (count($aErrors) == 0);
-			if ($bResult)
-			{
+			if ($bResult) {
 				list($bResult, $aErrors) = $oObj->CheckToWrite();
 			}
-			if ($bPreview)
-			{
+			if ($bPreview) {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusOk') : Dict::S('UI:BulkModifyStatusError');
-			}
-			else
-			{
+			} else {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 			}
-			$sCSSClass = $bResult ? HILIGHT_CLASS_NONE : HILIGHT_CLASS_CRITICAL;
 			$sChecked = $bResult ? 'checked' : '';
-			$sDisabled = $bResult ? '' : 'disabled';
 			$aRows[] = array(
-				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
 				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
-				'@class' => $sCSSClass,
 			);
-			if ($bResult && (!$bPreview))
-			{
+			if ($bResult && (!$bPreview)) {
 				$oObj->DBUpdate();
 			}
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
-		$oP->Table($aHeaders, $aRows);
-		if ($bPreview)
-		{
+		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
+
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+		$oPanel->AddCSSClass('ibo-datatable-panel');
+		$oPanel->AddSubBlock($oTable);
+
+
+		if ($bPreview) {
 			$sFormAction = utils::GetAbsoluteUrlAppRoot().'pages/UI.php'; // No parameter in the URL, the only parameter will be the ones passed through the form
 			// Form to submit:
-			$oP->add("<form method=\"post\" action=\"$sFormAction\" enctype=\"multipart/form-data\">\n");
+			$oForm = FormUIBlockFactory::MakeStandard('')->SetAction($sFormAction);
+			$oP->AddSubBlock($oForm);
+			$oForm->AddSubBlock($oPanel);
+			$oPanel->SetTitleBlock($oTitle);
+
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
-			foreach($aContextData as $sKey => $value)
-			{
-				$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
+			foreach ($aContextData as $sKey => $value) {
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 			}
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"0\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oP->add("<button type=\"button\" class=\"action cancel\" onClick=\"window.location.href='$sCancelUrl'\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oP->add("<button type=\"submit\" class=\"action\"><span>".Dict::S('UI:Button:ModifyAll')."</span></button>\n");
-			foreach($_POST as $sKey => $value)
-			{
-				if (preg_match('/attr_(.+)/', $sKey, $aMatches))
-				{
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sCustomOperation));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('preview_mode', 0));
+			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+
+			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+			$oForm->AddSubBlock($oToolbarButtons);
+			$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'))->SetOnClickJsCode("window.location.href='$sCancelUrl'"));
+			$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:ModifyAll'), '', '', true));
+
+			foreach ($_POST as $sKey => $value) {
+				if (preg_match('/attr_(.+)/', $sKey, $aMatches)) {
 					// Beware: some values (like durations) are passed as arrays
-					if (is_array($value))
-					{
-						foreach($value as $vKey => $vValue)
-						{
-							$oP->add("<input type=\"hidden\" name=\"{$sKey}[$vKey]\" value=\"".htmlentities($vValue,
-									ENT_QUOTES, 'UTF-8')."\">\n");
+					if (is_array($value)) {
+						foreach ($value as $vKey => $vValue) {
+							$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey.'['.$vKey.']', $vValue));
 						}
-					}
-					else
-					{
-						$oP->add("<input type=\"hidden\" name=\"$sKey\" value=\"".htmlentities($value, ENT_QUOTES,
-								'UTF-8')."\">\n");
+					} else {
+						$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 					}
 				}
 			}
-			$oP->add("</form>\n");
-		}
-		else
-		{
-			$oP->add("<button type=\"button\" onClick=\"window.location.href='$sCancelUrl'\" class=\"action\"><span>".Dict::S('UI:Button:Done')."</span></button>\n");
+		} else {
+			$oP->AddUiBlock($oTitle);
+			$oP->AddUiBlock($oPanel);
+			$oP->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done')))->SetOnClickJsCode("window.location.href='$sCancelUrl'")->AddCSSClass('mt-5');
 		}
 	}
 
@@ -4929,32 +4913,28 @@ EOF
 					'label' => 'Consequence',
 					'description' => Dict::S('UI:Delete:Consequence+'),
 				);
-				$oP->table($aDisplayConfig, $aDisplayData);
+				$oP->AddSubBlock(DataTableUIBlockFactory::MakeForForm(preg_replace('/[^a-zA-Z0-9_-]/', '', uniqid('form_', true)), $aDisplayConfig, $aDisplayData));
 			}
 
-			if ($oDeletionPlan->FoundStopper())
-			{
-				if ($oDeletionPlan->FoundSecurityIssue())
-				{
+			if ($oDeletionPlan->FoundStopper()) {
+				if ($oDeletionPlan->FoundSecurityIssue()) {
 					$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
-				}
-				elseif ($oDeletionPlan->FoundManualOperation())
+				} elseif ($oDeletionPlan->FoundManualOperation()) {
+					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+				} else // $bFoundManualOp
 				{
 					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
 				}
-				else // $bFoundManualOp
-				{
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-				}
+				$oForm = FormUIBlockFactory::MakeStandard('');
+				$oP->AddSubBlock($oForm);
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));
+				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+				$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+				$oForm->AddSubBlock($oToolbarButtons);
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Back'))->SetOnClickJsCode("window.history.back();"));
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Delete'), null, null, true)->SetIsDisabled(true));
 				$oAppContext = new ApplicationContext();
-				$oP->add("<form method=\"post\">\n");
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::ReadParam('transaction_id', '', false,
-						'transaction_id')
-					."\">\n");
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input DISABLED type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
+				$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 			}
 			else {
 				if (count($aObjects) == 1) {
@@ -4972,28 +4952,31 @@ EOF
 				$oFilter = new DBObjectSearch($sClass);
 				$oFilter->AddCondition('id', $aKeys, 'IN');
 				$oSet = new CMDBobjectSet($oFilter);
-				$oP->add('<div id="0">');
-				CMDBAbstractObject::DisplaySet($oP, $oSet, array('display_limit' => false, 'menu' => false));
-				$oP->add("</div>\n");
-				$oP->add("<form method=\"post\">\n");
-				foreach ($aContextData as $sKey => $value)
-				{
-					$oP->add("<input type=\"hidden\" name=\"{$sKey}\" value=\"$value\">\n");
+				$oDisplaySet = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard("0");
+				$oP->AddSubBlock($oDisplaySet);
+				$oDisplaySet->AddSubBlock(CMDBAbstractObject::GetDisplaySetBlock($oP, $oSet, array('display_limit' => false, 'menu' => false)));
+
+				$oForm = FormUIBlockFactory::MakeStandard('');
+				$oP->AddSubBlock($oForm);
+				foreach ($aContextData as $sKey => $value) {
+					$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $value));
 				}
-				$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"operation\" value=\"$sCustomOperation\">\n");
-				$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".htmlentities($oFilter->Serialize(), ENT_QUOTES,
-						'UTF-8')."\">\n");
-				$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-				foreach($aObjects as $oObj)
-				{
-					$oP->add("<input type=\"hidden\" name=\"selectObject[]\" value=\"".$oObj->GetKey()."\">\n");
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', $sCustomOperation));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', $oFilter->Serialize()));
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass));
+				foreach ($aObjects as $oObj) {
+					$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('selectObject[]', $oObj->GetKey()));
 				}
-				$oP->add("<input type=\"button\" onclick=\"window.history.back();\" value=\"".Dict::S('UI:Button:Back')."\">\n");
-				$oP->add("<input type=\"submit\" name=\"\" value=\"".Dict::S('UI:Button:Delete')."\">\n");
+
+				$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+				$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+				$oForm->AddSubBlock($oToolbarButtons);
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Back'))->SetOnClickJsCode("window.history.back();"));
+				$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForDestructiveAction(Dict::S('UI:Button:Delete'), null, null, true));
 				$oAppContext = new ApplicationContext();
-				$oP->add($oAppContext->GetForForm());
-				$oP->add("</form>\n");
+				$oForm->AddSubBlock($oAppContext->GetForFormBlock());
+
 			}
 		}
 		else // if ($bPreview)...

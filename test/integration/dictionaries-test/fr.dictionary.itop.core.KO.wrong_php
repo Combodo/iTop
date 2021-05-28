@@ -1,0 +1,14 @@
+<?php
+/**
+ * @used-by \Combodo\iTop\Test\UnitTest\Integration\DictionariesConsistencyTest::testPlaygroundDictionariesPhpSyntax
+ *
+ * This is a PHP file containing invalid code.
+ * The file extension was changed so that it won't display an error in the IDE.
+ * Didn't find any other way to disable syntax alerts (like @noinspection)
+ */
+
+Dict::Add('FR FR', 'French', 'Français', array(
+	'MyDictKey1' => 'l'échappement : mauvais exemple 1',
+	'MyDictKey2' => 'l''échappement : mauvais exemple 2',
+	'MyDictKey3' => 'l/'échappement : mauvais exemple 3',
+));

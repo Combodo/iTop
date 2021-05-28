@@ -228,6 +228,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		// Deprecated in 3.0.0  N°2591 Will be removed in 3.1
 		'skip_strong_security' => [
 			'type' => 'bool',
 			'description' => 'Disable strong security - TEMPORARY: this flag should be removed when we are more confident in the recent change in security',
@@ -297,6 +298,14 @@ class Config
 			'description' => 'The minimum number of characters to type in order to trigger the "autocomplete" behavior',
 			'default' => 2,
 			'value' => 2,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'max_autocomplete_results' => [
+			'type' => 'integer',
+			'description' => 'The maximum number of result elements to display, no matter the total number of results',
+			'default' => 150,
+			'value' => 150,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1220,6 +1229,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'activity_panel.prefilter_only_current_log' => [
+			'type' => 'bool',
+			'description' => 'Whether the "Logs" filter should only be set to the log from the current tab or to all of them.',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'activity_panel.show_author_name_below_entries' => [
 			'type' => 'bool',
 			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry.',
@@ -1267,6 +1284,14 @@ class Config
 			'description' => 'Delay in seconds between two refreshes of the obsolescence dates.',
 			'default' => 600,
 			'value' => 600,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'user_preferences.allow_backoffice_theme_override' => [
+			'type' => 'bool',
+			'description' => 'Whether the user can choose which theme to use in the backoffice. If set to false, all users will have the theme defined in "backoffice_default_theme"',
+			'default' => true,
+			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -1373,6 +1398,22 @@ class Config
 			'value' => false,
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
+		],
+		'theme.enable_precompilation' => [
+			'type' => 'bool',
+			'description' => 'If false, theme compilation will not use any precompiled file setup optimization.)',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'theme.force_signature_check_at_runtime' => [
+			'type' => 'bool',
+			'description' => 'If true, checking that the current theme signature matches the compiled file -to recompile it if necessary- will be done for each page. This can slow the application, only use it if you are experiencing issues while customizing a theme.)',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
 		],
 	];
 

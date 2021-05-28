@@ -5,20 +5,31 @@
  */
 
 
+/**
+ * Class DownloadPage
+ *
+ * Use it to download a file raw content (no extra / meta data from iTop)
+ *
+ * @api
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ */
 class DownloadPage extends AjaxPage
 {
-	/**@var  string */
+	/** @var string */
 	protected $sContent;
 
 	/**
-	 * @param string $sContent
-	 *
+	 * @inheritDoc
 	 */
 	public function add($sContent)
 	{
-		$this->sContent = $sContent;
+		$this->sContent .= $sContent;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function output()
 	{
 		if (!empty($this->sContentType)) {
@@ -31,6 +42,11 @@ class DownloadPage extends AjaxPage
 			header($s_header);
 		}
 
-		echo $this->sContent;
+		if (($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline')) {
+			// inline content != attachment && html => filter all scripts for malicious XSS scripts
+			echo self::FilterXSS($this->sContent);
+		} else {
+			echo $this->sContent;
+		}
 	}
 }

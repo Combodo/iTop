@@ -3,19 +3,21 @@
 <div id="{{ oUIBlock.GetId() }}" class="ibo-tab-container ibo-is-{{ oUIBlock.GetLayout() }}{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}"
      data-role="ibo-tab-container">
     {% block iboTabContainer %}
-	    <ul class="ibo-tab-container--tabs-list" data-role="ibo-tab-container--tabs-list">
-		    {% if not aPage.isPrintable %}
-			    {% block iboTabContainerTabsList %}
-				    {% for oTab in oUIBlock.GetSubBlocks() %}
-					    {% block iboTabContainerTab %}
-						    {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
+        <ul class="ibo-tab-container--tabs-list" data-role="ibo-tab-container--tabs-list">
+            {% if not aPage.isPrintable %}
+                {% block iboTabContainerTabsList %}
+                    {% for oTab in oUIBlock.GetSubBlocks() %}
+                        {% block iboTabContainerTab %}
+                            {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
                                 <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
                                     data-tab-id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                     data-tab-type="{{ oTab.GetType() }}"
                                     data-cache="{{ oTab.GetCache() }}"
                                     data-placeholder="{{ oTab.GetPlaceholderAbsPath() }}">
                                     <a href="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler"
-                                       data-role="ibo-tab-container--tab-toggler"><span>{{ oTab.GetTitle() }}</span></a>
+                                       data-role="ibo-tab-container--tab-toggler">
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
+                                    </a>
                                 </li>
                             {% elseif oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
                                 <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
@@ -23,33 +25,33 @@
                                     data-tab-type="{{ oTab.GetType() }}">
                                     <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                        class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler">
-                                        <span>{{ oTab.GetTitle() }}</span>
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
                                     </a>
                                 </li>
                             {% endif %}
-					    {% endblock %}
-				    {% endfor %}
-				    <li class="ibo-tab-container--extra-tabs-container ibo-tab-container--tab-header" data-role="ibo-tab-container--extra-tabs-container">
-					    <a href="#" class="ibo-tab-container--extra-tabs-list-toggler" data-role="ibo-tab-container--extra-tabs-list-toggler">
-						    <span class="fas fa-ellipsis-v"></span>
-					    </a>
-					    <div class="ibo-tab-container--extra-tabs-list ibo-is-hidden" data-role="ibo-tab-container--extra-tabs-list">
+                        {% endblock %}
+                    {% endfor %}
+                    <li class="ibo-tab-container--extra-tabs-container ibo-tab-container--tab-header" data-role="ibo-tab-container--extra-tabs-container">
+                        <a href="#" class="ibo-tab-container--extra-tabs-list-toggler" data-role="ibo-tab-container--extra-tabs-list-toggler">
+                            <span class="fas fa-ellipsis-v"></span>
+                        </a>
+                        <div class="ibo-tab-container--extra-tabs-list ibo-is-hidden" data-role="ibo-tab-container--extra-tabs-list">
                             {% for oTab in oUIBlock.GetSubBlocks() %}
                                 <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                    class="ibo-tab-container--extra-tab-toggler" data-role="ibo-tab-container--extra-tab-toggler">
                                     <span>{{ oTab.GetTitle() }}</span>
                                 </a>
                             {% endfor %}
-					    </div>
-				    </li>
-			    {% endblock %}
-		    {% endif %}
-	    </ul>
+                        </div>
+                    </li>
+                {% endblock %}
+            {% endif %}
+        </ul>
 
         {% block iboTabContainerTabsContainers %}
-	        {% if not aPage.isPrintable  %}
-				<div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{% if oUIBlock.GetIsScrollable()  %} ibo-is-scrollable{% endif %}" data-role="ibo-tab-container--tab-container-list">
-		            {% for oTab in oUIBlock.GetSubBlocks() %}
+            {% if not aPage.isPrintable %}
+                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}" data-role="ibo-tab-container--tab-container-list">
+                    {% for oTab in oUIBlock.GetSubBlocks() %}
                         {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
                             <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                                  class="ibo-tab-container--tab-container">
@@ -57,9 +59,9 @@
                                 {{ render_block(oTab, {aPage: aPage}) }}
                             </div>
                         {% endif %}
-		            {% endfor %}
-				</div>
-	        {% else %}
+                    {% endfor %}
+                </div>
+            {% else %}
 
                 {% for oTab in oUIBlock.GetSubBlocks() %}
                     <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
@@ -74,7 +76,7 @@
                         {% endif %}
                     </div>
                 {% endfor %}
-	        {% endif %}
+            {% endif %}
         {% endblock %}
 
     {% endblock %}

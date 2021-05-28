@@ -461,20 +461,26 @@ $ibo-button-colors: (
 }
 
 .ibo-button {
-	padding: $ibo-button--padding-y $ibo-button--padding-x;
-	border: $ibo-button--border;
-	border-radius: $ibo-button--border-radius;
-	cursor: pointer;
+  display: inline-block; /* Used to allow truncated text on .ibo-button--label */
+  padding: $ibo-button--padding-y $ibo-button--padding-x;
+  border: $ibo-button--border;
+  border-radius: $ibo-button--border-radius;
+  cursor: pointer;
   text-transform: uppercase;
-	@extend %ibo-font-ral-sembol-100;
+  white-space: nowrap; /* To force sub elements to be on 1 line */
+  @extend %ibo-font-ral-sembol-100;
 
-	& ~ .ibo-button {
-		margin-left: $ibo-button--sibling-spacing;
+  & ~ .ibo-button {
+    margin-left: $ibo-button--sibling-spacing;
 	}
 
   &.ibo-action-button {
     float: right;
   }
+}
+
+.ibo-button--label {
+  @extend %ibo-text-truncated-with-ellipsis;
 }
 
 /* Only when a button has both an icon and a label */

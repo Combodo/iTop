@@ -371,3 +371,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Person:personal_info' => 'Personal information',
 	'Person:notifiy' => 'Notification',
 ));
+
+// Themes
+Dict::Add('EN US', 'English', 'English', array(
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => 'Test instance (Red)',
+));

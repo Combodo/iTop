@@ -292,19 +292,16 @@ abstract class User extends cmdbAbstractObject
 	 * @throws \CoreException
 	 * @since 3.0.0
 	*/
-	public function GetInitials()
+	public function GetInitials(): string
 	{
 		$sInitials = '';
 
-		if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
-		{
-			$sInitials .= mb_substr($this->Get('first_name'), 0, 1);
-			$sInitials .= mb_substr($this->Get('last_name'), 0, 1);
+		if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0)) {
+			$sInitials = utils::ToAcronym($this->Get('contactid_friendlyname'));
 		}
 
-		if (empty($sInitials))
-		{
-			$sInitials = mb_substr($this->Get('login'), 0, 1);
+		if (empty($sInitials)) {
+			$sInitials = utils::ToAcronym($this->Get('login'));
 		}
 
 		return $sInitials;
@@ -1258,7 +1255,7 @@ class UserRights
 	}
 
 	/**
-	 * Render the user initials in best effort mode
+	 * Render the user initials in best effort mode (first letter of first word + first letter of any other word if capitalized)
 	 *
 	 * @param string $sLogin Login of the user from which we want to retrieve the initials
 	 *
@@ -1268,34 +1265,15 @@ class UserRights
 	 */
 	public static function GetUserInitials($sLogin = '')
 	{
-		if (empty($sLogin))
-		{
+		if (empty($sLogin)) {
 			$oUser = self::$m_oUser;
-		}
-		else
-		{
+		} else {
 			$oUser = self::FindUser($sLogin);
 		}
-		if (is_null($oUser))
-		{
-			$sInitials = '';
-			// - Capitalize the first letter no matter what
-			$sReworkedLogin = ucfirst($sLogin);
-			// - Replace dashes with spaces to interpret all parts of the login
-			$sReworkedLogin = str_replace('-', ' ', $sReworkedLogin);
-			// - Explode login to check parts individually
-			$aLoginParts = explode(' ', $sReworkedLogin);
-			foreach ($aLoginParts as $sLoginPart) {
-				// Keep only upper case first letters
-				// eg. "My first name My last name" => "MM"
-				// eg. "Carrie Anne Moss" => "CAM"
-				if (preg_match('/^\p{Lu}/u', $sLoginPart) > 0) {
-					$sInitials .= mb_substr($sLoginPart, 0, 1);
-				}
-			}
-
-			return $sInitials;
+		if (is_null($oUser)) {
+			return utils::ToAcronym($sLogin);
 		}
+
 		return $oUser->GetInitials();
 	}
 

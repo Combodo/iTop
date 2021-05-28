@@ -1,0 +1,13 @@
+$ibo-input-within-datatable--attribute-set-item--padding-x: $ibo-input-set--item--padding-x !default;
+$ibo-input-within-datatable--attribute-set-item--box-shadow: $ibo-elevation-100 !default;
+
+.ibo-datatable {
+  .attribute-set {
+    .attribute-set-item {
+      display: inline;
+      margin: 0;
+      padding: 0 $ibo-input-within-datatable--attribute-set-item--padding-x;
+      box-shadow: $ibo-input-within-datatable--attribute-set-item--box-shadow;
+    }
+  }
+}

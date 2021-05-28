@@ -535,30 +535,33 @@ class FileLog
 
 abstract class LogAPI
 {
-	const CHANNEL_DEFAULT   = '';
+	public const CHANNEL_DEFAULT = '';
 
-	const LEVEL_ERROR       = 'Error';
-	const LEVEL_WARNING     = 'Warning';
-	const LEVEL_INFO        = 'Info';
-	const LEVEL_OK          = 'Ok';
-	const LEVEL_DEBUG       = 'Debug';
-	const LEVEL_TRACE       = 'Trace';
+	public const LEVEL_ERROR = 'Error';
+	public const LEVEL_WARNING = 'Warning';
+	public const LEVEL_INFO = 'Info';
+	public const LEVEL_OK = 'Ok';
+	public const LEVEL_DEBUG = 'Debug';
+	public const LEVEL_TRACE = 'Trace';
 	/**
-	 * @var string default log level, can be overrided
-	 * @see GetMinLogLevel
+	 * @var string default log level
+	 * @used-by GetLevelDefault
 	 * @since 2.7.1 N°2977
 	 */
-	const LEVEL_DEFAULT     = self::LEVEL_OK;
+	public const LEVEL_DEFAULT = self::LEVEL_OK;
 
 	protected static $aLevelsPriority = array(
-		self::LEVEL_ERROR   => 400,
+		self::LEVEL_ERROR => 400,
 		self::LEVEL_WARNING => 300,
-		self::LEVEL_INFO    => 200,
-		self::LEVEL_OK      => 200,
-		self::LEVEL_DEBUG   => 100,
-		self::LEVEL_TRACE   =>  50,
+		self::LEVEL_INFO => 200,
+		self::LEVEL_OK => 200,
+		self::LEVEL_DEBUG => 100,
+		self::LEVEL_TRACE => 50,
 	);
 
+	/**
+	 * @var \Config attribute allowing to mock config in the tests
+	 */
 	protected static $m_oMockMetaModelConfig = null;
 
 	public static function Enable($sTargetFile)
@@ -567,7 +570,7 @@ abstract class LogAPI
 		static::$m_oFileLog = new FileLog($sTargetFile);
 	}
 
-	public static function MockStaticObjects($oFileLog, $oMetaModelConfig=null)
+	public static function MockStaticObjects($oFileLog, $oMetaModelConfig = null)
 	{
 		static::$m_oFileLog = $oFileLog;
 		static::$m_oMockMetaModelConfig = $oMetaModelConfig;
@@ -603,85 +606,115 @@ abstract class LogAPI
 		static::Log(self::LEVEL_TRACE, $sMessage, $sChannel, $aContext);
 	}
 
+	/**
+	 * @throws \ConfigException if log wrongly configured
+	 */
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
 	{
-		if (! static::$m_oFileLog)
-		{
+		if (!static::$m_oFileLog) {
 			return;
 		}
 
-		if (! isset(self::$aLevelsPriority[$sLevel]))
-		{
+		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
+
 			return;
 		}
 
-		if (is_null($sChannel))
-		{
+		if (is_null($sChannel)) {
 			$sChannel = static::CHANNEL_DEFAULT;
 		}
 
-		$sMinLogLevel = self::GetMinLogLevel($sChannel);
-
-		if ($sMinLogLevel === false || $sMinLogLevel === 'false')
-		{
+		if (!static::IsLogLevelEnabled($sLevel, $sChannel)) {
 			return;
-		}
-		if (is_string($sMinLogLevel))
-		{
-			if (! isset(self::$aLevelsPriority[$sMinLogLevel]))
-			{
-				throw new Exception("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
-			}
-			elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel])
-			{
-				//priority too low regarding the conf, do not log this
-				return;
-			}
 		}
 
 		static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
 	}
 
 	/**
-	 * @param $sChannel
-	 *
-	 * @return string one of the LEVEL_* const value
-	 * @uses \LogAPI::LEVEL_DEFAULT
+	 * @throws \ConfigException if log wrongly configured
+	 * @uses GetMinLogLevel
 	 */
-	private static function GetMinLogLevel($sChannel)
+	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel): bool
 	{
-		$oConfig = (static::$m_oMockMetaModelConfig !== null) ? static::$m_oMockMetaModelConfig :  \MetaModel::GetConfig();
-		if (!$oConfig instanceof Config)
-		{
-			return static::LEVEL_DEFAULT;
+		$sMinLogLevel = self::GetMinLogLevel($sChannel);
+
+		if ($sMinLogLevel === false || $sMinLogLevel === 'false') {
+			return false;
+		}
+		if (!is_string($sMinLogLevel)) {
+			return false;
+		}
+
+		if (!isset(self::$aLevelsPriority[$sMinLogLevel])) {
+			throw new ConfigException("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
+		} elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel]) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * @param string $sChannel
+	 *
+	 * @return string one of the LEVEL_* const value : the one configured it if exists, otherwise default log level for this channel
+	 *       Config can be done globally : `'log_level_min' => LogAPI::LEVEL_TRACE,`
+	 *       Or per channel : `'log_level_min' => ['InlineImage' => LogAPI::LEVEL_TRACE, 'UserRequest' => LogAPI::LEVEL_TRACE],`
+	 *
+	 * @uses \LogAPI::GetConfig()
+	 * @uses \LogAPI::GetLevelDefault
+	 */
+	protected static function GetMinLogLevel($sChannel)
+	{
+		$oConfig = static::GetConfig();
+		if (!$oConfig instanceof Config) {
+			return static::GetLevelDefault();
 		}
 
 		$sLogLevelMin = $oConfig->Get('log_level_min');
 
-		if (empty($sLogLevelMin))
-		{
-			return static::LEVEL_DEFAULT;
+		if (empty($sLogLevelMin)) {
+			return static::GetLevelDefault();
 		}
 
-		if (!is_array($sLogLevelMin))
-		{
+		if (!is_array($sLogLevelMin)) {
 			return $sLogLevelMin;
 		}
 
-		if (isset($sLogLevelMin[$sChannel]))
-		{
+		if (isset($sLogLevelMin[$sChannel])) {
 			return $sLogLevelMin[$sChannel];
 		}
 
-		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT]))
-		{
+		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT])) {
 			return $sLogLevelMin[$sChannel];
 		}
 
-		return static::LEVEL_DEFAULT;
+		return static::GetLevelDefault();
 	}
 
+	/**
+	 * @uses m_oMockMetaModelConfig if defined
+	 * @uses \MetaModel::GetConfig()
+	 */
+	protected static function GetConfig(): ?Config
+	{
+		return static::$m_oMockMetaModelConfig ?? \MetaModel::GetConfig();
+	}
+
+	/**
+	 * A method to override if default log level needs to be computed. Otherwise simply override the {@see LEVEL_DEFAULT} constant
+	 *
+	 * @used-by GetMinLogLevel
+	 * @uses    \LogAPI::LEVEL_DEFAULT
+	 *
+	 * @since 3.0.0 N°3731
+	 */
+	protected static function GetLevelDefault(): string
+	{
+		return static::LEVEL_DEFAULT;
+	}
 }
 
 class SetupLog extends LogAPI
@@ -741,7 +774,7 @@ class DeadLockLog extends LogAPI
 				return self::CHANNEL_WAIT_TIMEOUT;
 				break;
 			case 1213:
-				return  self::CHANNEL_DEADLOCK_FOUND;
+				return self::CHANNEL_DEADLOCK_FOUND;
 				break;
 			default:
 				return self::CHANNEL_DEFAULT;
@@ -750,17 +783,136 @@ class DeadLockLog extends LogAPI
 	}
 
 	/**
-	 * @param int $iMySQLErrNo will be converted to channel using {@link GetChannelFromMysqlErrorNo}
+	 * @param string $sLevel
 	 * @param string $sMessage
-	 * @param null $iMysqlErroNo
+	 * @param int $iMysqlErrorNumber will be converted to channel using {@link GetChannelFromMysqlErrorNo}
 	 * @param array $aContext
 	 *
 	 * @throws \Exception
+	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
+	 *
+	 * @since 2.7.1 method creation
+	 * @since 2.7.5 3.0.0 rename param names and fix phpdoc (thanks Hipska !)
 	 */
-	public static function Log($iMySQLErrNo, $sMessage, $iMysqlErroNo = null, $aContext = array())
+	public static function Log($sLevel, $sMessage, $iMysqlErrorNumber = null, $aContext = array())
 	{
-		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErroNo);
-		parent::Log($iMySQLErrNo, $sMessage, $sChannel, $aContext);
+		$sChannel = self::GetChannelFromMysqlErrorNo($iMysqlErrorNumber);
+		parent::Log($sLevel, $sMessage, $sChannel, $aContext);
+	}
+}
+
+
+/**
+ * @since 3.0.0 N°3731
+ */
+class DeprecatedCallsLog extends LogAPI
+{
+	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
+	public const ENUM_CHANNEL_FILE = 'deprecated-file';
+	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
+
+	public const LEVEL_DEFAULT = self::LEVEL_ERROR;
+
+	/** @var \FileLog we want our own instance ! */
+	protected static $m_oFileLog = null;
+
+	public static function Enable($sTargetFile = null): void
+	{
+		if (empty($sTargetFile)) {
+			$sTargetFile = APPROOT.'log/deprecated-calls.log';
+		}
+		parent::Enable($sTargetFile);
+	}
+
+	protected static function GetLevelDefault(): string
+	{
+		if (utils::IsDevelopmentEnvironment()) {
+			return static::LEVEL_DEBUG;
+		}
+
+		return static::LEVEL_DEFAULT;
+	}
+
+	/**
+	 * @throws \ConfigException
+	 * @link https://www.php.net/debug_backtrace
+	 * @uses \debug_backtrace()
+	 */
+	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
+	{
+		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+			return;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+		$sDeprecatedFile = $aStack[0]['file'];
+		if (array_key_exists(1, $aStack)) {
+			$sCallerFile = $aStack[1]['file'];
+			$sCallerLine = $aStack[1]['line'];
+		} else {
+			$sCallerFile = 'N/A';
+			$sCallerLine = 'N/A';
+		}
+
+		$sMessage = "{$sCallerFile} L{$sCallerLine} including/requiring {$sDeprecatedFile}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ' : '.$sAdditionalMessage;
+		}
+
+		static::Warning($sMessage, static::ENUM_CHANNEL_FILE);
+	}
+
+	/**
+	 * @param string|null $sAdditionalMessage
+	 *
+	 * @link https://www.php.net/debug_backtrace
+	 * @uses \debug_backtrace()
+	 */
+	public static function NotifyDeprecatedPhpMethod(?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
+			return;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+
+		$sDeprecatedObject = $aStack[1]['class'];
+		$sDeprecatedMethod = $aStack[1]['function'];
+		$sCallerFile = $aStack[1]['file'];
+		$sCallerLine = $aStack[1]['line'];
+		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
+
+		if (array_key_exists(2, $aStack)) {
+			$sCallerObject = $aStack[2]['class'];
+			$sCallerMethod = $aStack[2]['function'];
+			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
+		}
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ' : '.$sAdditionalMessage;
+		}
+
+		static::Warning($sMessage, static::ENUM_CHANNEL_PHP_METHOD);
+	}
+
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
+	{
+		if (utils::IsDevelopmentEnvironment()) {
+			trigger_error($sMessage, E_USER_DEPRECATED);
+		}
+
+		try {
+			parent::Log($sLevel, $sMessage, $sChannel, $aContext);
+		}
+		catch (ConfigException $e) {
+			// nothing much we can do... and we don't want to crash the caller !
+		}
 	}
 }
 
@@ -769,6 +921,7 @@ class LogFileRotationProcess implements iScheduledProcess
 {
 	/**
 	 * Cannot get this list from anywhere as log file name is provided by the caller using LogAPI::Enable
+	 *
 	 * @var string[]
 	 */
 	const LOGFILES_TO_ROTATE = array(

@@ -5,7 +5,6 @@
  */
 
 use Combodo\iTop\Application\UI\Base\iUIBlock;
-use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\Tab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 
@@ -82,6 +81,8 @@ class TabManager
 	 */
 	public function GetCurrentTabLength()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return 0;
 	}
 
@@ -97,6 +98,8 @@ class TabManager
 	 */
 	public function TruncateTab(string $sTabContainer, string $sTab, int $iLength)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return '';
 	}
 
@@ -293,6 +296,8 @@ class TabManager
 	 */
 	public function SelectTab(string $sTabContainer, string $sTabCode)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return '';
 	}
 
@@ -305,6 +310,8 @@ class TabManager
 	 */
 	public function RenderIntoContent(string $sContent, WebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return '';
 	}
 

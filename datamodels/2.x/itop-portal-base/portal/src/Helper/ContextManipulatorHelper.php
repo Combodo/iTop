@@ -26,6 +26,7 @@ use CorePortalInvalidActionRuleException;
 use DBObject;
 use DBObjectSet;
 use DBSearch;
+use DeprecatedCallsLog;
 use DOMFormatException;
 use DOMNodeList;
 use Exception;
@@ -443,15 +444,14 @@ class ContextManipulatorHelper
 	 */
 	public function GetCallbackUrls(array $aData, DBObject $oObject, $bModal = false)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use navigation rules for form callbacks');
 		$aResults = array(
 			'submit' => null,
 			'cancel' => null,
 		);
 
-		if (isset($aData['rules']))
-		{
-			foreach ($aData['rules'] as $sId)
-			{
+		if (isset($aData['rules'])) {
+			foreach ($aData['rules'] as $sId) {
 				// Retrieving current rule
 				$aRule = $this->GetRule($sId);
 

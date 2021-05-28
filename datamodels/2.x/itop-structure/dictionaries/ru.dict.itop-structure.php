@@ -339,3 +339,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Person:personal_info' => 'Личная информация',
 	'Person:notifiy' => 'Уведомления',
 ));
+
+// Themes
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

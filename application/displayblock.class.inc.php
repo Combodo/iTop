@@ -12,6 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparatorUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -168,6 +169,8 @@ class DisplayBlock
 				/** bool add toolkit menu */
 				'selectionMode',
 				/**positive or negative*/
+				'max_height',
+				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -1173,7 +1176,8 @@ JS
 			$sTitle = Dict::Format($sFormat, $iTotalCount);
 
 			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
-			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL());
+			$aOption['dom'] = 'pl';
+			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
 
 		} else {
 			// Simply count the number of elements in the set
@@ -1645,6 +1649,7 @@ class HistoryBlock extends DisplayBlock
 	
 	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		parent::__construct($oFilter, $sStyle, $bAsynchronous, $aParams, $oSet);
 		$this->iLimitStart = 0;
 		$this->iLimitCount = 0;
@@ -1771,6 +1776,13 @@ EOF
 class MenuBlock extends DisplayBlock
 {
 	/**
+	 * @var string Prefix to use for the ID of the actions toolbar
+	 * @used-by static::GetRenderContent
+	 * @since 3.0.0
+	 */
+	public const ACTIONS_TOOLBAR_ID_PREFIX = 'ibo-actions-toolbar-';
+
+	/**
 	 * Renders the "Actions" popup menu for the given set of objects
 	 *
 	 * Note that the menu links containing (or ending) with a hash (#) will have their fragment
@@ -1811,6 +1823,8 @@ class MenuBlock extends DisplayBlock
 		$aRegularActions = [];
 		/** @var array $aTransitionActions Only transitions */
 		$aTransitionActions = [];
+		/** @var array $aToolkitActions Any "legacy" toolkit menu item, which are now displayed in the same menu as the $aRegularActions, after them */
+		$aToolkitActions = [];
 		if ((!isset($aExtraParams['selection_mode']) || $aExtraParams['selection_mode'] == "") && $this->m_sStyle != 'listInObject') {
 			$oAppContext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
@@ -1980,13 +1994,9 @@ class MenuBlock extends DisplayBlock
 
 						$this->AddMenuSeparator($aRegularActions);
 
-						/** @var \iApplicationUIExtension $oExtensionInstance */
-						foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
-							$oSet->Rewind();
-							foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl) {
-								$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $sUrl) + $aActionParams;
-							}
-						}
+						$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
+							$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $data) + $aActionParams;
+						});
 					}
 					break;
 
@@ -2088,24 +2098,20 @@ class MenuBlock extends DisplayBlock
 
 			$this->AddMenuSeparator($aRegularActions);
 
-			/** @var \iApplicationUIExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
-				$oSet->Rewind();
-				foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data) {
-					if (is_array($data)) {
-						// New plugins can provide javascript handlers via the 'onclick' property
-						//TODO: enable extension of different menus by checking the 'target' property ??
-						$aRegularActions[$sLabel] = [
-							'label' => $sLabel,
-							'url' => isset($data['url']) ? $data['url'] : '#',
-							'onclick' => isset($data['onclick']) ? $data['onclick'] : '',
-						];
-					} else {
-						// Backward compatibility with old plugins
-						$aRegularActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
-					}
+			$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
+				if (is_array($data)) {
+					// New plugins can provide javascript handlers via the 'onclick' property
+					//TODO: enable extension of different menus by checking the 'target' property ??
+					$aRegularActions[$sLabel] = [
+						'label' => $sLabel,
+						'url' => isset($data['url']) ? $data['url'] : '#',
+						'onclick' => isset($data['onclick']) ? $data['onclick'] : '',
+					];
+				} else {
+					// Backward compatibility with old plugins
+					$aRegularActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
 				}
-			}
+			});
 
 			if (empty($sRefreshAction) && $this->m_sStyle == 'list') {
 				//for the detail page this var is defined way beyond this line
@@ -2115,18 +2121,17 @@ class MenuBlock extends DisplayBlock
 			//it's easier just display configure this list and MENU_OBJLIST_TOOLKIT
 		}
 		$param = null;
-		$iMenuId = null;
 		if (is_null($sId)) {
 			$sId = uniqid();
 		}
 
 		// New extensions based on iPopupMenuItem interface
+		$oPopupMenuItemsBlock = new UIContentBlock();
 		switch ($this->m_sStyle) {
 			case 'list':
 			case 'listInObject':
 				$oSet->Rewind();
 				$param = $oSet;
-				$iMenuId = iPopupMenuExtension::MENU_OBJLIST_ACTIONS;
 				$bToolkitMenu = true;
 				if (isset($aExtraParams['toolkit_menu'])) {
 					$bToolkitMenu = (bool)$aExtraParams['toolkit_menu'];
@@ -2134,18 +2139,21 @@ class MenuBlock extends DisplayBlock
 				if ($bToolkitMenu) {
 					$sLabel = Dict::S('UI:ConfigureThisList');
 					$aRegularActions['iTop::ConfigureList'] = ['label' => $sLabel, 'url' => '#', 'onclick' => "$('#datatable_dlg_datatable_{$sId}').dialog('open'); return false;"];
-					$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock(iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aRegularActions, $sId));
 				}
+				utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJLIST_ACTIONS, $param, $aRegularActions, $sId);
+				utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJLIST_TOOLKIT, $param, $aToolkitActions, $sId);
 				break;
 
 			case 'details':
 				$oSet->Rewind();
 				$param = $oSet->Fetch();
-				$iMenuId = iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS;
+				utils::GetPopupMenuItemsBlock($oPopupMenuItemsBlock, iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS, $param, $aRegularActions, $sId);
 				break;
 
 		}
-		$oRenderBlock->AddSubBlock(utils::GetPopupMenuItemsBlock($iMenuId, $param, $aRegularActions, $sId));
+		if ($oPopupMenuItemsBlock->HasSubBlocks()) {
+			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
+		}
 
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
@@ -2168,7 +2176,7 @@ class MenuBlock extends DisplayBlock
 			}
 		}
 
-		$oActionsToolbar = ToolbarUIBlockFactory::MakeForAction("ibo-actions-toolbar-{$sId}");
+		$oActionsToolbar = ToolbarUIBlockFactory::MakeForAction(static::ACTIONS_TOOLBAR_ID_PREFIX.$sId);
 		$oRenderBlock->AddSubBlock($oActionsToolbar);
 		$sRegularActionsMenuTogglerId = "ibo-regular-actions-menu-toggler-{$sId}";
 		$sRegularActionsPopoverMenuId = "ibo-regular-actions-popover-{$sId}";
@@ -2276,7 +2284,7 @@ class MenuBlock extends DisplayBlock
 			}
 
 			// - Others
-			if (!empty($aRegularActions)) {
+			if (!empty($aRegularActions) || !empty($aToolkitActions)) {
 				if (count($aFavoriteRegularActions) > 0) {
 					$sName = 'UI:Menu:OtherActions';
 				} else {
@@ -2291,15 +2299,73 @@ class MenuBlock extends DisplayBlock
 
 				$oActionsToolbar->AddSubBlock($oActionButton)
 					->AddSubBlock($oRegularActionsMenu);
+
+				// Toolkit actions
+				if (!empty($aToolkitActions)) {
+					foreach ($aToolkitActions as $sActionId => $aActionData) {
+						$oRegularActionsMenu->AddItem('toolkit-actions', PopoverMenuItemFactory::MakeFromDisplayBlockAction($sActionId, $aActionData));
+					}
+				}
 			}
 		}
 
 		return $oRenderBlock;
 	}
-	
+
+	/**
+	 * If an extension doesn't return an array as expected :
+	 * - calls IssueLog:Warning
+	 *
+	 * @param \DBObjectSet $oSet
+	 * @param callable $callback EnumAllowedActions returns an array, we will call this anonymous function on each of its value
+	 *               with two parameters : label (array index), data (array value)
+	 *
+	 * @throws \Exception
+	 *
+	 * @uses \MetaModel::EnumPlugins()
+	 * @uses \iApplicationUIExtension::EnumAllowedActions()
+	 *
+	 * @since 3.0.0
+	 */
+	private function GetEnumAllowedActions(DBObjectSet $oSet, callable $callback)
+	{
+		$aInvalidExtensions = [];
+
+		/** @var \iApplicationUIExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
+			$oSet->Rewind();
+			$aExtEnumAllowedActions = $oExtensionInstance->EnumAllowedActions($oSet);
+
+			if (!is_array($aExtEnumAllowedActions)) {
+				$aInvalidExtensions[] = get_class($oExtensionInstance);
+				continue;
+			}
+
+			foreach ($aExtEnumAllowedActions as $sLabel => $data) {
+				$callback($sLabel, $data);
+			}
+		}
+
+		if (!empty($aInvalidExtensions)) {
+			$sMessage = 'Some extensions returned non array value for EnumAllowedActions() method impl';
+
+			IssueLog::Warning(
+				$sMessage,
+				null,
+				['extensions' => $aInvalidExtensions]
+			);
+
+			if (utils::IsDevelopmentEnvironment()) {
+				throw new CoreUnexpectedValue($sMessage, $aInvalidExtensions);
+			}
+		}
+	}
+
 	/**
 	 * Appends a menu separator to the current list of actions
+	 *
 	 * @param array $aActions The current actions list
+	 *
 	 * @return void
 	 */
 	protected function AddMenuSeparator(&$aActions)

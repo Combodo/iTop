@@ -1,7 +1,7 @@
 <?php
 /*
- * @copyright Copyright (C) 2010-2021 Combodo SARL
- * @license    http://opensource.org/licenses/AGPL-3.0
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
@@ -697,6 +697,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Wykonywanie zapytań OQL',
 	'UI:RunQuery:QueryExamples' => 'Przykłady zapytań',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Cel, powód',
 	'UI:RunQuery:HeaderPurpose+' => 'Wyjaśnienie dotyczące zapytania',
 	'UI:RunQuery:HeaderOQLExpression' => 'Wyrażenie OQL',
@@ -1018,18 +1019,22 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	'Menu:ProfilesMenu' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profile',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Konta użytkowników', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Konta użytkowników', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Konta użytkowników',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Konta użytkowników',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Konta użytkowników',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s wersja %2$s',
 	'UI:iTopVersion:Long' => '%1$s wersja %2$s-%3$s zbudowana na %4$s',
 	'UI:PropertiesTab' => 'Właściwości',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otwórz dokument w nowym oknie: %1$s',
-	'UI:DownloadDocument_' => 'Pobierz dokument: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Otwórz~~',
+	'UI:DownloadDocument_' => 'Pobierz~~',
 	'UI:Document:NoPreview' => 'Brak podglądu tego typu dokumentu',
 	'UI:Download-CSV' => 'Pobierz %1$s',
 
@@ -1436,7 +1441,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Obiekt jest zablokowany, ponieważ jest obecnie modyfikowany przez %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Obiekt jest obecnie modyfikowany przez %1$s. Twoje modyfikacje nie mogą zostać przesłane, ponieważ zostałyby nadpisane.',
-	'UI:CurrentObjectIsSoftLockedBy_User' => 'Obiekt jest obecnie modyfikowany przez %1$s. Będziesz mógł przesłać swoje modyfikacje, gdy zostanie on zwolniony.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'Obiekt jest obecnie modyfikowany przez %1$s. Będziesz mógł przesłać swoje modyfikacje, gdy zostanie on zwolniony.~~',
 	'UI:CurrentObjectLockExpired' => 'Blokada zapobiegająca jednoczesnym modyfikacjom obiektu wygasła.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Blokada zapobiegająca jednoczesnym modyfikacjom obiektu wygasła. Nie możesz już przesłać swojej modyfikacji, ponieważ inni użytkownicy mogą teraz modyfikować ten obiekt.',
 	'UI:ConcurrentLockKilled' => 'Usunięto blokadę uniemożliwiającą modyfikacje bieżącego obiektu.',

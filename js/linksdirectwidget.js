@@ -60,7 +60,7 @@ $(function()
 			this.oButtons = {};
 			for(k in aButtonsTypes)
 			{
-				this.oButtons[aButtonsTypes[k]] =  $('<button type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
+				this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
 			}
 			this.indicator = $('<span></span>');
 			this.inputToBeCreated = $('<input type="hidden" name="'+this.options.input_name+'_tbc" value="{}">');
@@ -232,8 +232,6 @@ $(function()
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onSearchToAdd(); return false; } );
-				me.oDlg.find('button.cancel').off('click').on('click',  function() { me.oDlg.dialog('close'); } );
-				me.oDlg.find('button.ok').off('click').on('click',  function() { me._onDoAdd(); } );
 				$('#SearchFormToAdd_'+me.id).resize(function() { me._onSearchDlgUpdateSize(); });
 				
 				me.oDlg.dialog({
@@ -244,7 +242,24 @@ $(function()
 					maxHeight: $(window).height() - 50,
 					position: { my: "center", at: "center", of: window },
 					close: function() { me._onDlgClose(); },
-					resizeStop: function() { me._onSearchDlgUpdateSize(); }
+					resizeStop: function() { me._onSearchDlgUpdateSize(); },
+					buttons: [
+						{
+							text: Dict.S('UI:Button:Cancel'),
+							class: "cancel ibo-is-alternative ibo-is-neutral",
+							click: function() {
+								$(this).dialog('close');
+							}
+						},
+						{
+							text:  Dict.S('UI:Button:Add'),
+							class: "ok ibo-is-regular ibo-is-primary",
+							click: function() {
+								me._onDoAdd();							
+							}
+						},
+					],
+
 				});
 				me.indicator.html('');
 				me.oButtons['add'].prop('disabled', false);
@@ -369,11 +384,11 @@ $(function()
 		{
 			if (iCount > 0)
 			{
-				this.oDlg.find('button.ok').prop('disabled', false);
+				this.oDlg.parent().find('button.ok').prop('disabled', false);
 			}
 			else
 			{
-				this.oDlg.find('button.ok').prop('disabled', true);
+				this.oDlg.parent().find('button.ok').prop('disabled', true);
 			}
 		},
 		_onDoAdd:function()

@@ -1109,29 +1109,21 @@ EOF
 						$bOneColIsMissing = true;
 						if ($bVerbose)
 						{
-							if (count($aColumns) > 1)
-							{
+							if (count($aColumns) > 1) {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
 										$aColumns)." will be re-created.'.\n";
-							}
-							else
-							{
+							} else {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
 							}
 						}
-					}
-					elseif (strcasecmp(CMDBSource::GetFieldType($sTable, $sColName), $sColumnDef) != 0)
-					{
+					} elseif (!CMDBSource::IsSameFieldTypes($sColumnDef, CMDBSource::GetFieldSpec($sTable, $sColName))) {
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
-						if (count($aColumns) > 1)
-						{
+						if (count($aColumns) > 1) {
 							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
 									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
 									$aColumns)." will be re-created.'.\n";
-						}
-						else
-						{
+						} else {
 							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
 									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
 						}
@@ -1348,9 +1340,10 @@ EOF
 			}
 			else
 			{
-				foreach ($oAttDef->GetImportColumns() as $sField => $sDBFieldType)
-				{
-					$aColumns[$sField] = $sDBFieldType;
+				if (is_iterable($oAttDef->GetImportColumns())) {
+					foreach ($oAttDef->GetImportColumns() as $sField => $sDBFieldType) {
+						$aColumns[$sField] = $sDBFieldType;
+					}
 				}
 			}
 		}
@@ -2835,26 +2828,25 @@ class SynchroReplica extends DBObject implements iDisplay
 		$oPage->add('</fieldset>');
 
 		$sDestClass = $this->Get('dest_class');
-		$bIsActionAllowed = true;
-
+		$bCanDisplayDestObjSections = true;
 		if (strlen($sDestClass) > 0)
 		{
 			$oDestObj = MetaModel::GetObject($sDestClass, $this->Get('dest_id'), false);
 			if (is_object($oDestObj)) {
-				$bIsActionAllowed = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, DBObjectSet::FromObject($oDestObj));
-			} else {
-				$bIsActionAllowed = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, null);
-			}
+				$bCanDisplayDestObjSections = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, DBObjectSet::FromObject($oDestObj));
 
-			if ($bIsActionAllowed) {
-				$oPage->add('<fieldset>');
-				$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
-				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
-				$oPage->add('<fieldset>');
+				if ($bCanDisplayDestObjSections) {
+					$oPage->add('<fieldset>');
+					$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
+					$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
+					$oPage->add('<fieldset>');
+				}
+			} else {
+				$bCanDisplayDestObjSections = false;
 			}
 		}
 
-		if ($bIsActionAllowed) {
+		if ($bCanDisplayDestObjSections) {
 			$oPage->add('</div><div class="ibo-column">');
 			$oPage->add('<fieldset>');
 			$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');

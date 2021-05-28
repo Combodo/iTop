@@ -351,3 +351,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => '通知',
 ));
+
+// Themes
+Dict::Add('JA JP', 'Japanese', '日本語', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

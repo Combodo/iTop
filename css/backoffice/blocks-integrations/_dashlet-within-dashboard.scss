@@ -1,0 +1,23 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-first-dashlet: 0 !default;
+$ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-not-first-dashlet: 12px !default;
+
+.ibo-dashboard--grid-row{
+  // Margin on top to have a better visual separation like with fieldsets
+  .ibo-dashlet-header-static{
+    margin-top: $ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-not-first-dashlet;
+  }
+
+  // When the ibo-dashlet-header-static is the first dashlet of the dashboard, it must not have margin on top
+  &:first-child{
+    .ibo-dashlet:first-child{
+      .ibo-dashlet-header-static{
+        margin-top: $ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-first-dashlet;
+      }
+    }
+  }
+}

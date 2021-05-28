@@ -1,26 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
- *
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
 //////////////////////////////////////////////////////////////////////
@@ -155,7 +138,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Profiles' => 'Perfis',
 	'Class:URP_Profiles+' => 'Perfil do usuário',
 	'Class:URP_Profiles/Attribute:name' => 'Nome',
-	'Class:URP_Profiles/Attribute:name+' => 'label',
+	'Class:URP_Profiles/Attribute:name+' => '',
 	'Class:URP_Profiles/Attribute:description' => 'Descrição',
 	'Class:URP_Profiles/Attribute:description+' => 'uma linha descrição',
 	'Class:URP_Profiles/Attribute:user_list' => 'Usuários',
@@ -170,7 +153,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Dimensions' => 'dimensão',
 	'Class:URP_Dimensions+' => 'dimensão de aplicação (definição silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nome',
-	'Class:URP_Dimensions/Attribute:name+' => 'label',
+	'Class:URP_Dimensions/Attribute:name+' => '',
 	'Class:URP_Dimensions/Attribute:description' => 'Descrição',
 	'Class:URP_Dimensions/Attribute:description+' => 'uma linha descrição',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
@@ -713,6 +696,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'UI:RunQuery:Title' => 'Avaliar consultas OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemplos de consultas',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Propósito',
 	'UI:RunQuery:HeaderPurpose+' => 'Explicação sobre a consulta',
 	'UI:RunQuery:HeaderOQLExpression' => 'A consulta na sintaxe OQL',
@@ -1034,18 +1018,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'Menu:ProfilesMenu' => 'Perfis', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Perfis', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Perfis', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Perfis',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Contas usuários', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Contas usuários',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Contas usuários',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Contas usuários',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versão %2$s',
 	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s construído %4$s',
 	'UI:PropertiesTab' => 'Propriedades',
 
-	'UI:OpenDocumentInNewWindow_' => 'Abrir este documento em uma nova janela: %1$s',
-	'UI:DownloadDocument_' => 'Baixar este documento: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
+	'UI:DownloadDocument_' => 'Baixar~~',
 	'UI:Document:NoPreview' => 'Nenhuma visualização está disponível para este documento',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1218,6 +1206,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ImportDashboardTitle' => 'Importar por um arquivo',
 	'UI:ImportDashboardText' => 'Selecione um arquivo do painel para importar:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Criar um novo Painel',
@@ -1452,7 +1441,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:CurrentObjectIsLockedBy_User' => 'O objeto está bloqueado, pois está sendo modificado por %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'O objeto está sendo modificado por %1$s. Suas modificações não podem ser enviadas, pois seriam sobrescritas.',
-	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
 	'UI:CurrentObjectLockExpired' => 'O bloqueio para impedir modificações simultâneas do objeto expirou.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'O bloqueio para impedir modificações simultâneas do objeto expirou. Você não pode mais enviar sua modificação, pois outros usuários agora podem modificar este objeto.',
 	'UI:ConcurrentLockKilled' => 'O bloqueio impedindo modificações no objeto atual foi deletado.',

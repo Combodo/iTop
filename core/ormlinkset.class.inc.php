@@ -153,7 +153,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
      */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
     {
-        $this->AddItem($oObject);
+	    // cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+	    //DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
+	    $this->AddItem($oObject);
     }
 
 	/**
@@ -258,16 +260,13 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
      */
     public function ToArray($bWithId = true)
     {
-        $aRet = array();
-        foreach($this as $oItem)
-        {
-            if ($bWithId)
-            {
-                $aRet[$oItem->GetKey()] = $oItem;
-            }
-            else
-            {
-                $aRet[] = $oItem;
+	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use foreach($this as $oItem){} instead');
+	    $aRet = array();
+	    foreach ($this as $oItem) {
+		    if ($bWithId) {
+			    $aRet[$oItem->GetKey()] = $oItem;
+		    } else {
+			    $aRet[] = $oItem;
             }
         }
         return $aRet;

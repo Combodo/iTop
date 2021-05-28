@@ -46,11 +46,10 @@ class ThemeHandler
 			'name' => 'fullmoon',
 			'parameters' => [
 				'variables' => [],
-				'imports' => [
-				],
+				'imports' => [],
 				'stylesheets' => [
 					'main' => '../css/backoffice/main.scss',
-				],
+				]
 			],
 		];
 	}
@@ -58,22 +57,27 @@ class ThemeHandler
 	/**
 	 * Return the ID of the theme currently defined in the config. file
 	 *
+	 * @deprecated 3.0.0, will be removed in 3.1, see N°3898
 	 * @return string
 	 */
 	public static function GetCurrentThemeId()
 	{
-		try
-		{
-			if (is_null(MetaModel::GetConfig()))
-			{
-				throw new CoreException('no config');
-			}
-			$sThemeId = MetaModel::GetConfig()->Get('backoffice_default_theme');
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		static::GetCurrentUserThemeId();
+	}
+
+	/**
+	 * @return string ID of the theme currently defined in the config. file, which applies to all users by default. If non defined, fallback on the default one.
+	 * @since 3.0.0
+	 */
+	public static function GetApplicationThemeId(): string
+	{
+		try {
+			$sThemeId = utils::GetConfig()->Get('backoffice_default_theme');
 		}
-		catch(CoreException $oCompileException)
-		{
+		catch (CoreException $oCompileException) {
 			// Fallback on our default theme in case the config. is not available yet
-			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
+			$aDefaultTheme = ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
 		}
 
@@ -81,49 +85,173 @@ class ThemeHandler
 	}
 
 	/**
-	 * Return the absolute path of the compiled theme folder.
-	 *
+	 * @return string ID of the theme to use for the current user as per they preferences. If non defined, fallback on the app. theme ID.
+	 * @since 3.0.0
+	 */
+	public static function GetCurrentUserThemeId(): string
+	{
+		$sThemeId = null;
+
+		try {
+			if (true === utils::GetConfig()->Get('user_preferences.allow_backoffice_theme_override')) {
+				$sThemeId = appUserPreferences::GetPref('backoffice_theme', null);
+			}
+		}
+		catch (Exception $oException) {
+			// Do nothing, already handled by $sThemeId null by default
+		}
+
+		// Fallback on the app. theme
+		if (is_null($sThemeId)) {
+			$sThemeId = static::GetApplicationThemeId();
+		}
+
+		return $sThemeId;
+	}
+
+	/**
 	 * @param string $sThemeId
 	 *
-	 * @return string
+	 * @return string Label of the theme which is either a dict entry ('theme:<THEME_ID>') or the ID if no localized dict. entry found.
+	 * @since 3.0.0
 	 */
-	public static function GetCompiledThemeFolderAbsolutePath($sThemeId)
+	public static function GetThemeLabel(string $sThemeId): string
 	{
-		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/'.$sThemeId.'/';
+		$sDictEntryCode = 'theme:'.$sThemeId;
+		$sDictEntryValue = Dict::S('theme:'.$sThemeId);
+
+		return ($sDictEntryCode === $sDictEntryValue) ? $sThemeId : $sDictEntryValue;
 	}
-	
+
+	/**
+	 * @return array Associative array of <THEME_ID> => <THEME_LABEL>, ordered by labels
+	 * @since 3.0.0
+	 */
+	public static function GetAvailableThemes(): array
+	{
+		$aThemes = [];
+
+		foreach (glob(static::GetCompiledThemesFolderAbsolutePath().'/*') as $sPath) {
+			if (is_dir($sPath)) {
+				$sThemeId = basename($sPath);
+				$sThemeLabel = static::GetThemeLabel($sThemeId);
+
+				$aThemes[$sThemeId] = $sThemeLabel;
+			}
+		}
+		asort($aThemes);
+
+		return $aThemes;
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return bool True if $sThemeId is a valid theme that can be used.
+	 * @since 3.0.0
+	 */
+	public static function IsValidTheme(string $sThemeId): bool
+	{
+		return array_key_exists($sThemeId, static::GetAvailableThemes());
+	}
+
+	/**
+	 * @return string Absolute path to the folder containing all the compiled themes
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledThemesFolderAbsolutePath(): string
+	{
+		return APPROOT.'env-'.utils::GetCurrentEnvironment().'/branding/themes/';
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return string Absolute path to the folder containing the $sThemeId theme
+	 */
+	public static function GetCompiledThemeFolderAbsolutePath(string $sThemeId): string
+	{
+		return static::GetCompiledThemesFolderAbsolutePath().$sThemeId.'/';
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return string Absolute path of the compiled file for the $sThemeId theme (Note: It doesn't mean that the theme is actually compiled)
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledThemeFileAbsolutePath(string $sThemeId): string
+	{
+		return static::GetCompiledThemeFolderAbsolutePath($sThemeId).'main.css';
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return string Absolute URL of the compiled file for the $sThemeId theme (Note: It doesn't mean that the theme is actually compiled)
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledThemeFileAbsoluteUrl(string $sThemeId): string
+	{
+		return utils::GetAbsoluteUrlModulesRoot().'branding/themes/'.$sThemeId.'/main.css';
+	}
+
 	/**
 	 * Return the absolute URL for the current theme CSS file
 	 *
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function GetCurrentThemeUrl()
+	public static function GetCurrentThemeUrl(): string
 	{
-		try
-		{
+		try {
 			// Try to compile theme defined in the configuration
-			$sThemeId = static::GetCurrentThemeId();
-			static::CompileTheme($sThemeId);
+			// Note: In maintenance mode we should stick to the app theme (also we don't have access to many PHP classes, including the user preferences)
+			$sThemeId = SetupUtils::IsInMaintenanceMode() ? static::GetApplicationThemeId() : static::GetCurrentUserThemeId();
+			if (static::ShouldThemeSignatureCheckBeForced($sThemeId)) {
+				static::CompileTheme($sThemeId);
+			}
 		}
-		catch(CoreException $oCompileException)
-		{
+		catch (CoreException $oCompileException) {
 			// Fallback on our default theme (should always be compilable) in case the previous theme doesn't exists
-			$aDefaultTheme =  ThemeHandler::GetDefaultThemeInformation();
+			$aDefaultTheme = ThemeHandler::GetDefaultThemeInformation();
 			$sThemeId = $aDefaultTheme['name'];
 			$sDefaultThemeDirPath = static::GetCompiledThemeFolderAbsolutePath($sThemeId);
-			
+
 			// Create our theme dir if it doesn't exist (XML theme node removed, renamed etc..)
-			if(!is_dir($sDefaultThemeDirPath))
-			{
+			if (!is_dir($sDefaultThemeDirPath)) {
 				SetupUtils::builddir($sDefaultThemeDirPath);
 			}
-			
-			static::CompileTheme($sThemeId, false, "", $aDefaultTheme['parameters']);
+
+			if (static::ShouldThemeSignatureCheckBeForced($sThemeId)) {
+				static::CompileTheme($sThemeId, false, "", $aDefaultTheme['parameters']);
+			}
 		}
 
-		// Return absolute url to theme compiled css
-		return utils::GetAbsoluteUrlModulesRoot().'branding/themes/'.$sThemeId.'/main.css';
+		return static::GetCompiledThemeFileAbsoluteUrl($sThemeId);
+	}
+
+	/**
+	 * @param string $sThemeId
+	 *
+	 * @return bool True if the $sThemeId signature check -and possibly the compilation- should be forced (dev. environment, missing compiled file, ...)
+	 */
+	protected static function ShouldThemeSignatureCheckBeForced(string $sThemeId): bool
+	{
+		if (utils::IsDevelopmentEnvironment()) {
+			return true;
+		}
+
+		if (false === file_exists(static::GetCompiledThemeFileAbsolutePath($sThemeId))) {
+			return true;
+		}
+
+		if (true === utils::GetConfig()->Get('theme.force_signature_check_at_runtime')) {
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -135,33 +263,30 @@ class ThemeHandler
 	 * @param boolean $bSetup
 	 * @param string $sSetupCompilationTimestamp : setup compilation timestamp in micro secunds
 	 * @param array|null $aThemeParameters Parameters (variables, imports, stylesheets) for the theme, if not passed, will be retrieved from compiled DM
-	 * @param array|null $aImportsPaths Paths where imports can be found. Must end with '/'
+	 * @param array|null $aImportsPaths Folder paths where imports can be found. Must end with '/'
 	 * @param string|null $sWorkingPath Path of the folder used during compilation. Must end with a '/'
 	 *
 	 * @throws \CoreException
 	 * @return boolean: indicate whether theme compilation occured
 	 */
-	public static function CompileTheme($sThemeId, $bSetup=false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
-	{
-		if ($sSetupCompilationTimestamp==="")
-		{
+	public static function CompileTheme($sThemeId, $bSetup=false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null) {
+		if ($sSetupCompilationTimestamp === "") {
 			$sSetupCompilationTimestamp = microtime(true);
 		}
 
-		$sSetupCompilationTimestampInSecunds = (strpos($sSetupCompilationTimestamp, '.') !==false) ? explode('.', $sSetupCompilationTimestamp)[0] : $sSetupCompilationTimestamp;
+		$sSetupCompilationTimestampInSecunds = (strpos($sSetupCompilationTimestamp, '.') !== false) ? explode('.',
+			$sSetupCompilationTimestamp)[0] : $sSetupCompilationTimestamp;
 
 		$sEnv = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 
 		// Default working path
-		if($sWorkingPath === null)
-		{
+		if ($sWorkingPath === null) {
 			$sWorkingPath = $sEnv;
 		}
 
 		// Default import paths (env-*)
-		if($aImportsPaths === null)
-		{
-			$aImportsPaths = [ $sEnv];
+		if ($aImportsPaths === null) {
+			$aImportsPaths = [$sEnv];
 		}
 
 		// Note: We do NOT check that the folder exists!
@@ -169,39 +294,43 @@ class ThemeHandler
 		$sThemeCssPath = $sThemeFolderPath.'main.css';
 
 		// Save parameters if passed... (typically during DM compilation)
-		if(is_array($aThemeParameters))
-		{
-			if (!is_dir($sThemeFolderPath))
-			{
+		if (is_array($aThemeParameters)) {
+			if (!is_dir($sThemeFolderPath)) {
 				mkdir($sWorkingPath.'/branding/');
 				mkdir($sWorkingPath.'/branding/themes/');
 			}
 			file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
-		}
-		// ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
-		else
-		{
+		} // ... Otherwise, retrieve them from compiled DM (typically when switching current theme in the config. file)
+		else {
 			$aThemeParameters = json_decode(@file_get_contents($sThemeFolderPath.'theme-parameters.json'), true);
-			if ($aThemeParameters === null)
-			{
+			if ($aThemeParameters === null) {
 				throw new CoreException('Could not load "'.$sThemeId.'" theme parameters from file, check that it has been compiled correctly');
 			}
 		}
 
-		$aThemeParametersWithVersion = self::CloneThemeParameterAndIncludeVersion($aThemeParameters, $sSetupCompilationTimestampInSecunds);
+		$aThemeParametersWithVersion = self::CloneThemeParameterAndIncludeVersion($aThemeParameters, $sSetupCompilationTimestampInSecunds, $aImportsPaths);
 
 		clearstatcache();
 
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
-		foreach ($aThemeParameters['imports_utility'] as $sImport)
-		{
-			static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+		if (isset($aThemeParameters['variable_imports'])) {
+			foreach ($aThemeParameters['variable_imports'] as $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+			}
 		}
-		foreach ($aThemeParameters['stylesheets'] as $sStylesheet)
-		{
-			static::FindStylesheetFile($sStylesheet, $aImportsPaths, $oFindStylesheetObject);
+
+		if (isset($aThemeParameters['utility_imports'])) {
+			foreach ($aThemeParameters['utility_imports'] as $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+			}
+		}
+
+		if (isset($aThemeParameters['stylesheets'])) {
+			foreach ($aThemeParameters['stylesheets'] as $sStylesheet) {
+				static::FindStylesheetFile($sStylesheet, $aImportsPaths, $oFindStylesheetObject);
+			}
 		}
 
 		foreach ($oFindStylesheetObject->GetStylesheetFileURIs() as $sStylesheet){
@@ -267,11 +396,12 @@ CSS;
 					static::$oCompileCSSService = new CompileCSSService();
 				}
 				//store it again to change $version with latest compiled time
+				SetupLog::Info("Compiling theme $sThemeId...");
 				$sTmpThemeCssContent = static::$oCompileCSSService->CompileCSSFromSASS($sTmpThemeScssContent, $aImportsPaths,
 					$aThemeParametersWithVersion);
+				SetupLog::Info("$sThemeId theme compilation done.");
 				file_put_contents($sThemeFolderPath.'/theme-parameters.json', json_encode($aThemeParameters));
 				file_put_contents($sThemeCssPath, $sSignatureComment.$sTmpThemeCssContent);
-				SetupLog::Info("Theme $sThemeId file compiled.");
 				return true;
 			}
 		}
@@ -293,47 +423,51 @@ CSS;
 	 * @return string
 	 * @throws \Exception
 	 */
-	public static function ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages)
-	{
+	public static function ComputeSignature($aThemeParameters, $aImportsPaths, $aIncludedImages) {
 		$aSignature = [
 			'variables' => md5(json_encode($aThemeParameters['variables'])),
 			'stylesheets' => [],
-			'imports' => [],
-			'images' => []
+			'variable_imports' => [],
+			'images' => [],
+			'utility_imports' => []
 		];
 
 		$oFindStylesheetObject = new FindStylesheetObject();
 
-		foreach ($aThemeParameters['imports_variable'] as $key => $sImport)
-		{
-			static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
-			$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
-			if (!empty($sFile)){
-				$aSignature['stylesheets'][$key] = md5_file($sFile);
-			}
-		}		
-		foreach ($aThemeParameters['imports_utility'] as $key => $sImport)
-		{
-			static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
-			$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
-			if (!empty($sFile)){
-				$aSignature['stylesheets'][$key] = md5_file($sFile);
+		if (isset($aThemeParameters['variable_imports'])) {
+			foreach ($aThemeParameters['variable_imports'] as $key => $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
+				if (!empty($sFile)) {
+					$aSignature['variable_imports'][$key] = md5_file($sFile);
+				}
 			}
 		}
-		foreach ($aThemeParameters['stylesheets'] as $key => $sStylesheet)
-		{
-			static::FindStylesheetFile($sStylesheet, $aImportsPaths, $oFindStylesheetObject);
-			$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
 
-			if (!empty($sFile)){
-				$aSignature['stylesheets'][$key] = md5_file($sFile);
+		if (isset($aThemeParameters['utility_imports'])) {
+			foreach ($aThemeParameters['utility_imports'] as $key => $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
+				if (!empty($sFile)) {
+					$aSignature['utility_imports'][$key] = md5_file($sFile);
+				}
+			}
+		}
+		if (isset($aThemeParameters['stylesheets'])) {
+			foreach ($aThemeParameters['stylesheets'] as $key => $sStylesheet) {
+				static::FindStylesheetFile($sStylesheet, $aImportsPaths, $oFindStylesheetObject);
+				$sFile = $oFindStylesheetObject->GetLastStylesheetFile();
+
+				if (!empty($sFile)) {
+					$aSignature['stylesheets'][$key] = md5_file($sFile);
+				}
 			}
 		}
 
 		$aFiles = $oFindStylesheetObject->GetImportPaths();
 		if (count($aFiles) !== 0) {
 			foreach ($aFiles as $sFileURI => $sFilePath) {
-				$aSignature['imports_utility'][$sFileURI] = md5_file($sFilePath);
+				$aSignature['utility_imports'][$sFileURI] = md5_file($sFilePath);
 			}
 		}
 
@@ -609,6 +743,10 @@ CSS;
 			{
 				foreach ($aMatches[1] as $path)
 				{
+					$iRemainingClosingParenthesisPos = strpos($path, ')');
+					if ($iRemainingClosingParenthesisPos !== false){
+						$path = substr($path, 0, $iRemainingClosingParenthesisPos);
+					}
 					if (!array_key_exists($path, $aCompleteUrls)
 						&& !array_key_exists($path, $aToCompleteUrls))
 					{
@@ -699,8 +837,9 @@ CSS;
 
 	/**
 	 * @since 3.0.0 N°2982
-	 * Extract the signature for a generated CSS file. The signature MUST be alone one line immediately
-	 * followed (on the next line) by the === SIGNATURE END === pattern
+	 * Extract the signature for a generated CSS file.
+	 * The signature MUST be alone one line immediately followed (on the next line) by the === SIGNATURE END === pattern
+	 * The signature MUST be in the first 100th lines of the file.
 	 *
 	 * Note the signature can be place anywhere in the CSS file (obviously inside a CSS comment !) but the
 	 * function will be faster if the signature is at the beginning of the file (since the file is scanned from the start)
@@ -711,6 +850,7 @@ CSS;
 	 */
 	public static function GetSignature($sFilepath)
 	{
+		$iCount = 0;
 		$sPreviousLine = '';
 		$hFile = @fopen($sFilepath, "r");
 		if ($hFile !== false)
@@ -718,10 +858,11 @@ CSS;
 			$sLine = '';
 			do
 			{
+				$iCount++;
 				$sPreviousLine = $sLine;
 				$sLine = rtrim(fgets($hFile)); // Remove the trailing \n
 			}
-			while (($sLine !== false) && ($sLine != '=== SIGNATURE END ==='));
+			while (($sLine !== false) && ($sLine != '=== SIGNATURE END ===') && ($iCount <= 100));
 			fclose($hFile);
 		}
 		return $sPreviousLine;
@@ -843,10 +984,11 @@ CSS;
 	 * Clone variable array and include $version with bSetupCompilationTimestamp value
 	 * @param $aThemeParameters
 	 * @param $bSetupCompilationTimestamp
+	 * @param $aImportsPaths
 	 *
 	 * @return array
 	 */
-	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp)
+	public static function CloneThemeParameterAndIncludeVersion($aThemeParameters, $bSetupCompilationTimestamp, $aImportsPaths)
 	{
 		$aThemeParametersVariable = [];
 		if (array_key_exists('variables', $aThemeParameters))
@@ -855,12 +997,13 @@ CSS;
 			{
 				$aThemeParametersVariable = array_merge([], $aThemeParameters['variables']);
 			}
-		}		
-		if (array_key_exists('imports_variable', $aThemeParameters))
+		}
+
+		if (array_key_exists('variable_imports', $aThemeParameters))
 		{
-			if (is_array($aThemeParameters['imports_variable']))
+			if (is_array($aThemeParameters['variable_imports']))
 			{
-				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['imports_variable']));
+				$aThemeParametersVariable = array_merge($aThemeParametersVariable, static::GetVariablesFromFile($aThemeParameters['variable_imports'], $aImportsPaths));
 			}
 		}
 
@@ -870,20 +1013,30 @@ CSS;
 
 	/**
 	 * @param $aVariableFiles
+	 * @param $aImportsPaths
 	 *
 	 * @return array
 	 * @since 3.0.0 N°3593
 	 */
-	public static function GetVariablesFromFile($aVariableFiles){
+	public static function GetVariablesFromFile($aVariableFiles, $aImportsPaths){
 		$aVariablesResults = [];
 		foreach ($aVariableFiles as $sVariableFile)
 		{
-			$sFileContent = file_get_contents(APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$sVariableFile);
-			$aVariableMatches = [];
-			
-			preg_match_all( '/\$(.*?):(.*?);/', $sFileContent,$aVariableMatches);
-			$aVariableMatches =  array_combine( $aVariableMatches[1], array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariableMatches[2] ) );
-			$aVariablesResults = array_merge($aVariablesResults, $aVariableMatches);
+			foreach($aImportsPaths as $sPath) {
+				$sFilePath = $sPath.'/'.$sVariableFile;
+				$sImportedFile = realpath($sFilePath);
+				if ($sImportedFile !== false) {
+					$sFileContent = file_get_contents($sImportedFile);
+					$aVariableMatches = [];
+
+					preg_match_all('/\s*\$(.*?)\s*:\s*[\"\']{0,1}(.*?)[\"\']{0,1}\s*[;!]/', $sFileContent, $aVariableMatches);
+					$aVariableMatches = array_combine($aVariableMatches[1], array_map(function ($sVariableValue) {
+						return $sVariableValue;
+					}, $aVariableMatches[2]));
+					$aVariablesResults = array_merge($aVariablesResults, $aVariableMatches);
+					break;
+				}
+			}
 		}
 		array_map( function($sVariableValue) { return ltrim($sVariableValue); }, $aVariablesResults );
 		return $aVariablesResults;

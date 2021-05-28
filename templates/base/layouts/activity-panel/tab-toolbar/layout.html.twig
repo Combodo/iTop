@@ -26,7 +26,7 @@
                         <label class="ibo-activity-panel--tab-toolbar-action" data-role="ibo-activity-panel--tab-toolbar-action"
                                data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip'|dict_s }}">
                             <input type="checkbox" name="caselogs" data-role="ibo-activity-panel--filter" data-target-entry-types="caselog"
-                                   {% if (aFilteredCaseLogsAttCodes is not defined) or (aFilteredCaseLogsAttCodes is empty) %}checked{% endif %}>
+                                   {% if (aFilteredCaseLogsAttCodes is not defined) or (aFilteredCaseLogsAttCodes is empty) or (get_config_parameter('activity_panel.prefilter_only_current_log') == false) %}checked{% endif %}>
                             {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title'|dict_s }}
                             {% if oUIBlock.GetCaseLogTabs()|length > 0 %}
                                 <a class="ibo-activity-panel--filter-options-toggler ibo-is-closed"
@@ -40,7 +40,7 @@
                                             <input type="checkbox" name="caselog" value="{{ sCaseLogAttCode }}"
                                                    class="ibo-activity-panel--filter-option-input"
                                                    data-role="ibo-activity-panel--filter-option-input"
-                                                   {% if (aFilteredCaseLogsAttCodes is not defined) or (sCaseLogAttCode in aFilteredCaseLogsAttCodes) %}checked{% endif %}>
+                                                   {% if (aFilteredCaseLogsAttCodes is not defined) or (sCaseLogAttCode in aFilteredCaseLogsAttCodes) or (get_config_parameter('activity_panel.prefilter_only_current_log') == false) %}checked{% endif %}>
                                             {{ aCaseLogData['title'] }}
                                         </label>
                                     {% endfor %}

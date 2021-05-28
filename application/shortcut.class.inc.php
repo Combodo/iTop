@@ -286,8 +286,7 @@ class ShortcutOQL extends Shortcut
 		$sRateTitle = addslashes(Dict::Format('Class:ShortcutOQL/Attribute:auto_reload_sec/tip', MetaModel::GetConfig()->Get('min_reload_interval')));
 
 		$oPage->add_ready_script(
-<<<EOF
-
+<<<JS
 // Note: the title gets deleted by the validation mechanism
 $("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
@@ -322,16 +321,23 @@ $('#shortcut_creation_dlg').dialog({
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: ShortcutCreationOK },
-	{ text: "$sCancelButtonLabel", click: function() {
-		$(this).dialog( "close" ); $(this).remove();
-	} },
+	{
+		text: "$sCancelButtonLabel",
+        class: "ibo-is-alternative",
+		click: function() {
+			$(this).dialog( "close" );
+			$(this).remove();
+		}
+	},
+	{
+		text: "$sOkButtonLabel",
+        class: "ibo-is-primary",
+		click: ShortcutCreationOK
+	},
 	],
 	close: function() { $(this).remove(); }
 });
-EOF
+JS
 		);
 	}
 }
-
-?>

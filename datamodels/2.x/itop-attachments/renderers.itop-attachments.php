@@ -292,7 +292,7 @@ abstract class AbstractAttachmentsRenderer
 		if (!bFiles) return; // Not dragging files
 		
 		window.dropZone = $('#file').closest('.ibo-tab');
-		if (!IsElementVisibleToTheUser(dropZone[0]))
+		if (!CombodoGlobalToolbox.IsElementVisibleToTheUser(dropZone[0]))
 		{
 			// Hidden, but inside an inactive tab? Highlight the tab
 			var sTabId = dropZone.closest('.ibo-tab-container--tab-container').attr('aria-labelledby');

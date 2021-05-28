@@ -65,15 +65,17 @@ ul.cke_autocomplete_panel{
 		align-items: center;
 	}
 	.ibo-vendors-ckeditor--autocomplete-item-image{
-		width: $ibo-vendors-ckeditor--autocomplete-item-image--size;
-		height: $ibo-vendors-ckeditor--autocomplete-item-image--size;
-		background-position: center center;
-		background-size: 100%;
-		border-radius: 100%;
-		margin-right: $ibo-vendors-ckeditor--autocomplete-item-image--margin-right;
-		background-color: $ibo-vendors-ckeditor--autocomplete-item-image--background-color;
-		border: $ibo-vendors-ckeditor--autocomplete-item-image--border;
-	}
+    width: $ibo-vendors-ckeditor--autocomplete-item-image--size;
+    height: $ibo-vendors-ckeditor--autocomplete-item-image--size;
+    background-position: center center;
+    background-size: 100%;
+    border-radius: 100%;
+    margin-right: $ibo-vendors-ckeditor--autocomplete-item-image--margin-right;
+    background-color: $ibo-vendors-ckeditor--autocomplete-item-image--background-color;
+    border: $ibo-vendors-ckeditor--autocomplete-item-image--border;
+
+    @extend %ibo-fully-centered-content;
+  }
 	.ibo-vendors-ckeditor--autocomplete-item-title{
 		color: $ibo-vendors-ckeditor--autocomplete-item-title--text-color;
 		@extend %ibo-font-ral-bol-100;

@@ -1,25 +1,13 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -317,6 +305,8 @@ abstract class AttributeDefinition
 	 */
 	public function ListDBJoins()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return "";
 		// e.g: return array("Site", "infrid", "name");
 	}
@@ -842,9 +832,9 @@ abstract class AttributeDefinition
 	 */
 	public function MakeValue()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$sComputeFunc = $this->Get("compute_func");
-		if (empty($sComputeFunc))
-		{
+		if (empty($sComputeFunc)) {
 			return null;
 		}
 
@@ -5249,6 +5239,20 @@ class AttributeEnum extends AttributeString
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
+		// Get the definition of the column, including the actual values present in the table
+		return $this->GetSQLColHelper($bFullSpec, true);
+	}
+
+	/**
+	 * A more versatile version of GetSQLCol
+	 * @since 3.0.0
+	 * @param bool $bFullSpec
+	 * @param bool $bIncludeActualValues
+	 * @param string $sSQLTableName The table where to look for the actual values (may be useful for data synchro tables)
+	 * @return string
+	*/
+	protected function GetSQLColHelper($bFullSpec = false, $bIncludeActualValues = false, $sSQLTableName = null)
+	{
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef)
 		{
@@ -5258,6 +5262,19 @@ class AttributeEnum extends AttributeString
 		{
 			$aValues = array();
 		}
+
+		// Preserve the values already present in the database to ease migrations
+		if ($bIncludeActualValues)
+		{
+			if ($sSQLTableName == null)
+			{
+				// No SQL table given, use the one of the attribute
+				$sHostClass = $this->GetHostClass();
+				$sSQLTableName = MetaModel::DBGetTable($sHostClass, $this->GetCode());
+			}
+			$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB($sSQLTableName)));
+		}
+
 		if (count($aValues) > 0)
 		{
 			// The syntax used here do matters
@@ -5274,6 +5291,48 @@ class AttributeEnum extends AttributeString
 				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
+	}
+
+	/**
+	 * @since 3.0.0
+	 * {@inheritDoc}
+	 * @see AttributeDefinition::GetImportColumns()
+	 */
+	public function GetImportColumns()
+	{
+		// Note: this is used by the Data Synchro to build the "data" table
+		// Right now the function is not passed the "target" SQL table, but if we improve this in the future
+		// we may call $this->GetSQLColHelper(true, true, $sDBTable); to take into account the actual 'enum' values
+		// in this table
+		return array($this->GetCode() => $this->GetSQLColHelper(false, false));
+	}
+
+	/**
+	 * Get the list of the actual 'enum' values present in the database
+	 * @since 3.0.0
+	 * @return string[]
+	 */
+	protected function GetActualValuesInDB(string $sDBTable)
+	{
+		$aValues = array();
+		try
+		{
+			$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
+			$aValuesInDB = CMDBSource::QueryToArray($sSQL);
+			foreach($aValuesInDB as $aRow)
+			{
+				if ($aRow['value'] !== null)
+				{
+					$aValues[] = $aRow['value'];
+				}
+			}
+		}
+		catch(MySQLException $e)
+		{
+			// Never mind, maybe the table does not exist yet (new installation from scratch)
+			// It seems more efficient to try and ignore errors than to test if the table & column really exists
+		}
+		return CMDBSource::Quote($aValues);
 	}
 
 	protected function GetSQLColSpec()
@@ -6749,23 +6808,6 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return (int)$proposedValue;
 	}
 
-	public function GetPrerequisiteAttributes($sClass = null)
-	{
-		$aAttributes = parent::GetPrerequisiteAttributes($sClass);
-		$oExpression = DBSearch::FromOQL($this->GetValuesDef()->GetFilterExpression())->GetCriteria();
-		foreach ($oExpression->GetParameters('this') as $sAttCode)
-		{
-			// Skip the id as it cannot change anyway
-			if ($sAttCode =='id') continue;
-
-			if (!in_array($sAttCode, $aAttributes))
-			{
-				$aAttributes[] = $sAttCode;
-			}
-		}
-		return $aAttributes;
-	}
-
 	public function GetMaximumComboLength()
 	{
 		return $this->GetOptional('max_combo_length', MetaModel::GetConfig()->Get('max_combo_length'));
@@ -6774,6 +6816,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 	public function GetMinAutoCompleteChars()
 	{
 		return $this->GetOptional('min_autocomplete_chars', MetaModel::GetConfig()->Get('min_autocomplete_chars'));
+	}
+
+	/**
+	 * @return int
+	 * @since 3.0.0
+	 */
+	public function GetMaxAutoCompleteResults(): int
+	{
+		return MetaModel::GetConfig()->Get('max_autocomplete_results');
 	}
 
 	public function AllowTargetCreation()
@@ -6820,8 +6871,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
@@ -6830,11 +6880,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		// Setting params
 		$oFormField->SetMaximumComboLength($this->GetMaximumComboLength());
 		$oFormField->SetMinAutoCompleteChars($this->GetMinAutoCompleteChars());
+		$oFormField->SetMaxAutoCompleteResults($this->GetMaxAutoCompleteResults());
 		$oFormField->SetHierarchical(MetaModel::IsHierarchicalClass($this->GetTargetClass()));
 		// Setting choices regarding the field dependencies
 		$aFieldDependencies = $this->GetPrerequisiteAttributes();
-		if (!empty($aFieldDependencies))
-		{
+		if (!empty($aFieldDependencies)) {
 			$oTmpAttDef = $this;
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function () use ($oTmpField, $oTmpAttDef, $oObject) {
@@ -11727,13 +11777,12 @@ class AttributeFriendlyName extends AttributeDefinition
 		// Code duplicated with AttributeObsolescenceFlag
 		$aAttributes = $this->GetOptional("depends_on", array());
 		$oExpression = $this->GetOQLExpression();
-		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
-		{
-			if (!in_array($sAttCode, $aAttributes))
-			{
+		foreach ($oExpression->ListRequiredFields() as $sAttCode) {
+			if (!in_array($sAttCode, $aAttributes)) {
 				$aAttributes[] = $sAttCode;
 			}
 		}
+
 		return $aAttributes;
 	}
 
@@ -12557,16 +12606,15 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
 	{
-		try
-		{
+		try {
 			$oValue = $oHostObject->Get($this->GetCode());
 			$oHandler = $this->GetHandler($oValue->GetValues());
 			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
-		} catch (Exception $e)
-		{
-			$oForm = new \Combodo\iTop\Form\Form('');
+		}
+		catch (Exception $e) {
+			$oForm = new Form('');
 			$oField = new LabelField('');
 			$oField->SetLabel('Custom field error: '.$e->getMessage());
 			$oForm->AddField($oField);

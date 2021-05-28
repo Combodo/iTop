@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
@@ -314,7 +301,9 @@ class WebPage implements Page
 
 	public function GetTableBlock($aColumns, $aData)
 	{
-		return DataTableUIBlockFactory::MakeForForm(uniqid('form_', true), $aColumns, $aData);
+		$sId = Utils::Sanitize(uniqid('form_', true), '', Utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
+
+		return DataTableUIBlockFactory::MakeForForm($sId, $aColumns, $aData);
 	}
 
 	/**
@@ -1193,6 +1182,8 @@ class WebPage implements Page
 	 */
 	public function GetUniqueId()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use utils::GetUniqueId() instead');
+
 		return utils::GetUniqueId();
 	}
 
@@ -1375,25 +1366,7 @@ class WebPage implements Page
 			return null;
 		}
 
-		$iSectionIndex = 0;
-		$aMenuItems = [];
-		foreach ($aActions as $sActionId => $aAction) {
-			if (empty($aAction['url'])) {
-				$iSectionIndex++;
-				continue;
-			}
-
-			$aMenuItems["{$sId}_section_{$iSectionIndex}"][] = [
-				'uid' => $sActionId,
-				'css_classes' => isset($aAction['css_classes']) ? $aAction['css_classes'] : [],
-				'on_click' => isset($aAction['onclick']) ? $aAction['onclick'] : '',
-				'target' => isset($aAction['target']) ? $aAction['target'] : '',
-				'url' => $aAction['url'],
-				'label' => $aAction['label'],
-			];
-		}
-
-		return PopoverMenuFactory::MakeMenuForActions($sId, $aMenuItems);
+		return PopoverMenuFactory::MakeMenuForActions($sId, $aActions);
 	}
 
 	/**
@@ -1465,7 +1438,8 @@ EOD
 	 */
 	public function StartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
 	{
-		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault,	$sSectionStateStorageBusinessKey));
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \\Combodo\\iTop\\Application\\UI\\Base\\Component\\CollapsibleSection\\CollapsibleSection');
+		$this->add($this->GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault, $sSectionStateStorageBusinessKey));
 	}
 
 	/**

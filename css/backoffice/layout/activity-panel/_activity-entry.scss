@@ -185,29 +185,6 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
 	color: $ibo-activity-entry--main-information--text-color;
 	background-color: $ibo-activity-entry--main-information--background-color;
 	border-radius: $ibo-activity-entry--main-information--border-radius;
-
-	/* Avoid pre (code snippets) to overflow outside the entry */
-	pre{
-		white-space: pre-wrap;
-	}
-	/* Avoid table to overflow outside the entry (see N°2127) */
-	table{
-		table-layout: fixed;
-		width: 100%;
-	}
-
-	/* Specific hyperlink color */
-	a{
-		color: $ibo-activity-entry--main-information-hyperlink--text-color;
-
-		&:hover{
-			color: $ibo-activity-entry--main-information-hyperlink--on-hover--text-color;
-		}
-		&:active,
-		&:focus{
-			color: $ibo-activity-entry--main-information-hyperlink--on-active--text-color;
-		}
-	}
 }
 .ibo-activity-entry--main-information-icon{
 	margin-right: $ibo-activity-entry--main-information--elements-spacing;
@@ -216,7 +193,33 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
 }
 
 .ibo-activity-entry--main-information-content {
+  flex-grow: 1; /* So it occupies all the remaining width, which is easier for the user to click */
+  word-break: break-word; /* To avoid content to overflow its container (typically very long URLs) */
 
+  /* Avoid pre (code snippets) to overflow outside the entry */
+  pre {
+    white-space: pre-wrap;
+  }
+
+  /* Avoid table to overflow outside the entry (see N°2127) */
+  table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  /* Specific hyperlink color */
+  a {
+    color: $ibo-activity-entry--main-information-hyperlink--text-color;
+
+    &:hover {
+      color: $ibo-activity-entry--main-information-hyperlink--on-hover--text-color;
+    }
+
+    &:active,
+    &:focus {
+      color: $ibo-activity-entry--main-information-hyperlink--on-active--text-color;
+    }
+  }
 }
 
 .ibo-activity-entry--sub-information {

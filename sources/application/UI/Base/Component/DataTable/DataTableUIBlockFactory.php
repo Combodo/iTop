@@ -339,7 +339,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								'attribute_code' => $sAttCode,
 								'attribute_type' => '_key_',
 								'attribute_label' => MetaModel::GetName($sClassName),
-								'render' => $sDisplayFunction,
+								'render' => "return row['".$sClassAlias."/hyperlink'];",
 							];
 
 						}
@@ -384,6 +384,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
+		}
+
+		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
+		if (isset($aExtraParams['max_height'])) {
+			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
 		}
 
 		$aOptions['processing'] = true;
@@ -567,14 +572,15 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								} else {
 									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
 								}
+								$sAttLabel = MetaModel::GetName($sClassName);
 								$aColumnDefinition[] = [
 									'description' => $aData['label'],
 									'object_class' => $sClassName,
 									'class_alias' => $sClassAlias,
 									'attribute_code' => $sAttCode,
 									'attribute_type' => '_key_',
-									'attribute_label' => $aData['alias'],
-									"render" => $sRender,
+									'attribute_label' => $sAttLabel,
+									"render" => "return row['".$sClassAlias."/hyperlink'];",
 								];
 							}
 						} else {
@@ -619,6 +625,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
 		}
 
+		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
+		if (isset($aExtraParams['max_height'])) {
+			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
+		}
+
 		$aOptions['sTableId'] = $sTableId;
 		$aOptions['bUseCustomSettings'] = $bUseCustomSettings;
 		$aOptions['bViewLink'] = $bViewLink;
@@ -650,12 +661,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	 * @return array
 	 * @throws \Exception
 	 */
-	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams)
+	public static function GetOptionsForRendering(array $aColumns, string $sSelectMode, string $sFilter, int $iLength, array $aClassAliases, array $aExtraParams, string $sTableId)
 	{
 		$oAppRoot = utils::GetAbsoluteUrlAppRoot();
 
 		$aOptions = [];
-		$sTableId = $aExtraParams["table_id"];
 		$sListId = $aExtraParams["list_id"];
 		$aColumnsDefinitions = [];
 		$aColumnDefinition = [];
@@ -715,7 +725,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							$sDisplay = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
 						}
 						$aColumnDefinition["render"] = [
-							"display" => $sDisplay,
+							"display" =>  "return row['".$sClassAlias."/hyperlink'];",
 							"_" => $sClassAlias."/".$sAttCode,
 						];
 					} else {
@@ -742,7 +752,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 
-		$aOptions['select'] = ["style"=>$sSelectMode];
+		$aOptions['select'] = ["style" => $sSelectMode, "info" => false];
 
 		$aOptions['pageLength'] = $iLength;
 

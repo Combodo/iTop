@@ -640,7 +640,7 @@ class ObjectController extends BrickController
 		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%'.$sQuery.'%'));
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
-		$oSet->SetLimit(MetaModel::GetConfig()->Get('max_display_limit'));
+		$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
@@ -1156,12 +1156,12 @@ class ObjectController extends BrickController
 
 						$aData['msg'] = htmlentities($oDocument->GetFileName(), ENT_QUOTES, 'UTF-8');
 						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/icons8-image-file.svg';
-						
+
 						// Checking if the instance has attachments
 						if (class_exists('AttachmentPlugIn')) {
 							$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
 						}
-						
+
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
 						$aData['file_size'] = $oDocument->GetFormattedSize();
@@ -1344,6 +1344,9 @@ class ObjectController extends BrickController
 					$sUrl = $oAttDef->Get('default_image');
 				}
 				$aAttData['value'] = '<img src="'.$sUrl.'" />';
+			}
+			elseif ($oAttDef instanceof AttributeEnum) {
+				$aAttData['value'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
 			}
 			else
 			{

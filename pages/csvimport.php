@@ -58,6 +58,7 @@ try {
 	 */
 	function GetClassesSelect($sName, $sDefaultValue, $iWidthPx, $iActionCode = null)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetClassesSelectUIBlock');
 		$oSelectBlock = GetClassesSelectUIBlock($sName, $sDefaultValue, $iActionCode);
 
 		return BlockRenderer::RenderBlockTemplates($oSelectBlock);
@@ -628,7 +629,7 @@ try {
 			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->AddCSSClass('ibo-hidden');
 			$oDlg->AddSubBlock($oDlgConfirm);
 
-			$sDlgTitle = htmlentities(Dict::S('UI:CSVImportConfirmTitle'), ENT_QUOTES, 'UTF-8');
+			$sDlgTitle = Dict::S('UI:CSVImportConfirmTitle');
 
 			$oPage->add_ready_script(
 				<<<EOF
@@ -1423,11 +1424,11 @@ EOF
 			$aSynchroUpdate = null;
 		}
 
-		$oPanel = TitleUIBlockFactory::MakeForPage(Dict::S('UI:Title:BulkImport+'));
+		$oPanel = PanelUIBlockFactory::MakeForInformation(Dict::S('UI:Title:BulkImport+'));
 		$oPage->AddSubBlock($oPanel);
 
 		$oTabContainer = new TabContainer('tabs1', 'import');
-		$oPage->AddSubBlock($oTabContainer);
+		$oPanel->AddMainBlock($oTabContainer);
 
 		//** Tab:LoadFromFile */
 		$oTabFile = $oTabContainer->AddTab('LoadFromFile', Dict::S('UI:CSVImport:Tab:LoadFromFile'));

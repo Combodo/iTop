@@ -349,3 +349,9 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Person:personal_info' => 'Personal information~~',
 	'Person:notifiy' => 'Underretning',
 ));
+
+// Themes
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
+	'theme:fullmoon' => 'Full moon~~',
+	'theme:test-red' => 'Test instance (Red)~~',
+));

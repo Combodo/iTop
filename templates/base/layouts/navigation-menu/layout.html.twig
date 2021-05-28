@@ -87,27 +87,28 @@
 					</div>
 				</div>
 				<div class="ibo-navigation-menu--user-menu-container" data-role="ibo-navigation-menu--user-menu-container">
-					{{ render_block(oUIBlock.GetUserMenu(), {aPage: aPage}) }}
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
-		<div class="ibo-navigation-menu--menu-filter" data-role="ibo-nav-menu--menu-filter">
-			{# TODO: Retrieve input style from a component? #}
-			<input class="ibo-navigation-menu--menu-filter-input" data-role="ibo-navigation-menu--menu-filter-input" type="text" placeholder="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder'|dict_s }}" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip'|dict_s }}" data-tooltip-trigger="mouseenter">
-			<a class="ibo-navigation-menu--menu-filter-clear" data-role="ibo-navigation-menu--menu-filter-clear" href="#"><span class="fas fa-times"></span></a>
-			<span class="ibo-navigation-menu--menu-filter-hotkey">{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey'|dict_s }}</span>
-			{% if oUIBlock.HasMenuFilterHint() %}
-				<div class="ibo-navigation-menu--menu-filter-hint" data-role="ibo-navigation-menu--menu-filter-hint">
-					{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hint'|dict_s }}
-					<a class="ibo-navigation-menu--menu-filter-hint-close" data-role="ibo-navigation-menu--menu-filter-hint-close" href="#"><span class="fas fa-times"></span></a>
-				</div>
-			{% endif %}
-		</div>
-		<div class="ibo-navigation-menu--menu--placeholder" data-role="ibo-navigation-menu--menu--placeholder">
-			<div class="ibo-navigation-menu--menu--placeholder-image ibo-svg-illustration--container">
-				{{ source("illustrations/undraw_empty.svg") }}
+                    {{ render_block(oUIBlock.GetUserMenu(), {aPage: aPage}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
+        <div class="ibo-navigation-menu--menu-filter" data-role="ibo-nav-menu--menu-filter">
+            {# TODO: Retrieve input style from a component? #}
+            <input class="ibo-navigation-menu--menu-filter-input" data-role="ibo-navigation-menu--menu-filter-input" type="text" placeholder="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder'|dict_s }}" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip'|dict_s }}"
+                   data-tooltip-trigger="mouseenter">
+            <a class="ibo-navigation-menu--menu-filter-clear" data-role="ibo-navigation-menu--menu-filter-clear" href="#"><span class="fas fa-times"></span></a>
+            <span class="ibo-navigation-menu--menu-filter-hotkey">{{ oUIBlock.GetMenuFilterHotkeyLabel() }}</span>
+            {% if oUIBlock.HasMenuFilterHint() %}
+                <div class="ibo-navigation-menu--menu-filter-hint" data-role="ibo-navigation-menu--menu-filter-hint">
+                    {{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hint'|dict_s }}
+                    <a class="ibo-navigation-menu--menu-filter-hint-close" data-role="ibo-navigation-menu--menu-filter-hint-close" href="#"><span class="fas fa-times"></span></a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="ibo-navigation-menu--menu--placeholder" data-role="ibo-navigation-menu--menu--placeholder">
+            <div class="ibo-navigation-menu--menu--placeholder-image ibo-svg-illustration--container">
+                {{ source("illustrations/undraw_empty.svg") }}
 			</div>
 			<div class="ibo-navigation-menu--menu--placeholder-hint">{{ 'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint'|dict_s }}</div>
 		</div>

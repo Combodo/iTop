@@ -906,13 +906,15 @@ class DashletObjectList extends Dashlet
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$sClass = $oFilter->GetClass();
-		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle))
+			->AddCSSClass('ibo-datatable-panel');
 
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
 			'menu' => $sShowMenu,
 			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
 			'surround_with_panel' => false,
+			'max_height' => '500px',
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
@@ -925,24 +927,36 @@ class DashletObjectList extends Dashlet
 	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
+		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
 		$sTitle = $this->aProperties['title'];
 		$sQuery = $this->aProperties['query'];
 		$bShowMenu = $this->aProperties['menu'];
-
-		$oPage->add('<div class="dashlet-content">');
-		$sHtmlTitle = utils::HtmlEntities($this->oModelReflection->DictString($sTitle)); // done in the itop block
+		$sHtmlTitle = utils::HtmlEntities($this->oModelReflection->DictString($sTitle));
 		if ($sHtmlTitle != '') {
-			$oPage->add('<h1>'.$sHtmlTitle.'</h1>');
+			$sHtmlTitle = '<h1>'.$sHtmlTitle.'</h1>';
 		}
 		$oQuery = $this->oModelReflection->GetQuery($sQuery);
 		$sClass = $oQuery->GetClass();
-		$oPage->add('<div id="block_fake_'.$this->sId.'" class="display_block">');
-		$oPage->p(Dict::S('UI:NoObjectToDisplay'));
+		$sId = $this->sId;
+		$sMessage = Dict::S('UI:NoObjectToDisplay');
+		$sMenu = '';
 		if ($bShowMenu) {
-			$oPage->p('<a>'.Dict::Format('UI:ClickToCreateNew', $this->oModelReflection->GetName($sClass)).'</a>');
+			$sMenu = '<p><a>'.Dict::Format('UI:ClickToCreateNew', $this->oModelReflection->GetName($sClass)).'</a></p>';
 		}
-		$oPage->add('</div>');
-		$oPage->add('</div>');
+
+		$sHtml = <<<HTML
+<div class="dashlet-content">
+<h1>$sHtmlTitle</h1>
+<div id="block_fake_$sId" class="display_block">
+<p>$sMessage</p>
+$sMenu
+</div>
+</div>
+HTML;
+
+		$oDashletContainer->AddHtml($sHtml);
+
+		return $oDashletContainer;
 	}
 
 	public function GetDBSearch($aExtraParams = array())
@@ -2084,8 +2098,20 @@ class DashletHeaderDynamic extends Dashlet
 		$sQuery = $this->aProperties['query'];
 		$sGroupBy = $this->aProperties['group_by'];
 
-		$oQuery = $this->oModelReflection->GetQuery($sQuery);
-		$sClass = $oQuery->GetClass();
+		$aValueLabels = [];
+		$aValues = [];
+		try {
+			$oQuery = $this->oModelReflection->GetQuery($sQuery);
+			$sClass = $oQuery->GetClass();
+			$aValues = $this->GetValues();
+			foreach ($aValues as $sValue) {
+				$aValueLabels[] = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
+			}
+		}
+		catch (UnknownClassOqlException $e) {
+			$aValueLabels[] = $e->GetUserFriendlyDescription();
+			$aValues[] = 1;
+		}
 
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
 		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
@@ -2098,20 +2124,18 @@ class DashletHeaderDynamic extends Dashlet
 		$sBlockId = 'block_fake_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 
 		$iTotal = 0;
-		$aValues = $this->GetValues();
 
 		$sHtml .= '<div class="display_block" id="'.$sBlockId.'">';
 		$sHtml .= '<div class="summary-details">';
 		$sHtml .= '<table><tbody>';
 		$sHtml .= '<tr>';
-		foreach ($aValues as $sValue) {
-			$sValueLabel = $this->oModelReflection->GetValueLabel($sClass, $sGroupBy, $sValue);
+		foreach ($aValueLabels as $sValueLabel) {
 			$sHtml .= '	<th>'.$sValueLabel.'</th>';
 		}
 		$sHtml .= '</tr>';
 		$sHtml .= '<tr>';
 		foreach ($aValues as $sValue) {
-			$iCount = (int)rand(2, 100);
+			$iCount = rand(2, 100);
 			$iTotal += $iCount;
 			$sHtml .= '	<td>'.$iCount.'</td>';
 		}
@@ -2126,7 +2150,6 @@ class DashletHeaderDynamic extends Dashlet
 		$sHtml .= '<a class="summary">'.utils::HtmlEntities($sSubtitle).'</a>';
 		$sHtml .= '</div>';
 
-		$sHtml .= '</div>';
 
 		$oDashletContainer->AddHtml($sHtml);
 
@@ -2308,18 +2331,19 @@ class DashletBadge extends Dashlet
 		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
 
 		$sClass = $this->aProperties['class'];
-		$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);
+		$sIconUrl = utils::HtmlEntities($this->oModelReflection->GetClassIcon($sClass, false));
 		$sClassLabel = $this->oModelReflection->GetName($sClass);
+		$sId = $this->sId;
+		$sClassCreate = Dict::Format('UI:ClickToCreateNew', $sClassLabel);
 
-		$sHtml = '';
-		$sHtml .= '<div id="block_fake_'.$this->sId.'" class="display_block">';
-		$sHtml .= '<p>';
-		$sHtml .= '   <a class="actions"><img src="'.utils::HtmlEntities($sIconUrl).'" style="vertical-align:middle;float;left;margin-right:10px;border:0;">'.$sClassLabel.': 947</a>';
-		$sHtml .= '</p>';
-		$sHtml .= '<p>';
-		$sHtml .= '   <a>'.Dict::Format('UI:ClickToCreateNew', $sClassLabel).'</a>';
-		$sHtml .= '</p>';
-		$sHtml .= '</div>';
+		$sHtml = <<<HTML
+<div id="block_fake_$sId" class="display_block">
+   <div class="ibo-dashlet-badge--body" data-role="ibo-dashlet-badge--body" title="$sClassLabel">
+      <div class="ibo-dashlet-badge--icon-container"><img class="ibo-dashlet-badge--icon" src="$sIconUrl"></div>
+      <div class="ibo-dashlet-badge--actions"><a class="ibo-dashlet-badge--action-list" href="#" data-role="ibo-dashlet-badge--action-list"><span class="ibo-dashlet-badge--action-list-count">4</span><span class="ibo-dashlet-badge--action-list-label">$sClassLabel</span></a><a class="ibo-dashlet-badge--action-create" href="#"><span class="ibo-dashlet-badge--action-create-icon fas fa-plus"></span><span class="ibo-dashlet-badge--action-create-label"> $sClassCreate </span></a></div>
+   </div>
+</div>
+HTML;
 
 		$oDashletContainer->AddHtml($sHtml);
 

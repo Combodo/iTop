@@ -1,4 +1,4 @@
-$('#{{ oUIBlock.GetId() }}').collapsibleSection({
-	bOpenedByDefault: {{ oUIBlock.IsOpenedByDefault()|var_export }}
-	{% if oUIBlock.IsSaveCollapsibleStateEnabled() %}, collapsibleStateStorageKey: '{{ oUIBlock.GetSessionCollapsibleStateStorageKey() }}'{% endif %}
+$('#{{ oUIBlock.GetId() }}').collapsible_section({
+    bOpenedByDefault: {{ oUIBlock.IsOpenedByDefault()|var_export }}
+    {% if oUIBlock.IsSaveCollapsibleStateEnabled() %}, collapsibleStateStorageKey: '{{ oUIBlock.GetSessionCollapsibleStateStorageKey() }}'{% endif %}
 });

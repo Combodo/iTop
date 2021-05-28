@@ -566,8 +566,8 @@ abstract class CMDBObject extends DBObject
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{
-		if (is_null($bSkipStrongSecurity))
-		{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		if (is_null($bSkipStrongSecurity)) {
 			// This is temporary
 			// We have implemented this safety net right before releasing iTop 1.0
 			// and we decided that it was too risky to activate it

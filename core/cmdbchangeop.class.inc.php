@@ -436,28 +436,31 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
+			/** @var \ormDocument $oPrevDoc */
 			$oPrevDoc = $this->Get('prevdata');
-			if ($oPrevDoc->IsEmpty())
-			{
+			if ($oPrevDoc->IsEmpty()) {
 				$sPrevious = '';
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevious);
-			}
-			else
-			{
-				$sDocView = $oPrevDoc->GetAsHtml();
-				$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
-				$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
-				//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
+			} else {
+				$sFieldAsHtml = $oPrevDoc->GetAsHTML();
+
+				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
+				$sDisplayUrl = $oPrevDoc->GetDisplayURL(get_class($this), $this->GetKey(), 'prevdata');
+
+				$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
+
+				$sDocView = <<<HTML
+{$sFieldAsHtml}
+<a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
+HTML;
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
 			}
 		}
@@ -770,18 +773,15 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sTextView = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$this->Get('prevdata').'</div></div>';
-	
+			$sTextView = $this->Get('prevdata');
+
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
 		}

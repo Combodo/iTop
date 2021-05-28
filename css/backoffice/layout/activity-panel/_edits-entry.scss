@@ -18,27 +18,35 @@
 
 /* SCSS variables */
 $ibo-edits-entry--short-description--text-color: inherit !default;
-$ibo-edits-entry--long-description-toggler-icon--margin-left: 12px !default;
+$ibo-edits-entry--long-description-toggler-icon--top: 3px !default;
+$ibo-edits-entry--long-description-toggler-icon--right: 0 !default;
 $ibo-edits-entry--long-description--margin-top: 8px !default;
 
 /* CSS rules */
 /* - Long description */
 a.ibo-edits-entry--short-description {
-	color: $ibo-edits-entry--short-description--text-color;
+  position: relative;
+  display: block;
+  color: $ibo-edits-entry--short-description--text-color;
 }
-.ibo-edits-entry--long-description-toggler-icon{
-	margin-left: $ibo-edits-entry--long-description-toggler-icon--margin-left;
-	transition: all 0.2s ease-in-out;
+
+.ibo-edits-entry--long-description-toggler-icon {
+  position: absolute;
+  top: $ibo-edits-entry--long-description-toggler-icon--top;
+  right: $ibo-edits-entry--long-description-toggler-icon--right;
+  transition: all 0.2s ease-in-out;
 }
-.ibo-edits-entry--long-description{
-	display: none;
-	margin-top: $ibo-edits-entry--long-description--margin-top;
-	list-style: inside;
+
+.ibo-edits-entry--long-description {
+  display: none;
+  margin-top: $ibo-edits-entry--long-description--margin-top;
+  list-style: inside;
 }
+
 /* - Long desc. opened */
-.ibo-edits-entry{
-	&.ibo-is-opened{
-		.ibo-edits-entry--long-description-toggler-icon{
+.ibo-edits-entry {
+  &.ibo-is-opened {
+    .ibo-edits-entry--long-description-toggler-icon {
 			transform: rotateX(180deg);
 		}
 		.ibo-edits-entry--long-description{

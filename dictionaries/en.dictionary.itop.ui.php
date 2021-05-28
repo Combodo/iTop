@@ -142,7 +142,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Profiles' => 'Profile',
 	'Class:URP_Profiles+' => 'User profile',
 	'Class:URP_Profiles/Attribute:name' => 'Name',
-	'Class:URP_Profiles/Attribute:name+' => 'label',
+	'Class:URP_Profiles/Attribute:name+' => '',
 	'Class:URP_Profiles/Attribute:description' => 'Description',
 	'Class:URP_Profiles/Attribute:description+' => 'one line description',
 	'Class:URP_Profiles/Attribute:user_list' => 'Users',
@@ -157,7 +157,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_Dimensions' => 'dimension',
 	'Class:URP_Dimensions+' => 'application dimension (defining silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Name',
-	'Class:URP_Dimensions/Attribute:name+' => 'label',
+	'Class:URP_Dimensions/Attribute:name+' => '',
 	'Class:URP_Dimensions/Attribute:description' => 'Description',
 	'Class:URP_Dimensions/Attribute:description+' => 'one line description',
 	'Class:URP_Dimensions/Attribute:type' => 'Type',
@@ -708,6 +708,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Query Evaluation',
 	'UI:RunQuery:QueryExamples' => 'Query Examples',
+	'UI:RunQuery:QueryResults' => 'Query Results',
 	'UI:RunQuery:HeaderPurpose' => 'Purpose',
 	'UI:RunQuery:HeaderPurpose+' => 'Explanation about the query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Expression',
@@ -1029,18 +1030,22 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'Menu:ProfilesMenu' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiles', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiles',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'User Accounts', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'User Accounts',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s built on %4$s',
 	'UI:PropertiesTab' => 'Properties',
 
-	'UI:OpenDocumentInNewWindow_' => 'Open this document in a new window: %1$s',
-	'UI:DownloadDocument_' => 'Download this document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Open',
+	'UI:DownloadDocument_' => 'Download',
 	'UI:Document:NoPreview' => 'No preview is available for this type of document',
 	'UI:Download-CSV' => 'Download %1$s',
 
@@ -1214,6 +1219,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ImportDashboardTitle' => 'Import From a File',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',
@@ -1448,7 +1454,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.',
-	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they are done.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.',

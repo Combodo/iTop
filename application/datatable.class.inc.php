@@ -48,6 +48,7 @@ class DataTable
 	 */
 	public function __construct($iListId, $oSet, $aClassAliases, $sTableId = null)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use Combodo\iTop\Application\UI\Base\Component\DataTable\Datatable');
 		$this->iListId = utils::GetSafeId($iListId); // Make a "safe" ID for jQuery
 		$this->sDatatableContainerId = 'datatable_'.utils::GetSafeId($iListId);
 		$this->oSet = $oSet;

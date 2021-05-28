@@ -105,4 +105,47 @@ class PopoverMenuItem extends UIBlock
 	{
 		return $this->oPopupMenuItem->GetCssClasses();
 	}
+	
+	/**
+	 * @return string
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::GetIconClass()
+	 */
+	public function GetIconClass()
+	{
+		return $this->oPopupMenuItem->GetIconClass();
+	}
+
+	/**
+	 * @return $this
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::SetIconClass()
+	 */
+	public function SetIconClass($sIconClas)
+	{
+		$this->oPopupMenuItem->SetIconClass($sIconClas);
+		return $this;
+	}
+
+	/**
+	 * @return string
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::GetTooltip()
+	 */
+	public function GetTooltip()
+	{
+		return $this->oPopupMenuItem->GetTooltip();
+	}
+	
+	/**
+	 * @return $this
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::SetTooltip()
+	 */
+	public function SetTooltip($sTooltip)
+	{
+		$this->oPopupMenuItem->SetTooltip($sTooltip);
+		return $this;
+	}
+
 }

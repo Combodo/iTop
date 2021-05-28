@@ -1,24 +1,9 @@
 <?php
-// Copyright (C) 2010-2021 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditCategory' => 'Catégorie d\'audit',
 	'Class:AuditCategory+' => 'Une section de l\'audit',
@@ -707,6 +692,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 
 	'UI:RunQuery:Title' => 'iTop - Evaluation de requêtes OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemples de requêtes',
+	'UI:RunQuery:QueryResults' => 'Résultats de la requête',
 	'UI:RunQuery:HeaderPurpose' => 'Objectif',
 	'UI:RunQuery:HeaderPurpose+' => 'But de la requête',
 	'UI:RunQuery:HeaderOQLExpression' => 'Requête OQL',
@@ -1027,18 +1013,22 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'Menu:ProfilesMenu' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu+' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profils',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s du %4$s',
 	'UI:PropertiesTab' => 'Propriétés',
 
-	'UI:OpenDocumentInNewWindow_' => 'Ouvrir ce document dans une autre fenêtre: %1$s',
-	'UI:DownloadDocument_' => 'Télécharger ce document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Ouvrir',
+	'UI:DownloadDocument_' => 'Télécharger',
 	'UI:Document:NoPreview' => 'L\'aperçu n\'est pas disponible pour ce type de documents',
 	'UI:Download-CSV' => 'Télécharger %1$s',
 
@@ -1211,6 +1201,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ImportDashboardTitle' => 'Importation depuis un fichier',
 	'UI:ImportDashboardText' => 'Choisissez un fichier de définition de tableau de bord :',
 	'UI:Dashboard:Actions' => 'Actions du tableau de bord',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Ce tableau de bord affiche des informations qui ne reflète pas les modifications en cours.',
 
 
 	'UI:DashletCreation:Title' => 'Créer un Indicateur',

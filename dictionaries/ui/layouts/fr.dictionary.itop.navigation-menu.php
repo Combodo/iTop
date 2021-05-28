@@ -24,7 +24,6 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Déplier / Replier (Filtré sur %1$s)~~',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filtrer...',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Saisir des mots-clés pour filtrer les menus',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hotkey' => 'Alt + M',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Les correspondances dans chaque groupe de menu seront affichées',
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Aucun menu ne semble correspondre',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Bonjour %1$s !',

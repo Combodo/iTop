@@ -100,32 +100,6 @@ function ReloadAndDisplay($oPage, $oObj, $sMessageId = '', $sMessage = '', $sSev
 }
 
 /**
- * Displays the details of an object
- *
- * @param WebPage $oP Page for the output
- * @param string $sClass The name of the class of the object
- * @param \cmdbAbstractObject $oObj The object to display
- * @param mixed $id Identifier of the object (name or ID)
- *
- * @throws \CoreException
- * @throws \DictExceptionMissingString
- * @throws \SecurityException
-*/
-function DisplayDetails($oP, $sClass, $oObj, $id)
-{
-	$sClassLabel = MetaModel::GetName($sClass);
-
-	// The object could be listed, check if it is actually allowed to view it
-	$oSet = CMDBObjectSet::FromObject($oObj);
-	if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
-	{
-		throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
-	}
-	$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-	$oObj->DisplayDetails($oP);
-}
-
-/**
  * Display the session messages relative to the object identified by its "message key" (class::id)
  * @param string $sMessageKey
  * @param WebPage $oPage
@@ -258,8 +232,11 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	//by default all the elements are selected
 	$aExtraParams['selectionMode'] = 'negative';
 	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
-	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
-	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
+	$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+	$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+	$oForm->AddSubBlock($oToolbarButtons);
+	$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel')->SetOnClickJsCode('window.history.back()'));
+	$oToolbarButtons->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), 'next', Dict::S('UI:Button:Next'), true));
 
 	$oP->AddUiBlock($oForm);
 }
@@ -279,19 +256,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
 	 */
-	/*
-	$iBlock = 1; // Zero is not a valid blockid
-	foreach($aResults as $sListClass => $aObjects)
-	{
-		$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
-		$oP->add("</div>\n");
-		$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
-		$oBlock->Display($oP, $iBlock++, array('table_id' => get_class($oObj).'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
-		$oP->P('&nbsp;'); // Some space ?				
-	}
-	*/
+
 	$oP->add("</div>");
 	$oP->add("</div>");
 }
@@ -429,20 +394,18 @@ try
 				if (!is_null($oObj))
 				{
 					SetObjectBreadCrumbEntry($oObj, $oP);
-//					DisplayDetails($oP, $sClass, $oObj, $id);
 
 					// The object could be listed, check if it is actually allowed to view it
 					$oSet = CMDBObjectSet::FromObject($oObj);
-					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO)
-					{
+					if (UserRights::IsActionAllowed($sClass, UR_ACTION_READ, $oSet) == UR_ALLOWED_NO) {
 						throw new SecurityException('User not allowed to view this object', array('class' => $sClass, 'id' => $id));
 					}
 
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion()?cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT:cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT : cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 					$oObj->DisplayDetails($oP);
-				}				
+				}
 			}
 		break;
 
@@ -1215,7 +1178,7 @@ EOF
 				$aIssues = $e->getIssues();
 
 				$sObjKey = $oObj->GetKey();
-				$sClassIcon = MetaModel::GetClassIcon($sClass);
+				$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
@@ -1945,7 +1908,7 @@ class UI
 		// Add user filter
 		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->add("<h1>".Dict::S('UI:ModifyAllPageTitle')."</h1>\n");
+		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:ModifyAllPageTitle')));
 
 		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
 	}
@@ -1972,7 +1935,7 @@ class UI
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('search' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
 

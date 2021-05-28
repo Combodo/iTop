@@ -27,7 +27,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 	 *
 	 * @param $sDictFile
 	 */
-	public function testDictionariesLanguage($sDictFile)
+	public function testDictionariesLanguage($sDictFile): void
 	{
 		$aPrefixToLanguageData = array(
 			'cs' => array('CS CZ', 'Czech', 'Čeština'),
@@ -48,51 +48,43 @@ class DictionariesConsistencyTest extends ItopTestCase
 			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
 		);
 
-		if (!preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches))
-		{
+		if (!preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches)) {
 			static::fail("Dictionary file '$sDictFile' not matching the naming convention");
 		}
 
 		$sLangPrefix = $aMatches[1];
-		if (!array_key_exists($sLangPrefix, $aPrefixToLanguageData))
-		{
+		if (!array_key_exists($sLangPrefix, $aPrefixToLanguageData)) {
 			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile'");
 		}
 
-		$sExpectedLanguageCode = $aPrefixToLanguageData[$sLangPrefix][0];
-		$sExpectedEnglishLanguageDesc = $aPrefixToLanguageData[$sLangPrefix][1];
-		$sExpectedLocalizedLanguageDesc = $aPrefixToLanguageData[$sLangPrefix][2];
+		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $sExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
 
 		$sDictPHP = file_get_contents($sDictFile);
-		if ($iCount = preg_match_all("@Dict::Add\('(.*)'\s*,\s*'(.*)'\s*,\s*'(.*)'@", $sDictPHP, $aMatches) === false)
-		{
+		$iCount = preg_match_all("@Dict::Add\('(.*)'\s*,\s*'(.*)'\s*,\s*'(.*)'@", $sDictPHP, $aMatches);
+		if ($iCount === false) {
 			static::fail("Pattern not working");
 		}
-		if ($iCount == 0)
-		{
+		if ($iCount === 0) {
 			// Empty dictionary, that's fine!
 			static::assertTrue(true);
 		}
-		foreach ($aMatches[1] as $sLanguageCode)
-		{
+		foreach ($aMatches[1] as $sLanguageCode) {
 			static::assertSame($sExpectedLanguageCode, $sLanguageCode,
 				"Unexpected language code for Dict::Add in dictionary $sDictFile");
 		}
-		foreach ($aMatches[2] as $sEnglishLanguageDesc)
-		{
+		foreach ($aMatches[2] as $sEnglishLanguageDesc) {
 			static::assertSame($sExpectedEnglishLanguageDesc, $sEnglishLanguageDesc,
 				"Unexpected language description (english) for Dict::Add in dictionary $sDictFile");
 		}
-		foreach ($aMatches[3] as $sLocalizedLanguageDesc)
-		{
+		foreach ($aMatches[3] as $sLocalizedLanguageDesc) {
 			static::assertSame($sExpectedLocalizedLanguageDesc, $sLocalizedLanguageDesc,
 				"Unexpected language description for Dict::Add in dictionary $sDictFile");
 		}
 	}
 
-	public function DictionaryFileProvider()
+	public function DictionaryFileProvider(): array
 	{
-		static::setUp();
+		$this->setUp();
 
 		$aDictFiles = array_merge(
 			glob(APPROOT.'datamodels/2.x/*/*.dict*.php'), // legacy form in modules
@@ -100,10 +92,53 @@ class DictionariesConsistencyTest extends ItopTestCase
 			glob(APPROOT.'dictionaries/*.dict*.php') // framework
 		);
 		$aTestCases = array();
-		foreach ($aDictFiles as $sDictFile)
-		{
+		foreach ($aDictFiles as $sDictFile) {
 			$aTestCases[$sDictFile] = array('sDictFile' => $sDictFile);
 		}
+
 		return $aTestCases;
+	}
+
+	/**
+	 * @dataProvider DictionaryFileProvider
+	 *
+	 * @param string $sDictFile
+	 *
+	 * @group beforeSetup
+	 *
+	 * @uses         CheckDictionarySyntax
+	 */
+	public function testStandardDictionariesPhpSyntax(string $sDictFile): void
+	{
+		$this->CheckDictionarySyntax($sDictFile);
+	}
+
+	/**
+	 * Checks that {@see CheckDictionarySyntax} works as expected by passing 2 test dictionaries
+	 *
+	 * @uses CheckDictionarySyntax
+	 */
+	public function testPlaygroundDictionariesPhpSyntax(): void
+	{
+		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.KO.wrong_php', false);
+		/** @noinspection PhpRedundantOptionalArgumentInspection */
+		$this->CheckDictionarySyntax(__DIR__.'/dictionaries-test/fr.dictionary.itop.core.OK.php', true);
+	}
+
+	/**
+	 * @param string $sDictFile complete path for the file to check
+	 * @param bool $bIsSyntaxValid expected assert value
+	 *
+	 * @uses `php -l`
+	 * @uses \assertEquals()
+	 */
+	private function CheckDictionarySyntax(string $sDictFile, $bIsSyntaxValid = true): void
+	{
+		exec("php -l {$sDictFile}", $output, $return);
+
+		$bDictFileSyntaxOk = ($return === 0);
+
+		$sMessage = "File `{$sDictFile}` syntax didn't matched expectations\nparsing results=".var_export($output, true);
+		self::assertEquals($bIsSyntaxValid, $bDictFileSyntaxOk, $sMessage);
 	}
 }
