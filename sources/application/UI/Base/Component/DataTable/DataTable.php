@@ -23,6 +23,10 @@ class DataTable extends UIContentBlock
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-datatable';
+	// This block is handled by its own lib (dataTables)
+	public const INCLUDE_ANCESTORS_DEFAULT_JS_FILES = false;
+	public const INCLUDE_ANCESTORS_DEFAULT_CSS_FILES = false;
+
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_LIVE_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
