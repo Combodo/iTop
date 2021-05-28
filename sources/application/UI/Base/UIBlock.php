@@ -300,7 +300,7 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * Note: If $sCSSClass is already present, proceeds silently
 	 *
-	 * @param string $sCSSClass
+	 * @param string $sCSSClass CSS class to add to the generated html block
 	 *
 	 * @return $this
 	 *
@@ -436,7 +436,7 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * @param array $aDataAttributes
+	 * @param array $aDataAttributes Array of data attributes in the format ['name' => 'value']
 	 *
 	 * @return $this
 	 */
@@ -478,7 +478,7 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * @param bool $bIsHidden
+	 * @param bool $bIsHidden Indicates if the block is hidden by default
 	 *
 	 * @return $this
 	 */

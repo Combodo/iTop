@@ -139,7 +139,7 @@ interface iUIBlock {
 	/**
 	 * Add a JS file to a block
 	 *
-	 * @param string $sPath
+	 * @param string $sPath relative path of a JS file to add
 	 *
 	 * @return $this
 	 */
@@ -148,7 +148,7 @@ interface iUIBlock {
 	/**
 	 * Add a CSS file to a block
 	 *
-	 * @param string $sPath
+	 * @param string $sPath relative path of a CSS file to add
 	 *
 	 * @return $this
 	 */

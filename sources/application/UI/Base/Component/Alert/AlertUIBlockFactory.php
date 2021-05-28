@@ -38,9 +38,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make a basis Alert component
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
@@ -52,9 +52,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for informational messages
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
@@ -67,7 +67,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for successful messages
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
 	 * @param string|null $sId
 	 *
@@ -81,9 +81,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for warning messages
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
@@ -95,9 +95,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for danger messages
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
@@ -109,9 +109,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component for failure messages
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
@@ -123,9 +123,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component with primary color scheme
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
@@ -137,9 +137,9 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	/**
 	 * Make an Alert component with secondary color scheme
 	 *
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 * @param string $sContent The raw HTML content, must be already sanitized
-	 * @param string|null $sId
+	 * @param string|null $sId id of the html block
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Alert\Alert
 	 */
