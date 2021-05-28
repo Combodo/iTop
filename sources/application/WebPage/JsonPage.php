@@ -4,8 +4,16 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/**
+ * Class JsonPage
+ *
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ */
 class JsonPage extends WebPage
 {
+	/** @var array Bags of data to include in the response */
 	protected $aData = [];
 	/**
 	 * @var bool If true, only static::$aData will be output; otherwise data and scripts will be output in a structured object.
@@ -66,6 +74,9 @@ class JsonPage extends WebPage
 		return $this;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function output()
 	{
 		$this->add_header('Content-type: application/json');
