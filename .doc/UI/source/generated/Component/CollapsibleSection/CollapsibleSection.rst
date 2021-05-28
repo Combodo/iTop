@@ -1,0 +1,74 @@
+.. Copyright (C) 2010-2021 Combodo SARL
+.. http://opensource.org/licenses/AGPL-3.0
+
+CollapsibleSection
+==================
+
+Class CollapsibleSection
+
+----
+
+.. include:: /manual/Component/CollapsibleSection/CollapsibleSectionAdditionalDescription.rst
+
+----
+
+Twig Tag
+--------
+
+:Tag: **UICollapsibleSection**
+
+:Syntax:
+ 
+::
+
+    {% UICollapsibleSection Type {Parameters} %}
+        Content Goes Here
+    {% EndUICollapsibleSection %}
+
+:Type:
+
++----------+------------+
+| Standard | No comment |
++----------+------------+
+
+:CollapsibleSection *Standard* parameters:
+
++--------+--------+-----------+------+--+
+| sTitle | string | mandatory |      |  |
++--------+--------+-----------+------+--+
+| sId    | string | optional  | NULL |  |
++--------+--------+-----------+------+--+
+
+:CollapsibleSection common parameters:
+
++-------------------+----------+--------------------------------------------------------+
+| AddCSSClass       | string   |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| AddCSSClasses     | array    | like <code>['ibo-is-hidden', 'ibo-alert--body']</code> |
++-------------------+----------+--------------------------------------------------------+
+| AddCssFileRelPath | string   |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| AddDeferredBlock  | iUIBlock |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| AddHtml           | string   |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| AddJsFileRelPath  | string   |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| AddSubBlock       | iUIBlock |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| CSSClasses        | array    | like <code>['ibo-is-hidden', 'ibo-alert--body']</code> |
++-------------------+----------+--------------------------------------------------------+
+| DataAttributes    | array    |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| DeferredBlocks    | array    |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| IsHidden          | bool     |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| OpenedByDefault   | bool     |                                                        |
++-------------------+----------+--------------------------------------------------------+
+| SubBlocks         | array    |                                                        |
++-------------------+----------+--------------------------------------------------------+
+
+----
+
+.. include:: /manual/Component/CollapsibleSection/CollapsibleSectionFooter.rst

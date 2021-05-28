@@ -8,8 +8,8 @@ Welcome to iTop 3.0 UI's documentation!
     :maxdepth: 2
     :caption: Contents:
 
-    Component/Component
-    Layout/Layout
+    generated/Component/Component
+    generated/Layout/Layout
 
 
 
