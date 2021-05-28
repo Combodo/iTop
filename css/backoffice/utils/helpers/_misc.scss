@@ -40,6 +40,14 @@ $ibo-sticky-sentinel-bottom--height: $ibo-sticky-sentinel--height !default;
   display: none !important; /* Note: !important is necessary as it needs to overload any standard rules */
 }
 
+.ibo-is-transparent {
+  opacity: 0 !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
+.ibo-is-opaque {
+  opacity: 1 !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
 /****************************/
 /* Disposition / alignement */
 /****************************/
