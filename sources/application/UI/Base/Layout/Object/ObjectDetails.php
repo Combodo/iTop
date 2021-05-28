@@ -21,7 +21,6 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'js/components/panel.js',
 		'js/layouts/object/object-details.js',
 	];
 

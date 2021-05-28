@@ -137,7 +137,7 @@ interface iUIBlock {
 	public function GetParameters(): array;
 
 	/**
-	 * Add a JS file to a block
+	 * Add a JS file to a block (if not already present)
 	 *
 	 * @param string $sPath relative path of a JS file to add
 	 *
@@ -146,12 +146,32 @@ interface iUIBlock {
 	public function AddJsFileRelPath(string $sPath);
 
 	/**
-	 * Add a CSS file to a block
+	 * Add several JS files to a block.
+	 * Duplicates will not be added.
+	 *
+	 * @param string[] $aPaths
+	 *
+	 * @return mixed
+	 */
+	public function AddMultipleJsFilesRelPaths(array $aPaths);
+
+	/**
+	 * Add a CSS file to a block (if not already present)
 	 *
 	 * @param string $sPath relative path of a CSS file to add
 	 *
 	 * @return $this
 	 */
 	public function AddCssFileRelPath(string $sPath);
+
+	/**
+	 * Add several CSS files to a block.
+	 * Duplicates will not be added.
+	 *
+	 * @param string[] $aPaths
+	 *
+	 * @return mixed
+	 */
+	public function AddMultipleCssFilesRelPaths(array $aPaths);
 
 }
