@@ -8,6 +8,7 @@ namespace Combodo\iTop\Documentation\UI;
 
 use Exception;
 use ReflectionClass;
+use ReflectionException;
 use ReflectionMethod;
 use ReflectionNamedType;
 use utils;
@@ -265,6 +266,45 @@ function GetMethodParameters(ReflectionMethod $oMethod, string $sFullComment): a
 	return $aDocParams;
 }
 
+function GetMethodComment(ReflectionMethod $oMethod, string $sParamName)
+{
+	$sComment = $oMethod->getDocComment();
+	if (strpos($sComment, $sParamName) !== false) {
+		return $sComment;
+	}
+
+	//echo "- comment for $sParamName not found in ".$oMethod->class.":".$oMethod->name."\n";
+
+	// Try to find the comment in the parent class
+	$oReflectionClass = new ReflectionClass($oMethod->class);
+	$oReflectionParentClass = $oReflectionClass->getParentClass();
+	if ($oReflectionParentClass === false) {
+		$aReflectionParentClasses = $oReflectionClass->getInterfaces();
+		foreach ($aReflectionParentClasses as $oReflectionParentClass) {
+			try {
+				$oParentMethod = $oReflectionParentClass->getMethod($oMethod->name);
+			}
+			catch (ReflectionException $e) {
+				continue;
+			}
+			$sComment = GetMethodComment($oParentMethod, $sParamName);
+			if (!empty($sComment)) {
+				return $sComment;
+			}
+		}
+
+		return '';
+	}
+	try {
+		$oParentMethod = $oReflectionParentClass->getMethod($oMethod->name);
+	}
+	catch (ReflectionException $e) {
+		return '';
+	}
+
+	return GetMethodComment($oParentMethod, $sParamName);
+}
+
 /////////////////////////////
 /// Main
 ///
@@ -332,7 +372,10 @@ foreach ($aFactoryClasses as $sFactoryClass) {
 					$sName = $oMethod->getName();
 				}
 				if (!empty($sName)) {
-					$sFullComment = $oMethod->getDocComment();
+					// Get the param name
+					$aReflectionParameters = $oMethod->getParameters();
+					$oReflectionParameter = $aReflectionParameters[0];
+					$sFullComment = GetMethodComment($oMethod, $oReflectionParameter->getName());
 					$aParams = GetMethodParameters($oMethod, $sFullComment)[0];
 					$aParams['name'] = $sName;
 					$aDocGeneralParams[] = $aParams;
