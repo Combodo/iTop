@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIFileSelect**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIFileSelect Type {Parameters} %}
 
@@ -38,7 +38,7 @@ FileSelect Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIFileSelect Type Standard {sName:'value', sId:'value'} %}
 

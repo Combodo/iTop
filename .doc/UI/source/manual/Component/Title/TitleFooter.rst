@@ -7,7 +7,7 @@ Examples
 
 :The following code:
 
-::
+.. code-block:: twig
 
     {% UITitle ForPage {sTitle: 'UI:FullTextSearchTitle_Text'|dict_format(sFullText)} %}{% EndUITitle %}
 

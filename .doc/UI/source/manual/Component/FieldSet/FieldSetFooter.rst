@@ -2,7 +2,7 @@
 .. http://opensource.org/licenses/AGPL-3.0
 
 
-:Related Tag: :ref:`Field <Field>`
+:Related Tag: :ref:`Field`
 
 ----
 

@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UISpinner**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UISpinner Type {Parameters} %}
 
@@ -38,7 +38,7 @@ Spinner Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UISpinner Type Standard {sId:'value'} %}
 

@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UISelect**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UISelect Type {Parameters} %}
         Content Goes Here
@@ -42,7 +42,7 @@ Select ForSelect
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UISelect ForSelect {sName:'value', sId:'value'} %}
         Content Goes Here
@@ -63,7 +63,7 @@ Select ForSelectWithLabel
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UISelect ForSelectWithLabel {sName:'value', sLabel:'value', sId:'value'} %}
         Content Goes Here

@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIToolbarSpacer**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIToolbarSpacer Type {Parameters} %}
 
@@ -38,7 +38,7 @@ ToolbarSpacer Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIToolbarSpacer Type Standard {sId:'value'} %}
 

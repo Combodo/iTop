@@ -2,14 +2,16 @@
 .. http://opensource.org/licenses/AGPL-3.0
 
 
-:Related Tag: :ref:`FieldSet <FieldSet>`
+:Related Tag: :ref:`FieldSet`
 
 ----
 
 Examples
 --------
 
-Example to generate a Field::
+Example to generate a Field
+
+.. code-block:: twig
 
     {% UIField Small {sLabel: "Product"} %}
         iTop

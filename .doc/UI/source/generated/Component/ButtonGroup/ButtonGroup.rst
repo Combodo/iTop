@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIButtonGroup**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIButtonGroup Type {Parameters} %}
 
@@ -38,7 +38,7 @@ ButtonGroup ButtonWithOptionsMenu
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIButtonGroup Type ButtonWithOptionsMenu {oButton:value, oMenu:value} %}
 

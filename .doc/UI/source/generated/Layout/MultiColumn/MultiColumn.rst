@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIMultiColumn**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIMultiColumn Type {Parameters} %}
         Content Goes Here
@@ -40,7 +40,7 @@ MultiColumn Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIMultiColumn Standard {sId:'value'} %}
         Content Goes Here

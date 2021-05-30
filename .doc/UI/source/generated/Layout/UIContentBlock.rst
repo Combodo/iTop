@@ -21,8 +21,8 @@ Twig Tag
 :Tag: **UIContentBlock**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIContentBlock Type {Parameters} %}
         Content Goes Here
@@ -43,7 +43,7 @@ UIContentBlock Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIContentBlock Standard {sId:'value', aContainerClasses:{name:value, name:value}} %}
         Content Goes Here
@@ -64,7 +64,7 @@ UIContentBlock ForCode
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIContentBlock ForCode {sCode:'value', sId:'value'} %}
         Content Goes Here

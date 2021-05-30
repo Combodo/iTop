@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIToolbar**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIToolbar Type {Parameters} %}
         Content Goes Here
@@ -44,7 +44,7 @@ Toolbar ForAction
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIToolbar ForAction {sId:'value'} %}
         Content Goes Here
@@ -63,7 +63,7 @@ Toolbar Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIToolbar Standard {sId:'value', aContainerClasses:{name:value, name:value}} %}
         Content Goes Here
@@ -84,7 +84,7 @@ Toolbar ForButton
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIToolbar ForButton {sId:'value', aContainerClasses:{name:value, name:value}} %}
         Content Goes Here

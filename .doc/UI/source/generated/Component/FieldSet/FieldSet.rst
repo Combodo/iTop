@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIFieldSet**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIFieldSet Type {Parameters} %}
         Content Goes Here
@@ -40,7 +40,7 @@ FieldSet Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIFieldSet Standard {sLegend:'value', sId:'value'} %}
         Content Goes Here

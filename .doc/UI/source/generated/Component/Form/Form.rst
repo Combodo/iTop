@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIForm**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIForm Type {Parameters} %}
         Content Goes Here
@@ -40,7 +40,7 @@ Form Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIForm Standard {sId:'value'} %}
         Content Goes Here

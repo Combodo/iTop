@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIDataTable**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIDataTable Type {Parameters} %}
         Content Goes Here
@@ -50,7 +50,7 @@ DataTable ForResult
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIDataTable ForResult {oPage:value, sListId:'value', oSet:value, aExtraParams:value} %}
         Content Goes Here
@@ -75,7 +75,7 @@ DataTable ForObject
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIDataTable ForObject {oPage:value, sListId:'value', oSet:value, aExtraParams:value} %}
         Content Goes Here
@@ -100,7 +100,7 @@ DataTable ForRendering
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIDataTable ForRendering {sListId:'value', oSet:value, aExtraParams:value} %}
         Content Goes Here
@@ -123,7 +123,7 @@ DataTable ForRenderingObject
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIDataTable ForRenderingObject {sListId:'value', oSet:value, aExtraParams:value} %}
         Content Goes Here
@@ -146,7 +146,7 @@ DataTable ForStaticData
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIDataTable ForStaticData {sTitle:'value', aColumns:{name:value, name:value}, aData:{name:value, name:value}, sId:'value', aExtraParams:{name:value, name:value}, sFilter:'value', aOptions:{name:value, name:value}} %}
         Content Goes Here
@@ -177,7 +177,7 @@ DataTable ForForm
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIDataTable ForForm {sRef:'value', aColumns:{name:value, name:value}, aData:{name:value, name:value}, sFilter:'value'} %}
         Content Goes Here

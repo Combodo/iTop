@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UICollapsibleSection**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UICollapsibleSection Type {Parameters} %}
         Content Goes Here
@@ -40,7 +40,7 @@ CollapsibleSection Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UICollapsibleSection Standard {sTitle:'value', sId:'value'} %}
         Content Goes Here

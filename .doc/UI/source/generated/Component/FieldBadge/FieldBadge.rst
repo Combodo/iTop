@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIFieldBadge**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIFieldBadge Type {Parameters} %}
         Content Goes Here
@@ -40,7 +40,7 @@ FieldBadge ForField
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIFieldBadge ForField {sValue:'value', oStyle:value} %}
         Content Goes Here

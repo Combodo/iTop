@@ -4,7 +4,9 @@
 Examples
 --------
 
-Example to generate an temporary information with a spinner (on the real display the spinner is animated)::
+Example to generate an temporary information with a spinner (on the real display the spinner is animated)
+
+.. code-block:: twig
 
     {% UIAlert ForInformation {'sId':'header-requirements', 'IsCollapsible':false, 'IsClosable':false} %}
         {% UIContentBlock Standard {'aContainerClasses':['ibo-update-core-header-requirements'],
@@ -18,7 +20,9 @@ The information displayed:
 
 .. image:: /manual/Component/Alert/AlertInformationExample.png
 
-The javascript to set a success or a failure in return of an ajax call::
+The javascript to set a success or a failure in return of an ajax call
+
+.. code-block:: js
 
     function (data) {
         var oRequirements = $("#header-requirements");
@@ -34,13 +38,17 @@ The javascript to set a success or a failure in return of an ajax call::
 
 ----
 
-Example to generate a hidden alert to display using javascript in case of error::
+Example to generate a hidden alert to display using javascript in case of error
+
+.. code-block:: twig
 
     {% UIAlert ForFailure {sId:"dir_error_outer", IsCollapsible:false, IsClosable:false, IsHidden:true} %}
         *The content goes here*
     {% EndUIAlert %}
 
-The javascript to show the alert::
+The javascript to show the alert
+
+.. code-block:: js
 
     $("#dir_error_outer").removeClass("ibo-is-hidden");
 

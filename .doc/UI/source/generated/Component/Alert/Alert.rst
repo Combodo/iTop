@@ -21,8 +21,8 @@ Twig Tag
 :Tag: **UIAlert**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIAlert Type {Parameters} %}
         Content Goes Here
@@ -55,7 +55,7 @@ Alert Neutral
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert Neutral {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -78,7 +78,7 @@ Alert ForInformation
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert ForInformation {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -101,7 +101,7 @@ Alert ForSuccess
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert ForSuccess {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -124,7 +124,7 @@ Alert ForWarning
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert ForWarning {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -147,7 +147,7 @@ Alert ForDanger
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert ForDanger {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -170,7 +170,7 @@ Alert ForFailure
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert ForFailure {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -193,7 +193,7 @@ Alert WithBrandingPrimaryColor
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert WithBrandingPrimaryColor {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here
@@ -216,7 +216,7 @@ Alert WithBrandingSecondaryColor
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIAlert WithBrandingSecondaryColor {sTitle:'value', sContent:'value', sId:'value'} %}
         Content Goes Here

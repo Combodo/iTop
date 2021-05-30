@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIPanel**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIPanel Type {Parameters} %}
         Content Goes Here
@@ -56,7 +56,7 @@ Panel Neutral
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel Neutral {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -77,7 +77,7 @@ Panel ForInformation
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel ForInformation {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -98,7 +98,7 @@ Panel ForSuccess
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel ForSuccess {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -119,7 +119,7 @@ Panel ForWarning
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel ForWarning {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -140,7 +140,7 @@ Panel ForDanger
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel ForDanger {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -161,7 +161,7 @@ Panel ForFailure
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel ForFailure {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -182,7 +182,7 @@ Panel WithBrandingPrimaryColor
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel WithBrandingPrimaryColor {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -203,7 +203,7 @@ Panel WithBrandingSecondaryColor
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel WithBrandingSecondaryColor {sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here
@@ -224,7 +224,7 @@ Panel ForClass
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIPanel ForClass {sClass:'value', sTitle:'value', sSubTitle:'value'} %}
         Content Goes Here

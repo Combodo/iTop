@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UITitle**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UITitle Type {Parameters} %}
         Content Goes Here
@@ -46,7 +46,7 @@ Title ForPage
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UITitle ForPage {sTitle:'value', sId:'value'} %}
         Content Goes Here
@@ -67,7 +67,7 @@ Title ForPageWithIcon
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UITitle ForPageWithIcon {sTitle:'value', sIconUrl:'value', sIconCoverMethod:'value', bIsMedallion:true, sId:'value'} %}
         Content Goes Here
@@ -94,7 +94,7 @@ Title Neutral
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UITitle Neutral {sTitle:'value', iLevel:value, sId:'value'} %}
         Content Goes Here
@@ -117,7 +117,7 @@ Title Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UITitle Standard {oTitle:value, iLevel:value, sId:'value'} %}
         Content Goes Here

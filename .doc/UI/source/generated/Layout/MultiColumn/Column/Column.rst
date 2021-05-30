@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UIColumn**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UIColumn Type {Parameters} %}
         Content Goes Here
@@ -42,7 +42,7 @@ Column Standard
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIColumn Standard {sId:'value'} %}
         Content Goes Here
@@ -61,7 +61,7 @@ Column ForBlock
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UIColumn ForBlock {oBlock:value, sId:'value'} %}
         Content Goes Here

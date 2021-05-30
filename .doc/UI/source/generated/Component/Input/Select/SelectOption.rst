@@ -20,8 +20,8 @@ Twig Tag
 :Tag: **UISelectOption**
 
 :Syntax:
- 
-::
+
+.. code-block:: twig
 
     {% UISelectOption Type {Parameters} %}
 
@@ -38,7 +38,7 @@ SelectOption ForSelectOption
 
 :syntax:
 
-::
+.. code-block:: twig
 
     {% UISelectOption Type ForSelectOption {sValue:'value', sLabel:'value', bSelected:true, sId:'value'} %}
 
