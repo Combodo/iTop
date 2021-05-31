@@ -128,7 +128,6 @@ $(function () {
 					triggerElement: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top)[0],
 					//  ... leaves the viewport...
 					triggerHook: 0,
-					duration: this.element.outerHeight(),
 					offset: this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight()
 				})
 					// ... we consider the header as sticking...
