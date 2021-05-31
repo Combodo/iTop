@@ -395,9 +395,6 @@ foreach ($aFactoryClasses as $sFactoryClass) {
 				}
 				if (!empty($sName)) {
 					// Get the param name
-					$aReflectionParameters = $oMethod->getParameters();
-					$oReflectionParameter = $aReflectionParameters[0];
-					$sFullComment = GetMethodComment($oMethod, $oReflectionParameter->getName());
 					$aParams = GetMethodParameters($oMethod)[0];
 					$aParams['name'] = $sName;
 					$aDocGeneralParams[] = $aParams;
