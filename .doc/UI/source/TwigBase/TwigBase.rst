@@ -4,3 +4,6 @@
 Twig Base Presentation
 ======================
 
+The **Twig Base** feature is based on MVC structure:
+
+.. image:: MVC.png
