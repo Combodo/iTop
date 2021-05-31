@@ -111,11 +111,11 @@ Input common parameters
 +-------------------+--------+------------------------------------------------------------+
 | AddCSSClasses     | array  | like <code>['ibo-is-hidden', 'ibo-alert--body']</code>     |
 +-------------------+--------+------------------------------------------------------------+
-| AddCssFileRelPath | string | relative path of a CSS file to add                         |
+| AddCssFileRelPath | string |                                                            |
 +-------------------+--------+------------------------------------------------------------+
 | AddHtml           | string |                                                            |
 +-------------------+--------+------------------------------------------------------------+
-| AddJsFileRelPath  | string | relative path of a JS file to add                          |
+| AddJsFileRelPath  | string |                                                            |
 +-------------------+--------+------------------------------------------------------------+
 | CSSClasses        | array  | like <code>['ibo-is-hidden', 'ibo-alert--body']</code>     |
 +-------------------+--------+------------------------------------------------------------+

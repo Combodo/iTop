@@ -211,15 +211,15 @@ EOF;
 
 /**
  * @param \ReflectionMethod $oMethod
- * @param string $sFullComment
  *
  * @return array
  * @throws \ReflectionException
  */
-function GetMethodParameters(ReflectionMethod $oMethod, string $sFullComment): array
+function GetMethodParameters(ReflectionMethod $oMethod): array
 {
 	$aDocParams = [];
 	$aParameters = $oMethod->getParameters();
+	$sFullComment = $oMethod->getDocComment();
 	foreach ($aParameters as $oParameter) {
 		$sName = $oParameter->getName();
 		$aDocParam['name'] = $sName;
@@ -245,14 +245,36 @@ function GetMethodParameters(ReflectionMethod $oMethod, string $sFullComment): a
 		}
 
 		if ($sFullComment !== false) {
-			$sComment = $sFullComment;
-			$iPos = strpos($sComment, $sName);
-			if ($iPos !== false) {
-				$sComment = substr($sComment, strpos($sComment, '@param'));
-				$iPos = strpos($sComment, $sName);
-				$sComment = substr($sComment, $iPos + strlen($sName));
-				$sComment = substr($sComment, 0, strpos($sComment, "\n"));
-				$sComment = trim($sComment);
+			if (preg_match("#^\s*\*\s*@param\s+\S*\s*.$sName(?<comment>.*)$#m", $sFullComment, $aMatches)) {
+				$sComment = trim($aMatches['comment']);
+				if (preg_match("#^{@see (?<class>\S+)::.(?<property>\S+)}#", $sComment, $aMatches)) {
+					$sClass = $aMatches['class'];
+					$sProperty = $aMatches['property'];
+					try {
+						$oTargetClass = new ReflectionClass($sClass);
+						$oProperty = $oTargetClass->getProperty($sProperty);
+						$sComment = $oProperty->getDocComment();
+						if (preg_match("#/\*\*\s*@var.*$sProperty\s*(?<comment>.*)\*/#", $sComment, $aMatches)) {
+							$sComment = trim($aMatches['comment']);
+						}
+					}
+					catch (ReflectionException $e) {
+						// Try with the current name space
+						$oLocalClass = new ReflectionClass($oMethod->class);
+						$sNameSpace = $oLocalClass->getNamespaceName();
+						$sClass = $sNameSpace.'\\'.$sClass;
+						try {
+							$oTargetClass = new ReflectionClass($sClass);
+							$oProperty = $oTargetClass->getProperty($sProperty);
+							$sComment = $oProperty->getDocComment();
+							if (preg_match("#/\*\*\s*@var.*$sProperty\s*(?<comment>.*)\*/#", $sComment, $aMatches)) {
+								$sComment = trim($aMatches['comment']);
+							}
+						}
+						catch (ReflectionException $e) {
+						}
+					}
+				}
 			} else {
 				$sComment = '';
 			}
@@ -354,7 +376,7 @@ foreach ($aFactoryClasses as $sFactoryClass) {
 				$sType = substr($sMethodName, strlen('Make'));
 				$aDocType['comment'] = $sComment;
 
-				$aDocType['params'] = GetMethodParameters($oMethod, $sFullComment);
+				$aDocType['params'] = GetMethodParameters($oMethod);
 				$aDocTypes[$sType] = $aDocType;
 			}
 		}
@@ -376,7 +398,7 @@ foreach ($aFactoryClasses as $sFactoryClass) {
 					$aReflectionParameters = $oMethod->getParameters();
 					$oReflectionParameter = $aReflectionParameters[0];
 					$sFullComment = GetMethodComment($oMethod, $oReflectionParameter->getName());
-					$aParams = GetMethodParameters($oMethod, $sFullComment)[0];
+					$aParams = GetMethodParameters($oMethod)[0];
 					$aParams['name'] = $sName;
 					$aDocGeneralParams[] = $aParams;
 				}
