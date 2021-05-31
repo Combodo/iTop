@@ -68,7 +68,7 @@ Button Neutral
 
 .. code-block:: twig
 
-    {% UIButton Type Neutral {sLabel:'value', sName:'value', sId:'value'} %}
+    {% UIButton Neutral {sLabel:'value', sName:'value', sId:'value'} %}
 
 :parameters:
 
@@ -89,7 +89,7 @@ Button ForPrimaryAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForPrimaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForPrimaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -114,7 +114,7 @@ Button ForSecondaryAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForSecondaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForSecondaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -139,7 +139,7 @@ Button ForPositiveAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForPositiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForPositiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -164,7 +164,7 @@ Button ForDestructiveAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForDestructiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForDestructiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -189,7 +189,7 @@ Button AlternativeNeutral
 
 .. code-block:: twig
 
-    {% UIButton Type AlternativeNeutral {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton AlternativeNeutral {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -214,7 +214,7 @@ Button ForAlternativePrimaryAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForAlternativePrimaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForAlternativePrimaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -239,7 +239,7 @@ Button ForAlternativeSecondaryAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForAlternativeSecondaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForAlternativeSecondaryAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -264,7 +264,7 @@ Button ForAlternativeValidationAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForAlternativeValidationAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForAlternativeValidationAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -289,7 +289,7 @@ Button ForAlternativeDestructiveAction
 
 .. code-block:: twig
 
-    {% UIButton Type ForAlternativeDestructiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForAlternativeDestructiveAction {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -314,7 +314,7 @@ Button ForCancel
 
 .. code-block:: twig
 
-    {% UIButton Type ForCancel {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton ForCancel {sLabel:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -339,7 +339,7 @@ Button IconAction
 
 .. code-block:: twig
 
-    {% UIButton Type IconAction {sIconClasses:'value', sTooltipText:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
+    {% UIButton IconAction {sIconClasses:'value', sTooltipText:'value', sName:'value', sValue:'value', bIsSubmit:true, sId:'value'} %}
 
 :parameters:
 
@@ -366,7 +366,7 @@ Button LinkNeutral
 
 .. code-block:: twig
 
-    {% UIButton Type LinkNeutral {sURL:'value', sLabel:'value', sIconClasses:'value', sTarget:'value', sId:'value'} %}
+    {% UIButton LinkNeutral {sURL:'value', sLabel:'value', sIconClasses:'value', sTarget:'value', sId:'value'} %}
 
 :parameters:
 
@@ -391,7 +391,7 @@ Button IconLink
 
 .. code-block:: twig
 
-    {% UIButton Type IconLink {sIconClasses:'value', sTooltipText:'value', sURL:'value', sTarget:'value', sId:'value'} %}
+    {% UIButton IconLink {sIconClasses:'value', sTooltipText:'value', sURL:'value', sTarget:'value', sId:'value'} %}
 
 :parameters:
 
@@ -416,7 +416,7 @@ Button DestructiveIconLink
 
 .. code-block:: twig
 
-    {% UIButton Type DestructiveIconLink {sIconClasses:'value', sTooltipText:'value', sURL:'value', sName:'value', sTarget:'value', sId:'value'} %}
+    {% UIButton DestructiveIconLink {sIconClasses:'value', sTooltipText:'value', sURL:'value', sName:'value', sTarget:'value', sId:'value'} %}
 
 :parameters:
 

@@ -44,7 +44,7 @@ Input ForHidden
 
 .. code-block:: twig
 
-    {% UIInput Type ForHidden {sName:'value', sValue:'value', sId:'value'} %}
+    {% UIInput ForHidden {sName:'value', sValue:'value', sId:'value'} %}
 
 :parameters:
 
@@ -65,7 +65,7 @@ Input Standard
 
 .. code-block:: twig
 
-    {% UIInput Type Standard {sType:'value', sName:'value', sValue:'value', sId:'value'} %}
+    {% UIInput Standard {sType:'value', sName:'value', sValue:'value', sId:'value'} %}
 
 :parameters:
 
@@ -88,7 +88,7 @@ Input ForInputWithLabel
 
 .. code-block:: twig
 
-    {% UIInput Type ForInputWithLabel {sLabel:'value', sInputName:'value', sInputValue:'value', sInputId:'value', sInputType:'value'} %}
+    {% UIInput ForInputWithLabel {sLabel:'value', sInputName:'value', sInputValue:'value', sInputId:'value', sInputType:'value'} %}
 
 :parameters:
 

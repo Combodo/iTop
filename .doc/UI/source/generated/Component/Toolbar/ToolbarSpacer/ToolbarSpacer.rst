@@ -40,7 +40,7 @@ ToolbarSpacer Standard
 
 .. code-block:: twig
 
-    {% UIToolbarSpacer Type Standard {sId:'value'} %}
+    {% UIToolbarSpacer Standard {sId:'value'} %}
 
 :parameters:
 

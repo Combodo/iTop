@@ -40,7 +40,7 @@ FileSelect Standard
 
 .. code-block:: twig
 
-    {% UIFileSelect Type Standard {sName:'value', sId:'value'} %}
+    {% UIFileSelect Standard {sName:'value', sId:'value'} %}
 
 :parameters:
 

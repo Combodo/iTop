@@ -40,7 +40,7 @@ ButtonGroup ButtonWithOptionsMenu
 
 .. code-block:: twig
 
-    {% UIButtonGroup Type ButtonWithOptionsMenu {oButton:value, oMenu:value} %}
+    {% UIButtonGroup ButtonWithOptionsMenu {oButton:value, oMenu:value} %}
 
 :parameters:
 

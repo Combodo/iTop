@@ -40,7 +40,7 @@ Spinner Standard
 
 .. code-block:: twig
 
-    {% UISpinner Type Standard {sId:'value'} %}
+    {% UISpinner Standard {sId:'value'} %}
 
 :parameters:
 

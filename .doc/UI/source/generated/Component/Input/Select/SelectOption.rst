@@ -40,7 +40,7 @@ SelectOption ForSelectOption
 
 .. code-block:: twig
 
-    {% UISelectOption Type ForSelectOption {sValue:'value', sLabel:'value', bSelected:true, sId:'value'} %}
+    {% UISelectOption ForSelectOption {sValue:'value', sLabel:'value', bSelected:true, sId:'value'} %}
 
 :parameters:
 

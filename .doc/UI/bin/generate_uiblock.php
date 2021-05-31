@@ -170,7 +170,7 @@ EOF;
 EOF;
 			} else {
 				$sSyntax = <<<EOF
-    {% $sTag Type $sType {{$sParameters}} %}
+    {% $sTag $sType {{$sParameters}} %}
 EOF;
 			}
 			echo "$sSyntax\n";
