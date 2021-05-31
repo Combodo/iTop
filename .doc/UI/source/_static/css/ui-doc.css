@@ -11,3 +11,7 @@
 h3 {
 	font-size: 100%;
 }
+
+.rst-content .code-block-caption {
+	text-align: inherit;
+}

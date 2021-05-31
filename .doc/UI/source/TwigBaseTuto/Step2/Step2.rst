@@ -13,6 +13,7 @@ Create a controller into ``my-module/src/Controller``, let's call it ``MyModuleC
 
 .. code-block:: php
     :linenos:
+    :caption: src/Controller/MyModuleController.php
 
     <?php
 
@@ -27,6 +28,7 @@ Let's add a *Hello World* operation
 
 .. code-block:: php
     :linenos:
+    :caption: src/Controller/MyModuleController.php
 
     <?php
 
@@ -51,6 +53,7 @@ Let's create the template ``my-module/templates/HelloWorld.html.twig`` with a ni
 
 .. code-block:: twig
     :linenos:
+    :caption: templates/HelloWorld.html.twig
 
     {% UITitle ForPage {sTitle:'Hello World!'} %}{% EndUITitle %}
 
@@ -65,6 +68,7 @@ Then create landing page for your module ``my-module/index.php``
 
 .. code-block:: php
     :linenos:
+    :caption: index.php
 
     <?php
 

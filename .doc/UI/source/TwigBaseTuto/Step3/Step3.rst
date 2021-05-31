@@ -8,6 +8,7 @@ We have seen in :ref:`Step2` how to create a static template. Let's send some va
 
 .. code-block:: php
     :linenos:
+    :caption: src/Controller/MyModuleController.php
 
     <?php
 
@@ -31,6 +32,7 @@ Here two variables are created: ``sName`` and ``sDate``, we can use them in the 
 
 .. code-block:: twig
     :linenos:
+    :caption: templates/HelloWorld.html.twig
 
     {% UITitle ForPage {sTitle:'Hello ' ~ sName ~ '!'} %}{% EndUITitle %}
     {% UIContentBlock Standard {DataAttributes: {role: 'date'}} %}
@@ -45,6 +47,7 @@ The variables can be of any type, for example you can give an array as a variabl
 
 .. code-block:: php
     :linenos:
+    :caption: src/Controller/MyModuleController.php
 
     <?php
 
@@ -67,6 +70,7 @@ Here ``aQuarter`` is an array containing some months, we can use it in a selecto
 
 .. code-block:: twig
     :linenos:
+    :caption: templates/HelloWorld.html.twig
 
     {% UITitle ForPage {sTitle:'Hello ' ~ sName ~ '!'} %}{% EndUITitle %}
     {% UIContentBlock Standard {DataAttributes: {role: 'date'}} %}
