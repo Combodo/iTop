@@ -24,6 +24,12 @@ function log($sMsg)
 	echo "{$sDate} - {$sMsg}\n";
 }
 
+/**
+ * Echo an RST array of aParams filtered by aColumns
+ *
+ * @param array $aParams
+ * @param array $aColumns
+ */
 function DisplayParamsArray(array $aParams, array $aColumns)
 {
 	foreach ($aParams as $aParam) {
@@ -50,7 +56,14 @@ function DisplayParamsArray(array $aParams, array $aColumns)
 	echo "\n";
 }
 
-function DisplayParamsAsString(array $aParams)
+/**
+ * Generate the syntax for the given aParams
+ *
+ * @param array $aParams
+ *
+ * @return string
+ */
+function DisplayParamsAsString(array $aParams): string
 {
 	$aParamStr = [];
 	foreach ($aParams as $aParam) {
@@ -78,6 +91,17 @@ function DisplayParamsAsString(array $aParams)
 	return implode(', ', $aParamStr);
 }
 
+/**
+ * Echo the generated rst file for the given class
+ *
+ * @param string $sClass
+ * @param string $sClassComment
+ * @param string $sDir
+ * @param string $sTag
+ * @param bool $bHasSubBlocks
+ * @param array $aDocTypes
+ * @param array $aDocGeneralParams
+ */
 function output(string $sClass, string $sClassComment, string $sDir, string $sTag, bool $bHasSubBlocks, array $aDocTypes, array $aDocGeneralParams)
 {
 	if ($bHasSubBlocks) {
@@ -91,7 +115,6 @@ EOF;
     {% $sTag Type {Parameters} %}
 EOF;
 	}
-
 
 	echo ".. Copyright (C) 2010-2021 Combodo SARL\n";
 	echo ".. http://opensource.org/licenses/AGPL-3.0\n";
@@ -210,6 +233,8 @@ EOF;
 }
 
 /**
+ * Get parameters info from a method
+ *
  * @param \ReflectionMethod $oMethod
  *
  * @return array
@@ -244,34 +269,39 @@ function GetMethodParameters(ReflectionMethod $oMethod): array
 			$aDocParam['type'] = '';
 		}
 
+		// Get the comment for the param from method comment
 		if ($sFullComment !== false) {
 			if (preg_match("#^\s*\*\s*@param\s+\S*\s*.$sName(?<comment>.*)$#m", $sFullComment, $aMatches)) {
 				$sComment = trim($aMatches['comment']);
 				if (preg_match("#^{@see (?<class>\S+)::.(?<property>\S+)}#", $sComment, $aMatches)) {
-					$sClass = $aMatches['class'];
+					// Reference to a property of another class
+					$sClassName = $aMatches['class'];
 					$sProperty = $aMatches['property'];
 					try {
-						$oTargetClass = new ReflectionClass($sClass);
-						$oProperty = $oTargetClass->getProperty($sProperty);
-						$sComment = $oProperty->getDocComment();
-						if (preg_match("#/\*\*\s*@var.*$sProperty\s*(?<comment>.*)\*/#", $sComment, $aMatches)) {
-							$sComment = trim($aMatches['comment']);
-						}
+						GetPropertyComment($sClassName, $sProperty, $sComment);
 					}
 					catch (ReflectionException $e) {
 						// Try with the current name space
 						$oLocalClass = new ReflectionClass($oMethod->class);
 						$sNameSpace = $oLocalClass->getNamespaceName();
-						$sClass = $sNameSpace.'\\'.$sClass;
+						$sClass = $sNameSpace.'\\'.$sClassName;
 						try {
-							$oTargetClass = new ReflectionClass($sClass);
-							$oProperty = $oTargetClass->getProperty($sProperty);
-							$sComment = $oProperty->getDocComment();
-							if (preg_match("#/\*\*\s*@var.*$sProperty\s*(?<comment>.*)\*/#", $sComment, $aMatches)) {
-								$sComment = trim($aMatches['comment']);
-							}
+							GetPropertyComment($sClass, $sProperty, $sComment);
 						}
 						catch (ReflectionException $e) {
+							// Search in the autoloader
+							$sAutoloadFile = APPROOT.'lib/composer/autoload_classmap.php';
+							$aTmpClassMap = include $sAutoloadFile;
+							foreach (array_keys($aTmpClassMap) as $sClass) {
+								if (utils::EndsWith($sClass, '\\'.$sClassName)) {
+									try {
+										GetPropertyComment($sClass, $sProperty, $sComment);
+										break;
+									}
+									catch (ReflectionException $e) {
+									}
+								}
+							}
 						}
 					}
 				}
@@ -286,6 +316,25 @@ function GetMethodParameters(ReflectionMethod $oMethod): array
 	}
 
 	return $aDocParams;
+}
+
+/**
+ * Get the comment for a class property (variable)
+ *
+ * @param $sClass
+ * @param $sProperty
+ * @param $sComment
+ *
+ * @throws \ReflectionException when class or property does not exist
+ */
+function GetPropertyComment($sClass, $sProperty, &$sComment): void
+{
+	$oTargetClass = new ReflectionClass($sClass);
+	$oProperty = $oTargetClass->getProperty($sProperty);
+	$sComment = $oProperty->getDocComment();
+	if (preg_match("#/\*\*\s*@var.*$sProperty\s*(?<comment>.*)\*/#", $sComment, $aMatches)) {
+		$sComment = trim($aMatches['comment']);
+	}
 }
 
 function GetMethodComment(ReflectionMethod $oMethod, string $sParamName)
