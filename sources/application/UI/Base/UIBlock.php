@@ -39,15 +39,15 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public const BLOCK_CODE = 'ibo-block';
 	/**
-	 * @var bool Set to true so the block automatically includes its ancestors' external JS files. If set to false, only the files from the block itself will be included
+	 * @var bool Set to true so the block automatically requires/includes its ancestors' external JS files. If set to false, only the files from the block itself will be included
 	 * @see static::DEFAULT_JS_FILES_REL_PATH
 	 */
-	public const INCLUDE_ANCESTORS_DEFAULT_JS_FILES = true;
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = false;
 	/**
-	 * @var bool Set to true so the block automatically includes its ancestors' external CSS files. If set to false, only the files from the block itself will be included
+	 * @var bool Set to true so the block automatically requires/includes its ancestors' external CSS files. If set to false, only the files from the block itself will be included
 	 * @see static::DEFAULT_CSS_FILES_REL_PATH
 	 */
-	public const INCLUDE_ANCESTORS_DEFAULT_CSS_FILES = true;
+	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES = false;
 
 	/** @var string|null */
 	public const DEFAULT_GLOBAL_TEMPLATE_REL_PATH = null;
@@ -120,20 +120,51 @@ abstract class UIBlock implements iUIBlock
 		$this->sId = $sId ?? $this->GenerateId();
 
 		// Add external JS files
-		if(static::INCLUDE_ANCESTORS_DEFAULT_JS_FILES){
-			foreach(array_reverse(class_parents(static::class)) as $sParentClass){
+		// 1) From ancestors if they are required
+		if (static::REQUIRES_ANCESTORS_DEFAULT_JS_FILES) {
+			// Include ancestors files
+			foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
 				$this->AddMultipleJsFilesRelPaths($sParentClass::DEFAULT_JS_FILES_REL_PATH);
 			}
 		}
-		$this->AddMultipleJsFilesRelPaths(static::DEFAULT_JS_FILES_REL_PATH);
+
+		// 2) For current class if they are explicitely defined/overloaded, otherwise it will require the files from the closest ancestor with the constant definition which we don't want; which means:
+		//  - If this is the root class
+		//  - If this class requires ancestors files in which case it requires itselves
+		//  - If this class overloads files from its parent
+		//      IMPORTANT: We don't have a way -yet- to determine if the instantiated class has overloaded the constant directly
+		//      So we simply check if the instantiated class constant is different from its parent
+		$mParentClass = get_parent_class(static::class);
+		if ((false === $mParentClass)
+			|| (true === static::REQUIRES_ANCESTORS_DEFAULT_JS_FILES)
+			|| ($mParentClass::DEFAULT_JS_FILES_REL_PATH !== static::DEFAULT_JS_FILES_REL_PATH)
+		) {
+			$this->AddMultipleJsFilesRelPaths(static::DEFAULT_JS_FILES_REL_PATH);
+		}
 
 		// Add external CSS files
-		if(static::INCLUDE_ANCESTORS_DEFAULT_CSS_FILES){
-			foreach(array_reverse(class_parents(static::class)) as $sParentClass){
+		// 1) From ancestors if they are required
+		if (static::REQUIRES_ANCESTORS_DEFAULT_CSS_FILES) {
+			// Include ancestors files
+			foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
 				$this->AddMultipleCssFilesRelPaths($sParentClass::DEFAULT_CSS_FILES_REL_PATH);
 			}
 		}
-		$this->AddMultipleCssFilesRelPaths(static::DEFAULT_CSS_FILES_REL_PATH);
+
+		// 2) For current class if they are explicitely defined/overloaded, otherwise it will require the files from the closest ancestor with the constant definition which we don't want; which means:
+		//  - If this is the root class
+		//  - If this class requires ancestors files in which case it requires itselves
+		//  - If this class overloads files from its parent
+		//      IMPORTANT: We don't have a way -yet- to determine if the instantiated class has overloaded the constant directly
+		//      So we simply check if the instantiated class constant is different from its parent
+		$mParentClass = get_parent_class(static::class);
+
+		if ((false === $mParentClass)
+			|| (true === static::REQUIRES_ANCESTORS_DEFAULT_CSS_FILES)
+			|| ($mParentClass::DEFAULT_CSS_FILES_REL_PATH !== static::DEFAULT_CSS_FILES_REL_PATH)
+		) {
+			$this->AddMultipleCssFilesRelPaths(static::DEFAULT_CSS_FILES_REL_PATH);
+		}
 
 		$this->sHtmlTemplateRelPath = static::DEFAULT_HTML_TEMPLATE_REL_PATH;
 		$this->aJsTemplatesRelPath[self::ENUM_JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
