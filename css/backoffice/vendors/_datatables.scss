@@ -30,7 +30,6 @@ $ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
 
-$ibo-vendors-datatables--columns-header--margin-bottom: 4px !default;
 $ibo-vendors-datatables--columns-header--border-bottom: 1px solid $ibo-color-grey-400 !default;
 
 $ibo-vendors-datatables--row--background-color--is-odd: $ibo-color-white-100 !default;
@@ -132,7 +131,6 @@ $ibo-vendors-datatables--row-highlight--colors:(
 }
 
 .dataTables_scrollHeadInner {
-  margin-bottom: $ibo-vendors-datatables--columns-header--margin-bottom;
   border-bottom: $ibo-vendors-datatables--columns-header--border-bottom;
 }
 

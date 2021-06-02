@@ -3,6 +3,20 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-search-form-panel--z-index: 3 !default;
+
+$ibo-search-form-panel--body--padding-top: 18px !default;
+$ibo-search-form-panel--body--padding-bottom: 10px !default;
+$ibo-search-form-panel--body--padding-x: 14px !default;
+
+$ibo-search-results-area--z-index: $ibo-search-form-panel--z-index - 2 !default; /* Minus 2 because the criteria expands between the search form panel and the results area */
+
+$ibo-search-results-area--datatable-toolbar--background-color--is-sticking: $ibo-panel--body--background-color !default;
+$ibo-search-results-area--datatable-toolbar--border--is-sticking: $ibo-panel--body--border !default;
+
+$ibo-search-results-area--datatable-scrollhead--background-color--is-sticking: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking !default;
+$ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search-results-area--datatable-toolbar--border--is-sticking !default;
+
 /* IMPORTANT: All the code below do NOT follow the coding convention and has NOT been refactored to the UIBlock system */
 
 .search_box {
@@ -832,10 +846,11 @@
 
 
 .ibo-search-form-panel {
+  z-index: $ibo-search-form-panel--z-index;
 	margin-bottom: 8px;
 	
 	.ibo-panel--body {
-    padding: 18px 14px 10px;
+    padding: $ibo-search-form-panel--body--padding-top $ibo-search-form-panel--body--padding-x $ibo-search-form-panel--body--padding-bottom;
     overflow: initial;
   }
 }
@@ -864,4 +879,41 @@
 }
 .ibo-criterion-group:empty ~ .sf_more_criterion .sfm_tg_title{
   display: unset;
+}
+.sf_results_area {
+  z-index: $ibo-search-results-area--z-index;
+}
+
+/***********************/
+/* Sticky header rules */
+/***********************/
+.ibo-search-form-panel {
+  .ibo-panel--body.ibo-is-sticking {
+      position: fixed;
+
+      border-radius: 0;
+      border-bottom-color: transparent;
+  }
+}
+.sf_results_area {
+  .ibo-datatable-panel.ibo-is-sticking {
+    .ibo-panel--header {
+      z-index: 0;
+    }
+    .ibo-datatable--toolbar {
+      position: fixed;
+      z-index: 2;
+      padding-bottom: 4px;
+      background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
+      border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+      border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+    }
+    .dataTables_scrollHead {
+      position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
+      z-index: 2;
+      background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
+      border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+      border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+    }
+  }
 }
