@@ -46,7 +46,7 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     {% endif %}
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
-    {% if( oUIBlock.GetOptions("sort")[0] is defined ) %}
+    {% if( oUIBlock.GetOption("sort")[0] is defined ) %}
         order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
     {% else %}
         order: [],

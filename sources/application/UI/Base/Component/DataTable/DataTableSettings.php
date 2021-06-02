@@ -136,8 +136,9 @@ class DataTableSettings implements Serializable
                 if (array_key_exists($sNormalizedFName, $aSortOrder)) {
                     $sSort = $aSortOrder[$sNormalizedFName] ? 'asc' : 'desc';
                 }
+	            $aColumns[$sAlias]['_key_'] = $oSettings->GetFieldData($sAlias, '_key_', null, true /* bChecked */, $sSort);
             }
-	        $aColumns[$sAlias]['_key_'] = $oSettings->GetFieldData($sAlias, '_key_', null, true /* bChecked */, "none");
+
 	        foreach ($aList as $sAttCode) {
                 $sSort = 'none';
                 if (array_key_exists($sAttCode, $aSortOrder)) {
