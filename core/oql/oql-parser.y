@@ -25,6 +25,8 @@ later : solve the 2 remaining shift-reduce conflicts (JOIN)
 %syntax_error { 
 throw new OQLParserException($this->m_sSourceQuery, $this->m_iLine, $this->m_iCol, $this->tokenName($yymajor), $TOKEN);
 }
+/* Bug N°4052 Parser stack size too small for huge OQL requests */
+%stack_size 1000
 
 result ::= union(X). { $this->my_result = X; }
 result ::= query(X). { $this->my_result = X; }
