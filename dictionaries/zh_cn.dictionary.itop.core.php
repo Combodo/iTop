@@ -203,9 +203,9 @@ Operators:<br/>
 	'Core:AttributeTag' => '标签',
 	'Core:AttributeTag+' => '标签',
 	
-	'Core:Context=REST/JSON' => 'REST~~',
+	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro~~',
-	'Core:Context=Setup' => 'Setup~~',
+	'Core:Context=Setup' => '安装向导',
 	'Core:Context=GUI:Console' => 'Console~~',
 	'Core:Context=CRON' => 'cron~~',
 	'Core:Context=GUI:Portal' => 'Portal~~',
@@ -536,12 +536,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger' => '触发器',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/Attribute:description' => '描述',
-	'Class:Trigger/Attribute:description+' => '一行描述',
+	'Class:Trigger/Attribute:description+' => '简短描述',
 	'Class:Trigger/Attribute:action_list' => '触发的行为',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
-	'Class:Trigger/Attribute:context' => 'Context~~',
+	'Class:Trigger/Attribute:context' => '上下文',
 	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
 ));
 
@@ -632,11 +632,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnThresholdReached' => '触发器 (基于阀值)',
-	'Class:TriggerOnThresholdReached+' => '当达到某个阀值时触发',
+	'Class:TriggerOnThresholdReached' => '触发器 (基于阈值)',
+	'Class:TriggerOnThresholdReached+' => '当达到某个阈值时触发',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => '秒表',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阀值',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阈值',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
@@ -743,8 +743,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.',
-	'Core:SynchroReplica:PublicData' => 'Public Data',
-	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
+	'Core:SynchroReplica:PublicData' => '公共数据',
+	'Core:SynchroReplica:PrivateDetails' => '专属详情',
 	'Core:SynchroReplica:BackToDataSource' => '返回同步数据源: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)',
@@ -918,11 +918,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:OptionLinkSets' => '包含外链的对象',
 	'Core:BulkExport:OptionFormattedText' => '保持文本格式',
 	'Core:BulkExport:ScopeDefinition' => '定义要导出的对象',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
+	'Core:BulkExportLabelOQLExpression' => 'OQL 查询:',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.',
+	'Core:BulkExportMessageEmptyOQL' => '请输入有效的OQL 查询.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...',
+	'Core:BulkExportQueryPlaceholder' => '请在这里输入OQL 查询...',
 	'Core:BulkExportCanRunNonInteractive' => '点击这里运行非交互式导出.',
 	'Core:BulkExportLegacyExport' => '点击这里进入旧版导出.',
 	'Core:BulkExport:XLSXOptions' => 'Excel 选项',
@@ -959,7 +959,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData+' => '~~',
 
 	'Class:TagSetFieldData/Attribute:code' => '代码',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
+	'Class:TagSetFieldData/Attribute:code+' => '内部代码. 必须至少包含3个数字或字母',
 	'Class:TagSetFieldData/Attribute:label' => '标签',
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
 	'Class:TagSetFieldData/Attribute:description' => '描述',

@@ -64,26 +64,26 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'DBTools:LostAttachments' => 'Lost attachments~~',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments' => '附件丢失',
+	'DBTools:LostAttachments:Disclaimer' => '您可以在数据库里搜索附件是否有丢失或误挪动. 这不是数据恢复工具, 无法恢复已删除的数据.',
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => '该操作无法回退, 请确认是否继续还原.',
 	'DBTools:LostAttachments:Button:Busy' => '请稍后...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => '首先, 通过分析数据库来搜索丢失或误挪动的附件.',
 
 	'DBTools:LostAttachments:Step:AnalyzeResults' => '分析结果:',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => '非常好! 所有附件都是正常的.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => '某些附件 (%1$d) 看起来放错了位置. 请检查下面的列表并选择要挪动的文件.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => '文件名',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => '当前位置',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => '移动到...',
 
 	'DBTools:LostAttachments:Step:RestoreResults' => '还原结果:',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d attachments were restored.~~',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d 的附件已还原.',
 
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => 'Attachment "%1$s" restored with DB tools~~'
+	'DBTools:LostAttachments:History' => 'Attachment "附件 %1$s" 已被数据库工具恢复'
 ));

@@ -418,15 +418,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:Insert' => '插入',
 	'UI:Button:More' => '更多',
 	'UI:Button:Less' => '更少',
-	'UI:Button:Wait' => 'Please wait while updating fields~~',
-	'UI:Treeview:CollapseAll' => 'Collapse All~~',
-	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:Button:Wait' => '请稍候,正在更新字段',
+	'UI:Treeview:CollapseAll' => '全部折叠',
+	'UI:Treeview:ExpandAll' => '全部展开',
 
 	'UI:SearchToggle' => '搜索',
 	'UI:ClickToCreateNew' => '新建 %1$s',
 	'UI:SearchFor_Class' => '搜索 %1$s ',
 	'UI:NoObjectToDisplay' => '没有可显示的对象.',
-	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
+	'UI:Error:SaveFailed' => '对象无法被保存 :',
 	'UI:Error:MandatoryTemplateParameter_object_id' => '当link_attr 被指定时,参数 object_id 是必须的. 检查显示模板的定义.',
 	'UI:Error:MandatoryTemplateParameter_target_attr' => '当link_attr 被指定时, 参数 target_attr 是必须的. 检查显示模板的定义.',
 	'UI:Error:MandatoryTemplateParameter_group_by' => '参数 group_by 是必须的. 检查显示模板的定义.',
@@ -459,8 +459,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '错误: 在对象 %2$s 的 "%3$s" 状态上的无效刺激 "%1$s" .',
 	'UI:Error:InvalidDashboardFile' => 'Error: invalid dashboard file~~',
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
-	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
-	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:MaintenanceMode' => '应用正在维护中',
+	'UI:Error:MaintenanceTitle' => '维护',
 
 	'UI:GroupBy:Count' => '个数',
 	'UI:GroupBy:Count+' => '元素数量',
@@ -527,7 +527,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Login:ForgotPwdForm+' => 'iTop 将会给您发送一封密码重置邮件.',
 	'UI:Login:ResetPassword' => '立即发送!',
 	'UI:Login:ResetPwdFailed' => '邮件发送失败: %1$s',
-	'UI:Login:SeparatorOr' => 'Or~~',
+	'UI:Login:SeparatorOr' => '或者',
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' 用户名无效',
 	'UI:ResetPwd-Error-NotPossible' => '外部账户不允许重置密码.',
@@ -786,7 +786,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '批量删除 %1$d 个 %2$s 类的对象',
 	'UI:Delete:NotAllowedToDelete' => '您无权删除该对象',
 	'UI:Delete:NotAllowedToUpdate_Fields' => '您无权更新以下栏目: %1$s',
-	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
+	'UI:Error:ActionNotAllowed' => '您无权进行操作',
 	'UI:Error:NotEnoughRightsToDelete' => '无法删除该对象, 因为当前用户没有足够的权限',
 	'UI:Error:CannotDeleteBecause' => '无法删除该对象，因为: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => '无法删除该对象, 因为必须事先完成一些手动操作',
@@ -901,7 +901,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:AdminTools' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => '具有管理员角色的用户才能获得的工具', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:SystemTools' => 'System~~',
+	'Menu:SystemTools' => '系统',
 
 	'UI:ChangeManagementMenu' => '变更管理',
 	'UI:ChangeManagementMenu+' => '变更管理',
@@ -1039,9 +1039,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:RelationGroups' => '组',
 	'UI:OperationCancelled' => '操作已取消',
 	'UI:ElementsDisplayed' => '过滤',
-	'UI:RelationGroupNumber_N' => 'Group #%1$d',
+	'UI:RelationGroupNumber_N' => '分组 #%1$d',
 	'UI:Relation:ExportAsPDF' => '导出PDF...',
-	'UI:RelationOption:GroupingThreshold' => '分组阀值',
+	'UI:RelationOption:GroupingThreshold' => '分组阈值',
 	'UI:Relation:AdditionalContextInfo' => '其他信息',
 	'UI:Relation:NoneSelected' => '无',
 	'UI:Relation:Zoom' => '放大',
@@ -1065,7 +1065,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PageOrientation_Landscape' => '横向',
 	'UI:RelationTooltip:Redundancy' => '冗余',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# 受影响的项目: %1$d / %2$d',
-	'UI:RelationTooltip:CriticalThreshold_N_of_M' => '阀值: %1$d / %2$d',
+	'UI:RelationTooltip:CriticalThreshold_N_of_M' => '阈值: %1$d / %2$d',
 	'Portal:Title' => 'iTop 用户门户',
 	'Portal:NoRequestMgmt' => '亲爱的 %1$s, 您被重定向到这个页面,因为您的账户已被设置成角色 \'Portal user\'. 并且, iTop 没有安装 \'需求管理\' 功能. 请联系管理员.',
 	'Portal:Refresh' => '刷新',
@@ -1111,7 +1111,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ModifiedObject' => '对象已修改',
 	'UI:BulkModifyStatus' => '操作',
 	'UI:BulkModifyStatus+' => '操作状态',
-	'UI:BulkModifyErrors' => 'Errors (if any)',
+	'UI:BulkModifyErrors' => '报错 (如果有)',
 	'UI:BulkModifyErrors+' => '阻止修改时报错',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => '错误',
@@ -1161,8 +1161,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PrintResolution:FullSize' => '全尺寸',
 	'UI:PrintResolution:A4Portrait' => 'A4 纵向',
 	'UI:PrintResolution:A4Landscape' => 'A4 横向',
-	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
-	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
+	'UI:PrintResolution:LetterPortrait' => '纵向排版',
+	'UI:PrintResolution:LetterLandscape' => '横向排版',
 	'UI:Toggle:StandardDashboard' => '标准',
 	'UI:Toggle:CustomDashboard' => '自定义',
 
@@ -1444,7 +1444,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Button:RemoveImage' => '移除图片',
 	'UI:UploadNotSupportedInThisMode' => '本模式下不支持修改文件或图片.',
 
-	'UI:Button:RemoveDocument' => 'Remove the document~~',
+	'UI:Button:RemoveDocument' => '移除文档',
 
 	// Search form
 	'UI:Search:Toggle' => '折叠 / 展开',
@@ -1490,7 +1490,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s 和 %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: 任何',
 	//   - TagSet widget
-	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',
@@ -1525,7 +1525,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '小于 / 等于',  // > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => '不同',  // => '≠',
 	//   - Tag Set Widget
-	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
+	'UI:Search:Criteria:Operator:TagSet:Matches' => '匹配',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => '过滤器...',
