@@ -720,4 +720,19 @@ class DBSearchTest extends ItopDataTestCase
 		/** @var \DBObjectSearch $oNestedSearchInExpression */
 		self::assertEquals($bAllowAllData, $oNestedSearchInExpression->IsAllDataAllowed(), 'Nested DBSearch AllowData value');
 	}
+
+	/**
+	 * BUG N°4031 check AttributeObjectKey used in JOIN condition
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+	public function testAttributeObjectKey()
+	{
+		$sQuery = "SELECT II FROM InlineImage AS II JOIN UserRequest AS UR ON II.item_id = UR.id WHERE II.item_class = 'UserRequest'";
+		$oSearch = \DBObjectSearch::FromOQL($sQuery);
+		$oSearch->MakeSelectQuery();
+		self::assertTrue(true);
+	}
 }
