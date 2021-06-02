@@ -285,7 +285,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 
-		if (sizeof($oCustomSettings->aColumns) == 0)
+		if (count($oCustomSettings->aColumns) == 0)
 		{
 			$oCustomSettings->aColumns = $oDefaultSettings->aColumns;
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
@@ -324,6 +324,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
 					$aSortDatable=[$iIndexColumn,$aData['sort']];
 				}
+				elseif (isset($oCustomSettings->aSortOrder[$sAttCode])){
+					$aSortOrder[$sAlias.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
+				}
+				
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						if ($bViewLink) {
