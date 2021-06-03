@@ -1195,6 +1195,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:ImportDashboardTitle' => 'ファイルからインポート',
 	'UI:ImportDashboardText' => 'インポートするダッシュボードファイルを選択ください。:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => '新しいダッシュレットを作成',

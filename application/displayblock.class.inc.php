@@ -169,6 +169,8 @@ class DisplayBlock
 				/** bool add toolkit menu */
 				'selectionMode',
 				/**positive or negative*/
+				'max_height',
+				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -1992,13 +1994,9 @@ class MenuBlock extends DisplayBlock
 
 						$this->AddMenuSeparator($aRegularActions);
 
-						/** @var \iApplicationUIExtension $oExtensionInstance */
-						foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
-							$oSet->Rewind();
-							foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $sUrl) {
-								$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $sUrl) + $aActionParams;
-							}
-						}
+						$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
+							$aRegularActions[$sLabel] = array('label' => $sLabel, 'url' => $data) + $aActionParams;
+						});
 					}
 					break;
 
@@ -2100,24 +2098,20 @@ class MenuBlock extends DisplayBlock
 
 			$this->AddMenuSeparator($aRegularActions);
 
-			/** @var \iApplicationUIExtension $oExtensionInstance */
-			foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
-				$oSet->Rewind();
-				foreach ($oExtensionInstance->EnumAllowedActions($oSet) as $sLabel => $data) {
-					if (is_array($data)) {
-						// New plugins can provide javascript handlers via the 'onclick' property
-						//TODO: enable extension of different menus by checking the 'target' property ??
-						$aRegularActions[$sLabel] = [
-							'label' => $sLabel,
-							'url' => isset($data['url']) ? $data['url'] : '#',
-							'onclick' => isset($data['onclick']) ? $data['onclick'] : '',
-						];
-					} else {
-						// Backward compatibility with old plugins
-						$aRegularActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
-					}
+			$this->GetEnumAllowedActions($oSet, function ($sLabel, $data) use (&$aRegularActions, $aActionParams) {
+				if (is_array($data)) {
+					// New plugins can provide javascript handlers via the 'onclick' property
+					//TODO: enable extension of different menus by checking the 'target' property ??
+					$aRegularActions[$sLabel] = [
+						'label' => $sLabel,
+						'url' => isset($data['url']) ? $data['url'] : '#',
+						'onclick' => isset($data['onclick']) ? $data['onclick'] : '',
+					];
+				} else {
+					// Backward compatibility with old plugins
+					$aRegularActions[$sLabel] = ['label' => $sLabel, 'url' => $data] + $aActionParams;
 				}
-			}
+			});
 
 			if (empty($sRefreshAction) && $this->m_sStyle == 'list') {
 				//for the detail page this var is defined way beyond this line
@@ -2317,10 +2311,63 @@ class MenuBlock extends DisplayBlock
 
 		return $oRenderBlock;
 	}
-	
+
+	/**
+	 * If an extension doesn't return an array as expected :
+	 * - calls IssueLog:Warning
+	 * - if is dev env, then throw CoreUnexpectedValue exception
+	 *
+	 * @param \DBObjectSet $oSet
+	 * @param callable $callback EnumAllowedActions returns an array, we will call this anonymous function on each of its value
+	 *               with two parameters : label (array index), data (array value)
+	 *
+	 * @throws \CoreUnexpectedValue
+	 *
+	 * @uses \MetaModel::EnumPlugins()
+	 * @uses \iApplicationUIExtension::EnumAllowedActions()
+	 * @uses \utils::IsDevelopmentEnvironment()
+	 *
+	 * @since 3.0.0
+	 */
+	private function GetEnumAllowedActions(DBObjectSet $oSet, callable $callback): void
+	{
+		$aInvalidExtensions = [];
+
+		/** @var \iApplicationUIExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance) {
+			$oSet->Rewind();
+			$aExtEnumAllowedActions = $oExtensionInstance->EnumAllowedActions($oSet);
+
+			if (!is_array($aExtEnumAllowedActions)) {
+				$aInvalidExtensions[] = get_class($oExtensionInstance);
+				continue;
+			}
+
+			foreach ($aExtEnumAllowedActions as $sLabel => $data) {
+				$callback($sLabel, $data);
+			}
+		}
+
+		if (!empty($aInvalidExtensions)) {
+			$sMessage = 'Some extensions returned non array value for EnumAllowedActions() method impl';
+
+			IssueLog::Warning(
+				$sMessage,
+				null,
+				['extensions' => $aInvalidExtensions]
+			);
+
+			if (utils::IsDevelopmentEnvironment()) {
+				throw new CoreUnexpectedValue($sMessage, $aInvalidExtensions);
+			}
+		}
+	}
+
 	/**
 	 * Appends a menu separator to the current list of actions
+	 *
 	 * @param array $aActions The current actions list
+	 *
 	 * @return void
 	 */
 	protected function AddMenuSeparator(&$aActions)

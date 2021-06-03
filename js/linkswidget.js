@@ -45,10 +45,10 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
-		$('#datatable_'+me.id).DataTable().rows($('#datatable_'+me.id).find('tr.selected')).remove();
-		$('#linkedset_'+me.id+' .selection:checked').each(function () {
-			$(my_id+'_row_'+this.value).remove();
-			let iLink = $(this).attr('data-link-id');
+		$('#linkedset_'+me.id+' tr.selected').each(function () {
+			$('#datatable_'+me.id).DataTable().row($(this)).remove().draw();
+			var oCheckbox = $(this).find('.selection');
+			let iLink = $(oCheckbox).attr('data-link-id');
 			if (iLink > 0) {
 				me.aRemoved.push(iLink);
 				if (me.aModified.hasOwnProperty(iLink)) {
@@ -57,7 +57,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 			}
 			else
 			{
-				let iUniqueId = $(this).attr('data-unique-id');
+				let iUniqueId = $(oCheckbox).attr('data-unique-id');
 				if (iUniqueId < 0)
 				{
 					iUniqueId = -iUniqueId;
@@ -67,8 +67,6 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 		});
 		// Disable the button since all the selected items have been removed
 		$(my_id+'_btnRemove').prop('disabled', true);
-		// Re-run the zebra plugin to properly highlight the remaining lines & and take into account the removed ones
-		$('#linkedset_'+this.id+' .listResults').trigger('update').trigger("applyWidgets");
 
 		if ($('#linkedset_'+this.id+' .selection').length == 0)
 		{

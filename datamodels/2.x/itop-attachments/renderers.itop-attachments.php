@@ -24,6 +24,7 @@
  */
 
 
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
@@ -358,13 +359,14 @@ JS
 
 	protected function GetDeleteAttachmentButton($iAttId)
 	{
-		$oButton = ButtonUIBlockFactory::MakeDestructiveIconLink('fas fa-trash', Dict::S('Attachments:DeleteBtn'),
+		$oButton = ButtonUIBlockFactory::MakeIconAction('fas fa-trash', Dict::S('Attachments:DeleteBtn'),
 			'',
 			Dict::S('Attachments:DeleteBtn'),
-			null,
+			false,
 			"btn_remove_".$iAttId);
 		$oButton->AddCSSClass('btn_hidden')
-			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");");
+			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");")
+			->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
 		
 		return $oButton;
 	}
@@ -452,6 +454,18 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$this->oPage->AddUiBlock($oAttachmentTableBlock);
 
 		$sTableId = $oAttachmentTableBlock->GetId();
+
+		foreach ($aData as $aAtt){
+			$sJS = $aAtt['js'];
+			$this->oPage->add_ready_script(
+				<<<JS
+$('#$sTableId').on('init.dt draw.dt', function(){
+	$sJS
+});
+JS
+		);
+		}
+		
 	}
 
 	/**
@@ -540,6 +554,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			'upload-date' => $sAttachmentDateFormatted,
 			'uploader' => $sAttachmentUploader,
 			'type' => $sFileType,
+			'js' => '',
 		);
 		
 		if ($bWithDeleteButton)
@@ -547,7 +562,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);
 			
 			$oBlockRenderer = new BlockRenderer($sDeleteButton);
-			$this->oPage->add_ready_script($oBlockRenderer->RenderJsInline($sDeleteButton::ENUM_JS_TYPE_ON_INIT));
+			$aAttachmentLine['js'] .= $oBlockRenderer->RenderJsInline($sDeleteButton::ENUM_JS_TYPE_ON_INIT);
 			$aAttachmentLine['delete'] = $oBlockRenderer->RenderHtml();
 		}
 

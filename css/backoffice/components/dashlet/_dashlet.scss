@@ -11,7 +11,7 @@ $ibo-dashlet--elements-spacing-y: 24px !default;
 
 /* Rules */
 .ibo-dashlet {
-  width: $ibo-dashlet--width;
+  width: calc(#{$ibo-dashlet--width} - #{$ibo-dashlet--elements-spacing-x});
   margin: calc(#{$ibo-dashlet--elements-spacing-y} / 2) calc(#{$ibo-dashlet--elements-spacing-x} / 2);
 
   &.dashlet-selected {

@@ -13,8 +13,15 @@ $ibo-vendors-jqueryui--ui-dialog--border-radius: $ibo-border-radius-500 !default
 $ibo-vendors-jqueryui--ui-dialog--background-color: $ibo-color-white-100 !default;
 
 $ibo-vendors-jqueryui--ui-dialog-titlebar--height: 50px !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--padding-x: $ibo-vendors-jqueryui--ui-dialog--padding-x !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y: .4em !default;
 $ibo-vendors-jqueryui--ui-dialog-titlebar--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
 $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-200 !default;
+
+$ibo-vendors-jqueryui--ui-dialog-title--padding-right: 24px !default;
+
+$ibo-vendors-jqueryui--ui-dialog-content--padding-x: $ibo-vendors-jqueryui--ui-dialog--padding-x !default;
+$ibo-vendors-jqueryui--ui-dialog-content--padding-y: 16px !default;
 
 $ibo-vendors-jqueryui--ui-dialog-buttonpane--height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height !default;
 $ibo-vendors-jqueryui--ui-dialog-buttonpane--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
@@ -62,7 +69,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	outline: 0;
 	z-index: 21;
 	.ui-dialog-titlebar {
-		padding: .4em $ibo-vendors-jqueryui--ui-dialog--padding-x;
+		padding: $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-x;
 		position: relative;
 		background-color: $ibo-vendors-jqueryui--ui-dialog-titlebar--background-color;
 		height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height;
@@ -75,10 +82,9 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	.ui-dialog-title {
 		float: left;
 		margin: .1em 0;
-		white-space: nowrap;
 		width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
+    padding-right: $ibo-vendors-jqueryui--ui-dialog-title--padding-right; /* To avoid title being visible behind the closing "X" */
+		@extend %ibo-text-truncated-with-ellipsis;
 	}
 	.ui-dialog-titlebar-close {
 		position: absolute;
@@ -91,7 +97,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	}
 	.ui-dialog-content {
 		position: relative;
-		padding: 16px $ibo-vendors-jqueryui--ui-dialog--padding-x;
+		padding: $ibo-vendors-jqueryui--ui-dialog-content--padding-y $ibo-vendors-jqueryui--ui-dialog-content--padding-x;
     overflow: auto;
 	}
 	.ui-dialog-buttonpane {
@@ -556,4 +562,16 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 }
 .ui-menu-item{
   @extend .ibo-popover-menu--item;
+}
+
+// Helper
+
+.ui-helper-hidden-accessible {
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
 }

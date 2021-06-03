@@ -21,7 +21,7 @@ interface iUIContentBlock {
 	/**
 	 * Add raw HTML to the block
 	 *
-	 * @param string $sHtml
+	 * @param string $sHtml HTML to add to the block (must have been sanitized)
 	 *
 	 * @return $this
 	 */
@@ -30,7 +30,7 @@ interface iUIContentBlock {
 	/**
 	 * Add $oSubBlock, replacing any block with the same ID
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oSubBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock|null $oSubBlock Sub-block to add into the current block
 	 *
 	 * @return $this
 	 */
@@ -79,7 +79,7 @@ interface iUIContentBlock {
 	/**
 	 * Set all sub blocks at once, replacing all existing ones
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aSubBlocks
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aSubBlocks Array of blocks to set into the current block
 	 *
 	 * @return $this
 	 */
@@ -89,7 +89,7 @@ interface iUIContentBlock {
 	/**
 	 * Add $oDeferredBlock, replacing any block with the same ID
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oDeferredBlock
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oDeferredBlock Block added at the end of the page
 	 *
 	 * @return $this
 	 */
@@ -133,7 +133,7 @@ interface iUIContentBlock {
 	/**
 	 * Set all sub blocks at once, replacing all existing ones
 	 *
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aDeferredBlocks
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aDeferredBlocks Array of blocks set at the end of the page
 	 *
 	 * @return $this
 	 */

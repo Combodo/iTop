@@ -1206,6 +1206,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ImportDashboardTitle' => 'Импорт из файла',
 	'UI:ImportDashboardText' => 'Выберите файл дашборда для импорта:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Создать новый дашлет',

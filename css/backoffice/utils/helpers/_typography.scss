@@ -31,7 +31,7 @@
  */
 %ibo-font-ral-nor-50 {
   font-size: $ibo-font-size-50;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -39,7 +39,7 @@
 }
 %ibo-font-ral-nor-100 {
   font-size: $ibo-font-size-100;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -47,7 +47,7 @@
 }
 %ibo-font-ral-nor-150 {
   font-size: $ibo-font-size-150;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -55,7 +55,7 @@
 }
 %ibo-font-ral-nor-200 {
   font-size: $ibo-font-size-200;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -63,7 +63,7 @@
 }
 %ibo-font-ral-nor-250 {
   font-size: $ibo-font-size-250;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -71,7 +71,7 @@
 }
 %ibo-font-ral-nor-300 {
   font-size: $ibo-font-size-300;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -79,7 +79,7 @@
 }
 %ibo-font-ral-nor-350 {
   font-size: $ibo-font-size-350;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -87,7 +87,7 @@
 }
 %ibo-font-ral-nor-400 {
   font-size: $ibo-font-size-400;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -95,7 +95,7 @@
 }
 %ibo-font-ral-nor-450 {
   font-size: $ibo-font-size-450;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -103,7 +103,7 @@
 }
 %ibo-font-ral-nor-500 {
   font-size: $ibo-font-size-500;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -111,7 +111,7 @@
 }
 %ibo-font-ral-nor-550 {
   font-size: $ibo-font-size-550;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -119,7 +119,7 @@
 }
 %ibo-font-ral-med-50 {
   font-size: $ibo-font-size-50;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -127,7 +127,7 @@
 }
 %ibo-font-ral-med-100 {
   font-size: $ibo-font-size-100;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -135,7 +135,7 @@
 }
 %ibo-font-ral-med-150 {
   font-size: $ibo-font-size-150;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -143,7 +143,7 @@
 }
 %ibo-font-ral-med-200 {
   font-size: $ibo-font-size-200;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -151,7 +151,7 @@
 }
 %ibo-font-ral-med-250 {
   font-size: $ibo-font-size-250;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -159,7 +159,7 @@
 }
 %ibo-font-ral-med-300 {
   font-size: $ibo-font-size-300;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -167,7 +167,7 @@
 }
 %ibo-font-ral-med-350 {
   font-size: $ibo-font-size-350;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -175,7 +175,7 @@
 }
 %ibo-font-ral-med-400 {
   font-size: $ibo-font-size-400;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -183,7 +183,7 @@
 }
 %ibo-font-ral-med-450 {
   font-size: $ibo-font-size-450;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -191,7 +191,7 @@
 }
 %ibo-font-ral-med-500 {
   font-size: $ibo-font-size-500;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -199,7 +199,7 @@
 }
 %ibo-font-ral-med-550 {
   font-size: $ibo-font-size-550;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 500;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -207,7 +207,7 @@
 }
 %ibo-font-ral-bol-50 {
   font-size: $ibo-font-size-50;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -215,7 +215,7 @@
 }
 %ibo-font-ral-bol-100 {
   font-size: $ibo-font-size-100;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -223,7 +223,7 @@
 }
 %ibo-font-ral-bol-150 {
   font-size: $ibo-font-size-150;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -231,7 +231,7 @@
 }
 %ibo-font-ral-bol-200 {
   font-size: $ibo-font-size-200;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -239,7 +239,7 @@
 }
 %ibo-font-ral-bol-250 {
   font-size: $ibo-font-size-250;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -247,7 +247,7 @@
 }
 %ibo-font-ral-bol-300 {
   font-size: $ibo-font-size-300;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -255,7 +255,7 @@
 }
 %ibo-font-ral-bol-350 {
   font-size: $ibo-font-size-350;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -263,7 +263,7 @@
 }
 %ibo-font-ral-bol-400 {
   font-size: $ibo-font-size-400;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -271,7 +271,7 @@
 }
 %ibo-font-ral-bol-450 {
   font-size: $ibo-font-size-450;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -279,7 +279,7 @@
 }
 %ibo-font-ral-bol-500 {
   font-size: $ibo-font-size-500;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -287,7 +287,7 @@
 }
 %ibo-font-ral-bol-550 {
   font-size: $ibo-font-size-550;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 700;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -295,7 +295,7 @@
 }
 %ibo-font-ral-sembol-50 {
   font-size: $ibo-font-size-50;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -303,7 +303,7 @@
 }
 %ibo-font-ral-sembol-100 {
   font-size: $ibo-font-size-100;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -311,7 +311,7 @@
 }
 %ibo-font-ral-sembol-150 {
   font-size: $ibo-font-size-150;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -319,7 +319,7 @@
 }
 %ibo-font-ral-sembol-200 {
   font-size: $ibo-font-size-200;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -327,7 +327,7 @@
 }
 %ibo-font-ral-sembol-250 {
   font-size: $ibo-font-size-250;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -335,7 +335,7 @@
 }
 %ibo-font-ral-sembol-300 {
   font-size: $ibo-font-size-300;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -343,7 +343,7 @@
 }
 %ibo-font-ral-sembol-350 {
   font-size: $ibo-font-size-350;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -351,7 +351,7 @@
 }
 %ibo-font-ral-sembol-400 {
   font-size: $ibo-font-size-400;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -359,7 +359,7 @@
 }
 %ibo-font-ral-sembol-450 {
   font-size: $ibo-font-size-450;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -367,7 +367,7 @@
 }
 %ibo-font-ral-sembol-500 {
   font-size: $ibo-font-size-500;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -375,7 +375,7 @@
 }
 %ibo-font-ral-sembol-550 {
   font-size: $ibo-font-size-550;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 600;
   -webkit-font-feature-settings: "lnum";
   -moz-font-feature-settings: "lnum";
@@ -383,7 +383,7 @@
 }
 %ibo-font-ral-ita-50 {
   font-size: $ibo-font-size-50;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -392,7 +392,7 @@
 }
 %ibo-font-ral-ita-100 {
   font-size: $ibo-font-size-100;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -401,7 +401,7 @@
 }
 %ibo-font-ral-ita-150 {
   font-size: $ibo-font-size-150;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -410,7 +410,7 @@
 }
 %ibo-font-ral-ita-200 {
   font-size: $ibo-font-size-200;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -419,7 +419,7 @@
 }
 %ibo-font-ral-ita-250 {
   font-size: $ibo-font-size-250;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -428,7 +428,7 @@
 }
 %ibo-font-ral-ita-300 {
   font-size: $ibo-font-size-300;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -437,7 +437,7 @@
 }
 %ibo-font-ral-ita-350 {
   font-size: $ibo-font-size-350;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -446,7 +446,7 @@
 }
 %ibo-font-ral-ita-400 {
   font-size: $ibo-font-size-400;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -455,7 +455,7 @@
 }
 %ibo-font-ral-ita-450 {
   font-size: $ibo-font-size-450;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -464,7 +464,7 @@
 }
 %ibo-font-ral-ita-500 {
   font-size: $ibo-font-size-500;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";
@@ -474,7 +474,7 @@
 
 %ibo-font-ral-ita-550 {
   font-size: $ibo-font-size-550;
-  font-family: $ibo-font-family-base, "sans-serif";
+  font-family: $ibo-font-family-base, $ibo-font-family-fallbacks;
   font-weight: 400;
   font-style: italic;
   -webkit-font-feature-settings: "lnum";

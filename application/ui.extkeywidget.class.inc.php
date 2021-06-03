@@ -160,7 +160,8 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		
+		
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
 		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
@@ -183,8 +184,12 @@ class UIExtKeyWidget
 		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
+		$bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
+		$sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
-		if (!$oAllowedValues->CountExceeds($iMaxComboLength)) {
+		if (!$bIsAutocomplete) {
 			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
 			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
@@ -673,11 +678,9 @@ JS
 		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$oPage->add(<<<HTML
 <form id="fr_{$this->iId}" OnSubmit="return oACWidget_{$this->iId}.DoOk();">
-		<div id="dr_{$this->iId}" style="vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;">
-		<div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+		<div id="dr_{$this->iId}">
+		<div><p>{$sEmptyList}</p></div>
 		</div>
-		<input type="button" id="btn_cancel_{$this->iId}" value="{$sCancel}" onClick="$('#ac_dlg_{$this->iId}').dialog('close');">&nbsp;&nbsp;
-		<input type="button" id="btn_ok_{$this->iId}_results" value="{$sOK}"  onClick="oACWidget_{$this->iId}.DoOk();">
 		<input type="hidden" id="count_{$this->iId}_results" value="0">
 		</form>
 		</div></div>
@@ -686,7 +689,27 @@ HTML
 
 		$sDialogTitle = addslashes($sTitle);
 		$oPage->add_ready_script(<<<JS
-		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
+		$('#ac_dlg_{$this->iId}').dialog({ 
+				width: $(window).width()*0.8, 
+				height: $(window).height()*0.8, 
+				autoOpen: false, 
+				modal: true, 
+				title: '$sDialogTitle', 
+				resizeStop: oACWidget_{$this->iId}.UpdateSizes, 
+				close: oACWidget_{$this->iId}.OnClose,
+				buttons: [
+							{ text: "$sCancel",
+							 class: "ibo-is-alternative ibo-is-neutral",
+							 click: function() {
+								$(this).dialog('close');
+							} },
+							{ text: "$sOK",
+							 class: "ibo-is-regular ibo-is-primary",
+							 click: function() {
+								oACWidget_{$this->iId}.DoOk();
+							} },
+				],
+		});
 		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
 JS
@@ -977,8 +1000,8 @@ JS
 			$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
 		}
 
-		$oPage->add("<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
-		$oPage->add("<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
+		$oPage->add("<input type=\"button\" class=\"ibo-button ibo-is-regular ibo-is-neutral\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
+		$oPage->add("<input type=\"button\" class=\"ibo-button ibo-is-regular ibo-is-primary\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
 
 		$oPage->add('</div></div>');
 

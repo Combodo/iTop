@@ -148,15 +148,17 @@ class MFCompilerTest extends ItopTestCase {
 	}
 
 	public function testCompileThemes(){
-		$sXmlDataCustoFilePath = realpath(__DIR__ . '/ressources/datamodels/datamodel-branding.xml');
+		$sFullmoonThemeCompiledFolder = $this->sTmpDir.DIRECTORY_SEPARATOR.'branding'.DIRECTORY_SEPARATOR.'themes'.DIRECTORY_SEPARATOR.'fullmoon'.DIRECTORY_SEPARATOR;
+
+		$sXmlDataCustoFilePath = realpath(__DIR__.'/ressources/datamodels/datamodel-branding.xml');
 		$oDom = new MFDocument();
 		$oDom->load($sXmlDataCustoFilePath);
 
 		/** @var \MFElement $oBrandingNode */
 		$oBrandingNode = $oDom->GetNodes('branding')->item(0);
 
-		$this->RecurseMkdir($this->sTmpDir.'/branding/themes/fullmoon/');
-		file_put_contents($this->sTmpDir.'/branding/themes/fullmoon/main.css', "");
+		$this->RecurseMkdir($sFullmoonThemeCompiledFolder);
+		file_put_contents($sFullmoonThemeCompiledFolder.'main.css', "");
 
 		$aImportsPaths = array(
 			APPROOT.'css/',
@@ -171,11 +173,11 @@ class MFCompilerTest extends ItopTestCase {
 				'ibo-page-banner--text-color' => '$ibo-color-red-100',
 				'ibo-page-banner--text-content' => '"THIS IS A TEST INSTANCE"',
 			],
-			'variable_imports' => [ 'style2' => 'style2.scss'],
-			'utility_imports' => [ 'style1' => 'style1.scss', 'style3' => 'style3.scss'],
+			'variable_imports' => ['ok-because-xsi-type-variables' => 'ok-because-xsi-type-variables.scss'],
+			'utility_imports' => ['ok-because-xsi-type-utilities' => 'ok-because-xsi-type-utilities.scss'],
 			'stylesheets' => [
 				"fullmoon" => '../css/backoffice/main.scss',
-                "environment-banner" => '../css/backoffice/themes/page-banner.scss'
+				"environment-banner" => '../css/backoffice/themes/page-banner.scss',
 			],
 		];
 

@@ -42,8 +42,15 @@ class Panel extends UIContentBlock
 
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-panel';
+	/** @inheritDoc */
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
+	/** @inheritDoc */
+	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES = true;
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/panel/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/panel/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/components/panel.js',
+	];
 
 	// Specific constants
 	/** @var string ENUM_COLOR_PRIMARY */
@@ -103,6 +110,11 @@ class Panel extends UIContentBlock
 	public const DEFAULT_ICON_COVER_METHOD = self::ENUM_ICON_COVER_METHOD_CONTAIN;
 	/** @var bool */
 	public const DEFAULT_ICON_AS_MEDALLION = false;
+	/**
+	 * @var bool
+	 * @see static::$bIsHeaderVisibleOnScroll
+	 */
+	public const DEFAULT_IS_HEADER_VISIBLE_ON_SCROLL = false;
 
 	/** @var iUIContentBlock $oTitleBlock */
 	protected $oTitleBlock;
@@ -118,6 +130,8 @@ class Panel extends UIContentBlock
 	protected $sColor;
 	/** @var bool $bIsCollapsible */
 	protected $bIsCollapsible;
+	/** @var bool $bIsHeaderVisibleOnScroll True if the header of the panel should remain visible when scrolling */
+	protected $bIsHeaderVisibleOnScroll;
 
 	/**
 	 * Panel constructor.
@@ -146,6 +160,7 @@ class Panel extends UIContentBlock
 		$this->SetMainBlocks([]);
 		$this->SetToolBlocks([]);
 		$this->bIsCollapsible = false;
+		$this->bIsHeaderVisibleOnScroll = static::DEFAULT_IS_HEADER_VISIBLE_ON_SCROLL;
 	}
 
 	/**
@@ -448,6 +463,27 @@ class Panel extends UIContentBlock
 		return $this;
 	}
 
+	/**
+	 * @see static::$bIsHeaderVisibleOnScroll
+	 * @return bool
+	 */
+	public function IsHeaderVisibleOnScroll(): bool
+	{
+		return $this->bIsHeaderVisibleOnScroll;
+	}
+
+	/**
+	 * @see static::$bIsHeaderVisibleOnScroll
+	 *
+	 * @param bool $bIsHeaderVisibleOnScroll
+	 *
+	 * @return $this
+	 */
+	public function SetIsHeaderVisibleOnScroll(bool $bIsHeaderVisibleOnScroll)
+	{
+		$this->bIsHeaderVisibleOnScroll = $bIsHeaderVisibleOnScroll;
+		return $this;
+	}
 
 	//----------------------
 	// Specific content area

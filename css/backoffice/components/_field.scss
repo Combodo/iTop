@@ -33,13 +33,26 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 .ibo-field {
   @extend %ibo-font-ral-nor-150;
 
+  /* Avoid value to overflow from its container with very long strings (typically URLs) */
+  /* Note: Some types of attribute must be excluding as it can alter their rendering    */
+  &:not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeFile"]) {
+    /* We need the rule to apply for the class and all its descendants */
+    .ibo-field--value {
+      * {
+        word-break: break-word;
+        white-space: pre-wrap;
+      }
+    }
+  }
+
   & ~ .ibo-field {
     margin-top: $ibo-field--sibling-spacing;
   }
 }
 
+/* Large field = Label on top, value below */
 .ibo-field-large {
-  display: inherit;
+  display: block;
 
   .ibo-field--label {
     position: relative; /* Necessary for fullscreen toggler */
@@ -49,6 +62,8 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     max-width: initial;
     width: 100%;
   }
+
+  /* For custom fields (eg. request templates) only */
   .ibo-field-small .ibo-field--label {
     display: table-cell;
     vertical-align: top;
@@ -57,7 +72,28 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     max-width: 145px;
     width: 30%;
   }
+
+  /* Fullscreen mode */
+  &.ibo-is-fullscreen {
+    background-color: $ibo-field--background-color--is-fullscreen;
+
+    .ibo-field--label {
+      position: fixed;
+      width: $ibo-field--label--width--is-fullscreen;
+      min-width: initial;
+      max-width: initial;
+      padding: $ibo-field--label--padding-y--is-fullscreen $ibo-field--label--padding-x--is-fullscreen;
+      background-color: $ibo-field--label--background-color--is-fullscreen;
+      border-bottom: $ibo-field--label--border-bottom--is-fullscreen;
+    }
+
+    .ibo-field--value {
+      padding: $ibo-field--value--padding-top--is-fullscreen $ibo-field--value--padding-x--is-fullscreen $ibo-field--value--padding-bottom--is-fullscreen $ibo-field--value--padding-x--is-fullscreen;
+    }
+  }
 }
+
+/* Small field = Label on the left, value on the right */
 .ibo-field-small {
   display: table;
   width: 100%;
@@ -66,6 +102,21 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     display: table-cell;
     vertical-align: top;
     padding-right: 10px;
+  }
+}
+
+.ibo-field--fullscreen-toggler {
+  width: $ibo-field--fullscreen-toggler--size;
+  height: $ibo-field--fullscreen-toggler--size;
+  border-radius: $ibo-field--fullscreen-toggler--border-radius;
+  cursor: pointer;
+
+  @extend %ibo-hyperlink-inherited-colors;
+  @extend %ibo-fully-centered-content;
+  @extend %ibo-font-ral-nor-100;
+
+  &:hover {
+    background-color: $ibo-field--fullscreen-toggler--background-color--on-hover;
   }
 }
 
@@ -86,30 +137,10 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     }
   }
 }
-.ibo-field--fullscreen-toggler {
-  width: $ibo-field--fullscreen-toggler--size;
-  height: $ibo-field--fullscreen-toggler--size;
-  border-radius: $ibo-field--fullscreen-toggler--border-radius;
-  cursor: pointer;
-
-  @extend %ibo-hyperlink-inherited-colors;
-  @extend %ibo-fully-centered-content;
-  @extend %ibo-font-ral-nor-100;
-
-  &:hover {
-    background-color: $ibo-field--fullscreen-toggler--background-color--on-hover;
-  }
-}
 .ibo-field--value {
   display: table;
   width: 100%;
   color: $ibo-field--value--color;
-
-  /* Avoid value to overflow from its container with very long strings (typically URLs) */
-  * {
-    word-break: break-word;
-    white-space: pre-wrap;
-  }
 
   /* Hack to force a table to fit its container without overflow (see N°2127) */
   /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
@@ -120,7 +151,6 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     }
   }
 }
-
 .ibo-field--comments {
   display: table-cell;
   vertical-align: top;
@@ -133,6 +163,26 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   > .multi_values, > .mono_value {
     float: right;
+  }
+}
+
+/********************************************************/
+/* Shameful zone, CSS classes not following conventions */
+/* To be reworked                                       */
+/********************************************************/
+.mailto, .tel {
+  white-space: nowrap;
+
+  .text_decoration {
+    margin-right: $ibo-field--value-decoration--spacing-x;
+    font-size: 0.9em; /* Mind the "em" instead of "rem" as we want the decoration to be size relatively to the text itself, not the page */
+  }
+}
+
+.object-ref-icon, .object-ref-icon-disabled {
+  &.text_decoration {
+    margin-right: $ibo-field--value-decoration--spacing-x;
+    @extend %ibo-font-ral-nor-100;
   }
 }
 
@@ -153,40 +203,4 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
 .multi_values {
   background-color: #c33;
-}
-
-/* Fullscreen mode */
-.ibo-field-large {
-  &.ibo-is-fullscreen {
-    background-color: $ibo-field--background-color--is-fullscreen;
-
-    .ibo-field--label {
-      position: fixed;
-      width: $ibo-field--label--width--is-fullscreen;
-      min-width: initial;
-      max-width: initial;
-      padding: $ibo-field--label--padding-y--is-fullscreen $ibo-field--label--padding-x--is-fullscreen;
-      background-color: $ibo-field--label--background-color--is-fullscreen;
-      border-bottom: $ibo-field--label--border-bottom--is-fullscreen;
-    }
-
-    .ibo-field--value {
-      padding: $ibo-field--value--padding-top--is-fullscreen $ibo-field--value--padding-x--is-fullscreen $ibo-field--value--padding-bottom--is-fullscreen $ibo-field--value--padding-x--is-fullscreen;
-    }
-  }
-}
-
-.mailto, .tel {
-  white-space: nowrap;
-
-  .text_decoration {
-    margin-right: $ibo-field--value-decoration--spacing-x;
-  }
-}
-
-.object-ref-icon, .object-ref-icon-disabled {
-  &.text_decoration {
-    margin-right: $ibo-field--value-decoration--spacing-x;
-    @extend %ibo-font-ral-nor-100;
-  }
 }

@@ -38,6 +38,16 @@ abstract class UIBlock implements iUIBlock
 	 * should be "ibo-my-custom-clock")
 	 */
 	public const BLOCK_CODE = 'ibo-block';
+	/**
+	 * @var bool Set to true so the block automatically requires/includes its ancestors' external JS files. If set to false, only the files from the block itself will be included
+	 * @see static::DEFAULT_JS_FILES_REL_PATH
+	 */
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = false;
+	/**
+	 * @var bool Set to true so the block automatically requires/includes its ancestors' external CSS files. If set to false, only the files from the block itself will be included
+	 * @see static::DEFAULT_CSS_FILES_REL_PATH
+	 */
+	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES = false;
 
 	/** @var string|null */
 	public const DEFAULT_GLOBAL_TEMPLATE_REL_PATH = null;
@@ -48,7 +58,9 @@ abstract class UIBlock implements iUIBlock
 	 *    **Warning** : if you need to call a JS var defined in one of this file, then this calling code MUST be in {@see DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH}
 	 *         and not in {@see DEFAULT_JS_TEMPLATE_REL_PATH} ! Indeed the later is output before external files loading.
 	 */
-	public const DEFAULT_JS_FILES_REL_PATH = [];
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/ui-block.js',
+	];
 	/** @var string|null */
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
 	/** @var string|null Relative path (from <ITOP>/templates/) to the JS template not deferred */
@@ -88,9 +100,9 @@ abstract class UIBlock implements iUIBlock
 	/** @var string Relative path (from <ITOP>/templates/) to the CSS template */
 	protected $sCssTemplateRelPath;
 	/** @var array Relative paths (from <ITOP>/) to the JS files */
-	protected $aJsFilesRelPath;
+	protected $aJsFilesRelPath = [];
 	/** @var array Relative paths (from <ITOP>/) to the CSS files */
-	protected $aCssFilesRelPath;
+	protected $aCssFilesRelPath = [];
 	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>") */
 	protected $aDataAttributes = [];
 	/** @var bool Whether the current block is shown or hidden */
@@ -106,8 +118,54 @@ abstract class UIBlock implements iUIBlock
 	public function __construct(?string $sId = null)
 	{
 		$this->sId = $sId ?? $this->GenerateId();
-		$this->aJsFilesRelPath = static::DEFAULT_JS_FILES_REL_PATH;
-		$this->aCssFilesRelPath = static::DEFAULT_CSS_FILES_REL_PATH;
+
+		// Add external JS files
+		// 1) From ancestors if they are required
+		if (static::REQUIRES_ANCESTORS_DEFAULT_JS_FILES) {
+			// Include ancestors files
+			foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
+				$this->AddMultipleJsFilesRelPaths($sParentClass::DEFAULT_JS_FILES_REL_PATH);
+			}
+		}
+
+		// 2) For current class if they are explicitely defined/overloaded, otherwise it will require the files from the closest ancestor with the constant definition which we don't want; which means:
+		//  - If this is the root class
+		//  - If this class requires ancestors files in which case it requires itselves
+		//  - If this class overloads files from its parent
+		//      IMPORTANT: We don't have a way -yet- to determine if the instantiated class has overloaded the constant directly
+		//      So we simply check if the instantiated class constant is different from its parent
+		$mParentClass = get_parent_class(static::class);
+		if ((false === $mParentClass)
+			|| (true === static::REQUIRES_ANCESTORS_DEFAULT_JS_FILES)
+			|| ($mParentClass::DEFAULT_JS_FILES_REL_PATH !== static::DEFAULT_JS_FILES_REL_PATH)
+		) {
+			$this->AddMultipleJsFilesRelPaths(static::DEFAULT_JS_FILES_REL_PATH);
+		}
+
+		// Add external CSS files
+		// 1) From ancestors if they are required
+		if (static::REQUIRES_ANCESTORS_DEFAULT_CSS_FILES) {
+			// Include ancestors files
+			foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
+				$this->AddMultipleCssFilesRelPaths($sParentClass::DEFAULT_CSS_FILES_REL_PATH);
+			}
+		}
+
+		// 2) For current class if they are explicitely defined/overloaded, otherwise it will require the files from the closest ancestor with the constant definition which we don't want; which means:
+		//  - If this is the root class
+		//  - If this class requires ancestors files in which case it requires itselves
+		//  - If this class overloads files from its parent
+		//      IMPORTANT: We don't have a way -yet- to determine if the instantiated class has overloaded the constant directly
+		//      So we simply check if the instantiated class constant is different from its parent
+		$mParentClass = get_parent_class(static::class);
+
+		if ((false === $mParentClass)
+			|| (true === static::REQUIRES_ANCESTORS_DEFAULT_CSS_FILES)
+			|| ($mParentClass::DEFAULT_CSS_FILES_REL_PATH !== static::DEFAULT_CSS_FILES_REL_PATH)
+		) {
+			$this->AddMultipleCssFilesRelPaths(static::DEFAULT_CSS_FILES_REL_PATH);
+		}
+
 		$this->sHtmlTemplateRelPath = static::DEFAULT_HTML_TEMPLATE_REL_PATH;
 		$this->aJsTemplatesRelPath[self::ENUM_JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
 		$this->aJsTemplatesRelPath[self::ENUM_JS_TYPE_ON_INIT] = static::DEFAULT_JS_TEMPLATE_REL_PATH;
@@ -224,24 +282,6 @@ abstract class UIBlock implements iUIBlock
 		return $this->GetFilesUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, $bAbsoluteUrl);
 	}
 
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-	public function GetJsTemplatesRelPathRecursively(): array
-	{
-		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
-	}
-
-	/**
-	 * @return array
-	 * @throws \Exception
-	 */
-	public function GetCssTemplateRelPathRecursively(): array
-	{
-		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_CSS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
-	}
-
 	public function AddHtml(string $sHTML) {
 		// By default this does nothing
 		return $this;
@@ -256,7 +296,21 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function AddJsFileRelPath(string $sPath)
 	{
-		$this->aJsFilesRelPath[] = $sPath;
+		if(!in_array($sPath, $this->aJsFilesRelPath)) {
+			$this->aJsFilesRelPath[] = $sPath;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddMultipleJsFilesRelPaths(array $aPaths)
+	{
+		foreach($aPaths as $sPath){
+			$this->AddJsFileRelPath($sPath);
+		}
 
 		return $this;
 	}
@@ -266,7 +320,21 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public function AddCssFileRelPath(string $sPath)
 	{
-		$this->aCssFilesRelPath[] = $sPath;
+		if(!in_array($sPath, $this->aCssFilesRelPath)) {
+			$this->aCssFilesRelPath[] = $sPath;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function AddMultipleCssFilesRelPaths(array $aPaths)
+	{
+		foreach($aPaths as $sPath){
+			$this->AddCssFileRelPath($sPath);
+		}
 
 		return $this;
 	}
@@ -318,7 +386,7 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * Note: If $sCSSClass is already present, proceeds silently
 	 *
-	 * @param string $sCSSClass
+	 * @param string $sCSSClass CSS class to add to the generated html block
 	 *
 	 * @return $this
 	 *
@@ -446,34 +514,6 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * Return an array of the URL of the block $sFilesType and its sub blocks.
-	 * URL is relative unless the $bAbsoluteUrl is set to true.
-	 *
-	 * @param string $sExtensionFileType (see static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_CSS)
-	 *
-	 * @return array
-	 * @throws \Exception
-	 */
-	protected function GetTemplateRelPathRecursively(string $sExtensionFileType) {
-		$aFiles = [];
-
-		$sFilesRelPathMethodName = 'Get'.ucfirst($sExtensionFileType).'TemplateRelPath';
-		$aFiles[] = $this::$sFilesRelPathMethodName();
-
-		// Files from its sub blocks
-		foreach ($this->GetSubBlocks() as $sSubBlockName => $oSubBlock) {
-			/** @noinspection SlowArrayOperationsInLoopInspection */
-			$aFiles = array_merge(
-				$aFiles,
-				$oSubBlock->GetTemplateRelPathRecursively($sExtensionFileType)
-			);
-		}
-
-		return $aFiles;
-	}
-
-
-	/**
 	 * @return array
 	 */
 	public function GetDataAttributes(): array
@@ -482,7 +522,7 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * @param array $aDataAttributes
+	 * @param array $aDataAttributes Array of data attributes in the format ['name' => 'value']
 	 *
 	 * @return $this
 	 */
@@ -524,7 +564,7 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
-	 * @param bool $bIsHidden
+	 * @param bool $bIsHidden Indicates if the block is hidden by default
 	 *
 	 * @return $this
 	 */

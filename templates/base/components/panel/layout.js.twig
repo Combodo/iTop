@@ -1,5 +1,14 @@
-{% if oUIBlock.isCollapsible() %}
-    $('#{{ oUIBlock.GetId() }}').find('[data-role="ibo-panel--collapsible-toggler"]').on('click', function(){
-        $('#{{ oUIBlock.GetId() }}').toggleClass('ibo-is-opened');
+{# Collapsible handler #}
+{% block iboCollapsibleHandlers %}
+    {% if oUIBlock.isCollapsible() %}
+        $('#{{ oUIBlock.GetId() }}').find('[data-role="ibo-panel--collapsible-toggler"]').on('click', function(){
+            $('#{{ oUIBlock.GetId() }}').toggleClass('ibo-is-opened');
+        });
+    {% endif %}
+{% endblock %}
+
+{% block iboWidgetInstantiation %}
+    $('#{{ oUIBlock.GetId() }}').panel({
+        is_header_visible_on_scroll: {{ oUIBlock.IsHeaderVisibleOnScroll|var_export }}
     });
-{% endif %}
+{% endblock %}

@@ -73,6 +73,7 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
   align-content: flex-start;
   width: calc(100% + (2 * #{$ibo-dashboard--grid--elements-spacing-x}));
   margin: calc(-1 * #{$ibo-dashboard--grid--elements-spacing-y} / 2) calc(-1 * #{$ibo-dashboard--grid--elements-spacing-x} / 2); /* Because of the margin all around the dashlets, we need to compensate it */
+  min-width: 0;
 
   /* Compensate negative margin on inner borders to simulate egal dashlets spacing between columns */
   &:not(:last-child) {

@@ -1,4 +1,7 @@
-var table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }} = $('#{{ oUIBlock.GetId() }}').DataTable({
+{% set sListId = oUIBlock.GetId() %}
+{% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
+
+var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         emptyTable: "{{ 'UI:Message:EmptyList:UseAdd'|dict_s }}"
     },
@@ -21,8 +24,31 @@ var table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_
         {orderable: false, targets: 0}
     ],
     {% endif %}
+    drawCallback: function () {
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        } else {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
+    },
+    createdRow: function( row, data, dataIndex ) {
+        if (data['@class'] !== undefined) {
+            $(row).addClass(data['@class']);
+        }
+    },
 });
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
-{
-    table{{ oUIBlock.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}.columns.adjust().draw();
+if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible')) {
+    table{{ sListIDForVarSuffix }}.columns.adjust().draw();
+}
+
+if(window.ResizeObserver){
+    let oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oFromTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
+        clearTimeout(oFromTable{{ sListIDForVarSuffix }}ResizeTimeout);
+        oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
+            $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
+        }, 120);
+    });
+    oFromTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
 }

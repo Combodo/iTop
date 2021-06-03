@@ -7,6 +7,8 @@ $ibo-field-badge--margin: 0 !default;
 $ibo-field-badge--padding: 4px 10px !default;
 $ibo-field-badge--border-radius: $ibo-border-radius-300 !default;
 
+$ibo-field-badge--label--spacing-x: 0.5rem !default;
+
 .ibo-field-badge {
   @extend %ibo-font-ral-med-100;
 
@@ -14,4 +16,8 @@ $ibo-field-badge--border-radius: $ibo-border-radius-300 !default;
   padding: $ibo-field-badge--padding;
   border-radius: $ibo-field-badge--border-radius;
   display: inline;
+}
+
+.ibo-field-badge--decoration + .ibo-field-badge--label {
+  margin-left: $ibo-field-badge--label--spacing-x;
 }

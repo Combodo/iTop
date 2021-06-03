@@ -163,7 +163,7 @@ EOF
 								"sortable": false,
 								"title": '{$sSelectionInputGlobalHtml}',
 								"type": "html",
-								"data": "",
+								"data": "id",
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
@@ -261,7 +261,7 @@ EOF
 					// Handles items selection/deselection
 					// - Preventing limited access rows to be selected on click
 					oTable_{$this->oField->GetGlobalId()}.off('user-select').on('user-select', function(oEvent, dt, type, cell, originalEvent){
-						if($(originalEvent.target).closest('tr[role="row"]').hasClass('limited_access'))
+						if($(originalEvent.target).closest('tr[id]').hasClass('limited_access'))
 						{
 							oEvent.preventDefault();
 						}
@@ -271,7 +271,7 @@ EOF
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tbody tr[role="row"].selected td:first-child input').prop('checked', true);
+						$('#{$sTableId} tbody tr[id].selected td:first-child input').prop('checked', true);
 						// Saving values in temp array
 						for(var i in aData)
 						{
@@ -289,7 +289,7 @@ EOF
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tbody tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+						$('#{$sTableId} tbody tr[id]:not(.selected) td:first-child input').prop('checked', false);
 						// Saving values in temp array
 						for(var i in aData)
 						{

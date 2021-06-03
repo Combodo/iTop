@@ -20,6 +20,14 @@
 $ibo-is-code--background-color: $ibo-color-white-200 !default;
 $ibo-is-code--padding: 1.25rem 1.5rem !default;
 
+$ibo-sticky-sentinel--left: 0 !default;
+$ibo-sticky-sentinel--right: 0 !default;
+$ibo-sticky-sentinel--height: 0 !default;
+$ibo-sticky-sentinel-top--top: 0 !default;
+$ibo-sticky-sentinel-top--height: $ibo-sticky-sentinel--height !default;
+$ibo-sticky-sentinel-bottom--bottom: 0 !default;
+$ibo-sticky-sentinel-bottom--height: $ibo-sticky-sentinel--height !default;
+
 /**************/
 /* Visibility */
 /**************/
@@ -30,6 +38,14 @@ $ibo-is-code--padding: 1.25rem 1.5rem !default;
 
 .ibo-is-hidden {
   display: none !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
+.ibo-is-transparent {
+  opacity: 0 !important; /* Note: !important is necessary as it needs to overload any standard rules */
+}
+
+.ibo-is-opaque {
+  opacity: 1 !important; /* Note: !important is necessary as it needs to overload any standard rules */
 }
 
 /****************************/
@@ -125,6 +141,28 @@ body.ibo-has-fullscreen-descendant {
   padding: $ibo-is-code--padding;
   @extend %ibo-font-code-150;
 }
+
+/***********************************************************************/
+/* Sticky headers                                                      */
+/*                                                                     */
+/* Used as a trigger to make an element stick to another during scroll */
+/***********************************************************************/
+
+.ibo-sticky-sentinel {
+  position: absolute;
+  left: $ibo-sticky-sentinel--left;
+  right: $ibo-sticky-sentinel--right;
+  visibility: hidden;
+}
+.ibo-sticky-sentinel-top {
+  top: $ibo-sticky-sentinel-top--top;
+  height: $ibo-sticky-sentinel-top--height; /* To be overloaded by use cases */
+}
+.ibo-sticky-sentinel-bottom {
+  bottom: $ibo-sticky-sentinel-bottom--bottom;
+  height: $ibo-sticky-sentinel-bottom--height; /* To be overloaded by use cases */
+}
+
 
 %ibo-medallion {
   position: relative;

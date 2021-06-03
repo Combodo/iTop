@@ -895,13 +895,15 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
 		foreach ($oNodeList as $oNode) {
 			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
-			$sCode = $oCodeNode->textContent;
-			$this->DeleteNode($oCodeNode);
-			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
-			if ($oStyleNode) {
-				$this->DeleteNode($oStyleNode);
+			if ($oCodeNode) {
+				$sCode = $oCodeNode->textContent;
+				$this->DeleteNode($oCodeNode);
+				$oStyleNode = $oXPath->query('style', $oNode)->item(0);
+				if ($oStyleNode) {
+					$this->DeleteNode($oStyleNode);
+				}
+				$oNode->textContent = $sCode;
 			}
-			$oNode->textContent = $sCode;
 		}
 
 		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/default_style";

@@ -19,24 +19,24 @@
 
 // Activity panel
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
-	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load previous entries~~',
+	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Vergroot',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduceer',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Sluit',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Eerdere invoer laden',
 
 	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity~~',
-	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all messages~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all messages~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activiteiten',
+	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Concept',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Toon / verberg logs',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Statuswijzigingen',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Toon / verberg statuswijzigingen',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Aanpassingen',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Toon / verberg aanpassingen',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open alle berichten',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'sluit alle berichten',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Aantal participerende personen in de zichtbare berichten',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Aantal berichten in de zichtbare logs',
 
 	// Compose button
 	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry~~',
@@ -52,6 +52,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel~~',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel~~',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activiteitenpaneel',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Klik om het activiteitenpaneel te openen',
 ));

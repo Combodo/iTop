@@ -53,7 +53,8 @@ class MFCompiler
 {
 	const DATA_PRECOMPILED_FOLDER = 'data' . DIRECTORY_SEPARATOR . 'precompiled_styles' . DIRECTORY_SEPARATOR;
 
-	private static $oThemeHandlerService;
+	/** @var \ThemeHandlerService */
+	protected static $oThemeHandlerService;
 
 	/** @var \ModelFactory */
 	protected $oFactory;
@@ -2835,24 +2836,22 @@ EOF;
 
 			/** @var \DOMNodeList $oVariables */
 			$oVariables = $oTheme->GetNodes('variables/variable');
-			foreach($oVariables as $oVariable)
-			{
+			foreach ($oVariables as $oVariable) {
 				$sVariableId = $oVariable->getAttribute('id');
 				$aThemeParameters['variables'][$sVariableId] = $oVariable->GetText();
 			}
 
 			/** @var \DOMNodeList $oImports */
 			$oImports = $oTheme->GetNodes('imports/import');
-			foreach($oImports as $oImport)
-			{
+			foreach ($oImports as $oImport) {
 				$sImportId = $oImport->getAttribute('id');
-				if($oImport->getAttribute('xsi:type') === 'variables')
-				{
+				$sImportType = $oImport->getAttribute('xsi:type');
+				if ($sImportType === 'variables') {
 					$aThemeParameters['variable_imports'][$sImportId] = $oImport->GetText();
-				}
-				else
-				{
+				} elseif ($sImportType === 'utilities') {
 					$aThemeParameters['utility_imports'][$sImportId] = $oImport->GetText();
+				} else {
+					SetupLog::Warning('CompileThemes: Theme #'.$sThemeId.' has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
 				}
 			}
 

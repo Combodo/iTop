@@ -24,7 +24,8 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
- * Class Alert
+ * Alerts are the main component to give feedback to the user or communicate page specific to system wide messages.
+ * Alerts are a rectangular component displaying a title and a message.
  *
  * @author Stephen Abello <stephen.abello@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Alert
@@ -143,7 +144,7 @@ class Alert extends UIContentBlock
 	}
 
 	/**
-	 * @param string $sTitle
+	 * @param string $sTitle Title of the alert
 	 *
 	 * @return $this
 	 */
@@ -167,7 +168,7 @@ class Alert extends UIContentBlock
 	/**
 	 * Set the raw HTML content, must be already sanitized.
 	 *
-	 * @param string $sContent
+	 * @param string $sContent The raw HTML content, must be already sanitized
 	 *
 	 * @return $this
 	 */
@@ -187,7 +188,8 @@ class Alert extends UIContentBlock
 	}
 
 	/**
-	 * @param string $sColor
+	 * @param string $sColor Color of the alert (check CSS classes ibo-is-<color> for colors)
+	 *
 	 * @return $this
 	 */
 	public function SetColor(string $sColor)
@@ -208,7 +210,8 @@ class Alert extends UIContentBlock
 
 	/**
 	 * @see self::$bIsClosable
-	 * @param bool $bIsClosable
+	 *
+	 * @param bool $bIsClosable Indicates if the user can remove the alert from the screen
 	 *
 	 * @return $this
 	 */
@@ -230,7 +233,8 @@ class Alert extends UIContentBlock
 
 	/**
 	 * @see self::$bIsCollapsible
-	 * @param bool $bIsCollapsible
+	 *
+	 * @param bool $bIsCollapsible Indicates if the user can collapse the alert to display only the title
 	 *
 	 * @return $this
 	 */
@@ -255,7 +259,7 @@ class Alert extends UIContentBlock
 	}
 
 	/**
-	 * @param bool $bIsOpenedByDefault
+	 * @param bool $bIsOpenedByDefault Indicates if the alert is collapsed or not by default
 	 *
 	 * @return $this
 	 */

@@ -285,7 +285,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 
-		if (sizeof($oCustomSettings->aColumns) == 0)
+		if (count($oCustomSettings->aColumns) == 0)
 		{
 			$oCustomSettings->aColumns = $oDefaultSettings->aColumns;
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
@@ -324,6 +324,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
 					$aSortDatable=[$iIndexColumn,$aData['sort']];
 				}
+				elseif (isset($oCustomSettings->aSortOrder[$sAttCode])){
+					$aSortOrder[$sAlias.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
+				}
+				
 				if ($aData['checked']) {
 					if ($sAttCode == '_key_') {
 						if ($bViewLink) {
@@ -384,6 +388,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
+		}
+
+		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
+		if (isset($aExtraParams['max_height'])) {
+			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
 		}
 
 		$aOptions['processing'] = true;
@@ -567,13 +576,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 								} else {
 									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
 								}
+								$sAttLabel = MetaModel::GetName($sClassName);
 								$aColumnDefinition[] = [
 									'description' => $aData['label'],
 									'object_class' => $sClassName,
 									'class_alias' => $sClassAlias,
 									'attribute_code' => $sAttCode,
 									'attribute_type' => '_key_',
-									'attribute_label' => $aData['alias'],
+									'attribute_label' => $sAttLabel,
 									"render" => "return row['".$sClassAlias."/hyperlink'];",
 								];
 							}
@@ -617,6 +627,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aOptions['iPageSize'] = 10;
 		if ($oCustomSettings->iDefaultPageSize > 0) {
 			$aOptions['iPageSize'] = $oCustomSettings->iDefaultPageSize;
+		}
+
+		// Max height is only set if necessary, otherwise we want the list to occupy all the height it can depending on its pagination
+		if (isset($aExtraParams['max_height'])) {
+			$aOptions['sMaxHeight'] = $aExtraParams['max_height'];
 		}
 
 		$aOptions['sTableId'] = $sTableId;

@@ -335,39 +335,6 @@ JS
 		// TODO 3.0.0: What is this for?
 		$this->add_ready_script(
 			<<< JS
-	
-	// Adjust initial size
-	$('.v-resizable').each( function()
-		{
-			var parent_id = $(this).parent().id;
-			// Restore the saved height
-			var iHeight = GetUserPreference(parent_id+'_'+this.id+'_height', undefined);
-			if (iHeight != undefined)
-			{
-				$(this).height(parseInt(iHeight, 10)); // Parse in base 10 !);
-			}
-			// Adjust the child 'item''s height and width to fit
-			var container = $(this);
-			var fixedWidth = container.parent().innerWidth() - 6;
-			// Set the width to fit the parent
-			$(this).width(fixedWidth);
-			var headerHeight = $(this).find('.drag_handle').height();
-			// Now adjust the width and height of the child 'item'
-			container.find('.item').height(container.innerHeight() - headerHeight - 12).width(fixedWidth - 10);
-		}
-	);
-	// Make resizable, vertically only everything that claims to be v-resizable !
-	$('.v-resizable').resizable( { handles: 's', minHeight: $(this).find('.drag_handle').height(), minWidth: $(this).parent().innerWidth() - 6, maxWidth: $(this).parent().innerWidth() - 6, stop: function()
-		{
-			// Adjust the content
-			var container = $(this);
-			var headerHeight = $(this).find('.drag_handle').height();
-			container.find('.item').height(container.innerHeight() - headerHeight - 12);//.width(container.innerWidth());
-			var parent_id = $(this).parent().id;
-			SetUserPreference(parent_id+'_'+this.id+'_height', $(this).height(), true); // true => persistent
-		}
-	} );
-
 	PrepareWidgets();
 
 	// Make sortable, everything that claims to be sortable
@@ -385,9 +352,6 @@ JS
 	docWidth = $(document).width();
 	// $('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth, height: 'auto', maxHeight: $(window).height() - 50 }); // JQuery UI dialogs
 	ShowDebug();
-	$('#logOffBtn>ul').popupmenu();
-	
-	$('.caselog_header').on('click', function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
 	
 	$(document).ajaxSend(function(event, jqxhr, options) {
 		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
@@ -412,6 +376,8 @@ JS
 		setTimeout(function(){
 			CombodoTooltip.InitAllNonInstantiatedTooltips();
 			CombodoBackofficeToolbox.InitCodeHighlighting();
+			// Initialize date / datetime pickers if needed 
+			PrepareWidgets();
 		}, 500);
 	});
 JS

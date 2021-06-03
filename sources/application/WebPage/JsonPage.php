@@ -4,9 +4,22 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+/**
+ * Class JsonPage
+ *
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @since 3.0.0
+ */
 class JsonPage extends WebPage
 {
+	/** @var array Bags of data to include in the response */
 	protected $aData = [];
+	/**
+	 * @var bool If true, only static::$aData will be output; otherwise data and scripts will be output in a structured object.
+	 * This can be useful when feeding response to a third party lib that doesn't understand the structured format.
+	 */
+	protected $bOutputDataOnly = false;
 
 	/**
 	 * JsonPage constructor.
@@ -48,6 +61,22 @@ class JsonPage extends WebPage
 		return $this;
 	}
 
+	/**
+	 * @see static::$bOutputDataOnly
+	 * @param bool $bFlag
+	 *
+	 * @return $this
+	 */
+	public function SetOutputDataOnly(bool $bFlag)
+	{
+		$this->bOutputDataOnly = $bFlag;
+
+		return $this;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public function output()
 	{
 		$this->add_header('Content-type: application/json');
@@ -58,7 +87,7 @@ class JsonPage extends WebPage
 
 		$aScripts = array_merge($this->a_init_scripts, $this->a_scripts, $this->a_ready_scripts);
 
-		$aJson = [
+		$aJson = $this->bOutputDataOnly ? $this->aData : [
 			'data' => $this->aData,
 			'scripts' => $aScripts,
 		];

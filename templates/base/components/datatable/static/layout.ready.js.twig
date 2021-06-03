@@ -1,6 +1,7 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-
+{% set sListId = oUIBlock.GetId() %}
+{% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
     {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
@@ -29,21 +30,21 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     scrollX: true,
-    scrollCollapse: true,
+    {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
+        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+        scrollCollapse: true,
+    {% endif %}
     order: [],
     autoWidth: false,
     rowId: "id",
     filter: false,
     {% if oUIBlock.GetOption("pageLength") is not empty %}
-    pageLength: {{ oUIBlock.GetOption("pageLength") }},
-    {% endif %}
-    {% if oUIBlock.GetData()|length <= iPageSize %}
-    paging: false,
+        pageLength: {{ oUIBlock.GetOption("pageLength") }},
     {% endif %}
     {% if oUIBlock.GetOption("dom") is not empty %}
-    dom: "<'ibo-datatable-toolbar'{{ oUIBlock.GetOption("dom") }}>t",
+        dom: "<'ibo-datatable-toolbar'{{ oUIBlock.GetOption("dom") }}>t",
     {% else %}
-    dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
+        dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% endif %}
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     columns: [
@@ -54,5 +55,24 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
             sortable: true
         },
         {% endfor %}
-    ]
+    ],
+    drawCallback: function () {
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        } else {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
+    }
 });
+
+if(window.ResizeObserver){
+    let oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oStaticTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
+        clearTimeout(oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout);
+        oStaticTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
+            $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
+        }, 120);
+    });
+    oStaticTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
+}

@@ -1194,6 +1194,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:ImportDashboardTitle' => 'Import aus einer Datei',
 	'UI:ImportDashboardText' => 'Wählen Sie eine Dashboard-Datei zum Import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Neues ashlet erzeugen',

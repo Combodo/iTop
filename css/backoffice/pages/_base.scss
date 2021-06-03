@@ -20,10 +20,10 @@
 $ibo-body-text-color: $ibo-color-grey-900 !default;
 $ibo-body-background-color: $ibo-color-white-200 !default;
 
-$ibo-page-container--elements-padding-x: 48px !default;
+$ibo-page-container--elements-padding-x: 36px !default;
 
-$ibo-main-content--padding-top: 24px !default;
-$ibo-main-content--padding-bottom: 24px !default;
+$ibo-main-content--padding-top: 16px !default;
+$ibo-main-content--padding-bottom: 16px !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{
@@ -77,8 +77,14 @@ body{
 	z-index: 10;
 
 	flex-grow: 1; /* To occupy all height available */
+  overflow: hidden; /* Only the content areas should scroll */
+
+  > * {
+    height: 100%;
+  }
 }
 #ibo-main-content{
 	padding-top: $ibo-main-content--padding-top;
 	padding-bottom: $ibo-main-content--padding-bottom;
+  overflow: auto; /* For scroll to happen in the main content instead of the center content */
 }

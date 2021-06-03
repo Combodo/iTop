@@ -1219,6 +1219,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ImportDashboardTitle' => 'Import From a File',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:',
 	'UI:Dashboard:Actions' => 'Dashboard actions',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet',

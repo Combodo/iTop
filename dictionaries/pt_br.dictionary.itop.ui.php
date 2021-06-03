@@ -1206,6 +1206,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ImportDashboardTitle' => 'Importar por um arquivo',
 	'UI:ImportDashboardText' => 'Selecione um arquivo do painel para importar:',
 	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Criar um novo Painel',

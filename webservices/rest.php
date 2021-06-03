@@ -21,7 +21,6 @@ if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 require_once(APPROOT.'core/restservices.class.inc.php');
@@ -65,7 +64,7 @@ if (!function_exists('json_last_error_msg')) {
 //
 // Main
 //
-$oP = new ajax_page('rest');
+$oP = new AjaxPage('rest');
 $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');

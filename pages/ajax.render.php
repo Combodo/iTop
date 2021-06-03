@@ -82,9 +82,11 @@ try
 			break;
 
 		case 'search':
-			$oPage->SetContentType('application/json');
+			$oPage = new JsonPage();
+			// Feeds dataTables directly
+			$oPage->SetOutputDataOnly(true);
 			$aResult = AjaxRenderController::Search($sEncoding, $sFilter);
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'refreshDashletCount':
@@ -1166,6 +1168,7 @@ EOF
 					$sHtml = ConsoleBlockRenderer::RenderBlockTemplateInPage($oPage, $oBlock);
 					$sHtml = str_replace("\n", '', $sHtml);
 					$sHtml = str_replace("\r", '', $sHtml);
+					$sHtml = str_replace("'", "\'", $sHtml);
 					$oPage->add_script("$('#dashlet_$sDashletId').html('$sHtml');");
 				}
 				if ($oDashlet->IsFormRedrawNeeded()) {
