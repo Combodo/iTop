@@ -17,10 +17,54 @@
  */
 
 /*
+ * SCSS helpers for font sizes (use in SCSS files)
+ *
+ * Use them to only redefine the font size instead of the global font defnition, this way if the container's font changes
+ * the other properties will be propagated (weight, style)
+ *
+ * Usage: @extend %ibo-font-size-XXX;
+ */
+%ibo-font-size-50 {
+  font-size: $ibo-font-size-50;
+}
+%ibo-font-size-100 {
+  font-size: $ibo-font-size-100;
+}
+%ibo-font-size-150 {
+  font-size: $ibo-font-size-150;
+}
+%ibo-font-size-200 {
+  font-size: $ibo-font-size-200;
+}
+%ibo-font-size-250 {
+  font-size: $ibo-font-size-250;
+}
+%ibo-font-size-300 {
+  font-size: $ibo-font-size-300;
+}
+%ibo-font-size-350 {
+  font-size: $ibo-font-size-350;
+}
+%ibo-font-size-400 {
+  font-size: $ibo-font-size-400;
+}
+%ibo-font-size-450 {
+  font-size: $ibo-font-size-450;
+}
+%ibo-font-size-500 {
+  font-size: $ibo-font-size-500;
+}
+%ibo-font-size-550 {
+  font-size: $ibo-font-size-550;
+}
+
+/*
  * SCSS helpers for font weights (use in SCSS files)
  *
  * Use them to only redefine the font weight instead of the global font defnition, this way if the container's font changes
  * the other properties will be propagated (size, style)
+ *
+ * Usage: @extend %ibo-font-weight-XXX;
  */
 %ibo-font-weight-100 {
   font-weight: $ibo-font-weight-100;
@@ -57,6 +101,8 @@
  * SCSS helpers for global font definition (use in SCSS files)
  *
  * Use this only when you want to completely redefine the font, otherwise use the other helpers above
+ *
+ * Usage: @extend %ibo-font-XXX-YYY;
  */
 %ibo-font-ral-nor-50 {
   font-size: $ibo-font-size-50;
@@ -578,10 +624,39 @@
 }
 
 /*
+ * CSS classes for font sizes (use in HTML markup, JS scripts)
+ *
+ * Use them to only redefine the font size instead of the global font defnition, this way if the container's font changes
+ * the other properties will be propagated (weight, style)
+ *
+ * Usage: .ibo-font-size-XXX;
+ */
+$ibo-font-sizes: (
+  'ibo-font-size-50',
+  'ibo-font-size-100',
+  'ibo-font-size-150',
+  'ibo-font-size-200',
+  'ibo-font-size-250',
+  'ibo-font-size-300',
+  'ibo-font-size-350',
+  'ibo-font-size-400',
+  'ibo-font-size-450',
+  'ibo-font-size-500',
+  'ibo-font-size-550'
+);
+@each $sFontSize in $ibo-font-sizes {
+  .#{$sFontSize} {
+    @extend %#{$sFontSize};
+  }
+}
+
+/*
  * CSS classes for font weights (use in HTML markup, JS scripts)
  *
  * Use them to only redefine the font weight instead of the global font defnition, this way if the container's font changes
  * the other properties will be propagated (size, style)
+ *
+ * Usage: .ibo-font-weight-XXX;
  */
 $ibo-font-weights: (
   'ibo-font-weight-100',
@@ -605,6 +680,8 @@ $ibo-font-weights: (
  * CSS classes for global font wrappers (use in HTML markup, JS scripts)
  *
  * Use this only when you want to completely redefine the font, otherwise use the other helpers
+ *
+ * Usage: .ibo-font-XXX-YYY;
  */
 $ibo-fonts-all: (
         'ibo-font-ral-nor-50',
@@ -674,7 +751,6 @@ $ibo-fonts-all: (
         'ibo-font-code-500',
         'ibo-font-code-550'
 );
-
 @each $sFont in $ibo-fonts-all {
   .#{$sFont} {
     @extend %#{$sFont};
