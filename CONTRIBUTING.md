@@ -139,7 +139,9 @@ Detailed procedure to work on fork and create PR is available [in GitHub help pa
 
 ### 🙏 We are thankful
 
-We are thankful for all your contributions to the iTop universe, here are the 2021 stickers that will be sent to every iTop (& extensions) contributors this year. Design might change from one year to another, for the first year we wanted to try a "craft beer label" look.
+We are thankful for all your contributions to the iTop universe! As a thank you gift, we will send stickers to every iTop (& extensions) contributors! 
+
+Stickers' design might change from one year to another. For the first year we wanted to try a "craft beer label" look, see examples below: 
 
 * Bug hunter: Fix a bug
 * Translator: Add/update translations
