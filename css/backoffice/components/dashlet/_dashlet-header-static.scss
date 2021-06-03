@@ -41,7 +41,7 @@ $ibo-dashlet-header-static--body--separator-after--left: calc(100% + #{$ibo-dash
   margin-left: $ibo-dashlet-header-static--body--margin-left;
 
   color: $ibo-dashlet-header-static--body--text-color;
-  @extend %ibo-font-ral-med-350;
+  @extend %ibo-font-size-350;
 
   &::before,
   &::after{

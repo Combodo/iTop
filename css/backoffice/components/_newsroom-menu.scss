@@ -79,11 +79,9 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   align-items: center;
   float: right;
   align-self: center;
-  @extend %ibo-font-ral-nor-100;
   margin-left: $ibo-navigation-menu--notifications--item--bottom-text--margin-left;
 }
 .ibo-navigation-menu--notifications--item--content{
-  @extend %ibo-font-ral-nor-150;
   padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
   img{
     max-height: $ibo-navigation-menu--notifications--item--content--img--max-height;
@@ -108,7 +106,7 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
     margin-right: $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right;
   }
   .ibo-navigation-menu--notifications-show-all-multiple--counter{
-    @extend %ibo-font-ral-bol-200;
+    @extend %ibo-font-weight-600;
   }
 }
 .ibo-navigation-menu--notifications-dismiss-all--icon{

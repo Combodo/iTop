@@ -57,7 +57,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   height: $ibo-tab-container--tabs-list--height;
 
   background-color: $ibo-tab-container--tabs-list--background-color;
-  @extend %ibo-font-ral-nor-150;
+  @extend %ibo-font-size-150;
 }
 
 .ibo-tab-container--tab-header {
@@ -71,7 +71,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   }
 
   &.ui-tabs-active {
-    @extend %ibo-font-ral-bol-150;
+    @extend %ibo-font-weight-700;
     color: $ibo-tab-container--tab-header--text-color--is-active;
   }
 }
@@ -154,7 +154,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
     margin-left: $ibo-tab-container--tab-container--label--span--margin-left;
     color: $ibo-tab-container--tab-container--label--text-color;
 
-    @extend %ibo-font-ral-med-250;
+    @extend %ibo-font-size-250;
   }
 
   > span::before,
@@ -207,7 +207,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   width: 100%;
 
   cursor: pointer;
-  @extend %ibo-font-ral-med-300;
+  @extend %ibo-font-size-300;
 
   background-color: transparent;
   color: $ibo-tab--temporary-remote-content--button--color;

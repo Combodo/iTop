@@ -224,7 +224,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 .ibo-activity-panel--tab-title-draft-indicator{
   display: none;
   margin-left: $ibo-activity-panel--tab-title-draft-indicator--margin-x;
-  @extend %ibo-font-ral-nor-50;
+  @extend %ibo-font-size-50;
 }
 .ibo-activity-panel--tab-title-text{
 	max-width: $ibo-activity-panel--tab-title-text--max-width;

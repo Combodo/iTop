@@ -25,7 +25,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   padding: $ibo-datatable--toolbar--padding-y $ibo-datatable--toolbar--padding-x;
 
   color: $ibo-datatable--toolbar--text-color;
-  @extend %ibo-font-ral-med-100;
+  @extend %ibo-font-size-100;
 
   /* Above the table */
   &:first-child {
