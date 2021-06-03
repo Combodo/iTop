@@ -83,7 +83,7 @@ $(function()
 		// Submit properties (XHR, throttle, ...)
 		submit: null,
 
-		// {ScrollMagic.Controller} SM controller for the sticky header
+		/** @var {ScrollMagic.Controller} SM controller for the sticky header */
 		sticky_header_controller: null,
 
 		// the constructor
@@ -113,6 +113,8 @@ $(function()
 			this._prepareFormArea();
 			this._prepareCriterionArea();
 			this._prepareResultsArea();
+			// - Sticky header
+			this._updateStickyHeaderHandler();
 
 			// Binding events (eg. from search_form_criteria widgets)
 			this._bindEvents();
@@ -371,9 +373,6 @@ $(function()
 			// - Message area
 			this.elements.message_area = this.element.find('.sf_message');
 			this._cleanMessageArea();
-
-			// - Sticky header
-			this._updateStickyHeaderHandler();
 
 			// Events
 			// - Refresh icon
@@ -1412,7 +1411,7 @@ $(function()
 		 */
 		_getResultsPanelElem: function()
 		{
-			return $(this.options.result_list_outer_selector).find('[data-role="ibo-panel"]:first')
+			return this.elements.results_area === null ? null : this.elements.results_area.find('[data-role="ibo-panel"]:first')
 		},
 		/**
 		 * @return {Object} The jQuery object representing the top toolbar of the results (pagination, ...)
@@ -1420,7 +1419,7 @@ $(function()
 		 */
 		_getResultsToolbarTopElem: function()
 		{
-			return $(this.options.result_list_outer_selector).find('.ibo-datatable--toolbar:first');
+			return this.elements.results_area === null ? null : this.elements.results_area.find('.ibo-datatable--toolbar:first');
 		},
 		/**
 		 * @return {Object} The jQuery object representing the columns headers of the results
@@ -1428,7 +1427,7 @@ $(function()
 		 */
 		_getResultsTableHeaders: function()
 		{
-			return $(this.options.result_list_outer_selector).find('.dataTables_scrollHead:first');
+			return this.elements.results_area === null ? null : this.elements.results_area.find('.dataTables_scrollHead:first');
 		},
 
 
