@@ -2315,19 +2315,21 @@ class MenuBlock extends DisplayBlock
 	/**
 	 * If an extension doesn't return an array as expected :
 	 * - calls IssueLog:Warning
+	 * - if is dev env, then throw CoreUnexpectedValue exception
 	 *
 	 * @param \DBObjectSet $oSet
 	 * @param callable $callback EnumAllowedActions returns an array, we will call this anonymous function on each of its value
 	 *               with two parameters : label (array index), data (array value)
 	 *
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
 	 *
 	 * @uses \MetaModel::EnumPlugins()
 	 * @uses \iApplicationUIExtension::EnumAllowedActions()
+	 * @uses \utils::IsDevelopmentEnvironment()
 	 *
 	 * @since 3.0.0
 	 */
-	private function GetEnumAllowedActions(DBObjectSet $oSet, callable $callback)
+	private function GetEnumAllowedActions(DBObjectSet $oSet, callable $callback): void
 	{
 		$aInvalidExtensions = [];
 
