@@ -125,8 +125,7 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
     * ⬆️ `:arrow_up:` when upgrading dependencies
     * ⬇️ `:arrow_down:` when downgrading dependencies
     * ♻️ `:recycle:` code refactoring
-    * 💄 `:lipstick:` Updating the UI and style files.  
-  
+    * 💄 `:lipstick:` Updating the UI and style files.
 
 ## 👥 Pull request
 
@@ -141,3 +140,17 @@ Detailed procedure to work on fork and create PR is available [in GitHub help pa
 You might check the ["Allow edits from maintainers" PR checkbox][allow_edits_checkbox] to ease review.
 
 [allow_edits_checkbox]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork#enabling-repository-maintainer-permissions-on-existing-pull-requests
+
+### 🙏 We are thankful
+
+We are thankful for all your contributions to the iTop universe! As a thank you gift, we will send stickers to every iTop (& extensions) contributors! 
+
+Stickers' design might change from one year to another. For the first year we wanted to try a "craft beer label" look, see examples below: 
+
+* Bug hunter: Fix a bug
+* Translator: Add/update translations
+* White hat: Find and/or fix a vulnerability
+* Contributor: Contribute by finding a bug, making an extension or any other way
+* Partner: For Combodo's official partners
+
+![](documentation/contributing-guide/contributing-stickers-side-by-side.png)
