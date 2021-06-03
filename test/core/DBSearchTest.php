@@ -617,7 +617,7 @@ class DBSearchTest extends ItopDataTestCase
 			$sExceptionClass = get_class($e);
 		}
 
-		static::assertEquals('OQLParserException', $sExceptionClass);
+		static::assertEquals('OQLParserSyntaxErrorException', $sExceptionClass);
 	}
 
 	public function testSanity_GroupFunction_In_GroupByPart()
@@ -633,7 +633,7 @@ class DBSearchTest extends ItopDataTestCase
 			$sExceptionClass = get_class($e);
 		}
 
-		static::assertEquals('OQLParserException', $sExceptionClass);
+		static::assertEquals('OQLParserSyntaxErrorException', $sExceptionClass);
 	}
 
 	public function testSanity_UnknownGroupFunction_In_SelectPart()
