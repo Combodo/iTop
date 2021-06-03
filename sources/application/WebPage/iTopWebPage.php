@@ -475,6 +475,8 @@ JS
 		$this->sBreadCrumbEntryDescription = null;
 		$this->sBreadCrumbEntryUrl = null;
 		$this->sBreadCrumbEntryIcon = null;
+
+		$this->GetTopBarLayout()->SetBreadcrumbs(new Breadcrumbs($this->GetBreadCrumbsNewEntry(), Breadcrumbs::BLOCK_CODE));
 	}
 
 
