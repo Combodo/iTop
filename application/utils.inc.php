@@ -776,7 +776,7 @@ class utils
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 *
-	 * @since 2.7.0 N°2478 always call {@link MetaModel::GetConfig} first, cache is only set when loading from disk
+	 * @since 2.7.0 N°2478 this method will now always call {@link MetaModel::GetConfig} first, and cache in this class is only set when loading from disk
 	 */
 	public static function GetConfig()
 	{
