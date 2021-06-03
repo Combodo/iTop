@@ -74,7 +74,7 @@ $ibo-dashlet-badge--action-icon--margin-right: 6px !default;
 }
 .ibo-dashlet-badge--action-create{
 	@extend %ibo-baseline-centered-content;
-	@extend %ibo-font-ral-med-150;
+	@extend %ibo-font-size-150;
 }
 .ibo-dashlet-badge--action-create-icon{
 	margin-right: $ibo-dashlet-badge--action-icon--margin-right;

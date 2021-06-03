@@ -51,7 +51,7 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 }
 
 .ibo-title--for-object-details {
-  @extend %ibo-font-ral-med-300;
+  @extend %ibo-font-size-300;
 }
 
 .ibo-title--subtitle {
@@ -68,7 +68,7 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 	padding-top: 2em;
 }
 .ibo-title-for-dashlet--title {
-	@extend %ibo-font-ral-nor-350;
+	@extend %ibo-font-size-350;
 }
 
 .ibo-title-for-dashlet--content{

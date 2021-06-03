@@ -49,20 +49,20 @@ $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 		td{
 			margin-bottom: 14px;
 			.ibo-field{
-				@extend %ibo-font-ral-med-100;				
+				@extend %ibo-font-size-100;
 			}
 		}
 	}
 }
 .ibo-dashboard-editor--properties-title{
 	padding-bottom: $ibo-dashboard-editor--properties-title--padding-bottom;
-	@extend %ibo-font-ral-med-250;
+	@extend %ibo-font-size-250;
 }
 .ibo-dashboard-editor--properties-subtitle,
 .ibo-dashboard--available-dashlet--title,
 .ibo-dashlet--properties--title{
 	@extend .ibo-fieldset-legend;
-	@extend %ibo-font-ral-med-150;
+	@extend %ibo-font-size-150;
 }
 
 .ibo-dashboard-editor--layout-list {

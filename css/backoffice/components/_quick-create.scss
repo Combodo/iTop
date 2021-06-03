@@ -170,7 +170,7 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 	padding: $ibo-quick-create--drawer--padding-y $ibo-quick-create--drawer--padding-x;
 	background-color: $ibo-quick-create--drawer--background-color;
 	box-shadow: none;
-	@extend %ibo-font-ral-nor-100;
+	@extend %ibo-font-size-100;
 }
 .ibo-quick-create--compartment-title{
 	margin-top: $ibo-quick-create--compartment-title--margin-top;

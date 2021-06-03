@@ -207,13 +207,13 @@ $ibo-panel-colors: (
 .ibo-panel--title {
   display: inline-block;
   color: $ibo-panel--title--color;
-  @extend %ibo-font-ral-med-350;
+  @extend %ibo-font-size-350;
   flex-grow: 1;
 }
 
 .ibo-panel--subtitle {
   display: flex;
-  @extend %ibo-font-ral-med-150;
+  @extend %ibo-font-size-150;
   color: $ibo-panel--subtitle--color;
 }
 
@@ -226,7 +226,7 @@ $ibo-panel-colors: (
   border-radius: $ibo-panel--body--border-radius;
   overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
-  @extend %ibo-font-ral-nor-200;
+  @extend %ibo-font-size-150;
 }
 
 .ibo-panel--collapsible-toggler {

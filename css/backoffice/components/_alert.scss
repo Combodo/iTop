@@ -77,7 +77,7 @@ $ibo-alert-colors: (
 	border-radius: $ibo-alert--border-radius;
 	overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
-	@extend %ibo-font-ral-med-150;
+	@extend %ibo-font-size-150;
 
 	&::before {
 		display: block;
@@ -93,7 +93,7 @@ $ibo-alert-colors: (
 	.ibo-alert--title {
 		cursor: pointer;
 
-		@extend %ibo-font-ral-bol-150;
+		@extend %ibo-font-weight-700;
 	}
 	
 	&.ibo-is-opened {

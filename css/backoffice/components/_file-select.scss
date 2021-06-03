@@ -15,7 +15,7 @@ $ibo-input-file-select--file-name-margin-left: 10px !default;
 
     .ibo-input-file-select--file-name {
       margin-left: $ibo-input-file-select--file-name-margin-left;
-      @extend %ibo-font-ral-med-150;
+      @extend %ibo-font-size-150;
     }
   }
 }

@@ -37,7 +37,7 @@ $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 }
 .ibo-breadcrumbs--item{
 	color: $ibo-breadcrumbs--item--text-color;
-	@extend %ibo-font-ral-nor-100;
+	@extend %ibo-font-ral-med-100;
 
 	&:not(:last-child){
 		&::after{
@@ -59,7 +59,7 @@ $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 }
 .ibo-breadcrumbs--item-icon{
 	margin-right: $ibo-breadcrumbs--item-icon--margin-x;
-	@extend %ibo-font-ral-nor-150;
+	@extend %ibo-font-size-150;
 	transition: all 0.1s linear;
 
 	> span{

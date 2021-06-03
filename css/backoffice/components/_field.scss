@@ -31,7 +31,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
 /* SCSS rules */
 .ibo-field {
-  @extend %ibo-font-ral-nor-150;
+  @extend %ibo-font-size-150;
 
   /* Avoid value to overflow from its container with very long strings (typically URLs) */
   /* Note: Some types of attribute must be excluding as it can alter their rendering    */
@@ -113,7 +113,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   @extend %ibo-hyperlink-inherited-colors;
   @extend %ibo-fully-centered-content;
-  @extend %ibo-font-ral-nor-100;
+  @extend %ibo-font-size-100;
 
   &:hover {
     background-color: $ibo-field--fullscreen-toggler--background-color--on-hover;
@@ -124,6 +124,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
   min-width: 100px;
   max-width: 145px;
   width: 30%;
+  @extend %ibo-font-weight-600;
 
   > .ibo-has-description {
     &::after {
@@ -182,7 +183,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 .object-ref-icon, .object-ref-icon-disabled {
   &.text_decoration {
     margin-right: $ibo-field--value-decoration--spacing-x;
-    @extend %ibo-font-ral-nor-100;
+    @extend %ibo-font-size-100;
   }
 }
 

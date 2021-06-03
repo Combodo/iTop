@@ -159,7 +159,7 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
 
 	border-radius: $ibo-activity-entry--medallion--border-radius;
 
-	@extend %ibo-font-ral-nor-150;
+	@extend %ibo-font-size-150;
 
 	&.ibo-has-image{
 		background-color: $ibo-activity-entry--medallion--has-image--background-color;
@@ -227,7 +227,7 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
   text-align: left;
   color: $ibo-activity-entry--sub-information--text-color;
 
-  @extend %ibo-font-ral-nor-50;
+  @extend %ibo-font-size-50;
 }
 
 .ibo-activity-entry--author-name {

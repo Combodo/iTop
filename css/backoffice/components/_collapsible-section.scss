@@ -84,7 +84,7 @@ $ibo-collapsible-section--body--border-color: $ibo-color-grey-400 !default;
 
 		.ibo-collapsible-section--title {
 			color: $ibo-collapsible-section--title--color;
-			@extend %ibo-font-ral-med-250;
+			@extend %ibo-font-size-250;
 			flex-grow: 1;
 		}
 	}

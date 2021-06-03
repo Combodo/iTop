@@ -134,7 +134,7 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 	padding: $ibo-global-search--drawer--padding-y $ibo-global-search--drawer--padding-x;
 	background-color: $ibo-global-search--drawer--background-color;
 	box-shadow: none;
-	@extend %ibo-font-ral-nor-100;
+	@extend %ibo-font-size-100;
 }
 .ibo-global-search--compartment-title{
 	margin-bottom: $ibo-global-search--compartment-title--margin-bottom;

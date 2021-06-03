@@ -59,7 +59,7 @@ $ibo-vendors-datatables--row-highlight--colors:(
     height: $ibo-vendors-datatables--pagination-button--min-size;
     border-radius: $ibo-vendors-datatables--pagination-button--border-radius;
 
-    @extend %ibo-font-ral-med-100;
+    @extend %ibo-font-size-100;
     @extend %ibo-hyperlink-inherited-colors;
 
     &:hover {
@@ -74,7 +74,7 @@ $ibo-vendors-datatables--row-highlight--colors:(
 
     &.previous,
     &.next {
-      @extend %ibo-font-ral-med-200;
+      @extend %ibo-font-size-200;
     }
 
     &.current {

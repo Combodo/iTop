@@ -35,7 +35,6 @@ $ibo-popover-menu--item--icon--padding-right: 5px !default;
 .ibo-popover-menu--item{
   padding: $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-right $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-left;
   color: $ibo-popover-menu--item--text-color;
-  @extend %ibo-font-ral-nor-150;
 
   a {
     color: $ibo-popover-menu--item--text-color;

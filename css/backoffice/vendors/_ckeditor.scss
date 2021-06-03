@@ -78,6 +78,6 @@ ul.cke_autocomplete_panel{
   }
 	.ibo-vendors-ckeditor--autocomplete-item-title{
 		color: $ibo-vendors-ckeditor--autocomplete-item-title--text-color;
-		@extend %ibo-font-ral-bol-100;
+		@extend %ibo-font-weight-700;
 	}
 }
