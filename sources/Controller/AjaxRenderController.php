@@ -312,6 +312,7 @@ class AjaxRenderController
 		$aResult["recordsFiltered"] = $oSet->Count();
 		$aResult["data"] = [];
 		while ($aObject = $oSet->FetchAssoc()) {
+			$aObj = [];
 			foreach ($aClassAliases as $sAlias => $sClass) {
 				if (isset($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
