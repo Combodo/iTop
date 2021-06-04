@@ -29,7 +29,6 @@ $.fn.dataTable.pipeline = function (opts) {
 		let message = Dict.S('UI:Datatables:Language:Processing');
 		if (this.find('tbody').find('td').length == 0) {
 			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
-			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
 			this.find('tbody').block({
 				message: message,
 				css: {
