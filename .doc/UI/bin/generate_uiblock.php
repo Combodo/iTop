@@ -214,7 +214,7 @@ EOF;
 	if (!empty($aDocGeneralParams)) {
 		echo "$sClass common parameters\n";
 		echo str_repeat("^", strlen("$sClass common parameters"));
-		echo "\n";
+		echo "\n\n";
 		$aColumns = [
 			'name' => 0,
 			'type' => 0,
@@ -332,7 +332,7 @@ function GetPropertyComment($sClass, $sProperty, &$sComment): void
 	$oTargetClass = new ReflectionClass($sClass);
 	$oProperty = $oTargetClass->getProperty($sProperty);
 	$sComment = $oProperty->getDocComment();
-	if (preg_match("#/\*\*\s*@var.*$sProperty\s*(?<comment>.*)\*/#", $sComment, $aMatches)) {
+	if (preg_match("#/\*\*\s*@var\s+\S+(\s+$sProperty)?\s+(?<comment>.*)\*/#", $sComment, $aMatches)) {
 		$sComment = trim($aMatches['comment']);
 	}
 }
