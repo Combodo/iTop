@@ -16,6 +16,8 @@ $ibo-list-column--max-height: 150px !default;
 
 $ibo-datatable--sort-order--color: $ibo-color-orange-600 !default;
 
+$ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
+
 .ibo-datatable--toolbar {
   display: flex;
   justify-content: space-between;
@@ -82,5 +84,11 @@ $ibo-datatable--sort-order--color: $ibo-color-orange-600 !default;
   }
   &.ibo-is-none::after{
     content: '\f0dc';
+  }
+}
+
+.itop-fieldsorter{
+  >.selected{
+    background-color: $ibo-fieldsorter--selected--background-color;
   }
 }

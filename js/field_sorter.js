@@ -24,8 +24,8 @@ $(function()
 			var me = this;
 			this._initFields();
 
-			this.moveup_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.moveup+'</button>');
-			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
+			this.moveup_btn = $('<button type="button" disabled class="ibo-button ibo-is-regular ibo-is-neutral ibo-button--vertical-align">'+this.options.labels.moveup+'</button>');
+			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-is-regular ibo-is-neutral ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
 			columnWithButtons = $('<div class="ibo-mini-column"></div>');
 			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append('<br>').append(this.movedown_btn));
 			this.moveup_btn.on('click', function () {
