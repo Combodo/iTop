@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>FieldSet &mdash; iTop UI 3.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../_static/css/ui-doc.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+        <script src="../../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Form" href="../Form/Form.html" />
+    <link rel="prev" title="FieldBadge" href="../FieldBadge/FieldBadge.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../index.html" class="icon icon-home" alt="Documentation Home"> iTop UI
+          
+
+          
+            
+            <img src="../../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Twig Base:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBaseTuto/TwigBaseTuto.html">Twig Base Tutorial</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBaseReference/TwigBaseReference.html">Twig Base Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tags reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../Component.html">UI Components</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../Alert/Alert.html">Alert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Button/Button.html">Button</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ButtonGroup/ButtonGroup.html">ButtonGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CollapsibleSection/CollapsibleSection.html">CollapsibleSection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../DataTable/DataTable.html">DataTable</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Field/Field.html">Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../FieldBadge/FieldBadge.html">FieldBadge</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">FieldSet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#twig-tag">Twig Tag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#fieldset-standard">FieldSet Standard</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fieldset-common-parameters">FieldSet common parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Form/Form.html">Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/FileSelect/FileSelect.html">FileSelect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/Input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/Select/Select.html">Select</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/Select/SelectOption.html">SelectOption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Panel/Panel.html">Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Spinner/Spinner.html">Spinner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Title/Title.html">Title</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Toolbar/Toolbar.html">Toolbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Toolbar/ToolbarSpacer/ToolbarSpacer.html">ToolbarSpacer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Layout/Layout.html">UI Layouts</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">iTop UI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../Component.html">UI Components</a> &raquo;</li>
+        
+      <li>FieldSet</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../../_sources/generated/Component/FieldSet/FieldSet.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="fieldset">
+<span id="id1"></span><h1>FieldSet<a class="headerlink" href="#fieldset" title="Permalink to this headline">¶</a></h1>
+<p>Class FieldSet</p>
+<hr class="docutils" />
+<div class="section" id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Example FieldSets</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<img alt="../../../_images/FieldSet.png" src="../../../_images/FieldSet.png" />
+</div>
+<hr class="docutils" />
+<div class="section" id="twig-tag">
+<h2>Twig Tag<a class="headerlink" href="#twig-tag" title="Permalink to this headline">¶</a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Tag</dt>
+<dd class="field-odd"><p><strong>UIFieldSet</strong></p>
+</dd>
+<dt class="field-even">Syntax</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIFieldSet</span> <span class="p">T</span><span class="nv">ype</span> <span class="o">{</span><span class="p">P</span><span class="nv">arameters</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIFieldSet</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 75%" />
+<col style="width: 25%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#fieldsetstandard"><span class="std std-ref">Standard</span></a></p></td>
+<td><p>No comment</p></td>
+</tr>
+</tbody>
+</table>
+<div class="section" id="fieldset-standard">
+<span id="fieldsetstandard"></span><h3>FieldSet Standard<a class="headerlink" href="#fieldset-standard" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIFieldSet</span> <span class="p">S</span><span class="nv">tandard</span> <span class="o">{</span><span class="nv">sLegend</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sId</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIFieldSet</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 22%" />
+<col style="width: 31%" />
+<col style="width: 17%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sLegend</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sId</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="fieldset-common-parameters">
+<h3>FieldSet common parameters<a class="headerlink" href="#fieldset-common-parameters" title="Permalink to this headline">¶</a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 10%" />
+<col style="width: 61%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>AddCSSClass</p></td>
+<td><p>string</p></td>
+<td><p>CSS class to add to the generated html block</p></td>
+</tr>
+<tr class="row-even"><td><p>AddCSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>AddCssFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddDeferredBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddHtml</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddJsFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddMultipleCssFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddMultipleJsFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddSubBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>CSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>DataAttributes</p></td>
+<td><p>array</p></td>
+<td><p>Array of data attributes in the format [‘name’ =&gt; ‘value’]</p></td>
+</tr>
+<tr class="row-even"><td><p>DeferredBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>IsHidden</p></td>
+<td><p>bool</p></td>
+<td><p>Indicates if the block is hidden by default</p></td>
+</tr>
+<tr class="row-even"><td><p>SubBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<dl class="field-list simple">
+<dt class="field-odd">Related Tag</dt>
+<dd class="field-odd"><p><a class="reference internal" href="../Field/Field.html#field"><span class="std std-ref">Field</span></a></p>
+</dd>
+</dl>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Example to generate a FieldSet:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="x">{% UIFieldSet Standard {sLegend: &quot;iTop environment&quot;} %}</span>
+<span class="x">    {% UIField ... %}</span>
+<span class="x">    ...</span>
+<span class="x">{% EndUIFieldSet %}</span>
+</pre></div>
+</div>
+<p>The result:</p>
+<img alt="../../../_images/FieldSet-explained.png" src="../../../_images/FieldSet-explained.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Form/Form.html" class="btn btn-neutral float-right" title="Form" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../FieldBadge/FieldBadge.html" class="btn btn-neutral float-left" title="FieldBadge" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Combodo
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

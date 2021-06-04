@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>3. Passing variables to templates &mdash; iTop UI 3.0.0 documentation</title>
+  
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/ui-doc.css" type="text/css" />
+
+  
+  
+  
+  
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+        <script src="../../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="4. Adding new operations" href="../Step4/Step4.html" />
+    <link rel="prev" title="2. Hello World!" href="../Step2/Step2.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home" alt="Documentation Home"> iTop UI
+          
+
+          
+            
+            <img src="../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Twig Base:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../TwigBaseTuto.html">Twig Base Tutorial</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../Step1/Step1.html">1. Creating the structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Step2/Step2.html">2. Hello World!</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">3. Passing variables to templates</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Step4/Step4.html">4. Adding new operations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../TwigBaseReference/TwigBaseReference.html">Twig Base Reference</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Tags reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/Component/Component.html">UI Components</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generated/Layout/Layout.html">UI Layouts</a></li>
+</ul>
+
+            
+          
+        </div>
+        
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">iTop UI</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html" class="icon icon-home"></a> &raquo;</li>
+        
+          <li><a href="../TwigBaseTuto.html">Twig Base Tutorial</a> &raquo;</li>
+        
+      <li>3. Passing variables to templates</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/TwigBaseTuto/Step3/Step3.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="passing-variables-to-templates">
+<span id="step3"></span><h1>3. Passing variables to templates<a class="headerlink" href="#passing-variables-to-templates" title="Permalink to this headline">¶</a></h1>
+<p>We have seen in <a class="reference internal" href="../Step2/Step2.html#step2"><span class="std std-ref">2. Hello World!</span></a> how to create a static template. Let’s send some variables to have a more dynamic display.</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">src/Controller/MyModuleController.php</span><a class="headerlink" href="#id1" title="Permalink to this code">¶</a></div>
+<div class="highlight-php notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="nx">MyCompany\iTop\MyModule\Controller</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Combodo\iTop\Application\TwigBase\Controller\Controller</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">UserRights</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MyModuleController</span> <span class="k">extends</span> <span class="nx">Controller</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">OperationHelloWorld</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$aParams</span><span class="p">[</span><span class="s1">&#39;sName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">UserRights</span><span class="o">::</span><span class="na">GetUser</span><span class="p">();</span>
+        <span class="nv">$aParams</span><span class="p">[</span><span class="s1">&#39;sDate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">date</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">DisplayPage</span><span class="p">(</span><span class="nv">$aParams</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">DisplayPage()</span></code> method accept an array of parameters. This array is transformed into variables for the Twig template.</p>
+<p>Here two variables are created: <code class="docutils literal notranslate"><span class="pre">sName</span></code> and <code class="docutils literal notranslate"><span class="pre">sDate</span></code>, we can use them in the template.</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">templates/HelloWorld.html.twig</span><a class="headerlink" href="#id2" title="Permalink to this code">¶</a></div>
+<div class="highlight-twig notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre>1
+2
+3
+4</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UITitle</span> <span class="p">F</span><span class="nv">orPage</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;Hello &#39;</span> <span class="o">~</span> <span class="nv">sName</span> <span class="o">~</span> <span class="s1">&#39;!&#39;</span><span class="o">}</span> <span class="cp">%}{%</span> <span class="k">EndUITitle</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">UIContentBlock</span> <span class="p">S</span><span class="nv">tandard</span> <span class="o">{</span><span class="p">D</span><span class="nv">ataAttributes</span><span class="o">:</span> <span class="o">{</span><span class="nv">role</span><span class="o">:</span> <span class="s1">&#39;date&#39;</span><span class="o">}}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    We are currently </span><span class="cp">{{</span> <span class="nv">sDate</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">EndUIContentBlock</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>The output is then</p>
+<img alt="../../_images/Hello2.png" src="../../_images/Hello2.png" />
+<p>The variables can be of any type, for example you can give an array as a variable:</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">src/Controller/MyModuleController.php</span><a class="headerlink" href="#id3" title="Permalink to this code">¶</a></div>
+<div class="highlight-php notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13
+14
+15
+16</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">&lt;?php</span>
+
+<span class="k">namespace</span> <span class="nx">MyCompany\iTop\MyModule\Controller</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">Combodo\iTop\Application\TwigBase\Controller\Controller</span><span class="p">;</span>
+<span class="k">use</span> <span class="nx">UserRights</span><span class="p">;</span>
+
+<span class="k">class</span> <span class="nc">MyModuleController</span> <span class="k">extends</span> <span class="nx">Controller</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">OperationHelloWorld</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$aParams</span><span class="p">[</span><span class="s1">&#39;sName&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nx">UserRights</span><span class="o">::</span><span class="na">GetUser</span><span class="p">();</span>
+        <span class="nv">$aParams</span><span class="p">[</span><span class="s1">&#39;sDate&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">date</span><span class="p">(</span><span class="s2">&quot;r&quot;</span><span class="p">);</span>
+        <span class="nv">$aParams</span><span class="p">[</span><span class="s1">&#39;aQuarter&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;January&#39;</span><span class="p">,</span> <span class="s1">&#39;February&#39;</span><span class="p">,</span> <span class="s1">&#39;March&#39;</span><span class="p">];</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">DisplayPage</span><span class="p">(</span><span class="nv">$aParams</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>Here <code class="docutils literal notranslate"><span class="pre">aQuarter</span></code> is an array containing some months, we can use it in a selector:</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">templates/HelloWorld.html.twig</span><a class="headerlink" href="#id4" title="Permalink to this code">¶</a></div>
+<div class="highlight-twig notranslate"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre> 1
+ 2
+ 3
+ 4
+ 5
+ 6
+ 7
+ 8
+ 9
+10
+11
+12
+13</pre></div></td><td class="code"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UITitle</span> <span class="p">F</span><span class="nv">orPage</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;Hello &#39;</span> <span class="o">~</span> <span class="nv">sName</span> <span class="o">~</span> <span class="s1">&#39;!&#39;</span><span class="o">}</span> <span class="cp">%}{%</span> <span class="k">EndUITitle</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">UIContentBlock</span> <span class="p">S</span><span class="nv">tandard</span> <span class="o">{</span><span class="p">D</span><span class="nv">ataAttributes</span><span class="o">:</span> <span class="o">{</span><span class="nv">role</span><span class="o">:</span> <span class="s1">&#39;date&#39;</span><span class="o">}}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    We are currently </span><span class="cp">{{</span> <span class="nv">sDate</span> <span class="cp">}}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">EndUIContentBlock</span> <span class="cp">%}</span><span class="x"></span>
+
+<span class="cp">{%</span> <span class="k">UIForm</span> <span class="p">S</span><span class="nv">tandard</span> <span class="o">{</span><span class="nv">sId</span><span class="s1">:&#39;my-form&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Select Month:</span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">UISelect</span> <span class="p">F</span><span class="nv">orSelect</span> <span class="o">{</span><span class="nv">sName</span><span class="s1">:&#39;month&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">for</span> <span class="nv">index</span><span class="o">,</span><span class="nv">sMonth</span> <span class="k">in</span> <span class="nv">aQuarter</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">            </span><span class="cp">{%</span> <span class="k">UISelectOption</span> <span class="p">F</span><span class="nv">orSelectOption</span> <span class="o">{</span><span class="nv">sValue</span><span class="o">:</span> <span class="nv">index</span><span class="o">,</span> <span class="nv">sLabel</span><span class="o">:</span> <span class="nv">sMonth</span><span class="o">,</span> <span class="nv">bSelected</span><span class="o">:</span><span class="kp">false</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">        </span><span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    </span><span class="cp">{%</span> <span class="k">EndUISelect</span> <span class="cp">%}</span><span class="x"></span>
+<span class="cp">{%</span> <span class="k">EndUIForm</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</td></tr></table></div>
+</div>
+<p>The output is:</p>
+<img alt="../../_images/Hello3.png" src="../../_images/Hello3.png" />
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../Step4/Step4.html" class="btn btn-neutral float-right" title="4. Adding new operations" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../Step2/Step2.html" class="btn btn-neutral float-left" title="2. Hello World!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        
+        &copy; Copyright 2021, Combodo
+
+    </p>
+  </div>
+    
+    
+    
+    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a
+    
+    <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a>
+    
+    provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

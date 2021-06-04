@@ -1,0 +1,17 @@
+.. Copyright (C) 2010-2021 Combodo SARL
+.. http://opensource.org/licenses/AGPL-3.0
+
+.. _Layouts:
+
+UI Layouts
+==========
+
+A UI block that serves as a layout for the page.
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Components:
+
+   MultiColumn/Column/Column
+   MultiColumn/MultiColumn
+   UIContentBlock
