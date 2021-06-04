@@ -186,23 +186,19 @@ EOF
 						$aChoices = $this->oField->GetChoices();
 						foreach ($aChoices as $sChoice => $sLabel)
 						{
-							if ((count($aChoices)== 1) && $bMandatory)
-							{
+							if ((count($aChoices) == 1) && $bMandatory) {
 								// When there is only once choice, select it by default
 								$sSelected = 'checked';
-							    $value = $sChoice;
-							}
-							else
-							{
+								$value = $sChoice;
+							} else {
 								$sSelected = ($value == $sChoice) ? 'checked' : '';
 							}
-							$oRadio=InputUIBlockFactory::MakeForInputWithLabel($sLabel,"radio_".$sId, $sChoice,"{$sId}_{$idx}","radio" );;
+							$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_".$sId, $sChoice, "{$sId}_{$idx}", "radio");;
 							$oRadio->GetInput()->SetIsChecked($sSelected);
 							$oRadio->SetBeforeInput(false);
 							$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
 							$oValue->AddSubBlock($oRadio);
-							if ($bVertical)
-							{
+							if ($bVertical) {
 								$oValue->AddSubBlock(new Html("<br>"));
 							}
 							$idx++;

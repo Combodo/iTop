@@ -17,8 +17,10 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 	public const UI_BLOCK_CLASS_NAME = Select::class;
 
 	/**
-	 * @param string $sName
-	 * @param string|null $sId
+	 * Create a default Select input
+	 *
+	 * @param string $sName {@see Select::$sName}
+	 * @param string|null $sId {@see UIBlock::$sId}
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\Select
 	 */
@@ -31,24 +33,23 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 	}
 
 	/**
+	 * Create a Select input with a label
+	 *
 	 * If you need to have a real field with a label, you might use a {@link Field} component instead
 	 *
-	 * @param string $sName
-	 * @param string $sLabel
-	 * @param string|null $sId
+	 * @param string $sName {@see Select::$sName}
+	 * @param string $sLabel {@see Select::$sLabel}
+	 * @param string|null $sId {@see UIBlock::$sId}
 	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\InputWithLabel
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\Select
 	 */
-	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): InputWithLabel
+	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): Select
 	{
 		$oInput = new Select($sId);
 		$oInput->SetName($sName);
+		$oInput->SetLabel($sLabel);
 
-		if (is_null($sId)) {
-			$sId = $oInput->GetId();
-		}
-
-		return new InputWithLabel($sLabel, $oInput, $sId);
+		return $oInput;
 	}
 
 }

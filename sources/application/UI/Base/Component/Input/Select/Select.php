@@ -8,21 +8,22 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Input\Select;
 
 
+use Combodo\iTop\Application\UI\Base\Component\Input\tInputLabel;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 class Select extends UIContentBlock
 {
+	use tInputLabel;
+
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-select';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/select/select';
 
-	/** @var string */
+	/** @var string Input name for the form */
 	protected $sName;
-	/** @var string */
-	protected $sValue;
-	/** @var bool */
+	/** @var bool if true submit the form as soon as a change is detected */
 	protected $bSubmitOnChange = false;
-	/** @var bool */
+	/** @var bool Allow multiple selection */
 	protected $bIsMultiple = false;
 
 
@@ -32,6 +33,9 @@ class Select extends UIContentBlock
 		$this->bIsMultiple = false;
 	}
 
+	/**
+	 * @param SelectOption $oOption Select option UIBlock
+	 */
 	public function AddOption(SelectOption $oOption)
 	{
 		$this->AddSubBlock($oOption);
@@ -43,7 +47,7 @@ class Select extends UIContentBlock
 	}
 
 	/**
-	 * @param string $sName
+	 * @param string $sName {@see Select::$sName}
 	 *
 	 * @return $this
 	 */
@@ -54,25 +58,8 @@ class Select extends UIContentBlock
 		return $this;
 	}
 
-	public function GetValue(): ?string
-	{
-		return $this->sValue;
-	}
-
 	/**
-	 * @param string|null $sValue
-	 *
-	 * @return $this
-	 */
-	public function SetValue(?string $sValue)
-	{
-		$this->sValue = $sValue;
-
-		return $this;
-	}
-
-	/**
-	 * @return bool
+	 * @return bool {@see Select::$bSubmitOnChange}
 	 */
 	public function GetSubmitOnChange(): bool
 	{
@@ -80,7 +67,7 @@ class Select extends UIContentBlock
 	}
 
 	/**
-	 * @param bool $bSubmitOnChange
+	 * @param bool $bSubmitOnChange {@see Select::$bSubmitOnChange}
 	 *
 	 * @return $this
 	 */
@@ -92,7 +79,7 @@ class Select extends UIContentBlock
 	}
 
 	/**
-	 * @return bool
+	 * @return bool {@see Select::$bIsMultiple}
 	 */
 	public function IsMultiple(): bool
 	{
@@ -100,12 +87,10 @@ class Select extends UIContentBlock
 	}
 
 	/**
-	 * @param bool $bIsMultiple
+	 * @param bool $bIsMultiple {@see Select::$bIsMultiple}
 	 */
 	public function SetIsMultiple(bool $bIsMultiple): void
 	{
 		$this->bIsMultiple = $bIsMultiple;
 	}
-
-
 }

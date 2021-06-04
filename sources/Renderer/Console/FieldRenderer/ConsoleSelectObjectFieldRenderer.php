@@ -26,12 +26,12 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Form\Field\SelectObjectField;
 use Combodo\iTop\Form\Validator\MandatoryValidator;
 use Combodo\iTop\Renderer\BlockRenderer;
-use \Dict;
-use \DBObjectSet;
 use Combodo\iTop\Renderer\FieldRenderer;
-use Combodo\iTop\Form\Field\SelectObjectField;
+use DBObjectSet;
+use Dict;
 use UIExtKeyWidget;
 
 /**
@@ -41,16 +41,16 @@ use UIExtKeyWidget;
  */
 class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 {
-    /**
-     * @inheritDoc
-     */
-    public function Render()
+	/**
+	 * @inheritDoc
+	 */
+	public function Render()
 	{
 		$oOutput = parent::Render();
 
 		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
 		$oBlock->SetValueId($this->oField->GetGlobalId());
-		$oBlock->AddDataAttribute("input-id",$this->oField->GetGlobalId());
+		$oBlock->AddDataAttribute("input-id", $this->oField->GetGlobalId());
 
 		$sEditType = 'none';
 		if ($this->oField->GetReadOnly())
