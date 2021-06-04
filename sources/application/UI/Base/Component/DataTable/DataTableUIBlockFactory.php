@@ -319,8 +319,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 		foreach ($aClassAliases as $sClassAlias => $sClassName) {
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
+				$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
 				if ($aData['sort'] != 'none') {
-					$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
 					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
 					$aSortDatable=[$iIndexColumn,$aData['sort']];
 				}
