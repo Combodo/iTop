@@ -1,0 +1,9 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+$ibo-vendors-blockui--blockoverlay--within--dialog--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
+
+.ui-dialog .blockUI.blockOverlay{
+  background-color: $ibo-vendors-blockui--blockoverlay--within--dialog--background-color;
+}

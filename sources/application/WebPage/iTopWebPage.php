@@ -380,6 +380,11 @@ JS
 			PrepareWidgets();
 		}, 500);
 	});
+	
+	// Default values for blockui
+	$.blockUI.defaults.css = {}; 
+	$.blockUI.defaults.message= '<i class="fas fa-fw fa-spin fa-sync"></i>'; 
+	$.blockUI.defaults.overlayCSS = {} 
 JS
 		);
 
