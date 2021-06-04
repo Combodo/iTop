@@ -514,8 +514,8 @@ $(function()
 			// - Buttons
 			var oButtonsElem = $('<div></div>')
 				.addClass('sfm_buttons')
-				.append('<button type="button" name="apply">' + Dict.S('UI:Button:Apply') + '</button>')
-				.append('<button type="button" name="cancel">' + Dict.S('UI:Button:Cancel') + '</button>')
+				.append('<button type="button" class="ibo-button ibo-is-regular ibo-is-neutral" name="apply">' + Dict.S('UI:Button:Apply') + '</button>')
+				.append('<button type="button" class="ibo-button ibo-is-regular ibo-is-neutral" name="cancel">' + Dict.S('UI:Button:Cancel') + '</button>')
 				.appendTo(oContentElem);
 
 			// Bind events
