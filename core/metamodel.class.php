@@ -5366,7 +5366,7 @@ abstract class MetaModel
 				$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` ADD $sKeyFieldDefinition";
 				if (!$bTableToCreate)
 				{
-					$aAlterTableItems[$sTable][$sKeyField] = "ADD $sKeyFieldDefinition";
+					$aAlterTableItems[$sTable]['field'][$sKeyField] = "ADD $sKeyFieldDefinition";
 				}
 			}
 			else
@@ -5379,7 +5379,7 @@ abstract class MetaModel
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable`, DROP PRIMARY KEY, ADD PRIMARY key(`$sKeyField`)";
 					if (!$bTableToCreate)
 					{
-						$aAlterTableItems[$sTable][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
+						$aAlterTableItems[$sTable]['field'][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
 					}
 				}
 				if (self::IsAutoIncrementKey($sClass) && !CMDBSource::IsAutoIncrement($sTable, $sKeyField))
@@ -5388,7 +5388,7 @@ abstract class MetaModel
 					$aSugFix[$sClass]['id'][] = "ALTER TABLE `$sTable` CHANGE `$sKeyField` $sKeyFieldDefinition";
 					if (!$bTableToCreate)
 					{
-						$aAlterTableItems[$sTable][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
+						$aAlterTableItems[$sTable]['field'][$sKeyField] = "CHANGE `$sKeyField` $sKeyFieldDefinition";
 					}
 				}
 			}
@@ -5451,7 +5451,7 @@ abstract class MetaModel
 						}
 						else
 						{
-							$aAlterTableItems[$sTable][$sField] = "ADD $sFieldDefinition";
+							$aAlterTableItems[$sTable]['field'][$sField] = "ADD $sFieldDefinition";
 							$aAdditionalRequests = self::GetAdditionalRequestAfterAlter($sClass, $sTable, $sField);
 							if (!empty($aAdditionalRequests))
 							{
@@ -5495,7 +5495,7 @@ abstract class MetaModel
 							}
 							else
 							{
-								$aAlterTableItems[$sTable][] = "ADD $sIndexType `$sIndexName` ($sColumns)";
+								$aAlterTableItems[$sTable]['index'][] = "ADD $sIndexType `$sIndexName` ($sColumns)";
 							}
 						}
 
@@ -5536,7 +5536,7 @@ abstract class MetaModel
 								if (CMDBSource::HasIndex($sTable, $sField))
 								{
 									$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` DROP INDEX `$sIndexName`";
-									$aAlterTableItems[$sTable][] = "DROP INDEX `$sIndexName`";
+									$aAlterTableItems[$sTable]['index'][] = "DROP INDEX `$sIndexName`";
 								}
 								$sSugFixAfterChange = "ALTER TABLE `$sTable` ADD $sIndexType `$sIndexName` ($sColumns)";
 								$sAlterTableItemsAfterChange = "ADD $sIndexType `$sIndexName` ($sColumns)";
@@ -5550,7 +5550,7 @@ abstract class MetaModel
 						{
 							$aErrors[$sClass][$sAttCode][] = "field '$sField' in table '$sTable' has a wrong type: found <code>$sActualFieldSpec</code> while expecting <code>$sDBFieldSpec</code>";
 							$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
-							$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
+							$aAlterTableItems[$sTable]['field'][$sField] = "CHANGE `$sField` $sFieldDefinition";
 						}
 
 						// Create indexes (external keys only... so far)
@@ -5565,7 +5565,7 @@ abstract class MetaModel
 							}
 							else
 							{
-								$aAlterTableItems[$sTable][] = $sAlterTableItemsAfterChange;
+								$aAlterTableItems[$sTable]['index'][] = $sAlterTableItemsAfterChange;
 							}
 						}
 					}
@@ -5625,9 +5625,12 @@ abstract class MetaModel
 							{
 								$aAlterTableItems[$sTable] = array();
 							}
-							array_unshift($aAlterTableItems[$sTable], "DROP INDEX `$sIndexId`");
+							if (isset($aAlterTableItems[$sTable]['index']))
+							{
+								array_unshift($aAlterTableItems[$sTable]['index'], "DROP INDEX `$sIndexId`");
+							}
 						}
-						$aAlterTableItems[$sTable][] = "ADD INDEX `$sIndexId` ($sColumns)";
+						$aAlterTableItems[$sTable]['index'][] = "ADD INDEX `$sIndexId` ($sColumns)";
 					}
 				}
 			}
@@ -5645,7 +5648,7 @@ abstract class MetaModel
 						// without specifying the value of this unknown column
 						$sFieldDefinition = "`$sField` ".CMDBSource::GetFieldType($sTable, $sField).' NULL';
 						$aSugFix[$sClass][$sAttCode][] = "ALTER TABLE `$sTable` CHANGE `$sField` $sFieldDefinition";
-						$aAlterTableItems[$sTable][$sField] = "CHANGE `$sField` $sFieldDefinition";
+						$aAlterTableItems[$sTable]['field'][$sField] = "CHANGE `$sField` $sFieldDefinition";
 					}
 					$aSugFix[$sClass][$sAttCode][] = "-- Recommended action: ALTER TABLE `$sTable` DROP `$sField`";
 				}
@@ -5664,7 +5667,10 @@ abstract class MetaModel
 					{
 						$aAlterTableItems[$sTable] = array();
 					}
-					array_unshift($aAlterTableItems[$sTable], "DROP INDEX `$sIndexId`");
+					if (isset($aAlterTableItems[$sTable]['index']))
+					{
+						array_unshift($aAlterTableItems[$sTable]['index'], "DROP INDEX `$sIndexId`");
+					}
 				}
 			}
 
@@ -5696,8 +5702,16 @@ abstract class MetaModel
 		}
 		foreach ($aAlterTableItems as $sTable => $aChangeList)
 		{
-			$sChangeList = implode(', ', $aChangeList);
-			$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
+			if (isset($aAlterTableItems[$sTable]['field']))
+			{
+				$sChangeList = implode(', ', $aChangeList['field']);
+				$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
+			}
+			if (isset($aAlterTableItems[$sTable]['index']))
+			{
+				$sChangeList = implode(', ', $aChangeList['index']);
+				$aCondensedQueries[] = "ALTER TABLE `$sTable` $sChangeList";
+			}
 			// Add request right after the ALTER TABLE
 			if (isset($aPostTableAlteration[$sTable]))
 			{
