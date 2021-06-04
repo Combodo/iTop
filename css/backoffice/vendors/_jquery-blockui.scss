@@ -1,0 +1,18 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-blockui--blockoverlay--background-color: $ibo-color-white-200 !default;
+$ibo-vendors-blockui--blockomsg--color: $ibo-color-grey-700 !default;
+
+.blockUI.blockOverlay{
+  background-color: $ibo-color-white-200;
+}
+.blockUI.blockMsg{
+  font-size: 6em;
+  text-align: center;
+  color: $ibo-color-grey-700;
+  border: none;
+  background-color: transparent;
+}
