@@ -55,27 +55,27 @@ class PDFBulkExport extends HTMLBulkExport
 
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
-				$oSelectFormat->SetBeforeInput(false);
-				$oSelectFormat->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oSelectFormat->SetIsLabelBefore(false);
+				$oSelectFormat->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
 				$sDefaultFormat = 'A4';
 				foreach ($aPossibleFormat as $sVal) {
-					$oSelectFormat->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, htmlentities(Dict::S('Core:BulkExport:PageSize-'.$sVal), ENT_QUOTES, 'UTF-8'), ($sVal == $sDefaultFormat)));
+					$oSelectFormat->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, htmlentities(Dict::S('Core:BulkExport:PageSize-'.$sVal), ENT_QUOTES, 'UTF-8'), ($sVal == $sDefaultFormat)));
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
 				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_size",
 					Dict::S('Core:BulkExport:PDFPageOrientation'));
-				$oSelectOrientation->SetBeforeInput(false);
-				$oSelectOrientation->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oSelectOrientation->SetIsLabelBefore(false);
+				$oSelectOrientation->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 
 				$aPossibleOrientation = ['P', 'L'];
 				$sDefaultOrientation = 'L';
 				foreach ($aPossibleOrientation as $sVal) {
-					$oSelectOrientation->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, htmlentities(Dict::S('Core:BulkExport:PageOrientation-'.$sVal), ENT_QUOTES, 'UTF-8'), ($sVal == $sDefaultOrientation)));
+					$oSelectOrientation->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sVal, htmlentities(Dict::S('Core:BulkExport:PageOrientation-'.$sVal), ENT_QUOTES, 'UTF-8'), ($sVal == $sDefaultOrientation)));
 				}
 
 				//date format

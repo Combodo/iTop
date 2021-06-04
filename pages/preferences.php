@@ -471,11 +471,10 @@ function GetLanguageFieldBlock(): iUIBlock
 	ksort($aSortedLanguages);
 
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('language', Dict::S('UI:FavoriteLanguage'));
-	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oSelectInput */
-	$oSelectInput = $oSelect->GetInput();
+	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select\Select $oSelectInput */
 	foreach ($aSortedLanguages as $sCode) {
 		$bSelected = ($sCode === Dict::GetUserLanguage());
-		$oSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $aAvailableLanguages[$sCode]['description'].' ('.$aAvailableLanguages[$sCode]['localized_description'].')', $bSelected));
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $aAvailableLanguages[$sCode]['description'].' ('.$aAvailableLanguages[$sCode]['localized_description'].')', $bSelected));
 	}
 
 	return $oSelect;
@@ -490,8 +489,6 @@ function GetThemeFieldBlock(): iUIBlock
 	$aAvailableThemes = ThemeHandler::GetAvailableThemes();
 
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('theme', Dict::S('UI:Preferences:General:Theme'));
-	/** @var \Combodo\iTop\Application\UI\Base\Component\Input\Select $oSelectInput */
-	$oSelectInput = $oSelect->GetInput();
 	foreach ($aAvailableThemes as $sCode => $sLabel) {
 		if (MetaModel::GetConfig()->Get('demo_mode') && ($sCode !== ThemeHandler::GetApplicationThemeId())) {
 			// Demo mode: only the current app. theme is listed in the available choices
@@ -502,7 +499,7 @@ function GetThemeFieldBlock(): iUIBlock
 		if ($sCode === MetaModel::GetConfig()->Get('backoffice_default_theme')) {
 			$sLabel = Dict::Format('UI:Preferences:General:Theme:DefaultThemeLabel', $sLabel);
 		}
-		$oSelectInput->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $sLabel, $bSelected));
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sCode, $sLabel, $bSelected));
 	}
 
 	return $oSelect;
@@ -542,7 +539,7 @@ function GetTabsLayoutFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_layout', Dict::S('UI:Preferences:Tabs:Layout:Label'));
 	foreach ($aOptionsValues as $sValue) {
-		$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:Tabs:Layout:'.ucfirst($sValue)),
 			$sValue === $sCurrentValue)
@@ -570,7 +567,7 @@ function GetTabsNavigationFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('tab_scrollable', Dict::S('UI:Preferences:Tabs:Scrollable:Label'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:Tabs:Scrollable:'.$sDictEntrySuffix),
 			$sValue === $sCurrentValueAsString)
@@ -598,7 +595,7 @@ function GetRichTextToolbarExpandedFieldBlock(): iUIBlock
 	];
 	$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel('toolbarexpanded', Dict::S('UI:Preferences:RichText:ToolbarState'));
 	foreach ($aOptionsValues as $sValue => $sDictEntrySuffix) {
-		$oSelect->GetInput()->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
+		$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption(
 			$sValue,
 			Dict::S('UI:Preferences:RichText:ToolbarState:'.$sDictEntrySuffix),
 			$sValue === $sCurrentValueAsString)

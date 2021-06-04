@@ -397,7 +397,7 @@ abstract class UIBlock implements iUIBlock
 		$sCSSClass = trim($sCSSClass);
 
 		if (!array_key_exists($sCSSClass, $this->aAdditionalCSSClasses)) {
-			$this->aAdditionalCSSClasses[] = $sCSSClass;
+			$this->aAdditionalCSSClasses[$sCSSClass] = $sCSSClass;
 		}
 
 		return $this;

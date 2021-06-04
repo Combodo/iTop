@@ -185,13 +185,13 @@ class CSVBulkExport extends TabularBulkExport
 				$oFieldSetLocalization->AddSubBlock(new Html('</br>'));
 
 				$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel("charset", Dict::S('UI:CSVImport:Encoding'));
-				$oSelect->SetBeforeInput(true);
+				$oSelect->SetIsLabelBefore(true);
 				$oFieldSetLocalization->AddSubBlock($oSelect);
 
 				$aPossibleEncodings = utils::GetPossibleEncodings(MetaModel::GetConfig()->GetCSVImportCharsets());
 				$sDefaultEncoding = MetaModel::GetConfig()->Get('csv_file_default_charset');
 				foreach ($aPossibleEncodings as $sIconvCode => $sDisplayName) {
-					$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sIconvCode, $sDisplayName, ($sIconvCode == $sDefaultEncoding)));
+					$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sIconvCode, $sDisplayName, ($sIconvCode == $sDefaultEncoding)));
 				}
 				//markup
 				$oFieldSetMarkup = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));

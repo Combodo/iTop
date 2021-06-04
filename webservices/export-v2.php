@@ -288,13 +288,13 @@ EOF
 
 
 		$oSelect = SelectUIBlockFactory::MakeForSelectWithLabel("format", Dict::S('Core:BulkExport:ExportFormatPrompt'), "format_selector");
-		$oSelect->SetBeforeInput(true);
+		$oSelect->SetIsLabelBefore(true);
 		$oForm->AddSubBlock($oSelect);
 
 		$aSupportedFormats = BulkExport::FindSupportedFormats();
 		asort($aSupportedFormats);
 		foreach ($aSupportedFormats as $sFormatCode => $sLabel) {
-			$oSelect->GetInput()->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sFormatCode, htmlentities($sLabel, ENT_QUOTES, 'UTF-8'), ($sFormatCode == $sDefaultFormat)));
+			$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sFormatCode, htmlentities($sLabel, ENT_QUOTES, 'UTF-8'), ($sFormatCode == $sDefaultFormat)));
 			$oExporter = BulkExport::FindExporter($sFormatCode);
 			$oExporter->SetObjectList($oExportSearch);
 			$aParts = $oExporter->EnumFormParts();

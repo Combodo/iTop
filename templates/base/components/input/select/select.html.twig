@@ -1,14 +1,19 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-{% extends "base/components/input/layout.html.twig" %}
 {% block iboInput %}
+    {% if oUIBlock.HasLabel() and oUIBlock.IsLabelBefore() %}
+        {% include "base/components/input/inputlabel.html.twig" %}
+    {% endif %}
     <select id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}"
             {% if oUIBlock.GetSubmitOnChange() %} onChange="this.form.submit();" {% endif %}
             {% if oUIBlock.IsMultiple() %} multiple {% endif %}
-            class="{% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+            class="{% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}{% if oUIBlock.GetAdditionalCSSClassesAsString() %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}"
     >
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
     </select>
+    {% if oUIBlock.HasLabel() and not oUIBlock.IsLabelBefore() %}
+        {% include "base/components/input/inputlabel.html.twig" %}
+    {% endif %}
 {% endblock %}
