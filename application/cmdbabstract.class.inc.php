@@ -2305,9 +2305,9 @@ JS
 				case 'Set':
 				case 'TagSet':
 					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-set-widget.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
