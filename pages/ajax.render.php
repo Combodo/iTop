@@ -132,6 +132,79 @@ try
 			$aClassAliases = utils::ReadParam('class_aliases', array());
 			$iListId = utils::ReadParam('list_id', 0);
 
+			foreach ($aColumns as $sClass => $aAttCodes) {
+				foreach ($aAttCodes as $sAttCode => $aAttProperties) {
+					if (!array_key_exists('checked', $aAttProperties)) {
+						/**
+						 * For data passed in XHR queries with some volume, on some servers data can be cut off because of a php.ini's `max_input_vars` set too low
+						 *
+						 * Normal format is :
+						 * ```
+						 * array (
+						 *   'UserRequest' =>
+						 *   array (
+						 *     '_key_' =>
+						 *     array (
+						 *       'label' => 'User Request (Link)',
+						 *       'checked' => 'true',
+						 *       'disabled' => 'true',
+						 *       'alias' => 'UserRequest',
+						 *       'code' => '_key_',
+						 *       'sort' => 'none',
+						 *     ),
+						 *    // ...
+						 *     'parent_request_id_friendlyname' =>
+						 *     array (
+						 *       'label' => 'parent_request_id_friendlyname (Friendly Name)',
+						 *       'checked' => 'false',
+						 *       'disabled' => 'false',
+						 *       'alias' => 'UserRequest',
+						 *       'code' => 'parent_request_id_friendlyname',
+						 *       'sort' => 'none',
+						 *     ),
+						 * )
+						 * ```
+						 *
+						 * While with a low max_input_vars we can get :
+						 * ```
+						 * array (
+						 *   'UserRequest' =>
+						 *   array (
+						 *     '_key_' =>
+						 *     array (
+						 *       'label' => 'User Request (Link)',
+						 *       'checked' => 'true',
+						 *       'disabled' => 'true',
+						 *       'alias' => 'UserRequest',
+						 *       'code' => '_key_',
+						 *       'sort' => 'none',
+						 *     ),
+						 *    // ...
+						 *     'parent_request_id_friendlyname' =>
+						 *     array (
+						 *       'label' => 'parent_request_id_friendlyname (Friendly Name)',
+						 *     ),
+						 * )
+						 * ```
+						 *
+						 * @link https://www.php.net/manual/fr/info.configuration.php#ini.max-input-vars PHP doc on `max_input_vars`
+						 * @link https://www.itophub.io/wiki/page?id=latest%3Ainstall%3Aphp_and_mysql_configuration#php_mysql_mariadb_settings Combodo's recommended options
+						 */
+						$iMaxInputVarsValue = ini_get('max_input_vars');
+						IssueLog::Warning(
+							"ajax.render.php received an invalid array for columns : check max_input_vars value in php.ini !",
+							null,
+							array(
+								'operation' => $operation,
+								'max_input_vars' => $iMaxInputVarsValue,
+								'class.attcode with invalid format' => "$sClass.$sAttCode",
+							)
+						);
+						$aColumns[$sClass][$sAttCode]['checked'] = 'false';
+					}
+				}
+			}
+
 			// Filter the list to removed linked set since we are not able to display them here
 			$aOrderBy = array();
 			$iSortIndex = 0;
