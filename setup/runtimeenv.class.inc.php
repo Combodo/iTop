@@ -514,17 +514,18 @@ class RunTimeEnvironment
 			}
 			$oFactory->LoadModule($oModule);
 		}
-		
 
-		if ($oModule instanceof MFDeltaModule)
-		{
+
+		if ($oModule instanceof MFDeltaModule) {
 			// A delta was loaded, let's save a second copy of the datamodel
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
-		}
-		else
-		{
+		} else {
 			// No delta was loaded, let's save the datamodel now
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
+		}
+
+		if (!$bUseSymLinks && MFCompiler::IsUseSymbolicLinksFlagPresent()) {
+			$bUseSymLinks = true;
 		}
 
 		$sTargetDir = APPROOT.'env-'.$this->sTargetEnv;
