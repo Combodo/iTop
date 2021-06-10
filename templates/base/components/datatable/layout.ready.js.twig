@@ -328,7 +328,7 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
             }
         });
 
-$aOptions = {
+var aOptions{{ oUIBlock.GetId() }} = {
     sListId: '{{ oUIBlock.GetId() }}',
     oColumns: {{ oUIBlock.GetResultColumnsAsJson()|raw }},
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
@@ -346,8 +346,7 @@ $aOptions = {
 if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable')) {
     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('destroy');
 }
-
-$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings($aOptions);
+$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ oUIBlock.GetId() }});
 
 if(window.ResizeObserver){
         let oTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
