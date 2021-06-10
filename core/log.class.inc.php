@@ -398,10 +398,10 @@ class MonthlyRotatingLogFileNameBuilder extends RotatingLogFileNameBuilder
 	 */
 	protected function GetFileSuffix($oDate)
 	{
-		$sWeekYear = $oDate->format('o');
-		$sWeekNumber = $oDate->format('m');
+		$sMonthYear = $oDate->format('o');
+		$sMonthNumber = $oDate->format('m');
 
-		return $sWeekYear.'-month'.$sWeekNumber;
+		return $sMonthYear.'-month'.$sMonthNumber;
 	}
 
 	/**
