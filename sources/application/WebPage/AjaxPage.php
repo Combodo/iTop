@@ -24,6 +24,8 @@ class AjaxPage extends WebPage implements iTabbedPage
 	protected $s_dict_scripts;
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
+	/** @var string  */
+	private $sPromiseId;
 
 	/**
 	 * constructor for the web page
@@ -43,6 +45,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		$this->sContentType = 'text/html';
 		$this->sContentDisposition = 'inline';
 		$this->m_sMenu = "";
+		$this->sPromiseId = utils::ReadParam('ajax_promise_id', uniqid('ajax_', true));
 
 		utils::InitArchiveMode();
 	}
@@ -205,6 +208,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 			'sSanitizedContent' => utils::FilterXSS($this->s_content),
 			'sDeferredContent' => utils::FilterXSS(addslashes(str_replace("\n", '', $this->s_deferred_content))),
 			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
+			'sPromiseId' => $this->sPromiseId
 		];
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);

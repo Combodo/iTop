@@ -518,12 +518,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			$('#label_'+me.id).addClass('ac_dlg_loading');
 		}
 		me.oWizardHelper.UpdateWizard();
+		var sPromiseId = 'ajax_promise_' + me.id;
 		var theMap = {
 			sTargetClass: me.sTargetClass,
 			iInputId: me.id,
 			sAttCode: me.sAttCode,
 			'json': me.oWizardHelper.ToJSON(),
-			operation: 'objectCreationForm'
+			operation: 'objectCreationForm',
+			ajax_promise_id: sPromiseId
 		};
 
 		// Make sure that we cancel any pending request before issuing another
@@ -534,20 +536,22 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$('#ajax_'+me.id).html(data);
-				$('#ac_create_'+me.id).dialog('open');
-				$('#ac_create_'+me.id).dialog("option", "close", me.OnCloseCreateObject);
-				// Modify the action of the cancel button
-				$('#ac_create_'+me.id+' button.cancel').off('click').on('click', me.CloseCreateObject);
-				me.ajax_request = null;
-				// Adjust the dialog's size to fit into the screen
-				if ($('#ac_create_'+me.id).width() > ($(window).width()-40))
-				{
-					$('#ac_create_'+me.id).width($(window).width()-40);
-				}
-				if ($('#ac_create_'+me.id).height() > ($(window).height()-70))
-				{
-					$('#ac_create_'+me.id).height($(window).height()-70);
-				}
+				window[sPromiseId].then(function(){
+					$('#ac_create_'+me.id).dialog('open');
+					$('#ac_create_'+me.id).dialog("option", "close", me.OnCloseCreateObject);
+					// Modify the action of the cancel button
+					$('#ac_create_'+me.id+' button.cancel').off('click').on('click', me.CloseCreateObject);
+					me.ajax_request = null;
+					// Adjust the dialog's size to fit into the screen
+					if ($('#ac_create_'+me.id).width() > ($(window).width()-40))
+					{
+						$('#ac_create_'+me.id).width($(window).width()-40);
+					}
+					if ($('#ac_create_'+me.id).height() > ($(window).height()-70))
+					{
+						$('#ac_create_'+me.id).height($(window).height()-70);
+					}
+				});
 			},
 			'html'
 		);
