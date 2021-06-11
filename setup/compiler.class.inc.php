@@ -178,10 +178,15 @@ class MFCompiler
 	 * @return void
 	 * @throws Exception
 	 */
-	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = false, $bSkipTempDir = false)
+	public function Compile($sTargetDir, $oP = null, $bUseSymbolicLinks = null, $bSkipTempDir = false)
 	{
-		if (!$bUseSymbolicLinks && static::IsUseSymbolicLinksFlagPresent()) {
-			$bUseSymbolicLinks = true;
+		if (is_null($bUseSymbolicLinks)) {
+			$bUseSymbolicLinks = false;
+			if (self::IsUseSymbolicLinksFlagPresent()) {
+				// We are only overriding the useSymLinks option if the consumer didn't specify anything
+				// The toolkit always send this parameter for example, but not the Designer Connector
+				$bUseSymbolicLinks = true;
+			}
 		}
 
 		$sFinalTargetDir = $sTargetDir;
