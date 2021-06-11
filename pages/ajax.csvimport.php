@@ -434,6 +434,7 @@ EOF
 					$oButtonCsv = ButtonUIBlockFactory::MakeIconLink('ibo-import-csv--download-file fas fa-file-excel', $sClassDisplayName.'.xlsx', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName);
 					$oPage->AddSubBlock($oButtonCsv);
 					$oTextArea = new TextArea("", $sResult, "", 100, 5);
+					$oPage->AddSubBlock($oTextArea);
 				}
 			} else {
 				$oPage = new AjaxPage("Class $sClassName is not a valid class !");
