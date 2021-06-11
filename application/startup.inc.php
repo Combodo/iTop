@@ -45,7 +45,7 @@ register_shutdown_function(function()
 				$sMessage = substr($sMessage, 0, $iStackTracePos);
 			}
 		}
-		IssueLog::error($sMessage);
+		IssueLog::error($sMessage, null, $err);
 		if (strpos($err['message'], 'Allowed memory size of') !== false)
 		{
 			$sLimit = ini_get('memory_limit');
