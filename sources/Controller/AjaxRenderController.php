@@ -225,10 +225,12 @@ class AjaxRenderController
 		$iDrawNumber = utils::ReadParam('draw', 1);
 
 		$aSort = utils::ReadParam('order', [], false, 'array');
+		$bForceSort = false;
 		if (count($aSort) > 0) {
 			$iSortCol = $aSort[0]["column"];
 			$sSortOrder = $aSort[0]["dir"];
-		} else {
+		} else{
+			$bForceSort = true;
 			$iSortCol = 0;
 			$sSortOrder = "asc";
 		}
@@ -250,6 +252,15 @@ class AjaxRenderController
 			$aColumnsLoad[$sAlias] = array();
 			if (!isset($aColumns[$sAlias])) {
 				continue;
+			}
+			// It's better to use default class order than asc first column when none specified by the request 
+			if($bForceSort && count(MetaModel::GetOrderByDefault($sClassName)) > 0){
+				$iSortCol = -1;
+				
+				$aDefaultOrder = MetaModel::GetOrderByDefault($sClassName);
+				foreach ($aDefaultOrder as $sAttCode => $bOrder) {
+					$aOrderBy[$sAlias.'.'.$sAttCode] = $bOrder;
+				}
 			}
 			foreach ($aColumns[$sAlias] as $sAttCode => $aData) {
 				if ($aData['checked'] == 'true') {
