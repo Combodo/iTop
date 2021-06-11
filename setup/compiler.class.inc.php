@@ -112,6 +112,8 @@ class MFCompiler
 	}
 
 	/**
+	 * @param bool $bForce if true then will just check file existence
+	 *
 	 * @return bool possible return values :
 	 *   * always false if not in dev env
 	 *   * `symlink` function non existent : false
@@ -124,14 +126,16 @@ class MFCompiler
 	 *
 	 * @since 3.0.0
 	 */
-	public static function IsUseSymbolicLinksFlagPresent(): bool
+	public static function IsUseSymbolicLinksFlagPresent(bool $bForce = false): bool
 	{
-		if (!utils::IsDevelopmentEnvironment()) {
-			return false;
-		}
+		if (!$bForce) {
+			if (!utils::IsDevelopmentEnvironment()) {
+				return false;
+			}
 
-		if (!function_exists('symlink')) {
-			return false;
+			if (!function_exists('symlink')) {
+				return false;
+			}
 		}
 
 		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
@@ -145,7 +149,7 @@ class MFCompiler
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		$bHasUseSymlinksFile = static::IsUseSymbolicLinksFlagPresent();
+		$bHasUseSymlinksFile = static::IsUseSymbolicLinksFlagPresent(true);
 
 		if ($bUseSymbolicLinks) {
 			if ($bHasUseSymlinksFile) {
