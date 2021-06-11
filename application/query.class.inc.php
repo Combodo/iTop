@@ -17,6 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\Field;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+
 abstract class Query extends cmdbAbstractObject
 {
 	/**
@@ -120,36 +126,37 @@ class QueryOQL extends Query
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
-		
-		if (!$bEditMode)
-		{
+		$oPage->add_script("$('[name=attr_oql]').addClass('ibo-queryoql'); $('[data-attribute-code=oql]').addClass('ibo-queryoql');");
+
+		if (!$bEditMode) {
 			$sFields = trim($this->Get('fields'));
 			$bExportV1Recommended = ($sFields == '');
-			if ($bExportV1Recommended)
-			{
+			if ($bExportV1Recommended) {
 				$oFieldAttDef = MetaModel::GetAttributeDef('QueryOQL', 'fields');
-				$oPage->add('<div class="message message_error" style="padding-left: 30px;"><div style="padding: 10px;">'.Dict::Format('UI:Query:UrlV1', $oFieldAttDef->GetLabel()).'</div></div>');
+				$oAlert = AlertUIBlockFactory::MakeForFailure()
+					->SetIsClosable(false)
+					->SetIsCollapsible(false);
+				$oAlert->AddCSSClass('mb-5');
+				$oAlert->AddSubBlock(new Html(Dict::Format('UI:Query:UrlV1', '')));
+				$oPage->AddSubBlock($oAlert);
 				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
-			}
-			else 
-			{
+			} else {
 				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
 			}
 			$sOql = $this->Get('oql');
 			$sMessage = null;
-			try
-			{
+			try {
 				$oSearch = DBObjectSearch::FromOQL($sOql);
 				$aParameters = $oSearch->GetQueryParams();
-				foreach($aParameters as $sParam => $val)
-				{
+				foreach ($aParameters as $sParam => $val) {
 					$sUrl .= '&arg_'.$sParam.'=["'.$sParam.'"]';
 				}
 
-				$oPage->p(Dict::S('UI:Query:UrlForExcel').':<br/><textarea cols="80" rows="3" READONLY>'.$sUrl.'</textarea>');
+				$oTextArea = new TextArea("", $sUrl, null, 80, 3);
+				$oFieldUrl = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:Query:UrlForExcel'), $oTextArea, Field::ENUM_FIELD_LAYOUT_LARGE);
+				$oPage->AddSubBlock($oFieldUrl);
 
-				if (count($aParameters) == 0)
-				{
+				if (count($aParameters) == 0) {
 					$oBlock = new DisplayBlock($oSearch, 'list');
 					$aExtraParams = array(
 						//'menu' => $sShowMenu,
@@ -159,10 +166,13 @@ class QueryOQL extends Query
 					$oBlock->Display($oPage, $sBlockId, $aExtraParams);
 				}
 			}
-			catch (OQLException $e)
-			{
-				$sMessage = '<div class="message message_error" style="padding-left: 30px;"><div style="padding: 10px;">'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</div></div>';
-				$oPage->p($sMessage);
+			catch
+			(OQLException $e) {
+				$oAlert = AlertUIBlockFactory::MakeForFailure(Dict::Format('UI:RunQuery:Error'), $e->getHtmlDesc())
+					->SetIsClosable(false)
+					->SetIsCollapsible(false);
+				$oAlert->AddCSSClass('mb-5');
+				$oPage->AddSubBlock($oAlert);
 			}
 		}
 		return $aFieldsMap;
