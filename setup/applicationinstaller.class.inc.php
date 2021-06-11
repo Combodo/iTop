@@ -274,8 +274,9 @@ class ApplicationInstaller
 					$sExtensionDir = $this->oParams->Get('extensions_dir', 'extensions');
 					$sTargetEnvironment = $this->GetTargetEnv();
 					$sTargetDir = $this->GetTargetDir();
-					$bUseSymbolicLinks = false;
 					$aMiscOptions = $this->oParams->Get('options', array());
+
+					$bUseSymbolicLinks = null;
 					if ((isset($aMiscOptions['symlinks']) && $aMiscOptions['symlinks'])) {
 						if (function_exists('symlink')) {
 							$bUseSymbolicLinks = true;
@@ -500,8 +501,7 @@ class ApplicationInstaller
 	{
 		$oBackup = new SetupDBBackup($oConfig);
 		$sTargetFile = $oBackup->MakeName($sBackupFileFormat);
-		if (!empty($sMySQLBinDir))
-		{
+		if (!empty($sMySQLBinDir)) {
 			$oBackup->SetMySQLBinDir($sMySQLBinDir);
 		}
 
@@ -509,8 +509,8 @@ class ApplicationInstaller
 		$oBackup->CreateCompressedBackup($sTargetFile, $sSourceConfigFile);
 	}
 
-	
-	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = false)
+
+	protected static function DoCompile($aSelectedModules, $sSourceDir, $sExtensionDir, $sTargetDir, $sEnvironment, $bUseSymbolicLinks = null)
 	{
 		SetupLog::Info("Compiling data model.");
 
@@ -518,8 +518,7 @@ class ApplicationInstaller
 		require_once(APPROOT.'setup/modelfactory.class.inc.php');
 		require_once(APPROOT.'setup/compiler.class.inc.php');
 
-		if (empty($sSourceDir) || empty($sTargetDir))
-		{
+		if (empty($sSourceDir) || empty($sTargetDir)) {
 			throw new Exception("missing parameter source_dir and/or target_dir");
 		}		
 
