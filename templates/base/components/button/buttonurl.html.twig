@@ -1,5 +1,6 @@
+{% set sAriaLabel = oUIBlock.GetLabel() is not empty ? oUIBlock.GetLabel() : (oUIBlock.GetTooltip() is not empty ? oUIBlock.GetTooltip() : '') %}
 <a id="{{ oUIBlock.GetId() }}"
-        class="ibo-button ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
+        class="ibo-button ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
         {% if oUIBlock.GetDataAttributes() %}
             {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                 data-{{ sName }}="{{ sValue }}"
@@ -7,7 +8,16 @@
         {% endif %}
         href="{{ oUIBlock.GetURL() }}"
         target="{{ oUIBlock.GetTarget() }}"
-        {% if oUIBlock.GetTooltip() is not empty %} data-tooltip-content="{{ oUIBlock.GetTooltip() }}" {% else %} title="{{ oUIBlock.GetLabel() }}" {% endif %}
+        {# Visual tooltip... #}
+        {% if oUIBlock.GetTooltip() is not empty %}
+            data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
+        {% else %}
+            title="{{ oUIBlock.GetLabel() }}"
+        {% endif %}
+        {# ... and accessibility title. Important especially in case the button has no label, but only an icon #}
+        {% if sAriaLabel is not empty %}
+            aria-label="{{ sAriaLabel }}"
+        {% endif %}
 >
     {% if oUIBlock.GetIconClass() is not empty %}
         <span class="ibo-button--icon {{ oUIBlock.GetIconClass() }}"></span>

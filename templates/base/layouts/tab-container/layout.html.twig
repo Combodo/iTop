@@ -32,7 +32,10 @@
                         {% endblock %}
                     {% endfor %}
                     <li class="ibo-tab-container--extra-tabs-container ibo-tab-container--tab-header" data-role="ibo-tab-container--extra-tabs-container">
-                        <a href="#" class="ibo-tab-container--extra-tabs-list-toggler" data-role="ibo-tab-container--extra-tabs-list-toggler">
+                        <a href="#" class="ibo-tab-container--extra-tabs-list-toggler" data-role="ibo-tab-container--extra-tabs-list-toggler"
+                           aria-label="{{ 'UI:Layout:TabContainer:ExtraTabsListToggler:Label'|dict_s }}"
+                           data-tooltip-content="{{ 'UI:Layout:TabContainer:ExtraTabsListToggler:Label'|dict_s }}"
+                        >
                             <span class="fas fa-ellipsis-v"></span>
                         </a>
                         <div class="ibo-tab-container--extra-tabs-list ibo-is-hidden" data-role="ibo-tab-container--extra-tabs-list">

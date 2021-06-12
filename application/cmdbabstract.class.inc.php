@@ -3216,7 +3216,8 @@ EOF
 			// - Fullscreen toggler for large fields
 			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
 			$sFullscreenTogglerHTML = (false === in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? '' : <<<HTML
-<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler" 
+<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler"
+aria-label="{$sFullscreenTogglerTooltip}"
 data-tooltip-content="{$sFullscreenTogglerTooltip}" data-fullscreen-toggler-target="$(this).closest('[data-role=\'ibo-field\']')"><span class="fas fa-fw fa-expand-arrows-alt"></span></a>
 HTML;
 
