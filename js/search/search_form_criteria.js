@@ -379,7 +379,7 @@ $(function()
 
 			// Prepare base DOM structure
 			this.element
-				.append('<div class="sfc_header"><div class="sfc_title"></div><span class="sfc_toggle"><a class="fas fa-caret-down"' + ' href="#"></a></span></div>')
+				.append('<div class="sfc_header"><div class="sfc_title"></div><a class="sfc_toggle" href="#" aria-label="'+Dict.S('UI:Search:Criteria:Toggle')+'" data-tooltip-content="'+Dict.S('UI:Search:Criteria:Toggle')+'"><span class="fas fa-caret-down"></span></a></div>')
 				.append('<div class="sfc_form_group ibo-form-group"><div class="sfc_fg_operators"></div><div class="sfc_fg_buttons"></div></div>');
 
 			// Bind events
@@ -422,7 +422,7 @@ $(function()
 			// Removable / locked decoration
 			if(this.options.is_removable === true)
 			{
-				this.element.find('.sfc_header').append('<span class="sfc_close"><a class="fas fa-times" href="#"></a></span>');
+				this.element.find('.sfc_header').append('<a class="sfc_close" href="#" aria-label="'+Dict.S('UI:Search:Criteria:Remove')+'" data-tooltip-content="'+Dict.S('UI:Search:Criteria:Remove')+'"><span class="fas fa-times"></span></a>');
 				this.element.find('.sfc_close').on('click', function(oEvent){
 					// Prevent anchor
 					oEvent.preventDefault();
@@ -433,7 +433,7 @@ $(function()
 			else
 			{
 				this.element.addClass('locked');
-				this.element.find('.sfc_header').append('<span class="sfc_locked"><span class="fas fa-lock"></span></span>');
+				this.element.find('.sfc_header').append('<span class="sfc_locked" aria-label="'+Dict.S('UI:Search:Criteria:Locked')+'" data-tooltip-content="'+Dict.S('UI:Search:Criteria:Locked')+'"><span class="fas fa-lock"></span></span>');
 			}
 
 			// Form group
@@ -598,7 +598,9 @@ $(function()
 			var titleElem = this.element.find('.sfc_title');
 
 			titleElem.html(sTitle);
-			titleElem.attr('title', titleElem.text());
+			titleElem.attr('aria-label', titleElem.text());
+			titleElem.attr('data-tooltip-content', titleElem.text());
+			CombodoTooltip.InitTooltipFromMarkup(titleElem, true);
 		},
 
 		// Operators helpers

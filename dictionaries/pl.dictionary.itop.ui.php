@@ -1476,6 +1476,11 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:Search:AddCriteria:List:Others:Title' => 'Inne',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Jeszcze nic.',
 
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
+
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Każdy',

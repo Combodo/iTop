@@ -1464,6 +1464,11 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:AddCriteria:List:Others:Title' => 'Andere',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Noch keine',
 
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
+
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Beliebig',
