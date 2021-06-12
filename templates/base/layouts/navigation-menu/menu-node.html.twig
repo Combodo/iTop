@@ -4,7 +4,8 @@
 		<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>
 			<span class="ibo-navigation-menu--menu-node-label" data-role="ibo-navigation-menu--menu-node-label" title="{{ aMenuNode.sTitle }}">{{ aMenuNode.sTitle }}</span>
 			{% if aMenuNode.bHasCount %}
-				<span class="ibo-navigation-menu--menu-node-counter" data-menu-id="{{ aMenuNode.sId }}" style="display: none;"></span>
+                {# Counters will be shown once the background update is done (see JS widget) #}
+				<span class="ibo-navigation-menu--menu-node-counter ibo-is-hidden" data-menu-id="{{ aMenuNode.sId }}"></span>
 			{% endif %}
 		</a>
 	{% else %}
