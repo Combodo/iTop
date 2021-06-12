@@ -28,7 +28,8 @@
 					{% for aClass in oUIBlock.GetLastClasses() %}
 						<a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
 							{% if aClass.icon_url is defined %}
-								<img src="{{ aClass.icon_url}}" class="ibo-quick-create--compartment-element-image">
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+                                <img src="{{ aClass.icon_url}}" alt="" class="ibo-quick-create--compartment-element-image">
 							{% endif %}
 							{{ aClass.label_html|raw }}
 						</a>

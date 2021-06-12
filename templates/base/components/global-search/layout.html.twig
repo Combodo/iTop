@@ -24,7 +24,8 @@
 					{% for aQuery in oUIBlock.GetLastQueries() %}
 						<a href="{{ aQuery.target_url }}" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
 							{% if aQuery.icon_url is defined %}
-								<img src="{{ aQuery.icon_url}}" class="ibo-global-search--compartment-element-image">
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+								<img src="{{ aQuery.icon_url}}" alt="" class="ibo-global-search--compartment-element-image">
 							{% endif %}
 							{{ aQuery.label_html|raw }}
 						</a>
