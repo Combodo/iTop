@@ -164,23 +164,27 @@ try
 			/** @var WizardStep $oStep */
 			$oStep = new $sClass($oDummyController, $sState);
 			$sConfigFile = utils::GetConfigFilePath();
-			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig())
-			{
+			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
 				$sRelativePath = utils::GetConfigFilePathRelative();
 				$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
 				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 				$oPage->output();
-			}
-			else
-			{
+			} else {
 				$oStep->AsyncAction($oPage, $sActionCode, $aParams);
 			}
 		}
-		$oPage->output();
-		break;
+			$oPage->output();
+			break;
+
+		case 'toggle_use_symbolic_links':
+			$sUseSymbolicLinks = Utils::ReadParam('bUseSymbolicLinks', false);
+			$bUseSymbolicLinks = ($sUseSymbolicLinks === 'true');
+			MFCompiler::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
+			echo "toggle useSymbolicLInks file : $bUseSymbolicLinks";
+			break;
 
 		default:
-		throw(new Exception("Error unsupported operation '$sOperation'"));
+			throw(new Exception("Error unsupported operation '$sOperation'"));
 	}
 }
 catch(Exception $e)

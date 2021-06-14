@@ -32,6 +32,8 @@ test/vendor/*
 !/data/.htaccess
 !/data/index.php
 !/data/web.config
+!/data/exclude.txt
+!/data/.compilation-symlinks
 
 # iTop extensions
 /extensions/**
