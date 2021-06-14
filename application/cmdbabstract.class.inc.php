@@ -428,7 +428,7 @@ EOF
 		}
 
 		foreach ($aTags as $sIconId => $aIconData) {
-			$sTagTooltipContent = utils::HtmlEntities($aIconData['title']);
+			$sTagTooltipContent = utils::EscapeHtml($aIconData['title']);
 			$aHeaderBlocks['subtitle'][static::HEADER_BLOCKS_SUBTITLE_TAG_PREFIX.$sIconId] = new Html(<<<HTML
 <span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$sTagTooltipContent}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
 HTML
