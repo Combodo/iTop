@@ -1418,8 +1418,8 @@ class Config
 		'is_dev_env' => [
 			'type' => 'bool',
 			'description' => 'If true then uncloks dev env functionnalities, see \utils::IsDevelopmentEnvironment',
-			'default' => false,
-			'value' => false,
+			'default' => null,
+			'value' => null,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],

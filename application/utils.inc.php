@@ -2822,6 +2822,9 @@ HTML;
 		if ($bIsDevEnvInConfig === true) {
 			return true;
 		}
+		if ($bIsDevEnvInConfig === false) {
+			return false;
+		}
 
 		if (!defined('ITOP_REVISION')) {
 			//defensive behaviour: by default we are not in dev environment
