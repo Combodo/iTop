@@ -1415,6 +1415,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'is_dev_env' => [
+			'type' => 'bool',
+			'description' => 'If true then uncloks dev env functionnalities, see \utils::IsDevelopmentEnvironment',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'theme.enable_precompilation' => [
 			'type' => 'bool',
 			'description' => 'If false, theme compilation will not use any precompiled file setup optimization.)',

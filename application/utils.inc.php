@@ -2817,12 +2817,18 @@ HTML;
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		if (! defined('ITOP_REVISION')) {
+		$oConfig = utils::GetConfig();
+		$bIsDevEnvInConfig = $oConfig->Get('is_dev_env');
+		if ($bIsDevEnvInConfig === true) {
+			return true;
+		}
+
+		if (!defined('ITOP_REVISION')) {
 			//defensive behaviour: by default we are not in dev environment
 			//can happen even in production (unattended install for example) or with exotic use of iTop
 			return false;
 		}
-		
+
 		return ITOP_REVISION === 'svn';
 	}
 
