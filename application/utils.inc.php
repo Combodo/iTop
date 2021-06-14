@@ -2814,6 +2814,12 @@ HTML;
 	 * Check if iTop is in a development environment (VCS vs build number)
 	 *
 	 * @return bool
+	 *
+	 * @since 2.6.0 method creation
+	 * @since 3.0.0 add the `is_dev_env` config parameter
+	 *
+	 * @use `is_dev_env` config parameter
+	 * @use ITOP_REVISION
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
