@@ -1950,7 +1950,9 @@ EOF
 
 		case 'xlsx_run':
 			$sMemoryLimit = MetaModel::GetConfig()->Get('xlsx_exporter_memory_limit');
-			ini_set('memory_limit', $sMemoryLimit);
+			if (utils::SetMinMemoryLimit($sMemoryLimit) === false) {
+				IssueLog::Warning("XSLX export : cannot set memory_limit to {$sMemoryLimit}");
+			}
 			ini_set('max_execution_time', max(300, ini_get('max_execution_time'))); // At least 5 minutes
 
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
@@ -1958,8 +1960,7 @@ EOF
 			$oExcelExporter = new ExcelExporter($sToken);
 			$aStatus = $oExcelExporter->Run();
 			$aResults = array('status' => $aStatus['code'], 'percentage' => $aStatus['percentage'], 'message' => $aStatus['message']);
-			if ($aStatus['code'] == 'done')
-			{
+			if ($aStatus['code'] == 'done') {
 				$aResults['statistics'] = $oExcelExporter->GetStatistics('html');
 			}
 			$oPage->add(json_encode($aResults));

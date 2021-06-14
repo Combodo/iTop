@@ -208,16 +208,16 @@ class OQLTest extends ItopDataTestCase
     public function BadQueryProvider()
     {
         return array(
-            array('SELECT toto WHERE toto.a = (3++1)', 'OQLParserException'),
-            array('SELECT toto WHHHERE toto.a = "1"', 'OQLParserException'),
-            array('SELECT toto WHERE toto.a == "1"', 'OQLParserException'),
+            array('SELECT toto WHERE toto.a = (3++1)', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHHHERE toto.a = "1"', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHERE toto.a == "1"', 'OQLParserSyntaxErrorException'),
             array('SELECT toto WHERE toto.a % 1', 'Exception'),
-            array('SELECT toto WHERE toto.a like \'arg\'', 'OQLParserException'),
-            array('SELECT toto WHERE toto.a NOT LIKE "That\'s "it""', 'OQLParserException'),
-            array('SELECT toto WHERE toto.a NOT LIKE \'That\'s it\'', 'OQLParserException'),
+            array('SELECT toto WHERE toto.a like \'arg\'', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHERE toto.a NOT LIKE "That\'s "it""', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHERE toto.a NOT LIKE \'That\'s it\'', 'OQLParserSyntaxErrorException'),
             array('SELECT toto WHERE toto.a NOT LIKE "blah \\ truc"', 'Exception'),
             array('SELECT toto WHERE toto.a NOT LIKE \'blah \\ truc\'', 'Exception'),
-            array('SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id = B.id WHERE A.col1 BELOW 2 AND B.id = 3', 'OQLParserException'),
+            array('SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id = B.id WHERE A.col1 BELOW 2 AND B.id = 3', 'OQLParserSyntaxErrorException'),
         );
     }
 

@@ -658,48 +658,91 @@ class utils
 
 	public static function ReadFromFile($sFileName)
 	{
-		if (!file_exists($sFileName)) return false;
+		if (!file_exists($sFileName)) {
+			return false;
+		}
+
 		return file_get_contents($sFileName);
 	}
 
 	/**
 	 * Helper function to convert a value expressed in a 'user friendly format'
 	 * as in php.ini, e.g. 256k, 2M, 1G etc. Into a number of bytes
+	 *
 	 * @param mixed $value The value as read from php.ini
+	 *
 	 * @return number
 	 */
-	public static function ConvertToBytes( $value )
+	public static function ConvertToBytes($value)
 	{
 		$iReturn = $value;
-	    if ( !is_numeric( $value ) )
-		{
-	        $iLength = strlen( $value );
-	        $iReturn = substr( $value, 0, $iLength - 1 );
-	        $sUnit = strtoupper( substr( $value, $iLength - 1 ) );
-	        switch ( $sUnit )
-			{
-	            case 'G':
-	                $iReturn *= 1024;
-	            case 'M':
-	                $iReturn *= 1024;
-	            case 'K':
-	                $iReturn *= 1024;
-	        }
-	    }
-        return $iReturn;
-    }
-  
-  /**
-   * Checks if the memory limit is at least what is required
-   *
-   * @param int $memoryLimit set limit in bytes
-   * @param int $requiredLimit required limit in bytes
-   * @return bool
-   */
-  public static function IsMemoryLimitOk($memoryLimit, $requiredLimit)
-  {
-      return ($memoryLimit >= $requiredLimit) || ($memoryLimit == -1);
-  }
+		if (!is_numeric($value)) {
+			$iLength = strlen($value);
+			$iReturn = substr($value, 0, $iLength - 1);
+			$sUnit = strtoupper(substr($value, $iLength - 1));
+			switch ($sUnit) {
+				case 'G':
+					$iReturn *= 1024;
+				case 'M':
+					$iReturn *= 1024;
+				case 'K':
+					$iReturn *= 1024;
+			}
+		}
+
+		return $iReturn;
+	}
+
+	/**
+	 * Checks if the memory limit is at least what is required
+	 *
+	 * @param int $iMemoryLimit set limit in bytes, use {@link utils::ConvertToBytes()} to convert current php.ini value
+	 * @param int $iRequiredLimit required limit in bytes
+	 *
+	 * @return bool
+	 */
+	public static function IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)
+	{
+		if ($iMemoryLimit === -1) {
+			// -1 means : no limit (see https://www.php.net/manual/fr/ini.core.php#ini.memory-limit)
+			return true;
+		}
+
+		return ($iMemoryLimit >= $iRequiredLimit);
+	}
+
+	/**
+	 * Set memory_limit to required value
+	 *
+	 * @param string $sRequiredLimit required limit, for example '512M'
+	 *
+	 * @return bool|null null if nothing was done, true if modifying memory_limit was successful, false otherwise
+	 *
+	 * @uses utils::ConvertToBytes()
+	 * @uses \ini_get('memory_limit')
+	 * @uses \ini_set()
+	 * @uses utils::ConvertToBytes()
+	 *
+	 * @since 2.7.5 N°3806
+	 */
+	public static function SetMinMemoryLimit($sRequiredLimit)
+	{
+		$iRequiredLimit = static::ConvertToBytes($sRequiredLimit);
+		$sMemoryLimit = trim(ini_get('memory_limit'));
+		if (empty($sMemoryLimit)) {
+			// On some PHP installations, memory_limit does not exist as a PHP setting!
+			// (encountered on a 5.2.0 under Windows)
+			// In that case, ini_set will not work
+			return false;
+		}
+		$iMemoryLimit = static::ConvertToBytes($sMemoryLimit);
+
+		if (static::IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)) {
+			return null;
+		}
+
+		return ini_set('memory_limit', $iRequiredLimit);
+	}
 
 	/**
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
@@ -828,7 +871,7 @@ class utils
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 *
-	 * @since 2.7.0 N°2478 always call {@link MetaModel::GetConfig} first, cache is only set when loading from disk
+	 * @since 2.7.0 N°2478 this method will now always call {@link MetaModel::GetConfig} first, and cache in this class is only set when loading from disk
 	 */
 	public static function GetConfig()
 	{

@@ -48,7 +48,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Attachment+' => '',
 	'Class:Attachment/Attribute:expire' => '过期',
 	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => '临时 id',
+	'Class:Attachment/Attribute:temp_id' => '临时id',
 	'Class:Attachment/Attribute:temp_id+' => '~~',
 	'Class:Attachment/Attribute:item_class' => 'Item class~~',
 	'Class:Attachment/Attribute:item_class+' => '~~',

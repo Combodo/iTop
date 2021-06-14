@@ -2076,6 +2076,7 @@ JS
 	 * Create and store Setup authentication token
 	 *
 	 * @return string token
+	 * @since 2.6.5 2.7.0 N°3952
 	 */
 	final public static function CreateSetupToken()
 	{
@@ -2087,7 +2088,7 @@ JS
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
-
+		$_SESSION['setup_token'] = $sUID;
 		return $sUID;
 	}
 
@@ -2097,6 +2098,7 @@ JS
 	 * @param bool $bRemoveToken
 	 *
 	 * @throws \SecurityException
+	 * @since 2.6.5 2.7.0 N°3952
 	 */
 	final public static function CheckSetupToken($bRemoveToken = false)
 	{
@@ -2109,6 +2111,38 @@ JS
 			@unlink($sTokenFile);
 		}
 	}
+
+	/**
+	 * Check setup transaction and create a new one if necessary
+	 *
+	 * @return bool
+	 * @since 2.6.5 2.7.5 3.0.0 N°3952
+	 */
+	public static function IsSessionSetupTokenValid()
+	{
+		if (isset($_SESSION['setup_token'])) {
+			$sAuth = $_SESSION['setup_token'];
+			$sTokenFile = APPROOT.'data/setup/authent';
+			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * @since 2.6.5 2.7.5 3.0.0 N°3952
+	 */
+	public static function EraseSetupToken()
+	{
+		$sTokenFile = APPROOT.'data/setup/authent';
+		if (is_file($sTokenFile)) {
+			unlink($sTokenFile);
+		}
+		unset($_SESSION['setup_token']);
+	}
+
 
 	/**
 	 * @param string $sText

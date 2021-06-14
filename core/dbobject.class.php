@@ -3150,8 +3150,13 @@ abstract class DBObject implements iDisplay
 						array(), $aParams);
 					while ($oTrigger = $oSet->Fetch())
 					{
-						/** @var \Trigger $oTrigger */
-						$oTrigger->DoActivate($aTriggerArgs);
+						/** @var \TriggerOnObjectMention $oTrigger */
+						try {
+							$oTrigger->DoActivate($aTriggerArgs);
+						}
+						catch (Exception $e) {
+							utils::EnrichRaisedException($oTrigger, $e);
+						}
 					}
 				}
 			}
@@ -3326,7 +3331,7 @@ abstract class DBObject implements iDisplay
 				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
 					array(), $aParams);
 				while ($oTrigger = $oSet->Fetch()) {
-					/** @var \Trigger $oTrigger */
+					/** @var \TriggerOnObjectUpdate $oTrigger */
 					try {
 						$oTrigger->DoActivate($this->ToArgs('this'));
 					}
@@ -3698,16 +3703,22 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Apply a stimulus (workflow)
-     *
-     * @api
-     *
-	 * @param string  $sStimulusCode
-	 * @param bool $bDoNotWrite
-     *
+	 *
+	 * @api
+	 *
+	 * @param string $sStimulusCode
+	 * @param bool $bDoNotWrite if true we won't save the object !
+	 *
 	 * @return bool
-     *
+	 *
 	 * @throws CoreException
 	 * @throws CoreUnexpectedValue
+	 *
+	 * @uses \AttributeStopWatch::Start
+	 * @uses \AttributeStopWatch::Stop
+	 * @uses \DBObject::DBWrite
+	 * @uses \TriggerOnStateLeave::DoActivate
+	 * @uses \TriggerOnStateEnter::DoActivate
 	 */
 	public function ApplyStimulus($sStimulusCode, $bDoNotWrite = false)
 	{
@@ -3822,17 +3833,14 @@ abstract class DBObject implements iDisplay
 					if (in_array($sNewState, $oAttDef->GetStates()))
 					{
 						$oSW->Start($this, $oAttDef);
-					}
-					else
-					{
+					} else {
 						$oSW->Stop($this, $oAttDef);
 					}
 					$this->Set($sAttCode, $oSW);
 				}
 			}
 
-			if (!$bDoNotWrite)
-			{
+			if (!$bDoNotWrite) {
 				$this->DBWrite();
 			}
 
@@ -3840,30 +3848,26 @@ abstract class DBObject implements iDisplay
 			$aParams = array(
 				'class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL),
 				'previous_state' => $sPreviousState,
-				'new_state' => $sNewState);
+				'new_state' => $sNewState,
+			);
 			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateLeave AS t WHERE t.target_class IN (:class_list) AND t.state=:previous_state"), array(), $aParams);
-			while ($oTrigger = $oSet->Fetch())
-			{
-				/** @var \Trigger $oTrigger */
-				try
-				{
+			while ($oTrigger = $oSet->Fetch()) {
+				/** @var \TriggerOnStateLeave $oTrigger */
+				try {
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
-				catch(Exception $e)
-				{
+				catch (Exception $e) {
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}
 
 			$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnStateEnter AS t WHERE t.target_class IN (:class_list) AND t.state=:new_state"), array(), $aParams);
-			while ($oTrigger = $oSet->Fetch())
-			{
-				/** @var \Trigger $oTrigger */
-				try{
+			while ($oTrigger = $oSet->Fetch()) {
+				/** @var \TriggerOnStateEnter $oTrigger */
+				try {
 					$oTrigger->DoActivate($this->ToArgs('this'));
 				}
-				catch(Exception $e)
-				{
+				catch (Exception $e) {
 					utils::EnrichRaisedException($oTrigger, $e);
 				}
 			}

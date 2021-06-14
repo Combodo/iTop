@@ -29,17 +29,21 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 try {
-	ini_set('memory_limit', '256M');
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
+
+	if (utils::SetMinMemoryLimit('256M') === false) {
+		IssueLog::Warning('csvimport : cannot set minimum memory_limit !');
+	}
+
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 
 	$iStep = utils::ReadParam('step', 1);
-	
+
 	$oPage = new iTopWebPage(Dict::S('UI:Title:BulkImport'));
 	$oPage->SetBreadCrumbEntry('ui-tool-bulkimport', Dict::S('Menu:CSVImportMenu'), Dict::S('UI:Title:BulkImport+'), '', 'fas fa-file-import', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 

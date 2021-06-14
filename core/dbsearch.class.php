@@ -1039,10 +1039,8 @@ abstract class DBSearch
 	}
 
 	/**
-     * Generate a SQL query from the current search
-     *
-     * @internal
-     *
+	 * Generate a SQL query from the current search
+	 *
 	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 * @param null $aAttToLoad
@@ -1050,12 +1048,16 @@ abstract class DBSearch
 	 * @param int $iLimitCount
 	 * @param int $iLimitStart
 	 * @param bool $bGetCount
+	 * @param bool $bBeautifulSQL
+	 *
 	 * @return string
-	 * @throws CoreException
-	 * @throws Exception
-	 * @throws MissingQueryArgument
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @internal
+	 *
 	 */
-	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true)
 	{
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
@@ -1120,8 +1122,7 @@ abstract class DBSearch
 		}
 		try
 		{
-			// $bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
-			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, true);
+			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
 			if ($sClassAlias == '_itop_')
 			{
 				IssueLog::Info('SQL Query (_itop_): '.$sRes);

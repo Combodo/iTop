@@ -493,6 +493,10 @@
                         {
                             ShowErrorDialog('{{ 'UI:ObjectDoesNotExist'|dict_s|escape('js') }}', '{{ 'Error:HTTP:404'|dict_s|escape('js') }}');
                         }
+                      else if(oXHR.status === 0 && oXHR.readyState === 0)
+                        {
+                            //DO NOTHING the ajax call has been aborted
+                        }
                         else if(oXHR.responseText !== undefined && IsJSONString(oXHR.responseText) === true)
                         {
                             var oData = JSON.parse(oXHR.responseText);

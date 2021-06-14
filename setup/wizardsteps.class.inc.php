@@ -2216,7 +2216,7 @@ CSS
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Database Parameters</span><ul>');
 		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
-		$oPage->add('<li>DB user password: '.$aInstallParams['database']['pwd'].'</li>');
+		$oPage->add('<li>DB user password: ***</li>');
 		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes'))
 		{
 			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
@@ -2654,18 +2654,16 @@ class WizStepDone extends WizardStep
 		$aAdditionalModules = array();
 		foreach(json_decode($this->oWizard->GetParameter('additional_extensions_modules'), true) as $idx => $aModuleInfo)
 		{
-			if (in_array('_'.$idx, $aParameters[count($aParameters)-1]))
-			{
+			if (in_array('_'.$idx, $aParameters[count($aParameters)-1])) {
 				// Extensions "choices" can now have more than one module
-				foreach($aModuleInfo['modules'] as $sModuleName)
-				{
+				foreach ($aModuleInfo['modules'] as $sModuleName) {
 					$aAdditionalModules[] = $sModuleName;
 				}
 			}
 		}
 		$idx = 0;
 		$aReportedModules = array();
-		while($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
+		while ($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
 		{
 			$aReportedModules[] = $aAdditionalModules[$idx];
 			$idx++;
@@ -2675,6 +2673,7 @@ class WizStepDone extends WizardStep
 		$oPage->add('<img style="border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
 		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");
+		SetupUtils::EraseSetupToken();
 	}
 
 	public function CanMoveForward()

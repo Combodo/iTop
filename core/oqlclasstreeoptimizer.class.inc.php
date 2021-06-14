@@ -55,7 +55,7 @@ class OQLClassTreeOptimizer
 						$sJoinedClass = $oJoin->GetOOQLClassNode()->GetNodeClass();
 						$sExtKeyAttCode = $oJoin->GetLeftField();
 						$oExtKeyAttDef = MetaModel::GetAttributeDef($oCurrentClassNode->GetNodeClass(), $sExtKeyAttCode);
-						if ($sJoinedClass == $oExtKeyAttDef->GetTargetClass()) {
+						if (($oExtKeyAttDef instanceof AttributeExternalKey) && ($sJoinedClass == $oExtKeyAttDef->GetTargetClass())) {
 							// The join is not used, remove from tree
 							$oCurrentClassNode->RemoveJoin($sLeftKey, $index);
 						}

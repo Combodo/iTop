@@ -23,6 +23,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Contrôle de l\'intégrité de la base de données',
 	'DBTools:ErrorsFound' => 'Erreurs trouvées',
+	'DBTools:Indication' => 'Important : après correction il est nécessaire de relancer l\'analyse car d\'autres inconsistances peuvent être générées par les modifications',
+	'DBTools:Disclaimer' => 'ATTENTION : EFFECTUEZ UNE SAUVEGARDE DE LA BASE AVANT D\'APPLIQUER LES CORRECTIONS',
 	'DBTools:Error' => 'Erreur',
 	'DBTools:Count' => 'Nombre',
 	'DBTools:SQLquery' => 'Requête SQL',
@@ -43,7 +45,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:Inconsistencies' => 'Incohérences de base de données',
 	'DBTools:DetailedErrorTitle' => '%2$s erreur(s) dans la classe %1$s : %3$s',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la tableit  `%2$s`',
+	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la table `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clef externe invalide %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Clef externe manquante %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => 'Valeur invalide pour %1$s (colonne: `%2$s.%3$s`)',
