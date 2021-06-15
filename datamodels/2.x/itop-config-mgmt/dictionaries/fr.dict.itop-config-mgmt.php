@@ -1424,7 +1424,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien ApplicationSolutionToSolution Applicative / Processus métier',
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Lien Solution Applicative / Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Processus métier',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '',
