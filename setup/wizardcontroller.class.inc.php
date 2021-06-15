@@ -190,8 +190,10 @@ class WizardController
 		$oPage->add_linked_script('../setup/setup.js');
 		$oPage->add_script("function CanMoveForward()\n{\n".$oStep->JSCanMoveForward()."\n}\n");
 		$oPage->add_script("function CanMoveBackward()\n{\n".$oStep->JSCanMoveBackward()."\n}\n");
-		$oPage->add('<form id="wiz_form" method="post">');
+		$oPage->add('<form id="wiz_form" class="ibo-setup--wizard" method="post">');
+		$oPage->add('<div class="ibo-setup--wizard--content">');
 		$oStep->Display($oPage);
+		$oPage->add('</div>');
 		
 		// Add the back / next buttons and the hidden form
 		// to store the parameters
@@ -203,14 +205,14 @@ class WizardController
 		}
 
 		$oPage->add('<input type="hidden" name="_steps" value="'.htmlentities(json_encode($this->aSteps), ENT_QUOTES, 'UTF-8').'"/>');
-		$oPage->add('<table style="width:100%;"><tr>');
+		$oPage->add('<table style="width:100%;" class="ibo-setup--wizard--buttons-container"><tr>');
 		if ((count($this->aSteps) > 0) && ($oStep->CanMoveBackward()))
 		{
-			$oPage->add('<td style="text-align: left"><button id="btn_back" type="submit" name="operation" value="back"> &lt;&lt; Back </button></td>');
+			$oPage->add('<td style="text-align: left"><button id="btn_back" class="ibo-button ibo-is-alternative ibo-is-neutral" type="submit" name="operation" value="back"><span class="ibo-button--label">Back</span></button></td>');
 		}
 		if ($oStep->CanMoveForward())
 		{
-			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default" type="submit" name="operation" value="next">'.htmlentities($oStep->GetNextButtonLabel(), ENT_QUOTES, 'UTF-8').'</button></td>');
+			$oPage->add('<td style="text-align:right;"><button id="btn_next" class="default ibo-button ibo-is-regular ibo-is-primary" type="submit" name="operation" value="next"><span class="ibo-button--label">'.htmlentities($oStep->GetNextButtonLabel(), ENT_QUOTES, 'UTF-8').'</span></button></td>');
 		}
 		$oPage->add('</tr></table>');
 		$oPage->add("</form>");
@@ -432,7 +434,7 @@ abstract class WizardStep
 	 */
 	public function GetNextButtonLabel()
 	{
-		return ' Next >> ';
+		return 'Next';
 	}
 	
 	/**

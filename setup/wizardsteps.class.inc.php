@@ -64,7 +64,7 @@ class WizStepWelcome extends WizardStep
 	 */
 	public function GetNextButtonLabel()
 	{
-		return ' Continue >> ';
+		return 'Continue';
 	}
 
 	public function GetPossibleSteps()
@@ -123,11 +123,11 @@ EOF
 					break;
 			}
 		}
-		$sStyle = 'style="display:none;max-height:196px;overflow:auto;"';
-		$sToggleButtons = '<button type="button" id="show_details" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#hide_details\').toggle();">Show details</button><button type="button" id="hide_details" style="display:none;" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#show_details\').toggle();">Hide details</button>';
+		$sStyle = 'style="display:none;overflow:auto;"';
+		$sToggleButtons = '<button type="button" id="show_details" class="ibo-button ibo-is-alternative ibo-is-neutral" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#hide_details\').toggle();"><span class="ibo-button--icon fa fa-caret-down"></span><span class="ibo-button--label">Show details</span></button><button type="button" id="hide_details" class="ibo-button ibo-is-alternative ibo-is-neutral" style="display:none;" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#show_details\').toggle();"><span class="ibo-button--icon fa fa-caret-up"></span><span class="ibo-button--label">Hide details</span></button>';
 		if (count($aErrors)> 0)
 		{
-			$sStyle = 'style="max-height:196px;overflow:auto;"';
+			$sStyle = 'overflow:auto;"';
 			$sTitle = count($aErrors).' Error(s), '.count($aWarnings).' Warning(s).';
 			$sH2Class = 'text-error';
 		}
@@ -2155,7 +2155,7 @@ class WizStepSummary extends WizardStep
 	 */
 	public function GetNextButtonLabel()
 	{
-		return ' Install ! ';
+		return 'Install';
 	}
 
 	public function CanMoveForward()
@@ -2180,7 +2180,6 @@ class WizStepSummary extends WizardStep
 		$oPage->add_style(
 			<<<CSS
 #params_summary {
-	height: 200px;
 	overflow: auto;
 }
 #params_summary div {
@@ -2206,7 +2205,6 @@ class WizStepSummary extends WizardStep
 	padding-left: 20px;
 	font-weight: bold;
 	cursor: pointer;
-	background: url(../images/minus.gif) 2px 2px no-repeat;
 }
 #params_summary div.closed .title {
 	background: url(../images/plus.gif) 2px 2px no-repeat;
