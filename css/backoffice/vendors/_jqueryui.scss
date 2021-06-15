@@ -45,6 +45,14 @@ $ibo-vendors-jqueryui--ui-datepicker-next--right: 0 !default;
 
 $ibo-vendors-jqueryui--ui-datepicker-year--margin-left: 8px !default;
 
+$ibo-vendors-jqueryui--ui-datepicker-days--width: 23px !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--border-radius: $ibo-border-radius-full !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--color: $ibo-color-orange-700 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--active--background-color: $ibo-color-orange-700 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--active--color: $ibo-color-orange-100 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--highlight--background-color: $ibo-color-orange-200 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--hover--background-color: $ibo-color-orange-900 !default;
+
 $ibo-vendors-jqueryui--ui-slider--background-color: $ibo-color-grey-100 !default;
 $ibo-vendors-jqueryui--ui-slider--border-color: $ibo-color-grey-600 !default;
 $ibo-vendors-jqueryui--ui-slider--border-radius: $ibo-border-radius-300 !default;
@@ -293,7 +301,9 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
   background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
   border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
   box-shadow: $ibo-vendors-jqueryui--ui-datepicker--box-shadow;
-
+  z-index: 11 !important;
+  padding: 0px 8px 5px 8px;
+  
   .ui-datepicker-header {
     position: relative;
     margin: $ibo-vendors-jqueryui--ui-datepicker-header--margin;
@@ -344,8 +354,22 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
     span,
     a {
       display: block;
-      padding: .2em;
-      text-align: right;
+      padding: .2em 0;
+      text-align: center;
+      width: $ibo-vendors-jqueryui--ui-datepicker-days--width;
+      border-radius: $ibo-vendors-jqueryui--ui-datepicker-days--border-radius;
+      color: $ibo-vendors-jqueryui--ui-datepicker-days--color;
+      
+      &.ui-state-active {
+        background-color: $ibo-vendors-jqueryui--ui-datepicker-days--active--background-color;
+        color: $ibo-vendors-jqueryui--ui-datepicker-days--active--color;
+      }
+      &.ui-state-highlight:not(.ui-state-active) {
+        background-color: $ibo-vendors-jqueryui--ui-datepicker-days--highlight--background-color;
+      }
+      &.ui-state-hover:not(.ui-state-active) {
+        color: $ibo-vendors-jqueryui--ui-datepicker-days--hover--background-color;
+      }
     }
   }
 
