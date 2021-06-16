@@ -19,15 +19,15 @@
 
 // Navigation menu
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
-	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',
-	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Expand / Collapse (Filtered on %1$s)~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Type your keywords to filter menus~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Matches from all menu groups will be displayed~~',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!~~',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
-	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
+	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Unternehmenslogo',
+	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Ausklappen/Einklappen',
+	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Ausklappen/Einklappen (Gefiltert nach %1$s)',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Tippen Sie Keywords, um die Menüs zu filtern',
+	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Ergebnisse von allen Menüs werden angezeigt',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Kein Ergebnis für diesen Menü-Filter',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s Profilbild',
+	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filtere Menüeinträge',
 
 ));

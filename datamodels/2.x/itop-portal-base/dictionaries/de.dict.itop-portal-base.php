@@ -37,8 +37,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Error:HTTP:401' => 'Authentifizierung',
 	'Error:HTTP:404' => 'Seite nicht gefunden.',
 	'Error:HTTP:500' => 'Oops! Es ist ein Fehler aufgetreten.',
-	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren %1$s Administrator falls das Problem öfter auftaucht.',
-	'Error:XHR:Fail' => 'Konnte Daten nicht laden, bitte kontaktieren Sie Ihren %1$s administrator',
+	'Error:HTTP:GetHelp' => 'Bitte kontaktieren Sie Ihren %1$s Administrator, falls das Problem öfter auftaucht.',
+	'Error:XHR:Fail' => 'Konnte Daten nicht laden, bitte kontaktieren Sie Ihren %1$s Administrator',
 	'Portal:ErrorUserLoggedOut' => 'Sie sind ausgeloggt und müssen sich erneut einloggen, um fortfahren zu können.',
 	'Portal:Datatables:Language:Processing' => 'Bitte warten...',
 	'Portal:Datatables:Language:Search' => 'Filter :',
@@ -65,7 +65,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 // Object form
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Dieses Objekt schließen',
 	'Portal:Form:Close:Warning' => 'Soll diese Eingabemaske verlassen werden? Eingegebene Daten werden nicht gespeichert.',
 ));
 
@@ -90,7 +90,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 // BrowseBrick brick
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Brick:Portal:Browse:Name' => 'List durchgehen',
+	'Brick:Portal:Browse:Name' => 'Liste durchgehen',
 	'Brick:Portal:Browse:Mode:List' => 'Liste',
 	'Brick:Portal:Browse:Mode:Tree' => 'Baum',
 	'Brick:Portal:Browse:Mode:Mosaic' => 'Kachel',

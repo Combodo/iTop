@@ -149,7 +149,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:first_name+' => '',
 	'Class:Person/Attribute:employee_number' => 'Personalnummer',
 	'Class:Person/Attribute:employee_number+' => '',
-	'Class:Person/Attribute:mobile_phone' => 'Mobiltelefone',
+	'Class:Person/Attribute:mobile_phone' => 'Mobiltelefon',
 	'Class:Person/Attribute:mobile_phone+' => '',
 	'Class:Person/Attribute:location_id' => 'Standort',
 	'Class:Person/Attribute:location_id+' => '',
@@ -361,6 +361,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 // Themes
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Full Moon',
+	'theme:test-red' => 'Test Red (Testinstanz)',
 ));

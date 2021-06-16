@@ -19,10 +19,10 @@
 
 // Global search
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application~~',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...~~',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recents~~',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet~~',
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open global search~~',
+	'UI:Component:GlobalSearch:Tooltip' => 'Durchsuche die gesamte Datenbank',
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Suche...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Letzte',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Sie haben bisher noch keine Suchanfragen gestellt',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'Suchhistorie ist deaktiviert',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Öffne die globale Suche',
 ));

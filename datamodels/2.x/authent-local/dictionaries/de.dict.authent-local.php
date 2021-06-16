@@ -24,22 +24,22 @@
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal' => 'iTop-Benutzer',
-	'Class:UserLocal+' => 'Benutzer, von iTop authentifiziert',
+	'Class:UserLocal+' => 'Benutzer, der von iTop authentifiziert wird',
 	'Class:UserLocal/Attribute:password' => 'Passwort',
 	'Class:UserLocal/Attribute:password+' => 'Benutzerpasswort',
 
 	'Class:UserLocal/Attribute:expiration' => 'Passwortablauf',
-	'Class:UserLocal/Attribute:expiration+' => 'Passwortablaufstatus (Statusabhängige Effekte müssen per Extension implementiert werden)',
+	'Class:UserLocal/Attribute:expiration+' => 'Passwortablaufstatus (statusabhängige Effekte müssen per Extension implementiert werden)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'kann ablaufen',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Läuft nie ab',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'läuft nie ab',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'abgelaufen',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
-	'Class:UserLocal/Attribute:password_renewed_date' => 'Passworterneuerung',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Letzte Passworterneuerung',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Letztes Änderungsdatum',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort muss mindestens 8 Zeichen lang sein und Großbuchstaben, Kleinbuchstaben, Zahlen und Sonderzeichen enthalten.',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort entspricht nicht dem in den Konfigurationsregeln hinterlegten RegEx-Ausdruck',
 
 	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine iTop Erweiterung'
 ));

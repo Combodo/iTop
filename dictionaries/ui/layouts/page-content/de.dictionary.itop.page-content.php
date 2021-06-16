@@ -5,5 +5,5 @@
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UIBlock:Error:CannotGetBlocks' => 'Could not retrieve blocks from content area "%1$s" as it does seem to exists for page content "%2$s"~~',
+	'UIBlock:Error:CannotGetBlocks' => 'Konnte keine Einträge aus dem Inhaltsbereich "%1$s" holen, obwohl es so aussieht, als ob für die Seite "%2$s" Inhalte existieren.',
 ]);

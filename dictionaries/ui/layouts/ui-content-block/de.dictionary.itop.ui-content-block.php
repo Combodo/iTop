@@ -5,5 +5,5 @@
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UIBlock:Error:AddBlockForbidden' => 'Cannot add block to %1$s~~',
+	'UIBlock:Error:AddBlockForbidden' => 'Kann Block nicht zu %1$s hinzufügen',
 ]);

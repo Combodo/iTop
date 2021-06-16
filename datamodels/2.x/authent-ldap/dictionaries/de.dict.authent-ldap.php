@@ -24,5 +24,5 @@
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLDAP' => 'LDAP-Benutzer',
-	'Class:UserLDAP+' => 'Benutzer, der über LDAP authentifiziert wird',
+	'Class:UserLDAP+' => 'Benutzer, der via LDAP authentifiziert wird',
 ));

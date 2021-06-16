@@ -19,13 +19,13 @@
 
 // Display DataTable
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'UI:Datatables:Language:Processing' => 'Please wait...~~',
-	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
-	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
-	'UI:Datatables:Language:Info' => '_TOTAL_ item(s)~~',
-	'UI:Datatables:Language:InfoEmpty' => 'No information~~',
-	'UI:Datatables:Language:EmptyTable' => 'No data available in this table~~',
-	'UI:Datatables:Language:DisplayLength:All' => 'All~~',
-	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort~~',
-	'UI:Datatables:Language:Sort:Descending' => 'enable for a descending sort~~',
+	'UI:Datatables:Language:Processing' => 'Bitte warten...',
+	'UI:Datatables:Language:LengthMenu' => '_MENU_ pro Seite',
+	'UI:Datatables:Language:ZeroRecords' => 'Kein Ergebnis',
+	'UI:Datatables:Language:Info' => '_TOTAL_ Objekte',
+	'UI:Datatables:Language:InfoEmpty' => 'Keine Information',
+	'UI:Datatables:Language:EmptyTable' => 'Keine Daten in dieser Tabelle verfügbar',
+	'UI:Datatables:Language:DisplayLength:All' => 'Alle',
+	'UI:Datatables:Language:Sort:Ascending' => 'Aktivieren für aufsteigende Sortierung',
+	'UI:Datatables:Language:Sort:Descending' => 'Aktivieren für absteigende Sortierung',
 ));

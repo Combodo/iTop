@@ -30,19 +30,19 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:History_File_Added' => 'Attachment %1$s hinzugefügt.',
 	'Attachments:History_File_Removed' => 'Attachment %1$s entfernt.',
 	'Attachments:AddAttachment' => 'Attachment hinzufügen: ',
-	'Attachments:UploadNotAllowedOnThisSystem' => 'Dateiupload in diesem System NICHT erlaubt.',
+	'Attachments:UploadNotAllowedOnThisSystem' => 'Dateiupload in diesem System NICHT erlaubt',
 	'Attachment:Max_Go' => '(Maximale Dateigröße: %1$s GB)',
 	'Attachment:Max_Mo' => '(Maximale Dateigröße: %1$s MB)',
 	'Attachment:Max_Ko' => '(Maximale Dateigröße: %1$s KB)',
-	'Attachments:NoAttachment' => 'Kein Attachment. ',
-	'Attachments:PreviewNotAvailable' => 'Vorschau für diesen Attachment-Typ nicht verfügbar.',
+	'Attachments:NoAttachment' => 'Kein Attachment',
+	'Attachments:PreviewNotAvailable' => 'Vorschau für diesen Attachment-Typ nicht verfügbar',
 	'Attachments:Error:FileTooLarge' => 'Die Datei ist zu groß für den Upload: %1$s',
-	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
-Either you have pushed an empty file,
-or ask your iTop administrator if the iTop server disk is full.~~',
+	'Attachments:Error:UploadedFileEmpty' => 'Die Datei ist leer und kann nicht angehängt werden.
+Entweder ist die von Ihnen hochdeladene Datei leer,
+oder melden Sie dem iTop Administrator diesen Fehler, weil eventuell kein ausreichender Speicherplatz zur Verfügung steht',
 	'Attachments:Render:Icons' => 'Als Icons anzeigen',
 	'Attachments:Render:Table' => 'Als Liste anzeigen',
-	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
+	'UI:Attachments:DropYourFileHint' => 'Dateien in diesem Bereich ablegen...',
 ));
 
 //

@@ -60,7 +60,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkFunctionalCIToProviderContract+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Provider-Vertrag',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Providervertrags-Name',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Provider-Vertragsname',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CI',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',

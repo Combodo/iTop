@@ -261,7 +261,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:SelectServiceElementFrom_Service' => 'Wählen Sie ein Service-Element für %1$s',
 	'Portal:ListServices' => 'Liste der Services',
 	'Portal:TitleDetailsFor_Service' => 'Details für Service',
-	'Portal:Button:CreateRequestFromService' => 'EIne Benutzeranfrage betreffend dieses Diensts erzeugen',
+	'Portal:Button:CreateRequestFromService' => 'EIne Benutzeranfrage betreffend dieses Dienstes erzeugen',
 	'Portal:ListOpenRequests' => 'Offene Benutzeranfragen auflisten',
 	'Portal:UserRequest:MoreInfo' => 'Weitere Informationen',
 	'Portal:Details-Service-Element' => 'Service-Elemente',
