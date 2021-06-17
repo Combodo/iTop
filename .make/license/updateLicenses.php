@@ -1,7 +1,26 @@
 <?php
 /**
- * script used to sort license file (usefull for autogeneration)
- * Example: php 
+ * script used to sort license file (useful for autogeneration)
+ *
+ * Requirements :
+ *  * bash (on Windows, use Git Bash)
+ *  * composer (if you use the phar version, mind to create a `Composer` alias !)
+ *  * JQ command
+ *    to install on Windows :
+ *       `curl -L -o /usr/bin/jq.exe https://github.com/stedolan/jq/releases/latest/download/jq-win64.exe`
+ *    this is a Windows port : https://stedolan.github.io/jq/
+ *
+ * Known bug on Windows :
+ *   Licenses added from Composer contains a path in the product node (N°3870)
+ *   `<product scope="lib">C:\Dev\wamp64\www\itop-dev\.make\license/../..//lib/symfony/console</product>`
+ *
+ * Licenses sources :
+ *  * `composer licenses --format json` (see https://getcomposer.org/doc/03-cli.md#licenses)
+ *  * keep every existing nodes with `/licenses/license[11]/product/@scope` not in ['lib', 'datamodels']
+ *    ⚠ If licenses were added manually, they might be removed by this tool ! Be very careful to check for the result before pushing !
+ *
+ * To launch, check requirements and run `php updateLicenses.php`
+ * The target license file path is in `$xmlFilePath`
  */
 
 $iTopFolder = __DIR__ . "/../../" ;
