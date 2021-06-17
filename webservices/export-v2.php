@@ -294,7 +294,7 @@ EOF
 		$aSupportedFormats = BulkExport::FindSupportedFormats();
 		asort($aSupportedFormats);
 		foreach ($aSupportedFormats as $sFormatCode => $sLabel) {
-			$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sFormatCode, htmlentities($sLabel, ENT_QUOTES, 'UTF-8'), ($sFormatCode == $sDefaultFormat)));
+			$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($sFormatCode, $sLabel, ($sFormatCode == $sDefaultFormat)));
 			$oExporter = BulkExport::FindExporter($sFormatCode);
 			$oExporter->SetObjectList($oExportSearch);
 			$aParts = $oExporter->EnumFormParts();
@@ -329,7 +329,7 @@ EOF
 	if ($sFormat == null) {//if it's global export
 		$oP->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction('export', Dict::S('UI:Button:Export'), 'export', false, 'export-btn'));
 	}
-	$oBlockResult = UIContentBlockUIBlockFactory::MakeStandard("export-export_text_result")->SetIsHidden(true);
+	$oBlockResult = UIContentBlockUIBlockFactory::MakeStandard("export_text_result")->SetIsHidden(true);
 	$oBlockResult->AddSubBlock(new Html(Dict::S('Core:BulkExport:ExportResult')));
 
 	$oTextArea = new TextArea('export_content', '', 'export_content');

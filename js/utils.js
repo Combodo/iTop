@@ -453,8 +453,8 @@ function ExportStartExport() {
 				ExportRun(data);
 			}
 		}, 'json')
-		.fail(function () {
-			ExportError('Export failed, please contact your administrator');
+		.fail(function (data) {
+			ExportError('Export failed, please contact your administrator<br/>'+data.responseText);
 		});
 }
 
@@ -490,14 +490,11 @@ function ExportRun(data) {
 			sMessage = '<a href="'+GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=export_download&token='+data.token+'" target="_blank">'+data.message+'</a>';
 			$('.export-message').html(sMessage);
 			$('.export-progress-bar').hide();
-			$('#export-btn').hide();
 			$('#export-form').attr('data-state', 'done');
 			if (data.text_result != undefined) {
 				if (data.mime_type == 'text/html') {
 					$('#export_content').parent().html(data.text_result);
-					$('#export_text_result').show();
-					//$('#export_text_result .listResults').tableHover();
-					$('#export_text_result .listResults').tablesorter({widgets: ['myZebra']});
+					$('#export_text_result').removeClass('ibo-is-hidden');
 				} else {
 					if ($('#export_text_result').closest('ui-dialog').length == 0) {
 						// not inside a dialog box, adjust the height... approximately
@@ -511,7 +508,7 @@ function ExportRun(data) {
 						$('#export_content').height(iTotalHeight-80);
 					}
 					$('#export_content').val(data.text_result);
-					$('#export_text_result').show();
+					$('#export_text_result').removeClass('ibo-is-hidden');
 				}
 			}
 			$('#export-dlg-submit').button('option', 'label', Dict.S('UI:Button:Done')).button('enable');

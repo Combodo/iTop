@@ -211,15 +211,15 @@ class CSVBulkExport extends TabularBulkExport
 
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "csv_custom_date_time_format", "default", "csv_date_time_format_default", "radio");
+				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "csv_date_format_radio", "default", "csv_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
 				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "csv_custom_date_time_format", "custom", "csv_date_time_format_custom", "radio");
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="csv_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "csv_date_format_radio", "custom", "csv_date_time_format_custom", "radio");
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');

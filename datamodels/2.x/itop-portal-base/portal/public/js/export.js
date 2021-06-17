@@ -17,22 +17,21 @@
  */
 
 function ExportStartExport() {
-    var oParams = {};
-    oParams.operation = 'export_build_portal';
-    oParams.format = sFormat;
-    oParams.token = sToken;
-    oParams.start = 1;
-    $.post(GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php', oParams, function (data) {
-        if (data == null) {
-            ExportError('Export failed (no data provided), please contact your administrator');
-        }
-        else {
-            ExportRun(data);
-        }
-    }, 'json')
-        .fail(function () {
-            ExportError('Export failed, please contact your administrator');
-        });
+	var oParams = {};
+	oParams.operation = 'export_build_portal';
+	oParams.format = sFormat;
+	oParams.token = sToken;
+	oParams.start = 1;
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
+			if (data == null) {
+				ExportError('Export failed (no data provided), please contact your administrator');
+			} else {
+				ExportRun(data);
+			}
+		}, 'json')
+		.fail(function (data) {
+			ExportError('Export failed, please contact your administrator<br/>'+data.responseText);
+		});
 }
 
 function ExportError(sMessage) {
