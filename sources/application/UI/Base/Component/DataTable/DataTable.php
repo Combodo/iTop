@@ -168,4 +168,19 @@ class DataTable extends UIContentBlock
 		return "$('#".$this->sId."').DataTable().clearPipeline();
 				$('#".$this->sId."').DataTable().ajax.reload(null, false);";
 	}
+
+	public function GetDisabledSelect(): array
+	{
+		$aExtraParams = $this->aAjaxData['extra_params'];
+		if(isset($aExtraParams['selection_enabled']) ){
+			$aListDisabled = [];
+			foreach( $aExtraParams['selection_enabled'] as $sKey=>$bValue){
+				if ($bValue == false) {
+					$aListDisabled[] = $sKey;
+				}
+			}
+			return $aListDisabled;
+		}
+		return [];
+	}
 }

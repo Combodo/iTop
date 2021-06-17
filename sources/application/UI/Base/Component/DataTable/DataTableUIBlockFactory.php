@@ -884,6 +884,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			'selected_rows',        /** array list of Ids already selected when displaying the datatable */
 			'display_aliases',      /** string comma separated list of class aliases to display */
 			'list_id',              /** string list outer id */
+			'selection_enabled',    	/** list of id in witch select is allowed, if not exists all lines are selectable */
+			'id_for_select', /**give definition of id for select checkbox*/
 		];
 	}
 }

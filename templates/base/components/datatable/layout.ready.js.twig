@@ -184,7 +184,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}');
         {% if oUIBlock.GetOption("select_mode") != "single" %}
-        this.api().on('select', function (oEvent, dt, type, indexes) {
+            this.api().on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }})
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
@@ -295,7 +295,11 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         });
         {% endif %}
 
-
+        {% if oUIBlock.GetDisabledSelect() is not empty %}
+            {% for key in oUIBlock.GetDisabledSelect() %}
+                $('.selectList{{ oUIBlock.GetId() }}[value={{ key }}]').prop("disabled","disabled");
+            {% endfor %}
+        {% endif %}
         {% endif %}
     }
 });

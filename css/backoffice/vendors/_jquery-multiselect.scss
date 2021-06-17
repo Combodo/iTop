@@ -111,3 +111,27 @@ button.ui-multiselect > span {
   margin:1px 0; 
   text-decoration:none 
 }
+
+/**for multiselect in 3.0*/
+.ui-dialog-titlebar.ui-multiselect-header {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.ui-dialog-titlebar.ui-multiselect-header ul {
+  padding-left: 0px;
+  width:100%;
+}
+.ui-dialog-titlebar.ui-multiselect-header a{
+  color:$ibo-color-grey-900;
+  font-weight:normal;
+}
+.ui-multiselect, .ui-multiselect-menu, .ui-multiselect-header{
+  background-color: $ibo-color-grey-100;
+}
+button.ui-multiselect {
+  padding-right:10px !important;
+}
+button.ui-multiselect .fas{
+  float:right;
+  padding-left:10px;
+}

@@ -316,7 +316,7 @@ class AjaxRenderController
 		}
 
 		// Filter the list to removed linked set since we are not able to display them here
-		$sIdName = "";
+		$sIdName = isset($extraParams["id_for_select"])?$extraParams["id_for_select"]:"";
 		$aOrderBy = array();
 		$iSortIndex = 0;
 

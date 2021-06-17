@@ -14,16 +14,9 @@
                     data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
             {% endif %}
-            >
-        {% endif %}
-
-        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
-            {{ render_block(oSubBlock, {aPage: aPage}) }}
-        {% endfor %}
-
-        {% if bHasDiv %}
-            </div>
-        {% endif %}
+            > {% endif %}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %} {{ render_block(oSubBlock, {aPage: aPage}) }} {% endfor %}
+        {% if bHasDiv %} </div> {% endif %}
 
     {% endblock %}
 {% endapply %}
