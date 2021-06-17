@@ -7,6 +7,9 @@ var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     scrollX: true,
     scrollCollapse: true,
+    {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
+    scrollY: {{ oUIBlock.GetOption('sMaxHeight') }},
+    {% endif %}
     paging: false,
     filter: false,
     autoWidth: false,
@@ -26,27 +29,34 @@ var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     {% endif %}
     drawCallback: function () {
         // Hiding pagination if only one page
-        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+        {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
-        } else {
+        }
+        else
+        {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
     },
-    createdRow: function( row, data, dataIndex ) {
-        if (data['@class'] !== undefined) {
+    createdRow: function (row, data, dataIndex) {
+        if (data['@class'] !== undefined)
+        {
             $(row).addClass(data['@class']);
         }
     },
 });
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible')) {
+
+if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
+{
     table{{ sListIDForVarSuffix }}.columns.adjust().draw();
 }
 
-if(window.ResizeObserver){
+if (window.ResizeObserver)
+{
     let oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
-    const oFromTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
+    const oFromTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function () {
         clearTimeout(oFromTable{{ sListIDForVarSuffix }}ResizeTimeout);
-        oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
+        oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function () {
             $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
         }, 120);
     });

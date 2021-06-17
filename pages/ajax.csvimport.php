@@ -120,17 +120,12 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		$aChoices['id'] = Dict::S('UI:CSVImport:idField');
 	}
 	foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
-		$sStar = '';
 		if ($oAttDef->IsExternalKey()) {
 			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode)) {
 				$sFieldCode = $sAttCode;
 			}
 			if ($bAdvancedMode) {
 				$aChoices[$sAttCode] = $oAttDef->GetLabel();
-			}
-			$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
-			if (!$oExtKeyAttDef->IsNullAllowed()) {
-				$sStar = '*';
 			}
 			// Get fields of the external class that are considered as reconciliation keys
 			$sTargetClass = $oAttDef->GetTargetClass();
@@ -151,7 +146,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 						$aChoices[$sAttCode.'->'.$sTargetAttCode] = MetaModel::GetLabel($sClassName, $sAttCode.'->'.$sTargetAttCode, true);
 						foreach ($aSignatures as $sSignature) {
 							if (strcasecmp($sFieldName, $sSignature) == 0) {
-								$sFieldCode = $sAttCode.'->'.$sTargetAttCode.$sStar;
+								$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
 							}
 						}
 					}
