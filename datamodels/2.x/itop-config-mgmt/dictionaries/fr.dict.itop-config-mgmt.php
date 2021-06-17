@@ -754,7 +754,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:LogicalVolume/Attribute:storagesystem_id+' => '',
 	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Nom Système de stockage',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servers',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Serveurs',
 	'Class:LogicalVolume/Attribute:servers_list+' => '',
 	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Machines virtuelles',
 	'Class:LogicalVolume/Attribute:virtualdevices_list+' => '',
