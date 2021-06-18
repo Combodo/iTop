@@ -20,6 +20,16 @@ $ibo-dashlet-badge--icon--size: 48px !default;
 
 $ibo-dashlet-badge--action-icon--margin-right: 6px !default;
 
+/* CSS variables (can be changed directly from the browser) */
+:root {
+  --ibo-dashlet-badge--min-width: #{$ibo-dashlet-badge--min-width};
+  --ibo-dashlet-badge--padding-x: #{$ibo-dashlet-badge--padding-x};
+  --ibo-dashlet-badge--padding-y: #{$ibo-dashlet-badge--padding-y};
+  --ibo-dashlet-badge--background-color: #{$ibo-dashlet-badge--background-color};
+  --ibo-dashlet-badge--border: #{$ibo-dashlet-badge--border};
+  --ibo-dashlet-badge--border-radius: #{$ibo-dashlet-badge--border-radius};
+}
+
 /* Rules */
 .ibo-dashlet-badge {
   max-width: $ibo-dashlet-badge--max-width;

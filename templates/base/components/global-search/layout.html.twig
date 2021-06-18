@@ -4,7 +4,12 @@
      class="ibo-global-search {% if oUIBlock.HasQuery() %}ibo-is-opened{% endif %}"
      data-role="ibo-global-search">
 	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-global-search--head" data-role="ibo-global-search--head">
-		<a href="#" class="ibo-global-search--icon" data-role="ibo-global-search--icon" data-tooltip-content="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}" data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25">
+		<a href="#" class="ibo-global-search--icon" data-role="ibo-global-search--icon"
+           aria-label="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}"
+           data-tooltip-content="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}"
+           data-tooltip-placement="bottom-start"
+           data-tooltip-distance-offset="25"
+        >
 			<span class="fas fa-search"></span>
 		</a>
 		<input type="text" name="text" class="ibo-global-search--input" data-role="ibo-global-search--input" placeholder="{{ 'UI:Component:GlobalSearch:Input:Placeholder'|dict_s }}" value="{{ oUIBlock.GetQuery() }}" autocomplete="off">
@@ -24,7 +29,8 @@
 					{% for aQuery in oUIBlock.GetLastQueries() %}
 						<a href="{{ aQuery.target_url }}" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
 							{% if aQuery.icon_url is defined %}
-								<img src="{{ aQuery.icon_url}}" class="ibo-global-search--compartment-element-image">
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+								<img src="{{ aQuery.icon_url}}" alt="" class="ibo-global-search--compartment-element-image">
 							{% endif %}
 							{{ aQuery.label_html|raw }}
 						</a>

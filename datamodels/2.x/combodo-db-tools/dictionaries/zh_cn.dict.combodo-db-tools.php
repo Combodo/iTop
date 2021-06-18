@@ -74,11 +74,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:LostAttachments:Button:Restore:Confirm' => '该操作无法回退, 请确认是否继续还原.',
 	'DBTools:LostAttachments:Button:Busy' => '请稍后...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'First, search for lost/misplaced attachments by analyzing the database.~~',
+	'DBTools:LostAttachments:Step:Analyze' => '首先, 通过分析数据库来搜索丢失或误挪动的附件.',
 
 	'DBTools:LostAttachments:Step:AnalyzeResults' => '分析结果:',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Great! Every thing seems to be at the right place.~~',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Some attachments (%1$d) seem to be misplaced. Take a look at the following list and check the ones you would like to move.~~',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => '非常好! 所有附件都是正常的.',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => '某些附件 (%1$d) 看起来放错了位置. 请检查下面的列表并选择要挪动的文件.',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => '文件名',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => '当前位置',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => '移动到...',

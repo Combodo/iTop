@@ -38,4 +38,10 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 		return $oCode;
 	}
 
+	public static function MakeForPreformatted(string $sCode, string $sId = null)
+	{
+		$sCode = '<pre>'.$sCode.'</pre>';
+
+		return static::MakeForCode($sCode, $sId);
+	}
 }

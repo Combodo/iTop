@@ -183,7 +183,7 @@ EOF
 				$sEditType = 'select';
 				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
 				$oBlock->AddSubBlock($oSelect);
-				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne') ));
+				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
 				while ($oObject = $oSet->Fetch())
 				{
 					$iObject = $oObject->GetKey();

@@ -1471,6 +1471,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:AddCriteria:List:Others:Title' => 'Autres',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Aucun.',
 
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Réduire / Ouvrir',
+	'UI:Search:Criteria:Remove' => 'Retirer',
+	'UI:Search:Criteria:Locked' => 'Verrouillé',
+
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s : Indifférent',

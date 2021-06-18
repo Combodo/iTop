@@ -64,7 +64,7 @@ class WizStepWelcome extends WizardStep
 	 */
 	public function GetNextButtonLabel()
 	{
-		return ' Continue >> ';
+		return 'Continue';
 	}
 
 	public function GetPossibleSteps()
@@ -123,11 +123,11 @@ EOF
 					break;
 			}
 		}
-		$sStyle = 'style="display:none;max-height:196px;overflow:auto;"';
-		$sToggleButtons = '<button type="button" id="show_details" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#hide_details\').toggle();">Show details</button><button type="button" id="hide_details" style="display:none;" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#show_details\').toggle();">Hide details</button>';
+		$sStyle = 'style="display:none;overflow:auto;"';
+		$sToggleButtons = '<button type="button" id="show_details" class="ibo-button ibo-is-alternative ibo-is-neutral" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#hide_details\').toggle();"><span class="ibo-button--icon fa fa-caret-down"></span><span class="ibo-button--label">Show details</span></button><button type="button" id="hide_details" class="ibo-button ibo-is-alternative ibo-is-neutral" style="display:none;" onclick="$(\'#details\').toggle(); $(this).toggle(); $(\'#show_details\').toggle();"><span class="ibo-button--icon fa fa-caret-up"></span><span class="ibo-button--label">Hide details</span></button>';
 		if (count($aErrors)> 0)
 		{
-			$sStyle = 'style="max-height:196px;overflow:auto;"';
+			$sStyle = 'overflow:auto;"';
 			$sTitle = count($aErrors).' Error(s), '.count($aWarnings).' Warning(s).';
 			$sH2Class = 'text-error';
 		}
@@ -1161,6 +1161,30 @@ class WizStepUpgradeMiscParams extends WizardStep
 		});
 EOF
 		);
+
+		if (MFCompiler::IsUseSymbolicLinksFlagPresent()) {
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend>Dev parameters</legend>');
+			$oPage->p('<input id="use-symbolic-links" type="checkbox" checked><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
+			$oPage->add('</fieldset>');
+			$oPage->add_ready_script(<<<'JS'
+$("#use-symbolic-links").on("click", function() {
+	var $this = $(this),
+		bUseSymbolicLinks = $this.prop("checked");
+	if (!bUseSymbolicLinks){
+		if (!window.confirm("This will disable symbolic links generation.\nYou'll need the toolkit to restore this option.\n\nAre you sure ?")) {
+			$this.prop("checked", true);
+			return;
+		}
+	}
+	
+	var sAuthent = $('#authent_token').val();
+	var oAjaxParams = { operation: 'toggle_use_symbolic_links', bUseSymbolicLinks: bUseSymbolicLinks, authent: sAuthent};
+	$.post(GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php', oAjaxParams);
+});
+JS
+			);
+		}
 	}
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
@@ -2131,7 +2155,7 @@ class WizStepSummary extends WizardStep
 	 */
 	public function GetNextButtonLabel()
 	{
-		return ' Install ! ';
+		return 'Install';
 	}
 
 	public function CanMoveForward()
@@ -2156,7 +2180,6 @@ class WizStepSummary extends WizardStep
 		$oPage->add_style(
 			<<<CSS
 #params_summary {
-	height: 200px;
 	overflow: auto;
 }
 #params_summary div {
@@ -2182,7 +2205,6 @@ class WizStepSummary extends WizardStep
 	padding-left: 20px;
 	font-weight: bold;
 	cursor: pointer;
-	background: url(../images/minus.gif) 2px 2px no-repeat;
 }
 #params_summary div.closed .title {
 	background: url(../images/plus.gif) 2px 2px no-repeat;
@@ -2216,7 +2238,7 @@ CSS
 		$oPage->add('<div class="closed"><span class="title ibo-setup-summary-title">Database Parameters</span><ul>');
 		$oPage->add('<li>Server Name: '.$aInstallParams['database']['server'].'</li>');
 		$oPage->add('<li>DB User Name: '.$aInstallParams['database']['user'].'</li>');
-		$oPage->add('<li>DB user password: '.$aInstallParams['database']['pwd'].'</li>');
+		$oPage->add('<li>DB user password: ***</li>');
 		if (($sMode == 'install') && ($this->oWizard->GetParameter('create_db') == 'yes'))
 		{
 			$oPage->add('<li>Database Name: '.$aInstallParams['database']['name'].' (will be created)</li>');
@@ -2593,10 +2615,10 @@ class WizStepDone extends WizardStep
 			");
 		}
 
-		$sForm = '<form method="post" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
+		$sForm = '<form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
 		$sForm .= '<input type="hidden" name="auth_user" value="'.htmlentities($this->oWizard->GetParameter('admin_user'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
-		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></p>";
+		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></p>";
 		$sForm .= '</form>';
 		$sPHPVersion = phpversion();
 		$sMySQLVersion = SetupUtils::GetMySQLVersion(
@@ -2654,18 +2676,16 @@ class WizStepDone extends WizardStep
 		$aAdditionalModules = array();
 		foreach(json_decode($this->oWizard->GetParameter('additional_extensions_modules'), true) as $idx => $aModuleInfo)
 		{
-			if (in_array('_'.$idx, $aParameters[count($aParameters)-1]))
-			{
+			if (in_array('_'.$idx, $aParameters[count($aParameters)-1])) {
 				// Extensions "choices" can now have more than one module
-				foreach($aModuleInfo['modules'] as $sModuleName)
-				{
+				foreach ($aModuleInfo['modules'] as $sModuleName) {
 					$aAdditionalModules[] = $sModuleName;
 				}
 			}
 		}
 		$idx = 0;
 		$aReportedModules = array();
-		while($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
+		while ($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
 		{
 			$aReportedModules[] = $aAdditionalModules[$idx];
 			$idx++;
@@ -2675,6 +2695,7 @@ class WizStepDone extends WizardStep
 		$oPage->add('<img style="border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
 		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");
+		SetupUtils::EraseSetupToken();
 	}
 
 	public function CanMoveForward()

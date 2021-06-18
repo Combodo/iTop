@@ -148,12 +148,25 @@ class StaticTable extends UIContentBlock
 
 	/**
 	 * @param array $aOptions
-	 * 
+	 *
 	 * @return $this
 	 */
 	public function SetOptions($aOptions)
 	{
 		$this->aOptions = $aOptions;
+
+		return $this;
+	}
+
+	/**
+	 * @param array $aOptions
+	 *
+	 * @return $this
+	 */
+	public function AddOption($sName, $sValue)
+	{
+		$this->aOptions[$sName] = $sValue;
+
 		return $this;
 	}
 }

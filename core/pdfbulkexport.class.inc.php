@@ -56,7 +56,7 @@ class PDFBulkExport extends HTMLBulkExport
 				//page format
 				$oSelectFormat = SelectUIBlockFactory::MakeForSelectWithLabel("page_size", Dict::S('Core:BulkExport:PDFPageSize'));
 				$oSelectFormat->SetIsLabelBefore(false);
-				$oSelectFormat->AddCSSClass('ibo-input-checkbox');
+				//$oSelectFormat->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectFormat);
 
 				$aPossibleFormat = ['A3', 'A4', 'Letter'];
@@ -66,10 +66,10 @@ class PDFBulkExport extends HTMLBulkExport
 				}
 				$oFieldSetFormat->AddSubBlock(new Html('</br>'));
 
-				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_size",
+				$oSelectOrientation = SelectUIBlockFactory::MakeForSelectWithLabel("page_orientation",
 					Dict::S('Core:BulkExport:PDFPageOrientation'));
 				$oSelectOrientation->SetIsLabelBefore(false);
-				$oSelectOrientation->AddCSSClass('ibo-input-checkbox');
+				//$oSelectOrientation->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetFormat->AddSubBlock($oSelectOrientation);
 
 				$aPossibleOrientation = ['P', 'L'];
@@ -86,15 +86,15 @@ class PDFBulkExport extends HTMLBulkExport
 
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "pdf_custom_date_time_format", "default", "pdf_date_time_format_default", "radio");
+				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "pdf_date_format_radio", "default", "pdf_date_time_format_default", "radio");
 				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 				$oRadioDefault->SetBeforeInput(false);
 				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 				$oFieldSetDate->AddSubBlock($oRadioDefault);
 				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "pdf_custom_date_time_format", "custom", "pdf_date_time_format_custom", "radio");
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="pdf_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "pdf_date_format_radio", "custom", "pdf_date_time_format_custom", "radio");
 				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 				$oRadioCustom->SetBeforeInput(false);
 				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -184,9 +184,8 @@ EOF
 		$sData = parent::GetFooter();
 
 		// We need a lot of time for the PDF conversion
-		set_time_limit(60*10); // 10 minutes max ???
-		
-		require_once(APPROOT.'application/pdfpage.class.inc.php');
+		set_time_limit(60 * 10); // 10 minutes max ???
+
 		$oPage = new PDFPage(Dict::Format('Core:BulkExportOf_Class', MetaModel::GetName($this->oSearch->GetClass())), $this->aStatusInfo['page_size'], $this->aStatusInfo['page_orientation']);
 		$oPDF = $oPage->get_tcpdf();
 		$oPDF->SetFontSize(8);

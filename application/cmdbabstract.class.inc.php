@@ -428,8 +428,9 @@ EOF
 		}
 
 		foreach ($aTags as $sIconId => $aIconData) {
+			$sTagTooltipContent = utils::EscapeHtml($aIconData['title']);
 			$aHeaderBlocks['subtitle'][static::HEADER_BLOCKS_SUBTITLE_TAG_PREFIX.$sIconId] = new Html(<<<HTML
-<span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$aIconData['title']}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
+<span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$sTagTooltipContent}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
 HTML
 			);
 		}
@@ -2305,9 +2306,9 @@ JS
 				case 'Set':
 				case 'TagSet':
 					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/selectize.min.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
 					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'/js/jquery.itop-set-widget.js');
+					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
 
 					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
@@ -3215,7 +3216,8 @@ EOF
 			// - Fullscreen toggler for large fields
 			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
 			$sFullscreenTogglerHTML = (false === in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? '' : <<<HTML
-<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler" 
+<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler"
+aria-label="{$sFullscreenTogglerTooltip}"
 data-tooltip-content="{$sFullscreenTogglerTooltip}" data-fullscreen-toggler-target="$(this).closest('[data-role=\'ibo-field\']')"><span class="fas fa-fw fa-expand-arrows-alt"></span></a>
 HTML;
 

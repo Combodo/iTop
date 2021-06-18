@@ -31,6 +31,7 @@ $(function()
 				},
 			css_classes:
 				{
+					is_hidden: 'ibo-is-hidden',
 					menu_expanded: 'ibo-is-expanded',
 					menu_active: 'ibo-is-active',
 					menu_filtered: 'ibo-is-filtered',
@@ -361,7 +362,7 @@ $(function()
 								for (const [key, value] of Object.entries(data.counts)) {
 									let menuEntry = me.element.find('[data-menu-id="'+key+'"]');
 									menuEntry.html(value);
-									menuEntry.show();
+									menuEntry.removeClass(me.css_classes.is_hidden);
 								}
 							}
 						});

@@ -8,7 +8,8 @@
 				<img src="{{ oUIBlock.AppFullIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}">
 			</a>
 			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler"
-			   data-tooltip-content="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+               aria-label="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+               data-tooltip-content="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
 			   data-tooltip-placement="right"
 			   data-tooltip-distance-offset="20"
 			   href="#">
@@ -102,7 +103,7 @@
             {% if oUIBlock.HasMenuFilterHint() %}
                 <div class="ibo-navigation-menu--menu-filter-hint" data-role="ibo-navigation-menu--menu-filter-hint">
                     {{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hint'|dict_s }}
-                    <a class="ibo-navigation-menu--menu-filter-hint-close" data-role="ibo-navigation-menu--menu-filter-hint-close" href="#"><span class="fas fa-times"></span></a>
+                    <a class="ibo-navigation-menu--menu-filter-hint-close" data-role="ibo-navigation-menu--menu-filter-hint-close" aria-label="{{ 'UI:Button:Close'|dict_s }}" href="#"><span class="fas fa-times"></span></a>
                 </div>
             {% endif %}
         </div>

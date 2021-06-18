@@ -23,6 +23,7 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -43,14 +44,15 @@ const MAX_RESULTS = 10;
  * @param ApplicationContext $oAppContext
  *
  * @return \iTopWebPage
- * @throws CoreException
- * @throws DictExceptionMissingString
- * @throws MySQLException
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ * @throws \MySQLException
  */
 function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppContext)
 {
 	$iShowId = intval(utils::ReadParam('show_id', '0'));
 	$sClassSelection = utils::ReadParam('class_selection', '');
+	$bVerbose = utils::ReadParam('verbose', 0);
 	if (!empty($sClassSelection)) {
 		$aClassSelection = explode(",", $sClassSelection);
 	} else {
@@ -118,7 +120,7 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 
 
-	if (!empty($sErrorLabelSelection) || !empty($sClassSelection)) {
+	if (!empty($sClassSelection)) {
 		$oForm = FormUIBlockFactory::MakeStandard();
 		$oP->AddUiBlock($oForm);
 		$oInput = InputUIBlockFactory::MakeForHidden('show_id', '0');
@@ -138,9 +140,8 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 	if (!empty($aResults)) {
 		if ($iShowId == 3) {
 			// Report
-			DisplayInconsistenciesReport($aResults);
+			DisplayInconsistenciesReport($aResults, $bVerbose);
 		}
-
 
 		if ($iShowId == 0) {
 			// Error List
@@ -152,23 +153,23 @@ function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppCon
 			// Detail List
 			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:ErrorsFound'));
 			$oP->AddUiBlock($oFieldSet);
-			$oFieldSet->AddSubBlock(DisplayErrorDetails($aResults));
+			$oFieldSet->AddSubBlock(DisplayErrorDetails($aResults, $bVerbose));
 		}
 	}
-
 	return $oP;
 }
 
 /**
  * @param $aResults
+ * @param bool $bVerbose
  *
  * @return mixed
- * @throws CoreException
- * @throws DictExceptionMissingString
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
  */
-function DisplayInconsistenciesReport($aResults)
+function DisplayInconsistenciesReport($aResults, $bVerbose = false)
 {
-	$sReportFile = DBAnalyzerUtils::GenerateReport($aResults);
+	$sReportFile = DBAnalyzerUtils::GenerateReport($aResults, $bVerbose);
 
 	$sZipReport = "{$sReportFile}.zip";
 	$oArchive = new ZipArchive();
@@ -217,13 +218,15 @@ function DisplayErrorList($aResults)
 	return DataTableUIBlockFactory::MakeForForm('', $aColumns, $aRows);
 }
 
-function DisplayErrorDetails($aResults)
+function DisplayErrorDetails($aResults, $bVerbose)
 {
 	$oBlock = UIContentBlockUIBlockFactory::MakeStandard();
 
+	$oBlock->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('DBTools:Disclaimer')));
+	$oBlock->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('DBTools:Indication')));
+
 	foreach ($aResults as $sClass => $aErrorList) {
 		foreach ($aErrorList as $sErrorLabel => $aError) {
-
 			$sErrorTitle = Dict::Format('DBTools:DetailedErrorTitle', MetaModel::GetName($sClass).' ('.$sClass.')', $aError['count'], $sErrorLabel);
 			$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard($sErrorTitle);
 			$oBlock->AddSubBlock($oCollapsible);
@@ -231,7 +234,7 @@ function DisplayErrorDetails($aResults)
 			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLquery'));
 			$oCollapsible->AddSubBlock($oFieldSet);
 
-			$oCode = UIContentBlockUIBlockFactory::MakeForCode($aError['query']);
+			$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($aError['query']);
 			$oFieldSet->AddSubBlock($oCode);
 
 			if (isset($aError['fixit'])) {
@@ -240,30 +243,32 @@ function DisplayErrorDetails($aResults)
 
 				$aQueries = $aError['fixit'];
 				foreach ($aQueries as $sFixQuery) {
-					$oCode = UIContentBlockUIBlockFactory::MakeForCode($sFixQuery);
+					$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($sFixQuery);
 					$oFieldSet->AddSubBlock($oCode);
 				}
 			}
 
-			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLresult'));
-			$oCollapsible->AddSubBlock($oFieldSet);
+			if ($bVerbose) {
+				$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLresult'));
+				$oCollapsible->AddSubBlock($oFieldSet);
 
-			$sQueryResult = '';
-			$iCount = count($aError['res']);
-			$iMaxCount = MAX_RESULTS;
-			foreach ($aError['res'] as $aRes) {
-				$iMaxCount--;
-				if ($iMaxCount < 0) {
-					$sQueryResult .= 'Displayed '.MAX_RESULTS."/$iCount results.<br>";
-					break;
+				$sQueryResult = '';
+				$iCount = count($aError['res']);
+				$iMaxCount = MAX_RESULTS;
+				foreach ($aError['res'] as $aRes) {
+					$iMaxCount--;
+					if ($iMaxCount < 0) {
+						$sQueryResult .= 'Displayed '.MAX_RESULTS."/$iCount results.<br>";
+						break;
+					}
+					foreach ($aRes as $sKey => $sValue) {
+						$sQueryResult .= "'$sKey'='$sValue'&nbsp;";
+					}
+					$sQueryResult .= '<br>';
 				}
-				foreach ($aRes as $sKey => $sValue) {
-					$sQueryResult .= "'$sKey'='$sValue'&nbsp;";
-				}
-				$sQueryResult .= '<br>';
+				$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($sQueryResult);
+				$oFieldSet->AddSubBlock($oCode);
 			}
-			$oCode = UIContentBlockUIBlockFactory::MakeForCode($sQueryResult);
-			$oFieldSet->AddSubBlock($oCode);
 		}
 	}
 

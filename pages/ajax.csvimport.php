@@ -120,17 +120,12 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 		$aChoices['id'] = Dict::S('UI:CSVImport:idField');
 	}
 	foreach (MetaModel::ListAttributeDefs($sClassName) as $sAttCode => $oAttDef) {
-		$sStar = '';
 		if ($oAttDef->IsExternalKey()) {
 			if (($sFieldName == $oAttDef->GetLabel()) || ($sFieldName == $sAttCode)) {
 				$sFieldCode = $sAttCode;
 			}
 			if ($bAdvancedMode) {
 				$aChoices[$sAttCode] = $oAttDef->GetLabel();
-			}
-			$oExtKeyAttDef = MetaModel::GetAttributeDef($sClassName, $oAttDef->GetKeyAttCode());
-			if (!$oExtKeyAttDef->IsNullAllowed()) {
-				$sStar = '*';
 			}
 			// Get fields of the external class that are considered as reconciliation keys
 			$sTargetClass = $oAttDef->GetTargetClass();
@@ -151,7 +146,7 @@ function GetMappingForField($sClassName, $sFieldName, $iFieldIndex, $bAdvancedMo
 						$aChoices[$sAttCode.'->'.$sTargetAttCode] = MetaModel::GetLabel($sClassName, $sAttCode.'->'.$sTargetAttCode, true);
 						foreach ($aSignatures as $sSignature) {
 							if (strcasecmp($sFieldName, $sSignature) == 0) {
-								$sFieldCode = $sAttCode.'->'.$sTargetAttCode.$sStar;
+								$sFieldCode = $sAttCode.'->'.$sTargetAttCode;
 							}
 						}
 					}
@@ -434,6 +429,7 @@ EOF
 					$oButtonCsv = ButtonUIBlockFactory::MakeIconLink('ibo-import-csv--download-file fas fa-file-excel', $sClassDisplayName.'.xlsx', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName);
 					$oPage->AddSubBlock($oButtonCsv);
 					$oTextArea = new TextArea("", $sResult, "", 100, 5);
+					$oPage->AddSubBlock($oTextArea);
 				}
 			} else {
 				$oPage = new AjaxPage("Class $sClassName is not a valid class !");

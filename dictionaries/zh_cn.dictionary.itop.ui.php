@@ -797,7 +797,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '批量删除 %1$d 个 %2$s 类的对象',
 	'UI:Delete:NotAllowedToDelete' => '您无权删除该对象',
 	'UI:Delete:NotAllowedToUpdate_Fields' => '您无权更新以下栏目: %1$s',
-	'UI:Error:ActionNotAllowed' => 'You are not allowed to do this action~~',
+	'UI:Error:ActionNotAllowed' => '您无权进行操作',
 	'UI:Error:NotEnoughRightsToDelete' => '无法删除该对象, 因为当前用户没有足够的权限',
 	'UI:Error:CannotDeleteBecause' => '无法删除该对象，因为: %1$s',
 	'UI:Error:CannotDeleteBecauseOfDepencies' => '无法删除该对象, 因为必须事先完成一些手动操作',
@@ -909,7 +909,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:AdminTools' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools?' => '具有管理员角色的用户才能使用的工具', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:SystemTools' => 'System~~',
+	'Menu:SystemTools' => '系统',
 
 	'UI:ChangeManagementMenu' => '变更管理',
 	'UI:ChangeManagementMenu+' => '变更管理',
@@ -1050,7 +1050,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:RelationGroups' => '组',
 	'UI:OperationCancelled' => '操作已取消',
 	'UI:ElementsDisplayed' => '过滤',
-	'UI:RelationGroupNumber_N' => 'Group #%1$d',
+	'UI:RelationGroupNumber_N' => '分组 #%1$d',
 	'UI:Relation:ExportAsPDF' => '导出PDF...',
 	'UI:RelationOption:GroupingThreshold' => '分组阈值',
 	'UI:Relation:AdditionalContextInfo' => '其他信息',
@@ -1122,7 +1122,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:ModifiedObject' => '对象已修改',
 	'UI:BulkModifyStatus' => '操作',
 	'UI:BulkModifyStatus+' => '操作状态',
-	'UI:BulkModifyErrors' => 'Errors (if any)',
+	'UI:BulkModifyErrors' => '报错 (如果有)',
 	'UI:BulkModifyErrors+' => '阻止修改时报错',
 	'UI:BulkModifyStatusOk' => 'Ok',
 	'UI:BulkModifyStatusError' => '错误',
@@ -1174,8 +1174,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PrintResolution:A4Landscape' => 'A4 横向',
 	'UI:PrintResolution:LetterPortrait' => '纵向信纸',
 	'UI:PrintResolution:LetterLandscape' => '横向信纸',
-	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
-	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
+	'UI:Toggle:StandardDashboard' => '标准',
+	'UI:Toggle:CustomDashboard' => '自定义',
 
 	'UI:ConfigureThisList' => '配置这个列表...',
 	'UI:ListConfigurationTitle' => '列表配置',
@@ -1475,6 +1475,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:AddCriteria:List:Others:Title' => '其它',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => '还没有.',
 
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
+
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: 任何',
@@ -1507,7 +1512,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Search:Criteria:Title:Enum:In:Many' => '%1$s: %2$s 和 %3$s others',
 	'UI:Search:Criteria:Title:Enum:In:All' => '%1$s: 任何',
 	//   - TagSet widget
-	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s~~',
+	'UI:Search:Criteria:Title:TagSet:Matches' => '%1$s: %2$s',
 	//   - External key widget
 	'UI:Search:Criteria:Title:ExternalKey:Empty' => '%1$s 已定义',
 	'UI:Search:Criteria:Title:ExternalKey:NotEmpty' => '%1$s 未被定义',

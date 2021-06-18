@@ -105,7 +105,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
 	'Class:Contract/Attribute:contracttype_id' => 'Vertragstyp',
 	'Class:Contract/Attribute:contracttype_id+' => '',
-	'Class:Contract/Attribute:contracttype_name' => 'Vertragsty-Name',
+	'Class:Contract/Attribute:contracttype_name' => 'Vertragstyp-Name',
 	'Class:Contract/Attribute:contracttype_name+' => '',
 	'Class:Contract/Attribute:billing_frequency' => 'Abrechnungshäufigkeit',
 	'Class:Contract/Attribute:billing_frequency+' => '',
@@ -332,7 +332,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SLA/Attribute:slts_list+' => 'Service Level Targets:',
 	'Class:SLA/Attribute:customercontracts_list' => 'Kunden-Verträge',
 	'Class:SLA/Attribute:customercontracts_list+' => '',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Konnte den Link zwischen Kundevertrag %1$s und Service %2$s speichern: SLA existiert bereits',
 ));
 
 //

@@ -197,7 +197,7 @@ function activateFirstTabWithError(sFormId) {
 
 	$tabs.each(function (index, element) {
 		var $fieldsWithError = $(element).find(".form_validation");
-		if ($fieldsWithError.length > 0)
+		if ($fieldsWithError.length > 0 && ($tabsContainer.tabs("instance") !== undefined))
 		{
 			$tabsContainer.tabs("option", "active", index);
 			return false;

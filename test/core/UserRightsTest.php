@@ -31,6 +31,7 @@ use UserRights;
 
 /**
  * @group itopRequestMgmt
+ * @group userRights
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

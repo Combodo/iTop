@@ -5,7 +5,8 @@
          data-role="ibo-dashlet-badge--body"
          title="{{ oUIBlock.GetClassLabel() }}">
         <div class="ibo-dashlet-badge--icon-container">
-            <img class="ibo-dashlet-badge--icon" src="{{ oUIBlock.GetClassIconUrl() }}">
+            {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+            <img class="ibo-dashlet-badge--icon" src="{{ oUIBlock.GetClassIconUrl() }}" alt="">
         </div>
         <div class="ibo-dashlet-badge--actions">
             <a class="ibo-dashlet-badge--action-list" href="{{ oUIBlock.GetHyperlink() }}" data-role="ibo-dashlet-badge--action-list">

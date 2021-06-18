@@ -1610,7 +1610,7 @@ public function PrefillSearchForm(&$aContextParam)
 			}
 			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
 			$oResultSql = new DBObjectSet($oQuery);
-			$oResultSql->OptimizeColumnLoad(['ccs.customercontract_name','ccs.service_name']);
+			$oResultSql->OptimizeColumnLoad(['ccs' => ['ccs.customercontract_name','ccs.service_name']]);
 			if ($aCurrentRow = $oResultSql->Fetch())
 			{
 				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));

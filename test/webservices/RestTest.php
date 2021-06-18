@@ -8,6 +8,7 @@ use Exception;
 
 /**
  * @group itopRequestMgmt
+ * @group restApi
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

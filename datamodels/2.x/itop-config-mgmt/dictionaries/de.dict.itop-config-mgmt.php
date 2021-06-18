@@ -279,8 +279,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundanz',
 	'Class:DatacenterDevice/Attribute:redundancy/count' => 'Das Gerät läuft, wenn mindestens eine der Stromversorgungen (A oder B) läuft.',
 	// Unused yet
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Das Gerät läuft wenn alle seine Stromversorgungen laufen.',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Das Gerät läuft wenn mindestens %1$s %% seiner Stromversorgungen laufen.',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Das Gerät läuft, wenn alle seine Stromversorgungen laufen.',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'Das Gerät läuft, wenn mindestens %1$s %% seiner Stromversorgungen laufen.',
 ));
 
 //
@@ -327,7 +327,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Server/Attribute:cpu+' => '',
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
-	'Class:Server/Attribute:logicalvolumes_list' => 'Logische Volumen',
+	'Class:Server/Attribute:logicalvolumes_list' => 'Logische Volumes',
 	'Class:Server/Attribute:logicalvolumes_list+' => '',
 ));
 
@@ -492,9 +492,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'inaktiv',
 	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => '',
 	'Class:ApplicationSolution/Attribute:redundancy' => 'Auswirkungsanalyse: Redundanz-Einstellungen',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Die Lösung läuft wenn alle ihre CIs laufen.',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'Die Lösung läuft wenn mindestens %1$s CI(s) laufen.',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'Die Lösung läuft wemm mindestens %1$s %% der CIs laufen.',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Die Lösung läuft, wenn alle ihre CIs laufen.',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'Die Lösung läuft, wenn mindestens %1$s CI(s) laufen.',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'Die Lösung läuft, wenn mindestens %1$s %% der CIs laufen.',
 ));
 
 //
@@ -695,9 +695,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisoren',
 	'Class:Farm/Attribute:hypervisor_list+' => '',
 	'Class:Farm/Attribute:redundancy' => 'Hochverfügbarkeit',
-	'Class:Farm/Attribute:redundancy/disabled' => 'Die Farm läuft wenn alle Hypervisoren laufen.',
-	'Class:Farm/Attribute:redundancy/count' => 'Die Farm läuft wenn mindestens %1$s Hypervisor(en) läuft/laufen.',
-	'Class:Farm/Attribute:redundancy/percent' => 'Die Farm läuft wenn mindestens %1$s %% der Hypervisoren laufen.',
+	'Class:Farm/Attribute:redundancy/disabled' => 'Die Farm läuft, wenn alle Hypervisoren laufen.',
+	'Class:Farm/Attribute:redundancy/count' => 'Die Farm läuft, wenn mindestens %1$s Hypervisor(en) läuft/laufen.',
+	'Class:Farm/Attribute:redundancy/percent' => 'Die Farm läuft, wenn mindestens %1$s %% der Hypervisoren laufen.',
 ));
 
 //
@@ -1111,7 +1111,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Model/Attribute:type/Value:Phone+' => '',
 	'Class:Model/Attribute:physicaldevices_list' => 'Phyische Geräte',
 	'Class:Model/Attribute:physicaldevices_list+' => '',
-	'Class:Model/UniquenessRule:name_brand+' => 'Der Modellname der für eine Marke muss eindeutig sein',
+	'Class:Model/UniquenessRule:name_brand+' => 'Der Modellname für eine Marke muss eindeutig sein',
 	'Class:Model/UniquenessRule:name_brand' => 'Es existiert bereits ein Modell mit diesem Namen für diese Marke',
 ));
 
@@ -1409,7 +1409,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkApplicationSolutionToFunctionalCI' => 'Verknüpfung Anwendungslösung/FunctionalCI',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Applikationslösung',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Anwendungslösung',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Anwendungslösungs-Name',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '',
@@ -1432,7 +1432,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Anwendungslösung',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Applikationslösungs-Name',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Anwendungslösung-Name',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '',
 ));
 
@@ -1503,7 +1503,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Subnet/Tab:IPUsage-explain' => 'Interfaces mit einer IP in der Range: <em>%1$s</em> bis <em>%2$s</em>',
 	'Class:Subnet/Tab:FreeIPs' => 'Freie IPs',
 	'Class:Subnet/Tab:FreeIPs-count' => 'Freie IPs: %1$s',
-	'Class:Subnet/Tab:FreeIPs-explain' => 'Hier ist eine Aufstellung von 10 freien IP Adressen',
+	'Class:Subnet/Tab:FreeIPs-explain' => 'Hier ist eine Auflistung von 10 freien IP Adressen',
 	'Class:Document:PreviewTab' => 'Vorschau',
 ));
 

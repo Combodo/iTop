@@ -1489,6 +1489,11 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.',
 
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand',
+	'UI:Search:Criteria:Remove' => 'Remove',
+	'UI:Search:Criteria:Locked' => 'Locked',
+
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Any',

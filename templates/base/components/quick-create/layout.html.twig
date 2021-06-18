@@ -1,8 +1,12 @@
 <div id="{{ oUIBlock.GetId() }}" class="ibo-quick-create" data-role="ibo-quick-create">
 	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-quick-create--head" data-role="ibo-quick-create--head">
 		<input type="hidden" name="operation" value="new">
-		<a href="#" class="ibo-quick-create--icon" data-role="ibo-quick-create--icon" data-tooltip-content="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}"
-		   data-tooltip-placement="bottom-start" data-tooltip-distance-offset="25">
+		<a href="#" class="ibo-quick-create--icon" data-role="ibo-quick-create--icon"
+           aria-label="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}"
+           data-tooltip-content="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}"
+		   data-tooltip-placement="bottom-start"
+           data-tooltip-distance-offset="25"
+        >
 			<span class="fas fa-plus"></span>
 		</a>
 		<select name="class" class="ibo-quick-create--input" data-role="ibo-quick-create--input">
@@ -28,7 +32,8 @@
 					{% for aClass in oUIBlock.GetLastClasses() %}
 						<a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
 							{% if aClass.icon_url is defined %}
-								<img src="{{ aClass.icon_url}}" class="ibo-quick-create--compartment-element-image">
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+                                <img src="{{ aClass.icon_url}}" alt="" class="ibo-quick-create--compartment-element-image">
 							{% endif %}
 							{{ aClass.label_html|raw }}
 						</a>

@@ -288,6 +288,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		if (count($oCustomSettings->aColumns) == 0)
 		{
 			$oCustomSettings->aColumns = $oDefaultSettings->aColumns;
+		}
+		if(count($oCustomSettings->GetSortOrder()) == 0){
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
 		}
 
@@ -295,8 +297,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
 			foreach ($aColumnsInfo as $sAttCode => $aData) {
+				$bForceLoad = false;
+				if ($aData['sort'] != 'none' || isset($oCustomSettings->aSortOrder[$sAttCode])) {
+					$bForceLoad = true;
+				}
 				if ($sAttCode != '_key_') {
-					if ($aData['checked']) {
+					if ($aData['checked'] || $bForceLoad) {
 						$aColumnsToLoad[$sAlias][] = $sAttCode;
 					} else {
 						// See if this column is a must to load
@@ -321,11 +327,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
 				$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
 				if ($aData['sort'] != 'none') {
-					$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
+					$aSortOrder[$sAlias.'.'.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
 					$aSortDatable=[$iIndexColumn,$aData['sort']];
 				}
 				elseif (isset($oCustomSettings->aSortOrder[$sAttCode])){
-					$aSortOrder[$sAlias.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
+					$aSortOrder[$sAlias.'.'.$sCode] = $oCustomSettings->aSortOrder[$sAttCode]; // true for ascending, false for descending
 				}
 				
 				if ($aData['checked']) {
@@ -878,6 +884,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			'selected_rows',        /** array list of Ids already selected when displaying the datatable */
 			'display_aliases',      /** string comma separated list of class aliases to display */
 			'list_id',              /** string list outer id */
+			'selection_enabled',    	/** list of id in witch select is allowed, if not exists all lines are selectable */
+			'id_for_select', /**give definition of id for select checkbox*/
 		];
 	}
 }

@@ -73,15 +73,14 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	/**
 	 * @inheritDoc
 	 */
-	public abstract function ListSupportedLoginModes();
+	abstract public function ListSupportedLoginModes();
 
 	/**
 	 * @inheritDoc
 	 */
 	public function LoginAction($sLoginState, &$iErrorCode)
 	{
-		switch ($sLoginState)
-		{
+		switch ($sLoginState) {
 			case LoginWebPage::LOGIN_STATE_START:
 				return $this->OnStart($iErrorCode);
 

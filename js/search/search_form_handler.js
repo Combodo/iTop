@@ -435,7 +435,7 @@ $(function()
 
 			// Header part
 			var oHeaderElem = $('<div class="sfm_header"></div>')
-				.append('<a class="sfm_toggler" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
+				.append('<a class="sfm_toggler" aria-label="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" data-tooltip-content="' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '" href="#"><span class="sfm_tg_title">' + Dict.S('UI:Search:Criterion:MoreMenu:AddCriteria') + '</span><span class="sfm_tg_icon fas fa-plus"></span></a>')
 				.appendTo(this.elements.more_criterion);
 
 			// Content part
@@ -704,8 +704,8 @@ $(function()
 
 			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
 			var sButtonIcon = (this.options.auto_submit === true) ? 'fas fa-sync' : 'fas fa-search';
-			var oButtonElem = $('<div class="sfb_header" data-tooltip-content="' + sButtonText + '"></div>')
-				.append('<a class="fa-fw ' + sButtonIcon + '"  href="#"></a>')
+			var oButtonElem = $('<div class="sfb_header"></div>')
+				.append('<a aria-label="' + sButtonText + '" data-tooltip-content="' + sButtonText + '" href="#"><span class="fa-fw ' + sButtonIcon + '"></span></a>')
 				.appendTo(this.elements.submit_button);
 
 			// Bind events

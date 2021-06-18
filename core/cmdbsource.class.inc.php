@@ -182,7 +182,7 @@ class CMDBSource
 		}
 		catch(mysqli_sql_exception $e)
 		{
-			throw new MySQLException('Could not connect to the DB server', array('host' => $sServer, 'user' => $sUser), $e);
+			throw new MySQLException('Could not connect to the DB server', array('host' => $sServer, 'user' => $sUser),$e);
 		}
 
 		if ($bTlsEnabled

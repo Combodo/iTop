@@ -12,7 +12,7 @@
     "ext-soap": "*",
     "combodo/tcpdf": "6.3.5",
     "nikic/php-parser": "^3.1",
-    "pear/archive_tar": "1.4.10",
+    "pear/archive_tar": "1.4.13",
     "pelago/emogrifier": "2.1.0",
     "scssphp/scssphp": "1.0.6",
     "swiftmailer/swiftmailer": "5.4.12",

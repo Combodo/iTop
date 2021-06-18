@@ -1478,6 +1478,11 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	'UI:Search:AddCriteria:List:Others:Title' => 'Otros',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Ninguno todavía',
 
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
+
 	// - Criteria titles
 	//   - Default widget
 	'UI:Search:Criteria:Title:Default:Any' => '%1$s: Cualquier',

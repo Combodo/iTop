@@ -30,5 +30,10 @@ class MySQLException extends CoreException
 			$aContext['mysql_error'] = CMDBSource::GetError();
 		}
 		parent::__construct($sIssue, $aContext);
+		//if is connection error, don't log the default message with password in
+		if (mysqli_connect_errno()) {
+			error_log($this->message);
+			error_reporting(0);
+		}
 	}
 }

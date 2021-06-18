@@ -18,6 +18,18 @@ $ibo-datatable--sort-order--color: $ibo-color-orange-600 !default;
 
 $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 
+
+/* CSS variables (can be changed directly from the browser) */
+:root {
+  --ibo-datatable-panel--table-spacing: #{$ibo-datatable-panel--table-spacing};
+}
+
+.ibo-datatable {
+  .ibo-datatable-header {
+    color: var(--ibo-body-text-color);
+  }
+}
+
 .ibo-datatable--toolbar {
   display: flex;
   justify-content: space-between;

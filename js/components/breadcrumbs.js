@@ -84,7 +84,8 @@ $(function()
                         }
                         else if (oEntry['icon'].length > 0)
                         {
-                            sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><img src="'+oEntry['icon']+'"/></span>';
+	                        // Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/
+	                        sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><img src="'+oEntry['icon']+'" alt=""/></span>';
                         }
 
 						var sTitle = oEntry['description'],

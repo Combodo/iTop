@@ -59,7 +59,7 @@
       // jQuery UI 1.9+, and otherwise fallback to a custom string.
       this._namespaceID = this.eventNamespace || ('multiselect' + multiselectID);
 
-      var button = (this.button = $('<button type="button"><span class="ui-icon ui-icon-triangle-1-s"></span></button>'))
+      var button = (this.button = $('<button type="button"><span class="fas fa-caret-down"></span></button>'))
         .addClass('ui-multiselect ui-widget ui-state-default ui-corner-all')
         .addClass(o.classes)
         .attr({ 'title':el.attr('title'), 'aria-haspopup':true, 'tabIndex':el.attr('tabIndex') })
@@ -70,26 +70,25 @@
           .appendTo(button),
 
         menu = (this.menu = $('<div />'))
-          .addClass('ui-multiselect-menu ui-widget ui-widget-content ui-corner-all')
+          .addClass('ui-dialog ui-multiselect-menu ui-widget ui-widget-content ui-corner-all')
           .addClass(o.classes)
           .appendTo($(o.appendTo)),
 
         header = (this.header = $('<div />'))
-          .addClass('ui-widget-header ui-corner-all ui-multiselect-header ui-helper-clearfix')
+          .addClass('ui-dialog-titlebar  ui-corner-all ui-multiselect-header ui-helper-clearfix')
           .appendTo(menu),
 
         headerLinkContainer = (this.headerLinkContainer = $('<ul />'))
-          .addClass('ui-helper-reset')
           .html(function() {
             if(o.header === true) {
-              return '<li><a class="ui-multiselect-all" href="#"><span class="ui-icon ui-icon-check"></span><span>' + o.checkAllText + '</span></a></li><li><a class="ui-multiselect-none" href="#"><span class="ui-icon ui-icon-closethick"></span><span>' + o.uncheckAllText + '</span></a></li>';
+              return '<li><a class="ui-multiselect-all" href="#"><i class="far fa-square"></i> <span>' + o.checkAllText + '/' + o.uncheckAllText + '</span></a></li>';
             } else if(typeof o.header === "string") {
               return '<li>' + o.header + '</li>';
             } else {
               return '';
             }
           })
-          .append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close"><span class="ui-icon ui-icon-circle-close"></span></a></li>')
+         // .append('<li class="ui-multiselect-close"><a href="#" class="ui-multiselect-close"><i class="far fa-window-close"></i></a></li>')
           .appendTo(header),
 
         checkboxContainer = (this.checkboxContainer = $('<ul />'))
@@ -300,7 +299,17 @@
 
           // check all / uncheck all
         } else {
-          self[$(this).hasClass('ui-multiselect-all') ? 'checkAll' : 'uncheckAll']();
+           if ($(this).hasClass('ui-multiselect-all'))
+           {
+           	   self. checkAll();
+	           $(this).removeClass('ui-multiselect-all').addClass('ui-multiselect-none');
+	           $(this).find('.fa-square').removeClass('fa-square').addClass('fa-check-square');
+           } else {
+           	    self.uncheckAll();
+	           $(this).removeClass('ui-multiselect-none').addClass('ui-multiselect-all');
+	           $(this).find('.fa-check-square').removeClass('fa-check-square').addClass('fa-square');
+	       }
+
         }
 
         e.preventDefault();

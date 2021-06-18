@@ -126,6 +126,18 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testFriendlyNameLnk()
+	{
+		$oUserProfile = new \URP_UserProfile();
+		$oUserProfile->Set('profileid', 2);
+
+		static::assertEquals('', $oUserProfile->Get('friendlyname'));
+	}
+
+	/**
 	 * @covers DBObject::NewObject
 	 * @covers DBObject::Get
 	 * @covers DBObject::Set

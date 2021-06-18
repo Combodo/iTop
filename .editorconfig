@@ -90,7 +90,7 @@ ij_xml_attribute_wrap = normal
 ij_xml_block_comment_at_first_column = true
 ij_xml_keep_blank_lines = 2
 ij_xml_keep_indents_on_empty_lines = false
-ij_xml_keep_line_breaks = false
+ij_xml_keep_line_breaks = true
 ij_xml_keep_line_breaks_in_text = true
 ij_xml_keep_whitespaces = false
 ij_xml_keep_whitespaces_around_cdata = preserve
@@ -110,6 +110,7 @@ ij_shell_keep_column_alignment_padding = false
 ij_shell_minify_program = false
 ij_shell_redirect_followed_by_space = false
 ij_shell_switch_cases_indented = false
+ij_shell_use_unix_line_separator = true
 
 [{*.cjs,*.js}]
 indent_style = tab
@@ -514,7 +515,7 @@ ij_json_wrap_long_lines = false
 indent_style = tab
 ij_smart_tabs = true
 ij_visual_guides = none
-ij_html_add_new_line_before_tags = body, div, p, form, h1, h2, h3
+ij_html_add_new_line_before_tags = body,div,p,form,h1,h2,h3
 ij_html_align_attributes = true
 ij_html_align_text = false
 ij_html_attribute_wrap = normal
@@ -541,7 +542,21 @@ ij_html_space_inside_empty_tag = false
 ij_html_text_wrap = normal
 ij_html_uniform_ident = false
 
-[{*.yaml, *.yml}]
+[{*.markdown,*.md}]
+ij_visual_guides = none
+ij_markdown_force_one_space_after_blockquote_symbol = true
+ij_markdown_force_one_space_after_header_symbol = true
+ij_markdown_force_one_space_after_list_bullet = true
+ij_markdown_force_one_space_between_words = true
+ij_markdown_keep_indents_on_empty_lines = false
+ij_markdown_max_lines_around_block_elements = 1
+ij_markdown_max_lines_around_header = 1
+ij_markdown_max_lines_between_paragraphs = 1
+ij_markdown_min_lines_around_block_elements = 1
+ij_markdown_min_lines_around_header = 1
+ij_markdown_min_lines_between_paragraphs = 1
+
+[{*.yaml,*.yml}]
 indent_size = 2
 ij_visual_guides = none
 ij_yaml_align_values_properties = do_not_align

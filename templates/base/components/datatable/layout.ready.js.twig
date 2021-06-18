@@ -18,7 +18,7 @@ if ($('#{{ oUIBlock.GetId() }}') != 'undefined' && $.fn.dataTable.isDataTable('#
     $('#{{ oUIBlock.GetId() }}').DataTable().destroy(false);
 }
 
-var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
+var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
         search: "{{ 'UI:Datatables:Language:Search'|dict_s }}",
@@ -184,10 +184,10 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}');
         {% if oUIBlock.GetOption("select_mode") != "single" %}
-        this.api().on('select', function (oEvent, dt, type, indexes) {
+            this.api().on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }})
             {
-                let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
+                let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
                 if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
                 {
                     // Checking input
@@ -224,7 +224,7 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         this.api().off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }} )
             {
-                let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
+                let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
                 // Checking input
                 $('#{{ oUIBlock.GetId() }} tbody tr:not(.selected) td:first-child input').prop('checked', false);
                 // Saving values in temp array
@@ -258,7 +258,7 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         this.api().off('select').on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }} )
             {
-                let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
+                let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
                 // Checking input
                 $('#{{ oUIBlock.GetId() }}  tbody tr.selected td:first-child input').prop('checked', true);
                 // Saving values in temp array
@@ -277,7 +277,7 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         this.api().off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }} )
             {
-                let aData = oTable{{ sListIfForVarSuffix }}.rows(indexes).data().toArray();
+                let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
 
                 // Checking input
                 $('#{{ oUIBlock.GetId() }} tr tbody tr:not(.selected) td:first-child input').prop('checked', false);
@@ -295,12 +295,16 @@ var oTable{{ sListIfForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         });
         {% endif %}
 
-
+        {% if oUIBlock.GetDisabledSelect() is not empty %}
+            {% for key in oUIBlock.GetDisabledSelect() %}
+                $('.selectList{{ oUIBlock.GetId() }}[value={{ key }}]').prop("disabled","disabled");
+            {% endfor %}
+        {% endif %}
         {% endif %}
     }
 });
 
-oTable{{ sListIfForVarSuffix }}.select();
+oTable{{ sListIDForVarSuffix }}.select();
 
 
 
@@ -328,7 +332,7 @@ $('#datatable_dlg_{{ oUIBlock.GetId() }}').dialog(
             }
         });
 
-$aOptions = {
+var aOptions{{ sListIDForVarSuffix }} = {
     sListId: '{{ oUIBlock.GetId() }}',
     oColumns: {{ oUIBlock.GetResultColumnsAsJson()|raw }},
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
@@ -346,8 +350,7 @@ $aOptions = {
 if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable')) {
     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('destroy');
 }
-
-$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings($aOptions);
+$('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});
 
 if(window.ResizeObserver){
         let oTable{{ sListIDForVarSuffix }}ResizeTimeout = null;

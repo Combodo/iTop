@@ -490,11 +490,13 @@ class RunTimeEnvironment
 	 * The list of modules to be installed in the target environment is:
 	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
 	 *  - plus the list of modules present in the "extra" directory of the target environment: data/<target_environment>-modules/
+	 *
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
 	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
+	 *
 	 * @return string[]
 	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = false)
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$sSourceDir = $oSourceConfig->Get('source_dir');
@@ -504,7 +506,7 @@ class RunTimeEnvironment
 		//
 		$oFactory = new ModelFactory($sSourceDirFull);
 		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-		foreach($aModulesToCompile as $oModule)
+		foreach ($aModulesToCompile as $oModule)
 		{
 			if ($oModule instanceof MFDeltaModule)
 			{
@@ -514,15 +516,12 @@ class RunTimeEnvironment
 			}
 			$oFactory->LoadModule($oModule);
 		}
-		
 
-		if ($oModule instanceof MFDeltaModule)
-		{
+
+		if ($oModule instanceof MFDeltaModule) {
 			// A delta was loaded, let's save a second copy of the datamodel
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
-		}
-		else
-		{
+		} else {
 			// No delta was loaded, let's save the datamodel now
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 		}

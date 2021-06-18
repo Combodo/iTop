@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => 'c11fd4f0abc87e0246ee43c6d73296e19d385f6c',
+    'reference' => '51e24a4e3527c8416bc14fe28284ff67152a36c9',
     'name' => '__root__',
   ),
   'versions' => 
@@ -18,7 +18,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => 'c11fd4f0abc87e0246ee43c6d73296e19d385f6c',
+      'reference' => '51e24a4e3527c8416bc14fe28284ff67152a36c9',
     ),
     'combodo/tcpdf' => 
     array (
@@ -31,12 +31,12 @@
     ),
     'nikic/php-parser' => 
     array (
-      'pretty_version' => 'v4.10.4',
-      'version' => '4.10.4.0',
+      'pretty_version' => 'v3.1.5',
+      'version' => '3.1.5.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'c6d052fc58cb876152f89f532b95a8d7907e7f0e',
+      'reference' => 'bb87e28e7d7b8d9a7fda231d37457c9210faf6ce',
     ),
     'paragonie/random_compat' => 
     array (
@@ -49,12 +49,12 @@
     ),
     'pear/archive_tar' => 
     array (
-      'pretty_version' => '1.4.10',
-      'version' => '1.4.10.0',
+      'pretty_version' => '1.4.13',
+      'version' => '1.4.13.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bbb4f10f71a1da2715ec6d9a683f4f23c507a49b',
+      'reference' => '19bb8e95490d3e3ad92fcac95500ca80bdcc7495',
     ),
     'pear/console_getopt' => 
     array (
@@ -76,12 +76,12 @@
     ),
     'pear/pear_exception' => 
     array (
-      'pretty_version' => 'v1.0.1',
-      'version' => '1.0.1.0',
+      'pretty_version' => 'v1.0.2',
+      'version' => '1.0.2.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'dbb42a5a0e45f3adcf99babfb2a1ba77b8ac36a7',
+      'reference' => 'b14fbe2ddb0b9f94f5b24cf08783d599f776fff0',
     ),
     'pelago/emogrifier' => 
     array (
