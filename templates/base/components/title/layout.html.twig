@@ -7,7 +7,7 @@
         {% endif %}
         <div class="ibo-title--content">
             {% block iboPageTitleText %}
-                <h{{ oUIBlock.GetLevel() }} class="ibo-title--text title is-size-{{ oUIBlock.GetLevel() + 2 }}">
+                <h{{ oUIBlock.GetLevel() }} class="ibo-title--text is-size-{{ oUIBlock.GetLevel() + 2 }}">
                     {% for oSubBlock in oUIBlock.GetSubBlocks() %}
                         {{ render_block(oSubBlock, {aPage: aPage}) }}
                     {% endfor %}
