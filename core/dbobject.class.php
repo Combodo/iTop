@@ -790,7 +790,7 @@ abstract class DBObject implements iDisplay
 					//
 					/** @var \AttributeExternalField $oAttDef */
 					$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
-	
+
 					if (($iRemote = $this->Get($sExtKeyAttCode)) && ($iRemote > 0)) // Objects in memory have negative IDs
 					{
 						$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
@@ -5547,6 +5547,9 @@ abstract class DBObject implements iDisplay
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			$value = reset($aSQLValues);
+			if ($oAttDef->IsNull($value)) {
+				$value = '';
+			}
 			$aArgs[$sFieldDesc] = $value;
 		}
 		return $oExpression->Evaluate($aArgs);
