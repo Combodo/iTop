@@ -5,7 +5,7 @@
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', [
-	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Other tabs~~',
+	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Andere Tabs',
 	'UIBlock:Error:AddBlockNotTabForbidden' => 'Kann Inhaltsblock %1$s nicht zu %2$s hinzufügen (nur Tab-Inhalte sind erlaubt)',
 	'UIBlock:TabContainer:RemoteTabLoad' => 'Klicke, um diesen Tab zu laden',
 ]);
