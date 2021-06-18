@@ -30,11 +30,13 @@ Twig Tag
 
 :Type:
 
-+------------------------------------------+-------------------------------------------------------------------+
-| :ref:`Standard <UIContentBlockStandard>` | No comment                                                        |
-+------------------------------------------+-------------------------------------------------------------------+
-| :ref:`ForCode <UIContentBlockForCode>`   | Used to display a block of code like <pre> but allows line break. |
-+------------------------------------------+-------------------------------------------------------------------+
++--------------------------------------------------------+-------------------------------------------------------------------+
+| :ref:`Standard <UIContentBlockStandard>`               | No comment                                                        |
++--------------------------------------------------------+-------------------------------------------------------------------+
+| :ref:`ForCode <UIContentBlockForCode>`                 | Used to display a block of code like <pre> but allows line break. |
++--------------------------------------------------------+-------------------------------------------------------------------+
+| :ref:`ForPreformatted <UIContentBlockForPreformatted>` | No comment                                                        |
++--------------------------------------------------------+-------------------------------------------------------------------+
 
 .. _UIContentBlockStandard:
 
@@ -67,6 +69,27 @@ UIContentBlock ForCode
 .. code-block:: twig
 
     {% UIContentBlock ForCode {sCode:'value', sId:'value'} %}
+        Content Goes Here
+    {% EndUIContentBlock %}
+
+:parameters:
+
++-------+--------+-----------+------+--+
+| sCode | string | mandatory |      |  |
++-------+--------+-----------+------+--+
+| sId   | string | optional  | NULL |  |
++-------+--------+-----------+------+--+
+
+.. _UIContentBlockForPreformatted:
+
+UIContentBlock ForPreformatted
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:syntax:
+
+.. code-block:: twig
+
+    {% UIContentBlock ForPreformatted {sCode:'value', sId:'value'} %}
         Content Goes Here
     {% EndUIContentBlock %}
 

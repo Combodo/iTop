@@ -102,6 +102,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#twig-tag">Twig Tag</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#uicontentblock-standard">UIContentBlock Standard</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#uicontentblock-forcode">UIContentBlock ForCode</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#uicontentblock-forpreformatted">UIContentBlock ForPreformatted</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#uicontentblock-common-parameters">UIContentBlock common parameters</a></li>
 </ul>
 </li>
@@ -207,8 +208,8 @@ Base block containing sub-blocks</p>
 </dl>
 <table class="docutils align-default">
 <colgroup>
-<col style="width: 39%" />
-<col style="width: 61%" />
+<col style="width: 46%" />
+<col style="width: 54%" />
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><a class="reference internal" href="#uicontentblockstandard"><span class="std std-ref">Standard</span></a></p></td>
@@ -216,6 +217,9 @@ Base block containing sub-blocks</p>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="#uicontentblockforcode"><span class="std std-ref">ForCode</span></a></p></td>
 <td><p>Used to display a block of code like &lt;pre&gt; but allows line break.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#uicontentblockforpreformatted"><span class="std std-ref">ForPreformatted</span></a></p></td>
+<td><p>No comment</p></td>
 </tr>
 </tbody>
 </table>
@@ -265,6 +269,45 @@ Base block containing sub-blocks</p>
 <dd class="field-odd"><p></p></dd>
 </dl>
 <div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIContentBlock</span> <span class="p">F</span><span class="nv">orCode</span> <span class="o">{</span><span class="nv">sCode</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sId</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIContentBlock</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 21%" />
+<col style="width: 24%" />
+<col style="width: 32%" />
+<col style="width: 18%" />
+<col style="width: 6%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sCode</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sId</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="uicontentblock-forpreformatted">
+<span id="uicontentblockforpreformatted"></span><h3>UIContentBlock ForPreformatted<a class="headerlink" href="#uicontentblock-forpreformatted" title="Permalink to this headline">¶</a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIContentBlock</span> <span class="p">F</span><span class="nv">orPreformatted</span> <span class="o">{</span><span class="nv">sCode</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">sId</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
 <span class="x">    Content Goes Here</span>
 <span class="cp">{%</span> <span class="k">EndUIContentBlock</span> <span class="cp">%}</span><span class="x"></span>
 </pre></div>
