@@ -31,8 +31,8 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     scrollX: true,
     {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
-    scrollY: {{ oUIBlock.GetOption('sMaxHeight') }},
-    scrollCollapse: true,
+        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+        scrollCollapse: true,
     {% endif %}
     order: [],
     autoWidth: false,
