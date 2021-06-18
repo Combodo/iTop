@@ -1141,7 +1141,7 @@ JS
 				$aValues[$iRow] = $sValue;
 				$sHtmlValue = $oGroupByExp->MakeValueLabel($this->m_oFilter, $sValue, $sValue);
 				$aLabels[$iRow] = $sHtmlValue;
-				$aGroupBy[$iRow] = (int)$aRow[$sFctVar];
+				$aGroupBy[$iRow] = (float)$aRow[$sFctVar];
 				$iTotalCount += $aRow['_itop_count_'];
 			}
 
@@ -1541,7 +1541,7 @@ JS
 				$aValues[] = array(
 					'label' => html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8'),
 					'label_html' => $sHtmlValue,
-					'value' => (int)$aRow[$sFctVar],
+					'value' => (float)$aRow[$sFctVar],
 				);
 
 				// Build the search for this subset
@@ -1576,7 +1576,7 @@ JS
 				$aColumns = array();
 				$aNames = array();
 				foreach ($aValues as $idx => $aValue) {
-					$aColumns[] = array('series_'.$idx, (int)$aValue['value']);
+					$aColumns[] = array('series_'.$idx, (float)$aValue['value']);
 					$aNames['series_'.$idx] = $aValue['label'];
 				}
 				$oBlock = new BlockChartAjaxPie();
