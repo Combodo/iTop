@@ -604,36 +604,29 @@ abstract class LogAPI
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
 	{
-		if (! static::$m_oFileLog)
-		{
+		if (!static::$m_oFileLog) {
 			return;
 		}
 
-		if (! isset(self::$aLevelsPriority[$sLevel]))
-		{
+		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
+
 			return;
 		}
 
-		if (is_null($sChannel))
-		{
+		if (is_null($sChannel)) {
 			$sChannel = static::CHANNEL_DEFAULT;
 		}
 
 		$sMinLogLevel = self::GetMinLogLevel($sChannel);
 
-		if ($sMinLogLevel === false || $sMinLogLevel === 'false')
-		{
+		if ($sMinLogLevel === false || $sMinLogLevel === 'false') {
 			return;
 		}
-		if (is_string($sMinLogLevel))
-		{
-			if (! isset(self::$aLevelsPriority[$sMinLogLevel]))
-			{
+		if (is_string($sMinLogLevel)) {
+			if (!isset(self::$aLevelsPriority[$sMinLogLevel])) {
 				throw new Exception("invalid configuration for log_level '{$sMinLogLevel}' is not within the list: ".implode(',', array_keys(self::$aLevelsPriority)));
-			}
-			elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel])
-			{
+			} elseif (self::$aLevelsPriority[$sLevel] < self::$aLevelsPriority[$sMinLogLevel]) {
 				//priority too low regarding the conf, do not log this
 				return;
 			}
