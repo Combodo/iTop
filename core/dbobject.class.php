@@ -2739,50 +2739,72 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
+		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		try
+		if ($bIsTransactionEnabled)
 		{
-			if ($bIsTransactionEnabled)
-			{
-				CMDBSource::Query('START TRANSACTION');
-			}
-
-			// First query built upon on the root class, because the ID must be created first
-			$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
-
-			// Then do the leaf class, if different from the root class
-			if ($sClass != $sRootClass)
-			{
-				$this->DBInsertSingleTable($sClass);
-			}
-
-			// Then do the other classes
-			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
-			{
-				if ($sParentClass == $sRootClass)
-				{
-					continue;
-				}
-				$this->DBInsertSingleTable($sParentClass);
-			}
-
-			$this->OnObjectKeyReady();
-
-			$this->DBWriteLinks();
-			$this->WriteExternalAttributes();
-
-			if ($bIsTransactionEnabled)
-			{
-				CMDBSource::Query('COMMIT');
-			}
+			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+			$iTransactionRetryCount = 1;
+			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$iTransactionRetry = $iTransactionRetryCount;
 		}
-		catch (Exception $e)
-		{
-			if ($bIsTransactionEnabled)
-			{
-				CMDBSource::Query('ROLLBACK');
+		while ($iTransactionRetry > 0) {
+			try {
+				$iTransactionRetry--;
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('START TRANSACTION');
+				}
+
+				// First query built upon on the root class, because the ID must be created first
+				$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
+
+				// Then do the leaf class, if different from the root class
+				if ($sClass != $sRootClass) {
+					$this->DBInsertSingleTable($sClass);
+				}
+
+				// Then do the other classes
+				foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+					if ($sParentClass == $sRootClass) {
+						continue;
+					}
+					$this->DBInsertSingleTable($sParentClass);
+				}
+
+				$this->OnObjectKeyReady();
+
+				$this->DBWriteLinks();
+				$this->WriteExternalAttributes();
+
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('COMMIT');
+				}
+				break;
 			}
-			throw $e;
+			catch (Exception $e) {
+				IssueLog::Error($e->getMessage());
+				if ($bIsTransactionEnabled)
+				{
+					CMDBSource::Query('ROLLBACK');
+					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
+					{
+						// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
+						if ($iTransactionRetry > 0)
+						{
+							// wait and retry
+							IssueLog::Error("Insert TRANSACTION Retrying...");
+							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+							continue;
+						}
+						else
+						{
+							IssueLog::Error("Insert Deadlock TRANSACTION prevention failed.");
+						}
+					}
+				}
+				throw $e;
+			}
 		}
 
 		$this->m_bIsInDB = true;
@@ -3156,9 +3178,11 @@ abstract class DBObject implements iDisplay
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			if ($bIsTransactionEnabled)
 			{
-				$iIsTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				// TODO Deep clone this object before the transaction (to use it in case of rollback)
+				// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				$iTransactionRetryCount = 1;
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-				$iTransactionRetry = $iIsTransactionRetryCount;
+				$iTransactionRetry = $iTransactionRetryCount;
 			}
 			while ($iTransactionRetry > 0)
 			{
@@ -3246,18 +3270,18 @@ abstract class DBObject implements iDisplay
 				}
 				catch (MySQLException $e)
 				{
+					IssueLog::Error($e->getMessage());
 					if ($bIsTransactionEnabled)
 					{
 						CMDBSource::Query('ROLLBACK');
-						if ($e->getCode() == 1213)
+						if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
 						{
-							// Deadlock found when trying to get lock; try restarting transaction
-							IssueLog::Error($e->getMessage());
+							// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
 							if ($iTransactionRetry > 0)
 							{
 								// wait and retry
 								IssueLog::Error("Update TRANSACTION Retrying...");
-								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iIsTransactionRetryCount - $iTransactionRetry));
+								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 								continue;
 							}
 							else
@@ -3271,10 +3295,11 @@ abstract class DBObject implements iDisplay
 						'id' => $this->GetKey(),
 						'class' => get_class($this),
 						'issues' => $aErrors
-					));
+					), $e);
 				}
 				catch (CoreCannotSaveObjectException $e)
 				{
+					IssueLog::Error($e->getMessage());
 					if ($bIsTransactionEnabled)
 					{
 						CMDBSource::Query('ROLLBACK');
@@ -3283,6 +3308,7 @@ abstract class DBObject implements iDisplay
 				}
 				catch (Exception $e)
 				{
+					IssueLog::Error($e->getMessage());
 					if ($bIsTransactionEnabled)
 					{
 						CMDBSource::Query('ROLLBACK');
@@ -3494,9 +3520,11 @@ abstract class DBObject implements iDisplay
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		if ($bIsTransactionEnabled)
 		{
-			$iIsTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-			$iTransactionRetry = $iIsTransactionRetryCount;
+			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+			$iTransactionRetryCount = 1;
+			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$iTransactionRetry = $iTransactionRetryCount;
 		}
 		while ($iTransactionRetry > 0)
 		{
@@ -3519,18 +3547,18 @@ abstract class DBObject implements iDisplay
 			}
 			catch (MySQLException $e)
 			{
+				IssueLog::Error($e->getMessage());
 				if ($bIsTransactionEnabled)
 				{
 					CMDBSource::Query('ROLLBACK');
-					if ($e->getCode() == 1213)
+					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
 					{
 						// Deadlock found when trying to get lock; try restarting transaction
-						IssueLog::Error($e->getMessage());
 						if ($iTransactionRetry > 0)
 						{
 							// wait and retry
 							IssueLog::Error("Delete TRANSACTION Retrying...");
-							usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iIsTransactionRetryCount - $iTransactionRetry));
+							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 							continue;
 						}
 						else

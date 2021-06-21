@@ -632,6 +632,8 @@ abstract class LogAPI
 			}
 		}
 
+		$sUser = UserRights::GetUserId();
+		$sMessage = str_pad($sUser, 5)." | $sMessage";
 		static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
 	}
 

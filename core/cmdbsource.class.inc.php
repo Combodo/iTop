@@ -671,6 +671,11 @@ class CMDBSource
 	 */
 	private static function DBQuery($sSql)
 	{
+		$sShortSQL = str_replace("\n", " ", substr($sSql, 0, 120));
+		if (substr_compare($sShortSQL, "SELECT", 0, strlen("SELECT")) !== 0) {
+			IssueLog::Trace("$sShortSQL", 'cmdbsource');
+		}
+
 		$oKPI = new ExecutionKPI();
 		try
 		{
@@ -754,10 +759,15 @@ class CMDBSource
 	 */
 	private static function StartTransaction()
 	{
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions)
 		{
+			IssueLog::Trace("START TRANSACTION $sCaller", 'cmdbsource');
 			self::DBQuery('START TRANSACTION');
+		} else {
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", 'cmdbsource');
 		}
 
 		self::AddTransactionLevel();
@@ -775,9 +785,12 @@ class CMDBSource
 	 */
 	private static function Commit()
 	{
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		if (!self::IsInsideTransaction())
 		{
 			// should not happen !
+			IssueLog::Error("No Transaction COMMIT $sCaller", 'cmdbsource');
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 
@@ -785,8 +798,10 @@ class CMDBSource
 
 		if (self::IsInsideTransaction())
 		{
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") COMMIT $sCaller", 'cmdbsource');
 			return;
 		}
+		IssueLog::Trace("COMMIT $sCaller", 'cmdbsource');
 		self::DBQuery('COMMIT');
 	}
 
@@ -805,17 +820,22 @@ class CMDBSource
 	 */
 	private static function Rollback()
 	{
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		if (!self::IsInsideTransaction())
 		{
 			// should not happen !
+			IssueLog::Error("No Transaction ROLLBACK $sCaller", 'cmdbsource');
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 		self::RemoveLastTransactionLevel();
 		if (self::IsInsideTransaction())
 		{
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") ROLLBACK $sCaller", 'cmdbsource');
 			return;
 		}
 
+		IssueLog::Trace("ROLLBACK $sCaller", 'cmdbsource');
 		self::DBQuery('ROLLBACK');
 	}
 
@@ -863,6 +883,17 @@ class CMDBSource
 	private static function RemoveAllTransactionLevels()
 	{
 		self::$m_iTransactionLevel = 0;
+	}
+
+	public static function IsDeadlockException(Exception $e)
+	{
+		while ($e instanceof Exception) {
+			if (($e instanceof MySQLException) && ($e->getCode() == 1213)) {
+				return true;
+			}
+			$e = $e->getPrevious();
+		}
+		return false;
 	}
 
 	/**

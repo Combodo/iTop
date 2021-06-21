@@ -63,6 +63,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Open</a> / <a href="%4$s" class="file_download_link">Download</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'en-us', //work with moment.js locales
 	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.',
 ));
 
 // UserProfile brick
