@@ -28,14 +28,14 @@ class CoreCannotSaveObjectException extends CoreException
 	 *
 	 * @param array $aContextData containing at least those keys : issues, id, class
 	 */
-	public function __construct($aContextData)
+	public function __construct($aContextData, $oPrevious = null)
 	{
 		$this->aIssues = $aContextData['issues'];
 		$this->iObjectId = $aContextData['id'];
 		$this->sObjectClass = $aContextData['class'];
 
 		$sIssues = implode(', ', $this->aIssues);
-		parent::__construct($sIssues, $aContextData);
+		parent::__construct($sIssues, $aContextData, '', $oPrevious);
 	}
 
 	/**

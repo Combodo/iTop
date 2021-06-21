@@ -25,14 +25,12 @@ use AttributeDateTime;
 use AttributeTagSet;
 use CMDBChangeOpAttachmentAdded;
 use CMDBChangeOpAttachmentRemoved;
-use CMDBSource;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\FileUploadField;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -1121,30 +1119,28 @@ class ObjectFormManager extends FormManager
 			return $aData;
 		}
 
-		// The try catch is essentially to start a MySQL transaction in order to ensure that all or none objects are persisted when creating an object with links
-		try
-		{
-			$sObjectClass = get_class($this->oObject);
+		$sObjectClass = get_class($this->oObject);
 
-			// Starting transaction
-			CMDBSource::Query('START TRANSACTION');
+		try {
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
 			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
-			if ($bAllowWrite)
-			{
+			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
 
 			// Writing object to DB
-			$bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified());
+			$bIsNew = $this->oObject->IsNew();
 			$bWasModified = $this->oObject->IsModified();
+			$bActivateTriggers = (!$bIsNew && $bWasModified);
 			try
 			{
 				$this->oObject->DBWrite();
 			}
-			catch (CoreCannotSaveObjectException $e)
-			{
-				throw new Exception($e->getHtmlMessage());
+			catch (Exception $e) {
+				if ($bIsNew) {
+					throw new Exception(Dict::S('Portal:Error:ObjectCannotBeCreated'));
+				}
+				throw new Exception(Dict::S('Portal:Error:ObjectCannotBeUpdated'));
 			}
 			// Finalizing images link to object, otherwise it will be cleaned by the GC
 			InlineImage::FinalizeInlineImages($this->oObject);
@@ -1154,9 +1150,6 @@ class ObjectFormManager extends FormManager
 			{
 				$this->FinalizeAttachments($aArgs['attachmentIds']);
 			}
-
-			// Ending transaction with a commit as everything was fine
-			CMDBSource::Query('COMMIT');
 
 			// Checking if we have to apply a stimulus
 			if (isset($aArgs['applyStimulus']))
@@ -1205,13 +1198,10 @@ class ObjectFormManager extends FormManager
 		}
 		catch (Exception $e)
 		{
-			// End transaction with a rollback as something failed
-			CMDBSource::Query('ROLLBACK');
 			$aData['valid'] = false;
 			$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
+			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
 		}
-
 
 		return $aData;
 	}

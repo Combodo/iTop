@@ -30,6 +30,7 @@ use DBObjectSearch;
 use DBObjectSet;
 use DBSearch;
 use FieldExpression;
+use IssueLog;
 use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -65,6 +66,8 @@ class BrowseBrickController extends BrickController
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
+		$sPortalId = $this->getParameter('combodo.portal.instance.id');
+
 		/** @var \Combodo\iTop\Portal\Helper\BrowseBrickHelper $oBrowseBrickHelper */
 		$oBrowseBrickHelper = $this->get('browse_brick');
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
@@ -266,8 +269,7 @@ class BrowseBrickController extends BrickController
 						// Note : This could be way more simpler if we had a SetInternalParam($sParam, $value) verb
 						$aQueryParams = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetInternalParams();
 						// Note : $iSearchloopMax was initialized on the previous loop
-						for ($j = 0; $j <= $iSearchLoopMax; $j++)
-						{
+						for ($j = 0; $j <= $iSearchLoopMax; $j++) {
 							$aQueryParams['search_value_'.$j] = '%'.$aSearchValues[$j].'%';
 						}
 						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->SetInternalParams($aQueryParams);
@@ -277,12 +279,11 @@ class BrowseBrickController extends BrickController
 			$oQuery = $aLevelsProperties[$aLevelsPropertiesKeys[0]]['search'];
 
 			// Testing appropriate data loading mode if we are in auto
-			if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_AUTO)
-			{
+			if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_AUTO) {
 				// - Check how many records there is.
 				// - Update $sDataLoading with its new value regarding the number of record and the threshold
 				$oCountSet = new DBObjectSet($oQuery);
-				$fThreshold = (float)MetaModel::GetModuleSetting($this->getParameter('combodo.portal.instance.id'),
+				$fThreshold = (float)MetaModel::GetModuleSetting($sPortalId,
 					'lazy_loading_threshold');
 				$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 				unset($oCountSet);
@@ -440,17 +441,21 @@ class BrowseBrickController extends BrickController
 			}
 		}
 
+		IssueLog::Debug('Portal BrowseBrick query', 'portal', array(
+			'portalId' => $sPortalId,
+			'brickId' => $sBrickId,
+			'oql' => $oSet->GetFilter()->ToOQL(),
+		));
+
+
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			$aData = $aData + array(
 					'data' => $aItems,
 					'levelsProperties' => $aLevelsProperties,
 				);
 			$oResponse = new JsonResponse($aData);
-		}
-		else
-		{
+		} else {
 			$aData = $aData + array(
 					'oBrick' => $oBrick,
 					'sBrickId' => $sBrickId,
