@@ -119,13 +119,12 @@ class DisplayableNode extends GraphNode
 		$Alpha = 1.0;
 		$oPdf->SetFillColor(200, 200, 200);
 		$oPdf->setAlpha(1);
-		
+
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
-		
-		if ($this->GetProperty('source'))
-		{
-			$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
+
+		if ($this->GetProperty('source')) {
+			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
 		}
 		else if ($this->GetProperty('sink'))
@@ -133,34 +132,30 @@ class DisplayableNode extends GraphNode
 			$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
 		}
-		
-		if (!$this->GetProperty('is_reached'))
-		{
+
+		if (!$this->GetProperty('is_reached')) {
 			$sTempImageName = $this->CreateWhiteIcon($oGraph, $sIconPath);
-			if ($sTempImageName != null)
-			{
-				$oPdf->Image($sTempImageName, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale, 'PNG');
+			if ($sTempImageName != null) {
+				$oPdf->AddImage($sTempImageName, ($this->x - 16) * $fScale, ($this->y - 16) * $fScale, 32 * $fScale, 32 * $fScale, 'PNG');
 			}
 			$Alpha = 0.4;
 			$oPdf->setAlpha($Alpha);
 		}
-		
-		$oPdf->Image($sIconPath, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale);
-		
+
+		$oPdf->AddImage($sIconPath, ($this->x - 16) * $fScale, ($this->y - 16) * $fScale, 32 * $fScale, 32 * $fScale);
+
 		$aContextRootCauses = $this->GetProperty('context_root_causes');
-		if (!is_null($aContextRootCauses))
-		{
+		if (!is_null($aContextRootCauses)) {
 			$idx = 0;
-			foreach($aContextRootCauses as $key => $aObjects)
-			{
-				$sgn = 2*($idx %2) -1;
-				$coef = floor((1+$idx)/2) * $sgn;
-				$alpha = $coef*pi()/4 - pi()/2;						
-				$x = $this->x * $fScale + cos($alpha) * 16*1.25 * $fScale;
-				$y = $this->y * $fScale + sin($alpha) * 16*1.25 * $fScale;
+			foreach ($aContextRootCauses as $key => $aObjects) {
+				$sgn = 2 * ($idx % 2) - 1;
+				$coef = floor((1 + $idx) / 2) * $sgn;
+				$alpha = $coef * pi() / 4 - pi() / 2;
+				$x = $this->x * $fScale + cos($alpha) * 16 * 1.25 * $fScale;
+				$y = $this->y * $fScale + sin($alpha) * 16 * 1.25 * $fScale;
 				$l = 32 * $fScale / 3;
 				$sIconPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$aContextDefs[$key]['icon'];
-				$oPdf->Image($sIconPath, $x - $l/2, $y - $l/2, $l, $l);
+				$oPdf->AddImage($sIconPath, $x - $l / 2, $y - $l / 2, $l, $l);
 				$idx++;
 			}
 		}
@@ -779,8 +774,8 @@ class DisplayableGroupNode extends DisplayableNode
 		{
 			$aBorderColor = array(200, 200, 200);
 		}
-		$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
-		
+		$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
+
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
 		$oPdf->SetAlpha(1);
@@ -794,13 +789,13 @@ class DisplayableGroupNode extends DisplayableNode
 		{
 			$oPdf->SetAlpha(0.4);
 		}
-		$oPdf->Image($sIconPath, ($this->x - 17)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->Image($sIconPath, ($this->x + 1)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->Image($sIconPath, ($this->x -8)*$fScale, ($this->y +1)*$fScale, 16*$fScale, 16*$fScale);
+		$oPdf->AddImage($sIconPath, ($this->x - 17) * $fScale, ($this->y - 17) * $fScale, 16 * $fScale, 16 * $fScale);
+		$oPdf->AddImage($sIconPath, ($this->x + 1) * $fScale, ($this->y - 17) * $fScale, 16 * $fScale, 16 * $fScale);
+		$oPdf->AddImage($sIconPath, ($this->x - 8) * $fScale, ($this->y + 1) * $fScale, 16 * $fScale, 16 * $fScale);
 		$oPdf->SetFontParams('', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$oPdf->SetTextColor(0, 0, 0);
-		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 25)*$fScale, $this->GetProperty('label'));
+		$oPdf->Text($this->x * $fScale - $width / 2, ($this->y + 25) * $fScale, $this->GetProperty('label'));
 	}
 	
 	public function GetTooltip($aContextDefs)
@@ -1185,7 +1180,7 @@ class DisplayableGraph extends SimpleGraph
 	
 		return json_encode($aData);
 	}
-	
+
 	/**
 	 * Sort class "codes" based on their localized name
 	 * @param string $sClass1
@@ -1196,12 +1191,12 @@ class DisplayableGraph extends SimpleGraph
 	{
 		return strcasecmp(MetaModel::GetName($sClass1), MetaModel::GetName($sClass2));
 	}
-	
+
 	/**
 	 * Renders the graph in a PDF document: centered in the current page
 	 * @param PDFPage $oPage The PDFPage representing the PDF document to draw into
 	 * @param string $sComments An optional comment to  display next to the graph (HTML entities will be escaped, \n replaced by <br/>)
-	 * @param string $sContextKey The key to fetch the queries in the configuration. Example: itop-tickets/relation_context/UserRequest/impacts/down 
+	 * @param string $sContextKey The key to fetch the queries in the configuration. Example: itop-tickets/relation_context/UserRequest/impacts/down
 	 * @param float $xMin Left coordinate of the bounding box to display the graph
 	 * @param float $xMax Right coordinate of the bounding box to display the graph
 	 * @param float $yMin Top coordinate of the bounding box to display the graph
@@ -1329,20 +1324,18 @@ class DisplayableGraph extends SimpleGraph
 		$yPos = $yMin + $fPadding;
 		$oPdf->SetFillColor(225, 225, 225);
 		$oPdf->Cell($fIconSize + $fPadding + $fMaxWidth, $fIconSize + $fPadding, Dict::S('UI:Relation:Key'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
-		$yPos += $fIconSize + 2*$fPadding;
-		foreach($aClasses as $sClass => $sLabel)
-		{
+		$yPos += $fIconSize + 2 * $fPadding;
+		foreach ($aClasses as $sClass => $sLabel) {
 			$oPdf->SetX($xMin + $fIconSize + $fPadding);
-			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
-			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, $fIconSize, $fIconSize);
-			$yPos += $fIconSize + 2*$fPadding; 
+			$oPdf->Cell(0, $fIconSize + 2 * $fPadding, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->AddImage($aIcons[$sClass], $xMin + 1, $yPos, $fIconSize, $fIconSize);
+			$yPos += $fIconSize + 2 * $fPadding;
 		}
-		foreach($aContexts as $key => $sLabel)
-		{
+		foreach ($aContexts as $key => $sLabel) {
 			$oPdf->SetX($xMin + $fIconSize + $fPadding);
-			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
-			$oPdf->Image($aContextIcons[$key], $xMin+1+$fIconSize*0.125, $yPos+$fIconSize*0.125, $fIconSize*0.75, $fIconSize*0.75);
-			$yPos += $fIconSize + 2*$fPadding;
+			$oPdf->Cell(0, $fIconSize + 2 * $fPadding, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->AddImage($aContextIcons[$key], $xMin + 1 + $fIconSize * 0.125, $yPos + $fIconSize * 0.125, $fIconSize * 0.75, $fIconSize * 0.75);
+			$yPos += $fIconSize + 2 * $fPadding;
 		}
 		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
 		

@@ -5,6 +5,9 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
 use Combodo\iTop\Controller\Base\Layout\ActivityPanelController;
 use Combodo\iTop\Controller\PreferencesController;
@@ -2002,63 +2005,51 @@ EOF
 			$aContexts = utils::ReadParam('contexts', array(), false, 'raw_data');
 			$sContextKey = utils::ReadParam('context_key', '', false, 'raw_data');
 			$aPositions = null;
-			if ($sPositions != null)
-			{
+			if ($sPositions != null) {
 				$aPositions = json_decode($sPositions, true);
 			}
 
 			// Get the list of source objects
 			$aSources = utils::ReadParam('sources', array(), false, 'raw_data');
 			$aSourceObjects = array();
-			foreach($aSources as $sClass => $aIDs)
-			{
+			foreach ($aSources as $sClass => $aIDs) {
 				$oSearch = new DBObjectSearch($sClass);
 				$oSearch->AddCondition('id', $aIDs, 'IN');
 				$oSet = new DBObjectSet($oSearch);
-				while ($oObj = $oSet->Fetch())
-				{
+				while ($oObj = $oSet->Fetch()) {
 					$aSourceObjects[] = $oObj;
 				}
 			}
 			$sSourceClass = '*';
-			if (count($aSourceObjects) == 1)
-			{
+			if (count($aSourceObjects) == 1) {
 				$sSourceClass = get_class($aSourceObjects[0]);
 			}
 
 			// Get the list of excluded objects
 			$aExcluded = utils::ReadParam('excluded', array(), false, 'raw_data');
 			$aExcludedObjects = array();
-			foreach($aExcluded as $sClass => $aIDs)
-			{
+			foreach ($aExcluded as $sClass => $aIDs) {
 				$oSearch = new DBObjectSearch($sClass);
 				$oSearch->AddCondition('id', $aIDs, 'IN');
 				$oSet = new DBObjectSet($oSearch);
-				while ($oObj = $oSet->Fetch())
-				{
+				while ($oObj = $oSet->Fetch()) {
 					$aExcludedObjects[] = $oObj;
 				}
 			}
 
 			$iMaxRecursionDepth = MetaModel::GetConfig()->Get('relations_max_depth');
-			if ($sDirection == 'up')
-			{
+			if ($sDirection == 'up') {
 				$oRelGraph = MetaModel::GetRelatedObjectsUp($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aContexts);
-			}
-			else
-			{
+			} else {
 				$oRelGraph = MetaModel::GetRelatedObjectsDown($sRelation, $aSourceObjects, $iMaxRecursionDepth, true, $aExcludedObjects, $aContexts);
 			}
 
 			// Remove excluded classes from the graph
-			if (count($aExcludedClasses) > 0)
-			{
+			if (count($aExcludedClasses) > 0) {
 				$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
-				foreach($oIterator as $oNode)
-				{
+				foreach ($oIterator as $oNode) {
 					$oObj = $oNode->GetProperty('object');
-					if ($oObj && in_array(get_class($oObj), $aExcludedClasses))
-					{
+					if ($oObj && in_array(get_class($oObj), $aExcludedClasses)) {
 						$oRelGraph->FilterNode($oNode);
 					}
 				}
@@ -2069,36 +2060,29 @@ EOF
 
 			$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
 			$oGraph->InitFromGraphviz();
-			if ($aPositions != null)
-			{
+			if ($aPositions != null) {
 				$oGraph->UpdatePositions($aPositions);
 			}
 
 			$aGroups = array();
 			$oIterator = new RelationTypeIterator($oGraph, 'Node');
-			foreach($oIterator as $oNode)
-			{
-				if ($oNode instanceof DisplayableGroupNode)
-				{
+			foreach ($oIterator as $oNode) {
+				if ($oNode instanceof DisplayableGroupNode) {
 					$aGroups[$oNode->GetProperty('group_index')] = $oNode->GetObjects();
 				}
 			}
 			// First page is the graph
 			$oGraph->RenderAsPDF($oPage, $sComments, $sContextKey);
 
-			if ($bIncludeList)
-			{
+			if ($bIncludeList) {
 				// Then the lists of objects (one table per finalclass)
 				$aResults = array();
 				$oIterator = new RelationTypeIterator($oRelGraph, 'Node');
-				foreach($oIterator as $oNode)
-				{
+				foreach ($oIterator as $oNode) {
 					$oObj = $oNode->GetProperty('object'); // Some nodes (Redundancy Nodes and Group) do not contain an object
-					if ($oObj)
-					{
+					if ($oObj) {
 						$sObjClass = get_class($oObj);
-						if (!array_key_exists($sObjClass, $aResults))
-						{
+						if (!array_key_exists($sObjClass, $aResults)) {
 							$aResults[$sObjClass] = array();
 						}
 						$aResults[$sObjClass][] = $oObj;
@@ -2107,49 +2091,43 @@ EOF
 
 				$oPage->get_tcpdf()->AddPage();
 				$oPage->get_tcpdf()->SetFontSize(10); // Reset the font size to its default
-				$oPage->add('<div class="page_header"><h1>'.Dict::S('UI:RelationshipList').'</h1></div>');
+				$oPage->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RelationshipList')));
 				$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-				foreach($aResults as $sListClass => $aObjects)
-				{
+				foreach ($aResults as $sListClass => $aObjects) {
 					set_time_limit($iLoopTimeLimit * count($aObjects));
 					$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
 					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
-					$sHtml = "<div class=\"page_header\">\n";
-					$sHtml .= "<table class=\"section\"><tr><td>".MetaModel::GetClassIcon($sListClass, true, 'width: 24px; height: 24px;')." ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(),
-							Metamodel::GetName($sListClass))."</td></tr></table>\n";
-					$sHtml .= "</div>\n";
-					$oPage->add($sHtml);
-					cmdbAbstractObject::DisplaySet($oPage, $oSet, array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
-					$oPage->p(''); // Some space
+					$sIconUrl = MetaModel::GetClassIcon($sListClass, false);
+					$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
+					$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));
+					$oPage->AddSubBlock(TitleUIBlockFactory::MakeStandard($oTitle, 2));
+					$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet, array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass)));
 				}
 
 				// Then the content of the groups (one table per group)
-				if (count($aGroups) > 0)
-				{
+				if (count($aGroups) > 0) {
 					$oPage->get_tcpdf()->AddPage();
-					$oPage->add('<div class="page_header"><h1>'.Dict::S('UI:RelationGroups').'</h1></div>');
-					foreach($aGroups as $idx => $aObjects)
-					{
+					$oPage->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RelationGroups')));
+					foreach ($aGroups as $idx => $aObjects) {
 						set_time_limit($iLoopTimeLimit * count($aObjects));
 						$sListClass = get_class(current($aObjects));
 						$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
-						$sHtml = "<div class=\"page_header\">\n";
-						$sHtml .= "<table class=\"section\"><tr><td>".MetaModel::GetClassIcon($sListClass, true, 'width: 24px; height: 24px;')." ".Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))."</td></tr></table>\n";
-						$sHtml .= "</div>\n";
-						$oPage->add($sHtml);
-						cmdbAbstractObject::DisplaySet($oPage, $oSet);
-						$oPage->p(''); // Some space
+						$sIconUrl = MetaModel::GetClassIcon($sListClass, false);
+						$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
+						$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:RelationGroupNumber_N', (1 + $idx)), Metamodel::GetName($sListClass));
+						$oPage->AddSubBlock(TitleUIBlockFactory::MakeStandard($oTitle, 2));
+						$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet));
+
 					}
 				}
 			}
-			if ($operation == 'relation_attachment')
-			{
+			if ($operation == 'relation_attachment') {
 				$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
 				$iObjKey = (int)utils::ReadParam('obj_key', 0, false, 'integer');
 
 				// Save the generated PDF as an attachment
 				$sPDF = $oPage->get_pdf();
-				$oPage = new ajax_page('');
+				$oPage = new AjaxPage('');
 				$oAttachment = MetaModel::NewObject('Attachment');
 				$oAttachment->Set('item_class', $sObjClass);
 				$oAttachment->Set('item_id', $iObjKey);

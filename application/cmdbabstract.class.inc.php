@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
@@ -1173,6 +1174,9 @@ HTML
 
 	public static function GetDisplaySetBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
+		if ($oPage->IsPrintableVersion() || $oPage->is_pdf()) {
+			return self::GetDisplaySetForPrinting($oPage, $oSet, $aExtraParams);
+		}
 		if (empty($aExtraParams['currentId'])) {
 			$iListId = utils::GetUniqueId(); // Works only if not in an Ajax page !!
 		} else {
@@ -1181,6 +1185,146 @@ HTML
 
 		return DataTableUIBlockFactory::MakeForResult($oPage, $iListId, $oSet, $aExtraParams);
 	}
+
+	public static function GetDataTableFromDBObjectSet(DBObjectSet $oSet, $aParams = array())
+	{
+		$aFields = null;
+		if (isset($aParams['fields']) && (strlen($aParams['fields']) > 0)) {
+			$aFields = explode(',', $aParams['fields']);
+		}
+
+		$bFieldsAdvanced = false;
+		if (isset($aParams['fields_advanced'])) {
+			$bFieldsAdvanced = (bool)$aParams['fields_advanced'];
+		}
+
+		$bLocalize = true;
+		if (isset($aParams['localize_values'])) {
+			$bLocalize = (bool)$aParams['localize_values'];
+		}
+
+		$aList = array();
+
+		$aClasses = $oSet->GetFilter()->GetSelectedClasses();
+		$aAuthorizedClasses = array();
+		foreach ($aClasses as $sAlias => $sClassName) {
+			if (UserRights::IsActionAllowed($sClassName, UR_ACTION_READ, $oSet) != UR_ALLOWED_NO) {
+				$aAuthorizedClasses[$sAlias] = $sClassName;
+			}
+		}
+		$aHeader = array();
+		foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+			$aList[$sAlias] = array();
+
+			foreach (MetaModel::GetZListItems($sClassName, 'list') as $sAttCode) {
+				$oAttDef = Metamodel::GetAttributeDef($sClassName, $sAttCode);
+				if (is_null($aFields) || (count($aFields) == 0)) {
+					// Standard list of attributes (no link sets)
+					if ($oAttDef->IsScalar() && ($oAttDef->IsWritable() || $oAttDef->IsExternalField())) {
+						$sAttCodeEx = $oAttDef->IsExternalField() ? $oAttDef->GetKeyAttCode().'->'.$oAttDef->GetExtAttCode() : $sAttCode;
+
+						$aList[$sAlias][$sAttCodeEx] = $oAttDef;
+
+						if ($bFieldsAdvanced && $oAttDef->IsExternalKey(EXTKEY_RELATIVE)) {
+							$sRemoteClass = $oAttDef->GetTargetClass();
+							foreach (MetaModel::GetReconcKeys($sRemoteClass) as $sRemoteAttCode) {
+								$aList[$sAlias][$sAttCode.'->'.$sRemoteAttCode] = MetaModel::GetAttributeDef($sRemoteClass,
+									$sRemoteAttCode);
+							}
+						}
+					}
+				} else {
+					// User defined list of attributes
+					if (in_array($sAttCode, $aFields) || in_array($sAlias.'.'.$sAttCode, $aFields)) {
+						$aList[$sAlias][$sAttCode] = $oAttDef;
+					}
+				}
+			}
+			// Replace external key by the corresponding friendly name (if not already in the list)
+			foreach ($aList[$sAlias] as $sAttCode => $oAttDef) {
+				if ($oAttDef->IsExternalKey()) {
+					unset($aList[$sAlias][$sAttCode]);
+					$sFriendlyNameAttCode = $sAttCode.'_friendlyname';
+					if (!array_key_exists($sFriendlyNameAttCode,
+							$aList[$sAlias]) && MetaModel::IsValidAttCode($sClassName, $sFriendlyNameAttCode)) {
+						$oFriendlyNameAtt = MetaModel::GetAttributeDef($sClassName, $sFriendlyNameAttCode);
+						$aList[$sAlias][$sFriendlyNameAttCode] = $oFriendlyNameAtt;
+					}
+				}
+			}
+
+			foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
+				$sColLabel = $bLocalize ? MetaModel::GetLabel($sClassName, $sAttCodeEx) : $sAttCodeEx;
+
+				$oFinalAttDef = $oAttDef->GetFinalAttDef();
+				if (get_class($oFinalAttDef) == 'AttributeDateTime') {
+					$aHeader[$oAttDef->GetCode().'/D'] = ['label' => $sColLabel.' ('.Dict::S('UI:SplitDateTime-Date').')'];
+					$aHeader[$oAttDef->GetCode().'/T'] = ['label' => $sColLabel.' ('.Dict::S('UI:SplitDateTime-Time').')'];
+				} else {
+					$aHeader[$oAttDef->GetCode()] = ['label' => $sColLabel];
+				}
+			}
+		}
+
+
+		$oSet->Seek(0);
+		$aRows = [];
+		while ($aObjects = $oSet->FetchAssoc()) {
+			$aRow = [];
+			foreach ($aAuthorizedClasses as $sAlias => $sClassName) {
+				$oObj = $aObjects[$sAlias];
+				foreach ($aList[$sAlias] as $sAttCodeEx => $oAttDef) {
+					if (is_null($oObj)) {
+						$aRow[$oAttDef->GetCode()] = '';
+					} else {
+						$oFinalAttDef = $oAttDef->GetFinalAttDef();
+						if (get_class($oFinalAttDef) == 'AttributeDateTime') {
+							$sDate = $oObj->Get($sAttCodeEx);
+							if ($sDate === null) {
+								$aRow[$oAttDef->GetCode().'/D'] = '';
+								$aRow[$oAttDef->GetCode().'/T'] = '';
+							} else {
+								$iDate = AttributeDateTime::GetAsUnixSeconds($sDate);
+								$aRow[$oAttDef->GetCode().'/D'] = date('Y-m-d', $iDate); // Format kept as-is for 100% backward compatibility of the exports
+								$aRow[$oAttDef->GetCode().'/T'] = date('H:i:s', $iDate); // Format kept as-is for 100% backward compatibility of the exports
+							}
+						} else {
+							if ($oAttDef instanceof AttributeCaseLog) {
+								$rawValue = $oObj->Get($sAttCodeEx);
+								$outputValue = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+								// Trick for Excel: treat the content as text even if it begins with an equal sign
+								$aRow[$oAttDef->GetCode()] = $outputValue;
+							} else {
+								$rawValue = $oObj->Get($sAttCodeEx);
+								// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
+								// let's fix this and make sure we render an empty string if the key == 0
+								if ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName()) {
+									$sKeyAttCode = $oAttDef->GetKeyAttCode();
+									if ($oObj->Get($sKeyAttCode) == 0) {
+										$rawValue = '';
+									}
+								}
+								if ($bLocalize) {
+									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
+								} else {
+									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+								}
+								$aRow[$oAttDef->GetCode()] = $outputValue;
+							}
+						}
+					}
+				}
+			}
+			$aRows[] = $aRow;
+		}
+		$oTable = new StaticTable();
+		$oTable->SetColumns($aHeader);
+		$oTable->SetData($aRows);
+
+		return $oTable;
+		//DataTableUIBlockFactory::MakeForStaticData('', $aHeader, $aRows);
+	}
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param \CMDBObjectSet $oSet

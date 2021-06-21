@@ -40,6 +40,32 @@ class iTopPDF extends TCPDF
 	}
 
 	/**
+	 * Add image
+	 *
+	 * @param string $sImagePath Name of the SVG file or a '@' character followed by the SVG data string.
+	 * @param $x (float) Abscissa of the upper-left corner.
+	 * @param $y (float) Ordinate of the upper-left corner.
+	 * @param $w (float) Width of the image in the page. If not specified or equal to zero, it is automatically calculated.
+	 * @param $h (float) Height of the image in the page. If not specified or equal to zero, it is automatically calculated.
+	 */
+	public function AddImage($sImagePath, $x = '', $y = '', $w = 0, $h = 0)
+	{
+		/*if (endsWith(strtolower($sImagePath), ".svg")) {
+			$this->ImageSVG($sImagePath, $x, $y, $w, $h);
+		} else {
+			$this->Image($sImagePath, $x, $y, $w, $h);
+		}*/
+		$imgtype = TCPDF_IMAGES::getImageFileType($sImagePath);
+		if (($imgtype == 'eps') or ($imgtype == 'ai')) {
+			$this->ImageEps($sImagePath, $x, $y, $w, $h);;
+		} elseif ($imgtype == 'svg') {
+			$this->ImageSVG($sImagePath, $x, $y, $w, $h);;
+		} else {
+			$this->Image($sImagePath, $x, $y, $w, $h);;
+		}
+	}
+
+	/**
 	 * Builds the custom header. Called for each new page.
 	 *
 	 * @see TCPDF::Header()
