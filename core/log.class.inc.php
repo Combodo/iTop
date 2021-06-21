@@ -502,6 +502,7 @@ class FileLog
 	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
 	{
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7).' | ');
+		$sTextPrefix .= str_pad(UserRights::GetUserId(), 5)." | ";
 		$sTextSuffix = empty($sChannel) ? '' : " | $sChannel";
 		$sText = "{$sTextPrefix}{$sText}{$sTextSuffix}";
 		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
@@ -632,8 +633,6 @@ abstract class LogAPI
 			}
 		}
 
-		$sUser = UserRights::GetUserId();
-		$sMessage = str_pad($sUser, 5)." | $sMessage";
 		static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
 	}
 
