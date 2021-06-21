@@ -504,8 +504,6 @@ try {
 		}
 
 		$iUnchanged = count($aRes) - $iErrors - $iModified - $iCreated;
-		$oTable = DataTableUIBlockFactory::MakeForForm("csvImport", $aColumns, $aTableData);
-
 		$oContainer = UIContentBlockUIBlockFactory::MakeStandard();
 		$oContainer->AddCSSClass("wizContainer");
 		$oPage->AddSubBlock($oContainer);
@@ -585,9 +583,12 @@ try {
 
 		$oPanel = PanelUIBlockFactory::MakeNeutral('');
 		$oPanel->AddCSSClasses(['ibo-datatable-panel', 'mb-5']);
+		$oForm->AddSubBlock($oPanel);
+
+		$oTable = DataTableUIBlockFactory::MakeForForm("csvImport", $aColumns, $aTableData);
+		$oTable->AddOption('bFullscreen', true);
 		$oPanel->AddSubBlock($oTable);
 
-		$oForm->AddSubBlock($oPanel);
 
 		if ($bSimulate) {
 			$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Restart'))->SetOnClickJsCode("CSVRestart()"));
@@ -1295,14 +1296,15 @@ EOF
 
 		$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 		$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-		$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "date_time_format", "default", "radio_date_time_std", "radio");
+		$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:DefaultDateTimeFormat_Format_Example', $sDefaultFormat, $sExample), "date_time_format", "default", "radio_date_time_std", "radio");
 		$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
 		$oRadioDefault->SetBeforeInput(false);
 		$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oFieldSetDate->AddSubBlock($oRadioDefault);
 		$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-		$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sDateTimeFormat), "date_time_format", "custom", "radio_date_time_custom", "radio");
+		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+		$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:CustomDateTimeFormat', $sFormatInput), "date_time_format", "custom", "radio_date_time_custom", "radio");
 		$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 		$oRadioCustom->SetBeforeInput(false);
 		$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
