@@ -1228,8 +1228,8 @@ EOF
 		{
 			$sSeparator = $aGuesses['separator'];
 		}
-		if ($sSeparator == 'tab') {
-			$sSeparator = "\t";
+		if ($sSeparator == "\t") {
+			$sSeparator = "tab";
 		}
 		$sOtherSeparator = in_array($sSeparator, array(',', ';', "\t")) ? '' : $sSeparator;
 		$aSep['other'] = Dict::S('UI:CSVImport:SeparatorOther').' <input type="text" size="3" maxlength="1" name="other_separator"  id="other_separator" value="'.htmlentities($sOtherSeparator, ENT_QUOTES, 'UTF-8').'" onChange="DoPreview()"/>';
