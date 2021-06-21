@@ -51,6 +51,14 @@ class DOMFormatException extends Exception
  */ 
 class MFCompiler
 {
+	/**
+	 * Path to the "calculate hKeys" file
+	 * If this file is present, then we don't recalculate hkeys
+	 *
+	 * @var string
+	 */
+	public const REBUILD_HKEYS_NEVER= APPROOT.'data/.setup-rebuild-hkeys-never';
+
 	/** @var \ModelFactory */
 	protected $oFactory;
 
@@ -96,7 +104,21 @@ class MFCompiler
 	{
 		return $this->aLog;
 	}
-	
+
+	/**
+	 * @return bool possible return values :
+	 *   * if flag is present true, false otherwise
+	 *
+	 * @uses \file_exists()
+	 * @uses REBUILD_HKEYS_NEVER
+	 *
+	 * @since 2.7.5
+	 */
+	public static function SkipRebuildHKeys(): bool
+	{
+		return (file_exists(static::REBUILD_HKEYS_NEVER));
+	}
+
 
 	/**
 	 * Compile the data model into PHP files and data structures

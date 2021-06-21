@@ -26,6 +26,7 @@ test/vendor/*
 !/data/.htaccess
 !/data/index.php
 !/data/web.config
+!/data/.setup-rebuild-hkeys-never
 
 # iTop extensions
 /extensions/**
