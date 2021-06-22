@@ -154,6 +154,7 @@ class CMDBSource
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+	protected static $oMySQLiForQuery;
 
 	/**
 	 * @var int number of level for nested transactions : 0 if no transaction was ever opened, +1 for each 'START TRANSACTION' sent
@@ -220,6 +221,7 @@ class CMDBSource
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
 
 		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
+		self::SetMySQLiForQuery(self::$m_oMysqli);
 	}
 
 	/**
@@ -237,8 +239,6 @@ class CMDBSource
 	public static function GetMysqliInstance(
 		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false
 	) {
-		$oMysqli = null;
-
 		$sServer = null;
 		$iPort = null;
 		self::InitServerAndPort($sDbHost, $sServer, $iPort);
@@ -536,6 +536,24 @@ class CMDBSource
 		return self::$m_oMysqli;
 	}
 
+	/**
+	 * @return
+	 */
+	private static function GetMySQLiForQuery()
+	{
+		return self::$oMySQLiForQuery;
+	}
+
+
+	/**
+	 * Used for test purpose (mysqli mock)
+	 * @param $oMySQLi
+	 */
+	private static function SetMySQLiForQuery($oMySQLi)
+	{
+		self::$oMySQLiForQuery = $oMySQLi;
+	}
+
 	public static function GetErrNo()
 	{
 		if (self::$m_oMysqli->errno != 0)
@@ -671,7 +689,7 @@ class CMDBSource
 	 */
 	private static function DBQuery($sSql)
 	{
-		$sShortSQL = str_replace("\n", " ", substr($sSql, 0, 120));
+		$sShortSQL = substr(preg_replace("/\s+/", " ", substr($sSql, 0, 180)), 0, 150);
 		if (substr_compare($sShortSQL, "SELECT", 0, strlen("SELECT")) !== 0) {
 			IssueLog::Trace("$sShortSQL", 'cmdbsource');
 		}
@@ -679,7 +697,7 @@ class CMDBSource
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch (mysqli_sql_exception $e)
 		{
@@ -959,7 +977,7 @@ class CMDBSource
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -999,7 +1017,7 @@ class CMDBSource
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -1081,7 +1099,7 @@ class CMDBSource
 	{
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -1568,7 +1586,7 @@ class CMDBSource
 		$sSql = "SELECT * FROM `$sTable`";
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{

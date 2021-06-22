@@ -113,11 +113,6 @@ class CMDBSourceTest extends ItopTestCase
 				"ENUM('value 1 (with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
 			),
-			'ENUM with different values, containing parenthesis' => array(
-				false,
-				"ENUM('value 1 ) with parenthesis)','value 2') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-				"enum('value 1 (with parenthesis)','value 3') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-			),
 		);
 	}
 }

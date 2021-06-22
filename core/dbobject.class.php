@@ -2776,6 +2776,7 @@ abstract class DBObject implements iDisplay
 
 				$this->DBWriteLinks();
 				$this->WriteExternalAttributes();
+				$this->RecordObjCreation();
 
 				if ($bIsTransactionEnabled) {
 					CMDBSource::Query('COMMIT');
@@ -2836,8 +2837,6 @@ abstract class DBObject implements iDisplay
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
-
-		$this->RecordObjCreation();
 
 		return $this->m_iKey;
 	}
@@ -3250,13 +3249,6 @@ abstract class DBObject implements iDisplay
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
 
-					// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
-					// new values are already in the object (call {@see DBObject::Get()} to get them)
-					// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
-					$this->m_bDirty = false;
-					$this->m_aTouchedAtt = array();
-					$this->m_aModifiedAtt = array();
-
 					if (count($aChanges) != 0)
 					{
 						$this->RecordAttChanges($aChanges, $aOriginalValues);
@@ -3321,6 +3313,13 @@ abstract class DBObject implements iDisplay
 					));
 				}
 			}
+
+			// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
+			// new values are already in the object (call {@see DBObject::Get()} to get them)
+			// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
+			$this->m_bDirty = false;
+			$this->m_aTouchedAtt = array();
+			$this->m_aModifiedAtt = array();
 
 			try
 			{
