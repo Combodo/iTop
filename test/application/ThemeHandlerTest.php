@@ -148,9 +148,10 @@ class ThemeHandlerTest extends ItopTestCase
 
 						if ($sPreCompiledSig !== $compiled_json_sig)
 						{
+							$sSignatureDiffToPrint = $this->KeepSignatureDiff($sPreCompiledSig, $compiled_json_sig);
+							var_dump($sSignatureDiffToPrint);
 							$iLine = $oTheme->GetLineNo();
-							$aErrors[] = "       $sPrecompiledStylesheetUri declared in $sXmlDataCustoFilePath:$iLine.";
-							$this->assertEquals($sPreCompiledSig, $compiled_json_sig, "       $sPrecompiledStylesheetUri declared in $sXmlDataCustoFilePath:$iLine.");
+							$aErrors[] = "       $sPrecompiledStylesheetUri declared in $sXmlDataCustoFilePath:$iLine.\n$sSignatureDiffToPrint";
 							continue;
 						}
 					}
@@ -168,6 +169,42 @@ class ThemeHandlerTest extends ItopTestCase
 		{
 			$this->assertTrue(true);
 		}
+	}
+
+	function KeepSignatureDiff($sSignature1, $sSignature2) : string {
+		$aSignature1 = json_decode($sSignature1, true);
+		$aSignature2 = json_decode($sSignature2, true);
+
+		$aDiffOuput = [];
+		foreach ($aSignature1 as $sKey => $oVal1){
+			if (is_array($oVal1) && ! empty($oVal1)){
+				$aCurrentDiffVal = [];
+				$oVal2 = $aSignature2[$sKey];
+				if (0 != sizeof($oVal1)){
+					foreach ($oVal1 as $sKey1 => $sVal1){
+						if (! array_key_exists($sKey1, $oVal2)){
+							$aCurrentDiffVal[$sKey1] = "Missing";
+						} else if ($sVal1 !== $oVal2[$sKey1]) {
+							$aCurrentDiffVal[$sKey1] = "expected:$sVal1 | actual:" . $oVal2[$sKey1];
+						}
+					}
+				}
+				if (! empty($oVal2)){
+					foreach ($oVal2 as $sKey2 => $sVal2){
+						if (! array_key_exists($sKey2, $oVal1)){
+							$aCurrentDiffVal[$sKey1] = "Missing";
+						}
+					}
+				}
+				if (! empty($aCurrentDiffVal)){
+					$aDiffOuput[$sKey] = $aCurrentDiffVal;
+				}
+			} else if ($oVal1 !== $aSignature2[$sKey]){
+					$aDiffOuput[$sKey] = "expected:$oVal1 | actual:$aSignature2[$sKey]";
+			}
+		}
+
+		return json_encode($aDiffOuput, true);
 	}
 
 	function recurseMkdir($dir)
