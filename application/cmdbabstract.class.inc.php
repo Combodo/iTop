@@ -4952,7 +4952,8 @@ EOF
 		}
 		set_time_limit(intval($iPreviousTimeLimit));
 		$oTable = DataTableUIBlockFactory::MakeForForm('BulkModify', $aHeaders, $aRows);
-
+		$oTable->AddOption("bFullscreen", true);
+		
 		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
 		$oPanel->AddCSSClass('ibo-datatable-panel');
 		$oPanel->AddSubBlock($oTable);

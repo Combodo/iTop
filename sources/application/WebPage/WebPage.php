@@ -296,7 +296,9 @@ class WebPage implements Page
 	 */
 	public function table($aConfig, $aData, $aParams = array())
 	{
-		$this->AddUiBlock($this->GetTableBlock($aConfig, $aData));
+		$oDataTable = $this->GetTableBlock($aConfig, $aData);
+		$oDataTable->AddOption("bFullscreen", true);
+		$this->AddUiBlock($oDataTable);
 	}
 
 	public function GetTableBlock($aColumns, $aData)
