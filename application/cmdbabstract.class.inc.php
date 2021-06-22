@@ -2804,7 +2804,7 @@ $('.state_select_{$this->m_iFormId}').change( function() {
 	}
 });
 JAVASCRIPT
-			);
+				);
 			}
 		}
 
@@ -2847,6 +2847,18 @@ EOF
 		$oPage->p($sStatesSelection);
 
 		$aFieldsMap = $this->DisplayBareProperties($oPage, true, $sPrefix, $aExtraParams);
+		//if we are in bulk modify : Special case to display the case log, if any...
+		// WARNING: if you modify the loop below, also check the corresponding code in UpdateObject and DisplayModifyForm
+		if (isset($aExtraParams['nbBulkObj'])) {
+			foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef) {
+				if ($oAttDef instanceof AttributeCaseLog) {
+					$sComment = (isset($aExtraParams['fieldsComments'][$sAttCode])) ? $aExtraParams['fieldsComments'][$sAttCode] : '';
+					$this->DisplayCaseLogForBulkModify($oPage, $sAttCode, $sComment, $sPrefix);
+					$aFieldsMap[$sAttCode] = $this->m_iFormId.'_'.$sAttCode;
+				}
+			}
+		}
+
 		if (!is_array($aFieldsMap)) {
 			$aFieldsMap = array();
 		}
@@ -4499,6 +4511,72 @@ HTML;
 	<div class="field_container field_large" data-attribute-code="{$sAttCode}" data-attribute-type="{$sAttDefClass}" data-attribute-label="{$sAttMetaDataLabel}"
 		data-attribute-flag-hidden="{$sAttMetaDataFlagHidden}" data-attribute-flag-read-only="{$sAttMetaDataFlagReadOnly}" data-attribute-flag-mandatory="{$sAttMetaDataFlagMandatory}"
 		data-attribute-flag-must-change="{$sAttMetaDataFlagMustChange}" data-attribute-flag-must-prompt="{$sAttMetaDataFlagMustPrompt}" data-attribute-flag-slave="{$sAttMetaDataFlagSlave}">
+		{$sHTMLValue}
+	</div>
+</fieldset>
+HTML
+			);
+		}
+	}
+
+	/**
+	 * Special display where the case log uses the whole "screen" at the bottom of the "Properties" tab
+	 *
+	 * @param \WebPage $oPage
+	 * @param string $sAttCode
+	 * @param string $sComment
+	 * @param string $sPrefix
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 * @throws \Exception
+	 */
+	public function DisplayCaseLogForBulkModify(WebPage $oPage, $sAttCode, $sComment = '', $sPrefix = '')
+	{
+		$sClass = get_class($this);
+
+		$iFlags = $this->GetAttributeFlags($sAttCode);
+
+		if ($iFlags & (OPT_ATT_HIDDEN | OPT_ATT_READONLY | OPT_ATT_SLAVE)) {
+			// The case log can not be updated
+		} else {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+			$sAttDefClass = get_class($oAttDef);
+			$sAttLabel = $oAttDef->GetLabel();
+			$sAttMetaDataLabel = utils::HtmlEntities($sAttLabel);
+			$sAttMetaDataFlagMandatory = (($iFlags & OPT_ATT_MANDATORY) === OPT_ATT_MANDATORY) ? 'true' : 'false';
+			$sAttMetaDataFlagMustChange = (($iFlags & OPT_ATT_MUSTCHANGE) === OPT_ATT_MUSTCHANGE) ? 'true' : 'false';
+			$sAttMetaDataFlagMustPrompt = (($iFlags & OPT_ATT_MUSTPROMPT) === OPT_ATT_MUSTPROMPT) ? 'true' : 'false';
+
+			$sInputId = $this->m_iFormId.'_'.$sAttCode;
+
+			$sValue = $this->Get($sAttCode);
+			$sDisplayValue = $this->GetEditValue($sAttCode);
+			$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
+
+			$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
+			$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+			$sHTMLValue = <<<HTML
+<div class="field_data">
+	<div class="field_value">
+		$sCommentAsHtml
+		$sFieldAsHtml
+	</div>
+</div>
+HTML;
+
+			$aFieldsMap[$sAttCode] = $sInputId;
+
+			$oPage->add(<<<HTML
+<fieldset>
+	<legend>{$sAttLabel}</legend>
+	<div class="field_container field_large" data-attribute-code="{$sAttCode}" data-attribute-type="{$sAttDefClass}" data-attribute-label="{$sAttMetaDataLabel}"
+		data-attribute-flag-hidden="false" data-attribute-flag-read-only="false" data-attribute-flag-mandatory="{$sAttMetaDataFlagMandatory}"
+		data-attribute-flag-must-change="{$sAttMetaDataFlagMustChange}" data-attribute-flag-must-prompt="{$sAttMetaDataFlagMustPrompt}" data-attribute-flag-slave="false">
 		{$sHTMLValue}
 	</div>
 </fieldset>
