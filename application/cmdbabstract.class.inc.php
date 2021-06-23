@@ -2786,8 +2786,7 @@ JS
 				foreach($aInitialStates as $sStateCode => $sStateData)
 				{
 					$sSelected = '';
-					if ($sStateCode == $this->GetState())
-					{
+					if ($sStateCode == $this->GetState()) {
 						$sSelected = ' selected';
 					}
 					$sStatesSelection .= '<option value="'.$sStateCode.'" '.$sSelected.'>'.MetaModel::GetStateLabel($sClass,
@@ -2795,7 +2794,7 @@ JS
 				}
 				$sStatesSelection .= '</select>';
 				$sStatesSelection .= '<input type="hidden" id="obj_state_orig" name="obj_state_orig" value="'.$this->GetState().'"/>';
-				$oPage->add_ready_script(<<<JAVASCRIPT
+				$oPage->add_ready_script(<<<JS
 $('.state_select_{$this->m_iFormId}').change( function() {
 	if ($('#obj_state_orig').val() != $(this).val()) {
 		$('.state_select_{$this->m_iFormId}').val($(this).val());
@@ -2803,7 +2802,7 @@ $('.state_select_{$this->m_iFormId}').change( function() {
 		$('#form_{$this->m_iFormId}').submit();
 	}
 });
-JAVASCRIPT
+JS
 				);
 			}
 		}
