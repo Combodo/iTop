@@ -815,9 +815,9 @@ class ManageBrickController extends BrickController
 			}
 
 			IssueLog::Debug('Portal ManageBrick query', 'portal', array(
-				'portalId' => $sPortalId,
-				'brickId' => $sBrickId,
-				'groupingTab' => $sGroupingTab,
+				'sPortalId' => $sPortalId,
+				'sBrickId' => $sBrickId,
+				'sGroupingTab' => $sGroupingTab,
 				'oql' => $oSet->GetFilter()->ToOQL(),
 				'aGroupingTabs' => $aGroupingTabs,
 			));

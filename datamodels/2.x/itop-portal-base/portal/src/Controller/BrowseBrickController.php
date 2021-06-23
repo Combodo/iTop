@@ -442,8 +442,8 @@ class BrowseBrickController extends BrickController
 		}
 
 		IssueLog::Debug('Portal BrowseBrick query', 'portal', array(
-			'portalId' => $sPortalId,
-			'brickId' => $sBrickId,
+			'sPortalId' => $sPortalId,
+			'sBrickId' => $sBrickId,
 			'oql' => $oSet->GetFilter()->ToOQL(),
 		));
 
