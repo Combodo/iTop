@@ -155,7 +155,7 @@ $(function()
 			if(oData.form.hidden_fields !== undefined)
 			{
 				$.each(oData.form.hidden_fields, function( index, value ) {
-					me.element.find('[data-form-path="' + sFormPath + '"][data-field-id="'+value+'"][data-attribute-flag-hidden="false"]').remove();
+					me.element.find('[data-form-path="' + sFormPath + '"][data-field-id="'+value+'"][data-attribute-flag-hidden="false"]').children().remove();
 				});
 			}
 			if(oData.form.updated_fields !== undefined)
