@@ -92,7 +92,10 @@ class JsonPage extends WebPage
 			'scripts' => $aScripts,
 		];
 
-		echo json_encode($aJson);
+		$oKpi = new ExecutionKPI();
+		$sJSON = json_encode($aJson);
+		echo $sJSON;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
 	}
 
 }

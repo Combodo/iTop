@@ -38,22 +38,22 @@ class CSVPage extends WebPage
 
     public function output()
     {
-			$this->add_header("Content-Length: ".strlen(trim($this->s_content)));
+	    $this->add_header("Content-Length: ".strlen(trim($this->s_content)));
 
-			// Get the unexpected output but do nothing with it
-			$sTrash = $this->ob_get_clean_safe();
+	    // Get the unexpected output but do nothing with it
+	    $sTrash = $this->ob_get_clean_safe();
 
-        foreach($this->a_headers as $s_header)
-        {
-            header($s_header);
-        }
-        echo trim($this->s_content);
-        echo "\n";
+	    $oKpi = new ExecutionKPI();
+	    foreach ($this->a_headers as $s_header) {
+		    header($s_header);
+	    }
+	    echo trim($this->s_content);
+	    echo "\n";
+	    $oKpi->ComputeAndReport('Echoing ('.round(strlen($this->s_content) / 1024).' Kb)');
 
-        if (class_exists('DBSearch'))
-        {
-            DBSearch::RecordQueryTrace();
-        }
+	    if (class_exists('DBSearch')) {
+		    DBSearch::RecordQueryTrace();
+	    }
 	    if (class_exists('ExecutionKPI')) {
 		    ExecutionKPI::ReportStats();
 	    }
