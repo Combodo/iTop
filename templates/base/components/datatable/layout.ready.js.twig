@@ -42,8 +42,8 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollX: true,
     {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
         scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
-        scrollCollapse: true,
     {% endif %}
+    scrollCollapse: true,
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% if( oUIBlock.GetOption("sort")[0] is defined ) %}
@@ -113,7 +113,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             sortable: false,
             orderable: false,
             title:
-            {% if oUIBlock.GetOption("select_mode") != "single" %}
+                    {% if oUIBlock.GetOption("select_mode") != "single" %}
                 '<span class="row_input"><input type="checkbox" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
             {% else %}
                 '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
@@ -182,9 +182,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         this.find('thead').unblock();
 
         {% if oUIBlock.GetOption("select_mode") is not empty %}
-        updateDataTableSelection('{{ sListId }}');
+        updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
         {% if oUIBlock.GetOption("select_mode") != "single" %}
-            this.api().on('select', function (oEvent, dt, type, indexes) {
+        this.api().on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }})
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
@@ -199,7 +199,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                         if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
                         {
                             oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
-                            updateDataTableSelection('{{ sListId }}');
+                            updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
                 }
@@ -214,7 +214,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                         if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
                         {
                             oSelectedItems{{ sListId }}.push(iItemId);
-                            updateDataTableSelection('{{ sListId }}');
+                            updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
                 }
@@ -236,7 +236,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                         if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
                         {
                             oSelectedItems{{ sListId }}.push(iItemId);
-                            updateDataTableSelection('{{ sListId }}');
+                            updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
                 }
@@ -248,7 +248,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                         if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
                         {
                             oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
-                            updateDataTableSelection('{{ sListId }}');
+                            updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
                 }
@@ -268,7 +268,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
                     {
                         oSelectedItems{{ sListId }}.push(iItemId);
-                        updateDataTableSelection('{{ sListId }}');
+                        updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                     }
                 }
             }
@@ -288,7 +288,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
                     {
                         oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
-                        updateDataTableSelection('{{ sListId }}');
+                        updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                     }
                 }
             }

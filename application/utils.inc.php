@@ -538,14 +538,12 @@ class utils
 	 */
 	public static function ReadMultipleSelection($oFullSetFilter)
 	{
-		$aSelectedObj = utils::ReadParam('selectObject', array());
+		$aSelectedObj = utils::ReadParam('selectObject[]', array());
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
-		if ($sSelectionMode != '')
-		{
+		if ($sSelectionMode != '') {
 			// Paginated selection
 			$aExceptions = utils::ReadParam('storedSelection', array());
-			if ($sSelectionMode == 'positive')
-			{
+			if ($sSelectionMode == 'positive') {
 				// Only the explicitely listed items are selected
 				$aSelectedObj = $aExceptions;
 			}

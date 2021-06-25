@@ -30,6 +30,7 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumn;
 use Combodo\iTop\Application\UI\Base\Layout\Object\ObjectFactory;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
@@ -2180,6 +2181,7 @@ EOF
 				break;
 
 				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions or maybe *transition forms* as a caselog can be MUST_PROMPT?
+				// used for bulk modify in 3.0
 				case 'CaseLog':
 					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$aStyles = array();
@@ -4557,30 +4559,27 @@ HTML
 			$sDisplayValue = $this->GetEditValue($sAttCode);
 			$aArgs = array('this' => $this, 'formPrefix' => $sPrefix);
 
-			$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
-			$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
-			$sHTMLValue = <<<HTML
-<div class="field_data">
-	<div class="field_value">
-		$sCommentAsHtml
-		$sFieldAsHtml
-	</div>
-</div>
-HTML;
-
 			$aFieldsMap[$sAttCode] = $sInputId;
 
-			$oPage->add(<<<HTML
-<fieldset>
-	<legend>{$sAttLabel}</legend>
-	<div class="field_container field_large" data-attribute-code="{$sAttCode}" data-attribute-type="{$sAttDefClass}" data-attribute-label="{$sAttMetaDataLabel}"
-		data-attribute-flag-hidden="false" data-attribute-flag-read-only="false" data-attribute-flag-mandatory="{$sAttMetaDataFlagMandatory}"
-		data-attribute-flag-must-change="{$sAttMetaDataFlagMustChange}" data-attribute-flag-must-prompt="{$sAttMetaDataFlagMustPrompt}" data-attribute-flag-slave="false">
-		{$sHTMLValue}
-	</div>
-</fieldset>
-HTML
-			);
+			$oFieldset = FieldSetUIBlockFactory::MakeStandard($sAttLabel);
+			$oPage->AddSubBlock($oFieldset);
+
+			$oDivField = FieldUIBlockFactory::MakeLarge("");
+			//	UIContentBlockUIBlockFactory::MakeStandard(null,["field_container field_large"]);
+			$oDivField->AddDataAttribute("attribute-type", $sAttDefClass);
+			$oDivField->AddDataAttribute("attribute-label", $sAttMetaDataLabel);
+			$oDivField->AddDataAttribute("attribute-flag-hidden", false);
+			$oDivField->AddDataAttribute("attribute-flag-read-only", false);
+			$oDivField->AddDataAttribute("attribute-flag-mandatory", $sAttMetaDataFlagMandatory);
+			$oDivField->AddDataAttribute("attribute-flag-must-change", $sAttMetaDataFlagMustChange);
+			$oDivField->AddDataAttribute("attribute-flag-must-prompt", $sAttMetaDataFlagMustPrompt);
+			$oDivField->AddDataAttribute("attribute-flag-slave", false);
+			$oFieldset->AddSubBlock($oDivField);
+
+			$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
+			$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
+			$sHTMLValue = $sCommentAsHtml.$sFieldAsHtml;
+			$oDivField->AddSubBlock(new Html($sHTMLValue));
 		}
 	}
 
@@ -5176,7 +5175,7 @@ EOF
 				$oFilter = new DBObjectSearch($sClass);
 				$oFilter->AddCondition('id', $aKeys, 'IN');
 				$oSet = new CMDBobjectSet($oFilter);
-				$oDisplaySet = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard("0");
+				$oDisplaySet = UIContentBlockUIBlockFactory::MakeStandard("0");
 				$oP->AddSubBlock($oDisplaySet);
 				$oDisplaySet->AddSubBlock(CMDBAbstractObject::GetDisplaySetBlock($oP, $oSet, array('display_limit' => false, 'menu' => false)));
 

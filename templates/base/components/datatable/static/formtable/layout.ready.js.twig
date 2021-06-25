@@ -1,7 +1,7 @@
 {% set sListId = oUIBlock.GetId() %}
 {% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 
-var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
+var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         emptyTable: "{{ 'UI:Message:EmptyList:UseAdd'|dict_s }}"
     },
@@ -44,17 +44,22 @@ var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
 });
 
 {% if (oUIBlock.GetOption('bFullscreen')) %}
-var myheight = $("#ibo-main-content").height()-$("#ibo-main-content")[0].scrollHeight+$("#{{ oUIBlock.GetId() }}").height();
-if (myheight < 200)
+var heightS{{ sListIDForVarSuffix }} = 0;
+var heightD{{ sListIDForVarSuffix }} = 0;
+if ($("#{{ oUIBlock.GetId() }}").height() > 0)
 {
-    myheight = 200;
-};
-$("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(myheight);
+    heightD{{ sListIDForVarSuffix }} = $("#ibo-main-content").height()-$("#ibo-main-content")[0].scrollHeight+$("#{{ oUIBlock.GetId() }}").height();
+    heightS{{ sListIDForVarSuffix }} = $("#ibo-main-content").height();
+    if (heightD{{ sListIDForVarSuffix }} > 200)
+    {
+        $("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(heightD{{ sListIDForVarSuffix }});
+    }
+}
 {% endif %}
 
 if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
 {
-    table{{ sListIDForVarSuffix }}.columns.adjust().draw();
+    oTable{{ sListIDForVarSuffix }}.columns.adjust().draw();
 }
 
 if (window.ResizeObserver)
@@ -67,4 +72,40 @@ if (window.ResizeObserver)
         }, 120);
     });
     oFromTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
+
+    {% if (oUIBlock.GetOption('bFullscreen')) %}
+    let heightScreen{{ sListIDForVarSuffix }} = heightS{{ sListIDForVarSuffix }};
+    let heightDatatable{{ sListIDForVarSuffix }} = heightD{{ sListIDForVarSuffix }};
+    let oFromScreen{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oFromScreen{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function () {
+        clearTimeout(oFromScreen{{ sListIDForVarSuffix }}ResizeTimeout);
+        oFromScreen{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function () {
+            if ($("#{{ oUIBlock.GetId() }}_wrapper").height() > 0)
+            {
+                console.warn("$_wrapper).height()"+$("#{{ oUIBlock.GetId() }}_wrapper").height());
+                if (heightDatatable{{ sListIDForVarSuffix }}> 0)
+                {
+                    let calcul = $("#ibo-main-content").height()+heightDatatable{{ sListIDForVarSuffix }}-heightScreen{{ sListIDForVarSuffix }};
+                    if (calcul > 200)
+                    {
+                        $("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(calcul);
+                    }
+                }
+                else
+                {
+                    heightDatatable{{ sListIDForVarSuffix }} = $("#ibo-main-content").height()-$("#ibo-main-content")[0].scrollHeight+$("#{{ oUIBlock.GetId() }}_wrapper").height();
+                    heightScreen{{ sListIDForVarSuffix }} = $("#ibo-main-content").height();
+                    if (heightDatatable{{ sListIDForVarSuffix }} > 200)
+                    {
+                        $("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(heightDatatable{{ sListIDForVarSuffix }});
+                    }
+                }
+
+            }
+        }, 120);
+    });
+    oFromScreen{{ sListIDForVarSuffix }}Resize.observe($('#ibo-main-content')[0]);
+
+    {% endif %}
+
 }

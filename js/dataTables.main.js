@@ -19,7 +19,7 @@ function checkAllDataTable(tableId, value, listId) {
 		(value) ? currentLine.addClass("selected") : currentLine.removeClass("selected");
 	});
 
-	tableSelector.parent().parent().find(':input[name=selectionMode]').val(selectionMode);
+	tableSelector.closest(".dataTables_wrapper").parent().find(':input[name=selectionMode]').val(selectionMode);
 	// Reset the list of saved selection...
 	$(':input[name^=storedSelection]').remove();
 	tableSelector.parent().find(':checkbox[name^=selectObj]').trigger("change");
@@ -29,25 +29,25 @@ function checkAllDataTable(tableId, value, listId) {
 	} else {
 		tableSelector.DataTable().rows({page: 'current'}).deselect();
 	}
-	updateDataTableSelection(listId);
+	updateDataTableSelection(listId, tableId);
 
 	return true;
 }
 
-function updateDataTableSelection(listId) {
+function updateDataTableSelection(listId, tableId) {
 	let selectionContainer = $('#'+listId+' [data-target="ibo-datatable--selection"]');
 	let selectionCount = $('#'+listId+' [name="selectionCount"]');
 	let selectionMode = $('#'+listId+' [name=selectionMode]').val();
 
 	selectionContainer.html('');
 	let currentSelection = window['oSelectedItems'+listId];
-	for(let i in currentSelection) {
+	for (let i in currentSelection) {
 		let value = currentSelection[i];
-		selectionContainer.append('<input type="hidden" name="storedSelection[]" value="' + value + '">');
+		selectionContainer.append('<input type="hidden" name="storedSelection[]" value="'+value+'">');
 	}
 
 	if (selectionMode === 'negative') {
-		let total = $('#'+$aOptions.sListId).DataTable().page.info()["recordsTotal"];
+		let total = $('#'+tableId).DataTable().page.info()["recordsTotal"];
 		selectionCount.val(total-currentSelection.length);
 	} else {
 		selectionCount.val(currentSelection.length);
