@@ -517,12 +517,9 @@ class FileLog
 		{
 			flock($hLogFile, LOCK_EX);
 			$sDate = date('Y-m-d H:i:s');
-			if (empty($aContext))
-			{
+			if (empty($aContext)) {
 				fwrite($hLogFile, "$sDate | $sText\n");
-			}
-			else
-			{
+			} else {
 				$sContext = var_export($aContext, true);
 				fwrite($hLogFile, "$sDate | $sText\n$sContext\n");
 			}
@@ -532,6 +529,21 @@ class FileLog
 		}
 	}
 }
+
+
+/**
+ * Simple enum like class to factorize channels values as constants
+ * Channels are used especially as parameters in {@see \LogAPI} methods
+ *
+ * @since 2.7.5 3.0.0 N°4012
+ */
+class LogChannels
+{
+	const DEADLOCK = 'DeadLock';
+	const INLINE_IMAGE = 'InlineImage';
+	const PORTAL = 'portal';
+}
+
 
 abstract class LogAPI
 {
@@ -544,11 +556,11 @@ abstract class LogAPI
 	const LEVEL_DEBUG       = 'Debug';
 	const LEVEL_TRACE       = 'Trace';
 	/**
-	 * @var string default log level, can be overrided
 	 * @see GetMinLogLevel
+	 * @var string default log level, can be overrided
 	 * @since 2.7.1 N°2977
 	 */
-	const LEVEL_DEFAULT     = self::LEVEL_OK;
+	const LEVEL_DEFAULT = self::LEVEL_OK;
 
 	protected static $aLevelsPriority = array(
 		self::LEVEL_ERROR   => 400,

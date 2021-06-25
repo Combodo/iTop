@@ -43,6 +43,7 @@ use FieldExpression;
 use iPopupMenuExtension;
 use IssueLog;
 use JSButtonItem;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -814,7 +815,7 @@ class ManageBrickController extends BrickController
 				);
 			}
 
-			IssueLog::Debug('Portal ManageBrick query', 'portal', array(
+			IssueLog::Debug('Portal ManageBrick query', LogChannels::PORTAL, array(
 				'sPortalId' => $sPortalId,
 				'sBrickId' => $sBrickId,
 				'sGroupingTab' => $sGroupingTab,

@@ -761,7 +761,7 @@ class CMDBSource
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
-		IssueLog::Error($sMessage, 'DeadLock', $e->getMessage());
+		IssueLog::Error($sMessage, LogChannels::DEADLOCK, $e->getMessage());
 	}
 
 	/**
