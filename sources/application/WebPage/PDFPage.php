@@ -67,10 +67,10 @@ class PDFPage extends WebPage
 table {
 	padding: 2pt;
 }
-table.ibo-datatable td {
+table.ibo-datatable td, table.listResults td  {
 	border: 0.5pt solid #000 ;
 }
-table.ibo-datatable th {
+table.ibo-datatable th, table.listResults th  {
 	background-color: #eee;
 	border: 0.5pt solid #000 ;
 }

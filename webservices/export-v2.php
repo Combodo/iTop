@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
@@ -131,8 +132,14 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
 	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
 	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
+	$oTextArea->AddCSSClass("ibo-queryoql");
 	$oFieldQuery->AddSubBlock($oTextArea);
 	$oForm->AddSubBlock($oFieldQuery);
+	if (!empty($sExceptionMessage)) {
+		$oAlert = AlertUIBlockFactory::MakeForFailure($sExceptionMessage);
+		$oAlert->SetIsCollapsible(false);
+		$oForm->AddSubBlock($oAlert);
+	}
 
 	$oFieldPhraseBook = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label>');
 	$oSelect = SelectUIBlockFactory::MakeForSelect('query', "select_phrasebook");
