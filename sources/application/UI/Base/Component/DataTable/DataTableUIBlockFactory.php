@@ -308,7 +308,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						// See if this column is a must to load
 						$sClass = $aClassAliases[$sAlias];
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ($oAttDef->alwaysLoadInTables()) {
+						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
 					}
@@ -550,7 +550,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						// See if this column is a must to load
 						$sClass = $aClassAliases[$sAlias];
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ($oAttDef->alwaysLoadInTables()) {
+						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
 					}

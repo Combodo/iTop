@@ -377,6 +377,11 @@ class AjaxRenderController
 					$aColumns[$sAlias][$sAttCode]['checked'] = false;
 				}
 			}
+
+			// Add attributes to always load in tables
+			foreach (MetaModel::GetAttributesToAlwaysLoadInTables($sClassName) as $sAttCode) {
+				$aColumnsLoad[$sAlias][] = $sAttCode;
+			}
 		}
 		$aQueryParams = isset($aExtraParams['query_params']) ? $aExtraParams['query_params'] : [];
 
@@ -401,11 +406,11 @@ class AjaxRenderController
 				if (isset($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
-					foreach ($aObject[$sAlias]->GetLoadedAttributes() as $sAttCode) {
+					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
 					}
 					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
-					if (!empty($sObjHighlightClass)){
+					if (!empty($sObjHighlightClass)) {
 						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
 					}
 				}

@@ -775,17 +775,73 @@ abstract class MetaModel
 			}
 
 			return array($sFormat, $nameRawSpec);
-		}
-		elseif (empty($nameRawSpec))
-		{
+		} elseif (empty($nameRawSpec)) {
 			return array($sClass, array());
-		}
-		else
-		{
+		} else {
 			// string -> attcode
 			return array('%1$s', array($nameRawSpec));
 		}
 	}
+
+	/**
+	 *
+	 * @param string $sClass
+	 * @param bool $bWithAttributeDefinition
+	 *
+	 * @return array of attribute codes used by friendlyname
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function GetNameAttributes(string $sClass, $bWithAttributeDefinition = false): array
+	{
+		self::_check_subclass($sClass);
+		$rawNameAttCodes = self::$m_aClassParams[$sClass]["name_attcode"];
+		$aNameAttCodes = [];
+		if (!is_array($rawNameAttCodes)) {
+			if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
+				$aNameAttCodes[] = $rawNameAttCodes;
+			}
+		} else {
+			$aNameAttCodes = $rawNameAttCodes;
+		}
+
+		if ($bWithAttributeDefinition) {
+			$aResults = [];
+			foreach ($aNameAttCodes as $sAttCode) {
+				$aResults[$sAttCode] = self::GetAttributeDef($sClass, $sAttCode);
+			}
+
+			return $aResults;
+		}
+
+		return $aNameAttCodes;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param false $bWithAttributeDefinition
+	 *
+	 * @return array of attributes to always reload in tables
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	final public static function GetAttributesToAlwaysLoadInTables(string $sClass, $bWithAttributeDefinition = false): array
+	{
+		$aResults = [];
+		foreach (self::GetAttributesList($sClass) as $sAttCode) {
+			$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
+			if ($oAttDef->AlwaysLoadInTables()) {
+				if ($bWithAttributeDefinition) {
+					$aResults[$sAttCode] = $oAttDef;
+				} else {
+					$aResults[] = $sAttCode;
+				}
+			}
+		}
+
+		return $aResults;
+	}
+
 	/**
 	 * @param string $sClass
 	 *

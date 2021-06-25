@@ -116,8 +116,7 @@ class DataTable
 						// See if this column is a must to load			
 						$sClass = $this->aClassAliases[$sAlias];
 						$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-						if ($oAttDef->alwaysLoadInTables())
-						{
+						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
 					}

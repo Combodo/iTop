@@ -1517,7 +1517,7 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
-     * @api
+	 * @internal since 3.0 will be set final in 3.1
 	 *
 	 * @return string
 	 * @throws \CoreException
@@ -1528,14 +1528,14 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Helper to get the friendly name
-     *
-     * This is not safe for displaying inside a web page since the " < > characters are not escaped.
-     * In example, the name may contain some XSS script instructions.
+	 * Helper to get the friendly name
+	 *
+	 * This is not safe for displaying inside a web page since the " < > characters are not escaped.
+	 * In example, the name may contain some XSS script instructions.
 	 * Use this function only for internal computations or for an output to a non-HTML destination
 	 *
-     * @api
-     *
+	 * @internal since 3.0 will be set final in 3.1
+	 *
 	 * @return string
 	 * @throws \CoreException
 	 */
