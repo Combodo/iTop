@@ -370,7 +370,7 @@ JS
 											oData.items[i].target_id = oData.items[i].id;
 											
 											// Adding item to table only if it's not already there
-											if($('#{$sTableId} tr[role="row"] > td input[data-target-object-id="' + oData.items[i].target_id + '"], #{$sTableId} tr[role="row"] > td input[data-target-object-id="' + (oData.items[i].target_id*-1) + '"]').length === 0)
+											if($('#{$sTableId} tr[id] > td input[data-target-object-id="' + oData.items[i].target_id + '"], #{$sTableId} tr[id] > td input[data-target-object-id="' + (oData.items[i].target_id*-1) + '"]').length === 0)
 											{
 												// Making id negative in order to recognize it when persisting
 												oData.items[i].id = -1 * parseInt(oData.items[i].id);
@@ -464,7 +464,7 @@ EOF
 					    // Checking removed objects
 					    for(var i in oValues.current)
 					    {
-					        if($('#{$sTableId} tr[role="row"][id="'+i+'"]').length === 0)
+					        if($('#{$sTableId} tr[id="'+i+'"]').length === 0)
                             {
                                 oValues.remove[i] = {};
                             }
@@ -499,7 +499,7 @@ EOF
 					$('#{$sButtonAddId}').off('click').on('click', function(){
 						// Preparing current values
 						var aObjectIdsToIgnore = [];
-						$('#{$sTableId} tr[role="row"] > td input[data-target-object-id]').each(function(iIndex, oElem){
+						$('#{$sTableId} tr[id] > td input[data-target-object-id]').each(function(iIndex, oElem){
 							aObjectIdsToIgnore.push( $(oElem).attr('data-target-object-id') );
 						});
 						
