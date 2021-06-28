@@ -15,12 +15,31 @@ use Dict;
 use iKeyboardShortcut;
 use MetaModel;
 
+/**
+ * Class ObjectDetails
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Layout\Object
+ * @since 3.0.0
+ */
 class ObjectDetails extends Panel implements iKeyboardShortcut
 {
 	// Overloaded constants
+	/**
+	 * @inheritDoc
+	 */
 	public const BLOCK_CODE = 'ibo-object-details';
+	/**
+	 * @inheritDoc
+	 */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
+	/**
+	 * @inheritDoc
+	 */
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
+	/**
+	 * @inheritDoc
+	 */
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/object/object-details.js',
 	];
@@ -173,6 +192,13 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		return ($this->sObjectMode != "create");
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @see static::$oObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	protected function ComputeIconUrl(DBObject $oObject): void
 	{
 		// Default icon is the class icon
@@ -196,6 +222,13 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		$this->SetIcon($sIconUrl, $sIconCoverMethod, true);
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @see static::$oObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	protected function ComputeState(DBObject $oObject): void
 	{
 		if (MetaModel::HasStateAttributeCode($this->sClassName)) {
@@ -219,7 +252,10 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			$this->sObjectName = $oObject->GetRawName();
 		}
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 */
 	public static function GetShortcutKeys(): array
 	{
 		return [['id' => 'ibo-edit-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject', 'key' => 'e', 'event' => 'edit_object'],
@@ -228,6 +264,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			['id' => 'ibo-save-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject', 'key' => 's', 'event' => 'save_object']];
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public static function GetShortcutTriggeredElementSelector(): string
 	{
 		return "[data-role='".static::BLOCK_CODE."']";
