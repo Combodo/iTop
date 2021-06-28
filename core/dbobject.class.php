@@ -5548,30 +5548,31 @@ abstract class DBObject implements iDisplay
 	{
 		$aFields = $oExpression->ListRequiredFields();
 		$aArgs = array();
-		foreach ($aFields as $sFieldDesc)
-		{
+		foreach ($aFields as $sFieldDesc) {
 			$aFieldParts = explode('.', $sFieldDesc);
-			if (count($aFieldParts) == 2)
-			{
+			if (count($aFieldParts) == 2) {
 				$sClass = $aFieldParts[0];
 				$sAttCode = $aFieldParts[1];
-			}
-			else
-			{
+			} else {
 				$sClass = get_class($this);
 				$sAttCode = $aFieldParts[0];
 			}
-			if (get_class($this) != $sClass) continue;
-			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) continue;
+			if (get_class($this) != $sClass) {
+				continue;
+			}
+			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) {
+				continue;
+			}
 
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			$value = reset($aSQLValues);
 			if ($oAttDef->IsNull($value)) {
-				$value = '';
+				return '';
 			}
 			$aArgs[$sFieldDesc] = $value;
 		}
+
 		return $oExpression->Evaluate($aArgs);
 	}
 }

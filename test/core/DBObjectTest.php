@@ -126,6 +126,28 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 */
+	public function testPartialAttributeEvaluation()
+	{
+		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'org_id' => 3, 'location_id' => 2));
+
+		static::assertEquals('', $oObject->Get('friendlyname'));
+	}
+
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 */
+	public function testEmptyAttributeEvaluation()
+	{
+		$oObject = \MetaModel::NewObject('Person', array('org_id' => 3, 'location_id' => 2));
+
+		static::assertEquals('', $oObject->Get('friendlyname'));
+	}
+
+	/**
 	 * @covers DBObject::Get
 	 * @covers DBObject::Set
 	 */
