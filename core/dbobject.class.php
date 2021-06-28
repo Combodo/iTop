@@ -3271,13 +3271,18 @@ abstract class DBObject implements iDisplay
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
 
-					if (count($aChanges) != 0)
-					{
+					// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
+					// new values are already in the object (call {@see DBObject::Get()} to get them)
+					// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
+					$this->m_bDirty = false;
+					$this->m_aTouchedAtt = array();
+					$this->m_aModifiedAtt = array();
+
+					if (count($aChanges) != 0) {
 						$this->RecordAttChanges($aChanges, $aOriginalValues);
 					}
 
-					if ($bIsTransactionEnabled)
-					{
+					if ($bIsTransactionEnabled) {
 						CMDBSource::Query('COMMIT');
 					}
 					break;
