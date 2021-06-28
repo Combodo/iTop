@@ -190,7 +190,7 @@ class PopoverMenuFactory
 
 		$aTransformedItems = [];
 		foreach($aOriginalItems as $sItemID => $aItemData) {
-			$aTransformedItems[] = PopoverMenuItemFactory::MakeFromDisplayBlockAction($sItemID, $aItemData);
+			$aTransformedItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItemData($sItemID, $aItemData);
 		}
 
 		return $aTransformedItems;
@@ -265,7 +265,7 @@ class PopoverMenuFactory
 			}
 
 			foreach ($aActions as $sActionId => $aAction) {
-				$oMenu->AddItem($sSection, PopoverMenuItemFactory::MakeFromDisplayBlockAction($sActionId, $aAction));
+				$oMenu->AddItem($sSection, PopoverMenuItemFactory::MakeFromApplicationPopupMenuItemData($sActionId, $aAction));
 			}
 
 			$bFirst = false;

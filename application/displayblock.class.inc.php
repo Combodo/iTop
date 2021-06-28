@@ -2303,7 +2303,7 @@ class MenuBlock extends DisplayBlock
 				// Toolkit actions
 				if (!empty($aToolkitActions)) {
 					foreach ($aToolkitActions as $sActionId => $aActionData) {
-						$oRegularActionsMenu->AddItem('toolkit-actions', PopoverMenuItemFactory::MakeFromDisplayBlockAction($sActionId, $aActionData));
+						$oRegularActionsMenu->AddItem('toolkit-actions', PopoverMenuItemFactory::MakeFromApplicationPopupMenuItemData($sActionId, $aActionData));
 					}
 				}
 			}

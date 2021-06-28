@@ -67,7 +67,7 @@ class PopoverMenuItemFactory
 	}
 
 	/**
-	 * Make a PopoverMenuItem from an action prepared by \DisplayBlock
+	 * Make a PopoverMenuItem from an action data as return by {@see ApplicationPopupMenuItem::GetMenuItem()}
 	 *
 	 * @param string $sActionId
 	 * @param array $aActionData
@@ -75,7 +75,7 @@ class PopoverMenuItemFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem
 	 * @throws \Exception
 	 */
-	public static function MakeFromDisplayBlockAction(string $sActionId, array $aActionData)
+	public static function MakeFromApplicationPopupMenuItemData(string $sActionId, array $aActionData)
 	{
 		$aRefactoredItem = [
 			'uid' => $sActionId,
