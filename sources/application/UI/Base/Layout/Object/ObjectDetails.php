@@ -11,6 +11,7 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
+use Dict;
 use iKeyboardShortcut;
 use MetaModel;
 
@@ -63,14 +64,18 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		$this->sClassLabel = MetaModel::GetName($this->GetClassName());
 		$this->sObjectId = $oObject->GetKey();
 		// Note: We get the raw name as only the front-end consumer knows when and how to encode it.
-		$this->sObjectName = $oObject->GetRawName();
 		$this->sObjectMode = $sMode;
 
-		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
+		if ($this->sObjectMode == "create") {
+			$this->sObjectName = Dict::Format('UI:CreationTitle_Class', $this->sClassLabel);
+		} else {
+			$this->sObjectName = $oObject->GetRawName();
 
-		$this->SetColorFromClass($this->sClassName);
-		$this->ComputeIconUrl($oObject);
-		$this->ComputeState($oObject);
+			$this->SetColorFromClass($this->sClassName);
+			$this->ComputeIconUrl($oObject);
+			$this->ComputeState($oObject);
+		}
+		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
 	}
 
 	/**
@@ -149,7 +154,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 * @see self::$sStatusLabel
 	 * @return string
 	 */
-	public function GetStatusLabel(): string
+	public function GetStatusLabel(): ?string
 	{
 		return $this->sStatusLabel;
 	}
@@ -168,7 +173,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 */
 	public function HasSubTitle(): bool
 	{
-		return !empty($this->sStatusCode);
+		return ($this->sObjectMode != "create");
 	}
 
 	protected function ComputeIconUrl(DBObject $oObject): void
