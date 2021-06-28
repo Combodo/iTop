@@ -3221,7 +3221,7 @@ abstract class DBObject implements iDisplay
 						// Update the left & right indexes for each hierarchical key
 						foreach ($aHierarchicalKeys as $sAttCode => $oAttDef)
 						{
-							$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+							$sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
 							$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
 							$aRes = CMDBSource::QueryToArray($sSQL);
 							$iMyLeft = $aRes[0]['left'];
@@ -3229,8 +3229,7 @@ abstract class DBObject implements iDisplay
 							$iDelta = $iMyRight - $iMyLeft + 1;
 							MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
 
-							if ($aDBChanges[$sAttCode] == 0)
-							{
+							if ($aDBChanges[$sAttCode] == 0) {
 								// No new parent, insert completely at the right of the tree
 								$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
 								$aRes = CMDBSource::QueryToArray($sSQL);
@@ -3272,13 +3271,6 @@ abstract class DBObject implements iDisplay
 					}
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
-
-					// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
-					// new values are already in the object (call {@see DBObject::Get()} to get them)
-					// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
-					$this->m_bDirty = false;
-					$this->m_aTouchedAtt = array();
-					$this->m_aModifiedAtt = array();
 
 					if (count($aChanges) != 0) {
 						$this->RecordAttChanges($aChanges, $aOriginalValues);
@@ -3342,6 +3334,13 @@ abstract class DBObject implements iDisplay
 					));
 				}
 			}
+
+			// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
+			// new values are already in the object (call {@see DBObject::Get()} to get them)
+			// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
+			$this->m_bDirty = false;
+			$this->m_aTouchedAtt = array();
+			$this->m_aModifiedAtt = array();
 
 			try {
 				// - TriggerOnObjectUpdate
