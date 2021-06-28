@@ -1535,10 +1535,11 @@ abstract class DBObject implements iDisplay
 	 * In example, the name may contain some XSS script instructions.
 	 * Use this function only for internal computations or for an output to a non-HTML destination
 	 *
-	 * @internal since 3.0 will be set final in 3.1
-	 *
+	 * @internal
 	 * @return string
 	 * @throws \CoreException
+	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 *
 	 */
 	public function GetRawName()
 	{
