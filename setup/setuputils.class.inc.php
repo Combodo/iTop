@@ -2192,7 +2192,7 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
-			'curl' => 'Required to export as PDF',
+			'curl' => 'PDF exports won\'t be possible.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {
