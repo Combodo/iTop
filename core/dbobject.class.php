@@ -2810,6 +2810,9 @@ abstract class DBObject implements iDisplay
 				$this->DBWriteLinks();
 				$this->WriteExternalAttributes();
 
+				// Write object creation history within the transaction
+				$this->RecordObjCreation();
+
 				if ($bIsTransactionEnabled) {
 					CMDBSource::Query('COMMIT');
 				}
@@ -2869,8 +2872,6 @@ abstract class DBObject implements iDisplay
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
-
-		$this->RecordObjCreation();
 
 		return $this->m_iKey;
 	}
