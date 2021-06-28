@@ -598,11 +598,16 @@ class RunTimeEnvironment
 				$this->log_ok("Database structure successfully updated.");
 	
 				// Check (and update only if it seems needed) the hierarchical keys
-				ob_start();
-				MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
-				$sFeedback = ob_get_clean();
-				$this->log_ok("Hierchical keys rebuilt: $sFeedback");
-	
+				if (MFCompiler::SkipRebuildHKeys()) {
+					$this->log_ok("Hierchical keys are NOT rebuilt due to the presence of the \"data/.setup-rebuild-hkeys-never\" file");
+				} else {
+					ob_start();
+					$this->log_ok("Start of rebuilt of hierchical keys. If you have problems with this step, you can skip it by creating a \".setup-rebuild-hkeys-never\" file in data");
+					MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
+					$sFeedback = ob_get_clean();
+					$this->log_ok("Hierchical keys rebuilt: $sFeedback");
+				}
+
 				// Check (and fix) data sync configuration
 				ob_start();
 				MetaModel::CheckDataSources(false /*$bDiagnostics*/, true/*$bVerbose*/);

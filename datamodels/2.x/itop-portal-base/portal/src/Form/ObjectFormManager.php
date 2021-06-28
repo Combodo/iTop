@@ -78,6 +78,12 @@ class ObjectFormManager extends FormManager
 	protected $aFormProperties;
 	/** @var array $aCallbackUrls */
 	protected $aCallbackUrls = array();
+	/**
+	 * List of hidden fields, used for form update (eg. remove them from the form regarding they dependencies)
+	 * @var array $aHiddenFieldsId
+	 * @since 2.7.5
+	 */
+	protected $aHiddenFieldsId = array();
 
 	/**
 	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
@@ -954,6 +960,8 @@ class ObjectFormManager extends FormManager
 			if($oField->GetHidden() === false)
 			{
 				$oForm->AddField($oField);
+			} else {
+				$this->aHiddenFieldsId[]=$oField->GetId();
 			}
 		}
 
@@ -1484,5 +1492,23 @@ class ObjectFormManager extends FormManager
 			$oChangeOp->Set('filename', $sFileName);
 		}
 		return $oChangeOp;
+	}
+
+	/**
+	 * @return array
+	 * @since 2.7.5
+	 */
+	public function GetHiddenFieldsId()
+	{
+		return $this->aHiddenFieldsId;
+	}
+
+	/**
+	 * @param array $aHiddenFieldsId
+	 * @since 2.7.5
+	 */
+	public function SetHiddenFieldsId($aHiddenFieldsId)
+	{
+		$this->aHiddenFieldsId = $aHiddenFieldsId;
 	}
 }

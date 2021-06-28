@@ -198,31 +198,29 @@ class InlineImage extends DBObject
 			$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 			$oSearch = DBObjectSearch::FromOQL($sOQL);
 			$oSet = new DBObjectSet($oSearch, array(), array('temp_id' => $sTempId));
-            $aInlineImagesId = array();
-			while($oInlineImage = $oSet->Fetch())
-			{
-                $aInlineImagesId[] = $oInlineImage->GetKey();
+			$aInlineImagesId = array();
+			while ($oInlineImage = $oSet->Fetch()) {
+				$aInlineImagesId[] = $oInlineImage->GetKey();
 				$oInlineImage->SetItem($oObject);
 				$oInlineImage->Set('temp_id', '');
 				$oInlineImage->DBUpdate();
 			}
-            IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesId for the id list)', 'InlineImage', array(
-                '$sObjectClass' => get_class($oObject),
-                '$sTransactionId' => $iTransactionId,
-                '$sTempId' => $sTempId,
-                '$aInlineImagesId' => $aInlineImagesId,
-                '$sUser' => UserRights::GetUser(),
-                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            ));
+			IssueLog::Trace('FinalizeInlineImages (see $aInlineImagesId for the id list)', LogChannels::INLINE_IMAGE, array(
+				'$sObjectClass' => get_class($oObject),
+				'$sTransactionId' => $iTransactionId,
+				'$sTempId' => $sTempId,
+				'$aInlineImagesId' => $aInlineImagesId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			));
 		}
-        else
-        {
-            IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', 'InlineImage', array(
-                '$sObjectClass' => get_class($oObject),
-                '$sTransactionId' => $iTransactionId,
-                '$sUser' => UserRights::GetUser(),
-                'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            ));
+        else {
+	        IssueLog::Trace('FinalizeInlineImages "error" $iTransactionId is null', LogChannels::INLINE_IMAGE, array(
+		        '$sObjectClass' => get_class($oObject),
+		        '$sTransactionId' => $iTransactionId,
+		        '$sUser' => UserRights::GetUser(),
+		        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+	        ));
         }
 	}
 
@@ -253,12 +251,12 @@ class InlineImage extends DBObject
             $aInlineImagesId[] = $oInlineImage->GetKey();
 			$oInlineImage->DBDelete();
 		}
-        IssueLog::Trace('OnFormCancel', 'InlineImage', array(
-            '$sTempId' => $sTempId,
-            '$aInlineImagesId' => $aInlineImagesId,
-            '$sUser' => UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-        ));
+		IssueLog::Trace('OnFormCancel', LogChannels::INLINE_IMAGE, array(
+			'$sTempId' => $sTempId,
+			'$aInlineImagesId' => $aInlineImagesId,
+			'$sUser' => UserRights::GetUser(),
+			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		));
 	}
 
 	/**
@@ -608,17 +606,17 @@ JS
 	 */
     protected function AfterInsert()
     {
-        IssueLog::Trace(__METHOD__, 'InlineImage', array(
-            'id' => $this->GetKey(),
-            'expire' => $this->Get('expire'),
-            'temp_id' => $this->Get('temp_id'),
-            'item_class' => $this->Get('item_class'),
-            'item_id' => $this->Get('item_id'),
-            'item_org_id' => $this->Get('item_org_id'),
-            'secret' => $this->Get('secret'),
-            'user' => $sUser = UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
+		    'id' => $this->GetKey(),
+		    'expire' => $this->Get('expire'),
+		    'temp_id' => $this->Get('temp_id'),
+		    'item_class' => $this->Get('item_class'),
+		    'item_id' => $this->Get('item_id'),
+		    'item_org_id' => $this->Get('item_org_id'),
+		    'secret' => $this->Get('secret'),
+		    'user' => $sUser = UserRights::GetUser(),
+		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
         ));
 
 	    parent::AfterInsert();
@@ -629,17 +627,17 @@ JS
 	 */
     protected function AfterUpdate()
     {
-        IssueLog::Trace(__METHOD__, 'InlineImage', array(
-            'id' => $this->GetKey(),
-            'expire' => $this->Get('expire'),
-            'temp_id' => $this->Get('temp_id'),
-            'item_class' => $this->Get('item_class'),
-            'item_id' => $this->Get('item_id'),
-            'item_org_id' => $this->Get('item_org_id'),
-            'secret' => $this->Get('secret'),
-            'user' => $sUser = UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
+		    'id' => $this->GetKey(),
+		    'expire' => $this->Get('expire'),
+		    'temp_id' => $this->Get('temp_id'),
+		    'item_class' => $this->Get('item_class'),
+		    'item_id' => $this->Get('item_id'),
+		    'item_org_id' => $this->Get('item_org_id'),
+		    'secret' => $this->Get('secret'),
+		    'user' => $sUser = UserRights::GetUser(),
+		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
         ));
 
 	    parent::AfterUpdate();
@@ -650,17 +648,17 @@ JS
 	 */
 	protected function AfterDelete()
     {
-        IssueLog::Trace(__METHOD__, 'InlineImage', array(
-            'id' => $this->GetKey(),
-            'expire' => $this->Get('expire'),
-            'temp_id' => $this->Get('temp_id'),
-            'item_class' => $this->Get('item_class'),
-            'item_id' => $this->Get('item_id'),
-            'item_org_id' => $this->Get('item_org_id'),
-            'secret' => $this->Get('secret'),
-            'user' => $sUser = UserRights::GetUser(),
-            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+	    IssueLog::Trace(__METHOD__, LogChannels::INLINE_IMAGE, array(
+		    'id' => $this->GetKey(),
+		    'expire' => $this->Get('expire'),
+		    'temp_id' => $this->Get('temp_id'),
+		    'item_class' => $this->Get('item_class'),
+		    'item_id' => $this->Get('item_id'),
+		    'item_org_id' => $this->Get('item_org_id'),
+		    'secret' => $this->Get('secret'),
+		    'user' => $sUser = UserRights::GetUser(),
+		    'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+		    'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
         ));
 
 	    parent::AfterDelete();

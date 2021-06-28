@@ -64,6 +64,14 @@ class MFCompiler
 	/** @var \ThemeHandlerService */
 	protected static $oThemeHandlerService;
 
+	/**
+	 * Path to the "calculate hKeys" file
+	 * If this file is present, then we don't recalculate hkeys
+	 *
+	 * @var string
+	 */
+	public const REBUILD_HKEYS_NEVER= APPROOT.'data/.setup-rebuild-hkeys-never';
+
 	/** @var \ModelFactory */
 	protected $oFactory;
 
@@ -165,6 +173,20 @@ class MFCompiler
 			return;
 		}
 		unlink(static::USE_SYMBOLIC_LINKS_FILE_PATH);
+	}
+
+	/**
+	 * @return bool possible return values :
+	 *   * if flag is present true, false otherwise
+	 *
+	 * @uses \file_exists()
+	 * @uses REBUILD_HKEYS_NEVER
+	 *
+	 * @since 2.7.5
+	 */
+	public static function SkipRebuildHKeys(): bool
+	{
+		return (file_exists(static::REBUILD_HKEYS_NEVER));
 	}
 
 	/**

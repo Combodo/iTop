@@ -31,6 +31,7 @@ use DBObjectSet;
 use DBSearch;
 use FieldExpression;
 use IssueLog;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -441,9 +442,9 @@ class BrowseBrickController extends BrickController
 			}
 		}
 
-		IssueLog::Debug('Portal BrowseBrick query', 'portal', array(
-			'portalId' => $sPortalId,
-			'brickId' => $sBrickId,
+		IssueLog::Debug('Portal BrowseBrick query', LogChannels::PORTAL, array(
+			'sPortalId' => $sPortalId,
+			'sBrickId' => $sBrickId,
 			'oql' => $oSet->GetFilter()->ToOQL(),
 		));
 

@@ -2491,15 +2491,15 @@ EOF
 							$aResult['height'] = $aDimensions['height'];
 						}
 
-                        IssueLog::Trace('InlineImage created', 'InlineImage', array(
-                            '$operation' => $operation,
-                            '$aResult' => $aResult,
-                            'secret' => $oAttachment->Get('secret'),
-                            'temp_id' => $sTempId,
-                            'item_class' => $sObjClass,
-                            'user' => UserRights::GetUser(),
-                            'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-                            'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+                        IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
+	                        '$operation' => $operation,
+	                        '$aResult' => $aResult,
+	                        'secret' => $oAttachment->Get('secret'),
+	                        'temp_id' => $sTempId,
+	                        'item_class' => $sObjClass,
+	                        'user' => UserRights::GetUser(),
+	                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+	                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
                         ));
 					}
 					else
@@ -2542,15 +2542,15 @@ EOF
 					$oAttachment->Set('secret', sprintf('%06x', mt_rand(0, 0xFFFFFF))); // something not easy to guess
 					$iAttId = $oAttachment->DBInsert();
 
-                    IssueLog::Trace('InlineImage created', 'InlineImage', array(
-                        '$operation' => $operation,
-                        'secret' => $oAttachment->Get('secret'),
-                        'temp_id' => $sTempId,
-                        'item_class' => $sObjClass,
-                        'user' => UserRights::GetUser(),
-                        'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
-                        'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
-                    ));
+					IssueLog::Trace('InlineImage created', LogChannels::INLINE_IMAGE, array(
+						'$operation' => $operation,
+						'secret' => $oAttachment->Get('secret'),
+						'temp_id' => $sTempId,
+						'item_class' => $sObjClass,
+						'user' => UserRights::GetUser(),
+						'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+						'REQUEST_URI' => @$_SERVER['REQUEST_URI'],
+					));
 				}
 
 			} catch (FileUploadException $e)
