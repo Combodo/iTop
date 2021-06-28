@@ -9,3 +9,5 @@
 @import "elevation";
 @import "path";
 @import "typography";
+// Important: Keep this partial last as it includes variables from the previous partials
+@import "base";
