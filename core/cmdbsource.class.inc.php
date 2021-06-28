@@ -68,6 +68,7 @@ class CMDBSource
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+	/** @var mysqli or mock used for test purpose, only used in query() method */
 	protected static $oMySQLiForQuery;
 
 	/**
