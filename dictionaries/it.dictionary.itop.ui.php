@@ -167,6 +167,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserProfile' => 'Utente da Profilare',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Collegamento tra %1$s e %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Utente',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -187,6 +188,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:URP_UserOrg' => 'Organizzazione dell\'utente',
 	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg/Name' => 'Collegamento tra %1$s e %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Utente',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Account Utente',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -904,8 +906,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Collegamento tra %1$s e %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Collegamento tra %1$s e %2$s',
 
 	'Menu:AdminTools' => 'Strumenti di amministrazione', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)

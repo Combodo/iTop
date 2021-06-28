@@ -167,6 +167,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserProfile' => 'Usuário para perfil',
 	'Class:URP_UserProfile+' => 'Perfil usuário',
+	'Class:URP_UserProfile/Name' => 'Link entre %1$s e %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Usuário',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Conta usuário',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -187,6 +188,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_UserOrg' => 'Organização usuário',
 	'Class:URP_UserOrg+' => 'Organizações permitidas',
+	'Class:URP_UserOrg/Name' => 'Link entre %1$s e %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Usário',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Conta usuário',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -904,8 +906,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Ciclo de vida não tem sido definida para esta classe',
 	'UI:UserManagement:GrantMatrix' => 'Permissões concedidas',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link entre %1$s e %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link entre %1$s e %2$s',
 
 	'Menu:AdminTools' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Ferramentas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)

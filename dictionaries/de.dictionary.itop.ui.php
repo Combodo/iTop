@@ -156,6 +156,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_UserProfile' => 'Benutzerprofil',
 	'Class:URP_UserProfile+' => 'Benutzerprofil',
+	'Class:URP_UserProfile/Name' => 'Verbindung zwischen %1$s und %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Benutzer',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Benutzerkonto',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -176,6 +177,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:URP_UserOrg' => 'Benutzerorganisationen',
 	'Class:URP_UserOrg+' => 'Zulässige Organisationen',
+	'Class:URP_UserOrg/Name' => 'Verbindung zwischen %1$s und %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'User',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -893,8 +895,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'Nicht verfügbar',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Kein Lebenszyklus wurde für diese Klasse definiert.',
 	'UI:UserManagement:GrantMatrix' => 'Zugriffsmatrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Verbindung zwischen %1$s und %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Verbindung zwischen %1$s und %2$s',
 
 	'Menu:AdminTools' => 'Admin-Tools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administrationswerkzeuge', // Duplicated into itop-welcome-itil (will be removed from here...)

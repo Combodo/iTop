@@ -167,6 +167,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_UserProfile' => 'Kullanıcı Profili',
 	'Class:URP_UserProfile+' => 'Kullanıcı Profili',
+	'Class:URP_UserProfile/Name' => '%1$s ve %2$s arasındaki ilişki',
 	'Class:URP_UserProfile/Attribute:userid' => 'Kullanıcı',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Kullanıcı hesabı',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Kullanıcı adı',
@@ -187,6 +188,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_UserOrg' => 'Kullanıcı Kurumu',
 	'Class:URP_UserOrg+' => 'İzin verilen kurumlar',
+	'Class:URP_UserOrg/Name' => '%1$s ve %2$s arasındaki ilişki',
 	'Class:URP_UserOrg/Attribute:userid' => 'Kullanıcı',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Kullanıcı hesabı',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Kullanıcı',
@@ -904,8 +906,6 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Bu nesne için yaşam döngüsü tanımsız',
 	'UI:UserManagement:GrantMatrix' => 'Yetkiler',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s ve %2$s arasındaki ilişki',
-	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s ve %2$s arasındaki ilişki',
 
 	'Menu:AdminTools' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)

@@ -166,6 +166,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserProfile' => '角色目标用户',
 	'Class:URP_UserProfile+' => '用户的角色',
+	'Class:URP_UserProfile/Name' => '链接 %1$s 和 %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => '用户',
 	'Class:URP_UserProfile/Attribute:userid+' => '用户帐户',
 	'Class:URP_UserProfile/Attribute:userlogin' => '登录名',
@@ -186,6 +187,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserOrg' => '用户组织',
 	'Class:URP_UserOrg+' => '可以访问的组织',
+	'Class:URP_UserOrg/Name' => '链接 %1$s 和 %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => '用户',
 	'Class:URP_UserOrg/Attribute:userid+' => '用户帐户',
 	'Class:URP_UserOrg/Attribute:userlogin' => '登录名',
@@ -903,8 +905,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '该类未定义生命周期',
 	'UI:UserManagement:GrantMatrix' => '授权矩阵',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => '链接 %1$s 和 %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => '链接 %1$s 和 %2$s',
 
 	'Menu:AdminTools' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理工具', // Duplicated into itop-welcome-itil (will be removed from here...)

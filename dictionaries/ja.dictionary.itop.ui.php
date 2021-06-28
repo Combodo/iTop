@@ -156,6 +156,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_UserProfile' => 'ユーザープロフィール',
 	'Class:URP_UserProfile+' => 'ユーザープロフィール',
+	'Class:URP_UserProfile/Name' => '%1$s と %2$s間のリンク',
 	'Class:URP_UserProfile/Attribute:userid' => 'ユーザー',
 	'Class:URP_UserProfile/Attribute:userid+' => 'ユーザアカウント',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'ログイン',
@@ -176,6 +177,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:URP_UserOrg' => 'ユーザー組織',
 	'Class:URP_UserOrg+' => '許可された組織',
+	'Class:URP_UserOrg/Name' => '%1$s と %2$s 間のリンク',
 	'Class:URP_UserOrg/Attribute:userid' => 'ユーザー',
 	'Class:URP_UserOrg/Attribute:userid+' => 'ユーザーアカウント',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'ログイン',
@@ -893,8 +895,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => '該当なし',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'このクラスにはライフサイクルは定義されていません。',
 	'UI:UserManagement:GrantMatrix' => '権限マトリクス',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s と %2$s間のリンク',
-	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s と %2$s 間のリンク',
 
 	'Menu:AdminTools' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '管理ツール', // Duplicated into itop-welcome-itil (will be removed from here...)

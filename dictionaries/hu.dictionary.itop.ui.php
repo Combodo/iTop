@@ -156,6 +156,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_UserProfile' => 'Profilhoz rendelt felhasználók',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Kapcsolat %1$s és %2$s között',
 	'Class:URP_UserProfile/Attribute:userid' => 'Felhasználó',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Bejelentkezési név',
@@ -176,6 +177,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:URP_UserOrg' => 'Felhasználó szervezeti egysége',
 	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg/Name' => 'Kapcsolat %1$s és %2$s között',
 	'Class:URP_UserOrg/Attribute:userid' => 'Felhasználó',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Bejelentkezési név',
@@ -893,8 +895,6 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Jogosutlsági mátrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Kapcsolat %1$s és %2$s között',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Kapcsolat %1$s és %2$s között',
 
 	'Menu:AdminTools' => 'Adminisztrációs eszközök', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)

@@ -167,6 +167,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_UserProfile' => 'Uživatel/Profil',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Spojení mezi uživatelem %1$s a profilem %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Uživatel',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Přihlašovací jméno',
@@ -187,6 +188,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:URP_UserOrg' => 'Přístupné organizace',
 	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg/Name' => 'Spojení mezi uživatelem %1$s a organizací %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Uživatel',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Přihlašovací jméno',
@@ -904,8 +906,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'nedefinováno',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Pro tuto třídu nebyl definován žádný životní cyklus',
 	'UI:UserManagement:GrantMatrix' => 'Matice oprávnění',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Spojení mezi uživatelem %1$s a profilem %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Spojení mezi uživatelem %1$s a organizací %2$s',
 
 	'Menu:AdminTools' => 'Administrace', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Nástroje pro administraci', // Duplicated into itop-welcome-itil (will be removed from here...)

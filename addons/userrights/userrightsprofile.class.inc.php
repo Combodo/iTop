@@ -221,7 +221,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		(
 			"category" => "addon/userrights,grant_by_profile",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => array("userlogin", "profile"),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userprofile",
@@ -244,11 +244,6 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
-	}
-
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
 	}
 
 	public function CheckToDelete(&$oDeletionPlan)
@@ -362,7 +357,7 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 		(
 			"category" => "addon/userrights,grant_by_profile",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => array("userlogin", "allowed_org_name"),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userorg",
@@ -386,12 +381,6 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'allowed_org_id')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'allowed_org_id')); // Criteria of the advanced search form
 	}
-
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Org', $this->Get('userlogin'), $this->Get('allowed_org_name'));
-	}
-
 
 	protected function OnInsert()
 	{

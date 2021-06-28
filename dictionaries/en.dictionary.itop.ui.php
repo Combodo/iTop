@@ -171,6 +171,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserProfile' => 'User to profile',
 	'Class:URP_UserProfile+' => 'user profiles',
+	'Class:URP_UserProfile/Name' => 'Link between %1$s and %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'User',
 	'Class:URP_UserProfile/Attribute:userid+' => 'user account',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -191,6 +192,7 @@ Dict::Add('EN US', 'English', 'English', array(
 Dict::Add('EN US', 'English', 'English', array(
 	'Class:URP_UserOrg' => 'User organizations',
 	'Class:URP_UserOrg+' => 'Allowed organizations',
+	'Class:URP_UserOrg/Name' => 'LinkGG between %1$s and %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'User',
 	'Class:URP_UserOrg/Attribute:userid+' => 'user account',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -916,8 +918,6 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No lifecycle has been defined for this class',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link between %1$s and %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link between %1$s and %2$s',
 
 	'Menu:AdminTools' => 'Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administration tools', // Duplicated into itop-welcome-itil (will be removed from here...)

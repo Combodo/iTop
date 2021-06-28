@@ -167,6 +167,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:URP_UserProfile' => 'Asignación de Perfiles',
 	'Class:URP_UserProfile+' => 'Perfiles de Usuarios',
+	'Class:URP_UserProfile/Name' => 'Vinculo entre %1$s y %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Usuario',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Cuenta de usuario',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Clave de usuario',
@@ -187,6 +188,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:URP_UserOrg' => 'Organizaciones de Usuario',
 	'Class:URP_UserOrg+' => 'Organizaciones Permitidas',
+	'Class:URP_UserOrg/Name' => 'Vínculo entre %1$s y %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Usuario',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Cuenta de usuario',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -904,8 +906,6 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'No se ha definido ciclo de vida para esta clase',
 	'UI:UserManagement:GrantMatrix' => 'Matriz de Acceso',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Vinculo entre %1$s y %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Vínculo entre %1$s y %2$s',
 
 	'Menu:AdminTools' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Herramientas Administrativas', // Duplicated into itop-welcome-itil (will be removed from here...)
