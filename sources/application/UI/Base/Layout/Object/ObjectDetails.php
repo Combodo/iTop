@@ -66,16 +66,13 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		// Note: We get the raw name as only the front-end consumer knows when and how to encode it.
 		$this->sObjectMode = $sMode;
 
-		if ($this->sObjectMode == "create") {
-			$this->sObjectName = Dict::Format('UI:CreationTitle_Class', $this->sClassLabel);
-		} else {
-			$this->sObjectName = $oObject->GetRawName();
+		$this->ComputeObjectName($oObject);
 
-			$this->SetColorFromClass($this->sClassName);
-			$this->ComputeIconUrl($oObject);
-			$this->ComputeState($oObject);
-		}
 		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
+
+		$this->SetColorFromClass($this->sClassName);
+		$this->ComputeIconUrl($oObject);
+		$this->ComputeState($oObject);
 	}
 
 	/**
@@ -205,6 +202,21 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			$this->sStatusCode = $oObject->GetState();
 			$this->sStatusLabel = $oObject->GetStateLabel();
 			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);
+		}
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 * @see static::$oObject
+	 *
+	 * @throws \CoreException
+	 */
+	protected function ComputeObjectName(DBObject $oObject): void
+	{
+		if ($this->sObjectMode === cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE) {
+			$this->sObjectName = Dict::Format('UI:CreationTitle_Class', $this->sClassLabel);
+		} else {
+			$this->sObjectName = $oObject->GetRawName();
 		}
 	}
 	
