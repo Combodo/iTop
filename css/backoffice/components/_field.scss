@@ -35,9 +35,9 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   /* Avoid value to overflow from its container with very long strings (typically URLs) */
   /* Note: Some types of attribute must be excluding as it can alter their rendering    */
-  &:not([data-attribute-type="AttributeBlob"]):not([ data-attribute-type = "AttributeFile" ]):not([ data-attribute-type = "AttributeImage" ]):not(.ibo-input-file-select--container) {
+  &:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not(.ibo-input-file-select--container) {
     /* We need the rule to apply for the class and all its descendants */
-    . ibo-field--value {
+    .ibo-field--value {
       * {
         word-break: break-word;
         white-space: pre-wrap;
