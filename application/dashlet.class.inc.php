@@ -906,18 +906,22 @@ class DashletObjectList extends Dashlet
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$sClass = $oFilter->GetClass();
-		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle))
-			->AddCSSClass('ibo-datatable-panel');
+		//$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle))
+		//	->AddCSSClass('ibo-datatable-panel');
 
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
 			'menu' => $sShowMenu,
 			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
-			'surround_with_panel' => false,
+			'surround_with_panel' => true,
 			'max_height' => '500px',
+			"panel_title" => Dict::S($sTitle),
+			"panel_class" => $sClass,
 		);
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
-		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+		//$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+
+		$oPanel = $oBlock->GetDisplay($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 
 		return $oPanel;
 	}
@@ -1256,15 +1260,21 @@ abstract class DashletGroupBy extends Dashlet
 				break;
 		}
 
-		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
+		//$oPanel = \Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory::MakeStandard();
+		//PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
 
 
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
 		$oBlock = new DisplayBlock($oFilter, $sType);
-		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+		//$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+		$aExtraParams["surround_with_panel"] = true;
+		$aExtraParams["panel_title"] = Dict::S($sTitle);
+		$aExtraParams["panel_class"] = $sClass;
+		$oPanel = $oBlock->GetDisplay($oPage, $sType, array_merge($aExtraParams, $aParams));
 		if ($bEditMode) {
 			$oPanel->AddHtml('<div class="dashlet-blocker"></div>');
 		}
+
 		return $oPanel;
 	}
 

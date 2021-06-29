@@ -130,7 +130,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
 			$iCount = $oSet->Count();
-			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "")->AddCSSClass('ibo-datatable-panel');
+			$sTitle = (isset($aExtraParams['panel_title'])) ? $aExtraParams['panel_title'] : "";
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), $sTitle)->AddCSSClass('ibo-datatable-panel');
 			$oContainer->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iCount));
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
@@ -823,8 +824,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
 	{
 		$oBlock = new UIContentBlock();
-		$oTitle = TitleUIBlockFactory::MakeNeutral($sTitle, 3);
-		$oBlock->AddSubBlock($oTitle);
+		if ($sTitle != "") {
+			$oTitle = TitleUIBlockFactory::MakeNeutral($sTitle, 3);
+			$oBlock->AddSubBlock($oTitle);
+		}
 		$oTable = new StaticTable($sId, [], $aExtraParams);
 		$oTable->SetColumns($aColumns);
 		$oTable->SetData($aData);

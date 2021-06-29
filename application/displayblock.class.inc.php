@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Pill\PillFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
@@ -17,6 +18,7 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparato
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
@@ -149,6 +151,12 @@ class DisplayBlock
 				'order_direction',
 				/** string order direction 'asc' or 'desc' */
 				'display_limit',
+				'surround_with_panel',
+				/**bool true if list may be render in panel block*/
+				'panel_title',
+				/**string title of panel block*/
+				'panel_class',
+				/**string class for panel block style*/
 			],
 			'csv' => [],
 			'join' => array_merge([
@@ -171,6 +179,12 @@ class DisplayBlock
 				/**positive or negative*/
 				'max_height',
 				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
+				'surround_with_panel',
+				/**bool true if list may be render in panel block*/
+				'panel_title',
+				/**string title of panel block*/
+				'panel_class',
+				/**string class for panel block style*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -1173,11 +1187,20 @@ JS
 				),
 			);
 			$sFormat = isset($aExtraParams['format']) ? $aExtraParams['format'] : 'UI:Pagination:HeaderNoSelection';
-			$sTitle = Dict::Format($sFormat, $iTotalCount);
 
 			$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
 			$aOption['dom'] = 'pl';
-			$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
+
+			if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
+				$sTitle = Dict::Format($sFormat, $iTotalCount);
+				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+				$oBlock->AddSubTitleBlock(new Html($sTitle));
+				$oDataTable = DataTableUIBlockFactory::MakeForStaticData("", $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
+				$oBlock->AddSubBlock($oDataTable);
+			} else {
+				$sTitle = Dict::Format($sFormat, $iTotalCount);
+				$oBlock = DataTableUIBlockFactory::MakeForStaticData($sTitle, $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
+			}
 
 		} else {
 			// Simply count the number of elements in the set
@@ -1186,7 +1209,12 @@ JS
 			if (isset($aExtraParams['format'])) {
 				$sFormat = $aExtraParams['format'];
 			}
-			$oBlock = new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>');
+			if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
+				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+				$oBlock->AddSubBlock(new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>'));
+			} else {
+				$oBlock = new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>');
+			}
 		}
 
 		return $oBlock;
@@ -1273,6 +1301,22 @@ JS
 				$oBlock->bNotAuthorized = true;
 			}
 		} else {
+			if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history']) {
+				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
+				// Limit the size of the URL (N°1585 - request uri too long)
+				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
+					$oBlock->sEventAttachedData = json_encode(array(
+						'filter' => $sSearchFilter,
+						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
+						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
+						'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
+						'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
+						'breadcrumb_icon' => 'fas fa-search',
+						'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
+					));
+				}
+			}
+
 			// The list is made of only 1 class of objects, actions on the list are possible
 			if (($this->m_oSet->CountWithLimit(1) > 0) && (UserRights::IsActionAllowed($this->m_oSet->GetClass(), UR_ACTION_READ, $this->m_oSet) == UR_ALLOWED_YES)) {
 				$oBlock->AddSubBlock(cmdbAbstractObject::GetDisplaySetBlock($oPage, $this->m_oSet, $aExtraParams));
@@ -1299,25 +1343,16 @@ JS
 						$oBlock->bCreateNew = true;
 					}
 				}
-			}
 
-			if (isset($aExtraParams['update_history']) && true == $aExtraParams['update_history']) {
-				$sSearchFilter = $this->m_oSet->GetFilter()->serialize();
-				// Limit the size of the URL (N°1585 - request uri too long)
-				if (strlen($sSearchFilter) < SERVER_MAX_URL_LENGTH) {
-					$oBlock->sEventAttachedData = json_encode(array(
-						'filter' => $sSearchFilter,
-						'breadcrumb_id' => "ui-search-".$this->m_oSet->GetClass(),
-						'breadcrumb_label' => MetaModel::GetName($this->m_oSet->GetClass()),
-						'breadcrumb_max_count' => utils::GetConfig()->Get('breadcrumb.max_count'),
-						'breadcrumb_instance_id' => MetaModel::GetConfig()->GetItopInstanceid(),
-						'breadcrumb_icon' => 'fas fa-search',
-						'breadcrumb_icon_type' => iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES,
-					));
+				if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
+					$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+					$oPanel->AddSubBlock($oBlock);
+
+					return $oPanel;
 				}
 			}
-		}
 
+		}
 
 		return $oBlock;
 	}
