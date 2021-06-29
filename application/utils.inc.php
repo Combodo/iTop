@@ -664,16 +664,16 @@ class utils
 	}
 
 	/**
-	 * Helper function to convert a value expressed in a 'user friendly format'
-	 * as in php.ini, e.g. 256k, 2M, 1G etc. Into a number of bytes
+	 * @param mixed $value The value as read from php.ini (eg 256k, 2M, 1G etc.)
 	 *
-	 * @param mixed $value The value as read from php.ini
+	 * @return int conversion to number of bytes
 	 *
-	 * @return number
+	 * @since 2.7.5 3.0.0 convert to int numeric values
+	 *
+	 * @link https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes Shorthand bytes value reference in PHP.net FAQ
 	 */
 	public static function ConvertToBytes($value)
 	{
-		$iReturn = $value;
 		if (!is_numeric($value)) {
 			$iLength = strlen($value);
 			$iReturn = substr($value, 0, $iLength - 1);
@@ -686,6 +686,8 @@ class utils
 				case 'K':
 					$iReturn *= 1024;
 			}
+		} else {
+			$iReturn = (int)$value;
 		}
 
 		return $iReturn;

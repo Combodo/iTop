@@ -69,6 +69,7 @@ class MFCompiler
 	 * If this file is present, then we don't recalculate hkeys
 	 *
 	 * @var string
+	 * @since 2.7.5 3.0.0 N°4020
 	 */
 	public const REBUILD_HKEYS_NEVER= APPROOT.'data/.setup-rebuild-hkeys-never';
 
@@ -182,9 +183,9 @@ class MFCompiler
 	 * @uses \file_exists()
 	 * @uses REBUILD_HKEYS_NEVER
 	 *
-	 * @since 2.7.5
+	 * @since 2.7.5 3.0.0
 	 */
-	public static function SkipRebuildHKeys(): bool
+	public static function SkipRebuildHKeys()
 	{
 		return (file_exists(static::REBUILD_HKEYS_NEVER));
 	}

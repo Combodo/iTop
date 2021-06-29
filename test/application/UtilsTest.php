@@ -562,12 +562,14 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	{
 		$iCurrentConvertedValue = utils::ConvertToBytes($sExpressionToConvert);
 		self::assertEquals($iExpectedConvertedValue, $iCurrentConvertedValue, 'Converted value wasn\'t the one expected !');
+		self::assertSame($iExpectedConvertedValue, $iCurrentConvertedValue, 'Value was converted but not of the expected type');
 	}
 
 	public function ConvertToBytesProvider()
 	{
 		return [
-			'123' => ['123', 123],
+			'123 int value' => ['123', 123],
+			'-1 no limit' => ['-1', -1],
 			'56k' => ['56k', 56 * 1024],
 			'512M' => ['512M', 512 * 1024 * 1024],
 			'2G' => ['2G', 2 * 1024 * 1024 * 1024],
