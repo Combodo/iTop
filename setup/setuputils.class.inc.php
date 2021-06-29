@@ -434,7 +434,7 @@ class SetupUtils
 
 		// some CLI scripts are launched automatically
 		// we need a log so that we don't miss errors after migration !
-		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, 'CLI', $aPhpCheckErrorsForPrint);
+		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, LogChannels::CLI, $aPhpCheckErrorsForPrint);
 
 		exit($iExitCode);
 	}

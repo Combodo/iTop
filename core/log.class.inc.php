@@ -540,9 +540,11 @@ class FileLog
  */
 class LogChannels
 {
-	const DEADLOCK = 'DeadLock';
-	const INLINE_IMAGE = 'InlineImage';
-	const PORTAL = 'portal';
+	public const CLI = 'CLI';
+	public const CONSOLE = 'console';
+	public const DEADLOCK = 'DeadLock';
+	public const INLINE_IMAGE = 'InlineImage';
+	public const PORTAL = 'portal';
 }
 
 
