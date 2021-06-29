@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 
@@ -1147,7 +1148,8 @@ JS
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
 		$oActionsMenu = $oPage->GetPopoverMenu($sPopoverMenuId, $aActions)
-			->SetTogglerJSSelector("#$sMenuTogglerId");
+			->SetTogglerJSSelector("#$sMenuTogglerId")
+			->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
 
 		$oToolbar->AddSubBlock($oActionButton)
 			->AddSubBlock($oActionsMenu);
