@@ -1586,7 +1586,7 @@ EOF
 	{
 		case 11:
 			// Asynchronous tab
-			$oPage = new ajax_page('');
+			$oPage = new AjaxPage('');
 			BulkChange::DisplayImportHistory($oPage);
 			$oPage->add_ready_script('$("#CSVImportHistory table.listResults").tableHover();');
 			$oPage->add_ready_script('$("#CSVImportHistory table.listResults").tablesorter( { widgets: ["myZebra", "truncatedList"]} );');	
