@@ -984,10 +984,14 @@ class SetupUtils
 	{
 		$aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Hb');
 		$index = 0;
-		while (($fBytes > 1000) && ($index < count($aSizes)))
-		{
+		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
 			$fBytes = $fBytes / 1000;
+		}
+
+		if ($index == 0) {
+			// display int for bytes
+			return sprintf('%d %s', $fBytes, $aSizes[$index]);
 		}
 
 		return sprintf('%.2f %s', $fBytes, $aSizes[$index]);
