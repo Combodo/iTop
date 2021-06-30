@@ -1087,6 +1087,11 @@ class WebPage implements Page
 			header($sHeader);
 		}
 
+		// Compute and add dict entries for JS
+		if ($this->bAddJSDict) {
+			$this->output_dict_entries();
+		}
+
 		$s_captured_output = $this->ob_get_clean_safe();
 
 		$aData = [];
@@ -1129,16 +1134,6 @@ class WebPage implements Page
 			$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
 		}
 
-		// Dict entries for JS
-		//		if ($this->bAddJSDict) {
-		//			$this->output_dict_entries();
-		//		}
-
-
-		//		if (trim($s_captured_output) != "") {
-		//			echo "<div class=\"raw_output\">".utils::FilterXSS($s_captured_output)."</div>\n";
-		//		}
-
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
 		$oKpi = new ExecutionKPI();
@@ -1149,7 +1144,6 @@ class WebPage implements Page
 		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
-
 
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
