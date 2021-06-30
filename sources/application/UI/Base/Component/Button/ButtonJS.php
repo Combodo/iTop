@@ -48,8 +48,6 @@ class ButtonJS extends Button
 	protected $sName;
 	/** @var string $sValue The HTML value of the button, used by forms */
 	protected $sValue;
-	/** @var bool $bIsDisabled */
-	protected $bIsDisabled;
 
 	/**
 	 * ButtonJS constructor.
@@ -78,7 +76,6 @@ class ButtonJS extends Button
 		$this->sName = $sName;
 		$this->sValue = $sValue;
 		$this->sType = $sType;
-		$this->bIsDisabled = false;
 	}
 	
 	/**
@@ -137,25 +134,4 @@ class ButtonJS extends Button
 		$this->sValue = $sValue;
 		return $this;
 	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function IsDisabled()
-	{
-		return $this->bIsDisabled;
-	}
-
-	/**
-	 * @param bool $bIsDisabled
-	 *
-	 * @return $this
-	 */
-	public function SetIsDisabled(bool $bIsDisabled)
-	{
-		$this->bIsDisabled = $bIsDisabled;
-		return $this;
-	}
-
 }

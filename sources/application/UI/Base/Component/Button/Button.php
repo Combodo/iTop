@@ -77,6 +77,8 @@ class Button extends UIBlock
 	protected $sJsCode;
 	/** @var string $sOnClickJsCode */
 	protected $sOnClickJsCode;
+	/** @var bool $bIsDisabled */
+	protected $bIsDisabled;
 
 	/**
 	 * Button constructor.
@@ -102,6 +104,7 @@ class Button extends UIBlock
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
 		$this->aDataAttributes = ['role' => 'ibo-button'];
+		$this->bIsDisabled = false;
 	}
 
 	/**
@@ -237,6 +240,26 @@ class Button extends UIBlock
 	public function SetJsCode(string $sJsCode)
 	{
 		$this->sJsCode = $sJsCode;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsDisabled()
+	{
+		return $this->bIsDisabled;
+	}
+
+	/**
+	 * @param bool $bIsDisabled
+	 *
+	 * @return $this
+	 */
+	public function SetIsDisabled(bool $bIsDisabled)
+	{
+		$this->bIsDisabled = $bIsDisabled;
 
 		return $this;
 	}
