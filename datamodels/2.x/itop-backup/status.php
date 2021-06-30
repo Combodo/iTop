@@ -343,7 +343,8 @@ try {
 	$oTask = MetaModel::GetObjectByName(BackgroundTask::class, BackupExec::class, false);
 	if ($oTask)
 	{
-		$oNext = new DateTime($oTask->Get('next_run_date'));
+		$oTimezone = new DateTimeZone(MetaModel::GetConfig()->Get('timezone'));
+		$oNext = new DateTime($oTask->Get('next_run_date'), $oTimezone);
 		$sNextOccurrence = Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'),
 			$oNext->Format('H:i'));
 	}
