@@ -626,6 +626,15 @@ abstract class Controller
 	}
 
 	/**
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetOperation(): string
+	{
+		return $this->m_sOperation;
+	}
+
+	/**
 	 * @param $sContent
 	 *
 	 * @throws \Exception
