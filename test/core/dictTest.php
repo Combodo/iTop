@@ -38,12 +38,49 @@ use Exception;
  */
 class dictTest extends ItopTestCase
 {
+	private $sEnvName;
 	protected function setUp()
 	{
 		parent::setUp();
 		require_once (APPROOT.'core/coreexception.class.inc.php');
 		require_once (APPROOT.'core/dict.class.inc.php');
-		require_once 'mockDict.incphp';
+		require_once (APPROOT.'core/apc-service.class.inc.php');
+		$this->sEnvName = date("c");
+		$sDictionaryFolder = APPROOT."env-$this->sEnvName/dictionaries";
+		@mkdir($sDictionaryFolder, 0777, true);
+
+		$sContent = <<<PHP
+<?php
+//
+// Dictionary built by the compiler for the language "FR FR"
+//
+Dict::SetEntries('FR FR', array(
+        'label1' => 'gabu',
+));
+PHP;
+		file_put_contents("$sDictionaryFolder/fr-fr.dict.php", $sContent);
+		$sContent = <<<PHP
+<?php
+//
+// Dictionary built by the compiler for the language "FR FR"
+//
+Dict::SetEntries('EN EN', array(
+        'label1' => 'zomeu',
+));
+PHP;
+		file_put_contents("$sDictionaryFolder/en-en.dict.php", $sContent);
+
+		$_SESSION['itop_env'] = $this->sEnvName;
+		//require_once 'mockDict.incphp';
+	}
+
+	protected function tearDown()
+	{
+		foreach (glob(APPROOT."env-$this->sEnvName/dictionaries/*") as $sFile){
+			unlink($sFile);
+		}
+		rmdir(APPROOT."env-$this->sEnvName/dictionaries");
+		rmdir(APPROOT."env-$this->sEnvName");
 	}
 
     /**
@@ -51,7 +88,32 @@ class dictTest extends ItopTestCase
      */
     public function testType()
 	{
+		$_SESSION['itop_env'] = 'production';
 		$this->assertInternalType('string', Dict::S('Core:AttributeURL'));
 		$this->assertInternalType('string', Dict::Format('Change:AttName_SetTo', '1', '2'));
+	}
+
+	public function testInitLangIfNeeded_NoApc(){
+    	$oApcService = $this->createMock(\ApcService::class);
+    	Dict::SetApcService($oApcService);
+    	Dict::EnableCache('toto');
+
+		$oApcService->expects($this->any())
+			->method('function_exists')
+			->willReturn(false);
+
+		$oApcService->expects($this->never())
+			->method('apc_fetch')
+			->willReturn(false);
+
+		$oApcService->expects($this->never())
+			->method('apc_store')
+			->willReturn(false);
+
+		Dict::SetLanguagesList(['FR FR' => 'fr', 'EN EN' => 'en']);
+		Dict::SetUserLanguage('FR FR');
+		$this->assertEquals('gabu', Dict::S('label1'));
+		Dict::SetUserLanguage('EN EN');
+		$this->assertEquals('zomeu', Dict::S('label1'));
 	}
 }

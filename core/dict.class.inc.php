@@ -64,6 +64,8 @@ class Dict
 	protected static $m_aLanguages = array(); // array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	protected static $m_aData = array();
 	protected static $m_sApplicationPrefix = null;
+	/** @var \ApcService $m_oApcService  */
+	protected static $m_oApcService = null;
 
 	/**
 	 * @param $sLanguageCode
@@ -145,15 +147,17 @@ class Dict
 	{
 		// Attempt to find the string in the user language
 		//
-		self::InitLangIfNeeded(self::GetUserLanguage());
+		$sLangCode = self::GetUserLanguage();
+		self::InitLangIfNeeded($sLangCode);
 
-		if (!array_key_exists(self::GetUserLanguage(), self::$m_aData))
+		if (!array_key_exists($sLangCode, self::$m_aData))
 		{
+			IssueLog::Warning("Cannot find $sLangCode in dictionnaries. default labels displayed");
 			// It may happen, when something happens before the dictionaries get loaded
 			return $sStringCode;
 		}
-		$aCurrentDictionary = self::$m_aData[self::GetUserLanguage()];
-		if (array_key_exists($sStringCode, $aCurrentDictionary))
+		$aCurrentDictionary = self::$m_aData[$sLangCode];
+		if (is_array($aCurrentDictionary) && array_key_exists($sStringCode, $aCurrentDictionary))
 		{
 			return $aCurrentDictionary[$sStringCode];
 		}
@@ -164,7 +168,7 @@ class Dict
 			self::InitLangIfNeeded(self::$m_sDefaultLanguage);
 			
 			$aDefaultDictionary = self::$m_aData[self::$m_sDefaultLanguage];
-			if (array_key_exists($sStringCode, $aDefaultDictionary))
+			if (is_array($aDefaultDictionary) && array_key_exists($sStringCode, $aDefaultDictionary))
 			{
 				return $aDefaultDictionary[$sStringCode];
 			}
@@ -173,7 +177,7 @@ class Dict
 			self::InitLangIfNeeded('EN US');
 
 			$aDefaultDictionary = self::$m_aData['EN US'];
-			if (array_key_exists($sStringCode, $aDefaultDictionary))
+			if (is_array($aDefaultDictionary) && array_key_exists($sStringCode, $aDefaultDictionary))
 			{
 				return $aDefaultDictionary[$sStringCode];
 			}
@@ -232,7 +236,24 @@ class Dict
 	{
 		self::$m_aLanguages = $aLanguagesList;
 	}
-	
+
+	/**
+	 * @return \ApcService
+	 */
+	public static function GetApcService() {
+		if (self::$m_oApcService === null){
+			self::$m_oApcService = new ApcService();
+		}
+		return self::$m_oApcService;
+	}
+
+	/**
+	 * @param \ApcService $m_oApcService
+	 */
+	public static function SetApcService($oApcService) {
+		self::$m_oApcService = $oApcService;
+	}
+
 	/**
 	 * Load a language from the language dictionary, if not already loaded
 	 * @param string $sLangCode Language code
@@ -241,15 +262,16 @@ class Dict
 	public static function InitLangIfNeeded($sLangCode)
 	{
 		if (array_key_exists($sLangCode, self::$m_aData)) return true;
-		
+
 		$bResult = false;
-		
-		if (function_exists('apc_fetch') && (self::$m_sApplicationPrefix !== null))
+
+		if (self::GetApcService()->function_exists('apc_fetch')
+			&& (self::$m_sApplicationPrefix !== null))
 		{
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 			//
-			self::$m_aData[$sLangCode] = apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
-			if (self::$m_aData[$sLangCode] === false)
+			self::$m_aData[$sLangCode] = self::GetApcService()->apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
+			if (! is_array(self::$m_aData[$sLangCode]))
 			{
 				unset(self::$m_aData[$sLangCode]);
 			}
@@ -263,9 +285,10 @@ class Dict
 			$sDictFile = APPROOT.'env-'.utils::GetCurrentEnvironment().'/dictionaries/'.str_replace(' ', '-', strtolower($sLangCode)).'.dict.php';
 			require_once($sDictFile);
 			
-			if (function_exists('apc_store') && (self::$m_sApplicationPrefix !== null))
+			if (self::GetApcService()->function_exists('apc_store')
+				&& (self::$m_sApplicationPrefix !== null))
 			{
-				apc_store(self::$m_sApplicationPrefix.'-dict-'.$sLangCode, self::$m_aData[$sLangCode]);
+				self::GetApcService()->apc_store(self::$m_sApplicationPrefix.'-dict-'.$sLangCode, self::$m_aData[$sLangCode]);
 			}
 			$bResult = true;
 		}
