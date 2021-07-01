@@ -73,28 +73,34 @@ function get_license_nodes($file_path)
 	$licenses = iterator_to_array($licenseList);
 
 	usort($licenses, 'sort_by_product');
+
 	return $licenses;
 }
 
 $old_licenses = get_license_nodes($xmlFilePath);
 
 //generate file with updated licenses
+echo "- Generating licences...";
 $generated_license_file_path = __DIR__."/provfile.xml";
-exec("bash " . __DIR__ . "/gen-community-license.sh $iTopFolder > ". $generated_license_file_path);
+exec("bash ".__DIR__."/gen-community-license.sh $iTopFolder > ".$generated_license_file_path);
+echo "OK!\n";
+
+echo "- Get licenses nodes...";
 $new_licenses = get_license_nodes($generated_license_file_path);
-exec("rm -f ". $generated_license_file_path);
+unlink($generated_license_file_path);
 
 foreach ($old_licenses as $b) {
 	$aProductNode = get_product_node($b);
 
-	if (get_scope($aProductNode) !== "lib" && get_scope($aProductNode) !== "datamodels" )
-	{
+	if (get_scope($aProductNode) !== "lib" && get_scope($aProductNode) !== "datamodels") {
 		$new_licenses[] = $b;
 	}
 }
 
 usort($new_licenses, 'sort_by_product');
+echo "OK!\n";
 
+echo "- Overwritting Combodo license file...";
 $new_dom = new DOMDocument("1.0");
 $new_dom->formatOutput = true;
 $root = $new_dom->createElement("licenses");
@@ -106,3 +112,4 @@ foreach ($new_licenses as $b) {
 }
 
 $new_dom->save($xmlFilePath);
+echo "OK!\n";
