@@ -28,23 +28,14 @@
             <script type="text/javascript">
             window['{{ sPromiseId }}'] = new Promise(function(resolve, reject){
                 var aFilesToLoad{{ sId }} = [];
-                {# manage Dictionary file if exist #}
-                var sUrlDictFile = '';
-                {% if aPage.sDictScript is not empty %}
-                if ($.inArray('{{ aPage.sDictScript|raw }}', aListJsFiles) == -1)
-                {
-                    sUrlDictFile = "{{ aPage.sDictScript|raw }}";
-                    aListJsFiles.push(sUrlDictFile);
-                }
-                {% endif %}
-                {# manage the other Js File #}
                 {% for sJsFile in aPage.aJsFiles %}
-                if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) == -1)
-                {
-                    aFilesToLoad{{ sId }}.push('{{ sJsFile|raw|add_itop_version }}');
-                    aListJsFiles.push("{{ sJsFile|raw }}");
-                }
+                    if ($.inArray('{{ sJsFile|add_itop_version|raw }}', aListJsFiles) === -1)
+                    {
+                        aFilesToLoad{{ sId }}.push('{{ sJsFile|add_itop_version|raw }}');
+                        aListJsFiles.push("{{ sJsFile|add_itop_version|raw }}");
+                    }
                 {% endfor %}
+
                 var iCurrentIdx{{ sId }} = 0;
                 var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
                 if (iFilesToLoadCount{{ sId }}> 0)
@@ -66,38 +57,18 @@
                                     else
                                     {
                                         {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                                        {{ sJsInlineOnDomReady|raw }}
+                                            {{ sJsInlineOnDomReady|raw }}
                                         {% endfor %}
                                         resolve();
                                     }
                                 });
                     };
-                    {# first load Dictionary if exist #}
-                    if (sUrlDictFile != '')
-                    {
-                        $.ajax({
-                            url: '{{ aPage.sDictScript|raw }}',
-                            dataType: 'script',
-                            cache: true
-                        }).done(function (data) {
-                            if (Dict != undefined && data.startsWith("var aDictEntries = {\""))
-                            {
-                                eval(data);
-                                $.extend(Dict._entries, aDictEntries);
-                            }
-                        }).then(function () {
-                            fLoadScript{{ sId }}();
-                        });
-                    }
-                    else
-                    {
-                        fLoadScript{{ sId }}();
-                    }
+                    fLoadScript{{ sId }}();
                 }
                 else
                 {
                     {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                    {{ sJsInlineOnDomReady|raw }}
+                        {{ sJsInlineOnDomReady|raw }}
                     {% endfor %}
                     resolve();
                 }
@@ -106,50 +77,14 @@
         {% endblock %}
     {% else %}
         {% block iboPageJsInlineOnDomReady %}
-
-            {# first load Dictionnary if exist #}
-            {% if aPage.sDictScript is not empty %}
+            {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
                 <script type="text/javascript">
-                window['{{ sPromiseId }}'] = new Promise(function(resolve, reject){
-                    if ($.inArray('{{ aPage.sDictScript|raw }}', aListJsFiles) == -1)
-                    {
-                        aListJsFiles.push("{{ aPage.sDictScript|raw }}");
-                        $.ajax({
-                            url: '{{ aPage.sDictScript|raw }}',
-                            dataType: 'script',
-                            cache: true
-                        }).done(function (data) {
-                            if (Dict != undefined && data.startsWith("var aDictEntries = {\""))
-                            {
-                                eval(data);
-                                $.extend(Dict._entries, aDictEntries);
-                            }
-                        }).then(function () {
-                            {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                            {{ sJsInlineOnDomReady|raw }}
-                            {% endfor %}
-                            resolve();
-                        });
-                    }
-                    else
-                    {
-                        {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                    window['{{ sPromiseId }}'] = new Promise(function(resolve, reject){
                         {{ sJsInlineOnDomReady|raw }}
-                        {% endfor %}
                         resolve();
-                    }
-                });
+                    });
                 </script>
-            {% else %}
-                {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                    <script type="text/javascript">
-                        window['{{ sPromiseId }}'] = new Promise(function(resolve, reject){
-                            {{ sJsInlineOnDomReady|raw }}
-                            resolve();
-                        });
-                    </script>
-                {% endfor %}
-            {% endif %}
+            {% endfor %}
         {% endblock %}
     {% endif %}
 

@@ -702,7 +702,18 @@ class WebPage implements Page
 		{
 			$aEntries = array_merge($aEntries, Dict::ExportEntries($sPrefix));
 		}
-		$sJSFile = 'var aDictEntries = '.json_encode($aEntries);
+
+		$sEntriesAsJson = json_encode($aEntries);
+		$sJSFile = <<<JS
+// Create variable so it can be used by the Dict class on initialization
+var aDictEntries = {$sEntriesAsJson};
+
+// Check if Dict._entries already exists in order to complete, this is for async calls only.
+// Note: We should not overload the WebPage::get_dict_file_content() in AjaxPage to put the part below as the same dict file can be consumed either by a regular page or an async page.
+if (typeof Dict._entries != "undefined") {
+	$.extend(Dict._entries, aDictEntries);
+}
+JS;
 
 		return $sJSFile;
 	}
@@ -1087,14 +1098,15 @@ class WebPage implements Page
 			header($sHeader);
 		}
 
-		// Compute and add dict entries for JS
-		if ($this->bAddJSDict) {
-			$this->output_dict_entries();
-		}
-
 		$s_captured_output = $this->ob_get_clean_safe();
 
 		$aData = [];
+
+		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
+		// - Generate necessary dict. files
+		if ($this->bAddJSDict) {
+			$this->output_dict_entries();
+		}
 
 		$aData['oLayout'] = $this->oContentLayout;
 		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
