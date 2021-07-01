@@ -247,6 +247,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'ActionChecker' => __DIR__ . '/../..' . '/core/userrights.class.inc.php',
         'ActionEmail' => __DIR__ . '/../..' . '/core/action.class.inc.php',
         'ActionNotification' => __DIR__ . '/../..' . '/core/action.class.inc.php',
+        'ApcService' => __DIR__ . '/../..' . '/core/apc-service.class.inc.php',        
         'ApplicationContext' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',
         'ApplicationException' => __DIR__ . '/../..' . '/application/application.inc.php',
         'ApplicationMenu' => __DIR__ . '/../..' . '/application/menunode.class.inc.php',
