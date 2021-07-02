@@ -918,12 +918,12 @@ try
 			break;
 
 		case 'export_dashboard':
+			$oPage = new DownloadPage('');
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oKPI = new ExecutionKPI();
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
-			if (!is_null($oDashboard))
-			{
+			if (!is_null($oDashboard)) {
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType('text/xml');
 				$oPage->SetContentDisposition('attachment', 'dashboard_'.$oDashboard->GetTitle().'.xml');
