@@ -151,12 +151,6 @@ class DisplayBlock
 				'order_direction',
 				/** string order direction 'asc' or 'desc' */
 				'display_limit',
-				'surround_with_panel',
-				/**bool true if list may be render in panel block*/
-				'panel_title',
-				/**string title of panel block*/
-				'panel_class',
-				/**string class for panel block style*/
 			],
 			'csv' => [],
 			'join' => array_merge([
@@ -179,12 +173,6 @@ class DisplayBlock
 				/**positive or negative*/
 				'max_height',
 				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
-				'surround_with_panel',
-				/**bool true if list may be render in panel block*/
-				'panel_title',
-				/**string title of panel block*/
-				'panel_class',
-				/**string class for panel block style*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -271,6 +259,12 @@ class DisplayBlock
 			'withJSRefreshCallBack',
 			/** true if dashboard page */
 			'from_dashboard_page',
+			/**bool true if list may be render in panel block*/
+			'surround_with_panel',
+			/**string title of panel block*/
+			'panel_title',
+			/**string class for panel block style*/
+			'panel_class',
 		];
 
 		if (isset($aAllowedParams[$sStyle])) {
@@ -1040,10 +1034,12 @@ JS
 			$sHyperlink = $aCount['link'];
 			$sCountLabel = $aCount['label'];
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
-				->SetUrl($sHyperlink)
 				->SetTooltip($sStateLabel)
 				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span>")
 				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">$sStateLabel</span>");
+			if ($sHyperlink != '-') {
+				$oPill->SetUrl($sHyperlink);
+			}
 			$oBlock->AddSubBlock($oPill);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
@@ -1541,6 +1537,13 @@ JS
 
 		$oBlock->sUrl = $sUrl;
 
+		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
+			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+			$oPanel->AddSubBlock($oBlock);
+
+			return $oPanel;
+		}
+
 		return $oBlock;
 	}
 
@@ -1622,6 +1625,13 @@ JS
 				$oBlock->sURLForRefresh = str_replace("'", "\'", $sUrl);
 				break;
 		}
+		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
+			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+			$oPanel->AddSubBlock($oBlock);
+
+			return $oPanel;
+		}
+
 		return $oBlock;
 	}
 

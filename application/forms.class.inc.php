@@ -203,51 +203,41 @@ class DesignerForm
 		$sActionUrl = addslashes($this->sSubmitTo);
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
 		$sFormId = $this->GetFormId();
-		if ($this->oParentForm == null)
-		{
+		if ($this->oParentForm == null) {
 			$sReturn = '<form id="'.$sFormId.'" onsubmit="return false;">';
 			$sReturn .= '<table class="prop_table">';
-			$sReturn .= '<thead><tr><th class="prop_header">'.Dict::S('UI:Form:Property').'</th><th class="prop_header">'.Dict::S('UI:Form:Value').'</th><th colspan="2" class="prop_header">&nbsp;</th></tr></thead><tbody>';
+			$sReturn .= '<thead><tr><th class="ibo-prop-header">'.Dict::S('UI:Form:Property').'</th><th class="ibo-prop-header">'.Dict::S('UI:Form:Value').'</th><th colspan="2" class="ibo-prop-header">&nbsp;</th></tr></thead><tbody>';
 		}
 
 		$sHiddenFields = '';
-		foreach($this->aFieldSets as $sLabel => $aFields)
-		{
+		foreach ($this->aFieldSets as $sLabel => $aFields) {
 			$aDetails = array();
-			if ($sLabel != '')
-			{
+			if ($sLabel != '') {
 				$sReturn .= $this->StartRow().'<th colspan="4">'.$sLabel.'</th>'.$this->EndRow();
 			}
 
 
-			foreach($aFields as $oField)
-			{
+			foreach ($aFields as $oField) {
 				$aRow = $oField->Render($oP, $sFormId, 'property');
-				if ($oField->IsVisible())
-				{
+				if ($oField->IsVisible()) {
 					$sFieldId = $this->GetFieldId($oField->GetCode());
-					$sValidation = $this->GetValidationArea($sFieldId, '<span data-tooltip-content="Apply"><i class="fas fa-check"></i></span>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span data-tooltip-content="Revert"><i class="fas fa-times"></i></span></td>'.$this->EndRow();
-					
-					$sPath = $this->GetHierarchyPath().'/'.$oField->GetCode();
-					
-					if (is_null($aRow['label']))
-					{
+					$sValidation = $this->GetValidationArea($sFieldId, '<span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span>');
+					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td>'
+						.$this->EndRow();
+
+					if (is_null($aRow['label'])) {
 						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value ibo-field--value" colspan="2">'.$aRow['value'];
-					}
-					else
-					{
+					} else {
 						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label ibo-field--label">'.$aRow['label'].'</td><td class="prop_value ibo-field--value">'.$aRow['value'];
 					}
-					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField))
-					{
+					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField)) {
 						$sReturn .= $sValidationFields;
 					}
 					$sNotifyParentSelectorJS = is_null($sNotifyParentSelector) ? 'null' : "'".addslashes($sNotifyParentSelector)."'";
 					$sAutoApply = $oField->IsAutoApply() ? 'true' : 'false';
 					$sHandlerEquals = $oField->GetHandlerEquals();
 					$sHandlerGetValue = $oField->GetHandlerGetValue();
-					
+
 					$sWidgetClass = $oField->GetWidgetClass();
 					$sJSExtraParams = '';
 					if (count($oField->GetWidgetExtraParams()) > 0)
@@ -1423,28 +1413,32 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$idx = 0;
-		foreach($this->aAllowedValues as $index => $aValue)
-		{
-			if ($aValue['value'] == $this->defaultValue)
-			{
+		$idxFallback = 0;
+		foreach ($this->aAllowedValues as $index => $aValue) {
+			if ($aValue['value'] == $this->defaultValue) {
 				$idx = $index;
 				break;
 			}
+			//fallback if url of default value contains ../
+			//for contact, icon is http://localhost/env-production/itop-structure/../../images/icons/icons8-customer.svg => not found http://localhost/images/icons/icons8-customer.svg
+			if (basename($aValue['value']) == basename($this->defaultValue)) {
+				$idxFallback = $index;
+			}
+		}
+		if ($idx == 0) {
+			$idx = $idxFallback;
 		}
 		$sJSItems = json_encode($this->aAllowedValues);
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
-		if (!$this->IsReadOnly())
-		{
+		if (!$this->IsReadOnly()) {
 			$sDefaultValue = ($this->defaultValue !== '') ? $this->defaultValue : $this->aAllowedValues[$idx]['value'];
 			$sValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/>";
 			$oP->add_ready_script(
-<<<EOF
+				<<<EOF
 	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
 EOF
 			);
-		}
-		else
-		{
+		} else {
 			$sValue = '<span style="display:inline-block;line-height:48px;height:48px;"><span><img style="vertical-align:middle" src="'.$this->aAllowedValues[$idx]['icon'].'" />&nbsp;'.htmlentities($this->aAllowedValues[$idx]['label'], ENT_QUOTES, 'UTF-8').'</span></span>';
 		}
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' : '';
@@ -1459,18 +1453,21 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
+		$aFolderList = [
+			APPROOT.'env-'.utils::GetCurrentEnvironment() => utils::GetAbsoluteUrlModulesRoot(),
+			APPROOT.'images/icons' => utils::GetAbsoluteUrlAppRoot().'images/icons',
+		];
+		if (count(self::$aAllIcons) == 0) {
+			foreach ($aFolderList as $sFolderPath => $sUrlPrefix) {
+				$aIcons = self::FindIconsOnDisk($sFolderPath);
+				ksort($aIcons);
 
-		if (count(self::$aAllIcons) == 0)
-		{
-			self::$aAllIcons = self::FindIconsOnDisk(APPROOT.'env-'.utils::GetCurrentEnvironment());
-			ksort(self::$aAllIcons);
+				foreach ($aIcons as $sFilePath) {
+					self::$aAllIcons[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => $sUrlPrefix.$sFilePath);
+				}
+			}
 		}
-		$aValues = array();
-		foreach(self::$aAllIcons as $sFilePath)
-		{
-			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
-		}
-		$this->SetAllowedValues($aValues);
+		$this->SetAllowedValues(self::$aAllIcons);
 	}
 
 	static protected function FindIconsOnDisk($sBaseDir, $sDir = '')
@@ -1501,26 +1498,29 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 			SetupUtils::builddir(dirname($sCacheFile));
 			file_put_contents($sCacheFile, $sAvailableIcons, LOCK_EX);
 		}
+
 		return $aFiles;
 	}
 
-	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '')
+	static protected function _FindIconsOnDisk($sBaseDir, $sDir = ' ', &$aFilesCaract = [])
 	{
-		$aResult = array();
+		$aResult = [];
 		// Populate automatically the list of icon files
-		if ($hDir = @opendir($sBaseDir.'/'.$sDir))
-		{
-			while (($sFile = readdir($hDir)) !== false)
-			{
+		if ($hDir = @opendir($sBaseDir.'/'.$sDir)) {
+			while (($sFile = readdir($hDir)) !== false) {
 				$aMatches = array();
-				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
-				{
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile)) {
 					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
-					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath));
+					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath, $aFilesCaract));
 				}
-				if (preg_match("/\.(png|jpg|jpeg|gif)$/i", $sFile, $aMatches)) // png, jp(e)g and gif are considered valid
+				$sSize = filesize($sBaseDir.'/'.$sDir.'/'.$sFile);
+				if (isset($aFilesCaract[$sFile]) && $aFilesCaract[$sFile] == $sSize) {
+					continue;
+				}
+				if (preg_match("/\.(png|jpg|jpeg|gif|svg)$/i", $sFile, $aMatches)) // png, jp(e)g, gif and svg are considered valid
 				{
 					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
+					$aFilesCaract[$sFile] = $sSize;
 				}
 			}
 			closedir($hDir);
@@ -1645,27 +1645,23 @@ class DesignerFormSelectorField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
+		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' : '';
 
 		$this->aCSSClasses[] = 'formSelector';
-		
+
 		$sCSSClasses = '';
-		if (count($this->aCSSClasses) > 0)
-		{
+		if (count($this->aCSSClasses) > 0) {
 			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 		}
 
-		if ($this->IsSorted())
-		{
+		if ($this->IsSorted()) {
 			uasort($this->aSubForms, array(get_class($this), 'SortOnFormLabel'));
 		}
-		
-		if ($this->IsReadOnly())
-		{
+
+		if ($this->IsReadOnly()) {
 			$sDisplayValue = '';
 			$sHiddenValue = '';
-			foreach($this->aSubForms as $iKey => $aFormData)
-			{
+			foreach ($this->aSubForms as $iKey => $aFormData) {
 				if ($iKey == $this->defaultValue) // Default value is actually the index
 				{
 					$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
@@ -1674,12 +1670,9 @@ class DesignerFormSelectorField extends DesignerFormField
 				}
 			}
 			$sHtml = "<span $sCSSClasses>".$sDisplayValue.$sHiddenValue."</span>";
-		}
-		else
-		{
+		} else {
 			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
-			foreach($this->aSubForms as $iKey => $aFormData)
-			{
+			foreach ($this->aSubForms as $iKey => $aFormData) {
 				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
 				$sValue = htmlentities($aFormData['value'], ENT_QUOTES, 'UTF-8');
 				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
@@ -1687,22 +1680,19 @@ class DesignerFormSelectorField extends DesignerFormField
 			}
 			$sHtml .= "</select>";
 		}
-				
-		if ($sRenderMode == 'property')
-		{
-			$sHtml .= '</td><td class="prop_icon prop_apply"><span title="Apply" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
+
+		if ($sRenderMode == 'property') {
+			$sHtml .= '</td><td class="prop_icon prop_apply"><ii data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revertzegzinhgpzefinazepinezifgnzpzepbgzepvizpbvizebvpzegze').'" class="ui-icon ui-icon-circle-close"/></td></tr>';
 		}
-		foreach($this->aSubForms as $sKey => $aFormData)
-		{
+		foreach ($this->aSubForms as $sKey => $aFormData) {
 			$sId = $this->oForm->GetFieldId($this->sCode);
 			$sStyle = (($sKey == $this->defaultValue) && $this->oForm->IsDisplayed()) ? '' : 'style="display:none"';
 			$oSubForm = $aFormData['form'];
 			$oSubForm->SetParentForm($this->oForm);
 			$oSubForm->CopySubmitParams($this->oForm);
 			$oSubForm->SetPrefix($this->oForm->GetPrefix().$sKey.'_');
-			
-			if ($sRenderMode == 'property')
-			{
+
+			if ($sRenderMode == 'property') {
 				// Note: Managing the visibility of nested subforms had several implications
 				// 1) Attributes are displayed in a table and we have to group them in as many tbodys as necessary to hide/show the various options depending on the current selection
 				// 2) It is not possible to nest tbody tags. Therefore, it is not possible to manage the visibility the same way as it is done for the dialog mode (using nested divs).

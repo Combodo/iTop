@@ -1232,6 +1232,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds',
+	'UI:DashboardEdit:Revert' => 'Revert',
+	'UI:DashboardEdit:Apply' => 'Apply',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties',

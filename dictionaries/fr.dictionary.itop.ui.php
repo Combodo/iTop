@@ -1219,6 +1219,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
 	'UI:DashboardEdit:Dashlets' => 'Indicateurs',
 	'UI:DashboardEdit:DashletProperties' => 'Propriétés de l\'Indicateur',
+	'UI:DashboardEdit:Revert' => 'Revenir à la valeur précédente',
+	'UI:DashboardEdit:Apply' => 'Appliquer',
 
 	'UI:Form:Property' => 'Propriété',
 	'UI:Form:Value' => 'Valeur',

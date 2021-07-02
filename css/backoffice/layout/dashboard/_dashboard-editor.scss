@@ -44,15 +44,17 @@ $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 	flex-direction: column;
 	padding-bottom: 20px;
 	table{
-		width: 100%;
-		text-align: left;
-		td{
-			margin-bottom: 14px;
-			.ibo-field{
-				@extend %ibo-font-size-100;
-			}
-		}
-	}
+    width: 100%;
+    text-align: left;
+
+    td, th {
+      margin-bottom: 14px;
+
+      .ibo-field {
+        @extend %ibo-font-size-100;
+      }
+    }
+  }
 }
 .ibo-dashboard-editor--properties-title{
 	padding-bottom: $ibo-dashboard-editor--properties-title--padding-bottom;
