@@ -273,6 +273,7 @@ class Dict
 			self::$m_aData[$sLangCode] = self::GetApcService()->apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
 			if (! is_array(self::$m_aData[$sLangCode]))
 			{
+				IssueLog::Warning("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...");
 				unset(self::$m_aData[$sLangCode]);
 			}
 			else
