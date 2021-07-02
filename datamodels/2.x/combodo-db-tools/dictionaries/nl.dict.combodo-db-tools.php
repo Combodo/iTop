@@ -29,6 +29,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:Class' => 'Klasse',
 	'DBTools:Title' => 'Onderhoudstools voor de database~~',
 	'DBTools:ErrorsFound' => 'Fouten gevonden',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => 'Fout',
 	'DBTools:Count' => 'Aantal',
 	'DBTools:SQLquery' => 'SQL-query',

@@ -67,6 +67,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos.',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
 
 // UserProfile brick

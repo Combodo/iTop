@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:AuditCategory' => 'Audit kategória',
 	'Class:AuditCategory+' => '',
@@ -1467,7 +1466,6 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	// - Criteria header actions
 	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Locked' => 'Locked~~',
 	'UI:Search:Criteria:Locked' => 'Locked~~',
 
 	// - Criteria titles

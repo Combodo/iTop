@@ -6,7 +6,6 @@
 /*
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
-
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
 	'Menu:RequestManagement+' => 'Administración de Requerimientos',

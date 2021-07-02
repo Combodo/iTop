@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Global search
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',

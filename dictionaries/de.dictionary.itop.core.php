@@ -204,7 +204,7 @@ Operatoren:<br/>
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => 'Tags',
-
+	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',

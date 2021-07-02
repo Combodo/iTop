@@ -70,6 +70,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
 	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
 
 // UserProfile brick

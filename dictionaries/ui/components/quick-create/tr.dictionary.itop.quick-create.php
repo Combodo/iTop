@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Quick create
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',

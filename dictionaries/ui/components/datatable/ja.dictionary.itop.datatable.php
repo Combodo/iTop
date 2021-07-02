@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Display DataTable
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Datatables:Language:Processing' => 'Please wait...~~',
