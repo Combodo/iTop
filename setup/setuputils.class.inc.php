@@ -1184,39 +1184,33 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
 			$bHasDbVersionRequired = self::CheckDbServerVersion($aResult, $oDBSource);
-			if (!$bHasDbVersionRequired)
-			{
+			if (!$bHasDbVersionRequired) {
 				return $aResult;
 			}
 
 			// Check some server variables
-			$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
-			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$iMaxAllowedPacket         = $oDBSource->GetServerVariable('max_allowed_packet');
+			$sMaxAllowedPacketFriendly = utils::BytesToFriendlyFormat($iMaxAllowedPacket);
+			$iMaxUploadSize            = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$sMaxUploadSizeFriendly    = utils::BytesToFriendlyFormat($iMaxUploadSize);
 			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
 			{
-				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is big enough compared to upload_max_filesize ($iMaxUploadSize).");
-			}
-			else if($iMaxAllowedPacket < $iMaxUploadSize)
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
+			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly). Please, consider setting it to at least $sMaxUploadSizeFriendly + 500.");
 			}
 
 			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
-			if ($iMaxConnections < 5)
-			{
+			if ($iMaxConnections < 5) {
 				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_connections ($iMaxConnections) is not enough. Please, consider setting it to at least 5.");
-			}
-			else
-			{
+			} else {
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
-			try
-			{
+			try {
 				$aResult['databases'] = $oDBSource->ListDB();
 			}
-			catch(Exception $e)
-			{
+			catch (Exception $e) {
 				$aResult['databases'] = null;
 			}
 		}
