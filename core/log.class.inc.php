@@ -545,6 +545,7 @@ class LogChannels
 	public const DEADLOCK = 'DeadLock';
 	public const INLINE_IMAGE = 'InlineImage';
 	public const PORTAL = 'portal';
+	public const CMDB_SOURCE = 'cmdbsource';
 }
 
 

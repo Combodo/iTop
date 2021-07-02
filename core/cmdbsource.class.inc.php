@@ -606,7 +606,7 @@ class CMDBSource
 	{
 		$sShortSQL = substr(preg_replace("/\s+/", " ", substr($sSql, 0, 180)), 0, 150);
 		if (substr_compare($sShortSQL, "SELECT", 0, strlen("SELECT")) !== 0) {
-			IssueLog::Trace("$sShortSQL", 'cmdbsource');
+			IssueLog::Trace("$sShortSQL", LogChannels::CMDB_SOURCE);
 		}
 
 		$oKPI = new ExecutionKPI();
@@ -695,12 +695,11 @@ class CMDBSource
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
 		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		$bHasExistingTransactions = self::IsInsideTransaction();
-		if (!$bHasExistingTransactions)
-		{
-			IssueLog::Trace("START TRANSACTION $sCaller", 'cmdbsource');
+		if (!$bHasExistingTransactions) {
+			IssueLog::Trace("START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
 			self::DBQuery('START TRANSACTION');
 		} else {
-			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", 'cmdbsource');
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
 		}
 
 		self::AddTransactionLevel();
@@ -720,21 +719,20 @@ class CMDBSource
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
 		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
-		if (!self::IsInsideTransaction())
-		{
+		if (!self::IsInsideTransaction()) {
 			// should not happen !
-			IssueLog::Error("No Transaction COMMIT $sCaller", 'cmdbsource');
+			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 
 		self::RemoveLastTransactionLevel();
 
-		if (self::IsInsideTransaction())
-		{
-			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") COMMIT $sCaller", 'cmdbsource');
+		if (self::IsInsideTransaction()) {
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") COMMIT $sCaller", LogChannels::CMDB_SOURCE);
+
 			return;
 		}
-		IssueLog::Trace("COMMIT $sCaller", 'cmdbsource');
+		IssueLog::Trace("COMMIT $sCaller", LogChannels::CMDB_SOURCE);
 		self::DBQuery('COMMIT');
 	}
 
@@ -755,20 +753,19 @@ class CMDBSource
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
 		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
-		if (!self::IsInsideTransaction())
-		{
+		if (!self::IsInsideTransaction()) {
 			// should not happen !
-			IssueLog::Error("No Transaction ROLLBACK $sCaller", 'cmdbsource');
+			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 		self::RemoveLastTransactionLevel();
-		if (self::IsInsideTransaction())
-		{
-			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") ROLLBACK $sCaller", 'cmdbsource');
+		if (self::IsInsideTransaction()) {
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
+
 			return;
 		}
 
-		IssueLog::Trace("ROLLBACK $sCaller", 'cmdbsource');
+		IssueLog::Trace("ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
 		self::DBQuery('ROLLBACK');
 	}
 
