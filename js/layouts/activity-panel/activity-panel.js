@@ -959,8 +959,10 @@ $(function()
 					'json'
 					)
 					.fail(function (oXHR, sStatus, sErrorThrown) {
-						// TODO 3.0.0: Maybe we could have a centralized dialog to display error messages?
-						alert(sErrorThrown);
+						// In case of HTTP request failure (not lock request), put the details in the JS console
+						CombodoJSConsole.Error('Activity panel - Error on lock status check: '+sErrorThrown);
+						CombodoJSConsole.Debug('Response status: '+sStatus);
+						CombodoJSConsole.Debug('Response object: ', oXHR);
 					})
 					.done(function (oData) {
 						let sNewLockStatus = me.enums.lock_status.unknown;
@@ -993,7 +995,7 @@ $(function()
 									sNewLockStatus = me.enums.lock_status.locked_by_someone_else;
 								} else if ('expired' === oData.operation) {
 									sNewLockStatus = me.enums.lock_status.unknown;
-									// TODO 3.0.0: Maybe we could use the centralized dialog to display error message we talked about in the .fail() callback?
+									// TODO 3.0.0: Maybe we could use a centralized dialog to display error message?
 									alert(oData.popup_message);
 								}
 							} else {
