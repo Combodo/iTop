@@ -982,7 +982,7 @@ class SetupUtils
 
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Hb');
+		$aSizes = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'HB');
 		$index = 0;
 		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
