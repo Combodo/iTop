@@ -1197,7 +1197,11 @@ EOF
 			{
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
 			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
-				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly). Please, consider setting it to at least $sMaxUploadSizeFriendly + 500.");
+				$sWikiVersion                = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+				$sAttachmentsVarsWikiPageUrl = 'https://wiki.openitop.org/doku.php?id='.$sWikiVersion.':install:php_and_mysql_configuration#attachments_upload';
+
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
+					"MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly), whereas it should has a greater value. Consider increasing its value of at least 500KB. See the <a href=\"$sAttachmentsVarsWikiPageUrl\">documentation</a> for details.");
 			}
 
 			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
