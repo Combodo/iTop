@@ -71,7 +71,7 @@ class MFCompiler
 	 * @var string
 	 * @since 2.7.5 3.0.0 N°4020
 	 */
-	public const REBUILD_HKEYS_NEVER= APPROOT.'data/.setup-rebuild-hkeys-never';
+	const REBUILD_HKEYS_NEVER = APPROOT.'data/.setup-rebuild-hkeys-never';
 
 	/** @var \ModelFactory */
 	protected $oFactory;
