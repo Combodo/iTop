@@ -538,7 +538,7 @@ class utils
 	 */
 	public static function ReadMultipleSelection($oFullSetFilter)
 	{
-		$aSelectedObj = utils::ReadParam('selectObject[]', array());
+		$aSelectedObj = utils::ReadParam('selectObject', array());
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
 		if ($sSelectionMode != '') {
 			// Paginated selection
