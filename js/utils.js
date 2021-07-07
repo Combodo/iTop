@@ -709,6 +709,22 @@ const CombodoGlobalToolbox = {
 				|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
 			);
 		}
+	},
+	/**
+	 * This method should be a JS mirror of the PHP {@see utils::FilterXSS} method
+	 *
+	 * @param sInput {string} Input text to filter from XSS attacks
+	 * @returns {string} The sInput string filtered from possible XSS attacks
+	 * @constructor
+	 * @since 3.0.0
+	 */
+	FilterXSS: function (sInput) {
+		let sOutput = sInput;
+
+		// Remove HTML script tags
+		sOutput = sOutput.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
+
+		return sOutput;
 	}
 };
 
@@ -731,9 +747,7 @@ const CombodoTooltip = {
 	 * @constructor
 	 */
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
-		const oOptions = {
-			allowHTML: true,    // Always true so line breaks can work. Don't worry content will be sanitized.
-		};
+		const oOptions = {};
 
 		// First, check if the tooltip isn't already instantiated
 		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
@@ -746,24 +760,18 @@ const CombodoTooltip = {
 		// Content must be reworked before getting into the tooltip
 		// - Should we enable HTML content or keep text as is
 		const bEnableHTML = oElem.attr('data-tooltip-html-enabled') === 'true';
+		oOptions['allowHTML'] = bEnableHTML;
 
 		// - Content should be sanitized unless the developer says otherwise
 		// Note: Condition is inversed on purpose. When the developer is instantiating a tooltip,
-		// we want him/her to explicitly declare that he/she wants the sanitizer to be skipped.
+		// we want they to explicitly declare that they want the sanitizer to be skipped.
 		// Whereas in this code, it's easier to follow the logic with the variable oriented this way.
 		const bSanitizeContent = oElem.attr('data-tooltip-sanitizer-skipped') !== 'true';
 
-		// - Sanitize content and make sure line breaks are kept
-		const oTmpContentElem = $('<div />').html(oElem.attr('data-tooltip-content'));
-		let sContent = '';
-		if (bEnableHTML) {
-			sContent = oTmpContentElem.html();
-			if (bSanitizeContent) {
-				sContent = sContent.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
-			}
-		} else {
-			sContent = oTmpContentElem.text();
-			sContent = sContent.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>');
+		let sContent = oElem.attr('data-tooltip-content');
+		// - Check if both HTML and sanitizer are enabled
+		if (bEnableHTML && bSanitizeContent) {
+			sContent = CombodoGlobalToolbox.FilterXSS(sContent);
 		}
 		oOptions['content'] = sContent;
 

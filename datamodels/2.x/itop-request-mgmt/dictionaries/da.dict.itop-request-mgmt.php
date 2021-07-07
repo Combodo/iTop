@@ -6,7 +6,6 @@
 /*
  * @author	Erik Bøg <erik@boegmoeller.dk>
  */
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => '',

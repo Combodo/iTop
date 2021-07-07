@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Activity panel
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Erweitern',

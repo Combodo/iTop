@@ -27,6 +27,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:Class' => 'Class~~',
 	'DBTools:Title' => '数据库维护工具',
 	'DBTools:ErrorsFound' => '发现错误',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => '错误',
 	'DBTools:Count' => '个数',
 	'DBTools:SQLquery' => 'SQL 查询',

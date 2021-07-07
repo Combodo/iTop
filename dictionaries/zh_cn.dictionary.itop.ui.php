@@ -1174,8 +1174,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:PrintResolution:A4Landscape' => 'A4 横向',
 	'UI:PrintResolution:LetterPortrait' => '纵向信纸',
 	'UI:PrintResolution:LetterLandscape' => '横向信纸',
-	'UI:Toggle:StandardDashboard' => '标准',
-	'UI:Toggle:CustomDashboard' => '自定义',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => '配置这个列表...',
 	'UI:ListConfigurationTitle' => '列表配置',

@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
 //////////////////////////////////////////////////////////////////////
@@ -1210,6 +1209,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ImportDashboardText' => 'Selecteer een bestand van het dashboard om te importeren:',
 	'UI:Dashboard:Actions' => 'Dashboard acties',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+
 
 	'UI:DashletCreation:Title' => 'Maak een nieuwe Dashlet aan',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',

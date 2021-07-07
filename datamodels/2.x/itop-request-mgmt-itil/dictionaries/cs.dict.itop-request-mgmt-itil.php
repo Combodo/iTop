@@ -7,7 +7,6 @@
  *  * @author      Lukáš Dvořák <lukas.dvorak@itopportal.cz>
  * @author      Daniel Rokos <daniel.rokos@itopportal.cz>
  */
-
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:RequestManagement' => 'Helpdesk',
 	'Menu:RequestManagement+' => 'Helpdesk',

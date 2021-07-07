@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AuditCategory' => 'Audit-Kategorie',
 	'Class:AuditCategory+' => 'Definition einer Objektgruppe, die durch Regeln überprüft werden soll.',
@@ -1463,6 +1462,11 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Am beliebtesten',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Andere',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Noch keine',
+
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
 
 	// - Criteria titles
 	//   - Default widget

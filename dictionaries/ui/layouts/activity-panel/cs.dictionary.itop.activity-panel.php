@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Activity panel
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',

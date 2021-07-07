@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Global search
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application~~',

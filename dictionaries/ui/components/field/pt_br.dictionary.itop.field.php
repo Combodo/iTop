@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Global search
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Unknown values~~',

@@ -27,6 +27,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'DBTools:Class' => 'Clase',
 	'DBTools:Title' => 'Herramientas de mantenimiento de base de datos~~',
 	'DBTools:ErrorsFound' => 'Errores encontrados',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => 'Error',
 	'DBTools:Count' => 'Cantidad',
 	'DBTools:SQLquery' => 'Consulta SQL',

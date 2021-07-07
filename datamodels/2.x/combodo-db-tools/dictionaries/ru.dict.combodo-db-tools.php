@@ -14,6 +14,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'DBTools:Class' => 'Класс',
 	'DBTools:Title' => 'Инструменты обслуживания базы данных~~',
 	'DBTools:ErrorsFound' => 'Найденные ошибки',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => 'Ошибка',
 	'DBTools:Count' => 'Количество',
 	'DBTools:SQLquery' => 'SQL-запрос',
