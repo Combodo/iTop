@@ -52,13 +52,13 @@
                         <label class="ibo-activity-panel--tab-toolbar-action"
                                data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip'|dict_s }}">
                             <input type="checkbox" name="transitions" data-role="ibo-activity-panel--filter"
-                                   data-target-entry-types="transition" checked>
+                                   data-target-entry-types="transition" {% if (bPrefilterStateChanges is defined and bPrefilterStateChanges == true) or (get_config_parameter('activity_panel.prefilter_state_changes_on_logs') == true) %}checked{% endif %}>
                             {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title'|dict_s }}
                         </label>
                     {% endif %}
                     <label class="ibo-activity-panel--tab-toolbar-action"
                            data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip'|dict_s }}">
-                        <input type="checkbox" name="edits" data-role="ibo-activity-panel--filter" data-target-entry-types="edits" checked>
+                        <input type="checkbox" name="edits" data-role="ibo-activity-panel--filter" data-target-entry-types="edits" {% if (bPrefilterEdits is defined and bPrefilterEdits == true) or (get_config_parameter('activity_panel.prefilter_edits_on_logs') == true) %}checked{% endif %}>
                         {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title'|dict_s }}
                     </label>
                 </div>

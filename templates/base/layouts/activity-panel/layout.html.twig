@@ -54,7 +54,7 @@
             {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
                 {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
             {% endfor %}
-            {{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0)}) }}
+            {{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0), bPrefilterStateChanges: true, bPrefilterEdits: true}) }}
             <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title'|dict_s }}">
                 <div class="ibo-activity-panel--entry-forms-confirmation-explanation">{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation'|dict_s }}</div>
                 <label class="ibo-activity-panel--entry-forms-confirmation-preference">
