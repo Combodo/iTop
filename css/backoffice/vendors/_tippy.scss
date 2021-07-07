@@ -1,0 +1,9 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+// Allow plain text (opposite of HTML) multi-lines tooltips to be displayed correctly, otherwise it will all be on a single line.
+.tippy-content {
+  white-space: pre-line;
+}

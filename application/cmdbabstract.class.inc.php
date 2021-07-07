@@ -2533,14 +2533,13 @@ EOF
 						$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
 
 						// Adding tooltip so we can read the whole value when its very long (eg. URL)
-						$sTip = '';
+                        $sTip = '';
 						if (!empty($sDisplayValue)) {
 							$sTip = 'data-tooltip-content="'.$sDisplayValueForHtml.'"';
-							$oPage->add_ready_script(
-								<<<EOF
+							$oPage->add_ready_script(<<<JS
 								$('#{$iId}').on('keyup', function(evt, sFormId){ 
-									var sVal = $('#{$iId}').val();
-									var oTippy = this._tippy;
+									let sVal = $('#{$iId}').val();
+									const oTippy = this._tippy;
 									
 									if(sVal === '')
 									{
@@ -2553,7 +2552,7 @@ EOF
 									}
 									oTippy.setContent(sVal);
 								});
-EOF
+JS
 							);
 						}
 
