@@ -1414,7 +1414,7 @@ class utils
 				$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
 				$sSearchUrl = static::GetDataTableSearchUrl($oFilter);
 				if (!empty($sSearchUrl)) {
-					$aResult[] = new URLPopupMenuItem('DEBUG open search', 'DEBUG open search', $sSearchUrl);
+					$aResult[] = new URLPopupMenuItem('UI:Menu:OpenSearch', Dict::S('UI:Menu:OpenSearch'), $sSearchUrl);
 				}
 
 				break;
