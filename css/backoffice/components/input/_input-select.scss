@@ -59,6 +59,10 @@ $ibo-input-select--action-button--padding-right: 2px !default;
       padding-left: $ibo-input--padding-x;
     }
   }
+
+  &[size]{
+    height: auto;
+  }
 }
 .ibo-input-select-autocomplete{
   min-width: $ibo-input-select-autocomplete--value--min-midth !important;
