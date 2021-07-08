@@ -1379,43 +1379,45 @@ class utils
 		switch($iMenuId)
 		{
 			case iPopupMenuExtension::MENU_OBJLIST_TOOLKIT:
-			// $param is a DBObjectSet
-			$oAppContext = new ApplicationContext();
-			$sContext = $oAppContext->GetForLink();
-			$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;
-			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($param->GetFilter()->GetClass());
-			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
-			$sFilter = urlencode($param->GetFilter()->serialize());
-			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
-			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
-			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
+				// $param is a DBObjectSet
+				$oAppContext = new ApplicationContext();
+				$sContext = $oAppContext->GetForLink();
+				$sDataTableId = is_null($sDataTableId) ? '' : $sDataTableId;
+				$oFilter = $param->GetFilter();
+				$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+				$sOQL = addslashes($oFilter->ToOQL(true));
+				$sFilter = urlencode($oFilter->serialize());
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+				$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+				$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
-			$aResult = array();
-			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
-			{
-				$aResult[] = new SeparatorPopupMenuItem();
-				// Static menus: Email this page, CSV Export & Add to Dashboard
-				$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
+				$aResult = array();
+				if (strlen($sUrl) < SERVER_MAX_URL_LENGTH) {
+					$aResult[] = new SeparatorPopupMenuItem();
+					// Static menus: Email this page, CSV Export & Add to Dashboard
+					$aResult[] = new URLPopupMenuItem('UI:Menu:EMail', Dict::S('UI:Menu:EMail'),
 						"mailto:?body=".urlencode($sUrl).' ' // Add an extra space to make it work in Outlook
-				);
-			}
-			
-			if (UserRights::IsActionAllowed($param->GetFilter()->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO)
-			{
-				// Bulk export actions
-				$aResult[] = new JSPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), "ExportListDlg('$sOQL', '$sDataTableId', 'csv', ".json_encode(Dict::S('UI:Menu:CSVExport')).")");
-				$aResult[] = new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '$sDataTableId', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")");
-				if (extension_loaded('gd'))
-				{
-					// PDF export requires GD
-					$aResult[] = new JSPopupMenuItem('UI:Menu:ExportPDF', Dict::S('UI:Menu:ExportPDF'), "ExportListDlg('$sOQL', '$sDataTableId', 'pdf', ".json_encode(Dict::S('UI:Menu:ExportPDF')).")");
+					);
 				}
-			}
-			$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
-			$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
-				
-			break;
+
+				if (UserRights::IsActionAllowed($oFilter->GetClass(), UR_ACTION_BULK_READ, $param) != UR_ALLOWED_NO) {
+					// Bulk export actions
+					$aResult[] = new JSPopupMenuItem('UI:Menu:CSVExport', Dict::S('UI:Menu:CSVExport'), "ExportListDlg('$sOQL', '$sDataTableId', 'csv', ".json_encode(Dict::S('UI:Menu:CSVExport')).")");
+					$aResult[] = new JSPopupMenuItem('UI:Menu:ExportXLSX', Dict::S('ExcelExporter:ExportMenu'), "ExportListDlg('$sOQL', '$sDataTableId', 'xlsx', ".json_encode(Dict::S('ExcelExporter:ExportMenu')).")");
+					if (extension_loaded('gd')) {
+						// PDF export requires GD
+						$aResult[] = new JSPopupMenuItem('UI:Menu:ExportPDF', Dict::S('UI:Menu:ExportPDF'), "ExportListDlg('$sOQL', '$sDataTableId', 'pdf', ".json_encode(Dict::S('UI:Menu:ExportPDF')).")");
+					}
+				}
+				$aResult[] = new JSPopupMenuItem('UI:Menu:AddToDashboard', Dict::S('UI:Menu:AddToDashboard'), "DashletCreationDlg('$sOQL', '$sContext')");
+				$aResult[] = new JSPopupMenuItem('UI:Menu:ShortcutList', Dict::S('UI:Menu:ShortcutList'), "ShortcutListDlg('$sOQL', '$sDataTableId', '$sContext')");
+				$sSearchUrl = static::GetDataTableSearchUrl($oFilter);
+				if (!empty($sSearchUrl)) {
+					$aResult[] = new URLPopupMenuItem('DEBUG open search', 'DEBUG open search', $sSearchUrl);
+				}
+
+				break;
 
 			case iPopupMenuExtension::MENU_OBJDETAILS_ACTIONS:
 			// $param is a DBObject
@@ -1469,37 +1471,43 @@ class utils
 				// Unknown type of menu, do nothing
 				$aResult = array();
 		}
-		foreach ($aResult as $oMenuItem)
-		{
+		foreach ($aResult as $oMenuItem) {
 			$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
 		}
 
 		// Invoke the plugins
 		//
 		/** @var \iPopupMenuExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance)
-		{
-			if (is_object($param) && !($param instanceof DBObject))
-			{
+		foreach (MetaModel::EnumPlugins('iPopupMenuExtension') as $oExtensionInstance) {
+			if (is_object($param) && !($param instanceof DBObject)) {
 				$tmpParam = clone $param; // In case the parameter is an DBObjectSet, clone it to prevent alterations
-			}
-			else
-			{
+			} else {
 				$tmpParam = $param;
 			}
-			foreach($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem)
-			{
-				if (is_object($oMenuItem))
-				{
+			foreach ($oExtensionInstance->EnumItems($iMenuId, $tmpParam) as $oMenuItem) {
+				if (is_object($oMenuItem)) {
 					$aActions[$oMenuItem->GetUID()] = $oMenuItem->GetMenuItem();
-					
-					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
-					{
+
+					foreach ($oMenuItem->GetLinkedScripts() as $sLinkedScript) {
 						$oContainerBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
 		}
+	}
+
+	private static function GetDataTableSearchUrl(DBObjectSearch $oFilter): ?string
+	{
+		// ugly hack : we don't want to add the link when already in a search page
+		$sCurrentScript = basename($_SERVER['SCRIPT_NAME'], '.php');
+		if (($sCurrentScript === 'UI') && (utils::ReadParam('operation') === 'search')) {
+			return null;
+		}
+		if ($sCurrentScript === 'ajax.searchform') {
+			return null;
+		}
+
+		return 'http://www.combodo.com';
 	}
 
 	/**
@@ -1509,10 +1517,10 @@ class utils
 	 */
 	public static function GetConfigFilePath($sEnvironment = null)
 	{
-		if (is_null($sEnvironment))
-		{
+		if (is_null($sEnvironment)) {
 			$sEnvironment = self::GetCurrentEnvironment();
 		}
+
 		return APPCONF.$sEnvironment.'/'.ITOP_CONFIG_FILE;
 	}
 
