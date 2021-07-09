@@ -1415,7 +1415,7 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
-		'is_dev_env' => [
+		'developer_mode.enabled' => [
 			'type' => 'bool',
 			'description' => 'If true then uncloks dev env functionnalities, see \utils::IsDevelopmentEnvironment',
 			'default' => null,

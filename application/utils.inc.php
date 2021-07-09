@@ -2816,15 +2816,15 @@ HTML;
 	 * @return bool
 	 *
 	 * @since 2.6.0 method creation
-	 * @since 3.0.0 add the `is_dev_env` config parameter
+	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
 	 *
-	 * @use `is_dev_env` config parameter
+	 * @use `developer_mode.enabled` config parameter
 	 * @use ITOP_REVISION
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
 		$oConfig = utils::GetConfig();
-		$bIsDevEnvInConfig = $oConfig->Get('is_dev_env');
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
 		if ($bIsDevEnvInConfig === true) {
 			return true;
 		}
