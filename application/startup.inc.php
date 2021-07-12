@@ -67,7 +67,9 @@ session_name('itop-'.md5(APPROOT));
 session_start();
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
-if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv))
+if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && 
+	((isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv)) || !isset($_SESSION['itop_env']))
+)
 {
 	$_SESSION['itop_env'] = $sSwitchEnv;
 	$sEnv = $sSwitchEnv;
