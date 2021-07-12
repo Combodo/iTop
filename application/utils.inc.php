@@ -2814,15 +2814,30 @@ HTML;
 	 * Check if iTop is in a development environment (VCS vs build number)
 	 *
 	 * @return bool
+	 *
+	 * @since 2.6.0 method creation
+	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
+	 *
+	 * @use `developer_mode.enabled` config parameter
+	 * @use ITOP_REVISION
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		if (! defined('ITOP_REVISION')) {
+		$oConfig = utils::GetConfig();
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+		if ($bIsDevEnvInConfig === true) {
+			return true;
+		}
+		if ($bIsDevEnvInConfig === false) {
+			return false;
+		}
+
+		if (!defined('ITOP_REVISION')) {
 			//defensive behaviour: by default we are not in dev environment
 			//can happen even in production (unattended install for example) or with exotic use of iTop
 			return false;
 		}
-		
+
 		return ITOP_REVISION === 'svn';
 	}
 
