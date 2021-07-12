@@ -1416,11 +1416,11 @@ class Config
 			'show_in_conf_sample' => true,
 		],
 		'developer_mode.enabled' => [
-			'type' => 'bool',
-			'description' => 'If true then uncloks dev env functionnalities, see \utils::IsDevelopmentEnvironment',
-			'default' => null,
-			'value' => null,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'If true then unlocks dev env functionalities, see \utils::IsDevelopmentEnvironment',
+			'default'             => null,
+			'value'               => null,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'theme.enable_precompilation' => [
