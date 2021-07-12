@@ -1354,6 +1354,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Créer un Raccourci...',
+	'UI:Menu:OpenSearch' => '🔍 Ouvrir cette liste en recherche...',
 	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
 	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
 	'UI:ShortcutDelete:Confirm' => 'Veuillez confirmer la suppression du ou des raccourci(s)',
