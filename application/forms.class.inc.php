@@ -1502,7 +1502,7 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 		return $aFiles;
 	}
 
-	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '', &$aFilesCaract = [])
+	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '', &$aFilesSpecs = [])
 	{
 		$aResult = [];
 		// Populate automatically the list of icon files
@@ -1511,16 +1511,16 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 				$aMatches = array();
 				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile)) {
 					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
-					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath, $aFilesCaract));
+					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath, $aFilesSpecs));
 				}
 				$sSize = filesize($sBaseDir.'/'.$sDir.'/'.$sFile);
-				if (isset($aFilesCaract[$sFile]) && $aFilesCaract[$sFile] == $sSize) {
+				if (isset($aFilesSpecs[$sFile]) && $aFilesSpecs[$sFile] == $sSize) {
 					continue;
 				}
 				if (preg_match("/\.(png|jpg|jpeg|gif|svg)$/i", $sFile, $aMatches)) // png, jp(e)g, gif and svg are considered valid
 				{
 					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
-					$aFilesCaract[$sFile] = $sSize;
+					$aFilesSpecs[$sFile] = $sSize;
 				}
 			}
 			closedir($hDir);
