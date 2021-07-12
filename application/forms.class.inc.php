@@ -1502,7 +1502,7 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 		return $aFiles;
 	}
 
-	static protected function _FindIconsOnDisk($sBaseDir, $sDir = ' ', &$aFilesCaract = [])
+	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '', &$aFilesCaract = [])
 	{
 		$aResult = [];
 		// Populate automatically the list of icon files
