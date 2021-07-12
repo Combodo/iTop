@@ -259,11 +259,11 @@ class DisplayBlock
 			'withJSRefreshCallBack',
 			/** true if dashboard page */
 			'from_dashboard_page',
-			/**bool true if list may be render in panel block*/
+			/** bool true if list may be render in panel block */
 			'surround_with_panel',
-			/**string title of panel block*/
+			/** string title of panel block */
 			'panel_title',
-			/**string class for panel block style*/
+			/** string class for panel block style */
 			'panel_class',
 		];
 
