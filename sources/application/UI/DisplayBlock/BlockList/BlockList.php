@@ -20,7 +20,7 @@ class BlockList extends UIContentBlock
 	use tJSRefreshCallback;
 
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-blocklist';
+	public const BLOCK_CODE = 'ibo-block-list';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/display-block/block-list/layout';
 
