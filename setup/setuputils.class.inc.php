@@ -1469,30 +1469,24 @@ JS
 						}
 					}
 				}
-				if (count($aErrors) > 0)
-				{
-					$sErrorsToDisplay = utils::HtmlEntities(implode('<br/>', $aErrors));
+				if (count($aErrors) > 0) {
+					$sErrorsToDisplay = str_replace('\'', '\\\'', implode('<br/>', $aErrors));
 					$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>$sErrorsToDisplay</div>');
 JS
 					);
-				}
-				else
-				{
-					if (count($aWarnings) > 0)
-					{
-						$sWarningsToDisplay = utils::HtmlEntities(implode('<br/>', $aWarnings));
+				} else {
+					if (count($aWarnings) > 0) {
+						$sWarningsToDisplay = str_replace('\'', '\\\'', implode('<br/>', $aWarnings));
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
 						$oPage->add_ready_script(
 							<<<JS
 $("#db_info").html('<div class="message message-warning"><span class="message-title">Warning:</span>$sWarningsToDisplay</div>');
 JS
 						);
-					}
-					else
-					{
+					} else {
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
 						$oPage->add_ready_script(
 							<<<JS

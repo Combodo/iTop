@@ -815,15 +815,15 @@ class ManageBrickController extends BrickController
 					'iItemsCount' => $oSet->Count(),
 					'aColumnsDefinition' => $aColumnsDefinition,
 				);
-			}
 
-			IssueLog::Debug('Portal ManageBrick query', LogChannels::PORTAL, array(
-				'sPortalId' => $sPortalId,
-				'sBrickId' => $sBrickId,
-				'sGroupingTab' => $sGroupingTab,
-				'oql' => $oSet->GetFilter()->ToOQL(),
-				'aGroupingTabs' => $aGroupingTabs,
-			));
+				IssueLog::Debug('Portal ManageBrick query', LogChannels::PORTAL, array(
+					'sPortalId' => $sPortalId,
+					'sBrickId' => $sBrickId,
+					'sGroupingTab' => $sGroupingTab,
+					'oql' => $oSet->GetFilter()->ToOQL(),
+					'aGroupingTabs' => $aGroupingTabs,
+				));
+			}
 		} else {
 			$aGroupingAreasData = array();
 			$sGroupingArea = null;
