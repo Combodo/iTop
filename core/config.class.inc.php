@@ -1253,6 +1253,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'activity_panel.hide_avatars' => [
+			'type' => 'array',
+			'description' => 'GUIs IDs ("backoffice", "itop-portal" for the standard end-users portal, ...) in which the user avatars should be hidden and replaced if possible by their initials (eg. array("backoffice", "itop-portal", "another-portal-id"))',
+			'default' => [],
+			'value' => [],
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'activity_panel.show_author_name_below_entries' => [
 			'type' => 'bool',
 			'description' => 'Whether or not to show the author friendlyname next to the date on the last entry.',

@@ -577,6 +577,8 @@ HTML
 			// Caching profile picture url as it is resource consuming
 			$aContactPicturesCache = array();
 			$aPeerColorClassCache = array();
+			// Note: Yes, the config. param. is named after the backoffice element but we hope that we will "soon" have some kind of "light" activity panel in the portal too, so we keep this name.
+			$bHideContactPicture = in_array(PORTAL_ID, utils::GetConfig()->Get('activity_panel.hide_avatars'));
 			// Current user
 			$iCurrentUserId = UserRights::GetUserId();
 
@@ -590,13 +592,21 @@ HTML
 				// Retrieve (and cache) profile picture if available (standard datamodel)
 				// Note: Here the cache is more about nor retrieving the User object several times rather than computing the picture URL
 				if (!array_key_exists($iEntryUserId, $aContactPicturesCache)) {
-					$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
-					if(is_null($oEntryUser)) {
+					// First, check if we should display the picture
+					if ($bHideContactPicture === true) {
 						$sEntryContactPictureAbsoluteUrl = null;
 					}
+					// Otherwise try to retrieve one for the current contact
 					else {
-						$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
+						$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
+						if(is_null($oEntryUser)) {
+							$sEntryContactPictureAbsoluteUrl = null;
+						}
+						else {
+							$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
+						}
 					}
+
 					$aContactPicturesCache[$iEntryUserId] = $sEntryContactPictureAbsoluteUrl;
 				}
 
