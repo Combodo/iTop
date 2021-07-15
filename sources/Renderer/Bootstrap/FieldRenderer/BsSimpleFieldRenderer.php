@@ -588,8 +588,9 @@ HTML
 				$iEntryUserId = $aEntries[$i]['user_id'];
 
 				// Retrieve (and cache) profile picture if available (standard datamodel)
+				// Note: Here the cache is more about nor retrieving the User object several times rather than computing the picture URL
 				if (!array_key_exists($iEntryUserId, $aContactPicturesCache)) {
-					$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false, true);
+					$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
 					if(is_null($oEntryUser)) {
 						$sEntryContactPictureAbsoluteUrl = null;
 					}
@@ -625,8 +626,9 @@ HTML
 					);
 
 					// Open medallion from profile picture or first name letter
-					$sEntryMedallionStyle = (empty($aContactPicturesCache[$iEntryUserId]) === false) ? ' background-image: url(\''.$aContactPicturesCache[$iEntryUserId].'\');' : '';
-					$sEntryMedallionContent = (empty($aContactPicturesCache[$iEntryUserId]) === false) ? '' : UserRights::GetUserInitials($sEntryUserLogin);
+					$bEntryHasMedallionPicture = (empty($aContactPicturesCache[$iEntryUserId]) === false);
+					$sEntryMedallionStyle = $bEntryHasMedallionPicture ? ' background-image: url(\''.$aContactPicturesCache[$iEntryUserId].'\');' : '';
+					$sEntryMedallionContent = $bEntryHasMedallionPicture ? '' : UserRights::GetUserInitials($sEntryUserLogin);
 					// - Entry tooltip
 					$sEntryMedallionTooltip = utils::HtmlEntities($sEntryUserLogin);
 					$sEntryMedallionTooltipPlacement = ($iEntryUserId === $iCurrentUserId) ? 'left' : 'right';
