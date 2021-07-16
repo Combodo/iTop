@@ -895,7 +895,12 @@ $(function()
 			 * @private
 			 */
 			_RequestLock: function () {
-				// Do not request lock again if we already have it or a request is already pending
+				// Abort lock request if it is not enabled
+				if (this.options.lock_enabled === false) {
+					return;
+				}
+
+				// Abort lock request if we already have it or a request is already pending
 				// Note: This can happen when we write in several case logs
 				if ([this.enums.lock_status.request_pending, this.enums.lock_status.locked_by_myself].indexOf(this.options.lock_status) !== -1) {
 					return;
@@ -911,6 +916,11 @@ $(function()
 			 * @private
 			 */
 			_CancelLock: function () {
+				// Abort lock request if it is not enabled
+				if (this.options.lock_enabled === false) {
+					return;
+				}
+
 				if (this.enums.lock_status.locked_by_myself === this.options.lock_status) {
 					this.options.lock_status = this.enums.lock_status.release_pending;
 				} else {
