@@ -3202,7 +3202,7 @@ HTML
 		);
 
 		// Page title and subtitles
-		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetName()));
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetRawName()));
 		if (!empty($sActionDetails)) {
 			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
 		}
