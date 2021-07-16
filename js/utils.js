@@ -725,6 +725,23 @@ const CombodoGlobalToolbox = {
 		sOutput = sOutput.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
 
 		return sOutput;
+	},
+	/**
+	 * Pause the JS activity for iDuration milliseconds
+	 *
+	 * @see N°2763 for the original code idea
+	 * @return {void}
+	 * @param iDuration {integer} Duration in milliseconds
+	 * @constructor
+	 */
+	Pause: function (iDuration) {
+		const oDate = new Date();
+		let oCurrentDate = null;
+
+		do {
+			oCurrentDate = new Date();
+		}
+		while ((oCurrentDate - oDate) < iDuration);
 	}
 };
 
