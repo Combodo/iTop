@@ -15,7 +15,7 @@ $(document).ready(function () {
 	});
 	// - Error messages regarding the error code
 	$(document).ajaxError(function (event, jqxhr, options) {
-		// User is not logged ing
+		// User is not logged in
 		if (jqxhr.status == 401) {
 			const oUserDisconnectedDialog = $('#ibo-user-disconnected-dialog');
 			// Create dialog widget if not already instantiated
@@ -32,7 +32,14 @@ $(document).ready(function () {
 						{
 							text: Dict.S('UI:LoginAgain'),
 							click: function () {
-								window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php'
+								try {
+									// Try to reload the page so the login form redirects on the current page automatically
+									// Note: We don't use window.location.reload() as it could be a potential vulnerability. Indeed, if the previous page was a login form, the data would be posted as-is again without prompting the user, auto-logging them, which would give access to the foe.
+									window.location.href = CombodoGlobalToolbox.AddParameterToUrl(window.location.href, 'login_again', Date.now());
+								} catch (oError) {
+									// In case of exception, redirect to the login page
+									window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php';
+								}
 							}
 						},
 						{
