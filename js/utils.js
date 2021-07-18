@@ -713,19 +713,20 @@ const CombodoGlobalToolbox = {
 	 * @param sUrl {string} The URL to append the new param to
 	 * @param sParamName {string} Name of the parameter
 	 * @param sParamValue {string} Value of the param, needs to be already URL encoded
-	 * @return {string} The sUrl parameters with the sParamName / sParamValue append at the right place
+	 * @return {string} The sUrl parameter with the sParamName / sParamValue append at the end of the query string (but before the hash if any)
 	 */
 	AddParameterToUrl: function(sUrl, sParamName, sParamValue)
 	{
-		const bHasHash = sUrl.split('#')[1] !== undefined;
-		const bHasSomeParameters = sUrl.split('?')[1] !== undefined;
 		const sNewParamForUrl = sParamName + '=' + sParamValue;
 
-		if (bHasHash || bHasSomeParameters) {
-			sUrl += '&' + sNewParamForUrl;
-		} else {
-			sUrl += '?' + sNewParamForUrl;
-		}
+		// Split URL around the '#'. Note that if there are multiple '#' in the URL (which is not permitted!) this method won't work.
+		const aHashParts = sUrl.split('#');
+		// Part of the URL starting from the protocol to the character before the '#' if one, to the end of the URL otherwise
+		const sPreHashPart = aHashParts[0];
+		// Part of the URL starting just after the '#' if one, null otherwise
+		const sPostHashPart = aHashParts[1] ?? null;
+
+		sUrl = sPreHashPart + (sUrl.split('?')[1] ? '&' : '?') + sNewParamForUrl + (sPostHashPart !== null ? '#' + sPostHashPart : '');
 
 		return sUrl;
 	},
