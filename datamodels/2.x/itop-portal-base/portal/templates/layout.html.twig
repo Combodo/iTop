@@ -420,8 +420,13 @@
 				{
 					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
 				};
-				// Helper to add a parameter to an url
-				// TODO 3.0.0: Move to CombodoGlobalToolbox and deprecate this one
+				/**
+				 * @param sUrl {string} The URL to append the new param to
+				 * @param sParamName {string} Name of the parameter
+				 * @param sParamValue {string} Value of the param, needs to be already URL encoded
+				 * @return {string} The sUrl parameters with the sParamName / sParamValue append at the right place
+				 * @deprecated 3.0.0 N°4176
+				 */
 				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
 				{
 					sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;

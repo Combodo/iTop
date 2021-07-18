@@ -711,6 +711,26 @@ const CombodoGlobalToolbox = {
 		}
 	},
 	/**
+	 * @param sUrl {string} The URL to append the new param to
+	 * @param sParamName {string} Name of the parameter
+	 * @param sParamValue {string} Value of the param, needs to be already URL encoded
+	 * @return {string} The sUrl parameters with the sParamName / sParamValue append at the right place
+	 */
+	AddParameterToUrl: function(sUrl, sParamName, sParamValue)
+	{
+		const bHasHash = sUrl.split('#')[1] !== undefined;
+		const bHasSomeParameters = sUrl.split('?')[1] !== undefined;
+		const sNewParamForUrl = sParamName + '=' + sParamValue;
+
+		if (bHasHash || bHasSomeParameters) {
+			sUrl += '&' + sNewParamForUrl;
+		} else {
+			sUrl += '?' + sNewParamForUrl;
+		}
+
+		return sUrl;
+	},
+	/**
 	 * This method should be a JS mirror of the PHP {@see utils::FilterXSS} method
 	 *
 	 * @param sInput {string} Input text to filter from XSS attacks

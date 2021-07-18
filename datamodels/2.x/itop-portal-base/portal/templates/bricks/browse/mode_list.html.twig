@@ -103,7 +103,7 @@
 										break;
 									case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 										url = levelPrimaryAction.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-										url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
+										url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', data.action_rules_token[levelPrimaryAction.type]);
 										break;
 									default:
 									    url = '#';
@@ -151,7 +151,7 @@
 												break;
 											case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 												url = action.url.replace(/-objectClass-/, data.class).replace(/-objectId-/, data.id);
-												url = AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
+												url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', data.action_rules_token[action.type]);
 												break;
 											default:
 											    url = '#';
