@@ -676,7 +676,6 @@ const CombodoGlobalToolbox = {
 	 * @param iThreshold {integer} Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
 	 * @returns {boolean}
 	 * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
-	 * @since 3.0.0
 	 */
 	IsElementVisibleToTheUser: function (oDOMElem, bCompletely = false, iThreshold = 0) {
 		const oRect = oDOMElem.getBoundingClientRect(),
@@ -735,8 +734,6 @@ const CombodoGlobalToolbox = {
 	 *
 	 * @param sInput {string} Input text to filter from XSS attacks
 	 * @returns {string} The sInput string filtered from possible XSS attacks
-	 * @constructor
-	 * @since 3.0.0
 	 */
 	FilterXSS: function (sInput) {
 		let sOutput = sInput;
@@ -752,7 +749,6 @@ const CombodoGlobalToolbox = {
 	 * @see N°2763 for the original code idea
 	 * @return {void}
 	 * @param iDuration {integer} Duration in milliseconds
-	 * @constructor
 	 */
 	Pause: function (iDuration) {
 		const oDate = new Date();
@@ -781,7 +777,6 @@ const CombodoTooltip = {
 	 *
 	 * @param {Object} oElem The jQuery object representing the element
 	 * @param {boolean} bForce When set to true, tooltip will be instantiate even if one already exists, overwritting it.
-	 * @constructor
 	 */
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
 		const oOptions = {};
@@ -873,7 +868,6 @@ const CombodoTooltip = {
 	 *
 	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
 	 * @param {boolean} bForce Whether the tooltip instantiation should be forced or not (if already done)
-	 * @constructor
 	 */
 	InitAllNonInstantiatedTooltips: function (oContainerElem = null, bForce = false) {
 		if (oContainerElem === null) {
@@ -916,7 +910,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.log(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Log: function(sMessage) {
 		this._Trace(sMessage, 'log');
@@ -925,7 +918,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.info(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Info: function(sMessage) {
 		this._Trace(sMessage, 'info');
@@ -934,7 +926,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.debug(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Debug: function(sMessage) {
 		this._Trace(sMessage, 'debug');
@@ -943,7 +934,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.warn(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Warn: function(sMessage) {
 		this._Trace(sMessage, 'warn');
@@ -952,7 +942,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.error(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');
