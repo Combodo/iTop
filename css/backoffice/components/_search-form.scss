@@ -9,6 +9,17 @@ $ibo-search-form-panel--body--padding-top: 18px !default;
 $ibo-search-form-panel--body--padding-bottom: 10px !default;
 $ibo-search-form-panel--body--padding-x: 14px !default;
 
+$ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
+$ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
+$ibo-search-form-panel--criteria--locked--background-color: $ibo-color-grey-300 !default;
+
+$ibo-search-form-panel--more-criteria--color: $ibo-color-blue-grey-800 !default;
+$ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !default;
+$ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
+
+$ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
+$ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
+
 $ibo-search-results-area--z-index: $ibo-search-form-panel--z-index - 2 !default; /* Minus 2 because the criteria expands between the search form panel and the results area */
 
 $ibo-search-results-area--datatable-toolbar--background-color--is-sticking: $ibo-panel--body--background-color !default;
@@ -140,7 +151,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	.sf_criterion_area {
 		/*display: none;*/
 		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
-		background-color: $ibo-color-white-100;
 
 		.sf_criterion_row {
 
@@ -229,7 +239,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
     .search_form_criteria {
       /* Non editable criteria */
       &.locked {
-        background-color: $ibo-color-grey-200;
+        background-color: $ibo-search-form-panel--criteria--locked--background-color;
 
 				.sfc_title {
 					user-select: none;
@@ -278,8 +288,8 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			}
 
 			> * {
-				background-color: $ibo-color-white-200;
-				color: $ibo-color-grey-900;
+				background-color: $ibo-search-form-panel--criteria--background-color;
+				color: $ibo-search-form-panel--criteria--color;
 			}
 
 			/* Top left corner icons */
@@ -646,8 +656,8 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			}
 
 			> * {
-				background-color: $ibo-color-white-100;
-				color: $ibo-color-blue-grey-800;
+				background-color: $ibo-search-form-panel--more-criteria--background-color;
+				color: $ibo-search-form-panel--more-criteria--icon--color;
 			}
 
 			.sfm_toggler {
@@ -702,8 +712,8 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
       cursor: pointer;
 
 			> * {
-				background-color: $ibo-color-white-100;
-				color: $ibo-color-primary-600;
+				background-color: $ibo-search-form-panel--misc-button--background-color;
+				color: $ibo-search-form-panel--misc-button--icon--color;
 			}
 		}
 	}

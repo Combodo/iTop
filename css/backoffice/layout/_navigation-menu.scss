@@ -98,7 +98,7 @@ $ibo-navigation-menu--menu-group-title--text-color--is-active: $ibo-color-blue-g
 $ibo-navigation-menu--drawer--width: 312px !default;
 $ibo-navigation-menu--drawer--padding-x: 20px !default;
 $ibo-navigation-menu--drawer--padding-y: 32px !default;
-$ibo-navigation-menu--drawer--background-color: $ibo-color-grey-100 !default;
+$ibo-navigation-menu--drawer--background-color: $ibo-navigation-menu--menu-group--background-color--is-active !default;
 $ibo-navigation-menu--drawer--border-right: 1px solid $ibo-color-grey-300 !default;
 
 /* TODO: Refactor this into the standard field input */
