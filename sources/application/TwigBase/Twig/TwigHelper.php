@@ -118,6 +118,20 @@ class TwigHelper
 		$oPage->add_ready_script(self::RenderTemplate($oTwig, $aParams, $sTemplateName, 'ready.js'));
 	}
 
+	/**
+	 * Render the TWIG template directly in $oBlock
+	 *
+	 * @param \WebPage $oPage
+	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oBlock
+	 * @param string $sViewPath
+	 * @param string $sTemplateName
+	 * @param array $aParams
+	 * @param string $sDefaultType
+	 *
+	 * @throws \CoreTemplateException
+	 * @throws \Twig\Error\LoaderError
+	 * @since 3.0.0
+	 */
 	public static function RenderIntoBlock(WebPage $oPage, UIBlock $oBlock, $sViewPath, $sTemplateName, $aParams = array(), $sDefaultType = self::DEFAULT_FILE_TYPE)
 	{
 		$oTwig = self::GetTwigEnvironment($sViewPath);

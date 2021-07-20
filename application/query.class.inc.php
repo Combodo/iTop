@@ -126,7 +126,7 @@ class QueryOQL extends Query
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
-		$oPage->add_script("$('[name=attr_oql]').addClass('ibo-queryoql'); $('[data-attribute-code=oql]').addClass('ibo-queryoql');");
+		$oPage->add_script("$('[name=\"attr_oql\"]').addClass('ibo-queryoql'); $('[data-attribute-code=\"oql\"]').addClass('ibo-queryoql');");
 
 		if (!$bEditMode) {
 			$sFields = trim($this->Get('fields'));

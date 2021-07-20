@@ -452,20 +452,23 @@ class BulkChange
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
 			// skip the private key, if any
-			if ($sAttCode == 'id') continue;
+			if (($sAttCode == 'id') || ($sAttCode == 'friendlyname')) {
+				continue;
+			}
 
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 
 			// skip reconciliation keys
-			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
+			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)) {
+				continue;
+			}
 
 			$aReasons = array();
 			$iFlags = ($oTargetObj->IsNew())
 				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
 				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
-			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
-			{
-					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
+			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) ) {
+				$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
 			}
 			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
@@ -1180,16 +1183,16 @@ class BulkChange
 				$oPage->add('<p>'.$sCollapsedLabel.'&nbsp;&nbsp;<a class="truncated" onclick="OnTruncatedHistoryToggle(true);">'.$sLinkLabel.'</p>');
 
 				$oPage->add_ready_script(
-<<<EOF
+					<<<EOF
 	$('#$sAjaxDivId table.listResults').addClass('truncated');
 	$('#$sAjaxDivId table.listResults tr:last td').addClass('truncated');
 EOF
 				);
 
-				
+
 				$sAppContext = $oAppContext->GetForLink();
 				$oPage->add_script(
-<<<EOF
+					<<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
 		$('#csv_history_reload').html('<img src="../images/indicator.gif"/>');

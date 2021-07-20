@@ -6,6 +6,7 @@
                         data-{{ sName }}="{{ sValue }}"
                 {% endfor %}
         {% endif %}
+        {% if oUIBlock.IsDisabled() %} disabled {% endif %}
         {# Visual tooltip... #}
         {% if oUIBlock.GetTooltip() is not empty %}
             data-tooltip-content="{{ oUIBlock.GetTooltip() }}"

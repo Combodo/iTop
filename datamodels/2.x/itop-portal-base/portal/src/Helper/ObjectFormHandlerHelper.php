@@ -280,8 +280,8 @@ class ObjectFormHandlerHelper
 				->SetFormProperties($aFormProperties);
 
 			$oFormManager->Build();
-
-			// Check the number of editable fields
+			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
+				// Check the number of editable fields
 			$aFormData['editable_fields_count'] = $oFormManager->GetForm()->GetEditableFieldCount();
 		}
 		else
@@ -388,6 +388,7 @@ class ObjectFormHandlerHelper
 		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
+		$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 		// - Set a text to be copied on title if the object is not in creation
 		if($sMode !== static::ENUM_MODE_CREATE && !empty($sObjectId))
 		{

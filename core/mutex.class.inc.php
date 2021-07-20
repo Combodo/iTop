@@ -242,6 +242,8 @@ class iTopMutex
 	 *
 	 * @throws \Exception
 	 * @throws \MySQLException
+	 *
+	 * @since 2.7.5 3.0.0 N°3968 specify `wait_timeout` for the mutex dedicated connection
 	 */
 	public function InitMySQLSession()
 	{
@@ -254,9 +256,35 @@ class iTopMutex
 
 		$this->hDBLink = CMDBSource::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, false);
 
-		if (!$this->hDBLink)
-		{
+		if (!$this->hDBLink) {
 			throw new Exception("Could not connect to the DB server (host=$sServer, user=$sUser): ".mysqli_connect_error().' (mysql errno: '.mysqli_connect_errno().')');
+		}
+
+		// Make sure that the server variable `wait_timeout` is at least 86400 seconds for this connection,
+		// since the lock will be released if/when the connection times out.
+		// Source https://dev.mysql.com/doc/refman/5.7/en/locking-functions.html :
+		// > A lock obtained with GET_LOCK() is released explicitly by executing RELEASE_LOCK() or implicitly when your session terminates
+		//
+		// BEWARE: If you want to check the value of this variable, when run from an interactive console `SHOW VARIABLES LIKE 'wait_timeout'`
+		// will actually returns the value of the variable `interactive_timeout` which may be quite different.
+		$sSql = "SHOW VARIABLES LIKE 'wait_timeout'";
+		$result = mysqli_query($this->hDBLink, $sSql);
+		if (!$result) {
+			throw new Exception("Failed to issue MySQL query '".$sSql."': ".mysqli_error($this->hDBLink).' (mysql errno: '.mysqli_errno($this->hDBLink).')');
+		}
+		if ($aRow = mysqli_fetch_array($result, MYSQLI_BOTH)) {
+			$iTimeout = (int)$aRow[1];
+		} else {
+			mysqli_free_result($result);
+			throw new Exception("No result for query '".$sSql."'");
+		}
+		mysqli_free_result($result);
+
+		if ($iTimeout < 86400) {
+			$result = mysqli_query($this->hDBLink, 'SET SESSION wait_timeout=86400');
+			if ($result === false) {
+				throw new Exception("Failed to issue MySQL query '".$sSql."': ".mysqli_error($this->hDBLink).' (mysql errno: '.mysqli_errno($this->hDBLink).')');
+			}
 		}
 	}
 

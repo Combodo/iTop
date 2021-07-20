@@ -19,10 +19,6 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 
   color: $ibo-title--text-color;
   padding: $ibo-title--padding-y $ibo-title--padding-x;
-
-  .ibo-title--text {
-    @extend %ibo-font-ral-sembol-300;
-  }
 }
 
 .ibo-title--icon {
@@ -56,6 +52,10 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 
 .ibo-title--for-object-details {
   @extend %ibo-font-size-300;
+}
+
+.ibo-title--text {
+  @extend %ibo-font-ral-sembol-300;
 }
 
 .ibo-title--subtitle {

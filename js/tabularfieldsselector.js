@@ -376,6 +376,7 @@ $(function () {
 					var sDataAttcode = $(elt).attr('data-attcode');
 					var sTooltipContent = me._get_tooltip_content(sDataAttcode);
 					tippy(elt, {
+						appendTo: document.body,
 						'content': sTooltipContent,
 						allowHTML: true,
 						interactive: true,

@@ -1055,12 +1055,11 @@ class ObjectController extends BrickController
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */,
-			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass));
+		$bAllowAllDataFlag = ($bCheckSecurity === false) ? true : $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass);
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */, $bAllowAllDataFlag);
 		if ($oObject === null)
 		{
-			// We should never be there as the security helper makes sure that the object exists, but just in case.
-			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.': Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 

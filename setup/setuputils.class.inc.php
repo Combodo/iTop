@@ -434,7 +434,7 @@ class SetupUtils
 
 		// some CLI scripts are launched automatically
 		// we need a log so that we don't miss errors after migration !
-		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, 'CLI', $aPhpCheckErrorsForPrint);
+		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, LogChannels::CLI, $aPhpCheckErrorsForPrint);
 
 		exit($iExitCode);
 	}
@@ -982,12 +982,16 @@ class SetupUtils
 
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Hb');
+		$aSizes = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'HB');
 		$index = 0;
-		while (($fBytes > 1000) && ($index < count($aSizes)))
-		{
+		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
 			$fBytes = $fBytes / 1000;
+		}
+
+		if ($index == 0) {
+			// display int for bytes
+			return sprintf('%d %s', $fBytes, $aSizes[$index]);
 		}
 
 		return sprintf('%.2f %s', $fBytes, $aSizes[$index]);
@@ -1009,8 +1013,8 @@ class SetupUtils
 		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
 		$sNewDBName = ''
 	) {
-		$sWikiVersion =  utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
-		$sMysqlTlsWikiPageUrl = 'https://wiki.openitop.org/doku.php?id='.$sWikiVersion.':install:php_and_mysql_tls';
+		$sWikiVersion = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+		$sMysqlTlsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion.':install:php_and_mysql_tls';
 
 		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
@@ -1019,13 +1023,15 @@ class SetupUtils
 		//-- DB connection params
 		$oPage->add('<tbody>');
 		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td>E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"</td></tr>');
-		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER</td></tr>');
+		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'
+			.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8')
+			.'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER</td></tr>');
 		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
 		$oPage->add('</tbody>');
 
 		//-- TLS params (N°1260)
 		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
-		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
+		$sTlsCaDisabled     = $bTlsEnabled ? '' : ' disabled';
 		$oPage->add('<tbody id="tls_options" class="collapsable-options">');
 		$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom" id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
 		$oPage->add('<tr style="display:none"><td colspan="3" class="message message-error">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></td></tr>');
@@ -1269,39 +1275,38 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
 			$bHasDbVersionRequired = self::CheckDbServerVersion($aResult, $oDBSource);
-			if (!$bHasDbVersionRequired)
-			{
+			if (!$bHasDbVersionRequired) {
 				return $aResult;
 			}
 
 			// Check some server variables
-			$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
-			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$iMaxAllowedPacket         = $oDBSource->GetServerVariable('max_allowed_packet');
+			$sMaxAllowedPacketFriendly = utils::BytesToFriendlyFormat($iMaxAllowedPacket);
+			$iMaxUploadSize            = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$sMaxUploadSizeFriendly    = utils::BytesToFriendlyFormat($iMaxUploadSize);
 			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
 			{
-				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is big enough compared to upload_max_filesize ($iMaxUploadSize).");
-			}
-			else if($iMaxAllowedPacket < $iMaxUploadSize)
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
+			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
+				$sWikiVersion                = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+				$sAttachmentsVarsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion
+					.':install:php_and_mysql_configuration#attachments_upload';
+
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
+					"MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly), whereas it should has a greater value. Consider increasing its value of at least 500KB. See the <a href=\"$sAttachmentsVarsWikiPageUrl\">documentation</a> for details.");
 			}
 
 			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
-			if ($iMaxConnections < 5)
-			{
+			if ($iMaxConnections < 5) {
 				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_connections ($iMaxConnections) is not enough. Please, consider setting it to at least 5.");
-			}
-			else
-			{
+			} else {
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
-			try
-			{
+			try {
 				$aResult['databases'] = $oDBSource->ListDB();
 			}
-			catch(Exception $e)
-			{
+			catch (Exception $e) {
 				$aResult['databases'] = null;
 			}
 		}
@@ -1464,30 +1469,24 @@ JS
 						}
 					}
 				}
-				if (count($aErrors) > 0)
-				{
-					$sErrorsToDisplay = utils::HtmlEntities(implode('<br/>', $aErrors));
+				if (count($aErrors) > 0) {
+					$sErrorsToDisplay = str_replace('\'', '\\\'', implode('<br/>', $aErrors));
 					$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>$sErrorsToDisplay</div>');
 JS
 					);
-				}
-				else
-				{
-					if (count($aWarnings) > 0)
-					{
-						$sWarningsToDisplay = utils::HtmlEntities(implode('<br/>', $aWarnings));
+				} else {
+					if (count($aWarnings) > 0) {
+						$sWarningsToDisplay = str_replace('\'', '\\\'', implode('<br/>', $aWarnings));
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
 						$oPage->add_ready_script(
 							<<<JS
 $("#db_info").html('<div class="message message-warning"><span class="message-title">Warning:</span>$sWarningsToDisplay</div>');
 JS
 						);
-					}
-					else
-					{
+					} else {
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
 						$oPage->add_ready_script(
 							<<<JS
@@ -2192,6 +2191,7 @@ JS
 				'openssl' => 'Strong encryption will not be used.',
 			],
 			'ldap' => 'LDAP authentication will be disabled.',
+			'curl' => 'PDF exports won\'t be possible.',
 		];
 
 		if (utils::IsDevelopmentEnvironment()) {

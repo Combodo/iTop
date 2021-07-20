@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Display DataTable
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Datatables:Language:Processing' => 'Bitte warten...',

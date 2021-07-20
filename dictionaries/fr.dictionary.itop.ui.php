@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AuditCategory' => 'Catégorie d\'audit',
 	'Class:AuditCategory+' => 'Une section de l\'audit',
@@ -156,6 +155,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserProfile' => 'Utilisateur/Profil',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Lien entre %1$s et %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -176,6 +176,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
 	'Class:URP_UserOrg+' => 'Organisations permises pour l\'utilisateur',
+	'Class:URP_UserOrg/Name' => 'Lien entre %1$s et %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Utilisateur',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -900,8 +901,6 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Aucun cycle de vie n\'est défini pour ce type d\'objets.',
 	'UI:UserManagement:GrantMatrix' => 'Matrice des droits',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Lien entre %1$s et %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Lien entre %1$s et %2$s',
 
 	'Menu:AdminTools' => 'Administration', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Outils d\'administration', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1219,6 +1218,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
 	'UI:DashboardEdit:Dashlets' => 'Indicateurs',
 	'UI:DashboardEdit:DashletProperties' => 'Propriétés de l\'Indicateur',
+	'UI:DashboardEdit:Revert' => 'Revenir à la valeur précédente',
+	'UI:DashboardEdit:Apply' => 'Appliquer',
 
 	'UI:Form:Property' => 'Propriété',
 	'UI:Form:Value' => 'Valeur',

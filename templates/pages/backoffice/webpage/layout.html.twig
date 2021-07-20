@@ -4,7 +4,6 @@
 <html lang="{{ aPage.aMetadata.sLang }}">
 <head>
     <meta charset="{{ aPage.aMetadata.sCharset }}">
-    <meta name="viewport" content="width=device-width">
     {# This block can be used to add your own meta tags by extending the default template #}
     {% block iboPageExtraMetas %}
     {% endblock %}
@@ -13,7 +12,7 @@
     {% endif %}
     <title>{{ aPage.sTitle }}</title>
     {% if aPage.sFaviconUrl is defined %}
-        <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|raw|add_itop_version }}">
+        <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version|raw }}">
     {% endif %}
     <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
 
@@ -23,7 +22,7 @@
     {% block iboPageCssFiles %}
 	    {% for aCssFileData in aPage.aCssFiles %}
 		    {% if aCssFileData['condition'] != '' %}<!--[if {{ aCssFileData['condition'] }}]>{% endif %}
-			<link type="text/css" href="{{ aCssFileData['link']|raw|add_itop_version }}" rel="stylesheet">
+			<link type="text/css" href="{{ aCssFileData['link']|add_itop_version|raw }}" rel="stylesheet">
 			{% if aCssFileData['condition'] != '' %}<![endif]-->{% endif %}
 	    {% endfor %}
     {% endblock %}
@@ -59,7 +58,7 @@
 {% endif %}
 {% block iboPageJsFiles %}
     {% for sJsFile in aPage.aJsFiles %}
-        <script type="text/javascript" src="{{ sJsFile|raw|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ sJsFile|add_itop_version|raw }}"></script>
     {% endfor %}
 {% endblock %}
 

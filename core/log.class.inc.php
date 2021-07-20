@@ -503,6 +503,7 @@ class FileLog
 	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
 	{
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7).' | ');
+		$sTextPrefix .= str_pad(UserRights::GetUserId(), 5)." | ";
 		$sTextSuffix = empty($sChannel) ? '' : " | $sChannel";
 		$sText = "{$sTextPrefix}{$sText}{$sTextSuffix}";
 		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
@@ -517,12 +518,9 @@ class FileLog
 		{
 			flock($hLogFile, LOCK_EX);
 			$sDate = date('Y-m-d H:i:s');
-			if (empty($aContext))
-			{
+			if (empty($aContext)) {
 				fwrite($hLogFile, "$sDate | $sText\n");
-			}
-			else
-			{
+			} else {
 				$sContext = var_export($aContext, true);
 				fwrite($hLogFile, "$sDate | $sText\n$sContext\n");
 			}
@@ -532,6 +530,24 @@ class FileLog
 		}
 	}
 }
+
+
+/**
+ * Simple enum like class to factorize channels values as constants
+ * Channels are used especially as parameters in {@see \LogAPI} methods
+ *
+ * @since 2.7.5 3.0.0 N°4012
+ */
+class LogChannels
+{
+	public const CLI = 'CLI';
+	public const CONSOLE = 'console';
+	public const DEADLOCK = 'DeadLock';
+	public const INLINE_IMAGE = 'InlineImage';
+	public const PORTAL = 'portal';
+	public const CMDB_SOURCE = 'cmdbsource';
+}
+
 
 abstract class LogAPI
 {
@@ -545,6 +561,7 @@ abstract class LogAPI
 	public const LEVEL_TRACE = 'Trace';
 	/**
 	 * @var string default log level
+	 * @see GetMinLogLevel
 	 * @used-by GetLevelDefault
 	 * @since 2.7.1 N°2977
 	 */

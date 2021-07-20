@@ -169,6 +169,13 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				$('#'+me.id).trigger('extkeychange');
 				$('#'+me.id).trigger('change');
 				return false;
+			},
+			open: function(event, ui){
+				// dialog tries to move above every .ui-front with _moveToTop(), we want to be above our parent dialog
+				var dialog = $(this).closest('.ui-dialog');
+				if(dialog.length > 0){
+					$('.ui-autocomplete.ui-front').css('z-index', parseInt(dialog.css("z-index")) + 1);
+				}
 			}
 		})
 		.autocomplete("instance")._renderItem = function (ul, item) {

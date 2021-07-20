@@ -27,6 +27,7 @@ use JSPopupMenuItem;
 use MetaModel;
 use SeparatorPopupMenuItem;
 use URLPopupMenuItem;
+use iPopupMenuExtension;
 use UserRights;
 use utils;
 
@@ -65,6 +66,13 @@ class PopoverMenuFactory
 		// User related pages
 		$oMenu->AddSection('user_related')
 			->SetItems('user_related', static::PrepareUserRelatedItemsForUserMenu());
+
+		// API: iPopupMenuExtension::MENU_USER_ACTIONS
+		$aAPIItems = static::PrepareAPIItemsForUserMenu($oMenu);
+		if (count($aAPIItems) > 0) {
+			$oMenu->AddSection('popup_menu_extension-menu_user_actions')
+				->SetItems('popup_menu_extension-menu_user_actions', $aAPIItems);
+		}
 
 		// Misc links
 		$oMenu->AddSection('misc')
@@ -164,10 +172,28 @@ class PopoverMenuFactory
 			);
 		}
 
-		// TODO: iPopupMenuExtension::MENU_USER_ACTIONS
-		// Legacy code: utils::GetPopupMenuItems($this, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aActions);
-
 		return $aItems;
+	}
+
+	/**
+	 * @param \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu $oMenu Here we must pass a block ($oMenu) as the helper will use it to dispatch the external resources (files) if some.
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItem[] Return the items from the iPopupMenuExtension::MENU_USER_ACTIONS API
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	protected static function PrepareAPIItemsForUserMenu(PopoverMenu &$oMenu)
+	{
+		$aOriginalItems = [];
+		utils::GetPopupMenuItemsBlock($oMenu, iPopupMenuExtension::MENU_USER_ACTIONS, null, $aOriginalItems);
+
+		$aTransformedItems = [];
+		foreach($aOriginalItems as $sItemID => $aItemData) {
+			$aTransformedItems[] = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItemData($sItemID, $aItemData);
+		}
+
+		return $aTransformedItems;
 	}
 
 	/**
@@ -239,7 +265,7 @@ class PopoverMenuFactory
 			}
 
 			foreach ($aActions as $sActionId => $aAction) {
-				$oMenu->AddItem($sSection, PopoverMenuItemFactory::MakeFromDisplayBlockAction($sActionId, $aAction));
+				$oMenu->AddItem($sSection, PopoverMenuItemFactory::MakeFromApplicationPopupMenuItemData($sActionId, $aAction));
 			}
 
 			$bFirst = false;

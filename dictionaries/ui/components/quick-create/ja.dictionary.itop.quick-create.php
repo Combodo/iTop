@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Quick create
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',

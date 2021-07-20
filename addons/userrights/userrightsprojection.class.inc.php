@@ -270,7 +270,7 @@ class URP_UserProfile extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => array("userlogin", "profile"),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userprofile",
@@ -293,11 +293,6 @@ class URP_UserProfile extends UserRightsBaseClass
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
-	}
-
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
 	}
 }
 

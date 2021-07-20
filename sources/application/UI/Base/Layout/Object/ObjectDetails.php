@@ -11,15 +11,35 @@ use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Helper\UIHelper;
 use DBObject;
+use Dict;
 use iKeyboardShortcut;
 use MetaModel;
 
+/**
+ * Class ObjectDetails
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Layout\Object
+ * @since 3.0.0
+ */
 class ObjectDetails extends Panel implements iKeyboardShortcut
 {
 	// Overloaded constants
+	/**
+	 * @inheritDoc
+	 */
 	public const BLOCK_CODE = 'ibo-object-details';
+	/**
+	 * @inheritDoc
+	 */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
+	/**
+	 * @inheritDoc
+	 */
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/layouts/object/object-details/layout';
+	/**
+	 * @inheritDoc
+	 */
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/layouts/object/object-details.js',
 	];
@@ -63,8 +83,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		$this->sClassLabel = MetaModel::GetName($this->GetClassName());
 		$this->sObjectId = $oObject->GetKey();
 		// Note: We get the raw name as only the front-end consumer knows when and how to encode it.
-		$this->sObjectName = $oObject->GetRawName();
 		$this->sObjectMode = $sMode;
+
+		$this->ComputeObjectName($oObject);
 
 		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
 
@@ -149,7 +170,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 * @see self::$sStatusLabel
 	 * @return string
 	 */
-	public function GetStatusLabel(): string
+	public function GetStatusLabel(): ?string
 	{
 		return $this->sStatusLabel;
 	}
@@ -168,9 +189,16 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 */
 	public function HasSubTitle(): bool
 	{
-		return !empty($this->sStatusCode);
+		return ($this->sObjectMode != "create");
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @see static::$oObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	protected function ComputeIconUrl(DBObject $oObject): void
 	{
 		// Default icon is the class icon
@@ -194,6 +222,13 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		$this->SetIcon($sIconUrl, $sIconCoverMethod, true);
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @see static::$oObject
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	protected function ComputeState(DBObject $oObject): void
 	{
 		if (MetaModel::HasStateAttributeCode($this->sClassName)) {
@@ -202,7 +237,25 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);
 		}
 	}
-	
+
+	/**
+	 * @param \DBObject $oObject
+	 * @see static::$oObject
+	 *
+	 * @throws \CoreException
+	 */
+	protected function ComputeObjectName(DBObject $oObject): void
+	{
+		if ($this->sObjectMode === cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE) {
+			$this->sObjectName = Dict::Format('UI:CreationTitle_Class', $this->sClassLabel);
+		} else {
+			$this->sObjectName = $oObject->GetRawName();
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	public static function GetShortcutKeys(): array
 	{
 		return [['id' => 'ibo-edit-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject', 'key' => 'e', 'event' => 'edit_object'],
@@ -211,6 +264,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			['id' => 'ibo-save-object', 'label' => 'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject', 'key' => 's', 'event' => 'save_object']];
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public static function GetShortcutTriggeredElementSelector(): string
 	{
 		return "[data-role='".static::BLOCK_CODE."']";

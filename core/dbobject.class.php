@@ -1517,7 +1517,8 @@ abstract class DBObject implements iDisplay
 	/**
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
-     * @api
+	 * @internal
+	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
 	 *
 	 * @return string
 	 * @throws \CoreException
@@ -1528,16 +1529,17 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Helper to get the friendly name
-     *
-     * This is not safe for displaying inside a web page since the " < > characters are not escaped.
-     * In example, the name may contain some XSS script instructions.
+	 * Helper to get the friendly name
+	 *
+	 * This is not safe for displaying inside a web page since the " < > characters are not escaped.
+	 * In example, the name may contain some XSS script instructions.
 	 * Use this function only for internal computations or for an output to a non-HTML destination
 	 *
-     * @api
-     *
+	 * @internal
 	 * @return string
 	 * @throws \CoreException
+	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 *
 	 */
 	public function GetRawName()
 	{
@@ -2431,14 +2433,6 @@ abstract class DBObject implements iDisplay
 		return $this->m_aCurrValues;
 	}
 
-	/*
-	 * return array
-	 */
-	public function GetLoadedAttributes()
-	{
-		return array_keys($this->m_aLoadedAtt);
-	}
-
 	/**
 	 * @api
 	 * @api-advanced
@@ -2778,50 +2772,75 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
+		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		try
+		if ($bIsTransactionEnabled)
 		{
-			if ($bIsTransactionEnabled)
-			{
-				CMDBSource::Query('START TRANSACTION');
-			}
-
-			// First query built upon on the root class, because the ID must be created first
-			$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
-
-			// Then do the leaf class, if different from the root class
-			if ($sClass != $sRootClass)
-			{
-				$this->DBInsertSingleTable($sClass);
-			}
-
-			// Then do the other classes
-			foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass)
-			{
-				if ($sParentClass == $sRootClass)
-				{
-					continue;
-				}
-				$this->DBInsertSingleTable($sParentClass);
-			}
-
-			$this->OnObjectKeyReady();
-
-			$this->DBWriteLinks();
-			$this->WriteExternalAttributes();
-
-			if ($bIsTransactionEnabled)
-			{
-				CMDBSource::Query('COMMIT');
-			}
+			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+			$iTransactionRetryCount = 1;
+			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$iTransactionRetry = $iTransactionRetryCount;
 		}
-		catch (Exception $e)
-		{
-			if ($bIsTransactionEnabled)
-			{
-				CMDBSource::Query('ROLLBACK');
+		while ($iTransactionRetry > 0) {
+			try {
+				$iTransactionRetry--;
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('START TRANSACTION');
+				}
+
+				// First query built upon on the root class, because the ID must be created first
+				$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
+
+				// Then do the leaf class, if different from the root class
+				if ($sClass != $sRootClass) {
+					$this->DBInsertSingleTable($sClass);
+				}
+
+				// Then do the other classes
+				foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+					if ($sParentClass == $sRootClass) {
+						continue;
+					}
+					$this->DBInsertSingleTable($sParentClass);
+				}
+
+				$this->OnObjectKeyReady();
+
+				$this->DBWriteLinks();
+				$this->WriteExternalAttributes();
+
+				// Write object creation history within the transaction
+				$this->RecordObjCreation();
+
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('COMMIT');
+				}
+				break;
 			}
-			throw $e;
+			catch (Exception $e) {
+				IssueLog::Error($e->getMessage());
+				if ($bIsTransactionEnabled)
+				{
+					CMDBSource::Query('ROLLBACK');
+					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
+					{
+						// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
+						if ($iTransactionRetry > 0)
+						{
+							// wait and retry
+							IssueLog::Error("Insert TRANSACTION Retrying...");
+							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+							continue;
+						}
+						else
+						{
+							IssueLog::Error("Insert Deadlock TRANSACTION prevention failed.");
+						}
+					}
+				}
+				throw $e;
+			}
 		}
 
 		$this->m_bIsInDB = true;
@@ -2853,8 +2872,6 @@ abstract class DBObject implements iDisplay
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
-
-		$this->RecordObjCreation();
 
 		return $this->m_iKey;
 	}
@@ -3185,9 +3202,11 @@ abstract class DBObject implements iDisplay
 			$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 			if ($bIsTransactionEnabled)
 			{
-				$iIsTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				// TODO Deep clone this object before the transaction (to use it in case of rollback)
+				// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+				$iTransactionRetryCount = 1;
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-				$iTransactionRetry = $iIsTransactionRetryCount;
+				$iTransactionRetry = $iTransactionRetryCount;
 			}
 			while ($iTransactionRetry > 0)
 			{
@@ -3203,7 +3222,7 @@ abstract class DBObject implements iDisplay
 						// Update the left & right indexes for each hierarchical key
 						foreach ($aHierarchicalKeys as $sAttCode => $oAttDef)
 						{
-							$sTable = $sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+							$sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
 							$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
 							$aRes = CMDBSource::QueryToArray($sSQL);
 							$iMyLeft = $aRes[0]['left'];
@@ -3211,8 +3230,7 @@ abstract class DBObject implements iDisplay
 							$iDelta = $iMyRight - $iMyLeft + 1;
 							MetaModel::HKTemporaryCutBranch($iMyLeft, $iMyRight, $oAttDef, $sTable);
 
-							if ($aDBChanges[$sAttCode] == 0)
-							{
+							if ($aDBChanges[$sAttCode] == 0) {
 								// No new parent, insert completely at the right of the tree
 								$sSQL = "SELECT max(`".$oAttDef->GetSQLRight()."`) AS max FROM `$sTable`";
 								$aRes = CMDBSource::QueryToArray($sSQL);
@@ -3255,38 +3273,29 @@ abstract class DBObject implements iDisplay
 					$this->DBWriteLinks();
 					$this->WriteExternalAttributes();
 
-					// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
-					// new values are already in the object (call {@see DBObject::Get()} to get them)
-					// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
-					$this->m_bDirty = false;
-					$this->m_aTouchedAtt = array();
-					$this->m_aModifiedAtt = array();
-
-					if (count($aChanges) != 0)
-					{
+					if (count($aChanges) != 0) {
 						$this->RecordAttChanges($aChanges, $aOriginalValues);
 					}
 
-					if ($bIsTransactionEnabled)
-					{
+					if ($bIsTransactionEnabled) {
 						CMDBSource::Query('COMMIT');
 					}
 					break;
 				}
 				catch (MySQLException $e)
 				{
+					IssueLog::Error($e->getMessage());
 					if ($bIsTransactionEnabled)
 					{
 						CMDBSource::Query('ROLLBACK');
-						if ($e->getCode() == 1213)
+						if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
 						{
-							// Deadlock found when trying to get lock; try restarting transaction
-							IssueLog::Error($e->getMessage());
+							// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
 							if ($iTransactionRetry > 0)
 							{
 								// wait and retry
 								IssueLog::Error("Update TRANSACTION Retrying...");
-								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iIsTransactionRetryCount - $iTransactionRetry));
+								usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 								continue;
 							}
 							else
@@ -3300,10 +3309,11 @@ abstract class DBObject implements iDisplay
 						'id' => $this->GetKey(),
 						'class' => get_class($this),
 						'issues' => $aErrors
-					));
+					), $e);
 				}
 				catch (CoreCannotSaveObjectException $e)
 				{
+					IssueLog::Error($e->getMessage());
 					if ($bIsTransactionEnabled)
 					{
 						CMDBSource::Query('ROLLBACK');
@@ -3312,6 +3322,7 @@ abstract class DBObject implements iDisplay
 				}
 				catch (Exception $e)
 				{
+					IssueLog::Error($e->getMessage());
 					if ($bIsTransactionEnabled)
 					{
 						CMDBSource::Query('ROLLBACK');
@@ -3324,6 +3335,13 @@ abstract class DBObject implements iDisplay
 					));
 				}
 			}
+
+			// following lines are resetting changes (so after this {@see DBObject::ListChanges()} won't return changes anymore)
+			// new values are already in the object (call {@see DBObject::Get()} to get them)
+			// call {@see DBObject::ListPreviousValuesForUpdatedAttributes()} to get changed fields and previous values
+			$this->m_bDirty = false;
+			$this->m_aTouchedAtt = array();
+			$this->m_aModifiedAtt = array();
 
 			try {
 				// - TriggerOnObjectUpdate
@@ -3514,9 +3532,11 @@ abstract class DBObject implements iDisplay
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		if ($bIsTransactionEnabled)
 		{
-			$iIsTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-			$iTransactionRetry = $iIsTransactionRetryCount;
+			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+			$iTransactionRetryCount = 1;
+			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$iTransactionRetry = $iTransactionRetryCount;
 		}
 		while ($iTransactionRetry > 0)
 		{
@@ -3539,18 +3559,18 @@ abstract class DBObject implements iDisplay
 			}
 			catch (MySQLException $e)
 			{
+				IssueLog::Error($e->getMessage());
 				if ($bIsTransactionEnabled)
 				{
 					CMDBSource::Query('ROLLBACK');
-					if ($e->getCode() == 1213)
+					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
 					{
 						// Deadlock found when trying to get lock; try restarting transaction
-						IssueLog::Error($e->getMessage());
 						if ($iTransactionRetry > 0)
 						{
 							// wait and retry
 							IssueLog::Error("Delete TRANSACTION Retrying...");
-							usleep(random_int(1, 5) * 1000 * $iIsTransactionRetryDelay * ($iIsTransactionRetryCount - $iTransactionRetry));
+							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
 							continue;
 						}
 						else
@@ -5528,30 +5548,31 @@ abstract class DBObject implements iDisplay
 	{
 		$aFields = $oExpression->ListRequiredFields();
 		$aArgs = array();
-		foreach ($aFields as $sFieldDesc)
-		{
+		foreach ($aFields as $sFieldDesc) {
 			$aFieldParts = explode('.', $sFieldDesc);
-			if (count($aFieldParts) == 2)
-			{
+			if (count($aFieldParts) == 2) {
 				$sClass = $aFieldParts[0];
 				$sAttCode = $aFieldParts[1];
-			}
-			else
-			{
+			} else {
 				$sClass = get_class($this);
 				$sAttCode = $aFieldParts[0];
 			}
-			if (get_class($this) != $sClass) continue;
-			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) continue;
+			if (get_class($this) != $sClass) {
+				continue;
+			}
+			if (!MetaModel::IsValidAttCode(get_class($this), $sAttCode)) {
+				continue;
+			}
 
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			$aSQLValues = $oAttDef->GetSQLValues($this->m_aCurrValues[$sAttCode]);
 			$value = reset($aSQLValues);
 			if ($oAttDef->IsNull($value)) {
-				$value = '';
+				return '';
 			}
 			$aArgs[$sFieldDesc] = $value;
 		}
+
 		return $oExpression->Evaluate($aArgs);
 	}
 }

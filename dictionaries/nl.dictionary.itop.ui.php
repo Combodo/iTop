@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 //////////////////////////////////////////////////////////////////////
 // Classes in 'gui'
 //////////////////////////////////////////////////////////////////////
@@ -167,6 +166,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserProfile' => 'Gebruiker / Profiel',
 	'Class:URP_UserProfile+' => 'Koppeling tussen gebruikers en profielen',
+	'Class:URP_UserProfile/Name' => 'Link tussen %1$s en %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Gebruiker',
 	'Class:URP_UserProfile/Attribute:userid+' => 'De gebruiker gekoppeld aan dit profiel',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -187,6 +187,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:URP_UserOrg' => 'Gebruiker / Organisatie',
 	'Class:URP_UserOrg+' => 'Koppeling tussen gebruikers en organisaties',
+	'Class:URP_UserOrg/Name' => 'Link tussen %1$s en %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Gebruiker',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Account van de gebruiker',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -904,8 +905,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'Niet beschikbaar',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Er is geen levenscyclus gedefinieerd voor deze klasse',
 	'UI:UserManagement:GrantMatrix' => 'Rechtenmatrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link tussen %1$s en %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link tussen %1$s en %2$s',
 
 	'Menu:AdminTools' => 'Admintools', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Beheertools', // Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1210,6 +1209,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:ImportDashboardText' => 'Selecteer een bestand van het dashboard om te importeren:',
 	'UI:Dashboard:Actions' => 'Dashboard acties',
 	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+
 
 	'UI:DashletCreation:Title' => 'Maak een nieuwe Dashlet aan',
 	'UI:DashletCreation:Dashboard' => 'Dashboard',

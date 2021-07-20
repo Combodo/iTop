@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Navigation menu
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Bedrijfslogo',
@@ -29,4 +28,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Welkom %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s profielfoto',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
+
 ));

@@ -221,7 +221,13 @@ class ActivityEntry extends UIBlock
 		// - Initials
 		$this->sAuthorInitials = UserRights::GetUserInitials($this->sAuthorLogin);
 		// - Picture
-		$this->sAuthorPictureAbsUrl = UserRights::GetUserPictureAbsUrl($this->sAuthorLogin, false);
+		// ... first compute the user picture...
+		if (in_array('backoffice', utils::GetConfig()->Get('activity_panel.hide_avatars'))) {
+			$this->sAuthorPictureAbsUrl = null;
+		} else {
+			$this->sAuthorPictureAbsUrl = UserRights::GetUserPictureAbsUrl($this->sAuthorLogin, false);
+		}
+		// ... then fallback on system picture if necessary
 		if ((null === $this->sAuthorPictureAbsUrl) && (ITOP_APPLICATION_SHORT === $this->sAuthorLogin)) {
 			$this->sAuthorPictureAbsUrl = utils::GetAbsoluteUrlAppRoot().static::DEFAULT_AUTHOR_PICTURE_REL_URL;
 		}

@@ -27,6 +27,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:Class' => 'Classe',
 	'DBTools:Title' => 'Manutenção da Base de Dados',
 	'DBTools:ErrorsFound' => 'Erros Encontrados',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => 'Erros',
 	'DBTools:Count' => 'Quantidade',
 	'DBTools:SQLquery' => 'Query SQL',

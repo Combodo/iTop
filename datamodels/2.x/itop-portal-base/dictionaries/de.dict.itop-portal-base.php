@@ -67,6 +67,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Dieses Objekt schließen',
 	'Portal:Form:Close:Warning' => 'Soll diese Eingabemaske verlassen werden? Eingegebene Daten werden nicht gespeichert.',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
 
 // UserProfile brick

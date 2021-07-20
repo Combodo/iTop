@@ -295,10 +295,15 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 
 	public function ExpressionsWithObjectFieldsProvider()
 	{
-		return array(
-			array('Location', array('name' => 'Grenoble', 'org_id' => 2), 'org_id', 2),
-			array('Location', array('name' => 'Grenoble', 'org_id' => 2), 'CONCAT(SUBSTR(name, 4), " cause")', 'noble cause'),
-		);
+		return [
+			['URP_UserProfile', ['profileid' => 2], 'friendlyname', ''],
+			['Location', ['name' => 'Grenoble', 'org_id' => 2], 'name', 'Grenoble'],
+			['Location', ['name' => 'Grenoble', 'org_id' => 2], 'friendlyname', ''],
+			['Location', ['name' => 'Grenoble', 'org_id' => 2], 'org_name', ''],
+			['Location', ['name' => 'Grenoble', 'org_id' => 2], 'org_id_friendlyname', ''],
+			['Location', ['name' => 'Grenoble', 'org_id' => 2], 'org_id', 2],
+			['Location', ['name' => 'Grenoble', 'org_id' => 2], 'CONCAT(SUBSTR(name, 4), " cause")', 'noble cause'],
+		];
 	}
 
 	/**

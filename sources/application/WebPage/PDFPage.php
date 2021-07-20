@@ -67,10 +67,10 @@ class PDFPage extends WebPage
 table {
 	padding: 2pt;
 }
-table.listResults td {
+table.ibo-datatable td, table.listResults td  {
 	border: 0.5pt solid #000 ;
 }
-table.listResults th {
+table.ibo-datatable th, table.listResults th  {
 	background-color: #eee;
 	border: 0.5pt solid #000 ;
 }
@@ -85,6 +85,13 @@ table.section td {
 }
 td.icon {
 	width: 30px;
+}
+h2{
+	font-size: 10pt;
+	vertical-align: middle;
+	background-color:#eee;
+	padding: 2pt;
+	margin:2pt;
 }
 EOF
 		);

@@ -27,6 +27,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'DBTools:Class' => 'Class~~',
 	'DBTools:Title' => 'Database Maintenance Tools~~',
 	'DBTools:ErrorsFound' => 'Errors Found~~',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => 'Error~~',
 	'DBTools:Count' => 'Count~~',
 	'DBTools:SQLquery' => 'SQL query~~',

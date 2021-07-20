@@ -377,8 +377,8 @@ abstract class Controller
 		$this->AddReadyScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'ready.js'));
 		$this->AddStyleToPage($this->RenderTemplate($aParams, $sTemplateName, 'css'));
 		if (!empty($this->m_aAjaxTabs)) {
-			$this->m_oPage->AddTabContainer('');
-			$this->m_oPage->SetCurrentTabContainer('');
+			$this->m_oPage->AddTabContainer('TwigBaseTabContainer');
+			$this->m_oPage->SetCurrentTabContainer('TwigBaseTabContainer');
 		}
 		foreach ($this->m_aAjaxTabs as $sTabCode => $aTabData) {
 			$this->AddAjaxTabToPage($sTabCode, $aTabData['label'], $aTabData['url'], $aTabData['cache']);
@@ -623,6 +623,15 @@ abstract class Controller
 	public function GetOperationTitle()
 	{
 		return Dict::S($this->m_sModule.'/Operation:'.$this->m_sOperation.'/Title');
+	}
+
+	/**
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetOperation(): string
+	{
+		return $this->m_sOperation;
 	}
 
 	/**

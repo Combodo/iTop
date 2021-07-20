@@ -3,12 +3,12 @@
 {% set sListId = oUIBlock.GetId() %}
 {% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 {% if oUIBlock.GetOption("iPageSize") is not empty %}
-    {% set iPageSize = oUIBlock.GetOption("iPageSize") %}
+{% set iPageSize = oUIBlock.GetOption("iPageSize") %}
 {% else %}
-    {% set iPageSize = 10 %}
+{% set iPageSize = 10 %}
 {% endif %}
 
-$('#{{ oUIBlock.GetId() }}').DataTable({
+var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         processing: "{{ 'UI:Datatables:Language:Processing'|dict_s }}",
         search: "{{ 'UI:Datatables:Language:Search'|dict_s }}",
@@ -32,8 +32,8 @@ $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollX: true,
     {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
         scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
-        scrollCollapse: true,
     {% endif %}
+    scrollCollapse: true,
     order: [],
     autoWidth: false,
     rowId: "id",

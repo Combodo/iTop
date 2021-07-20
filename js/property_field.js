@@ -50,15 +50,14 @@ $(function()
 			if (this.bModified)
 			{
 				this.element.addClass("itop-property-field-modified");
-				if (this.options.can_apply)
-				{
-					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: ''});					
-				}
-				else
-				{
+				if (this.options.can_apply) {
+					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: ''});
+					CombodoTooltip.InitTooltipFromMarkup(this.element.find(".prop_icon.ibo-prop--apply [data-tooltip-content]"), true);
+				} else {
 					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
 				}
 				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: ''});
+				CombodoTooltip.InitTooltipFromMarkup(this.element.find(".prop_icon.ibo-prop--cancel [data-tooltip-content]"), true);
 			}
 			else
 			{

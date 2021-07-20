@@ -34,7 +34,9 @@ $ibo-activity-panel--togglers--elements-spacing: 0.75rem !default;
 
 /* - Tabs togglers*/
 $ibo-activity-panel--tabs-togglers--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
+$ibo-activity-panel--tab-toolbar-action--color: $ibo-color-grey-900 !default;
 
+$ibo-activity-panel--tab-toolbar-info--color: $ibo-activity-panel--tab-toolbar-action--color !default;
 /* - Tab toggler */
 $ibo-activity-panel--tab-toggler--caselog-highlight-colors: $ibo-caselog-highlight-colors !default;
 $ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200 !default;
@@ -278,7 +280,8 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 }
 .ibo-activity-panel--tab-toolbar-right-actions {
 	.ibo-activity-panel--tab-toolbar-info {
-		> .ibo-activity-panel--tab-toolbar-info-icon {
+    color: $ibo-activity-panel--tab-toolbar-info--color;
+    > .ibo-activity-panel--tab-toolbar-info-icon {
 			margin-left: $ibo-activity-panel--tab-toolbar-info-icon--margin-left;
 		}
 
@@ -289,6 +292,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 }
 .ibo-activity-panel--tab-toolbar-action{
   position: relative;
+  color: $ibo-activity-panel--tab-toolbar-action--color;
 	@extend %ibo-fully-centered-content;
 }
 .ibo-activity-panel--filter{

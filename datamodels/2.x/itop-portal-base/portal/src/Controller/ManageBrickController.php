@@ -42,7 +42,9 @@ use Dict;
 use Exception;
 use FieldExpression;
 use iPopupMenuExtension;
+use IssueLog;
 use JSButtonItem;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,10 +91,10 @@ class ManageBrickController extends BrickController
 		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
 
-		if (is_null($sDisplayMode))
-		{
+		if (is_null($sDisplayMode)) {
 			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
+
 		$aData = $this->GetData($oRequest, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
@@ -102,8 +104,7 @@ class ManageBrickController extends BrickController
 				'iDefaultListLength' => $oBrick->GetDefaultListLength(),
 			);
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			$oResponse = new JsonResponse($aData);
 		}
 		else
@@ -814,31 +815,32 @@ class ManageBrickController extends BrickController
 					'iItemsCount' => $oSet->Count(),
 					'aColumnsDefinition' => $aColumnsDefinition,
 				);
+
+				IssueLog::Debug('Portal ManageBrick query', LogChannels::PORTAL, array(
+					'sPortalId' => $sPortalId,
+					'sBrickId' => $sBrickId,
+					'sGroupingTab' => $sGroupingTab,
+					'oql' => $oSet->GetFilter()->ToOQL(),
+					'aGroupingTabs' => $aGroupingTabs,
+				));
 			}
-		}
-		else
-		{
+		} else {
 			$aGroupingAreasData = array();
 			$sGroupingArea = null;
 		}
 
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			$aData = $aData + array(
 					'data' => $aGroupingAreasData[$sGroupingArea]['aItems'],
 				);
-		}
-		else
-		{
+		} else {
 			$aDisplayValues = array();
 			$aUrls = array();
 			$aColumns = array();
 			$aNames = array();
-			if ($bHasScope)
-			{
-				foreach ($aGroupingTabsValues as $aValues)
-				{
+			if ($bHasScope) {
+				foreach ($aGroupingTabsValues as $aValues) {
 					$aDisplayValues[] = array(
 						'value' => $aValues['count'],
 						'label' => $aValues['label'],

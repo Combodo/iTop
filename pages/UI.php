@@ -411,14 +411,20 @@ try
 
 		case 'release_lock_and_details':
         $oP->DisableBreadCrumb();
+
+        // Retrieve object
         $sClass = utils::ReadParam('class', '', false, 'class');
 		$id = utils::ReadParam('id', '');
 		$oObj = MetaModel::GetObject($sClass, $id);
+
+		// Retrieve ownership token
 		$sToken = utils::ReadParam('token', '');
 		if ($sToken != '')
 		{
 			iTopOwnershipLock::ReleaseLock($sClass, $id, $sToken);
 		}
+
+		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
 		cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
 		break;
 	
@@ -1879,7 +1885,7 @@ catch (Exception $e) {
 	}
 
 	$sOperationToLog = $operation ?? 'N/A';
-	IssueLog::Debug('UI.php operation='.$sOperationToLog.', error='.$e->getMessage()."\n".$sErrorStackTrace, 'console');
+	IssueLog::Debug('UI.php operation='.$sOperationToLog.', error='.$e->getMessage()."\n".$sErrorStackTrace, LogChannels::CONSOLE);
 }
 
 

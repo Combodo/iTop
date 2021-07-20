@@ -43,7 +43,7 @@ $ibo-font-weight-950: 950 !default; /* 950 Extra Black (Ultra Black) */
 
 $ibo-font-family-base: "Raleway" !default;
 $ibo-font-family-fallbacks: "sans-serif", "system-ui" !default;
-$ibo-font-family-monospace: "monospace" !default;
+$ibo-font-family-monospace: monospace !default;
 $ibo-font-family-code: $ibo-font-family-monospace !default;
 
 :root {

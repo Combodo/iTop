@@ -110,7 +110,8 @@ class ActivityPanelHelper
 		];
 
 		// - Prepare query to retrieve changes
-		$oSearch = DBObjectSearch::FromOQL('SELECT CO FROM CMDBChangeOp AS CO WHERE CO.objclass = :obj_class AND CO.objkey = :obj_key AND CO.finalclass NOT IN (:excluded_optypes)');
+		// N°3924: The "CO.objkey > 0" clause is there to avoid retrieving orphan elements from objects that have not been completely created / cleaned. There seem to be a lot of them due to some cron tasks.
+		$oSearch = DBObjectSearch::FromOQL('SELECT CO FROM CMDBChangeOp AS CO WHERE CO.objclass = :obj_class AND CO.objkey = :obj_key AND CO.objkey > 0 AND CO.finalclass NOT IN (:excluded_optypes)');
 		$aArgs = ['obj_class' => $sObjectClass, 'obj_key' => $sObjectId, 'excluded_optypes' => ['CMDBChangeOpSetAttributeCaseLog']];
 
 		// - Optional offset condition

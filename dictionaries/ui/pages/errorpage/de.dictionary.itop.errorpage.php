@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Navigation menu
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ErrorPage:UnstableVersion' => 'Sie nutzeng gerade eine Unstable-Version, die eventuell Bugs enthält. Wenn Sie glauben, dieser Fehler liegt an einem solchen Bug, bitte senden Sie uns Ihr Feedback!',

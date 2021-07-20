@@ -540,12 +540,10 @@ class utils
 	{
 		$aSelectedObj = utils::ReadParam('selectObject', array());
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
-		if ($sSelectionMode != '')
-		{
+		if ($sSelectionMode != '') {
 			// Paginated selection
 			$aExceptions = utils::ReadParam('storedSelection', array());
-			if ($sSelectionMode == 'positive')
-			{
+			if ($sSelectionMode == 'positive') {
 				// Only the explicitely listed items are selected
 				$aSelectedObj = $aExceptions;
 			}
@@ -666,16 +664,16 @@ class utils
 	}
 
 	/**
-	 * Helper function to convert a value expressed in a 'user friendly format'
-	 * as in php.ini, e.g. 256k, 2M, 1G etc. Into a number of bytes
+	 * @param mixed $value The value as read from php.ini (eg 256k, 2M, 1G etc.)
 	 *
-	 * @param mixed $value The value as read from php.ini
+	 * @return int conversion to number of bytes
 	 *
-	 * @return number
+	 * @since 2.7.5 3.0.0 convert to int numeric values
+	 *
+	 * @link https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes Shorthand bytes value reference in PHP.net FAQ
 	 */
 	public static function ConvertToBytes($value)
 	{
-		$iReturn = $value;
 		if (!is_numeric($value)) {
 			$iLength = strlen($value);
 			$iReturn = substr($value, 0, $iLength - 1);
@@ -688,6 +686,8 @@ class utils
 				case 'K':
 					$iReturn *= 1024;
 			}
+		} else {
+			$iReturn = (int)$value;
 		}
 
 		return $iReturn;
@@ -2814,15 +2814,30 @@ HTML;
 	 * Check if iTop is in a development environment (VCS vs build number)
 	 *
 	 * @return bool
+	 *
+	 * @since 2.6.0 method creation
+	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
+	 *
+	 * @use `developer_mode.enabled` config parameter
+	 * @use ITOP_REVISION
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		if (! defined('ITOP_REVISION')) {
+		$oConfig = utils::GetConfig();
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+		if ($bIsDevEnvInConfig === true) {
+			return true;
+		}
+		if ($bIsDevEnvInConfig === false) {
+			return false;
+		}
+
+		if (!defined('ITOP_REVISION')) {
 			//defensive behaviour: by default we are not in dev environment
 			//can happen even in production (unattended install for example) or with exotic use of iTop
 			return false;
 		}
-		
+
 		return ITOP_REVISION === 'svn';
 	}
 

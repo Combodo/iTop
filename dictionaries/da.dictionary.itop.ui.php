@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:AuditCategory' => 'Audit-kategori',
 	'Class:AuditCategory+' => 'Udsnit af alle Audits',
@@ -156,6 +155,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_UserProfile' => 'Brugerprofil',
 	'Class:URP_UserProfile+' => 'Brugerprofil',
+	'Class:URP_UserProfile/Name' => 'Link mellem %1$s and %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Bruger',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Brugerkonto',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -176,6 +176,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Class:URP_UserOrg' => 'Bruger organisation(er)',
 	'Class:URP_UserOrg+' => 'Tilladte organisation(er)',
+	'Class:URP_UserOrg/Name' => 'Link mellem %1$s og %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Bruger',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -893,8 +894,6 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Grant Matrix',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Link mellem %1$s and %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Link mellem %1$s og %2$s',
 
 	'Menu:AdminTools' => 'Admin værktøjer', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Administration tools~~', // Duplicated into itop-welcome-itil (will be removed from here...)

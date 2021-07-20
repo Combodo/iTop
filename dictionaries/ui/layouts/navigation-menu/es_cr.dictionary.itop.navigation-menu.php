@@ -16,7 +16,6 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
-
 // Navigation menu
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',

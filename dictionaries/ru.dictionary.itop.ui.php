@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 /**
  * Локализация интерфейса Combodo iTop подготовлена сообществом iTop по-русски http://community.itop-itsm.ru.
  *
@@ -168,6 +167,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_UserProfile' => 'Профиль пользователя',
 	'Class:URP_UserProfile+' => 'Профиль пользователя',
+	'Class:URP_UserProfile/Name' => 'Связь между %1$s и %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Пользователь',
 	'Class:URP_UserProfile/Attribute:userid+' => 'учетная запись пользователя',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Логин',
@@ -188,6 +188,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:URP_UserOrg' => 'Организации пользователя',
 	'Class:URP_UserOrg+' => 'Разрешённые организации',
+	'Class:URP_UserOrg/Name' => 'Связь между %1$s и %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Пользователь',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Учетная запись пользователя',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Логин',
@@ -905,8 +906,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'не определено',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Не определён жизненній цикл для данного класса',
 	'UI:UserManagement:GrantMatrix' => 'Матрица разрешений',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Связь между %1$s и %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Связь между %1$s и %2$s',
 
 	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)

@@ -8,9 +8,12 @@ $ibo-datatable--toolbar--padding-y: 0 !default;
 $ibo-datatable--toolbar--text-color: $ibo-color-grey-700 !default;
 $ibo-datatable--toolbar--elements-spacing: 1rem !default;
 $ibo-datatable--toolbar--table-spacing: 18px !default;
-$ibo-datatable-panel--table-spacing: 48px !default;
 
+$ibo-datatable-header--text-color: $ibo-base-variable--text-color !default;
+
+$ibo-datatable-panel--table-spacing: 48px !default;
 $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
+
 $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
 $ibo-list-column--max-height: 150px !default;
 
@@ -24,12 +27,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   --ibo-datatable-panel--table-spacing: #{$ibo-datatable-panel--table-spacing};
 }
 
-.ibo-datatable {
-  .ibo-datatable-header {
-    color: var(--ibo-body-text-color);
-  }
-}
-
+/* Rules */
 .ibo-datatable--toolbar {
   display: flex;
   justify-content: space-between;
@@ -57,6 +55,10 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   > *:not(:first-child) {
     margin-left: $ibo-datatable--toolbar--elements-spacing;
   }
+}
+
+.ibo-datatable-header {
+  color: $ibo-datatable-header--text-color;
 }
 
 /* TODO 3.0.0: The lines below need to be refactored / placed in the right places (integrations, dedicated block / page, ...) */

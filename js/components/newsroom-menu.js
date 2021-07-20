@@ -87,7 +87,10 @@ $(function()
 		_load: function()
 		{
 			var me = this;
-			setTimeout(function() { me._getAllMessages(); }, 1000);
+
+			if(this.options.providers.length > 0) {
+				setTimeout(function() { me._getAllMessages(); }, 1000);
+			}
 		},
 		_getAllMessages: function()
 		{

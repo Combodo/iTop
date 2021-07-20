@@ -1,0 +1,14 @@
+/*!
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-block-list--create-icon--margin-right: 0.5rem !default;
+
+.ibo-block-list--empty-text, .ibo-block-list--create-action{
+  text-align: center;
+}
+
+.ibo-block-list--create-icon {
+  margin-right: $ibo-block-list--create-icon--margin-right;
+}

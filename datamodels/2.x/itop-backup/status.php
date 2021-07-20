@@ -337,18 +337,29 @@ try {
 		);
 	}
 
-	// Do backup now
+	// Next occurrence
 	//
-	$oBackupExec = new BackupExec();
-	$oNext = $oBackupExec->GetNextOccurrence();
-	$sNextOccurrence = Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'),
-		$oNext->Format('H:i'));
+	/** @var \BackgroundTask $oTask */
+	$oTask = MetaModel::GetObjectByName(BackgroundTask::class, BackupExec::class, false);
+	if ($oTask)
+	{
+		$oTimezone = new DateTimeZone(MetaModel::GetConfig()->Get('timezone'));
+		$oNext = new DateTime($oTask->Get('next_run_date'), $oTimezone);
+		$sNextOccurrence = Dict::Format('bkp-next-backup', $aWeekDayToString[$oNext->Format('N')], $oNext->Format('Y-m-d'),
+			$oNext->Format('H:i'));
+	}
+	else
+	{
+		$sNextOccurrence = Dict::S('bkp-next-backup-unknown');
+	}
 	$oFieldsetBackupNow->AddSubBlock(
 		AlertUIBlockFactory::MakeForInformation('', $sNextOccurrence)
 			->SetIsClosable(false)
 			->SetIsCollapsible(false)
 	);
 
+	// Do backup now
+	//
 	$oLaunchBackupButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('bkp-button-backup-now'));
 	$oLaunchBackupButton->SetOnClickJsCode('LaunchBackupNow();');
 	$oFieldsetBackupNow->AddSubBlock($oLaunchBackupButton);

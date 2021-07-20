@@ -1,7 +1,7 @@
 {% set sListId = oUIBlock.GetId() %}
 {% set sListIDForVarSuffix = ('' ~ sListId)|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
 
-var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
+var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     language: {
         emptyTable: "{{ 'UI:Message:EmptyList:UseAdd'|dict_s }}"
     },
@@ -26,29 +26,85 @@ var table{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     {% endif %}
     drawCallback: function () {
         // Hiding pagination if only one page
-        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+        {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
-        } else {
+        }
+        else
+        {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
     },
-    createdRow: function( row, data, dataIndex ) {
-        if (data['@class'] !== undefined) {
+    createdRow: function (row, data, dataIndex) {
+        if (data['@class'] !== undefined)
+        {
             $(row).addClass(data['@class']);
         }
     },
 });
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible')) {
-    table{{ sListIDForVarSuffix }}.columns.adjust().draw();
+
+{% if (oUIBlock.GetOption('bFullscreen')) %}
+var heightS{{ sListIDForVarSuffix }} = 0;
+var heightD{{ sListIDForVarSuffix }} = 0;
+if ($("#{{ oUIBlock.GetId() }}").height() > 0)
+{
+    heightD{{ sListIDForVarSuffix }} = $("#ibo-main-content").height()-$("#ibo-main-content")[0].scrollHeight+$("#{{ oUIBlock.GetId() }}").height();
+    heightS{{ sListIDForVarSuffix }} = $("#ibo-main-content").height();
+    if (heightD{{ sListIDForVarSuffix }} > 200)
+    {
+        $("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(heightD{{ sListIDForVarSuffix }});
+    }
+}
+{% endif %}
+
+if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
+{
+    oTable{{ sListIDForVarSuffix }}.columns.adjust().draw();
 }
 
-if(window.ResizeObserver){
+if (window.ResizeObserver)
+{
     let oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = null;
-    const oFromTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function(){
+    const oFromTable{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function () {
         clearTimeout(oFromTable{{ sListIDForVarSuffix }}ResizeTimeout);
-        oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function(){
+        oFromTable{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function () {
             $('#{{ oUIBlock.GetId() }}').DataTable().columns.adjust();
         }, 120);
     });
     oFromTable{{ sListIDForVarSuffix }}Resize.observe($('#{{ oUIBlock.GetId() }}')[0]);
+
+    {% if (oUIBlock.GetOption('bFullscreen')) %}
+    let heightScreen{{ sListIDForVarSuffix }} = heightS{{ sListIDForVarSuffix }};
+    let heightDatatable{{ sListIDForVarSuffix }} = heightD{{ sListIDForVarSuffix }};
+    let oFromScreen{{ sListIDForVarSuffix }}ResizeTimeout = null;
+    const oFromScreen{{ sListIDForVarSuffix }}Resize = new ResizeObserver(function () {
+        clearTimeout(oFromScreen{{ sListIDForVarSuffix }}ResizeTimeout);
+        oFromScreen{{ sListIDForVarSuffix }}ResizeTimeout = setTimeout(function () {
+            if ($("#{{ oUIBlock.GetId() }}_wrapper").height() > 0)
+            {
+                if (heightDatatable{{ sListIDForVarSuffix }}> 0)
+                {
+                    let calcul = $("#ibo-main-content").height()+heightDatatable{{ sListIDForVarSuffix }}-heightScreen{{ sListIDForVarSuffix }};
+                    if (calcul > 200)
+                    {
+                        $("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(calcul);
+                    }
+                }
+                else
+                {
+                    heightDatatable{{ sListIDForVarSuffix }} = $("#ibo-main-content").height()-$("#ibo-main-content")[0].scrollHeight+$("#{{ oUIBlock.GetId() }}_wrapper").height();
+                    heightScreen{{ sListIDForVarSuffix }} = $("#ibo-main-content").height();
+                    if (heightDatatable{{ sListIDForVarSuffix }} > 200)
+                    {
+                        $("#{{ oUIBlock.GetId() }}_wrapper").find(".dataTables_scrollBody").height(heightDatatable{{ sListIDForVarSuffix }});
+                    }
+                }
+
+            }
+        }, 120);
+    });
+    oFromScreen{{ sListIDForVarSuffix }}Resize.observe($('#ibo-main-content')[0]);
+
+    {% endif %}
+
 }

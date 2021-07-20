@@ -280,7 +280,7 @@ ij_javascript_while_brace_force = always
 ij_javascript_while_on_new_line = false
 ij_javascript_wrap_comments = false
 
-[{*.ctp,*.hphp,*.inc,*.module,*.php,*.php4,*.php5,*.phtml}]
+[{*.ctp, *.hphp, *.inc, *.module, *.php, *.php4, *.php5, *.phtml}]
 indent_style = tab
 ij_continuation_indent_size = 4
 ij_smart_tabs = true
@@ -289,8 +289,8 @@ ij_php_align_assignments = false
 ij_php_align_class_constants = false
 ij_php_align_group_field_declarations = false
 ij_php_align_inline_comments = false
-ij_php_align_key_value_pairs = false
-ij_php_align_multiline_array_initializer_expression = false
+ij_php_align_key_value_pairs = true
+ij_php_align_multiline_array_initializer_expression = true
 ij_php_align_multiline_binary_operation = false
 ij_php_align_multiline_chained_methods = false
 ij_php_align_multiline_extends_list = false

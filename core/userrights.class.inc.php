@@ -1110,13 +1110,15 @@ class UserRights
 					}
 				}
 			}
-		} // If no contact, check if user has a placeholder in they preferences
-		else {
+		}
+		// If no contact & empty login, check if current user has a placeholder in they preferences
+		elseif ('' === $sLogin) {
 			$sPlaceholderPictureFilename = appUserPreferences::GetPref($sUserPicturePlaceholderPrefKey, null, static::GetUserId($sLogin));
 			if (!empty($sPlaceholderPictureFilename)) {
 				$sPictureUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.$sPlaceholderPictureFilename;
 			}
 		}
+		// Else, no contact and no login, then it's for an unknown origin (system, extension, ...)
 
 		// Update cache
 		static::$m_aCacheContactPictureAbsUrl[$sLogin] = $sPictureUrl;

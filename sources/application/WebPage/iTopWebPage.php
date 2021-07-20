@@ -153,6 +153,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/on-ready.js');
 	}
 
 	/**
@@ -173,6 +174,10 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_dict_entry('UI:Datatables:Language:Processing');
 		$this->add_dict_entries('UI:Newsroom');
 
+		// User not logged in dialog
+		$this->add_dict_entry('UI:DisconnectedDlgTitle');
+		$this->add_dict_entry('UI:LoginAgain');
+		$this->add_dict_entry('UI:StayOnThePage');
 	}
 
 	/**
@@ -210,10 +215,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 */
 	protected function PrepareLayout()
 	{
-		$sJSDisconnectedMessage = json_encode(Dict::S('UI:DisconnectedDlgMessage'));
-		$sJSTitle = json_encode(Dict::S('UI:DisconnectedDlgTitle'));
-		$sJSLoginAgain = json_encode(Dict::S('UI:LoginAgain'));
-		$sJSStayOnThePage = json_encode(Dict::S('UI:StayOnThePage'));
 		$aDaysMin = array(
 			Dict::S('DayOfWeek-Sunday-Min'),
 			Dict::S('DayOfWeek-Monday-Min'),
@@ -352,34 +353,6 @@ JS
 	docWidth = $(document).width();
 	// $('#ModalDlg').dialog({ autoOpen: false, modal: true, width: 0.8*docWidth, height: 'auto', maxHeight: $(window).height() - 50 }); // JQuery UI dialogs
 	ShowDebug();
-	
-	$(document).ajaxSend(function(event, jqxhr, options) {
-		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
-	});
-	$(document).ajaxError(function(event, jqxhr, options) {
-		if (jqxhr.status == 401)
-		{
-			$('<div>'+$sJSDisconnectedMessage+'</div>').dialog({
-				modal:true,
-				title: $sJSTitle,
-				close: function() { $(this).remove(); },
-				minWidth: 400,
-				buttons: [
-					{ text: $sJSLoginAgain, click: function() { window.location.href= GetAbsoluteUrlAppRoot()+'pages/UI.php' } },
-					{ text: $sJSStayOnThePage, click: function() { $(this).dialog('close'); } }
-				]
-			});
-		}
-	});
-	$(document).ajaxSuccess(function(){
-		// Async. markup, small timeout to allow markup to be built if necessary
-		setTimeout(function(){
-			CombodoTooltip.InitAllNonInstantiatedTooltips();
-			CombodoBackofficeToolbox.InitCodeHighlighting();
-			// Initialize date / datetime pickers if needed 
-			PrepareWidgets();
-		}, 500);
-	});
 	
 	// Default values for blockui
 	$.blockUI.defaults.css = {}; 

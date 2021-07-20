@@ -68,6 +68,8 @@ class CMDBSource
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+	/** @var mysqli or mock used for test purpose, only used in query() method */
+	protected static $oMySQLiForQuery;
 
 	/**
 	 * @var int number of level for nested transactions : 0 if no transaction was ever opened, +1 for each 'START TRANSACTION' sent
@@ -134,6 +136,7 @@ class CMDBSource
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
 
 		self::$m_oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
+		self::SetMySQLiForQuery(self::$m_oMysqli);
 	}
 
 	/**
@@ -151,8 +154,6 @@ class CMDBSource
 	public static function GetMysqliInstance(
 		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false
 	) {
-		$oMysqli = null;
-
 		$sServer = null;
 		$iPort = null;
 		self::InitServerAndPort($sDbHost, $sServer, $iPort);
@@ -450,6 +451,24 @@ class CMDBSource
 		return self::$m_oMysqli;
 	}
 
+	/**
+	 * @return
+	 */
+	private static function GetMySQLiForQuery()
+	{
+		return self::$oMySQLiForQuery;
+	}
+
+
+	/**
+	 * Used for test purpose (mysqli mock)
+	 * @param $oMySQLi
+	 */
+	private static function SetMySQLiForQuery($oMySQLi)
+	{
+		self::$oMySQLiForQuery = $oMySQLi;
+	}
+
 	public static function GetErrNo()
 	{
 		if (self::$m_oMysqli->errno != 0)
@@ -585,10 +604,15 @@ class CMDBSource
 	 */
 	private static function DBQuery($sSql)
 	{
+		$sShortSQL = substr(preg_replace("/\s+/", " ", substr($sSql, 0, 180)), 0, 150);
+		if (substr_compare($sShortSQL, "SELECT", 0, strlen("SELECT")) !== 0) {
+			IssueLog::Trace("$sShortSQL", LogChannels::CMDB_SOURCE);
+		}
+
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch (mysqli_sql_exception $e)
 		{
@@ -652,7 +676,7 @@ class CMDBSource
 		);
 		DeadLockLog::Info($sMessage, $iMySqlErrorNo, $aLogContext);
 
-		IssueLog::Error($sMessage, 'DeadLock', $e->getMessage());
+		IssueLog::Error($sMessage, LogChannels::DEADLOCK, $e->getMessage());
 	}
 
 	/**
@@ -668,10 +692,14 @@ class CMDBSource
 	 */
 	private static function StartTransaction()
 	{
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		$bHasExistingTransactions = self::IsInsideTransaction();
-		if (!$bHasExistingTransactions)
-		{
+		if (!$bHasExistingTransactions) {
+			IssueLog::Trace("START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
 			self::DBQuery('START TRANSACTION');
+		} else {
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
 		}
 
 		self::AddTransactionLevel();
@@ -689,18 +717,22 @@ class CMDBSource
 	 */
 	private static function Commit()
 	{
-		if (!self::IsInsideTransaction())
-		{
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if (!self::IsInsideTransaction()) {
 			// should not happen !
+			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 
 		self::RemoveLastTransactionLevel();
 
-		if (self::IsInsideTransaction())
-		{
+		if (self::IsInsideTransaction()) {
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") COMMIT $sCaller", LogChannels::CMDB_SOURCE);
+
 			return;
 		}
+		IssueLog::Trace("COMMIT $sCaller", LogChannels::CMDB_SOURCE);
 		self::DBQuery('COMMIT');
 	}
 
@@ -719,17 +751,21 @@ class CMDBSource
 	 */
 	private static function Rollback()
 	{
-		if (!self::IsInsideTransaction())
-		{
+		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if (!self::IsInsideTransaction()) {
 			// should not happen !
+			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
 		}
 		self::RemoveLastTransactionLevel();
-		if (self::IsInsideTransaction())
-		{
+		if (self::IsInsideTransaction()) {
+			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
+
 			return;
 		}
 
+		IssueLog::Trace("ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
 		self::DBQuery('ROLLBACK');
 	}
 
@@ -779,6 +815,18 @@ class CMDBSource
 		self::$m_iTransactionLevel = 0;
 	}
 
+	public static function IsDeadlockException(Exception $e)
+	{
+		while ($e instanceof Exception) {
+			if (($e instanceof MySQLException) && ($e->getCode() == 1213)) {
+				return true;
+			}
+			$e = $e->getPrevious();
+		}
+		return false;
+	}
+
+
 	public static function GetInsertId()
 	{
 		$iRes = self::$m_oMysqli->insert_id;
@@ -823,7 +871,7 @@ class CMDBSource
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -863,7 +911,7 @@ class CMDBSource
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -945,7 +993,7 @@ class CMDBSource
 	{
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -1433,7 +1481,7 @@ class CMDBSource
 		$sSql = "SELECT * FROM `$sTable`";
 		try
 		{
-			$oResult = self::$m_oMysqli->query($sSql);
+			$oResult = self::GetMySQLiForQuery()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{

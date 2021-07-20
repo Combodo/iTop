@@ -115,3 +115,5 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'Class:ModuleInstallation/Attribute:version' => 'Version',
     'Class:ModuleInstallation/Attribute:comment' => 'Kommentar',
 ));
+
+

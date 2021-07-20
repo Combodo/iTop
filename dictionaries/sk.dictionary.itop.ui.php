@@ -155,6 +155,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:URP_UserProfile' => 'Z užívateľa na profil',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Spojenie medzi %1$s a %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Užívateľ',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Prihlasovacie meno',
@@ -175,6 +176,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:URP_UserOrg' => 'Užívateľské organizácie',
 	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg/Name' => 'Spojenie medzi %1$s a %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Užívateľ',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Prihlasovacie meno',
@@ -893,8 +895,6 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Udelovacia matica',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Spojenie medzi %1$s a %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Spojenie medzi %1$s a %2$s',
 
 	'Menu:AdminTools' => 'Administrátorské pomôcky', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)

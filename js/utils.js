@@ -277,8 +277,15 @@ function CheckAll(sSelector, bValue) {
 function ToggleField(value, field_id) {
 	if (value) {
 		$('#'+field_id).prop('disabled', false);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', false);
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.enable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', false);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').removeClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', false);
+		}
 	} else {
 		$('#'+field_id).prop('disabled', true);
 		if ($('#'+field_id).hasClass('selectized')) {
@@ -669,7 +676,6 @@ const CombodoGlobalToolbox = {
 	 * @param iThreshold {integer} Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
 	 * @returns {boolean}
 	 * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
-	 * @since 3.0.0
 	 */
 	IsElementVisibleToTheUser: function (oDOMElem, bCompletely = false, iThreshold = 0) {
 		const oRect = oDOMElem.getBoundingClientRect(),
@@ -702,6 +708,57 @@ const CombodoGlobalToolbox = {
 				|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
 			);
 		}
+	},
+	/**
+	 * @param sUrl {string} The URL to append the new param to
+	 * @param sParamName {string} Name of the parameter
+	 * @param sParamValue {string} Value of the param, needs to be already URL encoded
+	 * @return {string} The sUrl parameter with the sParamName / sParamValue append at the end of the query string (but before the hash if any)
+	 */
+	AddParameterToUrl: function(sUrl, sParamName, sParamValue)
+	{
+		const sNewParamForUrl = sParamName + '=' + sParamValue;
+
+		// Split URL around the '#'. Note that if there are multiple '#' in the URL (which is not permitted!) this method won't work.
+		const aHashParts = sUrl.split('#');
+		// Part of the URL starting from the protocol to the character before the '#' if one, to the end of the URL otherwise
+		const sPreHashPart = aHashParts[0];
+		// Part of the URL starting just after the '#' if one, null otherwise
+		const sPostHashPart = aHashParts[1] ?? null;
+
+		sUrl = sPreHashPart + (sUrl.split('?')[1] ? '&' : '?') + sNewParamForUrl + (sPostHashPart !== null ? '#' + sPostHashPart : '');
+
+		return sUrl;
+	},
+	/**
+	 * This method should be a JS mirror of the PHP {@see utils::FilterXSS} method
+	 *
+	 * @param sInput {string} Input text to filter from XSS attacks
+	 * @returns {string} The sInput string filtered from possible XSS attacks
+	 */
+	FilterXSS: function (sInput) {
+		let sOutput = sInput;
+
+		// Remove HTML script tags
+		sOutput = sOutput.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
+
+		return sOutput;
+	},
+	/**
+	 * Pause the JS activity for iDuration milliseconds
+	 *
+	 * @see N°2763 for the original code idea
+	 * @return {void}
+	 * @param iDuration {integer} Duration in milliseconds
+	 */
+	Pause: function (iDuration) {
+		const oDate = new Date();
+		let oCurrentDate = null;
+
+		do {
+			oCurrentDate = new Date();
+		}
+		while ((oCurrentDate - oDate) < iDuration);
 	}
 };
 
@@ -721,12 +778,9 @@ const CombodoTooltip = {
 	 *
 	 * @param {Object} oElem The jQuery object representing the element
 	 * @param {boolean} bForce When set to true, tooltip will be instantiate even if one already exists, overwritting it.
-	 * @constructor
 	 */
 	InitTooltipFromMarkup: function (oElem, bForce = false) {
-		const oOptions = {
-			allowHTML: true,    // Always true so line breaks can work. Don't worry content will be sanitized.
-		};
+		const oOptions = {};
 
 		// First, check if the tooltip isn't already instantiated
 		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
@@ -739,24 +793,18 @@ const CombodoTooltip = {
 		// Content must be reworked before getting into the tooltip
 		// - Should we enable HTML content or keep text as is
 		const bEnableHTML = oElem.attr('data-tooltip-html-enabled') === 'true';
+		oOptions['allowHTML'] = bEnableHTML;
 
 		// - Content should be sanitized unless the developer says otherwise
 		// Note: Condition is inversed on purpose. When the developer is instantiating a tooltip,
-		// we want him/her to explicitly declare that he/she wants the sanitizer to be skipped.
+		// we want they to explicitly declare that they want the sanitizer to be skipped.
 		// Whereas in this code, it's easier to follow the logic with the variable oriented this way.
 		const bSanitizeContent = oElem.attr('data-tooltip-sanitizer-skipped') !== 'true';
 
-		// - Sanitize content and make sure line breaks are kept
-		const oTmpContentElem = $('<div />').html(oElem.attr('data-tooltip-content'));
-		let sContent = '';
-		if (bEnableHTML) {
-			sContent = oTmpContentElem.html();
-			if (bSanitizeContent) {
-				sContent = sContent.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
-			}
-		} else {
-			sContent = oTmpContentElem.text();
-			sContent = sContent.replace(/(\r\n|\n\r|\r|\n)/g, '<br/>');
+		let sContent = oElem.attr('data-tooltip-content');
+		// - Check if both HTML and sanitizer are enabled
+		if (bEnableHTML && bSanitizeContent) {
+			sContent = CombodoGlobalToolbox.FilterXSS(sContent);
 		}
 		oOptions['content'] = sContent;
 
@@ -821,7 +869,6 @@ const CombodoTooltip = {
 	 *
 	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
 	 * @param {boolean} bForce Whether the tooltip instantiation should be forced or not (if already done)
-	 * @constructor
 	 */
 	InitAllNonInstantiatedTooltips: function (oContainerElem = null, bForce = false) {
 		if (oContainerElem === null) {
@@ -864,7 +911,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.log(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Log: function(sMessage) {
 		this._Trace(sMessage, 'log');
@@ -873,7 +919,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.info(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Info: function(sMessage) {
 		this._Trace(sMessage, 'info');
@@ -882,7 +927,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.debug(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Debug: function(sMessage) {
 		this._Trace(sMessage, 'debug');
@@ -891,7 +935,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.warn(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Warn: function(sMessage) {
 		this._Trace(sMessage, 'warn');
@@ -900,7 +943,6 @@ const CombodoJSConsole = {
 	 * Equivalent of a "console.error(sMessage)"
 	 *
 	 * @param sMessage {string}
-	 * @constructor
 	 */
 	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');

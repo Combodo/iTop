@@ -296,7 +296,9 @@ class WebPage implements Page
 	 */
 	public function table($aConfig, $aData, $aParams = array())
 	{
-		$this->AddUiBlock($this->GetTableBlock($aConfig, $aData));
+		$oDataTable = $this->GetTableBlock($aConfig, $aData);
+		$oDataTable->AddOption("bFullscreen", true);
+		$this->AddUiBlock($oDataTable);
 	}
 
 	public function GetTableBlock($aColumns, $aData)
@@ -700,7 +702,18 @@ class WebPage implements Page
 		{
 			$aEntries = array_merge($aEntries, Dict::ExportEntries($sPrefix));
 		}
-		$sJSFile = 'var aDictEntries = '.json_encode($aEntries);
+
+		$sEntriesAsJson = json_encode($aEntries);
+		$sJSFile = <<<JS
+// Create variable so it can be used by the Dict class on initialization
+var aDictEntries = {$sEntriesAsJson};
+
+// Check if Dict._entries already exists in order to complete, this is for async calls only.
+// Note: We should not overload the WebPage::get_dict_file_content() in AjaxPage to put the part below as the same dict file can be consumed either by a regular page or an async page.
+if ((typeof Dict != "undefined") && (typeof Dict._entries != "undefined")) {
+	$.extend(Dict._entries, aDictEntries);
+}
+JS;
 
 		return $sJSFile;
 	}
@@ -1089,6 +1102,12 @@ class WebPage implements Page
 
 		$aData = [];
 
+		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
+		// - Generate necessary dict. files
+		if ($this->bAddJSDict) {
+			$this->output_dict_entries();
+		}
+
 		$aData['oLayout'] = $this->oContentLayout;
 		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
 
@@ -1127,16 +1146,6 @@ class WebPage implements Page
 			$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
 		}
 
-		// Dict entries for JS
-		//		if ($this->bAddJSDict) {
-		//			$this->output_dict_entries();
-		//		}
-
-
-		//		if (trim($s_captured_output) != "") {
-		//			echo "<div class=\"raw_output\">".utils::FilterXSS($s_captured_output)."</div>\n";
-		//		}
-
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
 		$oKpi = new ExecutionKPI();
@@ -1147,7 +1156,6 @@ class WebPage implements Page
 		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
-
 
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();

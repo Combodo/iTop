@@ -35,9 +35,12 @@ $ibo-input-select--action-button--padding-left: 6px !default;
 $ibo-input-select--action-button--padding-right: 2px !default;
 
 .ibo-input-select {
-  appearance: none;
   display: inline-block;
   min-width: $ibo-input-select--value--min-midth;
+
+  &:not(.ibo-input-select-autocomplete):not(.ibo-input-selectize) {
+    appearance: none;
+  }
 
   &.ibo-input-selectize {
     padding-right: 0;
@@ -55,6 +58,10 @@ $ibo-input-select--action-button--padding-right: 2px !default;
       line-height: $ibo-input-select-selectize--value--line-height;
       padding-left: $ibo-input--padding-x;
     }
+  }
+
+  &[size]{
+    height: auto;
   }
 }
 .ibo-input-select-autocomplete{
