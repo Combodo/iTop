@@ -1682,7 +1682,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		}
 
 		if ($sRenderMode == 'property') {
-			$sHtml .= '</td><td class="prop_icon prop_apply"><ii data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revertzegzinhgpzefinazepinezifgnzpzepbgzepvizpbvizebvpzegze').'" class="ui-icon ui-icon-circle-close"/></td></tr>';
+			$sHtml .= '</td><td class="prop_icon prop_apply ibo-prop--apply"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span></td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td></tr>';
 		}
 		foreach ($this->aSubForms as $sKey => $aFormData) {
 			$sId = $this->oForm->GetFieldId($this->sCode);
