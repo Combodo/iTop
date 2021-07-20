@@ -7,6 +7,15 @@
         {{ render_block(oLayout, {aPage: aPage}) }}
     {% endif %}
 
+    {% block iboPageJsInlineEarly %}
+        {% for sJsInline in aPage.aJsInlineEarly %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+            {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
+
 	{% block iboPageJsInlineLive %}
 		{% for sJsInline in aPage.aJsInlineLive %}
 			{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}

@@ -202,8 +202,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			$sParams .= $sName.'='.urlencode($value).'&'; // Always add a trailing &
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/'.$oObj->GetUIPage().'?'.$sParams.'class='.get_class($oObj).'&id='.$oObj->getKey().'&'.$oAppContext->GetForLink().'&a=1';
-		$oPage->add_script(
-			<<<EOF
+		$oPage->add_early_script(<<<JS
 	if (!sessionStorage.getItem('$sSessionStorageKey'))
 	{
 		sessionStorage.setItem('$sSessionStorageKey', 1);
@@ -213,7 +212,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	{
 		sessionStorage.removeItem('$sSessionStorageKey');
 	}
-EOF
+JS
 		);
 
 		$oObj->Reload();

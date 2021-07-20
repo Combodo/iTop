@@ -35,6 +35,15 @@
             </style>
         {% endfor %}
     {% endblock %}
+
+    {% block iboPageJsInlineEarly %}
+        {% for sJsInline in aPage.aJsInlineEarly %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+            {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
 </head>
 <body data-gui-type="backoffice">
 {% block iboPageBodyHtml %}

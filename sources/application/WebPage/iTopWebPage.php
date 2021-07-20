@@ -861,6 +861,7 @@ HTML;
 			[
 				'aCssFiles' => $this->a_linked_stylesheets,
 				'aCssInline' => $this->a_styles,
+				'aJsInlineEarly' => $this->a_early_scripts,
 				'aJsFiles' => $this->a_linked_scripts,
 				'aJsInlineOnInit' => $this->a_init_scripts,
 				'aJsInlineOnDomReady' => $this->GetReadyScripts(),

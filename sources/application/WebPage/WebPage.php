@@ -74,7 +74,13 @@ class WebPage implements Page
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
-	/** @var array Scripts to be put in the page's header */
+	/**
+	 * @var array Scripts to be put in the page's header, therefore executed first, BEFORE the DOM interpretation.
+	 *            /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
+	 * @since 3.0.0
+	 */
+	protected $a_early_scripts;
+	/** @var array Scripts to be executed immediately without waiting for the DOM to be ready */
 	protected $a_scripts;
 	/** @var array Scripts to be executed when the DOM is ready (typical JQuery use), right before "ready scripts" */
 	protected $a_init_scripts;
@@ -127,6 +133,7 @@ class WebPage implements Page
 		$this->s_title = $s_title;
 		$this->s_content = "";
 		$this->s_deferred_content = '';
+		$this->InitializeEarlyScripts();
 		$this->InitializeScripts();
 		$this->InitializeInitScripts();
 		$this->InitializeReadyScripts();
@@ -433,6 +440,45 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS in the page's header
 	 *
+	 * @uses \WebPage::$a_a_early_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyEarlyScripts(): void
+	{
+		$this->a_early_scripts = [];
+	}
+
+	/**
+	 * Initialize base JS in the page's header
+	 *
+	 * @uses \WebPage::$a_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeEarlyScripts(): void
+	{
+		$this->EmptyEarlyScripts();
+	}
+
+	/**
+	 * Add some Javascript to the header of the page, therefore executed first, BEFORE the DOM interpretation.
+	 * /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
+	 *
+	 * @uses \WebPage::$a_a_early_scripts
+	 * @param string $s_script
+	 * @since 3.0.0
+	 */
+	public function add_early_script($s_script)
+	{
+		if (!empty(trim($s_script))) {
+			$this->a_early_scripts[] = $s_script;
+		}
+	}
+
+	/**
+	 * Empty all base JS
+	 *
 	 * @uses \WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
@@ -443,7 +489,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Initialize base JS in the page's header
+	 * Initialize base JS
 	 *
 	 * @uses \WebPage::$a_scripts
 	 * @return void
@@ -455,7 +501,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to the header of the page
+	 * Add some Javascript to be executed immediately without waiting for the DOM to be ready
 	 *
 	 * @uses \WebPage::$a_scripts
 	 * @param string $s_script
@@ -1123,6 +1169,7 @@ JS;
 			],
 			'aCssFiles' => $this->a_linked_stylesheets,
 			'aCssInline' => $this->a_styles,
+			'aJsInlineEarly' => $this->a_early_scripts,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),

@@ -115,11 +115,10 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 		// IMPORTANT: the ajax request MUST BE synchronous to be executed in this context
 		$.ajax({
 			url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			async: true,
+			async: false,
 			method: 'POST',
 			data: {operation: 'on_form_cancel', transaction_id: sTransactionId, obj_class: sObjClass, obj_key: iObjKey, token: sToken }
 		});
-		CombodoGlobalToolbox.Pause(1000);
 	}
 }
 
