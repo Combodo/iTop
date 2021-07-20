@@ -315,11 +315,6 @@ class ThemeHandler
 		// Loading files to import and stylesheet to compile, also getting most recent modification time on overall files
 		$sTmpThemeScssContent = '';
 		$oFindStylesheetObject = new FindStylesheetObject();
-		if (isset($aThemeParameters['variable_imports'])) {
-			foreach ($aThemeParameters['variable_imports'] as $sImport) {
-				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
-			}
-		}
 
 		if (isset($aThemeParameters['utility_imports'])) {
 			foreach ($aThemeParameters['utility_imports'] as $sImport) {
@@ -335,6 +330,12 @@ class ThemeHandler
 
 		foreach ($oFindStylesheetObject->GetStylesheetFileURIs() as $sStylesheet){
 			$sTmpThemeScssContent .= '@import "'.$sStylesheet.'";'."\n";
+		}
+
+		if (isset($aThemeParameters['variable_imports'])) {
+			foreach ($aThemeParameters['variable_imports'] as $sImport) {
+				static::FindStylesheetFile($sImport, $aImportsPaths, $oFindStylesheetObject);
+			}
 		}
 
 		$iStyleLastModified = $oFindStylesheetObject->GetLastModified();
