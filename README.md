@@ -21,6 +21,19 @@ iTop also offers mass import tools and web services to integrate with your IT
 - [Data synchronization][18] (for data federation)
 
 
+## Latest release
+
+- [Changes since the previous version][62]
+- [New features][63]
+- [Installation notes][64]
+- [Download][65]
+
+[62]: https://www.itophub.io/wiki/page?id=latest:release:change_log
+[63]: https://www.itophub.io/wiki/page?id=latest:release:start
+[64]: https://www.itophub.io/wiki/page?id=latest:install:start
+[65]: https://sourceforge.net/projects/itop/files/latest/download
+
+
 ## Resources
 
  - [iTop Forums][1]: for support request
@@ -30,28 +43,6 @@ iTop also offers mass import tools and web services to integrate with your IT
  - [iTop extensions][5] for discovering and installing extensions
 
  
-## Releases
-### Version 2.6  
- - [Changes since the previous version][58]
- - [New features][59]
- - [Migration notes][60]
- - [Download iTop 2.6.3][61]
-
-
-### Version 2.5  
- - [Changes since the previous version][54]
- - [New features][55]
- - [Migration notes][56]
- - [Download iTop 2.5.1][57]
- 
-
-### Version 2.4  
- - [Changes since the previous version][50]
- - [New features][51]
- - [Migration notes][52]
- - [Download iTop 2.4.1][53]
-
-
 # About Us
 
 iTop development is sponsored, led and supported by [Combodo][0].
