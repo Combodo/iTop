@@ -505,6 +505,7 @@ class WebPage implements Page
 	 *
 	 * @uses \WebPage::$a_scripts
 	 * @param string $s_script
+	 * @since 3.0.0 These scripts are put at the end of the <body> tag instead of the end of the <head> tag, {@see static::add_early_script} to add script there
 	 */
 	public function add_script($s_script)
 	{
