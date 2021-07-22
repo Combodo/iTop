@@ -159,9 +159,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 
 	/**
 	 * @see self::$sStatusCode
-	 * @return string
+	 * @return string|null
 	 */
-	public function GetStatusCode(): string
+	public function GetStatusCode(): ?string
 	{
 		return $this->sStatusCode;
 	}
