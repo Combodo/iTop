@@ -44,6 +44,9 @@ class SetupPage extends NiceWebPage
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");
+
+		// Note: JS dict. entries cannot be added to the setup page as it does not support them well. Install from scratch is mot likely to crash (especially with build packages) as it gonna try to load the english dictionary from env-production which doesn't exists yet
+		$this->bAddJSDict = false;
 	}
 
 	/**

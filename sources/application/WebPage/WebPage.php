@@ -111,6 +111,11 @@ class WebPage implements Page
 	protected $a_OutputOptions;
 	protected $bPrintable;
 	protected $bHasCollapsibleSection;
+	/**
+	 * @var bool Whether the JS dictionary entries should be added to the page or not during the final output
+	 * @see static::add_dict_entry
+	 * @see static::add_dict_entries
+	 */
 	protected $bAddJSDict;
 	/** @var iUIContentBlock $oContentLayout */
 	protected $oContentLayout;
