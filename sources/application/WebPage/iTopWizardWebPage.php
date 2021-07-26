@@ -53,4 +53,3 @@ class iTopWizardWebPage extends iTopWebPage
     	parent::output();
 	}
 }
-?>

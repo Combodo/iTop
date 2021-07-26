@@ -30,7 +30,7 @@ class NiceWebPage extends WebPage
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
 		parent::__construct($s_title, $bPrintable);
 
-	    $this->LoadTheme();
+		$this->LoadTheme();
 	}
 
 	/**

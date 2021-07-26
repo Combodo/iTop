@@ -177,24 +177,26 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
-			'sTitle' => $this->s_title,
-			'aMetadata' => [
+			'sTitle'              => $this->s_title,
+			'aMetadata'           => [
 				'sCharset' => static::PAGES_CHARSET,
 				'sLang' => $this->GetLanguageForMetadata(),
 			],
-			'aCssFiles' => $this->a_linked_stylesheets,
-			'aCssInline' => $this->a_styles,
-			'aJsFiles' => $this->a_linked_scripts,
-			'aJsInlineLive' => $this->a_scripts,
+			'aCssFiles'           => $this->a_linked_stylesheets,
+			'aCssInline'          => $this->a_styles,
+			'aJsFiles'            => $this->a_linked_scripts,
+			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
-			'aJsInlineOnInit' => $this->a_init_scripts,
-			'bEscapeContent' => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
+			'aJsInlineOnInit'     => $this->a_init_scripts,
+			'bEscapeContent'      => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
 			// TODO 3.0.0: TEMP, used while developping, remove it.
-			'sSanitizedContent' => utils::FilterXSS($this->s_content),
-			'sDeferredContent' => utils::FilterXSS(addslashes(str_replace("\n", '', $this->s_deferred_content))),
-			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
-			'sPromiseId' => $this->sPromiseId
+			'sSanitizedContent'   => utils::FilterXSS($this->s_content),
+			'sDeferredContent'    => utils::FilterXSS(addslashes(str_replace("\n", '', $this->s_deferred_content))),
+			'sCapturedOutput'     => utils::FilterXSS($s_captured_output),
+			'sPromiseId'          => $this->sPromiseId,
 		];
+
+		$aData['aBlockParams'] = $this->GetBlockParams();
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML

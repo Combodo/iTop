@@ -99,6 +99,8 @@ class WebPage implements Page
 	protected $a_styles;
 	/** @var array Stylesheets linked (external) to the page through URIs */
 	protected $a_linked_stylesheets;
+	/** @var array Parameters to be used by page blocks */
+	protected $aBlockParams;
 	protected $a_headers;
 	protected $a_base;
 	protected $iNextId;
@@ -133,7 +135,7 @@ class WebPage implements Page
 	 * @param string $s_title
 	 * @param bool $bPrintable
 	 */
-	public function __construct($s_title, $bPrintable = false)
+	public function __construct(string $s_title, bool $bPrintable = false)
 	{
 		$this->s_title = $s_title;
 		$this->s_content = "";
@@ -146,8 +148,8 @@ class WebPage implements Page
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
-		$this->a_headers = array();
-		$this->a_base = array('href' => '', 'target' => '');
+		$this->a_headers = [];
+		$this->a_base = ['href' => '', 'target' => ''];
 		$this->iNextId = 0;
 		$this->iTransactionId = 0;
 		$this->sContentType = '';
@@ -155,7 +157,8 @@ class WebPage implements Page
 		$this->sContentFileName = '';
 		$this->bTrashUnexpectedOutput = false;
 		$this->s_OutputFormat = utils::ReadParam('output_format', 'html');
-		$this->a_OutputOptions = array();
+		$this->a_OutputOptions = [];
+		$this->aBlockParams = [];
 		$this->bHasCollapsibleSection = false;
 		$this->bPrintable = $bPrintable;
 		$this->bAddJSDict = true;
@@ -1168,23 +1171,25 @@ JS;
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
-			'sTitle' => $this->s_title,
-			'aMetadata' => [
+			'sTitle'              => $this->s_title,
+			'aMetadata'           => [
 				'sCharset' => static::PAGES_CHARSET,
-				'sLang' => $this->GetLanguageForMetadata(),
+				'sLang'    => $this->GetLanguageForMetadata(),
 			],
-			'aCssFiles' => $this->a_linked_stylesheets,
-			'aCssInline' => $this->a_styles,
-			'aJsInlineEarly' => $this->a_early_scripts,
-			'aJsFiles' => $this->a_linked_scripts,
-			'aJsInlineLive' => $this->a_scripts,
+			'aCssFiles'           => $this->a_linked_stylesheets,
+			'aCssInline'          => $this->a_styles,
+			'aJsInlineEarly'      => $this->a_early_scripts,
+			'aJsFiles'            => $this->a_linked_scripts,
+			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
-			'aJsInlineOnInit' => $this->a_init_scripts,
+			'aJsInlineOnInit'     => $this->a_init_scripts,
 
 			// TODO 3.0.0: TEMP, used while developing, remove it.
-			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
-			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
+			'sCapturedOutput'     => utils::FilterXSS($s_captured_output),
+			'sDeferredContent'    => utils::FilterXSS($this->s_deferred_content),
 		];
+
+		$aData['aBlockParams'] = $this->GetBlockParams();
 
 		if ($this->a_base['href'] != '') {
 			$aData['aPage']['aMetadata']['sBaseUrl'] = $this->a_base['href'];
@@ -1601,5 +1606,26 @@ EOD
 	public function GetTemplateRelPath()
 	{
 		return $this->sTemplateRelPath;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function GetBlockParams(): array
+	{
+		return $this->aBlockParams;
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param $value
+	 *
+	 * @return $this
+	 */
+	public function SetBlockParam(string $sKey, $value)
+	{
+		$this->aBlockParams[$sKey] = $value;
+
+		return $this;
 	}
 }

@@ -547,31 +547,24 @@ try
 				// Save search to history
 				// - Prepare icon
 				$sQueryIconUrl = null;
-				if(!empty($sClassName))
-				{
+				if(!empty($sClassName)) {
 					$sQueryIconUrl = MetaModel::GetClassIcon($sClassName, false);
 				}
 				// - Prepare label
 				$sQueryLabel = null;
-				if($sQuery !== $sFullText)
-				{
+				if ($sQuery !== $sFullText) {
 					$sQueryLabel = $sFullText;
 				}
 				GlobalSearchHelper::AddQueryToHistory($sQuery, $sQueryIconUrl, $sQueryLabel);
-				$oP->GetTopBarLayout()
-					->GetGlobalSearch()
-					->SetQuery($sQuery)
-					->SetLastQueries(GlobalSearchHelper::GetLastQueries());
+				$oP->AddBlockParam('global_search.query', $sQuery);
 
 				// Check the needle length
 				$iMinLenth = MetaModel::GetConfig()->Get('full_text_needle_min');
-				foreach ($aFullTextNeedles as $sNeedle)
-				{
-					if (strlen($sNeedle) < $iMinLenth)
-					{
+				foreach ($aFullTextNeedles as $sNeedle) {
+					if (strlen($sNeedle) < $iMinLenth) {
 						$oP->p(Dict::Format('UI:Search:NeedleTooShort', $sNeedle, $iMinLenth));
 						$key = array_search($sNeedle, $aFullTextNeedles);
-						if($key!== false)
+						if ($key !== false)
 						{
 							unset($aFullTextNeedles[$key]);
 						}

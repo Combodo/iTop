@@ -70,8 +70,8 @@ class GlobalSearch extends UIBlock implements iKeyboardShortcut
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);
 		$this->SetQuery('');
 		$this->SetLastQueries($aLastQueries);
-		$this->bShowHistory = (bool) MetaModel::GetConfig()->Get('global_search.show_history');
-		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('global_search.max_history_results');
+		$this->bShowHistory = (bool)MetaModel::GetConfig()->Get('global_search.show_history');
+		$this->iMaxHistoryResults = (int)MetaModel::GetConfig()->Get('global_search.max_history_results');
 	}
 
 	/**
