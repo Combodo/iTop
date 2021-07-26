@@ -100,9 +100,7 @@ class WebPage implements Page
 	/** @var array Stylesheets linked (external) to the page through URIs */
 	protected $a_linked_stylesheets;
 	/**
-	 * These parameters are used by page blocks and avoid accessing directly the blocks from external code
-	 *
-	 * @var array Parameters to be used by page blocks
+	 * @var array These parameters are used by the page UIBlocks and avoid accessing them directly from external code
 	 * @since 3.0.0
 	 */
 	protected $aBlockParams;
@@ -1615,7 +1613,7 @@ EOD
 
 	/**
 	 *
-	 * @see aBlockParams
+	 * @see static::$aBlockParams
 	 *
 	 * @param string $sKey
 	 * @param $value
@@ -1631,7 +1629,7 @@ EOD
 	}
 
 	/**
-	 * @see aBlockParams
+	 * @see static::$aBlockParams
 	 * @return array
 	 * @since 3.0.0
 	 */
