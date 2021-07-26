@@ -91,7 +91,7 @@ class WebPage implements Page
 	protected $a_ready_scripts;
 	/** @var array Scripts linked (externals) to the page through URIs */
 	protected $a_linked_scripts;
-	/** @var array Specific dictionnary entries to be used client side */
+	/** @var array Specific dictionary entries to be used client side */
 	protected $a_dict_entries;
 	/** @var array Sub-sets of dictionary entries (based on the given prefix) for the client side */
 	protected $a_dict_entries_prefixes;
@@ -99,7 +99,12 @@ class WebPage implements Page
 	protected $a_styles;
 	/** @var array Stylesheets linked (external) to the page through URIs */
 	protected $a_linked_stylesheets;
-	/** @var array Parameters to be used by page blocks */
+	/**
+	 * These parameters are used by page blocks and avoid accessing directly the blocks from external code
+	 *
+	 * @var array Parameters to be used by page blocks
+	 * @since 3.0.0
+	 */
 	protected $aBlockParams;
 	protected $a_headers;
 	protected $a_base;
@@ -1609,23 +1614,29 @@ EOD
 	}
 
 	/**
-	 * @return array
-	 */
-	public function GetBlockParams(): array
-	{
-		return $this->aBlockParams;
-	}
-
-	/**
+	 *
+	 * @see aBlockParams
+	 *
 	 * @param string $sKey
 	 * @param $value
 	 *
 	 * @return $this
+	 * @since 3.0.0
 	 */
 	public function SetBlockParam(string $sKey, $value)
 	{
 		$this->aBlockParams[$sKey] = $value;
 
 		return $this;
+	}
+
+	/**
+	 * @see aBlockParams
+	 * @return array
+	 * @since 3.0.0
+	 */
+	public function GetBlockParams(): array
+	{
+		return $this->aBlockParams;
 	}
 }

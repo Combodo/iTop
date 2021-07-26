@@ -65,6 +65,11 @@ abstract class Controller
 	private $m_aLinkedStylesheets;
 	private $m_aSaas;
 	private $m_aAjaxTabs;
+	/** parameters for page's blocks
+	 *
+	 * @var array
+	 * @since 3.0.0
+	 */
 	private $m_aBlockParams;
 	/** @var string */
 	private $m_sAccessTokenConfigParamId = null;
@@ -560,8 +565,9 @@ abstract class Controller
 
 	/**
 	 * @param array $aBlockParams
+	 * @since 3.0.0
 	 */
-	public function AddBlockParams(array $aBlockParams)
+	public function SetBlockParams(array $aBlockParams)
 	{
 		$this->m_aBlockParams = $aBlockParams;
 	}
@@ -688,7 +694,12 @@ abstract class Controller
 		$this->m_oPage->AddAjaxTab($sCode, $sURL, $bCache, $sTitle);
 	}
 
-	public function SetBlockParamToPage(string $sKey, $value)
+	/**
+	 * @param string $sKey
+	 * @param $value
+	 * @since 3.0.0
+	 */
+	private function SetBlockParamToPage(string $sKey, $value)
 	{
 		$this->m_oPage->SetBlockParam($sKey, $value);
 	}
