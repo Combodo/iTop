@@ -355,10 +355,21 @@ abstract class User extends cmdbAbstractObject
 		// Check that this user has at least one profile assigned when profiles have changed
 		if (array_key_exists('profile_list', $aChanges))
 		{
+			/** @var \DBObjectSet $oSet */
 			$oSet = $this->Get('profile_list');
-			if ($oSet->Count() == 0)
-			{
+			if ($oSet->Count() == 0) {
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
+			}
+			// A user cannot add a profile denying the access to the backoffice
+			$aForbiddenProfiles = PortalDispatcherData::GetData('backoffice')['deny'];
+			if (UserRights::GetUserId() == $this->GetKey()) {
+				$oSet->Rewind();
+				while ($oUserProfile = $oSet->Fetch()) {
+					$sProfile = $oUserProfile->Get('profile');
+					if (in_array($sProfile, $aForbiddenProfiles)) {
+						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:ProfileNotAllowed', $sProfile);
+					}
+				}
 			}
 		}
 		// Only administrators can manage administrators
