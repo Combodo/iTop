@@ -6957,7 +6957,7 @@ abstract class MetaModel
 	 * @param int $iKey id value of the object to retrieve
 	 * @param bool $bMustBeFound see throws ArchivedObjectException
 	 * @param bool $bAllowAllData if true then user rights will be bypassed - use with care!
-	 * @param null $aModifierProperties
+	 * @param array $aModifierProperties properties for {@see iQueryModifier} impl
 	 *
 	 * @return \DBObject null if : (the object is not found) or (archive mode disabled and object is archived and
 	 *     $bMustBeFound=false)

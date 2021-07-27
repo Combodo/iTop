@@ -63,22 +63,23 @@ else
  
 abstract class DBSearch
 {
-    /** @internal */
+	/** @internal */
 	const JOIN_POINTING_TO = 0;
-    /** @internal */
+	/** @internal */
 	const JOIN_REFERENCED_BY = 1;
 
 	protected $m_bNoContextParameters = false;
+	/** @var array For {@see iQueryModifier} impl */
 	protected $m_aModifierProperties = array();
 	protected $m_bArchiveMode = false;
 	protected $m_bShowObsoleteData = true;
 
-    /**
-     * DBSearch constructor.
-     *
-     * @api
-     * @see DBSearch::FromOQL()
-     */
+	/**
+	 * DBSearch constructor.
+	 *
+	 * @api
+	 * @see DBSearch::FromOQL()
+	 */
 	public function __construct()
 	{
 		$this->Init();
