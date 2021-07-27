@@ -413,14 +413,22 @@ abstract class User extends cmdbAbstractObject
 		}
 	}
 
+	public function DoCheckToDelete(&$oDeletionPlan)
+	{
+		parent::DoCheckToDelete($oDeletionPlan);
+
+		// A user cannot suppress himself
+		if (UserRights::GetUserId() == $this->GetKey()) {
+			$this->m_bSecurityIssue = true;
+			$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
+		}
+	}
+
 	function GetGrantAsHtml($sClass, $iAction)
 	{
-		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this)) 
-		{
+		if (UserRights::IsActionAllowed($sClass, $iAction, null, $this)) {
 			return '<span style="background-color: #ddffdd;">'.Dict::S('UI:UserManagement:ActionAllowed:Yes').'</span>';
-		}
-		else
-		{
+		} else {
 			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
