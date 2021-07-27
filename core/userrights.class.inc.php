@@ -351,7 +351,7 @@ abstract class User extends cmdbAbstractObject
 
 		// A User cannot disable himself
 		if ($this->IsCurrentUser()) {
-			if (isset($aChanges['status'])) {
+			if (isset($aChanges['status']) && ($this->Get('status') == 'disabled')) {
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:StatusChangeIsNotAllowed');
 			}
 		}
@@ -418,8 +418,8 @@ abstract class User extends cmdbAbstractObject
 			}
 		}
 
+		$oAddon = UserRights::GetModuleInstance();
 		if (!UserRights::IsAdministrator()) {
-			$oAddon = UserRights::GetModuleInstance();
 			$oUser = UserRights::GetUserObject();
 			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs')) {
 				$aOrgs = $oAddon->GetUserOrgs($oUser, ''); // Modifier allowed orgs
