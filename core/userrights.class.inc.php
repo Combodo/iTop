@@ -333,10 +333,10 @@ abstract class User extends cmdbAbstractObject
 	{
 		parent::DoCheckToWrite();
 
-		// Note: This MUST be factorized later: declare unique keys (set of columns) in the data model
 		$aChanges = $this->ListChanges();
 		if (array_key_exists('login', $aChanges))
 		{
+			// Check login uniqueness
 			if (strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0)
 			{
 				$sNewLogin = $aChanges['login'];
@@ -352,11 +352,14 @@ abstract class User extends cmdbAbstractObject
 				}
 			}
 		}
+
+		// A User cannot disable himself
 		if ($this->IsCurrentUser()) {
 			if (isset($aChanges['status'])) {
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:StatusChangeIsNotAllowed');
 			}
 		}
+
 		// Check that this user has at least one profile assigned when profiles have changed
 		if (array_key_exists('profile_list', $aChanges))
 		{
@@ -365,6 +368,7 @@ abstract class User extends cmdbAbstractObject
 			if ($oSet->Count() == 0) {
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
+
 			// A user cannot add a profile denying the access to the backoffice
 			$aForbiddenProfiles = PortalDispatcherData::GetData('backoffice')['deny'];
 			if ($this->IsCurrentUser()) {
@@ -377,10 +381,19 @@ abstract class User extends cmdbAbstractObject
 				}
 			}
 		}
+
 		// Only administrators can manage administrators
 		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
 		{
 			$this->m_aCheckIssues[] = Dict::S('UI:Login:Error:AccessRestricted');
+		}
+
+		// A contact is mandatory (an administrator can bypass it but not for himself)
+		if ((!UserRights::IsAdministrator() || $this->IsCurrentUser())
+			&& isset($aChanges['contactid'])
+			&& ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid'))))
+		{
+			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
 
 		if (!UserRights::IsAdministrator())
@@ -389,37 +402,30 @@ abstract class User extends cmdbAbstractObject
 			$oAddon = UserRights::GetModuleInstance();
 			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs'))
 			{
-				if ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))
+				$aOrgs = $oAddon->GetUserOrgs($oUser, '');
+				if (count($aOrgs) > 0)
 				{
-					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
-				}
-				else
-				{
-					$aOrgs = $oAddon->GetUserOrgs($oUser, '');
-					if (count($aOrgs) > 0)
+					// Check that the modified User belongs to one of our organization
+					if (!in_array($this->GetOriginal('org_id'), $aOrgs) && !in_array($this->Get('org_id'), $aOrgs))
 					{
-						// Check that the modified User belongs to one of our organization
-						if (!in_array($this->GetOriginal('org_id'), $aOrgs) && !in_array($this->Get('org_id'), $aOrgs))
+						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:UserOrganizationNotAllowed');
+					}
+					// Check users with restricted organizations when allowed organizations have changed
+					if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges))
+					{
+						$oSet = $this->get('allowed_org_list');
+						if ($oSet->Count() == 0)
 						{
-							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:UserOrganizationNotAllowed');
+							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneOrganizationIsNeeded');
 						}
-						// Check users with restricted organizations when allowed organizations have changed
-						if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges))
+						else
 						{
-							$oSet = $this->get('allowed_org_list');
-							if ($oSet->Count() == 0)
+							$aModifiedLinks = $oSet->ListModifiedLinks();
+							foreach ($aModifiedLinks as $oLink)
 							{
-								$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneOrganizationIsNeeded');
-							}
-							else
-							{
-								$aModifiedLinks = $oSet->ListModifiedLinks();
-								foreach ($aModifiedLinks as $oLink)
+								if (!in_array($oLink->Get('allowed_org_id'), $aOrgs))
 								{
-									if (!in_array($oLink->Get('allowed_org_id'), $aOrgs))
-									{
-										$this->m_aCheckIssues[] = Dict::S('Class:User/Error:OrganizationNotAllowed');
-									}
+									$this->m_aCheckIssues[] = Dict::S('Class:User/Error:OrganizationNotAllowed');
 								}
 							}
 						}
