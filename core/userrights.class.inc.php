@@ -334,20 +334,16 @@ abstract class User extends cmdbAbstractObject
 		parent::DoCheckToWrite();
 
 		$aChanges = $this->ListChanges();
-		if (array_key_exists('login', $aChanges))
-		{
+		if (array_key_exists('login', $aChanges)) {
 			// Check login uniqueness
-			if (strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0)
-			{
+			if (strcasecmp($this->Get('login'), $this->GetOriginal('login')) !== 0) {
 				$sNewLogin = $aChanges['login'];
 				$oSearch = DBObjectSearch::FromOQL_AllData("SELECT User WHERE login = :newlogin");
-				if (!$this->IsNew())
-				{
+				if (!$this->IsNew()) {
 					$oSearch->AddCondition('id', $this->GetKey(), '!=');
 				}
 				$oSet = new DBObjectSet($oSearch, array(), array('newlogin' => $sNewLogin));
-				if ($oSet->Count() > 0)
-				{
+				if ($oSet->Count() > 0) {
 					$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:LoginMustBeUnique', $sNewLogin);
 				}
 			}
@@ -361,8 +357,7 @@ abstract class User extends cmdbAbstractObject
 		}
 
 		// Check that this user has at least one profile assigned when profiles have changed
-		if (array_key_exists('profile_list', $aChanges))
-		{
+		if (array_key_exists('profile_list', $aChanges)) {
 			/** @var \DBObjectSet $oSet */
 			$oSet = $this->Get('profile_list');
 			if ($oSet->Count() == 0) {
@@ -383,48 +378,65 @@ abstract class User extends cmdbAbstractObject
 		}
 
 		// Only administrators can manage administrators
-		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator())
-		{
+		if (UserRights::IsAdministrator($this) && !UserRights::IsAdministrator()) {
 			$this->m_aCheckIssues[] = Dict::S('UI:Login:Error:AccessRestricted');
 		}
 
 		// A contact is mandatory (an administrator can bypass it but not for himself)
 		if ((!UserRights::IsAdministrator() || $this->IsCurrentUser())
 			&& isset($aChanges['contactid'])
-			&& ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid'))))
-		{
+			&& ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))) {
 			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
 
-		if (!UserRights::IsAdministrator())
-		{
-			$oUser = UserRights::GetUserObject();
+		// Allowed orgs must contains the user org (if any)
+		if (!empty($this->Get('org_id')) && !UserRights::IsAdministrator($this)) {
+			// Get the user org and all its parent orgs
+			$aUserOrgs = [$this->Get('org_id')];
+			$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
+			if ($sHierarchicalKeyCode !== false) {
+				$sOrgQuery = 'SELECT Org FROM Organization AS Org JOIN Organization AS Root ON Org.'.$sHierarchicalKeyCode.' ABOVE Root.id WHERE Root.id = :id';
+				$oOrgSet = new DBObjectSet(DBObjectSearch::FromOQL_AllData($sOrgQuery), [], ['id' => $this->Get('org_id')]);
+				while ($aRow = $oOrgSet->FetchAssoc()) {
+					$oOrg = $aRow['Org'];
+					$aUserOrgs[] = $oOrg->GetKey();
+				}
+			}
+			// Check the allowed orgs list
+			$oSet = $this->get('allowed_org_list');
+			if ($oSet->Count() > 0) {
+				$bFound = false;
+				while ($oOrg = $oSet->Fetch()) {
+					if (in_array($oOrg->Get('allowed_org_id'), $aUserOrgs)) {
+						$bFound = true;
+						break;
+					}
+				}
+				if (!$bFound) {
+					$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AllowedOrgsMustContainUserOrg');
+				}
+			}
+		}
+
+		if (!UserRights::IsAdministrator()) {
 			$oAddon = UserRights::GetModuleInstance();
-			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs'))
-			{
-				$aOrgs = $oAddon->GetUserOrgs($oUser, '');
-				if (count($aOrgs) > 0)
-				{
+			$oUser = UserRights::GetUserObject();
+			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs')) {
+				$aOrgs = $oAddon->GetUserOrgs($oUser, ''); // Modifier allowed orgs
+				if (count($aOrgs) > 0) {
 					// Check that the modified User belongs to one of our organization
-					if (!in_array($this->GetOriginal('org_id'), $aOrgs) && !in_array($this->Get('org_id'), $aOrgs))
-					{
+					if (!in_array($this->GetOriginal('org_id'), $aOrgs) && !in_array($this->Get('org_id'), $aOrgs)) {
 						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:UserOrganizationNotAllowed');
 					}
 					// Check users with restricted organizations when allowed organizations have changed
-					if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges))
-					{
+					if ($this->IsNew() || array_key_exists('allowed_org_list', $aChanges)) {
 						$oSet = $this->get('allowed_org_list');
-						if ($oSet->Count() == 0)
-						{
+						if ($oSet->Count() == 0) {
 							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneOrganizationIsNeeded');
-						}
-						else
-						{
+						} else {
 							$aModifiedLinks = $oSet->ListModifiedLinks();
-							foreach ($aModifiedLinks as $oLink)
-							{
-								if (!in_array($oLink->Get('allowed_org_id'), $aOrgs))
-								{
+							foreach ($aModifiedLinks as $oLink) {
+								if (!in_array($oLink->Get('allowed_org_id'), $aOrgs)) {
 									$this->m_aCheckIssues[] = Dict::S('Class:User/Error:OrganizationNotAllowed');
 								}
 							}
