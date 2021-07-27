@@ -352,6 +352,11 @@ abstract class User extends cmdbAbstractObject
 				}
 			}
 		}
+		if ($this->IsCurrentUser()) {
+			if (isset($aChanges['status'])) {
+				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:StatusChangeIsNotAllowed');
+			}
+		}
 		// Check that this user has at least one profile assigned when profiles have changed
 		if (array_key_exists('profile_list', $aChanges))
 		{
@@ -362,7 +367,7 @@ abstract class User extends cmdbAbstractObject
 			}
 			// A user cannot add a profile denying the access to the backoffice
 			$aForbiddenProfiles = PortalDispatcherData::GetData('backoffice')['deny'];
-			if (UserRights::GetUserId() == $this->GetKey()) {
+			if ($this->IsCurrentUser()) {
 				$oSet->Rewind();
 				while ($oUserProfile = $oSet->Fetch()) {
 					$sProfile = $oUserProfile->Get('profile');
@@ -429,7 +434,7 @@ abstract class User extends cmdbAbstractObject
 		parent::DoCheckToDelete($oDeletionPlan);
 
 		// A user cannot suppress himself
-		if (UserRights::GetUserId() == $this->GetKey()) {
+		if ($this->IsCurrentUser()) {
 			$this->m_bSecurityIssue = true;
 			$this->m_aDeleteIssues[] = Dict::S('UI:Delete:NotAllowedToDelete');
 		}
@@ -546,6 +551,15 @@ abstract class User extends cmdbAbstractObject
 			return;
 		}
 		parent::DBDeleteSingleObject();
+	}
+
+	/**
+	 * @return bool
+	 * @throws \OQLException
+	 */
+	private function IsCurrentUser(): bool
+	{
+		return UserRights::GetUserId() == $this->GetKey();
 	}
 }
 

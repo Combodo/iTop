@@ -111,6 +111,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
 	'Class:User/Error:ProfileNotAllowed' => 'Le profil "%1$s" ne peux pas être ajouté à son propre utilisateur, il interdit l\'accès à la console',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Impossible de changer l\'état de son propre utilisateur',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
