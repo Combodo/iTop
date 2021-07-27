@@ -1859,9 +1859,7 @@ abstract class DBObject implements iDisplay
 			{
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
-				$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
-				if (is_null($oTargetObj))
-				{
+				if (false === MetaModel::IsObjectExistsInDb($sTargetClass, $toCheck)) {
 					return "Target object not found ($sTargetClass::$toCheck)";
 				}
 			}

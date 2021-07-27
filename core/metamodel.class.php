@@ -6976,17 +6976,23 @@ abstract class MetaModel
 
 		if (!utils::IsArchiveMode() && $oObject->IsArchived())
 		{
-			if ($bMustBeFound)
-			{
+			if ($bMustBeFound) {
 				throw new ArchivedObjectException("The object $sClass::$iKey is archived");
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 		}
 
 		return $oObject;
+	}
+
+	public static function IsObjectExistsInDb(string $sClass, int $iKey): bool
+	{
+		$oFilter = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE id = :id', ['id' => $iKey,]);
+		$oSet = new DBObjectSet($oFilter);
+		$iCount = $oSet->Count();
+
+		return ($iCount > 0);
 	}
 
 	/**
