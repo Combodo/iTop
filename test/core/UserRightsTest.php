@@ -133,7 +133,7 @@ class UserRightsTest extends ItopDataTestCase
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function testIsActionAllowed($iProfileId, $aClassActionResult)
+	public function _testIsActionAllowed($iProfileId, $aClassActionResult)
 	{
 		$this->AddUser('test1', $iProfileId);
 		$_SESSION = array();
