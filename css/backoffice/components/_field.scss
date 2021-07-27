@@ -205,3 +205,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 .multi_values {
   background-color: #c33;
 }
+
+ .form_field ~ .form_field {
+    margin-top: $ibo-field--sibling-spacing;
+ }

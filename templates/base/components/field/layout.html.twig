@@ -25,9 +25,7 @@
 >
     <div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}</div>
     <div class="ibo-field--value" {% if oUIBlock.GetValueId() %}id="{{ oUIBlock.GetValueId() }}"{% endif %}>
-        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
-            {{ render_block(oSubBlock, {aPage: aPage}) }}
-        {% endfor %}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }} {% endfor %}
     </div>
     {% if oUIBlock.GetComments() %}
         <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>

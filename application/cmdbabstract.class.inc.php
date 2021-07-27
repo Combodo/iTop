@@ -2402,6 +2402,7 @@ HTML;
 				case 'CustomFields':
 					$sHTMLValue .= '<div id="'.$iId.'_console_form">';
 					$sHTMLValue .= '<div id="'.$iId.'_field_set">';
+					$sHTMLValue .= '</div></div>';
 					$sHTMLValue .= '<div>'.$sReloadSpan.'</div>'; // No validation span for this one: it does handle its own validation!
 					$sHTMLValue .= "<input name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" type=\"hidden\" id=\"$iId\" value=\"\"/>\n";
 
