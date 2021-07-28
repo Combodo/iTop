@@ -1143,6 +1143,7 @@ $(function()
 				});
 
 				this._UpdateEntryGroupsVisibility();
+				this._UpdateLoadMoreEntriesButtonVisibility();
 				this._UpdateMessagesCounters();
 			},
 			_ShowAllEntries: function()
@@ -1200,6 +1201,12 @@ $(function()
 
 				this._UpdateEntryGroupsVisibility();
 			},
+			/**
+			 * Update the entry groups visibility regarding if they have visible entries themself
+			 *
+			 * @private
+			 * @return {void}
+			 */
 			_UpdateEntryGroupsVisibility: function () {
 				const me = this;
 
@@ -1210,6 +1217,27 @@ $(function()
 						$(this).removeClass(me.css_classes.is_hidden);
 					}
 				});
+			},
+			/**
+			 * Update the "load more entries" button visibility regarding the current filters
+			 *
+			 * @private
+			 * @return {void}
+			 */
+			_UpdateLoadMoreEntriesButtonVisibility: function () {
+				const oButtonElem = this.element.find(this.js_selectors.load_more_entries);
+
+				// Check if button exists (if all entries have been loaded, we might have remove it
+				if (oButtonElem.length === 0) {
+					return;
+				}
+
+				// Show button only if the states / edits filters are selected as log entries are always fully loaded
+				if (this._GetActiveTabToolbarElement().find(this.js_selectors.activity_filter + '[data-target-entry-types!="'+this.enums.entry_types.caselog+'"]:checked').length > 0) {
+					oButtonElem.removeClass(this.css_classes.is_hidden);
+				} else {
+					oButtonElem.addClass(this.css_classes.is_hidden);
+				}
 			},
 			/**
 			 * Load the next entries and append them to the current ones
@@ -1266,7 +1294,7 @@ $(function()
 						me.options.last_loaded_entries_ids = oData.data.last_loaded_entries_ids;
 						// - Update button state
 						if (Object.keys(me.options.last_loaded_entries_ids).length === 0) {
-							me.element.find(me.js_selectors.load_more_entries).addClass(me.css_classes.is_hidden);
+							me.element.find(me.js_selectors.load_more_entries).remove();
 						}
 					})
 					.always(function () {

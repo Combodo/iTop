@@ -83,7 +83,9 @@
             {% endfor %}
             {% if oUIBlock.HasMoreEntriesToLoad() %}
                 <div class="ibo-activity-panel--load-more-entries-container" data-role="ibo-activity-panel--load-more-entries-container">
-                    <a href="#" class="ibo-activity-panel--load-more-entries" data-role="ibo-activity-panel--load-more-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip'|dict_s }}">
+                    {# Note: The "more entries" button is hidden by default to avoid a visual glitch. #}
+                    {# Otherwise when the page is loaded, the button is displayed even if the current tab only show log entries (which are all loaded) #}
+                    <a href="#" class="ibo-activity-panel--load-more-entries ibo-is-hidden" data-role="ibo-activity-panel--load-more-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip'|dict_s }}">
                         <span class="ibo-activity-panel--load-more-entries-icon fas fa-fw fa-angle-double-down" data-role="ibo-activity-panel--load-more-entries-icon"></span>
                     </a>
                 </div>
