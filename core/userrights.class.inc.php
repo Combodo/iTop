@@ -365,7 +365,7 @@ abstract class User extends cmdbAbstractObject
 				$this->m_aCheckIssues[] = Dict::S('Class:User/Error:AtLeastOneProfileIsNeeded');
 			}
 
-			// A user cannot add a profile denying the access to the backoffice
+			// A user cannot add to themself a profile denying the access to the backoffice
 			$aForbiddenProfiles = PortalDispatcherData::GetData('backoffice')['deny'];
 			if ($this->IsCurrentUser()) {
 				$oSet->Rewind();
@@ -471,6 +471,10 @@ abstract class User extends cmdbAbstractObject
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
 	public function DoCheckToDelete(&$oDeletionPlan)
 	{
 		parent::DoCheckToDelete($oDeletionPlan);
@@ -598,6 +602,7 @@ abstract class User extends cmdbAbstractObject
 	/**
 	 * @return bool
 	 * @throws \OQLException
+	 * @since 3.0.0
 	 */
 	private function IsCurrentUser(): bool
 	{
