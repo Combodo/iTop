@@ -378,22 +378,24 @@ abstract class User extends cmdbAbstractObject
 					$aProfiles[$oUserProfile->Get('profileid')] = $sProfile;
 				}
 
-				// Check if the user is yet allowed to modify Users
-				if (method_exists($oAddon, 'ResetCache')) {
-					$aCurrentProfiles = $_SESSION['profile_list'] ?? null;
-					// Set the current profiles into a session variable (not yet in the database)
-					$_SESSION['profile_list'] = $aProfiles;
+				if (!in_array(ADMIN_PROFILE_NAME, $aProfiles)) {
+					// Check if the user is yet allowed to modify Users
+					if (method_exists($oAddon, 'ResetCache')) {
+						$aCurrentProfiles = $_SESSION['profile_list'] ?? null;
+						// Set the current profiles into a session variable (not yet in the database)
+						$_SESSION['profile_list'] = $aProfiles;
 
-					$oAddon->ResetCache();
-					if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
-						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
-					}
-					$oAddon->ResetCache();
+						$oAddon->ResetCache();
+						if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
+							$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
+						}
+						$oAddon->ResetCache();
 
-					if (is_null($aCurrentProfiles)) {
-						unset($_SESSION['profile_list']);
-					} else {
-						$_SESSION['profile_list'] = $aCurrentProfiles;
+						if (is_null($aCurrentProfiles)) {
+							unset($_SESSION['profile_list']);
+						} else {
+							$_SESSION['profile_list'] = $aCurrentProfiles;
+						}
 					}
 				}
 			}

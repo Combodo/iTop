@@ -29,6 +29,9 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreCannotSaveObjectException;
 use DBObject;
+use DBObjectSet;
+use DeleteException;
+use URP_UserProfile;
 use UserRights;
 use utils;
 
@@ -153,7 +156,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		$this->AddUser('test1', $iProfileId);
 		$_SESSION = array();
-		$this->assertTrue(UserRights::Login('test1'));
+		UserRights::Login('test1');
 		$bRes = UserRights::IsActionAllowed($aClassActionResult['class'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
 	}
@@ -164,6 +167,11 @@ class UserRightsTest extends ItopDataTestCase
 	 * URP_UserProfile    => addon/userrights
 	 * UserLocal          => addon/authentication
 	 * ModuleInstallation => core	view_in_gui
+	 *
+	 * Profiles:
+	 * 1 - Administrator
+	 * 2 - User Portal
+	 * 3 - Configuration manager
 	 *
 	 */
 	public function ActionAllowedProvider(): array
@@ -229,7 +237,7 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		$this->AddUser('test1', $iProfileId);
 		$_SESSION = [];
-		$this->assertTrue(UserRights::Login('test1'));
+		UserRights::Login('test1');
 		$sClass = $aClassActionResult['class'];
 		$bRes = UserRights::IsActionAllowedOnAttribute($sClass, self::$aClasses[$sClass]['attcode'], $aClassActionResult['action']) == UR_ALLOWED_YES;
 		$this->assertEquals($aClassActionResult['res'], $bRes);
@@ -268,4 +276,156 @@ class UserRightsTest extends ItopDataTestCase
 			'Configuration manager ModuleInstallation' => [3, ['class' => 'ModuleInstallation', 'action' => 2, 'res' => true]],
 		];
 	}
+
+	/**
+	 * @dataProvider ProfileDenyingConsoleProvider
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testProfileDenyingConsole(int $iProfileId)
+	{
+		$oUser = $this->AddUser('test1', $iProfileId);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		try {
+			$this->AddProfileToUser($oUser, 2);
+			$this->fail('Profile should not be added');
+		} catch (CoreCannotSaveObjectException $e) {
+		}
+
+		// logout
+		$_SESSION = [];
+	}
+
+	public function ProfileDenyingConsoleProvider(): array
+	{
+		return [
+			'Administrator'         => [1],
+			'Configuration manager' => [3],
+		];
+	}
+
+	/**
+	 * @dataProvider DeletingSelfUserProvider
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testDeletingSelfUser(int $iProfileId)
+	{
+		$oUser = $this->AddUser('test1', $iProfileId);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		try {
+			$oUser->DBDelete();
+			$this->fail('Current User cannot be deleted');
+		} catch (DeleteException $e) {
+		}
+
+		// logout
+		$_SESSION = [];
+	}
+
+	public function DeletingSelfUserProvider(): array
+	{
+		return [
+			'Administrator'         => [1],
+			'Configuration manager' => [3],
+		];
+	}
+
+	/**
+	 * @dataProvider RemovingOwnContactProvider
+	 * @doesNotPerformAssertions
+	 *
+	 * @param int $iProfileId
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testRemovingOwnContact(int $iProfileId)
+	{
+		$oUser = $this->AddUser('test1', $iProfileId);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		$oUser->Set('contactid', 0);
+
+		try {
+			$oUser->DBWrite();
+			$this->fail('Current User cannot remove his own contact');
+		} catch (CoreCannotSaveObjectException $e) {
+		}
+	}
+
+	public function RemovingOwnContactProvider(): array
+	{
+		return [
+			'Administrator'         => [1],
+			'Configuration manager' => [3],
+		];
+	}
+
+	/**
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testUpgradingToAdmin()
+	{
+		$oUser = $this->AddUser('test1', 3);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		try {
+			$this->AddProfileToUser($oUser, 1);
+			$this->fail('Should not be able to upgrade to Administrator');
+		} catch (CoreCannotSaveObjectException $e) {
+		}
+
+		// logout
+		$_SESSION = [];
+	}
+
+	/**
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testDenyingUserModification()
+	{
+		$oUser = $this->AddUser('test1', 1);
+		$_SESSION = [];
+		UserRights::Login('test1');
+		$this->AddProfileToUser($oUser, 3);
+
+		// Keep only the profile 3 (remove profile 1)
+		$oUserProfile = new URP_UserProfile();
+		$oUserProfile->Set('profileid', 3);
+		$oUserProfile->Set('reason', 'UNIT Tests');
+		$oSet = DBObjectSet::FromObject($oUserProfile);
+		$oUser->Set('profile_list', $oSet);
+
+		try {
+			$oUser->DBWrite();
+			$this->fail('Should not be able to deny User modifications');
+		} catch (CoreCannotSaveObjectException $e) {
+		}
+
+		// logout
+		$_SESSION = [];
+	}
+
 }
