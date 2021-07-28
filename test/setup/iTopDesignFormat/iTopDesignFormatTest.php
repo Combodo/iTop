@@ -60,9 +60,9 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	public function ConvertProvider()
 	{
 		return array(
-			'1.7 to 1.6' => array('1.6', '1.7_to_1.6'),
+			//'1.7 to 1.6' => array('1.6', '1.7_to_1.6'),
 			'1.7 to 3.0' => array('3.0', '1.7_to_3.0'),
-			'3.0 to 1.7' => array('1.7', '3.0_to_1.7'),
+			//'3.0 to 1.7' => array('1.7', '3.0_to_1.7'),
 		);
 	}
 

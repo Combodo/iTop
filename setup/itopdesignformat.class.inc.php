@@ -799,8 +799,8 @@ class iTopDesignFormat
 			$this->MoveNode($oNode, $oSemanticNode, "state_attribute");
 		}
 
-		// New Enum values format
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		// New values format contains code
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field/values/value");
 		foreach ($oNodeList as $oNode) {
 			$sCode = $oNode->textContent;
 			$oNode->textContent = '';
@@ -808,15 +808,6 @@ class iTopDesignFormat
 			$oNode->appendChild($oCodeNode);
 		}
 
-		// MetaEnum
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
-		foreach ($oNodeList as $oNode) {
-			$sCode = $oNode->textContent;
-			$oNode->textContent = '';
-			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
-			$oNode->appendChild($oCodeNode);
-		}
-		
 		// N°3516 Remove legacy backoffice theme
 		// Remove completely light-grey theme
 		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="light-grey"]');
@@ -897,8 +888,8 @@ class iTopDesignFormat
 		$sPath = "/itop_design//class/properties/fields_semantic";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// New Enum values format
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		// New values format
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field/values/value");
 		foreach ($oNodeList as $oNode) {
 			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
 			if ($oCodeNode) {
@@ -912,23 +903,7 @@ class iTopDesignFormat
 			}
 		}
 
-		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/default_style";
-		$this->RemoveNodeFromXPath($sPath);
-
-		// MetaEnum
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
-		foreach ($oNodeList as $oNode) {
-			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
-			$sCode = $oCodeNode->textContent;
-			$this->DeleteNode($oCodeNode);
-			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
-			if ($oStyleNode) {
-				$this->DeleteNode($oStyleNode);
-			}
-			$oNode->textContent = $sCode;
-		}
-
-		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/default_style";
+		$sPath = "/itop_design/classes//class/fields/field/default_style";
 		$this->RemoveNodeFromXPath($sPath);
 
 		// N°3516 Bring back legacy themes

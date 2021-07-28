@@ -1711,10 +1711,12 @@ CSS;
 				{
 					$oValues = $oField->GetUniqueElement('values');
 					$oValueNodes = $oValues->getElementsByTagName('value');
-					$aValues = array();
+					$aValues = [];
 					foreach($oValueNodes as $oValue)
 					{
-						$aValues[] = $oValue->textContent;
+						// New in 3.0 the format of values changed
+						$sCode = $this->GetMandatoryPropString($oValue, 'code', false);
+						$aValues[] = $sCode;
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
 					$aParameters['allowed_values'] = 'null';
