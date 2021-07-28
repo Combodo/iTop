@@ -21,7 +21,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Vergroot',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduceer',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Sluit',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Eerdere invoer laden',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activiteiten',

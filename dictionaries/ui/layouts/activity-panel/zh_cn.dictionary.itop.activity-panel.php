@@ -21,7 +21,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => '展开',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => '减少',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => '关闭',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => '载入以前的条目',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => '活动~~',

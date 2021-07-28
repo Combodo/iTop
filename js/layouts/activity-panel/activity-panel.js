@@ -91,6 +91,8 @@ $(function()
 					load_more_entries_container: '[data-role="ibo-activity-panel--load-more-entries-container"]',
 					load_more_entries: '[data-role="ibo-activity-panel--load-more-entries"]',
 					load_more_entries_icon: '[data-role="ibo-activity-panel--load-more-entries-icon"]',
+					load_all_entries: '[data-role="ibo-activity-panel--load-all-entries"]',
+					load_all_entries_icon: '[data-role="ibo-activity-panel--load-all-entries-icon"]',
 				},
 			enums: {
 				tab_types: {
@@ -225,6 +227,10 @@ $(function()
 				// - Click on load more entries button
 				this.element.find(this.js_selectors.load_more_entries).on('click', function (oEvent) {
 					me._onLoadMoreEntriesButtonClick(oEvent);
+				});
+				// - Click on load all entries button
+				this.element.find(this.js_selectors.load_all_entries).on('click', function (oEvent) {
+					me._onLoadAllEntriesButtonClick(oEvent);
 				});
 
 				// Page exit
@@ -378,6 +384,16 @@ $(function()
 				oEvent.preventDefault();
 
 				this._LoadMoreEntries();
+			},
+			/**
+			 * @param oEvent {Object}
+			 * @return {void}
+			 * @private
+			 */
+			_onLoadAllEntriesButtonClick: function (oEvent) {
+				oEvent.preventDefault();
+
+				this._LoadMoreEntries(false);
 			},
 			/**
 			 * Indicate that there is a draft entry and will request lock on the object
@@ -1225,18 +1241,21 @@ $(function()
 			 * @return {void}
 			 */
 			_UpdateLoadMoreEntriesButtonVisibility: function () {
-				const oButtonElem = this.element.find(this.js_selectors.load_more_entries);
+				const oMoreButtonElem = this.element.find(this.js_selectors.load_more_entries);
+				const oAllButtonElem = this.element.find(this.js_selectors.load_all_entries);
 
 				// Check if button exists (if all entries have been loaded, we might have remove it
-				if (oButtonElem.length === 0) {
+				if (oMoreButtonElem.length === 0) {
 					return;
 				}
 
 				// Show button only if the states / edits filters are selected as log entries are always fully loaded
 				if (this._GetActiveTabToolbarElement().find(this.js_selectors.activity_filter + '[data-target-entry-types!="'+this.enums.entry_types.caselog+'"]:checked').length > 0) {
-					oButtonElem.removeClass(this.css_classes.is_hidden);
+					oMoreButtonElem.removeClass(this.css_classes.is_hidden);
+					oAllButtonElem.removeClass(this.css_classes.is_hidden);
 				} else {
-					oButtonElem.addClass(this.css_classes.is_hidden);
+					oMoreButtonElem.addClass(this.css_classes.is_hidden);
+					oAllButtonElem.addClass(this.css_classes.is_hidden);
 				}
 			},
 			/**
@@ -1249,13 +1268,17 @@ $(function()
 			 * be placed between already present entries (case logs, notifications) to keep the chronological order. This is a known limitation
 			 * and might be worked on in a future version.
 			 *
+			 * @param {boolean} bLimitResultsLength True to limit the results length to the X previous entries, false to retrieve them all
 			 * @private
 			 * @return {void}
 			 */
-			_LoadMoreEntries: function () {
+			_LoadMoreEntries: function (bLimitResultsLength = true) {
 				const me = this;
 
 				// Change icon to spinning
+				// - Hide second button
+				this.element.find(this.js_selectors.load_all_entries).addClass(this.css_classes.is_hidden);
+				// - Transform first button
 				this.element.find(this.js_selectors.load_more_entries_icon)
 					.removeClass('fas fa-angle-double-down')
 					.addClass('fas fa-sync-alt fa-spin');
@@ -1266,6 +1289,7 @@ $(function()
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
+					limit_results_length: bLimitResultsLength,
 				};
 				$.post(
 					this.options.load_more_entries_endpoint,
@@ -1295,15 +1319,22 @@ $(function()
 						// - Update button state
 						if (Object.keys(me.options.last_loaded_entries_ids).length === 0) {
 							me.element.find(me.js_selectors.load_more_entries).remove();
+							me.element.find(me.js_selectors.load_all_entries).remove();
 						}
 					})
 					.always(function () {
-						// Change icon back to original (whether it should be displayed or not will be handle by thes other callbacks)
-						// - fail => keep displayed for retry
-						// - done => display only if more entries to load
-						me.element.find(me.js_selectors.load_more_entries_icon)
-							.removeClass('fas fa-sync-alt fa-spin')
-							.addClass('fas fa-angle-double-down');
+						// IF is a protection against cases when the button have be removed from the DOM (when no more entries to load)
+						if (me.element.find(me.js_selectors.load_more_entries_icon).length > 0) {
+							// Restore second button
+							me.element.find(me.js_selectors.load_all_entries).removeClass(me.css_classes.is_hidden);
+
+							// Change first button icon back to original (whether it should be displayed or not will be handle by thes other callbacks)
+							// - fail => keep displayed for retry
+							// - done => display only if more entries to load
+							me.element.find(me.js_selectors.load_more_entries_icon)
+								.removeClass('fas fa-sync-alt fa-spin')
+								.addClass('fas fa-angle-double-down');
+						}
 					});
 			},
 			/**

@@ -88,6 +88,7 @@ class ActivityPanelHelper
 	 * @param string $sObjectClass
 	 * @param string $sObjectId
 	 * @param string|null $sChangeOpIdToOffsetFrom Entries will be retrieved after this CMDBChangeOp ID. Typically used for pagination.
+	 * @param bool $bLimitResultsLength True to limit to the X previous entries, false to retrieve them all
 	 *
 	 * @return array The 'max_history_length' edits entries from the CMDBChangeOp of the object, starting from $sChangeOpIdToOffsetFrom. Flag to know if more entries are available and the ID of the last returned entry are also provided.
 	 *
@@ -99,8 +100,13 @@ class ActivityPanelHelper
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	public static function GetCMDBChangeOpEditsEntriesForObject(string $sObjectClass, string $sObjectId, ?string $sChangeOpIdToOffsetFrom = null): array
+	public static function GetCMDBChangeOpEditsEntriesForObject(string $sObjectClass, string $sObjectId, ?string $sChangeOpIdToOffsetFrom = null, bool $bLimitResultsLength = true): array
 	{
 		$iMaxHistoryLength = MetaModel::GetConfig()->Get('max_history_length');
 		$aResults = [
@@ -129,8 +135,12 @@ class ActivityPanelHelper
 		$oSet = new DBObjectSet($oSearch, ['id' => false], $aArgs);
 
 		// - Limit history entries to display
-		$bMoreEntriesToLoad = $oSet->CountExceeds($iMaxHistoryLength);
-		$oSet->SetLimit($iMaxHistoryLength);
+		if ($bLimitResultsLength) {
+			$bMoreEntriesToLoad = $oSet->CountExceeds($iMaxHistoryLength);
+			$oSet->SetLimit($iMaxHistoryLength);
+		} else {
+			$bMoreEntriesToLoad = false;
+		}
 
 		// Prepare previous values to group edits within a same CMDBChange
 		$iPreviousChangeId = 0;

@@ -22,6 +22,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Replier',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fermer',
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Charger les entrées précédentes',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Charger toutes les entrées',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activité',

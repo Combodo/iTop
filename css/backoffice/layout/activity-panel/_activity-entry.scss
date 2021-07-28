@@ -58,10 +58,12 @@ $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
 $ibo-activity-entry--author-name--sibling-spacing: 0.2rem !default;
 
-$ibo-activity-panel--load-more-entries--size: 32px !default;
-$ibo-activity-panel--load-more-entries--border-radius: $ibo-border-radius-full !default;
-$ibo-activity-panel--load-more-entries--background-color: $ibo-activity-entry--main-information--background-color !default;
-$ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !default;
+$ibo-activity-panel--load-entries-button--size: 32px !default;
+$ibo-activity-panel--load-entries-button--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--load-entries-button--background-color: $ibo-activity-entry--main-information--background-color !default;
+$ibo-activity-panel--load-entries-button--border: $ibo-content-block--border !default;
+
+$ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-panel--load-entries-button--size + 10px) * 2 !default; /* 2x is necessary here as the elements are centered */
 
 /* Entry group */
 .ibo-activity-panel--entry-group{
@@ -239,15 +241,37 @@ $ibo-activity-panel--load-more-entries--border: $ibo-content-block--border !defa
 }
 
 .ibo-activity-panel--load-more-entries-container {
+  position: relative;
   @extend %ibo-fully-centered-content;
+
+  &:hover {
+    .ibo-activity-panel--load-all-entries {
+      margin-left: $ibo-activity-panel--load-all-entries--is-hover--margin-left;
+    }
+  }
+  &:not(:hover) {
+    .ibo-activity-panel--load-all-entries {
+      visibility: hidden;
+    }
+  }
 }
 
-.ibo-activity-panel--load-more-entries {
-  width: $ibo-activity-panel--load-more-entries--size;
-  height: $ibo-activity-panel--load-more-entries--size;
-  border-radius: $ibo-activity-panel--load-more-entries--border-radius;
-  background-color: $ibo-activity-panel--load-more-entries--background-color;
-  border: $ibo-activity-panel--load-more-entries--border;
+.ibo-activity-panel--load-entries-button {
+  width: $ibo-activity-panel--load-entries-button--size;
+  height: $ibo-activity-panel--load-entries-button--size;
+  border-radius: $ibo-activity-panel--load-entries-button--border-radius;
+  background-color: $ibo-activity-panel--load-entries-button--background-color;
+  border: $ibo-activity-panel--load-entries-button--border;
   @extend %ibo-fully-centered-content;
   @extend %ibo-hyperlink-inherited-colors;
+}
+.ibo-activity-panel--load-more-entries {
+  z-index: 1;
+}
+.ibo-activity-panel--load-all-entries {
+  position: absolute;
+  z-index: 0; /* Must be below the other button as it will reveal later */
+  top: 0;
+  margin-left: 0;
+  transition: all 0.1s ease-in-out;
 }

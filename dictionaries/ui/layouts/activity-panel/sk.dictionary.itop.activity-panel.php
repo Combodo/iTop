@@ -21,7 +21,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load previous entries~~',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity~~',

@@ -152,6 +152,7 @@ class ActivityPanelController
 		$sObjectClass = utils::ReadPostedParam('object_class', null, utils::ENUM_SANITIZATION_FILTER_CLASS);
 		$sObjectId = utils::ReadPostedParam('object_id', 0);
 		$aLastLoadedEntriesIds = utils::ReadPostedParam('last_loaded_entries_ids', [], utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+		$bLimitResultsLength = utils::ReadPostedParam('limit_results_length', 'true') === 'true';
 
 		$aResults = [
 			'success' => true,
@@ -161,7 +162,7 @@ class ActivityPanelController
 
 		// CMDBChangeOp entries
 		if (array_key_exists('cmdbchangeop', $aLastLoadedEntriesIds)) {
-			$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjectClass, $sObjectId, $aLastLoadedEntriesIds['cmdbchangeop']);
+			$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjectClass, $sObjectId, $aLastLoadedEntriesIds['cmdbchangeop'], $bLimitResultsLength);
 
 			if (true === $aChangesData['more_entries_to_load']) {
 				$aResults['last_loaded_entries_ids']['cmdbchangeop'] = $aChangesData['last_loaded_entry_id'];

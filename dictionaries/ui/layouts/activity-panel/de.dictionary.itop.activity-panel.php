@@ -21,7 +21,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Erweitern',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduzieren',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Schließen',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Vorherige Werte laden',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Aktivität',
