@@ -271,13 +271,13 @@ class Dict
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 			//
 			self::$m_aData[$sLangCode] = self::GetApcService()->apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
-			if (! is_array(self::$m_aData[$sLangCode]))
-			{
-				IssueLog::Warning("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...");
+			if (self::$m_aData[$sLangCode] === false) {
 				unset(self::$m_aData[$sLangCode]);
-			}
-			else
-			{
+			} else if (! is_array(self::$m_aData[$sLangCode])) {
+				IssueLog::Warning("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...");
+				//N°4125: we dont fix issue on iTop side. just add some log to be aware of it and fix APCu instead.
+				$bResult = true;
+			} else {
 				$bResult = true;
 			}
 		}

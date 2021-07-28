@@ -269,23 +269,24 @@ STR;
 		$this->assertEquals('fr1', Dict::S('label1'));
 	}
 
+	//corrupted data not fixed
+	//we will return label from another dictionary (defaut one => russian here)
 	public function testInitLangIfNeeded_Apc_CorruptedCache_PropertyInUserDictionnary(){
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
 
-		$this->oApcService->expects($this->exactly(1))
+		$this->oApcService->expects($this->exactly(2))
 			->method('apc_fetch')
-			->with('toto-dict-FR FR')
-			->willReturn('label1');
+			->withConsecutive(['toto-dict-FR FR'], ['toto-dict-RU RU'])
+			->willReturnOnConsecutiveCalls('corrupteddata', ['label1' => 'ru1']);
 
-		$this->oApcService->expects($this->exactly(1))
-			->method('apc_store')
-			->with('toto-dict-FR FR', ['label1' => 'fr1']);
+		$this->oApcService->expects($this->exactly(0))
+			->method('apc_store');
 
 		Dict::SetDefaultLanguage('RU RU');
 		Dict::SetUserLanguage('FR FR');
-		$this->assertEquals('fr1', Dict::S('label1'));
+		$this->assertEquals('ru1', Dict::S('label1'));
 	}
 
 	public function testInitLangIfNeeded_Apc_PropertyInDefaultLanguageDictionnary(){
@@ -308,24 +309,24 @@ STR;
 		$this->assertEquals('ru2', Dict::S('label2'));
 	}
 
+	//corrupted data not fixed
+	//we will return label from default language dictionary (EN here)
 	public function testInitLangIfNeeded_ApcCorrupted_PropertyInDefaultLanguageDictionnary(){
 		$this->oApcService->expects($this->any())
 			->method('function_exists')
 			->willReturn(true);
 
-		$this->oApcService->expects($this->exactly(2))
+		$this->oApcService->expects($this->exactly(3))
 			->method('apc_fetch')
-			->withConsecutive(['toto-dict-FR FR'], ['toto-dict-RU RU'])
-			->willReturnOnConsecutiveCalls([], 'corrupteddata');
+			->withConsecutive(['toto-dict-FR FR'], ['toto-dict-RU RU'], ['toto-dict-EN US'])
+			->willReturnOnConsecutiveCalls([], 'corrupteddata', ['label1' => 'en1', 'label2' => 'en2', 'label3' => 'en3']);
 
-		$this->oApcService->expects($this->exactly(1))
-			->method('apc_store')
-			->withConsecutive(['toto-dict-RU RU', ['label1' => 'ru1', 'label2' => 'ru2']]
-			);
+		$this->oApcService->expects($this->exactly(0))
+			->method('apc_store');
 
 		Dict::SetDefaultLanguage('RU RU');
 		Dict::SetUserLanguage('FR FR');
-		$this->assertEquals('ru2', Dict::S('label2'));
+		$this->assertEquals('en2', Dict::S('label2'));
 	}
 
 	public function testInitLangIfNeeded_Apc_PropertyInDictDefaultLanguageDictionnary(){
@@ -357,17 +358,14 @@ STR;
 		$this->oApcService->expects($this->exactly(3))
 			->method('apc_fetch')
 			->withConsecutive(['toto-dict-FR FR'], ['toto-dict-RU RU'], ['toto-dict-EN US'])
-			->willReturnOnConsecutiveCalls([], [], 'corrupted');
+			->willReturnOnConsecutiveCalls([], [], 'corrupteddata');
 
-		$this->oApcService->expects($this->exactly(1))
-			->method('apc_store')
-			->withConsecutive(
-				['toto-dict-EN US', ['label1' => 'en1', 'label2' => 'en2', 'label3' => 'en3']]
-			);
+		$this->oApcService->expects($this->exactly(0))
+			->method('apc_store');
 
 		Dict::SetDefaultLanguage('RU RU');
 		Dict::SetUserLanguage('FR FR');
-		$this->assertEquals('en3', Dict::S('label3'));
+		$this->assertEquals('label3', Dict::S('label3'));
 	}
 
 	public function testInitLangIfNeeded_Apc_PropertyNotFound(){
