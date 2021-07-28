@@ -380,7 +380,7 @@ abstract class User extends cmdbAbstractObject
 
 				// Check if the user is yet allowed to modify Users
 				if (method_exists($oAddon, 'ResetCache')) {
-					$aCurrentProfiles = $_SESSION['profile_list'];
+					$aCurrentProfiles = $_SESSION['profile_list'] ?? null;
 					// Set the current profiles into a session variable (not yet in the database)
 					$_SESSION['profile_list'] = $aProfiles;
 
@@ -390,7 +390,11 @@ abstract class User extends cmdbAbstractObject
 					}
 					$oAddon->ResetCache();
 
-					$_SESSION['profile_list'] = $aCurrentProfiles;
+					if (is_null($aCurrentProfiles)) {
+						unset($_SESSION['profile_list']);
+					} else {
+						$_SESSION['profile_list'] = $aCurrentProfiles;
+					}
 				}
 			}
 		}
@@ -594,6 +598,9 @@ abstract class User extends cmdbAbstractObject
 	 */
 	private function IsCurrentUser(): bool
 	{
+		if (is_null(UserRights::GetUserId())) {
+			return false;
+		}
 		return UserRights::GetUserId() == $this->GetKey();
 	}
 }
