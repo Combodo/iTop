@@ -28,6 +28,14 @@
       </properties>
       <lifecycle/>
     </class>
+    <class id="ClassWithLifecycleNoProperties">
+      <lifecycle/>
+      <properties>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
     <class id="OtherClass">
       <properties>
         <style>

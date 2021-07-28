@@ -785,6 +785,12 @@ class iTopDesignFormat
 			if ($oFieldsSemanticNodeList->length > 0) {
 				$oSemanticNode = $oFieldsSemanticNodeList->item(0);
 			} else {
+				if (is_null($oPropertiesNode)) {
+					// No properties node found, create it
+					$oClassNode = $oXPath->query("../..", $oNode)->item(0);
+					$oPropertiesNode = $oClassNode->ownerDocument->createElement("properties");
+					$oClassNode->appendChild($oPropertiesNode);
+				}
 				$oSemanticNode = $oPropertiesNode->ownerDocument->createElement("fields_semantic");
 				$oPropertiesNode->appendChild($oSemanticNode);
 			}
