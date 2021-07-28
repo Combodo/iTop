@@ -408,8 +408,9 @@ abstract class User extends cmdbAbstractObject
 
 		// A contact is mandatory (an administrator can bypass it but not for himself)
 		if ((!UserRights::IsAdministrator() || $this->IsCurrentUser())
+			&& !$this->IsNew()
 			&& isset($aChanges['contactid'])
-			&& ((empty($this->GetOriginal('contactid')) && !($this->IsNew())) || empty($this->Get('contactid')))) {
+			&& empty($this->Get('contactid'))) {
 			$this->m_aCheckIssues[] = Dict::S('Class:User/Error:PersonIsMandatory');
 		}
 
