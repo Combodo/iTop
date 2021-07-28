@@ -20,7 +20,7 @@
     </themes>
   </branding>
   <classes>
-    <class id="PhysicalDevice" _delta="must_exist">
+    <class id="ClassWithNewValueInFieldWhichHasNoXsiTypeDueToMustExistFlag" _delta="must_exist">
       <fields>
         <field id="status" _delta="must_exist">
           <values>
