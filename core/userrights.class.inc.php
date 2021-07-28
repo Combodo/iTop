@@ -333,6 +333,7 @@ abstract class User extends cmdbAbstractObject
 	{
 		parent::DoCheckToWrite();
 
+		$oAddon = UserRights::GetModuleInstance();
 		$aChanges = $this->ListChanges();
 		if (array_key_exists('login', $aChanges)) {
 			// Check login uniqueness
@@ -368,11 +369,28 @@ abstract class User extends cmdbAbstractObject
 			$aForbiddenProfiles = PortalDispatcherData::GetData('backoffice')['deny'];
 			if ($this->IsCurrentUser()) {
 				$oSet->Rewind();
+				$aProfiles = [];
 				while ($oUserProfile = $oSet->Fetch()) {
 					$sProfile = $oUserProfile->Get('profile');
 					if (in_array($sProfile, $aForbiddenProfiles)) {
 						$this->m_aCheckIssues[] = Dict::Format('Class:User/Error:ProfileNotAllowed', $sProfile);
 					}
+					$aProfiles[$oUserProfile->Get('profileid')] = $sProfile;
+				}
+
+				// Check if the user is yet allowed to modify Users
+				if (method_exists($oAddon, 'ResetCache')) {
+					$aCurrentProfiles = $_SESSION['profile_list'];
+					// Set the current profiles into a session variable (not yet in the database)
+					$_SESSION['profile_list'] = $aProfiles;
+
+					$oAddon->ResetCache();
+					if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
+						$this->m_aCheckIssues[] = Dict::S('Class:User/Error:CurrentProfilesHaveInsufficientRights');
+					}
+					$oAddon->ResetCache();
+
+					$_SESSION['profile_list'] = $aCurrentProfiles;
 				}
 			}
 		}
@@ -418,7 +436,6 @@ abstract class User extends cmdbAbstractObject
 			}
 		}
 
-		$oAddon = UserRights::GetModuleInstance();
 		if (!UserRights::IsAdministrator()) {
 			$oUser = UserRights::GetUserObject();
 			if (!is_null($oUser) && method_exists($oAddon, 'GetUserOrgs')) {
