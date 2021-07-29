@@ -147,9 +147,12 @@ $(function () {
 				}
 			},
 			_onHeaderStopsBeingSticky: function () {
-				this.element.find(this.js_selectors.block.panel_header).removeClass(this.css_classes.is_sticking);
-				if (this._hasTabContainer()) {
-					this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
+				//test to prevent the screen from flashing (cf bug 4124)
+				if ((this.element.position().top+this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight()) < (this.options.viewport_elem.scrollHeight-this.options.viewport_elem.clientHeight)) {
+					this.element.find(this.js_selectors.block.panel_header).removeClass(this.css_classes.is_sticking);
+					if (this._hasTabContainer()) {
+						this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
+					}
 				}
 			},
 			/**
