@@ -16,17 +16,17 @@ $.fn.dataTable.pipeline = function (opts) {
 		data: null,   // function or object with parameters to send to the server
 	                  // matching how `ajax.data` works in DataTables
 		method: 'GET' // Ajax HTTP method
-	}, opts );
+	}, opts);
 
 	// Private variables for storing the cache
 	var cacheLower = -1;
 	var cacheUpper = null;
 	var cacheLastRequest = null;
 	var cacheLastJson = null;
-	var	draw_number = 1;
+	var draw_number = 1;
 
-	return function ( request, drawCallback, settings ) {
-		let message = Dict.S('UI:Datatables:Language:Processing');
+	return function (request, drawCallback, settings) {
+		let message = settings["oLanguage"]["processing"];
 		if (this.find('tbody').find('td').length == 0) {
 			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
 			this.find('tbody').block({

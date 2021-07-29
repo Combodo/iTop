@@ -173,6 +173,8 @@ class DisplayBlock
 				/**positive or negative*/
 				'max_height',
 				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
+				'localize_values',
+				/** param for export.php */
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
