@@ -1095,6 +1095,30 @@ class UserRights
 	}
 
 	/**
+	 * @param Person $oPerson Person we try to match against Users contact (also Person objects)
+	 * @param bool $bMustBeUnique If true, return null when 2+ Users matching this Person were found. Otherwise return the first one
+	 *
+	 * @return \DBObject|null
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @since 3.0.0
+	 */
+	public static function GetUserFromPerson(Person $oPerson, bool $bMustBeUnique = true): ?DBObject
+	{
+		$sUserSearch = 'SELECT User WHERE contactid = :id';
+		$oUserSearch = DBObjectSearch::FromOQL($sUserSearch);
+		$oUserSearch->AllowAllData();
+		$oUserSet = new DBObjectSet($oUserSearch, array(), array('id' => $oPerson->GetKey()));
+		if($oUserSet->Count() > 0 && !($oUserSet->Count() > 1 && $bMustBeUnique)){
+			return $oUserSet->Fetch();
+		}
+		return null;
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function GetUserLanguage()
