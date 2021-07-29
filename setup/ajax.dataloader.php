@@ -180,7 +180,7 @@ try
 			$sUseSymbolicLinks = Utils::ReadParam('bUseSymbolicLinks', false);
 			$bUseSymbolicLinks = ($sUseSymbolicLinks === 'true');
 			MFCompiler::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
-			echo "toggle useSymbolicLInks file : $bUseSymbolicLinks";
+			echo "toggle useSymbolicLinks flag : $bUseSymbolicLinks";
 			break;
 
 		default:

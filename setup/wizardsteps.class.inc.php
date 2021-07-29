@@ -943,7 +943,7 @@ EOF
 	}}
 
 /**
- * Miscellaneous Parameters (URL, Sample Data)
+ * Miscellaneous Parameters (URL, Sample Data) when installing from scratch
  */
 class WizStepMiscParams extends WizardStep
 {
@@ -1162,22 +1162,17 @@ class WizStepUpgradeMiscParams extends WizardStep
 EOF
 		);
 
-		if (MFCompiler::IsUseSymbolicLinksFlagPresent()) {
+		if (MFCompiler::IsUseSymbolicLinksFlagCanBeUsed()) {
+			$sChecked = (MFCompiler::IsUseSymbolicLinksFlagPresent()) ? ' checked' : '';
+
 			$oPage->add('<fieldset>');
 			$oPage->add('<legend>Dev parameters</legend>');
-			$oPage->p('<input id="use-symbolic-links" type="checkbox" checked><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
+			$oPage->p('<input id="use-symbolic-links" type="checkbox"'.$sChecked.'><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
 			$oPage->add('</fieldset>');
 			$oPage->add_ready_script(<<<'JS'
 $("#use-symbolic-links").on("click", function() {
 	var $this = $(this),
 		bUseSymbolicLinks = $this.prop("checked");
-	if (!bUseSymbolicLinks){
-		if (!window.confirm("This will disable symbolic links generation.\nYou'll need the toolkit to restore this option.\n\nAre you sure ?")) {
-			$this.prop("checked", true);
-			return;
-		}
-	}
-	
 	var sAuthent = $('#authent_token').val();
 	var oAjaxParams = { operation: 'toggle_use_symbolic_links', bUseSymbolicLinks: bUseSymbolicLinks, authent: sAuthent};
 	$.post(GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php', oAjaxParams);

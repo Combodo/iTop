@@ -58,6 +58,8 @@ class MFCompiler
 	 * If this file is present, then we will compile to symlink !
 	 *
 	 * @var string
+	 *
+	 * @since 3.0.0 N°4092
 	 */
 	public const USE_SYMBOLIC_LINKS_FILE_PATH = APPROOT.'data/.compilation-symlinks';
 
@@ -121,47 +123,63 @@ class MFCompiler
 	}
 
 	/**
-	 * @param bool $bForce if true then will just check file existence
+	 * @return bool if flag is present true, false otherwise
 	 *
-	 * @return bool possible return values :
-	 *   * always false if not in dev env
-	 *   * `symlink` function non existent : false
-	 *   * if flag is present true, false otherwise
-	 *
-	 * @uses utils::IsDevelopmentEnvironment()
-	 * @uses \function_exists()
 	 * @uses \file_exists()
 	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.0 N°4092
 	 */
-	public static function IsUseSymbolicLinksFlagPresent(bool $bForce = false): bool
+	public static function IsUseSymbolicLinksFlagPresent(): bool
 	{
-		if (!$bForce) {
-			if (!utils::IsDevelopmentEnvironment()) {
-				return false;
-			}
+		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
+	}
 
-			if (!function_exists('symlink')) {
-				return false;
-			}
+	/**
+	 * This is to check if the functionality can be used. As this is really only useful for developers,
+	 * this is strictly limited and not available on any iTop instance !
+	 *
+	 * @return bool Check that the symlinks flag can be used
+	 *   *  always false if not in dev env
+	 *   * `symlink` function non-existent : false
+	 *   * true otherwise
+	 *
+	 * @uses utils::IsDevelopmentEnvironment()
+	 * @uses \function_exists()
+	 *
+	 * @since 3.0.0 N°4092
+	 */
+	public static function IsUseSymbolicLinksFlagCanBeUsed(): bool
+	{
+		if (false === utils::IsDevelopmentEnvironment()) {
+			return false;
 		}
 
-		return (file_exists(static::USE_SYMBOLIC_LINKS_FILE_PATH));
+		if (false === function_exists('symlink')) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
 	 * @param bool $bUseSymbolicLinks
 	 *
-	 * @since 3.0.0 method creation
 	 * @uses USE_SYMBOLIC_LINKS_FILE_PATH
+	 *
+	 * @since 3.0.0 N°4092
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		$bHasUseSymlinksFile = static::IsUseSymbolicLinksFlagPresent(true);
+		if (!static::IsUseSymbolicLinksFlagCanBeUsed()) {
+			// functionality cannot be used, so we're doing nothing !
+			return;
+		}
+
+		$bIsUseSymlinksFlagPresent = (static::IsUseSymbolicLinksFlagPresent());
 
 		if ($bUseSymbolicLinks) {
-			if ($bHasUseSymlinksFile) {
+			if ($bIsUseSymlinksFlagPresent) {
 				return;
 			}
 
@@ -170,7 +188,7 @@ class MFCompiler
 			return;
 		}
 
-		if (!$bHasUseSymlinksFile) {
+		if (!$bIsUseSymlinksFlagPresent) {
 			return;
 		}
 		unlink(static::USE_SYMBOLIC_LINKS_FILE_PATH);
@@ -205,7 +223,7 @@ class MFCompiler
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
-			if (self::IsUseSymbolicLinksFlagPresent()) {
+			if (self::IsUseSymbolicLinksFlagCanBeUsed() && self::IsUseSymbolicLinksFlagPresent()) {
 				// We are only overriding the useSymLinks option if the consumer didn't specify anything
 				// The toolkit always send this parameter for example, but not the Designer Connector
 				$bUseSymbolicLinks = true;
