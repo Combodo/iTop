@@ -83,7 +83,8 @@ class ActivityEntryFactory
 			DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $aOrmEntry['date']),
 			$sUserLogin,
 			$sAttCode,
-			$aOrmEntry['message_html']
+			$aOrmEntry['message_html'],
+			$aOrmEntry['user_login']
 		);
 
 		return $oEntry;
