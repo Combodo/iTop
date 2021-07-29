@@ -4159,7 +4159,7 @@ class AttributeText extends AttributeString
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
 
-			return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
+			return "<div $sStyle>$sValue</div>";
 		}
 		else
 		{
