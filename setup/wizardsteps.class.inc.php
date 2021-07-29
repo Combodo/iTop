@@ -30,7 +30,7 @@
  * WizStepLicense          WizStepDetectedInfo
  * WizStepDBParams           +              +
  * WizStepAdminAccount       |              |
- * WizStepMiscParams         v              +------>
+ * WizStepInstallMiscParams  v              +------>
  *    +                    WizStepLicense2 +--> WizStepUpgradeMiscParams
  *    |                                            +
  *    +--->    <-----------------------------------+
@@ -867,7 +867,7 @@ class WizStepAdminAccount extends WizardStep
 
 	public function GetPossibleSteps()
 	{
-		return array('WizStepMiscParams');
+		return array(WizStepInstallMiscParams::class);
 	}
 
 	public function ProcessParams($bMoveForward = true)
@@ -876,7 +876,8 @@ class WizStepAdminAccount extends WizardStep
 		$this->oWizard->SaveParameter('admin_pwd', '');
 		$this->oWizard->SaveParameter('confirm_pwd', '');
 		$this->oWizard->SaveParameter('admin_language', 'EN US');
-		return array('class' => 'WizStepMiscParams', 'state' => '');
+
+		return array('class' => WizStepInstallMiscParams::class, 'state' => '');
 	}
 
 	public function Display(WebPage $oPage)
@@ -939,13 +940,47 @@ EOF
 	
 	return bRet;
 EOF
-		;
-	}}
+			;
+	}
+}
+
+
+/**
+ * @since 3.0.0 N°4092
+ */
+abstract class AbstractWizStepMiscParams extends WizardStep
+{
+	/**
+	 * @since 3.0.0 N°4092
+	 */
+	final protected function AddUseSymlinksFlagOption(WebPage $oPage): void
+	{
+		if (MFCompiler::IsUseSymbolicLinksFlagCanBeUsed()) {
+			$sChecked = (MFCompiler::IsUseSymbolicLinksFlagPresent()) ? ' checked' : '';
+
+			$oPage->add('<fieldset>');
+			$oPage->add('<legend>Dev parameters</legend>');
+			$oPage->p('<input id="use-symbolic-links" type="checkbox"'.$sChecked.'><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
+			$oPage->add('</fieldset>');
+			$oPage->add_ready_script(<<<'JS'
+$("#use-symbolic-links").on("click", function() {
+	var $this = $(this),
+		bUseSymbolicLinks = $this.prop("checked");
+	var sAuthent = $('#authent_token').val();
+	var oAjaxParams = { operation: 'toggle_use_symbolic_links', bUseSymbolicLinks: bUseSymbolicLinks, authent: sAuthent};
+	$.post(GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php', oAjaxParams);
+});
+JS
+			);
+		}
+	}
+}
+
 
 /**
  * Miscellaneous Parameters (URL, Sample Data) when installing from scratch
  */
-class WizStepMiscParams extends WizardStep
+class WizStepInstallMiscParams extends AbstractWizStepMiscParams
 {
 	public function GetTitle()
 	{
@@ -1022,6 +1057,8 @@ class WizStepMiscParams extends WizardStep
 		});
 EOF
 		);
+
+		$this->AddUseSymlinksFlagOption($oPage);
 	}
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters) {
@@ -1105,7 +1142,7 @@ EOF
 /**
  * Miscellaneous Parameters (URL...) in case of upgrade
  */
-class WizStepUpgradeMiscParams extends WizardStep
+class WizStepUpgradeMiscParams extends AbstractWizStepMiscParams
 {
 	public function GetTitle()
 	{
@@ -1162,24 +1199,7 @@ class WizStepUpgradeMiscParams extends WizardStep
 EOF
 		);
 
-		if (MFCompiler::IsUseSymbolicLinksFlagCanBeUsed()) {
-			$sChecked = (MFCompiler::IsUseSymbolicLinksFlagPresent()) ? ' checked' : '';
-
-			$oPage->add('<fieldset>');
-			$oPage->add('<legend>Dev parameters</legend>');
-			$oPage->p('<input id="use-symbolic-links" type="checkbox"'.$sChecked.'><label for="use-symbolic-links">&nbsp;Create symbolic links instead of creating a copy in env-production (useful for debugging extensions)');
-			$oPage->add('</fieldset>');
-			$oPage->add_ready_script(<<<'JS'
-$("#use-symbolic-links").on("click", function() {
-	var $this = $(this),
-		bUseSymbolicLinks = $this.prop("checked");
-	var sAuthent = $('#authent_token').val();
-	var oAjaxParams = { operation: 'toggle_use_symbolic_links', bUseSymbolicLinks: bUseSymbolicLinks, authent: sAuthent};
-	$.post(GetAbsoluteUrlAppRoot()+'setup/ajax.dataloader.php', oAjaxParams);
-});
-JS
-			);
-		}
+		$this->AddUseSymlinksFlagOption($oPage);
 	}
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
