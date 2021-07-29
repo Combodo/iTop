@@ -504,20 +504,34 @@ class ormCaseLog {
 		$sHtml .= '</td></tr></table>';
 		return $sHtml;
 	}
-	
+
 	/**
-	 * Add a new entry to the log or merge the given text into the currently modified entry 
+	 * Add a new entry to the log or merge the given text into the currently modified entry
 	 * and updates the internal index
-	 * @param $sText string The text of the new entry 
+	 *
+	 * @param $sText string The text of the new entry
+	 * @param string $sOnBehalfOf Display this name instead of current user name
+	 * @param null|int $iOnBehalfOfId Use this UserId to author this Entry. If $sOnBehalfOf equals '', it'll be replaced by this User friendlyname
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
 	 */
-	public function AddLogEntry($sText, $sOnBehalfOf = '')
+	public function AddLogEntry(string $sText, $sOnBehalfOf = '', $iOnBehalfOfId = null)
 	{
 		$sText = HTMLSanitizer::Sanitize($sText);
 		$sDate = date(AttributeDateTime::GetInternalFormat());
-		if ($sOnBehalfOf == '')
-		{
+		if ($sOnBehalfOf == '' && $iOnBehalfOfId === null) {
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
 			$iUserId = UserRights::GetUserId();
+		}
+		elseif ($iOnBehalfOfId !== null) {
+			$iUserId = $iOnBehalfOfId;
+			/* @var User $oUser */
+			$oUser = MetaModel::GetObject('User', $iUserId, false, true);
+			if ($oUser !== null && $sOnBehalfOf === '') {
+				$sOnBehalfOf = $oUser->GetFriendlyName();
+			}
 		}
 		else
 		{
