@@ -36,20 +36,21 @@
         {% block iboPageJsFiles %}
             <script type="text/javascript">
             window['{{ sPromiseId }}'] = new Promise(function(resolve, reject){
-                var aFilesToLoad{{ sId }} = [];
-                {# manage the other Js File #}
+                let aFilesToLoad{{ sId }} = [];
+
                 {% for sJsFile in aPage.aJsFiles %}
-                if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) == -1)
+                if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) === -1)
                 {
                     aFilesToLoad{{ sId }}.push('{{ sJsFile|add_itop_version|raw }}');
                     aListJsFiles.push("{{ sJsFile|raw }}");
                 }
                 {% endfor %}
-                var iCurrentIdx{{ sId }} = 0;
-                var iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
-                if (iFilesToLoadCount{{ sId }}> 0)
+
+                let iCurrentIdx{{ sId }} = 0;
+                let iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
+                if (iFilesToLoadCount{{ sId }} > 0)
                 {
-                    var fLoadScript{{ sId }} = function () {
+                    let fLoadScript{{ sId }} = function () {
                         $.when(
                                 $.ajax({
                                     url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
@@ -66,7 +67,7 @@
                                     else
                                     {
                                         {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                                        {{ sJsInlineOnDomReady|raw }}
+                                            {{ sJsInlineOnDomReady|raw }}
                                         {% endfor %}
                                         resolve();
                                     }
@@ -77,7 +78,7 @@
                 else
                 {
                     {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
-                    {{ sJsInlineOnDomReady|raw }}
+                        {{ sJsInlineOnDomReady|raw }}
                     {% endfor %}
                     resolve();
                 }
@@ -98,10 +99,6 @@
     {% endif %}
 
     {% if aDeferredBlocks is not empty %}
-        {# TODO 3.0.0 #}
-        {# <script type="text/javascript"> #}
-        {# $('body').append('{% for oBlock in aDeferredBlocks %}{{ render_block(oBlock, {aPage: aPage})|escape('js')|raw }}{% endfor %}'); #}
-        {# </script> #}
         {% for oBlock in aDeferredBlocks %}
             {{ render_block(oBlock, {aPage: aPage})|raw }}
         {% endfor %}
@@ -116,18 +113,6 @@
     {% block iboPageCssFiles %}
         {% for aCssFileData in aPage.aCssFiles %}
             <script type="text/javascript">
-           /* $.ajax({
-			            url: aKBFilesToLoad[iKBCurrentIdx].url,
-			            dataType: aKBFilesToLoad[iKBCurrentIdx].type,
-			            cache: true
-		            })
-		            .done(function(){
-			            if ( (aKBFilesToLoad[iKBCurrentIdx].type === 'text') && ($('head link[type="text/css"][href="' + aKBFilesToLoad[iKBCurrentIdx].url + '"]').length === 0) )
-			            {
-				            $('<link rel="stylesheet" type="text/css" href="' + aKBFilesToLoad[iKBCurrentIdx].url + '">').appendTo('head');
-			            }
-		            })
-            )*/
                 if (!$('link[href="{{ aCssFileData.link }}"]').length) $('<link href="{{ aCssFileData.link }}" rel="stylesheet">').appendTo('head');
             </script>
         {% endfor %}
