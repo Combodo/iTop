@@ -109,6 +109,7 @@ EOF
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
