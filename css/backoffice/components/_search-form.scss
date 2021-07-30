@@ -11,11 +11,13 @@ $ibo-search-form-panel--body--padding-x: 14px !default;
 
 $ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
 $ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
+$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-300 !default;
 $ibo-search-form-panel--criteria--locked--background-color: $ibo-color-grey-300 !default;
 
 $ibo-search-form-panel--more-criteria--color: $ibo-color-blue-grey-800 !default;
 $ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !default;
 $ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
+$ibo-search-form-panel--more-criteria--border-color: $ibo-search-form-panel--criteria--border-color !default;
 
 $ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
 $ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
@@ -182,7 +184,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 				display: inline;
 				.sfc_fg_button,
 				.sfc_header {
-					border: 1px solid #E1E7EC; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+					border: 1px solid $ibo-search-form-panel--criteria--border-color; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
 					border-radius: 3px;
 				}
 			}
@@ -211,7 +213,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			> * {
 				padding: 7px 8px;
 				vertical-align: top;
-				border: solid 1px $ibo-color-grey-300;
+				border: solid 1px $ibo-search-form-panel--more-criteria--border-color;
 				border-radius: $ibo-border-radius-300;
 			}
 

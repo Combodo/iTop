@@ -17,21 +17,21 @@
  */
 
 /* SCSS variables */
-$ibo-collapsible-section--margin-top: 3rem;
-$ibo-collapsible-section--title--color: $ibo-color-grey-900 !default;
-$ibo-collapsible-section--body--background-color: $ibo-color-white-100 !default;
-
+$ibo-collapsible-section--margin-top: 3rem !default;
+$ibo-collapsible-section--title--color: $ibo-panel--title--color !default;
+$ibo-collapsible-section--body--background-color: $ibo-panel--body--background-color !default;
 $ibo-collapsible-section--highlight--height: 8px !default;
 
-$ibo-collapsible-section--maximize-minimize-button--right: 5px !default;
+$ibo-collapsible-section--maximize-minimize-button--color: $ibo-panel--collapsible-toggler--color !default;
+$ibo-collapsible-section--maximize-minimize-button--right: $ibo-panel--collapsible-toggler--margin-right !default;
 
 
 $ibo-collapsible-section--body--padding-bottom: 16px !default;
 $ibo-collapsible-section--body--padding-top: $ibo-collapsible-section--body--padding-bottom + $ibo-collapsible-section--highlight--height !default;
 $ibo-collapsible-section--body--padding-x: 16px !default;
-$ibo-collapsible-section--body--border-radius: $ibo-border-radius-500 !default;
+$ibo-collapsible-section--body--border-radius: $ibo-panel--body--border-radius !default;
 $ibo-collapsible-section--body--border-size: 1px !default;
-$ibo-collapsible-section--body--border-color: $ibo-color-grey-400 !default;
+$ibo-collapsible-section--body--border-color: $ibo-panel--body--border-color !default;
 
 
 /* Rules */
@@ -78,6 +78,7 @@ $ibo-collapsible-section--body--border-color: $ibo-color-grey-400 !default;
 
 		.ibo-collapsible-section--action-button {
 			&.ibo-collapsible-section--maximize-button, &.ibo-collapsible-section--minimize-button {
+        color: $ibo-collapsible-section--maximize-minimize-button--color;
 				margin-right: $ibo-collapsible-section--maximize-minimize-button--right;
 			}
 		}
