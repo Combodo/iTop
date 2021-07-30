@@ -97,6 +97,7 @@ class CaseLogEntry extends ActivityEntry
 			// Reset bIsFromCurrentUser as UserRights often consider '' login as current user login
 			$this->bIsFromCurrentUser = null;
 		}
+		return $this;
 	}
 
 	/**
