@@ -18,7 +18,6 @@ use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparato
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
-use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockWithJSRefreshCallback;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChart\BlockChart;
 use Combodo\iTop\Application\UI\DisplayBlock\BlockChartAjaxBars\BlockChartAjaxBars;
@@ -2205,9 +2204,9 @@ class MenuBlock extends DisplayBlock
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
 		$aFavoriteTransitionActions = [];
-		$aCallSpec = [$sClass, 'GetShortcutActions'];
-		if (is_callable($aCallSpec)) {
-			$aShortcutActions = call_user_func($aCallSpec, $sClass);
+		if (is_callable([$sClass, 'GetShortcutActions'])) {
+			/** @var cmdbAbstractObject $sClass */
+			$aShortcutActions = $sClass::GetShortcutActions($sClass);
 			foreach ($aShortcutActions as $key) {
 				// Regular actions
 				if (isset($aRegularActions[$key])) {
