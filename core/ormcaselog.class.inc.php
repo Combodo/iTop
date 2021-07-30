@@ -509,13 +509,16 @@ class ormCaseLog {
 	 * Add a new entry to the log or merge the given text into the currently modified entry
 	 * and updates the internal index
 	 *
-	 * @param $sText string The text of the new entry
+	 * @param string $sText The text of the new entry
 	 * @param string $sOnBehalfOf Display this name instead of current user name
 	 * @param null|int $iOnBehalfOfId Use this UserId to author this Entry. If $sOnBehalfOf equals '', it'll be replaced by this User friendlyname
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \OQLException
+	 * 
+	 * @since 3.0.0 New $iOnBehalfOfId parameter
+	 * @since 3.0.0 May throw \ArchivedObjectException exception
 	 */
 	public function AddLogEntry(string $sText, $sOnBehalfOf = '', $iOnBehalfOfId = null)
 	{
