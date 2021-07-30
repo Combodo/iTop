@@ -1277,13 +1277,20 @@ abstract class DBObject implements iDisplay
 		{
 			// If the object if not issued from a query but constructed programmatically
 			// the label may be empty. In this case run a query to get the object's friendly name
-			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey, false);
-			if (is_object($oTmpObj))
-			{
+			$sObjOql = 'SELECT '.$sObjClass.' WHERE id='.$sObjKey;
+			$oObjFilter = DBSearch::FromOQL($sObjOql);
+			$oSet = new DBObjectSet($oObjFilter);
+
+			// we will only use id and friendlyname, so let's remove other fields !
+			$aAttToLoad = [
+				$sObjClass => [],
+			];
+			$oSet->OptimizeColumnLoad($aAttToLoad);
+
+			$oTmpObj = $oSet->Fetch();
+			if (is_object($oTmpObj)) {
 				$sHtmlLabel = $oTmpObj->GetName();
-			}
-			else
-			{
+			} else {
 				// May happen in case the target object is not in the list of allowed values for this attribute
 				$sHtmlLabel = "<em>$sObjClass::$sObjKey</em>";
 			}
