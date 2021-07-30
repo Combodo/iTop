@@ -955,7 +955,7 @@ abstract class AbstractWizStepMiscParams extends WizardStep
 	 */
 	final protected function AddUseSymlinksFlagOption(WebPage $oPage): void
 	{
-		if (MFCompiler::IsUseSymbolicLinksFlagCanBeUsed()) {
+		if (MFCompiler::CanUseSymbolicLinksFlagBeUsed()) {
 			$sChecked = (MFCompiler::IsUseSymbolicLinksFlagPresent()) ? ' checked' : '';
 
 			$oPage->add('<fieldset>');

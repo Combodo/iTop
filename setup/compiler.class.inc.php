@@ -149,7 +149,7 @@ class MFCompiler
 	 *
 	 * @since 3.0.0 N°4092
 	 */
-	public static function IsUseSymbolicLinksFlagCanBeUsed(): bool
+	public static function CanUseSymbolicLinksFlagBeUsed(): bool
 	{
 		if (false === utils::IsDevelopmentEnvironment()) {
 			return false;
@@ -171,7 +171,7 @@ class MFCompiler
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		if (!static::IsUseSymbolicLinksFlagCanBeUsed()) {
+		if (!static::CanUseSymbolicLinksFlagBeUsed()) {
 			// functionality cannot be used, so we're doing nothing !
 			return;
 		}
@@ -223,7 +223,7 @@ class MFCompiler
 	{
 		if (is_null($bUseSymbolicLinks)) {
 			$bUseSymbolicLinks = false;
-			if (self::IsUseSymbolicLinksFlagCanBeUsed() && self::IsUseSymbolicLinksFlagPresent()) {
+			if (self::CanUseSymbolicLinksFlagBeUsed() && self::IsUseSymbolicLinksFlagPresent()) {
 				// We are only overriding the useSymLinks option if the consumer didn't specify anything
 				// The toolkit always send this parameter for example, but not the Designer Connector
 				$bUseSymbolicLinks = true;
