@@ -901,11 +901,12 @@ class CMDBSource
 
 	/**
 	 * @param string $sSql
+	 * @param int $iMode
 	 *
 	 * @return array
 	 * @throws \MySQLException if query cannot be processed
 	 */
-	public static function QueryToArray($sSql)
+	public static function QueryToArray($sSql, $iMode = MYSQLI_BOTH)
 	{
 		$aData = array();
 		$oKPI = new ExecutionKPI();
@@ -924,7 +925,7 @@ class CMDBSource
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
 				
-		while ($aRow = $oResult->fetch_array(MYSQLI_BOTH))
+		while ($aRow = $oResult->fetch_array($iMode))
 		{
 			$aData[] = $aRow;
 		}
