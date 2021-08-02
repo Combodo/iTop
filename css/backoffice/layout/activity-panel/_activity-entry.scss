@@ -56,7 +56,10 @@ $ibo-activity-entry--sub-information--margin-top: 4px !default;
 $ibo-activity-entry--sub-information--margin-bottom: $ibo-activity-entry--sub-information--margin-top !default;
 $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
-$ibo-activity-entry--author-name--sibling-spacing: 0.2rem !default;
+$ibo-activity-entry--sub-information--sibling-spacing: 0.5rem !default;
+$ibo-activity-entry--sub-information-sibling-separator--size: 4px !default;
+$ibo-activity-entry--sub-information-sibling-separator--border-radius: 100% !default;
+$ibo-activity-entry--sub-information-sibling-separator--background-color: $ibo-color-grey-600 !default;
 
 $ibo-activity-panel--load-entries-button--size: 32px !default;
 $ibo-activity-panel--load-entries-button--border-radius: $ibo-border-radius-full !default;
@@ -230,13 +233,17 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
   color: $ibo-activity-entry--sub-information--text-color;
 
   @extend %ibo-font-size-50;
-}
 
-.ibo-activity-entry--author-name {
-  &:after {
-    content: "-";
-    margin-left: $ibo-activity-entry--author-name--sibling-spacing;
-    margin-right: $ibo-activity-entry--author-name--sibling-spacing;
+  > *:not(:last-child):after {
+    content: " ";
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: $ibo-activity-entry--sub-information--sibling-spacing;
+    margin-right: $ibo-activity-entry--sub-information--sibling-spacing;
+    width: $ibo-activity-entry--sub-information-sibling-separator--size;
+    height: $ibo-activity-entry--sub-information-sibling-separator--size;
+    border-radius: $ibo-activity-entry--sub-information-sibling-separator--border-radius;
+    background-color: $ibo-activity-entry--sub-information-sibling-separator--background-color;
   }
 }
 

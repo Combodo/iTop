@@ -20,3 +20,12 @@
         </ul>
     {% endif %}
 {% endblock %}
+
+{% block iboActivityEntrySubInformation %}
+    {% if oUIBlock.GetOrigin() is not null and oUIBlock.GetOrigin != constant('Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin::INTERACTIVE') %}
+        <span class="ibo-activity-entry--origin" data-role="ibo-activity-entry--origin" data-tooltip-content="{{ ('Class:CMDBChange/Attribute:origin/Value:' ~ oUIBlock.GetOrigin())|dict_s }}">
+            <span class="{{ oUIBlock.GetOriginDecorationClasses() }}"></span>
+        </span>
+    {% endif %}
+    {{ parent() }}
+{% endblock %}

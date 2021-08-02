@@ -40,7 +40,6 @@ class ActivityEntry extends UIBlock
 	public const BLOCK_CODE = 'ibo-activity-entry';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/layout';
 
-	// Specific constants
 	/** @var string DEFAULT_ORIGIN */
 	public const DEFAULT_ORIGIN = 'unknown';
 	/** @var string DEFAULT_TYPE */
@@ -286,7 +285,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return $this
 	 */
-	protected function SetOrigin(string $sOrigin)
+	public function SetOrigin(string $sOrigin)
 	{
 		$this->sOrigin = $sOrigin;
 
