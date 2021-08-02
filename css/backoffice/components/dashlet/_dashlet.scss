@@ -28,3 +28,12 @@ $ibo-dashlet--elements-spacing-y: 24px !default;
 .ibo-details{
   margin-top: 5px;
 }
+.ibo-dashlet-blocker{
+  position: absolute;
+  z-index: 9; /* To be above calendar links & all, but below .close-box (9) */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: not-allowed;
+}

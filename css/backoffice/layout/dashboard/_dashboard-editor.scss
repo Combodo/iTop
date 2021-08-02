@@ -104,3 +104,8 @@ $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 	@extend .ibo-is-alternative;
 	@extend .ibo-is-danger;
 }
+.ibo-dashboard-editor .itop-dashboard{
+  a{
+    cursor: not-allowed;
+  }
+}

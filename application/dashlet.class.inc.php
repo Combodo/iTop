@@ -1274,7 +1274,7 @@ abstract class DashletGroupBy extends Dashlet
 		$aExtraParams["panel_class"] = $sClass;
 		$oPanel = $oBlock->GetDisplay($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 		if ($bEditMode) {
-			$oPanel->AddHtml('<div class="dashlet-blocker"></div>');
+			$oPanel->AddHtml('<div class="ibo-dashlet-blocker dashlet-blocker"></div>');
 		}
 
 		return $oPanel;
