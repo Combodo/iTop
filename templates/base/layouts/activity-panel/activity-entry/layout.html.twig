@@ -1,4 +1,4 @@
-{% spaceless %}
+{% apply spaceless %}
 <div class="ibo-activity-entry {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
      data-role="ibo-activity-entry"
      data-entry-type="{% block iboActivityEntryType %}{{ oUIBlock.GetType() }}{% endblock %}"
@@ -46,4 +46,4 @@
 		{% endblock %}
 	</div>
 </div>
-{% endspaceless %}
+{% endapply %}
