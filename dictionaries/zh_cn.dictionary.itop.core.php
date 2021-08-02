@@ -230,6 +230,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChange/Attribute:date+' => '变更被记录的日期和时间',
 	'Class:CMDBChange/Attribute:userinfo' => '杂项. 信息',
 	'Class:CMDBChange/Attribute:userinfo+' => '呼叫者已定义的信息',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //

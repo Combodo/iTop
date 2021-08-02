@@ -229,6 +229,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChange/Attribute:date+' => '',
 	'Class:CMDBChange/Attribute:userinfo' => 'Autres informations',
 	'Class:CMDBChange/Attribute:userinfo+' => '',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Action utilisateur dans l\'IHM',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'Script d\'import CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'Import CSV dans l\'IHM',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Traitement d\'email',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Source de données synchronisée',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Webservices REST/JSON',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Webservices SOAP',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Par une extension',
 ));
 
 //

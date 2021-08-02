@@ -231,6 +231,14 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:CMDBChange/Attribute:date+' => 'date and time at which the changes have been recorded',
 	'Class:CMDBChange/Attribute:userinfo' => 'misc. info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'caller\'s defined information',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension',
 ));
 
 //
