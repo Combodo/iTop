@@ -556,7 +556,7 @@ try
 					$sQueryLabel = $sFullText;
 				}
 				GlobalSearchHelper::AddQueryToHistory($sQuery, $sQueryIconUrl, $sQueryLabel);
-				$oP->AddBlockParam('global_search.query', $sQuery);
+				$oP->SetBlockParam('ibo-global-search.sQuery', $sQuery);
 
 				// Check the needle length
 				$iMinLenth = MetaModel::GetConfig()->Get('full_text_needle_min');
