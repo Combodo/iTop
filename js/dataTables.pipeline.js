@@ -132,7 +132,7 @@ $.fn.dataTable.pipeline = function (opts) {
 				"data":     request,
 				"dataType": "json",
 				"cache":    false,
-				"success":  function ( json ) {
+				"success": function (json) {
 					cacheLastJson = $.extend(true, {}, json);
 
 					if (cacheLower != drawStart && requestLength != -1) {
@@ -142,6 +142,28 @@ $.fn.dataTable.pipeline = function (opts) {
 						json.data.splice(requestLength, json.data.length);
 					}
 					drawCallback(json);
+				},
+				error: function (data) {
+					let oDlg = $('<div></div>');
+					$('body').append(oDlg);
+					oDlg.html(data.responseText);
+					oDlg.dialog({
+						title: settings["oLanguage"]["errorMessage"],
+						modal: true,
+						width: 'auto',
+						height: 'auto',
+						maxHeight: $(window).height() * 0.7,
+						maxWidth: '500',
+						position: {my: "center", at: "center", of: window},
+						buttons: [
+							{
+								text: settings["oLanguage"]["buttonOk"],
+								class: "ibo-is-primary ibo-is-neutral",
+								click: function () {
+									$(this).dialog('close');
+								}
+							}],
+					});
 				}
 			} );
 		} else {

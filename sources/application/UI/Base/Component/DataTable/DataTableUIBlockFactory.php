@@ -508,8 +508,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 		}
 
-		$sSelectMode = 'none';
-
 		$oDefaultSettings = DataTableSettings::GetDataModelSettings($aAuthorizedClasses, $bViewLink, $aList);
 
 		$bDisplayLimit = isset($aExtraParams['display_limit']) ? $aExtraParams['display_limit'] : true;
@@ -563,9 +561,15 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$aColumnDefinition = [];
 		$aSortOrder = [];
 		$iIndexColumn = 0;
-		if ($sSelectMode != "") {
+
+		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
+		$bSingleSelectMode = isset($aExtraParams['selection_type']) ? ($aExtraParams['selection_type'] == 'single') : false;
+		$sSelectMode = '';
+		if ($bSelectMode) {
+			$sSelectMode = $bSingleSelectMode ? 'single' : 'multiple';
 			$iIndexColumn++;
 		}
+
 		$aSortDatable = [];
 		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
 			if (isset($oCustomSettings->aColumns[$sClassAlias])) {

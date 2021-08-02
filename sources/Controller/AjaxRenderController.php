@@ -403,7 +403,7 @@ class AjaxRenderController
 		while ($aObject = $oSet->FetchAssoc()) {
 			$aObj = [];
 			foreach ($aClassAliases as $sAlias => $sClass) {
-				if (isset($aObject[$sAlias])) {
+				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
@@ -415,10 +415,14 @@ class AjaxRenderController
 					}
 				}
 			}
-			if ($sIdName != "") {
-				$aObj["id"] = $aObj[$sIdName];
-			}
-			if (isset($aObj)) {
+			if (isset($aObject)) {
+				if ($sIdName != "") {
+					if (isset($aObj[$sIdName])) {
+						$aObj["id"] = $aObj[$sIdName];
+					} else {
+						throw new Exception(Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $oSet->GetFilter()->ToOQL()));
+					}
+				}
 				array_push($aResult["data"], $aObj);
 			}
 		}
