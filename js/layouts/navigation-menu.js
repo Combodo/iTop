@@ -321,6 +321,7 @@ $(function()
 					}
 
 					if (bMatches) {
+						me.element.find(me.js_selectors.menu_filter_placeholder).css('display', 'none');
 						bHasAnyMatch = true;
 						// Note: Selector must be recursive
 						$(this).parents('[data-role="ibo-navigation-menu--menu-nodes"], [data-role="ibo-navigation-menu--menu-node"]').show();
