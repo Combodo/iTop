@@ -1448,7 +1448,7 @@ class DisplayableGraph extends SimpleGraph
 		$oP->add("<div class=\"not-printable\">\n");
 		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_CYAN, 'ds_flash');
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
-
+		$oUiSearchBlock->SetIsCollapsible(true);
 		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
 <<<EOF
  <div id="ds_flash" class="search_box ibo-display-graph--search-box">
