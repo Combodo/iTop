@@ -237,26 +237,28 @@ $ibo-panel-colors: (
   cursor: pointer;
 }
 
-.ibo-panel--collapsible-toggler--opened {
-  display: block;
-}
-
-.ibo-panel--collapsible-toggler--closed {
-  display: none;
-}
 
 /* Collapsible rules */
-.ibo-panel:not(.ibo-is-opened) {
-  .ibo-panel--collapsible-toggler--closed {
+.ibo-panel {
+  .ibo-panel--collapsible-toggler--opened {
     display: block;
   }
 
-  .ibo-panel--collapsible-toggler--opened {
+  .ibo-panel--collapsible-toggler--closed {
     display: none;
   }
+  &:not(.ibo-is-opened) {
+    .ibo-panel--collapsible-toggler--closed {
+      display: block;
+    }
 
-  .ibo-panel--body {
-    display: none;
+    .ibo-panel--collapsible-toggler--opened {
+      display: none;
+    }
+
+    .ibo-panel--body {
+      display: none;
+    }
   }
 }
 
