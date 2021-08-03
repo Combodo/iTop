@@ -147,8 +147,11 @@ $(function () {
 				}
 			},
 			_onHeaderStopsBeingSticky: function () {
-				//test to prevent the screen from flashing (cf bug 4124)
-				if ((this.element.position().top+this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight()) < (this.options.viewport_elem.scrollHeight-this.options.viewport_elem.clientHeight)) {
+				const fPanelBottomPosition = this.element.position().top + this.element.find(this.js_selectors.block.panel_header_sticky_sentinel_top).outerHeight();
+				const fViewportVerticalScrollPosition = this.options.viewport_elem.scrollHeight - this.options.viewport_elem.clientHeight;
+
+				// Test to prevent the screen from flashing (cf bug 4124)
+				if (fPanelBottomPosition < fViewportVerticalScrollPosition) {
 					this.element.find(this.js_selectors.block.panel_header).removeClass(this.css_classes.is_sticking);
 					if (this._hasTabContainer()) {
 						this._updateTabsListPosition(false /* Need to wait for the header transition to end */);
