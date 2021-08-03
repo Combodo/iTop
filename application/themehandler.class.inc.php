@@ -27,6 +27,7 @@ class ThemeHandler
 {
 	const IMAGE_EXTENSIONS = ['png', 'gif', 'jpg', 'jpeg'];
 
+	/** @var \CompileCSSService */
 	private static $oCompileCSSService;
 
 	public static function GetAppRootWithSlashes()
