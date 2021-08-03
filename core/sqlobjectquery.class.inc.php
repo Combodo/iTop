@@ -388,7 +388,8 @@ class SQLObjectQuery extends SQLQuery
 		{
 			if (count($this->__aSelectedIdFields) > 0)
 			{
-				$aCountFields = array();
+				$aCountFields = [];
+				$aCountI = [];
 				$i = 0;
 				foreach ($this->__aSelectedIdFields as $sFieldExpr) {
 					$aCountFields[] = "COALESCE($sFieldExpr, 0) AS idCount$i"; // Null values are excluded from the count
