@@ -80,7 +80,10 @@ $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px
   padding-right: 0;
 }  
 .ibo-display-graph--search-box {
-
+  .sf_criterion_area{
+    display: flex;
+    flex-direction: column;
+  }
   .sf_criterion_row {
     display: flex;
     flex-wrap: wrap;
@@ -103,6 +106,6 @@ $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px
   }
 
   #ReloadMovieBtn {
-    float: right;
+    align-self: flex-end;
   }
 }
