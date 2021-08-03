@@ -150,7 +150,7 @@ class ActivityPanelHelper
 
 		/** @var \CMDBChangeOp $oChangeOp */
 		while ($aElements = $oSet->FetchAssoc()) {
-			$oChange = $aElements['C'] ?? null;
+			$oChange = $aElements['C'];
 			$oChangeOp = $aElements['CO'];
 
 			// Skip case log changes as they are handled directly from the attributes themselves (most of them should have been excluded by the OQL above, but some derivated classes could still be retrieved)
