@@ -1035,9 +1035,6 @@ HTML
 	 */
 	public function DisplayDetails(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
-		$sClass = get_class($this);
-		$iKey = $this->GetKey();
-
 		// Object's details
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
 
@@ -3095,55 +3092,45 @@ EOF
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
 		$aAttributes = array();
-		foreach($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode)
-		{
+		foreach ($this->FlattenZList(MetaModel::GetZListItems($sClass, 'details')) as $sAttCode) {
 			$aAttributes[$sAttCode] = true;
 		}
-		foreach(MetaModel::GetAttributesList($sClass) as $sAttCode)
-		{
-			if (!array_key_exists($sAttCode, $aAttributes))
-			{
+		foreach (MetaModel::GetAttributesList($sClass) as $sAttCode) {
+			if (!array_key_exists($sAttCode, $aAttributes)) {
 				$aAttributes[$sAttCode] = true;
 			}
 		}
 		// Order the fields based on their dependencies, set the fields for which there is only one possible value
 		// and perform this in the order of dependencies to avoid dead-ends
 		$aDeps = array();
-		foreach($aAttributes as $sAttCode => $trash)
-		{
+		foreach ($aAttributes as $sAttCode => $trash) {
 			$aDeps[$sAttCode] = MetaModel::GetPrerequisiteAttributes($sClass, $sAttCode);
 		}
 		$aList = $this->OrderDependentFields($aDeps);
 
-		foreach($aList as $sAttCode)
-		{
+		$bExistFieldToDisplay = false;
+		foreach ($aList as $sAttCode) {
 			// Consider only the "expected" fields for the target state
-			if (array_key_exists($sAttCode, $aExpectedAttributes))
-			{
+			if (array_key_exists($sAttCode, $aExpectedAttributes)) {
 				$iExpectCode = $aExpectedAttributes[$sAttCode];
 				// Prompt for an attribute if
 				// - the attribute must be changed or must be displayed to the user for confirmation
 				// - or the field is mandatory and currently empty
 				if (($iExpectCode & (OPT_ATT_MUSTCHANGE | OPT_ATT_MUSTPROMPT)) ||
-					(($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == '')))
-				{
+					(($iExpectCode & OPT_ATT_MANDATORY) && ($this->Get($sAttCode) == ''))) {
 					$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 					$aArgs = array('this' => $this);
 					// If the field is mandatory, set it to the only possible value
-					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY))
-					{
-						if ($oAttDef->IsExternalKey())
-						{
+					if ((!$oAttDef->IsNullAllowed()) || ($iExpectCode & OPT_ATT_MANDATORY)) {
+						if ($oAttDef->IsExternalKey()) {
 							/** @var DBObjectSet $oAllowedValues */
 							$oAllowedValues = MetaModel::GetAllowedValuesAsObjectSet($sClass, $sAttCode, $aArgs, '',
 								$this->Get($sAttCode));
-							if ($oAllowedValues->CountWithLimit(2) == 1)
-							{
+							if ($oAllowedValues->CountWithLimit(2) == 1) {
 								$oRemoteObj = $oAllowedValues->Fetch();
 								$this->Set($sAttCode, $oRemoteObj->GetKey());
 							}
-						}
-						else
+						} else
 						{
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 							if (is_array($aAllowedValues) && count($aAllowedValues) == 1)
@@ -3179,8 +3166,7 @@ EOF
 					$bExcludeRawValue = false;
 					foreach (static::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
 					{
-						if (is_a($sAttDefClass, $sAttDefClassToExclude, true))
-						{
+						if (is_a($sAttDefClass, $sAttDefClassToExclude, true)) {
 							$bExcludeRawValue = true;
 							break;
 						}
@@ -3190,88 +3176,105 @@ EOF
 					$aDetails[] = $aAttrib;
 					$aFieldsMap[$sAttCode] = 'att_'.$iFieldIndex;
 					$iFieldIndex++;
+					$bExistFieldToDisplay = true;
 				}
 			}
 		}
 
-		$oPage->set_title($sActionLabel);
-		$oPage->add(<<<HTML
-<!-- Beginning of object-transition -->
-<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
+		if ($bExistFieldToDisplay) {
+			$oPage->set_title($sActionLabel);
+			$oPage->add(<<<HTML
+	<!-- Beginning of object-transition -->
+	<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
 HTML
-		);
+			);
 
-		// Page title and subtitles
-		$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetRawName()));
-		if (!empty($sActionDetails)) {
-			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
-		}
+			// Page title and subtitles
+			$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionLabel.' - '.$this->GetRawName()));
+			if (!empty($sActionDetails)) {
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
+			}
 
-		$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
-		$oPage->AddUiBlock($oFormContainer);
-		$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
-		$oFormContainer->AddSubBlock($oForm);
+			$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
+			$oPage->AddUiBlock($oFormContainer);
+			$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
+			$oFormContainer->AddSubBlock($oForm);
 
-		$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $this->GetKey(), 'id'))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_stimulus'))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
-			->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
+			$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $this->GetKey(), 'id'))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'apply_stimulus'))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', $iTransactionId));
 
-		if ($sOwnershipToken !== null) {
-			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
-		}
+			if ($sOwnershipToken !== null) {
+				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
+			}
 
-		// Note: Remove the table is we want fields to occupy the whole width of the container
-		$oForm->AddHtml('<table><tr><td>');
-		$oForm->AddHtml($oPage->GetDetails($aDetails));
-		$oForm->AddHtml('</td></tr></table>');
+			// Note: Remove the table is we want fields to occupy the whole width of the container
+			$oForm->AddHtml('<table><tr><td>');
+			$oForm->AddHtml($oPage->GetDetails($aDetails));
+			$oForm->AddHtml('</td></tr></table>');
 
-		$oAppContext = new ApplicationContext();
-		$oForm->AddHtml($oAppContext->GetForForm());
+			$oAppContext = new ApplicationContext();
+			$oForm->AddHtml($oAppContext->GetForForm());
 
-		$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
-		$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
-		$oForm->AddSubBlock($oCancelButton);
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+			$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
+			$oForm->AddSubBlock($oCancelButton);
 
-		$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
-		$oForm->AddSubBlock($oSubmitButton);
+			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+			$oForm->AddSubBlock($oSubmitButton);
 
-		$oPage->add(<<<HTML
-<!-- End of object-transition -->
-</div>
+			$oPage->add(<<<HTML
+	<!-- End of object-transition -->
+	</div>
 HTML
-		);
+			);
 
-		$iFieldsCount = count($aFieldsMap);
-		$sJsonFieldsMap = json_encode($aFieldsMap);
+			$iFieldsCount = count($aFieldsMap);
+			$sJsonFieldsMap = json_encode($aFieldsMap);
 
-		$oPage->add_script(
-			<<<EOF
-		// Initializes the object once at the beginning of the page...
-		var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '{$this->GetState()}', '$sStimulus');
-		oWizardHelper.SetFieldsMap($sJsonFieldsMap);
-		oWizardHelper.SetFieldsCount($iFieldsCount);
+			$oPage->add_script(
+				<<<EOF
+			// Initializes the object once at the beginning of the page...
+			var oWizardHelper = new WizardHelper('$sClass', '', '$sTargetState', '{$this->GetState()}', '$sStimulus');
+			oWizardHelper.SetFieldsMap($sJsonFieldsMap);
+			oWizardHelper.SetFieldsCount($iFieldsCount);
 EOF
-		);
-		$sJSToken = json_encode($sOwnershipToken);
-		$oPage->add_ready_script(
-			<<<EOF
-		// Starts the validation when the page is ready
-		CheckFields('apply_stimulus', false);
-		$(window).on('unload', function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
+			);
+			$sJSToken = json_encode($sOwnershipToken);
+			$oPage->add_ready_script(
+				<<<EOF
+			// Starts the validation when the page is ready
+			CheckFields('apply_stimulus', false);
+			$(window).on('unload', function() { return OnUnload('$iTransactionId', '$sClass', $iKey, $sJSToken) } );
 EOF
-		);
+			);
 
-		if ($sOwnershipToken !== null)
-		{
-			$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
+			if ($sOwnershipToken !== null) {
+				$this->GetOwnershipJSHandler($oPage, $sOwnershipToken);
+			}
+
+			// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug N°1240.
+			$sTempId = utils::GetUploadTempId($iTransactionId);
+			$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		} else {
+			//we can directly apply the stimuli
+			$bApplyStimulus = $this->ApplyStimulus($sStimulus); // will write the object in the DB
+			if (!$bApplyStimulus) {
+				throw new ApplicationException(Dict::S('UI:FailedToApplyStimuli'));
+			} else {
+				if ($sOwnershipToken !== null) {
+					// Release the concurrent lock, if any
+					iTopOwnershipLock::ReleaseLock($sClass, $iKey, $sOwnershipToken);
+				}
+
+				return true;
+			}
 		}
 
-		// Note: This part (inline images activation) is duplicated in self::DisplayModifyForm and several other places. Maybe it should be refactored so it automatically activates when an HTML field is present, or be an option of the attribute. See bug N°1240.
-		$sTempId = utils::GetUploadTempId($iTransactionId);
-		$oPage->add_ready_script(InlineImage::EnableCKEditorImageUpload($this, $sTempId));
+		return false;
 	}
 
 	public static function ProcessZlist($aList, $aDetails, $sCurrentTab, $sCurrentCol, $sCurrentSet)
