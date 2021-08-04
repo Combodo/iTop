@@ -19,7 +19,7 @@
 
 
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
-use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 
 require_once('../approot.inc.php');
@@ -41,7 +41,7 @@ $oP->SetContentLayout($oPageContentLayout);
 
 $sAlertTitle = Dict::S('UI:NotificationsMenu:Title');
 $sAlertContent = Dict::S('UI:NotificationsMenu:HelpContent');
-$oConfigurationHelp = new CollapsibleSection($sAlertTitle, [new Html($sAlertContent)]);
+$oConfigurationHelp = new CollapsibleSection($sAlertTitle, [HtmlFactory::MakeHtmlContent($sAlertContent)]);
 $oConfigurationHelp
 	->SetOpenedByDefault(true)
 	->EnableSaveCollapsibleState('notifications__home');
