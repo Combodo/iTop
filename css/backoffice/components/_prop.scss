@@ -42,7 +42,6 @@ $ibo-prop--apply--error--color: $ibo-color-grey-800 !default;
 		height: $ibo-prop--apply-cancel--span--height;
 		width: $ibo-prop--apply-cancel--span--width;
 		text-align: center;
-		@extend .ibo-button;
-		@extend .ibo-is-alternative;
+		@extend .ibo-button.ibo-is-alternative;
 	}
 }

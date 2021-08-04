@@ -847,9 +847,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	
 	button {
 		margin-top: 8px;
-		@extend .ibo-button;
-		@extend .ibo-is-primary;
-		@extend .ibo-is-regular;
+		@extend .ibo-button.ibo-is-primary.ibo-is-regular;
 		> span {
 			margin-right: 0.5em;
 		}
@@ -877,8 +875,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 }
 
 .sfc_fg_button{
-	@extend .ibo-button;
-	@extend .ibo-is-neutral;
+	@extend .ibo-button.ibo-is-neutral;
 	&.sfc_fg_search, &.sfc_fg_apply, &.sfc_fg_cancel {
 		@extend .ibo-is-regular;
 	}

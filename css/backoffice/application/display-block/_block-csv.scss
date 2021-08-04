@@ -11,7 +11,5 @@ $ibo-block-csv--textarea--margin-top: 10px !default;
 }
 
 .ibo-block-csv--download-link{
-  @extend .ibo-button;
-  @extend .ibo-is-alternative;
-  @extend .ibo-is-primary;
+  @extend .ibo-button.ibo-is-alternative.ibo-is-primary;
 }
