@@ -415,7 +415,7 @@ class AjaxRenderController
 					}
 				}
 			}
-			if (isset($aObject)) {
+			if (isset($aObj)) {
 				if ($sIdName != "") {
 					if (isset($aObj[$sIdName])) {
 						$aObj["id"] = $aObj[$sIdName];
