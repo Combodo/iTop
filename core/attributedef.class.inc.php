@@ -4165,7 +4165,7 @@ class AttributeText extends AttributeString
 		{
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 
-			return "<div class=\"HTML\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
+			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
 		}
 
 	}

@@ -142,6 +142,14 @@ body.ibo-has-fullscreen-descendant {
   @extend %ibo-font-code-150;
 }
 
+/*
+ * A single class to handle WYSIWYG generated content, where only HTML tags are available
+ * See https://bulma.io/documentation/elements/content/
+ */
+.ibo-is-html-content {
+  @extend .content;
+}
+
 /***********************************************************************/
 /* Sticky headers                                                      */
 /*                                                                     */
