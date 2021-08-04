@@ -1116,7 +1116,6 @@ abstract class MetaModel
 	 */
 	final public static function GetFilterCodeOrigin($sClass, $sAttCode)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
 
 		return self::$m_aFilterOrigins[$sClass][$sAttCode];
