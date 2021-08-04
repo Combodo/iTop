@@ -7243,7 +7243,6 @@ abstract class MetaModel
 	 */
 	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		// $aValues is an array of $sAttCode => $value
 		$sSQL = $oFilter->MakeUpdateQuery($aValues);
 		if (!self::DBIsReadOnly()) {
