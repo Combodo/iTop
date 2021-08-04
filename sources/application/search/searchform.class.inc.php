@@ -154,6 +154,7 @@ class SearchForm
 			$aCSSClasses[] = 'no_auto_submit';
 		}
 		$oForm = FormUIBlockFactory::MakeStandard();
+		$oForm->SetAction($sAction);
 		$oForm->AddSubBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
 
 		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
