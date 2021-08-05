@@ -976,7 +976,7 @@ JS
 	public function DisplayHierarchy(WebPage $oPage, $sFilter, $currValue, $oObj)
 	{
 		$sDialogTitle = addslashes(Dict::Format('UI:HierarchyOf_Class', MetaModel::GetName($this->sTargetClass)));
-		$oPage->add('<div id="dlg_tree_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div style="overflow:auto;background:#fff;margin-bottom:5px;" id="tree_'.$this->iId.'">');
+		$oPage->add('<div id="dlg_tree_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div style="margin-bottom:5px;" id="tree_'.$this->iId.'">');
 		$oPage->add('<table style="width:100%"><tr><td>');
 		if (is_null($sFilter))
 		{
