@@ -837,43 +837,12 @@ class DeprecatedCallsLog extends LogAPI
 	/** @var \FileLog we want our own instance ! */
 	protected static $m_oFileLog = null;
 
-	/**
-	 * @param string|null $sTargetFile
-	 *
-	 * @throws \ConfigException
-	 *
-	 * @uses \set_error_handler() to catch deprecated notices
-	 *
-	 * @since 3.0.0-beta4 N°3002 logs deprecated notices in called code
-	 */
 	public static function Enable($sTargetFile = null): void
 	{
 		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/deprecated-calls.log';
 		}
 		parent::Enable($sTargetFile);
-
-		if (static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_METHOD)) {
-			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler']);
-		}
-	}
-
-	/**
-	 * @since 3.0.0-beta4 N°3002
-	 * @noinspection SpellCheckingInspection
-	 */
-	public static function DeprecatedNoticesErrorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
-	{
-		if ((\E_USER_DEPRECATED !== $errno)
-			&& (\E_DEPRECATED !== $errno)
-			&& (\E_WARNING !== $errno || false === strpos($errstr, '" targeting switch is equivalent to "break')) // for @trigger_error() calls !
-		) {
-			return false;
-		}
-
-		static::NotifyDeprecatedPhpMethod('catched by DeprecatedNoticesErrorHandler');
-
-		return true;
 	}
 
 	protected static function GetLevelDefault(): string
