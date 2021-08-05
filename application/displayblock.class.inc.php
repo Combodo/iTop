@@ -192,6 +192,8 @@ class DisplayBlock
 				/** string */
 				'open',
 				/** bool open by default the search */
+				'submit_on_load',
+				/** bool submit the search on loading page */
 				'class', /** class name */
 				'search_header_force_dropdown', /** Html for <select> to choose the class to search  */
 				'this',
@@ -201,6 +203,8 @@ class DisplayBlock
 				/** string search root class */
 				'open',
 				/** bool open the search panel by default */
+				'submit_on_load',
+				/** bool submit the search on loading page */
 				'result_list_outer_selector',
 				/** string js selector of the search result display */
 				'search_header_force_dropdown',

@@ -1128,20 +1128,10 @@ class OQLMenuNode extends MenuNode
 		//$sIcon = MetaModel::GetClassIcon($oSearch->GetClass(), false);
 
 		if ($bSearchPane) {
-			$aParams = array_merge(array('open' => $bSearchOpen, 'table_id' => $sUsageId), $aExtraParams);
+			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => true], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}
-
-		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
-		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
-		$oPage->AddUiBlock($oTitle);
-
-		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
-		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
-		$oBlock->Display($oPage, $sUsageId);
-
-		$oPage->add("</div>");
 
 		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage)) {
 			// Breadcrumb
@@ -1212,32 +1202,6 @@ class SearchMenuNode extends MenuNode
 		$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
-
-		$bAutoSubmit = true;
-		$mSubmitParam = utils::GetConfig()->Get('search_manual_submit');
-		if ($mSubmitParam !== false)
-		{
-			$bAutoSubmit = false;
-		}
-		else
-		{
-			$mSubmitParam = utils::GetConfig()->Get('high_cardinality_classes');
-			if (is_array($mSubmitParam)) {
-				if (in_array( $oSearch->GetClass(), $mSubmitParam)) {
-					$bAutoSubmit = false;
-				}
-			}
-		}
-		if($bAutoSubmit) {
-			$oPage->add("<div class='sf_results_area' data-target='search_results'>");
-
-			$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
-			$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
-			$oBlock->Display($oPage, $sUsageId);
-
-			$oPage->add("</div>");
-		}
-
 	}
 }
 

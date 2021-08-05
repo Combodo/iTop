@@ -227,6 +227,7 @@ class SearchForm
 		{
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
+		$bSubmitOnLoad =  (isset($aExtraParams['submit_on_load'])) ? $aExtraParams['submit_on_load'] : false;
 
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
 		if ($sDebug == 'true')
@@ -250,6 +251,7 @@ class SearchForm
 			'data_config_list_selector' => "#{$aExtraParams['result_list_outer_selector']}",
 			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php?'.$sContext,
 			'init_opened' => $bOpen,
+			'submit_on_load' => $bSubmitOnLoad,
 			'auto_submit' => $bAutoSubmit,
 			'list_params' => $aListParams,
 			'show_obsolete_data' => $bShowObsoleteData,

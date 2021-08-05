@@ -15,6 +15,7 @@ $(function()
 			'endpoint': null,
 			'init_opened': false,
 			'auto_submit': true,
+			'submit_on_load': false,
 			'show_obsolete_data' : true,
 			'search': {
 				'base_oql': '',
@@ -127,10 +128,10 @@ $(function()
             });
 
 			// If auto submit is enabled, also submit on first display
-			/*if(this.options.auto_submit === true)
+			if(this.options.auto_submit === true || this.options.submit_on_load === true)
 			{
 				this._submit();
-			}*/
+			}
 
 		},
 		// called when created, and later when changing options
