@@ -105,7 +105,7 @@ class DesignerForm
 			foreach($aFields as $oField) {
 				$aRow = $oField->Render($oP, $sFormId);
 				if ($oField->IsVisible()) {
-					$sValidation = '<span class="prop_apply ibo-prop--apply">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
+					$sValidation = '<span class="prop_apply ibo-prop--apply ibo-button ibo-is-alternative">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
 					$sField = $aRow['value'].$sValidation;
 					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
 				} else {
@@ -222,7 +222,7 @@ class DesignerForm
 				if ($oField->IsVisible()) {
 					$sFieldId = $this->GetFieldId($oField->GetCode());
 					$sValidation = $this->GetValidationArea($sFieldId, '<span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td>'
+					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply ibo-button ibo-is-alternative" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td>'
 						.$this->EndRow();
 
 					if (is_null($aRow['label'])) {
@@ -1682,7 +1682,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		}
 
 		if ($sRenderMode == 'property') {
-			$sHtml .= '</td><td class="prop_icon prop_apply ibo-prop--apply"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span></td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td></tr>';
+			$sHtml .= '</td><td class="prop_icon prop_apply ibo-prop--apply ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span></td><td  class="prop_icon prop_cancel ibo-prop--cancel ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td></tr>';
 		}
 		foreach ($this->aSubForms as $sKey => $aFormData) {
 			$sId = $this->oForm->GetFieldId($this->sCode);

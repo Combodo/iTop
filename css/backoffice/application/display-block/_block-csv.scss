@@ -9,7 +9,3 @@ $ibo-block-csv--textarea--margin-top: 10px !default;
     margin-top: $ibo-block-csv--textarea--margin-top;
   }
 }
-
-.ibo-block-csv--download-link{
-  @extend .ibo-button.ibo-is-alternative.ibo-is-primary;
-}

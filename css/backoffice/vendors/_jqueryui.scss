@@ -167,7 +167,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 		top: 0;
 	}
 	.ui-button {
-		@extend .ibo-button.ibo-is-regular.ibo-is-secondary;
+		@extend .ibo-button, .ibo-is-regular, .ibo-is-secondary;
 		> .ui-icon {
 			background-image: none;
 			float: unset;

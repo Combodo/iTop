@@ -847,7 +847,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	
 	button {
 		margin-top: 8px;
-		@extend .ibo-button.ibo-is-primary.ibo-is-regular;
 		> span {
 			margin-right: 0.5em;
 		}
@@ -874,15 +873,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	padding-top: $ibo-panel--spacing-top ;
 }
 
-.sfc_fg_button{
-	@extend .ibo-button.ibo-is-neutral;
-	&.sfc_fg_search, &.sfc_fg_apply, &.sfc_fg_cancel {
-		@extend .ibo-is-regular;
-	}
-	&.sfc_fg_more {
-		@extend .ibo-is-alternative;
-	}
-}
 .sfm_tg_title{
   display: none;
 }

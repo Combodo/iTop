@@ -100,7 +100,6 @@ $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 	right: $ibo-dashboard-editor--delete-dashlet-icon--right;
 	padding: $ibo-dashboard-editor--delete-dashlet-icon--padding;
 	z-index: $ibo-dashboard-editor--delete-dashlet-icon--z-index;
-	@extend .ibo-button.ibo-is-alternative.ibo-is-danger;
 }
 .ibo-dashboard-editor .itop-dashboard{
   a{
