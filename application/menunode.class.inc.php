@@ -1133,7 +1133,6 @@ class OQLMenuNode extends MenuNode
 			$oBlock->Display($oPage, 0);
 		}
 
-		//$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
 		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
 		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
 		$oPage->AddUiBlock($oTitle);
@@ -1209,9 +1208,36 @@ class SearchMenuNode extends MenuNode
 		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oSearch = new DBObjectSearch($this->sClass);
-		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
+		$sUsageId =  'Menu_'.utils::GetSafeId($this->GetMenuId());
+		$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
+
+		$bAutoSubmit = true;
+		$mSubmitParam = utils::GetConfig()->Get('search_manual_submit');
+		if ($mSubmitParam !== false)
+		{
+			$bAutoSubmit = false;
+		}
+		else
+		{
+			$mSubmitParam = utils::GetConfig()->Get('high_cardinality_classes');
+			if (is_array($mSubmitParam)) {
+				if (in_array( $oSearch->GetClass(), $mSubmitParam)) {
+					$bAutoSubmit = false;
+				}
+			}
+		}
+		if($bAutoSubmit) {
+			$oPage->add("<div class='sf_results_area' data-target='search_results'>");
+
+			$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
+			$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
+			$oBlock->Display($oPage, $sUsageId);
+
+			$oPage->add("</div>");
+		}
+
 	}
 }
 

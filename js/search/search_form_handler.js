@@ -127,10 +127,10 @@ $(function()
             });
 
 			// If auto submit is enabled, also submit on first display
-			if(this.options.auto_submit === true)
+			/*if(this.options.auto_submit === true)
 			{
 				this._submit();
-			}
+			}*/
 
 		},
 		// called when created, and later when changing options
