@@ -757,6 +757,9 @@ try
 				// See TRAC #363, fix described here: http://forums.codecharge.com/posts.php?post_id=97771
 				$oPage->add_header("Cache-Control: cache, must-revalidate");
 				$oPage->add_header("Pragma: public");
+				// Fix bug in Symphony 3x in Response::sendHeaders() : don't replace header of page except Content-Type
+				header("Cache-Control: cache, must-revalidate");
+				header("Pragma: public");
 				$oPage->add_header("Expires: Fri, 17 Jul 1970 05:00:00 GMT");
 
 				$aParams = utils::ReadParam('params', array(), false, 'raw_data');

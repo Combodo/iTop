@@ -1079,9 +1079,15 @@ class ObjectController extends BrickController
 		if ($iCacheSec > 0)
 		{
 			$aHeaders['Expires'] = '';
-			$aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
+			$aHeaders['Cache-Control'] = 'no-tranjsform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
 			// Reset the value set previously
 			$aHeaders['Pragma'] = 'cache';
+
+			// Fix bug in Symphony 3x in Response::sendHeaders() : don't replace header of page except Content-Type
+			header('Cache-Control: no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec);
+			header('Pragma: cache');
+			header('Expires: ');
+
 			// An arbitrary date in the past is ok
 			$aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
 		}
