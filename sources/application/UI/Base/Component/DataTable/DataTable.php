@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 
+use ApplicationContext;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use DataTableConfig;
@@ -71,7 +72,19 @@ class DataTable extends UIContentBlock
 	 */
 	public function SetAjaxUrl(string $sAjaxUrl): void
 	{
-		$this->sAjaxUrl = $sAjaxUrl;
+		if (strlen($sAjaxUrl) > 0)
+		{
+			$oAppContext = new ApplicationContext();
+			if(strpos ($sAjaxUrl,'?')) {
+				$this->sAjaxUrl = $sAjaxUrl."&".$oAppContext->GetForLink();
+			} else {
+				$this->sAjaxUrl = $sAjaxUrl."?".$oAppContext->GetForLink();
+			}
+		}
+		else
+		{
+			$this->sAjaxUrl = $sAjaxUrl;
+		}
 	}
 
 	/**
