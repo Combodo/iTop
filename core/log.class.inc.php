@@ -830,6 +830,7 @@ class DeadLockLog extends LogAPI
 class DeprecatedCallsLog extends LogAPI
 {
 	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
+	public const ENUM_CHANNEL_PHP_LIBMETHOD = 'deprecated-php-libmethod';
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
 
@@ -838,12 +839,71 @@ class DeprecatedCallsLog extends LogAPI
 	/** @var \FileLog we want our own instance ! */
 	protected static $m_oFileLog = null;
 
+	/**
+	 * @param string|null $sTargetFile
+	 *
+	 * @throws \ConfigException
+	 *
+	 * @uses \set_error_handler() to catch deprecated notices
+	 *
+	 * @since 3.0.0-beta4 N°3002 logs deprecated notices in called code
+	 */
 	public static function Enable($sTargetFile = null): void
 	{
 		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/deprecated-calls.log';
 		}
 		parent::Enable($sTargetFile);
+
+		try {
+			$bIsLogLevelEnabled = static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD);
+		}
+		catch (ConfigException $e) {
+			$bIsLogLevelEnabled = false;
+		}
+		if ($bIsLogLevelEnabled) {
+			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler']);
+		}
+	}
+
+	/**
+	 * This will catch a message for all E_DEPRECATED and E_USER_DEPRECATED errors.
+	 * This handler is set in DeprecatedCallsLog::Enable
+	 *
+	 * @since 3.0.0-beta4 N°3002
+	 * @noinspection SpellCheckingInspection
+	 */
+	public static function DeprecatedNoticesErrorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
+	{
+		if (
+			(\E_USER_DEPRECATED !== $errno)
+			&& (\E_DEPRECATED !== $errno)
+		) {
+			return false;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
+		$iStackDeprecatedMethodLevel = 2; // level 0 = current method, level 1 = @trigger_error, level 2 = method containing the `trigger_error` call
+		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
+		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
+		if (($sDeprecatedObject === __CLASS__) && ($sDeprecatedMethod === 'Log')) {
+			// We are generating a trigger_error ourselves, we don't want to trace them !
+			return false;
+		}
+		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
+		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
+		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
+
+		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 3 = caller of the deprecated method
+		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
+			$sCallerObject = $aStack[3]['class'];
+			$sCallerMethod = $aStack[3]['function'];
+			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
+		}
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_LIBMETHOD);
+
+		return true;
 	}
 
 	protected static function GetLevelDefault(): string
@@ -903,16 +963,17 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
-
-		$sDeprecatedObject = $aStack[1]['class'];
-		$sDeprecatedMethod = $aStack[1]['function'];
-		$sCallerFile = $aStack[1]['file'];
-		$sCallerLine = $aStack[1]['line'];
+		$iStackDeprecatedMethodLevel = 1; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
+		$sDeprecatedObject = $aStack[$iStackDeprecatedMethodLevel]['class'];
+		$sDeprecatedMethod = $aStack[$iStackDeprecatedMethodLevel]['function'];
+		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
+		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
 		$sMessage = "Call to {$sDeprecatedObject}::{$sDeprecatedMethod} in {$sCallerFile}#L{$sCallerLine}";
 
-		if (array_key_exists(2, $aStack)) {
-			$sCallerObject = $aStack[2]['class'];
-			$sCallerMethod = $aStack[2]['function'];
+		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 2 = caller of the deprecated method
+		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
+			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'];
+			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'];
 			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
 		}
 
@@ -920,12 +981,12 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Warning($sMessage, static::ENUM_CHANNEL_PHP_METHOD);
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
 	{
-		if (utils::IsDevelopmentEnvironment()) {
+		if (true === utils::IsDevelopmentEnvironment()) {
 			trigger_error($sMessage, E_USER_DEPRECATED);
 		}
 
