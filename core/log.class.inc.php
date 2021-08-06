@@ -691,6 +691,8 @@ abstract class LogAPI
 	 * @uses \LogAPI::GetConfig()
 	 * @uses `log_level_min` config parameter
 	 * @uses \LogAPI::GetLevelDefault
+	 *
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Aadmin%3Alog iTop log reference
 	 */
 	protected static function GetMinLogLevel($sChannel)
 	{
