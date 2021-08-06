@@ -902,11 +902,6 @@ JS;
 		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
-
-		// Fix bug in Symphony 3x in Response::sendHeaders() : don't replace header of page except Content-Type
-		header('Cache-control: no-cache, no-store, must-revalidate');
-		header('Pragma: no-cache');
-		header('Expires: 0');
 	}
 
 	public function set_cache($iCacheSec)
@@ -914,11 +909,6 @@ JS;
 		$this->add_header("Cache-Control: max-age=$iCacheSec");
 		$this->add_header("Pragma: cache");
 		$this->add_header("Expires: ");
-
-		// Fix bug in Symphony 3x in Response::sendHeaders() : don't replace header of page except Content-Type
-		header("Cache-Control: max-age=$iCacheSec");
-		header('Pragma: cache');
-		header('Expires: ');
 	}
 
 	/**

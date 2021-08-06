@@ -1079,7 +1079,7 @@ class ObjectController extends BrickController
 		if ($iCacheSec > 0)
 		{
 			$aHeaders['Expires'] = '';
-			$aHeaders['Cache-Control'] = 'no-tranjsform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
+			$aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
 			// Reset the value set previously
 			$aHeaders['Pragma'] = 'cache';
 
