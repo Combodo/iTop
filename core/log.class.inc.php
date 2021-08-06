@@ -677,10 +677,19 @@ abstract class LogAPI
 	 * @param string $sChannel
 	 *
 	 * @return string one of the LEVEL_* const value : the one configured it if exists, otherwise default log level for this channel
-	 *       Config can be done globally : `'log_level_min' => LogAPI::LEVEL_TRACE,`
-	 *       Or per channel : `'log_level_min' => ['InlineImage' => LogAPI::LEVEL_TRACE, 'UserRequest' => LogAPI::LEVEL_TRACE],`
+	 *       Config can be set :
+	 *          * globally : `'log_level_min' => LogAPI::LEVEL_TRACE,`
+	 *          * per channel :
+	 *            ```
+	 *            'log_level_min' => [
+	 *                ''            => LogAPI::LEVEL_ERROR, // default log level for channels not listed below
+	 *                'InlineImage' => LogAPI::LEVEL_TRACE,
+	 *                'UserRequest' => LogAPI::LEVEL_TRACE
+	 *            ],
+	 *            ```
 	 *
 	 * @uses \LogAPI::GetConfig()
+	 * @uses `log_level_min` config parameter
 	 * @uses \LogAPI::GetLevelDefault
 	 */
 	protected static function GetMinLogLevel($sChannel)
