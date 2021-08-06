@@ -167,8 +167,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         method: "post",
         pages: 1 // number of pages to cache
     }),
-    createdRow: function( row, data, dataIndex ) {
-        if (data['@class'] !== undefined) {
+    createdRow: function (row, data, dataIndex) {
+        if (data['@class'] !== undefined)
+        {
             $(row).addClass(data['@class']);
         }
     },
@@ -176,8 +177,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         this.api().columns.adjust().draw();
         if (this.api().page.info().pages < 2)
         {
-            this.parent().find('.dataTables_paginate').hide();
-            this.parent().find('.dataTables_length').hide();
+            this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
         }
         this.find('.ibo-dataTables--processing').remove();
         this.find('tbody').unblock();

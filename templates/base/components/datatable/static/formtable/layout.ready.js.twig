@@ -41,6 +41,13 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             $(row).addClass(data['@class']);
         }
     },
+
+    initComplete: function () {
+        if (this.api().page.info().pages < 2)
+        {
+            this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
+        }
+    },
 });
 
 {% if (oUIBlock.GetOption('bFullscreen')) %}
