@@ -708,6 +708,7 @@ abstract class LogAPI
 		    return $sLogLevelMin[static::CHANNEL_DEFAULT];
 		}
 
+		// Even though the *self*::CHANNEL_DEFAULT is set to '' in the current class (LogAPI), the test below is necessary as the CHANNEL_DEFAULT constant can be (and is!) overloaded in derivated classes, don't remove this test to factorize it with the previous one.
 		if (isset($sLogLevelMin[''])) {
 		    return $sLogLevelMin[''];
 		}
