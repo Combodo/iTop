@@ -1,5 +1,9 @@
 @CHARSET "UTF-8";
 
+*, ::before, ::after {
+	box-sizing: content-box;
+}
+
 html,body {
 	height: 100%;
 }
@@ -107,10 +111,9 @@ a:hover {
 }
 
 #login-form-content .divider hr {
-	margin-left:auto;
-	margin-right:auto;
+	margin: 0.5rem auto;
 	width:40%;
-	color: #E1E7EC;
+	background-color: #E1E7EC;
 }
 
 #login-form-content .divider hr.left {
