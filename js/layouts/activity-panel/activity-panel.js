@@ -234,12 +234,18 @@ $(function()
 				});
 
 				// Page exit
-				// - Show confirm dialog if draft entries (IMPORTANT: Lock is NOT released, see N°3786)
-				window.onbeforeunload = function (oEvent) {
-					if (true === me._HasDraftEntries()) {
-						return true;
-					}
-				};
+				// - Show confirm dialog if draft entries
+				if (window.onbeforeunload === null) {
+					window.onbeforeunload = function (oEvent) {
+						if (true === me._HasDraftEntries()) {
+							return true;
+						}
+					};
+				}
+				// - Processing / cleanup when the leaving page
+				$(window).on('unload', function() {
+					return me._onUnload();
+				});
 
 				// Mostly for outside clicks that should close elements
 				oBodyElem.on('click', function (oEvent) {
@@ -404,8 +410,14 @@ $(function()
 			_onDraftEntryForm: function (sCaseLogAttCode) {
 				// Put draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_draft);
-				// Request lock
-				this._RequestLock();
+
+				if (this.options.lock_enabled === true) {
+					// Request lock
+					this._RequestLock();
+				} else {
+					// Only enable buttons
+					this.element.find(this.js_selectors.caselog_entry_form + '[data-attribute-code="' + sCaseLogAttCode + '"]').trigger('enable_submission.caselog_entry_form.itop');
+				}
 			},
 			/**
 			 * Remove indication of a draft entry and will cancel the lock (acquired or pending) if no draft entry left
@@ -416,9 +428,15 @@ $(function()
 			_onEmptyEntryForm: function (sCaseLogAttCode) {
 				// Remove draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
-				// Cancel lock if all forms empty
-				if (false === this._HasDraftEntries()) {
-					this._CancelLock();
+
+				if (this.options.lock_enabled === true) {
+					// Cancel lock if all forms empty
+					if (false === this._HasDraftEntries()) {
+						this._CancelLock();
+					}
+				} else {
+					// Only disable buttons
+					this.element.find(this.js_selectors.caselog_entry_form + '[data-attribute-code="' + sCaseLogAttCode + '"]').trigger('disable_submission.caselog_entry_form.itop');
 				}
 			},
 			_onCancelledEntryForm: function () {
@@ -432,7 +450,7 @@ $(function()
 			 */
 			_onRequestSubmission: function (oEvent, oData) {
 				// Check lock state
-				if (this.enums.lock_status.locked_by_myself !== this.options.lock_status) {
+				if ((this.options.lock_enabled === true) && (this.enums.lock_status.locked_by_myself !== this.options.lock_status)) {
 					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
 					return;
 				}
@@ -482,6 +500,13 @@ $(function()
 					// Hide all filters's options
 					this._HideAllFiltersOptions();
 				}
+			},
+			/**
+			 * Called when the user leave the page, will remove the current lock if any draft entries
+			 * @private
+			 */
+			_onUnload: function() {
+				return OnUnload(this.options.transaction_id, this.element.attr('data-object-class'), this.element.attr('data-object-id'), this.options.lock_token);
 			},
 
 			// Methods

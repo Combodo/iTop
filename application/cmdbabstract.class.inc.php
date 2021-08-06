@@ -1035,6 +1035,32 @@ HTML
 	 */
 	public function DisplayDetails(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
+		// N°3786: As this can now be call recursively from the self::ReloadAndDisplay(), we need to make sure we don't fall into an infinite loop
+		static $bBlockReentrance = false;
+
+		$sClass = get_class($this);
+		$iKey = $this->GetKey();
+
+		if ($sMode === static::ENUM_OBJECT_MODE_VIEW)
+		{
+			// The concurrent access lock makes sense only for already existing objects
+			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
+			if ($LockEnabled)
+			{
+				$aLockInfo = iTopOwnershipLock::IsLocked($sClass, $iKey);
+				if ($aLockInfo['locked'] === true && $aLockInfo['owner']->GetKey() == UserRights::GetUserId() && $bBlockReentrance === false)
+				{
+					// If the object is locked by the current user, it's worth trying again, since
+					// the lock may be released by 'onunload' which is called AFTER loading the current page.
+					//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
+					$bBlockReentrance = true;
+					self::ReloadAndDisplay($oPage, $this, array('operation' => 'details'));
+
+					return;
+				}
+			}
+		}
+
 		// Object's details
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
 
