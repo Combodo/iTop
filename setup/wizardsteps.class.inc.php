@@ -2569,6 +2569,7 @@ class WizStepDone extends WizardStep
 				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sRootUrl.$aAvailableModules[$sModuleId]['doc.manual_setup'];
 			}
 		}
+		$oPage->add('<div class="ibo-is-html-content">');
 		if (count($aManualSteps) > 0)
 		{
 			$oPage->add("<h2>Manual operations required</h2>");
@@ -2606,6 +2607,9 @@ class WizStepDone extends WizardStep
 		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Support from Combodo\" href=\"https://support.combodo.com\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-support.gif\"/></td></a>");
 		$oPage->add("<td><a style=\"background:transparent;padding:0;\" title=\"Get Professional Training from Combodo\" href=\"http://www.combodo.com/training\" target=\"_blank\"><img style=\"border:0\" src=\"../images/setup-training.gif\"/></td></a>");
 		$oPage->add('</tr></table>');
+
+		$oPage->add('</div>');
+
 
 		$oConfig = new Config(utils::GetConfigFilePath());
 		// Load the data model only, in order to load env-production/core/main.php to get the XML parameters (needed by GetModuleSettings below)
