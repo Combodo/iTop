@@ -32,7 +32,7 @@ private static $installed = array (
     'aliases' => 
     array (
     ),
-    'reference' => '51e24a4e3527c8416bc14fe28284ff67152a36c9',
+    'reference' => 'c8dd8c3806d92e19b5a67c16be9d64ceaa2e0524',
     'name' => '__root__',
   ),
   'versions' => 
@@ -44,7 +44,7 @@ private static $installed = array (
       'aliases' => 
       array (
       ),
-      'reference' => '51e24a4e3527c8416bc14fe28284ff67152a36c9',
+      'reference' => 'c8dd8c3806d92e19b5a67c16be9d64ceaa2e0524',
     ),
     'combodo/tcpdf' => 
     array (
@@ -57,12 +57,12 @@ private static $installed = array (
     ),
     'nikic/php-parser' => 
     array (
-      'pretty_version' => 'v3.1.5',
-      'version' => '3.1.5.0',
+      'pretty_version' => 'v4.12.0',
+      'version' => '4.12.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'bb87e28e7d7b8d9a7fda231d37457c9210faf6ce',
+      'reference' => '6608f01670c3cc5079e18c1dab1104e002579143',
     ),
     'paragonie/random_compat' => 
     array (
