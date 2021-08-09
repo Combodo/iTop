@@ -1094,9 +1094,13 @@ class LoginWebPage extends NiceWebPage
 			if (isset($_SESSION['auth_user']))
 			{
 				$sAuthUser = $_SESSION['auth_user'];
+				$sIssue = $_SESSION['pwd_issue'] ?? null;
+				unset($_SESSION['pwd_issue']);
+				$bFailedLogin = ($sIssue != null); // Force the "failed login" flag to display the "issue" message
+
 				UserRights::Login($sAuthUser); // Set the user's language
 				$oPage = self::NewLoginWebPage();
-				$oPage->DisplayChangePwdForm();
+				$oPage->DisplayChangePwdForm($bFailedLogin, $sIssue);
 				$oPage->output();
 				exit;
 			}

@@ -604,7 +604,7 @@ abstract class User extends cmdbAbstractObject
 	 * @throws \OQLException
 	 * @since 3.0.0
 	 */
-	private function IsCurrentUser(): bool
+	protected function IsCurrentUser(): bool
 	{
 		if (is_null(UserRights::GetUserId())) {
 			return false;
