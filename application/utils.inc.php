@@ -2638,9 +2638,21 @@ class utils
 		if(!empty($aMentionsAllowedClasses)) {
 			$aDefaultConf['mentions'] = [];
 
-			foreach($aMentionsAllowedClasses as $sMentionChar => $sMentionClass) {
+			foreach($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
+				// Retrieve mention class
+				// - First test if the conf is a simple Datamodel class
+				if (MetaModel::IsValidClass($sMentionScope)) {
+					$sMentionClass = $sMentionScope;
+				}
+				// - Otherwise it must be a valid OQL
+				else {
+					$oTmpSearch = DBSearch::FromOQL($sMentionScope);
+					$sMentionClass = $oTmpSearch->GetClass();
+					unset($oTmpSearch);
+				}
+
 				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
-				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class='.$sMentionClass.'&needle={encodedQuery}';
+				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.$sMentionMarker.'&needle={encodedQuery}';
 				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
 
 				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
@@ -2650,12 +2662,12 @@ HTML;
 <li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
 HTML;
 				$sMentionOutputTemplate = <<<HTML
-<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionChar}{friendlyname}</a>
+<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionMarker}{friendlyname}</a>
 HTML;
 
 				$aDefaultConf['mentions'][] = [
 					'feed' => $sMentionEndpoint,
-					'marker' => $sMentionChar,
+					'marker' => $sMentionMarker,
 					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 					'itemTemplate' => $sMentionItemTemplate,
 					'outputTemplate' => $sMentionOutputTemplate,

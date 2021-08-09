@@ -2677,19 +2677,38 @@ EOF
 		// TODO 3.0.0: Move this to new ajax render controller?
 		case 'cke_mentions':
 			$oPage->SetContentType('application/json');
-			$sTargetClass = utils::ReadParam('target_class', '', false, 'class');
+			$sMarker = utils::ReadParam('marker', '', false, 'raw_data');
 			$sNeedle = utils::ReadParam('needle', '', false, 'raw_data');
 
 			// Check parameters
-			if($sTargetClass === '') {
-				throw new Exception('Invalid parameters, target_class must be specified.');
+			if($sMarker === '') {
+				throw new Exception('Invalid parameters, marker must be specified.');
+			}
+
+			$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+			if (isset($aMentionsAllowedClasses[$sMarker]) === false) {
+				throw new Exception('Invalid marker "'.$sMarker.'"');
 			}
 
 			$aMatches = array();
 			if ($sNeedle !== '') {
-				$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sTargetClass);
+				// Retrieve scope from marker
+				$sScope = $aMentionsAllowedClasses[$sMarker];
+				if (MetaModel::IsValidClass($sScope)) {
+					$sScope = "SELECT $sScope";
+				}
+				$oSearch = DBSearch::FromOQL($sScope);
 
-				$oSearch = DBObjectSearch::FromOQL("SELECT $sTargetClass WHERE friendlyname LIKE :needle");
+				$sSearchMainClassName = $oSearch->GetClass();
+				$sSearchMainClassAlias = $oSearch->GetClassAlias();
+
+				$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
+
+				// Add condition to filter on the friendlyname
+				$oSearch->AddConditionExpression(
+					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
+				);
+				//$oSearch = DBObjectSearch::FromOQL("SELECT $sMarker WHERE friendlyname LIKE :needle");
 				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
@@ -2712,7 +2731,7 @@ EOF
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
 						if (!$oImage->IsEmpty()) {
-							$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+							$aMatch['picture_url'] = $oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode);
 						}
 					}
 

@@ -1287,9 +1287,9 @@ class Config
 		],
 		'mentions.allowed_classes' => [
 			'type' => 'array',
-			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete (eg. "@" => "Person")',
+			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete, value can be either a DM class or a valid OQL (eg. "@" => "Person", "?" => "SELECT FAQ WHERE status = \'published\')',
 			'default' => [
-				'@' => 'Person',
+				'@' => 'SELECT Person WHERE status = \'active\'',
 			],
 			'value' => false,
 			'source_of_value' => '',
