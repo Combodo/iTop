@@ -912,6 +912,10 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
 		}
 
+		if (!empty($errstr)) {
+			$sMessage .= ' : '.$errstr;
+		}
+
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_LIBMETHOD);
 
 		return true;
