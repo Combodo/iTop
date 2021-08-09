@@ -438,7 +438,7 @@ JS;
 		// Logon message
 		$sLogonMessageDictCode = (UserRights::IsAdministrator()) ? 'UI:LoggedAsMessage+Admin' : 'UI:LoggedAsMessage';
 
-		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactFriendlyname());
+		$aData['sLogonMessage'] = Dict::Format($sLogonMessageDictCode, UserRights::GetContactFriendlyname(), UserRights::GetUser());
 
 		$this->aUserData = $aData;
 
