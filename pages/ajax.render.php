@@ -2708,7 +2708,7 @@ EOF
 				$oSearch->AddConditionExpression(
 					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
 				);
-				//$oSearch = DBObjectSearch::FromOQL("SELECT $sMarker WHERE friendlyname LIKE :needle");
+
 				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
