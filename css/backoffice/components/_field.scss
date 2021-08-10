@@ -40,7 +40,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     .ibo-field--value {
       * {
         word-break: break-word;
-        white-space: pre-wrap;
+        white-space: pre-line;
       }
     }
   }

@@ -203,7 +203,7 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
 
   /* Avoid pre (code snippets) to overflow outside the entry */
   pre {
-    white-space: pre-wrap;
+    white-space: pre-line;
   }
 
   /* Avoid table to overflow outside the entry (see N°2127) */
