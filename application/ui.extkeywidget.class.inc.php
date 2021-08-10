@@ -82,6 +82,12 @@ class UIExtKeyWidget
 		$aArgs = [], $bSearchMode = false, &$sInputType = ''
 	)
 	{
+		// we will only use key & name, so let's reduce fields loaded !
+		$aAttToLoad = [
+			$sClass => [], // nothing, id and friendlyname are automatically added by the API
+		];
+		$oAllowedValues->OptimizeColumnLoad($aAttToLoad);
+
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
