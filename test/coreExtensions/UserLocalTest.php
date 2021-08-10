@@ -275,6 +275,7 @@ class UserLocalTest extends ItopDataTestCase
 	public function testPasswordRenewal($sBefore, $sExpectedAfter)
 	{
 		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
+		$oNow = date(\AttributeDate::GetInternalFormat());
 		$oExpectedAfter = is_null($sExpectedAfter) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sExpectedAfter));
 
 		$aUserLocalValues = array('login' => 'john');
@@ -298,7 +299,7 @@ class UserLocalTest extends ItopDataTestCase
 		//INSERT
 		$oUserLocal->Set('password', 'fooBar1???');
 		$oUserLocal->DBWrite();
-		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'INSERT changes the "password_renewed_date"');
+		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 
 		//UPDATE password_renewed_date
 		$oUserLocal->Set('password_renewed_date', $oBefore);
