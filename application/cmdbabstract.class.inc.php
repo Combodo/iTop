@@ -1145,25 +1145,11 @@ HTML
 	 */
 	public static function GetDisplaySetForPrinting(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : null;
+		$sTableId = isset($aExtraParams['table_id']) ? $aExtraParams['table_id'] : utils::GetUniqueId();;
+		$aExtraParams['view_link'] = true;
+		$aExtraParams['select_mode'] = 'none';
 
-		$bViewLink = true;
-		$sSelectMode = 'none';
-		$iListId = $sTableId;
-		$sClassAlias = $oSet->GetClassAlias();
-		$sClassName = $oSet->GetClass();
-		$sZListName = 'list';
-		$aClassAliases = array($sClassAlias => $sClassName);
-		$aList = cmdbAbstractObject::FlattenZList(MetaModel::GetZListItems($sClassName, $sZListName));
-
-		$oDataTable = new PrintableDataTable($iListId, $oSet, $aClassAliases, $sTableId);
-		$oSettings = DataTableSettings::GetDataModelSettings($aClassAliases, $bViewLink, array($sClassAlias => $aList));
-		$oSettings->iDefaultPageSize = 0;
-		$oSettings->aSortOrder = MetaModel::GetOrderByDefault($sClassName);
-
-		return $oDataTable->Display($oPage, $oSettings, false /* $bDisplayMenu */, $sSelectMode, $bViewLink,
-			$aExtraParams);
-
+		return DataTableUIBlockFactory::MakeForObject($oPage, $sTableId, $oSet, $aExtraParams);
 	}
 
 	/**
