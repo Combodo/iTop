@@ -1081,10 +1081,6 @@ $(function()
 			_UpdateLockDependencies: function (sNewLockStatus, sMessage) {
 				const sOldLockStatus = this.options.lock_status;
 
-				if (sOldLockStatus === sNewLockStatus) {
-					return false;
-				}
-
 				// Update lock indicator
 				this.options.lock_status = sNewLockStatus;
 				this.element.find(this.js_selectors.lock_message).text(sMessage);
