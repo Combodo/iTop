@@ -148,7 +148,12 @@ body.ibo-has-fullscreen-descendant {
  */
 .ibo-is-html-content {
   @extend .content;
+
+  code {
+    color: initial;
+  }
 }
+
 
 /***********************************************************************/
 /* Sticky headers                                                      */

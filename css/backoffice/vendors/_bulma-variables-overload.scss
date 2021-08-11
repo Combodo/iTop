@@ -24,3 +24,11 @@ $body-weight: $ibo-font-weight-500 !default;
 
 $body-overflow-x: hidden !default;
 $body-overflow-y: auto !default;
+
+
+/**
+ * customize Bulma content variables
+ * See https://bulma.io/documentation/elements/content/
+ */
+$content-table-head-cell-border-width: 2px;
+$content-table-cell-border-width: 1px;
