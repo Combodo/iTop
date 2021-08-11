@@ -44,6 +44,7 @@ class ConfigNodesVisitor extends NodeVisitorAbstract
 			Node\Expr\PreDec::class,
 			Node\Expr\PreInc::class,
 			Node\Expr\Print_::class,
+			Node\Stmt\Expression::class,
 			Node\Expr\Ternary::class,
 			Node\Expr\UnaryMinus::class,
 			Node\Expr\UnaryPlus::class,
