@@ -1083,7 +1083,7 @@ class ObjectController extends BrickController
 			// Reset the value set previously
 			$aHeaders['Pragma'] = 'cache';
 
-			// Fix bug in Symphony 3x in Response::sendHeaders() : don't replace header of page except Content-Type
+			// N°3423 Fix bug in Symphony 3.x in Response::sendHeaders(): Headers need to send directly as SF doesn't replace header of page except for Content-Type
 			header('Cache-Control: no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec);
 			header('Pragma: cache');
 			header('Expires: ');

@@ -14,7 +14,9 @@ $(function()
 			'data_config_list_selector': null,
 			'endpoint': null,
 			'init_opened': false,
+			/* Submit the search form automatically on criteria change */
 			'auto_submit': true,
+			/* Submit the search form when the page is first loaded */
 			'submit_on_load': false,
 			'show_obsolete_data' : true,
 			'search': {

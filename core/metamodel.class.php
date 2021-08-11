@@ -6986,6 +6986,22 @@ abstract class MetaModel
 		return $oObject;
 	}
 
+	/**
+	 * @param string $sClass
+	 * @param int $iKey
+	 *
+	 * @return bool True if the object of $sClass and $iKey exists in the DB, false otherwise meaning:
+	 * - It could be in memory for now and is not persisted yet
+	 * - It is neither in memory nor DB
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 *
+	 * @since 3.0.0 N°4173
+	 */
 	public static function IsObjectExistsInDb(string $sClass, int $iKey): bool
 	{
 		$oFilter = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE id = :id', ['id' => $iKey,]);

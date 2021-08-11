@@ -853,11 +853,9 @@ class DeprecatedCallsLog extends LogAPI
 	/**
 	 * @param string|null $sTargetFile
 	 *
-	 * @throws \ConfigException
+	 *@uses \set_error_handler() to catch deprecated notices
 	 *
-	 * @uses \set_error_handler() to catch deprecated notices
-	 *
-	 * @since 3.0.0-beta4 N°3002 logs deprecated notices in called code
+	 * @since 3.0.0 N°3002 logs deprecated notices in called code
 	 */
 	public static function Enable($sTargetFile = null): void
 	{
@@ -881,7 +879,13 @@ class DeprecatedCallsLog extends LogAPI
 	 * This will catch a message for all E_DEPRECATED and E_USER_DEPRECATED errors.
 	 * This handler is set in DeprecatedCallsLog::Enable
 	 *
-	 * @since 3.0.0-beta4 N°3002
+	 * @param int $errno
+	 * @param string $errstr
+	 * @param string $errfile
+	 * @param int $errline
+	 *
+	 * @return bool
+	 * @since 3.0.0 N°3002
 	 * @noinspection SpellCheckingInspection
 	 */
 	public static function DeprecatedNoticesErrorHandler(int $errno, string $errstr, string $errfile, int $errline): bool
