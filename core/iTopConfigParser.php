@@ -125,9 +125,6 @@ class iTopConfigParser
 			$aCurrentRootVarMap =& $this->aVarsMap[$sCurrentRootVar];
 
 			foreach ($oAssignation->expr->items as $oItem) {
-				if (false === ($oItem->key instanceof PhpParser\Node\Scalar\String_)) {
-					continue;
-				}
 				$sValue = $prettyPrinter->prettyPrintExpr($oItem->value);
 				$aCurrentRootVarMap[$oItem->key->value] = $sValue;
 			}
