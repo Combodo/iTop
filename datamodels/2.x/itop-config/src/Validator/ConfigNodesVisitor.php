@@ -23,6 +23,7 @@ class ConfigNodesVisitor extends NodeVisitorAbstract
 			Node\Name::class,
 
 			Node\Const_::class,
+			Node\Identifier::class,
 
 			Node\Expr\Array_::class,
 			Node\Expr\ArrayDimFetch::class,

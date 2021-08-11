@@ -31,6 +31,19 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 		$this->assertTrue(true, 'The file is valid and interpreted as such');
 	}
 
+	//FIXME disabled test, is failing for now with error "Invalid configuration: LEVEL_WARNING of type Identifier is forbidden in line 152"
+	public function __testValidateFileValidLogLevelMinConst()
+	{
+		try {
+			$this->CallValidatorOnFile('config-itop_VALID_log-level-min_const.php');
+		}
+		catch (Exception $e) {
+			$this->fail('An exception was thrown by the validation method on a valid file: '.$e->getMessage());
+		}
+
+		$this->assertTrue(true, 'The file is valid and interpreted as such');
+	}
+
 	public function testValidateFileWithCode()
 	{
 		$this->expectExceptionMessage('type Stmt_Function is forbidden');
