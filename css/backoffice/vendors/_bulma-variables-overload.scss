@@ -30,5 +30,8 @@ $body-overflow-y: auto !default;
  * customize Bulma content variables
  * See https://bulma.io/documentation/elements/content/
  */
-$content-table-head-cell-border-width: 2px;
+$content-table-cell-border: 1px solid black;
 $content-table-cell-border-width: 1px;
+$content-table-head-cell-border-width: 1px;
+$content-table-foot-cell-border-width: 1px;
+$content-table-foot-cell-color: black;
