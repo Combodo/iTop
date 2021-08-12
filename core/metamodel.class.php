@@ -7002,7 +7002,7 @@ abstract class MetaModel
 	 *
 	 * @since 3.0.0 N°4173
 	 */
-	public static function IsObjectExistsInDb(string $sClass, int $iKey): bool
+	public static function IsObjectInDB(string $sClass, int $iKey): bool
 	{
 		$oFilter = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE id = :id', ['id' => $iKey,]);
 		$oSet = new DBObjectSet($oFilter);
