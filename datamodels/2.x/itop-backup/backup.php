@@ -206,7 +206,9 @@ elseif (MetaModel::GetConfig()->Get('demo_mode'))
 }
 else
 {
+	SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
 	$oBackup->CreateCompressedBackup($sBackupFile);
+	SetupUtils::ExitReadOnlyMode();
 }
 if ($res && $bDownloadBackup)
 {
