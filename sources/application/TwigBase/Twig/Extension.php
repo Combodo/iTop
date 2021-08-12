@@ -100,13 +100,13 @@ class Extension
 		);
 
 		/**
-		 * Filter to transform the wiki syntax into HTML
+		 * Filter to transform the wiki syntax ONLY into HTML.
 		 *
 		 * @uses \AttributeText::RenderWikiHtml()
 		 * @since 3.0.0
 		 */
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('render_wiki_to_html', function ($sString) {
-				return AttributeText::RenderWikiHtml($sString);
+				return AttributeText::RenderWikiHtml($sString, true /* Important, otherwise hyperlinks will be tranformed as well */);
 			})
 		);
 
