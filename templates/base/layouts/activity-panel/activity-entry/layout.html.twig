@@ -28,7 +28,7 @@
 				<div class="ibo-activity-entry--main-information-content" data-role="ibo-activity-entry--main-information-content">
 					{% block iboActivityEntryMainInformationContent %}
 						{# Content is printed as raw because it is stored as HTML in the database and should have been sanitized before storage, so we can assume it is safe #}
-						{{ oUIBlock.GetContent()|raw }}
+						{{ oUIBlock.GetContent()|render_wiki_to_html|raw }}
 					{% endblock %}
 				</div>
 			</div>
