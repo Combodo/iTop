@@ -28,8 +28,8 @@ class DBRestore extends DBBackup
 	{
 		parent::__construct($oConfig);
 
-		$this->sDBUser = $oConfig->Get('db_user');
-		$this->sDBPwd = $oConfig->Get('db_pwd');
+		$this->sDBUser = $this->oConfig->Get('db_user');
+		$this->sDBPwd = $this->oConfig->Get('db_pwd');
 	}
 
 	protected function LogInfo($sMsg)
