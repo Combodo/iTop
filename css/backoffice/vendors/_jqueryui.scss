@@ -567,6 +567,9 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
   left: 0;
   cursor: default;
   z-index: 100;
+  .ui-menu-item{
+    padding: 0;
+  }
 }
 .ui-autocomplete-input{
   @extend .ibo-input;
