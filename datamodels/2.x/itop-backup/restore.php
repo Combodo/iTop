@@ -201,12 +201,7 @@ if (MetaModel::GetConfig()->Get('demo_mode'))
 else
 {
 	$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-	SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
-	try{
-		$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
-	} finally {
-		SetupUtils::ExitReadOnlyMode();
-	}
+	$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 }
 
 $oP->output();

@@ -174,9 +174,8 @@ class DBBackup
 	{
 		$bReadonlyBefore = SetupUtils::IsInReadOnlyMode();
 		SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
-
-		//safe zone for db backup => cron is stopped/ itop in readonly
 		try {
+			//safe zone for db backup => cron is stopped/ itop in readonly
 			$bIsCmdbSourceInitialized = CMDBSource::GetMysqli() instanceof mysqli;
 			if (!$bIsCmdbSourceInitialized) {
 				$sErrorMsg = 'Cannot backup : CMDBSource not initialized !';
@@ -209,7 +208,6 @@ class DBBackup
 				//we are in the scope of main process that needs to handle/keep readonly mode (setup for example).
 				$this->LogInfo("Keep readonly mode after backup");
 			}
-
 		}
 	}
 

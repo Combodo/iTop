@@ -133,66 +133,78 @@ class DBRestore extends DBBackup
 
 		try {
 			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
-
-			$this->LogInfo("Starting restore of ".basename($sFile));
-
-
-			$sNormalizedFile = strtolower(basename($sFile));
-			if (substr($sNormalizedFile, -4) == '.zip') {
-				$this->LogInfo('zip file detected');
-				$oArchive = new ZipArchiveEx();
-				$oArchive->open($sFile);
-			} elseif (substr($sNormalizedFile, -7) == '.tar.gz') {
-				$this->LogInfo('tar.gz file detected');
-				$oArchive = new TarGzArchive($sFile);
-			} else {
-				throw new BackupException('Unsupported format for a backup file: '.$sFile);
-			}
-
-			// Load the database
-			//
-			$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
-
-			SetupUtils::builddir($sDataDir); // Here is the directory
-			$oArchive->extractTo($sDataDir);
-
-			$sDataFile = $sDataDir.'/itop-dump.sql';
-			$this->LoadDatabase($sDataFile);
-
-			// Update the code
-			//
-			$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
-
-			if (is_file($sDataDir.'/delta.xml')) {
-				// Extract and rename delta.xml => <env>.delta.xml;
-				rename($sDataDir.'/delta.xml', $sDeltaFile);
-			} else {
-				@unlink($sDeltaFile);
-			}
-			if (is_dir(APPROOT.'data/production-modules/')) {
-				try {
-					SetupUtils::rrmdir(APPROOT.'data/production-modules/');
-				} catch (Exception $e) {
-					throw new BackupException("Can't remove production-modules dir", 0, $e);
-				}
-			}
-			if (is_dir($sDataDir.'/production-modules')) {
-				rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
-			}
-
-			$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
-			@chmod($sConfigFile, 0770); // Allow overwriting the file
-			rename($sDataDir.'/config-itop.php', $sConfigFile);
-			@chmod($sConfigFile, 0440); // Read-only
+			$bReadonlyBefore = SetupUtils::IsInReadOnlyMode();
+			SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
 
 			try {
-				SetupUtils::rrmdir($sDataDir);
-			} catch (Exception $e) {
-				throw new BackupException("Can't remove data dir", 0, $e);
-			}
+				//safe zone for db backup => cron is stopped/ itop in readonly
+				$this->LogInfo("Starting restore of ".basename($sFile));
 
-			$oEnvironment = new RunTimeEnvironment($sEnvironment);
-			$oEnvironment->CompileFrom($sEnvironment);
+
+				$sNormalizedFile = strtolower(basename($sFile));
+				if (substr($sNormalizedFile, -4) == '.zip') {
+					$this->LogInfo('zip file detected');
+					$oArchive = new ZipArchiveEx();
+					$oArchive->open($sFile);
+				} elseif (substr($sNormalizedFile, -7) == '.tar.gz') {
+					$this->LogInfo('tar.gz file detected');
+					$oArchive = new TarGzArchive($sFile);
+				} else {
+					throw new BackupException('Unsupported format for a backup file: '.$sFile);
+				}
+
+				// Load the database
+				//
+				$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+
+				SetupUtils::builddir($sDataDir); // Here is the directory
+				$oArchive->extractTo($sDataDir);
+
+				$sDataFile = $sDataDir.'/itop-dump.sql';
+				$this->LoadDatabase($sDataFile);
+
+				// Update the code
+				//
+				$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+
+				if (is_file($sDataDir.'/delta.xml')) {
+					// Extract and rename delta.xml => <env>.delta.xml;
+					rename($sDataDir.'/delta.xml', $sDeltaFile);
+				} else {
+					@unlink($sDeltaFile);
+				}
+				if (is_dir(APPROOT.'data/production-modules/')) {
+					try {
+						SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+					} catch (Exception $e) {
+						throw new BackupException("Can't remove production-modules dir", 0, $e);
+					}
+				}
+				if (is_dir($sDataDir.'/production-modules')) {
+					rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
+				}
+
+				$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
+				@chmod($sConfigFile, 0770); // Allow overwriting the file
+				rename($sDataDir.'/config-itop.php', $sConfigFile);
+				@chmod($sConfigFile, 0440); // Read-only
+
+				try {
+					SetupUtils::rrmdir($sDataDir);
+				} catch (Exception $e) {
+					throw new BackupException("Can't remove data dir", 0, $e);
+				}
+
+				$oEnvironment = new RunTimeEnvironment($sEnvironment);
+				$oEnvironment->CompileFrom($sEnvironment);
+			} finally {
+				if (! $bReadonlyBefore) {
+					SetupUtils::ExitReadOnlyMode();
+				} else {
+					//we are in the scope of main process that needs to handle/keep readonly mode.
+					$this->LogInfo("Keep readonly mode after restore");
+				}
+			}
 		}
 		finally
 		{
