@@ -180,7 +180,6 @@ class MetaModelTest extends ItopDataTestCase
 		}
 	}
 
-
 	/**
 	 * @dataProvider enumPluginsProvider
 	 *
@@ -273,7 +272,6 @@ class MetaModelTest extends ItopDataTestCase
 		return $aInterfaces;
 	}
 
-
 	/**
 	 * @group itopRequestMgmt
 	 * @dataProvider GetEnumStyleProvider
@@ -333,6 +331,35 @@ class MetaModelTest extends ItopDataTestCase
 		return [
 			['Person', false],
 			['lnkPersonToTeam', true],
+		];
+	}
+
+	/**
+	 * @covers       \MetaModel::IsObjectInDB
+	 * @dataProvider IsObjectInDBProvider
+	 *
+	 * @param int $iKeyOffset Offset to apply on the key of the test object. This is necessary to test an object that doesn't exist yet in any DB as we can't know what is the last existing object key.
+	 * @param $bExpectedResult
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 */
+	public function testIsObjectInDB(int $iKeyOffset, $bExpectedResult)
+	{
+		$oPerson = $this->CreatePerson(1, 1);
+		$sClass = get_class($oPerson);
+		$iKey = $oPerson->GetKey() + $iKeyOffset;
+
+		$bTestResult = MetaModel::IsObjectInDB($sClass, $iKey);
+		$this->assertEquals($bTestResult, $bExpectedResult);
+	}
+
+	public function IsObjectInDBProvider(): array
+	{
+		return [
+			'Existing person' => [0, true],
+			'Non existing person' => [10, false],
 		];
 	}
 }

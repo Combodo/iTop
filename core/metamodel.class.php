@@ -6990,25 +6990,29 @@ abstract class MetaModel
 	 * @param string $sClass
 	 * @param int $iKey
 	 *
-	 * @return bool True if the object of $sClass and $iKey exists in the DB, false otherwise meaning:
+	 * @return bool True if the object of $sClass and $iKey exists in the DB -no matter the current user restrictions-, false otherwise meaning:
 	 * - It could be in memory for now and is not persisted yet
 	 * - It is neither in memory nor DB
 	 *
 	 * @throws \CoreException
-	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 *
+	 * @throws \MySQLQueryHasNoResultException
 	 * @since 3.0.0 N°4173
 	 */
 	public static function IsObjectInDB(string $sClass, int $iKey): bool
 	{
-		$oFilter = DBObjectSearch::FromOQL('SELECT '.$sClass.' WHERE id = :id', ['id' => $iKey,]);
-		$oSet = new DBObjectSet($oFilter);
-		$iCount = $oSet->Count();
+		// Note: We take the root class to ensure that there is a corresponding table in the DB
+		// as some intermediate classes can have no table in the DB.
+		$sRootClass = MetaModel::GetRootClass($sClass);
 
-		return ($iCount > 0);
+		$sTable = MetaModel::DBGetTable($sRootClass);
+		$sKeyCol = MetaModel::DBGetKey($sRootClass);
+		$sEscapedKey = CMDBSource::Quote($iKey);
+
+		$sQuery = "SELECT count(*) FROM `{$sTable}` WHERE `{$sKeyCol}` = {$sEscapedKey}";
+		$iCount = (int) CMDBSource::QueryToScalar($sQuery);
+
+		return $iCount === 1;
 	}
 
 	/**
