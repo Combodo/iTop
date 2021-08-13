@@ -533,14 +533,15 @@ body {
 }
 .collapsable-options{
   margin-bottom: 18px;
-  &:not(.setup-is-opened)::before{
+  [data-role="setup-collapsable-options--toggler"]::before {
     margin-right: 8px;
     @extend %fa-solid-base;
+    cursor: pointer;
+  }
+  &:not(.setup-is-opened) [data-role="setup-collapsable-options--toggler"]::before{
     content: '\f078';
   }
-  &.setup-is-opened::before{
-    margin-right: 8px;
-    @extend %fa-solid-base;
+  &.setup-is-opened [data-role="setup-collapsable-options--toggler"]::before{
     content: '\f077';
   }
 }

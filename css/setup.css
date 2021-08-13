@@ -605,7 +605,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
 /* NOTE: Those helpers allow to easily use an icon from libs. like FontAwesome or FontCombodo within a CSS rule (eg. ::after) */
 /* To use it, simply "@extend %fa-regular-base" in a rule and put the desired icon "content: '\f054'"                         */
 /******************************************************************************************************************************/
-.dataTables_scrollHead thead tr th.sorting::after, .ibo-breadcrumbs--item:not(:last-child)::after, .ibo-prop--apply.ui-state-error:after, .ibo-sort-order::after, .collapsable-options:not(.setup-is-opened)::before, .collapsable-options.setup-is-opened::before, #params_summary div.closed .title::before, #params_summary div:not(.closed) .title::before {
+.dataTables_scrollHead thead tr th.sorting::after, .ibo-breadcrumbs--item:not(:last-child)::after, .ibo-prop--apply.ui-state-error:after, .ibo-sort-order::after, .collapsable-options [data-role="setup-collapsable-options--toggler"]::before, #params_summary div.closed .title::before, #params_summary div:not(.closed) .title::before {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   -webkit-font-smoothing: antialiased;
@@ -1355,6 +1355,10 @@ body.ibo-has-fullscreen-descendant {
 }
 .dataTables_paginate a.paginate_button:hover, .dataTables_paginate .ibo-quick-create--compartment-results--element > .paginate_button.option:hover, .ibo-dashlet-badge--action-list:hover, .ibo-dashlet-badge--action-list:active:hover, .ibo-field--fullscreen-toggler:hover, .search_form_handler a:hover, .search_form_handler .ibo-quick-create--compartment-results--element > .option:hover, .ibo-navigation-menu--menu-filter-clear:hover, .ibo-navigation-menu--menu-filter-hint-close:hover, .ibo-tab-container--tab-toggler:hover, .ibo-tab-container--extra-tabs-list-toggler:hover, .ibo-activity-panel--load-entries-button:hover, .dataTables_paginate a.paginate_button:active, .ibo-dashlet-badge--action-list:hover:active, .ibo-dashlet-badge--action-list:active, .ibo-field--fullscreen-toggler:active, .search_form_handler a:active, .ibo-navigation-menu--menu-filter-clear:active, .ibo-navigation-menu--menu-filter-hint-close:active, .ibo-tab-container--tab-toggler:active, .ibo-tab-container--extra-tabs-list-toggler:active, .ibo-activity-panel--load-entries-button:active {
   color: inherit;
+}
+.ibo-is-broken-hyperlink {
+  text-decoration: line-through;
+  cursor: help;
 }
 .ibo-is-code {
   background-color: #f2f2f2;
@@ -17651,12 +17655,14 @@ body {
 .collapsable-options {
   margin-bottom: 18px;
 }
-.collapsable-options:not(.setup-is-opened)::before {
+.collapsable-options [data-role="setup-collapsable-options--toggler"]::before {
   margin-right: 8px;
+  cursor: pointer;
+}
+.collapsable-options:not(.setup-is-opened) [data-role="setup-collapsable-options--toggler"]::before {
   content: '\f078';
 }
-.collapsable-options.setup-is-opened::before {
-  margin-right: 8px;
+.collapsable-options.setup-is-opened [data-role="setup-collapsable-options--toggler"]::before {
   content: '\f077';
 }
 .setup-input--hint--icon {
