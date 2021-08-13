@@ -227,4 +227,12 @@ class SetupPage extends NiceWebPage
 	{
 		// Do nothing
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return utils::GetAbsoluteUrlAppRoot().'setup/favicon.ico';
+	}
 }

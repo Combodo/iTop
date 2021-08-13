@@ -1203,9 +1203,7 @@ JS;
 		}
 
 		// Favicon
-		if (class_exists('MetaModel') && MetaModel::GetConfig()) {
-			$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
-		}
+		$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
