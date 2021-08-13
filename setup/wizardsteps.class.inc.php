@@ -2575,12 +2575,12 @@ class WizStepDone extends WizardStep
 
 		if ($sIframeUrl != '')
 		{
-			$oPage->add('<iframe id="fresh_content" style="border:0; width:100%; display:none;" src="'.$sIframeUrl.'"></iframe>');
+			$oPage->add('<iframe id="fresh_content" frameborder="0" scrolling="auto" src="'.$sIframeUrl.'"></iframe>');
 
-			$oPage->add_script("window.addEventListener('message', function(event) {
+			$oPage->add_script("
+			window.addEventListener('message', function(event) {
 				if (event.data === 'itophub_load_completed')
 				{
-					$('#fresh_content').height($('#placeholder').height());
 					$('#placeholder').hide();
 					$('#fresh_content').show();
 				}
