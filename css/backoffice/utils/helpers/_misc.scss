@@ -136,6 +136,11 @@ body.ibo-has-fullscreen-descendant {
   }
 }
 
+.ibo-is-broken-hyperlink {
+  text-decoration: line-through;
+  cursor: help;
+}
+
 .ibo-is-code {
   background-color: $ibo-is-code--background-color;
   padding: $ibo-is-code--padding;
