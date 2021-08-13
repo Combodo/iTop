@@ -52,3 +52,5 @@ function ExecuteStep(sStep)
 		WizardUpdateButtons();
 	} );
 }
+
+CombodoTooltip.InitAllNonInstantiatedTooltips();
