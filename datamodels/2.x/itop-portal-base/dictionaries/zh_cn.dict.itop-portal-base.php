@@ -18,7 +18,7 @@
  */
 // Portal
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Page:DefaultTitle' => 'iTop 用户门户',
+	'Page:DefaultTitle' => ITOP_APPLICATION_SHORT.' 用户门户',
 	'Page:PleaseWait' => '请稍后...',
 	'Page:Home' => '主页',
 	'Page:GoPortalHome' => '主页面',

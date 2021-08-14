@@ -127,7 +127,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Учетная запись пользователя не принадлежит вашим разрешенным организациям.',
 	'Class:User/Error:PersonIsMandatory' => 'Необходимо выбрать персону.',
 	'Class:UserInternal' => 'Внутренний пользователь',
-	'Class:UserInternal+' => 'Учетная запись создана внутри iTop',
+	'Class:UserInternal+' => 'Учетная запись создана внутри '.ITOP_APPLICATION_SHORT,
 ));
 
 //
@@ -332,12 +332,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'BooleanLabel:yes' => 'да',
 	'BooleanLabel:no' => 'нет',
-	'UI:Login:Title' => 'Вход в iTop',
+	'UI:Login:Title' => 'Вход в '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenu' => 'Добро пожаловать', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Добро пожаловать', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Добро пожаловать в iTop',
+	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop является порталом оперативного централизованного управления IT инфраструктурой с открытым исходным кодом.</p>
 <ul>Он включает:
@@ -555,7 +555,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Повторите новый пароль',
 	'UI:Login:IncorrectOldPassword' => 'Ошибка: старый пароль неверный',
 	'UI:LogOffMenu' => 'Выход',
-	'UI:LogOff:ThankYou' => 'Спасибо за использование iTop',
+	'UI:LogOff:ThankYou' => 'Спасибо за использование '.ITOP_APPLICATION_SHORT,
 	'UI:LogOff:ClickHereToLoginAgain' => 'Нажмите здесь, чтобы снова войти...',
 	'UI:ChangePwdMenu' => 'Изменить пароль...',
 	'UI:Login:PasswordChanged' => 'Пароль успешно изменён!',
@@ -578,7 +578,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:DataLine1' => 'Строка данных 1',
 	'UI:CSVImport:DataLine2' => 'Строка данных 2',
 	'UI:CSVImport:idField' => 'id (Первичный ключ)',
-	'UI:Title:BulkImport' => 'iTop - Пакетный импорт',
+	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Пакетный импорт',
 	'UI:Title:BulkImport+' => 'Мастер импорта CSV',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronization of %1$d objects of class %2$s~~',
 	'UI:CSVImport:ClassesSelectOne' => '-- выбрать один --',
@@ -627,7 +627,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Необходимо выбрать, по крайней мере один критерий',
 	'UI:CSVImport:Encoding' => 'Кодировка символов',
-	'UI:UniversalSearchTitle' => 'iTop - Универсальный поиск',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Универсальный поиск',
 	'UI:UniversalSearch:Error' => 'Ошибка: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Выбор класса для поиска: ',
 
@@ -677,7 +677,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:CSVExport:LostChars' => 'Проблема кодировки',
 	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. iTop has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').',
 
-	'UI:Audit:Title' => 'iTop - Аудит CMDB',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - Аудит CMDB',
 	'UI:Audit:InteractiveAudit' => 'Интерактивный аудит',
 	'UI:Audit:HeaderAuditRule' => 'Правило аудита',
 	'UI:Audit:HeaderNbObjects' => '# Объекты',
@@ -696,7 +696,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
 
 
-	'UI:RunQuery:Title' => 'iTop - Оценка запросов OQL',
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Оценка запросов OQL',
 	'UI:RunQuery:QueryExamples' => 'Примеры запросов',
 	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Цель',
@@ -714,7 +714,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RunQuery:Error' => 'Ошибка при выполнении запроса',
 	'UI:Query:UrlForExcel' => 'URL-адрес для использования в веб-запросах MS-Excel',
 	'UI:Query:UrlV1' => 'Список полей был оставлен неопределенным. Страница <em>export-V2.php</em> не может быть вызван без этой информации. Поэтому URL-адрес, предложенный здесь ниже, указывает на устаревшую страницу: <em>export.php</ем>. Эта устаревшая версия экспорта имеет следующее ограничение: список экспортируемых полей может варьироваться в зависимости от формата вывода и модели данных iTop. если вы хотите гарантировать, что список экспортируемых столбцов будет оставаться стабильным в долгосрочной перспективе, то вы должны указать значение атрибута "Экспорт. поля" и использовать страницу <em>export-V2.php</ем>.',
-	'UI:Schema:Title' => 'iTop схема объектов',
+	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' схема объектов',
 	'UI:Schema:CategoryMenuItem' => 'Категория <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Отношения',
 	'UI:Schema:AbstractClass' => 'Абстрактный класс: используется для наследования свойств, объекты этого класса не создаются.',
@@ -830,9 +830,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Необходимо выполнить указанные операции в ручную до удаления этого объекта',
 	'UI:Delect:Confirm_Object' => 'Подтвердите удаление %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Подтвердите удаление %1$d объектов класса %2$s.',
-	'UI:WelcomeToITop' => 'Добро пожаловать в iTop',
-	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s подробности',
-	'UI:ErrorPageTitle' => 'iTop - Ошибка',
+	'UI:WelcomeToITop' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s подробности',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Ошибка',
 	'UI:ObjectDoesNotExist' => 'Извните, этот объект не существует (или вы не можете его видеть).',
 	'UI:ObjectArchived' => 'Этот объект заархивирован. Включите режим просмотра архива или обратитесь к администратору.',
 	'Tag:Archived' => 'Архивный',
@@ -842,7 +842,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Tag:Synchronized' => 'Синхронизированный',
 	'ObjectRef:Archived' => 'Архивный',
 	'ObjectRef:Obsolete' => 'Устаревший',
-	'UI:SearchResultsPageTitle' => 'iTop - Результаты поиска',
+	'UI:SearchResultsPageTitle' => ITOP_APPLICATION_SHORT.' - Результаты поиска',
 	'UI:SearchResultsTitle' => 'Результаты поиска',
 	'UI:SearchResultsTitle+' => 'Результаты полнотекстового поиска',
 	'UI:Search:NoSearch' => 'Ничего не найдено',
@@ -852,27 +852,27 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:FullTextSearchTitle_Text' => 'Результаты для "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d объект(ы) класса %2$s найдено.',
 	'UI:Search:NoObjectFound' => 'Объекты не найдены.',
-	'UI:ModificationPageTitle_Object_Class' => 'iTop - Изменение объекта %2$s - %1$s',
+	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Изменение объекта %2$s - %1$s',
 	'UI:ModificationTitle_Class_Object' => 'Изменение объекта %1$s: <span class=\\"hilite\\">%2$s</span>',
-	'UI:ClonePageTitle_Object_Class' => 'iTop - Клон %1$s - %2$s модификация',
+	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Клон %1$s - %2$s модификация',
 	'UI:CloneTitle_Class_Object' => 'Клон %1$s: <span class=\\"hilite\\">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - Создание объекта %1$s',
+	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Создание объекта %1$s',
 	'UI:CreationTitle_Class' => 'Создание объекта %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Выбор типа %1$s для создания:',
 	'UI:Class_Object_NotUpdated' => 'Изменений не обнаружено, %1$s (%2$s) <strong>не</strong> был изменён.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) обновлён.',
-	'UI:BulkDeletePageTitle' => 'iTop - Пакетное удаление',
+	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - Пакетное удаление',
 	'UI:BulkDeleteTitle' => 'Выбор объектов для удаления:',
-	'UI:PageTitle:ObjectCreated' => 'iTop Объект создан.',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Объект создан.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s создан.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Применение %1$s на объект: %2$s в состоянии %3$s для целевого класса: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Объект не может быть записан: %1$s',
-	'UI:PageTitle:FatalError' => 'iTop - Критическая ошибка',
+	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Критическая ошибка',
 	'UI:SystemIntrusion' => 'Доступ запрещён. Вы пытаетесь выполнить неразрешённую операцию.',
 	'UI:FatalErrorMessage' => 'Критическая ошибка, iTop не может продолжать работу.',
 	'UI:Error_Details' => 'Ошибка: %1$s.',
 
-	'UI:PageTitle:ProfileProjections' => 'iTop управление пользователями - проектирование профилей',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' управление пользователями - проектирование профилей',
 	'UI:UserManagement:Class' => 'Классs',
 	'UI:UserManagement:Class+' => 'Класс объектов',
 	'UI:UserManagement:ProjectedObject' => 'Объект',
@@ -1077,7 +1077,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RelationTooltip:Redundancy' => 'Избыточность',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Кол-во затронутых элементов: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Критический порог: %1$d / %2$d',
-	'Portal:Title' => 'Пользовательский портал iTop',
+	'Portal:Title' => 'Пользовательский портал '.ITOP_APPLICATION_SHORT,
 	'Portal:NoRequestMgmt' => 'Уважаемый %1$s, вы были перенаправлены на потрал, потому что ваш аккаунт содержит профиль \'Portal user\'. К сожалению, iTop не содержит модуля \'Request Management\'. Пожалуйста, свяжитесь с вашим администратором.',
 	'Portal:Refresh' => 'Обновить',
 	'Portal:Back' => 'Назад',
@@ -1411,7 +1411,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:SelectionOf_Class' => 'Выбор объектов класса %1$s',
 
 	'UI:AboutBox' => 'Об этом iTop...',
-	'UI:About:Title' => 'Об этом iTop',
+	'UI:About:Title' => 'Об этом '.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => 'Модель данных',
 	'UI:About:Support' => 'Информация для технической поддержки',
 	'UI:About:Licenses' => 'Лицензии',
@@ -1436,7 +1436,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'ExcelExport:PreparingExport' => 'Подготовка к экспорту...',
 	'ExcelExport:Statistics' => 'Статистика',
 	'portal:legacy_portal' => 'Пользовательский портал',
-	'portal:backoffice' => 'iTop Back-Office интерфейс',
+	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office интерфейс',
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Объект заблокирован, поскольку в настоящее время редактируется пользователем %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Объект в настоящее время редактируется пользователем %1$s. Ваши изменения не будут сохранены, поскольку они могут быть перезаписаны.',
@@ -1620,9 +1620,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:DataSources' => 'Синхронизация данных',
 	'Menu:DataSources+' => 'Синхронизация данных',
 	'Menu:WelcomeMenu' => 'Добро пожаловать',
-	'Menu:WelcomeMenu+' => 'Добро пожаловать в iTop',
+	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Добро пожаловать',
-	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в iTop',
+	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Инструменты администратора',
 	'Menu:AdminTools+' => 'Инструменты администратора',
 	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора',

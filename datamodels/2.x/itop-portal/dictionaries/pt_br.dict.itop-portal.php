@@ -29,7 +29,7 @@
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'portal:itop-portal' => 'Standard portal~~', // This is the portal name that will be displayed in portal dispatcher (eg. URL in menus)
-	'Page:DefaultTitle' => 'iTop - Portal do Usuário',
+	'Page:DefaultTitle' => ITOP_APPLICATION_SHORT.' - Portal do Usuário',
 	'Brick:Portal:UserProfile:Title' => 'Meu Perfil',
 	'Brick:Portal:NewRequest:Title' => 'Nova Solicitação',
 	'Brick:Portal:NewRequest:Title+' => '<p>Precisa de ajuda?</p><p>Escolha no Catálogo de Serviços e envie sua solicitação para nossas equipes de suporte.</p>',

@@ -61,7 +61,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopHub:GetMoreExtensions' => 'Extensies zoeken op iTop Hub...',
 
 	'iTopHub:LandingWelcome' => 'Gefeliciteerd! Deze extensies werden gedownload via iTop Hub en op deze iTop geïnstalleerd.',
-	'iTopHub:GoBackToITopBtn' => 'Terug naar iTop',
+	'iTopHub:GoBackToITopBtn' => 'Terug naar '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Extensies aan het uitpakken...',
 	'iTopHub:InstallationWelcome' => 'Installatie van extensies via iTop Hub',
 	'iTopHub:DBBackupLabel' => 'Backup van deze omgeving',

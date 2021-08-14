@@ -61,7 +61,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:DoBackup:Warning' => '由于磁盘空间不足, 不建议备份',
 
     'iTopUpdate:UI:DiskFreeSpace' => '磁盘剩余空间',
-    'iTopUpdate:UI:ItopDiskSpace' => 'iTop 的磁盘空间',
+    'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' 的磁盘空间',
     'iTopUpdate:UI:DBDiskSpace' => '数据库的磁盘空间',
 	'iTopUpdate:UI:FileUploadMaxSize' => '文件上传大小上限',
 

@@ -21,8 +21,8 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DA DA', 'Danish', 'Dansk', array(
-	'Class:UserLocal' => 'iTop-Bruger',
-	'Class:UserLocal+' => 'Bruger der godkendes af iTop',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-Bruger',
+	'Class:UserLocal+' => 'Bruger der godkendes af '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Password',
 	'Class:UserLocal/Attribute:password+' => 'Brugerens password',
 

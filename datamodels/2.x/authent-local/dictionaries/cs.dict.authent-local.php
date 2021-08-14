@@ -36,8 +36,8 @@
 // Class: UserLocal
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Class:UserLocal' => 'interní uživatel iTop',
-	'Class:UserLocal+' => 'Uživatel ověřen interně v iTop',
+	'Class:UserLocal' => 'interní uživatel '.ITOP_APPLICATION_SHORT,
+	'Class:UserLocal+' => 'Uživatel ověřen interně v '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Heslo',
 	'Class:UserLocal/Attribute:password+' => '',
 

@@ -539,7 +539,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:ResetPwd-Error-NoEmail' => 'brak adresu e-mail. Skontaktuj się z administratorem.',
 	'UI:ResetPwd-Error-Send' => 'problem techniczny dotyczący transportu poczty elektronicznej. Skontaktuj się z administratorem.',
 	'UI:ResetPwd-EmailSent' => 'Sprawdź swoją skrzynkę e-mail i postępuj zgodnie z instrukcjami. Jeśli nie otrzymasz wiadomości e-mail, sprawdź wpisany login.',
-	'UI:ResetPwd-EmailSubject' => 'Reset hasła '.ITOP_APPLICATION_SHORT.'',
+	'UI:ResetPwd-EmailSubject' => 'Reset hasła '.ITOP_APPLICATION_SHORT,
 	'UI:ResetPwd-EmailBody' => '<body><p>Poprosiłeś o zresetowanie hasła '.ITOP_APPLICATION_SHORT.'.</p><p>Proszę skorzystać z tego linku (jednorazowe użycie), <a href="%1$s">wpisz nowe hasło</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Zresetuj hasło',
