@@ -25,7 +25,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:Datatables:Language:Info'              => '_TOTAL_ item(s)',
 	'UI:Datatables:Language:InfoEmpty'         => 'No information',
 	'UI:Datatables:Language:EmptyTable'        => 'No data available in this table',
-	'UI::Datatables:Language:Error'            => 'An error occured while running the query',
+	'UI:Datatables:Language:Error'             => 'An error occured while running the query',
 	'UI:Datatables:Language:DisplayLength:All' => 'All',
 	'UI:Datatables:Language:Sort:Ascending'    => 'enable for an ascending sort',
 	'UI:Datatables:Language:Sort:Descending'   => 'enable for a descending sort',
