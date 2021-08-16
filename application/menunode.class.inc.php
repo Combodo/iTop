@@ -1125,13 +1125,22 @@ class OQLMenuNode extends MenuNode
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-		//$sIcon = MetaModel::GetClassIcon($oSearch->GetClass(), false);
 
 		if ($bSearchPane) {
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => true], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}
+
+		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
+		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
+		$oPage->AddUiBlock($oTitle);
+
+		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
+		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
+		$oBlock->Display($oPage, $sUsageId);
+
+		$oPage->add("</div>");
 
 		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage)) {
 			// Breadcrumb
