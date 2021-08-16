@@ -574,28 +574,22 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
 			if (isset($oCustomSettings->aColumns[$sClassAlias])) {
 				foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
-					if ($aData['sort'] != 'none') {
-						$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
-						$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
-						$aSortDatable = [$iIndexColumn, $aData['sort']];
+					if ($aData['sort'] != 'none' && $aSortDatable == []) {
+						$aSortDatable = [$index, $aData['sort']];
 					}
+
 					if ($aData['checked']) {
 						if ($sAttCode == '_key_') {
 							if ($bViewLink) {
-								if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
-									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
-								} else {
-									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
-								}
 								$sAttLabel = MetaModel::GetName($sClassName);
 								$aColumnDefinition[] = [
-									'description' => $aData['label'],
-									'object_class' => $sClassName,
-									'class_alias' => $sClassAlias,
-									'attribute_code' => $sAttCode,
-									'attribute_type' => '_key_',
+									'description'     => $aData['label'],
+									'object_class'    => $sClassName,
+									'class_alias'     => $sClassAlias,
+									'attribute_code'  => $sAttCode,
+									'attribute_type'  => '_key_',
 									'attribute_label' => $sAttLabel,
-									"render" => "return row['".$sClassAlias."/hyperlink'];",
+									"render"          => "return row['".$sClassAlias."/hyperlink'];",
 								];
 							}
 						} else {
@@ -825,6 +819,23 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $aOptions;
 	}
 
+	/**
+	 * @param string $sTitle
+	 * @param array $aColumns
+	 * @param array $aData
+	 * @param string|null $sId
+	 * @param array $aExtraParams
+	 * @param string $sFilter
+	 * @param array $aOptions
+	 * *
+	 * $aColumns =[
+	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
+	 *           'nameField2' => ['label' => labelFIeld2, 'description' => descriptionField2],
+	 *           'nameField3' => ['label' => labelFIeld3, 'description' => descriptionField3]];
+	 * $aData = [['nameField1' => valueField1, 'nameField2' => valueField2, 'nameField3' => valueField3],...]
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 */
 	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
 	{
 		$oBlock = new UIContentBlock();
@@ -872,6 +883,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $oTable;
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function GetAllowedParams(): array
 	{
 		return [

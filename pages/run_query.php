@@ -217,7 +217,7 @@ EOF
 		$oP->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryResults'), 2));
 
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-		$oResultBlock->Display($oP, 'runquery');
+		$oP->AddSubBlock($oResultBlock->GetDisplay($oP, 'runquery'));
 
 		// Breadcrumb
 		//$iCount = $oResultBlock->GetDisplayedCount();
@@ -235,8 +235,7 @@ EOF
 			}
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal',
-			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 
 		//--- More info
@@ -319,12 +318,7 @@ EOF
 
 					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
 					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
-					$oUseSuggestedQueryButton->SetOnClickJsCode(<<<JS
-let \$oQueryTextarea = $('textarea[name=expression]');
-\$oQueryTextarea.val('$sEscapedExpression').focus();
-\$oQueryTextarea.closest('form').submit();
-JS
-					);
+					$oUseSuggestedQueryButton->SetOnClickJsCode("let \$oQueryTextarea = $('textarea[name=expression]');\$oQueryTextarea.val('$sEscapedExpression').focus();\$oQueryTextarea.closest('form').submit();");
 					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
 					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));

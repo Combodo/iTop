@@ -343,8 +343,8 @@ class AjaxRenderController
 							$sIdName = $sAlias."/_key_";
 						}
 						if ($iSortCol == $iSortIndex) {
-							if (!MetaModel::HasChildrenClasses($oFilter->GetClass())) {
-								$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
+							if (!MetaModel::HasChildrenClasses($sClassName)) {
+								$aNameSpec = MetaModel::GetNameSpec($sClassName);
 								if ($aNameSpec[0] == '%1$s') {
 									// The name is made of a single column, let's sort according to the sort algorithm for this column
 									$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = ($sSortOrder == 'asc');
