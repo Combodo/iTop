@@ -5114,7 +5114,7 @@ abstract class MetaModel
 			foreach($aErrors as $sClass => $aMessages)
 			{
 				echo "<p>Wrong declaration for class <b>$sClass</b></p>\n";
-				echo "<ul class=\"treeview\">\n";
+				echo "<ul >\n";
 				$i = 0;
 				foreach($aMessages as $sMsg)
 				{
