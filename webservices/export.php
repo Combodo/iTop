@@ -20,8 +20,10 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
+
 
 const EXIT_CODE_ERROR = -1;
 const EXIT_CODE_FATAL = -2;
@@ -226,11 +228,11 @@ if (!empty($sExpression))
 						);
 					} else {
 						$aExtraParams = array(
-							'menu'            => false,
-							'toolkit_menu'    => false,
-							'display_limit'   => false,
+							'menu' => false,
+							'toolkit_menu' => false,
+							'display_limit' => false,
 							'localize_values' => $bLocalize,
-							'zlist'           => 'details',
+							'zlist' => 'details',
 						);
 					}
 
