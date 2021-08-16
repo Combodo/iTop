@@ -624,7 +624,7 @@ JS
 	ShowDebug();
 	$('#logOffBtn>ul').popupmenu();
 	
-	$('.caselog_header').click( function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
+	$('body').on('click', '.caselog_header', function () { $(this).toggleClass('open').next('.caselog_entry,.caselog_entry_html').toggle(); });
 	
 	$(document).ajaxSend(function(event, jqxhr, options) {
 		jqxhr.setRequestHeader('X-Combodo-Ajax', 'true');
