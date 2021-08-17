@@ -102,12 +102,20 @@ class DesignerForm
 				$sReturn .= '<fieldset>';
 				$sReturn .= '<legend>'.$sLabel.'</legend>';
 			}
+			/** @var \DesignerFormField $oField */
 			foreach($aFields as $oField) {
 				$aRow = $oField->Render($oP, $sFormId);
 				if ($oField->IsVisible()) {
 					$sValidation = '<span class="prop_apply ibo-prop--apply ibo-button ibo-is-alternative">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
 					$sField = $aRow['value'].$sValidation;
-					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
+					$aDetails[] = array(
+						'label' => $aRow['label'],
+						'value' => $sField,
+						'attcode' => $oField->GetCode(),
+						'attlabel' => $aRow['label'],
+						'inputid' => $this->GetFieldId($oField->GetCode()),
+						'inputtype' => $oField->GetInputType(),
+					);
 				} else {
 					$sHiddenFields .= $aRow['value'];
 				}
@@ -708,6 +716,19 @@ class DesignerFormField
 	}
 
 	/**
+	 * Important, for now we use constants from the \cmdbAbstractObject class, introducing a coupling that should not exist.
+	 * This has been traced under N°4241 and will be discussed during the next modernization batch.
+	 *
+	 * @return string|null Return the input type of the field
+	 * @see \cmdbAbstractObject::ENUM_INPUT_TYPE_XXX
+	 * @since 3.0.0
+	 */
+	public function GetInputType(): ?string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_SINGLE_INPUT;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetCode()
@@ -1047,6 +1068,14 @@ class DesignerLongTextField extends DesignerTextField
 		$this->aCSSClasses[] = 'ibo-input-text';
 	}
 
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_TEXTAREA;
+	}
+
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -1174,6 +1203,19 @@ class DesignerComboField extends DesignerFormField
 
 		$this->bAutoApply = true;
 		$this->bSorted = true; // Sorted by default
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		if ($this->bMultipleSelection) {
+			return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_MULTIPLE_CHOICES;
+		}
+		else {
+			return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_RAW;
+		}
 	}
 	
 	public function SetAllowedValues($aAllowedValues)
@@ -1311,6 +1353,14 @@ class DesignerBooleanField extends DesignerFormField
 		$this->bAutoApply = true;
 		$this->aCSSClasses[] = 'ibo-input-checkbox';
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_CHECKBOX;
+	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
@@ -1370,6 +1420,14 @@ class DesignerHiddenField extends DesignerFormField
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
+	}
 	
 	public function IsVisible()
 	{
@@ -1396,6 +1454,14 @@ class DesignerIconSelectionField extends DesignerFormField
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->bAutoApply = true;
 		$this->sUploadUrl = null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
 	}
 	
 	public function SetAllowedValues($aAllowedValues)
@@ -1566,6 +1632,14 @@ class DesignerSortableField extends DesignerFormField
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->aAllowedValues = array();
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
+	}
 	
 	public function SetAllowedValues($aAllowedValues)
 	{
@@ -1603,6 +1677,14 @@ class DesignerFormSelectorField extends DesignerFormField
 		$this->aSubForms = array();
 		$this->bSorted = true;
 		$this->aCSSClasses[] = 'ibo-input-select';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
 	}
 
 	public function IsSorted()
@@ -1790,6 +1872,14 @@ class DesignerSubFormField extends DesignerFormField
 		parent::__construct('', $sLabel, '');
 		$this->oSubForm = $oSubForm;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
+	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
@@ -1832,6 +1922,14 @@ class DesignerStaticTextField extends DesignerFormField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
 	}
 
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')

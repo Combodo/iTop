@@ -977,6 +977,8 @@ JS;
 			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
 			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
 			$sDataAttributeLabel = isset($aAttrib['attlabel']) ? 'data-attribute-label="'.utils::HtmlEntities($aAttrib['attlabel']).'"' : '';
+			$sDataInputId = isset($aAttrib['inputid']) ? 'data-input-id="'.utils::HtmlEntities($aAttrib['inputid']).'"' : '';
+			$sDataInputType = isset($aAttrib['inputtype']) ? 'data-input-type="'.utils::HtmlEntities($aAttrib['inputtype']).'"' : '';
 			// - Attribute flags
 			$sDataAttributeFlags = '';
 			if(isset($aAttrib['attflags']))
@@ -996,7 +998,7 @@ JS;
 			// - Value raw
 			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.utils::HtmlEntities($aAttrib['value_raw']).'"' : '';
 
-			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
+			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" data-role=\"ibo-field\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw $sDataInputId $sDataInputType>\n";
 			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";

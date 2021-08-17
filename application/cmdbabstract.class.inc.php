@@ -94,6 +94,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/** @var string */
 	public const ENUM_INPUT_TYPE_RADIO = 'radio';
 	/** @var string */
+	public const ENUM_INPUT_TYPE_CHECKBOX = 'checkbox';
+	/** @var string */
 	public const ENUM_INPUT_TYPE_DROPDOWN_RAW = 'dropdown_raw';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_DROPDOWN_DECORATED = 'dropdown_decorated'; // now with the JQuery Selectize plugin
