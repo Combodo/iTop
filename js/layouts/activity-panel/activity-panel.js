@@ -244,7 +244,9 @@ $(function()
 				}
 				// - Processing / cleanup when the leaving page
 				$(window).on('unload', function() {
-					return me._onUnload();
+					if (true === me._HasDraftEntries()) {
+						return me._onUnload();
+					}
 				});
 
 				// Mostly for outside clicks that should close elements
