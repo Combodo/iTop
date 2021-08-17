@@ -188,6 +188,12 @@ $(function()
 			_isOpened: function () {
 				return this.element.hasClass(this.css_classes.opened);
 			},
+			/**
+			 * Compute and apply current position of the menu
+			 *
+			 * @return {void}
+			 * @private
+			 */
 			_applyPosition: function () {
 				const oTargetElem = ('toggler' === this.options.position.target) ? $(this.options.toggler) : $(this.options.position.target);
 				const oTargetPos = ('parent' === this.options.container) ? oTargetElem.position() : oTargetElem.offset();
