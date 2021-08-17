@@ -229,7 +229,7 @@ class InlineImage extends DBObject
 	 *
 	 * @param string $sTempId
 	 *
-	 * @return void
+	 * @return bool True if cleaning was successful, false if anything aborted it
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreCannotSaveObjectException
 	 * @throws \CoreException
@@ -239,8 +239,19 @@ class InlineImage extends DBObject
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function OnFormCancel($sTempId)
+	public static function OnFormCancel($sTempId): bool
 	{
+		// Protection against unfortunate massive delete of inline images when a null temp ID is passed
+		if (strlen($sTempId) === 0) {
+			IssueLog::Trace('OnFormCancel "error" $sTempId is null or empty', LogChannels::INLINE_IMAGE, array(
+				'$sTempId' => $sTempId,
+				'$sUser' => UserRights::GetUser(),
+				'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
+			));
+
+			return false;
+		}
+
 		// Delete all "pending" InlineImages for this form
 		$sOQL = 'SELECT InlineImage WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);
@@ -257,6 +268,8 @@ class InlineImage extends DBObject
 			'$sUser' => UserRights::GetUser(),
 			'HTTP_REFERER' => @$_SERVER['HTTP_REFERER'],
 		));
+
+		return true;
 	}
 
 	/**
