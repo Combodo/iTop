@@ -831,6 +831,11 @@ try
 				$iCacheSec = (int)utils::ReadParam('cache', 0);
 				$oPage->set_cache($iCacheSec);
 
+				// N°4129 - Prevent XSS attacks & other script executions
+				if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+					$oPage->add_header('Content-Security-Policy: sandbox;');
+				}
+
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 				$oKPI->ComputeAndReport('Data fetch and format');
 			}

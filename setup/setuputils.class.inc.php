@@ -103,7 +103,7 @@ class SetupUtils
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
 
-	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
+	const MIN_MEMORY_LIMIT = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
@@ -305,23 +305,19 @@ class SetupUtils
 
 		// Check some more ini settings here, needed for file upload
 		$sMemoryLimit = trim(ini_get('memory_limit'));
-		if (empty($sMemoryLimit))
-		{
+		if (empty($sMemoryLimit)) {
 			// On some PHP installations, memory_limit does not exist as a PHP setting!
 			// (encountered on a 5.2.0 under Windows)
 			// In that case, ini_set will not work, let's keep track of this and proceed anyway
 			$aResult[] = new CheckResult(CheckResult::WARNING, "No memory limit has been defined in this instance of PHP");
-		}
-		else
-		{
+		} else {
 			// Check that the limit will allow us to load the data
 			//
-			$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT)) {
-				$aResult[] = new CheckResult(CheckResult::ERROR,
-					"memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
-			}
-			else {
+			$iCurrentMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+			$iMinMemoryLimit = utils::ConvertToBytes(self::MIN_MEMORY_LIMIT);
+			if (!utils::IsMemoryLimitOk($iCurrentMemoryLimit, $iMinMemoryLimit)) {
+				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($sMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
+			} else {
 				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $iMemoryLimit, ok.");
 			}
 		}
