@@ -154,6 +154,11 @@ body.ibo-has-fullscreen-descendant {
 .ibo-is-html-content {
   @extend .content;
 
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+  table {
+    width: unset !important;
+    max-width: max-content;
+  }
   code {
     color: initial;
   }
