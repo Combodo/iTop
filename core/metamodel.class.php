@@ -1135,7 +1135,8 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$oAtt = self::GetAttributeDef($sClass, $sAttCode);
-		return $oAtt->GetPrerequisiteAttributes();
+
+		return $oAtt->GetPrerequisiteAttributes($sClass);
 	}
 
 	/**
