@@ -17,6 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
 require_once APPROOT.'core/metamodelmodifier.inc.php';
@@ -24,6 +26,7 @@ require_once APPROOT.'core/computing.inc.php';
 require_once APPROOT.'core/relationgraph.class.inc.php';
 require_once APPROOT.'core/apc-compat.php';
 require_once APPROOT.'core/expressioncache.class.inc.php';
+require_once APPROOT.'sources/Core/MetaModel/FriendlyNameType.php';
 
 
 /**
@@ -757,12 +760,48 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	final public static function GetNameSpec($sClass)
+	final public static function GetNameSpec($sClass, $sType = FriendlyNameType::SHORT)
 	{
 		self::_check_subclass($sClass);
-		$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+
+		switch ($sType) {
+			case FriendlyNameType::COMPLEMENTARY:
+				if (!isset(self::$m_aClassParams[$sClass]["complementary_name_attcode"])) {
+					return [$sClass, []];
+				}
+				$nameRawSpec = self::$m_aClassParams[$sClass]["complementary_name_attcode"];
+				$sDictName = 'ComplementaryName';
+				break;
+			case FriendlyNameType::LONG:
+				$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+				if (!isset(self::$m_aClassParams[$sClass]["complementary_name_attcode"])) {
+					return self::GetNameSpec($sClass, FriendlyNameType::SHORT);
+				}
+				$complementaryNameRawSpec = self::$m_aClassParams[$sClass]["complementary_name_attcode"];
+				if (is_array($nameRawSpec)) {
+					if (is_array($complementaryNameRawSpec)) {
+						$nameRawSpec = merge($nameRawSpec, $complementaryNameRawSpec);
+					} elseif (!empty($nameRawSpec)) {
+						$nameRawSpec = merge($nameRawSpec, [$complementaryNameRawSpec]);
+					}
+				} elseif (empty($nameRawSpec)) {
+					$nameRawSpec = $complementaryNameRawSpec;
+				} else {
+					if (is_array($complementaryNameRawSpec)) {
+						$nameRawSpec = merge([$nameRawSpec], $complementaryNameRawSpec);
+					} elseif (!empty($nameRawSpec)) {
+						$nameRawSpec = [$nameRawSpec, $complementaryNameRawSpec];
+					}
+				}
+				$sDictName = 'LongName';
+				break;
+			default:
+				$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+				$sDictName = 'Name';
+		}
+
 		if (is_array($nameRawSpec)) {
-			$sFormat = Dict::S("Class:$sClass/Name", '');
+			$sFormat = Dict::S("Class:$sClass/$sDictName", '');
 			if (strlen($sFormat) == 0) {
 				// Default to "%1$s %2$s..."
 				for ($i = 1; $i <= count($nameRawSpec); $i++) {
@@ -774,12 +813,12 @@ abstract class MetaModel
 				}
 			}
 
-			return array($sFormat, $nameRawSpec);
+			return [$sFormat, $nameRawSpec];
 		} elseif (empty($nameRawSpec)) {
-			return array($sClass, array());
+			return [$sClass, []];
 		} else {
 			// string -> attcode
-			return array('%1$s', array($nameRawSpec));
+			return ['%1$s', [$nameRawSpec]];
 		}
 	}
 
@@ -792,19 +831,32 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @since 3.0.0
 	 */
-	final public static function GetNameAttributes(string $sClass, $bWithAttributeDefinition = false): array
+	final public static function GetNameAttributes(string $sClass, $bWithAttributeDefinition = false, $sType = FriendlyNameType::SHORT): array
 	{
 		self::_check_subclass($sClass);
-		$rawNameAttCodes = self::$m_aClassParams[$sClass]["name_attcode"];
 		$aNameAttCodes = [];
-		if (!is_array($rawNameAttCodes)) {
-			if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
-				$aNameAttCodes[] = $rawNameAttCodes;
+		if ($sType == FriendlyNameType::SHORT || FriendlyNameType::LONG) {
+			$rawNameAttCodes = self::$m_aClassParams[$sClass]["name_attcode"];
+			if (!is_array($rawNameAttCodes)) {
+				if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
+					$aNameAttCodes[] = $rawNameAttCodes;
+				}
+			} else {
+				$aNameAttCodes = $rawNameAttCodes;
 			}
-		} else {
-			$aNameAttCodes = $rawNameAttCodes;
 		}
-
+		if ($sType == FriendlyNameType::COMPLEMENTARY || FriendlyNameType::LONG) {
+			$rawNameAttCodes = self::$m_aClassParams[$sClass]["complementary_name_attcode"];
+			if (!isEmpty($rawNameAttCodes)) {
+				if (!is_array($rawNameAttCodes)) {
+					if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
+						$aNameAttCodes[] = array_merge($aNameAttCodes, [$rawNameAttCodes]);
+					}
+				} else {
+					$aNameAttCodes = array_merge($rawNameAttCodes, $rawNameAttCodes);
+				}
+			}
+		}
 		if ($bWithAttributeDefinition) {
 			$aResults = [];
 			foreach ($aNameAttCodes as $sAttCode) {
@@ -843,56 +895,6 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @param string $sClass
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	final static public function GetComplementAttributeSpec($sClass)
-	{
-		self::_check_subclass($sClass);
-		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
-		{
-			$sParentClass = static::GetParentClass($sClass);
-			if (is_null($sParentClass)) {
-				return array($sClass, array());
-			} else {
-				return static::GetComplementAttributeSpec($sParentClass);
-			}
-		}
-		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
-		if (is_array($nameRawSpec))
-		{
-			$sFormat = Dict::S("Class:$sClass/ComplementForSelect", '');
-			if (strlen($sFormat) == 0)
-			{
-				// Default to "%1$s %2$s..."
-				for($i = 1; $i <= count($nameRawSpec); $i++)
-				{
-					if (empty($sFormat))
-					{
-						$sFormat .= '%'.$i.'$s';
-					}
-					else
-					{
-						$sFormat .= ' %'.$i.'$s';
-					}
-				}
-			}
-			return array($sFormat, $nameRawSpec);
-		}
-		elseif (empty($nameRawSpec))
-		{
-			return array($sClass, array());
-		}
-		else
-		{
-			// string -> attcode
-			return array('%1$s', array($nameRawSpec));
-		}
-	}
-	/**
 	 * Get the friendly name expression for a given class
 	 *
 	 * @param string $sClass
@@ -901,9 +903,9 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	final public static function GetNameExpression($sClass)
+	final public static function GetNameExpression($sClass, $sType = FriendlyNameType::SHORT)
 	{
-		$aNameSpec = self::GetNameSpec($sClass);
+		$aNameSpec = self::GetNameSpec($sClass, $sType);
 		$sFormat = $aNameSpec[0];
 		$aAttributes = $aNameSpec[1];
 
@@ -940,9 +942,9 @@ abstract class MetaModel
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	final public static function GetFriendlyNameAttributeCode($sClass)
+	final public static function GetFriendlyNameAttributeCode($sClass, $sType = FriendlyNameType::SHORT)
 	{
-		$aNameSpec = self::GetNameSpec($sClass);
+		$aNameSpec = self::GetNameSpec($sClass, $sType);
 		$sFormat = trim($aNameSpec[0]);
 		$aAttributes = $aNameSpec[1];
 		if (($sFormat != '') && ($sFormat != '%1$s')) {
@@ -962,9 +964,9 @@ abstract class MetaModel
 	 *
 	 * @return array
 	 */
-	final public static function GetFriendlyNameAttributeCodeList($sClass)
+	final public static function GetFriendlyNameAttributeCodeList($sClass, $sType = FriendlyNameType::SHORT)
 	{
-		$aNameSpec = self::GetNameSpec($sClass);
+		$aNameSpec = self::GetNameSpec($sClass, $sType);
 		$aAttributes = $aNameSpec[1];
 
 		return $aAttributes;

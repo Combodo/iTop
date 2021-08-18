@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 /**
@@ -200,42 +202,33 @@ class UIExtKeyWidget
 			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
 			$aOptions = [];
-			$sDisplayValue = "";
 
 			$aOption = [];
 			$aOption['value'] = "";
 			$aOption['label'] = Dict::S('UI:SelectOne');
-			array_push($aOptions,$aOption);
+			array_push($aOptions, $aOption);
 
 			$oAllowedValues->Rewind();
-			$bAddingValue=false;
+			$sClassAllowed = $oAllowedValues->GetClass();
+			$bAddingValue = false;
 
-			$aComplementAttributeSpec = MetaModel::GetComplementAttributeSpec($oAllowedValues->GetClass());
+			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
 			$sFormatAdditionalField = $aComplementAttributeSpec[0];
 			$aAdditionalField = $aComplementAttributeSpec[1];
 
-			if (count($aAdditionalField)>0)
-			{
-				$bAddingValue=true;
+			if (count($aAdditionalField) > 0) {
+				$bAddingValue = true;
 			}
-			while($oObj = $oAllowedValues->Fetch())
-			{
-				$aOption=[];
+			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			while ($oObj = $oAllowedValues->Fetch()) {
+				$aOption = [];
 				$aOption['value'] = $oObj->GetKey();
 				$aOption['label'] = $oObj->GetName();//.'<span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>';
 
-				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
-				{
+				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
 					// When there is only once choice, select it by default
-					$sDisplayValue=$oObj->GetName();
-					if($value != $oObj->GetKey())
-					{
-						$value=$oObj->GetKey();
-					}
-				}
-				else {
-					if ((is_array($value) && in_array($oObj->GetKey(), $value)) || ($value == $oObj->GetKey())) {
-						$sDisplayValue = $oObj->GetName();
+					if ($value != $oObj->GetKey()) {
+						$value = $oObj->GetKey();
 					}
 				}
 				if ($oObj->IsObsolete()) {
@@ -247,6 +240,17 @@ class UIExtKeyWidget
 						array_push($aArguments, $oObj->Get($sAdditionalField));
 					}
 					$aOption['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+				}
+				if (!empty($sObjectImageAttCode)) {
+					// Try to retrieve image for contact
+					/** @var \ormDocument $oImage */
+					$oImage = $oObj->Get($sObjectImageAttCode);
+					if (!$oImage->IsEmpty()) {
+						$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
+						$aOption['initials'] = '';
+					} else {
+						$aOption['initials'] = utils::ToAcronym($oObj->Get('friendlyname'));
+					}
 				}
 				array_push($aOptions, $aOption);
 			}
@@ -811,21 +815,24 @@ JS
 		{
 			case static::ENUM_OUTPUT_FORMAT_JSON:
 
-			    $aJsonMap = array();
-			    foreach ($aValues as $sKey => $aValue)
-                {
-                    if ($aValue['additional_field'] != '')
-                    {
-	                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag'], 'additional_field' => $aValue['additional_field']);
-                    }
-                    else
-                    {
-	                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']);
-                    }
-                }
+				$aJsonMap = array();
+				foreach ($aValues as $sKey => $aValue) {
+					$aElt = ['value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']];
+					if ($aValue['additional_field'] != '') {
+						$aElt['additional_field'] = $aValue['additional_field'];
+					}
 
-			    $oP->SetContentType('application/json');
-                $oP->add(json_encode($aJsonMap));
+					if (array_key_exists('initials', $aValue)) {
+						$aElt['initials'] = $aValue['initials'];
+						if (array_key_exists('picture_url', $aValue)) {
+							$aElt['picture_url'] = $aValue['picture_url'];
+						}
+					}
+					$aJsonMap[] = $aElt;
+				}
+
+				$oP->SetContentType('application/json');
+				$oP->add(json_encode($aJsonMap));
 				break;
 
 			case static::ENUM_OUTPUT_FORMAT_CSV:

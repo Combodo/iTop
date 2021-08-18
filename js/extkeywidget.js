@@ -137,15 +137,25 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					return $("<div>").append(val);
 				},
 				option: function(item) {
+					val = '';
+					if (item.initials != undefined) {
+						if (item.picture_url != undefined) {
+							val = '<span class="ibo-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+						} else {
+							val = '<span class="ibo-select--autocomplete-item-image">'+item.initials+'</span>';
+						}
+					}
+					val = val+'<span class="ibo-select--autocomplete-item-txt" >';
 					if (item.obsolescence_flag == 1) {
-						val = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
+						val = val+'<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
 					} else {
-						val = item.label;
+						val = val+item.label;
 					}
 					if (item.additional_field != undefined) {
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
-					return $("<div class=\"option\">").append(val);
+					val = val+'</span>';
+					return $("<div class=\"option ibo-select--autocomplete-item\">").append(val);
 				}
 			},
 			valueField: 'value',
@@ -238,19 +248,28 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			})
 		.autocomplete("instance")._renderItem = function (ul, item) {
 			$(ul).addClass('selectize-dropdown');
-			var term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
-			var val = $('<div>').text(item.label).html();
-			val = val.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
-			if (item.obsolescence_flag == '1') {
-				val = ' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+val;
+			let term = this.term.replace("/([\^\$\(\)\[\]\{\}\*\.\+\?\|\\])/gi", "\\$1");
+			let val = '';
+			if (item.initials != undefined) {
+				if (item.picture_url != undefined) {
+					val = '<span class="ibo-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+				} else {
+					val = '<span class="ibo-select--autocomplete-item-image");">'+item.initials+'</span>';
+				}
 			}
-			if (item.additional_field != undefined )
-			{
+			val = val+'<div class="ibo-select--autocomplete-item-txt">';
+			if (item.obsolescence_flag == '1') {
+				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
+			}
+			let labelValue = $('<div>').text(item.label).html();
+			labelValue = labelValue.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+			val = val+labelValue;
+			if (item.additional_field != undefined) {
 				val = val+'<br><i>'+item.additional_field+'</i>';
 			}
-
+			val = val+'</div>';
 			return $("<li>")
-				.append("<div data-selectable=\"\">"+val+"</div>")
+				.append("<div data-selectable=\"\" class=\"ibo-select--autocomplete-item\">"+val+"</div>")
 				.appendTo(ul);
 		};
 

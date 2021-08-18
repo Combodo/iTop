@@ -1099,41 +1099,47 @@ EOF
 		$oProperties = $oClass->GetUniqueElement('properties');
 		$sPHP = '';
 		$sCss = ''; // Contains dynamic CSS class definitions
-	
+
 		// Class caracteristics
 		//
 		$aClassParams = array();
 		$aClassParams['category'] = $this->GetPropString($oProperties, 'category', '');
 		$aClassParams['key_type'] = "'autoincrement'";
-		if ((bool) $this->GetPropNumber($oProperties, 'is_link', 0))
-		{
+		if ((bool)$this->GetPropNumber($oProperties, 'is_link', 0)) {
 			$aClassParams['is_link'] = 'true';
 		}
 
 		// Naming
-		if ($oNaming = $oProperties->GetOptionalElement('naming'))
-		{
+		$sComplementaryNameAttCode = "";
+		if ($oNaming = $oProperties->GetOptionalElement('naming')) {
 			$oNameAttributes = $oNaming->GetUniqueElement('attributes');
 			/** @var \DOMNodeList $oAttributes */
 			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
 			$aNameAttCodes = array();
 			/** @var \MFElement $oAttribute */
-			foreach($oAttributes as $oAttribute)
-			{
+			foreach ($oAttributes as $oAttribute) {
 				$aNameAttCodes[] = $oAttribute->getAttribute('id');
 			}
-			if (count($aNameAttCodes) > 0)
-			{
+			if (count($aNameAttCodes) > 0) {
 				// New style...
 				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
-			}
-			else
-			{
+			} else {
 				$sNameAttCode = "''";
 			}
-		}
-		else
-		{
+			if ($oComplementaryNameAttributes = $oNaming->GetOptionalElement('complementary_attributes')) {
+				/** @var \DOMNodeList $oAttributes */
+				$oComplementaryAttributes = $oComplementaryNameAttributes->getElementsByTagName('attribute');
+				$aComplementaryNameAttCodes = array();
+				/** @var \MFElement $oAttribute */
+				foreach ($oComplementaryAttributes as $oComplementaryAttribute) {
+					$aComplementaryNameAttCodes[] = $oComplementaryAttribute->getAttribute('id');
+				}
+				if (count($aComplementaryNameAttCodes) > 0) {
+					$sComplementaryNameAttCode = "array('".implode("', '", $aComplementaryNameAttCodes)."')";
+				}
+				$aClassParams['complementary_name_attcode'] = $sComplementaryNameAttCode;
+			}
+		} else {
 			$sNameAttCode = "''";
 		}
 		$aClassParams['name_attcode'] = $sNameAttCode;
@@ -1228,76 +1234,39 @@ EOF
 			{
 				$sIndexId = $oIndex->getAttribute('id');
 				$oAttributes = $oIndex->GetUniqueElement('attributes');
-				foreach($oAttributes->getElementsByTagName('attribute') as $oAttribute)
-				{
+				foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute) {
 					$aIndexes[$sIndexId][] = $oAttribute->getAttribute('id');
 				}
 			}
 			$aClassParams['indexes'] = var_export($aIndexes, true);
 		}
 
-		if ($oArchive = $oProperties->GetOptionalElement('archive'))
-		{
+		if ($oArchive = $oProperties->GetOptionalElement('archive')) {
 			$bEnabled = $this->GetPropBoolean($oArchive, 'enabled', false);
 			$aClassParams['archive'] = $bEnabled;
 		}
 
-		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence'))
-		{
+		if ($oObsolescence = $oProperties->GetOptionalElement('obsolescence')) {
 			$sCondition = trim($this->GetPropString($oObsolescence, 'condition', ''));
-			if ($sCondition != "''")
-			{
+			if ($sCondition != "''") {
 				$aClassParams['obsolescence_expression'] = $sCondition;
 			}
 		}
 
-		if ($oAdditionalValueForSelect = $oProperties->GetOptionalElement('complement_for_select'))
-		{
-			$oNameAttributes = $oAdditionalValueForSelect->GetUniqueElement('attributes');
-			/** @var \DOMNodeList $oAttributes */
-			$oAttributes = $oNameAttributes->getElementsByTagName('attribute');
-			$aNameAttCodes = array();
-			/** @var \MFElement $oAttribute */
-			foreach($oAttributes as $oAttribute)
-			{
-				$aNameAttCodes[] = $oAttribute->getAttribute('id');
-			}
-			if (count($aNameAttCodes) > 0)
-			{
-				// New style...
-				$sNameAttCode = "array('".implode("', '", $aNameAttCodes)."')";
-			}
-			else
-			{
-				$sNameAttCode = "''";
-			}
-		}
-		else
-		{
-			$sNameAttCode = "''";
-		}
-		$aClassParams['name_complement_for_select'] = $sNameAttCode;
-
-		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules'))
-		{
+		if ($oUniquenessRules = $oProperties->GetOptionalElement('uniqueness_rules')) {
 			$aUniquenessRules = array();
 			/** @var \MFElement $oUniquenessSingleRule */
-			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule)
-			{
+			foreach ($oUniquenessRules->GetElementsByTagName('rule') as $oUniquenessSingleRule) {
 				$sCurrentRuleId = $oUniquenessSingleRule->getAttribute('id');
 
 				$oAttributes = $oUniquenessSingleRule->GetUniqueElement('attributes', false);
-				if ($oAttributes)
-				{
+				if ($oAttributes) {
 					$aUniquenessAttributes = array();
-					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute)
-					{
+					foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute) {
 						$aUniquenessAttributes[] = $oAttribute->getAttribute('id');
 					}
 					$aUniquenessRules[$sCurrentRuleId]['attributes'] = $aUniquenessAttributes;
-				}
-				else
-				{
+				} else {
 					$aUniquenessRules[$sCurrentRuleId]['attributes'] = null;
 				}
 

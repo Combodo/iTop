@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 /**
  * All objects to be displayed in the application (either as a list or as details)
  * must implement this interface.
@@ -1525,14 +1527,14 @@ abstract class DBObject implements iDisplay
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
 	 * @internal
-	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
-	 *
 	 * @return string
 	 * @throws \CoreException
+	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 *
 	 */
-	public function GetName()
+	public function GetName($sType = FriendlyNameType::SHORT)
 	{
-		return htmlentities($this->GetRawName(), ENT_QUOTES, 'UTF-8');
+		return htmlentities($this->GetRawName($sType), ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
@@ -1548,9 +1550,14 @@ abstract class DBObject implements iDisplay
 	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
 	 *
 	 */
-	public function GetRawName()
+	public function GetRawName($sType = FriendlyNameType::SHORT)
 	{
-		return $this->Get('friendlyname');
+		if ($sType == FriendlyNameType::SHORT) {
+			return $this->Get('friendlyname');
+		} else {
+			$oExpression = MetaModel::GetNameExpression(get_class($this), $sType);
+			$this->EvaluateExpression($oExpression);
+		}
 	}
 
 	/**
