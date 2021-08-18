@@ -1036,6 +1036,11 @@ try
 				// so we're resetting its value ! (see N°3416)
 				$oPage->add_xframe_options('');
 
+				// N°4129 - Prevent XSS attacks & other script executions
+				if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+					$oPage->add_header('Content-Security-Policy: sandbox;');
+				}
+
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 				$oKPI->ComputeAndReport('Data fetch and format');
 			}
