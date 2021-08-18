@@ -902,7 +902,12 @@ try
 			$sField = utils::ReadParam('field', '');
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
-				$oPage->add_header('X-Frame-Options:'); // resets header, see N°3416
+				// Resets header, see N°3416
+				$oPage->add_header('X-Frame-Options:');
+				// N°4129 - Prevent XSS attacks & other script executions
+				if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+					$oPage->add_header('Content-Security-Policy: sandbox;');
+				}
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 			}
 			break;
