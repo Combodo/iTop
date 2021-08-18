@@ -2656,7 +2656,7 @@ class utils
 				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
 
 				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
-<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');">{initials}</span>
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="{picture_style}">{initials}</span>
 HTML;
 				$sMentionItemTemplate = <<<HTML
 <li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>

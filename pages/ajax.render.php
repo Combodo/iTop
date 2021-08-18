@@ -2720,10 +2720,9 @@ EOF
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
 					$aMatch = [
-						'class' => $sObjectClass,
-						'id' => $iObjectId,
+						'class'        => $sObjectClass,
+						'id'           => $iObjectId,
 						'friendlyname' => $oObject->Get('friendlyname'),
-						'initials' => '',
 					];
 
 					// Try to retrieve image for contact
@@ -2731,12 +2730,14 @@ EOF
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
 						if (!$oImage->IsEmpty()) {
-							$aMatch['picture_url'] = $oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode);
+							$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode)."')";
+							$aMatch['initials'] = '';
+						} else {
+							// If no image found, fallback on initials
+							$aMatch['picture_style'] = '';
+							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
 						}
 					}
-
-					// If no image found, fallback on initials
-					$aMatch['initials'] = array_key_exists('picture_url', $aMatch) ? '' : utils::ToAcronym($oObject->Get('friendlyname'));
 
 					$aMatches[] = $aMatch;
 				}
