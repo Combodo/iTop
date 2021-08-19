@@ -42,9 +42,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         pageLength: {{ oUIBlock.GetOption("pageLength") }},
     {% endif %}
     {% if oUIBlock.GetOption("dom") is not empty %}
-        dom: "<'ibo-datatable-toolbar'{{ oUIBlock.GetOption("dom") }}>t",
+    dom: "<'ibo-datatable--toolbar'{{ oUIBlock.GetOption("dom") }}>t",
     {% else %}
-        dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
+    dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% endif %}
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     columns: [
