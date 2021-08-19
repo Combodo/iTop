@@ -2668,6 +2668,9 @@ class WizStepDone extends WizardStep
 		$oPage->add('<img style="visibility: hidden;border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
 		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");
+		// avoid leaving in a dirty state
+		SetupUtils::ExitMaintenanceMode(false);
+		SetupUtils::ExitReadOnlyMode(false);
 		SetupUtils::EraseSetupToken();
 	}
 
