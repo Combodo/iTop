@@ -318,7 +318,7 @@ class SetupUtils
 			if (!utils::IsMemoryLimitOk($iCurrentMemoryLimit, $iMinMemoryLimit)) {
 				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($sMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
 			} else {
-				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $iMemoryLimit, ok.");
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $sMemoryLimit, ok.");
 			}
 		}
 
