@@ -1,0 +1,21 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
+{% block iboPageBodyHtml %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-12 col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2">
+                <div id="uwp-main-container">
+                    <div id="uwp-container" class="panel panel-default">
+                        <div id="uwp-header" class="panel-heading">
+                            <h1 class="panel-title"><img id="uwp-logo" src="{{ aPage.sPanelIcon }}" /><span id="uwp-title">{{ aPage.sPanelTitle }}</span></h1>
+                        </div>
+                        <div id="uwp-content" class="panel-body">
+                            {{ aPage.sContent|raw }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
