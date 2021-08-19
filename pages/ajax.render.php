@@ -1452,20 +1452,23 @@ JS
 			$aChoices = $oExtensionsMap->GetChoices();
 			foreach($aChoices as $oExtension)
 			{
+				$sDecorationClass = '';
 				switch ($oExtension->sSource)
 				{
 					case iTopExtension::SOURCE_REMOTE:
-						$sSource = ' <span class="extension-source">'.Dict::S('UI:About:RemoteExtensionSource').'</span>';
+						$sSource = Dict::S('UI:About:RemoteExtensionSource');
+						$sDecorationClass = 'fc fc-chameleon-icon';
 						break;
 
 					case iTopExtension::SOURCE_MANUAL:
-						$sSource = ' <span class="extension-source">'.Dict::S('UI:About:ManualExtensionSource').'</span>';
+						$sSource = Dict::S('UI:About:ManualExtensionSource');
+						$sDecorationClass = 'fas fa-folder';
 						break;
 
 					default:
 						$sSource = '';
 				}
-				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.$sSource.'</li>');
+				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.'<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sSource.'"></i></li>');
 			}
 			$oPage->add('</ul>');
 			$oPage->add("</div>");

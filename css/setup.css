@@ -1291,7 +1291,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
 .ibo-is-fullwidth {
   width: 100%;
 }
-ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image, .ibo-panel--header-left, .ibo-panel--icon, .ibo-dashlet-header-static--icon-container, .ibo-input-image--image-view, .ibo-pill, .ibo-title--icon, .ibo-datatable--toolbar-left, .ibo-datatable--toolbar-right, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--bottom-part, .ibo-navigation-menu--user-info, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-picture, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-object-details--status-dot, .ibo-activity-panel--togglers, .ibo-activity-panel--tabs-togglers, .ibo-activity-panel--tab-title, .ibo-activity-panel--tab-toolbar-actions, .ibo-activity-panel--tab-toolbar-action, .ibo-activity-panel--body--placeholder-image, .ibo-activity-panel--body--placeholder-hint, .ibo-activity-panel--closed-cover, .ibo-caselog-entry-form--lock-icon, .ibo-activity-entry--medallion, .ibo-activity-panel--load-more-entries-container, .ibo-activity-panel--load-entries-button {
+ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image, .ibo-panel--header-left, .ibo-panel--icon, .ibo-dashlet-header-static--icon-container, .ibo-input-image--image-view, .ibo-select--autocomplete-item-image, .ibo-pill, .ibo-title--icon, .ibo-datatable--toolbar-left, .ibo-datatable--toolbar-right, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--bottom-part, .ibo-navigation-menu--user-info, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-picture, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-object-details--status-dot, .ibo-activity-panel--togglers, .ibo-activity-panel--tabs-togglers, .ibo-activity-panel--tab-title, .ibo-activity-panel--tab-toolbar-actions, .ibo-activity-panel--tab-toolbar-action, .ibo-activity-panel--body--placeholder-image, .ibo-activity-panel--body--placeholder-hint, .ibo-activity-panel--closed-cover, .ibo-caselog-entry-form--lock-icon, .ibo-activity-entry--medallion, .ibo-activity-panel--load-more-entries-container, .ibo-activity-panel--load-entries-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -13472,6 +13472,27 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   background-color: #f5fafd;
   color: #495c68;
 }
+.ibo-select--autocomplete-item {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.ibo-select--autocomplete-item-image {
+  width: 25px;
+  height: 25px;
+  /* min-xxx are here to avoid medallion to be horizontally compressed when the title is to long */
+  min-width: 25px;
+  min-height: 25px;
+  background-position: center center;
+  background-size: 100%;
+  border-radius: 100%;
+  margin-right: 0.5rem;
+  background-color: #ebf8ff;
+  border: 1px solid #929fb1;
+}
+.ibo-select--autocomplete-item-txt {
+  white-space: nowrap;
+}
 .ibo-input-select-icon > img {
   max-height: 100%;
   max-width: 100%;
@@ -17701,6 +17722,11 @@ body {
   max-height: 150px;
   margin-bottom: 15px;
   width: auto;
+}
+.setup-extension--icon {
+  margin-right: 5px;
+  color: #2b6bb0;
+  font-size: 1.33rem;
 }
 /* integrityCheck: end (do not remove/edit) */
 /* Legacy inline stuff */

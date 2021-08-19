@@ -1963,14 +1963,17 @@ EOF
 
 	protected function GetExtensionSourceLabel($sSource)
 	{
+		$sDecorationClass = '';
 		switch($sSource)
 		{
 			case iTopExtension::SOURCE_MANUAL:
-			$sResult = 'Extension';
+			$sResult = 'Local extensions folder';
+			$sDecorationClass = 'fas fa-folder';
 			break;
 
 			case iTopExtension::SOURCE_REMOTE:
-			$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop-Hub' : 'ITSM-Designer';
+			$sResult = (ITOP_APPLICATION == 'iTop') ? 'iTop Hub' : 'ITSM Designer';
+			$sDecorationClass = (ITOP_APPLICATION == 'iTop') ? 'fc fc-chameleon-icon' : 'fa pencil-ruler';
 			break;
 
 			default:
@@ -1980,7 +1983,7 @@ EOF
 		{
 			return '';
 		}
-		return '<span style="display:inline-block;font-size:8pt;padding:3px;border-radius:4px;color:#fff;background-color:#1c94c4;margin-left:0.5em;margin-right:0.5em">'.$sResult.'</span>';
+		return '<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sResult.'"></i>';
 	}
 
 	protected function DisplayOptions($oPage, $aStepInfo, $aSelectedComponents, $aDefaults, $sParentId = '', $bAllDisabled = false)
@@ -2096,7 +2099,7 @@ EOF
 		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
 		$sSourceLabel = isset($aChoice['source_label']) ? $aChoice['source_label'] : '';
 		$sId = htmlentities($aChoice['extension_code'], ENT_QUOTES, 'UTF-8');
-		$oPage->add('<label for="'.$sId.'"><b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.$sSourceLabel.'</label> '.$sMoreInfo);
+		$oPage->add('<label for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
 		$sDescription = isset($aChoice['description']) ? htmlentities($aChoice['description'], ENT_QUOTES, 'UTF-8') : '';
 		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options']))
