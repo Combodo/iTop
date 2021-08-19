@@ -4123,7 +4123,7 @@ class AttributeText extends AttributeString
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sToolTipForHtml = utils::EscapeHtml(Dict::S('Core:UnknownObjectTip'));
+						$sToolTipForHtml = utils::EscapeHtml(Dict::Format('Core:UnknownObjectLabel', $sClass, $sName));
 						$sReplacement = "<span class=\"wiki_broken_link ibo-is-broken-hyperlink\" data-tooltip-content=\"$sToolTipForHtml\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
 						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
