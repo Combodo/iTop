@@ -33,9 +33,6 @@ $sPortalPublicFolderAbsPath = APPROOT . $sPortalPublicFolderRelPath;
 /** @noinspection PhpUnhandledExceptionInspection */
 $sPortalPublicFolderAbsUrl = utils::GetAbsoluteUrlModulesRoot().'/itop-portal-base/portal/public/';
 
-// Portal autoloader
-require_once $sPortalBaseFolderAbsPath . 'vendor/autoload.php';
-
 // Constants to be used in the UnauthenticatedWebPage
 if(!defined('UAWP_PORTAL_PUBLIC_FOLDER_ABSOLUTE_URL'))
 {
