@@ -152,7 +152,7 @@ body.ibo-has-fullscreen-descendant {
  * See https://bulma.io/documentation/elements/content/
  */
 .ibo-is-html-content {
-  /* @extend .content; */
+  @extend .content;
 
   code {
     color: initial;
