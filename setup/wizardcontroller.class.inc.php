@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,13 +19,14 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 /**
  * Engine for displaying the various pages of a "wizard"
- * Each "step" of the wizard must be implemented as 
+ * Each "step" of the wizard must be implemented as
  * separate class derived from WizardStep. each 'step' can also have its own
  * internal 'state' for developing complex wizards.
  * The WizardController provides the "<< Back" feature by storing a stack
  * of the previous screens. The WizardController also maintains from page
  * to page a list of "parameters" to be dispayed/edited by each of the steps.
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ *
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -233,9 +234,9 @@ $('form').each(function () {
 		width: 0
 	}));
 });
-$('#btn_back').click(function() { $('#wiz_form').data('back', true); });
+$('#btn_back').on('click', function() { $('#wiz_form').data('back', true); });
 
-$('#wiz_form').submit(function() {
+$('#wiz_form').on('submit', function() {
 	if ($(this).data('back'))
 	{
 		return CanMoveBackward();
@@ -346,7 +347,7 @@ on the page's parameters
  * If a step needs to maintain an internal "state" (for complex steps)
  * then it's up to the derived class to implement the behavior based on
  * the internal 'sCurrentState' variable.
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
