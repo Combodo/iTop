@@ -350,10 +350,15 @@ class CMDBSource
 
 	}
 
+	/**
+	 * Get the version of the database server.
+	 *
+	 * @return string
+	 * @throws \MySQLException
+	 */
 	public static function GetDBVersion()
 	{
-		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
-		return $aVersions[0];
+		return static::QueryToScalar('SELECT VERSION()', 0);
 	}
 
 	/**
@@ -1506,19 +1511,13 @@ class CMDBSource
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
 	 * @return mixed Current value of the variable
-	 */	   	
+	 * @throws \MySQLQueryHasNoResultException|\MySQLException
+	 */
 	public static function GetServerVariable($sVarName)
 	{
-		$result = '';
-		$sSql = "SELECT @@$sVarName as theVar";
-		$aRows = self::QueryToArray($sSql);
-		if (count($aRows) > 0)
-		{
-			$result = $aRows[0]['theVar'];
-		}
-		return $result;
+		$sSql = "SELECT @@".$sVarName;
+		return static::QueryToScalar($sSql, 0);
 	}
-
 
 	/**
 	 * Returns the privileges of the current user
