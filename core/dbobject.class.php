@@ -1530,6 +1530,7 @@ abstract class DBObject implements iDisplay
 	 * @return string
 	 * @throws \CoreException
 	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
 	public function GetName($sType = FriendlyNameType::SHORT)
@@ -1548,6 +1549,7 @@ abstract class DBObject implements iDisplay
 	 * @return string
 	 * @throws \CoreException
 	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
 	public function GetRawName($sType = FriendlyNameType::SHORT)

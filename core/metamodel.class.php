@@ -755,10 +755,13 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetNameSpec($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -826,6 +829,7 @@ abstract class MetaModel
 	 *
 	 * @param string $sClass
 	 * @param bool $bWithAttributeDefinition
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array of attribute codes used by friendlyname
 	 * @throws \CoreException
@@ -898,10 +902,13 @@ abstract class MetaModel
 	 * Get the friendly name expression for a given class
 	 *
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return Expression
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetNameExpression($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -937,10 +944,13 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return string The friendly name IIF it is equivalent to a single attribute
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetFriendlyNameAttributeCode($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -960,9 +970,12 @@ abstract class MetaModel
 	/**
 	 * Returns the list of attributes composing the friendlyname
 	 *
-	 * @param $sClass
+	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetFriendlyNameAttributeCodeList($sClass, $sType = FriendlyNameType::SHORT)
 	{
