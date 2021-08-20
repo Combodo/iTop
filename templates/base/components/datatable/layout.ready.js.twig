@@ -162,11 +162,13 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endfor %}
     ],
     ajax: $.fn.dataTable.pipeline({
-        url: "{{ oUIBlock.GetAjaxUrl() }}",
-        data: {{ oUIBlock.GetJsonAjaxData() |raw }},
-        method: "post",
-        pages: 1 // number of pages to cache
-    }),
+                url: "{{ oUIBlock.GetAjaxUrl() }}",
+                data: {{ oUIBlock.GetJsonAjaxData() |raw }},
+                method: "post",
+                pages: 1
+            }, // number of pages to cache
+            {{ oUIBlock.GetJsonData() |raw }}
+    ),
     createdRow: function (row, data, dataIndex) {
         if (data['@class'] !== undefined)
         {

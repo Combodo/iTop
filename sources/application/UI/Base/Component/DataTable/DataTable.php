@@ -44,6 +44,7 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	protected $sJsonData;
 
 	/**
 	 * Panel constructor.
@@ -57,6 +58,7 @@ class DataTable extends UIContentBlock
 		$this->aDisplayColumns = [];
 		$this->aOptions = [];
 		$this->aResultColumns = [];
+		$this->sJsonData = '';
 	}
 
 	/**
@@ -176,6 +178,26 @@ class DataTable extends UIContentBlock
 		$this->aOptions = $aOptions;
 	}
 
+	/**
+	 * @return string
+	 */
+	public function GetJsonData(): string
+	{
+		return $this->sJsonData;
+	}
+
+	/**
+	 * @param string $aData
+	 *
+	 * @return $this
+	 */
+	public function SetJsonData(string $sJSON)
+	{
+		$this->sJsonData = $sJSON;
+
+		return $this;
+	}
+
 	public function GetJSRefresh(): string
 	{
 		return "$('#".$this->sId."').DataTable().clearPipeline();
@@ -185,15 +207,17 @@ class DataTable extends UIContentBlock
 	public function GetDisabledSelect(): array
 	{
 		$aExtraParams = $this->aAjaxData['extra_params'];
-		if(isset($aExtraParams['selection_enabled']) ){
+		if (isset($aExtraParams['selection_enabled'])) {
 			$aListDisabled = [];
-			foreach( $aExtraParams['selection_enabled'] as $sKey=>$bValue){
+			foreach ($aExtraParams['selection_enabled'] as $sKey => $bValue) {
 				if ($bValue == false) {
 					$aListDisabled[] = $sKey;
 				}
 			}
+
 			return $aListDisabled;
 		}
+
 		return [];
 	}
 }

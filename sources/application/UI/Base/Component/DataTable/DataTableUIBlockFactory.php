@@ -18,6 +18,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
 use Dict;
 use MenuBlock;
@@ -286,14 +287,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 
-		if (count($oCustomSettings->aColumns) == 0)
-		{
+		if (count($oCustomSettings->aColumns) == 0) {
 			$oCustomSettings->aColumns = $oDefaultSettings->aColumns;
 		}
-		if(count($oCustomSettings->GetSortOrder()) == 0){
+		if (count($oCustomSettings->GetSortOrder()) == 0) {
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
 		}
 
+		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
 		// Load only the requested columns
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
@@ -312,6 +313,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
+					}
+				} else {
+					if ($sIdName == "") {
+						$sIdName = $sAlias."/_key_";
 					}
 				}
 			}
@@ -420,15 +425,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData([
-			"operation" => 'search',
-			"filter" => $oSet->GetFilter()->serialize(),
-			"columns" => $oCustomSettings->aColumns,
-			"extra_params" => $aExtraParams,
+			"operation"     => 'search',
+			"filter"        => $oSet->GetFilter()->serialize(),
+			"columns"       => $oCustomSettings->aColumns,
+			"extra_params"  => $aExtraParams,
 			"class_aliases" => $aClassAliases,
-			"select_mode" => $sSelectMode,
+			"select_mode"   => $sSelectMode,
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
+		$oDataTable->SetJsonData(json_encode(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams)));
 
 		return $oDataTable;
 	}
@@ -538,6 +544,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 
+		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
 		// Load only the requested columns
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
@@ -553,13 +560,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
 					}
+				} else {
+					if ($sIdName == "") {
+						$sIdName = $sAlias."/_key_";
+					}
 				}
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 		$aColumnDefinition = [];
-		$aSortOrder = [];
 		$iIndexColumn = 0;
 
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
@@ -647,15 +657,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
 		$oDataTable->SetAjaxData([
-			"operation" => 'search',
-			"filter" => $oSet->GetFilter()->serialize(),
-			"columns" => $oCustomSettings->aColumns,
-			"extra_params" => $aExtraParams,
+			"operation"     => 'search',
+			"filter"        => $oSet->GetFilter()->serialize(),
+			"columns"       => $oCustomSettings->aColumns,
+			"extra_params"  => $aExtraParams,
 			"class_aliases" => $aClassAliases,
-			"select_mode" => $sSelectMode,
+			"select_mode"   => $sSelectMode,
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
+		$oDataTable->SetJsonData(json_encode(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams)));
 
 		return $oDataTable;
 	}
