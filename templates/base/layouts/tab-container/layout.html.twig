@@ -1,7 +1,7 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 <div id="{{ oUIBlock.GetId() }}" class="ibo-tab-container ibo-is-{{ oUIBlock.GetLayout() }}{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}"
-     data-role="ibo-tab-container">
+     data-role="ibo-tab-container" data-status="loading">
     {% block iboTabContainer %}
         <ul class="ibo-tab-container--tabs-list" data-role="ibo-tab-container--tabs-list">
             {% if not aPage.isPrintable %}
@@ -14,7 +14,7 @@
                                     data-tab-type="{{ oTab.GetType() }}"
                                     data-cache="{{ oTab.GetCache() }}"
                                     data-placeholder="{{ oTab.GetPlaceholderAbsPath() }}">
-                                    <a href="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler"
+                                    <a data-target="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler"
                                        data-role="ibo-tab-container--tab-toggler">
                                         <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
                                     </a>
