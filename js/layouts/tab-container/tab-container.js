@@ -70,9 +70,7 @@ $(function()
 	            
 	            // While our tab widget is loading, protect tab toggler from being triggered
 	            this.element.find(this.js_selectors.tab_toggler).on('click', function(e){
-	            	console.log('cc');
 		            if(me.element.attr('data-status') === 'loading') {
-			            console.log('non');
 			            e.preventDefault();
 			            e.stopImmediatePropagation();
 		            }
