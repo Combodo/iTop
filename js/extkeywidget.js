@@ -140,12 +140,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					val = '';
 					if (item.initials != undefined) {
 						if (item.picture_url != undefined) {
-							val = '<span class="ibo-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+							val = '<span class="ibo-input-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
 						} else {
-							val = '<span class="ibo-select--autocomplete-item-image">'+item.initials+'</span>';
+							val = '<span class="ibo-input-select--autocomplete-item-image">'+item.initials+'</span>';
 						}
 					}
-					val = val+'<span class="ibo-select--autocomplete-item-txt" >';
+					val = val+'<span class="ibo-input-select--autocomplete-item-txt" >';
 					if (item.obsolescence_flag == 1) {
 						val = val+'<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
 					} else {
@@ -155,7 +155,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
 					val = val+'</span>';
-					return $("<div class=\"option ibo-select--autocomplete-item\">").append(val);
+					return $("<div class=\"option ibo-input-select--autocomplete-item\">").append(val);
 				}
 			},
 			valueField: 'value',
@@ -252,12 +252,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			let val = '';
 			if (item.initials != undefined) {
 				if (item.picture_url != undefined) {
-					val = '<span class="ibo-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
+					val = '<span class="ibo-input-select--autocomplete-item-image" style="background-image: url('+item.picture_url+');">'+item.initials+'</span>';
 				} else {
-					val = '<span class="ibo-select--autocomplete-item-image");">'+item.initials+'</span>';
+					val = '<span class="ibo-input-select--autocomplete-item-image");">'+item.initials+'</span>';
 				}
 			}
-			val = val+'<div class="ibo-select--autocomplete-item-txt">';
+			val = val+'<div class="ibo-input-select--autocomplete-item-txt">';
 			if (item.obsolescence_flag == '1') {
 				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
 			}
@@ -269,7 +269,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			}
 			val = val+'</div>';
 			return $("<li>")
-				.append("<div data-selectable=\"\" class=\"ibo-select--autocomplete-item\">"+val+"</div>")
+				.append("<div data-selectable=\"\" class=\"ibo-input-select--autocomplete-item\">"+val+"</div>")
 				.appendTo(ul);
 		};
 

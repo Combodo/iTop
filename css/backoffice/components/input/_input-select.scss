@@ -34,10 +34,10 @@ $ibo-input-select--select-wrapper--action-button--margin-right: 20px !default;
 $ibo-input-select--action-button--padding-left: 6px !default;
 $ibo-input-select--action-button--padding-right: 2px !default;
 
-$ibo-select--autocomplete-item-image--size: 25px !default;
-$ibo-select--autocomplete-item-image--margin-right: 0.5rem !default;
-$ibo-select--autocomplete-item-image--background-color: $ibo-color-blue-100 !default;
-$ibo-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
+$ibo-input-select--autocomplete-item-image--size: 25px !default;
+$ibo-input-select--autocomplete-item-image--margin-right: 0.5rem !default;
+$ibo-input-select--autocomplete-item-image--background-color: $ibo-color-blue-100 !default;
+$ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
 
 .ibo-input-select {
   display: inline-block;
@@ -176,28 +176,28 @@ $ibo-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !def
   color: #495c68;
 }
 
-.ibo-select--autocomplete-item {
+.ibo-input-select--autocomplete-item {
   display: flex;
   justify-content: left;
   align-items: center;
 }
 
-.ibo-select--autocomplete-item-image {
-  width: $ibo-select--autocomplete-item-image--size;
-  height: $ibo-select--autocomplete-item-image--size;
+.ibo-input-select--autocomplete-item-image {
+  width: $ibo-input-select--autocomplete-item-image--size;
+  height: $ibo-input-select--autocomplete-item-image--size;
   /* min-xxx are here to avoid medallion to be horizontally compressed when the title is to long */
-  min-width: $ibo-select--autocomplete-item-image--size;
-  min-height: $ibo-select--autocomplete-item-image--size;
+  min-width: $ibo-input-select--autocomplete-item-image--size;
+  min-height: $ibo-input-select--autocomplete-item-image--size;
   background-position: center center;
   background-size: 100%;
   border-radius: 100%;
-  margin-right: $ibo-select--autocomplete-item-image--margin-right;
-  background-color: $ibo-select--autocomplete-item-image--background-color;
-  border: $ibo-select--autocomplete-item-image--border;
+  margin-right: $ibo-input-select--autocomplete-item-image--margin-right;
+  background-color: $ibo-input-select--autocomplete-item-image--background-color;
+  border: $ibo-input-select--autocomplete-item-image--border;
 
   @extend %ibo-fully-centered-content;
 }
 
-.ibo-select--autocomplete-item-txt {
+.ibo-input-select--autocomplete-item-txt {
   white-space: nowrap;
 }
