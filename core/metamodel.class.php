@@ -26,7 +26,6 @@ require_once APPROOT.'core/computing.inc.php';
 require_once APPROOT.'core/relationgraph.class.inc.php';
 require_once APPROOT.'core/apc-compat.php';
 require_once APPROOT.'core/expressioncache.class.inc.php';
-require_once APPROOT.'sources/Core/MetaModel/FriendlyNameType.php';
 
 
 /**
