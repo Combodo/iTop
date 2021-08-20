@@ -362,6 +362,7 @@ class CMDBSource
 	}
 
 	/**
+	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
 	 * @return string
 	 */
 	public static function GetServerInfo()
