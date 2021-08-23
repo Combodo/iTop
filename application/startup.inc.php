@@ -15,9 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
+
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/contexttag.class.inc.php');
+require_once(APPROOT.'/core/kpi.class.inc.php');
 
 
 /**
@@ -26,6 +29,9 @@ require_once(APPROOT.'/core/contexttag.class.inc.php');
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+ExecutionKPI::EnableDuration(1);
+ExecutionKPI::EnableMemory(1);
 
 // This storage is freed on error (case of allowed memory exhausted)
 $sReservedMemory = str_repeat('*', 1024 * 1024);
@@ -63,8 +69,9 @@ register_shutdown_function(function()
 	}
 });
 
-session_name('itop-'.md5(APPROOT));
-session_start();
+Session::Start();
+Session::WriteClose();
+
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
 if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv))

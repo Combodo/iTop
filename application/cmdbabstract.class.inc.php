@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
@@ -260,15 +261,15 @@ JS
 	public static function SetSessionMessage($sClass, $iKey, $sMessageId, $sMessage, $sSeverity, $fRank, $bMustNotExist = false)
 	{
 		$sMessageKey = $sClass.'::'.$iKey;
-		if (!isset($_SESSION['obj_messages'][$sMessageKey])) {
-			$_SESSION['obj_messages'][$sMessageKey] = array();
+		if (!Session::IsSet(['obj_messages', $sMessageKey])) {
+			Session::Set(['obj_messages', $sMessageKey], []);
 		}
-		if (!$bMustNotExist || !array_key_exists($sMessageId, $_SESSION['obj_messages'][$sMessageKey])) {
-			$_SESSION['obj_messages'][$sMessageKey][$sMessageId] = array(
+		if (!$bMustNotExist || !Session::IsSet(['obj_messages', $sMessageKey, $sMessageId])) {
+			Session::Set(['obj_messages', $sMessageKey, $sMessageId], [
 				'rank' => $fRank,
 				'severity' => $sSeverity,
 				'message' => $sMessage,
-			);
+			]);
 		}
 	}
 

@@ -24,6 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
@@ -321,7 +322,7 @@ class ApplicationContext
 		$sPrevious = self::GetUrlMakerClass();
 
 		self::$m_sUrlMakerClass = $sClass;
-		$_SESSION['UrlMakerClass'] = $sClass;
+		Session::Set('UrlMakerClass', $sClass);
 
 		return $sPrevious;
 	}
@@ -334,9 +335,9 @@ class ApplicationContext
 	{
 		if (is_null(self::$m_sUrlMakerClass))
 		{
-			if (isset($_SESSION['UrlMakerClass']))
+			if (Session::IsSet('UrlMakerClass'))
 			{
-				self::$m_sUrlMakerClass = $_SESSION['UrlMakerClass'];
+				self::$m_sUrlMakerClass = Session::Get('UrlMakerClass');
 			}
 			else
 			{
@@ -389,9 +390,9 @@ class ApplicationContext
 	 */
 	protected static function LoadPluginProperties()
 	{
-		if (isset($_SESSION['PluginProperties']))
+		if (Session::IsSet('PluginProperties'))
 		{
-			self::$m_aPluginProperties = $_SESSION['PluginProperties'];
+			self::$m_aPluginProperties = Session::Get('PluginProperties');
 		}
 		else
 		{
@@ -411,7 +412,7 @@ class ApplicationContext
 		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
 
 		self::$m_aPluginProperties[$sPluginClass][$sProperty] = $value;
-		$_SESSION['PluginProperties'][$sPluginClass][$sProperty] = $value;
+		Session::Set(['PluginProperties', $sPluginClass, $sProperty], $value);
 	}
 
 	/**

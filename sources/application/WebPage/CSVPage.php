@@ -54,9 +54,7 @@ class CSVPage extends WebPage
 	    if (class_exists('DBSearch')) {
 		    DBSearch::RecordQueryTrace();
 	    }
-	    if (class_exists('ExecutionKPI')) {
-		    ExecutionKPI::ReportStats();
-	    }
+	    ExecutionKPI::ReportStats();
     }
 
 	public function small_p($sText)

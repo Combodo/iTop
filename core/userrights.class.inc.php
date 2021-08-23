@@ -1,4 +1,7 @@
 <?php
+
+use Combodo\iTop\Application\Helper\Session;
+
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
 define('UR_ALLOWED_DEPENDS', 2);
@@ -381,9 +384,9 @@ abstract class User extends cmdbAbstractObject
 				if (!in_array(ADMIN_PROFILE_NAME, $aProfiles)) {
 					// Check if the user is yet allowed to modify Users
 					if (method_exists($oAddon, 'ResetCache')) {
-						$aCurrentProfiles = $_SESSION['profile_list'] ?? null;
+						$aCurrentProfiles = Session::Get('profile_list');
 						// Set the current profiles into a session variable (not yet in the database)
-						$_SESSION['profile_list'] = $aProfiles;
+						Session::Set('profile_list', $aProfiles);
 
 						$oAddon->ResetCache();
 						if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
@@ -392,9 +395,9 @@ abstract class User extends cmdbAbstractObject
 						$oAddon->ResetCache();
 
 						if (is_null($aCurrentProfiles)) {
-							unset($_SESSION['profile_list']);
+							Session::IsSet('profile_list');
 						} else {
-							$_SESSION['profile_list'] = $aCurrentProfiles;
+							Session::Set('profile_list', $aCurrentProfiles);
 						}
 					}
 				}
@@ -840,10 +843,10 @@ class UserRights
 		}
 		self::$m_oUser = $oUser;
 
-		if (isset($_SESSION['impersonate_user']))
+		if (Session::IsSet('impersonate_user'))
 		{
 			self::$m_oRealUser = self::$m_oUser;
-			self::$m_oUser = self::FindUser($_SESSION['impersonate_user']);
+			self::$m_oUser = self::FindUser(Session::Get('impersonate_user'));
 		}
 
 		Dict::SetUserLanguage(self::GetUserLanguage());
@@ -947,15 +950,15 @@ class UserRights
 		{
 			$bRet = false;
 		}
-		elseif (isset($_SESSION['archive_allowed']))
+		elseif (Session::IsSet('archive_allowed'))
 		{
-			$bRet = $_SESSION['archive_allowed'];
+			$bRet = Session::Get('archive_allowed');
 		}
 		else
 		{
 			// As of now, anybody can switch to the archive mode as soon as there is an archivable class
 			$bRet = (count(MetaModel::EnumArchivableClasses()) > 0);
-			$_SESSION['archive_allowed'] = $bRet;
+			Session::Set('archive_allowed', $bRet);
 		}
 		return $bRet;
 	}
@@ -1041,7 +1044,7 @@ class UserRights
 				// Do impersonate!
 				self::$m_oUser = $oUser;
 				Dict::SetUserLanguage(self::GetUserLanguage());
-				$_SESSION['impersonate_user'] = $sLogin;
+				Session::Set('impersonate_user', $sLogin);
 				self::_ResetSessionCache();
 			}
 		}
@@ -1057,7 +1060,7 @@ class UserRights
 		{
 			self::$m_oUser = self::$m_oRealUser;
 			Dict::SetUserLanguage(self::GetUserLanguage());
-			unset($_SESSION['impersonate_user']);
+			Session::Unset('impersonate_user');
 			self::_ResetSessionCache();
 		}
 	}
@@ -1755,9 +1758,9 @@ class UserRights
 		elseif ((self::$m_oUser !== null) && ($oUser->GetKey() == self::$m_oUser->GetKey()))
 		{
 			// Data about the current user can be found into the session data
-			if (array_key_exists('profile_list', $_SESSION))
+			if (Session::IsSet('profile_list'))
 			{
-				$aProfiles = $_SESSION['profile_list'];
+				$aProfiles = Session::Get('profile_list');
 			}
 		}
 
@@ -1792,10 +1795,9 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
-		if (!isset($_SESSION) && !utils::IsModeCLI())
+		if (!utils::IsModeCLI())
 		{
-			session_name('itop-'.md5(APPROOT));
-			session_start();
+			Session::Start();
 		}
 		self::_ResetSessionCache();
 		if (self::$m_oAddOn)
@@ -1881,10 +1883,7 @@ class UserRights
 	public static function _InitSessionCache()
 	{
 		// Cache data about the current user into the session
-		if (isset($_SESSION))
-		{
-			$_SESSION['profile_list'] = self::ListProfiles();
-		}
+		Session::Set('profile_list', self::ListProfiles());
 
 		$oConfig = MetaModel::GetConfig();
 		$bSessionIdRegeneration = $oConfig->Get('regenerate_session_id_enabled');
@@ -1906,14 +1905,8 @@ class UserRights
 
 	public static function _ResetSessionCache()
 	{
-		if (isset($_SESSION['profile_list']))
-		{
-			unset($_SESSION['profile_list']);
-		}
-		if (isset($_SESSION['archive_allowed']))
-		{
-			unset($_SESSION['archive_allowed']);
-		}
+		Session::Unset('profile_list');
+		Session::Unset('archive_allowed');
 	}
 	
 	/**

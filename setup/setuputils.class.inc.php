@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
@@ -2064,7 +2065,7 @@ JS
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
-		$_SESSION['setup_token'] = $sUID;
+		Session::Set('setup_token', $sUID);
 		return $sUID;
 	}
 
@@ -2096,8 +2097,8 @@ JS
 	 */
 	public static function IsSessionSetupTokenValid()
 	{
-		if (isset($_SESSION['setup_token'])) {
-			$sAuth = $_SESSION['setup_token'];
+		if (Session::IsSet('setup_token')) {
+			$sAuth = Session::Get('setup_token');
 			$sTokenFile = APPROOT.'data/setup/authent';
 			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
 				return true;
@@ -2116,7 +2117,7 @@ JS
 		if (is_file($sTokenFile)) {
 			unlink($sTokenFile);
 		}
-		unset($_SESSION['setup_token']);
+		Session::Unset('setup_token');
 	}
 
 

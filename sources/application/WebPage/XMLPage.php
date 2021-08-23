@@ -50,6 +50,8 @@ class XMLPage extends WebPage
 	{
 		if (!$this->m_bPassThrough)
 		{
+			$oKpi = new ExecutionKPI();
+
 			// Get the unexpected output but do nothing with it
 			$sTrash = $this->ob_get_clean_safe();
 
@@ -60,11 +62,15 @@ class XMLPage extends WebPage
 			{
 				header($s_header);
 			}
+			$oKpi->ComputeAndReport(get_class($this).' prepare output');
+			$oKpi = new ExecutionKPI();
 			echo $this->s_content;
+			$oKpi->ComputeAndReport('Echoing ('.round(strlen($this->s_content) / 1024).' Kb)');
 		}
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
+		ExecutionKPI::ReportStats();
 	}
 
 	public function add($sText)

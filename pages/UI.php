@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -30,7 +31,7 @@ use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
  */
 function DisplayWelcomePopup(WebPage $oP)
 {
-	if (!isset($_SESSION['welcome']))
+	if (!Session::IsSet('welcome'))
 	{
 		// Check, only once per session, if the popup should be displayed...
 		// If the user did not already ask for hiding it forever
@@ -38,7 +39,7 @@ function DisplayWelcomePopup(WebPage $oP)
 		if ($bPopup)
 		{
 			TwigHelper::RenderIntoPage($oP, APPROOT.'/', 'templates/pages/backoffice/welcome_popup/welcome_popup');
-			$_SESSION['welcome'] = 'ok';
+			Session::Set('welcome', 'ok');
 		}
 	}	
 }
@@ -299,6 +300,7 @@ try
 	$oAppContext = new ApplicationContext();
 
 	$oKPI->ComputeAndReport('User login');
+	$oKPI = new ExecutionKPI();
 
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
 	$oP->SetMessage($sLoginMessage);
@@ -734,7 +736,7 @@ EOF
 				// 2nd - set values from the page argument 'default'
 				$oObjToClone->UpdateObjectFromArg('default');
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => Session::Get('auth_user'),
 					'context' => $oAppContext->GetAsHash(),
 					'default' => utils::ReadParam('default', array(), '', 'raw_data'),
 					'origin' => 'console',
@@ -1548,12 +1550,12 @@ EOF
 		$oObj = MetaModel::GetObject($sClass, $id, false);
 		if ($oObj != null)
 		{
-			$aPrefillFormParam = array(
-				'user'     => $_SESSION["auth_user"],
+			$aPrefillFormParam = [
+				'user'     => Session::Get('auth_user'),
 				'context'  => $oAppContext->GetAsHash(),
 				'stimulus' => $sStimulus,
 				'origin'   => 'console',
-			);
+			];
 			try {
 				$bApplyTransition = $oObj->DisplayStimulusForm($oP, $sStimulus, $aPrefillFormParam);
 			}
@@ -1847,6 +1849,7 @@ EOF
 
 	}
 	DisplayWelcomePopup($oP);
+	$oKPI->ComputeAndReport('Compute page');
 	$oP->output();	
 }
 catch (Exception $e) {

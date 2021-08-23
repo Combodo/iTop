@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -178,10 +179,9 @@ class WebPage implements Page
 	 */
 	public function AddSessionMessages(string $sMessageKey, array $aRanks = [], array $aMessages = []): void
 	{
-		if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey,
-				$_SESSION['obj_messages'])) {
+		if (is_array(Session::Get(['obj_messages', $sMessageKey]))) {
 			$aReadMessages = [];
-			foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData) {
+			foreach (Session::Get(['obj_messages', $sMessageKey]) as $aMessageData) {
 				if (!in_array($aMessageData['message'], $aReadMessages)) {
 					$aReadMessages[] = $aMessageData['message'];
 					$aRanks[] = $aMessageData['rank'];
@@ -202,7 +202,7 @@ class WebPage implements Page
 					}
 				}
 			}
-			unset($_SESSION['obj_messages'][$sMessageKey]);
+			Session::Unset(['obj_messages', $sMessageKey]);
 		}
 		array_multisort($aRanks, $aMessages);
 		foreach ($aMessages as $oMessage) {
@@ -1153,6 +1153,7 @@ JS;
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		// Send headers
 		foreach ($this->a_headers as $sHeader) {
 			header($sHeader);
@@ -1206,10 +1207,11 @@ JS;
 
 		// Favicon
 		$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
+		$oKpi->ComputeAndReport(get_class($this).' prepare output');
 
+		$oKpi = new ExecutionKPI();
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
-		$oKpi = new ExecutionKPI();
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 		$oKpi->ComputeAndReport('TWIG rendering');
 
@@ -1221,9 +1223,7 @@ JS;
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
-		if (class_exists('ExecutionKPI')) {
-			ExecutionKPI::ReportStats();
-		}
+		ExecutionKPI::ReportStats();
 	}
 
 	/**

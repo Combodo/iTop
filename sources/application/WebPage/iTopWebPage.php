@@ -780,6 +780,8 @@ HTML;
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
+
 		// Data to be passed to the view
 		$aData = [];
 
@@ -886,6 +888,7 @@ HTML;
 				header($sHeader);
 			}
 		}
+		$oKpi->ComputeAndReport(get_class($this).' prepare output');
 
 
 		// Render final TWIG into global HTML

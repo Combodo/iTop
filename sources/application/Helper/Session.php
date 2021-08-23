@@ -1,0 +1,151 @@
+<?php
+/**
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+
+namespace Combodo\iTop\Application\Helper;
+
+use ExecutionKPI;
+
+/**
+ * Session management
+ * Allow early session close to have multiple ajax calls in parallel
+ * When a session parameter is set, the session is re-opened if necessary
+ *
+ * @since 3.0.0
+ */
+class Session
+{
+	public static $iSessionId = null;
+	public static $bSessionStarted = false;
+
+	public static function Start()
+	{
+		if (!self::$bSessionStarted) {
+			$oKPI = new ExecutionKPI();
+			session_name('itop-'.md5(APPROOT));
+			if (!is_null(self::$iSessionId)) {
+				session_id(self::$iSessionId);
+				self::$bSessionStarted = session_start();
+			} else {
+				self::$bSessionStarted = session_start();
+				self::$iSessionId = session_id();
+			}
+			$oKPI->ComputeAndReport("Session Start");
+		}
+	}
+
+	public static function WriteClose()
+	{
+		if (self::$bSessionStarted) {
+			$oKPI = new ExecutionKPI();
+			session_write_close();
+			self::$bSessionStarted = false;
+			$oKPI->ComputeAndReport("Session Write Close");
+		}
+	}
+
+	/**
+	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
+	 * @param $value
+	 */
+	public static function Set($key, $value)
+	{
+		$sSessionVar = &$_SESSION;
+		if (is_array($key)) {
+			foreach ($key as $sKey) {
+				$sSessionVar = &$sSessionVar[$sKey];
+			}
+		} else {
+			$sSessionVar = &$sSessionVar[$key];
+		}
+		if (!self::$bSessionStarted) {
+			self::Start();
+			$sSessionVar = $value;
+			self::WriteClose();
+		} else {
+			$sSessionVar = $value;
+		}
+	}
+
+	/**
+	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
+	 */
+	public static function Unset($key)
+	{
+		if (self::IsSet($key)) {
+			$aSession = $_SESSION;
+			$sSessionVar = &$aSession;
+			$sKey = $key;
+			// Get the array containing the last key in order to unset the correct variable
+			if (is_array($key)) {
+				$sPrevKey = null;
+				foreach ($key as $sKey) {
+					if (!is_null($sPrevKey)) {
+						$sSessionVar = &$sSessionVar[$sPrevKey];
+					}
+					$sPrevKey = $sKey;
+				}
+			}
+			if (!self::$bSessionStarted) {
+				self::Start();
+				unset($sSessionVar[$sKey]);
+				$_SESSION = $aSession;
+				self::WriteClose();
+			} else {
+				unset($sSessionVar[$sKey]);
+				$_SESSION = $aSession;
+			}
+		}
+	}
+
+	/**
+	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
+	 * @param $default
+	 *
+	 * @return mixed
+	 */
+	public static function Get($key, $default = null)
+	{
+		$sSessionVar = &$_SESSION;
+		if (is_array($key)) {
+			foreach ($key as $SKey) {
+				$sSessionVar = &$sSessionVar[$SKey];
+			}
+		} else {
+			$sSessionVar = &$sSessionVar[$key];
+		}
+
+		if (isset($sSessionVar)) {
+			return $sSessionVar;
+		}
+
+		return $default;
+	}
+
+	/**
+	 * @param string|array $key key to access to the session variable. To access to $_SESSION['a']['b'] $key must be ['a', 'b']
+	 *
+	 * @return bool
+	 */
+	public static function IsSet($key): bool
+	{
+		$sSessionVar = &$_SESSION;
+		if (is_array($key)) {
+			foreach ($key as $SKey) {
+				$sSessionVar = &$sSessionVar[$SKey];
+			}
+		} else {
+			$sSessionVar = &$sSessionVar[$key];
+		}
+		return isset($sSessionVar);
+	}
+
+	public static function ListVariables(): array
+	{
+		return array_keys($_SESSION);
+	}
+
+}

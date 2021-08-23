@@ -14,14 +14,6 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'application/wizardhelper.class.inc.php');
-require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
-require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
-require_once(APPROOT.'application/excelexporter.class.inc.php');
-
 
 function LogErrorMessage($sMsgPrefix, $aContextInfo) {
 	$sCurrentUserLogin = UserRights::GetUser();
@@ -34,6 +26,10 @@ try
 {
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
+	$oKPI = new ExecutionKPI();
+	$oKPI->ComputeAndReport('Data model loaded');
+
+	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$operation = utils::ReadParam('operation', '');
@@ -54,6 +50,7 @@ try
 			break;
 	}
 	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
+	$oKPI->ComputeAndReport('User login');
 
 	$oPage = new AjaxPage("");
 
@@ -2870,4 +2867,3 @@ EOF
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
-ExecutionKPI::ReportStats();

@@ -6524,6 +6524,7 @@ abstract class MetaModel
 	 */
 	public static function LoadConfig($oConfiguration, $bAllowCache = false)
 	{
+		$oKPI = new ExecutionKPI();
 		self::$m_oConfig = $oConfiguration;
 
 		// N°2478 utils has his own private attribute
@@ -6600,6 +6601,7 @@ abstract class MetaModel
 
 		$sSource = self::$m_oConfig->Get('db_name');
 		$sTablePrefix = self::$m_oConfig->Get('db_subname');
+		$oKPI->ComputeAndReport('Load config');
 
 		if (self::$m_bUseAPCCache)
 		{

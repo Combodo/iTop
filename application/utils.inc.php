@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
@@ -239,9 +240,9 @@ class utils
 
 	public static function InitArchiveMode()
 	{
-		if (isset($_SESSION['archive_mode']))
+		if (Session::IsSet('archive_mode'))
 		{
-			$iDefault = $_SESSION['archive_mode'];
+			$iDefault = Session::Get('archive_mode');
 		}
 		else
 		{
@@ -251,7 +252,7 @@ class utils
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
 		if (isset($_SESSION))
 		{
-			$_SESSION['archive_mode'] = $iCurrent;
+			Session::Set('archive_mode', $iCurrent);
 		}
 		// Read and use the value for the current page (web services)
 		$iCurrent = self::ReadParam('with_archive', $iCurrent, true);
@@ -1210,7 +1211,7 @@ class utils
 	 */
 	static function CanLogOff()
 	{
-		return (isset($_SESSION['can_logoff']) ? $_SESSION['can_logoff'] : false);
+		return Session::Get('can_logoff', false);
 	}
 
 	/**
@@ -1312,14 +1313,7 @@ class utils
 	 */
 	public static function GetCurrentEnvironment()
 	{
-		if (isset($_SESSION['itop_env']))
-		{
-			return $_SESSION['itop_env'];
-		}
-		else
-		{
-			return ITOP_DEFAULT_ENV;
-		}
+		return Session::Get('itop_env', ITOP_DEFAULT_ENV);
 	}
 
 	/**

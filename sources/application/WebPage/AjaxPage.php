@@ -147,6 +147,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		$s_captured_output = $this->ob_get_clean_safe();
 
 		if (!empty($this->sContentType)) {
@@ -198,9 +199,10 @@ class AjaxPage extends WebPage implements iTabbedPage
 
 		$aData['aBlockParams'] = $this->GetBlockParams();
 
+		$oKpi->ComputeAndReport(get_class($this).' prepare output');
+		$oKpi = new ExecutionKPI();
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
-		$oKpi = new ExecutionKPI();
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 		$oKpi->ComputeAndReport('TWIG rendering');
 
@@ -208,8 +210,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
-
-		return;
+		ExecutionKPI::ReportStats();
 	}
 
 	/**

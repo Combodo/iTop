@@ -79,6 +79,7 @@ class JsonPage extends WebPage
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		$this->add_header('Content-type: application/json');
 
 		foreach ($this->a_headers as $s_header) {
@@ -91,11 +92,13 @@ class JsonPage extends WebPage
 			'data' => $this->aData,
 			'scripts' => $aScripts,
 		];
+		$oKpi->ComputeAndReport(get_class($this).' prepare output');
 
 		$oKpi = new ExecutionKPI();
 		$sJSON = json_encode($aJson);
 		echo $sJSON;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
+		ExecutionKPI::ReportStats();
 	}
 
 }

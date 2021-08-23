@@ -25,6 +25,7 @@ use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
 use ErrorPage;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 use iTopWebPage;
 use LoginWebPage;
@@ -161,6 +162,8 @@ abstract class Controller
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
 			$sMethodName = 'Operation'.$this->m_sOperation;
+			$oKPI = new ExecutionKPI();
+			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
 			if (method_exists($this, $sMethodName))
 			{
 				$this->$sMethodName();
@@ -413,13 +416,18 @@ abstract class Controller
 	 */
 	public function DisplayJSONPage($aParams = array(), $iResponseCode = 200, $aHeaders = array())
 	{
+		$oKpi = new ExecutionKPI();
 		http_response_code($iResponseCode);
 		header('Content-Type: application/json');
 		foreach ($aHeaders as $sHeader)
 		{
 			header($sHeader);
 		}
-		echo json_encode($aParams);
+		$sJSON = json_encode($aParams);
+		echo $sJSON;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
+
+		ExecutionKPI::ReportStats();
 	}
 
 	/**
