@@ -81,7 +81,7 @@ $(function()
 			{
 				// We are inside a tab, find out which one and hook its activation
 				this.sTabId = jTabPanel.attr('id');
-				var jTabs = this.element.closest('.ui-tabs');
+				var jTabs = this.element.closest('.ibo-tab-container');
 				jTabs.on( "tabsactivate", function( event, ui ) {
 					me._on_tabs_activate(ui);
 				});					
@@ -704,7 +704,7 @@ $(function()
 		},
 		_on_tabs_activate: function(ui)
 		{
-			if (ui.newPanel.selector == ('#'+this.sTabId))
+			if (ui.newPanel[0] === $('#'+this.sTabId)[0])
 			{
 				if (this.bRedrawNeeded)
 				{
