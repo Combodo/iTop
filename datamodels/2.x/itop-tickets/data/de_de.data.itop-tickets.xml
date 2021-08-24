@@ -93,4 +93,34 @@
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
+  <QueryOQL alias="QueryOQL" id="11">
+    <name>Kontaktliste eines Funktionales CI</name>
+    <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Funktionales CI zu verständigen</description>
+    <is_template>yes</is_template>
+    <oql>SELECT Contact AS C JOIN lnkContactToFunctionalCI AS L ON L.contact_id=C.id
+      WHERE L.functionalci_id = :this-&gt;id
+    </oql>
+    <fields>id,email</fields>
+    <finalclass>QueryOQL</finalclass>
+  </QueryOQL>
+  <QueryOQL alias="QueryOQL" id="12">
+    <name>Kontaktliste eines Dienstes</name>
+    <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Dienstes zu verständigen</description>
+    <is_template>yes</is_template>
+    <oql>SELECT Contact AS C JOIN lnkContactToService AS L ON L.contact_id=C.id
+      WHERE L.service_id = :this-&gt;id
+    </oql>
+    <fields>id,email</fields>
+    <finalclass>QueryOQL</finalclass>
+  </QueryOQL>
+  <QueryOQL alias="QueryOQL" id="13">
+    <name>Kontaktliste eines Vertrages</name>
+    <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Vertrages zu verständigen</description>
+    <is_template>yes</is_template>
+    <oql>SELECT Contact AS C JOIN lnkContactToContract AS L ON L.contact_id=C.id
+      WHERE L.contract_id = :this-&gt;id
+    </oql>
+    <fields>id,email</fields>
+    <finalclass>QueryOQL</finalclass>
+  </QueryOQL>
 </Set>
