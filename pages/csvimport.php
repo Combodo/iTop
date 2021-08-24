@@ -26,6 +26,7 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 try {
@@ -343,6 +344,7 @@ try {
 			// We're doing it for real, let's create a change
 			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
 			CMDBObject::SetTrackInfo($sUserString);
+			CMDBObject::SetTrackOrigin(CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
 		CMDBObject::SetTrackOrigin('csv-interactive');
