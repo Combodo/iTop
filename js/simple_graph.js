@@ -806,14 +806,12 @@ $(function()
 			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
 
 			this._close_all_tooltips();
-			this.oPaper.rect(this.xPan, this.yPan, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
-			this.oPaper.rect(this.xPan + this.element.width()/2 - 100, this.yPan + this.element.height()/2 - 10, 200, 20)
-			.attr({fill: 'url(../setup/orange-progress.gif)', stroke: '#000', 'stroke-width': 1});
-			this.oPaper.text(this.xPan + this.element.width()/2, this.yPan + this.element.height()/2 - 20, this.options.labels.loading);			
+			this.element.block({message:this.options.labels.loading});
 			
 			$('#'+sId+'_refresh_btn').button('disable'); 
 			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded, contexts: aContexts, context_key: this.options.context_key }, function(data) {
 				me.load(data);
+				me.element.unblock();
 				$('#'+sId+'_refresh_btn').button('enable');
 			}, 'json');
 		},
