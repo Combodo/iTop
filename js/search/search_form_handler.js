@@ -242,10 +242,14 @@ $(function()
 			// Refresh handler when the list has changed
 			// - Initialization
 			// - Destroy / reinitialization (changing the DM class of the search form)
+			this.element.scrollParent().on('init.dt', function(oEvent) {
+				me._updateStickyHeaderHandler();
+			});
+			// Refresh sticky positions when results are redrawn
 			// - AJAX pagination, filtering
 			// - Page length changes
-			this.element.scrollParent().on('init.dt draw.dt column-sizing.dt', function(oEvent) {
-				me._updateStickyHeaderHandler();
+			this.element.scrollParent().on('draw.dt column-sizing.dt', function(oEvent) {
+				me._updateStickyPositions();
 			});
 
 			// Refresh handler when resising:
@@ -1206,12 +1210,17 @@ $(function()
 			const me = this;
 			const oFormPanelHeaderElem = this._getFormPanelHeaderElem();
 
+			// Note: As offset() starts from the very top of the window, we need to take into account the top container height!
+			let fOffset = this._getResultsPanelElem().find('.ibo-panel--body:first').offset().top - $('#ibo-top-container').outerHeight() - this._getFormPanelBodyElem().outerHeight();
+			if (this._isInAModal()) {
+				fOffset = fOffset - this.element.closest('[role="dialog"]').offset().top;
+			}
+
 			new ScrollMagic.Scene({
 				triggerElement: oFormPanelHeaderElem[0],
 				triggerHook: 0,
 				// Careful, this won't get updated dynamically, meaning that if the elements move or resize, it won't be exact anymore
-				// Note: As offset() starts from the very top of the window, we need to take into account the top container height!
-				offset: this._getResultsPanelElem().find('.ibo-panel--body:first').offset().top - $('#ibo-top-container').outerHeight() - this._getFormPanelBodyElem().outerHeight(),
+				offset: fOffset,
 			})
 				.on('enter', function () {
 					me._onResultsBecomesSticky();
@@ -1466,6 +1475,15 @@ $(function()
 		_hideLoader: function()
 		{
 			this.elements.results_area.unblock();
+		},
+		/**
+		 * @return {boolean} True if the search form is in a modal window
+		 * @private
+		 * @since 3.0.0
+		 */
+		_isInAModal: function()
+		{
+			return this.element.closest('[role="dialog"]').length > 0;
 		},
 		// - Converts a snake_case string to CamelCase
 		_toCamelCase: function(sString)

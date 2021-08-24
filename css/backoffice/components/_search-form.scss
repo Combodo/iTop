@@ -894,25 +894,23 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
       border-bottom-color: transparent;
   }
 }
-.sf_results_area {
-  .ibo-datatable-panel.ibo-is-sticking {
-    .ibo-panel--header {
-      z-index: 0;
-    }
-    .ibo-datatable--toolbar {
-      position: fixed;
-      z-index: 2;
-      padding-bottom: 4px;
-      background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
-      border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
-      border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
-    }
-    .dataTables_scrollHead {
-      position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
-      z-index: 2;
-      background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
-      border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
-      border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
-    }
+.ibo-datatable-panel.ibo-is-sticking {
+  .ibo-panel--header {
+    z-index: 0;
+  }
+  .ibo-datatable--toolbar {
+    position: fixed;
+    z-index: 2;
+    padding-bottom: 4px;
+    background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+    border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+  }
+  .dataTables_scrollHead {
+    position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
+    z-index: 2;
+    background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+    border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
   }
 }
