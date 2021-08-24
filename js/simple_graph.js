@@ -392,25 +392,9 @@ $(function()
 			}
 			return null;
 		},
-		adjust_height: function()
-		{
-			var maxHeight = this.element.parent().height();
-			// Compute the available height
-			var element = this.element;
-			this.element.parent().children().each(function() {
-				if($(this).is(':visible') && !$(this).hasClass('graph') && ($(this).attr('id') != element.attr('id')))
-				{
-					maxHeight = maxHeight - $(this).height();
-				}
-			});
-			
-			this.element.height(maxHeight - 8);
-			this.oPaper.setSize(this.element.width(), this.element.height());
-		},
 		auto_scale: function()
 		{
 			var fMaxZoom = 1.5;
-			this.adjust_height();
 			
 			iMargin = 10;
 			xmin = this.options.xmin - iMargin;
@@ -821,7 +805,6 @@ $(function()
 			var aContexts = [];
 			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
 
-			this.adjust_height();
 			this._close_all_tooltips();
 			this.oPaper.rect(this.xPan, this.yPan, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
 			this.oPaper.rect(this.xPan + this.element.width()/2 - 100, this.yPan + this.element.height()/2 - 10, 200, 20)
