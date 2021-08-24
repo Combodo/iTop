@@ -1,4 +1,5 @@
 $.widget( "itop.scrollabletabs", $.ui.tabs, {
+	widgetEventPrefix: 'tabs',
 	js_selectors:
 		{
 			tab_toggler: '[data-role="ibo-tab-container--tab-toggler"]',
