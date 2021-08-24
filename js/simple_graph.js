@@ -466,7 +466,7 @@ $(function()
 		{
 			this._close_all_tooltips();
 			// Activate the 3rd tab
-			this.element.closest('.ui-tabs').tabs("option", "active", 2);
+			this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabWidget").option("active", 2);
 			// Scroll into view the group
 			if ($('#'+sGroupId).length > 0)
 			{
@@ -698,7 +698,6 @@ $(function()
 		},
 		_on_resize: function()
 		{
-			this.element.closest('.ui-tabs').tabs({ heightStyle: "content" });
 			this.auto_scale();
 			this._close_all_tooltips();
 			this.draw();
@@ -754,24 +753,28 @@ $(function()
 		},
 		refresh_groups: function(aGroups)
 		{
-			if ($('#impacted_groups').length > 0)
-			{
-				
-				// The "Groups" tab is present, refresh it
-				if (aGroups.length == 0)
+			if(this.element.parents('.ibo-tab-container').attr('data-status') === 'loaded'){
+				if ($('#impacted_groups').length > 0)
 				{
-					this.element.closest('.ui-tabs').tabs("disable", 2);
-					$('#impacted_groups').html('');
+					// The "Groups" tab is present, refresh it
+					if (aGroups.length == 0)
+					{
+						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabWidget").disable(2);
+						$('#impacted_groups').html('');
+					}
+					else
+					{
+						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabWidget").enable(2);
+						$('#impacted_groups').html('<img src="../images/indicator.gif">');
+						var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+						$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
+							$('#impacted_groups').html(data);
+						});
+					}
 				}
-				else
-				{
-					this.element.closest('.ui-tabs').tabs("enable", 2);
-					$('#impacted_groups').html('<img src="../images/indicator.gif">');
-					var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
-					$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
-						$('#impacted_groups').html(data);
-					});
-				}
+			}
+			else{
+				setTimeout(this.refresh_groups(aGroups), 800);
 			}
 		},
 		refresh_lists: function(aLists)
