@@ -165,7 +165,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 }
 
 .selectize-dropdown {
-  z-index: 2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
+  z-index: 2000 !important; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container. "!important" is necessary to overload the default selectize CSS rule 😕 */
   max-height: $ibo-input-select-selectize--dropdown--max-height;
   overflow-y: auto;
 }
