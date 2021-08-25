@@ -4,7 +4,7 @@
     <name>Bearbeiter des Tickets</name>
     <description>Kann in Benachrichtigungen genutzt werden, um den Bearbeiter des Tickets zu verständigen.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id=:this-&gt;agent_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id=:this->agent_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -14,7 +14,7 @@
       Es wird keine E-Mail gesendet, wenn die auslösende Person der Benachrichtigung der Bearbeiter des Tickets ist.
     </description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id=:this-&gt;agent_id AND id != :current_contact_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id=:this->agent_id AND id != :current_contact_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -22,10 +22,10 @@
     <name>Melder und Kontaktliste des Tickets</name>
     <description>Kann in Benachrichtigungen verwendet werden, um den Melder und alle verknüpften Kontakte eines Tickets zu verständigen.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this-&gt;id
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this->id
       UNION
-      SELECT Person WHERE id=:this-&gt;caller_id
-    </oql>
+      SELECT Person WHERE id=:this->caller_id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -33,7 +33,7 @@
     <name>Melder des Tickets</name>
     <description>Kann in Benachrichtigungen verwendet werden, um den Melder zu verständigen.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id=:this-&gt;caller_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id=:this->caller_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -41,7 +41,7 @@
     <name>Kontaktliste des Tickets</name>
     <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Tickets zu verständigen</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this-&gt;id</oql>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this->id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -49,7 +49,7 @@
     <name>Manager des Ticketmelders</name>
     <description>Kann in Benachrichtigungen verwendet werden, um den Manager des Melders eines Tickets zu verständigen.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person AS manager JOIN Person AS employee ON employee.manager_id = manager.id WHERE employee.id=:this-&gt;caller_id</oql>
+    <oql><![CDATA[SELECT Person AS manager JOIN Person AS employee ON employee.manager_id = manager.id WHERE employee.id=:this->caller_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -59,7 +59,7 @@
       Wird dieser Befehl allein ausgelöst, wird die Person zurückgegeben, die mit dem angemeldeten Benutzer verknüpft ist, der diesen Befehl ausführt.
     </description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id = :current_contact_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id = :current_contact_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -67,9 +67,9 @@
     <name>Teammitglieder des Tickets</name>
     <description>Kann in Benachrichtigungen verwendet werden, um den alle Mitglieder des Teams zu verständigen, an das das Ticket verteilt ist.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
-      WHERE L.team_id = :this-&gt;team_id
-    </oql>
+    <oql><![CDATA[SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
+      WHERE L.team_id = :this->team_id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -79,9 +79,9 @@
       Der Bearbeiter des Tickets ist aus dieser Liste ausgeschlossen.
     </description>
     <is_template>yes</is_template>
-    <oql>SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
-      WHERE L.team_id = :this-&gt;team_id AND P.id != :this-&gt;agent_id
-    </oql>
+    <oql><![CDATA[SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
+      WHERE L.team_id = :this->team_id AND P.id != :this->agent_id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -89,7 +89,7 @@
     <name>Team des Tickets</name>
     <description>Kann in Benachrichtigungen verwendet werden, um das Team, an das das Ticket verteilt ist, über eine hinterlegte Team-Mail-Ad­res­se zu benachrichtigen.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Team WHERE id = :this-&gt;team_id</oql>
+    <oql><![CDATA[SELECT Team WHERE id = :this->team_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -97,9 +97,9 @@
     <name>Kontaktliste eines Funktionales CI</name>
     <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Funktionales CI zu verständigen</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToFunctionalCI AS L ON L.contact_id=C.id
-      WHERE L.functionalci_id = :this-&gt;id
-    </oql>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToFunctionalCI AS L ON L.contact_id=C.id
+      WHERE L.functionalci_id = :this->id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -107,9 +107,9 @@
     <name>Kontaktliste eines Dienstes</name>
     <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Dienstes zu verständigen</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToService AS L ON L.contact_id=C.id
-      WHERE L.service_id = :this-&gt;id
-    </oql>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToService AS L ON L.contact_id=C.id
+      WHERE L.service_id = :this->id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -117,9 +117,9 @@
     <name>Kontaktliste eines Vertrages</name>
     <description>Kann in Benachrichtigungen verwendet werden, um alle verknüpften Kontakte eines Vertrages zu verständigen</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToContract AS L ON L.contact_id=C.id
-      WHERE L.contract_id = :this-&gt;id
-    </oql>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToContract AS L ON L.contact_id=C.id
+      WHERE L.contract_id = :this->id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
