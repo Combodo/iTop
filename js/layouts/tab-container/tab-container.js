@@ -104,7 +104,7 @@ $(function()
 	         * Return tabs widget instance
 	         * @public
 	         */
-	        GetTabWidget: function () {
+	        GetTabsWidget: function () {
 		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
 			        return this.element.scrollabletabs('instance');
 		        } else {

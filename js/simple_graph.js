@@ -450,7 +450,7 @@ $(function()
 		{
 			this._close_all_tooltips();
 			// Activate the 3rd tab
-			this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabWidget").option("active", 2);
+			this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabsWidget").option("active", 2);
 			// Scroll into view the group
 			if ($('#'+sGroupId).length > 0)
 			{
@@ -743,12 +743,12 @@ $(function()
 					// The "Groups" tab is present, refresh it
 					if (aGroups.length == 0)
 					{
-						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabWidget").disable(2);
+						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabsWidget").disable(2);
 						$('#impacted_groups').html('');
 					}
 					else
 					{
-						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabWidget").enable(2);
+						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabsWidget").enable(2);
 						$('#impacted_groups').block({message:this.options.labels.loading});
 						var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
 						$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
