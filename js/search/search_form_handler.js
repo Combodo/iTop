@@ -1091,6 +1091,8 @@ $(function()
 				this.submit.xhr.abort();
 			}
 
+			// Remove sticky state as we want to return at the beginning of the results
+			this._exitStickyState();
 			// Show loader
 			this._showLoader();
 			this._cleanMessageArea();
@@ -1373,6 +1375,16 @@ $(function()
 						'padding-bottom': '',
 					});
 			}
+		},
+		/**
+		 * Exit the sticky state for the whole search, returning to the top of the results
+		 * @return {void}
+		 */
+		_exitStickyState: function()
+		{
+			this._onFormStopsBeingSticky();
+			this._onResultsStopsBeingSticky();
+			this.element.scrollParent().scrollTop();
 		},
 		/**
 		 * @param oElem {Object} jQuery object representing the element to test
