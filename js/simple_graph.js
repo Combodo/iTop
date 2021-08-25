@@ -888,6 +888,7 @@ $(function()
 		_make_tooltips: function()
 		{
 			var me  = this;
+			let aTooltipGroups = [];
 			$( ".popupMenuTarget" ).each(function(){
 				var sDataId = $(this).attr('data-id');
 				var sTooltipContent = me._get_tooltip_content(sDataId);
@@ -897,7 +898,13 @@ $(function()
 					.attr('data-tooltip-append-to', 'body')
 					.attr('data-tooltip-hide-delay', '1500');
 				CombodoTooltip.InitTooltipFromMarkup($(this));
+				if(aTooltipGroups.indexOf(sDataId) < 0) {
+					aTooltipGroups.push(sDataId);
+				}
 			});
+			for(let sTooltipGroupKey in aTooltipGroups) {
+				CombodoTooltip.InitSingletonFromSelector('[data-id="' + aTooltipGroups[sTooltipGroupKey] + '"]');
+			}
 		},
 		_get_tooltip_content: function(sNodeId)
 		{
