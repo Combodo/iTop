@@ -66,7 +66,7 @@ $(function()
 			this.bInUpdateSliderZoom = false;
 			this.bRedrawNeeded = false;
 			
-			this.oPaper = Raphael(this.element.get(0), 16*this.element.width(), 16*this.element.height());
+			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
 
 			this.element
 			.addClass('panel-resized')
