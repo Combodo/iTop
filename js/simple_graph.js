@@ -903,7 +903,7 @@ $(function()
 				}
 			});
 			for(let sTooltipGroupKey in aTooltipGroups) {
-				CombodoTooltip.InitSingletonFromSelector('[data-id="' + aTooltipGroups[sTooltipGroupKey] + '"]');
+				CombodoTooltip.InitSingletonFromSelector('.itop-simple-graph [data-id="' + aTooltipGroups[sTooltipGroupKey] + '"]');
 			}
 		},
 		_get_tooltip_content: function(sNodeId)
