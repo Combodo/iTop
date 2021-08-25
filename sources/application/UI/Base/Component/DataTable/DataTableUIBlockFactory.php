@@ -135,6 +135,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$sTitle = (isset($aExtraParams['panel_title'])) ? $aExtraParams['panel_title'] : "";
 			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), $sTitle)->AddCSSClass('ibo-datatable-panel');
 			$oContainer->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iCount));
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oContainer->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
