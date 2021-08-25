@@ -295,7 +295,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
 		}
 
-		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
+		$sIdName = isset($aExtraParams["id_for_select"]) ? $aExtraParams["id_for_select"] : "";
 		// Load only the requested columns
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
