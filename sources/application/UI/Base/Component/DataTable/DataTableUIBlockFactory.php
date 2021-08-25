@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 use ApplicationException;
+use ApplicationContext;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
