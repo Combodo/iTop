@@ -244,15 +244,14 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
 	$oP->SetCurrentTab('UI:RelationshipList');
-	$oP->add("<div id=\"impacted_objects\" style=\"width:100%;background-color:#fff;padding:10px;\">");
+	$oP->add("<div id=\"impacted_objects\">");
 	$sOldRelation = $sRelation;
 	if (($sRelation == 'impacts') && ($sDirection == 'up'))
 	{
 		$sOldRelation = 'depends on';
 	}
-	$oP->add("<h1>".MetaModel::GetRelationDescription($sOldRelation).' '.$oObj->GetName()."</h1>\n");
 	$oP->add("<div id=\"impacted_objects_lists\">");
-	$oP->add('<img src="../images/indicator.gif">');
+	$oP->add("<div id=\"impacted_objects_lists_placeholder\"></div>");
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
 	 */
@@ -264,8 +263,9 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 function DisplayNavigatorGroupTab($oP)
 {
 	$oP->SetCurrentTab('UI:RelationGroups');
-	$oP->add("<div id=\"impacted_groups\" style=\"width:100%;background-color:#fff;padding:10px;\">");
-	$oP->add('<img src="../images/indicator.gif">');
+	$oP->add("<div id=\"impacted_groups\">");
+	$oP->add("<div id=\"impacted_groups_placeholder\"></div>");
+
 	/*
 	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_groups
 	*/
@@ -1774,8 +1774,14 @@ EOF
 
 			$aResults = $oRelGraph->GetObjectsByClass();
 			$oDisplayGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-
-			$oP->AddTabContainer('Navigator');
+			$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetRelationDescription($sRelation).' '.$oObj->GetName());
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+			if (strlen($sClassIcon) > 0){
+				$oPanel->SetIcon($sClassIcon);
+			}
+			
+			$oP->AddUiBlock($oPanel);
+			$oP->AddTabContainer('Navigator', '', $oPanel);
 			$oP->SetCurrentTabContainer('Navigator');
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');

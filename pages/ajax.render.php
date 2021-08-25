@@ -2239,13 +2239,13 @@ EOF
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))."</h1>\n");
-				$oPage->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass))."</h2>\n");
-				$oPage->add("</div>\n");
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))));
 				$oBlock = new DisplayBlock($oSearch, 'list');
-				$oBlock->Display($oPage, 'group_'.$iBlock++);
-				$oPage->p('&nbsp;'); // Some space ?
+				$oBlock->Display($oPage, 'group_'.$iBlock++, array('surround_with_panel' => true,
+				                                                    'panel_class' => $sListClass,
+				                                                    'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass)),
+				                                                    'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
+				));
 			}
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
@@ -2259,12 +2259,13 @@ EOF
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aKeys, 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->add("<div class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass))."</h2>\n");
-				$oPage->add("</div>\n");
 				$oBlock = new DisplayBlock($oSearch, 'list');
-				$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass));
-				$oPage->p('&nbsp;'); // Some space ?
+				$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass,
+				                                                  'surround_with_panel' => true,
+				                                                  'panel_class' => $sListClass,
+				                                                  'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass)),
+				                                                  'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
+				));
 			}
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
