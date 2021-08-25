@@ -465,7 +465,7 @@ $(function()
 			sHtml += '<div class="ibo-simple-graph--grouping-threshold--container"><label for="'+sId+'_grouping_threshold">'+this.options.labels.grouping_threshold+'</label><input type="number" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2" class="ibo-input"></div>';
 			if (this.options.additional_contexts.length > 0)
 			{
-				sHtml += '<div class="ibo-simple-graph--additional-context--container"><label for="'+sId+'_contexts">'+this.options.labels.additional_context_info+'</label><div class="ibo-input-select-wrapper"><select id="'+sId+'_contexts" name="contexts" class="multiselect ibo-input' +
+				sHtml += '<div class="ibo-simple-graph--additional-context--container"><label for="'+sId+'_contexts">'+this.options.labels.additional_context_info+'</label><div><select id="'+sId+'_contexts" name="contexts" class="multiselect ibo-input' +
 					' ibo-input-select" multiple size="1">';
 				for(var k in this.options.additional_contexts)
 				{
