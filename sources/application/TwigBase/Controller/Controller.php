@@ -376,10 +376,17 @@ abstract class Controller
 		}
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
 		$this->CreatePage($sPageType);
-		$this->AddToPage($this->RenderTemplate($aParams, $sTemplateName, 'html'));
-		$this->AddScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'js'));
-		$this->AddReadyScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'ready.js'));
-		$this->AddStyleToPage($this->RenderTemplate($aParams, $sTemplateName, 'css'));
+		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html');
+		$this->AddToPage($sHTMLContent);
+		$sJSScript = $this->RenderTemplate($aParams, $sTemplateName, 'js');
+		$this->AddScriptToPage($sJSScript);
+		$sReadyScript = $this->RenderTemplate($aParams, $sTemplateName, 'ready.js');
+		$this->AddReadyScriptToPage($sReadyScript);
+		$sStyle = $this->RenderTemplate($aParams, $sTemplateName, 'css');
+		$this->AddStyleToPage($sStyle);
+		if (strlen($sHTMLContent) == 0 && strlen($sJSScript) == 0 && strlen($sReadyScript) == 0 && strlen($sStyle) == 0) {
+			IssueLog::Error("Missing TWIG template for $sTemplateName");
+		}
 		if (!empty($this->m_aAjaxTabs)) {
 			$this->m_oPage->AddTabContainer('TwigBaseTabContainer');
 			$this->m_oPage->SetCurrentTabContainer('TwigBaseTabContainer');
