@@ -7,8 +7,6 @@
 
 namespace Combodo\iTop\Application\Helper;
 
-use ExecutionKPI;
-
 /**
  * Session management
  * Allow early session close to have multiple ajax calls in parallel
@@ -26,7 +24,6 @@ class Session
 	{
 		self::$bIsInitialized = true;
 		if (!self::$bSessionStarted) {
-			$oKPI = new ExecutionKPI();
 			session_name('itop-'.md5(APPROOT));
 			if (!is_null(self::$iSessionId)) {
 				session_id(self::$iSessionId);
@@ -35,17 +32,14 @@ class Session
 				self::$bSessionStarted = session_start();
 				self::$iSessionId = session_id();
 			}
-			$oKPI->ComputeAndReport("Session Start");
 		}
 	}
 
 	public static function WriteClose()
 	{
 		if (self::$bSessionStarted) {
-			$oKPI = new ExecutionKPI();
 			session_write_close();
 			self::$bSessionStarted = false;
-			$oKPI->ComputeAndReport("Session Write Close");
 		}
 	}
 
@@ -55,6 +49,9 @@ class Session
 	 */
 	public static function Set($key, $value)
 	{
+		if (self::Get($key) == $value) {
+			return;
+		}
 		$aSession = $_SESSION;
 		$sSessionVar = &$aSession;
 		if (is_array($key)) {

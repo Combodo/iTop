@@ -1795,10 +1795,6 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
-		if (!utils::IsModeCLI())
-		{
-			Session::Start();
-		}
 		self::_ResetSessionCache();
 		if (self::$m_oAddOn)
 		{
@@ -1905,10 +1901,8 @@ class UserRights
 
 	public static function _ResetSessionCache()
 	{
-		Session::Start();
 		Session::Unset('profile_list');
 		Session::Unset('archive_allowed');
-		Session::WriteClose();
 	}
 	
 	/**

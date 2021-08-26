@@ -49,7 +49,6 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 	{
 		if (Session::Get('login_mode') == 'cas')
 		{
-			Session::Start();
 			static::InitCASClient();
 			if (phpCAS::isAuthenticated())
 			{
@@ -72,7 +71,6 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 				Session::Set('login_mode', 'cas');
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
 			}
-			Session::WriteClose();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}

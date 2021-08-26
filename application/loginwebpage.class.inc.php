@@ -394,14 +394,12 @@ class LoginWebPage extends NiceWebPage
 	public static function ResetSession()
 	{
 		// Unset all of the session variables.
-		Session::Start();
 		Session::Unset('auth_user');
 		Session::Unset('login_state');
 		Session::Unset('can_logoff');
 		Session::Unset('archive_mode');
 		Session::Unset('impersonate_user');
 		UserRights::_ResetSessionCache();
-		Session::WriteClose();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
 	}
@@ -669,10 +667,8 @@ class LoginWebPage extends NiceWebPage
 			$oLog->DBInsertNoReload();
 		}
 
-		Session::Start();
 		Session::Set('auth_user', $sAuthUser);
 		Session::Set('login_mode', $sLoginMode);
-		Session::WriteClose();
 		UserRights::_InitSessionCache();
 	}
 
@@ -1017,7 +1013,6 @@ class LoginWebPage extends NiceWebPage
 		$sMessage = self::HandleOperations($operation); // May exit directly
 	
 		$iRet = self::Login($iOnExit);
-	
 		if ($iRet == self::EXIT_CODE_OK)
 		{
 			if ($bMustBeAdmin && !UserRights::IsAdministrator())

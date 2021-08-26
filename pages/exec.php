@@ -43,9 +43,11 @@ if ($sPage == '')
 }
 $sPage = basename($sPage); // protect against ../.. ...
 
+$oKPI = new ExecutionKPI();
 Session::Start();
 $sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
 Session::WriteClose();
+$oKPI->ComputeAndReport("Session Start");
 
 $sTargetPage = APPROOT.'env-'.$sEnvironment.'/'.$sModule.'/'.$sPage;
 

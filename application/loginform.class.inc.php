@@ -51,10 +51,8 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 				$this->bForceFormOnError = false;
 				exit;
 			}
-			Session::Start();
 			Session::Set('login_temp_auth_user', $sAuthUser);
 			Session::Set('login_mode', 'form');
-			Session::WriteClose();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
