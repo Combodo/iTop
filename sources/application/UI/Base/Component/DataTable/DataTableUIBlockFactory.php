@@ -131,7 +131,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			$iCount = $oSet->Count();
+			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){
+				$iCount = $oDataTable->GetInitDisplayData()['recordsTotal'];
+			} else {
+				$iCount = $oSet->Count();
+			}
 			$sTitle = (isset($aExtraParams['panel_title'])) ? $aExtraParams['panel_title'] : "";
 			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), $sTitle)->AddCSSClass('ibo-datatable-panel');
 			$oContainer->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iCount));
@@ -438,7 +442,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
-		$oDataTable->SetJsonData(json_encode(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams)));
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
 		return $oDataTable;
 	}
@@ -670,7 +674,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
-		$oDataTable->SetJsonData(json_encode(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams)));
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
 		return $oDataTable;
 	}

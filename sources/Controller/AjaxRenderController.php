@@ -63,7 +63,7 @@ class AjaxRenderController
 		$oKPI = new ExecutionKPI();
 		$aResult["draw"] = $iDrawNumber;
 		$aResult["recordsTotal"] = $oSet->Count();
-		$aResult["recordsFiltered"] = $oSet->Count();
+		$aResult["recordsFiltered"] = $aResult["recordsTotal"] ;
 		$aResult["data"] = [];
 		while ($aObject = $oSet->FetchAssoc()) {
 			$aObj = [];
@@ -80,7 +80,7 @@ class AjaxRenderController
 					}
 				}
 			}
-			if (isset($aObj)) {
+			if (!empty($aObj)) {
 				if ($sIdName != "") {
 					if (isset($aObj[$sIdName])) {
 						$aObj["id"] = $aObj[$sIdName];
