@@ -100,6 +100,17 @@ $(function()
 			        this.element.regulartabs(oParams);
 		        }
 	        },
+	        /**
+	         * Return tabs widget instance
+	         * @public
+	         */
+	        GetTabsWidget: function () {
+		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
+			        return this.element.scrollabletabs('instance');
+		        } else {
+			        return this.element.regulartabs('instance');
+		        }
+	        },
             // events bound via _bind are removed automatically
             // revert other modifications here
             _destroy: function()

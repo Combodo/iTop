@@ -66,7 +66,7 @@ $(function()
 			this.bInUpdateSliderZoom = false;
 			this.bRedrawNeeded = false;
 			
-			this.oPaper = Raphael(this.element.get(0), 16*this.element.width(), 16*this.element.height());
+			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
 
 			this.element
 			.addClass('panel-resized')
@@ -81,7 +81,7 @@ $(function()
 			{
 				// We are inside a tab, find out which one and hook its activation
 				this.sTabId = jTabPanel.attr('id');
-				var jTabs = this.element.closest('.ui-tabs');
+				var jTabs = this.element.closest('.ibo-tab-container');
 				jTabs.on( "tabsactivate", function( event, ui ) {
 					me._on_tabs_activate(ui);
 				});					
@@ -392,25 +392,9 @@ $(function()
 			}
 			return null;
 		},
-		adjust_height: function()
-		{
-			var maxHeight = this.element.parent().height();
-			// Compute the available height
-			var element = this.element;
-			this.element.parent().children().each(function() {
-				if($(this).is(':visible') && !$(this).hasClass('graph') && ($(this).attr('id') != element.attr('id')))
-				{
-					maxHeight = maxHeight - $(this).height();
-				}
-			});
-			
-			this.element.height(maxHeight - 8);
-			this.oPaper.setSize(this.element.width(), this.element.height());
-		},
 		auto_scale: function()
 		{
 			var fMaxZoom = 1.5;
-			this.adjust_height();
 			
 			iMargin = 10;
 			xmin = this.options.xmin - iMargin;
@@ -466,7 +450,7 @@ $(function()
 		{
 			this._close_all_tooltips();
 			// Activate the 3rd tab
-			this.element.closest('.ui-tabs').tabs("option", "active", 2);
+			this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabsWidget").option("active", 2);
 			// Scroll into view the group
 			if ($('#'+sGroupId).length > 0)
 			{
@@ -481,7 +465,7 @@ $(function()
 			sHtml += '<div class="ibo-simple-graph--grouping-threshold--container"><label for="'+sId+'_grouping_threshold">'+this.options.labels.grouping_threshold+'</label><input type="number" name="g" value="'+this.options.grouping_threshold+'" id="'+sId+'_grouping_threshold" size="2" class="ibo-input"></div>';
 			if (this.options.additional_contexts.length > 0)
 			{
-				sHtml += '<div class="ibo-simple-graph--additional-context--container"><label for="'+sId+'_contexts">'+this.options.labels.additional_context_info+'</label><div class="ibo-input-select-wrapper"><select id="'+sId+'_contexts" name="contexts" class="multiselect ibo-input' +
+				sHtml += '<div class="ibo-simple-graph--additional-context--container"><label for="'+sId+'_contexts">'+this.options.labels.additional_context_info+'</label><div><select id="'+sId+'_contexts" name="contexts" class="multiselect ibo-input' +
 					' ibo-input-select" multiple size="1">';
 				for(var k in this.options.additional_contexts)
 				{
@@ -698,14 +682,13 @@ $(function()
 		},
 		_on_resize: function()
 		{
-			this.element.closest('.ui-tabs').tabs({ heightStyle: "content" });
 			this.auto_scale();
 			this._close_all_tooltips();
 			this.draw();
 		},
 		_on_tabs_activate: function(ui)
 		{
-			if (ui.newPanel.selector == ('#'+this.sTabId))
+			if (ui.newPanel[0] === $('#'+this.sTabId)[0])
 			{
 				if (this.bRedrawNeeded)
 				{
@@ -754,24 +737,29 @@ $(function()
 		},
 		refresh_groups: function(aGroups)
 		{
-			if ($('#impacted_groups').length > 0)
-			{
-				
-				// The "Groups" tab is present, refresh it
-				if (aGroups.length == 0)
+			if(this.element.parents('.ibo-tab-container').attr('data-status') === 'loaded'){
+				if ($('#impacted_groups').length > 0)
 				{
-					this.element.closest('.ui-tabs').tabs("disable", 2);
-					$('#impacted_groups').html('');
+					// The "Groups" tab is present, refresh it
+					if (aGroups.length == 0)
+					{
+						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabsWidget").disable(2);
+						$('#impacted_groups').html('');
+					}
+					else
+					{
+						this.element.closest('[data-role="ibo-tab-container"]').tab_container("GetTabsWidget").enable(2);
+						$('#impacted_groups').block({message:this.options.labels.loading});
+						var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+						$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
+							$('#impacted_groups').unblock();
+							$('#impacted_groups').html(data);
+						});
+					}
 				}
-				else
-				{
-					this.element.closest('.ui-tabs').tabs("enable", 2);
-					$('#impacted_groups').html('<img src="../images/indicator.gif">');
-					var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
-					$.post(sUrl, { operation: 'relation_groups', groups: aGroups }, function(data) {
-						$('#impacted_groups').html(data);
-					});
-				}
+			}
+			else{
+				setTimeout(this.refresh_groups(aGroups), 800);
 			}
 		},
 		refresh_lists: function(aLists)
@@ -785,9 +773,10 @@ $(function()
 				}
 				else
 				{
-					$('#impacted_objects_lists').html('<img src="../images/indicator.gif">');
+					$('#impacted_objects_lists').block({message:this.options.labels.loading});
 					var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
 					$.post(sUrl, { operation: 'relation_lists', lists: aLists }, function(data) {
+						$('#impacted_objects_lists').unblock();
 						$('#impacted_objects_lists').html(data);
 					});
 				}
@@ -818,16 +807,13 @@ $(function()
 			var aContexts = [];
 			$('#'+sId+'_contexts').multiselect('getChecked').each(function() { aContexts[$(this).val()] = me.options.additional_contexts[$(this).val()].oql; });
 
-			this.adjust_height();
 			this._close_all_tooltips();
-			this.oPaper.rect(this.xPan, this.yPan, this.element.width(), this.element.height()).attr({fill: '#000', opacity: 0.4, 'stroke-width': 0});
-			this.oPaper.rect(this.xPan + this.element.width()/2 - 100, this.yPan + this.element.height()/2 - 10, 200, 20)
-			.attr({fill: 'url(../setup/orange-progress.gif)', stroke: '#000', 'stroke-width': 1});
-			this.oPaper.text(this.xPan + this.element.width()/2, this.yPan + this.element.height()/2 - 20, this.options.labels.loading);			
+			this.element.block({message:this.options.labels.loading});
 			
 			$('#'+sId+'_refresh_btn').button('disable'); 
 			$.post(sUrl, {excluded_classes: this.options.excluded_classes, g: this.options.grouping_threshold, sources: this.options.sources, excluded: this.options.excluded, contexts: aContexts, context_key: this.options.context_key }, function(data) {
 				me.load(data);
+				me.element.unblock();
 				$('#'+sId+'_refresh_btn').button('enable');
 			}, 'json');
 		},
@@ -902,6 +888,7 @@ $(function()
 		_make_tooltips: function()
 		{
 			var me  = this;
+			let aTooltipGroups = [];
 			$( ".popupMenuTarget" ).each(function(){
 				var sDataId = $(this).attr('data-id');
 				var sTooltipContent = me._get_tooltip_content(sDataId);
@@ -911,7 +898,13 @@ $(function()
 					.attr('data-tooltip-append-to', 'body')
 					.attr('data-tooltip-hide-delay', '1500');
 				CombodoTooltip.InitTooltipFromMarkup($(this));
+				if(aTooltipGroups.indexOf(sDataId) < 0) {
+					aTooltipGroups.push(sDataId);
+				}
 			});
+			for(let sTooltipGroupKey in aTooltipGroups) {
+				CombodoTooltip.InitSingletonFromSelector('.itop-simple-graph [data-id="' + aTooltipGroups[sTooltipGroupKey] + '"]');
+			}
 		},
 		_get_tooltip_content: function(sNodeId)
 		{

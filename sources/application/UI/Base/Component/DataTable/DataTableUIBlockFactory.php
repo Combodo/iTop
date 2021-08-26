@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 use ApplicationException;
+use ApplicationContext;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
@@ -134,6 +135,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$sTitle = (isset($aExtraParams['panel_title'])) ? $aExtraParams['panel_title'] : "";
 			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), $sTitle)->AddCSSClass('ibo-datatable-panel');
 			$oContainer->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iCount));
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oContainer->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
@@ -294,7 +298,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
 		}
 
-		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
+		$sIdName = isset($aExtraParams["id_for_select"]) ? $aExtraParams["id_for_select"] : "";
 		// Load only the requested columns
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {

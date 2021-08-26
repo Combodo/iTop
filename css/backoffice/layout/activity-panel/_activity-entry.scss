@@ -94,6 +94,7 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
 	/* Current or not user specificities */
 	&.ibo-is-current-user{
 		flex-direction: row-reverse;
+    min-width: max-content;
 
 		.ibo-activity-entry--medallion{
 			margin-right: initial;

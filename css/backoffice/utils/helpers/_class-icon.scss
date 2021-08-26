@@ -1,0 +1,17 @@
+.ibo-class-icon{
+  &.ibo-is-small{
+    width: 32px;
+    min-width: 32px;
+    max-height: 32px;
+  }
+  &.ibo-is-medium{
+    width: 48px;
+    min-width: 48px;
+    max-height: 48px;
+  }
+  &.ibo-is-large{
+    width: 64px;
+    min-width: 64px;
+    max-height: 64px;
+  }
+} 

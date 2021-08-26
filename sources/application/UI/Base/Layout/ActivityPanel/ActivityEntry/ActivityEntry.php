@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
 
 use AttributeDateTime;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use DateTime;
 use UserRights;
 use utils;
@@ -41,7 +42,7 @@ class ActivityEntry extends UIBlock
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/layouts/activity-panel/activity-entry/layout';
 
 	/** @var string DEFAULT_ORIGIN */
-	public const DEFAULT_ORIGIN = 'unknown';
+	public const DEFAULT_ORIGIN = CMDBChangeOrigin::INTERACTIVE;
 	/** @var string DEFAULT_TYPE */
 	public const DEFAULT_TYPE = 'generic';
 	/** @var string DEFAULT_DECORATION_CLASSES */
@@ -67,7 +68,10 @@ class ActivityEntry extends UIBlock
 	protected $sAuthorPictureAbsUrl;
 	/** @var bool $bIsFromCurrentUser Flag to know if the user who made the activity was the current user */
 	protected $bIsFromCurrentUser;
-	/** @var string $sOrigin Origin of the entry (case log, cron, lifecycle, user edit, ...) */
+	/**
+	 * @var string $sOrigin Origin of the entry (interactive, CSV import, ...)
+	 * @see \Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin
+	 */
 	protected $sOrigin;
 
 	/**
@@ -300,5 +304,44 @@ class ActivityEntry extends UIBlock
 	public function GetOrigin()
 	{
 		return $this->sOrigin;
+	}
+
+	/**
+	 * @return string|null The CSS decoration classes for the origin of the entry
+	 * @see \CMDBChangeOrigin
+	 */
+	public function GetOriginDecorationClasses(): ?string
+	{
+		$sDecorationClasses = null;
+
+		// Note: We put fa-fw on all cases instead of just in the template as one of the cases could (in the future) not use FA icons. This will ensure that any use of the FA icons are always the same width.
+		switch($this->GetOrigin()) {
+			case CMDBChangeOrigin::CSV_INTERACTIVE:
+			case CMDBChangeOrigin::CSV_IMPORT:
+				$sDecorationClasses = 'fas fa-fw fa-file-import';
+				break;
+
+			case CMDBChangeOrigin::EMAIL_PROCESSING:
+				$sDecorationClasses = 'fas fa-fw fa-envelope-open';
+				break;
+
+			case CMDBChangeOrigin::SYNCHRO_DATA_SOURCE:
+				$sDecorationClasses = 'fas fa-fw fa-lock';
+				break;
+
+			case CMDBChangeOrigin::WEBSERVICE_REST:
+			case CMDBChangeOrigin::WEBSERVICE_SOAP:
+				$sDecorationClasses = 'fas fa-fw fa-cloud';
+				break;
+
+			case CMDBChangeOrigin::CUSTOM_EXTENSION:
+				$sDecorationClasses = 'fas fa-fw fa-parachute-box';
+				break;
+
+			default:
+				break;
+		}
+
+		return $sDecorationClasses;
 	}
 }
