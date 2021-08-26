@@ -31,7 +31,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'form') {
+		if (!Session::IsSet('login_mode') || Session::Get('login_mode') == 'form') {
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
 			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd))
@@ -51,9 +51,10 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 				$this->bForceFormOnError = false;
 				exit;
 			}
-
+			Session::Start();
 			Session::Set('login_temp_auth_user', $sAuthUser);
 			Session::Set('login_mode', 'form');
+			Session::WriteClose();
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}

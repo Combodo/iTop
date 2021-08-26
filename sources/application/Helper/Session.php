@@ -55,7 +55,8 @@ class Session
 	 */
 	public static function Set($key, $value)
 	{
-		$sSessionVar = &$_SESSION;
+		$aSession = $_SESSION;
+		$sSessionVar = &$aSession;
 		if (is_array($key)) {
 			foreach ($key as $sKey) {
 				$sSessionVar = &$sSessionVar[$sKey];
@@ -63,12 +64,13 @@ class Session
 		} else {
 			$sSessionVar = &$sSessionVar[$key];
 		}
+		$sSessionVar = $value;
 		if (!self::$bSessionStarted) {
 			self::Start();
-			$sSessionVar = $value;
+			$_SESSION = $aSession;
 			self::WriteClose();
 		} else {
-			$sSessionVar = $value;
+			$_SESSION = $aSession;
 		}
 	}
 
@@ -111,7 +113,8 @@ class Session
 	 */
 	public static function Get($key, $default = null)
 	{
-		$sSessionVar = &$_SESSION;
+		$aSession = $_SESSION;
+		$sSessionVar = &$aSession;
 		if (is_array($key)) {
 			foreach ($key as $SKey) {
 				$sSessionVar = &$sSessionVar[$SKey];
@@ -134,7 +137,8 @@ class Session
 	 */
 	public static function IsSet($key): bool
 	{
-		$sSessionVar = &$_SESSION;
+		$aSession = $_SESSION;
+		$sSessionVar = &$aSession;
 		if (is_array($key)) {
 			foreach ($key as $SKey) {
 				$sSessionVar = &$sSessionVar[$SKey];
