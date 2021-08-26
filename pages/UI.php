@@ -293,14 +293,12 @@ try
 	$oKPI = new ExecutionKPI();
 	$oKPI->ComputeAndReport('Data model loaded');
 
-	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$sLoginMessage = LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 	$oAppContext = new ApplicationContext();
 
 	$oKPI->ComputeAndReport('User login');
-	$oKPI = new ExecutionKPI();
 
 	$oP = new iTopWebPage(Dict::S('UI:WelcomeToITop'), $bPrintable);
 	$oP->SetMessage($sLoginMessage);

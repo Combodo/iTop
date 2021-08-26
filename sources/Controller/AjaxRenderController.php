@@ -60,7 +60,6 @@ class AjaxRenderController
 			$bShowObsoleteData = utils::ShowObsoleteData();
 		}
 		$oSet->SetShowObsoleteData($bShowObsoleteData);
-		$oKPI = new ExecutionKPI();
 		$aResult["draw"] = $iDrawNumber;
 		$aResult["recordsTotal"] = $oSet->Count();
 		$aResult["recordsFiltered"] = $oSet->Count();
@@ -91,7 +90,6 @@ class AjaxRenderController
 				array_push($aResult["data"], $aObj);
 			}
 		}
-		$oKPI->ComputeAndReport('Data fetch and format');
 
 		return $aResult;
 	}
