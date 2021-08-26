@@ -1174,7 +1174,7 @@ class phpCAS
     }
 
     /**
-     * Checks whether authenticated based on $_SESSION. Useful to avoid
+     * Checks whether authenticated based on _SESSION. Useful to avoid
      * server calls.
      *
      * @return bool true if authenticated, false otherwise.

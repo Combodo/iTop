@@ -1905,8 +1905,10 @@ class UserRights
 
 	public static function _ResetSessionCache()
 	{
+		Session::Start();
 		Session::Unset('profile_list');
 		Session::Unset('archive_allowed');
+		Session::WriteClose();
 	}
 	
 	/**

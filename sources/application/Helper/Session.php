@@ -19,10 +19,12 @@ use ExecutionKPI;
 class Session
 {
 	public static $iSessionId = null;
-	public static $bSessionStarted = false;
+	protected static $bIsInitialized = false;
+	protected static $bSessionStarted = false;
 
 	public static function Start()
 	{
+		self::$bIsInitialized = true;
 		if (!self::$bSessionStarted) {
 			$oKPI = new ExecutionKPI();
 			session_name('itop-'.md5(APPROOT));
@@ -140,6 +142,7 @@ class Session
 		} else {
 			$sSessionVar = &$sSessionVar[$key];
 		}
+
 		return isset($sSessionVar);
 	}
 
@@ -148,4 +151,19 @@ class Session
 		return array_keys($_SESSION);
 	}
 
+	/**
+	 * @return bool
+	 */
+	public static function IsInitialized(): bool
+	{
+		return self::$bIsInitialized;
+	}
+
+	/**
+	 * @return bool|string
+	 */
+	public static function GetLog()
+	{
+		return print_r($_SESSION, true);
+	}
 }

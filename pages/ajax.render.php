@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -181,7 +182,7 @@ try
 			}
 			$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 			$oAppContext = new ApplicationContext();
-			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			$aPrefillFormParam = array( 'user' => Session::Get("auth_user"),
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
 				'origin' => 'console',
@@ -261,7 +262,7 @@ try
 			$iCurrObjectId = utils::ReadParam('iObjId', 0);
 			$oPage->SetContentType('text/html');
 			$oAppContext = new ApplicationContext();
-			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			$aPrefillFormParam = array( 'user' => Session::Get('auth_user'),
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
 				'origin' => 'console',
@@ -290,7 +291,7 @@ try
 				$oObj = $oWizardHelper->GetTargetObject();
 			}
 			$oAppContext = new ApplicationContext();
-			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			$aPrefillFormParam = array( 'user' => Session::Get('auth_user'),
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
 				'origin' => 'console',
@@ -441,7 +442,7 @@ try
 		            $oWizardHelper = WizardHelper::FromJSON($sJson);
 		            $oObj = $oWizardHelper->GetTargetObject();
 		            $oAppContext = new ApplicationContext();
-		            $aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+		            $aPrefillFormParam = array( 'user' => Session::Get('auth_user'),
 			                                    'context' => $oAppContext->GetAsHash(),
 			                                    'att_code' => $sAttCode,
 		                                        'source_obj' => $oObj,

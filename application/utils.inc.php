@@ -250,7 +250,7 @@ class utils
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		if (isset($_SESSION))
+		if (Session::IsInitialized())
 		{
 			Session::Set('archive_mode', $iCurrent);
 		}
@@ -1220,7 +1220,7 @@ class utils
 	 */
 	public static function GetSessionLog()
 	{
-		return print_r($_SESSION, true);
+		return Session::GetLog();
 	}
 
 	 static function DebugBacktrace($iLimit = 5)

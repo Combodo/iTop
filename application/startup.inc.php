@@ -74,9 +74,9 @@ Session::WriteClose();
 
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
-if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv))
+if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) &&( Session::Get('itop_env') !== $sSwitchEnv))
 {
-	$_SESSION['itop_env'] = $sSwitchEnv;
+	Session::Set('itop_env', $sSwitchEnv);
 	$sEnv = $sSwitchEnv;
     $bAllowCache = false;
     // Reset the opcache since otherwise the PHP "model" files may still be cached !!
@@ -92,14 +92,14 @@ if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FI
     }
 	// TODO: reset the credentials as well ??
 }
-else if (isset($_SESSION['itop_env']))
+else if (Session::IsSet('itop_env'))
 {
-	$sEnv = $_SESSION['itop_env'];
+	$sEnv = Session::Get('itop_env');
 }
 else
 {
 	$sEnv = ITOP_DEFAULT_ENV;
-	$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
+	Session::Set('itop_env', ITOP_DEFAULT_ENV);
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);
