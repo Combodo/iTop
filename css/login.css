@@ -179,7 +179,9 @@ a:hover {
 .v-spacer {
 	padding-top: 1em;
 }
-
+#login-sso-buttons{
+	padding: 0 10px;
+}
 .sso-button {
 	margin: 5px 0px;
 	position: relative;
