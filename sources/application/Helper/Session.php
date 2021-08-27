@@ -110,20 +110,21 @@ class Session
 	 */
 	public static function Get($key, $default = null)
 	{
-		$aSession = $_SESSION;
-		$sSessionVar = &$aSession;
-		if (is_array($key)) {
-			foreach ($key as $SKey) {
-				$sSessionVar = &$sSessionVar[$SKey];
+		if (isset($_SESSION)) {
+			$aSession = $_SESSION;
+			$sSessionVar = &$aSession;
+			if (is_array($key)) {
+				foreach ($key as $SKey) {
+					$sSessionVar = &$sSessionVar[$SKey];
+				}
+			} else {
+				$sSessionVar = &$sSessionVar[$key];
 			}
-		} else {
-			$sSessionVar = &$sSessionVar[$key];
-		}
 
-		if (isset($sSessionVar)) {
-			return $sSessionVar;
+			if (isset($sSessionVar)) {
+				return $sSessionVar;
+			}
 		}
-
 		return $default;
 	}
 
@@ -134,6 +135,10 @@ class Session
 	 */
 	public static function IsSet($key): bool
 	{
+		if (!isset($_SESSION)) {
+			return false;
+		}
+
 		$aSession = $_SESSION;
 		$sSessionVar = &$aSession;
 		if (is_array($key)) {
