@@ -917,12 +917,12 @@ class DeprecatedCallsLog extends LogAPI
 			if (!is_null($sCallerObject)) {
 				$sMessage .= "{$sCallerObject}::{$sCallerMethod}";
 			} else {
-				$sCallerFile = $aStack[$iStackCallerMethodLevel]['file'];
+				$sCallerMethodFile = $aStack[$iStackCallerMethodLevel]['file'];
+				$sCallerMethodLine = $aStack[$iStackCallerMethodLevel]['line'];
 				if (!is_null($sCallerMethod)) {
-					$sMessage .= "function {$sCallerMethod}";
+					$sMessage .= "call to {$sCallerMethod}() in {$sCallerMethodFile}#L{$sCallerMethodLine}";
 				} else {
-					$sCallerLine = $aStack[$iStackCallerMethodLevel]['line'];
-					$sMessage .= "{$sCallerFile}#L{$sCallerLine}";
+					$sMessage .= "{$sCallerMethodFile}#L{$sCallerMethodLine}";
 				}
 			}
 			$sMessage .= ')';
