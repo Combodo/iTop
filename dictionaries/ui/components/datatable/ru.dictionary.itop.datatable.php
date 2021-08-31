@@ -22,7 +22,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ объектов на страницу',
 	'UI:Datatables:Language:ZeroRecords' => 'Нет объектов для отображения',
 	'UI:Datatables:Language:Info' => '_TOTAL_ элементов',
-	'UI:Datatables:Language:InfoEmpty' => 'Нет ифнормации',
+	'UI:Datatables:Language:InfoEmpty' => 'Нет информации',
 	'UI:Datatables:Language:EmptyTable' => 'Нет данных для отображения',
 	'UI:Datatables:Language:DisplayLength:All' => 'Все',
 	'UI:Datatables:Language:Sort:Ascending' => 'Включить для сортировки по возрастанию',
