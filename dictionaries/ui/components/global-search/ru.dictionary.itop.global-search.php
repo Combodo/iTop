@@ -18,10 +18,10 @@
  */
 // Global search
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Search throughout the whole application~~',
-	'UI:Component:GlobalSearch:Input:Placeholder' => 'Search...~~',
-	'UI:Component:GlobalSearch:Recents:Title' => 'Recents~~',
-	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'You haven\'t run any search yet~~',
-	'UI:Component:GlobalSearch:HistoryDisabled' => 'History is disabled~~',
-	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open global search~~',
+	'UI:Component:GlobalSearch:Tooltip' => 'Глобальный поиск',
+	'UI:Component:GlobalSearch:Input:Placeholder' => 'Поиск...',
+	'UI:Component:GlobalSearch:Recents:Title' => 'Недавние',
+	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Поиск ещё не выполнялся',
+	'UI:Component:GlobalSearch:HistoryDisabled' => 'История отключена',
+	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Открыть глобальный поиск',
 ));
