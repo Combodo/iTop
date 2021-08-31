@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
 require_once(APPROOT.'/application/displayblock.class.inc.php');
@@ -899,26 +901,17 @@ JS
             }
         }
 
-        $sDialogTitle = '';
-        $oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
-        $oPage->add('<form>');
-
 		$sClassLabel = MetaModel::GetName($this->sTargetClass);
-		$oPage->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
-		$oPage->add('<nobr><select name="class">');
-		asort($aPossibleClasses);
-		foreach($aPossibleClasses as $sClassName => $sClassLabel)
-		{
-			$oPage->add("<option value=\"$sClassName\">$sClassLabel</option>");
-		}
-		$oPage->add('</select>');
-		$oPage->add('&nbsp; <button type="submit" class="action" style="margin-top:15px;"><span>' . Dict::S('UI:Button:Ok') . '</span></button></nobr></p>');
+        $sDialogTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);;
+        $oBlock = UIContentBlockUIBlockFactory::MakeStandard('ac_create_'.$this->iId,['ibo-is-visible']);
+		$oPage->AddSubBlock($oBlock);
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+		$oBlock->AddSubBlock($oClassForm);
+		$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sClassLabel, $this->sTargetClass,   $aPossibleClasses));
 
-        $oPage->add('</form>');
-        $oPage->add('</div></div></div>');
-        $oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
+        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').removeAttr('onsubmit');");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
 
 	/**
