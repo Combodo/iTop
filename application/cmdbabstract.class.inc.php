@@ -2956,12 +2956,14 @@ EOF
 	 * @param string $sClass
 	 * @param \WebPage $oP
 	 * @param \ApplicationContext $oAppContext
-	 * @param array $sStateCode
 	 * @param array $aPossibleClasses
+	 * @param array $aHiddenFields
 	 *
-	 * @return array
+	 * @return void
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0
 	 */
 	public static function DisplaySelectClassToCreate(string $sClass, WebPage $oP, ApplicationContext $oAppContext, array $aPossibleClasses, array $aHiddenFields)
 	{
