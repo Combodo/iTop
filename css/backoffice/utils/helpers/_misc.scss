@@ -160,13 +160,10 @@ body.ibo-has-fullscreen-descendant {
     max-width: max-content;
   }
 
-  & > code {
-    color: initial;
-  }
-
-  /* hljs is the CSS class for Highlight.js block codes */
+  /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
+  & > code,
   :not(pre.hljs) code {
-    color: initial;
+    color: inherit;
   }
 }
 
