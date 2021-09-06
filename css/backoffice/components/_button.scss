@@ -461,6 +461,7 @@ $ibo-button-colors: (
 }
 
 .ibo-button {
+  position: relative;
   display: inline-block; /* Used to allow truncated text on .ibo-button--label */
   padding: $ibo-button--padding-y $ibo-button--padding-x;
   border: $ibo-button--border;
