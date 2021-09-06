@@ -39,21 +39,25 @@ class ExecutionKPI
 
 	static public function EnableDuration($iLevel)
 	{
-		if ($iLevel > 0)
-		{
+		if ($iLevel > 0) {
 			self::$m_bEnabled_Duration = true;
-			if ($iLevel > 1)
-			{
+			if ($iLevel > 1) {
 				self::$m_bBlameCaller = true;
+			} else {
+				self::$m_bBlameCaller = false;
 			}
+		} else {
+			self::$m_bEnabled_Duration = false;
+			self::$m_bBlameCaller = false;
 		}
 	}
 
 	static public function EnableMemory($iLevel)
 	{
-		if ($iLevel > 0)
-		{
+		if ($iLevel > 0) {
 			self::$m_bEnabled_Memory = true;
+		} else {
+			self::$m_bEnabled_Memory = false;
 		}
 	}
 
