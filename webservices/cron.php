@@ -30,16 +30,15 @@ if (file_exists(READONLY_MODE_FILE))
 }
 
 require_once(APPROOT.'/application/application.inc.php');
+require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/core/background.inc.php');
 
-$sConfigFile = APPCONF.ITOP_DEFAULT_ENV.'/'.ITOP_CONFIG_FILE;
 if (!file_exists($sConfigFile))
 {
 	echo "iTop is not yet installed. Exiting...\n";
 	exit(EXIT_CODE_ERROR);
 }
 
-require_once(APPROOT.'/application/startup.inc.php');
 
 $oCtx = new ContextTag(ContextTag::TAG_CRON);
 
