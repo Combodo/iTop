@@ -172,8 +172,7 @@ class DBBackup
 	 */
 	public function CreateCompressedBackup($sTargetFile, $sSourceConfigFile = null)
 	{
-		$bReadonlyBefore = SetupUtils::IsInReadOnlyMode();
-		SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
+		$bReadonlyBefore = SetupUtils::EnterReadOnlyMode(MetaModel::GetConfig());
 		try {
 			//safe zone for db backup => cron is stopped/ itop in readonly
 			$bIsCmdbSourceInitialized = CMDBSource::GetMysqli() instanceof mysqli;
