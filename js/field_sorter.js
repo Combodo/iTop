@@ -27,7 +27,7 @@ $(function()
 			this.moveup_btn = $('<button type="button" disabled class="ibo-button ibo-is-regular ibo-is-neutral ibo-button--vertical-align">'+this.options.labels.moveup+'</button>');
 			this.movedown_btn = $('<button type="button" disabled class="ibo-button ibo-is-regular ibo-is-neutral ibo-button--vertical-align">'+this.options.labels.movedown+'</button>');
 			columnWithButtons = $('<div class="ibo-mini-column"></div>');
-			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append('<br>').append(this.movedown_btn));
+			this.element.parent().parent().append(columnWithButtons.append(this.moveup_btn).append(this.movedown_btn));
 			this.moveup_btn.on('click', function () {
 				me._moveUp();
 			});
@@ -93,9 +93,10 @@ $(function()
 		{
 			this.element
 			.removeClass('itop-fieldsorter');
-			
+			let oButtonsColumn = this.moveup_btn.parent('.ibo-mini-column');
 			this.moveup_btn.remove();
 			this.movedown_btn.remove();
+			oButtonsColumn.remove();
 			this.element.sortable('destroy').html('');		
 		},
 		// _setOptions is called with a hash of all options that are changing
