@@ -581,7 +581,7 @@
 .ibo-top-bar, .ibo-tab-container--extra-tabs-list {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 1px 3px rgba(0, 0, 0, 0.12);
 }
-ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .selectize-dropdown, .ibo-popover-menu, .ui-menu, .ui-multiselect-menu, .ibo-input-select-icon--menu, .graph_config .toolkit_menu.graph > ul > li ul, .ibo-activity-panel--filter-options {
+ul.cke_autocomplete_panel, .ibo-breadcrumbs--previous-items-list, .ibo-quick-create--input.selectize-control.single .selectize-dropdown, .ibo-popover-menu, .ui-menu, .ui-multiselect-menu, .ibo-input-select-icon--menu, .graph_config .toolkit_menu.graph > ul > li ul, .ibo-activity-panel--filter-options {
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.15);
 }
 /*!
@@ -605,7 +605,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
 /* NOTE: Those helpers allow to easily use an icon from libs. like FontAwesome or FontCombodo within a CSS rule (eg. ::after) */
 /* To use it, simply "@extend %fa-regular-base" in a rule and put the desired icon "content: '\f054'"                         */
 /******************************************************************************************************************************/
-.dataTables_scrollHead thead tr th.sorting::after, .ibo-breadcrumbs--item:not(:last-child)::after, .ibo-prop--apply.ui-state-error:after, .ibo-sort-order::after, .collapsable-options [data-role="setup-collapsable-options--toggler"]::before, #params_summary div.closed .title::before, #params_summary div:not(.closed) .title::before {
+.dataTables_scrollHead thead tr th.sorting::after, .ibo-breadcrumbs--item:not(:last-child)::after, .ibo-breadcrumbs--previous-items-list-toggler:not(:last-child)::after, .ibo-prop--apply.ui-state-error:after, .ibo-sort-order::after, .collapsable-options [data-role="setup-collapsable-options--toggler"]::before, #params_summary div.closed .title::before, #params_summary div:not(.closed) .title::before {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   -webkit-font-smoothing: antialiased;
@@ -640,10 +640,10 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
  *
  * Usage: @extend %ibo-font-size-XXX;
  */
-.ibo-font-size-50, .ibo-activity-panel--tab-title-draft-indicator, .ibo-activity-entry--sub-information {
+.ibo-font-size-50, .ibo-field--fullscreen-toggler, .ibo-activity-panel--tab-title-draft-indicator, .ibo-activity-entry--sub-information {
   font-size: 0.83rem;
 }
-.ibo-font-size-100, .dataTables_paginate a.paginate_button, .ibo-quick-create--drawer, .ibo-global-search--drawer, .ibo-dashlet-header-dynamic--label, .ibo-datatable--toolbar, .ibo-field--fullscreen-toggler, .object-ref-icon.text_decoration, .object-ref-icon-disabled.text_decoration, .ibo-criterion-area, .ibo-dashboard-editor--properties table td .ibo-field, .ibo-dashboard--available-dashlets table td .ibo-field, .ibo-dashlet--properties table td .ibo-field, .ibo-dashboard-editor--properties table th .ibo-field, .ibo-dashboard--available-dashlets table th .ibo-field, .ibo-dashlet--properties table th .ibo-field {
+.ibo-font-size-100, .dataTables_paginate a.paginate_button, .ibo-quick-create--drawer, .ibo-global-search--drawer, .ibo-dashlet-header-dynamic--label, .ibo-datatable--toolbar, .object-ref-icon.text_decoration, .object-ref-icon-disabled.text_decoration, .ibo-criterion-area, .ibo-dashboard-editor--properties table td .ibo-field, .ibo-dashboard--available-dashlets table td .ibo-field, .ibo-dashlet--properties table td .ibo-field, .ibo-dashboard-editor--properties table th .ibo-field, .ibo-dashboard--available-dashlets table th .ibo-field, .ibo-dashlet--properties table th .ibo-field {
   font-size: 1rem;
 }
 .ibo-font-size-150, .ibo-alert, .ibo-breadcrumbs--item-icon, .ibo-panel--subtitle, .ibo-panel--body, .ibo-dashlet-badge--action-create, .ibo-prop-header, .ibo-field, .sf_results_placeholder, .ibo-input-file-select--container .ibo-input-file-select .ibo-input-file-select--file-name, .ibo-tab-container--tabs-list, .ibo-dashboard-editor--properties-subtitle, .ibo-dashboard--available-dashlet--title, .ibo-dashlet--properties--title, .ibo-activity-entry--medallion {
@@ -814,7 +814,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
   -moz-font-feature-settings: "lnum";
   font-feature-settings: "lnum";
 }
-.ibo-font-ral-med-100, .dataTable th, .dataTable td, .ibo-breadcrumbs--item, body {
+.ibo-font-ral-med-100, .dataTable th, .dataTable td, .ibo-breadcrumbs--item, .ibo-breadcrumbs--previous-items-list-toggler, .ibo-breadcrumbs--previous-item, body {
   font-size: 1rem;
   font-family: "Raleway", "sans-serif", "system-ui";
   font-weight: 500;
@@ -1291,7 +1291,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
 .ibo-is-fullwidth {
   width: 100%;
 }
-ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image, .ibo-panel--header-left, .ibo-panel--icon, .ibo-dashlet-header-static--icon-container, .ibo-input-image--image-view, .ibo-select--autocomplete-item-image, .ibo-pill, .ibo-title--icon, .ibo-datatable--toolbar-left, .ibo-datatable--toolbar-right, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--bottom-part, .ibo-navigation-menu--user-info, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-picture, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-object-details--status-dot, .ibo-activity-panel--togglers, .ibo-activity-panel--tabs-togglers, .ibo-activity-panel--tab-title, .ibo-activity-panel--tab-toolbar-actions, .ibo-activity-panel--tab-toolbar-action, .ibo-activity-panel--body--placeholder-image, .ibo-activity-panel--body--placeholder-hint, .ibo-activity-panel--closed-cover, .ibo-caselog-entry-form--lock-icon, .ibo-activity-entry--medallion, .ibo-activity-panel--load-more-entries-container, .ibo-activity-panel--load-entries-button {
+ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image, .ibo-panel--header-left, .ibo-panel--icon, .ibo-dashlet-header-static--icon-container, .ibo-input-image--image-view, .ibo-input-select--autocomplete-item-image, .ibo-pill, .ibo-title--icon, .ibo-datatable--toolbar-left, .ibo-datatable--toolbar-right, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--bottom-part, .ibo-navigation-menu--user-info, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-picture, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-object-details--status-dot, .ibo-activity-panel--togglers, .ibo-activity-panel--tabs-togglers, .ibo-activity-panel--tab-title, .ibo-activity-panel--tab-toolbar-actions, .ibo-activity-panel--tab-toolbar-action, .ibo-activity-panel--body--placeholder-image, .ibo-activity-panel--body--placeholder-hint, .ibo-activity-panel--closed-cover, .ibo-caselog-entry-form--lock-icon, .ibo-activity-entry--medallion, .ibo-activity-panel--load-more-entries-container, .ibo-activity-panel--load-entries-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1327,7 +1327,7 @@ body.ibo-has-fullscreen-descendant {
 .ibo-has-fullscreen-descendant {
   position: static !important;
   overflow: visible !important;
-  z-index: 9000 !important;
+  z-index: 1050 !important;
 }
 /* Used on a fullscreen element (see .ibo-has-fullscreen-descendant) */
 .ibo-is-fullscreen {
@@ -1339,12 +1339,12 @@ body.ibo-has-fullscreen-descendant {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  z-index: 9000;
+  z-index: 1050;
 }
 /****************/
 /* Text helpers */
 /****************/
-.ibo-text-truncated-with-ellipsis, .ui-dialog .ui-dialog-title, .ibo-button--label, .ibo-breadcrumbs--item-label, .ibo-quick-create--compartment-element, .ibo-quick-create--compartment-results--element > .option, .ibo-global-search--compartment-element, .ibo-dashlet-badge--action-list-label, .attribute-set .attribute-set-item, .selectize-control.multi .selectize-input.ibo-input-set .attribute-set-item, .selectize-control.multi .ibo-quick-create--input.selectize-control.single .ibo-input-set.selectize-input.input-active .attribute-set-item, .ibo-quick-create--input.selectize-control.single .selectize-control.multi .ibo-input-set.selectize-input.input-active .attribute-set-item, .ibo-navigation-menu--menu-group-title, .ibo-navigation-menu--menu-nodes-title, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-tab-container--tab-toggler-label, .ibo-tab-container--extra-tab-toggler, .ibo-activity-panel--tab-title-text, .ibo-activity-panel--filter-option {
+.ibo-text-truncated-with-ellipsis, .ui-dialog .ui-dialog-title, .ibo-button--label, .ibo-breadcrumbs--item-label, .ibo-quick-create--compartment-element, .ibo-quick-create--compartment-results--element > .option, .ibo-global-search--compartment-element, .ibo-dashlet-badge--action-list-label, .attribute-set .attribute-set-item, .selectize-control.multi .selectize-input.ibo-input-set .attribute-set-item, .selectize-control.multi .ibo-quick-create--input.selectize-control.single .ibo-input-set.selectize-input.input-active .attribute-set-item, .ibo-quick-create--input.selectize-control.single .selectize-control.multi .ibo-input-set.selectize-input.input-active .attribute-set-item, .ibo-navigation-menu--menu-group-title, .ibo-navigation-menu--menu-nodes-title, .ibo-top-bar--toolbar-dashboard-title, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-tab-container--tab-toggler-label, .ibo-tab-container--extra-tab-toggler, .ibo-activity-panel--tab-title-text, .ibo-activity-panel--filter-option {
   white-space: nowrap;
   overflow-x: hidden;
   text-overflow: ellipsis;
@@ -1368,8 +1368,16 @@ body.ibo-has-fullscreen-descendant {
  * A single class to handle WYSIWYG generated content, where only HTML tags are available
  * See https://bulma.io/documentation/elements/content/
  */
-.ibo-is-html-content code {
-  color: initial;
+.ibo-is-html-content {
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+}
+.ibo-is-html-content table {
+  width: unset !important;
+  max-width: max-content;
+  /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
+}
+.ibo-is-html-content > code, .ibo-is-html-content :not(pre.hljs) code {
+  color: inherit;
 }
 /***********************************************************************/
 /* Sticky headers                                                      */
@@ -1391,6 +1399,21 @@ body.ibo-has-fullscreen-descendant {
   bottom: 0;
   height: 0;
   /* To be overloaded by use cases */
+}
+.ibo-class-icon.ibo-is-small {
+  width: 32px;
+  min-width: 32px;
+  max-height: 32px;
+}
+.ibo-class-icon.ibo-is-medium {
+  width: 48px;
+  min-width: 48px;
+  max-height: 48px;
+}
+.ibo-class-icon.ibo-is-large {
+  width: 64px;
+  min-width: 64px;
+  max-height: 64px;
 }
 /*!
  * Copyright (C) 2013-2021 Combodo SARL
@@ -10860,6 +10883,9 @@ ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-title {
   position: absolute;
   width: 1px;
 }
+.ui-tabs-tab.ui-state-disabled a {
+  cursor: not-allowed !important;
+}
 .ui-multiselect {
   width: auto !important;
   padding-left: 0.7em !important;
@@ -11009,7 +11035,7 @@ button.ui-multiselect .fas {
 }
 .dataTables_scrollHead thead tr th.sorting::after {
   position: absolute;
-  right: 1em;
+  right: calc((12px - 8px) / 2);
   content: "\f0dc";
   opacity: 0.3;
   line-height: inherit;
@@ -11129,6 +11155,12 @@ button.ui-multiselect .fas {
   color: #6e7a8a;
   border: none;
   background-color: transparent;
+}
+.mfp-bg {
+  z-index: 1100;
+}
+.mfp-wrap {
+  z-index: 1101;
 }
 /*!
  * Copyright (C) 2013-2021 Combodo SARL
@@ -11872,6 +11904,7 @@ a:active {
   box-shadow: inset 0px 2px 0px transparent;
 }
 .ibo-button, .ui-dialog .ui-button, .ui-datepicker-current, .ui-datepicker-close {
+  position: relative;
   display: inline-block;
   /* Used to allow truncated text on .ibo-button--label */
   padding: 6px 9px;
@@ -12140,17 +12173,19 @@ a:active {
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+.ibo-breadcrumbs {
+  position: relative;
+  margin-right: 16px;
+}
+.ibo-breadcrumbs.ibo-is-overflowing {
+  justify-content: right;
+}
 .ibo-breadcrumbs * {
   display: flex;
   align-items: center;
 }
 .ibo-breadcrumbs--item {
   color: #404b5a;
-}
-.ibo-breadcrumbs--item:not(:last-child)::after {
-  content: '\f054';
-  margin: 0 12px;
-  color: #aebecd;
 }
 .ibo-breadcrumbs--item:not(:last-child):hover .ibo-breadcrumbs--item-icon > * {
   opacity: 1;
@@ -12174,6 +12209,37 @@ a:active {
   display: inline;
   /* Otherwise the "truncate" doesn't work with th default display: flex */
   max-width: 100px;
+}
+.ibo-breadcrumbs--item:not(:last-child)::after, .ibo-breadcrumbs--previous-items-list-toggler:not(:last-child)::after {
+  content: '\f054';
+  margin: 0 12px;
+  color: #aebecd;
+}
+.ibo-breadcrumbs--previous-items-list-toggler {
+  margin-right: 24px;
+  color: #6e7a8a !important;
+}
+.ibo-breadcrumbs--previous-items-list-toggler:not(:last-child)::after {
+  position: absolute;
+  /* To be outside of the button */
+  right: -24px;
+}
+.ibo-breadcrumbs--previous-items-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  /* For the items to occupy the full width */
+  position: fixed;
+  top: 37px;
+  padding: 8px 0;
+  background-color: white;
+}
+.ibo-breadcrumbs--previous-item {
+  color: #404b5a;
+  padding: 12px 12px;
+}
+.ibo-breadcrumbs--previous-item .ibo-breadcrumbs--item-label {
+  max-width: 200px;
 }
 /*!
  * Copyright (C) 2013-2021 Combodo SARL
@@ -13462,8 +13528,8 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   float: right;
 }
 .selectize-dropdown {
-  z-index: 2000;
-  /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container */
+  z-index: 2000 !important;
+  /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container. "!important" is necessary to overload the default selectize CSS rule 😕 */
   max-height: 50vh;
   overflow-y: auto;
 }
@@ -13472,12 +13538,12 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   background-color: #f5fafd;
   color: #495c68;
 }
-.ibo-select--autocomplete-item {
+.ibo-input-select--autocomplete-item {
   display: flex;
   justify-content: left;
   align-items: center;
 }
-.ibo-select--autocomplete-item-image {
+.ibo-input-select--autocomplete-item-image {
   width: 25px;
   height: 25px;
   /* min-xxx are here to avoid medallion to be horizontally compressed when the title is to long */
@@ -13490,7 +13556,7 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   background-color: #ebf8ff;
   border: 1px solid #929fb1;
 }
-.ibo-select--autocomplete-item-txt {
+.ibo-input-select--autocomplete-item-txt {
   white-space: nowrap;
 }
 .ibo-input-select-icon > img {
@@ -13808,11 +13874,16 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   /* Note: Some types of attribute must be excluding as it can alter their rendering    */
 }
 .ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container) {
-  /* We need the rule to apply for the class and all its descendants */
+  /* We need the rule to apply for the class and all its descendants, hence the "&, & *" */
 }
-.ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container) .ibo-field--value * {
+.ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container) .ibo-field--value, .ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container) .ibo-field--value * {
   word-break: break-word;
-  white-space: pre-line;
+  white-space: inherit;
+  /* Here we don't put break-spaces as it would put ".ibo-field-small .ibo-field-value" on a new line due to the spaces/indentation of the HTML templates. For now we rather have this rule than diminish the templates readability/maintenability */
+}
+.ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container).ibo-field-large .ibo-field--value, .ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container).ibo-field-large .ibo-field--value * {
+  white-space: break-spaces;
+  /* For large fields we don't have the issue stated above */
 }
 .ibo-field ~ .ibo-field {
   margin-top: 16px;
@@ -13825,7 +13896,6 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   position: relative;
   /* Necessary for fullscreen toggler */
   display: flex;
-  justify-content: space-between;
   align-items: center;
   max-width: initial;
   width: 100%;
@@ -13885,6 +13955,9 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   vertical-align: top;
   cursor: pointer;
   color: #929fb1;
+}
+.ibo-field--label-small .ibo-field--label {
+  width: 145px;
 }
 .ibo-field--value {
   display: table;
@@ -14618,10 +14691,10 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   border-radius: 0;
   border-bottom-color: transparent;
 }
-.sf_results_area .ibo-datatable-panel.ibo-is-sticking .ibo-panel--header {
+.ibo-datatable-panel.ibo-is-sticking .ibo-panel--header {
   z-index: 0;
 }
-.sf_results_area .ibo-datatable-panel.ibo-is-sticking .ibo-datatable--toolbar {
+.ibo-datatable-panel.ibo-is-sticking .ibo-datatable--toolbar {
   position: fixed;
   z-index: 2;
   padding-bottom: 4px;
@@ -14629,7 +14702,7 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   border-left: 1px solid #ccd4db;
   border-right: 1px solid #ccd4db;
 }
-.sf_results_area .ibo-datatable-panel.ibo-is-sticking .dataTables_scrollHead {
+.ibo-datatable-panel.ibo-is-sticking .dataTables_scrollHead {
   position: fixed !important;
   /* Important is required as the property is already set in the style attribute by the JS lib */
   z-index: 2;
@@ -15255,6 +15328,9 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
 .ibo-top-bar--quick-actions {
   margin-right: var(--ibo-top-bar--quick-actions--margin-right);
 }
+.ibo-top-bar--toolbar-dashboard-title {
+  max-width: 350px;
+}
 .ibo-top-bar--toolbar-dashboard-menu-toggler {
   display: flex;
   align-items: center;
@@ -15355,7 +15431,7 @@ input:checked + .slider:before {
 .ibo-tab-container--tab-header, .ibo-tab-container--extra-tabs-container {
   color: #6e7a8a;
 }
-.ibo-tab-container--tab-header:hover, .ibo-tab-container--extra-tabs-container:hover {
+.ibo-tab-container--tab-header:hover:not(.ui-state-disabled), .ibo-tab-container--extra-tabs-container:not(.ui-state-disabled):hover {
   color: #2c5382;
   background-color: #e1e7ec;
 }
@@ -15399,6 +15475,7 @@ input:checked + .slider:before {
 }
 .ibo-tab-container--tab-container {
   padding: 32px 32px;
+  overflow-x: auto;
 }
 .ibo-is-scrollable .ibo-tab-container--tab-container--label {
   display: block;
@@ -16078,6 +16155,12 @@ input:checked + .ibo-dashboard--slider:after {
 }
 .ibo-activity-panel--add-caselog-entry-button:hover {
   color: white;
+  background-color: #ea7d1e;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12), 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+.ibo-activity-panel--add-caselog-entry-button:active {
+  color: white;
+  background-color: #c05621;
 }
 .ibo-activity-panel--add-caselog-entry-button.ibo-is-hidden {
   display: none;
@@ -16190,6 +16273,7 @@ input:checked + .ibo-dashboard--slider:after {
 }
 .ibo-activity-entry.ibo-is-current-user {
   flex-direction: row-reverse;
+  min-width: max-content;
 }
 .ibo-activity-entry.ibo-is-current-user .ibo-activity-entry--medallion {
   margin-right: initial;
@@ -16277,15 +16361,6 @@ input:checked + .ibo-dashboard--slider:after {
   /* So it occupies all the remaining width, which is easier for the user to click */
   word-break: break-word;
   /* To avoid content to overflow its container (typically very long URLs) */
-  /* Avoid pre (code snippets) to overflow outside the entry */
-}
-.ibo-activity-entry--main-information-content pre {
-  white-space: pre-line;
-  /* Avoid table to overflow outside the entry (see N°2127) */
-}
-.ibo-activity-entry--main-information-content table {
-  table-layout: fixed;
-  width: 100%;
   /* Specific hyperlink color */
 }
 .ibo-activity-entry--main-information-content a {
@@ -16851,6 +16926,12 @@ body {
 }
 .ibo-display-graph--search-box #ReloadMovieBtn {
   align-self: flex-end;
+}
+#impacted_objects_lists > div ~ div {
+  margin-top: 24px;
+}
+#impacted_objects_lists_placeholder, #impacted_groups_placeholder {
+  height: 250px;
 }
 .ibo-audit--audit-category--panel .ibo-panel--body tr.ibo-is-red td:last-of-type:before {
   background-color: #c53030;
@@ -17570,6 +17651,9 @@ body {
 }
 #ibo_setup_container .ibo-setup--body .ibo-setup--wizard .ibo-setup--wizard--content {
   overflow: auto;
+}
+#ibo_setup_container .ibo-setup--body .ibo-setup--wizard .ibo-setup--wizard--content input#db_backup {
+  margin-right: 0.4rem;
 }
 #ibo_setup_container .ibo-setup--body .ibo-setup--wizard .ibo-setup--wizard--buttons-container {
   margin-top: auto;
