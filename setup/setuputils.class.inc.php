@@ -2016,7 +2016,10 @@ JS
 		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
 		self::Log("----> Entering read only mode");
-		self::WaitCronTermination($oConfig, "read only");
+		if (!ContextTag::Check(ContextTag::TAG_CRON)) {
+			self::WaitCronTermination($oConfig, "read only");
+		}
+
 		return $bPreviousMode;
 	}
 
