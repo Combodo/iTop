@@ -228,6 +228,10 @@ class Alert extends UIContentBlock
 	 */
 	public function IsCollapsible(): bool
 	{
+		if (empty($this->sTitle)) {
+			return false;
+		}
+
 		return $this->bIsCollapsible;
 	}
 

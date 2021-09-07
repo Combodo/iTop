@@ -69,7 +69,6 @@ class CaseLogEntry extends ActivityEntry
 
 		$this->sAttCode = $sAttCode;
 		$this->SetCaseLogRank(static::DEFAULT_CASELOG_RANK);
-		$this->SetOrigin('caselog:'.$this->sAttCode);
 	}
 	
 	/*

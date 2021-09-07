@@ -97,7 +97,7 @@ body.ibo-has-fullscreen-descendant {
 .ibo-has-fullscreen-descendant {
   position: static !important;
   overflow: visible !important;
-  z-index: 9000 !important;
+  z-index: 1050 !important;
 }
 
 /* Used on a fullscreen element (see .ibo-has-fullscreen-descendant) */
@@ -110,7 +110,7 @@ body.ibo-has-fullscreen-descendant {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  z-index: 9000;
+  z-index: 1050;
 }
 
 /****************/
@@ -136,6 +136,11 @@ body.ibo-has-fullscreen-descendant {
   }
 }
 
+.ibo-is-broken-hyperlink {
+  text-decoration: line-through;
+  cursor: help;
+}
+
 .ibo-is-code {
   background-color: $ibo-is-code--background-color;
   padding: $ibo-is-code--padding;
@@ -149,8 +154,16 @@ body.ibo-has-fullscreen-descendant {
 .ibo-is-html-content {
   @extend .content;
 
-  code {
-    color: initial;
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+  table {
+    width: unset !important;
+    max-width: max-content;
+  }
+
+  /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
+  & > code,
+  :not(pre.hljs) code {
+    color: inherit;
   }
 }
 

@@ -115,7 +115,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Das Benutzerkonto gehört nicht zu den für Sie freigegebenen Organisationen',
 	'Class:User/Error:PersonIsMandatory' => 'Der Kontakt muss angegeben werden.',
 	'Class:UserInternal' => 'Interner Benutzer',
-	'Class:UserInternal+' => 'Benutzer, der innerhalb iTop definiert wird',
+	'Class:UserInternal+' => 'Benutzer, der innerhalb '.ITOP_APPLICATION_SHORT.' definiert wird',
 ));
 
 //
@@ -320,14 +320,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nein',
-	'UI:Login:Title' => 'iTop Login',
+	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' Login',
 	'Menu:WelcomeMenu' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Willkommen bei iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Willkommen bei iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Willkommen bei iTop',
+	'Menu:WelcomeMenuPage+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop ist ein ein vollständiges, ITIL- und webbasiertes IT-Service-Management-Tool (ITSM)</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' ist ein ein vollständiges, ITIL- und webbasiertes IT-Service-Management-Tool (ITSM)</p>
 <ul>Es umfasst...
 <li>eine vollständige CMDB (Configuration Management Database), um das IT-Portfolio zu dokumentieren und zu managen,</li>
 <li>ein Incident Management-Modul, um alle Störfälle in der IT-Landschaft zu beobachten und diese zu kommunizieren,</li>
@@ -338,14 +338,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 </ul>
 <p>Alle Module können nacheinander und vollständig unabhängig voneinander eingerichtet werden.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
-<ul>iTop bietet ein umfangreiches Set an Business-Prozessen, die
+	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' ist mandantenfähig, es erlaubt IT-Technikern, auf einfache Art eine Vielzahl an Kunden und Firmen zu verwalten.
+<ul>'.ITOP_APPLICATION_SHORT.' bietet ein umfangreiches Set an Business-Prozessen, die
 <li>die Effizienz des IT-Managements steigern,</li>
 <li>die die Performance des IT-Betriebs steuern,</li>
 <li>die Kundenzufriedenheit verbessern und Führungskräften Einsicht in die Business Performance ermöglichen.</li>
 </ul>
 </p>
-<p>iTop ist komplett offen, damit es sich bestmöglich in Ihre derzeitige IT-Management-Infrastruktur integriert.</p>
+<p>'.ITOP_APPLICATION_SHORT.' ist komplett offen, damit es sich bestmöglich in Ihre derzeitige IT-Management-Infrastruktur integriert.</p>
 <p>
 <ul>Die neue Generation des IT Operational Portals ermöglicht Ihnen
 <li>ein besseres Management in einer immer komplexeren IT-Landschaft,</li>
@@ -353,7 +353,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <li>und ein besseres Verwalten des wichtigsten Bestandteiles Ihrer IT: der Dokumentation.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> 'Willkommen bei iTop',
+	'UI:WelcomeMenu:Text'=> 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',
@@ -507,14 +507,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:SearchValue:CheckAll' => 'Alle auswählen',
 	'UI:SearchValue:UncheckAll' => 'Auswahl aufheben',
 	'UI:SelectOne' => 'bitte wählen',
-	'UI:Login:Welcome' => 'Willkommen bei iTop!',
+	'UI:Login:Welcome' => 'Willkommen bei '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => 'Ungültiges Passwort oder Login-Daten. Bitte versuchen Sie es erneut.',
 	'UI:Login:IdentifyYourself' => 'Bitte identifizieren Sie sich, bevor Sie fortfahren.',
 	'UI:Login:UserNamePrompt' => 'Benutzername',
 	'UI:Login:PasswordPrompt' => 'Passwort',
 	'UI:Login:ForgotPwd' => 'Neues Passwort zusenden',
 	'UI:Login:ForgotPwdForm' => 'Neues Passwort zusenden',
-	'UI:Login:ForgotPwdForm+' => 'iTop kann Ihnen eine Mail mit Anweisungen senden, wie Sie Ihren Account/Passwort zurücksetzen können',
+	'UI:Login:ForgotPwdForm+' => ITOP_APPLICATION_SHORT.' kann Ihnen eine Mail mit Anweisungen senden, wie Sie Ihren Account/Passwort zurücksetzen können',
 	'UI:Login:ResetPassword' => 'Jetzt senden!',
 	'UI:Login:ResetPwdFailed' => 'Konnte keine Email versenden: %1$s',
 	'UI:Login:SeparatorOr' => 'oder',
@@ -527,8 +527,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ResetPwd-Error-NoEmail' => 'die email Adresse dieses Accounts fehlt. Bitte kontaktieren Sie Ihren Administrator.',
 	'UI:ResetPwd-Error-Send' => 'Beim Versenden der Email trat ein technisches Problem auf. Bitte kontaktieren Sie Ihren Administrator.',
 	'UI:ResetPwd-EmailSent' => 'Bitte schauen Sie in Ihre Mailbox und folgen Sie den Anweisungen.',
-	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres iTop-Passworts',
-	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres iTop Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
+	'UI:ResetPwd-EmailSubject' => 'Zurücksetzen Ihres '.ITOP_APPLICATION_SHORT.'-Passworts',
+	'UI:ResetPwd-EmailBody' => '<body><p>Sie haben das Zurücksetzen Ihres '.ITOP_APPLICATION_SHORT.' Passworts angefordert.</p><p>Bitte folgen Sie diesem Link (funktioniert nur einmalig) : <a href="%1$s">neues Passwort eingeben</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Passwort zurücksetzen',
 	'UI:ResetPwd-Error-InvalidToken' => 'Entschuldigung, aber entweder das passwort wurde bereits zurückgesetzt, oder Sie haben mehrere eMails für das Zurücksetzen erhalten. Bitte nutzen Sie den link in der letzten Mail, die Sie erhalten haben.',
@@ -543,17 +543,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Login:RetypeNewPasswordPrompt' => 'Wiederholen Sie Ihr neues Passwort',
 	'UI:Login:IncorrectOldPassword' => 'Fehler: das alte Passwort ist ungültig',
 	'UI:LogOffMenu' => 'Abmelden',
-	'UI:LogOff:ThankYou' => 'Vielen Dank dafür, dass Sie iTop benutzen!',
+	'UI:LogOff:ThankYou' => 'Vielen Dank dafür, dass Sie '.ITOP_APPLICATION_SHORT.' benutzen!',
 	'UI:LogOff:ClickHereToLoginAgain' => 'Klicken Sie hier, um sich wieder anzumelden...',
 	'UI:ChangePwdMenu' => 'Passwort ändern...',
 	'UI:Login:PasswordChanged' => 'Passwort erfolgreich gesetzt!',
-	'UI:AccessRO-All' => 'iTop ist nur lesbar',
-	'UI:AccessRO-Users' => 'iTop ist nur lesbar für Endnutzer',
+	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' ist nur lesbar',
+	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' ist nur lesbar für Endnutzer',
 	'UI:ApplicationEnvironment' => 'Applikationsumgebung: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Neues Passwort und das wiederholte Passwort stimmen nicht überein!',
-	'UI:Button:Login' => 'in iTop anmelden',
-	'UI:Login:Error:AccessRestricted' => 'Der iTop-Zugang ist gesperrt. Bitte kontaktieren Sie Ihren iTop-Administrator.',
-	'UI:Login:Error:AccessAdmin' => 'Zugang nur für Personen mit Administratorrechten. Bitte kontaktieren Sie Ihren iTop-Administrator.',
+	'UI:Button:Login' => 'in '.ITOP_APPLICATION_SHORT.' anmelden',
+	'UI:Login:Error:AccessRestricted' => 'Der '.ITOP_APPLICATION_SHORT.'-Zugang ist gesperrt. Bitte kontaktieren Sie Ihren '.ITOP_APPLICATION_SHORT.'-Administrator.',
+	'UI:Login:Error:AccessAdmin' => 'Zugang nur für Personen mit Administratorrechten. Bitte kontaktieren Sie Ihren '.ITOP_APPLICATION_SHORT.'-Administrator.',
 	'UI:Login:Error:WrongOrganizationName' => 'Unbekannte Organisation',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Mehrere Kontakte mit gleicher EMail-Adresse',
 	'UI:Login:Error:NoValidProfiles' => 'Kein gültiges Profil ausgewählt',
@@ -566,7 +566,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVImport:DataLine1' => 'Daten-Zeile 1',
 	'UI:CSVImport:DataLine2' => 'Daten-Zeile 2',
 	'UI:CSVImport:idField' => 'ID (Primärer Schlüssel)',
-	'UI:Title:BulkImport' => 'iTop - Massenimport',
+	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Massenimport',
 	'UI:Title:BulkImport+' => 'CSV-Import-Assistent',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation von %1$d Objekten der Klasse %2$s',
 	'UI:CSVImport:ClassesSelectOne' => 'Bitte wählen',
@@ -615,7 +615,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Bitte stellen Sie sicher, dass jedes Zielfeld nur einmal gemapped wird. ',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Bitte wählen Sie mindestens ein Suchkriterium aus.',
 	'UI:CSVImport:Encoding' => 'Buchstaben-Codierung',
-	'UI:UniversalSearchTitle' => 'iTop - universelle Suche',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - universelle Suche',
 	'UI:UniversalSearch:Error' => 'Fehler: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Wählen Sie für die Suche die Klasse aus: ',
 
@@ -665,7 +665,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:CSVExport:LostChars' => 'Kodierungsproblem',
 	'UI:CSVExport:LostChars+' => '',
 
-	'UI:Audit:Title' => 'iTop - CMDB-Audit',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB-Audit',
 	'UI:Audit:InteractiveAudit' => 'Interaktives Audit',
 	'UI:Audit:HeaderAuditRule' => 'Audit-Regel',
 	'UI:Audit:HeaderNbObjects' => '# Objekte',
@@ -684,7 +684,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Audit:AuditCategory:Subtitle' => '%1$s Fehler von ingesamt %2$s - %3$s%%',
 
 
-	'UI:RunQuery:Title' => 'iTop - OQL-Abfrage-Auswertung',
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL-Abfrage-Auswertung',
 	'UI:RunQuery:QueryExamples' => 'Abfragebeispiele',
 	'UI:RunQuery:QueryResults' => 'Abfrageergebnisse',
 	'UI:RunQuery:HeaderPurpose' => 'Verwendungszweck',
@@ -692,6 +692,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-Ausdruck',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Die Abfrage in OQL-Syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Auszuwertender Ausdruck: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Mehr Informationen zur Abfrage: ',
 	'UI:RunQuery:DevelopedQuery' => 'Überarbeiteter Abfrageausdruck: ',
 	'UI:RunQuery:SerializedFilter' => 'Serieller Filter: ',
@@ -701,8 +702,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:ResultSQL' => 'Resultierendes SQL',
 	'UI:RunQuery:Error' => 'Ein Fehler trat während der Abfrage auf',
 	'UI:Query:UrlForExcel' => 'URL für MS Excel Web Queries',
-	'UI:Query:UrlV1' => 'Die Liste der Felder wurde nicht spezifiziert. Die Seite <em>export-V2.php</em> kann ohne diese Angabe nicht verarbeitet werden. Deswegen, zeigt die nachstehende URL zu der Legacy-Page: <em>export.php</em>. Diese Legacy-Version des Exports hat folgende Limitierungen: Die Liste exportierter Felder kann, abhängig vom Output-Format und vom Datenmodell von iTop, variieren. Möchten Sie garantieren, dass die Liste aller exportierten Spalten stabil bleibt, müssen Sie einen Wert für das Attribut Feld angeben und die Seite <em>export-V2.php</em> nutzen.',
-	'UI:Schema:Title' => 'iTop Objekte-Schema',
+	'UI:Query:UrlV1' => 'Die Liste der Felder wurde nicht spezifiziert. Die Seite <em>export-V2.php</em> kann ohne diese Angabe nicht verarbeitet werden. Deswegen, zeigt die nachstehende URL zu der Legacy-Page: <em>export.php</em>. Diese Legacy-Version des Exports hat folgende Limitierungen: Die Liste exportierter Felder kann, abhängig vom Output-Format und vom Datenmodell von '.ITOP_APPLICATION_SHORT.', variieren. Möchten Sie garantieren, dass die Liste aller exportierten Spalten stabil bleibt, müssen Sie einen Wert für das Attribut Feld angeben und die Seite <em>export-V2.php</em> nutzen.',
+	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' Objekte-Schema',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Wechselseite Beziehungen',
 	'UI:Schema:AbstractClass' => 'Abstrakte Klasse: ein Objekt dieser Klasse kann nicht instanziiert werden.',
@@ -818,11 +819,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Bitte führen Sie die oben aufgelisteten manuellen Operationen zuerst durch, bevor Sie dieses Objekt löschen.',
 	'UI:Delect:Confirm_Object' => 'Bitte bestätigen Sie, dass Sie %1$s löschen möchten.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bitte bestätigen Sie, dasss Sie die folgenden %1$d Objekte der Klasse %2$s löschen möchten.',
-	'UI:WelcomeToITop' => 'Willkommen bei iTop',
-	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s Details',
-	'UI:ErrorPageTitle' => 'iTop - Fehler',
+	'UI:WelcomeToITop' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s Details',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fehler',
 	'UI:ObjectDoesNotExist' => 'Leider existiert dieses Objekt nicht oder Sie sind nicht berechtigt es einzusehen.',
-	'UI:ObjectArchived' => 'Dieses Objekt wurde archiviert. Bitte aktivieren Sie die Archiv-Modus oder kontaktieren Sie Ihren iTop-Administrator.',
+	'UI:ObjectArchived' => 'Dieses Objekt wurde archiviert. Bitte aktivieren Sie die Archiv-Modus oder kontaktieren Sie Ihren '.ITOP_APPLICATION_SHORT.'-Administrator.',
 	'Tag:Archived' => 'Archiviert',
 	'Tag:Archived+' => 'Auf dieses Objekt kann nur im Archiv-Modus zugegriffen werden',
 	'Tag:Obsolete' => 'Obsolet (Veraltet)',
@@ -830,7 +831,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Tag:Synchronized' => 'Synchronisiert',
 	'ObjectRef:Archived' => 'Archiviert',
 	'ObjectRef:Obsolete' => 'Obsolet (Veraltet)',
-	'UI:SearchResultsPageTitle' => 'iTop - Suchergebnisse',
+	'UI:SearchResultsPageTitle' => ITOP_APPLICATION_SHORT.' - Suchergebnisse',
 	'UI:SearchResultsTitle' => 'Suchergebnisse',
 	'UI:SearchResultsTitle+' => 'Volltext-Suchresultate',
 	'UI:Search:NoSearch' => 'Kein Suchbegriff eingegeben',
@@ -840,27 +841,27 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:FullTextSearchTitle_Text' => 'Ergebnisse für "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d Objekt(e) der Klasse %2$s gefunden.',
 	'UI:Search:NoObjectFound' => 'Kein Objekt gefunden',
-	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s Änderungen',
+	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s Änderungen',
 	'UI:ModificationTitle_Class_Object' => 'Änderungen von %1$s: <span class=\\"hilite\\">%2$s</span>',
-	'UI:ClonePageTitle_Object_Class' => 'iTop - Dupliziere %1$s - %2$s Änderung',
+	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Dupliziere %1$s - %2$s Änderung',
 	'UI:CloneTitle_Class_Object' => 'Duplizieren von %1$s: <span class=\\"hilite\\">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - Erstellung eines neuen Objekts vom Typ "%1$s" ',
+	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Erstellung eines neuen Objekts vom Typ "%1$s" ',
 	'UI:CreationTitle_Class' => 'Erstellung eines neuen Objekts vom Typ "%1$s"',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Wählen Sie den Typ vom Objekt "%1$s" aus, den Sie erstellen möchten:',
 	'UI:Class_Object_NotUpdated' => 'Keine Änderung festgestellt, %1$s (%2$s) wurde <strong>nicht</strong> modifiziert.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) aktualisiert.',
-	'UI:BulkDeletePageTitle' => 'iTop - Massenlöschung von Objekten',
+	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - Massenlöschung von Objekten',
 	'UI:BulkDeleteTitle' => 'Wählen Sie die Objekte aus, die Sie löschen möchten:',
-	'UI:PageTitle:ObjectCreated' => 'iTop-Objekt wurde erstellt.',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.'-Objekt wurde erstellt.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s erstellt.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Anwenden von %1$s auf Objekt: %2$s in Status %3$s zu Zielstatus: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Das Objekt konnte nicht geschrieben werden: %1$s',
-	'UI:PageTitle:FatalError' => 'iTop - Fataler Fehler',
+	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Fataler Fehler',
 	'UI:SystemIntrusion' => 'Zugriff verweigert. Sie haben versucht, eine Aktion auszuführen, für die Sie keine ausreichende Berechtigungen besitzen.',
-	'UI:FatalErrorMessage' => 'Fataler Fehler! iTop kann leider nicht fortfahren.',
+	'UI:FatalErrorMessage' => 'Fataler Fehler! '.ITOP_APPLICATION_SHORT.' kann leider nicht fortfahren.',
 	'UI:Error_Details' => 'Fehler: %1$s.',
 
-	'UI:PageTitle:ProfileProjections' => 'iTop Benutzerverwaltung - Profilabbildung',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' Benutzerverwaltung - Profilabbildung',
 	'UI:UserManagement:Class' => 'Klasse',
 	'UI:UserManagement:Class+' => 'Klasse von Objekten',
 	'UI:UserManagement:ProjectedObject' => 'Objekt',
@@ -956,7 +957,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Einstellungen der Benachrichtigungen',
 	'UI:NotificationsMenu:Help' => 'Hilfe',
-	'UI:NotificationsMenu:HelpContent' => '<p>In iTop sind Benachrichtigungen vollständig anpassbar. Sie basieren auf zwei Gruppen an Objekten: <i>Trigger und Aktionen</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' sind Benachrichtigungen vollständig anpassbar. Sie basieren auf zwei Gruppen an Objekten: <i>Trigger und Aktionen</i>.</p>
 <p><i><b>Trigger</b></i> definieren, wann eine Benachrichtigung ausgeführt wird. Es gibt verschiedene Auslöser als Teil des iTop-Kerns, aber andere können durch Erweiterungen eingebracht werden:
 <ol>
 	<li>Einige Trigger werden ausgeführt, wenn ein Objekt der angegebenen Klasse <b>angelegt</b>, <b>aktualisiert</b> oder <b>gelöscht wird</b>.</li>
@@ -1065,8 +1066,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:RelationTooltip:Redundancy' => 'Redundanz',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# der betroffenen Items: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Kritischer Schwellwert: %1$d / %2$d',
-	'Portal:Title' => 'iTop-Benutzerportal',
-	'Portal:NoRequestMgmt' => 'Lieber %1$s, Sie wurden hierher umgeleitet, weil Ihr Account mit dem Profil \'Portal user\' konfiguriert wurde. Leider wurde in iTop aber das \'Request Management\'-Feature nicht installiert. Bitte kontaktieren Sie Ihren Administrator.',
+	'Portal:Title' => ITOP_APPLICATION_SHORT.'-Benutzerportal',
+	'Portal:NoRequestMgmt' => 'Lieber %1$s, Sie wurden hierher umgeleitet, weil Ihr Account mit dem Profil \'Portal user\' konfiguriert wurde. Leider wurde in '.ITOP_APPLICATION_SHORT.' aber das \'Request Management\'-Feature nicht installiert. Bitte kontaktieren Sie Ihren Administrator.',
 	'Portal:Refresh' => 'Neu laden',
 	'Portal:Back' => 'Zurück',
 	'Portal:WelcomeUserOrg' => 'Wilkommen %1$s, von %2$s',
@@ -1150,7 +1151,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Favorites:ShowObsoleteData+' => 'Zeige obsolete (veraltete) Daten in Suchresultaten und Auswahllisten von Objekten',
 	'UI:NavigateAwayConfirmationMessage' => 'Jedwede Veränderung wird verworfen.',
 	'UI:CancelConfirmationMessage' => 'Sie werden Ihre Änderungen verlieren. Dennoch fortfahren?',
-	'UI:AutoApplyConfirmationMessage' => 'Einige Änderungen wurden noch nicht angewandt. Möchten Sie, daß iTop diese berüchsichtigt?',
+	'UI:AutoApplyConfirmationMessage' => 'Einige Änderungen wurden noch nicht angewandt. Möchten Sie, daß '.ITOP_APPLICATION_SHORT.' diese berüchsichtigt?',
 	'UI:Create_Class_InState' => 'Erzeuge die/das %1$s in Status: ',
 	'UI:OrderByHint_Values' => 'Sortierreihenfolge: %1$s',
 	'UI:Menu:AddToDashboard' => 'Zu Dashboard hinzufügen...',
@@ -1398,8 +1399,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:AddAnExisting_Class' => 'Objekte des Typs %1$s hinzufügen...',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s',
 
-	'UI:AboutBox' => 'Über iTop...',
-	'UI:About:Title' => 'Über iTop',
+	'UI:AboutBox' => 'Über '.ITOP_APPLICATION_SHORT.'...',
+	'UI:About:Title' => 'Über '.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => 'Datenmodell',
 	'UI:About:Support' => 'Support-Information',
 	'UI:About:Licenses' => 'Lizenzen',
@@ -1424,7 +1425,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'ExcelExport:PreparingExport' => 'Bereite Export vor...',
 	'ExcelExport:Statistics' => 'Statistik',
 	'portal:legacy_portal' => 'Endbenutzer-Portal',
-	'portal:backoffice' => 'iTop Backend',
+	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Backend',
 
 	'UI:CurrentObjectIsLockedBy_User' => 'Das Objekt ist gesperrt, da es derzeit durch %1$s bearbeitet wird.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'Das Objekt wird derzeit durch %1$s bearbeitet. Ihre Änderungen können nicht gespeichert werden, da sie überschrieben würden.',
@@ -1608,9 +1609,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:DataSources' => 'Datenquellen für die Synchronisation',
 	'Menu:DataSources+' => 'Alle Datenquellen für die Synchronisation',
 	'Menu:WelcomeMenu' => 'Willkommen',
-	'Menu:WelcomeMenu+' => 'Willkommen bei iTop',
+	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Willkommen',
-	'Menu:WelcomeMenuPage+' => 'Willkommen bei iTop',
+	'Menu:WelcomeMenuPage+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Admin-Tools',
 	'Menu:AdminTools+' => 'Administrationswerkzeuge',
 	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',

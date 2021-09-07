@@ -1097,6 +1097,11 @@ class ObjectController extends BrickController
 		$aHeaders['Content-Type'] = $oDocument->GetMimeType();
 		$aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment').';filename="'.$oDocument->GetFileName().'"';
 
+		// N°4129 - Prevent XSS attacks & other script executions
+		if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+			$aHeaders['Content-Security-Policy'] = 'sandbox';
+		}
+
 		return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
 	}
 

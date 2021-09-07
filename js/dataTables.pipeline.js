@@ -8,7 +8,7 @@
 //
 var numberCachePages = 5;
 
-$.fn.dataTable.pipeline = function (opts) {
+$.fn.dataTable.pipeline = function (opts, initJson) {
 	// Configuration options
 	var conf = $.extend({
 		pages: numberCachePages,     // number of pages to cache
@@ -75,8 +75,12 @@ $.fn.dataTable.pipeline = function (opts) {
 				ajax = true;
 			}
 		}
-
-		if (settings.clearCache) {
+		if (request.draw == 1 && initJson != null) {
+			//do nothing
+			cacheLastJson = $.extend(true, {}, initJson);
+			cacheLower = 0;
+			cacheUpper = initJson.data.length;
+		} else if (settings.clearCache) {
 			// API requested that the cache be cleared
 			ajax = true;
 			settings.clearCache = false;

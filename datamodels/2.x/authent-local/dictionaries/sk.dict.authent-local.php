@@ -33,7 +33,7 @@
 // Class: UserLocal
 //
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:UserLocal' => 'iTop užívateľ',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' užívateľ',
 	'Class:UserLocal+' => '',
 	'Class:UserLocal/Attribute:password' => 'Heslo',
 	'Class:UserLocal/Attribute:password+' => '',

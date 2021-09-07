@@ -18,7 +18,7 @@
  */
 // Portal
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Page:DefaultTitle' => 'Portal do usuário iTop',
+	'Page:DefaultTitle' => 'Portal do usuário '.ITOP_APPLICATION_SHORT,
 	'Page:PleaseWait' => 'Aguarde...',
 	'Page:Home' => 'Home',
 	'Page:GoPortalHome' => 'Página Inicial',

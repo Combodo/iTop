@@ -63,7 +63,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Organization/Attribute:overview' => 'Overzicht',
 	'Organization:Overview:FunctionalCIs' => 'Configuratie-items van deze organisatie',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'per type',
-	'Organization:Overview:Users' => 'iTop-gebruikers in deze organisatie',
+	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.'-gebruikers in deze organisatie',
 ));
 
 //

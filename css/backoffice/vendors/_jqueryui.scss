@@ -600,3 +600,8 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
   position: absolute;
   width: 1px;
 }
+
+// Tabs
+.ui-tabs-tab.ui-state-disabled a{
+  cursor: not-allowed !important;
+}

@@ -4123,7 +4123,8 @@ class AttributeText extends AttributeString
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "<span class=\"wiki_broken_link\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
+						$sToolTipForHtml = utils::EscapeHtml(Dict::Format('Core:UnknownObjectLabel', $sClass, $sName));
+						$sReplacement = "<span class=\"wiki_broken_link ibo-is-broken-hyperlink\" data-tooltip-content=\"$sToolTipForHtml\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
 						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name

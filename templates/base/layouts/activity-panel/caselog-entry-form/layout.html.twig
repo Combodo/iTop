@@ -5,6 +5,7 @@
       data-object-class="{{ oUIBlock.GetObjectClass() }}"
       data-object-id="{{ oUIBlock.GetObjectId() }}"
       data-attribute-code="{{ oUIBlock.GetAttCode() }}"
+      data-attribute-label="{{ oUIBlock.GetAttLabel() }}"
       data-submit-mode="{{ oUIBlock.GetSubmitMode() }}"
       method="post">
     <div class="ibo-caselog-entry-form--actions">
@@ -22,6 +23,8 @@
     </div>
     <div class="ibo-caselog-entry-form--text-input" data-role="ibo-caselog-entry-form--text-input">
         {{ render_block(oUIBlock.GetTextInput(), {aPage: aPage}) }}
+    </div>
+    <div class="ibo-caselog-entry-form--extra-inputs" data-role="ibo-caselog-entry-form--extra-inputs">
     </div>
     <div class="ibo-caselog-entry-form--lock-indicator ibo-is-hidden" data-role="ibo-caselog-entry-form--lock-indicator">
         <span class="ibo-caselog-entry-form--lock-icon" data-role="ibo-caselog-entry-form--lock-icon">

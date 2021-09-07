@@ -539,7 +539,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:ResetPwd-Error-NoEmail' => 'brak adresu e-mail. Skontaktuj się z administratorem.',
 	'UI:ResetPwd-Error-Send' => 'problem techniczny dotyczący transportu poczty elektronicznej. Skontaktuj się z administratorem.',
 	'UI:ResetPwd-EmailSent' => 'Sprawdź swoją skrzynkę e-mail i postępuj zgodnie z instrukcjami. Jeśli nie otrzymasz wiadomości e-mail, sprawdź wpisany login.',
-	'UI:ResetPwd-EmailSubject' => 'Reset hasła '.ITOP_APPLICATION_SHORT.'',
+	'UI:ResetPwd-EmailSubject' => 'Reset hasła '.ITOP_APPLICATION_SHORT,
 	'UI:ResetPwd-EmailBody' => '<body><p>Poprosiłeś o zresetowanie hasła '.ITOP_APPLICATION_SHORT.'.</p><p>Proszę skorzystać z tego linku (jednorazowe użycie), <a href="%1$s">wpisz nowe hasło</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Zresetuj hasło',
@@ -705,6 +705,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'Wyrażenie OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Zapytanie w składni OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Wyrażenie do wykonania: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Więcej informacji o zapytaniu: ',
 	'UI:RunQuery:DevelopedQuery' => 'Rozwinięte wyrażenie zapytania: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtr serializowany: ',

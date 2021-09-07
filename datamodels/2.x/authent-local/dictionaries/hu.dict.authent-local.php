@@ -20,7 +20,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
-	'Class:UserLocal' => 'iTop felhasználó',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' felhasználó',
 	'Class:UserLocal+' => '',
 	'Class:UserLocal/Attribute:password' => 'Jelszó',
 	'Class:UserLocal/Attribute:password+' => '',

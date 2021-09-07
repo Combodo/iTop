@@ -24,7 +24,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Datatables:Language:Info'              => '_TOTAL_ élément(s)',
 	'UI:Datatables:Language:InfoEmpty'         => 'Pas d\'information',
 	'UI:Datatables:Language:EmptyTable'        => 'Pas de résultat',
-	'UI::Datatables:Language:Error'            => 'Erreur lors du chargement des données',
+	'UI:Datatables:Language:Error'             => 'Erreur lors du chargement des données',
 	'UI:Datatables:Language:DisplayLength:All' => 'Tous',
 	'UI:Datatables:Language:Sort:Ascending'    => 'tri croissant',
 	'UI:Datatables:Language:Sort:Descending'   => 'tri décroissant',

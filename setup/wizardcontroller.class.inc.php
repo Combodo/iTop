@@ -19,12 +19,13 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 /**
  * Engine for displaying the various pages of a "wizard"
- * Each "step" of the wizard must be implemented as 
+ * Each "step" of the wizard must be implemented as
  * separate class derived from WizardStep. each 'step' can also have its own
  * internal 'state' for developing complex wizards.
  * The WizardController provides the "<< Back" feature by storing a stack
  * of the previous screens. The WizardController also maintains from page
  * to page a list of "parameters" to be dispayed/edited by each of the steps.
+ *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */

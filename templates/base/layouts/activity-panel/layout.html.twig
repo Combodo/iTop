@@ -12,6 +12,7 @@
                      data-role="ibo-activity-panel--tab-toggler"
                      data-tab-type="caselog"
                      data-caselog-attribute-code="{{ sCaseLogAttCode }}"
+                     data-caselog-attribute-label="{{ aCaseLogData.title }}"
                      data-caselog-rank="{{ loop.index }}">
                     <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
                         <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
@@ -52,7 +53,7 @@
         </div>
         <div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
             {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-                {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
+                {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), sAttCode: sCaseLogAttCode, aData: aCaseLogData, aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
             {% endfor %}
             {{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0), bPrefilterStateChanges: true, bPrefilterEdits: true}) }}
             <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title'|dict_s }}">

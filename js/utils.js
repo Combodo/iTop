@@ -878,6 +878,25 @@ const CombodoTooltip = {
 		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instantiated="true"])')).each(function () {
 			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
 		});
+	},
+	/**
+	 * Instantiate a singleton for tooltips of elements matching sSelector.
+	 * Used to guarantee that tooltips from said selector elements won't show at same time.
+	 * Require selector elements tooltips to be instantiated before.
+	 *
+	 * @param {string} sSelector jQuery selector used to get elements tooltips
+	 */
+	InitSingletonFromSelector: function (sSelector) {
+		let oTippyInstances = [];
+		$(sSelector).each(function(){
+			if($(this)[0]._tippy !== undefined){
+				oTippyInstances.push($(this)[0]._tippy);
+			}
+		});
+		let aOptions = {
+			moveTransition: 'transform 0.2s ease-out',
+		}
+		tippy.createSingleton(oTippyInstances, $.extend(aOptions, oTippyInstances[0].props));
 	}
 };
 

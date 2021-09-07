@@ -464,7 +464,7 @@ class DisplayableNode extends GraphNode
 				{
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
-				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
+				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
 			}
 			$sHtml .= '<hr/>';
 		}
@@ -805,7 +805,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$sHtml .= '<a href="#" onclick="$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
 		$sHtml .= '<hr/>';
 		$sHtml .= '<table><tbody><tr>';
-		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
+		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img class="ibo-class-icon ibo-is-small" src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
 		$sHtml .= Dict::Format('UI_CountOfObjectsShort', $this->GetObjectCount()).'</td>';
 		$sHtml .= '</tr></tbody></table>';
 		return $sHtml;

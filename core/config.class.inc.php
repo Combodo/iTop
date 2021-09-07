@@ -1415,6 +1415,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.disable_inline_documents_sandbox' => [
+			'type' => 'bool',
+			'description' => 'If true then the sandbox for documents displayed in a browser tab will be disabled; enabling scripts and other interactive content. Note that setting this to true will open the application to potential XSS attacks!',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',

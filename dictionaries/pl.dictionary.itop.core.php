@@ -311,7 +311,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Change:TwoAttributesChanged' => 'Zmodyfikowano %1$s i %2$s',
 	'Change:ThreeAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i 1 inny',
 	'Change:FourOrMoreAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i %3$s inne',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmianiono na %2$s (poprzednia wartość: %3$s)',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmieniono na %2$s (poprzednia wartość: %3$s)',
 	'Change:AttName_SetTo' => '%1$s zmieniono na %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s dołączone do %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s zmodyfikowano, poprzednia wartość: %2$s',

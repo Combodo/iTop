@@ -65,7 +65,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
 
   color: $ibo-tab-container--tab-header--text-color;
 
-  &:hover {
+  &:hover:not(.ui-state-disabled) {
     color: $ibo-tab-container--tab-header--text-color--on-hover;
     background-color: $ibo-tab-container--tab-header--background-color--on-hover;
   }
@@ -137,6 +137,7 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
 
 .ibo-tab-container--tab-container {
   padding: $ibo-tab-container--tab-container--padding-y $ibo-tab-container--tab-container--padding-x;
+  overflow-x: auto;
 }
 
 .ibo-is-scrollable .ibo-tab-container--tab-container--label {

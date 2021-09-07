@@ -28,7 +28,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         infoEmpty: "{{ 'UI:Datatables:Language:InfoEmpty'|dict_s }}",
         infoFiltered: "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
         emptyTable: "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
-        errorMessage: "{{ 'UI::Datatables:Language:Error'|dict_s }}",
+        errorMessage: "{{ 'UI:Datatables:Language:Error'|dict_s }}",
         buttonOk: "{{ 'UI:Button:Ok'|dict_s }}",
         paginate: {
             first: "<i class=\"fas fa-angle-double-left\"></i>",
@@ -162,11 +162,13 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endfor %}
     ],
     ajax: $.fn.dataTable.pipeline({
-        url: "{{ oUIBlock.GetAjaxUrl() }}",
-        data: {{ oUIBlock.GetJsonAjaxData() |raw }},
-        method: "post",
-        pages: 1 // number of pages to cache
-    }),
+                url: "{{ oUIBlock.GetAjaxUrl() }}",
+                data: {{ oUIBlock.GetJsonAjaxData() |raw }},
+                method: "post",
+                pages: 1
+            }, // number of pages to cache
+            {{ oUIBlock.GetJsonData() |raw }}
+    ),
     createdRow: function (row, data, dataIndex) {
         if (data['@class'] !== undefined)
         {
@@ -186,7 +188,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
         {% if oUIBlock.GetOption("select_mode") != "single" %}
-        this.api().on('select', function (oEvent, dt, type, indexes) {
+            this.api().on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }})
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
@@ -340,7 +342,7 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sSelectedItemsName: "oSelectedItems{{ sListId }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
-    iPageSize: '{{ oUIBlock.GetOption("iPageSize") }}',
+    iPageSize: ' {{ iPageSize }}',
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
@@ -349,7 +351,8 @@ var aOptions{{ sListIDForVarSuffix }} = {
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
 };
 
-if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable')) {
+if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
+{
     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('destroy');
 }
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});

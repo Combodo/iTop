@@ -168,7 +168,6 @@ class ormCaseLog {
 		return $aEntries;
 	}
 
-
 	/**
 	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the 'html' entries have been removed
 	 * @return string
@@ -200,6 +199,15 @@ class ormCaseLog {
 	public function IsEmpty()
     {
         return ($this->m_sLog === null);
+    }
+
+	/**
+	 * @return int The number of entries in this log
+	 * @since 3.0.0
+	 */
+    public function GetEntryCount(): int
+    {
+    	return count($this->m_aIndex);
     }
 	
 	public function ClearModifiedFlag()
@@ -570,7 +578,6 @@ class ormCaseLog {
 		$this->m_bModified = true;
 	}
 
-
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
 		if (isset($oJson->user_id))
@@ -646,7 +653,6 @@ class ormCaseLog {
 
 		$this->m_bModified = true;
 	}
-
 
 	public function GetModifiedEntry($sFormat = 'text')
 	{
@@ -726,4 +732,3 @@ class ormCaseLog {
 		return $sText;
 	}
 }
-?>

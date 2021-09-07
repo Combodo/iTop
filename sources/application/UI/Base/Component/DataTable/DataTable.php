@@ -44,6 +44,10 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	/*
+	 * array of data to display the first page
+	 */
+	protected $aInitDisplayData;
 
 	/**
 	 * Panel constructor.
@@ -57,6 +61,7 @@ class DataTable extends UIContentBlock
 		$this->aDisplayColumns = [];
 		$this->aOptions = [];
 		$this->aResultColumns = [];
+		$this->sJsonData = '';
 	}
 
 	/**
@@ -99,6 +104,7 @@ class DataTable extends UIContentBlock
 	}
 
 	/**
+	 * Get $aAjaxData as a JSON
 	 * @return mixed
 	 */
 	public function GetJsonAjaxData(): string
@@ -176,6 +182,36 @@ class DataTable extends UIContentBlock
 		$this->aOptions = $aOptions;
 	}
 
+	/**
+	 *  Get $aInitDisplayData as a JSON This is data of first page
+	 * @return string
+	 */
+	public function GetJsonInitDisplayData(): string
+	{
+		return json_encode($this->aInitDisplayData);
+	}
+
+	/**
+	 *  Get $aInitDisplayData
+	 * @return array
+	 */
+	public function GetInitDisplayData(): array
+	{
+		return $this->aInitDisplayData;
+	}
+
+	/**
+	 * @param string $aData
+	 *
+	 * @return $this
+	 */
+	public function SetInitDisplayData(array $aData)
+	{
+		$this->aInitDisplayData = $aData;
+
+		return $this;
+	}
+
 	public function GetJSRefresh(): string
 	{
 		return "$('#".$this->sId."').DataTable().clearPipeline();
@@ -185,15 +221,17 @@ class DataTable extends UIContentBlock
 	public function GetDisabledSelect(): array
 	{
 		$aExtraParams = $this->aAjaxData['extra_params'];
-		if(isset($aExtraParams['selection_enabled']) ){
+		if (isset($aExtraParams['selection_enabled'])) {
 			$aListDisabled = [];
-			foreach( $aExtraParams['selection_enabled'] as $sKey=>$bValue){
+			foreach ($aExtraParams['selection_enabled'] as $sKey => $bValue) {
 				if ($bValue == false) {
 					$aListDisabled[] = $sKey;
 				}
 			}
+
 			return $aListDisabled;
 		}
+
 		return [];
 	}
 }

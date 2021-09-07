@@ -270,6 +270,8 @@ class DisplayBlock
 			'panel_title',
 			/** string class for panel block style */
 			'panel_class',
+			/** string class for panel block style */
+			'panel_icon',
 		];
 
 		if (isset($aAllowedParams[$sStyle])) {
@@ -1196,6 +1198,9 @@ JS
 				$sTitle = Dict::Format($sFormat, $iTotalCount);
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
 				$oBlock->AddSubTitleBlock(new Html($sTitle));
+				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+					$oBlock->SetIcon($aExtraParams["panel_icon"]);
+				}
 				$oDataTable = DataTableUIBlockFactory::MakeForStaticData("", $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
 				$oBlock->AddSubBlock($oDataTable);
 			} else {
@@ -1212,6 +1217,9 @@ JS
 			}
 			if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+					$oBlock->SetIcon($aExtraParams["panel_icon"]);
+				}
 				$oBlock->AddSubBlock(new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>'));
 			} else {
 				$oBlock = new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>');
@@ -1347,6 +1355,9 @@ JS
 
 				if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 					$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+					if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+						$oPanel->SetIcon($aExtraParams["panel_icon"]);
+					}
 					$oPanel->AddSubBlock($oBlock);
 
 					return $oPanel;
@@ -1544,6 +1555,9 @@ JS
 
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oPanel->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oPanel->AddSubBlock($oBlock);
 
 			return $oPanel;
@@ -1632,6 +1646,9 @@ JS
 		}
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oPanel->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oPanel->AddSubBlock($oBlock);
 
 			return $oPanel;

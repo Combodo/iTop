@@ -18,8 +18,12 @@ use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -93,6 +97,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_TAGSET = 'tagset';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_RADIO = 'radio';
+	/** @var string */
+	public const ENUM_INPUT_TYPE_CHECKBOX = 'checkbox';
 	/** @var string */
 	public const ENUM_INPUT_TYPE_DROPDOWN_RAW = 'dropdown_raw';
 	/** @var string */
@@ -2894,7 +2900,7 @@ EOF
 		$oPage->add($oAppContext->GetForForm());
 
 		// Hook the cancel button via jQuery so that it can be unhooked easily as well if needed
-		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=cancel&'.$oAppContext->GetForLink();
+		$sDefaultUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=search_form&class='.$sClass.'&'.$oAppContext->GetForLink();
 		$oPage->add_ready_script("$('#form_{$this->m_iFormId} button.cancel').on('click', function() { BackToDetails('$sClass', $iKey, '$sDefaultUrl', $sJSToken)} );");
 
 		$iFieldsCount = count($aFieldsMap);
@@ -2945,6 +2951,93 @@ EOF
 		}
 	}
 
+	/**
+	 *  Select the derived class to create
+	 * @param string $sClass
+	 * @param \WebPage $oP
+	 * @param \ApplicationContext $oAppContext
+	 * @param array $aPossibleClasses
+	 * @param array $aHiddenFields
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0
+	 */
+	public static function DisplaySelectClassToCreate(string $sClass, WebPage $oP, ApplicationContext $oAppContext, array $aPossibleClasses, array $aHiddenFields)
+	{
+		$sClassLabel = MetaModel::GetName($sClass);
+		$sTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+
+		$oP->set_title($sTitle);
+		$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)
+			->SetIcon($sClassIconUrl);
+
+
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+		$oPanel->AddMainBlock($oClassForm);
+
+		$oClassForm->AddHtml($oAppContext->GetForForm())
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('checkSubclass', '0'))
+			->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'new'));
+
+		foreach ($aHiddenFields as $sKey => $sValue) {
+			if (is_scalar($sValue)) {
+				$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden($sKey, $sValue));
+			}
+		}
+
+		$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
+		foreach ($aDefaults as $key => $value) {
+			if (is_array($value)) {
+				foreach ($value as $key2 => $value2) {
+					if (is_array($value2)) {
+						foreach ($value2 as $key3 => $value3) {
+							$sValue = utils::EscapeHtml($value3);
+							$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2][$key3]", $sValue));
+						}
+					} else {
+						$sValue = utils::EscapeHtml($value2);
+						$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2]", $sValue));
+					}
+				}
+			} else {
+				$sValue = utils::EscapeHtml($value);
+				$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key]", $sValue));
+			}
+		}
+
+		$oClassForm->AddSubBlock(self::DisplayBlockSelectClassToCreate($sClass, $sClassLabel, $aPossibleClasses));
+
+		$oP->AddSubBlock($oPanel);
+	}
+
+	/**
+	 * @param string $sClassLabel
+	 * @param array $aPossibleClasses
+	 * @param string $sClass
+	 *
+	 * @return UIContentBlock
+	 * @throws \CoreException
+	 */
+	public static function DisplayBlockSelectClassToCreate( string $sClass, string $sClassLabel,array $aPossibleClasses): UIContentBlock
+	{
+		$oBlock= UIContentBlockUIBlockFactory::MakeStandard();
+		$oBlock->AddSubBlock(HtmlFactory::MakeRaw(Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel)));
+		$oSelect = SelectUIBlockFactory::MakeForSelect('class');
+		$oBlock->AddSubBlock($oSelect);
+		asort($aPossibleClasses);
+		foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
+			$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, ($sClassName == $sClass)));
+		}
+
+		$oToolbar = ToolbarUIBlockFactory::MakeForAction();
+		$oBlock->AddSubBlock($oToolbar);
+		$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+		return $oBlock;
+	}
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sClass

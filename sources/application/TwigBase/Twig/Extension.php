@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
 use AttributeDateTime;
+use AttributeText;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
@@ -95,6 +96,17 @@ class Extension
 		 */
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('sanitize', function (string $sString, string $sFilter) {
 				return utils::Sanitize($sString, '', $sFilter);
+			})
+		);
+
+		/**
+		 * Filter to transform the wiki syntax ONLY into HTML.
+		 *
+		 * @uses \AttributeText::RenderWikiHtml()
+		 * @since 3.0.0
+		 */
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('render_wiki_to_html', function ($sString) {
+				return AttributeText::RenderWikiHtml($sString, true /* Important, otherwise hyperlinks will be tranformed as well */);
 			})
 		);
 

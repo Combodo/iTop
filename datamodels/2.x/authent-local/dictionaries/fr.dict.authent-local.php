@@ -20,8 +20,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
-	'Class:UserLocal' => 'Utilisateur iTop',
-	'Class:UserLocal+' => 'Utilisateur authentifié par iTop',
+	'Class:UserLocal' => 'Utilisateur '.ITOP_APPLICATION_SHORT,
+	'Class:UserLocal+' => 'Utilisateur authentifié par '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Mot de passe',
 	'Class:UserLocal/Attribute:password+' => '',
 

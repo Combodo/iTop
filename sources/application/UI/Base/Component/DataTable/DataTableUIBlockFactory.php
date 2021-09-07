@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 use ApplicationException;
+use ApplicationContext;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
@@ -18,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Controller\AjaxRenderController;
 use DBObjectSet;
 use Dict;
 use MenuBlock;
@@ -129,10 +131,17 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			$iCount = $oSet->Count();
+			if(!empty($oDataTable->GetInitDisplayData()) && isset($oDataTable->GetInitDisplayData()['recordsTotal'])){
+				$iCount = $oDataTable->GetInitDisplayData()['recordsTotal'];
+			} else {
+				$iCount = $oSet->Count();
+			}
 			$sTitle = (isset($aExtraParams['panel_title'])) ? $aExtraParams['panel_title'] : "";
 			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), $sTitle)->AddCSSClass('ibo-datatable-panel');
 			$oContainer->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iCount));
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oContainer->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
@@ -286,14 +295,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 
-		if (count($oCustomSettings->aColumns) == 0)
-		{
+		if (count($oCustomSettings->aColumns) == 0) {
 			$oCustomSettings->aColumns = $oDefaultSettings->aColumns;
 		}
-		if(count($oCustomSettings->GetSortOrder()) == 0){
+		if (count($oCustomSettings->GetSortOrder()) == 0) {
 			$oCustomSettings->aSortOrder = $oDefaultSettings->aSortOrder;
 		}
 
+		$sIdName = isset($aExtraParams["id_for_select"]) ? $aExtraParams["id_for_select"] : "";
 		// Load only the requested columns
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
@@ -312,6 +321,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						if ($oAttDef->AlwaysLoadInTables()) {
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
+					}
+				} else {
+					if ($sIdName == "") {
+						$sIdName = $sAlias."/_key_";
 					}
 				}
 			}
@@ -420,15 +433,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl(utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php");
 		$oDataTable->SetAjaxData([
-			"operation" => 'search',
-			"filter" => $oSet->GetFilter()->serialize(),
-			"columns" => $oCustomSettings->aColumns,
-			"extra_params" => $aExtraParams,
+			"operation"     => 'search',
+			"filter"        => $oSet->GetFilter()->serialize(),
+			"columns"       => $oCustomSettings->aColumns,
+			"extra_params"  => $aExtraParams,
 			"class_aliases" => $aClassAliases,
-			"select_mode" => $sSelectMode,
+			"select_mode"   => $sSelectMode,
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
 		return $oDataTable;
 	}
@@ -538,6 +552,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$oSet->SetLimit($oCustomSettings->iDefaultPageSize);
 		}
 
+		$sIdName = isset($extraParams["id_for_select"]) ? $extraParams["id_for_select"] : "";
 		// Load only the requested columns
 		$aColumnsToLoad = array();
 		foreach ($oCustomSettings->aColumns as $sAlias => $aColumnsInfo) {
@@ -553,13 +568,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							$aColumnsToLoad[$sAlias][] = $sAttCode;
 						}
 					}
+				} else {
+					if ($sIdName == "") {
+						$sIdName = $sAlias."/_key_";
+					}
 				}
 			}
 		}
 		$oSet->OptimizeColumnLoad($aColumnsToLoad);
 
 		$aColumnDefinition = [];
-		$aSortOrder = [];
 		$iIndexColumn = 0;
 
 		$bSelectMode = isset($aExtraParams['selection_mode']) ? $aExtraParams['selection_mode'] == true : false;
@@ -574,28 +592,22 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		foreach ($aAuthorizedClasses as $sClassAlias => $sClassName) {
 			if (isset($oCustomSettings->aColumns[$sClassAlias])) {
 				foreach ($oCustomSettings->aColumns[$sClassAlias] as $sAttCode => $aData) {
-					if ($aData['sort'] != 'none') {
-						$sCode = ($aData['code'] == '_key_') ? 'friendlyname' : $aData['code'];
-						$aSortOrder[$sAlias.$sCode] = ($aData['sort'] == 'asc'); // true for ascending, false for descending
-						$aSortDatable = [$iIndexColumn, $aData['sort']];
+					if ($aData['sort'] != 'none' && $aSortDatable == []) {
+						$aSortDatable = [$index, $aData['sort']];
 					}
+
 					if ($aData['checked']) {
 						if ($sAttCode == '_key_') {
 							if ($bViewLink) {
-								if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
-									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
-								} else {
-									$sRender = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
-								}
 								$sAttLabel = MetaModel::GetName($sClassName);
 								$aColumnDefinition[] = [
-									'description' => $aData['label'],
-									'object_class' => $sClassName,
-									'class_alias' => $sClassAlias,
-									'attribute_code' => $sAttCode,
-									'attribute_type' => '_key_',
+									'description'     => $aData['label'],
+									'object_class'    => $sClassName,
+									'class_alias'     => $sClassAlias,
+									'attribute_code'  => $sAttCode,
+									'attribute_type'  => '_key_',
 									'attribute_label' => $sAttLabel,
-									"render" => "return row['".$sClassAlias."/hyperlink'];",
+									"render"          => "return row['".$sClassAlias."/hyperlink'];",
 								];
 							}
 						} else {
@@ -653,15 +665,16 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$oDataTable->SetOptions($aOptions);
 		$oDataTable->SetAjaxUrl("ajax.render.php");
 		$oDataTable->SetAjaxData([
-			"operation" => 'search',
-			"filter" => $oSet->GetFilter()->serialize(),
-			"columns" => $oCustomSettings->aColumns,
-			"extra_params" => $aExtraParams,
+			"operation"     => 'search',
+			"filter"        => $oSet->GetFilter()->serialize(),
+			"columns"       => $oCustomSettings->aColumns,
+			"extra_params"  => $aExtraParams,
 			"class_aliases" => $aClassAliases,
-			"select_mode" => $sSelectMode,
+			"select_mode"   => $sSelectMode,
 		]);
 		$oDataTable->SetDisplayColumns($aColumnDefinition);
 		$oDataTable->SetResultColumns($oCustomSettings->aColumns);
+		$oDataTable->SetInitDisplayData(AjaxRenderController::GetDataForTable($oSet, $aClassAliases, $aColumnsToLoad, $sIdName, $aExtraParams));
 
 		return $oDataTable;
 	}
@@ -704,10 +717,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			$aColumnDefinition["data"] = "";
 			$aColumnDefinition["render"]["display"] = "";
 			if ($sSelectMode != "single") {
-				$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . " var oCheckboxElem = $('<span class=\"row_input\"><input type=\"checkbox\" class=\"selectList".$sTableId."\" name=\"selectObject\" /></span>');";
+				$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . " var oCheckboxElem = $('<span class=\"row_input\"><input type=\"checkbox\" class=\"selectList".$sTableId."\" name=\"selectObject[]\" value='+row.id+' /></span>');";
 			}
 			else {
-				$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . " var oCheckboxElem = $('<span class=\"row_input\"><input type=\"radio\" class=\"selectList".$sTableId."\" name=\"selectObject\" /></span>');";
+				$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . " var oCheckboxElem = $('<span class=\"row_input\"><input type=\"radio\" class=\"selectList".$sTableId."\" name=\"selectObject[]\" value='+ row.id +' /></span>');";
 			}
 			$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"] . "	if (row.limited_access) { oCheckboxElem.html('-'); } else {	oCheckboxElem.find(':input').attr('data-object-id', row.id).attr('data-target-object-id', row.target_id); }";
 			$aColumnDefinition["render"]["display"] = $aColumnDefinition["render"]["display"]. "	return oCheckboxElem.prop('outerHTML');	";
@@ -734,11 +747,6 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							'attribute_label' => $aData['alias'],
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
-						if (MetaModel::IsValidAttCode($sClassName, 'obsolescence_flag')) {
-							$sDisplay = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>';  if (row['".$sClassAlias."/obsolescence_flag'].indexOf('no') == -1){displayField = '<span class=\"object-ref obsolete\" title=\"obsolete\"><a class=\'object-ref-link\' href=\'UI.php?operation=details&class=".$sClassName."&id='+data+'\'><span class=\"object-ref-icon text_decoration\"><span class=\"fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span></span>'+row['".$sClassAlias."/friendlyname']+'</a></span>';} return displayField;";
-						} else {
-							$sDisplay = "let displayField = '<span class=\"object-ref\" title=\"".$sClassAlias."::'+data+'\"><a class=\'object-ref-link\' href=\'".$oAppRoot."/pages/UI.php?operation=details&class=".$sClassName."&id='+data+'\'>'+row['".$sClassAlias."/friendlyname']+'</a></span>'; return displayField;";
-						}
 						$aColumnDefinition["render"] = [
 							"display" =>  "return row['".$sClassAlias."/hyperlink'];",
 							"_" => $sClassAlias."/".$sAttCode,
@@ -825,6 +833,23 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $aOptions;
 	}
 
+	/**
+	 * @param string $sTitle
+	 * @param array $aColumns
+	 * @param array $aData
+	 * @param string|null $sId
+	 * @param array $aExtraParams
+	 * @param string $sFilter
+	 * @param array $aOptions
+	 * *
+	 * $aColumns =[
+	 *           'nameField1' => ['label' => labelFIeld1, 'description' => descriptionField1],
+	 *           'nameField2' => ['label' => labelFIeld2, 'description' => descriptionField2],
+	 *           'nameField3' => ['label' => labelFIeld3, 'description' => descriptionField3]];
+	 * $aData = [['nameField1' => valueField1, 'nameField2' => valueField2, 'nameField3' => valueField3],...]
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 */
 	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null, array $aExtraParams = [], string $sFilter = "", array $aOptions = [])
 	{
 		$oBlock = new UIContentBlock();
@@ -872,6 +897,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		return $oTable;
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function GetAllowedParams(): array
 	{
 		return [

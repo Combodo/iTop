@@ -72,7 +72,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationEffect:NoChange' => 'Version: %1$s 已安装. 保持不变.',
 	'iTopHub:InstallationEffect:Upgrade' => '将从 version %1$s <b>升级</b> 到 version %2$s.',
 	'iTopHub:InstallationEffect:Downgrade' => '将从 version %1$s <b>降级</b> 到 version %2$s.',
-	'iTopHub:InstallationProgress:DatabaseBackup' => 'iTop 本机备份...',
+	'iTopHub:InstallationProgress:DatabaseBackup' => ITOP_APPLICATION_SHORT.' 本机备份...',
 	'iTopHub:InstallationProgress:ExtensionsInstallation' => '安装扩展',
 	'iTopHub:InstallationEffect:MissingDependencies' => '扩展无法安装,因为未知的依赖.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => '该扩展依赖模块: %1$s',

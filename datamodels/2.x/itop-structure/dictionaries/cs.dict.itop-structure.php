@@ -64,7 +64,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Organization/Attribute:overview' => 'Overview~~',
 	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => 'iTop Users within this organization~~',
+	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
 ));
 
 //

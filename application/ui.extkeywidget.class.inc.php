@@ -4,6 +4,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 /**
@@ -200,42 +204,35 @@ class UIExtKeyWidget
 			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
 			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
 			$aOptions = [];
-			$sDisplayValue = "";
 
 			$aOption = [];
 			$aOption['value'] = "";
 			$aOption['label'] = Dict::S('UI:SelectOne');
-			array_push($aOptions,$aOption);
+			array_push($aOptions, $aOption);
 
 			$oAllowedValues->Rewind();
-			$bAddingValue=false;
+			$sClassAllowed = $oAllowedValues->GetClass();
+			$bAddingValue = false;
 
-			$aComplementAttributeSpec = MetaModel::GetComplementAttributeSpec($oAllowedValues->GetClass());
+			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
 			$sFormatAdditionalField = $aComplementAttributeSpec[0];
 			$aAdditionalField = $aComplementAttributeSpec[1];
 
-			if (count($aAdditionalField)>0)
-			{
-				$bAddingValue=true;
+			if (count($aAdditionalField) > 0) {
+				$bAddingValue = true;
 			}
-			while($oObj = $oAllowedValues->Fetch())
-			{
-				$aOption=[];
+			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			$bInitValue = false;
+			while ($oObj = $oAllowedValues->Fetch()) {
+				$aOption = [];
 				$aOption['value'] = $oObj->GetKey();
 				$aOption['label'] = $oObj->GetName();//.'<span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>';
 
-				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
-				{
+				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
 					// When there is only once choice, select it by default
-					$sDisplayValue=$oObj->GetName();
-					if($value != $oObj->GetKey())
-					{
-						$value=$oObj->GetKey();
-					}
-				}
-				else {
-					if ((is_array($value) && in_array($oObj->GetKey(), $value)) || ($value == $oObj->GetKey())) {
-						$sDisplayValue = $oObj->GetName();
+					if ($value != $oObj->GetKey()) {
+						$value = $oObj->GetKey();
+						$bInitValue = true;
 					}
 				}
 				if ($oObj->IsObsolete()) {
@@ -248,6 +245,17 @@ class UIExtKeyWidget
 					}
 					$aOption['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
 				}
+				if (!empty($sObjectImageAttCode)) {
+					// Try to retrieve image for contact
+					/** @var \ormDocument $oImage */
+					$oImage = $oObj->Get($sObjectImageAttCode);
+					if (!$oImage->IsEmpty()) {
+						$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
+						$aOption['initials'] = '';
+					} else {
+						$aOption['initials'] = utils::ToAcronym($oObj->Get('friendlyname'));
+					}
+				}
 				array_push($aOptions, $aOption);
 			}
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
@@ -259,10 +267,12 @@ class UIExtKeyWidget
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$value');
 		$('#$this->iId').on('update', function() { oACWidget_{$this->iId}.Update(); } );
-		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange') } );
-
+		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange'); } );
 EOF
 			);
+			if ($bInitValue) {
+				$oPage->add_ready_script("$('#$this->iId').one('validate', function() { $(this).trigger('change'); } );");
+			}
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
 		}
 		else
@@ -811,21 +821,24 @@ JS
 		{
 			case static::ENUM_OUTPUT_FORMAT_JSON:
 
-			    $aJsonMap = array();
-			    foreach ($aValues as $sKey => $aValue)
-                {
-                    if ($aValue['additional_field'] != '')
-                    {
-	                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag'], 'additional_field' => $aValue['additional_field']);
-                    }
-                    else
-                    {
-	                    $aJsonMap[] = array('value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']);
-                    }
-                }
+				$aJsonMap = array();
+				foreach ($aValues as $sKey => $aValue) {
+					$aElt = ['value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']];
+					if ($aValue['additional_field'] != '') {
+						$aElt['additional_field'] = $aValue['additional_field'];
+					}
 
-			    $oP->SetContentType('application/json');
-                $oP->add(json_encode($aJsonMap));
+					if (array_key_exists('initials', $aValue)) {
+						$aElt['initials'] = $aValue['initials'];
+						if (array_key_exists('picture_url', $aValue)) {
+							$aElt['picture_url'] = $aValue['picture_url'];
+						}
+					}
+					$aJsonMap[] = $aElt;
+				}
+
+				$oP->SetContentType('application/json');
+				$oP->add(json_encode($aJsonMap));
 				break;
 
 			case static::ENUM_OUTPUT_FORMAT_CSV:
@@ -892,26 +905,17 @@ JS
             }
         }
 
-        $sDialogTitle = '';
-        $oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
-        $oPage->add('<form>');
-
 		$sClassLabel = MetaModel::GetName($this->sTargetClass);
-		$oPage->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
-		$oPage->add('<nobr><select name="class">');
-		asort($aPossibleClasses);
-		foreach($aPossibleClasses as $sClassName => $sClassLabel)
-		{
-			$oPage->add("<option value=\"$sClassName\">$sClassLabel</option>");
-		}
-		$oPage->add('</select>');
-		$oPage->add('&nbsp; <button type="submit" class="action" style="margin-top:15px;"><span>' . Dict::S('UI:Button:Ok') . '</span></button></nobr></p>');
+        $sDialogTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);;
+        $oBlock = UIContentBlockUIBlockFactory::MakeStandard('ac_create_'.$this->iId,['ibo-is-visible']);
+		$oPage->AddSubBlock($oBlock);
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+		$oBlock->AddSubBlock($oClassForm);
+		$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sClassLabel, $this->sTargetClass,   $aPossibleClasses));
 
-        $oPage->add('</form>');
-        $oPage->add('</div></div></div>');
-        $oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
+        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').removeAttr('onsubmit');");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
 
 	/**

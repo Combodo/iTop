@@ -61,7 +61,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
     'iTopUpdate:UI:DoBackup:Warning' => 'Backup is not recommended due to limited available disk space~~',
 
     'iTopUpdate:UI:DiskFreeSpace' => 'Disk free space~~',
-    'iTopUpdate:UI:ItopDiskSpace' => 'iTop disk space~~',
+    'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' disk space~~',
     'iTopUpdate:UI:DBDiskSpace' => 'Database disk space~~',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'File upload max size~~',
 

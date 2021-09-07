@@ -61,7 +61,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
     'iTopUpdate:UI:DoBackup:Warning' => 'Backup não recomendado devido ao espaço em disco limitado',
 
     'iTopUpdate:UI:DiskFreeSpace' => 'Espaço em disco disponível',
-    'iTopUpdate:UI:ItopDiskSpace' => 'Espaço em disco do iTop',
+    'iTopUpdate:UI:ItopDiskSpace' => 'Espaço em disco do '.ITOP_APPLICATION_SHORT,
     'iTopUpdate:UI:DBDiskSpace' => 'Espaço em disco da base de dados',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Tamanho máximo de envio de arquivos',
 

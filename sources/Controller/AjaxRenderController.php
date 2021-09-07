@@ -37,6 +37,66 @@ use WizardHelper;
 class AjaxRenderController
 {
 	/**
+	 * @param \DBObjectSet $oSet
+	 * @param $aResult
+	 * @param array $aClassAliases
+	 * @param array $aColumnsLoad
+	 * @param string $sIdName
+	 * @param array $aExtraParams
+	 * @param int $iDrawNumber
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public static function GetDataForTable(DBObjectSet $oSet, array $aClassAliases, array $aColumnsLoad, string $sIdName = "", array $aExtraParams = [], int $iDrawNumber = 1)
+	{
+		if (isset($aExtraParams['show_obsolete_data'])) {
+			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
+		} else {
+			$bShowObsoleteData = utils::ShowObsoleteData();
+		}
+		$oSet->SetShowObsoleteData($bShowObsoleteData);
+		$oKPI = new ExecutionKPI();
+		$aResult["draw"] = $iDrawNumber;
+		$aResult["recordsTotal"] = $oSet->Count();
+		$aResult["recordsFiltered"] = $aResult["recordsTotal"] ;
+		$aResult["data"] = [];
+		while ($aObject = $oSet->FetchAssoc()) {
+			$aObj = [];
+			foreach ($aClassAliases as $sAlias => $sClass) {
+				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
+					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
+					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
+					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
+						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+					}
+					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
+					if (!empty($sObjHighlightClass)) {
+						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
+					}
+				}
+			}
+			if (!empty($aObj)) {
+				if ($sIdName != "") {
+					if (isset($aObj[$sIdName])) {
+						$aObj["id"] = $aObj[$sIdName];
+					} else {
+						throw new Exception(Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $oSet->GetFilter()->ToOQL()));
+					}
+				}
+				array_push($aResult["data"], $aObj);
+			}
+		}
+		$oKPI->ComputeAndReport('Data fetch and format');
+
+		return $aResult;
+	}
+
+	/**
 	 * @param \AjaxPage $oPage
 	 *
 	 * @param bool $bTokenOnly
@@ -220,16 +280,16 @@ class AjaxRenderController
 		} else {
 			$oFilter = DBSearch::unserialize($sFilter);
 		}
-		$iStart = utils::ReadParam('start', 0);
-		$iEnd = utils::ReadParam('end', 1);
-		$iDrawNumber = utils::ReadParam('draw', 1);
+		$iStart = utils::ReadParam('start', 0, false, 'integer');
+		$iEnd = utils::ReadParam('end', 1, false, 'integer');
+		$iDrawNumber = utils::ReadParam('draw', 1, false, 'integer');
 
 		$aSort = utils::ReadParam('order', [], false, 'array');
 		$bForceSort = false;
 		if (count($aSort) > 0) {
 			$iSortCol = $aSort[0]["column"];
 			$sSortOrder = $aSort[0]["dir"];
-		} else{
+		} else {
 			$bForceSort = true;
 			$iSortCol = 0;
 			$sSortOrder = "asc";
@@ -343,8 +403,8 @@ class AjaxRenderController
 							$sIdName = $sAlias."/_key_";
 						}
 						if ($iSortCol == $iSortIndex) {
-							if (!MetaModel::HasChildrenClasses($oFilter->GetClass())) {
-								$aNameSpec = MetaModel::GetNameSpec($oFilter->GetClass());
+							if (!MetaModel::HasChildrenClasses($sClassName)) {
+								$aNameSpec = MetaModel::GetNameSpec($sClassName);
 								if ($aNameSpec[0] == '%1$s') {
 									// The name is made of a single column, let's sort according to the sort algorithm for this column
 									$aOrderBy[$sAlias.'.'.$aNameSpec[1][0]] = ($sSortOrder == 'asc');
@@ -389,46 +449,7 @@ class AjaxRenderController
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aQueryParams, null, $iEnd - $iStart, $iStart);
 		$oSet->OptimizeColumnLoad($aColumnsLoad);
 
-		if (isset($aExtraParams['show_obsolete_data'])) {
-			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
-		} else {
-			$bShowObsoleteData = utils::ShowObsoleteData();
-		}
-		$oSet->SetShowObsoleteData($bShowObsoleteData);
-		$oKPI = new ExecutionKPI();
-		$aResult["draw"] = $iDrawNumber;
-		$aResult["recordsTotal"] = $oSet->Count();
-		$aResult["recordsFiltered"] = $oSet->Count();
-		$aResult["data"] = [];
-		while ($aObject = $oSet->FetchAssoc()) {
-			$aObj = [];
-			foreach ($aClassAliases as $sAlias => $sClass) {
-				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
-					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
-					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
-					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
-						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
-					}
-					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
-					if (!empty($sObjHighlightClass)) {
-						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
-					}
-				}
-			}
-			if (isset($aObj)) {
-				if ($sIdName != "") {
-					if (isset($aObj[$sIdName])) {
-						$aObj["id"] = $aObj[$sIdName];
-					} else {
-						throw new Exception(Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $oSet->GetFilter()->ToOQL()));
-					}
-				}
-				array_push($aResult["data"], $aObj);
-			}
-		}
-		$oKPI->ComputeAndReport('Data fetch and format');
-
-		return $aResult;
+		return self::GetDataForTable($oSet, $aClassAliases, $aColumnsLoad, $sIdName, $aExtraParams, $iDrawNumber);
 	}
 
 	/**

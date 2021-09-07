@@ -9,7 +9,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
 	'Menu:iTopHub:Register' => 'Se connecter à iTop Hub',
-	'Menu:iTopHub:Register+' => 'Connectez-vous à iTop Hub pour enregistrer cette instance d\'iTop',
+	'Menu:iTopHub:Register+' => 'Connectez-vous à iTop Hub pour enregistrer cette instance d\''.ITOP_APPLICATION_SHORT,
 	'Menu:iTopHub:Register:Description' => '<p>Connectez-vous à la communauté iTop Hub!</br>Trouvez tout le contenu dont vous avez besoin, gérer vos instances d\'iTop depuis un tableau de bord centralisé et déployez de nouvelles extensions.</br><br/>En vous connectant au Hub depuis cette page, vous transmettez au Hub des informations relatives à cette instance d\'iTop.</p>',
 	'Menu:iTopHub:MyExtensions' => 'Extensions déployées',
 	'Menu:iTopHub:MyExtensions+' => 'Voir la liste des extensions déployes sur cette instance',
@@ -45,11 +45,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopHub:GetMoreExtensions' => 'Obtenir des extensions depuis iTop Hub...',
 
 	'iTopHub:LandingWelcome' => 'Félicitations! Les extensions ci-dessous ont été téléchargées depuis iTop Hub et installées sur cette instance d\'iTop.',
-	'iTopHub:GoBackToITopBtn' => 'Retourner dans iTop',
+	'iTopHub:GoBackToITopBtn' => 'Retourner dans '.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => 'Décompression des extensions...',
 	'iTopHub:InstallationWelcome' => 'Installation des extensions téléchargées depuis iTop Hub',
-	'iTopHub:DBBackupLabel' => 'Sauvegarde de l\'instance iTop',
-	'iTopHub:DBBackupSentence' => 'Faire une sauvegarde de la base de données et des paramétrages d\'iTop',
+	'iTopHub:DBBackupLabel' => 'Sauvegarde de l\'instance '.ITOP_APPLICATION_SHORT,
+	'iTopHub:DBBackupSentence' => 'Faire une sauvegarde de la base de données et des paramétrages d\''.ITOP_APPLICATION_SHORT,
 	'iTopHub:DeployBtn' => 'Déployer !',
 	'iTopHub:DatabaseBackupProgress' => 'Sauvegarde de l\'instance...',
 

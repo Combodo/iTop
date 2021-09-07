@@ -831,6 +831,11 @@ try
 				$iCacheSec = (int)utils::ReadParam('cache', 0);
 				$oPage->set_cache($iCacheSec);
 
+				// N°4129 - Prevent XSS attacks & other script executions
+				if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+					$oPage->add_header('Content-Security-Policy: sandbox;');
+				}
+
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
 				$oKPI->ComputeAndReport('Data fetch and format');
 			}
@@ -1422,7 +1427,7 @@ EOF
 			foreach($aLicenses as $oLicense)
 			{
 				$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
-				$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
+				$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 				$oPage->add_ready_script(<<<JS
 $("#toggle_$index").on('click', function() { 
 	$(this).toggleClass('open');
@@ -1447,20 +1452,23 @@ JS
 			$aChoices = $oExtensionsMap->GetChoices();
 			foreach($aChoices as $oExtension)
 			{
+				$sDecorationClass = '';
 				switch ($oExtension->sSource)
 				{
 					case iTopExtension::SOURCE_REMOTE:
-						$sSource = ' <span class="extension-source">'.Dict::S('UI:About:RemoteExtensionSource').'</span>';
+						$sSource = Dict::S('UI:About:RemoteExtensionSource');
+						$sDecorationClass = 'fc fc-chameleon-icon';
 						break;
 
 					case iTopExtension::SOURCE_MANUAL:
-						$sSource = ' <span class="extension-source">'.Dict::S('UI:About:ManualExtensionSource').'</span>';
+						$sSource = Dict::S('UI:About:ManualExtensionSource');
+						$sDecorationClass = 'fas fa-folder';
 						break;
 
 					default:
 						$sSource = '';
 				}
-				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.$sSource.'</li>');
+				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.'<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sSource.'"></i></li>');
 			}
 			$oPage->add('</ul>');
 			$oPage->add("</div>");
@@ -2231,13 +2239,13 @@ EOF
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))."</h1>\n");
-				$oPage->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass))."</h2>\n");
-				$oPage->add("</div>\n");
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))));
 				$oBlock = new DisplayBlock($oSearch, 'list');
-				$oBlock->Display($oPage, 'group_'.$iBlock++);
-				$oPage->p('&nbsp;'); // Some space ?
+				$oBlock->Display($oPage, 'group_'.$iBlock++, array('surround_with_panel' => true,
+				                                                    'panel_class' => $sListClass,
+				                                                    'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass)),
+				                                                    'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
+				));
 			}
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
@@ -2251,12 +2259,13 @@ EOF
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aKeys, 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->add("<div class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass))."</h2>\n");
-				$oPage->add("</div>\n");
 				$oBlock = new DisplayBlock($oSearch, 'list');
-				$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass));
-				$oPage->p('&nbsp;'); // Some space ?
+				$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass,
+				                                                  'surround_with_panel' => true,
+				                                                  'panel_class' => $sListClass,
+				                                                  'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass)),
+				                                                  'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
+				));
 			}
 			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
@@ -2720,10 +2729,9 @@ EOF
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
 					$aMatch = [
-						'class' => $sObjectClass,
-						'id' => $iObjectId,
+						'class'        => $sObjectClass,
+						'id'           => $iObjectId,
 						'friendlyname' => $oObject->Get('friendlyname'),
-						'initials' => '',
 					];
 
 					// Try to retrieve image for contact
@@ -2731,12 +2739,14 @@ EOF
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
 						if (!$oImage->IsEmpty()) {
-							$aMatch['picture_url'] = $oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode);
+							$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode)."')";
+							$aMatch['initials'] = '';
+						} else {
+							// If no image found, fallback on initials
+							$aMatch['picture_style'] = '';
+							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
 						}
 					}
-
-					// If no image found, fallback on initials
-					$aMatch['initials'] = array_key_exists('picture_url', $aMatch) ? '' : utils::ToAcronym($oObject->Get('friendlyname'));
 
 					$aMatches[] = $aMatch;
 				}

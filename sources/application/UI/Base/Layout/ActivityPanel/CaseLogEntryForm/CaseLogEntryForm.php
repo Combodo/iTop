@@ -10,6 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\RichText\RichText;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
+use MetaModel;
 
 /**
  * Class CaseLogEntryForm
@@ -101,6 +102,16 @@ class CaseLogEntryForm extends UIContentBlock
 	public function GetAttCode(): string
 	{
 		return $this->sAttCode;
+	}
+
+	/**
+	 * @see static::$sAttCode
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function GetAttLabel(): string
+	{
+		return MetaModel::GetLabel($this->GetObjectClass(), $this->GetAttCode());
 	}
 
 	/**

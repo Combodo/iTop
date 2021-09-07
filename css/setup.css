@@ -605,7 +605,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
 /* NOTE: Those helpers allow to easily use an icon from libs. like FontAwesome or FontCombodo within a CSS rule (eg. ::after) */
 /* To use it, simply "@extend %fa-regular-base" in a rule and put the desired icon "content: '\f054'"                         */
 /******************************************************************************************************************************/
-.dataTables_scrollHead thead tr th.sorting::after, .ibo-breadcrumbs--item:not(:last-child)::after, .ibo-prop--apply.ui-state-error:after, .ibo-sort-order::after {
+.dataTables_scrollHead thead tr th.sorting::after, .ibo-breadcrumbs--item:not(:last-child)::after, .ibo-prop--apply.ui-state-error:after, .ibo-sort-order::after, .collapsable-options [data-role="setup-collapsable-options--toggler"]::before, #params_summary div.closed .title::before, #params_summary div:not(.closed) .title::before {
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   -webkit-font-smoothing: antialiased;
@@ -750,7 +750,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
   -moz-font-feature-settings: "lnum";
   font-feature-settings: "lnum";
 }
-.ibo-font-ral-nor-250, .ui-dialog-title, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-welcome-message, .ibo-welcome-popup--text {
+.ibo-font-ral-nor-250, .ui-dialog-title, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-welcome-message, .ibo-welcome-popup--text, #ibo_setup_container .ibo-setup--body .setup-content-title, #ibo_setup_container .ibo-setup--body h2, .setup-end-placeholder a {
   font-size: 1.5rem;
   font-family: "Raleway", "sans-serif", "system-ui";
   font-weight: 400;
@@ -1291,7 +1291,7 @@ ul.cke_autocomplete_panel, .ibo-quick-create--input.selectize-control.single .se
 .ibo-is-fullwidth {
   width: 100%;
 }
-ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image, .ibo-panel--header-left, .ibo-panel--icon, .ibo-dashlet-header-static--icon-container, .ibo-input-image--image-view, .ibo-pill, .ibo-title--icon, .ibo-datatable--toolbar-left, .ibo-datatable--toolbar-right, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--bottom-part, .ibo-navigation-menu--user-info, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-picture, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-object-details--status-dot, .ibo-activity-panel--togglers, .ibo-activity-panel--tabs-togglers, .ibo-activity-panel--tab-title, .ibo-activity-panel--tab-toolbar-actions, .ibo-activity-panel--tab-toolbar-action, .ibo-activity-panel--body--placeholder-image, .ibo-activity-panel--body--placeholder-hint, .ibo-activity-panel--closed-cover, .ibo-caselog-entry-form--lock-icon, .ibo-activity-entry--medallion, .ibo-activity-panel--load-more-entries-container, .ibo-activity-panel--load-entries-button {
+ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image, .ibo-panel--header-left, .ibo-panel--icon, .ibo-dashlet-header-static--icon-container, .ibo-input-image--image-view, .ibo-select--autocomplete-item-image, .ibo-pill, .ibo-title--icon, .ibo-datatable--toolbar-left, .ibo-datatable--toolbar-right, .ibo-field--fullscreen-toggler, .ibo-navigation-menu--bottom-part, .ibo-navigation-menu--user-info, .ibo-navigation-menu--user-info .ibo-navigation-menu--user-picture, .ibo-tab-container--tab-toggler, .ibo-tab-container--extra-tabs-list-toggler, .ibo-object-details--status-dot, .ibo-activity-panel--togglers, .ibo-activity-panel--tabs-togglers, .ibo-activity-panel--tab-title, .ibo-activity-panel--tab-toolbar-actions, .ibo-activity-panel--tab-toolbar-action, .ibo-activity-panel--body--placeholder-image, .ibo-activity-panel--body--placeholder-hint, .ibo-activity-panel--closed-cover, .ibo-caselog-entry-form--lock-icon, .ibo-activity-entry--medallion, .ibo-activity-panel--load-more-entries-container, .ibo-activity-panel--load-entries-button {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -1356,6 +1356,10 @@ body.ibo-has-fullscreen-descendant {
 .dataTables_paginate a.paginate_button:hover, .dataTables_paginate .ibo-quick-create--compartment-results--element > .paginate_button.option:hover, .ibo-dashlet-badge--action-list:hover, .ibo-dashlet-badge--action-list:active:hover, .ibo-field--fullscreen-toggler:hover, .search_form_handler a:hover, .search_form_handler .ibo-quick-create--compartment-results--element > .option:hover, .ibo-navigation-menu--menu-filter-clear:hover, .ibo-navigation-menu--menu-filter-hint-close:hover, .ibo-tab-container--tab-toggler:hover, .ibo-tab-container--extra-tabs-list-toggler:hover, .ibo-activity-panel--load-entries-button:hover, .dataTables_paginate a.paginate_button:active, .ibo-dashlet-badge--action-list:hover:active, .ibo-dashlet-badge--action-list:active, .ibo-field--fullscreen-toggler:active, .search_form_handler a:active, .ibo-navigation-menu--menu-filter-clear:active, .ibo-navigation-menu--menu-filter-hint-close:active, .ibo-tab-container--tab-toggler:active, .ibo-tab-container--extra-tabs-list-toggler:active, .ibo-activity-panel--load-entries-button:active {
   color: inherit;
 }
+.ibo-is-broken-hyperlink {
+  text-decoration: line-through;
+  cursor: help;
+}
 .ibo-is-code {
   background-color: #f2f2f2;
   padding: 1.25rem 1.5rem;
@@ -1364,6 +1368,9 @@ body.ibo-has-fullscreen-descendant {
  * A single class to handle WYSIWYG generated content, where only HTML tags are available
  * See https://bulma.io/documentation/elements/content/
  */
+.ibo-is-html-content code {
+  color: initial;
+}
 /***********************************************************************/
 /* Sticky headers                                                      */
 /*                                                                     */
@@ -1418,6 +1425,10 @@ body.ibo-has-fullscreen-descendant {
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
+ */
+/**
+ * customize Bulma content variables
+ * See https://bulma.io/documentation/elements/content/
  */
 /*! bulma.io v0.9.0 | MIT License | github.com/jgthms/bulma */
 @keyframes spinAround {
@@ -2964,8 +2975,8 @@ a.box:active {
   width: 100%;
 }
 .content table td, .ibo-is-html-content table td, .content table th, .ibo-is-html-content table th {
-  border: 1px solid #dbdbdb;
-  border-width: 0 0 1px;
+  border: 1px solid black;
+  border-width: 1px;
   padding: 0.5em 0.75em;
   vertical-align: top;
 }
@@ -2976,12 +2987,12 @@ a.box:active {
   text-align: inherit;
 }
 .content table thead td, .ibo-is-html-content table thead td, .content table thead th, .ibo-is-html-content table thead th {
-  border-width: 0 0 2px;
+  border-width: 1px;
   color: #363636;
 }
 .content table tfoot td, .ibo-is-html-content table tfoot td, .content table tfoot th, .ibo-is-html-content table tfoot th {
-  border-width: 2px 0 0;
-  color: #363636;
+  border-width: 1px;
+  color: black;
 }
 .content table tbody tr:last-child td, .ibo-is-html-content table tbody tr:last-child td, .content table tbody tr:last-child th, .ibo-is-html-content table tbody tr:last-child th {
   border-bottom-width: 0;
@@ -10349,7 +10360,7 @@ a.has-text-danger-dark:hover, .ibo-quick-create--compartment-results--element > 
   padding: 0.9rem !important;
   box-shadow: 0 0px 3px 2px inset rgba(0, 0, 0, 0.4);
   border-radius: 3px;
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 /* Mentions in caselogs */
 /* Note: Mind the "ul", it allows us to have a more precise rule than the original plugin's CSS so we can override it */
@@ -10366,14 +10377,19 @@ ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item {
 ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-image {
   width: 25px;
   height: 25px;
+  /* min-xxx are here to avoid medallion to be horizontally compressed when the title is to long */
+  min-width: 25px;
+  min-height: 25px;
   background-position: center center;
   background-size: 100%;
   border-radius: 100%;
   margin-right: 0.5rem;
-  background-color: #e1e7ec;
+  background-color: #ebf8ff;
   border: 1px solid #929fb1;
 }
 ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-title {
+  white-space: nowrap;
+  /* Here we don't want to truncate the text as in an autocomplete we might have similar values and we need the user to see the entire text to be able to differenciate them */
   color: #3A3A3A;
 }
 /*!
@@ -10827,6 +10843,9 @@ ul.cke_autocomplete_panel .ibo-vendors-ckeditor--autocomplete-item-title {
   left: 0;
   cursor: default;
   z-index: 100;
+}
+.ui-autocomplete .ui-menu-item {
+  padding: 0;
 }
 .ui-autocomplete-input {
   width: auto;
@@ -13453,6 +13472,27 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
   background-color: #f5fafd;
   color: #495c68;
 }
+.ibo-select--autocomplete-item {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+.ibo-select--autocomplete-item-image {
+  width: 25px;
+  height: 25px;
+  /* min-xxx are here to avoid medallion to be horizontally compressed when the title is to long */
+  min-width: 25px;
+  min-height: 25px;
+  background-position: center center;
+  background-size: 100%;
+  border-radius: 100%;
+  margin-right: 0.5rem;
+  background-color: #ebf8ff;
+  border: 1px solid #929fb1;
+}
+.ibo-select--autocomplete-item-txt {
+  white-space: nowrap;
+}
 .ibo-input-select-icon > img {
   max-height: 100%;
   max-width: 100%;
@@ -13772,7 +13812,7 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
 }
 .ibo-field:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container) .ibo-field--value * {
   word-break: break-word;
-  white-space: pre-wrap;
+  white-space: pre-line;
 }
 .ibo-field ~ .ibo-field {
   margin-top: 16px;
@@ -14405,7 +14445,7 @@ img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-naviga
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion > * {
   background-color: white;
-  color: #dd6c20;
+  color: #37474f;
 }
 .search_form_handler .sf_criterion_area .sf_more_criterion .sfm_toggler .sfm_tg_title {
   margin-right: 7px;
@@ -16240,7 +16280,7 @@ input:checked + .ibo-dashboard--slider:after {
   /* Avoid pre (code snippets) to overflow outside the entry */
 }
 .ibo-activity-entry--main-information-content pre {
-  white-space: pre-wrap;
+  white-space: pre-line;
   /* Avoid table to overflow outside the entry (see N°2127) */
 }
 .ibo-activity-entry--main-information-content table {
@@ -17139,6 +17179,8 @@ tr.row_added td {
    */
 }
 #ibo-main-content .ibo-panel.ibo-has-sticky-header {
+  margin-bottom: 200px;
+  /* Add a margin below the panel so the dropdown lists can open without problem (N°4039) */
   /* Stickable header rules */
 }
 #ibo-main-content .ibo-panel.ibo-has-sticky-header > .ibo-sticky-sentinel-top {
@@ -17450,10 +17492,9 @@ h3.clickable.open {
 fieldset {
   border: none;
   padding: 0;
-  margin: 30px 0 0 0;
+  margin: 15px 0 0 0;
 }
 fieldset > legend {
-  margin-top: 25px;
   margin-bottom: 7px;
   padding-bottom: 7px;
   width: 100%;
@@ -17505,13 +17546,10 @@ body {
   border-bottom: none;
   border-radius: 3px 3px 0 0;
 }
-#ibo_setup_container .ibo-setup--header img {
+#ibo_setup_container .ibo-setup--header .ibo-title--icon {
   border: 0;
   vertical-align: middle;
   margin-right: 20px;
-}
-#ibo_setup_container .ibo-setup--header h1 {
-  margin-top: 10px;
 }
 #ibo_setup_container .ibo-setup--body {
   display: flex;
@@ -17562,10 +17600,10 @@ body {
   margin-top: 5px;
 }
 #ibo_setup_container .ibo-setup--body .ibo-fieldset, #ibo_setup_container .ibo-setup--body fieldset {
-  margin-top: 25px;
+  margin-top: 12px;
 }
 #ibo_setup_container .ibo-setup--body .ibo-fieldset ~ .ibo-fieldset, #ibo_setup_container .ibo-setup--body fieldset ~ .ibo-fieldset, #ibo_setup_container .ibo-setup--body .ibo-fieldset ~ fieldset, #ibo_setup_container .ibo-setup--body fieldset ~ fieldset {
-  margin-top: 25px;
+  margin-top: 12px;
 }
 #ibo_setup_container .ibo-setup--body .ibo-field {
   margin-top: 5px;
@@ -17599,6 +17637,19 @@ body {
   max-height: 400px;
   overflow: auto;
 }
+#ibo_setup_container .ibo-setup--body .ibo-input, #ibo_setup_container .ibo-setup--body .ui-autocomplete-input, #ibo_setup_container .ibo-setup--body .ui-multiselect, #ibo_setup_container .ibo-setup--body .dataTables_length select, .dataTables_length #ibo_setup_container .ibo-setup--body select, #ibo_setup_container .ibo-setup--body .ui_tpicker_hour_slider > select, #ibo_setup_container .ibo-setup--body .ui_tpicker_minute_slider > select, #ibo_setup_container .ibo-setup--body .ui_tpicker_second_slider > select, #ibo_setup_container .ibo-setup--body .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_content input[type="text"], .search_form_handler .sf_criterion_area .search_form_criteria .sfc_form_group .sfc_fg_operators .sfc_fg_operator .sfc_op_content #ibo_setup_container .ibo-setup--body input[type="text"], #ibo_setup_container .ibo-setup--body .search_form_handler .sf_filter .sff_input_wrapper input[type="text"], .search_form_handler .sf_filter .sff_input_wrapper #ibo_setup_container .ibo-setup--body input[type="text"] {
+  width: auto;
+  display: inline-block;
+}
+#ibo_setup_container .ibo-setup--body table td {
+  white-space: nowrap;
+  line-height: 2.5rem;
+  padding-right: 8px;
+  padding-bottom: 1rem;
+}
+#ibo_setup_container .ibo-setup--body .setup-content-title, #ibo_setup_container .ibo-setup--body h2 {
+  margin-bottom: 18px;
+}
 .ibo-setup--button-bar {
   margin-top: 16px;
 }
@@ -17611,4 +17662,122 @@ body {
 .ibo-setup-summary-title {
   font-size: 1.17rem;
 }
+.setup-prefix-toggler--input--container, .setup-tls--input--container, .setup-disk-location--input--container, .setup-backup--input--container {
+  display: flex;
+  line-height: 2.5rem;
+  margin: 1rem 0;
+}
+.setup-prefix-toggler--input--container input, .setup-tls--input--container input, .setup-disk-location--input--container input, .setup-backup--input--container input {
+  margin: 0 8px;
+}
+.setup-disk-location--input--container input, .setup-backup--input--container input {
+  flex-grow: 1;
+}
+.collapsable-options {
+  margin-bottom: 18px;
+}
+.collapsable-options [data-role="setup-collapsable-options--toggler"]::before {
+  margin-right: 8px;
+  cursor: pointer;
+}
+.collapsable-options:not(.setup-is-opened) [data-role="setup-collapsable-options--toggler"]::before {
+  content: '\f078';
+}
+.collapsable-options.setup-is-opened [data-role="setup-collapsable-options--toggler"]::before {
+  content: '\f077';
+}
+.setup-input--hint--icon {
+  color: #6e7a8a;
+}
+.setup-invalid-field--icon {
+  color: #c53030;
+  margin-left: 8px;
+}
+.setup-accept-licenses {
+  margin-top: 18px;
+}
+.setup-accept-licenses input {
+  margin-right: 8px;
+}
+.module-selection-banner {
+  display: flex;
+}
+.module-selection-banner > img {
+  margin-right: 12px;
+}
+.setup-end-placeholder {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.setup-end-placeholder > div {
+  padding: 0px 15px;
+}
+.setup-end-placeholder a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.setup-end-placeholder a svg {
+  max-height: 150px;
+  margin-bottom: 15px;
+  width: auto;
+}
+.setup-extension--icon {
+  margin-right: 5px;
+  color: #2b6bb0;
+  font-size: 1.33rem;
+}
 /* integrityCheck: end (do not remove/edit) */
+/* Legacy inline stuff */
+#params_summary {
+  overflow: auto;
+}
+#params_summary div {
+  width: 100%;
+  margin-top: 0;
+  padding-top: 0.5em;
+  padding-left: 0;
+}
+#params_summary div ul {
+  margin-left: 0;
+  padding-left: 40px;
+}
+#params_summary div.closed ul {
+  display: none;
+}
+#params_summary div li {
+  list-style: none;
+  width: 100%;
+  margin-left: 0;
+  padding-left: 0em;
+}
+.title {
+  padding-left: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#params_summary div.closed .title::before {
+  margin-right: 5px;
+  content: '\f078';
+}
+#params_summary div:not(.closed) .title::before {
+  margin-right: 5px;
+  content: '\f077';
+}
+#progress_content {
+  height: 200px;
+  overflow: auto;
+  text-align: center;
+}
+#installation_progress {
+  display: none;
+}
+#fresh_content {
+  border: 0;
+  min-height: 300px;
+  min-width: 600px;
+  display: none;
+  margin-left: auto;
+  margin-right: auto;
+}

@@ -37,5 +37,5 @@
 //
 Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserExternal' => 'Externí uživatel',
-	'Class:UserExternal+' => 'Uživatel definovaný mimo iTop',
+	'Class:UserExternal+' => 'Uživatel definovaný mimo '.ITOP_APPLICATION_SHORT,
 ));

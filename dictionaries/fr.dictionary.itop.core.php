@@ -127,13 +127,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEnum+' => 'Valeur choisie parmi un liste de chaîne de caractères',
 
 	'Core:AttributeTemplateString' => 'Modèle de chaîne de caractères',
-	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeTemplateText' => 'Modèle de texte',
-	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeTemplateHTML' => 'Modèle HTML',
-	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeDateTime' => 'Date/heure',
 	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',

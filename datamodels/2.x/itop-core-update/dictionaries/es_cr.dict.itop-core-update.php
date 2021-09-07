@@ -61,7 +61,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'iTopUpdate:UI:DoBackup:Warning' => 'El respaldo no está recomendado por el limitado espacio en el dispositivo',
 
     'iTopUpdate:UI:DiskFreeSpace' => 'Espaciolibre en el dispositivo',
-    'iTopUpdate:UI:ItopDiskSpace' => 'Espacio en diso de iTop',
+    'iTopUpdate:UI:ItopDiskSpace' => 'Espacio en diso de '.ITOP_APPLICATION_SHORT,
     'iTopUpdate:UI:DBDiskSpace' => 'Espacio en diso de base de datos',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Máximo tamaño de subida de archivos',
 

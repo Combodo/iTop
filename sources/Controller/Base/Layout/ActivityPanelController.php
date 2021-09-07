@@ -116,6 +116,14 @@ class ActivityPanelController
 				'html_rendering' => $sEntryAsHtml,
 			];
 		}
+		
+		// Invoke extensions after the update of the object from the activity form
+		/** @var \iApplicationUIExtension $oExtensionInstance */
+		foreach(MetaModel::EnumPlugins('iApplicationUIExtension') as $oExtensionInstance)
+		{
+			$oExtensionInstance->OnFormSubmit($oObject);
+		}
+
 		$oObject->DBWrite();
 
 		// Finalize inline images
