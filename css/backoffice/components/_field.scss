@@ -64,7 +64,6 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
   .ibo-field--label {
     position: relative; /* Necessary for fullscreen toggler */
     display: flex;
-    justify-content: space-between;
     align-items: center;
     max-width: initial;
     width: 100%;
@@ -120,7 +119,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   @extend %ibo-hyperlink-inherited-colors;
   @extend %ibo-fully-centered-content;
-  @extend %ibo-font-size-100;
+  @extend %ibo-font-size-50;
 
   &:hover {
     background-color: $ibo-field--fullscreen-toggler--background-color--on-hover;
