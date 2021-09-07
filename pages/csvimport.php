@@ -1009,7 +1009,7 @@ EOF
 					if ($(this).val() == sRefValue)
 					{
 						iOccurences++;
-					}c
+					}
 				});
 				if ((iOccurences > 1) && (sRefValue != ':none:'))
 				{

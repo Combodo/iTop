@@ -911,9 +911,21 @@ class DeprecatedCallsLog extends LogAPI
 
 		$iStackCallerMethodLevel = $iStackDeprecatedMethodLevel + 1; // level 3 = caller of the deprecated method
 		if (array_key_exists($iStackCallerMethodLevel, $aStack)) {
-			$sCallerObject = $aStack[3]['class'];
-			$sCallerMethod = $aStack[3]['function'];
-			$sMessage .= " ({$sCallerObject}::{$sCallerMethod})";
+			$sCallerObject = $aStack[$iStackCallerMethodLevel]['class'] ?? null;
+			$sCallerMethod = $aStack[$iStackCallerMethodLevel]['function'] ?? null;
+			$sMessage .= ' (';
+			if (!is_null($sCallerObject)) {
+				$sMessage .= "{$sCallerObject}::{$sCallerMethod}";
+			} else {
+				$sCallerMethodFile = $aStack[$iStackCallerMethodLevel]['file'];
+				$sCallerMethodLine = $aStack[$iStackCallerMethodLevel]['line'];
+				if (!is_null($sCallerMethod)) {
+					$sMessage .= "call to {$sCallerMethod}() in {$sCallerMethodFile}#L{$sCallerMethodLine}";
+				} else {
+					$sMessage .= "{$sCallerMethodFile}#L{$sCallerMethodLine}";
+				}
+			}
+			$sMessage .= ')';
 		}
 
 		if (!empty($errstr)) {

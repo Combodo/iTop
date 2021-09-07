@@ -693,6 +693,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Výraz',
 	'UI:RunQuery:HeaderOQLExpression+' => '',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Výraz k určeniu: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Viac informácií o dopyte: ',
 	'UI:RunQuery:DevelopedQuery' => 'Dopyt rozvinutého výrazu: ',
 	'UI:RunQuery:SerializedFilter' => 'Serializovaný filter: ',

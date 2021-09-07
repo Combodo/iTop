@@ -202,17 +202,6 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
   flex-grow: 1; /* So it occupies all the remaining width, which is easier for the user to click */
   word-break: break-word; /* To avoid content to overflow its container (typically very long URLs) */
 
-  /* Avoid pre (code snippets) to overflow outside the entry */
-  pre {
-    white-space: pre-line;
-  }
-
-  /* Avoid table to overflow outside the entry (see N°2127) */
-  table {
-    table-layout: fixed;
-    width: 100%;
-  }
-
   /* Specific hyperlink color */
   a {
     color: $ibo-activity-entry--main-information-hyperlink--text-color;

@@ -692,6 +692,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL式',
 	'UI:RunQuery:HeaderOQLExpression+' => 'OQL文法によるクエリ',
 	'UI:RunQuery:ExpressionToEvaluate' => '評価式',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'クエリに関する追加情報',
 	'UI:RunQuery:DevelopedQuery' => 'クエリ式の再開発',
 	'UI:RunQuery:SerializedFilter' => 'シリアライズされたフィルタ：',

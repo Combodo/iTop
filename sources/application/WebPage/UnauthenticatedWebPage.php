@@ -60,8 +60,6 @@ class UnauthenticatedWebPage extends NiceWebPage
 	
 	// TODO 3.0 Find a clever way to allow theme customization for unauthenticated webpages
 	private $sCustomThemeUrl;
-	/** @var array $aReadyScripts */
-	protected $aReadyScripts;
 
 	/**
 	 * @inheritDoc
@@ -71,7 +69,6 @@ class UnauthenticatedWebPage extends NiceWebPage
 	{
 		parent::__construct($s_title, $bPrintable);
 
-		$this->aReadyScripts = array();
 		$this->sContent = '';
 		$this->sPanelTitle = '';
 		$this->sPanelIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png';
@@ -109,14 +106,6 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$this->sContent .= $sHtml;
 	}
 	
-	/**
-	 * @inheritdoc
-	 */
-	public function add_ready_script($sScript)
-	{
-		$this->aReadyScripts[] = $sScript;
-	}
-
 	/**
 	 * @inheritdoc
 	 */

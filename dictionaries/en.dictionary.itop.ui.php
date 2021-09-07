@@ -720,6 +720,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Expression',
 	'UI:RunQuery:HeaderOQLExpression+' => 'The query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expression to evaluate: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments',
 	'UI:RunQuery:MoreInfo' => 'More information about the query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Serialized filter: ',

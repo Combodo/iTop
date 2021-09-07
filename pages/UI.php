@@ -8,12 +8,8 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
-use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
-use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
@@ -753,54 +749,7 @@ EOF
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
 			} else {
 				// Select the derived class to create
-				$sClassLabel = MetaModel::GetName($sClass);
-				$sClassIconUrl = MetaModel::GetClassIcon($sClass, false);
-				$sTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
-
-				$oP->set_title($sTitle);
-				$oPanel = PanelUIBlockFactory::MakeForClass($sClass, $sTitle)
-					->SetIcon($sClassIconUrl);
-				$oP->AddUiBlock($oPanel);
-
-				$oClassForm = FormUIBlockFactory::MakeStandard();
-				$oPanel->AddMainBlock($oClassForm);
-
-				$oClassForm->AddSubBlock(HtmlFactory::MakeParagraph(Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel)))
-					->AddHtml($oAppContext->GetForForm())
-					->AddSubBlock(InputUIBlockFactory::MakeForHidden('checkSubclass', '0'))
-					->AddSubBlock(InputUIBlockFactory::MakeForHidden('state', $sStateCode))
-					->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'new'));
-
-				$aDefaults = utils::ReadParam('default', array(), false, 'raw_data');
-				foreach ($aDefaults as $key => $value) {
-					if (is_array($value)) {
-						foreach ($value as $key2 => $value2) {
-							if (is_array($value2)) {
-								foreach ($value2 as $key3 => $value3) {
-									$sValue = utils::EscapeHtml($value3);
-									$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2][$key3]", $sValue));
-								}
-							} else {
-								$sValue = utils::EscapeHtml($value2);
-								$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key][$key2]", $sValue));
-							}
-						}
-					} else {
-						$sValue = utils::EscapeHtml($value);
-						$oClassForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("default[$key]", $sValue));
-					}
-				}
-
-				$oSelect = SelectUIBlockFactory::MakeForSelect('class');
-				$oClassForm->AddSubBlock($oSelect);
-				asort($aPossibleClasses);
-				foreach ($aPossibleClasses as $sClassName => $sClassLabel) {
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, $sClassLabel, ($sClassName == $sClass)));
-				}
-
-				$oToolbar = ToolbarUIBlockFactory::MakeForAction();
-				$oClassForm->AddSubBlock($oToolbar);
-				$oToolbar->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), null, null, true));
+				cmdbAbstractObject::DisplaySelectClassToCreate($sClass, $oP, $oAppContext, $aPossibleClasses,['state' => $sStateCode]);
 			}
 		break;
 	

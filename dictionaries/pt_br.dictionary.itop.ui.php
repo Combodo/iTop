@@ -703,6 +703,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'A consulta na sintaxe OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'A consulta na sintaxe OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressão para avaliar: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Mais informações sobre a consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro serializado: ',

@@ -97,7 +97,7 @@ body.ibo-has-fullscreen-descendant {
 .ibo-has-fullscreen-descendant {
   position: static !important;
   overflow: visible !important;
-  z-index: 9000 !important;
+  z-index: 1050 !important;
 }
 
 /* Used on a fullscreen element (see .ibo-has-fullscreen-descendant) */
@@ -110,7 +110,7 @@ body.ibo-has-fullscreen-descendant {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  z-index: 9000;
+  z-index: 1050;
 }
 
 /****************/
@@ -159,8 +159,11 @@ body.ibo-has-fullscreen-descendant {
     width: unset !important;
     max-width: max-content;
   }
-  code {
-    color: initial;
+
+  /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
+  & > code,
+  :not(pre.hljs) code {
+    color: inherit;
   }
 }
 

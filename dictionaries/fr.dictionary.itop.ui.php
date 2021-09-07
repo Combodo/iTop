@@ -703,6 +703,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:RunQuery:HeaderOQLExpression' => 'Requête OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'La requête en OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Requête à exécuter : ',
+	'UI:RunQuery:QueryArguments' => 'Arguments de la requête',
 	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur la requête : ',
 	'UI:RunQuery:DevelopedQuery' => 'Requête OQL décompilée : ',
 	'UI:RunQuery:SerializedFilter' => 'Version sérialisée : ',

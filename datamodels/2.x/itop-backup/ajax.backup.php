@@ -170,10 +170,6 @@ JS
 			require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-			IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
-			$oRestoreMutex->Lock();
-			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			try
 			{
 				set_time_limit(0);
@@ -203,7 +199,6 @@ JS
 			finally
 			{
 				unlink($tokenRealPath);
-				$oRestoreMutex->Unlock();
 			}
 
 			$oPage->output();

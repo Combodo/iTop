@@ -703,6 +703,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'Espressioni OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => '',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Espressione da valutare: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Maggiori informazioni sulla query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Espressione della query riqualificata:',
 	'UI:RunQuery:SerializedFilter' => 'Filtro pubblicato: ',

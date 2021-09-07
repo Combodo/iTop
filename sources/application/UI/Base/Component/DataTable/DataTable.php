@@ -44,7 +44,10 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
-	protected $sJsonData;
+	/*
+	 * array of data to display the first page
+	 */
+	protected $aInitDisplayData;
 
 	/**
 	 * Panel constructor.
@@ -101,6 +104,7 @@ class DataTable extends UIContentBlock
 	}
 
 	/**
+	 * Get $aAjaxData as a JSON
 	 * @return mixed
 	 */
 	public function GetJsonAjaxData(): string
@@ -179,11 +183,21 @@ class DataTable extends UIContentBlock
 	}
 
 	/**
+	 *  Get $aInitDisplayData as a JSON This is data of first page
 	 * @return string
 	 */
-	public function GetJsonData(): string
+	public function GetJsonInitDisplayData(): string
 	{
-		return $this->sJsonData;
+		return json_encode($this->aInitDisplayData);
+	}
+
+	/**
+	 *  Get $aInitDisplayData
+	 * @return array
+	 */
+	public function GetInitDisplayData(): array
+	{
+		return $this->aInitDisplayData;
 	}
 
 	/**
@@ -191,9 +205,9 @@ class DataTable extends UIContentBlock
 	 *
 	 * @return $this
 	 */
-	public function SetJsonData(string $sJSON)
+	public function SetInitDisplayData(array $aData)
 	{
-		$this->sJsonData = $sJSON;
+		$this->aInitDisplayData = $aData;
 
 		return $this;
 	}

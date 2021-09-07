@@ -704,6 +704,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'Выражение OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Запрос в синтаксисе OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Оценка выражения: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Подробная информация о запросе: ',
 	'UI:RunQuery:DevelopedQuery' => 'Декомпилированный запрос OQL: ',
 	'UI:RunQuery:SerializedFilter' => 'Сериализованная версия: ',

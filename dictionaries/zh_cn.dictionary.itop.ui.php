@@ -703,6 +703,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL 表达式',
 	'UI:RunQuery:HeaderOQLExpression+' => 'OQL 语法表示的查询',
 	'UI:RunQuery:ExpressionToEvaluate' => '请输入表达式: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => '该查询的更多信息: ',
 	'UI:RunQuery:DevelopedQuery' => '重新开发的查询表达式: ',
 	'UI:RunQuery:SerializedFilter' => '序列化的过滤器: ',

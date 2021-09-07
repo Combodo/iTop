@@ -703,6 +703,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL ifadesi',
 	'UI:RunQuery:HeaderOQLExpression+' => 'OQL yapısında sorgu',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Değerlendirilecek ifade: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Sorgu hakkında detaylı bilgi: ',
 	'UI:RunQuery:DevelopedQuery' => 'Yeniden düzenlenen sorgu: ',
 	'UI:RunQuery:SerializedFilter' => 'Özel filtre: ',

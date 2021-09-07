@@ -1966,11 +1966,13 @@ JS
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
 
-	public static function EnterMaintenanceMode($oConfig)
+	public static function EnterMaintenanceMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
 		self::Log("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
+		return $bPreviousMode;
 	}
 
 	public static function ExitMaintenanceMode($bLog = true)
@@ -1987,11 +1989,14 @@ JS
 		return file_exists(MAINTENANCE_MODE_FILE);
 	}
 
-	public static function EnterReadOnlyMode($oConfig)
+	public static function EnterReadOnlyMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
 		self::Log("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
+
+		return $bPreviousMode;
 	}
 
 	public static function ExitReadOnlyMode($bLog = true)
@@ -2017,8 +2022,7 @@ JS
 		try
 		{
 			// Wait for cron to stop
-			if (is_null($oConfig))
-			{
+			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
 			}
 			// Use mutex to check if cron is running

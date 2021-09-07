@@ -1,4 +1,5 @@
-/*!
+<?php
+/**
  * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
@@ -16,13 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-@import "bulma-variables-overload";
-@import "../../../node_modules/bulma-scss/bulma";
-@import "ckeditor";
-@import "tippy";
-@import "jqueryui";
-@import "jquery-multiselect";
-@import "datatables";
-@import "jquery-treeview";
-@import "jquery-blockui";
-@import "magnific-popup";
+// Global search
+Dict::Add('EN US', 'English', 'English', array(
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages',
+));

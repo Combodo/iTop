@@ -703,6 +703,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'Expresión OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'La consulta en sintáxis OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expresión a evaluar: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Más información acerca de la consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Expresión de consulta rediseñada: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro de serialización: ',

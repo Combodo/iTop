@@ -30,9 +30,6 @@ if (!defined('APPROOT'))
 	}
 }
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/webpage.class.inc.php');
-require_once(APPROOT.'application/csvpage.class.inc.php');
-require_once(APPROOT.'application/clipage.class.inc.php');
 require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'core/log.class.inc.php');

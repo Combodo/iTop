@@ -2581,6 +2581,10 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	public function GetNodes($sXPath, $oContextNode = null, $bSafe = true)
 	{
 		$oXPath = new DOMXPath($this);
+		// For Designer audit
+		$oXPath->registerNamespace("php", "http://php.net/xpath");
+		$oXPath->registerPhpFunctions();
+
 		if ($bSafe)
 		{
 			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";

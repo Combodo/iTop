@@ -788,6 +788,22 @@ $(function()
 				return oEntries;
 			},
 			/**
+			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
+			 * @private
+			 */
+			_GetExtraInputsFromAllForms: function () {
+				const me = this;
+
+				let oExtraInputs = {};
+				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
+					const oEntryFormElem = $(this);
+					oExtraInputs = $.extend(oExtraInputs, oEntryFormElem.triggerHandler('get_extra_inputs.caselog_entry_form.itop'));
+				});
+
+				return oExtraInputs;
+			},
+
+			/**
 			 * @return {boolean} True if at least 1 of the entry form is draft (has some text in it)
 			 * @private
 			 */
@@ -863,6 +879,7 @@ $(function()
 			_SendEntriesToServer: function (sStimulusCode = null) {
 				const me = this;
 				const oEntries = this._GetEntriesFromAllForms();
+				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
 				if (Object.keys(oEntries).length === 0) {
@@ -870,13 +887,13 @@ $(function()
 				}
 
 				// Prepare parameters
-				let oParams = {
+				let oParams = $.extend(oExtraInputs, {
 					operation: 'activity_panel_add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
 					entries: oEntries,
-				};
+				});
 
 				// Freeze case logs
 				this._FreezeCaseLogsEntryForms();

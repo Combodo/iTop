@@ -157,6 +157,9 @@ $(function() {
 				this.element.on('get_entry.caselog_entry_form.itop', function () {
 					return me._GetInputData();
 				});
+				this.element.on('get_extra_inputs.caselog_entry_form.itop', function () {
+					return me._GetExtraInputs();
+				});
 				// Clear the entry value
 				this.element.on('clear_entry.caselog_entry_form.itop', function () {
 					me._EmptyInput();
@@ -280,6 +283,27 @@ $(function() {
 			},
 			_GetInputData: function() {
 				return (this._GetCKEditorInstance() === undefined) ? '' : this._GetCKEditorInstance().getData();
+			},
+			_GetExtraInputs: function() {
+				let aExtraInputs = {};
+				const aFormInputs = this.element.serializeArray();
+				// Iterate across all values that would be sent if we submit current form
+				for (const aExtraInput of aFormInputs) {
+					// If we don't already have a value with the same name, add it
+					// Otherwise we'll consider that we need to return this value as an array of values
+					if(aExtraInputs[aExtraInput.name] === undefined) {
+						aExtraInputs[aExtraInput.name] = aExtraInput.value;
+					}
+					else {
+						if(Array.isArray(aExtraInputs[aExtraInput.name])){
+							aExtraInputs[aExtraInput.name].push(aExtraInput.value);
+						}
+						else{
+							aExtraInputs[aExtraInput.name] = [aExtraInputs[aExtraInput.name], aExtraInput.value];
+						}
+					}
+				};
+				return aExtraInputs;
 			},
 			// - Main actions
 			_ShowMainActions: function() {

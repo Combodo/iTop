@@ -342,7 +342,7 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sSelectedItemsName: "oSelectedItems{{ sListId }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
-    iPageSize: '{{ oUIBlock.GetOption("iPageSize") }}',
+    iPageSize: ' {{ iPageSize }}',
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
@@ -351,7 +351,8 @@ var aOptions{{ sListIDForVarSuffix }} = {
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
 };
 
-if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable')) {
+if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
+{
     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('destroy');
 }
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});

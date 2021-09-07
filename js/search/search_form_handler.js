@@ -224,7 +224,6 @@ $(function()
 
 				$('#ibo-breadcrumbs')
 					.breadcrumbs('destroy')
-					.html('')
 					.breadcrumbs({
 					itop_instance_id: oData['breadcrumb_instance_id'],
 					max_count: oData['breadcrumb_max_count'],
