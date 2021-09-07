@@ -222,6 +222,7 @@ class UIExtKeyWidget
 				$bAddingValue = true;
 			}
 			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			$bInitValue = false;
 			while ($oObj = $oAllowedValues->Fetch()) {
 				$aOption = [];
 				$aOption['value'] = $oObj->GetKey();
@@ -231,6 +232,7 @@ class UIExtKeyWidget
 					// When there is only once choice, select it by default
 					if ($value != $oObj->GetKey()) {
 						$value = $oObj->GetKey();
+						$bInitValue = true;
 					}
 				}
 				if ($oObj->IsObsolete()) {
@@ -265,10 +267,12 @@ class UIExtKeyWidget
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$value');
 		$('#$this->iId').on('update', function() { oACWidget_{$this->iId}.Update(); } );
-		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange') } );
-
+		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange'); } );
 EOF
 			);
+			if ($bInitValue) {
+				$oPage->add_ready_script("$('#$this->iId').one('validate', function() { $(this).trigger('change'); } );");
+			}
 			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
 		}
 		else
