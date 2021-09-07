@@ -2016,9 +2016,7 @@ JS
 		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
 		self::Log("----> Entering read only mode");
-		if (!ContextTag::Check(ContextTag::TAG_CRON)) {
-			self::WaitCronTermination($oConfig, "read only");
-		}
+		self::WaitCronTermination($oConfig, "read only");
 
 		return $bPreviousMode;
 	}
@@ -2046,8 +2044,7 @@ JS
 		try
 		{
 			// Wait for cron to stop
-			if (is_null($oConfig))
-			{
+			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
 			}
 			// Use mutex to check if cron is running
