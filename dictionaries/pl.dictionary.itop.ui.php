@@ -705,6 +705,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'Wyrażenie OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Zapytanie w składni OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Wyrażenie do wykonania: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Więcej informacji o zapytaniu: ',
 	'UI:RunQuery:DevelopedQuery' => 'Rozwinięte wyrażenie zapytania: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtr serializowany: ',

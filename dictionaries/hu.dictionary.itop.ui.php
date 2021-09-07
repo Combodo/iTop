@@ -692,6 +692,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL kifejezés',
 	'UI:RunQuery:HeaderOQLExpression+' => '',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Értékelendő kifejezés: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Több információ a lekérdezésről: ',
 	'UI:RunQuery:DevelopedQuery' => 'Újraírt lekérdező értékelés: ',
 	'UI:RunQuery:SerializedFilter' => 'Szerializált szűrő: ',

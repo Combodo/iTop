@@ -703,6 +703,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL dotaz',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Dotaz v OQL syntaxi',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Dotaz k vyhodnocení: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Více informací o dotazu: ',
 	'UI:RunQuery:DevelopedQuery' => 'Rekonstruovaný dotaz: ',
 	'UI:RunQuery:SerializedFilter' => 'Serializovaný filtr: ',

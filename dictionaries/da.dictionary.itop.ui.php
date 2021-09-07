@@ -692,6 +692,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Udtryk',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Forespørgslen i OQL syntaks',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Udtryk der skal evalueres: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Mere information om forespørgslen: ',
 	'UI:RunQuery:DevelopedQuery' => 'Videreudviklet forespørgselsudtryk: ',
 	'UI:RunQuery:SerializedFilter' => 'Serielt filter: ',

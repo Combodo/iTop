@@ -692,6 +692,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-Ausdruck',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Die Abfrage in OQL-Syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Auszuwertender Ausdruck: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Mehr Informationen zur Abfrage: ',
 	'UI:RunQuery:DevelopedQuery' => 'Überarbeiteter Abfrageausdruck: ',
 	'UI:RunQuery:SerializedFilter' => 'Serieller Filter: ',

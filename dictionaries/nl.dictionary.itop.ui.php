@@ -703,6 +703,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-expressie',
 	'UI:RunQuery:HeaderOQLExpression+' => 'De query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressie om te evalueren: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Geserialiseerde filter: ',
