@@ -2546,6 +2546,10 @@ EOF
 					}
 					else
 					{
+						if (array_key_exists($sGroupId, $aGroupClasses) === false) {
+							SetupLog::Error("Profile \"$sName\" relies on group \"$sGroupId\" but it does not seem to in the DM yet (did you forgot a dependency in your module?)");
+						}
+
 						$aGrantClasses = $aGroupClasses[$sGroupId];
 					}
 					foreach ($aGrantClasses as $sClass)
