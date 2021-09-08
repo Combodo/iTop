@@ -1966,6 +1966,12 @@ JS
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
 
+	/**
+	 * @param $oConfig
+	 *
+	 * @return bool
+	 * @since 3.0.0 returns true if the app. was already in maintenance mode, false otherwise
+	 */
 	public static function EnterMaintenanceMode($oConfig): bool
 	{
 		$bPreviousMode = self::IsInMaintenanceMode();
