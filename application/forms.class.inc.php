@@ -229,8 +229,8 @@ class DesignerForm
 				$aRow = $oField->Render($oP, $sFormId, 'property');
 				if ($oField->IsVisible()) {
 					$sFieldId = $this->GetFieldId($oField->GetCode());
-					$sValidation = $this->GetValidationArea($sFieldId, '<span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply ibo-button ibo-is-alternative" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td>'
+					$sValidation = $this->GetValidationArea($sFieldId, '<div class="ibo-button ibo-is-alternative ibo-is-success" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></div>');
+					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span><div class="ibo-button ibo-is-alternative ibo-is-neutral" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-undo"></i></div></span></td>'
 						.$this->EndRow();
 
 					if (is_null($aRow['label'])) {
