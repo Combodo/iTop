@@ -85,7 +85,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 			if (Session::IsSet('auth_user'))
 			{
 				// If FSM reenter this state (example 2FA) then the auth_user is not resubmitted
-				$sAuthUser =Session::Get('auth_user');
+				$sAuthUser = Session::Get('auth_user');
 			}
 			else
 			{

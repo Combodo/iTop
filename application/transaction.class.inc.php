@@ -102,7 +102,7 @@ class privUITransaction
 /**
  * The original (and by default) mechanism for storing transaction information
  * as an array in the _SESSION variable
- * @see Session
+ * @see \Combodo\iTop\Application\Helper\Session
  *
  */
 class privUITransactionSession

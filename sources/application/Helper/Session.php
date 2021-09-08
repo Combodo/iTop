@@ -16,8 +16,11 @@ namespace Combodo\iTop\Application\Helper;
  */
 class Session
 {
+	/** @var int|null */
 	public static $iSessionId = null;
+	/** @var bool */
 	protected static $bIsInitialized = false;
+	/** @var bool */
 	protected static $bSessionStarted = false;
 
 	public static function Start()
