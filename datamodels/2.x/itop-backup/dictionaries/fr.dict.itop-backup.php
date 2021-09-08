@@ -34,6 +34,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'bkp-status-backups-manual' => 'Sauvegardes manuelles',
 	'bkp-status-backups-none' => 'Aucune sauvegarde n\'a été faite jusqu\' à présent.',
 	'bkp-next-backup' => 'La prochaine sauvegarde aura lieu <b>%1$s</b> (%2$s) à %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Sauvegarder maintenant !',
 	'bkp-button-restore-now' => 'Restaurer !',
 	'bkp-confirm-backup' => 'Veuillez confirmer que vous souhaiter effectuer une sauvegarde maintenant.',

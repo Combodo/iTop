@@ -49,6 +49,8 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
 

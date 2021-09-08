@@ -34,6 +34,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'bkp-status-backups-manual' => 'Backups manuais',
 	'bkp-status-backups-none' => 'Nenhum backup ainda',
 	'bkp-next-backup' => 'O próximo backup ocorrerá em <b>%1$s</b> (%2$s) at %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Backup Agora!',
 	'bkp-button-restore-now' => 'Restaurar!',
 	'bkp-confirm-backup' => 'Por favor, confirme que você solicitou que o backup ocorra agora.',

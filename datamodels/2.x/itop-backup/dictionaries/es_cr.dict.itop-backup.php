@@ -49,6 +49,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'bkp-status-backups-manual' => 'Respaldos Manuales',
 	'bkp-status-backups-none' => 'No hay respaldos',
 	'bkp-next-backup' => 'El siguiente respaldo ocurrirá el <b>%1$s</b> (%2$s) a %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Respaldar Ahora!',
 	'bkp-button-restore-now' => 'Restaurar!',
 	'bkp-confirm-backup' => 'Por favor confirme que requiere realizar el respaldo en este momento.',
