@@ -65,7 +65,6 @@ class Extension
 				})
 		);
 
-
 		// Filter to format output
 		// example a DateTime is converted to user format
 		// Usage in twig: {{ 'String:ToFormat'|output_format }}
