@@ -1223,7 +1223,8 @@ EOF
 				$oPage->add_script(<<<JS
 $('body').trigger('add_shortcut_node.navigation_menu.itop', {
 	parent_menu_node_id: '{$sMenuGroupId}',
-	new_menu_node_html_rendering: `{$sHtml}`
+	new_menu_node_html_rendering: `{$sHtml}`,
+	new_menu_name: `{$aValues['name']}`
 });
 JS
 				);

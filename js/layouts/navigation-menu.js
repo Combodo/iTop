@@ -197,7 +197,7 @@ $(function()
 			},
 
 			_onAddShortcutNode: function (oData) {
-				this._addShortcut(oData.parent_menu_node_id, oData.new_menu_node_html_rendering);
+				this._addShortcut(oData.parent_menu_node_id, oData.new_menu_node_html_rendering, oData.new_menu_name);
 			},
 
 			// Methods
@@ -374,13 +374,30 @@ $(function()
 			 * @param sNewMenuNodeHtmlRendering {string} HTML rendering of the new menu node to add
 			 * @return {boolean}
 			 */
-			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering) {
-				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"] > ul');
+			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering, new_menu_name) {
+				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"]');
 				if (oNewMenuNodeContainerElem.length === 0) {
 					return false;
 				}
-
-				oNewMenuNodeContainerElem.append(sNewMenuNodeHtmlRendering);
+				let oNewMenuNodeContainerElemUL = oNewMenuNodeContainerElem.find('ul');
+				if (oNewMenuNodeContainerElemUL.length === 0) {
+					oNewMenuNodeContainerElem.append('<ul>'+sNewMenuNodeHtmlRendering+'</ul>');
+				} else {
+					let children = oNewMenuNodeContainerElem.find('li');
+					let i = 0;
+					let bInsertToDo = true;
+					while (bInsertToDo) {
+						let currentChild = children.eq(i);
+						if (currentChild.find(".ibo-navigation-menu--menu-node-label").attr('title').toUpperCase() > new_menu_name.toUpperCase()) {
+							currentChild.before(sNewMenuNodeHtmlRendering);
+							bInsertToDo = false;
+						}
+						i++;
+					}
+					if (bInsertToDo) {
+						oNewMenuNodeContainerElemUL.append(sNewMenuNodeHtmlRendering);
+					}
+				}
 				return true;
 			}
 		});
