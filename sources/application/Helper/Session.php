@@ -49,7 +49,7 @@ class Session
 	 */
 	public static function Set($key, $value)
 	{
-		if (self::Get($key) == $value) {
+		if (!isset($_SESSION) || self::Get($key) == $value) {
 			return;
 		}
 		$aSession = $_SESSION;
