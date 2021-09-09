@@ -360,7 +360,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		} else {
 			$('#label_'+me.id).addClass('ac_dlg_loading');
 		}
-		var theMap = {
+
+		let sPromiseId = 'ajax_promise_'+me.id;
+		let theMap = {
 			sAttCode: me.sAttCode,
 			iInputId: me.id,
 			sTitle: me.sTitle,
@@ -368,7 +370,8 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			sTargetClass: me.sTargetClass,
 			sFilter: me.sFilter,
 			bSearchMode: me.bSearchMode,
-			operation: 'objectSearchForm'
+			operation: 'objectSearchForm',
+			ajax_promise_id: sPromiseId
 		};
 
 		if (me.oWizardHelper == null) {
@@ -387,16 +390,18 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		me.ajax_request = $.post(AddAppContext(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php'), theMap,
 			function (data) {
 				$('#ac_dlg_'+me.id).html(data);
-				$('#ac_dlg_'+me.id).dialog('open');
-				me.UpdateSizes();
-				me.UpdateButtons();
-				me.ajax_request = null;
-				$('#count_'+me.id+'_results').change(function () {
+				window[sPromiseId].then(function () {
+					$('#ac_dlg_'+me.id).dialog('open');
+					me.UpdateSizes();
 					me.UpdateButtons();
+					me.ajax_request = null;
+					$('#count_'+me.id+'_results').change(function () {
+						me.UpdateButtons();
+					});
+					if (me.bDoSearch) {
+						me.DoSearchObjects();
+					}
 				});
-				if (me.bDoSearch) {
-					me.DoSearchObjects();
-				}
 			},
 			'html'
 		);

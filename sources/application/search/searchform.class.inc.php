@@ -55,6 +55,23 @@ class SearchForm
 	public function GetSearchFormUIBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oUiBlock =  new UIContentBlock();
+		$oUiBlock->AddMultipleJsFilesRelPaths([
+			'js/search/search_form_handler.js',
+			'js/search/search_form_handler_history.js',
+			'js/search/search_form_criteria.js',
+			'js/search/search_form_criteria_raw.js',
+			'js/search/search_form_criteria_string.js',
+			'js/search/search_form_criteria_external_field.js',
+			'js/search/search_form_criteria_numeric.js',
+			'js/search/search_form_criteria_enum.js',
+			'js/search/search_form_criteria_tag_set.js',
+			'js/search/search_form_criteria_external_key.js',
+			'js/search/search_form_criteria_hierarchical_key.js',
+			'js/search/search_form_criteria_date_abstract.js',
+			'js/search/search_form_criteria_date.js',
+			'js/search/search_form_criteria_date_time.js',
+		]);
+
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aListParams = array();
