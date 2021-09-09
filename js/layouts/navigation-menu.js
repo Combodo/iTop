@@ -373,6 +373,7 @@ $(function()
 			/**
 			 * @param sParentMenuNodeId {string} ID of the parent menu node the shortcut should be added to
 			 * @param sNewMenuNodeHtmlRendering {string} HTML rendering of the new menu node to add
+			 * @param sNewMenulabel {string} Label of the menu node to add
 			 * @return {boolean}
 			 */
 			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering, sNewMenulabel) {
