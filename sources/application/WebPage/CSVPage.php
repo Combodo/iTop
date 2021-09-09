@@ -29,11 +29,13 @@ class CSVPage extends WebPage
 {
     function __construct($s_title)
     {
+	    $oKpi = new ExecutionKPI();
 	    parent::__construct($s_title);
 	    $this->add_header("Content-type: text/plain; charset=".self::PAGES_CHARSET);
 	    $this->no_cache();
 	    $this->add_xframe_options();
 	    //$this->add_header("Content-Transfer-Encoding: binary");
+	    $oKpi->ComputeStats(get_class($this).' creation', 'CSVPage');
     }	
 
     public function output()

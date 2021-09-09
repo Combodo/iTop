@@ -30,6 +30,7 @@ class PDFPage extends WebPage
 
 	public function __construct($s_title, $sPageFormat = 'A4', $sPageOrientation = 'L')
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
 		define('K_PATH_FONTS', APPROOT.'lib/combodo/tcpdf/fonts/');
 		$this->oPdf = new iTopPDF($sPageOrientation, 'mm', $sPageFormat, true, self::PAGES_CHARSET, false);
@@ -54,7 +55,7 @@ class PDFPage extends WebPage
 
 		$this->SetContentDisposition('inline', $s_title.'.pdf');
 		$this->SetDefaultStyle();
-
+		$oKpi->ComputeStats(get_class($this).' creation', 'PDFPage');
 	}
 
 	/**

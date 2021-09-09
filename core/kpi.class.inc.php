@@ -31,10 +31,15 @@ class ExecutionKPI
 	static protected $m_bBlameCaller = false;
 	static protected $m_sAllowedUser = '*';
 
-	static protected $m_aStats = array(); // Recurrent operations
-	static protected $m_aExecData = array(); // One shot operations
+	static protected $m_aStats = []; // Recurrent operations
+	static protected $m_aExecData = []; // One shot operations
+	/**
+	 * @var array[ExecutionKPI]
+	 */
+	static protected $m_aExecutionStack = []; // embedded execution stats
 
 	protected $m_fStarted = null;
+	protected $m_fChildrenDuration = 0; // Count embedded
 	protected $m_iInitialMemory = null;
 
 	static public function EnableDuration($iLevel)
@@ -284,6 +289,32 @@ class ExecutionKPI
 	public function __construct()
 	{
 		$this->ResetCounters();
+		self::Push($this);
+	}
+
+	/**
+	 * Stack executions to remove children duration from stats
+	 *
+	 * @param \ExecutionKPI $oExecutionKPI
+	 */
+	private static function Push(ExecutionKPI $oExecutionKPI)
+	{
+		array_push(self::$m_aExecutionStack, $oExecutionKPI);
+	}
+
+	/**
+	 * Pop current child and count its duration in its parent
+	 *
+	 * @param float|int $fChildDuration
+	 */
+	private static function Pop(float $fChildDuration = 0)
+	{
+		array_pop(self::$m_aExecutionStack);
+		// Update the parent's children duration
+		$oPrevExecutionKPI = end(self::$m_aExecutionStack);
+		if ($oPrevExecutionKPI) {
+			$oPrevExecutionKPI->m_fChildrenDuration += $fChildDuration;
+		}
 	}
 
 	// Get the duration since startup, and reset the counter for the next measure
@@ -294,13 +325,12 @@ class ExecutionKPI
 
 		$aNewEntry = null;
 
-		if (self::$m_bEnabled_Duration)
-		{
+		if (self::$m_bEnabled_Duration) {
 			$fStopped = MyHelpers::getmicrotime();
 			$aNewEntry = array(
-				'op' => $sOperationDesc,
+				'op'         => $sOperationDesc,
 				'time_begin' => $this->m_fStarted - $fItopStarted,
-				'time_end' => $fStopped - $fItopStarted,
+				'time_end'   => $fStopped - $fItopStarted,
 			);
 			// Reset for the next operation (if the object is recycled)
 			$this->m_fStarted = $fStopped;
@@ -332,24 +362,23 @@ class ExecutionKPI
 
 	public function ComputeStats($sOperation, $sArguments)
 	{
-		if (self::$m_bEnabled_Duration)
-		{
+		$fDuration = 0;
+		if (self::$m_bEnabled_Duration) {
 			$fStopped = MyHelpers::getmicrotime();
 			$fDuration = $fStopped - $this->m_fStarted;
-			if (self::$m_bBlameCaller)
-			{
+			$fSelfDuration = $fDuration - $this->m_fChildrenDuration;
+			if (self::$m_bBlameCaller) {
 				self::$m_aStats[$sOperation][$sArguments][] = array(
-					'time' => $fDuration,
+					'time'    => $fSelfDuration,
 					'callers' => MyHelpers::get_callstack(1),
 				);
-			}
-			else
-			{
+			} else {
 				self::$m_aStats[$sOperation][$sArguments][] = array(
-					'time' => $fDuration
+					'time' => $fSelfDuration,
 				);
 			}
 		}
+		self::Pop($fDuration);
 	}
 
 	protected function ResetCounters()

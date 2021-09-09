@@ -604,8 +604,7 @@ class DashletUnknown extends Dashlet
 
 		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
+		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div><div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		return $oDashletContainer;
 	}
@@ -624,8 +623,7 @@ class DashletUnknown extends Dashlet
 
 		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
+		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div><div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		return $oDashletContainer;
 	}

@@ -25,6 +25,7 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForField(string $sValue, ?ormStyle $oStyle)
 	{
 		$oBadge = null;
+		$sHtml = '';
 		if ($oStyle) {
 			$sStyleClass = $oStyle->GetStyleClass();
 			$sPrimaryColor = $oStyle->GetMainColor();
@@ -34,27 +35,26 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 				$oBadge = new FieldBadge(null, $aCSSClasses);
 				$sDecorationClasses = $oStyle->GetDecorationClasses();
 				if (!is_null($sDecorationClasses) && !empty($sDecorationClasses)) {
-					$oBadge->AddHtml("<span class=\"ibo-field-badge--decoration\"><i class=\"$sDecorationClasses\"></i></span>");
+					$sHtml .= "<span class=\"ibo-field-badge--decoration\"><i class=\"$sDecorationClasses\"></i></span>";
 				}
-				$oBadge->AddHtml("<span class=\"ibo-field-badge--label\">$sValue</span>");
+				$sHtml .= "<span class=\"ibo-field-badge--label\">$sValue</span>";
 				// Add custom style
 				// TODO 3.0 To be removed when compilation supports generated CSS
-				$oBadge->AddHtml(<<<HTML
+				$sHtml .= <<<HTML
 <style>
 .$sStyleClass {
 		color: $sComplementaryColor;
 		background-color: $sPrimaryColor;
 	}
 </style>
-HTML
-				);
+HTML;
 			}
 		}
 		if (!$oBadge) {
 			$oBadge = new FieldBadge();
-			$oBadge->AddHtml("<span>$sValue</span>");
+			$sHtml .= "<span>$sValue</span>";
 		}
-
+		$oBadge->AddHtml($sHtml);
 		return $oBadge;
 	}
 }

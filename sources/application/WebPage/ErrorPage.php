@@ -17,12 +17,14 @@ class ErrorPage extends NiceWebPage
 {
 	public function __construct($sTitle)
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->add_saas("css/setup.scss");
+		$oKpi->ComputeStats(get_class($this).' creation', 'ErrorPage');
 	}
 
 	public function info($sText)

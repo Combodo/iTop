@@ -28,7 +28,9 @@ class CaptureWebPage extends WebPage
 {
 	function __construct()
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct('capture web page');
+		$oKpi->ComputeStats(get_class($this).' creation', 'CaptureWebPage');
 	}
 
 	public function GetHtml()

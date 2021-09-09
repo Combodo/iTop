@@ -80,6 +80,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 */
 	public function __construct($sTitle, $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($sTitle, $bPrintable);
 		$this->m_oTabs = new TabManager();
 		$this->oCtx = new ContextTag(ContextTag::TAG_CONSOLE);
@@ -112,6 +113,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 			$oPrintHeader = $this->OutputPrintable();
 			$this->AddUiBlock($oPrintHeader);
 		}
+		$oKpi->ComputeStats(get_class($this).' creation', 'iTopWebPage');
 	}
 
 	/**
@@ -888,18 +890,13 @@ HTML;
 				header($sHeader);
 			}
 		}
-		$oKpi->ComputeAndReport(get_class($this).' prepare output');
-
 
 		// Render final TWIG into global HTML
-		$oKpi = new ExecutionKPI();
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 
-
-		$oKpi->ComputeAndReport('TWIG rendering');
-
+		$oKpi->ComputeAndReport(get_class($this).' output');
+		
 		// Echo global HTML
-		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 

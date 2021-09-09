@@ -27,10 +27,12 @@ class NiceWebPage extends WebPage
 
 	public function __construct($s_title, $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
 		parent::__construct($s_title, $bPrintable);
 
 		$this->LoadTheme();
+		$oKpi->ComputeStats(get_class($this).' creation', 'NiceWebPage');
 	}
 
 	/**

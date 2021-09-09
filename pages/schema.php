@@ -843,12 +843,12 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 	$oPanel = PanelUIBlockFactory::MakeForClass($sClass, MetaModel::GetName($sClass).' ('.$sClass.')')
 		->SetIcon(MetaModel::GetClassIcon($sClass, false));
 	$sClassDescritpion = MetaModel::GetClassDescription($sClass);
-	$oEnchancedPanelSubtitle = $oPanel->GetSubTitleBlock();
-	$oEnchancedPanelSubtitle->AddHtml($sClassHierarchy.($sClassDescritpion == "" ? "" : ' - '.$sClassDescritpion));
+	$oEnhancedPanelSubtitle = $oPanel->GetSubTitleBlock();
+	$sEnhancedPanelSubtitle = $sClassHierarchy.($sClassDescritpion == "" ? "" : ' - '.$sClassDescritpion);
 	if (MetaModel::IsAbstract($sClass)) {
-		$oEnchancedPanelSubtitle->AddHtml(' - <i class="fas fa-lock" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></i>');
+		$sEnhancedPanelSubtitle .= ' - <i class="fas fa-lock" data-tooltip-content="'.Dict::S('UI:Schema:AbstractClass').'"></i>';
 	}
-
+	$oEnhancedPanelSubtitle->AddHtml($sEnhancedPanelSubtitle);
 	$oPage->AddUiBlock($oPanel);
 	$oPage->AddTabContainer('details', '', $oPanel);
 	$oPage->SetCurrentTabContainer('details');

@@ -141,6 +141,7 @@ class WebPage implements Page
 	 */
 	public function __construct(string $s_title, bool $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		$this->s_title = $s_title;
 		$this->s_content = "";
 		$this->s_deferred_content = '';
@@ -170,6 +171,7 @@ class WebPage implements Page
 		$this->SetTemplateRelPath(static::DEFAULT_PAGE_TEMPLATE_REL_PATH);
 
 		ob_start(); // Start capturing the output
+		$oKpi->ComputeStats(get_class($this).' creation', 'WebPage');
 	}
 
 	/**
@@ -1205,16 +1207,13 @@ JS;
 
 		// Favicon
 		$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
-		$oKpi->ComputeAndReport(get_class($this).' prepare output');
 
-		$oKpi = new ExecutionKPI();
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
-		$oKpi->ComputeAndReport('TWIG rendering');
+		$oKpi->ComputeAndReport(get_class($this).'output');
 
 		// Echo global HTML
-		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 

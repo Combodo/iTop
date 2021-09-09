@@ -12,6 +12,7 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use CoreTemplateException;
+use ExecutionKPI;
 use IssueLog;
 use Twig\Environment;
 use Twig\Error\Error;
@@ -155,7 +156,12 @@ class TwigHelper
 	public static function RenderTemplate(Environment $oTwig, array $aParams, string $sName, string $sTemplateFileExtension = self::DEFAULT_FILE_TYPE, bool $bLogMissingFile = true): string
 	{
 		try {
-			return $oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
+			$oKPI = new ExecutionKPI();
+			$sFileName = $sName.'.'.$sTemplateFileExtension.'.twig';
+			$sResult = $oTwig->render($sFileName, $aParams);
+			$oKPI->ComputeStats('Render TWIG', $sFileName);
+
+			return $sResult;
 		}
 		catch (Error $oTwigException) {
 			$oTwigPreviousException = $oTwigException->getPrevious();

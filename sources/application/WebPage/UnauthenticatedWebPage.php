@@ -67,6 +67,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 */
 	public function __construct($s_title, $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title, $bPrintable);
 
 		$this->sContent = '';
@@ -96,6 +97,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 
 		// Default theme
 		$this->add_saas('css/unauthenticated.scss');
+		$oKpi->ComputeStats(get_class($this).' creation', $s_title);
 	}
 
 	/**
@@ -111,6 +113,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		// Send headers
 		foreach ($this->a_headers as $sHeader) {
 			header($sHeader);
@@ -172,8 +175,9 @@ class UnauthenticatedWebPage extends NiceWebPage
 		
 		// Render final TWIG into global HTML
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
+		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sHtml;
-
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 	}
 	
 	/**

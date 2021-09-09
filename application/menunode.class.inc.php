@@ -59,6 +59,10 @@ class ApplicationMenu
 	 */
 	static $aMenusIndex = array();
 	/**
+	 * @var array
+	 */
+	static $aMenusById = [];
+	/**
 	 * @var string
 	 */
 	static $sFavoriteSiloQuery = 'SELECT Organization';
@@ -166,6 +170,7 @@ class ApplicationMenu
 			$aBacktrace = debug_backtrace();
 			$sFile = isset($aBacktrace[2]["file"]) ? $aBacktrace[2]["file"] : $aBacktrace[1]["file"];
 			self::$aMenusIndex[$index] = array('node' => $oMenuNode, 'children' => array(), 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile);
+			self::$aMenusById[$oMenuNode->GetMenuId()] = $index;
 		}
 		else
 		{
@@ -506,17 +511,11 @@ EOF
 	 */
 	public static function GetMenuIndexById($sTitle)
 	{
-		$index = -1;
-		/** @var MenuNode[] $aMenu */
-		foreach(self::$aMenusIndex as $aMenu)
-		{
-			if ($aMenu['node']->GetMenuId() == $sTitle)
-			{
-				$index = $aMenu['node']->GetIndex();
-				break;
-			}
+		if (isset(self::$aMenusById[$sTitle])) {
+			return self::$aMenusById[$sTitle];
 		}
-		return $index;
+
+		return -1;
 	}
 	
 	/**

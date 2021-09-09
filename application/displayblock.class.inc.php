@@ -1042,8 +1042,7 @@ JS
 			$sCountLabel = $aCount['label'];
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
 				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span>")
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">$sStateLabel</span>");
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">$sStateLabel</span>");
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}

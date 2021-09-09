@@ -24,7 +24,6 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
-use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -3318,12 +3317,13 @@ HTML
 			}
 
 			// Note: Remove the table if we want fields to occupy the whole width of the container
-			$oForm->AddHtml('<table><tr><td>');
-			$oForm->AddHtml($oPage->GetDetails($aDetails));
-			$oForm->AddHtml('</td></tr></table>');
+			$sHtml = '<table><tr><td>';
+			$sHtml .= $oPage->GetDetails($aDetails);
+			$sHtml .= '</td></tr></table>';
 
 			$oAppContext = new ApplicationContext();
-			$oForm->AddHtml($oAppContext->GetForForm());
+			$sHtml .= $oAppContext->GetForForm();
+			$oForm->AddHtml($sHtml);
 
 			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 			$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
