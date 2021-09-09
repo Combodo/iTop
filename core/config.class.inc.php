@@ -1149,6 +1149,22 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
 		],
+		'compatibility.include_deprecated_js_files' => [
+			'type' => 'bool',
+			'description' => 'Include the deprecated JS files to ease usage of not migrated extensions',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'compatibility.include_deprecated_css_files' => [
+			'type' => 'bool',
+			'description' => 'Include the deprecated CSS files to ease usage of not migrated extensions',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'navigation_menu.show_menus_count' => [
 			'type' => 'bool',
 			'description' => 'Display count badges for OQL menu entries',
