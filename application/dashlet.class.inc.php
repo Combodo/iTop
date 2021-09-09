@@ -203,6 +203,24 @@ abstract class Dashlet
 	}
 
 	/**
+	 * @return array Rel. path to the app. root of the JS files required by the dashlet
+	 * @since 3.0.0
+	 */
+	public function GetJSFilesRelPaths(): array
+	{
+		return [];
+	}
+
+	/**
+	 * @return array Rel. path to the app. root of the CSS files required by the dashlet
+	 * @since 3.0.0
+	 */
+	public function GetCSSFilesRelPaths(): array
+	{
+		return [];
+	}
+
+	/**
 	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param bool $bEnclosingDiv
@@ -223,6 +241,9 @@ abstract class Dashlet
 			$oDashletContainer = new DashletContainer();
 			$oDashletContainer->AddCSSClasses($this->aCSSClasses);
 		}
+
+		$oDashletContainer->AddMultipleJsFilesRelPaths($this->GetJSFilesRelPaths());
+		$oDashletContainer->AddMultipleCssFilesRelPaths($this->GetCSSFilesRelPaths());
 
 		try {
 			if (get_class($this->oModelReflection) == 'ModelReflectionRuntime') {
@@ -1671,6 +1692,33 @@ class DashletGroupByPie extends DashletGroupBy
 			'label' => Dict::S('UI:DashletGroupByPie:Label'),
 			'icon' => 'images/dashlets/icons8-pie-chart-48.png',
 			'description' => Dict::S('UI:DashletGroupByPie:Description'),
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetJSFilesRelPaths(): array
+	{
+		return array_merge(
+			parent::GetJSFilesRelPaths(),
+			[
+				'js/d3.js',
+				'js/c3.js',
+			]
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCSSFilesRelPaths(): array
+	{
+		return array_merge(
+			parent::GetCSSFilesRelPaths(),
+			[
+				'css/c3.min.css',
+			]
 		);
 	}
 

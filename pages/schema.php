@@ -537,6 +537,11 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 
 		// 3) Processing data and building graph
 		//
+		// - Add graphs dependencies
+		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
+		// - Add markup
 		$oPage->add(
 			<<<EOF
 <div id="dataModelGraph">
@@ -545,6 +550,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 </div>
 EOF
 		);
+		// - Add scripts
 		$oPage->add_ready_script(
 			<<<JS
 
