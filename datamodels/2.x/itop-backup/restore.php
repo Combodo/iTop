@@ -33,8 +33,12 @@ require_once(APPROOT.'application/application.inc.php');
 require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
+require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
 
-class MyDBBackup extends DBBackup
+/**
+ * @since 3.0.0 N°4227 new class to handle iTop restore manually via a CLI command
+ */
+class MyCliRestore extends DBRestore
 {
 	/** @var Page used to send log */
 	protected $oPage;
@@ -57,13 +61,9 @@ class MyDBBackup extends DBBackup
 	}
 }
 
-function GetOperationName() {
-	return "iTop - Database Backup";
-}
-
 function Usage($oP)
 {
-	$oP->p('Perform a backup of the iTop database by running mysqldump');
+	$oP->p('Restore an iTop from a backup file');
 	$oP->p('Parameters:');
 	if (utils::IsModeCLI())
 	{
@@ -71,18 +71,21 @@ function Usage($oP)
 		$oP->p('auth_pwd: ...');
 	}
 	$oP->p('backup_file [optional]: name of the file to store the backup into. Follows the PHP strftime format spec. The following placeholders are available: __HOST__, __DB__, __SUBNAME__');
-	$oP->p('simulate [optional]: set to check the name of the file that would be created');
-	$oP->p('mysql_bindir [optional]: specify the path for mysqldump');
+	$oP->p('mysql_bindir [optional]: specify the path for mysql executable');
 
 	if (utils::IsModeCLI())
 	{
-		$oP->p('Example: php -q backup.php --auth_user=admin --auth_pwd=myPassw0rd');
+		$oP->p('Example: php -q restore.php --auth_user=admin --auth_pwd=myPassw0rd --backup_file=/tmp/backup.zip');
 		$oP->p('Known limitation: the current directory must be the directory of backup.php');
 	}
 	else
 	{
-		$oP->p('Example: .../backup.php?backup_file=/tmp/backup.__DB__-__SUBNAME__.%Y-%m');
+		$oP->p('Example: .../restore.php?backup_file=/tmp/backup.zip');
 	}
+}
+
+function GetOperationName() {
+	return "iTop - iTop Restore";
 }
 
 /**
@@ -92,13 +95,12 @@ function Usage($oP)
  * @throws \OQLException
  */
 function ExecuteMainOperation($oP){
-
 	if (utils::IsModeCLI())
 	{
 		$oP->p(date('Y-m-d H:i:s')." - running backup utility");
 		$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
 		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
-		$bDownloadBackup = false;
+		$sBackupFile = ReadMandatoryParam($oP, 'backup_file');
 		if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 		{
 			UserRights::Login($sAuthUser); // Login & set the user's language
@@ -107,17 +109,20 @@ function ExecuteMainOperation($oP){
 		{
 			ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
 		}
+
+		if (!is_file($sBackupFile) && is_readable($sBackupFile)){
+			ExitError($oP, "Cannot access backup file ('$sBackupFile')");
+		}
 	}
 	else
 	{
 		require_once(APPROOT.'application/loginwebpage.class.inc.php');
 		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-		$bDownloadBackup = utils::ReadParam('download', false);
 	}
 
 	if (!UserRights::IsAdministrator())
 	{
-		ExitError($oP, "Access restricted to administors");
+		ExitError($oP, "Access restricted to administrators");
 	}
 
 	if (CheckParam('?') || CheckParam('h') || CheckParam('help'))
@@ -127,32 +132,19 @@ function ExecuteMainOperation($oP){
 		exit;
 	}
 
-
-	$sDefaultBackupFileName = SetupUtils::GetTmpDir().'/'."__DB__-%Y-%m-%d";
-	$sBackupFile =  utils::ReadParam('backup_file', $sDefaultBackupFileName, true, 'raw_data');
-
 // Interpret strftime specifications (like %Y) and database placeholders
-	$oBackup = new MyDBBackup($oP);
-	$oBackup->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
-	$sBackupFile = $oBackup->MakeName($sBackupFile);
+	$oRestore = new MyCliRestore($oP);
+	$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 
-	$bSimulate = utils::ReadParam('simulate', false, true);
 	$res = false;
-	if ($bSimulate)
-	{
-		$oP->p("Simulate: would create file '$sBackupFile'");
-	}
-	elseif (MetaModel::GetConfig()->Get('demo_mode'))
+	if (MetaModel::GetConfig()->Get('demo_mode'))
 	{
 		$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
 	}
 	else
 	{
-		$oBackup->CreateCompressedBackup($sBackupFile);
-	}
-	if ($res && $bDownloadBackup)
-	{
-		$oBackup->DownloadBackup($sBackupFile);
+		$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
+		$oRestore->RestoreFromCompressedBackup($sBackupFile, $sEnvironment);
 	}
 }
 
