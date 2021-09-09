@@ -96,8 +96,8 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	}
 	.ui-dialog-titlebar-close {
 		position: absolute;
-		right: $ibo-vendors-jqueryui--ui-dialog--padding-x;
-		top: 50%;
+		right: 0;
+		top: $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y;
 		width: 20px;
 		margin: -10px 0 0 0;
 		padding: 1px;
