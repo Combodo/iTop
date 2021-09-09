@@ -4950,12 +4950,12 @@
 				</field>
 				<field id="ip" xsi:type="AttributeIPAddress">
 					<sql>ip</sql>
-          <default_value>0.0.0.0</default_value>
+          <default_value></default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="ip_mask" xsi:type="AttributeIPAddress">
 					<sql>ip_mask</sql>
-          <default_value>0.0.0.0</default_value>
+          <default_value></default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="vlans_list" xsi:type="AttributeLinkedSetIndirect">
@@ -4976,47 +4976,47 @@
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-			$oPage->SetCurrentTab('Class:Subnet/Tab:IPUsage');
+      $bIsCreation = ($this->GetKey() != -1)? false : true;
+      if (!$bIsCreation)	{
+        $oPage->SetCurrentTab('Class:Subnet/Tab:IPUsage');
 
-			$bit_ip = ip2long($this->Get('ip'));
-			$bit_mask = ip2long($this->Get('ip_mask'));
+        $bit_ip = ip2long($this->Get('ip'));
+        $bit_mask = ip2long($this->Get('ip_mask'));
 
-			$iIPMin = sprintf('%u', ($bit_ip & $bit_mask) | 1); // exclude the first one: identifies the subnet itself
-			$iIPMax = sprintf('%u', (($bit_ip | (~$bit_mask))) & 0xfffffffe); // exclude the last one : broadcast address
+        $iIPMin = sprintf('%u', ($bit_ip & $bit_mask) | 1); // exclude the first one: identifies the subnet itself
+        $iIPMax = sprintf('%u', (($bit_ip | (~$bit_mask))) & 0xfffffffe); // exclude the last one : broadcast address
 
-			$sIPMin = long2ip($iIPMin);
-			$sIPMax = long2ip($iIPMax);
+        $sIPMin = long2ip($iIPMin);
+        $sIPMax = long2ip($iIPMax);
 
-			$oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
+        $oPage->p(Dict::Format('Class:Subnet/Tab:IPUsage-explain', $sIPMin, $sIPMax));
 
-			$oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
-			$oIfSet = new CMDBObjectSet($oIfFilter);
-			$oBlock = new DisplayBlock($oIfFilter, 'list', false);
-			$oBlock->Display($oPage, 'nwif', array('menu' => false));
+        $oIfFilter = DBObjectSearch::FromOQL("SELECT IPInterface AS if WHERE INET_ATON(if.ipaddress) >= INET_ATON('$sIPMin') AND INET_ATON(if.ipaddress) <= INET_ATON('$sIPMax')");
+        $oIfSet = new CMDBObjectSet($oIfFilter);
+        $oBlock = new DisplayBlock($oIfFilter, 'list', false);
+        $oBlock->Display($oPage, 'nwif', array('menu' => false));
 
-			$iCountUsed = $oIfSet->Count();
-			$iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
-			$iFreeCount =  $iCountRange - $iCountUsed;
+        $iCountUsed = $oIfSet->Count();
+        $iCountRange = $iIPMax - $iIPMin; // On 32-bit systems the substraction will be computed using floats for values greater than PHP_MAX_INT;
+        $iFreeCount =  $iCountRange - $iCountUsed;
 
-			$oPage->SetCurrentTab('Class:Subnet/Tab:FreeIPs');
-			$oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
-			$oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
+        $oPage->SetCurrentTab('Class:Subnet/Tab:FreeIPs');
+        $oPage->p(Dict::Format('Class:Subnet/Tab:FreeIPs-count', $iFreeCount));
+        $oPage->p(Dict::S('Class:Subnet/Tab:FreeIPs-explain'));
 
-			$aUsedIPs = $oIfSet->GetColumnAsArray('ipaddress', false);
-			$iAnIP = $iIPMin;
-			$iFound = 0;
-			while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
-			{
-				$sAnIP = long2ip($iAnIP);
-				if (!in_array($sAnIP, $aUsedIPs))
-				{
-					$iFound++;
-					$oPage->p($sAnIP);
-				}
-				else
-				{
-				}
-				$iAnIP++;
+        $aUsedIPs = $oIfSet->GetColumnAsArray('ipaddress', false);
+        $iAnIP = $iIPMin;
+        $iFound = 0;
+        while (($iFound < min($iFreeCount, 10)) && ($iAnIP <= $iIPMax))
+        {
+          $sAnIP = long2ip($iAnIP);
+          if (!in_array($sAnIP, $aUsedIPs))
+          {
+            $iFound++;
+            $oPage->p($sAnIP);
+          }
+          $iAnIP++;
+        }
 			}
 	}]]></code>
 				</method>
