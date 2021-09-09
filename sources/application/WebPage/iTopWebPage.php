@@ -37,8 +37,14 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
+		// Moved files
 		'js/d3.js',
 		'js/c3.js',
+
+		// Deprecated files
+		'js/jquery.layout.min.js',
+		/** @deprecated since 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
+		'js/jquery.qtip-1.0.min.js',
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH = [
@@ -135,9 +141,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedScripts();
 
 		// TODO 3.0.0: Add only what's necessary
-		// jquery.layout : not used anymore in the whole console but only in some pages (datamodel viewer, dashboard edit, ...)
-		// TODO : remove adding jquery.layout in iTopWebPage, and only add it when necessary (component level)
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.layout.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/date.js');
@@ -148,8 +151,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/ckeditor.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/adapters/jquery.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js');
-		/** @deprecated since 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.qtip-1.0.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
