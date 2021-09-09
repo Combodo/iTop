@@ -60,6 +60,16 @@ class WebPage implements Page
 	 */
 	public const ENUM_SESSION_MESSAGE_SEVERITY_ERROR = 'error';
 
+	/**
+	 * @var array Script linked (externals) to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_js_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [];
+	/**
+	 * @var array Stylesheets linked (externals) to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_css_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH = [];
 
 	/**
 	 * @var string
@@ -150,9 +160,11 @@ class WebPage implements Page
 		$this->InitializeInitScripts();
 		$this->InitializeReadyScripts();
 		$this->InitializeLinkedScripts();
+		$this->InitializeCompatibilityLinkedScripts();
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
+		$this->InitializeCompatibilityLinkedStylesheets();
 		$this->a_headers = [];
 		$this->a_base = ['href' => '', 'target' => ''];
 		$this->iNextId = 0;
@@ -685,6 +697,33 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Initialize compatibility linked scripts for the page
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	protected function InitializeCompatibilityLinkedScripts(): void
+	{
+		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_js_files');
+		if ($bIncludeDeprecatedFiles === false) {
+			return;
+		}
+
+		// Add ancestors files
+		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
+			foreach ($sParentClass::COMPATIBILITY_LINKED_SCRIPTS_REL_PATH as $sJSFile) {
+				$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJSFile);
+			}
+		}
+
+		// Add current class files
+		foreach (static::COMPATIBILITY_LINKED_SCRIPTS_REL_PATH as $sJSFile) {
+			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJSFile);
+		}
+	}
+
+	/**
 	 * Empty both dict. entries and dict. entries prefixes for the page
 	 *
 	 * @uses \WebPage::$a_dict_entries
@@ -849,6 +888,33 @@ JS;
 	public function add_linked_stylesheet($s_linked_stylesheet, $s_condition = "")
 	{
 		$this->a_linked_stylesheets[$s_linked_stylesheet] = array('link' => $s_linked_stylesheet, 'condition' => $s_condition);
+	}
+
+	/**
+	 * Initialize compatibility linked stylesheets for the page
+	 *
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	protected function InitializeCompatibilityLinkedStylesheets(): void
+	{
+		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_css_files');
+		if ($bIncludeDeprecatedFiles === false) {
+			return;
+		}
+
+		// Add ancestors files
+		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
+			foreach ($sParentClass::COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH as $sCSSFile) {
+				$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sCSSFile);
+			}
+		}
+
+		// Add current class files
+		foreach (static::COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH as $sCSSFile) {
+			$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sCSSFile);
+		}
 	}
 
 	/**
