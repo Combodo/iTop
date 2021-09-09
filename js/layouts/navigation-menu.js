@@ -52,6 +52,7 @@ $(function()
 					user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
 					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]',
 					menu_node: '[data-role="ibo-navigation-menu--menu-node"]',
+					menu_node_label: '[data-role="ibo-navigation-menu--menu-node-label"]',
 				},
 			filter_throttle_timeout: null,
 
@@ -374,7 +375,7 @@ $(function()
 			 * @param sNewMenuNodeHtmlRendering {string} HTML rendering of the new menu node to add
 			 * @return {boolean}
 			 */
-			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering, new_menu_name) {
+			_addShortcut: function (sParentMenuNodeId, sNewMenuNodeHtmlRendering, sNewMenulabel) {
 				const oNewMenuNodeContainerElem = this.element.find(this.js_selectors.menu_node+'[data-menu-node-id="'+sParentMenuNodeId+'"]');
 				if (oNewMenuNodeContainerElem.length === 0) {
 					return false;
@@ -383,16 +384,16 @@ $(function()
 				if (oNewMenuNodeContainerElemUL.length === 0) {
 					oNewMenuNodeContainerElem.append('<ul>'+sNewMenuNodeHtmlRendering+'</ul>');
 				} else {
-					let children = oNewMenuNodeContainerElem.find('li');
-					let i = 0;
+					let oChildrenElem = oNewMenuNodeContainerElem.find('li');
+					let iIndex = 0;
 					let bInsertToDo = true;
-					while (bInsertToDo) {
-						let currentChild = children.eq(i);
-						if (currentChild.find(".ibo-navigation-menu--menu-node-label").attr('title').toUpperCase() > new_menu_name.toUpperCase()) {
-							currentChild.before(sNewMenuNodeHtmlRendering);
+					while (bInsertToDo && iIndex < oChildrenElem.length) {
+						let oCurrentChild = oChildrenElem.eq(iIndex);
+						if (oCurrentChild.find(this.js_selectors.menu_node_label).attr('title').toUpperCase() > sNewMenulabel.toUpperCase()) {
+							oCurrentChild.before(sNewMenuNodeHtmlRendering);
 							bInsertToDo = false;
 						}
-						i++;
+						iIndex++;
 					}
 					if (bInsertToDo) {
 						oNewMenuNodeContainerElemUL.append(sNewMenuNodeHtmlRendering);
