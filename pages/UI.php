@@ -7,6 +7,7 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -16,6 +17,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -197,12 +199,15 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
  * @param string $sNextOperation string The next operation (code) to be executed when the form is submitted
  * @param ActionChecker $oChecker ActionChecker The helper class/instance used to check for which object the action is valid
  * @param array $aExtraFormParams
+ * @param array $aDisplayParams
+ *
+ * @since 3.0.0 $aDisplayParams parameter
  *
  * @throws \ApplicationException
  * @throws \ArchivedObjectException
  * @throws \CoreException
  */
-function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [])
+function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sNextOperation, ActionChecker $oChecker, array $aExtraFormParams = [], array $aDisplayParams = [])
 {
 	$oAppContext = new ApplicationContext();
 	$iBulkActionAllowed = $oChecker->IsAllowed();
@@ -228,6 +233,15 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list', false);
 	//by default all the elements are selected
 	$aExtraParams['selectionMode'] = 'negative';
+	if(array_key_exists('icon', $aDisplayParams) || array_key_exists('title', $aDisplayParams)){
+		$aExtraParams['surround_with_panel'] = true;
+		if(array_key_exists('icon', $aDisplayParams)){
+			$aExtraParams['panel_icon'] = $aDisplayParams['icon'];
+		}		
+		if(array_key_exists('title', $aDisplayParams)){
+			$aExtraParams['panel_title'] = $aDisplayParams['title'];
+		}
+	}
 	$oForm->AddSubBlock($oDisplayBlock->GetDisplay($oP, 1, $aExtraParams));
 	$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
 	$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
@@ -931,11 +945,18 @@ EOF
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'filter'));
 			}
 			$oP->set_title(Dict::S('UI:BulkDeletePageTitle'));
-			$oP->add("<h1>".Dict::S('UI:BulkDeleteTitle')."</h1>\n");
+			
 			$oFilter = DBSearch::unserialize($sFilter); // TO DO : check that the filter is valid
 			$oFilter->UpdateContextFromUser();
+
+			$sClass = $oFilter->GetClass();
+
+			$aDisplayParams = [
+				'icon' => MetaModel::GetClassIcon($sClass, false),
+				'title' => Dict::S('UI:BulkDeleteTitle'),
+			];
 			$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_DELETE);
-			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker);
+			DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_delete', $oChecker, [], $aDisplayParams);
 		break;
 
 		///////////////////////////////////////////////////////////////////////////////////////////
@@ -1163,13 +1184,15 @@ EOF
 		$sActionLabel = $aStimuli[$sStimulus]->GetLabel();
 		$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
 		$oP->set_title($sActionLabel);
-		$oP->add('<div class="page_header">');
-		$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.$sActionLabel.'</h1>');
-		$oP->add('</div>');
+		$sClass = $oFilter->GetClass();
 
+		$aDisplayParams = [
+			'icon' => MetaModel::GetClassIcon($sClass, false),
+			'title' => $sActionLabel,
+		];
 		$oChecker = new StimulusChecker($oFilter, $sState, $sStimulus);
 		$aExtraFormParams = array('stimulus' => $sStimulus, 'state' => $sState);
-		DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_stimulus', $oChecker, $aExtraFormParams);
+		DisplayMultipleSelectionForm($oP, $oFilter, 'bulk_stimulus', $oChecker, $aExtraFormParams, $aDisplayParams);
 		break;
 		
 		case 'bulk_stimulus':
@@ -1203,9 +1226,17 @@ EOF
 			$aTargetStateDef = $aStates[$sTargetState];
 
 			$oP->set_title(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass));
-			$oP->add('<div class="page_header">');
-			$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass).'</h1>');
-			$oP->add('</div>');
+			$oP->add(<<<HTML
+	<!-- Beginning of objects-transition -->
+	<div class="object-transition" data-object-class="$sClass" data-object-current-state="$sState" data-object-target-state="$sTargetState">
+HTML
+			);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aSelectObject), $sClass)));
+			if (!empty($sActionDetails)) {
+				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sActionDetails));
+			}
+
+
 
 			$aExpectedAttributes = MetaModel::GetTransitionAttributes($sClass, $sStimulus, $sState);
 			$aDetails = array();
@@ -1286,40 +1317,43 @@ EOF
 					$iFieldIndex++;
 				}
 			}
-			$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-			if ($sButtonsPosition == 'bottom')
-			{
-				// bottom: Displays the ticket details BEFORE the actions
-				$oP->add('<div class="ui-widget-content">');
-				$oObj->DisplayBareProperties($oP);
-				$oP->add('</div>');
+			$oFormContainer = new UIContentBlock(null, ['ibo-wizard-container']);
+			$oP->AddUiBlock($oFormContainer);
+			$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form($sFormId);
+			$oFormContainer->AddSubBlock($oForm);
+			$oForm->SetOnSubmitJsCode("return OnSubmit('{$sFormId}');")
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('class', $sClass))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('operation', 'bulk_apply_stimulus'))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('stimulus', $sStimulus))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('preview_mode', 1))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('filter', utils::HtmlEntities($sFilter)))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('state', $sState))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('selectObject', implode(',',$aSelectObject)))
+				->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::GetNewTransactionId()));
+
+			$aContextInputBlocks = $oAppContext->GetForUIForm();
+			foreach ($aContextInputBlocks as $oContextInputBlock){
+				$oForm->AddSubBlock($oContextInputBlock);
 			}
-			$oP->add("<div class=\"wizContainer\">\n");
-			$oP->add("<form id=\"{$sFormId}\" method=\"post\" onSubmit=\"return OnSubmit('{$sFormId}');\">\n");
-			$oP->add("<table><tr><td>\n");
-			$oP->details($aDetails);
-			$oP->add("</td></tr></table>\n");
-			$oP->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-			$oP->add("<input type=\"hidden\" name=\"operation\" value=\"bulk_apply_stimulus\">\n");
-			$oP->add("<input type=\"hidden\" name=\"preview_mode\" value=\"1\">\n");
-			$oP->add("<input type=\"hidden\" name=\"filter\" value=\"".utils::HtmlEntities($sFilter)."\">\n");
-			$oP->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
-			$oP->add("<input type=\"hidden\" name=\"state\" value=\"$sState\">\n");
-			$oP->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".utils::GetNewTransactionId()."\">\n");
-			$oP->add($oAppContext->GetForForm());
-			$oP->add("<input type=\"hidden\" name=\"selectObject\" value=\"".implode(',',$aSelectObject)."\">\n");
+			// Note: Remove the table if we want fields to occupy the whole width of the container
+			$oForm->AddHtml('<table><tr><td>');
+			$oForm->AddHtml($oP->GetDetails($aDetails));
+			$oForm->AddHtml('</td></tr></table>');
+
 			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-			$oP->add("<input type=\"button\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"window.location.href='$sURL'\">&nbsp;&nbsp;&nbsp;&nbsp;\n");
-			$oP->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
-			$oP->add("</form>\n");
-			$oP->add("</div>\n");
-			if ($sButtonsPosition != 'bottom')
-			{
-				// top or both: Displays the ticket details AFTER the actions
-				$oP->add('<div class="ui-widget-content">');
-				$oObj->DisplayBareProperties($oP);
-				$oP->add('</div>');
-			}
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+			$oCancelButton->SetOnClickJsCode("window.location.href='$sURL'");
+			$oForm->AddSubBlock($oCancelButton);
+
+			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+			$oForm->AddSubBlock($oSubmitButton);
+
+			$oP->add(<<<HTML
+	<!-- End of object-transition -->
+	</div>
+HTML
+			);
+			
 			$iFieldsCount = count($aFieldsMap);
 			$sJsonFieldsMap = json_encode($aFieldsMap);
 
@@ -1381,9 +1415,6 @@ EOF
 			$sActionDetails = $aStimuli[$sStimulus]->GetDescription();
 			
 			$oP->set_title(Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aObjects), $sClass));
-			$oP->add('<div class="page_header">');
-			$oP->add('<h1>'.MetaModel::GetClassIcon($sClass).'&nbsp;'.Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aObjects), $sClass).'</h1>');
-			$oP->add('</div>');
 			
 			$oSet = DBObjectSet::FromArray($sClass, $aObjects);
 			
@@ -1469,10 +1500,22 @@ EOF
 					'errors' => $sError,
 				);
 			}
-			$oP->Table($aHeaders, $aRows);
+			$oBlock = PanelUIBlockFactory::MakeForClass($sClass, Dict::Format('UI:StimulusModify_N_ObjectsOf_Class', $sActionLabel, count($aObjects), $sClass));
+				$oBlock->SetIcon(MetaModel::GetClassIcon($sClass, false));
+			
+
+			$oDataTable = DataTableUIBlockFactory::MakeForStaticData('', $aHeaders,$aRows);
+			$oBlock->AddSubBlock($oDataTable);
+			$oP->AddUiBlock($oBlock);
+
 			// Back to the list
 			$sURL = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-			$oP->add('<input type="button" onClick="window.location.href=\''.$sURL.'\'" value="'.Dict::S('UI:Button:Done').'">');
+			$oSubmitButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done'), 'submit', 'submit', true);
+			$oSubmitButton->SetOnClickJsCode("window.location.href='$sURL'");
+			$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
+			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
+			$oToolbarButtons->AddSubBlock($oSubmitButton);
+			$oP->AddSubBlock($oToolbarButtons);
 		}
 		break;
 
@@ -1868,9 +1911,13 @@ class UI
 		// Add user filter
 		$oFilter->UpdateContextFromUser();
 		$oChecker = new ActionChecker($oFilter, UR_ACTION_BULK_MODIFY);
-		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:ModifyAllPageTitle')));
+		$sClass = $oFilter->GetClass();
 
-		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker);
+		$aDisplayParams = [
+			'icon' => MetaModel::GetClassIcon($sClass, false),
+			'title' => Dict::S('UI:ModifyAllPageTitle'),
+		];
+		DisplayMultipleSelectionForm($oP, $oFilter, 'form_for_modify_all', $oChecker, [], $aDisplayParams);
 	}
 
 	/**

@@ -228,6 +228,20 @@ class ApplicationContext
 		}
 		return $sContext;
 	}
+	/**
+	 * Returns the context an array of input blocks
+	 *
+	 * @return array The context as a sequence of <input type="hidden" /> tags
+	 * @since 3.0.0
+	 */
+	public function GetForUIForm()
+	{
+		$aContextInputBlocks = [];
+		foreach ($this->aValues as $sName => $sValue) {
+			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", htmlentities($sValue, ENT_QUOTES, 'UTF-8'));
+		}
+		return $aContextInputBlocks;
+	}
 
 	/**
 	 * Returns the context as sequence of input tags to be inserted inside a <form> tag

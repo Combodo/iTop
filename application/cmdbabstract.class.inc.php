@@ -3317,7 +3317,7 @@ HTML
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 			}
 
-			// Note: Remove the table is we want fields to occupy the whole width of the container
+			// Note: Remove the table if we want fields to occupy the whole width of the container
 			$oForm->AddHtml('<table><tr><td>');
 			$oForm->AddHtml($oPage->GetDetails($aDetails));
 			$oForm->AddHtml('</td></tr></table>');
@@ -5018,7 +5018,6 @@ EOF
 
 		$sHeaderTitle = Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), MetaModel::GetName($sClass));
 		$sClassIcon = MetaModel::GetClassIcon($sClass, false);
-		$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sHeaderTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
 
 
 		$oP->set_title(Dict::Format('UI:Modify_N_ObjectsOf_Class', count($aSelectedObj), $sClass));
@@ -5061,6 +5060,8 @@ EOF
 		$oTable->AddOption("bFullscreen", true);
 		
 		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+		$oPanel->SetIcon($sClassIcon);
+		$oPanel->SetTitle($sHeaderTitle);
 		$oPanel->AddCSSClass('ibo-datatable-panel');
 		$oPanel->AddSubBlock($oTable);
 
@@ -5071,7 +5072,6 @@ EOF
 			$oForm = FormUIBlockFactory::MakeStandard('')->SetAction($sFormAction);
 			$oP->AddSubBlock($oForm);
 			$oForm->AddSubBlock($oPanel);
-			$oPanel->SetTitleBlock($oTitle);
 
 			$oAppContext = new ApplicationContext();
 			$oP->add($oAppContext->GetForForm());
@@ -5102,7 +5102,6 @@ EOF
 				}
 			}
 		} else {
-			$oP->AddUiBlock($oTitle);
 			$oP->AddUiBlock($oPanel);
 			$oP->AddSubBlock(ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Done')))->SetOnClickJsCode("window.location.href='$sCancelUrl'")->AddCSSClass('mt-5');
 		}
@@ -5220,19 +5219,21 @@ EOF
 			}
 
 			$iImpactedIndirectly = $oDeletionPlan->GetTargetCount() - count($aObjects);
+			$sImpactedTableTitle = '';
+			$sImpactedTableSubtitle = '';
 			if ($iImpactedIndirectly > 0)
 			{
 				if (count($aObjects) == 1)
 				{
 					$oObj = $aObjects[0];
-					$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly,
-						$oObj->GetName()));
+					$sImpactedTableTitle = Dict::Format('UI:Delete:Count_Objects/LinksReferencing_Object', $iImpactedIndirectly,
+						$oObj->GetName());
 				}
 				else
 				{
-					$oP->p(Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iImpactedIndirectly));
+					$sImpactedTableTitle = Dict::Format('UI:Delete:Count_Objects/LinksReferencingTheObjects', $iImpactedIndirectly);
 				}
-				$oP->p(Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity'));
+				$sImpactedTableSubtitle = Dict::S('UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity');
 			}
 
 			if (($iImpactedIndirectly > 0) || $oDeletionPlan->FoundStopper())
@@ -5244,7 +5245,11 @@ EOF
 					'label' => 'Consequence',
 					'description' => Dict::S('UI:Delete:Consequence+'),
 				);
-				$oP->AddSubBlock(DataTableUIBlockFactory::MakeForForm(preg_replace('/[^a-zA-Z0-9_-]/', '', uniqid('form_', true)), $aDisplayConfig, $aDisplayData));
+				$oBlock = PanelUIBlockFactory::MakeNeutral($sImpactedTableTitle, $sImpactedTableSubtitle);
+
+				$oDataTable = DataTableUIBlockFactory::MakeForForm(preg_replace('/[^a-zA-Z0-9_-]/', '', uniqid('form_', true)), $aDisplayConfig, $aDisplayData);
+				$oBlock->AddSubBlock($oDataTable);
+				$oP->AddUiBlock($oBlock);
 			}
 
 			if ($oDeletionPlan->FoundStopper()) {
@@ -5275,7 +5280,6 @@ EOF
 					$sSubtitle = Dict::Format('UI:Delect:Confirm_Count_ObjectsOf_Class', count($aObjects),
 						MetaModel::GetName($sClass));
 				}
-				$oP->AddUiBlock(TitleUIBlockFactory::MakeStandard(new Html($sSubtitle)));
 
 				foreach ($aObjects as $oObj) {
 					$aKeys[] = $oObj->GetKey();
@@ -5285,7 +5289,14 @@ EOF
 				$oSet = new CMDBobjectSet($oFilter);
 				$oDisplaySet = UIContentBlockUIBlockFactory::MakeStandard("0");
 				$oP->AddSubBlock($oDisplaySet);
-				$oDisplaySet->AddSubBlock(CMDBAbstractObject::GetDisplaySetBlock($oP, $oSet, array('display_limit' => false, 'menu' => false)));
+				$oDisplaySet->AddSubBlock(CMDBAbstractObject::GetDisplaySetBlock($oP, $oSet, array(
+					'display_limit' => false,
+					'menu' => false,
+					'surround_with_panel' => true,
+					'panel_title' => $sSubtitle,
+					'panel_icon' => MetaModel::GetClassIcon($sClass, false),
+					'panel_class' => $sClass,
+				)));
 
 				$oForm = FormUIBlockFactory::MakeStandard('');
 				$oP->AddSubBlock($oForm);
@@ -5384,18 +5395,16 @@ EOF
 					$sSubtitle = Dict::Format('UI:Delete:CleaningUpRefencesTo_Several_ObjectsOf_Class', count($aObjects),
 						MetaModel::GetName($sClass));
 				}
-				$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sSubtitle));
 
 				$aDisplayConfig = array();
 				$aDisplayConfig['class'] = array('label' => 'Class', 'description' => '');
 				$aDisplayConfig['object'] = array('label' => 'Object', 'description' => '');
 				$aDisplayConfig['consequence'] = array('label' => 'Done', 'description' => Dict::S('UI:Delete:Done+'));
 
-				$oResultsPanel = PanelUIBlockFactory::MakeForInformation('');
+				$oResultsPanel = PanelUIBlockFactory::MakeForInformation($sSubtitle);
 				$oP->AddUiBlock($oResultsPanel);
-				$oResultsPanel->AddSubBlock(
-					DataTableUIBlockFactory::MakeForStaticData('', $aDisplayConfig, $aDisplayData)
-				);
+				$oDatatable = DataTableUIBlockFactory::MakeForStaticData('', $aDisplayConfig, $aDisplayData);
+				$oResultsPanel->AddSubBlock($oDatatable);
 			}
 		}
 	}
