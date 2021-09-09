@@ -1001,7 +1001,6 @@ JS;
 			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" data-role=\"ibo-field\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw $sDataInputId $sDataInputType>\n";
 			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
-		//	$sHtml .= "<div class=\"field_data\">\n";
 			// By Rom, for csv import, proposed to show several values for column selection
 			if (is_array($aAttrib['value']))
 			{
@@ -1022,7 +1021,6 @@ JS;
 			{
 				$sHtml .= "<div class=\"ibo-field--infos\">$sInfo</div>\n";
 			}
-		//	$sHtml .= "</div>\n";
 
 			$sHtml .= "</div>\n";
 		}
