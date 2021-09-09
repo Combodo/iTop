@@ -661,6 +661,12 @@ EOF
 		$sCreated = json_encode(Dict::Format('UI:CSVImportCreated_items', $iCreated));
 		$sModified = json_encode(Dict::Format('UI:CSVImportModified_items', $iModified));
 		$sUnchanged = json_encode(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
+
+		// Add graphs dependencies
+		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
+		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
+
 		$oPage->add_script(		
 <<< EOF
 function CSVGoBack()

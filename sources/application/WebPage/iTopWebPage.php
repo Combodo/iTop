@@ -35,6 +35,16 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	/** @var string DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE */
 	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 
+	/** @inheritDoc */
+	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
+		'js/d3.js',
+		'js/c3.js',
+	];
+	/** @inheritDoc */
+	protected const COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH = [
+		'css/c3.min.css',
+	];
+
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/itopwebpage/layout';
 
@@ -146,8 +156,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
@@ -196,7 +204,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// TODO 3.0.0: Add only what's necessary
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
