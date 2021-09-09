@@ -22,7 +22,26 @@
  */
 class NiceWebPage extends WebPage
 {
+	/** @inheritDoc */
+	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
+		'js/search/search_form_handler.js',
+		'js/search/search_form_handler_history.js',
+		'js/search/search_form_criteria.js',
+		'js/search/search_form_criteria_raw.js',
+		'js/search/search_form_criteria_string.js',
+		'js/search/search_form_criteria_external_field.js',
+		'js/search/search_form_criteria_numeric.js',
+		'js/search/search_form_criteria_enum.js',
+		'js/search/search_form_criteria_tag_set.js',
+		'js/search/search_form_criteria_external_key.js',
+		'js/search/search_form_criteria_hierarchical_key.js',
+		'js/search/search_form_criteria_date_abstract.js',
+		'js/search/search_form_criteria_date.js',
+		'js/search/search_form_criteria_date_time.js',
+	];
+
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
+
 	var $m_sRootUrl;
 
 	public function __construct($s_title, $bPrintable = false)
@@ -127,20 +146,6 @@ EOF
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler_history.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_field.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_numeric.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_enum.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_tag_set.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_key.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_hierarchical_key.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js');
