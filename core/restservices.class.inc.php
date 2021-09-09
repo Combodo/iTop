@@ -137,6 +137,12 @@ class RestResultWithObjects extends RestResult
 {
 	public $objects;
 
+	public function __construct()
+	{
+		parent::__construct();
+		$this->objects = array();
+	}
+
 	/**
 	 * Report the given object
 	 * 	 
