@@ -147,7 +147,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedScripts();
 
 		// TODO 3.0.0: Add only what's necessary
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
+		// Used in external keys, DM viewer
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
