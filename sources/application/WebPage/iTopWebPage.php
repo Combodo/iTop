@@ -45,6 +45,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		'js/c3.js',
 
 		// Deprecated files
+		'js/date.js',
 		'js/jquery.layout.min.js',
 		/** @deprecated since 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
 		'js/jquery.qtip-1.0.min.js',
@@ -147,7 +148,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// TODO 3.0.0: Add only what's necessary
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/date.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
