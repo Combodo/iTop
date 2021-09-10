@@ -17,7 +17,7 @@ if (count($aScssFiles) === 0) {
 $aCssFiles = GetFilesWithExtension('css', $aFilesToCommit);
 if (count($aCssFiles) === 0) {
     echo "There are SCSS files staged but no CSS file : REJECTING commit.\n";
-    echo "You must push the compiled SCSS files by running the setup !\n";
+	echo "You must add the compiled SCSS files by running the setup !\n";
     exit(1);
 }
 
