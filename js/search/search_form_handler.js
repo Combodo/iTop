@@ -17,8 +17,8 @@ $(function()
 			/* Submit the search form automatically on criteria change */
 			'auto_submit': true,
 			/* Submit the search form when the page is first loaded */
-			'submit_on_load': false,
-			'show_obsolete_data' : true,
+			'submit_on_load': true,
+			'show_obsolete_data': true,
 			'search': {
 				'base_oql': '',
 				'class_name': null,
@@ -109,10 +109,10 @@ $(function()
 			};
 
 			//init others widgets :
-			this.element.search_form_handler_history({'itop_root_class':me.options.search.class_name});
+			this.element.search_form_handler_history({'itop_root_class': me.options.search.class_name});
 
 
-            // Prepare DOM elements
+			// Prepare DOM elements
 			this._prepareFormArea();
 			this._prepareCriterionArea();
 			this._prepareResultsArea();
@@ -122,16 +122,15 @@ $(function()
 			// Binding events (eg. from search_form_criteria widgets)
 			this._bindEvents();
 
-            //memorize the initial state so on first criteria close, we do not trigger a refresh if nothing has changed
-            this._updateSearch();
+			//memorize the initial state so on first criteria close, we do not trigger a refresh if nothing has changed
+			this._updateSearch();
 			this.oPreviousAjaxParams = JSON.stringify({
-                'base_oql': this.options.search.base_oql,
-                'criterion': this.options.search.criterion,
-            });
+				'base_oql': this.options.search.base_oql,
+				'criterion': this.options.search.criterion,
+			});
 
 			// If auto submit is enabled, also submit on first display
-			if(this.options.auto_submit === true || this.options.submit_on_load === true)
-			{
+			if (this.options.auto_submit === true && this.options.submit_on_load === true) {
 				this._submit();
 			}
 

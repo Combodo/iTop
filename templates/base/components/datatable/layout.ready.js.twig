@@ -167,7 +167,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 method: "post",
                 pages: 1
             }, // number of pages to cache
-            {{ oUIBlock.GetJsonData() |raw }}
+            {{ oUIBlock.GetJsonInitDisplayData() |raw }}
     ),
     createdRow: function (row, data, dataIndex) {
         if (data['@class'] !== undefined)
@@ -300,9 +300,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endif %}
 
         {% if oUIBlock.GetDisabledSelect() is not empty %}
-            {% for key in oUIBlock.GetDisabledSelect() %}
-                $('.selectList{{ oUIBlock.GetId() }}[value={{ key }}]').prop("disabled","disabled");
-            {% endfor %}
+        {% for key in oUIBlock.GetDisabledSelect() %}
+        $('.selectList{{ oUIBlock.GetId() }}[value={{ key }}]').prop("disabled", "disabled");
+        {% endfor %}
         {% endif %}
         {% endif %}
     }

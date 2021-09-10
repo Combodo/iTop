@@ -1126,7 +1126,7 @@ class OQLMenuNode extends MenuNode
 		$oSearch = DBObjectSearch::FromOQL($sOql);
 
 		if ($bSearchPane) {
-			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => true], $aExtraParams);
+			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}

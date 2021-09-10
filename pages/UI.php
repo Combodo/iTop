@@ -176,7 +176,8 @@ function DisplaySearchSet($oP, $oFilter, $bSearchForm = true, $sBaseClass = '', 
 				$sTableId = 'result_1';
 			}
 			$aExtraParams['table_id'] = $sTableId;
-			$oUIBlockForm = $oBlockForm->GetDisplay($oP, 'search_1',$aExtraParams);
+			$aExtraParams['submit_on_load'] = false;
+			$oUIBlockForm = $oBlockForm->GetDisplay($oP, 'search_1', $aExtraParams);
 			//add result block
 			$oUIBlock = $oBlock->GetDisplay($oP, $sTableId);
 			$oUIBlock->AddCSSClasses(['display_block', 'sf_results_area']);
