@@ -146,35 +146,51 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedScripts();
 
-		// TODO 3.0.0: Add only what's necessary
-		// Used in external keys, DM viewer
+		// Used by external keys, DM viewer
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
+
+		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 
 		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/ckeditor.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/adapters/jquery.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js');
 
+		// Tooltips
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
+
+		// Used by external keys and other drop down lists
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
+
+		// Used by inline image, CKEditor and other places
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+
+		// Used by date(time) attibutes, activity panel, ...
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
+
+		// Used by the newsroom
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+
+		// Keyboard shortcuts
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
+
+		// Used throughout the app.
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/on-ready.js');
+
+		// Used by dashboard editor
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
+
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
 	}
 
 	/**
@@ -209,14 +225,24 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedStylesheets();
 
-		// TODO 3.0.0: Add only what's necessary
+		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
+
+		// Used by inline image, CKEditor and other places
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
+
+		// Tooltips
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+
+		// Icons
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+
+		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
+
+		// Used by external keys and other drop down lists
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 	}
 
