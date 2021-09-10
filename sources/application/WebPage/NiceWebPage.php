@@ -148,7 +148,6 @@ EOF
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js');
 	}
 
 	/**
