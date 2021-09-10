@@ -1499,10 +1499,12 @@ EOF
 		
 		$sDirection = utils::ReadParam('d', 'horizontal');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
-	
+
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
 		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
 		try
 		{

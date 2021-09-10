@@ -2207,6 +2207,7 @@ EOF
 			require_once(APPROOT.'core/simplegraph.class.inc.php');
 			require_once(APPROOT.'core/relationgraph.class.inc.php');
 			require_once(APPROOT.'core/displayablegraph.class.inc.php');
+
 			$sRelation = utils::ReadParam('relation', 'impacts');
 			$sDirection = utils::ReadParam('direction', 'down');
 			$iGroupingThreshold = utils::ReadParam('g', 5);
@@ -2215,6 +2216,13 @@ EOF
 			$sImpactAttCode = utils::ReadParam('impact_attcode', 'impact_code');
 			$sImpactAttCodeValue = utils::ReadParam('impact_attcode_value', 'manual');
 			$iId = (int)utils::ReadParam('id', 0, false, 'integer');
+
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
 
 			// Get the list of source objects
 			$oTicket = MetaModel::GetObject($sClass, $iId);
