@@ -18,6 +18,15 @@ class RichText extends UIBlock
 	public const BLOCK_CODE = 'ibo-richtext';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/input/richtext/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/ckeditor/ckeditor.js',
+		'js/ckeditor/adapters/jquery.js',
+		'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
+	];
+	public const DEFAULT_CSS_FILES_REL_PATH = [
+		'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css',
+	];
+
 	/** @var string */
 	protected $aConfig;
 

@@ -38,8 +38,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
 		// Moved files
+		// - TabContainer
 		'js/jquery.ba-bbq.min.js',
-
+		// - DashletGroupBy & other specific places
 		'js/d3.js',
 		'js/c3.js',
 
@@ -50,6 +51,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	];
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH = [
+		// Moved files
+		// - DashletGroupBy & other specific places
 		'css/c3.min.css',
 	];
 
@@ -148,9 +151,12 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
+
+		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/ckeditor.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/adapters/jquery.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js');
+
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
