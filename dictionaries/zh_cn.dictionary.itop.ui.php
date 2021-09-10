@@ -1043,7 +1043,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => '帮助',
-	'UI:PasswordConfirm' => '(确认)',
+	'UI:PasswordConfirm' => '确认',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '在添加更多 %1$s 之前, 保存该对象.',
 	'UI:DisplayThisMessageAtStartup' => '在启动时显示此消息',
 	'UI:RelationshipGraph' => '图览',

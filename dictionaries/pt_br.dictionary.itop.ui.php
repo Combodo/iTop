@@ -1043,7 +1043,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Ajuda',
-	'UI:PasswordConfirm' => '(Confirmar)',
+	'UI:PasswordConfirm' => 'Confirmar',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Antes de adicionar mais %1$s objetos, salvar este objeto.',
 	'UI:DisplayThisMessageAtStartup' => 'Exibir esta mensagem na inicialização',
 	'UI:RelationshipGraph' => 'Visualizar gráfico',

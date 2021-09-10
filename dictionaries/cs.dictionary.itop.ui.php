@@ -1041,7 +1041,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Nápověda',
-	'UI:PasswordConfirm' => '(Potvrzení)',
+	'UI:PasswordConfirm' => 'Potvrzení',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Než přidáte další objekty třídy %1$s, uložte tento objekt.',
 	'UI:DisplayThisMessageAtStartup' => 'Zobrazovat tuto zprávu při spuštění',
 	'UI:RelationshipGraph' => 'Grafické zobrazení',

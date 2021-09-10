@@ -1043,7 +1043,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Deadline_Hours_Minutes' => '%1$d ч %2$d мин',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d д %2$d ч %3$d мин',
 	'UI:Help' => 'Помощь',
-	'UI:PasswordConfirm' => '(Подтвердить)',
+	'UI:PasswordConfirm' => 'Подтвердить',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Перед добавлением объекта %1$s сохраните текущий объект.',
 	'UI:DisplayThisMessageAtStartup' => 'Показать это сообщение при запуске',
 	'UI:RelationshipGraph' => 'Графический вид',

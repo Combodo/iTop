@@ -1043,7 +1043,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$ddk',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d gün %2$d saat %3$d dk',
 	'UI:Help' => 'Yardım',
-	'UI:PasswordConfirm' => '(Onay)',
+	'UI:PasswordConfirm' => 'Onay',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Yeni %1$s nesneleri eklemeden önce bu nesneyi kaydediniz.',
 	'UI:DisplayThisMessageAtStartup' => 'Bu mesajı başlangıçta göster',
 	'UI:RelationshipGraph' => 'Grafiksel gösterim',

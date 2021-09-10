@@ -422,11 +422,14 @@ function ValidatePasswordField(id, sFormId)
 				oFormErrors['input_'+sFormId] = id;
 			}
 			// Visual feedback
-			$('#v_'+id).html('<img src="../images/validation_error.png"  style="vertical-align:middle"/>');
+			$('#v_'+id).html(Dict.S('UI:Component:Input:Password:DoesNotMatch'));
+			$('#field_'+id +' .ibo-input-wrapper').addClass('is-error');
+
 			return false;
 		}
 	}
-	$('#v_'+id).html(''); //<img src="../images/validation_ok.png" />');
+	$('#v_'+id).html('');
+	$('#field_'+id +' .ibo-input-wrapper').removeClass('is-error');
 	return true;
 }
 

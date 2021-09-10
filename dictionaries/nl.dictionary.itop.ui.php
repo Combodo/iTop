@@ -1046,7 +1046,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Help',
-	'UI:PasswordConfirm' => '(Bevestig)',
+	'UI:PasswordConfirm' => 'Bevestig',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Sla dit object op voordat je meer %1$s objecten toevoegt.',
 	'UI:DisplayThisMessageAtStartup' => 'Geef dit bericht weer bij het opstarten',
 	'UI:RelationshipGraph' => 'Grafische weergave',

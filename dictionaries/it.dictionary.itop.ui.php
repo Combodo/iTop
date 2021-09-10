@@ -1044,7 +1044,7 @@ Quando è associata a un trigger, ad ogni azione è assegnato un numero "ordine"
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dg %2$dh %3$dmin',
 	'UI:Help' => 'Aiuto',
-	'UI:PasswordConfirm' => '(Conferma)',
+	'UI:PasswordConfirm' => 'Conferma',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Prima di aggiungere più %1$s oggetti, salva questo oggetto.',
 	'UI:DisplayThisMessageAtStartup' => 'Visualizza questo messaggio in fase di avvio',
 	'UI:RelationshipGraph' => 'Visualizzazione grafica',

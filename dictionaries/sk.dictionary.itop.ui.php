@@ -1035,7 +1035,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Pomoc',
-	'UI:PasswordConfirm' => '(Potvrdiť)',
+	'UI:PasswordConfirm' => 'Potvrdiť',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Pred pridaním viacerých %1$s objektov, uložte tento objekt.',
 	'UI:DisplayThisMessageAtStartup' => 'Zobraziť túto správu pri spustení',
 	'UI:RelationshipGraph' => 'Grafický pohľad',

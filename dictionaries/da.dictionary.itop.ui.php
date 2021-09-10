@@ -1032,7 +1032,7 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Hjælp',
-	'UI:PasswordConfirm' => '(Bekræft)',
+	'UI:PasswordConfirm' => 'Bekræft',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Gem dette objekt, før der tilføjes flere %1$s objekter.',
 	'UI:DisplayThisMessageAtStartup' => 'Vis denne beksed ved start',
 	'UI:RelationshipGraph' => 'Grafisk visning',

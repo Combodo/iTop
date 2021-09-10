@@ -1042,7 +1042,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dj %2$dh %3$dmin',
 	'UI:Help' => 'Aide',
-	'UI:PasswordConfirm' => '(Confirmer)',
+	'UI:PasswordConfirm' => 'Confirmer',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Enregistrez l\'objet courant avant de créer de nouveaux éléments de type %1$s.',
 	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
 	'UI:RelationshipGraph' => 'Vue graphique',

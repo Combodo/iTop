@@ -1032,7 +1032,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Deadline_Hours_Minutes' => '%1$d時間%2$d分',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d日%2$d時間%3$d分',
 	'UI:Help' => 'ヘルプ',
-	'UI:PasswordConfirm' => '(確認)',
+	'UI:PasswordConfirm' => '確認',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '%1$sオブジェクトをさらに追加する前に、このオブジェクトを保存してください。',
 	'UI:DisplayThisMessageAtStartup' => '起動時にこのメッセージを表示する',
 	'UI:RelationshipGraph' => 'グラフィカル表示',

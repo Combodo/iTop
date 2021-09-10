@@ -1045,7 +1045,7 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Pomoc',
-	'UI:PasswordConfirm' => '(Potwierdenie)',
+	'UI:PasswordConfirm' => 'Potwierdenie',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Zanim dodasz więcej obiektów %1$s, zapisz ten obiekt.',
 	'UI:DisplayThisMessageAtStartup' => 'Wyświetl tę wiadomość podczas uruchamiania',
 	'UI:RelationshipGraph' => 'Widok graficzny',

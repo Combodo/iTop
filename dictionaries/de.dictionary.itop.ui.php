@@ -1031,7 +1031,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Deadline_Hours_Minutes' => '%1$dStunden %2$dMinuten',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dTage %2$dStunden %3$dMinuten',
 	'UI:Help' => 'Hilfe',
-	'UI:PasswordConfirm' => '(Bestätigen)',
+	'UI:PasswordConfirm' => 'Bestätigen',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Bevor weitere Objekte vom Typ "%1$s" hinzugefügt werden können, speichern Sie bitte dieses Objekt.',
 	'UI:DisplayThisMessageAtStartup' => 'Diese Meldung beim Start immer anzeigen',
 	'UI:RelationshipGraph' => 'Grafische Ansicht',

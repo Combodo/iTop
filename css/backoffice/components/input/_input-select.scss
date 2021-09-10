@@ -110,8 +110,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 	pointer-events: none;
 }
 .ibo-input-select-wrapper--with-buttons {
-  position: relative;
-  display: flex;
+  @extend .ibo-input-wrapper--with-buttons;
 }
 
 .ibo-input-select-container {

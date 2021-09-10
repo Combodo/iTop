@@ -1031,7 +1031,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Deadline_Hours_Minutes' => '%1$dóra %2$dperc',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$nap %2$dóra %3$dperc',
 	'UI:Help' => 'Segítség',
-	'UI:PasswordConfirm' => '(Jóváhagyás)',
+	'UI:PasswordConfirm' => 'Jóváhagyás',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '%1$s objektumok hozzáadása előtt mentse ezt az  objektumot',
 	'UI:DisplayThisMessageAtStartup' => 'Az üzenet megjelenítése indításkor',
 	'UI:RelationshipGraph' => 'Grafikus nézet',

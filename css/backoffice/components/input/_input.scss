@@ -55,6 +55,10 @@ $ibo-input--margin-x: 5px !default;
     border: 1px solid $ibo-input-wrapper--is-error--border-color;
   }
 }
+.ibo-input-wrapper--with-buttons{
+  position: relative;
+  display: flex;
+}
 
 .ibo-field-validation {
   color: $ibo-field-validation;
