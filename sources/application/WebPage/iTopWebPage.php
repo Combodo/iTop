@@ -38,6 +38,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
 		// Moved files
+		'js/jquery.ba-bbq.min.js',
+
 		'js/d3.js',
 		'js/c3.js',
 
@@ -141,7 +143,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		parent::InitializeLinkedScripts();
 
 		// TODO 3.0.0: Add only what's necessary
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/date.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
