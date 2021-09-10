@@ -363,7 +363,7 @@ class CMDBSource
 
 	/**
 	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
-	 * @see mysqli_get_server_info
+	 * @uses mysqli_get_server_info
 	 */
 	public static function GetServerInfo()
 	{
