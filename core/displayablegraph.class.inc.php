@@ -1504,6 +1504,8 @@ EOF
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
 		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
+		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
 		try

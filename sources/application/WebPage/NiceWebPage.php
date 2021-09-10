@@ -25,6 +25,9 @@ class NiceWebPage extends WebPage
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
 		// Moved files
+		// - DisplayableGraph, impact analysis
+		'js/jquery.positionBy.js',
+		'js/jquery.popupmenu.js',
 		// - SearchForm
 		'js/search/search_form_handler.js',
 		'js/search/search_form_handler_history.js',
@@ -147,8 +150,6 @@ EOF
 
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
