@@ -40,9 +40,17 @@ class NiceWebPage extends WebPage
 		'js/search/search_form_criteria_date_abstract.js',
 		'js/search/search_form_criteria_date.js',
 		'js/search/search_form_criteria_date_time.js',
+		// - DataTable UIBlock
+		'js/field_sorter.js',
+		'js/table-selectable-lines.js',
 
 		// Deprecated files
 		'js/hovertip.js',
+		/** @deprecated since 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal */
+		'js/datatable.js',
+		'js/jquery.tablesorter.js',
+		'js/jquery.tablesorter.pager.js',
+		'js/jquery.tablehover.js',
 	];
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
@@ -138,15 +146,6 @@ EOF
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
 
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
-		//TODO deprecated in 3.0.0
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
-		// table sorting
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
-		//TODO end deprecated in 3.0.0
 
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');

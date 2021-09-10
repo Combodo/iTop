@@ -34,6 +34,8 @@ class DataTable extends UIContentBlock
 		'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
 		'node_modules/datatables.net-scroller/js/dataTables.scroller.js',
 		'node_modules/datatables.net-select/js/dataTables.select.js',
+		'js/field_sorter.js',
+		'js/table-selectable-lines.js',
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
