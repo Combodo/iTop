@@ -24,6 +24,8 @@ class NiceWebPage extends WebPage
 {
 	/** @inheritDoc */
 	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
+		// Moved files
+		// - SearchForm
 		'js/search/search_form_handler.js',
 		'js/search/search_form_handler_history.js',
 		'js/search/search_form_criteria.js',
@@ -38,6 +40,9 @@ class NiceWebPage extends WebPage
 		'js/search/search_form_criteria_date_abstract.js',
 		'js/search/search_form_criteria_date.js',
 		'js/search/search_form_criteria_date_time.js',
+
+		// Deprecated files
+		'js/hovertip.js',
 	];
 
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
@@ -120,6 +125,7 @@ EOF
 	{
 		parent::InitializeLinkedScripts();
 
+		// Used throught the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
@@ -130,8 +136,8 @@ EOF
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
+
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
 		//TODO deprecated in 3.0.0
