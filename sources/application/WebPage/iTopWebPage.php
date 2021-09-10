@@ -43,6 +43,9 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - DashletGroupBy & other specific places
 		'js/d3.js',
 		'js/c3.js',
+		// - DisplayableGraph, impact analysis
+		'js/raphael-min.js',
+		'js/jquery.mousewheel.js',
 
 		// Deprecated files
 		'js/date.js',
@@ -189,8 +192,6 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
-
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
 	}
 
 	/**
