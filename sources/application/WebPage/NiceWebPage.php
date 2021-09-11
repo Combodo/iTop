@@ -46,6 +46,9 @@ class NiceWebPage extends WebPage
 		// - DataTable UIBlock
 		'js/field_sorter.js',
 		'js/table-selectable-lines.js',
+		// - Not used internally or by extensions yet
+		'js/clipboard.min.js',
+		'js/clipboardwidget.js',
 
 		// Deprecated files
 		'js/hovertip.js',
@@ -152,8 +155,6 @@ EOF
 
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
 	}
 
 	/**
