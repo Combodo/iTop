@@ -49,7 +49,7 @@ class NiceWebPage extends WebPage
 
 		// Deprecated files
 		'js/hovertip.js',
-		/** @deprecated since 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal */
+		/** @deprecated since 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal, will be removed in 3.x */
 		'js/datatable.js',
 		'js/jquery.tablesorter.js',
 		'js/jquery.tablesorter.pager.js',
