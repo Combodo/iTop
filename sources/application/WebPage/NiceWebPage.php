@@ -53,6 +53,7 @@ class NiceWebPage extends WebPage
 		'js/searchformforeignkeys.js',
 
 		// Deprecated files
+		/** @deprecated since 3.0.0 Not used in the backoffice since the introduction of the new tooltip lib. */
 		'js/hovertip.js',
 		/** @deprecated since 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal, will be removed in 3.x */
 		'js/datatable.js',
@@ -141,7 +142,7 @@ EOF
 	{
 		parent::InitializeLinkedScripts();
 
-		// Used throught the app.
+		// Used throughout the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
@@ -153,6 +154,7 @@ EOF
 		}
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
 
+		// Used throughout the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
 	}
