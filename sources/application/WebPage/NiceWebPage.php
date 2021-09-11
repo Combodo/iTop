@@ -23,8 +23,7 @@
 class NiceWebPage extends WebPage
 {
 	/** @inheritDoc */
-	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
-		// Moved files
+	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [
 		// - DisplayableGraph, impact analysis
 		'js/jquery.positionBy.js',
 		'js/jquery.popupmenu.js',
@@ -51,8 +50,9 @@ class NiceWebPage extends WebPage
 		'js/clipboardwidget.js',
 		// - SearchForm
 		'js/searchformforeignkeys.js',
-
-		// Deprecated files
+	];
+	/** @inheritDoc */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
 		/** @deprecated since 3.0.0 Not used in the backoffice since the introduction of the new tooltip lib. */
 		'js/hovertip.js',
 		/** @deprecated since 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal, will be removed in 3.x */

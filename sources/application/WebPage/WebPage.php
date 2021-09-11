@@ -61,15 +61,46 @@ class WebPage implements Page
 	public const ENUM_SESSION_MESSAGE_SEVERITY_ERROR = 'error';
 
 	/**
-	 * @var array Script linked (externals) to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_js_files" conf. param.}
+	 * @var string
 	 * @since 3.0.0
 	 */
-	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [];
+	protected const ENUM_COMPATIBILITY_FILE_TYPE_JS = 'js';
 	/**
-	 * @var array Stylesheets linked (externals) to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_css_files" conf. param.}
+	 * @var string
 	 * @since 3.0.0
 	 */
-	protected const COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH = [];
+	protected const ENUM_COMPATIBILITY_FILE_TYPE_CSS = 'css';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected const ENUM_COMPATIBILITY_MODE_MOVED_FILES = 'moved';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected const ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES = 'deprecated';
+
+	/**
+	 * @var array Script linked to the page through URIs, which are now included only were necessary instead of in all pages, but can be added back if necessary {@see "compatibility.include_moved_js_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [];
+	/**
+	 * @var array Script linked to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_js_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [];
+	/**
+	 * @var array Stylesheets linked to the page through URIs, which are now included only were necessary instead of in all pages, but can be added back if necessary {@see "compatibility.include_moved_css_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [];
+	/**
+	 * @var array Stylesheets linked to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_css_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH = [];
 
 	/**
 	 * @var string
@@ -699,6 +730,7 @@ class WebPage implements Page
 	/**
 	 * Initialize compatibility linked scripts for the page
 	 *
+	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @since 3.0.0
@@ -706,20 +738,13 @@ class WebPage implements Page
 	protected function InitializeCompatibilityLinkedScripts(): void
 	{
 		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_js_files');
-		if ($bIncludeDeprecatedFiles === false) {
-			return;
+		if ($bIncludeDeprecatedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
 		}
 
-		// Add ancestors files
-		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
-			foreach ($sParentClass::COMPATIBILITY_LINKED_SCRIPTS_REL_PATH as $sJSFile) {
-				$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJSFile);
-			}
-		}
-
-		// Add current class files
-		foreach (static::COMPATIBILITY_LINKED_SCRIPTS_REL_PATH as $sJSFile) {
-			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sJSFile);
+		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_js_files');
+		if ($bIncludeMovedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
 		}
 	}
 
@@ -893,6 +918,8 @@ JS;
 	/**
 	 * Initialize compatibility linked stylesheets for the page
 	 *
+	 * @see static::COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH
+	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @since 3.0.0
@@ -900,20 +927,40 @@ JS;
 	protected function InitializeCompatibilityLinkedStylesheets(): void
 	{
 		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_css_files');
-		if ($bIncludeDeprecatedFiles === false) {
-			return;
+		if ($bIncludeDeprecatedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
 		}
+
+		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_css_files');
+		if ($bIncludeMovedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
+		}
+	}
+
+	/**
+	 * Add compatibility files of $sFileType from $sMode (which are declared in {@see static::COMPATIBILITY_<MODE>_LINKED_<TYPE>_REL_PATH}) back to the page
+	 *
+	 * @param string $sFileType {@see static::ENUM_COMPATIBILITY_FILE_TYPE_XXX}
+	 * @param string $sMode {@see static::ENUM_COMPATIBILITY_MODE_XXX}
+	 *
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	protected function AddCompatibilityFiles(string $sFileType, string $sMode): void
+	{
+		$sConstantName = 'COMPATIBILITY_'.strtoupper($sMode).'_LINKED_'. ($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'STYLESHEETS' : 'SCRIPTS') .'_REL_PATH';
+		$sMethodName = 'add_linked_'.($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'stylesheet' : 'script');
 
 		// Add ancestors files
 		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
-			foreach ($sParentClass::COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH as $sCSSFile) {
-				$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sCSSFile);
+			foreach (constant($sParentClass.'::'.$sConstantName) as $sFile) {
+				$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
 			}
 		}
 
 		// Add current class files
-		foreach (static::COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH as $sCSSFile) {
-			$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sCSSFile);
+		foreach (constant('static::'.$sConstantName) as $sFile) {
+			$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
 		}
 	}
 

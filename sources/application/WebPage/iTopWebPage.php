@@ -36,8 +36,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 
 	/** @inheritDoc */
-	protected const COMPATIBILITY_LINKED_SCRIPTS_REL_PATH = [
-		// Moved files
+	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [
 		// - TabContainer
 		'js/jquery.ba-bbq.min.js',
 		// - DashletGroupBy & other specific places
@@ -46,15 +45,16 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		// - DisplayableGraph, impact analysis
 		'js/raphael-min.js',
 		'js/jquery.mousewheel.js',
-
-		// Deprecated files
+	];
+	/** @inheritDoc */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
 		'js/date.js',
 		'js/jquery.layout.min.js',
 		/** @deprecated since 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
 		'js/jquery.qtip-1.0.min.js',
 	];
 	/** @inheritDoc */
-	protected const COMPATIBILITY_LINKED_STYLESHEETS_REL_PATH = [
+	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [
 		// Moved files
 		// - DashletGroupBy & other specific places
 		'css/c3.min.css',
