@@ -16,8 +16,11 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+/* For Bulma only import what we actual use to limit the final CSS size */
 @import "bulma-variables-overload";
-@import "../../../node_modules/bulma-scss/bulma";
+@import "../../../node_modules/bulma-scss/utilities/all";
+@import "../../../node_modules/bulma-scss/base/all";
+@import "../../../node_modules/bulma-scss/elements/content";
 @import "ckeditor";
 @import "tippy";
 @import "jqueryui";
