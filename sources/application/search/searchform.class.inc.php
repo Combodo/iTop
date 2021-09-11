@@ -57,6 +57,7 @@ class SearchForm
 		$oUiBlock =  new UIContentBlock();
 		$oUiBlock->AddMultipleJsFilesRelPaths([
 			'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
+			'js/searchformforeignkeys.js',
 			'js/search/search_form_handler.js',
 			'js/search/search_form_handler_history.js',
 			'js/search/search_form_criteria.js',

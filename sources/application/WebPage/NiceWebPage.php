@@ -49,6 +49,8 @@ class NiceWebPage extends WebPage
 		// - Not used internally or by extensions yet
 		'js/clipboard.min.js',
 		'js/clipboardwidget.js',
+		// - SearchForm
+		'js/searchformforeignkeys.js',
 
 		// Deprecated files
 		'js/hovertip.js',
@@ -152,8 +154,6 @@ EOF
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
 
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
 	}
 
