@@ -21,6 +21,45 @@ use utils;
 class WebResourcesHelper
 {
 	/**
+	 * Add necessary files (JS/CSS) to be able to use d3/c3.js in the page
+	 *
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \Exception
+	 */
+	public static function EnableC3JSToWebPage(WebPage &$oPage): void
+	{
+		foreach (static::GetCSSFilesRelPathsForC3JS() as $sFile) {
+			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().$sFile);
+		}
+
+		foreach (static::GetJSFilesRelPathsForC3JS() as $sFile) {
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
+		}
+	}
+
+	/**
+	 * @return string[] Relative URLs to the CSS files necessary for d3/c3.js
+	 */
+	public static function GetCSSFilesRelPathsForC3JS(): array
+	{
+		return [
+			'css/c3.min.css',
+		];
+	}
+
+	/**
+	 * @return string[] Relative URLs to the JS files necessary for d3/c3.js
+	 */
+	public static function GetJSFilesRelPathsForC3JS(): array
+	{
+		return [
+			'js/d3.js',
+			'js/c3.js',
+		];
+	}
+
+	/**
 	 * Add necessary files (JS/CSS) to be able to use simple_graph in the page
 	 *
 	 * @param \WebPage $oPage
