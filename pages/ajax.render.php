@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -2217,14 +2218,7 @@ EOF
 			$sImpactAttCodeValue = utils::ReadParam('impact_attcode_value', 'manual');
 			$iId = (int)utils::ReadParam('id', 0, false, 'integer');
 
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+			WebResourcesHelper::EnableSimpleGraphInWebPage($oPage);
 
 			// Get the list of source objects
 			$oTicket = MetaModel::GetObject($sClass, $iId);
