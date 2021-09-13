@@ -471,7 +471,7 @@ $ibo-button-colors: (
   white-space: nowrap; /* To force sub elements to be on 1 line */
   @extend %ibo-font-ral-sembol-100;
 
-  & ~ .ibo-button {
+  & + .ibo-button {
     margin-left: $ibo-button--sibling-spacing;
 	}
 
