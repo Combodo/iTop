@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
@@ -663,9 +664,7 @@ EOF
 		$sUnchanged = json_encode(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
 
 		// Add graphs dependencies
-		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
+		WebResourcesHelper::EnableC3JSToWebPage($oPage);
 
 		$oPage->add_script(		
 <<< EOF

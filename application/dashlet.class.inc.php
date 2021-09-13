@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -1702,10 +1703,7 @@ class DashletGroupByPie extends DashletGroupBy
 	{
 		return array_merge(
 			parent::GetJSFilesRelPaths(),
-			[
-				'js/d3.js',
-				'js/c3.js',
-			]
+			WebResourcesHelper::GetJSFilesRelPathsForC3JS()
 		);
 	}
 
@@ -1716,9 +1714,7 @@ class DashletGroupByPie extends DashletGroupBy
 	{
 		return array_merge(
 			parent::GetCSSFilesRelPaths(),
-			[
-				'css/c3.min.css',
-			]
+			WebResourcesHelper::GetCSSFilesRelPathsForC3JS()
 		);
 	}
 

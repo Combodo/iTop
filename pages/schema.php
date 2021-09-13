@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
@@ -538,9 +539,7 @@ function DisplayRelatedClassesGraph($oPage, $sClass)
 		// 3) Processing data and building graph
 		//
 		// - Add graphs dependencies
-		$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
-		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
+		WebResourcesHelper::EnableC3JSToWebPage($oPage);
 		// - Add markup
 		$oPage->add(
 			<<<EOF
