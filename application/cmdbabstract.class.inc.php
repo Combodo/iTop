@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
@@ -2242,6 +2243,7 @@ EOF
 					// - Final config
 					$sConfigJS = json_encode($aConfig);
 
+					WebResourcesHelper::EnableCKEditorToWebPage($oPage);
 					$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 
 					$oPage->add_ready_script(

@@ -22,6 +22,7 @@ class RichText extends UIBlock
 		'js/ckeditor/ckeditor.js',
 		'js/ckeditor/adapters/jquery.js',
 		'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
+		'js/ckeditor.on-init.js',
 	];
 	public const DEFAULT_CSS_FILES_REL_PATH = [
 		'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css',
