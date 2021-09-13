@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -1500,14 +1501,7 @@ EOF
 		$sDirection = utils::ReadParam('d', 'horizontal');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+		WebResourcesHelper::EnableSimpleGraphInWebPage($oP);
 		try
 		{
 			$this->InitFromGraphviz();
