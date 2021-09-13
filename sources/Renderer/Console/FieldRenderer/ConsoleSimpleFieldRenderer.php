@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -124,7 +125,11 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 							$aConfig = utils::GetCkeditorPref();
 							$aConfig['extraPlugins'] = 'codesnippet';
 							$sJsConfig = json_encode($aConfig);
-							
+
+							foreach (WebResourcesHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
+								$oOutput->AddJsFile($sJSFile);
+							}
+
 							$oOutput->AddJs(
 <<<EOF
 								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');

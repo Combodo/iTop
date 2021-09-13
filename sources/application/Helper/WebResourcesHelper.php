@@ -20,6 +20,41 @@ use utils;
  */
 class WebResourcesHelper
 {
+	//---------------------------------
+	// CKEditor
+	//---------------------------------
+
+	/**
+	 * Add necessary files (JS) to be able to use CKEditor in the page
+	 *
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \Exception
+	 */
+	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
+	{
+		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
+			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
+		}
+	}
+
+	/**
+	 * @return string[] Relative URLs to the JS files necessary for CKEditor
+	 */
+	public static function GetJSFilesRelPathsForCKEditor(): array
+	{
+		return [
+			'js/ckeditor/ckeditor.js',
+			'js/ckeditor/adapters/jquery.js',
+			'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js',
+			'js/ckeditor.on-init.js',
+		];
+	}
+
+	//---------------------------------
+	// D3/C3.js
+	//---------------------------------
+
 	/**
 	 * Add necessary files (JS/CSS) to be able to use d3/c3.js in the page
 	 *
@@ -58,6 +93,10 @@ class WebResourcesHelper
 			'js/c3.js',
 		];
 	}
+
+	//---------------------------------
+	// SimpleGraph
+	//---------------------------------
 
 	/**
 	 * Add necessary files (JS/CSS) to be able to use simple_graph in the page
