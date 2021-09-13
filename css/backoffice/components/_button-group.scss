@@ -48,8 +48,10 @@ $ibo-button-group--elements-separator--border-left: 1px solid transparent !defau
     border-left: $ibo-button-group--elements-separator--border-left;
   }
 
-  /* Note: Selector cannot be simplified in the one above as the "::before" must be after the different classes */
-  .ibo-button + .ibo-button {
+  /* Note: Selector cannot be simplified in the one above as the "::before" must be after the different classes.
+  * A more precise selector could be .ibo-button + .ibo-button, however .ibo-button is extended by multiple element and in a multiple loop it creates heavy selectors.
+  */
+  > * + * {
     @each $sType, $aColors in $ibo-button-colors {
       @each $sColor, $aPseudoclasses in $aColors {
         @each $sPseudoclass, $aAttributes in $aPseudoclasses {
