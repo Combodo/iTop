@@ -1843,7 +1843,7 @@ class UserRights
 				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
 			}
 			
-			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
+			if (!array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication]))
 			{
 				switch($sAuthentication)
 				{
