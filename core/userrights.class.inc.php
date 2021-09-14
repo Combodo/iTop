@@ -321,7 +321,14 @@ abstract class User extends cmdbAbstractObject
 		{
 			if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
 			{
-				$this->oContactObject = MetaModel::GetObject('Contact', $this->Get('contactid'));
+				$this->oContactObject = null;
+				// The User Contact is generally a Person, so try it first
+				if (MetaModel::IsValidClass('Person')) {
+					$this->oContactObject = MetaModel::GetObject('Person', $this->Get('contactid'), false);
+				}
+				if (is_null($this->oContactObject)) {
+					$this->oContactObject = MetaModel::GetObject('Contact', $this->Get('contactid'));
+				}
 			}
 		}
 		return $this->oContactObject;
@@ -1196,7 +1203,14 @@ class UserRights
 		// Then check if the user has a contact attached and if it has an picture defined
 		$sContactId = UserRights::GetContactId($sLogin);
 		if (!empty($sContactId)) {
-			$oContact = MetaModel::GetObject('Contact', $sContactId, false, true);
+			$oContact = null;
+			// Picture if generally for Person, so try it first
+			if (MetaModel::IsValidClass('Person')) {
+				$oContact = MetaModel::GetObject('Person', $sContactId, false, true);
+			}
+			if (is_null($oContact)) {
+				$oContact = MetaModel::GetObject('Contact', $sContactId, false, true);
+			}
 			$sContactClass = get_class($oContact);
 
 			// Check that Contact object still exists and that Contact class has a picture attribute
