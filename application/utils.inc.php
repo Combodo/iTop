@@ -1916,7 +1916,7 @@ class utils
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
 		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
+		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
 		// Setting our variables
 		$oSass->setVariables($aVariables);
 		// Setting our imports paths
