@@ -12545,9 +12545,15 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
 	{
-		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),
-			true);
+		$sData=utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data');
+		if($sData == null){
+			return null;
+		}
+		$aRawData = json_decode($sData,true);
 
+		if ($aRawData == null) {
+			throw new Exception('Unable to decode parameter  attr_'.$sFormPrefix.$this->GetCode().': '.$sData);
+		}
 		return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
 	}
 
