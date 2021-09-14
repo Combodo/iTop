@@ -948,10 +948,9 @@ abstract class DBObject implements iDisplay
      */
 	protected function ComputeHighlightCode()
 	{
-		// First if the state defines a HiglightCode, apply it
-		$sState = $this->GetState();
-		if ($sState != '')
+		if (MetaModel::HasLifecycle(get_class($this)))
 		{
+			$sState = $this->GetState();
 			$sCode = MetaModel::GetHighlightCode(get_class($this), $sState);
 			$this->SetHighlightCode($sCode);
 		}
