@@ -19,7 +19,7 @@ foreach ($aHooks as $sSourceHookFileName) {
 		echo "OK !\n";
 	}
 
-	echo "Creating symlink for hook...";
+	echo "Creating symlink for hook in $sTargetHookPath...";
 	symlink($sSourceHookPath, $sTargetHookPath);
 	echo "OK !\n";
 }
