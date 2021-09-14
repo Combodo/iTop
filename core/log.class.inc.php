@@ -653,9 +653,9 @@ abstract class LogAPI
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
 	 */
-	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel): bool
+	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $code = 'log_level_min'): bool
 	{
-		$sMinLogLevel = self::GetMinLogLevel($sChannel);
+		$sMinLogLevel = self::GetMinLogLevel($sChannel, $code);
 
 		if ($sMinLogLevel === false || $sMinLogLevel === 'false') {
 			return false;
@@ -694,14 +694,14 @@ abstract class LogAPI
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Aadmin%3Alog iTop log reference
 	 */
-	protected static function GetMinLogLevel($sChannel)
+	protected static function GetMinLogLevel($sChannel, $code = 'log_level_min')
 	{
 		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
 			return static::GetLevelDefault();
 		}
 
-		$sLogLevelMin = $oConfig->Get('log_level_min');
+		$sLogLevelMin = $oConfig->Get($code);
 
 		if (empty($sLogLevelMin)) {
 			return static::GetLevelDefault();
@@ -1097,5 +1097,148 @@ class LogFileRotationProcess implements iScheduledProcess
 		}
 
 		throw new ProcessException(self::class.' : The configured filename builder is invalid (log_filename_builder_impl="'.$sLogFileNameBuilder.'")');
+	}
+}
+
+/**
+ * Log exceptions using dedicated API and logic.
+ *
+ * Please use @see ExceptionLog::FromException() to log exceptions
+ *
+ * @Since 3.0.0
+ */
+class ExceptionLog extends LogAPI
+{
+	const CHANNEL_DEFAULT = 'Exception';
+
+	private static $oLastEventIssue = null;
+
+	protected static $m_oFileLog = null;
+
+	/**
+	 * This method should be used to write logs.
+	 *
+	 * As it encapsulate the operations performed using the Exception, you should prefer it to the standard API inherited from LogApi `ExceptionLog::Error($oException->getMessage(), get_class($oException), ['exception' => $oException]);`
+	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way.
+	 */
+	public static function FromException(Exception $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING)
+	{
+		if (empty($aContext['exception'])) {
+			$aContext['exception'] = $oException;
+		}
+
+		if (empty($aContext['exception class'])) {
+			$aContext['exception class'] = get_class($oException);
+		}
+
+		return self::Log($sLevel, $oException->getMessage(), get_class($oException), $aContext);
+	}
+
+	/**
+	 * @throws \ConfigException if log wrongly configured
+	 */
+	public static function Log($sLevel, $sMessage, $sClass = null, $aContext = array())
+	{
+		if (!static::$m_oFileLog) {
+			return;
+		}
+
+		if (!isset(self::$aLevelsPriority[$sLevel])) {
+			IssueLog::Error("invalid log level '{$sLevel}'");
+
+			return;
+		}
+
+
+		$sChannel = self::FindClassChannel($sClass);
+		if (static::IsLogLevelEnabled($sLevel, $sChannel)) {
+			static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
+		}
+
+		$sDbChannel = self::FindClassChannel($sClass, 'log_level_min.write_in_db');
+		if (static::IsLogLevelEnabled($sLevel, $sDbChannel, 'log_level_min.write_in_db')) {
+			self::WriteToDb($aContext);
+		}
+
+	}
+
+
+	protected static function FindClassChannel($sClass, $code = 'log_level_min')
+	{
+		$oConfig = static::GetConfig();
+		if (!$oConfig instanceof Config) {
+			return static::GetLevelDefault();
+		}
+
+		$sLogLevelMin = $oConfig->Get($code);
+
+		if (empty($sLogLevelMin)) {
+			return $sClass;
+		}
+
+		if (!is_array($sLogLevelMin)) {
+			return $sClass;
+		}
+
+		$sParentClass = $sClass;
+		while (
+			(!isset($sLogLevelMin[$sParentClass]))
+			&&
+			($sParentClass !== false)
+		)
+		{
+			$sParentClass = get_parent_class($sParentClass);
+		}
+
+		if (isset($sLogLevelMin[$sParentClass])) {
+			return $sParentClass;
+		}
+
+		return $sClass;
+	}
+
+	public static function Enable($sTargetFile = null)
+	{
+		if (empty($sTargetFile))
+		{
+			$sTargetFile = APPROOT.'log/error.log';
+		}
+		parent::Enable($sTargetFile);
+	}
+
+	private static function WriteToDb(array $aContext): void
+	{
+		$exception = $aContext['exception'];
+		if (MetaModel::IsLogEnabledIssue()) {
+			if (MetaModel::IsValidClass('EventIssue')) {
+				try {
+					self::$oLastEventIssue = new EventIssue();
+
+					$sIssue = ($exception instanceof CoreException) ? $exception->GetIssue() : 'PHP Exception';
+					$sErrorStackTrace = ($exception instanceof CoreException) ? $exception->getFullStackTraceAsString() : $exception->getTraceAsString();
+					$aContextData = ($exception instanceof CoreException) ? $exception->getContextData() : [];
+
+
+					self::$oLastEventIssue->Set('message', $exception->getMessage());
+					self::$oLastEventIssue->Set('userinfo', '');
+					self::$oLastEventIssue->Set('issue', $sIssue);
+					self::$oLastEventIssue->Set('impact', '');
+					self::$oLastEventIssue->Set('callstack', $sErrorStackTrace);
+					self::$oLastEventIssue->Set('data', array_merge($aContextData, $aContext));
+					self::$oLastEventIssue->DBInsertNoReload();
+				}
+				catch (Exception $e) {
+					IssueLog::Error("Failed to log issue into the DB");
+				}
+			}
+		}
+	}
+
+	/**
+	 * used by the tests
+	 */
+	private static function getLastEventIssue()
+	{
+		return self::$oLastEventIssue;
 	}
 }

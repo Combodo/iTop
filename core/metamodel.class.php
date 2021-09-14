@@ -6545,6 +6545,7 @@ abstract class MetaModel
 			ToolsLog::Enable(APPROOT.'log/tools.log');
 			DeadLockLog::Enable();
 			DeprecatedCallsLog::Enable();
+			ExceptionLog::Enable();
 		}
 		else
 		{

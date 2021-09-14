@@ -113,6 +113,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'log_level_min.write_in_db' => [
+			'type' => 'array',
+			'description' => 'Additional configuration that enable "in DB" logs for Exception on compatible code.',
+			'default' => [ 'Exception' => 'Error', ],
+			'value' => [ 'Exception' => 'Error', ],
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'app_env_label' => [
 			'type' => 'string',
 			'description' => 'Label displayed to describe the current application environment, defaults to the environment name (e.g. "production")',
