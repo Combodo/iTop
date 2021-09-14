@@ -7,7 +7,7 @@
     "datatables.net-responsive": "^2.1.0",
     "datatables.net-scroller": "^1.4.2",
     "datatables.net-select": "^1.2.0",
-    "raleway-webfont": "^3.0.1",
+    "@fontsource/raleway": "^4.5.0",
     "scrollmagic": "^2.0.8",
     "tippy.js": "^6.2.5"
   }
