@@ -371,8 +371,8 @@ function DashletCreationDlg(sOQL, sContext) {
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
-		oColumns: $('#'+sDataTableName).DataTable().ajax.params()['columns'],
-		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']/numberCachePages
+		oColumns: $('#datatable_dlg_'+sDataTableName).DataTableSettings('GetColumns'),
+		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']
 	};
 	var sTableSettings = JSON.stringify(oTableSettings);
 

@@ -265,14 +265,17 @@ $(function () {
 				dlgElement.unblock();
 
 			},
-			IsDialogOpen: function() {
+			IsDialogOpen: function () {
 				//TODO 3.0.0 voir si on accede à cette fonction. il y a de grandes chances pour qu'elle ne soit plus utilisée
 				var oDlgOpen = $('#datatable_dlg_'+this.options.sListId+' :visible');
 
 				return (oDlgOpen.length > 0);
 			},
-			DoRefresh: function() {
+			DoRefresh: function () {
 				this._refresh();
+			},
+			GetColumns: function () {
+				return this.options.oColumns;
 			}
 		});
 });
