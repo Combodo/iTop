@@ -50,7 +50,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
 		'js/date.js',
 		'js/jquery.layout.min.js',
-		/** @deprecated since 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
+		/** @deprecated 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
 		'js/jquery.qtip-1.0.min.js',
 	];
 	/** @inheritDoc */
