@@ -714,8 +714,9 @@ abstract class MenuNode
 	{
 		// Count the entries up to 99
 		$oSearch = DBSearch::FromOQL($sOQL);
-
+		$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
 		DBSearchHelper::AddContextFilter($oSearch);
+
 
 		$oSet = new DBObjectSet($oSearch);
 		$iCount = $oSet->CountWithLimit(99);
