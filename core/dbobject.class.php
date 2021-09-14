@@ -2142,28 +2142,23 @@ abstract class DBObject implements iDisplay
 		}
 
 		if ($oAttDef->DuplicatesAllowed()) {
-			return true;
+			return;
 		}
 
+		// To control duplicates go through all the entries and check if the remote has been seen
 		/** @var \ormLinkSet $value */
-		$aModifiedLnk = $value->ListModifiedLinks();
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-		$aExistingRemotesId = $value->GetColumnAsArray($sExtKeyToRemote, true);
-		$aExistingRemotesFriendlyName = $value->GetColumnAsArray($sExtKeyToRemote.'_friendlyname', true);
+		$aCurrentRemoteIds = [];
 		$aDuplicatesFields = [];
-		foreach ($aModifiedLnk as $oModifiedLnk) {
-			$iModifiedLnkId = $oModifiedLnk->GetKey();
-			$iModifiedLnkRemoteId = $oModifiedLnk->Get($sExtKeyToRemote);
-			$aExistingRemotesIdToCheck = array_filter($aExistingRemotesId, function ($iLnkKey) use ($iModifiedLnkId) {
-				return ($iLnkKey != $iModifiedLnkId);
-			}, ARRAY_FILTER_USE_KEY);
-
-			if (!in_array($iModifiedLnkRemoteId, $aExistingRemotesIdToCheck, true)) {
-				continue;
+		$value->rewind();
+		while ($oCurrentLnk = $value->current()) {
+			$iExtKeyToRemote = $oCurrentLnk->Get($sExtKeyToRemote);
+			if (isset($aCurrentRemoteIds[$iExtKeyToRemote])) {
+				$aDuplicatesFields[] = $oCurrentLnk->Get($sExtKeyToRemote.'_friendlyname');
+			} else {
+				$aCurrentRemoteIds[$iExtKeyToRemote] = true;
 			}
-
-			$iLnkId = $oModifiedLnk->GetKey();
-			$aDuplicatesFields[] = $aExistingRemotesFriendlyName[$iLnkId];
+			$value->next();
 		}
 
 		if (!empty($aDuplicatesFields)) {

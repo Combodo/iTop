@@ -183,8 +183,6 @@ class ormLinkSetTest extends ItopDataTestCase
      */
     public function testRemoveThenAdd()
     {
-	    self::markTestSkipped('Throws a undefined offset PHP notice in core\dbobject.class.php:2151, to be fixed in N°4047');
-
 	    $oServer = $this->CreateServer(1);
 	    $aPersons = array();
 	    for ($i = 0; $i < 3; $i++) {
