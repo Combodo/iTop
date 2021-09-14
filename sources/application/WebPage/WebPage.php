@@ -940,8 +940,11 @@ JS;
 	/**
 	 * Add compatibility files of $sFileType from $sMode (which are declared in {@see static::COMPATIBILITY_<MODE>_LINKED_<TYPE>_REL_PATH}) back to the page
 	 *
-	 * @param string $sFileType {@see static::ENUM_COMPATIBILITY_FILE_TYPE_XXX}
-	 * @param string $sMode {@see static::ENUM_COMPATIBILITY_MODE_XXX}
+	 * @param string $sFileType {@uses static::ENUM_COMPATIBILITY_FILE_TYPE_XXX}
+	 * @param string $sMode {@uses static::ENUM_COMPATIBILITY_MODE_XXX}
+	 *
+	 * @uses static::add_linked_script Depending on $sFileType
+	 * @uses static::add_linked_stylesheet Depending on $sFileType
 	 *
 	 * @throws \Exception
 	 * @since 3.0.0
