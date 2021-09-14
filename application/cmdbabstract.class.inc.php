@@ -4229,6 +4229,25 @@ HTML;
 
 	/**
 	 * Updates the object from a given page argument
+	 *
+	 * The values are read from parameters (GET or POST, using {@see utils::ReadParam()}).
+	 *
+	 * To pass the arg, either add in HTML :
+	 *
+	 * ```html
+	 * <input type="hidden" name="sArgName[attCode1]" value="...">
+	 * <input type="hidden" name="sArgName[attCode2]" value="...">
+	 * ```
+	 *
+	 * Or directly in the URL :
+	 *
+	 * ```php
+	 * $aObjectArgs = ['attCode1' => ..., 'attCode2' => ...];
+	 * $sQueryString = http_build_query(['sArgName' => $aObjectArgs]);
+	 * ```
+	 *
+	 * @uses utils::ReadParam()
+	 * @uses self::UpdateObjectFromArray
 	 */
 	public function UpdateObjectFromArg($sArgName, $aAttList = null, $aAttFlags = array())
 	{
