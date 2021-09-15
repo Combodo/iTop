@@ -1516,7 +1516,7 @@ class CMDBSource
 	 */
 	public static function GetServerVariable($sVarName)
 	{
-		$sSql = "SELECT @@".$sVarName;
+		$sSql = 'SELECT @@'.$sVarName;
 		return static::QueryToScalar($sSql, 0);
 	}
 
