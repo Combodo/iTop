@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -146,6 +147,10 @@ class WebPage implements Page
 	 * @since 3.0.0
 	 */
 	protected $aBlockParams;
+	/** @var array Contain fonts that needs to be preloaded
+	 * @since 3.0.0
+	 */
+	protected $aPreloadedFonts;
 	protected $a_headers;
 	protected $a_base;
 	protected $iNextId;
@@ -196,6 +201,7 @@ class WebPage implements Page
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
 		$this->InitializeCompatibilityLinkedStylesheets();
+		$this->aPreloadedFonts = WebResourcesHelper::GetPreloadedFonts();
 		$this->a_headers = [];
 		$this->a_base = ['href' => '', 'target' => ''];
 		$this->iNextId = 0;
@@ -1298,6 +1304,7 @@ JS;
 				'sCharset' => static::PAGES_CHARSET,
 				'sLang'    => $this->GetLanguageForMetadata(),
 			],
+			'aPreloadedFonts'     => $this->aPreloadedFonts,
 			'aCssFiles'           => $this->a_linked_stylesheets,
 			'aCssInline'          => $this->a_styles,
 			'aJsInlineEarly'      => $this->a_early_scripts,
@@ -1749,5 +1756,15 @@ EOD
 	public function GetBlockParams(): array
 	{
 		return $this->aBlockParams;
+	}
+
+	/**
+	 * @param array $aFonts
+	 *
+	 * @since 3.0.0
+	 */
+	public function AddPreloadedFonts(array $aFonts)
+	{
+		$this->aPreloadedFonts = array_merge($this->aPreloadedFonts, $aFonts);
 	}
 }

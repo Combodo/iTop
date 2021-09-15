@@ -904,6 +904,7 @@ HTML;
 		$aData['aPage'] = array_merge(
 			$aData['aPage'],
 			[
+				'aPreloadedFonts' => $this->aPreloadedFonts,
 				'aCssFiles' => $this->a_linked_stylesheets,
 				'aCssInline' => $this->a_styles,
 				'aJsInlineEarly' => $this->a_early_scripts,
