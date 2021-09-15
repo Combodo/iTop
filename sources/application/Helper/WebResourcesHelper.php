@@ -21,6 +21,31 @@ use utils;
 class WebResourcesHelper
 {
 	//---------------------------------
+	// Fonts
+	//---------------------------------
+
+	/**
+	 * Preload necessary fonts to display them as soon as possible when CSS rules are interpreted
+	 *
+	 * @return string[]
+	 *
+	 * @throws \Exception
+	 */
+	public static function GetPreloadedFonts(): array
+	{
+		return [
+			['font' => utils::GetAbsoluteUrlAppRoot().'css/font-combodo/combodo-webfont.woff2', 'type' => 'woff2'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'css/font-awesome/webfonts/fa-solid-900.woff2', 'type' => 'woff2'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-400-normal.woff', 'type' => 'woff'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-500-normal.woff', 'type' => 'woff'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-600-normal.woff', 'type' => 'woff'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-700-normal.woff', 'type' => 'woff'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-400-italic.woff', 'type' => 'woff'],
+			['font' => utils::GetAbsoluteUrlAppRoot().'node_modules/@fontsource/raleway/files/raleway-all-500-italic.woff', 'type' => 'woff'],
+		];
+	}
+	
+	//---------------------------------
 	// CKEditor
 	//---------------------------------
 
