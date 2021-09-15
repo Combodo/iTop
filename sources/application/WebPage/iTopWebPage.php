@@ -833,7 +833,10 @@ HTML;
 
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
 		// - Generate necessary dict. files
-		$this->output_dict_entries();
+		if ($this->bAddJSDict) {
+			$this->output_dict_entries();
+		}
+
 		// TODO 3.0.0 not displayed ?
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
