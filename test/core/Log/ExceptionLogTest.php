@@ -16,17 +16,12 @@
 namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ExceptionLog;
 
 
-
-
+require_once (__DIR__.'/ExceptionLogTest/Exceptions.php');
 class ExceptionLogTest extends ItopDataTestCase
 {
-	private $mockFileLog;
-	private $oMetaModelConfig;
-
 	protected function setUp()
 	{
 		require_once (__DIR__.'/ExceptionLogTest/Exceptions.php');
@@ -34,9 +29,6 @@ class ExceptionLogTest extends ItopDataTestCase
 
 		$oConfig = \MetaModel::GetConfig();
 		$oConfig->Set('developer_mode.enabled', false);
-
-		$this->mockFileLog = $this->createMock('FileLog');
-		$this->oMetaModelConfig = $this->createMock('Config');
 	}
 
 	/**
@@ -44,9 +36,11 @@ class ExceptionLogTest extends ItopDataTestCase
 	 */
 	public function testLogInFile($aLevels, $aExceptions, $sChannel, $aExpectedWriteNumber, $logLevelMin, $aExpectedDbWriteNumber, $logLevelMinWriteInDb)
 	{
-		ExceptionLog::Enable();
 
-		$this->oMetaModelConfig
+		$mockFileLog = $this->createMock('FileLog');
+		$oMockConfig = $this->createMock('Config');
+
+		$oMockConfig
 			->method("Get")
 			->willReturnCallback(function ($code) use ($logLevelMin, $logLevelMinWriteInDb) {
 				switch ($code) {
@@ -79,12 +73,12 @@ class ExceptionLogTest extends ItopDataTestCase
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
 			$iExpectedDbWriteNumber = $aExpectedDbWriteNumber[$i];
 			$aExpectedContext = array_merge($aContext, ['exception' => $oException, 'exception class' => get_class($oException)]); //The context is preserved, and, if the key 'exception' is not yet in the array, it is added
-			$this->mockFileLog->expects($this->exactly($iExpectedWriteNumber))
+			$mockFileLog->expects($this->exactly($iExpectedWriteNumber))
 				->method($sLevel)
 				->with($oException->GetMessage(), $sChannel, $aExpectedContext)
 			;
 
-			ExceptionLog::MockStaticObjects($this->mockFileLog, $this->oMetaModelConfig);
+			ExceptionLog::MockStaticObjects($mockFileLog, $oMockConfig);
 
 			ExceptionLog::FromException($oException, $aContext, $sLevel);
 
@@ -101,8 +95,6 @@ class ExceptionLogTest extends ItopDataTestCase
 
 	public function logProvider()
 	{
-		require_once (__DIR__.'/ExceptionLogTest/Exceptions.php');
-
 		return [
 			'use parent' => [
 				'aLevels' => ['Debug'],
