@@ -15,6 +15,7 @@
         <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version|raw }}">
     {% endif %}
     <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
+    {# Main fonts have to be preloaded to avoid blocking content rendering #}
     {% for aPreloadedFont in aPage.aPreloadedFonts %}
         <link rel="preload" href="{{ aPreloadedFont['font'] }}" as="font" type="font/{{ aPreloadedFont['type'] }}" crossorigin>
     {% endfor %}
