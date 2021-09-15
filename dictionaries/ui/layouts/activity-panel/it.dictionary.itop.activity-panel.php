@@ -33,8 +33,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all messages~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all messages~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all entries~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all entries~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
 

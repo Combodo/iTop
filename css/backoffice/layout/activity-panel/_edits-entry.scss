@@ -45,7 +45,7 @@ a.ibo-edits-entry--short-description {
 
 /* - Long desc. opened */
 .ibo-edits-entry {
-  &.ibo-is-opened {
+  &:not(.ibo-is-closed) {
     .ibo-edits-entry--long-description-toggler-icon {
 			transform: rotateX(180deg);
 		}

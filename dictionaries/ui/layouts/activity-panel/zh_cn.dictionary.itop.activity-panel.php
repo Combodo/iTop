@@ -33,8 +33,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => '显示 / 隐藏 状态变化',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => '编辑',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => '显示 / 隐藏 字段编辑',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => '打开所有消息',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => '关闭所有消息',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all entries~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all entries~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
 

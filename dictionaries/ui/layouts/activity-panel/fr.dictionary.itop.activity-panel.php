@@ -33,8 +33,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Afficher / masquer les changements de statut sur cet onglet',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Modif.',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Afficher / masquer les modifications sur cet onglet',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Ouvrir tous les messages',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fermer tous les messages',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Ouvrir toutes les entrées',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fermer toutes les entrées',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Nombre de personnes ayant contribué aux entrées affichées',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Nombre de messages dans le(s) journal / journaux affichés',
 

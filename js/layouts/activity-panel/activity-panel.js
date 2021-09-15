@@ -178,11 +178,11 @@ $(function()
 				});
 				// - Click on open all case log messages
 				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function () {
-					me._onCaseLogOpenAllClick($(this));
+					me._onOpenAllEntriesClick();
 				});
 				// - Click on close all case log messages
 				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function () {
-					me._onCaseLogCloseAllClick($(this));
+					me._onCloseAllEntriesClick();
 				});
 
 				// Entry form
@@ -214,7 +214,7 @@ $(function()
 				// Entries
 				// - Click on a closed case log message
 				this.element.on('click', this.js_selectors.entry+'.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
-					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
+					me._onClosedEntryClick($(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an edits entry's long description toggler
 				this.element.on('click', this.js_selectors.edits_entry_long_description_toggler, function (oEvent) {
@@ -336,15 +336,13 @@ $(function()
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ApplyEntriesFilters();
 			},
-			_onCaseLogOpenAllClick: function(oIconElem)
+			_onOpenAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._OpenAllMessages(sCaseLogAttCode);
+				this._OpenAllEntries();
 			},
-			_onCaseLogCloseAllClick: function(oIconElem)
+			_onCloseAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._CloseAllMessages(sCaseLogAttCode);
+				this._CloseAllEntries();
 			},
 			/**
 			 * @param oEvent {Object}
@@ -467,14 +465,14 @@ $(function()
 					this._SendEntriesToServer(sStimulusCode);
 				}
 			},
-			_onCaseLogClosedMessageClick: function (oEntryElem) {
-				this._OpenMessage(oEntryElem);
+			_onClosedEntryClick: function (oEntryElem) {
+				this._OpenEntry(oEntryElem);
 			},
 			_onEntryLongDescriptionTogglerClick: function (oEvent, oEntryElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
-				oEntryElem.toggleClass(this.css_classes.is_opened);
+				oEntryElem.toggleClass(this.css_classes.is_closed);
 			},
 			/**
 			 * Callback for mouse clicks that should interact with the activity panel (eg. Clic outside a dropdown should close it, ...)
@@ -1115,20 +1113,23 @@ $(function()
 			},
 
 			// - Helpers on messages
-			_OpenMessage: function (oEntryElem) {
+			_OpenEntry: function (oEntryElem) {
 				oEntryElem.removeClass(this.css_classes.is_closed);
 			},
-			_OpenAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('open', sCaseLogAttCode);
+			_OpenAllEntries: function () {
+				this._SwitchAllEntries('open');
 			},
-			_CloseAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('close', sCaseLogAttCode);
+			_CloseAllEntries: function () {
+				this._SwitchAllEntries('close');
 			},
-			_SwitchAllMessages: function (sMode, sCaseLogAttCode = null) {
-				const sExtraSelector = (sCaseLogAttCode === null) ? '' : '[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]';
+			/**
+			 *
+			 * @param sMode {string} Which way to switch the entries, can be either "open" or "close".
+			 * @private
+			 */
+			_SwitchAllEntries: function (sMode) {
 				const sCallback = (sMode === 'open') ? 'removeClass' : 'addClass';
-
-				this.element.find(this.js_selectors.entry+sExtraSelector)[sCallback](this.css_classes.is_closed);
+				this.element.find(this.js_selectors.entry)[sCallback](this.css_classes.is_closed);
 			},
 			/**
 			 * Update the messages and users counters in the tabs toolbar

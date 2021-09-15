@@ -33,8 +33,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Zeige/verstecke Statuswechsel in diesem Tab',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Änderungen',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Zeige/verstecke Änderungen in diesem Tab',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Zeige alle Nachrichten',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Schließe alle Nachrichten',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all entries~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all entries~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Anzahl von Personen, die an der aktuellen Konversation beteiligt sind',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Anzahl von Nachrichten, die in den Logs sichtbar sind',
 
