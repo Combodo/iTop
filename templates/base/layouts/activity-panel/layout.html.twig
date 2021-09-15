@@ -36,17 +36,20 @@
             <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
                 <a href="#" class="ibo-activity-panel--expand-icon"
                    data-role="ibo-activity-panel--expand-icon"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-expand-alt"></span>
                 </a>
                 <a href="#" class="ibo-activity-panel--reduce-icon"
                    data-role="ibo-activity-panel--reduce-icon"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-compress-alt"></span>
                 </a>
                 <a href="#" class="ibo-activity-panel--close-icon"
                    data-role="ibo-activity-panel--close-icon"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}">
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-chevron-right"></span>
                 </a>
             </div>
@@ -70,7 +73,8 @@
            id="ibo-activity-panel--add-caselog-entry-button"
            class="ibo-activity-panel--add-caselog-entry-button {% if oUIBlock.IsEntryFormOpened() %}ibo-is-hidden{% endif %}"
            data-role="ibo-activity-panel--add-caselog-entry-button"
-           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
+           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}"
+           aria-label="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
             <i class="fas fa-feather"></i>
         </a>
         {% if oUIBlock.HasComposeMenu() %}

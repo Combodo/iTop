@@ -29,6 +29,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => '草稿',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => '日志',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => '显示 / 隐藏 日志',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => '状态变化',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => '显示 / 隐藏 状态变化',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => '编辑',

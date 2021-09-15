@@ -29,6 +29,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Entwurfsmodus',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Zeige/verstecke Logeinträge in diesem Tab',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Statuswechsel',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Zeige/verstecke Statuswechsel in diesem Tab',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Änderungen',
