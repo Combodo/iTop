@@ -587,6 +587,9 @@ abstract class LogAPI
 		static::$m_oFileLog = new FileLog($sTargetFile);
 	}
 
+	/**
+	 * @internal uses only for testing purpose.
+	 */
 	public static function MockStaticObjects($oFileLog, $oMetaModelConfig = null)
 	{
 		static::$m_oFileLog = $oFileLog;

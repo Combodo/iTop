@@ -69,7 +69,7 @@ class ExceptionLogTest extends ItopDataTestCase
 		$aContext = ['contextKey1' => 'value'];
 
 		foreach ($aLevels as $i => $sLevel) {
-			$oException = $aExceptions[$i];
+			$oException = new $aExceptions[$i]("Iteration number $i");
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
 			$iExpectedDbWriteNumber = $aExpectedDbWriteNumber[$i];
 			$aExpectedContext = array_merge($aContext, ['exception' => $oException, 'exception class' => get_class($oException)]); //The context is preserved, and, if the key 'exception' is not yet in the array, it is added
@@ -98,7 +98,7 @@ class ExceptionLogTest extends ItopDataTestCase
 		return [
 			'use parent' => [
 				'aLevels' => ['Debug'],
-				'aExceptions' => [new \GrandChildException('Foo')],
+				'aExceptions' => [\GrandChildException::class],
 				'sChannel' => 'Exception',
 				'aExpectedWriteNumber' => [1],
 				'logLevelMin' => ['Exception' => 'Debug'],
@@ -107,7 +107,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'flat configuration' => [
 				'aLevels' => ['Debug'],
-				'aExceptions' => [new \GrandChildException('Foo')],
+				'aExceptions' => [\GrandChildException::class],
 				'sChannel' => 'GrandChildException',
 				'aExpectedWriteNumber' => [1],
 				'logLevelMin' => 'Debug',
@@ -116,7 +116,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'Default conf has expected levels' => [
 				'aLevels' => ['Debug', 'Warning'],
-				'aExceptions' => [new \GrandChildException('I am first'), new \GrandChildException('I am 2d')],
+				'aExceptions' => [\GrandChildException::class, \GrandChildException::class],
 				'sChannel' => 'GrandChildException',
 				'aExpectedWriteNumber' => [0, 1],
 				'logLevelMin' => null,
@@ -125,7 +125,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'use correct order in inheritance tree' => [
 				'aLevels' => ['Trace', 'Debug', 'Info', 'Error'],
-				'aExceptions' => [new \GrandChildException('I am first'), new \GrandChildException('I am 2d'), new \GrandChildException('I am 3rd'), new \GrandChildException('I am 4th')],
+				'aExceptions' => [\GrandChildException::class, \GrandChildException::class, \GrandChildException::class, \GrandChildException::class],
 				'sChannel' => 'GrandChildException',
 				'aExpectedWriteNumber' => [0, 1, 1, 1],
 				'logLevelMin' => ['ChildException' => 'Error', 'GrandChildException' => 'Debug', ],
@@ -134,7 +134,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'handle namespaced classes' => [
 				'aLevels' => ['Debug'],
-				'aExceptions' => [new \Namespaced\Exception\ExceptionInNamespace('Foo')],
+				'aExceptions' => [\Namespaced\Exception\ExceptionInNamespace::class],
 				'sChannel' => 'Namespaced\Exception\ExceptionInNamespace',
 				'aExpectedWriteNumber' => [1],
 				'logLevelMin' => ['Namespaced\Exception\ExceptionInNamespace' => 'Debug'],
@@ -143,7 +143,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'not enabled by default' => [
 				'aLevels' => ['Debug'],
-				'aExceptions' => [new \Exception('Foo')],
+				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
 				'aExpectedWriteNumber' => [0],
 				'logLevelMin' => null,
@@ -152,7 +152,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'explicitly disabled' => [
 				'aLevels' => ['Info'],
-				'aExceptions' => [new \Exception('Foo')],
+				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
 				'aExpectedWriteNumber' => [0],
 				'logLevelMin' => ['Exception' => 'Error'],
@@ -161,7 +161,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'default channel, default conf' => [
 				'aLevels' => ['Warning'],
-				'aExceptions' => [new \Exception('Foo')],
+				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
 				'aExpectedWriteNumber' => [1],
 				'logLevelMin' => null,
@@ -170,7 +170,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'enabled' => [
 				'aLevels' => ['Debug'],
-				'aExceptions' => [new \Exception('Foo')],
+				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
 				'aExpectedWriteNumber' => [1],
 				'logLevelMin' => ['Exception' => 'Debug'],
@@ -179,7 +179,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 			'file: 2 enabled, 2 filtered, db: 1 enabled, 3 filtered' => [
 				'aLevels' => ['Debug', 'Trace', 'Warning', 'Error'],
-				'aExceptions' => [new \Exception('I am first'), new \Exception('I am 2d'), new \Exception('I am 3rd'), new \Exception('I am 4th')],
+				'aExceptions' => [\Exception::class, \Exception::class, \Exception::class, \Exception::class],
 				'sChannel' => 'Exception',
 				'aExpectedWriteNumber' => [0, 0, 1, 1],
 				'logLevelMin' => null,
