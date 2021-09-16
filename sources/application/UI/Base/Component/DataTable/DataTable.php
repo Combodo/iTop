@@ -29,11 +29,11 @@ class DataTable extends UIContentBlock
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_LIVE_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'node_modules/datatables.net/js/jquery.dataTables.js',
-		'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
-		'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
-		'node_modules/datatables.net-scroller/js/dataTables.scroller.js',
-		'node_modules/datatables.net-select/js/dataTables.select.js',
+		'node_modules/datatables.net/js/jquery.dataTables.min.js',
+		'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js',
+		'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js',
+		'node_modules/datatables.net-scroller/js/dataTables.scroller.min.js',
+		'node_modules/datatables.net-select/js/dataTables.select.min.js',
 		'js/field_sorter.js',
 		'js/table-selectable-lines.js',
 		'js/dataTables.main.js',
