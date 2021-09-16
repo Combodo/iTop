@@ -82,7 +82,7 @@ class ExceptionLogTest extends ItopDataTestCase
 
 			ExceptionLog::FromException($oException, $aContext, $sLevel);
 
-			$oExpectedLastEventIssue = $this->InvokeNonPublicStaticMethod('ExceptionLog', 'getLastEventIssue', []);
+			$oExpectedLastEventIssue = $this->InvokeNonPublicStaticMethod('ExceptionLog', 'GetLastEventIssue', []);
 
 			if (0 == $iExpectedDbWriteNumber) {
 				$this->assertNull($oExpectedLastEventIssue);
