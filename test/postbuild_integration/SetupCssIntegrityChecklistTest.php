@@ -44,14 +44,10 @@ class SetupCssIntegrityChecklistTest extends ItopTestCase
 		parent::setUp();
 	}
 
-	/**
-	 */
 	public function testSetupCssIntegrity()
 	{
 		$sSetupCssPath = APPROOT.'css/setup.css';
 		$sSetupCssContent = file_get_contents($sSetupCssPath);
-		$this->assertContains('/* integrityCheck: begin (do not remove/edit) */', $sSetupCssContent);
-		$this->assertContains('/* integrityCheck: end (do not remove/edit) */', $sSetupCssContent);
 		$this->assertGreaterThan(4000, strlen($sSetupCssContent), "Test if the resulting file $sSetupCssPath is long enough, the value is totally arbitrary (at the time of the writing the file is 5660o  long");
 	}
 
