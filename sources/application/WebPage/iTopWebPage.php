@@ -811,17 +811,6 @@ HTML;
 
 		return $oFooter;
 	}
-	protected function output_dict_entries($bReturnOutput = false)
-	{
-		if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0)) {
-			if (class_exists('Dict')) {
-				// The dictionary may not be available for example during the setup...
-				// Create a specific dictionary file and load it as a JS script
-				$this->add_early_script($this->get_dict_file_content());
-			}
-		}
-	}
-
 
 	/**
 	 * @inheritDoc
