@@ -25,6 +25,8 @@ class Input extends AbstractInput
 	protected $bIsDisabled = false;
 	protected $bIsReadonly = false;
 
+	protected $sLabel = null;
+
 	/** @var string */
 	protected $sType;
 
@@ -100,5 +102,30 @@ class Input extends AbstractInput
 	{
 		$this->bIsReadonly = $bIsReadonly;
 		return $this;
+	}
+
+	/**
+	 * @return string|null
+	 */
+	public function GetLabel()
+	{
+		return $this->sLabel;
+	}
+
+	/**
+	 * @param null $sLabel
+	 *
+	 * @return $this
+	 */
+	public function SetLabel($sLabel)
+	{
+		$this->sLabel = $sLabel;
+
+		return $this;
+	}
+
+	public function HasLabel()
+	{
+		return !is_null($this->sLabel);
 	}
 }

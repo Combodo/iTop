@@ -13,4 +13,5 @@
             {% endif %}
             {% if oUIBlock.GetPlaceHolder() %}  placeholder="{{ oUIBlock.GetPlaceHolder() }}" {% endif %}
     >
+    {% if oUIBlock.HasLabel() %}<label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() |raw }}</label>{% endif %}
 {% endblock %}

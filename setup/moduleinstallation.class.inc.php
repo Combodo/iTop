@@ -33,12 +33,13 @@ class ModuleInstallation extends cmdbAbstractObject
 		(
 			"category" => "core,view_in_gui",
 			"key_type" => "autoincrement",
-			"name_attcode" => "",
+			'name_attcode' => array('name', 'version'),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_module_install",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
+			'order_by_default' => array('installed' => false),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -51,7 +52,7 @@ class ModuleInstallation extends cmdbAbstractObject
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details', array('name', 'version', 'installed', 'comment', 'parent_id')); // Attributes to be displayed for the complete details
-		MetaModel::Init_SetZListItems('list', array('name', 'version', 'installed', 'comment')); // Attributes to be displayed for a list
+		MetaModel::Init_SetZListItems('list', array('installed', 'comment')); // Attributes to be displayed for a list
 		// Search criteria
 //		MetaModel::Init_SetZListItems('standard_search', array('name')); // Criteria of the std search form
 //		MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
