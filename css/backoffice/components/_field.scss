@@ -29,6 +29,14 @@ $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--
 
 $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
+$ibo-field--enable-bulk--padding-y: 2px !default;
+$ibo-field--enable-bulk--padding-x: 5px !default;
+$ibo-field--enable-bulk--margin-left: 5px !default;
+$ibo-field--enable-bulk--height: calc(100% - #{$ibo-field--enable-bulk--padding-x}) !default;
+$ibo-field--enable-bulk--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
+
 /* SCSS rules */
 .ibo-field {
   @extend %ibo-font-size-150;
@@ -196,23 +204,18 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
   }
 }
 
-.multi_values, .mono_value {
-  display: inline-block;
-  padding: 1px 3px;
-  margin-left: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  color: #fff;
+.ibo-field--enable-bulk {
+  display: inline;
+  padding: $ibo-field--enable-bulk--padding-y $ibo-field--enable-bulk--padding-x;
+  margin: 0 0 0 $ibo-field--enable-bulk--margin-left;
+  height: $ibo-field--enable-bulk--height;
+  border-radius: $ibo-field--enable-bulk--border-radius;
   font-weight: bold;
+  white-space: nowrap;
 }
 
-.mono_value {
-  background-color: #3c3;
-}
-
-.multi_values {
-  background-color: #c33;
+.ibo-field--enable-bulk--checkbox {
+  margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
  .form_field ~ .form_field {

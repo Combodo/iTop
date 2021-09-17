@@ -4879,8 +4879,8 @@ HTML
 						$sTip = Dict::S('UI:Component:Field:BulkModify:UnknownValues:Tooltip');
 
 						$oDummyObj->Set($sAttCode, null);
-						$aComments[$sAttCode] = '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
-						$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'"> ? </div>';
+						$aComments[$sAttCode] = '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'">?';
+						$aComments[$sAttCode] .= '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/></div>';
 						$sReadyScript .= 'ToggleField(false, \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					} else {
 						$iCount = count($aValues[$sAttCode]);
@@ -4889,13 +4889,13 @@ HTML
 							reset($aValues[$sAttCode]);
 							$aKeys = array_keys($aValues[$sAttCode]);
 							$currValue = $aKeys[0]; // The only value is the first key
-							//echo "<p>current value for $sAttCode : $currValue</p>";
 							$oDummyObj->Set($sAttCode, $currValue);
 							$aComments[$sAttCode] = '';
+							$sValueCheckbox = '';
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
-								$aComments[$sAttCode] .= '<input type="checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+								$sValueCheckbox .= '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" checked id="enable_'.$iFormId.'_'.$sAttCode.'"  onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
-							$aComments[$sAttCode] .= '<div class="mono_value">1</div>';
+							$aComments[$sAttCode] .= '<div class="mono_value ibo-field--enable-bulk ibo-pill ibo-is-success">1'.$sValueCheckbox.'</div>';
 						} else {
 							// Non-homogeneous value
 							$aMultiValues = $aValues[$sAttCode];
@@ -4941,10 +4941,12 @@ HTML
 								$oDummyObj->Set($sAttCode, null);
 							}
 							$aComments[$sAttCode] = '';
+							$sValueCheckbox = '';
+
 							if ($sAttCode != MetaModel::GetStateAttributeCode($sClass) || !MetaModel::HasLifecycle($sClass)) {
-								$aComments[$sAttCode] .= '<input type="checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
+								$sValueCheckbox = '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" id="enable_'.$iFormId.'_'.$sAttCode.'" onClick="ToggleField(this.checked, \''.$iFormId.'_'.$sAttCode.'\')"/>';
 							}
-							$aComments[$sAttCode] .= '<div class="multi_values" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.'</div>';
+							$aComments[$sAttCode] .= '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sAttCode.'" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.$iCount.$sValueCheckbox.'</div>';
 						}
 						$sReadyScript .= 'ToggleField('.(($iCount == 1) ? 'true' : 'false').', \''.$iFormId.'_'.$sAttCode.'\');'."\n";
 					}

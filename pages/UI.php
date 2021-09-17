@@ -1283,14 +1283,14 @@ HTML
 					}
 					$aArgs = array('this' => $oObj);
 					$sHTMLValue = cmdbAbstractObject::GetFormElementForField($oP, $sClass, $sAttCode, $oAttDef, $oObj->Get($sAttCode), $oObj->GetEditValue($sAttCode), $sFieldInputId, '', $iExpectCode, $aArgs);
-					$sComments = '<input type="checkbox" checked id="enable_'.$sFieldInputId.'"  onClick="ToggleField(this.checked, \''.$sFieldInputId.'\')"/>';
+					$sComments = '<input type="checkbox" class="ibo-field--enable-bulk--checkbox" checked id="enable_'.$sFieldInputId.'"  onClick="ToggleField(this.checked, \''.$sFieldInputId.'\')"/>';
 					if (!isset($aValues[$sAttCode]))
 					{
 						$aValues[$sAttCode] = array();
 					}
 					if (count($aValues[$sAttCode]) == 1)
 					{
-						$sComments .= '<div class="mono_value">1</div>';
+						$sComments = '<div class="mono_value ibo-field--enable-bulk ibo-pill ibo-is-success">1'.$sComments.'</div>';
 					}
 					else
 					{
@@ -1311,7 +1311,7 @@ HTML
 						}
 						$sTip .= "</ul></p>";
 						$sTip = utils::HtmlEntities($sTip);
-						$sComments .= '<div class="multi_values" id="multi_values_'.$sFieldInputId.'"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.count($aValues[$sAttCode]).'</div>';
+						$sComments = '<div class="multi_values ibo-field--enable-bulk ibo-pill ibo-is-failure" id="multi_values_'.$sFieldInputId.'"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true">'.count($aValues[$sAttCode]).$sComments.'</div>';
 					}
 					$aDetails[] = array('label' => '<span>'.$oAttDef->GetLabel().'</span>', 'value' => "<span id=\"field_$sFieldInputId\">$sHTMLValue</span>", 'comments' => $sComments);
 					$aFieldsMap[$sAttCode] = $sFieldInputId;
