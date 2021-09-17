@@ -114,11 +114,7 @@ class Extension
 		//
 		// Note: This could be rename "add_cache_buster" instead.
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
-			if (strpos($sUrl, '?') === false) {
-				$sUrl = $sUrl."?t=".utils::GetCacheBusterTimestamp();
-			} else {
-				$sUrl = $sUrl."&t=".utils::GetCacheBusterTimestamp();
-			}
+			$sUrl = utils::AddParamToUrl($sUrl, 't', utils::GetCacheBusterTimestamp());
 
 			return $sUrl;
 		}));
@@ -126,12 +122,7 @@ class Extension
 		// Filter to add a module's version to an url
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_module_version', function ($sUrl, $sModuleName) {
 			$sModuleVersion = utils::GetCompiledModuleVersion($sModuleName);
-
-			if (strpos($sUrl, '?') === false) {
-				$sUrl = $sUrl."?moduleversion=".$sModuleVersion;
-			} else {
-				$sUrl = $sUrl."&moduleversion=".$sModuleVersion;
-			}
+			$sUrl = utils::AddParamToUrl($sUrl, 'moduleversion', $sModuleVersion);
 
 			return $sUrl;
 		}));

@@ -3014,4 +3014,24 @@ HTML;
 
 		return $aMentionedObjects;
 	}
+
+	/**
+	 * @param $sUrl
+	 * @param string|null $sModuleVersion
+	 *
+	 * @return string
+	 */
+	public static function AddParamToUrl($sUrl, string $sName, string $sModuleVersion): string
+	{
+		if (strpos($sUrl, '?') === false)
+		{
+			$sUrl = $sUrl."?".$sName."=".$sModuleVersion;
+		}
+		else
+		{
+			$sUrl = $sUrl."&".$sName."=".$sModuleVersion;
+		}
+
+		return $sUrl;
+	}
 }
