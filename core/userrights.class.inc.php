@@ -1214,13 +1214,15 @@ class UserRights
 			$sContactClass = get_class($oContact);
 
 			// Check that Contact object still exists and that Contact class has a picture attribute
-			if (!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE)) {
+			// - Try to get the semantic image attribute, or try to fallback on the default one if none defined
+			$sContactPictureAttCode = MetaModel::HasImageAttributeCode($sContactClass) ? MetaModel::GetImageAttributeCode($sContactClass) : static::DEFAULT_CONTACT_PICTURE_ATTCODE;
+			if (!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, $sContactPictureAttCode)) {
 				/** @var \ormDocument $oPicture */
-				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+				$oPicture = $oContact->Get($sContactPictureAttCode);
 				if ($oPicture->IsEmpty()) {
 					if ($bAllowDefaultPicture === true) {
 						/** @var \AttributeImage $oAttDef */
-						$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+						$oAttDef = MetaModel::GetAttributeDef($sContactClass, $sContactPictureAttCode);
 						$sPictureUrl = $oAttDef->Get('default_image');
 					} else {
 						$sPictureUrl = null;
@@ -1228,9 +1230,9 @@ class UserRights
 				} else {
 					if (ContextTag::Check(ContextTag::TAG_PORTAL)) {
 						$sSignature = $oPicture->GetSignature();
-						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
+						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.$sContactPictureAttCode.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
 					} else {
-						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), $sContactPictureAttCode);
 					}
 				}
 			}
