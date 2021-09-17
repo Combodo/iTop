@@ -435,6 +435,7 @@ try
 
 	$aIsDateToTransform = array();
 	$aDateToTransformReport = array();
+	$aIsBinaryToTransform = array();
 	foreach ($aInputColumns as $iFieldId => $sInputColumn)
 	{
 		if (array_key_exists($sInputColumn, $aDateColumns))
@@ -456,6 +457,7 @@ try
 		{
 			throw new ExchangeException("Unknown column '$sInputColumn' (class: '$sClass')");
 		}
+		$aIsBinaryToTransform[$iFieldId] = $aColumns[$sInputColumn] === 'LONGBLOB';
 	}
 	if (!isset($iPrimaryKeyCol))
 	{
@@ -535,6 +537,10 @@ try
 							$aValues[] = $sDate;
 						}
 					}
+					elseif ($aIsBinaryToTransform[$iCol])
+					{
+						$aValues[] = base64_decode($value);
+					}
 					else
 					{
 						$aValues[] = $value;
@@ -599,6 +605,10 @@ try
 						{
 							$aValuePairs[] = "`$sCol` = ".CMDBSource::Quote($sDate);
 						}
+					}
+					elseif ($aIsBinaryToTransform[$iCol])
+					{
+						$aValuePairs[] = "`$sCol` = FROM_BASE64(".CMDBSource::Quote($aRow[$iCol], true).")";
 					}
 					else
 					{
