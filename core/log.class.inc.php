@@ -656,9 +656,9 @@ abstract class LogAPI
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
 	 */
-	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sCode = 'log_level_min'): bool
+	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $code = 'log_level_min'): bool
 	{
-		$sMinLogLevel = self::GetMinLogLevel($sChannel, $sCode);
+		$sMinLogLevel = self::GetMinLogLevel($sChannel, $code);
 
 		if ($sMinLogLevel === false || $sMinLogLevel === 'false') {
 			return false;
@@ -678,7 +678,6 @@ abstract class LogAPI
 
 	/**
 	 * @param string $sChannel
-	 * @param string $sCode
 	 *
 	 * @return string one of the LEVEL_* const value : the one configured it if exists, otherwise default log level for this channel
 	 *       Config can be set :
@@ -698,14 +697,14 @@ abstract class LogAPI
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Aadmin%3Alog iTop log reference
 	 */
-	protected static function GetMinLogLevel($sChannel, $sCode = 'log_level_min')
+	protected static function GetMinLogLevel($sChannel, $code = 'log_level_min')
 	{
 		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
 			return static::GetLevelDefault();
 		}
 
-		$sLogLevelMin = $oConfig->Get($sCode);
+		$sLogLevelMin = $oConfig->Get($code);
 
 		if (empty($sLogLevelMin)) {
 			return static::GetLevelDefault();
@@ -1107,9 +1106,9 @@ class LogFileRotationProcess implements iScheduledProcess
 /**
  * Log exceptions using dedicated API and logic.
  *
- * Please use {@see ExceptionLog::FromException()} to log exceptions
+ * Please use {@see ExceptionLog::ExceptionLog()} to log exceptions
  *
- * @since 3.0.0
+ * @Since 3.0.0
  */
 class ExceptionLog extends LogAPI
 {
@@ -1135,11 +1134,10 @@ class ExceptionLog extends LogAPI
 			$aContext['exception class'] = get_class($oException);
 		}
 
-		self::Log($sLevel, $oException->getMessage(), get_class($oException), $aContext);
+		return self::Log($sLevel, $oException->getMessage(), get_class($oException), $aContext);
 	}
 
 	/**
-	 * @inheritDoc
 	 * @throws \ConfigException if log wrongly configured
 	 */
 	public static function Log($sLevel, $sMessage, $sClass = null, $aContext = array())
@@ -1167,14 +1165,15 @@ class ExceptionLog extends LogAPI
 
 	}
 
-	protected static function FindClassChannel($sClass, $sCode = 'log_level_min')
+
+	protected static function FindClassChannel($sClass, $code = 'log_level_min')
 	{
 		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
 			return static::GetLevelDefault();
 		}
 
-		$sLogLevelMin = $oConfig->Get($sCode);
+		$sLogLevelMin = $oConfig->Get($code);
 
 		if (empty($sLogLevelMin)) {
 			return $sClass;
@@ -1201,9 +1200,6 @@ class ExceptionLog extends LogAPI
 		return $sClass;
 	}
 
-	/**
-	 * @inheritDoc
-	 */
 	public static function Enable($sTargetFile = null)
 	{
 		if (empty($sTargetFile))
@@ -1242,9 +1238,9 @@ class ExceptionLog extends LogAPI
 	}
 
 	/**
-	 * @internal Used by the tests
+	 * used by the tests
 	 */
-	private static function GetLastEventIssue()
+	private static function getLastEventIssue()
 	{
 		return self::$oLastEventIssue;
 	}

@@ -48,8 +48,7 @@ class ExceptionLogTest extends ItopDataTestCase
 
 						if (is_null($logLevelMin))
 						{
-							$oConf = \MetaModel::GetConfig();
-							$logLevelMin = $oConf->Get('log_level_min');
+							$logLevelMin = '';//this should be the default value, if it did change, please fix it here
 						}
 
 						return $logLevelMin;
@@ -57,8 +56,7 @@ class ExceptionLogTest extends ItopDataTestCase
 
 						if (is_null($logLevelMinWriteInDb))
 						{
-							$oConf = \MetaModel::GetConfig();
-							$logLevelMinWriteInDb = $oConf->Get('log_level_min.write_in_db');
+							$logLevelMinWriteInDb = [ 'Exception' => 'Error', ];//this should be the default value, if it did change, please fix it here
 						}
 
 						return $logLevelMinWriteInDb;
@@ -72,15 +70,15 @@ class ExceptionLogTest extends ItopDataTestCase
 			$oException = new $aExceptions[$i]("Iteration number $i");
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
 			$iExpectedDbWriteNumber = $aExpectedDbWriteNumber[$i];
-			$aExpectedContext = array_merge($aContext, ['exception' => $oException, 'exception class' => get_class($oException)]); //The context is preserved, and, if the key 'exception' is not yet in the array, it is added
+			$aExpectedFileContext = array_merge($aContext, ['__exception class' => get_class($oException)]); //The context is preserved, and, if the key '__exception' is not yet in the array, it is added
 			$mockFileLog->expects($this->exactly($iExpectedWriteNumber))
 				->method($sLevel)
-				->with($oException->GetMessage(), $sChannel, $aExpectedContext)
+				->with($oException->GetMessage(), $sChannel, $aExpectedFileContext)
 			;
 
 			ExceptionLog::MockStaticObjects($mockFileLog, $oMockConfig);
 
-			ExceptionLog::FromException($oException, $aContext, $sLevel);
+			ExceptionLog::LogException($oException, $aContext, $sLevel);
 
 			$oExpectedLastEventIssue = $this->InvokeNonPublicStaticMethod('ExceptionLog', 'GetLastEventIssue', []);
 
@@ -88,7 +86,7 @@ class ExceptionLogTest extends ItopDataTestCase
 				$this->assertNull($oExpectedLastEventIssue);
 			} else {
 				$this->assertInstanceOf(\EventIssue::class, $oExpectedLastEventIssue);
-				$this->assertEquals($aExpectedContext, $oExpectedLastEventIssue->Get('data'));
+				$this->assertEquals($aExpectedFileContext, $oExpectedLastEventIssue->Get('data'));
 			}
 		}
 	}
