@@ -12,6 +12,7 @@ use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
@@ -369,6 +370,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						}
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+						if ($oAttDef instanceof \AttributeCaseLog) {
+							// Add JS file for display caselog
+							$oDataTable->AddMultipleJsFilesRelPaths(CollapsibleSection::DEFAULT_JS_FILES_REL_PATH);
+						}
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = $oAttDef->GetLabel();
 						$aColumnDefinition[] = [
@@ -612,6 +617,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							}
 						} else {
 							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+							if ($oAttDef instanceof \AttributeCaseLog) {
+								// Removed from the display list
+								$oDataTable->AddMultipleJsFilesRelPaths(CollapsibleSection::DEFAULT_JS_FILES_REL_PATH);
+							}
 							$sAttDefClass = get_class($oAttDef);
 							$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
 							$aColumnDefinition[] = [
@@ -701,6 +710,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 		$sSortCol = utils::ReadParam('sort_col', '', false, 'raw_data');
 		$sSortOrder = utils::ReadParam('sort_order', '', false, 'raw_data');
 		$sOrder = [];
+		$aJsFiles = [];
 		if ($sSortCol != "") {
 			$sOrder[] = [$sSortCol, $sSortOrder];
 		}
@@ -753,9 +763,12 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						];
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
+						if ($oAttDef instanceof \AttributeCaseLog) {
+							// Get JS files
+							$aJsFiles = array_merge($aJsFiles, CollapsibleSection::DEFAULT_JS_FILES_REL_PATH);
+						}
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
-
 						$aColumnDefinition["title"] = $sAttLabel;
 						$aColumnDefinition['metadata'] = [
 							'object_class' => $sClassName,
@@ -829,7 +842,14 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					"pages": 5 // number of pages to cache
 				} )'
 		]);
-
+		if(sizeof($aJsFiles)>0) {
+			foreach ($aJsFiles as $sJsFile) {
+				$aUrlFiles[] = utils::GetAbsoluteUrlAppRoot().$sJsFile;
+			}
+			$aOptions['js_files'] = $aUrlFiles;
+			$aOptions['js_files_param'] = 'itopversion';
+			$aOptions['js_files_value'] = ITOP_VERSION;
+		}
 		return $aOptions;
 	}
 

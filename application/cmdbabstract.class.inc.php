@@ -10,6 +10,7 @@ use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
@@ -3239,6 +3240,12 @@ EOF
 							}
 						} else
 						{
+							if ($oAttDef instanceof \AttributeCaseLog) {
+								// Add JS file for display caselog
+								foreach (CollapsibleSection::DEFAULT_JS_FILES_REL_PATH as $sJSFile) {
+									$oPage->add_linked_script('../'.$sJSFile);
+								}
+							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);
 							if (is_array($aAllowedValues) && count($aAllowedValues) == 1)
 							{

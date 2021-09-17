@@ -78,7 +78,6 @@ $(function () {
 					if (window.pager_params) {
 						window.pager_params['pager'+me.options.sListId] = undefined;
 					}
-
 					var parentElt = $('#'+me.options.sListId).closest('.dataTables_wrapper').parent();
 					var aOptions = $('#'+me.options.sListId).DataTable().context[0].oInit;
 					window['bSelectAllowed'+me.options.sListId] = false;
@@ -88,6 +87,16 @@ $(function () {
 						sThead += "<th></th>";
 					}
 					aOptions = $.extend(aOptions, JSON.parse(data));
+					if (aOptions.js_files) {
+						$.each(aOptions.js_files, function (i, item) {
+							if ($.inArray(item, aListJsFiles) === -1)
+							{
+								sFileUrl = CombodoGlobalToolbox.AddParameterToUrl(item, aOptions.js_files_param, aOptions.js_files_value);
+								$.ajax({url:sFileUrl, dataType: 'script', cache: true });
+								aListJsFiles.push(item);
+							}
+						});
+					}
 					$.each(aOptions['allColumns'], function (i, item) {
 						$.each(item, function (j, champs) {
 							if (champs.checked == 'true') {
