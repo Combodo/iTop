@@ -86,6 +86,7 @@ a:hover {
 
 #login-logo img {
 	border: 0;
+	max-height: 54px;
 }
 
 #login-form {

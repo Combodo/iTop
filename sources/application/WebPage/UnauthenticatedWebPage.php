@@ -18,6 +18,7 @@
  */
 
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
@@ -72,12 +73,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 
 		$this->sContent = '';
 		$this->sPanelTitle = '';
-		$this->sPanelIcon = utils::GetAbsoluteUrlAppRoot().'images/itop-logo.png';
-		if (file_exists(MODULESROOT.'branding/main-logo.png'))
-		{
-			$this->sPanelIcon = utils::GetAbsoluteUrlModulesRoot().'branding/main-logo.png';
-		}
-		
+		$this->sPanelIcon = Branding::GetFullMainLogoAbsoluteUrl();
 		$this->SetContentType('text/html');
 		
 		

@@ -1,5 +1,6 @@
 <?php
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -59,7 +60,7 @@ class ErrorPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot(true).'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$sLogo = Branding::GetFullMainLogoAbsoluteUrl();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard('ibo_setup_container', ['ibo-setup']);
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);

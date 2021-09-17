@@ -2851,15 +2851,19 @@ EOF;
 		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
 		{
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
-			$sTargetFile = $sTempTargetDir.'/branding/'.$sTargetFile.'.png';
+			$aIconName=explode(".", $sIcon);
+			$sIconExtension=$aIconName[count($aIconName)-1];
+			$sTargetFile = '/branding/'.$sTargetFile.'.'.$sIconExtension;
 
 			if (!file_exists($sSourceFile))
 			{
 				throw new Exception("Branding $sNodeName: could not find the file $sIcon ($sSourceFile)");
 			}
 
-			copy($sSourceFile, $sTargetFile);
+			copy($sSourceFile, $sTempTargetDir.$sTargetFile);
+			return $sTargetFile;
 		}
+		return null;
 	}
 
 	/**
@@ -3098,11 +3102,25 @@ EOF;
 		{
 			// Transform file refs into files in the images folder
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
+			$aDataBranding = [];
 
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'login_logo', 'login-logo');
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo', 'main-logo-full');
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'main_logo_compact', 'main-logo-compact');
-			$this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, 'portal_logo', 'portal-logo');
+			$aLogosToCompile=[['sNodeName'=>'login_logo', 'sTargetFile'=> 'login-logo', 'sType'=>'login_logo'],
+							                  ['sNodeName'=>'main_logo', 'sTargetFile'=> 'main-logo-full', 'sType'=>'main-logo-full'],
+							                  ['sNodeName'=>'main_logo_compact', 'sTargetFile'=> 'main_logo_compact', 'sType'=>'main_logo_compact'],
+							                  ['sNodeName'=>'login_logo', 'sTargetFile'=>'portal_logo', 'sType'=>'portal_logo']];
+			foreach ($aLogosToCompile as $aLogo) {
+				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
+				if ($sLogo != null) {
+					$aDataBranding['sType'] = $sLogo;
+				}
+			}
+			if ($sTempTargetDir == null) {
+				$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+			} else {
+				$sWorkingPath = $sTempTargetDir;
+			}
+
+			file_put_contents($sWorkingPath.'/branding/logos.json', json_encode($aDataBranding));
 
 			// Cleanup the images directory (eventually made by CompileFiles)
 			if (file_exists($sTempTargetDir.'/branding/images'))

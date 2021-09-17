@@ -73,25 +73,22 @@ class Branding
 	public static function GetLogoAbsoluteUrl($sType = self::DEFAULT_LOGO_TYPE)
 	{
 		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
-		$sCustomLogoPath = static::$aLogoPaths[$sType]['custom'];
-
-		if (file_exists(MODULESROOT.$sCustomLogoPath))
-		{
-			$sUrl = utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath;
+		$sWorkingPath =  APPROOT.'env-'.utils::GetCurrentEnvironment();
+		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'/branding/logos.json'), true);
+		if ( isset( $aThemeParameters[$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sType];
+			if (file_exists(MODULESROOT.$sCustomLogoPath)) {
+				return utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+			}
 		}
-		else
-		{
-			$sUrl = utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath;
-		}
-
-		return $sUrl.'?t='.utils::GetCacheBusterTimestamp();
+		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
 	}
 
 	/**
 	 * Return the absolute URL for the full main logo
 	 *
 	 * @return string
-	 * @throws \Exception
+	 * @throws \Exception<
 	 */
 	public static function GetFullMainLogoAbsoluteUrl()
 	{

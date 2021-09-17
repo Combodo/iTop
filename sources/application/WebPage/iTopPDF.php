@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Branding;
+
 
 /**
  * Custom class derived from TCPDF for providing custom headers and footers
@@ -91,10 +93,7 @@ class iTopPDF extends TCPDF
 			'', true, 0, false, true, 15, 'M' /* $valign */);
 
 		// Branding logo
-		$sBrandingIcon = APPROOT.'images/itop-logo.png';
-		if (file_exists(MODULESROOT.'branding/main-logo.png')) {
-			$sBrandingIcon = MODULESROOT.'branding/main-logo.png';
-		}
+		$sBrandingIcon = Branding::GetFullMainLogoAbsoluteUrl();
 		$this->Image($sBrandingIcon, $aMargins['left'], 5, 0, 10);
 	}
 

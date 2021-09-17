@@ -7,6 +7,7 @@
  */
 
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\TwigExtension;
 
 /**
@@ -238,16 +239,9 @@ class LoginTwigRenderer
 
 	public function GetDefaultVars()
 	{
-		$sLogo = 'itop-logo-external.png';
-		$sBrandingLogo = 'login-logo.png';
-
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?t='.utils::GetCacheBusterTimestamp();
-		if (file_exists(MODULESROOT.'branding/'.$sBrandingLogo))
-		{
-			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo.'?t='.utils::GetCacheBusterTimestamp();
-		}
+		$sDisplayIcon = Branding::GetLoginLogoAbsoluteUrl();
 
 		$aVars = array(
 			'sAppRootUrl' => utils::GetAbsoluteUrlAppRoot(),
