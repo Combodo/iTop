@@ -24,6 +24,7 @@ namespace Combodo\iTop\Portal\EventListener;
 
 use Dict;
 use IssueLog;
+use LogChannels;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -86,7 +87,10 @@ class ExceptionListener implements ContainerAwareInterface
 		}
 
 		// Log exception in iTop log
-		IssueLog::Error($sErrorTitle.': '.$sErrorMessage);
+		IssueLog::Error($sErrorTitle.': '.$sErrorMessage, LogChannels::PORTAL, [
+			'file' => $oException->getFile(),
+			'line' => $oException->getLine(),
+		]);
 
 		// Prepare data for template
 		$aData = array(
