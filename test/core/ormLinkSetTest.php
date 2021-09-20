@@ -274,4 +274,42 @@ class ormLinkSetTest extends ItopDataTestCase
 		$oContactsSet = $oServer->Get('contacts_list');
 		static::assertEquals(3, $oContactsSet->Count());
 	}
+
+	/**
+	 * @dataProvider ToDBObjectSetProvider
+	 * @param $sHostClass
+	 * @param $sAttCode
+	 * @param $sOriginalFilter
+	 * @param $bShowObsolete
+	 * @param $sExpectedFilter
+	 */
+	public function testToDBObjectSet($sHostClass, $sAttCode, $sOriginalFilter, $bShowObsolete, $sExpectedFilter)
+	{
+		$oOriginalSet = new \DBObjectSet(\DBSearch::FromOQL($sOriginalFilter));
+		$oOrmLinkSet = new ormLinkSet($sHostClass, $sAttCode, $oOriginalSet);
+
+		$oSet = $oOrmLinkSet->ToDBObjectSet($bShowObsolete);
+		$this->assertEquals($sExpectedFilter, $oSet->GetFilter()->ToOQL());
+	}
+
+	public function ToDBObjectSetProvider()
+	{
+		return [
+			'lnkContactToFunctionalCI' => [
+				'sHostClass' => 'ApplicationSolution',
+				'sAttCode' => 'contacts_list',
+				'sOriginalFilter' => 'SELECT `lnkContactToFunctionalCI` FROM lnkContactToFunctionalCI AS `lnkContactToFunctionalCI` JOIN FunctionalCI AS `FunctionalCI` ON `lnkContactToFunctionalCI`.functionalci_id = `FunctionalCI`.id WHERE (`FunctionalCI`.`id` = :id)',
+				'bShowObsolete' => false,
+				'sExpectedFilter' => 'SELECT `Link`, `Remote` FROM lnkContactToFunctionalCI AS `Link` JOIN FunctionalCI AS `FunctionalCI` ON `Link`.functionalci_id = `FunctionalCI`.id JOIN Contact AS `Remote` ON `Link`.contact_id = `Remote`.id WHERE ((`FunctionalCI`.`id` = :id) AND (`Remote`.`obsolescence_flag` = 0))',
+				],
+//			'lnkFAQToFAQ' => [
+//				'sHostClass' => 'FAQ',
+//				'sAttCode' => 'contacts_list',
+//				'sOriginalFilter' => '',
+//				'bShowObsolete' => true,
+//				'sExpectedFilter' => '',
+//			],
+		];
+	}
+
 }
