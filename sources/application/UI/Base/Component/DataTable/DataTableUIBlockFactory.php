@@ -842,7 +842,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					"pages": 5 // number of pages to cache
 				} )'
 		]);
-		if(sizeof($aJsFiles)>0) {
+		if (count($aJsFiles) > 0) {
 			foreach ($aJsFiles as $sJsFile) {
 				$aUrlFiles[] = utils::GetAbsoluteUrlAppRoot().$sJsFile;
 			}
