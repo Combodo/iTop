@@ -3017,19 +3017,21 @@ HTML;
 
 	/**
 	 * @param $sUrl
-	 * @param string|null $sModuleVersion
+	 * @param string $sParamName
+	 * @param string $sParamValue
 	 *
 	 * @return string
+	 * @since 3.0.0
 	 */
-	public static function AddParamToUrl($sUrl, string $sName, string $sModuleVersion): string
+	public static function AddParameterToUrl(string $sUrl, string $sParamName, string $sParamValue): string
 	{
 		if (strpos($sUrl, '?') === false)
 		{
-			$sUrl = $sUrl."?".$sName."=".$sModuleVersion;
+			$sUrl = $sUrl.'?'.urlencode($sParamName).'='.urlencode($sParamValue);
 		}
 		else
 		{
-			$sUrl = $sUrl."&".$sName."=".$sModuleVersion;
+			$sUrl = $sUrl.'&'.urlencode($sParamName).'='.urlencode($sParamValue);
 		}
 
 		return $sUrl;

@@ -134,7 +134,7 @@ class AppExtension extends AbstractExtension
 
 		// Filter to add itopversion to an url
 		$filters[] = new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
-			$sUrl = utils::AddParamToUrl($sUrl, 'itopversion', ITOP_VERSION);
+			$sUrl = utils::AddParameterToUrl($sUrl, 'itopversion', ITOP_VERSION);
 
 			return $sUrl;
 		});
@@ -142,7 +142,7 @@ class AppExtension extends AbstractExtension
 		// Filter to add a module's version to an url
 		$filters[] = new Twig_SimpleFilter('add_module_version', function ($sUrl, $sModuleName) {
 			$sModuleVersion = utils::GetCompiledModuleVersion($sModuleName);
-			$sUrl = utils::AddParamToUrl($sUrl, 'moduleversion', $sModuleVersion);
+			$sUrl = utils::AddParameterToUrl($sUrl, 'moduleversion', $sModuleVersion);
 
 			return $sUrl;
 		});
