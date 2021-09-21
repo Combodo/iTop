@@ -171,11 +171,6 @@ class MFCompiler
 	 */
 	public static function SetUseSymbolicLinksFlag(bool $bUseSymbolicLinks): void
 	{
-		if (!static::CanUseSymbolicLinksFlagBeUsed()) {
-			// functionality cannot be used, so we're doing nothing !
-			return;
-		}
-
 		$bIsUseSymlinksFlagPresent = (static::IsUseSymbolicLinksFlagPresent());
 
 		if ($bUseSymbolicLinks) {
