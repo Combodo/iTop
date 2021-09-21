@@ -861,6 +861,8 @@ class utils
 	}
 
 	/**
+	 * @param boolean $bForceGetFromDisk if true then will always read from disk without using instances in memory
+	 *
 	 * @return \Config Get object in the following order :
 	 * <ol>
 	 * <li>from {@link MetaModel::GetConfig} if loaded
@@ -873,25 +875,26 @@ class utils
 	 * @throws \CoreException
 	 *
 	 * @since 2.7.0 N°2478 this method will now always call {@link MetaModel::GetConfig} first, and cache in this class is only set when loading from disk
+	 * @since 3.0.0 N°4158 new $bReadFromDisk parameter
 	 */
-	public static function GetConfig()
+	public static function GetConfig($bForceGetFromDisk = false)
 	{
-		$oMetaModelConfig = MetaModel::GetConfig();
-		if ($oMetaModelConfig !== null)
-		{
-			return $oMetaModelConfig;
-		}
+		if (!$bForceGetFromDisk) {
+			$oMetaModelConfig = MetaModel::GetConfig();
+			if ($oMetaModelConfig !== null) {
+				return $oMetaModelConfig;
+			}
 
-		if (self::$oConfig !== null)
-		{
-			return self::$oConfig;
+			if (self::$oConfig !== null) {
+				return self::$oConfig;
+			}
 		}
 
 		$sCurrentEnvConfigPath = self::GetConfigFilePath();
-		if (file_exists($sCurrentEnvConfigPath))
-		{
+		if (file_exists($sCurrentEnvConfigPath)) {
 			$oCurrentEnvDiskConfig = new Config($sCurrentEnvConfigPath);
 			self::SetConfig($oCurrentEnvDiskConfig);
+
 			return self::$oConfig;
 		}
 
@@ -2817,19 +2820,19 @@ HTML;
 	//----------------------------------------------
 
 	/**
-	 * Check if iTop is in a development environment (VCS vs build number)
+	 * Check if iTop is in a development environment
 	 *
-	 * @return bool
+	 * @return bool true if development environment
 	 *
 	 * @since 2.6.0 method creation
 	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
 	 *
-	 * @use `developer_mode.enabled` config parameter
-	 * @use ITOP_REVISION
+	 * @uses developer_mode.enabled` config parameter
+	 * @uses ITOP_REVISION constant (check 'svn' value)
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		$oConfig = utils::GetConfig();
+		$oConfig = utils::GetConfig(true);
 		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
 		if ($bIsDevEnvInConfig === true) {
 			return true;
