@@ -1296,11 +1296,11 @@ class DesignerComboField extends DesignerFormField
 		{
 			if ($this->bMultipleSelection)
 			{
-				$sHtml = "<select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
+				$sHtml = "<span><select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{
-				$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\">";
+				$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\">";
 				if ($this->sNullLabel != '')
 				{
 					$sHtml .= "<option value=\"\">".$this->sNullLabel."</option>";
@@ -1320,7 +1320,7 @@ class DesignerComboField extends DesignerFormField
 				$sHtmlValue = str_replace(' ', '&nbsp;', htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8'));
 				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
 			}
-			$sHtml .= "</select>";
+			$sHtml .= "</select></span>";
 			if ($this->bOtherChoices)
 			{
 				$sHtml .= '<br/><input type="checkbox" id="other_chk_'.$sId.'"><label for="other_chk_'.$sId.'">&nbsp;Other:</label>&nbsp;<input type="text" id="other_'.$sId.'" name="other_'.$sName.'" size="30"/>'; 
@@ -1498,7 +1498,7 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
 		if (!$this->IsReadOnly()) {
 			$sDefaultValue = ($this->defaultValue !== '') ? $this->defaultValue : $this->aAllowedValues[$idx]['value'];
-			$sValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/>";
+			$sValue = "<span class=\"ibo-input-select-wrapper\"><input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/></span>";
 			$oP->add_ready_script(
 				<<<EOF
 	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
@@ -1753,14 +1753,14 @@ class DesignerFormSelectorField extends DesignerFormField
 			}
 			$sHtml = "<span $sCSSClasses>".$sDisplayValue.$sHiddenValue."</span>";
 		} else {
-			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 			foreach ($this->aSubForms as $iKey => $aFormData) {
 				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
 				$sValue = htmlentities($aFormData['value'], ENT_QUOTES, 'UTF-8');
 				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
 				$sHtml .= "<option data-value=\"$sValue\" value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
 			}
-			$sHtml .= "</select>";
+			$sHtml .= "</select></span>";
 		}
 
 		if ($sRenderMode == 'property') {

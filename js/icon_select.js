@@ -44,7 +44,7 @@ $(function()
 			}
 			this.oImg = $('<img src="'+sIcon+'" style="vertical-align: middle;" foo="bar">');								
 			this.oLabel = $('<span>'+sLabel+'</span>');
-			this.oButton = $('<button type="button" class="icon-select icon-select-dropdown ibo-input ibo-input-select-icon"><div style="display: inline-block;vertical-align: middle;"><span class="ui-icon ui-icon-triangle-1-s"/></div></button>');
+			this.oButton = $('<button type="button" class="icon-select icon-select-dropdown ibo-input ibo-input-select-icon"></button>');
 			this.oButton.prepend(this.oLabel).prepend(this.oImg);
 			this.oButton.on('click', function(event, ui) {
 				//me._cleanAllMenus();
