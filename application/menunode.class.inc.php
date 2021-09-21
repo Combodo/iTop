@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -1414,6 +1415,8 @@ class DashboardMenuNode extends MenuNode
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null)
 		{
+			WebResourcesHelper::EnableC3JSToWebPage($oPage);
+
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
 			$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;
