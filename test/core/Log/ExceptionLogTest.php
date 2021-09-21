@@ -16,19 +16,34 @@
 namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use DeprecatedCallsLog;
 use ExceptionLog;
+use LogAPI;
+use MetaModel;
 
 
-require_once (__DIR__.'/ExceptionLogTest/Exceptions.php');
+require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
+
 class ExceptionLogTest extends ItopDataTestCase
 {
 	protected function setUp()
 	{
-		require_once (__DIR__.'/ExceptionLogTest/Exceptions.php');
+		require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
 		parent::setUp();
 
-		$oConfig = \MetaModel::GetConfig();
-		$oConfig->Set('developer_mode.enabled', false);
+		// We are using PHPUnit\Framework\MockObject\Generator::generateMock that is throwing notice !
+		// Changing the log config so that those won't be caught by \DeprecatedCallsLog::DeprecatedNoticesErrorHandler
+		$oConfig = MetaModel::GetConfig();
+		$mLogLevelMin = $oConfig->Get('log_level_min');
+		if (is_string($mLogLevelMin)) {
+			$aLogLevelMin[''] = $mLogLevelMin;
+		} else if (is_array($mLogLevelMin)) {
+			$aLogLevelMin = $mLogLevelMin;
+		} else {
+			$aLogLevelMin = [];
+		}
+		$aLogLevelMin[DeprecatedCallsLog::ENUM_CHANNEL_PHP_LIBMETHOD] = LogAPI::LEVEL_ERROR;
+		$oConfig->Set('log_level_min', $aLogLevelMin);
 	}
 
 	/**

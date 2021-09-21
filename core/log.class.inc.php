@@ -855,9 +855,31 @@ class DeprecatedCallsLog extends LogAPI
 	protected static $m_oFileLog = null;
 
 	/**
+	 * Indirection to {@see \LogAPI::IsLogLevelEnabled()} that is handling possible {@see ConfigException}
+	 *
+	 * @param string $sLevel
+	 * @param string $sChannel
+	 *
+	 * @return bool if exception occurs, then returns false
+	 *
+	 * @uses \LogAPI::IsLogLevelEnabled()
+	 */
+	protected static function IsLogLevelEnabledSafe($sLevel, $sChannel): bool
+	{
+		try {
+			$bIsLogLevelEnabled = static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD);
+		}
+		catch (ConfigException $e) {
+			$bIsLogLevelEnabled = false;
+		}
+
+		return $bIsLogLevelEnabled;
+	}
+
+	/**
 	 * @param string|null $sTargetFile
 	 *
-	 *@uses \set_error_handler() to catch deprecated notices
+	 * @uses \set_error_handler() to catch deprecated notices
 	 *
 	 * @since 3.0.0 N°3002 logs deprecated notices in called code
 	 */
@@ -868,13 +890,7 @@ class DeprecatedCallsLog extends LogAPI
 		}
 		parent::Enable($sTargetFile);
 
-		try {
-			$bIsLogLevelEnabled = static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD);
-		}
-		catch (ConfigException $e) {
-			$bIsLogLevelEnabled = false;
-		}
-		if ($bIsLogLevelEnabled) {
+		if (static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)) {
 			set_error_handler([static::class, 'DeprecatedNoticesErrorHandler']);
 		}
 	}
@@ -899,6 +915,11 @@ class DeprecatedCallsLog extends LogAPI
 			&& (\E_DEPRECATED !== $errno)
 		) {
 			return false;
+		}
+
+		if (false === static::IsLogLevelEnabledSafe(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_LIBMETHOD)) {
+			// returns true so that nothing is throwned !
+			return true;
 		}
 
 		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 4);
