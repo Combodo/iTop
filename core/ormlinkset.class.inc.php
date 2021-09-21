@@ -836,6 +836,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 			}
 
 			$oLinkSearch->AddCondition_PointingTo($oRemoteClassSearch, $sExtKeyToRemote);
+			if ($sTargetClass != $this->sClass) {
+				$oLinkSearch->RenameAlias($sTargetClass, self::REMOTE_ALIAS);
+			}
 			$oLinkSearch->SetSelectedClasses([self::LINK_ALIAS, self::REMOTE_ALIAS]);
 		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
