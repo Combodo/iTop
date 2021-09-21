@@ -121,4 +121,24 @@ class SetupUtilsTest extends ItopTestCase
 			],
 		];
 	}
+
+	/**
+	 * @covers SetupUtils::PHP_MIN_VERSION
+	 * @covers SetupUtils::PHP_NOT_VALIDATED_VERSION
+	 * @covers composer.json
+	 */
+	public function testPhpMinVersionConsistency()
+	{
+		$sPHPMinVersion = SetupUtils::PHP_MIN_VERSION;
+		$sPHPNotValidatedVersion = SetupUtils::PHP_NOT_VALIDATED_VERSION;
+
+		// Ensure that not validated version is greater than min. supported version
+		$this->assertTrue(version_compare($sPHPMinVersion, $sPHPNotValidatedVersion, '<'), "SetupUtils::PHP_MIN_VERSION ($sPHPMinVersion) is not strictly lower than SetupUtils::PHP_NOT_VALIDATED_VERSION ($sPHPNotValidatedVersion)");
+
+		$oComposerConfig = json_decode(file_get_contents(APPROOT.'composer.json'));
+		// Platform/PHP must be set to the minimum to ensure dependancies are compatible with the min. version
+		$this->assertEquals($sPHPMinVersion, $oComposerConfig->config->platform->php, "Composer/Platform/PHP");
+		// Require/PHP must be set to the supported PHP versions range in order to keep our package constraints up-to-date
+		$this->assertEquals(">=$sPHPMinVersion <$sPHPNotValidatedVersion", $oComposerConfig->require->php, "Composer/Require/PHP");
+	}
 }
