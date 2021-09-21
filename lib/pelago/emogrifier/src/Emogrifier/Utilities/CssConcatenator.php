@@ -1,6 +1,6 @@
 <?php
 
-namespace Pelago\Emogrifier;
+namespace Pelago\Emogrifier\Utilities;
 
 /**
  * Facilitates building a CSS string by appending rule blocks one at a time, checking whether the media query,
@@ -32,6 +32,8 @@ namespace Pelago\Emogrifier;
  * `     margin: 0.75em 0;
  * `   }
  * ` }
+ *
+ * @internal
  *
  * @author Jake Hotson <jake.github@qzdesign.co.uk>
  */
@@ -72,7 +74,7 @@ class CssConcatenator
             $lastRuleBlock->selectorsAsKeys += $selectorsAsKeys;
         } else {
             $hasSameSelectorsAsLastRule = $lastRuleBlock !== false
-                && static::hasEquivalentSelectors($selectorsAsKeys, $lastRuleBlock->selectorsAsKeys);
+                && self::hasEquivalentSelectors($selectorsAsKeys, $lastRuleBlock->selectorsAsKeys);
             if ($hasSameSelectorsAsLastRule) {
                 $lastDeclarationsBlockWithoutSemicolon = \rtrim(\rtrim($lastRuleBlock->declarationsBlock), ';');
                 $lastRuleBlock->declarationsBlock = $lastDeclarationsBlockWithoutSemicolon . ';' . $declarationsBlock;
@@ -87,7 +89,7 @@ class CssConcatenator
      */
     public function getCss()
     {
-        return \implode('', \array_map([$this, 'getMediaRuleCss'], $this->mediaRules));
+        return \implode('', \array_map([self::class, 'getMediaRuleCss'], $this->mediaRules));
     }
 
     /**
@@ -133,7 +135,7 @@ class CssConcatenator
      */
     private static function getMediaRuleCss(\stdClass $mediaRule)
     {
-        $css = \implode('', \array_map([static::class, 'getRuleBlockCss'], $mediaRule->ruleBlocks));
+        $css = \implode('', \array_map([self::class, 'getRuleBlockCss'], $mediaRule->ruleBlocks));
         if ($mediaRule->media !== '') {
             $css = $mediaRule->media . '{' . $css . '}';
         }

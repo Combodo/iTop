@@ -10,8 +10,6 @@ namespace Pelago\Emogrifier\HtmlProcessor;
  *
  * To trigger the conversion, call the convertCssToVisualAttributes method.
  *
- * @internal This class currently is a new technology preview, and its API is still in flux. Don't use it in production.
- *
  * @author Oliver Klee <github@oliverklee.de>
  */
 class CssToAttributeConverter extends AbstractHtmlProcessor
@@ -52,7 +50,7 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
     /**
      * Maps the CSS from the style nodes to visual HTML attributes.
      *
-     * @return CssToAttributeConverter fluent interface
+     * @return self fluent interface
      */
     public function convertCssToVisualAttributes()
     {
@@ -72,9 +70,7 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
      */
     private function getAllNodesWithStyleAttribute()
     {
-        $xPath = new \DOMXPath($this->domDocument);
-
-        return $xPath->query('//*[@style]');
+        return $this->xPath->query('//*[@style]');
     }
 
     /**
@@ -103,9 +99,7 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
         }
 
         $properties = [];
-        $declarations = \preg_split('/;(?!base64|charset)/', $cssDeclarationsBlock);
-
-        foreach ($declarations as $declaration) {
+        foreach (\preg_split('/;(?!base64|charset)/', $cssDeclarationsBlock) as $declaration) {
             $matches = [];
             if (!\preg_match('/^([A-Za-z\\-]+)\\s*:\\s*(.+)$/s', \trim($declaration), $matches)) {
                 continue;
@@ -176,13 +170,12 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
         $mapping = $this->cssToHtmlMap[$property];
         $nodesMatch = !isset($mapping['nodes']) || \in_array($node->nodeName, $mapping['nodes'], true);
         $valuesMatch = !isset($mapping['values']) || \in_array($value, $mapping['values'], true);
-        if (!$nodesMatch || !$valuesMatch) {
-            return false;
+        $canBeMapped = $nodesMatch && $valuesMatch;
+        if ($canBeMapped) {
+            $node->setAttribute($mapping['attribute'], $value);
         }
 
-        $node->setAttribute($mapping['attribute'], $value);
-
-        return true;
+        return $canBeMapped;
     }
 
     /**
@@ -224,12 +217,14 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
     private function mapBackgroundProperty(\DOMElement $node, $value)
     {
         // parse out the color, if any
-        $styles = \explode(' ', $value);
+        $styles = \explode(' ', $value, 2);
         $first = $styles[0];
-        if (!\is_numeric($first[0]) && \strpos($first, 'url') !== 0) {
-            // as this is not a position or image, assume it's a color
-            $node->setAttribute('bgcolor', $first);
+        if (\is_numeric($first[0]) || \strncmp($first, 'url', 3) === 0) {
+            return;
         }
+
+        // as this is not a position or image, assume it's a color
+        $node->setAttribute('bgcolor', $first);
     }
 
     /**
@@ -307,6 +302,7 @@ class CssToAttributeConverter extends AbstractHtmlProcessor
      */
     private function parseCssShorthandValue($value)
     {
+        /** @var string[] $values */
         $values = \preg_split('/\\s+/', $value);
 
         $css = [];
