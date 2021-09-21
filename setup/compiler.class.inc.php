@@ -84,6 +84,11 @@ class MFCompiler
 	protected $sMainPHPCode; // Code that goes into core/main.php
 	protected $aSnippets;
 	protected $aRelations;
+	/**
+	 * @var array Strings containing dynamic CSS definitions for DM classes
+	 * @since 3.0.0
+	 */
+	protected $aClassesCSSRules;
 	protected $sEnvironment;
 	protected $sCompilationTimeStamp;
 
@@ -104,6 +109,7 @@ class MFCompiler
 		$this->sMainPHPCode .= "define('COMPILATION_TIMESTAMP', '".$this->sCompilationTimeStamp."');\n";
 		$this->aSnippets = array();
 		$this->aRelations = array();
+		$this->aClassesCSSRules = [];
 	}
 
 	protected function Log($sText)
@@ -411,9 +417,6 @@ class MFCompiler
 			}
 
 
-			/** array of strings containing dynamic CSS class definitions */
-			$aClassesCss = [];
-
 			$oClasses = $this->oFactory->ListClasses($sModuleName);
 			$iClassCount = $oClasses->length;
 			if ($iClassCount == 0)
@@ -429,7 +432,7 @@ class MFCompiler
 					$aAllClasses[] = $sClass;
 					try
 					{
-						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir, $aClassesCss);
+						$sCompiledCode .= $this->CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sRelativeDir);
 					}
 					catch (DOMFormatException $e)
 					{
@@ -868,7 +871,17 @@ EOF
 		return $sPHP;
 	}
 
-	protected function GetPropString($oNode, $sTag, $sDefault = null)
+	/**
+	 * @param $oNode
+	 * @param string $sTag
+	 * @param string|null $sDefault
+	 * @param bool $bAddQuotes If true, surrounds property value with single quotes and escapes existing single quotes
+	 *
+	 * @return string|null
+	 *
+	 * @since 3.0.0 Add param. $bAddQuotes to be equivalent to {@see self::GetMandatoryPropString} and allow retrieving property without surrounding single quotes
+	 */
+	protected function GetPropString($oNode, string $sTag, string $sDefault = null, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
 		if (is_null($val))
@@ -882,18 +895,23 @@ EOF
 				$val = $sDefault;
 			}
 		}
-		return "'".str_replace("'", "\\'", $val)."'";
+
+		if ($bAddQuotes) {
+			$val = "'".str_replace("'", "\\'", $val)."'";
+		}
+
+		return $val;
 	}
 
 	/**
 	 * @param $oNode
-	 * @param $sTag
+	 * @param string $sTag
 	 * @param bool $bAddQuotes
 	 *
 	 * @return string
 	 * @throws \DOMFormatException
 	 */
-	protected function GetMandatoryPropString($oNode, $sTag, $bAddQuotes = true)
+	protected function GetMandatoryPropString($oNode, string $sTag, bool $bAddQuotes = true)
 	{
 		$val = $oNode->GetChildText($sTag);
 		if (!is_null($val) && ($val !== ''))
@@ -1084,17 +1102,17 @@ EOF
 	 * @param string $sTempTargetDir
 	 * @param string $sFinalTargetDir
 	 * @param string $sModuleRelativeDir
-	 * @param array $aClassesCss Contains dynamic CSS class definitions
 	 *
 	 * @return string
 	 * @throws \DOMFormatException
 	 */
-	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir, &$aClassesCss)
+	protected function CompileClass($oClass, $sTempTargetDir, $sFinalTargetDir, $sModuleRelativeDir)
 	{
 		$sClass = $oClass->getAttribute('id');
 		$oProperties = $oClass->GetUniqueElement('properties');
 		$sPHP = '';
-		$sCss = ''; // Contains dynamic CSS class definitions
+		/** @var Contains dynamic CSS class definitions $sCss */
+		$sCss = '';
 
 		// Class caracteristics
 		//
@@ -1426,20 +1444,37 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
 							$sSafeCode = utils::GetSafeId($sCode);
 							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
 							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
-							$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+
+							$sMainColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+							$sMainColorForCss = $this->GetMandatoryPropString($oStyleNode, 'main_color', false);
+							$sMainColorScssVariableName = "\$$sEnumClass--main-color";
+							$sMainColorCssVariableName = "--$sEnumClass--main-color";
+							$sComplementaryColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+							$sComplementaryColorForCss = $this->GetMandatoryPropString($oStyleNode, 'complementary_color', false);
+							$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
+							$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
 							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+
+							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
 							$sCss .= <<<CSS
+$sMainColorScssVariableName: $sMainColorForCss !default;
+$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
+
+:root {
+	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
+	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
+}
+
 .$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
+	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
-	color: $sMainColor;
+	--ibo-main-color: $sComplementaryColorScssVariableName;
+	--ibo-complementary-color: $sMainColorScssVariableName;
 }
 
 CSS;
@@ -1451,21 +1486,38 @@ CSS;
 						$sStyledValues = "[".implode(',', $aStyledValues)."]";
 						$aParameters['styled_values'] = "$sStyledValues";
 					}
-					$oStyleNode = $oField->GetOptionalElement('default_style');
-					if ($oStyleNode) {
-						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
+					if ($oDefaultStyleNode) {
 						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
 						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
-						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+
+						$sMainColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color');
+						$sMainColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color', false);
+						$sMainColorScssVariableName = "\$$sEnumClass--main-color";
+						$sMainColorCssVariableName = "--$sEnumClass--main-color";
+						$sComplementaryColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color');
+						$sComplementaryColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color', false);
+						$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
+						$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
+						$sDecorationClasses = $this->GetPropString($oDefaultStyleNode, 'decoration_classes', '');
+
+						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
 						$sCss .= <<<CSS
+$sMainColorScssVariableName: $sMainColorForCss !default;
+$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
+
+:root {
+	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
+	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
+}
+
 .$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
+	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
-	color: $sMainColor;
+	--ibo-main-color: $sComplementaryColorScssVariableName;
+	--ibo-complementary-color: $sMainColorScssVariableName;
 }
 
 CSS;
@@ -1488,20 +1540,37 @@ CSS;
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
 							$sSafeCode = utils::GetSafeId($sCode);
 							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
 							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
-							$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+
+							$sMainColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+							$sMainColorForCss = $this->GetMandatoryPropString($oStyleNode, 'main_color', false);
+							$sMainColorScssVariableName = "\$$sEnumClass--main-color";
+							$sMainColorCssVariableName = "--$sEnumClass--main-color";
+							$sComplementaryColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
+							$sComplementaryColorForCss = $this->GetMandatoryPropString($oStyleNode, 'complementary_color', false);
+							$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
+							$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
 							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+
+							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
 							$sCss .= <<<CSS
+$sMainColorScssVariableName: $sMainColorForCss !default;
+$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
+
+:root {
+	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
+	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
+}
+
 .$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
+	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
-	color: $sMainColor;
+	--ibo-main-color: $sComplementaryColorScssVariableName;
+	--ibo-complementary-color: $sMainColorScssVariableName;
 }
 
 CSS;
@@ -1513,21 +1582,38 @@ CSS;
 						$sStyledValues = "[".implode(',', $aStyledValues)."]";
 						$aParameters['styled_values'] = "$sStyledValues";
 					}
-					$oStyleNode = $oField->GetOptionalElement('default_style');
-					if ($oStyleNode) {
-						$sMainColor = $this->GetMandatoryPropString($oStyleNode, 'main_color');
+					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
+					if ($oDefaultStyleNode) {
 						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
 						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
-						$sComplementaryColor = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-						$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColor, $sComplementaryColor, $sDecorationClasses)";
+
+						$sMainColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color');
+						$sMainColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color', false);
+						$sMainColorScssVariableName = "\$$sEnumClass--main-color";
+						$sMainColorCssVariableName = "--$sEnumClass--main-color";
+						$sComplementaryColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color');
+						$sComplementaryColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color', false);
+						$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
+						$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
+						$sDecorationClasses = $this->GetPropString($oDefaultStyleNode, 'decoration_classes', '');
+
+						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
 						$sCss .= <<<CSS
+$sMainColorScssVariableName: $sMainColorForCss !default;
+$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
+
+:root {
+	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
+	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
+}
+
 .$sEnumClass {
-	color: $sComplementaryColor;
-	background-color: $sMainColor;
+	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
-	color: $sMainColor;
+	--ibo-main-color: $sComplementaryColorScssVariableName;
+	--ibo-complementary-color: $sMainColorScssVariableName;
 }
 
 CSS;
@@ -1593,17 +1679,17 @@ CSS;
 						$aStates[] = '"'.$oState->GetAttribute('id').'"';
 					}
 					$aParameters['states'] = 'array('.implode(', ', $aStates).')';
-	
+
 					$aParameters['goal_computing'] = $this->GetPropString($oField, 'goal', 'DefaultMetricComputer'); // Optional, no deadline by default
 					$aParameters['working_time_computing'] = $this->GetPropString($oField, 'working_time', ''); // Blank (different than DefaultWorkingTimeComputer)
-	
+
 					$oThresholds = $oField->GetUniqueElement('thresholds');
 					$oThresholdNodes = $oThresholds->getElementsByTagName('threshold');
 					$aThresholds = array();
 					foreach($oThresholdNodes as $oThreshold)
 					{
 						$iPercent = (int)$oThreshold->getAttribute('id');
-	
+
 						$oHighlight = $oThreshold->GetUniqueElement('highlight', false);
 						$sHighlight = '';
 						if($oHighlight)
@@ -1612,7 +1698,7 @@ CSS;
 							$sPersistent =  $this->GetPropBoolean($oHighlight, 'persistent', false);
 							$sHighlight = "'highlight' => array('code' => '$sCode', 'persistent' => $sPersistent), ";
 						}
-						
+
 						$oActions = $oThreshold->GetUniqueElement('actions');
 						$oActionNodes = $oActions->getElementsByTagName('action');
 						$aActions = array();
@@ -1781,7 +1867,7 @@ CSS;
 				{
 					$aParameters['tracking_level'] = $this->TrackingLevelToPHP($sAttType, $sTrackingLevel);
 				}
-		
+
 				$aParams = array();
 				foreach($aParameters as $sKey => $sValue)
 				{
@@ -1795,10 +1881,10 @@ CSS;
 			}
 			catch(Exception $e)
 			{
-				throw new DOMFormatException("Field: '$sAttCode', (type: $sAttType), ".$e->getMessage());	
+				throw new DOMFormatException("Field: '$sAttCode', (type: $sAttType), ".$e->getMessage());
 			}
 		}
-	
+
 		// Lifecycle
 		//
 		$sLifecycle = '';
@@ -1807,13 +1893,13 @@ CSS;
 		if ($oLifecycle) {
 			$sLifecycle .= "\t\t// Lifecycle (status attribute: $sStateAttCode)\n";
 			$sLifecycle .= "\t\t//\n";
-	
+
 			$oStimuli = $oLifecycle->GetUniqueElement('stimuli');
 			foreach ($oStimuli->getElementsByTagName('stimulus') as $oStimulus)
 			{
 				$sStimulus = $oStimulus->getAttribute('id');
 				$sStimulusClass = $oStimulus->getAttribute('xsi:type');
-	
+
 				$sLifecycle .= "		MetaModel::Init_DefineStimulus(new ".$sStimulusClass."(\"".$sStimulus."\", array()));\n";
 			}
 			$oHighlightScale = $oLifecycle->GetUniqueElement('highlight_scale', false);
@@ -1821,9 +1907,9 @@ CSS;
 			{
 				$sHighlightScale = "\t\t// Higlight Scale\n";
 				$sHighlightScale .= "		MetaModel::Init_DefineHighlightScale( array(\n";
-				
+
 				$this->CompileFiles($oHighlightScale, $sTempTargetDir.'/'.$sModuleRelativeDir, $sFinalTargetDir.'/'.$sModuleRelativeDir, '');
-				
+
 				foreach ($oHighlightScale->getElementsByTagName('item') as $oItem)
 				{
 					$sItemCode = $oItem->getAttribute('id');
@@ -1845,32 +1931,32 @@ CSS;
 						case 'HIGHLIGHT_CLASS_CRITICAL':
 						$sColor = 'HILIGHT_CLASS_CRITICAL';
 						break;
-						
+
 						case 'HILIGHT_CLASS_OK':
 						case 'HIGHLIGHT_CLASS_OK':
 						$sColor = 'HILIGHT_CLASS_OK';
 						break;
-						
+
 						case 'HIGHLIGHT_CLASS_WARNING':
 						case 'HILIGHT_CLASS_WARNING':
 						$sColor = 'HILIGHT_CLASS_WARNING';
 						break;
-						
+
 						case 'HIGHLIGHT_CLASS_NONE':
 						case 'HILIGHT_CLASS_NONE':
 						$sColor = 'HILIGHT_CLASS_NONE';
 						break;
-						
+
 						default:
 						// Future extension, specify your own color??
 						$sColor = "'".addslashes($sColor)."'";
 					}
 					$sHighlightScale .= "		    '$sItemCode' => array('rank' => $fRank, 'color' => $sColor, 'icon' => $sIcon),\n";
-					
+
 				}
 				$sHighlightScale .= "		));\n";
 			}
-					
+
 			$oStates = $oLifecycle->GetUniqueElement('states');
 			$aStatesDependencies = array();
 			$aStates = array();
@@ -1946,9 +2032,9 @@ CSS;
 					{
 						$sLifecycle .= "				'highlight' => array('code' => '$sCode'),\n";
 					}
-					
+
 				}
-				
+
 				$sLifecycle .= "				\"attribute_list\" => array(\n";
 
 				$oFlags = $oState->GetUniqueElement('flags');
@@ -1969,13 +2055,13 @@ CSS;
 				}
 				$sLifecycle .= "			)\n";
 				$sLifecycle .= "		);\n";
-	
+
 				$oTransitions = $oState->GetUniqueElement('transitions');
 				foreach ($oTransitions->getElementsByTagName('transition') as $oTransition)
 				{
 					$sStimulus = $oTransition->getAttribute('id');
 					$sTargetState = $oTransition->GetChildText('target');
-	
+
 					$oActions = $oTransition->GetUniqueElement('actions');
 					$aVerbs = array();
 					foreach ($oActions->getElementsByTagName('action') as $oAction)
@@ -2051,7 +2137,7 @@ CSS;
 				$sLifecycle .= "		);\n";
 			}
 		}
-		
+
 		// ZLists
 		//
 		$aListRef = array(
@@ -2060,7 +2146,7 @@ CSS;
 			'default_search' => 'default_search',
 			'list' => 'list',
 		);
-	
+
 		$oPresentation = $oClass->GetUniqueElement('presentation');
 		$sZlists = '';
 		foreach ($aListRef as $sListCode => $sListTag)
@@ -2074,12 +2160,12 @@ CSS;
 					$aAttributes = array();
 				}
 				$this->ArrayOfItemsToZList($aAttributes);
-		
+
 				$sZAttributes = var_export($aAttributes, true);
 				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
 			}
 		}
-	
+
 		// Methods
 		$sMethods = "";
 		$oMethods = $oClass->GetUniqueElement('methods');
@@ -2093,7 +2179,7 @@ CSS;
 			else
 			{
 				$sMethods .= "\n\n".$sMethodCode."\n";
-			}		
+			}
 		}
 
 		// Relations
@@ -2247,7 +2333,12 @@ EOF
 			}
 		}
 
-		$aClassesCss[] = $sCss;
+		if (strlen($sCss) > 0) {
+			if (array_key_exists($sClass, $this->aClassesCSSRules) === false) {
+				$this->aClassesCSSRules[$sClass] = '';
+			}
+			$this->aClassesCSSRules[$sClass] .= $sCss;
+		}
 
 		return $sPHP;
 	}
@@ -2884,11 +2975,19 @@ EOF;
 		);
 
 		// Build compiled themes folder
-		$sThemesDir = $sTempTargetDir.'branding/themes/';
-		if(!is_dir($sThemesDir))
+		$sThemesRelDirPath = 'branding/themes/';
+		$sThemesAbsDirPath = $sTempTargetDir.$sThemesRelDirPath;
+		if(!is_dir($sThemesAbsDirPath))
 		{
-			SetupUtils::builddir($sThemesDir);
+			SetupUtils::builddir($sThemesAbsDirPath);
 		}
+
+		// Prepare DM CSS rules for inclusion
+		$sDmStylesheetFilename = 'datamodel-scss-rules.scss';
+		$sDmStylesheetContent = implode("\n", $this->aClassesCSSRules);
+		// Here we use a hash instead of the current timestamp because the former changes when running unit tests
+		$sDmStylesheetId = 'datamodel-scss-rules-'.md5($sDmStylesheetContent);
+		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
 
 		// Parsing themes from DM
 		$aThemes = array();
@@ -2925,6 +3024,8 @@ EOF;
 				}
 			}
 
+			// Stylesheets
+			// - Manually added in the XML
 			/** @var \DOMNodeList $oStylesheets */
 			$oStylesheets = $oTheme->GetNodes('stylesheets/stylesheet');
 			foreach($oStylesheets as $oStylesheet)
@@ -2932,6 +3033,9 @@ EOF;
 				$sStylesheetId = $oStylesheet->getAttribute('id');
 				$aThemeParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 			}
+
+			// - Computed from the DM
+			$aThemeParameters['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
 
 			$aThemes[$sThemeId] = [
 				'theme_parameters' => $aThemeParameters,
@@ -2943,6 +3047,7 @@ EOF;
 		if(empty($aThemes))
 		{
 			$aDefaultThemeInfo = ThemeHandler::GetDefaultThemeInformation();
+			$aDefaultThemeInfo['parameters']['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
 			$aThemes[$aDefaultThemeInfo['name']] = $aDefaultThemeInfo['parameters'];
 		}
 
@@ -2958,7 +3063,7 @@ EOF;
 			$aThemeParameters = $aThemeInfos['theme_parameters'];
 			$sPrecompiledStylesheet = $aThemeInfos['precompiled_stylesheet'];
 
-			$sThemeDir = $sThemesDir.$sThemeId;
+			$sThemeDir = $sThemesAbsDirPath.$sThemeId;
 			if(!is_dir($sThemeDir))
 			{
 				SetupUtils::builddir($sThemeDir);

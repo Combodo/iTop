@@ -38,16 +38,6 @@ class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 					$sHtml .= "<span class=\"ibo-field-badge--decoration\"><i class=\"$sDecorationClasses\"></i></span>";
 				}
 				$sHtml .= "<span class=\"ibo-field-badge--label\">$sValue</span>";
-				// Add custom style
-				// TODO 3.0 To be removed when compilation supports generated CSS
-				$sHtml .= <<<HTML
-<style>
-.$sStyleClass {
-		color: $sComplementaryColor;
-		background-color: $sPrimaryColor;
-	}
-</style>
-HTML;
 			}
 		}
 		if (!$oBadge) {
