@@ -72,10 +72,13 @@ class ExceptionLogTest extends ItopDataTestCase
 		$aContext = ['contextKey1' => 'value'];
 
 		foreach ($aLevels as $i => $sLevel) {
-			$oException = new $aExceptions[$i]("Iteration number $i");
+
+			$sExpectedFile=__FILE__;
+			$oException = new $aExceptions[$i]("Iteration number $i"); $sExpectedLine = __LINE__; //Both should remain on the same line
+
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
 			$iExpectedDbWriteNumber = $aExpectedDbWriteNumber[$i];
-			$aExpectedFileContext = array_merge($aContext, ['exception class' => get_class($oException)]); //The context is preserved, and, if the key 'exception class' is not yet in the array, it is added
+			$aExpectedFileContext = array_merge($aContext, ['exception class' => get_class($oException), 'file' => $sExpectedFile, 'line' => $sExpectedLine]); //The context is preserved, and, if the key 'exception class' is not yet in the array, it is added
 			$mockFileLog->expects($this->exactly($iExpectedWriteNumber))
 				->method($sLevel)
 				->with($oException->GetMessage(), $sChannel, $aExpectedFileContext)

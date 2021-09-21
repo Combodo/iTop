@@ -1157,6 +1157,14 @@ class ExceptionLog extends LogAPI
 			$aContext['exception class'] = get_class($oException);
 		}
 
+		if (empty($aContext['file'])) {
+			$aContext['file'] = $oException->getFile();
+		}
+
+		if (empty($aContext['line'])) {
+			$aContext['line'] =$oException->getLine();
+		}
+
 		self::Log($sLevel, $oException->getMessage(), get_class($oException), $aContext);
 	}
 

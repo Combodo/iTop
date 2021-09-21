@@ -88,8 +88,6 @@ class ExceptionListener implements ContainerAwareInterface
 		// Log exception in iTop log
 		\ExceptionLog::LogException($oException, [
 			'uri' => $oEvent->getRequest()->getUri(),
-			'file' => $oException->getFile(),
-			'line' => $oException->getLine(),
 		]);
 
 		// Prepare data for template
