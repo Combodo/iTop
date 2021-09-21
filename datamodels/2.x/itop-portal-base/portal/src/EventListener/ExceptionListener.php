@@ -23,6 +23,7 @@ namespace Combodo\iTop\Portal\EventListener;
 
 
 use Dict;
+use ExceptionLog;
 use IssueLog;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -86,7 +87,7 @@ class ExceptionListener implements ContainerAwareInterface
 		}
 
 		// Log exception in iTop log
-		\ExceptionLog::LogException($oException, [
+		ExceptionLog::LogException($oException, [
 			'uri' => $oEvent->getRequest()->getUri(),
 		]);
 

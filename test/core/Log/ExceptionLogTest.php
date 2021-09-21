@@ -73,7 +73,7 @@ class ExceptionLogTest extends ItopDataTestCase
 
 		foreach ($aLevels as $i => $sLevel) {
 
-			$sExpectedFile=__FILE__;
+			$sExpectedFile = __FILE__;
 			$oException = new $aExceptions[$i]("Iteration number $i"); $sExpectedLine = __LINE__; //Both should remain on the same line
 
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
