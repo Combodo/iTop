@@ -3242,8 +3242,10 @@ EOF
 						{
 							if ($oAttDef instanceof \AttributeCaseLog) {
 								// Add JS file for display caselog
-								foreach (CollapsibleSection::DEFAULT_JS_FILES_REL_PATH as $sJSFile) {
-									$oPage->add_linked_script('../'.$sJSFile);
+								//collapsible Section create in order to get JS files
+								$sCollapsibleSection = new CollapsibleSection('');
+								foreach ($sCollapsibleSection->GetJsFilesUrlRecursively(true) as $sJSFile) {
+									$oPage->add_linked_script($sJSFile);
 								}
 							}
 							$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode, $aArgs);

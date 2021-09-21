@@ -372,7 +372,8 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						if ($oAttDef instanceof \AttributeCaseLog) {
 							// Add JS file for display caselog
-							$oDataTable->AddMultipleJsFilesRelPaths(CollapsibleSection::DEFAULT_JS_FILES_REL_PATH);
+							$sCollapsibleSection = new CollapsibleSection('');
+							$oDataTable->AddMultipleJsFilesRelPaths($sCollapsibleSection->GetJsFilesUrlRecursively());
 						}
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = $oAttDef->GetLabel();
@@ -619,7 +620,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 							if ($oAttDef instanceof \AttributeCaseLog) {
 								// Removed from the display list
-								$oDataTable->AddMultipleJsFilesRelPaths(CollapsibleSection::DEFAULT_JS_FILES_REL_PATH);
+								//collapsible Section create in order to get JS files
+								$sCollapsibleSection = new CollapsibleSection('');
+								$oDataTable->AddMultipleJsFilesRelPaths($sCollapsibleSection->GetJsFilesUrlRecursively());
 							}
 							$sAttDefClass = get_class($oAttDef);
 							$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
@@ -765,7 +768,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						if ($oAttDef instanceof \AttributeCaseLog) {
 							// Get JS files
-							$aJsFiles = array_merge($aJsFiles, CollapsibleSection::DEFAULT_JS_FILES_REL_PATH);
+							//collapsible Section create in order to get JS files
+							$sCollapsibleSection = new CollapsibleSection('');
+							$aJsFiles = array_merge($aJsFiles, $sCollapsibleSection->GetJsFilesUrlRecursively());
 						}
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
