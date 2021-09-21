@@ -2827,7 +2827,7 @@ HTML;
 	 * @since 2.6.0 method creation
 	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
 	 *
-	 * @uses developer_mode.enabled` config parameter
+	 * @uses developer_mode.enabled config parameter, but always read it from disk
 	 * @uses ITOP_REVISION constant (check 'svn' value)
 	 */
 	public static function IsDevelopmentEnvironment()
