@@ -1216,7 +1216,7 @@ class ExceptionLog extends LogAPI
 
 	private static function WriteToDb(array $aContext): void
 	{
-		$exception = $aContext[self::CONTEXT_EXCEPTION];
+		$oContextException = $aContext[self::CONTEXT_EXCEPTION];
 		unset($aContext[self::CONTEXT_EXCEPTION]);
 
 		if (MetaModel::IsLogEnabledIssue()) {
@@ -1224,12 +1224,12 @@ class ExceptionLog extends LogAPI
 				try {
 					self::$oLastEventIssue = new EventIssue();
 
-					$sIssue = ($exception instanceof CoreException) ? $exception->GetIssue() : 'PHP Exception';
-					$sErrorStackTrace = ($exception instanceof CoreException) ? $exception->getFullStackTraceAsString() : $exception->getTraceAsString();
-					$aContextData = ($exception instanceof CoreException) ? $exception->getContextData() : [];
+					$sIssue = ($oContextException instanceof CoreException) ? $oContextException->GetIssue() : 'PHP Exception';
+					$sErrorStackTrace = ($oContextException instanceof CoreException) ? $oContextException->getFullStackTraceAsString() : $oContextException->getTraceAsString();
+					$aContextData = ($oContextException instanceof CoreException) ? $oContextException->getContextData() : [];
 
 
-					self::$oLastEventIssue->Set('message', $exception->getMessage());
+					self::$oLastEventIssue->Set('message', $oContextException->getMessage());
 					self::$oLastEventIssue->Set('userinfo', '');
 					self::$oLastEventIssue->Set('issue', $sIssue);
 					self::$oLastEventIssue->Set('impact', '');
