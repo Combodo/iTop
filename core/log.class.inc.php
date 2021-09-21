@@ -737,7 +737,7 @@ abstract class LogAPI
 	 */
 	protected static function GetConfig(): ?Config
 	{
-		return static::$m_oMockMetaModelConfig ?? \MetaModel::GetConfig();
+		return static::$m_oMockMetaModelConfig ?? \utils::GetConfig();
 	}
 
 	/**
