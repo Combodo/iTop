@@ -3104,10 +3104,12 @@ EOF;
 			$this->CompileFiles($oBrandingNode, $sTempTargetDir.'/branding', $sFinalTargetDir.'/branding', 'branding');
 			$aDataBranding = [];
 
-			$aLogosToCompile=[['sNodeName'=>'login_logo', 'sTargetFile'=> 'login-logo', 'sType'=>'login_logo'],
-							                  ['sNodeName'=>'main_logo', 'sTargetFile'=> 'main-logo-full', 'sType'=>'main-logo-full'],
-							                  ['sNodeName'=>'main_logo_compact', 'sTargetFile'=> 'main_logo_compact', 'sType'=>'main_logo_compact'],
-							                  ['sNodeName'=>'login_logo', 'sTargetFile'=>'portal_logo', 'sType'=>'portal_logo']];
+			$aLogosToCompile = [
+				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => 'login_logo'],
+				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => 'main-logo-full'],
+				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main_logo_compact', 'sType' => 'main_logo_compact'],
+				['sNodeName' => 'login_logo', 'sTargetFile' =>'portal_logo', 'sType' => 'portal_logo'],
+			];
 			foreach ($aLogosToCompile as $aLogo) {
 				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 				if ($sLogo != null) {
