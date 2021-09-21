@@ -3241,10 +3241,10 @@ EOF
 						} else
 						{
 							if ($oAttDef instanceof \AttributeCaseLog) {
-								// Add JS file for display caselog
-								//collapsible Section create in order to get JS files
-								$sCollapsibleSection = new CollapsibleSection('');
-								foreach ($sCollapsibleSection->GetJsFilesUrlRecursively(true) as $sJSFile) {
+								// Add JS files for display caselog
+								// Dummy collapsible section created in order to get JS files
+								$oCollapsibleSection = new CollapsibleSection('');
+								foreach ($oCollapsibleSection->GetJsFilesUrlRecursively(true) as $sJSFile) {
 									$oPage->add_linked_script($sJSFile);
 								}
 							}
