@@ -371,9 +371,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						if ($oAttDef instanceof \AttributeCaseLog) {
-							// Add JS file for display caselog
-							$sCollapsibleSection = new CollapsibleSection('');
-							$oDataTable->AddMultipleJsFilesRelPaths($sCollapsibleSection->GetJsFilesUrlRecursively());
+							// Add JS files for display caselog
+							// Dummy collapsible section created in order to get JS files
+							$oCollapsibleSection = new CollapsibleSection('');
+							$oDataTable->AddMultipleJsFilesRelPaths($oCollapsibleSection->GetJsFilesUrlRecursively());
 						}
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = $oAttDef->GetLabel();
@@ -620,7 +621,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 							$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 							if ($oAttDef instanceof \AttributeCaseLog) {
 								// Removed from the display list
-								//collapsible Section create in order to get JS files
+								// Dummy collapsible section created in order to get JS files
 								$sCollapsibleSection = new CollapsibleSection('');
 								$oDataTable->AddMultipleJsFilesRelPaths($sCollapsibleSection->GetJsFilesUrlRecursively());
 							}
@@ -768,9 +769,9 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						if ($oAttDef instanceof \AttributeCaseLog) {
 							// Get JS files
-							//collapsible Section create in order to get JS files
-							$sCollapsibleSection = new CollapsibleSection('');
-							$aJsFiles = array_merge($aJsFiles, $sCollapsibleSection->GetJsFilesUrlRecursively());
+							// Dummy collapsible section created in order to get JS files
+							$oCollapsibleSection = new CollapsibleSection('');
+							$aJsFiles = array_merge($aJsFiles, $oCollapsibleSection->GetJsFilesUrlRecursively());
 						}
 						$sAttDefClass = get_class($oAttDef);
 						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
