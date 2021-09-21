@@ -49,7 +49,7 @@ function GenerateBackupsList(string $sListTitleDictKey, string $sNoRecordDictKey
 
 	if (count($aListData) > 0) {
 		$oFieldsetForList->AddSubBlock(
-			DataTableUIBlockFactory::MakeForForm(uniqid('form_', true), $aListConfig, array_reverse($aListData))
+			DataTableUIBlockFactory::MakeForForm(utils::Sanitize(uniqid('form_', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER), $aListConfig, array_reverse($aListData))
 		);
 	} else {
 		$oFieldsetForList->AddSubBlock(

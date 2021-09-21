@@ -5279,7 +5279,7 @@ EOF
 				);
 				$oBlock = PanelUIBlockFactory::MakeNeutral($sImpactedTableTitle, $sImpactedTableSubtitle);
 
-				$oDataTable = DataTableUIBlockFactory::MakeForForm(preg_replace('/[^a-zA-Z0-9_-]/', '', uniqid('form_', true)), $aDisplayConfig, $aDisplayData);
+				$oDataTable = DataTableUIBlockFactory::MakeForForm(utils::Sanitize(uniqid('form_', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER), $aDisplayConfig, $aDisplayData);
 				$oBlock->AddSubBlock($oDataTable);
 				$oP->AddUiBlock($oBlock);
 			}
