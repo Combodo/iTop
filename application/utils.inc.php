@@ -2827,13 +2827,12 @@ HTML;
 	 * @since 2.6.0 method creation
 	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
 	 *
-	 * @uses developer_mode.enabled config parameter, but always read it from disk
+	 * @uses GetDeveloperModeParam
 	 * @uses ITOP_REVISION constant (check 'svn' value)
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		$oConfig = utils::GetConfig(true);
-		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+		$bIsDevEnvInConfig = static::GetDeveloperModeParam();
 		if ($bIsDevEnvInConfig === true) {
 			return true;
 		}
@@ -2851,7 +2850,36 @@ HTML;
 	}
 
 	/**
-	 * @return bool : indicate whether we run under a windows environnement or not
+	 * In the setup there are times when the MetaModel config attribute is loaded but partially (only setup parameters are set, others have the default value)
+	 * So we need to load from disk then !
+	 *
+	 * But in other scenario we want to read from memory : for example when changing the option in a PHPUnit setUp method
+	 *
+	 * This method will first try to get the `developer_mode.enabled` config parameter the standard way (call to GetConfig without modification).
+	 * If we are getting null (not defined parameter), then we will load config from disk only (GetConfig(true))
+	 *
+	 * @return bool|null
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @uses developer_mode.enabled config parameter
+	 */
+	private static function GetDeveloperModeParam(): ?bool
+	{
+		$oConfig = static::GetConfig(false);
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+
+		if (!is_null($bIsDevEnvInConfig)) {
+			return $bIsDevEnvInConfig;
+		}
+
+		$oConfigFromDisk = static::GetConfig(true);
+
+		return $oConfigFromDisk->Get('developer_mode.enabled');
+	}
+
+	/**
+	 * @return bool true if we are running under a Windows environment
 	 * @since 2.7.4 : N°3412
 	 */
 	public static function IsWindowsEnvironment()
