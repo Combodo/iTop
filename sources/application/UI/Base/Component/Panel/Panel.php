@@ -190,7 +190,7 @@ class Panel extends UIContentBlock
 	 */
 	public function SetTitleBlock(iUIContentBlock $oBlock)
 	{
-		$this->oSubTitleBlock = $oBlock;
+		$this->oTitleBlock = $oBlock;
 
 		return $this;
 	}
