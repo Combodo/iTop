@@ -41,14 +41,6 @@ class ItopExtensionsExtraRoutes
 	 */
 	public static function AddRoutes($extraRoutes)
 	{
-		@trigger_error(
-			sprintf(
-				'Usage of legacy route "%s" is deprecated. You should declare routes in YAML format.',
-				__FILE__
-			),
-			E_USER_DEPRECATED
-		);
-
 		if (!is_array($extraRoutes))
 		{
 			throw new Exception('Only array are allowed as parameter to '.__METHOD__);
