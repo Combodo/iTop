@@ -3,43 +3,44 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-csv-import--cell-message-padding:3px;
+
 #tabs1-import .ibo-field--label {
   max-width: 50%;
 }
 
-div.cell_modified {
+div.ibo-csv-import--cell-modified {
   font-weight: bold;
-  color: #004e91;
+  color: $ibo-color-blue-700;
 }
 
-div.cell_error {
+div.ibo-csv-import--cell-error {
   font-weight: bold;
-  color: #D81515;
+  color: $ibo-color-red-700;
 }
 
-div.cell_error > p {
-  font-weight: bold;
-  color: #D81515;
+div.ibo-csv-import--cell-message {
+  padding-top: $ibo-csv-import--cell-message-padding;
 }
 
-tr.row_unchanged td {
-  border-bottom: 1px #ccc solid;
+tr.ibo-csv-import--row-unchanged td {
+  border-bottom: 1px $ibo-color-grey-400 solid;
 }
 
-.wizContainer table tr.row_error td {
-  border-bottom: 1px #ccc solid;
-  background-color: #fdd;
+.wizContainer table tr.ibo-csv-import--row-error td {
+  border-bottom: 1px $ibo-color-grey-400 solid;
+  background-color: $ibo-color-red-200;
 }
 
-tr.row_modified td {
-  border-bottom: 1px #ccc solid;
+tr.ibo-csv-import--row-modified td {
+  border-bottom: 1px $ibo-color-grey-400 solid;
 }
 
-tr.row_added td {
-  border-bottom: 1px #ccc solid;
+tr.ibo-csv-import--row-added td {
+  border-bottom: 1px $ibo-color-grey-400 solid;
 }
 
-.ibo-import-csv--download-file {
+.ibo-csv-import--download-file {
   font-size: 4em;
   color: $ibo-color-primary-400;
   margin: 20px;
