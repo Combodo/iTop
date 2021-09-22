@@ -77,11 +77,6 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   overflow-y: auto;
 }
 
-.ibo-datatable .ibo-field-badge {
-	margin: 0;
-	padding: 0px 4px;
-}
-
 // Datatables configure this list dialog
 // Could be in a separate component, but is only used in datatables as of now
 
