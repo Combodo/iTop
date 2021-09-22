@@ -172,14 +172,13 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
 .ibo-field--comments {
   display: table-cell;
   vertical-align: top;
-  padding-right: 10px;
 
   > input[type="checkbox"] {
     margin-left: 5px;
     float: right;
   }
 
-  > .multi_values, > .mono_value {
+  > .multi_values, > .mono_value, > .ibo-field--comments--synchro{
     float: right;
   }
 }
@@ -204,7 +203,7 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
   }
 }
 
-.ibo-field--enable-bulk {
+.ibo-field--enable-bulk, .ibo-field--comments--synchro {
   display: inline;
   padding: $ibo-field--enable-bulk--padding-y $ibo-field--enable-bulk--padding-x;
   margin: 0 0 0 $ibo-field--enable-bulk--margin-left;

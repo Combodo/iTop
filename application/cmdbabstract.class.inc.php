@@ -924,7 +924,7 @@ HTML
 													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
 												}
 												$sTip = utils::HtmlEntities($sTip);
-												$sSynchroIcon = '<img id="synchro_'.$sInputId.'" src="../images/transp-lock.png"  data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true" />';
+												$sSynchroIcon = '<div id="synchro_'.$sInputId.'" class="ibo-field--comments--synchro ibo-pill ibo-is-frozen" data-tooltip-content="'.$sTip.'" data-tooltip-html-enabled="true"><i class="fas fa-lock"></i></div>';
 												$sComments = $sSynchroIcon;
 											}
 
