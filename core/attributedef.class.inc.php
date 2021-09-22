@@ -12552,7 +12552,8 @@ class AttributeCustomFields extends AttributeDefinition
 		$aRawData = json_decode($sData,true);
 
 		if ($aRawData == null) {
-			throw new Exception('Unable to decode parameter  attr_'.$sFormPrefix.$this->GetCode().': '.$sData);
+			// Temporarly commented as it is blocking for several people. Will be looked / fixed by ACC in the coming days.
+			// throw new Exception('Unable to decode parameter  attr_'.$sFormPrefix.$this->GetCode().': '.$sData);
 		}
 		return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
 	}
