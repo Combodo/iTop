@@ -28,7 +28,7 @@ $ibo-object-details--tag--separator--diameter: 5px !default;
 $ibo-object-details--tag--separator--margin-right: 12px !default;
 $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !default;
 
-/* Parent block overloads (!= than blocks integrations */
+/* Parent block overloads (!= than blocks integrations) */
 .ibo-object-details {
   &.ibo-has-icon.ibo-has-medallion-icon {
     // Note: Direct child selector is mandatory, otherwise a panel within a panel with a medallion icon will have its icon as a medallion too (eg. dashboard in an object)
@@ -81,13 +81,6 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
 
   &::after {
     content: ")";
-  }
-}
-
-@each $sType, $aColors in $ibo-lifecycle-states-colors {
-  .ibo-object-details--status-dot.ibo-is-state-#{$sType} {
-    color: map-get($aColors, 'secondary-color');
-    background-color: map-get($aColors, 'primary-color');
   }
 }
 

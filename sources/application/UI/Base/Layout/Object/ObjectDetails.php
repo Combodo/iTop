@@ -59,9 +59,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sObjectMode;
 	/** @var string */
 	protected $sIconUrl;
-	/** @var string */
+	/** @var string Code of the current value of the attribute carrying the state for $sClassName */
 	protected $sStatusCode;
-	/** @var string */
+	/** @var string Label of the current value of the attribute carrying the state for $sClassName  */
 	protected $sStatusLabel;
 	/** @var string */
 	protected $sStatusColor;
@@ -223,18 +223,21 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	}
 
 	/**
-	 * @param \DBObject $oObject
 	 * @see static::$oObject
 	 *
+	 * @param \DBObject $oObject
+	 *
 	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @throws \CoreException*@throws \Exception
 	 */
 	protected function ComputeState(DBObject $oObject): void
 	{
 		if (MetaModel::HasStateAttributeCode($this->sClassName)) {
 			$this->sStatusCode = $oObject->GetState();
 			$this->sStatusLabel = $oObject->GetStateLabel();
-			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);
+
+			$oStyle = MetaModel::GetEnumStyle($this->sClassName, MetaModel::GetStateAttributeCode($this->sClassName), $this->sStatusCode);
+			$this->sStatusColor = $oStyle->GetMainColor();
 		}
 	}
 

@@ -12,7 +12,7 @@
 {% block iboPanelSubTitle %}
     {% if oUIBlock.GetStatusLabel() is not empty %}
         <span class="ibo-object-details--status" data-role="ibo-object-details--status" data-status-code="{{ oUIBlock.GetStatusCode() }}">
-            <span class="ibo-object-details--status-dot ibo-is-state-{{ oUIBlock.GetStatusColor() }}" data-role="ibo-object-details--status-dot"></span>
+            <span class="ibo-object-details--status-dot" data-role="ibo-object-details--status-dot" style="background-color: {{ oUIBlock.GetStatusColor() }};"></span>
             <span class="ibo-object-details--status-label" data-role="ibo-object-details--status-label">{{ oUIBlock.GetStatusLabel() }}</span>
         </span>
     {% endif %}
