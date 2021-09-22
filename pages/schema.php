@@ -949,7 +949,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
 
 		$aDetails[] = array(
-			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'">'.$oAttDef->GetLabel().' ('.$oAttDef->GetCode().')</span>',
+			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'" data-tooltip-html-enabled="true">'.$oAttDef->GetLabel().' ('.$oAttDef->GetCode().')</span>',
 			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'">'.$sTypeDict.' ('.$sType.')</span>',
 			'origincolor' => '<div class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></div>',
 			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
