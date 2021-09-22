@@ -154,6 +154,12 @@ class CMDBSource
 
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
+	/**
+	 * @var mysqli $oMySQLiForQuery
+	 * @see GetMySQLiForQuery
+	 * @see SetMySQLiForQuery
+	 * @since 2.7.5 N°3513 new var to allow mock in tests ({@see \Combodo\iTop\Test\UnitTest\Core\TransactionsTest})
+	 */
 	protected static $oMySQLiForQuery;
 
 	/**
@@ -348,9 +354,9 @@ class CMDBSource
 	 */
 	private static function IsOpenedDbConnectionUsingTls($oMysqli)
 	{
-		if (self::$m_oMysqli == null)
+		if (is_null(self::GetMySQLiForQuery()))
 		{
-			self::$m_oMysqli = $oMysqli;
+			self::SetMySQLiForQuery($oMysqli);
 		}
 
 		$bNonEmptySslVersionVar = self::IsMySqlVarNonEmpty('ssl_version');
