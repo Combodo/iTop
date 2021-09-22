@@ -18,6 +18,7 @@
  */
 
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
 
 require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -3100,15 +3101,15 @@ EOF;
 			$aDataBranding = [];
 
 			$aLogosToCompile = [
-				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => 'login_logo'],
-				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' => 'main-logo-full'],
-				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main_logo_compact', 'sType' => 'main_logo_compact'],
-				['sNodeName' => 'login_logo', 'sTargetFile' =>'portal_logo', 'sType' => 'portal_logo'],
+				['sNodeName' => 'login_logo', 'sTargetFile' => 'login-logo', 'sType' => Branding::ENUM_LOGO_TYPE_LOGIN_LOGO],
+				['sNodeName' => 'main_logo', 'sTargetFile' => 'main-logo-full', 'sType' =>Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL],
+				['sNodeName' => 'main_logo_compact', 'sTargetFile' => 'main-logo-compact', 'sType' => Branding::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT],
+				['sNodeName' => 'portal_logo', 'sTargetFile' =>'portal-logo', 'sType' =>Branding::ENUM_LOGO_TYPE_PORTAL_LOGO],
 			];
 			foreach ($aLogosToCompile as $aLogo) {
 				$sLogo = $this->CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $aLogo['sNodeName'], $aLogo['sTargetFile']);
 				if ($sLogo != null) {
-					$aDataBranding['sType'] = $sLogo;
+					$aDataBranding[$aLogo['sType']] = $sLogo;
 				}
 			}
 			if ($sTempTargetDir == null) {
