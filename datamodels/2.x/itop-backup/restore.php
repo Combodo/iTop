@@ -97,7 +97,7 @@ function GetOperationName() {
 function ExecuteMainOperation($oP){
 	if (utils::IsModeCLI())
 	{
-		$oP->p(date('Y-m-d H:i:s')." - running backup utility");
+		$oP->p(date('Y-m-d H:i:s')." - running restore utility");
 		$sAuthUser = ReadMandatoryParam($oP, 'auth_user');
 		$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd');
 		$sBackupFile = ReadMandatoryParam($oP, 'backup_file');
@@ -110,7 +110,7 @@ function ExecuteMainOperation($oP){
 			ExitError($oP, "Access restricted or wrong credentials ('$sAuthUser')");
 		}
 
-		if (!is_file($sBackupFile) && is_readable($sBackupFile)){
+		if (!is_file($sBackupFile) || !is_readable($sBackupFile)){
 			ExitError($oP, "Cannot access backup file ('$sBackupFile')");
 		}
 	}
@@ -136,7 +136,6 @@ function ExecuteMainOperation($oP){
 	$oRestore = new MyCliRestore($oP);
 	$oRestore->SetMySQLBinDir(MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', ''));
 
-	$res = false;
 	if (MetaModel::GetConfig()->Get('demo_mode'))
 	{
 		$oP->p("Sorry, iTop is in demonstration mode: the feature is disabled");
