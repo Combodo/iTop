@@ -28,7 +28,7 @@ function MakeClassHLink($sClass, $sContext)
 {
 	return "<a href=\"schema.php?operation=details_class&class=$sClass{$sContext}\" title=\"".html_entity_decode(MetaModel::GetClassDescription($sClass),
 			ENT_QUOTES,
-			'UTF-8')."\"><span class=\"attrLabel\">".MetaModel::GetName($sClass)."</span> <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$sClass."</span><span class=\"parenthesis\">)</span></a>";
+			'UTF-8')."\">".MetaModel::GetName($sClass)." (".$sClass.")</a>";
 }
 
 /**
@@ -152,7 +152,7 @@ JS
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+			$oPage->add("<li class=\"closed\">$sStateLabel <span class=\"ibo-datamodel-viewer--lifecycle--code\"> ($sStateCode) $sStateDescription</span>\n");
 			$oPage->add("<ul class=\"closed\">\n");
 			foreach (MetaModel::EnumTransitions($sClass, $sStateCode) as $sStimulusCode => $aTransitionDef)
 			{
@@ -186,9 +186,9 @@ JS
 				}
 
 				$oPage->add("<li class=\"closed\"><span class=\"attrLabel ibo-datamodel-viewer--lifecycle--stimuli\" title=\"code: $sStimulusCode\">$sStimulusLabel</span>
-								<span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStimulusCode</span><span class=\"parenthesis\">)</span> </span>
+								<span class=\"ibo-datamodel-viewer--lifecycle--code\"> ($sStimulusCode) </span>
 								<i class=\"fas fa-arrow-right ibo-datamodel-viewer--parent--spacer\"></i>
-								<span class=\"attrLabel\">$sTargetStateLabel </span><span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span> <span class=\"attrCode\">$sTargetState</span> <span class=\"parenthesis\">)</span></span> $sActions</li>\n");
+								$sTargetStateLabel <span class=\"ibo-datamodel-viewer--lifecycle--code\"> ($sTargetState)</span> $sActions</li>\n");
 			}
 			$oPage->add("</ul></li>\n");
 		}
@@ -199,7 +199,7 @@ JS
 		{
 			$sStateLabel = MetaModel::GetStateLabel($sClass, $sStateCode);
 			$sStateDescription = MetaModel::GetStateDescription($sClass, $sStateCode);
-			$oPage->add("<li class=\"closed\"><span class=\"attrLabel\">$sStateLabel </span><span class=\"ibo-datamodel-viewer--lifecycle--code\"><span class=\"parenthesis\">(</span><span class=\"attrCode\">$sStateCode</span><span class=\"parenthesis\">) </span>$sStateDescription</span>\n");
+			$oPage->add("<li class=\"closed\">$sStateLabel<span class=\"ibo-datamodel-viewer--lifecycle--code\"> ($sStateCode) $sStateDescription</span>\n");
 			if (count($aStates[$sStateCode]['attribute_list']) > 0)
 			{
 				$oPage->add("<ul>\n");
@@ -926,7 +926,7 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 			$aDescription = array();
 			foreach ($aLocalizedValues as $val => $sDisplay)
 			{
-				$aDescription[] = "<span class=\"attrLabel\">".$sDisplay."</span>  <span class=\"parenthesis\">(</span><span class=\"attrCode\">".$val."</span><span class=\"parenthesis\">)</span>";
+				$aDescription[] = $sDisplay." (".$val.")";
 			}
 			$sAllowedValues = implode(', ', $aDescription);
 			$sIsEnumValues = 'true';
@@ -949,8 +949,8 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		$sDefaultNullValueEscpd = utils::HtmlEntities($sDefaultNullValue);
 
 		$aDetails[] = array(
-			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'"><span class="attrLabel">'.$oAttDef->GetLabel().'</span> <span class="parenthesis">(</span><span class="attrCode">'.$oAttDef->GetCode().'</span><span class="parenthesis">)</span></span>',
-			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'"><span class="attrLabel">'.$sTypeDict.'</span> <span class="parenthesis">(</span><span class="attrCode">'.$sType.'</span><span class="parenthesis">)</span></span>',
+			'code' => '<span id="attr'.$sAttrCode.'" data-tooltip-content="'.$sAttrValueEscpd.'">'.$oAttDef->GetLabel().' ('.$oAttDef->GetCode().')</span>',
+			'type' => '<span id="type'.$sAttrCode.'" data-tooltip-content="'.$sAttrTypeDescEscpd.'">'.$sTypeDict.' ('.$sType.')</span>',
 			'origincolor' => '<div class="originColor'.$sOrigin.'" data-tooltip-content="'.$sAttrOriginEscpd.'"></div>',
 			'origin' => "<span id=\"origin".$sAttrCode."\">$sOrigin</span>",
 			'values' => $sAllowedValues,
