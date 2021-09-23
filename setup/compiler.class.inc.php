@@ -2222,6 +2222,8 @@ EOF
 	}
 
 	/**
+	 * This method is public in order to be used in the tests
+	 *
 	 * @param \MFElement $oNode Style node, can be either a <style> node of a specific field value, or a <default_style> node of a field
 	 * @param string $sClass
 	 * @param string $sAttCode
@@ -2229,8 +2231,9 @@ EOF
 	 *
 	 * @return array ['orm_style' => <GENERATED_ORMSTYLE_INSTANTIATION>, 'css' => <GENERATED_CSS>]
 	 * @throws \DOMFormatException
+	 * @internal
 	 */
-	protected function GenerateFieldStyleData(MFElement $oNode, string $sClass, string $sAttCode, string $sValueCode = null): array
+	public function GenerateFieldStyleData(MFElement $oNode, string $sClass, string $sAttCode, string $sValueCode = null): array
 	{
 		$aData = [];
 
@@ -2925,10 +2928,9 @@ EOF;
 		}
 
 		// Prepare DM CSS rules for inclusion
-		$sDmStylesheetFilename = 'datamodel-scss-rules.scss';
+		$sDmStylesheetFilename = 'datamodel-compiled-scss-rules.scss';
 		$sDmStylesheetContent = implode("\n", $this->aClassesCSSRules);
-		// Here we use a hash instead of the current timestamp because the former changes when running unit tests
-		$sDmStylesheetId = 'datamodel-scss-rules-'.md5($sDmStylesheetContent);
+		$sDmStylesheetId = 'datamodel-compiled-scss-rules';
 		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
 
 		// Parsing themes from DM
