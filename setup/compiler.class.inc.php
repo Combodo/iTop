@@ -1444,42 +1444,9 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$sSafeCode = utils::GetSafeId($sCode);
-							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
-							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
-
-							$sMainColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'main_color');
-							$sMainColorForCss = $this->GetMandatoryPropString($oStyleNode, 'main_color', false);
-							$sMainColorScssVariableName = "\$$sEnumClass--main-color";
-							$sMainColorCssVariableName = "--$sEnumClass--main-color";
-							$sComplementaryColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-							$sComplementaryColorForCss = $this->GetMandatoryPropString($oStyleNode, 'complementary_color', false);
-							$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
-							$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
-							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-
-							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
-							$sCss .= <<<CSS
-$sMainColorScssVariableName: $sMainColorForCss !default;
-$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
-
-:root {
-	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
-	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
-}
-
-.$sEnumClass {
-	--ibo-main-color: $sMainColorScssVariableName;
-	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
-	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
-	--ibo-complementary-color: $sComplementaryColorScssVariableName;
-}
-.$sEnumClassAlt {
-	--ibo-main-color: $sComplementaryColorScssVariableName;
-	--ibo-complementary-color: $sMainColorScssVariableName;
-}
-
-CSS;
+							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, $sClass, $sAttCode, $sCode);
+							$aStyledValues[] = $aEnumStyleData['orm_style'];
+							$sCss .= $aEnumStyleData['css'];
 						}
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
@@ -1490,41 +1457,9 @@ CSS;
 					}
 					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oDefaultStyleNode) {
-						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
-						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
-
-						$sMainColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color');
-						$sMainColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color', false);
-						$sMainColorScssVariableName = "\$$sEnumClass--main-color";
-						$sMainColorCssVariableName = "--$sEnumClass--main-color";
-						$sComplementaryColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color');
-						$sComplementaryColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color', false);
-						$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
-						$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
-						$sDecorationClasses = $this->GetPropString($oDefaultStyleNode, 'decoration_classes', '');
-
-						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
-						$sCss .= <<<CSS
-$sMainColorScssVariableName: $sMainColorForCss !default;
-$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
-
-:root {
-	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
-	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
-}
-
-.$sEnumClass {
-	--ibo-main-color: $sMainColorScssVariableName;
-	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
-	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
-	--ibo-complementary-color: $sComplementaryColorScssVariableName;
-}
-.$sEnumClassAlt {
-	--ibo-main-color: $sComplementaryColorScssVariableName;
-	--ibo-complementary-color: $sMainColorScssVariableName;
-}
-
-CSS;
+						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, $sClass, $sAttCode);
+						$aParameters['default_style'] = $aEnumStyleData['orm_style'];
+						$sCss .= $aEnumStyleData['css'];
 					}
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
@@ -1544,42 +1479,9 @@ CSS;
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$sSafeCode = utils::GetSafeId($sCode);
-							$sEnumClass = "ibo-enum--$sClass-$sAttCode-$sSafeCode";
-							$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sSafeCode";
-
-							$sMainColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'main_color');
-							$sMainColorForCss = $this->GetMandatoryPropString($oStyleNode, 'main_color', false);
-							$sMainColorScssVariableName = "\$$sEnumClass--main-color";
-							$sMainColorCssVariableName = "--$sEnumClass--main-color";
-							$sComplementaryColorForOrm = $this->GetMandatoryPropString($oStyleNode, 'complementary_color');
-							$sComplementaryColorForCss = $this->GetMandatoryPropString($oStyleNode, 'complementary_color', false);
-							$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
-							$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
-							$sDecorationClasses = $this->GetPropString($oStyleNode, 'decoration_classes', '');
-
-							$aStyledValues[] = "'$sCode' => new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
-							$sCss .= <<<CSS
-$sMainColorScssVariableName: $sMainColorForCss !default;
-$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
-
-:root {
-	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
-	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
-}
-
-.$sEnumClass {
-	--ibo-main-color: $sMainColorScssVariableName;
-	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
-	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
-	--ibo-complementary-color: $sComplementaryColorScssVariableName;
-}
-.$sEnumClassAlt {
-	--ibo-main-color: $sComplementaryColorScssVariableName;
-	--ibo-complementary-color: $sMainColorScssVariableName;
-}
-
-CSS;
+							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, $sClass, $sAttCode, $sCode);
+							$aStyledValues[] = $aEnumStyleData['orm_style'];
+							$sCss .= $aEnumStyleData['css'];
 						}
 					}
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
@@ -1590,41 +1492,9 @@ CSS;
 					}
 					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oDefaultStyleNode) {
-						$sEnumClass = "ibo-enum--$sClass-$sAttCode";
-						$sEnumClassAlt = "ibo-enum-alt--$sClass-$sAttCode";
-
-						$sMainColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color');
-						$sMainColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'main_color', false);
-						$sMainColorScssVariableName = "\$$sEnumClass--main-color";
-						$sMainColorCssVariableName = "--$sEnumClass--main-color";
-						$sComplementaryColorForOrm = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color');
-						$sComplementaryColorForCss = $this->GetMandatoryPropString($oDefaultStyleNode, 'complementary_color', false);
-						$sComplementaryColorScssVariableName = "\$$sEnumClass--complementary-color";
-						$sComplementaryColorCssVariableName = "--$sEnumClass--complementary-color";
-						$sDecorationClasses = $this->GetPropString($oDefaultStyleNode, 'decoration_classes', '');
-
-						$aParameters['default_style'] = "new ormStyle('$sEnumClass', '$sEnumClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
-						$sCss .= <<<CSS
-$sMainColorScssVariableName: $sMainColorForCss !default;
-$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
-
-:root {
-	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
-	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
-}
-
-.$sEnumClass {
-	--ibo-main-color: $sMainColorScssVariableName;
-	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
-	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
-	--ibo-complementary-color: $sComplementaryColorScssVariableName;
-}
-.$sEnumClassAlt {
-	--ibo-main-color: $sComplementaryColorScssVariableName;
-	--ibo-complementary-color: $sMainColorScssVariableName;
-}
-
-CSS;
+						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, $sClass, $sAttCode);
+						$aParameters['default_style'] = $aEnumStyleData['orm_style'];
+						$sCss .= $aEnumStyleData['css'];
 					}
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
@@ -2349,6 +2219,70 @@ EOF
 		}
 
 		return $sPHP;
+	}
+
+	/**
+	 * @param \MFElement $oNode Style node, can be either a <style> node of a specific field value, or a <default_style> node of a field
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param string|null $sValueCode Code of the value of the field. If null, then it will generate data as for the default style
+	 *
+	 * @return array ['orm_style' => <GENERATED_ORMSTYLE_INSTANTIATION>, 'css' => <GENERATED_CSS>]
+	 * @throws \DOMFormatException
+	 */
+	protected function GenerateFieldStyleData(MFElement $oNode, string $sClass, string $sAttCode, string $sValueCode = null): array
+	{
+		$aData = [];
+
+		if ($sValueCode === null) {
+			$sCssClassSuffix = "";
+			$sOrmStylePrefix = "";
+		} else {
+			$sCssClassSuffix = "-".utils::GetSafeId($sValueCode);
+			$sOrmStylePrefix = "'$sValueCode' => ";
+		}
+
+		$sCssClass = "ibo-enum--$sClass-$sAttCode-$sCssClassSuffix";
+		$sCssClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sCssClassSuffix";
+
+		$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
+		$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);
+
+		$sMainColorScssVariableName = "\$$sCssClass--main-color";
+		$sMainColorCssVariableName = "--$sCssClass--main-color";
+
+		$sComplementaryColorForOrm = $this->GetMandatoryPropString($oNode, 'complementary_color');
+		$sComplementaryColorForCss = $this->GetMandatoryPropString($oNode, 'complementary_color', false);
+
+		$sComplementaryColorScssVariableName = "\$$sCssClass--complementary-color";
+		$sComplementaryColorCssVariableName = "--$sCssClass--complementary-color";
+
+		$sDecorationClasses = $this->GetPropString($oNode, 'decoration_classes', '');
+
+		$aData['orm_style'] = "$sOrmStylePrefix new ormStyle('$sCssClass', '$sCssClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
+		$aData['css'] = <<<CSS
+$sMainColorScssVariableName: $sMainColorForCss !default;
+$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
+
+:root {
+	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
+	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
+}
+
+.$sCssClass {
+	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
+	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
+	--ibo-complementary-color: $sComplementaryColorScssVariableName;
+}
+.$sCssClassAlt {
+	--ibo-main-color: $sComplementaryColorScssVariableName;
+	--ibo-complementary-color: $sMainColorScssVariableName;
+}
+
+CSS;
+
+		return $aData;
 	}
 
 	private static function GetTagDataClassName($sClass, $sAttCode)
