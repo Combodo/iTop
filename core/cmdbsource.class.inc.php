@@ -717,7 +717,7 @@ class CMDBSource
 		{
 			$aContext = array('query' => $sSql);
 
-			$iMySqlErrorNo = self::$m_oMysqli->errno;
+			$iMySqlErrorNo = self::GetMySQLiForQuery()->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
 			if (in_array($iMySqlErrorNo, $aMySqlHasGoneAwayErrorCodes))
 			{
