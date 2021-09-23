@@ -8,10 +8,6 @@
 namespace Combodo\iTop\Application\UI\Helper;
 
 
-use MetaModel;
-
-// TODO 3.0.0: Delete this class as it is only a temporary helper while code is being reworked.
-
 /**
  * Class UIHelper
  *
@@ -22,71 +18,62 @@ use MetaModel;
  */
 class UIHelper
 {
-	public static function GetColorFromStatus(string $sClass, ?string $sStateCode): string
+	/**
+	 * @param string $sStateCode Code of the state value
+	 * @param bool $bAllowFallbackIfNoMatch If set to true, a fallback semantic color code will be returned in case of no matching mappping. Otherwise it will return null to indicate there was no match.
+	 *
+	 * @return string|null A semantic status color code (eg. success, pending, failure, neutral, ...) depending on the value's code. Usefull to try to find a semantic match when a class has no style defined on its state attribute.
+	 */
+	public static function GetColorFromStatusCode(string $sStateCode, bool $bAllowFallbackIfNoMatch = true): ?string
 	{
-		// Example on how to get the color for the current status of a class
-//		$sStatusColor = 'neutral';
-//		$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-//		if (strlen($sStateAttCode) == 0) {
-//			return $sStatusColor;
-//		}
-//
-//		$oStyle = MetaModel::GetEnumStyle($sClass, $sStateAttCode, $sStateCode);
-//		if ($oStyle) {
-//			$sStatusColor = $oStyle->GetMainColor();
-//		}
-//		return $sStatusColor;
+		$sStatusColor = null;
 
-		$sRootClass = MetaModel::GetRootClass($sClass);
-		switch ($sRootClass) {
-			case 'Ticket':
-				// TODO 3.0.0 : Dehardcode this
-				switch ($sStateCode) {
-					case 'new':
-						$sStatusColor = 'new';
-						break;
+		switch ($sStateCode) {
+			case 'active':
+				$sStatusColor = 'active';
+				break;
 
-					case 'waiting_for_approval':
-					case 'pending':
-						$sStatusColor = 'waiting';
-						break;
+			case 'inactive':
+				$sStatusColor = 'inactive';
+				break;
 
-					case 'escalated_tto':
-					case 'escalated_ttr':
-					case 'rejected':
-						$sStatusColor = 'failure';
-						break;
+			case 'new':
+				$sStatusColor = 'new';
+				break;
 
-					case 'resolved':
-						$sStatusColor = 'success';
-						break;
+			case 'waiting_for_approval':
+			case 'pending':
+				$sStatusColor = 'waiting';
+				break;
 
-					case 'closed':
-						$sStatusColor = 'frozen';
-						break;
+			case 'escalated_tto':
+			case 'escalated_ttr':
+			case 'rejected':
+				$sStatusColor = 'failure';
+				break;
 
-					case 'approved':
-					case 'assigned':
-					case 'dispatched':
-					case 'redispatched':
-					default:
-						$sStatusColor = 'neutral';
-						break;
+			case 'resolved':
+				$sStatusColor = 'success';
+				break;
+
+			case 'closed':
+				$sStatusColor = 'frozen';
+				break;
+
+			case 'approved':
+			case 'assigned':
+			case 'dispatched':
+			case 'redispatched':
+				$sStatusColor = 'neutral';
+				break;
+
+			default:
+				if ($bAllowFallbackIfNoMatch) {
+					$sStatusColor = 'neutral';
 				}
 				break;
-			default:
-				switch ($sStateCode) {
-					case 'active':
-						$sStatusColor = 'active';
-						break;
-					case 'inactive':
-						$sStatusColor = 'inactive';
-						break;
-					default:
-						$sStatusColor = 'neutral';
-						break;
-				}
 		}
+
 		return $sStatusColor;
 	}
 }

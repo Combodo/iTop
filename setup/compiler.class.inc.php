@@ -1470,6 +1470,8 @@ $sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
 
 .$sEnumClass {
 	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
+	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
 	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
@@ -1513,6 +1515,8 @@ $sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
 
 .$sEnumClass {
 	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
+	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
 	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
@@ -1566,6 +1570,8 @@ $sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
 
 .$sEnumClass {
 	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
+	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
 	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {
@@ -1609,6 +1615,8 @@ $sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
 
 .$sEnumClass {
 	--ibo-main-color: $sMainColorScssVariableName;
+	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
+	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
 	--ibo-complementary-color: $sComplementaryColorScssVariableName;
 }
 .$sEnumClassAlt {

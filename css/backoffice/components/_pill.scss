@@ -83,4 +83,11 @@ $ibo-pill-states-colors: (
   margin: $ibo-pill--margin;
   padding: $ibo-pill--padding;
   border-radius: $ibo-pill--border-radius;
+
+  color: var(--ibo-main-color--900);
+  background-color: var(--ibo-main-color--100);
+
+  &:hover, &:active {
+    color: inherit; /* Force color to stay as defined in pill instead of being overloaded by anchor's rules */
+  }
 }

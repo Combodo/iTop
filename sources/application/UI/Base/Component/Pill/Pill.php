@@ -24,8 +24,8 @@ class Pill extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-pill';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/pill/layout';
 
-	/** @var string */
-	protected $sColor;
+	/** @var null|string CSS class that will be used on the block */
+	protected $sCSSColorClass;
 	/** @var null|string URL to go to if the pill is clicked */
 	protected $sUrl;
 	/** @var null|string Text to display as a tooltip */
@@ -34,30 +34,48 @@ class Pill extends UIContentBlock
 	/**
 	 * Pill constructor.
 	 *
-	 * @param string $sColor
+	 * @param string|null $sSemanticColor Semantic color code such as "success", "failure", "active", ... {@see css/backoffice/components/_pill.scss}
 	 */
-	public function __construct(string $sColor)
+	public function __construct(?string $sSemanticColor = null)
 	{
 		parent::__construct();
-		$this->SetColor($sColor);
+
+		if (is_null($sSemanticColor) === false) {
+			$this->SetSemanticColor($sSemanticColor);
+		}
 	}
 
 	/**
+	 * @see static::$sCSSColorClass
 	 * @return string
 	 */
-	public function GetColor(): ?string
+	public function GetCSSColorClass(): ?string
 	{
-		return $this->sColor;
+		return $this->sCSSColorClass;
 	}
 
 	/**
-	 * @param string $sColor
+	 * @param string $sCSSColorClass
 	 *
+	 * @see static::$sCSSColorClass
+	 * @return $this
+	 */
+	public function SetCSSColorClass(string $sCSSColorClass)
+	{
+		$this->sCSSColorClass = $sCSSColorClass;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $sSemanticColor Semantic color code such as "success", "failure", "active", ... {@see css/backoffice/components/_pill.scss}
+	 *
+	 * @see static::$sCSSColorClass
 	 * @return Pill
 	 */
-	public function SetColor(string $sColor): Pill
+	public function SetSemanticColor(string $sSemanticColor)
 	{
-		$this->sColor = $sColor;
+		$this->sCSSColorClass = 'ibo-is-'.$sSemanticColor;
 
 		return $this;
 	}
