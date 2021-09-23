@@ -715,7 +715,7 @@ CSS
 		$oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
-		$oPage->add('<ul>');
+		$oPage->add('<ul id="ibo-setup-licenses--components-list">');
         $index = 0;
         foreach ($aLicenses as $oLicense)
 		{
