@@ -739,7 +739,7 @@ class CMDBSource
 	private static function LogDeadLock(Exception $e)
 	{
 		// checks MySQL error code
-		$iMySqlErrorNo = self::$m_oMysqli->errno;
+		$iMySqlErrorNo = self::GetMySQLiForQuery()->errno;
 		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK)))
 		{
 			return;
@@ -747,7 +747,7 @@ class CMDBSource
 
 		// Get error info
 		$sUser = UserRights::GetUser();
-		$oError = self::$m_oMysqli->query('SHOW ENGINE INNODB STATUS');
+		$oError = self::GetMySQLiForQuery()->query('SHOW ENGINE INNODB STATUS');
 		if ($oError !== false)
 		{
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
