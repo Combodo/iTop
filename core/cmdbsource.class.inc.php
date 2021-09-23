@@ -68,9 +68,6 @@ class CMDBSource
 	 */
 	protected static $m_sDBTlsCA;
 
-	/** @var DbConnectionWrapper $oDbCnx */
-	protected static $oDbCnx;
-
 	/**
 	 * @var int number of level for nested transactions : 0 if no transaction was ever opened, +1 for each 'START TRANSACTION' sent
 	 * @since 2.7.0 N°679
@@ -136,7 +133,7 @@ class CMDBSource
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
 
 		$oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
-		self::$oDbCnx::SetDbConnection($oMysqli);
+		DbConnectionWrapper::SetDbConnection($oMysqli);
 	}
 
 	/**
@@ -346,7 +343,7 @@ class CMDBSource
 			// In case we don't have rights to enumerate the databases
 			// Let's try to connect directly
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			return @((bool)self::$oDbCnx::GetDbConnection()->query("USE `$sSource`"));
+			return @((bool)DbConnectionWrapper::GetDbConnection()->query("USE `$sSource`"));
 		}
 
 	}
@@ -362,7 +359,7 @@ class CMDBSource
 	 */
 	public static function GetServerInfo()
 	{
-		return mysqli_get_server_info(self::$oDbCnx::GetDbConnection());
+		return mysqli_get_server_info(DbConnectionWrapper::GetDbConnection());
 	}
 
 	/**
@@ -394,7 +391,7 @@ class CMDBSource
 	public static function SelectDB($sSource)
 	{
 		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-		if (!((bool)self::$oDbCnx::GetDbConnection()->query("USE `$sSource`"))) {
+		if (!((bool)DbConnectionWrapper::GetDbConnection()->query("USE `$sSource`"))) {
 			throw new MySQLException('Could not select DB', array('db_name' => $sSource));
 		}
 		self::$m_sDBName = $sSource;
@@ -449,7 +446,7 @@ class CMDBSource
 	 */
 	public static function GetMysqli()
 	{
-		return self::$oDbCnx::GetDbConnection(false);
+		return DbConnectionWrapper::GetDbConnection(false);
 	}
 
 	/**
@@ -462,24 +459,24 @@ class CMDBSource
 	 */
 	protected static function SetMySQLiForQuery($oMysqli)
 	{
-		static::$oDbCnx::SetDbConnection($oMysqli, true);
+		DbConnectionWrapper::SetDbConnection($oMysqli, true);
 	}
 
 	public static function GetErrNo()
 	{
-		if (self::$oDbCnx::GetDbConnection()->errno != 0) {
-			return self::$oDbCnx::GetDbConnection()->errno;
+		if (DbConnectionWrapper::GetDbConnection()->errno != 0) {
+			return DbConnectionWrapper::GetDbConnection()->errno;
 		} else {
-			return self::$oDbCnx::GetDbConnection()->connect_errno;
+			return DbConnectionWrapper::GetDbConnection()->connect_errno;
 		}
 	}
 
 	public static function GetError()
 	{
-		if (self::$oDbCnx::GetDbConnection()->error != '') {
-			return self::$oDbCnx::GetDbConnection()->error;
+		if (DbConnectionWrapper::GetDbConnection()->error != '') {
+			return DbConnectionWrapper::GetDbConnection()->error;
 		} else {
-			return self::$oDbCnx::GetDbConnection()->connect_error;
+			return DbConnectionWrapper::GetDbConnection()->connect_error;
 		}
 	}
 
@@ -520,7 +517,7 @@ class CMDBSource
 		if ($bAlways || is_string($value))
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$value = $cQuoteStyle.self::$oDbCnx::GetDbConnection()->real_escape_string($value).$cQuoteStyle;
+			$value = $cQuoteStyle.DbConnectionWrapper::GetDbConnection()->real_escape_string($value).$cQuoteStyle;
 		}
 		return $value;
 	}
@@ -604,7 +601,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = self::$oDbCnx::GetDbConnection(true)->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch (mysqli_sql_exception $e)
 		{
@@ -615,7 +612,7 @@ class CMDBSource
 		if ($oResult === false) {
 			$aContext = array('query' => $sSql);
 
-			$iMySqlErrorNo = self::$oDbCnx::GetDbConnection(true)->errno;
+			$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection(true)->errno;
 			$aMySqlHasGoneAwayErrorCodes = MySQLHasGoneAwayException::getErrorCodes();
 			if (in_array($iMySqlErrorNo, $aMySqlHasGoneAwayErrorCodes)) {
 				throw new MySQLHasGoneAwayException(self::GetError(), $aContext);
@@ -638,7 +635,7 @@ class CMDBSource
 	private static function LogDeadLock(Exception $e, $bIsCnxMockable = false)
 	{
 		// checks MySQL error code
-		$iMySqlErrorNo = self::$oDbCnx::GetDbConnection($bIsCnxMockable)->errno;
+		$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bIsCnxMockable)->errno;
 		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
 			return;
 		}
@@ -646,7 +643,7 @@ class CMDBSource
 		// Get error info
 		$sUser = UserRights::GetUser();
 		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-		$oError = self::$oDbCnx::GetDbConnection($bIsCnxMockable)->query('SHOW ENGINE INNODB STATUS');
+		$oError = DbConnectionWrapper::GetDbConnection($bIsCnxMockable)->query('SHOW ENGINE INNODB STATUS');
 		if ($oError !== false) {
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
 			$sInnodbStatus = $aData[0];
@@ -820,7 +817,7 @@ class CMDBSource
 
 	public static function GetInsertId()
 	{
-		$iRes = self::$oDbCnx::GetDbConnection()->insert_id;
+		$iRes = DbConnectionWrapper::GetDbConnection()->insert_id;
 		if (is_null($iRes))
 		{
 			return 0;
@@ -863,7 +860,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = self::$oDbCnx::GetDbConnection(true)->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -905,7 +902,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = self::$oDbCnx::GetDbConnection(true)->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -956,7 +953,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = self::$oDbCnx::GetDbConnection()->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection()->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -989,7 +986,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = self::$oDbCnx::GetDbConnection(true)->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
@@ -1014,7 +1011,7 @@ class CMDBSource
 
 	public static function AffectedRows()
 	{
-		return self::$oDbCnx::GetDbConnection()->affected_rows;
+		return DbConnectionWrapper::GetDbConnection()->affected_rows;
 	}
 
 	public static function FetchArray($oResult)
@@ -1478,7 +1475,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = self::$oDbCnx::GetDbConnection(true)->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
