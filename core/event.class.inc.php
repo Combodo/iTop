@@ -222,6 +222,10 @@ class EventIssue extends Event
 		//
 		$this->Set('page', @$GLOBALS['_SERVER']['SCRIPT_NAME']);
 
+		if (strlen($this->Get('userinfo')) == 0) {
+			$this->Set('userinfo', UserRights::GetUserId());
+		}
+
 		if (array_key_exists('_GET', $GLOBALS) && is_array($GLOBALS['_GET']))
 		{
 			$this->Set('arguments_get', $GLOBALS['_GET']);
