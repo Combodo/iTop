@@ -216,7 +216,7 @@ $(function()
 					me._updatePreviousItemsList();
 				}, {
 					root: $(this.js_selectors.breadcrumbs)[0],
-					threshold: [1] // Must be completely visible
+					threshold: [0.9] // N°3900 Should be completely visible, but lowering the threshold prevents a bug in the JS Observer API when the window is zoomed in/out, in which case all items respond as being hidden even when they are not.
 				});
 				this.element.find(this.js_selectors.item).each(function(){
 					me.items_observer.observe(this);
