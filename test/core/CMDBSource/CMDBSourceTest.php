@@ -128,7 +128,7 @@ class CMDBSourceTest extends ItopTestCase
 		CMDBSource::InitFromConfig($oConfig);
 		$oMysqli = CMDBSource::GetMysqli();
 
-		// resets \CMDBSource::$oMySQLiForQuery to simulate call to \CMDBSource::Init with a LTS connexion
+		// resets \CMDBSource::$oMySQLiForQuery to simulate call to \CMDBSource::Init with a TLS connexion
 		$this->InvokeNonPublicStaticMethod(CMDBSource::class, 'SetMySQLiForQuery',[null]);
 
 		// before N°4215 fix, this was crashing : "Call to a member function query() on null"
