@@ -252,7 +252,7 @@ class CMDBSource
 	 * parameters were used.<br>
 	 * This method can be called to ensure that the DB connection really uses TLS.
 	 *
-	 * <p>We're using this object connection : {@link self::$m_oMysqli}
+	 * <p>We're using this object connection : {@see self::$m_oMysqli}
 	 *
 	 * @param \mysqli $oMysqli
 	 *
@@ -590,7 +590,7 @@ class CMDBSource
 	/**
 	 * Send the query directly to the DB. **Be extra cautious with this !**
 	 *
-	 * Use {@link Query} if you're not sure.
+	 * Use {@see Query} if you're not sure.
 	 *
 	 * @internal
 	 *
@@ -1137,7 +1137,7 @@ class CMDBSource
 	 *
 	 * We still need to do a case sensitive comparison for enum values !
 	 *
-	 * A better solution would be to generate SQL field definitions ({@link GetFieldSpec} method) based on the DB used... But for
+	 * A better solution would be to generate SQL field definitions ({@see GetFieldSpec} method) based on the DB used... But for
 	 * now (N°2490 / SF #1756 / PR #91) we did implement this simpler solution
 	 *
 	 * @see GetFieldDataTypeAndOptions extracts all info from the SQL field definition
