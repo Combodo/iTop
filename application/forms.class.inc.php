@@ -1217,9 +1217,14 @@ class DesignerComboField extends DesignerFormField
 			return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_RAW;
 		}
 	}
-	
-	public function SetAllowedValues($aAllowedValues)
+
+	public function SetAllowedValues(?array $aAllowedValues)
 	{
+		// Make sure to have an actual array for values
+		if (is_null($aAllowedValues)) {
+			$aAllowedValues = [];
+		}
+
 		$this->aAllowedValues = $aAllowedValues;
 	}
 	
