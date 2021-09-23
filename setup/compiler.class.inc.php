@@ -2245,8 +2245,8 @@ EOF
 			$sOrmStylePrefix = "'$sValueCode' => ";
 		}
 
-		$sCssClass = "ibo-enum--$sClass-$sAttCode-$sCssClassSuffix";
-		$sCssClassAlt = "ibo-enum-alt--$sClass-$sAttCode-$sCssClassSuffix";
+		$sCssClass = "ibo-enum--$sClass-$sAttCode$sCssClassSuffix";
+		$sCssClassAlt = "ibo-enum-alt--$sClass-$sAttCode$sCssClassSuffix";
 
 		$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
 		$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);

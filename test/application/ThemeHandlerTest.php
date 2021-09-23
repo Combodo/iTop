@@ -710,7 +710,7 @@ SCSS;
 	 * @throws \Exception
 	 */
 	public function testFindStylesheetFile(string $sFileToFind, array $aAllImports){
-		$sImportsPath = $this->sTmpDir.'/branding/';
+		$sImportsPath = $this->sTmpDir.'branding/';
 
 		// Windows compat O:)
 		$sFileToFind = $this->UpdateDirSep($sFileToFind);
