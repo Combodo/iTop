@@ -155,6 +155,10 @@ class CMDBSource
 	/** @var mysqli $m_oMysqli */
 	protected static $m_oMysqli;
 	/**
+	 * The mysqli object is really hard to mock ! This attribute is used only in certain methods, so that we can mock only a very little subset of the mysqli object.
+	 * We are setting it in {@see Init}, by default it is a copy of {@see $m_oMysqli}
+	 * The mock can be injected using the setter {@see SetMySQLiForQuery}
+	 *
 	 * @var mysqli $oMySQLiForQuery
 	 * @see GetMySQLiForQuery
 	 * @see SetMySQLiForQuery
