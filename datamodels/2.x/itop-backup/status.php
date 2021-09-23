@@ -242,7 +242,7 @@ try {
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
 		$sConfirmRestore = addslashes(Dict::Format('bkp-confirm-restore', $sFileName));
 		$sFileEscaped = addslashes($sFilePath);
-		$oButton =ButtonUIBlockFactory::MakeNeutral($sRestore);
+		$oButton = ButtonUIBlockFactory::MakeNeutral($sRestore);
 		$oButton->SetIsDisabled($oRestoreMutex->IsLocked());
 		if (in_array($sBackupFile, $aFilesToDelete)) {
 			$aDetails[] = array(
@@ -292,7 +292,7 @@ try {
 		$sSize = SetupUtils::HumanReadableSize(filesize($sBackupFile));
 		$sConfirmRestore = addslashes(Dict::Format('bkp-confirm-restore', $sFileName));
 		$sFileEscaped = addslashes($sFilePath);
-		$oButton =ButtonUIBlockFactory::MakeNeutral("$sRestore");
+		$oButton = ButtonUIBlockFactory::MakeNeutral("$sRestore");
 		$oButton->SetIsDisabled($oRestoreMutex->IsLocked());
 		$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton));
 		$oP->add_ready_script('$("#'.$oButton->GetId().'").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});');
