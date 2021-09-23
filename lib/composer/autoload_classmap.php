@@ -299,6 +299,7 @@ return array(
     'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => $baseDir . '/sources/Controller/Base/Layout/ActivityPanelController.php',
     'Combodo\\iTop\\Controller\\PreferencesController' => $baseDir . '/sources/Controller/PreferencesController.php',
     'Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin' => $baseDir . '/sources/Core/CMDBChange/CMDBChangeOrigin.php',
+    'Combodo\\iTop\\Core\\DbConnectionWrapper' => $baseDir . '/core/DbConnectionWrapper.php',
     'Combodo\\iTop\\Core\\MetaModel\\FriendlyNameType' => $baseDir . '/sources/Core/MetaModel/FriendlyNameType.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
