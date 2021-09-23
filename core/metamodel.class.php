@@ -7234,21 +7234,6 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 2.7.0 N°1627, use ItopCounter::incRootClass($sClass) instead
-	 *
-	 * @param string $sClass
-	 *
-	 * @return int
-	 * @throws \CoreException
-	 */
-	public static function GetNextKey($sClass)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ItopCounter::incRootClass($sClass) instead');
-
-		return ItopCounter::IncClass($sClass);
-	}
-
-	/**
 	 * Deletion of records, bypassing {@link DBObject::DBDelete} !!!
 	 * It is NOT recommended to use this shortcut
 	 * In particular, it will not work
