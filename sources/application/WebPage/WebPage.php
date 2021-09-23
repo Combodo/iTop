@@ -215,7 +215,8 @@ class WebPage implements Page
 		$this->aBlockParams = [];
 		$this->bHasCollapsibleSection = false;
 		$this->bPrintable = $bPrintable;
-		$this->bAddJSDict = true;
+		// Note: JS dict. entries cannot be added to a page if current environment and config file aren't available yet.
+		$this->bAddJSDict = class_exists('\Dict') && file_exists(utils::GetConfigFilePath());
 		$this->oContentLayout = new UIContentBlock();
 		$this->SetTemplateRelPath(static::DEFAULT_PAGE_TEMPLATE_REL_PATH);
 
