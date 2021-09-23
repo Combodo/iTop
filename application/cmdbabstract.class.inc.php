@@ -2842,11 +2842,10 @@ EOF
 		);
 
 		if (isset($aExtraParams['nbBulkObj'])) {
-			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
 			$sTitle = Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $aExtraParams['nbBulkObj'], $sClass, $aExtraParams['nbBulkObj']);
-			$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
-			$oObjectDetails = PanelUIBlockFactory::MakeForClass(get_class($this), '');
-			$oObjectDetails->SetTitleBlock($oTitle);
+			$sClassIcon = MetaModel::GetClassIcon($sClass, false);
+			$oObjectDetails = PanelUIBlockFactory::MakeForClass($sClass, $sTitle);
+			$oObjectDetails->SetIcon($sClassIcon);
 			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
 		} else {
 			$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
@@ -4975,10 +4974,6 @@ HTML
 				//$oStateAtt = MetaModel::GetAttributeDef($sClass, $sStateAttCode);
 				//$oDummyObj->Set($sStateAttCode, $oStateAtt->GetDefaultValue());
 			}
-			/*$sClassIcon = MetaModel::GetClassIcon($sClass, false);
-			$sTitle = Dict::Format('UI:Modify_M_ObjectsOf_Class_OutOf_N', $iAllowedCount, $sClass, $iAllowedCount);
-			$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
-			$oP->AddSubBlock($oTitle);*/
 
 			$oP->add("<div class=\"wizContainer\">\n");
 			$sDisableFields = json_encode($aExcludeAttributes);
