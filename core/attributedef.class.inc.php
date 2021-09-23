@@ -10283,7 +10283,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			} else {
 				$sTooltipContent = <<<HTML
 <h4>$sLabel</h4>
-<br>
 <div>$sDescription</div>
 HTML;
 				$sTooltipHtmlEnabled = 'true';
@@ -11574,7 +11573,6 @@ class AttributeTagSet extends AttributeSet
 				} else {
 					$sTooltipContent = <<<HTML
 <h4>$sTagLabel</h4>
-<br>
 <div>$sTagDescription</div>
 HTML;
 					$sTooltipHtmlEnabled = 'true';
