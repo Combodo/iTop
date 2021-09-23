@@ -4,6 +4,7 @@
  */
 
 $ibo-breadcrumbs--margin-right: 16px !default;
+$ibo-breadcrumbs--padding: 2px !default;
 
 $ibo-breadcrumbs--item--text-color: $ibo-color-grey-800 !default;
 
@@ -31,6 +32,7 @@ $ibo-breadcrumbs--previous-item-label--max-width: 200px !default;
 .ibo-breadcrumbs{
   position: relative;
   margin-right: $ibo-breadcrumbs--margin-right;
+  padding: $ibo-breadcrumbs--padding; /* Important: N°3900 The padding is here to prevent a bug in the JS Observer API when the window is zoomed in/out, in which case all items respond as being hidden even when they are not. */
 	@extend %ibo-full-height-content;
 
   &.ibo-is-overflowing {
