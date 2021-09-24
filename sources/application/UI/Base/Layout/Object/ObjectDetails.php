@@ -237,7 +237,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			$this->sStatusLabel = $oObject->GetStateLabel();
 
 			$oStyle = MetaModel::GetEnumStyle($this->sClassName, MetaModel::GetStateAttributeCode($this->sClassName), $this->sStatusCode);
-			$this->sStatusColor = $oStyle->GetMainColor();
+			if ($oStyle !== null) {
+				$this->sStatusColor = $oStyle->GetMainColor();
+			}
 		}
 	}
 
