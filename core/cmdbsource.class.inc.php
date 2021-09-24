@@ -614,15 +614,15 @@ class CMDBSource
 
 	/**
 	 * @param \Exception $e
-	 * @param bool $bIsCnxMockable
+	 * @param bool $bForQuery to get the proper DB connection
 	 *
 	 * @since 2.7.1
 	 * @since 3.0.0 N°4325 add new optional parameter to use the correct DB connection
 	 */
-	private static function LogDeadLock(Exception $e, $bIsCnxMockable = false)
+	private static function LogDeadLock(Exception $e, $bForQuery = false)
 	{
 		// checks MySQL error code
-		$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bIsCnxMockable)->errno;
+		$iMySqlErrorNo = DbConnectionWrapper::GetDbConnection($bForQuery)->errno;
 		if (!in_array($iMySqlErrorNo, array(self::MYSQL_ERRNO_WAIT_TIMEOUT, self::MYSQL_ERRNO_DEADLOCK))) {
 			return;
 		}
@@ -630,7 +630,7 @@ class CMDBSource
 		// Get error info
 		$sUser = UserRights::GetUser();
 		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-		$oError = DbConnectionWrapper::GetDbConnection($bIsCnxMockable)->query('SHOW ENGINE INNODB STATUS');
+		$oError = DbConnectionWrapper::GetDbConnection($bForQuery)->query('SHOW ENGINE INNODB STATUS');
 		if ($oError !== false) {
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
 			$sInnodbStatus = $aData[0];
@@ -940,7 +940,7 @@ class CMDBSource
 		try
 		{
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = DbConnectionWrapper::GetDbConnection()->query($sSql);
+			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
 		}
 		catch(mysqli_sql_exception $e)
 		{
