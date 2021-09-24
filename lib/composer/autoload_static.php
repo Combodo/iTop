@@ -529,6 +529,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Controller\\Base\\Layout\\ActivityPanelController' => __DIR__ . '/../..' . '/sources/Controller/Base/Layout/ActivityPanelController.php',
         'Combodo\\iTop\\Controller\\PreferencesController' => __DIR__ . '/../..' . '/sources/Controller/PreferencesController.php',
         'Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin' => __DIR__ . '/../..' . '/sources/Core/CMDBChange/CMDBChangeOrigin.php',
+        'Combodo\\iTop\\Core\\DbConnectionWrapper' => __DIR__ . '/../..' . '/core/DbConnectionWrapper.php',
         'Combodo\\iTop\\Core\\MetaModel\\FriendlyNameType' => __DIR__ . '/../..' . '/sources/Core/MetaModel/FriendlyNameType.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
