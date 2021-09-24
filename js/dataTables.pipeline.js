@@ -26,14 +26,15 @@ $.fn.dataTable.pipeline = function (opts, initJson) {
 	var draw_number = 1;
 
 	return function (request, drawCallback, settings) {
-		let message = '<i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i>';
-		this.closest('.dataTables_wrapper').block({
-			message: message,
-			css: {
-				border: '0px '
-			}
-		});
-
+		if (request.draw != 1) {
+			let message = '<i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i>';
+			this.closest('.dataTables_wrapper').block({
+				message: message,
+				css: {
+					border: '0px '
+				}
+			});
+		}
 		var ajax = false;
 		var requestStart = request.start;
 		var drawStart = request.start;
