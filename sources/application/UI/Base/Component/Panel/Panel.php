@@ -407,10 +407,9 @@ class Panel extends UIContentBlock
 	}
 
 	/**
-	 * Set the panel's color from an ormStyle directly.
+	 * Set the panel's accent color from an ormStyle directly.
 	 *
 	 * Use cases:
-	 * - Display information about a datamodel class
 	 * - Display information about a particular enum value (linked objects)
 	 *
 	 * @param \ormStyle $oStyle
@@ -426,7 +425,10 @@ class Panel extends UIContentBlock
 	}
 
 	/**
-	 * Set the panel's color to the one corresponding to the $sClass datamodel class
+	 * Set the panel's accent color to the one corresponding to the $sClass datamodel class
+	 *
+	 * Use cases:
+	 * - Display information about a specific datamodel class
 	 *
 	 * @param string $sClass
 	 *
