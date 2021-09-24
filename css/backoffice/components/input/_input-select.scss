@@ -3,6 +3,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-input-select--padding-x: $ibo-input--padding-x !default;
+$ibo-input-select--option--padding-x: $ibo-input-select--padding-x !default;
+$ibo-input-select--option--padding-y: 4px !default;
+
 $ibo-input-select--value--min-midth: 50px;
 
 $ibo-input-select-autocomplete--value--min-midth: 150px;
@@ -55,18 +59,27 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
     input {
       border-width: 0px;
       border-color: white;
-      padding-left: $ibo-input--padding-x;
+      padding-left: $ibo-input-select--padding-x;
     }
 
     > [data-value] {
       height: $ibo-input-select-selectize--value--height;
       line-height: $ibo-input-select-selectize--value--line-height;
-      padding-left: $ibo-input--padding-x;
+      padding-left: $ibo-input-select--padding-x;
     }
   }
 
   &[size]{
     height: auto;
+  }
+
+  &[multiple] {
+    padding-left: unset;
+    padding-right: unset;
+
+    option {
+      padding: $ibo-input-select--option--padding-y $ibo-input-select--option--padding-x;
+    }
   }
 }
 .ibo-input-select-autocomplete{
