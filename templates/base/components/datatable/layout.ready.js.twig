@@ -85,7 +85,8 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             } else {
                 $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
             }
-            
+
+            $(this).closest('.dataTables_wrapper').unblock();
             $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
                 //disable select action when there is a link
                 e.stopPropagation();
@@ -93,6 +94,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         },
     {% else %}
         drawCallback: function () {
+            $(this).closest('.dataTables_wrapper').unblock();
             // Hiding pagination if only one page
             if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
                 $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
@@ -181,9 +183,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
         }
-        this.find('.ibo-dataTables--processing').remove();
-        this.find('tbody').unblock();
-        this.find('thead').unblock();
+        this.closest('.dataTables_wrapper').unblock();
 
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');

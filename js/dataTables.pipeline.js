@@ -26,36 +26,14 @@ $.fn.dataTable.pipeline = function (opts, initJson) {
 	var draw_number = 1;
 
 	return function (request, drawCallback, settings) {
-		let message = settings["oLanguage"]["processing"];
-		if (this.find('tbody').find('td').length == 0) {
-			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
-			this.find('tbody').block({
-				message: message,
-				css: {
-					border: '0px '
-				}
-			});
-			this.find('thead').block({
-				message: '',
-				css: {
-					border: '0px '
-				}
-			});
-		} else {
-			this.find('tbody').block({
-				message: '',
-				css: {
-					border: '0px '
-				}
-			});
-			this.find('thead').block({
-				message: message,
-				css: {
-					border: '0px ',
-					top: '20px',
-				}
-			});
-		}
+		let message = '<i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i>';
+		this.closest('.dataTables_wrapper').block({
+			message: message,
+			css: {
+				border: '0px '
+			}
+		});
+
 		var ajax = false;
 		var requestStart = request.start;
 		var drawStart = request.start;
