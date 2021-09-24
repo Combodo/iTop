@@ -44,7 +44,8 @@
       "*": "dist"
     },
     "sort-packages": true,
-    "classmap-authoritative": true
+    "classmap-authoritative": true,
+    "platform-check": true
   },
   "autoload": {
     "classmap": [
