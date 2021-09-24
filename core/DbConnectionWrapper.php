@@ -47,7 +47,7 @@ class DbConnectionWrapper
 		return static::$oDbCnxStandard;
 	}
 
-	public static function SetDbConnections(mysqli $oMysqli): void
+	public static function SetDbConnection(mysqli $oMysqli): void
 	{
 		static::$oDbCnxStandard = $oMysqli;
 		static::SetDbConnectionMockForQuery($oMysqli);

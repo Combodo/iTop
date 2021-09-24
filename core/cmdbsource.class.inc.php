@@ -133,7 +133,7 @@ class CMDBSource
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
 
 		$oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
-		DbConnectionWrapper::SetDbConnections($oMysqli);
+		DbConnectionWrapper::SetDbConnection($oMysqli);
 	}
 
 	/**
