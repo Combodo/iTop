@@ -17,7 +17,7 @@ use mysqli;
  *
  * @used-by \CMDBSource
  *
- * @since 2.7.5 N°3513 new mockable {@see mysqli} object in {@see CMDBSource}
+ * @since 2.7.5 N°3513 new mockable {@see mysqli} object in {@see CMDBSource} //FIXME
  * @since 3.0.0 N°4325 add this object to avoid confusions and document the wanted behavior
  */
 class DbConnectionWrapper

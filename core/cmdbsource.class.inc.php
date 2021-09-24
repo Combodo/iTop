@@ -343,7 +343,7 @@ class CMDBSource
 			// In case we don't have rights to enumerate the databases
 			// Let's try to connect directly
 			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			return @((bool)DbConnectionWrapper::GetDbConnection()->query("USE `$sSource`"));
+			return @((bool)DbConnectionWrapper::GetDbConnection(true)->query("USE `$sSource`"));
 		}
 
 	}
@@ -391,7 +391,7 @@ class CMDBSource
 	public static function SelectDB($sSource)
 	{
 		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-		if (!((bool)DbConnectionWrapper::GetDbConnection()->query("USE `$sSource`"))) {
+		if (!((bool)DbConnectionWrapper::GetDbConnection(true)->query("USE `$sSource`"))) {
 			throw new MySQLException('Could not select DB', array('db_name' => $sSource));
 		}
 		self::$m_sDBName = $sSource;
@@ -630,7 +630,7 @@ class CMDBSource
 		// Get error info
 		$sUser = UserRights::GetUser();
 		/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-		$oError = DbConnectionWrapper::GetDbConnection($bForQuery)->query('SHOW ENGINE INNODB STATUS');
+		$oError = DbConnectionWrapper::GetDbConnection(true)->query('SHOW ENGINE INNODB STATUS');
 		if ($oError !== false) {
 			$aData = $oError->fetch_all(MYSQLI_ASSOC);
 			$sInnodbStatus = $aData[0];
