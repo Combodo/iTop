@@ -708,7 +708,7 @@ $(function()
 				.appendTo(this.elements.criterion_area.find('.sf_criterion_row:first'));
 
 			var sButtonText = (this.options.auto_submit === true) ? Dict.S('UI:Button:Refresh') : Dict.S('UI:Button:Search');
-			var sButtonIcon = (this.options.auto_submit === true) ? 'fas fa-sync' : 'fas fa-search';
+			var sButtonIcon = (this.options.auto_submit === true) ? 'fas fa-sync-alt' : 'fas fa-search';
 			var oButtonElem = $('<div class="sfb_header"></div>')
 				.append('<a aria-label="' + sButtonText + '" data-tooltip-content="' + sButtonText + '" href="#"><span class="fa-fw ' + sButtonIcon + '"></span></a>')
 				.appendTo(this.elements.submit_button);

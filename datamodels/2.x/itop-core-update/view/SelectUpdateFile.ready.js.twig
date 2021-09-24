@@ -86,7 +86,7 @@ $("#file").on("change", function(e) {
 $("#check-update").on("click", function(e) {
     $("#submit-wait").removeClass("ibo-is-hidden");
     $(this).prop("disabled", true);
-    $(".ajax-spin").removeClass("fa-spinner").removeClass("fa-spin").addClass("fa-times");
+    $(".ajax-spin").removeClass("fa-sync-alt").removeClass("fa-spin").addClass("fa-times");
     $(this).parents('form').submit();
     e.preventDefault();
     e.stopPropagation();

@@ -403,7 +403,7 @@ function LaunchBackupNow()
 	{
 		if(!$('#waitbackup').length)
 		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sBackUpNow" id="waitbackup"><i class="ajax-spin fas fa-spinner fa-spin"></i> $sPleaseWaitBackup</div>'));
+			$('body').append($('<div class="mt-5 text-nowrap" title="$sBackUpNow" id="waitbackup"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitBackup</div>'));
 		}
 		$('#waitbackup').dialog();
 
@@ -432,7 +432,7 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 	}
 	if(!$('#waitrestore').length)
 		{
-			$('body').append($('<div class="mt-5 text-nowrap" title="$sRestore" id="waitrestore"><i class="ajax-spin fas fa-spinner fa-spin"></i> $sPleaseWaitRestore</div>'));
+			$('body').append($('<div class="mt-5 text-nowrap" title="$sRestore" id="waitrestore"><i class="ajax-spin fas fa-sync-alt fa-spin"></i> $sPleaseWaitRestore</div>'));
 		}
 	$('#waitrestore').dialog();
 

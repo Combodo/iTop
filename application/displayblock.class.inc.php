@@ -2335,7 +2335,7 @@ class MenuBlock extends DisplayBlock
 			// - Refresh
 			if ($sRefreshAction != '') {
 				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
-				$oActionButton->SetIconClass('fas fa-sync')
+				$oActionButton->SetIconClass('fas fa-sync-alt')
 					->SetOnClickJsCode($sRefreshAction)
 					->SetTooltip(Dict::S('UI:Button:Refresh'))
 					->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
