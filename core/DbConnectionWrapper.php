@@ -26,27 +26,40 @@ class DbConnectionWrapper
 	protected static $oDbCnxStandard;
 
 	/**
+	 * Can contain a genuine mysqli object, or a mock that would emulate {@see mysqli::query()}
+	 *
 	 * @var mysqli
 	 * @used-by \Combodo\iTop\Test\UnitTest\Core\TransactionsTest
 	 */
-	protected static $oDbCnxMockable;
+	protected static $oDbCnxMockableForQuery;
 
-	public static function GetDbConnection(bool $bIsMockable = false): ?mysqli
+	/**
+	 * @param bool $bIsForQuery set to true if using {@see mysqli::query()}
+	 *
+	 * @return \mysqli|null
+	 */
+	public static function GetDbConnection(bool $bIsForQuery = false): ?mysqli
 	{
-		if ($bIsMockable) {
-			return self::$oDbCnxMockable;
+		if ($bIsForQuery) {
+			return static::$oDbCnxMockableForQuery;
 		}
 
-		return self::$oDbCnxStandard;
+		return static::$oDbCnxStandard;
 	}
 
-	public static function SetDbConnection(mysqli $oMysqli, bool $bIsMockable = false): void
+	public static function SetDbConnections(mysqli $oMysqli): void
 	{
-		self::$oDbCnxMockable = $oMysqli;
-		if ($bIsMockable) {
-			return;
-		}
+		static::$oDbCnxStandard = $oMysqli;
+		static::SetDbConnectionMockForQuery($oMysqli);
+	}
 
-		self::$oDbCnxStandard = $oMysqli;
+	/**
+	 * Use this to register a mock that will handle {@see mysqli::query()}
+	 *
+	 * @param \mysqli $oMysqli
+	 */
+	public static function SetDbConnectionMockForQuery(mysqli $oMysqli): void
+	{
+		static::$oDbCnxMockableForQuery = $oMysqli;
 	}
 }

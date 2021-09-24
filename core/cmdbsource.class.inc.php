@@ -133,7 +133,7 @@ class CMDBSource
 		self::$m_sDBTlsCA = empty($sTlsCA) ? null : $sTlsCA;
 
 		$oMysqli = self::GetMysqliInstance($sServer, $sUser, $sPwd, $sSource, $bTlsEnabled, $sTlsCA, true);
-		DbConnectionWrapper::SetDbConnection($oMysqli);
+		DbConnectionWrapper::SetDbConnections($oMysqli);
 	}
 
 	/**
@@ -447,19 +447,6 @@ class CMDBSource
 	public static function GetMysqli()
 	{
 		return DbConnectionWrapper::GetDbConnection(false);
-	}
-
-	/**
-	 * @param mysqli $oMysqli
-	 *
-	 * @used-by \Combodo\iTop\Test\UnitTest\Core\TransactionsTest
-	 * @noinspection PhpUnused
-	 * @noinspection PhpMissingParamTypeInspection
-	 * @noinspection ReturnTypeCanBeDeclaredInspection
-	 */
-	protected static function SetMySQLiForQuery($oMysqli)
-	{
-		DbConnectionWrapper::SetDbConnection($oMysqli, true);
 	}
 
 	public static function GetErrNo()

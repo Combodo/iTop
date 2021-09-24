@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
+use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Exception;
 use MetaModel;
@@ -48,7 +49,7 @@ class TransactionsTest extends ItopTestCase
 				}
 			));
 
-		$this->InvokeNonPublicStaticMethod('CMDBSource', 'SetMySQLiForQuery', [$oMockMysqli]);
+		DbConnectionWrapper::SetDbConnectionMockForQuery($oMockMysqli);
 	}
 
 	/**
