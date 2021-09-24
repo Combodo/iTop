@@ -443,6 +443,8 @@ class CMDBSource
 
 	/**
 	 * @return \mysqli
+	 *
+	 * @since 2.5.0 N°1260
 	 */
 	public static function GetMysqli()
 	{
