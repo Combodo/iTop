@@ -17,8 +17,10 @@ use mysqli;
  *
  * @used-by \CMDBSource
  *
- * @since 2.7.5 N°3513 new mockable {@see mysqli} object in {@see CMDBSource} //FIXME
- * @since 3.0.0 N°4325 add this object to avoid confusions and document the wanted behavior
+ * @since 3.0.0 N°4325 Object creation
+ *          This wrapper handles the 2 {@mysqli myqsli} attributes that were previously in {@see CMDBSource}
+ *          To allow testing we added a second mysqli object (N°3513 in 2.7.5) and code became a bit confusing :/
+ *          With this wrapper everything is in the same place, and we can express the intention more clearly !
  */
 class DbConnectionWrapper
 {
