@@ -732,8 +732,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						// Put the value corresponding to the newly created object in the autocomplete
 						var oTemp = $('<div>'+data.name+'</div>');
 						var txt = oTemp.text(); // this causes HTML entities to be interpreted
-						$('#label_'+me.id).val(txt);
 						$('#'+me.id).val(data.id);
+						$('#label_'+me.id).val(txt);
+						$('#label_'+me.id).data('selected_value',txt);
 						$('#label_'+me.id).removeClass('ac_dlg_loading');
 						$('#label_'+me.id).focus();
 					}
