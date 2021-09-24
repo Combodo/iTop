@@ -63,7 +63,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sStatusCode;
 	/** @var string Label of the current value of the attribute carrying the state for $sClassName  */
 	protected $sStatusLabel;
-	/** @var string */
+	/** @var string Color value (eg. #ABCDEF, var(--foo-color), ...) */
 	protected $sStatusColor;
 
 	/**
@@ -239,6 +239,11 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 			$oStyle = MetaModel::GetEnumStyle($this->sClassName, MetaModel::GetStateAttributeCode($this->sClassName), $this->sStatusCode);
 			if ($oStyle !== null) {
 				$this->sStatusColor = $oStyle->GetMainColor();
+			}
+			// If no style defined, fallback on a default color
+			else {
+				$sColorName = UIHelper::GetColorNameFromStatusCode($this->sStatusCode);
+				$this->sStatusColor = "var(--ibo-lifecycle-$sColorName-state-primary-color)";
 			}
 		}
 	}

@@ -37,7 +37,7 @@ class PillFactory
 		if ($oStyle !== null) {
 			$oPill->SetCSSColorClass($oStyle->GetStyleClass());
 		} else {
-			$oPill->SetSemanticColor(UIHelper::GetColorFromStatusCode($sStateCode));
+			$oPill->SetSemanticColor(UIHelper::GetColorNameFromStatusCode($sStateCode));
 		}
 
 		return $oPill;
