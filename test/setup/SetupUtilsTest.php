@@ -125,7 +125,7 @@ class SetupUtilsTest extends ItopTestCase
 	/**
 	 * @covers SetupUtils::PHP_MIN_VERSION
 	 * @covers SetupUtils::PHP_NOT_VALIDATED_VERSION
-	 * @covers composer.json
+	 * @covers composerJson
 	 */
 	public function testPhpMinVersionConsistency()
 	{
