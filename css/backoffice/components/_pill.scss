@@ -78,6 +78,10 @@ $ibo-pill-states-colors: (
 
 /* Rules */
 .ibo-pill {
+  /* --ibo-main-color-xxx is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
+  --ibo-main-color--100: map-get(map-get($ibo-pill-states-colors, 'neutral'), 'primary-color');
+  --ibo-main-color--900: map-get(map-get($ibo-pill-states-colors, 'neutral'), 'secondary-color');
+
   @extend %ibo-fully-centered-content;
   max-width: $ibo-pill--max-width;
   margin: $ibo-pill--margin;

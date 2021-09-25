@@ -24,7 +24,7 @@ class Pill extends UIContentBlock
 	public const BLOCK_CODE = 'ibo-pill';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/pill/layout';
 
-	/** @var null|string CSS class that will be used on the block */
+	/** @var null|string CSS class that will be used on the block to define its color scheme */
 	protected $sCSSColorClass;
 	/** @var null|string URL to go to if the pill is clicked */
 	protected $sUrl;
