@@ -55,6 +55,21 @@ class MFCompiler
 	const DATA_PRECOMPILED_FOLDER = 'data'.DIRECTORY_SEPARATOR.'precompiled_styles'.DIRECTORY_SEPARATOR;
 
 	/**
+	 * @var string
+	 * @see self::GenerateStyleDataFromNode
+	 * @internal
+	 * @since 3.0.0
+	 */
+	public const ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS = 'class';
+	/**
+	 * @var string
+	 * @see self::GenerateStyleDataFromNode
+	 * @internal
+	 * @since 3.0.0
+	 */
+	public const ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM = 'enum';
+
+	/**
 	 * Path to the "use symlinks" file
 	 * If this file is present, then we will compile to symlink !
 	 *
@@ -1211,15 +1226,9 @@ EOF
 
 		// Style
 		if ($oStyle = $oProperties->GetOptionalElement('style')) {
-			$sMainColor = $oStyle->GetChildText('main_color');
-			$sComplementaryColor = $oStyle->GetChildText('complementary_color');
-			$sStyleCSSClass = "ibo-dm-class--$sClass";
-			$sStyleCSSAltClass = "ibo-dm-class-alt--$sClass";
-			if (($sIcon = $oStyle->GetChildText('icon')) && (strlen($sIcon) > 0)) {
-				$sIcon = $sModuleRelativeDir.'/'.$sIcon;
-				$sIcon = ", '$sIcon'";
-			}
-			$aClassParams['style'] = "new ormStyle('$sStyleCSSClass', '$sStyleCSSAltClass', '$sMainColor', '$sComplementaryColor', null $sIcon)";
+			$aClassStyleData = $this->GenerateStyleDataFromNode($oStyle, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS, $sClass);
+			$aClassParams['style'] = $aClassStyleData['orm_style_instantiation'];
+			$sCss .= $aClassStyleData['scss'];
 		}
 
 
@@ -1439,9 +1448,9 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, 'enum', $sClass, $sAttCode, $sCode);
-							$aStyledValues[] = $aEnumStyleData['orm_style'];
-							$sCss .= $aEnumStyleData['css'];
+							$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
+							$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
+							$sCss .= $aEnumStyleData['scss'];
 						}
 					}
 					$sValues = '"'.implode(',', $aValues).'"';
@@ -1452,9 +1461,9 @@ EOF
 					}
 					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oDefaultStyleNode) {
-						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, 'enum', $sClass, $sAttCode);
-						$aParameters['default_style'] = $aEnumStyleData['orm_style'];
-						$sCss .= $aEnumStyleData['css'];
+						$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
+						$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
+						$sCss .= $aEnumStyleData['scss'];
 					}
 					$aParameters['display_style'] = $this->GetPropString($oField, 'display_style', 'list');
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
@@ -1474,9 +1483,9 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, 'enum', $sClass, $sAttCode, $sCode);
-							$aStyledValues[] = $aEnumStyleData['orm_style'];
-							$sCss .= $aEnumStyleData['css'];
+							$aEnumStyleData = $this->GenerateStyleDataFromNode($oStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sCode);
+							$aStyledValues[] = $aEnumStyleData['orm_style_instantiation'];
+							$sCss .= $aEnumStyleData['scss'];
 						}
 					}
 					//	new style... $sValues = 'array('.implode(', ', $aValues).')';
@@ -1487,9 +1496,9 @@ EOF
 					}
 					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oDefaultStyleNode) {
-						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, 'enum', $sClass, $sAttCode);
-						$aParameters['default_style'] = $aEnumStyleData['orm_style'];
-						$sCss .= $aEnumStyleData['css'];
+						$aEnumStyleData = $this->GenerateStyleDataFromNode($oDefaultStyleNode, $sModuleRelativeDir, self::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode);
+						$aParameters['default_style'] = $aEnumStyleData['orm_style_instantiation'];
+						$sCss .= $aEnumStyleData['scss'];
 					}
 					$aParameters['allowed_values'] = "new ValueSetEnum($sValues)";
 					$aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
@@ -2217,70 +2226,152 @@ EOF
 	}
 
 	/**
-	 * This method is public in order to be used in the tests
-	 *
-	 * @internal
+	 * @internal This method is public in order to be used in the tests
 	 *
 	 * @param \MFElement $oNode Style node, can be either a <style> node of a specific field value, or a <default_style> node of a field
-	 * @param string $sElementType
+	 * @param string $sElementType Type of element the style is for: 'enum' for an Attribute(Meta)Enum field, 'class' for a class. {@see self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS, ...}
 	 * @param string $sClass
-	 * @param string $sAttCode
-	 * @param string|null $sValueCode Code of the value of the field. If null, then it will generate data as for the default style
+	 * @param string|null $sAttCode Optional, att. code
+	 * @param string|null $sValue Optional, value (code) of the field. Used onlyIf null, then it will generate data as for the default style
 	 *
-	 * @return array ['orm_style' => <GENERATED_ORMSTYLE_INSTANTIATION>, 'css' => <GENERATED_CSS>]
+	 * @return array Data generated from a style node of the DM ['orm_style_instantiation' => <GENERATED_ORMSTYLE_INSTANTIATION>, 'scss' => <GENERATED_SCSS>]
 	 * @throws \DOMFormatException
 	 */
-	public function GenerateFieldStyleData(MFElement $oNode, string $sElementType, string $sClass, string $sAttCode, string $sValueCode = null): array
+	public function GenerateStyleDataFromNode(MFElement $oNode, string $sModuleRelDir, string $sElementType, string $sClass, ?string $sAttCode = null, ?string $sValue = null): array
 	{
 		$aData = [];
 
-		if ($sValueCode === null) {
-			$sCssClassSuffix = "";
-			$sOrmStylePrefix = "";
-		} else {
-			$sCssClassSuffix = "-".utils::GetSafeId($sValueCode);
-			$sOrmStylePrefix = "'$sValueCode' => ";
+		$sCssClassSuffix = "";
+		$sOrmStylePrefix = "";
+
+		// In case $sAttCode and optionally $sValue are passed, we prepare additional info. Typically used for (meta)enum attributes
+		if (is_null($sAttCode) === false) {
+			$sCssClassSuffix .= "-$sAttCode";
+
+			if (is_null($sValue) === false) {
+				$sCssClassSuffix .= "-".utils::GetSafeId($sValue);
+				$sOrmStylePrefix = "'$sValue' => ";
+			}
 		}
 
-		$sCssClass = "ibo-dm-$sElementType--$sClass-$sAttCode$sCssClassSuffix";
-		$sCssClassAlt = "ibo-dm-$sElementType-alt--$sClass-$sAttCode$sCssClassSuffix";
+		// CSS classes representing the element (regular and alternative)
+		$sCssRegularClass = "ibo-dm-$sElementType--$sClass$sCssClassSuffix";
+		$sCssAlternativeClass = "ibo-dm-$sElementType-alt--$sClass$sCssClassSuffix";
 
-		$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
-		$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);
+		// Retrieve colors (optional depending on the element)
+		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
+			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
+			if (is_null($sMainColorForOrm)) {
+				// TODO 3.0.0: Should check for main color in parent classes definition
+				$sMainColorForOrm = "null";
+			}
+			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
 
-		$sMainColorScssVariableName = "\$$sCssClass--main-color";
-		$sMainColorCssVariableName = "--$sCssClass--main-color";
+			$sComplementaryColorForOrm = $this->GetPropString($oNode, 'complementary_color', null);
+			if (is_null($sComplementaryColorForOrm)) {
+				// TODO 3.0.0: Should check for complementary color in parent classes definition
+				$sComplementaryColorForOrm = "null";
+			}
+			$sComplementaryColorForCss = $this->GetPropString($oNode, 'complementary_color', null, false);
+		} else {
+			$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
+			$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);
 
-		$sComplementaryColorForOrm = $this->GetMandatoryPropString($oNode, 'complementary_color');
-		$sComplementaryColorForCss = $this->GetMandatoryPropString($oNode, 'complementary_color', false);
+			$sComplementaryColorForOrm = $this->GetMandatoryPropString($oNode, 'complementary_color');
+			$sComplementaryColorForCss = $this->GetMandatoryPropString($oNode, 'complementary_color', false);
+		}
+		$bHasMainColor = is_null($sMainColorForCss) === false;
+		$bHasComplementaryColor = is_null($sComplementaryColorForCss) === false;
 
-		$sComplementaryColorScssVariableName = "\$$sCssClass--complementary-color";
-		$sComplementaryColorCssVariableName = "--$sCssClass--complementary-color";
+		// Optional decoration classes
+		$sDecorationClasses = $this->GetPropString($oNode, 'decoration_classes', null);
+		if (is_null($sDecorationClasses)) {
+			$sDecorationClasses = "null";
+		}
 
-		$sDecorationClasses = $this->GetPropString($oNode, 'decoration_classes', '');
+		// Optional icon
+		$sIconRelPath = $this->GetPropString($oNode, 'icon', null, false);
+		if (is_null($sIconRelPath)) {
+			$sIconRelPath = "null";
+		} else {
+			$sIconRelPath = "'$sModuleRelDir/$sIconRelPath'";
+		}
 
-		$aData['orm_style'] = "$sOrmStylePrefix new ormStyle('$sCssClass', '$sCssClassAlt', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses)";
-		$aData['css'] = <<<CSS
-$sMainColorScssVariableName: $sMainColorForCss !default;
-$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;
+		// Generate ormStyle instantiation
+		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle('$sCssRegularClass', '$sCssAlternativeClass', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
+
+		// Generate SCSS declaration
+		$sScss = "";
+		if ($bHasMainColor || $bHasComplementaryColor) {
+			if ($bHasMainColor) {
+				$sMainColorScssVariableName = "\$$sCssRegularClass--main-color";
+				$sMainColorCssVariableName = "--$sCssRegularClass--main-color";
+
+				$sMainColorScssVariableDeclaration = "$sMainColorScssVariableName: $sMainColorForCss !default;";
+				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
+
+				$sCssRegularClassMainColorDeclaration = "--ibo-main-color: $sMainColorScssVariableName;";
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);";
+
+				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: $sMainColorScssVariableName;";
+			} else {
+				$sMainColorScssVariableName = null;
+				$sMainColorCssVariableName = null;
+
+				$sMainColorScssVariableDeclaration = null;
+
+				$sCssRegularClassMainColorDeclaration = null;
+				$sCssRegularClassMainColor900Declaration = null;
+
+				$sCssAlternativeClassComplementaryColorDeclaration = null;
+			}
+
+			if ($bHasComplementaryColor) {
+				$sComplementaryColorScssVariableName = "\$$sCssRegularClass--complementary-color";
+				$sComplementaryColorCssVariableName = "--$sCssRegularClass--complementary-color";
+
+				$sComplementaryScssVariableDeclaration = "$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;";
+				$sComplementaryCssVariableDeclaration = "$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};";
+
+				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color: $sComplementaryColorScssVariableName;";
+
+				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color: $sComplementaryColorScssVariableName;";
+			} else {
+				$sComplementaryColorScssVariableName = null;
+				$sComplementaryColorCssVariableName = null;
+
+				$sComplementaryScssVariableDeclaration = null;
+				$sComplementaryCssVariableDeclaration = null;
+
+				$sCssRegularClassComplementaryColorDeclaration = null;
+
+				$sCssAlternativeClassMainColorDeclaration = null;
+			}
+
+			$sScss .= <<<CSS
+$sMainColorScssVariableDeclaration
+$sComplementaryScssVariableDeclaration
 
 :root {
-	$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};
-	$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};
+	$sMainColorCssVariableDeclaration
+	$sComplementaryCssVariableDeclaration
 }
 
-.$sCssClass {
-	--ibo-main-color: $sMainColorScssVariableName;
-	--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);
-	--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);
-	--ibo-complementary-color: $sComplementaryColorScssVariableName;
+.$sCssRegularClass {
+	$sCssRegularClassMainColorDeclaration
+	$sCssRegularClassMainColor100Declaration
+	$sCssRegularClassMainColor900Declaration
+	$sCssRegularClassComplementaryColorDeclaration
 }
-.$sCssClassAlt {
-	--ibo-main-color: $sComplementaryColorScssVariableName;
-	--ibo-complementary-color: $sMainColorScssVariableName;
+.$sCssAlternativeClass {
+	$sCssAlternativeClassMainColorDeclaration
+	$sCssAlternativeClassComplementaryColorDeclaration
 }
 
 CSS;
+		}
+		$aData['scss'] = $sScss;
 
 		return $aData;
 	}

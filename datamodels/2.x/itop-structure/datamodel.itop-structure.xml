@@ -392,8 +392,8 @@
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-customer.svg</icon>
-          <main_color>blue-grey</main_color>
-          <complementary_color>white</complementary_color>
+          <main_color>#546E7A</main_color>
+          <complementary_color>#FFFFFF</complementary_color>
         </style>
         <reconciliation>
           <attributes>

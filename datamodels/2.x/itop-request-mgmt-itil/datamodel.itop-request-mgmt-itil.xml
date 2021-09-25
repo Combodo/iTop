@@ -26,7 +26,7 @@
 				</fields_semantic>
 				<style>
           <icon>images/user-request.png</icon>
-          <main_color>blue</main_color>
+          <main_color>#2C5382</main_color>
         </style>
 				<reconciliation>
 					<attributes>

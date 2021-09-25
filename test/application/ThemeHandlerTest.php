@@ -92,13 +92,13 @@ class ThemeHandlerTest extends ItopTestCase
 						$oValueNodes = $oFieldNode->GetNodes("value");
 						foreach ($oValueNodes as $oValueNode) {
 							$sValueCode = $oValueNode->getAttribute("id");
-							$sDmCssContent .= $oMFCompiler->GenerateFieldStyleData($oValueNode, $sClass, $sAttCode, $sValueCode)['css'];
+							$sDmCssContent .= $oMFCompiler->GenerateStyleDataFromNode($oValueNode, $oMFCompiler::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode, $sValueCode)['scss'];
 						}
 
 						// Default style
 						$oDefaultStyleNode = $oFieldNode->GetOptionalElement('default_style');
 						if ($oDefaultStyleNode) {
-							$sDmCssContent .= $oMFCompiler->GenerateFieldStyleData($oDefaultStyleNode, $sClass, $sAttCode)['css'];
+							$sDmCssContent .= $oMFCompiler->GenerateStyleDataFromNode($oDefaultStyleNode, $oMFCompiler::ENUM_STYLE_HOST_ELEMENT_TYPE_ENUM, $sClass, $sAttCode)['scss'];
 						}
 					}
 				}
