@@ -13,7 +13,7 @@ $ibo-button-group--elements-separator--width: 1px !default;
 $ibo-button-group--elements-separator--border-left: 1px solid transparent !default;
 
 .ibo-button-group {
-  display: flex; /* Ensure that buttons of a same group always stay on the same line */
+  display: inline-flex; /* Ensure that buttons of a same group always stay on the same line */
   flex-wrap: nowrap;
 
   .ibo-button {
