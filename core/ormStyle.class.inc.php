@@ -21,7 +21,7 @@ class ormStyle
 	protected $sAltStyleClass;
 	/** @var string */
 	protected $sDecorationClasses;
-	/** @var string */
+	/** @var string Relative path (from current environment) to the icon */
 	protected $sIcon;
 
 	/**
@@ -41,7 +41,7 @@ class ormStyle
 		$this->sStyleClass = $sStyleClass;
 		$this->sAltStyleClass = $sAltStyleClass;
 		$this->sDecorationClasses = $sDecorationClasses;
-		$this->sIcon = $sIcon;
+		$this->SetIcon($sIcon);
 	}
 
 	/**
@@ -140,22 +140,36 @@ class ormStyle
 	}
 
 	/**
-	 * @return string
-	 */
-	public function GetIcon(): ?string
-	{
-		return $this->sIcon;
-	}
-
-	/**
 	 * @param string|null $sIcon
 	 *
 	 * @return $this
 	 */
 	public function SetIcon(?string $sIcon)
 	{
-		$this->sIcon = $sIcon;
+		$this->sIcon = (strlen($sIcon) === 0) ? null : $sIcon;
 		return $this;
 	}
 
+	/**
+	 * @see static::$sIcon
+	 * @return string|null Relative path (from the current environment) of the icon
+	 */
+	public function GetIconAsRelPath(): ?string
+	{
+		return $this->sIcon;
+	}
+
+	/**
+	 * @see static::$sIcon
+	 * @return string|null Absolute URL of the icon
+	 * @throws \Exception
+	 */
+	public function GetIconAsAbsUrl(): ?string
+	{
+		if (is_null($this->sIcon)) {
+			return null;
+		}
+
+		return utils::GetAbsoluteUrlModulesRoot().$this->sIcon;
+	}
 }

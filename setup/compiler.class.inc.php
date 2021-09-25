@@ -1222,7 +1222,7 @@ EOF
 			$sStyleCSSAltClass = "ibo-class-style-alt--$sClass";
 			if (($sIcon = $oStyle->GetChildText('icon')) && (strlen($sIcon) > 0)) {
 				$sIcon = $sModuleRelativeDir.'/'.$sIcon;
-				$sIcon = ", utils::GetAbsoluteUrlModulesRoot().'$sIcon'";
+				$sIcon = ", '$sIcon'";
 			}
 			$aClassParams['style'] = "new ormStyle('$sStyleCSSClass', '$sStyleCSSAltClass', '$sMainColor', '$sComplementaryColor', null $sIcon)";
 		}
