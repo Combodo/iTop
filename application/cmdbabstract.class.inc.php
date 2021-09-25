@@ -2783,7 +2783,7 @@ JS
 					case UR_ALLOWED_YES:
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClass('action');
-						$oButton->SetColor(Button::ENUM_COLOR_NEUTRAL);
+						$oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
 						$oToolbarButtons->AddSubBlock($oButton);
 						break;
 

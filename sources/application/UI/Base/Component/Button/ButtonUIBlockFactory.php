@@ -54,7 +54,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	{
 		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
-			->SetColor(Button::ENUM_COLOR_NEUTRAL);
+			->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
 
 		if (!empty($sName)) {
 			$oButton->SetName($sName);
@@ -81,7 +81,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
 	/**
@@ -102,7 +102,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
 	/**
@@ -123,7 +123,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
 	/**
@@ -145,7 +145,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -171,7 +171,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -194,7 +194,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_PRIMARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_PRIMARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -216,7 +216,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SECONDARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_SECONDARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -238,7 +238,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_VALIDATION, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_VALIDATION, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -260,7 +260,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	): Button {
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -285,7 +285,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		$sLabel = $sLabel ?? Dict::S('UI:Button:Cancel');
 		$sName = $sName ?? 'cancel';
 
-		return static::MakeForAction($sLabel, Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
 
@@ -307,7 +307,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		bool $bIsSubmit = false,
 		?string $sId = null
 	) {
-		$oButton =  static::MakeForAction('', Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
+		$oButton =  static::MakeForAction('', Button::ENUM_COLOR_SCHEME_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 		$oButton->SetIconClass($sIconClasses);
 		$oButton->SetTooltip($sTooltipText);
@@ -337,7 +337,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 			$sTarget = ButtonURL::DEFAULT_TARGET;
 		}
 		$sType = empty($sIconClasses) ? Button::ENUM_ACTION_TYPE_REGULAR : Button::ENUM_ACTION_TYPE_ALTERNATIVE;
-		$oButton = static::MakeForLink($sLabel, $sURL,Button::ENUM_COLOR_NEUTRAL, $sType,  $sTarget, $sId);
+		$oButton = static::MakeForLink($sLabel, $sURL,Button::ENUM_COLOR_SCHEME_NEUTRAL, $sType,  $sTarget, $sId);
 
 		if (!empty($sIconClasses)) {
 			$oButton->SetIconClass($sIconClasses);
@@ -362,7 +362,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		if (empty($sTarget)) {
 			$sTarget = ButtonURL::DEFAULT_TARGET;
 		}
-		$oButton = static::MakeForLink('', $sURL,Button::ENUM_COLOR_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sTarget, $sId);
+		$oButton = static::MakeForLink('', $sURL,Button::ENUM_COLOR_SCHEME_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sTarget, $sId);
 		$oButton->SetIconClass($sIconClasses);
 		$oButton->SetTooltip($sTooltipText);
 
@@ -384,7 +384,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		?string $sId = null
 	) {
 		$oButton = static::MakeIconLink($sIconClasses, $sTooltipText, $sURL,  $sTarget, $sId);
-		$oButton->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
+		$oButton->SetColor(Button::ENUM_COLOR_SCHEME_DESTRUCTIVE);
 		$oButton->SetTooltip($sTooltipText);
 		return $oButton;
 	}

@@ -87,7 +87,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 
 		$this->ComputeObjectName($oObject);
 
-		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
+		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR_SCHEME, $sId);
 
 		$this->SetColorFromClass($this->sClassName);
 		$this->ComputeIconUrl($oObject);

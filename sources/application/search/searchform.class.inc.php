@@ -176,7 +176,7 @@ class SearchForm
 		$oForm->SetAction($sAction);
 		$oForm->AddSubBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
 
-		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
+		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_SCHEME_CYAN, $sSearchFormId);
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
 			->AddTitleBlock($oForm);
 		$oUiBlock->AddSubBlock($oUiSearchBlock);

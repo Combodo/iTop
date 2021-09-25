@@ -46,7 +46,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeNeutral(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_NEUTRAL, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_NEUTRAL, $sId);
 	}
 
 	/**
@@ -60,7 +60,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForInformation(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_INFORMATION, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_INFORMATION, $sId);
 
 	}
 
@@ -75,7 +75,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForSuccess(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SUCCESS, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_SUCCESS, $sId);
 	}
 
 	/**
@@ -89,7 +89,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForWarning(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_WARNING, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_WARNING, $sId);
 	}
 
 	/**
@@ -103,7 +103,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForDanger(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_DANGER, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_DANGER, $sId);
 	}
 
 	/**
@@ -117,7 +117,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeForFailure(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_FAILURE, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_FAILURE, $sId);
 	}
 
 	/**
@@ -131,7 +131,7 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeWithBrandingPrimaryColor(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_PRIMARY, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_PRIMARY, $sId);
 	}
 
 	/**
@@ -145,6 +145,6 @@ class AlertUIBlockFactory extends AbstractUIBlockFactory
 	 */
 	public static function MakeWithBrandingSecondaryColor(string $sTitle = '', string $sContent = '', ?string $sId = null)
 	{
-		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SECONDARY, $sId);
+		return new Alert($sTitle, $sContent, Alert::ENUM_COLOR_SCHEME_SECONDARY, $sId);
 	}
 }

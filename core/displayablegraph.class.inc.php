@@ -1447,7 +1447,7 @@ class DisplayableGraph extends SimpleGraph
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
 		$sSearchToggle = Dict::S('UI:Search:Toggle');
 		$oP->add("<div class=\"not-printable\">\n");
-		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_CYAN, 'ds_flash');
+		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_SCHEME_CYAN, 'ds_flash');
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
 		$oUiSearchBlock->SetIsCollapsible(true);
 		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(

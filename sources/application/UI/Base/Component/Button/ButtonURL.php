@@ -66,7 +66,7 @@ class ButtonURL extends Button
 	 */
 	public function __construct(
 		string $sLabel, string $sURL, string $sId = null, string $sTarget = self::DEFAULT_TARGET,  string $sTooltip = '', string $sIconClass = '',
-		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '',
+		string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR_SCHEME, string $sJsCode = '',
 		string $sOnClickJsCode = '')
 	{
 		parent::__construct($sLabel, $sId, $sTooltip, $sIconClass,
