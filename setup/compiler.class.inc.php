@@ -1213,13 +1213,8 @@ EOF
 		if ($oStyle = $oProperties->GetOptionalElement('style')) {
 			$sMainColor = $oStyle->GetChildText('main_color');
 			$sComplementaryColor = $oStyle->GetChildText('complementary_color');
-//			$bHasMainColor = (strlen($sMainColor) > 0);
-//			$bHasComplementaryColor = (strlen($sComplementaryColor) > 0);
-//			if ($bHasMainColor xor $bHasComplementaryColor) {
-//				throw new DOMFormatException("Tags 'main_color' and 'complementary_color' must be set or empty together in node 'style' of class $sClass");
-//			}
-			$sStyleCSSClass = "ibo-class-style--$sClass";
-			$sStyleCSSAltClass = "ibo-class-style-alt--$sClass";
+			$sStyleCSSClass = "ibo-dm-class--$sClass";
+			$sStyleCSSAltClass = "ibo-dm-class-alt--$sClass";
 			if (($sIcon = $oStyle->GetChildText('icon')) && (strlen($sIcon) > 0)) {
 				$sIcon = $sModuleRelativeDir.'/'.$sIcon;
 				$sIcon = ", '$sIcon'";
@@ -1444,7 +1439,7 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, $sClass, $sAttCode, $sCode);
+							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, 'enum', $sClass, $sAttCode, $sCode);
 							$aStyledValues[] = $aEnumStyleData['orm_style'];
 							$sCss .= $aEnumStyleData['css'];
 						}
@@ -1457,7 +1452,7 @@ EOF
 					}
 					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oDefaultStyleNode) {
-						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, $sClass, $sAttCode);
+						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, 'enum', $sClass, $sAttCode);
 						$aParameters['default_style'] = $aEnumStyleData['orm_style'];
 						$sCss .= $aEnumStyleData['css'];
 					}
@@ -1479,7 +1474,7 @@ EOF
 						$aValues[] = $sCode;
 						$oStyleNode = $oValue->GetOptionalElement('style');
 						if ($oStyleNode) {
-							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, $sClass, $sAttCode, $sCode);
+							$aEnumStyleData = $this->GenerateFieldStyleData($oStyleNode, 'enum', $sClass, $sAttCode, $sCode);
 							$aStyledValues[] = $aEnumStyleData['orm_style'];
 							$sCss .= $aEnumStyleData['css'];
 						}
@@ -1492,7 +1487,7 @@ EOF
 					}
 					$oDefaultStyleNode = $oField->GetOptionalElement('default_style');
 					if ($oDefaultStyleNode) {
-						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, $sClass, $sAttCode);
+						$aEnumStyleData = $this->GenerateFieldStyleData($oDefaultStyleNode, 'enum', $sClass, $sAttCode);
 						$aParameters['default_style'] = $aEnumStyleData['orm_style'];
 						$sCss .= $aEnumStyleData['css'];
 					}
@@ -2224,16 +2219,18 @@ EOF
 	/**
 	 * This method is public in order to be used in the tests
 	 *
+	 * @internal
+	 *
 	 * @param \MFElement $oNode Style node, can be either a <style> node of a specific field value, or a <default_style> node of a field
+	 * @param string $sElementType
 	 * @param string $sClass
 	 * @param string $sAttCode
 	 * @param string|null $sValueCode Code of the value of the field. If null, then it will generate data as for the default style
 	 *
 	 * @return array ['orm_style' => <GENERATED_ORMSTYLE_INSTANTIATION>, 'css' => <GENERATED_CSS>]
 	 * @throws \DOMFormatException
-	 * @internal
 	 */
-	public function GenerateFieldStyleData(MFElement $oNode, string $sClass, string $sAttCode, string $sValueCode = null): array
+	public function GenerateFieldStyleData(MFElement $oNode, string $sElementType, string $sClass, string $sAttCode, string $sValueCode = null): array
 	{
 		$aData = [];
 
@@ -2245,8 +2242,8 @@ EOF
 			$sOrmStylePrefix = "'$sValueCode' => ";
 		}
 
-		$sCssClass = "ibo-enum--$sClass-$sAttCode$sCssClassSuffix";
-		$sCssClassAlt = "ibo-enum-alt--$sClass-$sAttCode$sCssClassSuffix";
+		$sCssClass = "ibo-dm-$sElementType--$sClass-$sAttCode$sCssClassSuffix";
+		$sCssClassAlt = "ibo-dm-$sElementType-alt--$sClass-$sAttCode$sCssClassSuffix";
 
 		$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
 		$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);

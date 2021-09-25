@@ -274,9 +274,37 @@ class MetaModelTest extends ItopDataTestCase
 
 	/**
 	 * @group itopRequestMgmt
+	 * @dataProvider GetClassStyleProvider
+	 */
+	public function testGetClassStyle($sClass, $sAwaitedCSSClass, $sAwaitedCSSClassAlt, $sAwaitedDecorationClasses, $sAwaitedIconRelPath)
+	{
+		$oStyle = MetaModel::GetClassStyle($sClass);
+
+		if (is_null($sAwaitedCSSClass) && is_null($sAwaitedIconRelPath)) {
+			self::assertNull($oStyle);
+			return;
+		}
+
+		self::assertInstanceOf('ormStyle', $oStyle);
+
+		self::assertEquals($sAwaitedCSSClass, $oStyle->GetStyleClass());
+		self::assertEquals($sAwaitedCSSClassAlt, $oStyle->GetAltStyleClass());
+		self::assertEquals($sAwaitedDecorationClasses, $oStyle->GetDecorationClasses());
+		self::assertEquals($sAwaitedIconRelPath, $oStyle->GetIconAsRelPath());
+	}
+
+	public function GetClassStyleProvider()
+	{
+		return [
+			'Organization' => ['Organization', 'ibo-dm-class--Organization', 'ibo-dm-class-alt--Organization', null, 'itop-structure/../../images/icons/icons8-organization.svg'],
+		];
+	}
+
+	/**
+	 * @group itopRequestMgmt
 	 * @dataProvider GetEnumStyleProvider
 	 */
-	public function testGetEnumStyle($sClass, $sAttCode, $sValue, $sAwaitedCSSClass)
+	public function testGetEnumStyle($sClass, $sAttCode, $sValue, $sAwaitedCSSClass, $sAwaitedCSSClassAlt, $sAwaitedDecorationClasses, $sAwaitedIconRelPath)
 	{
 		$oStyle = MetaModel::GetEnumStyle($sClass, $sAttCode, $sValue);
 
@@ -288,14 +316,15 @@ class MetaModelTest extends ItopDataTestCase
 		self::assertInstanceOf('ormStyle', $oStyle);
 
 		self::assertEquals($sAwaitedCSSClass, $oStyle->GetStyleClass());
+		self::assertEquals($sAwaitedCSSClassAlt, $oStyle->GetAltStyleClass());
 	}
 
 	public function GetEnumStyleProvider()
 	{
 		return [
-			'status-new' => ['UserRequest', 'status', 'new', 'ibo-enum--UserRequest-status-new'],
-			'status-default' => ['UserRequest', 'status', '', 'ibo-enum--UserRequest-status'],
-			'urgency' => ['UserRequest', 'origin', 'mail', null],
+			'status-new' => ['UserRequest', 'status', 'new', 'ibo-dm-enum--UserRequest-status-new', 'ibo-dm-enum-alt--UserRequest-status-new', null, null],
+			'status-default' => ['UserRequest', 'status', '', 'ibo-dm-enum--UserRequest-status', 'ibo-dm-enum-alt--UserRequest-status', null, null],
+			'urgency' => ['UserRequest', 'origin', 'mail', null, null, null, null],
 		];
 	}
 
