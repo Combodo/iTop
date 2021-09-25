@@ -126,8 +126,8 @@ class Panel extends UIContentBlock
 	protected $sIconCoverMethod;
 	/** @var bool Whether the icon should be rendered as a medallion (rounded with border) or a standalone image */
 	protected $bIconAsMedallion;
-	/** @var string $sColor */
-	protected $sColor;
+	/** @var string $sCSSColorClass CSS class that will be used on the block to define its accent color */
+	protected $sCSSColorClass;
 	/** @var bool $bIsCollapsible */
 	protected $bIsCollapsible;
 	/** @var bool $bIsHeaderVisibleOnScroll True if the header of the panel should remain visible when scrolling */
@@ -138,10 +138,10 @@ class Panel extends UIContentBlock
 	 *
 	 * @param string $sTitle
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aSubBlocks
-	 * @param string $sColor
+	 * @param string $sSemanticColor $sSemanticColor Semantic color code such as "success", "failure", "active", ... {@see css/backoffice/components/_panel.scss}
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sTitle = '', array $aSubBlocks = [], string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
+	public function __construct(string $sTitle = '', array $aSubBlocks = [], string $sSemanticColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
 		parent::__construct($sId);
 
@@ -156,7 +156,7 @@ class Panel extends UIContentBlock
 		$this->sIconUrl = static::DEFAULT_ICON_URL;
 		$this->sIconCoverMethod = static::DEFAULT_ICON_COVER_METHOD;
 		$this->bIconAsMedallion = static::DEFAULT_ICON_AS_MEDALLION;
-		$this->sColor = $sColor;
+		$this->SetColorFromSemantic($sSemanticColor);
 		$this->SetMainBlocks([]);
 		$this->SetToolBlocks([]);
 		$this->bIsCollapsible = false;
@@ -387,21 +387,36 @@ class Panel extends UIContentBlock
 	}
 
 	/**
+	 * @see static::$sCSSColorClass
 	 * @return string
 	 */
-	public function GetColor()
+	public function GetCSSColorClass()
 	{
-		return $this->sColor;
+		return $this->sCSSColorClass;
 	}
 
 	/**
-	 * @param string $sColor
+	 * @param string $sCSSColorClass
 	 *
+	 * @see static::$sCSSColorClass
 	 * @return $this
 	 */
-	public function SetColor(string $sColor)
+	public function SetCSSColorClass(string $sCSSColorClass)
 	{
-		$this->sColor = $sColor;
+		$this->sCSSColorClass = $sCSSColorClass;
+
+		return $this;
+	}
+
+	/**
+	 * @param string $sSemanticColor
+	 *
+	 * @see static::$sCSSColorClass
+	 * @return $this
+	 */
+	public function SetColorFromSemantic(string $sSemanticColor)
+	{
+		$this->SetCSSColorClass("ibo-is-$sSemanticColor");
 
 		return $this;
 	}
@@ -414,12 +429,16 @@ class Panel extends UIContentBlock
 	 *
 	 * @param \ormStyle $oStyle
 	 *
+	 * @see static::$sCSSColorClass
 	 * @return $this
 	 */
 	public function SetColorFromOrmStyle(ormStyle $oStyle)
 	{
-		$sColor = empty($oStyle->GetMainColor()) ? static::DEFAULT_COLOR : $oStyle->GetMainColor();
-		$this->SetColor($sColor);
+		if (strlen($oStyle->GetStyleClass()) === 0) {
+			$this->SetColorFromSemantic(static::DEFAULT_COLOR);
+		} else {
+			$this->SetCSSColorClass($oStyle->GetStyleClass());
+		}
 
 		return $this;
 	}
@@ -432,13 +451,14 @@ class Panel extends UIContentBlock
 	 *
 	 * @param string $sClass
 	 *
+	 * @see static::$sCSSColorClass
 	 * @return $this
 	 */
 	public function SetColorFromClass(string $sClass)
 	{
 		$oStyle = MetaModel::GetClassStyle($sClass);
 		if (empty($oStyle)) {
-			$this->SetColor(static::DEFAULT_COLOR_FOR_CLASS);
+			$this->SetColorFromSemantic(static::DEFAULT_COLOR_FOR_CLASS);
 		} else {
 			$this->SetColorFromOrmStyle($oStyle);
 		}

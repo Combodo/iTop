@@ -392,7 +392,7 @@ try
 				continue;
 			}
 			
-			$oAuditCategoryPanelBlock->SetColor($sClass);
+			$oAuditCategoryPanelBlock->SetColorFromSemantic($sClass);
 			$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
 			$aData = [];
 			foreach($aResults as $aRow)

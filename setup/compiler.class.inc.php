@@ -2262,14 +2262,14 @@ EOF
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
 			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
 			if (is_null($sMainColorForOrm)) {
-				// TODO 3.0.0: Should check for main color in parent classes definition
+				// TODO: Check for main color in parent classes definition is currently done in MetaModel::GetClassStyle() at runtime but it should be done here at compile time
 				$sMainColorForOrm = "null";
 			}
 			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
 
 			$sComplementaryColorForOrm = $this->GetPropString($oNode, 'complementary_color', null);
 			if (is_null($sComplementaryColorForOrm)) {
-				// TODO 3.0.0: Should check for complementary color in parent classes definition
+				// TODO: Check for main color in parent classes definition is currently done in MetaModel::GetClassStyle() at runtime but it should be done here at compile time
 				$sComplementaryColorForOrm = "null";
 			}
 			$sComplementaryColorForCss = $this->GetPropString($oNode, 'complementary_color', null, false);

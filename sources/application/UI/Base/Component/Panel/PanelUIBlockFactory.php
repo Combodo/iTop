@@ -52,7 +52,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_NEUTRAL);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_NEUTRAL);
 
 		return $oPanel;
 	}
@@ -71,7 +71,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_INFORMATION);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_INFORMATION);
 
 		return $oPanel;
 	}
@@ -90,7 +90,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_SUCCESS);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_SUCCESS);
 
 		return $oPanel;
 	}
@@ -109,7 +109,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_WARNING);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_WARNING);
 
 		return $oPanel;
 	}
@@ -128,7 +128,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_DANGER);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_DANGER);
 
 		return $oPanel;
 	}
@@ -147,7 +147,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_FAILURE);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_FAILURE);
 
 		return $oPanel;
 	}
@@ -166,7 +166,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_PRIMARY);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_PRIMARY);
 
 		return $oPanel;
 	}
@@ -185,7 +185,7 @@ class PanelUIBlockFactory extends AbstractUIBlockFactory
 		if (!is_null($sSubTitle)) {
 			$oPanel->SetSubTitle($sSubTitle);
 		}
-		$oPanel->SetColor(Panel::ENUM_COLOR_SECONDARY);
+		$oPanel->SetColorFromSemantic(Panel::ENUM_COLOR_SECONDARY);
 
 		return $oPanel;
 	}
