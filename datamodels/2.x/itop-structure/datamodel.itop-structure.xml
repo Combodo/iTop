@@ -53,16 +53,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -230,16 +230,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
@@ -392,8 +392,8 @@
         </fields_semantic>
         <style>
           <icon>../../images/icons/icons8-customer.svg</icon>
-          <main_color>#546E7A</main_color>
-          <complementary_color>#FFFFFF</complementary_color>
+          <main_color>$ibo-color-blue-grey-600</main_color>
+          <complementary_color>$ibo-color-white-100</complementary_color>
         </style>
         <reconciliation>
           <attributes>
@@ -419,16 +419,16 @@
             <value id="active">
               <code>active</code>
               <style>
-                <main_color>#689F38</main_color>
-                <complementary_color>#FFFFFF</complementary_color>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>
             <value id="inactive">
               <code>inactive</code>
               <style>
-                <main_color>#E1E7EC</main_color>
-                <complementary_color>#6E7A8A</complementary_color>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
                 <decoration_classes/>
               </style>
             </value>

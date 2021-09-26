@@ -1584,16 +1584,16 @@
 						<value id="active">
 							<code>active</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="inactive">
 							<code>inactive</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -1736,16 +1736,16 @@
 						<value id="active">
 							<code>active</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="inactive">
 							<code>inactive</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
@@ -1904,16 +1904,16 @@
 						<value id="active">
 							<code>active</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="inactive">
 							<code>inactive</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
