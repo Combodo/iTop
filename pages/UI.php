@@ -1152,9 +1152,6 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sHeaderTitle, $sClassIcon, Title::DEFAULT_ICON_COVER_METHOD, false);
-				$oP->AddUiBlock($oTitle);
-
 				if (!empty($aIssues)) {
 					$oP->AddHeaderMessage($e->getHtmlMessage(), 'message_error');
 				}
