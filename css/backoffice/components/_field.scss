@@ -23,6 +23,7 @@ $ibo-field--fullscreen-toggler--size: 20px !default;
 $ibo-field--fullscreen-toggler--border-radius: $ibo-border-radius-500 !default;
 $ibo-field--fullscreen-toggler--background-color--on-hover: $ibo-color-white-200 !default;
 
+$ibo-field--value--scrollbar-track-background-color: $ibo-color-white-200 !default;
 $ibo-field--value--padding-x--is-fullscreen: $ibo-field--label--padding-x--is-fullscreen !default;
 $ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + 32px !default;
 $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen !default;
@@ -85,6 +86,11 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
     min-width: 100px;
     max-width: 145px;
     width: 30%;
+  }
+
+  /* N°4318 - Visible scrollbar background for large fields overflowing to ease "limits" visualization by the user */
+  .ibo-field--value > * {
+    --ibo-scrollbar--scrollbar-track-background-color: $ibo-field--value--scrollbar-track-background-color;
   }
 
   /* Fullscreen mode */
