@@ -434,10 +434,10 @@ class Panel extends UIContentBlock
 	 */
 	public function SetColorFromOrmStyle(ormStyle $oStyle)
 	{
-		if (strlen($oStyle->GetStyleClass()) === 0) {
-			$this->SetColorFromColorSemantic(static::DEFAULT_COLOR_SCHEME);
-		} else {
+		if ($oStyle->HasStyleClass()) {
 			$this->SetCSSColorClass($oStyle->GetStyleClass());
+		} else {
+			$this->SetColorFromColorSemantic(static::DEFAULT_COLOR_SCHEME);
 		}
 
 		return $this;

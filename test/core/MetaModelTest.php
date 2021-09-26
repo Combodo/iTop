@@ -296,7 +296,8 @@ class MetaModelTest extends ItopDataTestCase
 	public function GetClassStyleProvider()
 	{
 		return [
-			'Organization' => ['Organization', 'ibo-dm-class--Organization', 'ibo-dm-class-alt--Organization', null, 'itop-structure/../../images/icons/icons8-organization.svg'],
+			'Class with no color, only icon' => ['Organization', null, null, null, 'itop-structure/../../images/icons/icons8-organization.svg'],
+			'Class with colors and icon' => ['Contact', 'ibo-dm-class--Contact', 'ibo-dm-class-alt--Contact', null, 'itop-structure/../../images/icons/icons8-customer.svg'],
 		];
 	}
 

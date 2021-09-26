@@ -2254,10 +2254,6 @@ EOF
 			}
 		}
 
-		// CSS classes representing the element (regular and alternative)
-		$sCssRegularClass = "ibo-dm-$sElementType--$sClass$sCssClassSuffix";
-		$sCssAlternativeClass = "ibo-dm-$sElementType-alt--$sClass$sCssClassSuffix";
-
 		// Retrieve colors (optional depending on the element)
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
 			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
@@ -2282,6 +2278,7 @@ EOF
 		}
 		$bHasMainColor = is_null($sMainColorForCss) === false;
 		$bHasComplementaryColor = is_null($sComplementaryColorForCss) === false;
+		$bHasAtLeastOneColor = $bHasMainColor || $bHasComplementaryColor;
 
 		// Optional decoration classes
 		$sDecorationClasses = $this->GetPropString($oNode, 'decoration_classes', null);
@@ -2297,12 +2294,19 @@ EOF
 			$sIconRelPath = "'$sModuleRelDir/$sIconRelPath'";
 		}
 
+		// CSS classes representing the element (regular and alternative)
+		$sCssRegularClass = "ibo-dm-$sElementType--$sClass$sCssClassSuffix";
+		$sCssRegularClassForOrm = $bHasAtLeastOneColor ? "'$sCssRegularClass'" : "null";
+
+		$sCssAlternativeClass = "ibo-dm-$sElementType-alt--$sClass$sCssClassSuffix";
+		$sCssAlternativeClassForOrm = $bHasAtLeastOneColor ? "'$sCssAlternativeClass'" : "null";
+
 		// Generate ormStyle instantiation
-		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle('$sCssRegularClass', '$sCssAlternativeClass', $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
+		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle($sCssRegularClassForOrm, $sCssAlternativeClassForOrm, $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
 
 		// Generate SCSS declaration
 		$sScss = "";
-		if ($bHasMainColor || $bHasComplementaryColor) {
+		if ($bHasAtLeastOneColor) {
 			if ($bHasMainColor) {
 				$sMainColorScssVariableName = "\$$sCssRegularClass--main-color";
 				$sMainColorCssVariableName = "--$sCssRegularClass--main-color";
@@ -2316,9 +2320,6 @@ EOF
 
 				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: $sMainColorScssVariableName;";
 			} else {
-				$sMainColorScssVariableName = null;
-				$sMainColorCssVariableName = null;
-
 				$sMainColorScssVariableDeclaration = null;
 
 				$sCssRegularClassMainColorDeclaration = null;
@@ -2338,9 +2339,6 @@ EOF
 
 				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color: $sComplementaryColorScssVariableName;";
 			} else {
-				$sComplementaryColorScssVariableName = null;
-				$sComplementaryColorCssVariableName = null;
-
 				$sComplementaryScssVariableDeclaration = null;
 				$sComplementaryCssVariableDeclaration = null;
 

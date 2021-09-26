@@ -11,37 +11,46 @@
  */
 class ormStyle
 {
-	/** @var string */
+	/** @var string|null */
 	protected $sMainColor;
-	/** @var string */
+	/** @var string|null */
 	protected $sComplementaryColor;
-	/** @var string CSS class with color and background-color */
+	/** @var string|null CSS class with color and background-color */
 	protected $sStyleClass;
-	/** @var string CSS class with only color */
+	/** @var string|null CSS class with only color */
 	protected $sAltStyleClass;
-	/** @var string */
+	/** @var string|null */
 	protected $sDecorationClasses;
-	/** @var string Relative path (from current environment) to the icon */
+	/** @var string|null Relative path (from current environment) to the icon */
 	protected $sIcon;
 
 	/**
 	 * ormStyle constructor.
 	 *
-	 * @param string $sStyleClass
-	 * @param string $sAltStyleClass
+	 * @param string|null $sStyleClass
+	 * @param string|null $sAltStyleClass
 	 * @param string|null $sMainColor
 	 * @param string|null $sComplementaryColor
 	 * @param string|null $sDecorationClasses
 	 * @param string|null $sIcon
 	 */
-	public function __construct(string $sStyleClass, string $sAltStyleClass, string $sMainColor = null, string $sComplementaryColor = null, string $sDecorationClasses = null, string $sIcon = null)
+	public function __construct(?string $sStyleClass = null, ?string $sAltStyleClass = null, ?string $sMainColor = null, ?string $sComplementaryColor = null, ?string $sDecorationClasses = null, ?string $sIcon = null)
 	{
-		$this->sMainColor = $sMainColor;
-		$this->sComplementaryColor = $sComplementaryColor;
-		$this->sStyleClass = $sStyleClass;
-		$this->sAltStyleClass = $sAltStyleClass;
-		$this->sDecorationClasses = $sDecorationClasses;
+		$this->SetMainColor($sMainColor);
+		$this->SetComplementaryColor($sComplementaryColor);
+		$this->SetStyleClass($sStyleClass);
+		$this->SetAltStyleClass($sAltStyleClass);
+		$this->SetDecorationClasses($sDecorationClasses);
 		$this->SetIcon($sIcon);
+	}
+
+	/**
+	 * @see static::$sMainColor
+	 * @return bool
+	 */
+	public function HasMainColor(): bool
+	{
+		return strlen($this->sMainColor) > 0;
 	}
 
 	/**
@@ -59,8 +68,17 @@ class ormStyle
 	 */
 	public function SetMainColor(?string $sMainColor)
 	{
-		$this->sMainColor = $sMainColor;
+		$this->sMainColor = (strlen($sMainColor) === 0) ? null : $sMainColor;
 		return $this;
+	}
+
+	/**
+	 * @see static::$sComplementaryColor
+	 * @return bool
+	 */
+	public function HasComplementaryColor(): bool
+	{
+		return strlen($this->sComplementaryColor) > 0;
 	}
 
 	/**
@@ -78,14 +96,33 @@ class ormStyle
 	 */
 	public function SetComplementaryColor(?string $sComplementaryColor)
 	{
-		$this->sComplementaryColor = $sComplementaryColor;
+		$this->sComplementaryColor = (strlen($sComplementaryColor) === 0) ? null : $sComplementaryColor;
 		return $this;
+	}
+
+	/**
+	 * @see static::$sMainColor
+	 * @see static::$sComplementaryColor
+	 * @return bool
+	 */
+	public function HasAtLeastOneColor(): bool
+	{
+		return $this->HasMainColor() || $this->HasComplementaryColor();
+	}
+
+	/**
+	 * @see static::$sStyleClass
+	 * @return bool
+	 */
+	public function HasStyleClass(): bool
+	{
+		return strlen($this->sStyleClass) > 0;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetStyleClass(): string
+	public function GetStyleClass(): ?string
 	{
 		return $this->sStyleClass;
 	}
@@ -95,16 +132,25 @@ class ormStyle
 	 *
 	 * @return $this
 	 */
-	public function SetStyleClass(string $sStyleClass)
+	public function SetStyleClass(?string $sStyleClass)
 	{
-		$this->sStyleClass = $sStyleClass;
+		$this->sStyleClass = (strlen($sStyleClass) === 0) ? null : $sStyleClass;
 		return $this;
+	}
+
+	/**
+	 * @see static::$sAltStyleClass
+	 * @return bool
+	 */
+	public function HasAltStyleClass(): bool
+	{
+		return strlen($this->sAltStyleClass) > 0;
 	}
 
 	/**
 	 * @return string
 	 */
-	public function GetAltStyleClass(): string
+	public function GetAltStyleClass(): ?string
 	{
 		return $this->sAltStyleClass;
 	}
@@ -114,10 +160,19 @@ class ormStyle
 	 *
 	 * @return $this
 	 */
-	public function SetAltStyleClass(string $sAltStyleClass)
+	public function SetAltStyleClass(?string $sAltStyleClass)
 	{
-		$this->sAltStyleClass = $sAltStyleClass;
+		$this->sAltStyleClass = (strlen($sAltStyleClass) === 0) ? null : $sAltStyleClass;
 		return $this;
+	}
+
+	/**
+	 * @see static::$sDecorationClasses
+	 * @return bool
+	 */
+	public function HasDecorationClasses(): bool
+	{
+		return strlen($this->sDecorationClasses) > 0;
 	}
 
 	/**
@@ -135,8 +190,17 @@ class ormStyle
 	 */
 	public function SetDecorationClasses(?string $sDecorationClasses)
 	{
-		$this->sDecorationClasses = $sDecorationClasses;
+		$this->sDecorationClasses = (strlen($sDecorationClasses) === 0) ? null : $sDecorationClasses;
 		return $this;
+	}
+
+	/**
+	 * @see static::$sIcon
+	 * @return bool
+	 */
+	public function HasIcon(): bool
+	{
+		return strlen($this->sIcon) > 0;
 	}
 
 	/**
