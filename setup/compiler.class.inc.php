@@ -2241,7 +2241,9 @@ EOF
 	{
 		$aData = [];
 
+		/** @var $sCssClassSuffix Optional suffix for the CSS classes depending on the given parameters */
 		$sCssClassSuffix = "";
+		/** @var $sOrmStylePrefix Prefix used for the ormStyle instantiation in PHP */
 		$sOrmStylePrefix = "";
 
 		// In case $sAttCode and optionally $sValue are passed, we prepare additional info. Typically used for (meta)enum attributes
@@ -2254,27 +2256,27 @@ EOF
 			}
 		}
 
-		// Retrieve colors (optional depending on the element)
+		// Retrieve colors (mandatory/optional depending on the element type)
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
+			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
 			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
 			if (is_null($sMainColorForOrm)) {
 				// TODO: Check for main color in parent classes definition is currently done in MetaModel::GetClassStyle() at runtime but it should be done here at compile time
 				$sMainColorForOrm = "null";
 			}
-			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
 
+			$sComplementaryColorForCss = $this->GetPropString($oNode, 'complementary_color', null, false);
 			$sComplementaryColorForOrm = $this->GetPropString($oNode, 'complementary_color', null);
 			if (is_null($sComplementaryColorForOrm)) {
 				// TODO: Check for main color in parent classes definition is currently done in MetaModel::GetClassStyle() at runtime but it should be done here at compile time
 				$sComplementaryColorForOrm = "null";
 			}
-			$sComplementaryColorForCss = $this->GetPropString($oNode, 'complementary_color', null, false);
 		} else {
-			$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
 			$sMainColorForCss = $this->GetMandatoryPropString($oNode, 'main_color', false);
+			$sMainColorForOrm = $this->GetMandatoryPropString($oNode, 'main_color');
 
-			$sComplementaryColorForOrm = $this->GetMandatoryPropString($oNode, 'complementary_color');
 			$sComplementaryColorForCss = $this->GetMandatoryPropString($oNode, 'complementary_color', false);
+			$sComplementaryColorForOrm = $this->GetMandatoryPropString($oNode, 'complementary_color');
 		}
 		$bHasMainColor = is_null($sMainColorForCss) === false;
 		$bHasComplementaryColor = is_null($sComplementaryColorForCss) === false;
@@ -2300,9 +2302,6 @@ EOF
 
 		$sCssAlternativeClass = "ibo-dm-$sElementType-alt--$sClass$sCssClassSuffix";
 		$sCssAlternativeClassForOrm = $bHasAtLeastOneColor ? "'$sCssAlternativeClass'" : "null";
-
-		// Generate ormStyle instantiation
-		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle($sCssRegularClassForOrm, $sCssAlternativeClassForOrm, $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
 
 		// Generate SCSS declaration
 		$sScss = "";
@@ -2370,6 +2369,17 @@ $sComplementaryScssVariableDeclaration
 CSS;
 		}
 		$aData['scss'] = $sScss;
+
+		// Generate ormStyle instantiation
+		// - Convert SCSS variable to CSS variable use as SCSS variable cannot be used elsewhere than during SCSS compiling
+		//   Note: We check the $sXXXColorForCSS instead of the $sXXXColorForOrm because its value has been altered.
+		if ($bHasMainColor && (stripos($sMainColorForCss, '$') === 0)) {
+		       $sMainColorForOrm = "'var($sMainColorCssVariableName)'";
+		}
+		if ($bHasComplementaryColor && (stripos($sComplementaryColorForCss, '$') === 0)) {
+		       $sComplementaryColorForOrm = "'var($sComplementaryColorCssVariableName)'";
+		}
+		$aData['orm_style_instantiation'] = "$sOrmStylePrefix new ormStyle($sCssRegularClassForOrm, $sCssAlternativeClassForOrm, $sMainColorForOrm, $sComplementaryColorForOrm, $sDecorationClasses, $sIconRelPath)";
 
 		return $aData;
 	}
