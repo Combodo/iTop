@@ -2321,6 +2321,12 @@ class MenuBlock extends DisplayBlock
 						$sIconClass = 'fas fa-share-alt';
 						$sLabel = '';
 						break;
+
+					default:
+						$sIconClass = $aAction['icon_class'] ?? '';
+						if ($sIconClass != '') {
+							$sLabel = '';
+						}
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
