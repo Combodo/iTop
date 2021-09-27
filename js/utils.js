@@ -388,15 +388,11 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 		var sDataTableName = 'datatable_'+sDataTableId;
 		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
-			for (var k in oColumns[j]) {
-				if (oColumns[j][k].checked) {
-					var sCode = oColumns[j][k].code;
-					if (sCode == '_key_') {
-						sCode = 'id';
-					}
-					aFields.push(j+'.'+sCode);
-				}
+			var sCode = oColumns[j]['data'].split("/");
+			if (sCode[1] == '_key_') {
+				sCode[1] = 'id';
 			}
+			aFields.push(sCode[0]+'.'+sCode[1]);
 		}
 	}
 
