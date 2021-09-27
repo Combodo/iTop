@@ -1135,12 +1135,12 @@ class LogFileRotationProcess implements iScheduledProcess
  *
  * Please use {@see ExceptionLog::LogException()} to log exceptions
  *
- * @since 3.0.0
+ * @since 3.0.0 N°4261 class creation to allow to easier logging when exception occurs
  */
 class ExceptionLog extends LogAPI
 {
-	const CHANNEL_DEFAULT = 'Exception';
-	const CONTEXT_EXCEPTION = '__exception';
+	public const CHANNEL_DEFAULT = 'Exception';
+	public const CONTEXT_EXCEPTION = '__exception';
 
 	private static $oLastEventIssue = null;
 
@@ -1152,7 +1152,7 @@ class ExceptionLog extends LogAPI
 	 * As it encapsulate the operations performed using the Exception, you should prefer it to the standard API inherited from LogApi `ExceptionLog::Error($oException->getMessage(), get_class($oException), ['__exception' => $oException]);`
 	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way.
 	 */
-	public static function LogException(Exception $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING)
+	public static function LogException(Exception $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING): void
 	{
 		if (empty($aContext[self::CONTEXT_EXCEPTION])) {
 			$aContext[self::CONTEXT_EXCEPTION] = $oException;
@@ -1196,10 +1196,10 @@ class ExceptionLog extends LogAPI
 		}
 
 		$sDbChannel = self::FindClassChannel($sClass, 'log_level_min.write_in_db');
+		//TODO pull up in LogAPI
 		if (static::IsLogLevelEnabled($sLevel, $sDbChannel, 'log_level_min.write_in_db')) {
 			self::WriteToDb($aContext);
 		}
-
 	}
 
 	protected static function FindClassChannel($sClass, $sCode = 'log_level_min')
