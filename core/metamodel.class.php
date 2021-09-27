@@ -7726,6 +7726,10 @@ abstract class MetaModel
 	 */
 	public static function GetEnumStyle(string $sClass, string $sAttCode, string $sValue = ''): ?ormStyle
 	{
+		if (empty($sAttCode)) {
+			return null;
+		}
+
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		if (!$oAttDef instanceof AttributeEnum) {
 			throw new CoreException("MetaModel::GetEnumStyle() Attribute $sAttCode of class $sClass is not an AttributeEnum\n");
