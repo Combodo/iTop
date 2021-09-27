@@ -125,17 +125,19 @@ $(function () {
 				}
 			},
 			_on_multi_click: function (sMultiFieldCode, bChecked) {
+				var me = this;
 				var oField = this._get_main_field_by_code(sMultiFieldCode);
 				if (oField != null) {
-					var sPrefix = '#tfs_'+this.sId+'_';
+					var sPrefix = '#tfs_'+me.sId+'_';
 					for (var k in oField.subattr) {
-						this._mark_as_selected(oField.subattr[k].code, bChecked);
+						me._mark_as_selected(oField.subattr[k].code, bChecked);
 						// In case the tooltip is visible, also update the checkboxes
 						sElementId = (sPrefix+oField.subattr[k].code).replace('.', '_');
 						$(sElementId).prop('checked', bChecked);
 					}
-					this._update_holder();
-					this._update_preview();
+					me._update_tooltips(sMultiFieldCode);
+					me._update_holder();
+					me._update_preview();
 				}
 			},
 			_on_check_all: function (jSelector, bChecked) {
@@ -387,7 +389,16 @@ $(function () {
 						}
 					});
 				});
-
+			},
+			_update_tooltips: function (sDataAttCode) {
+				/*var sTooltipContent = this._get_tooltip_content(sDataAttCode);
+				const tippyInstance = $('#'+this.sId+' label[data-attcode='+sDataAttCode+']')._tippy;
+				tippyInstance.setContent('New content');*/
+				let sTooltipContent = this._get_tooltip_content(sDataAttCode);
+				$('#'+this.sId+'  label[data-attcode='+sDataAttCode+']').each(function (index, elt) {
+					let tippyInstance = elt._tippy;
+					tippyInstance.setContent(sTooltipContent);
+				});
 			},
 			_get_tooltip_content: function (sDataAttCode) {
 				var oField = this._get_main_field_by_code(sDataAttCode);
