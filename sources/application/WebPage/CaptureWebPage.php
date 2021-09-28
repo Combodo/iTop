@@ -15,6 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
  * Adapter class: when an API requires WebPage and you want to produce something else
@@ -36,7 +38,9 @@ class CaptureWebPage extends WebPage
 	public function GetHtml()
 	{
 		$trash = $this->ob_get_clean_safe();
-		return $this->s_content;
+
+		$oBlockRenderer = new BlockRenderer($this->oContentLayout);
+		return $oBlockRenderer->RenderHtml();
 	}
 
 	public function GetJS()
@@ -46,12 +50,22 @@ class CaptureWebPage extends WebPage
 		{
 			$sRet .= "\n\$('body').append('".addslashes(str_replace("\n", '', $this->s_deferred_content))."');";
 		}
+
+		$oBlockRenderer = new BlockRenderer($this->oContentLayout);
+		$sRet .= $oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_LIVE);
+		$sRet .= $oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_ON_INIT);
+
 		return $sRet;
 	}
 
 	public function GetReadyJS()
 	{
-		return "\$(document).ready(function() {\n".implode("\n", $this->a_init_scripts).implode("\n", $this->a_ready_scripts)."\n});";
+		$sRet =  "\$(document).ready(function() {\n".implode("\n", $this->a_init_scripts).implode("\n", $this->a_ready_scripts)."\n});";
+
+		$oBlockRenderer = new BlockRenderer($this->oContentLayout);
+		$sRet .= $oBlockRenderer->RenderJsInline(iUIBlock::ENUM_JS_TYPE_ON_READY);
+
+		return $sRet;
 	}
 
 	public function GetCSS()
