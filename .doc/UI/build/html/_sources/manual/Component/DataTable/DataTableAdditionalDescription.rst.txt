@@ -7,8 +7,8 @@ Output
 
 Dynamic DataTable
 
-.. image:: /manual/Component/Datatable/Datatable.png
+.. image:: /manual/Component/DataTable/Datatable.png
 
 Static DataTable
 
-.. image:: /manual/Component/Datatable/DatatableStatic.png
+.. image:: /manual/Component/DataTable/DatatableStatic.png
