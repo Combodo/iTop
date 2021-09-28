@@ -19,12 +19,12 @@ namespace Combodo\iTop\Application\UI\Helper;
 class UIHelper
 {
 	/**
-	 * @param string $sStateCode Code of the state value
+	 * @param string|null $sStateCode Code of the state value, can be null if allowed by the attribute definition
 	 * @param bool $bAllowFallbackIfNoMatch If set to true, a fallback semantic color code will be returned in case of no matching mappping. Otherwise it will return null to indicate there was no match.
 	 *
 	 * @return string|null A semantic status color name (eg. success, pending, failure, neutral, ...) depending on the value's code. Usefull to try to find a semantic match when a class has no style defined on its state attribute.
 	 */
-	public static function GetColorNameFromStatusCode(string $sStateCode, bool $bAllowFallbackIfNoMatch = true): ?string
+	public static function GetColorNameFromStatusCode(?string $sStateCode, bool $bAllowFallbackIfNoMatch = true): ?string
 	{
 		$sStatusColor = null;
 

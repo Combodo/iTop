@@ -7718,14 +7718,18 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
-	 * @param string $sValue
+	 * @param string|null $sValue Code of the state value, can be null if allowed by the attribute definition
 	 *
 	 * @return \ormStyle|null
 	 * @throws \Exception
 	 * @throws \CoreException
 	 */
-	public static function GetEnumStyle(string $sClass, string $sAttCode, string $sValue = ''): ?ormStyle
+	public static function GetEnumStyle(string $sClass, string $sAttCode, ?string $sValue = ''): ?ormStyle
 	{
+		if (strlen($sAttCode) === 0) {
+			return null;
+		}
+
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		if (!$oAttDef instanceof AttributeEnum) {
 			throw new CoreException("MetaModel::GetEnumStyle() Attribute $sAttCode of class $sClass is not an AttributeEnum\n");

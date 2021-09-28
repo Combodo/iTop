@@ -1012,9 +1012,10 @@ JS
 				$aCountsQueryResults[$aCountGroupBySingleResult[0]] = $aCountGroupBySingleResult[1];
 			}
 
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+			$aValues = $oAttDef->GetAllowedValues();
 			foreach ($aStates as $sStateValue) {
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
-				$aStateLabels[$sStateValue] = $oAttDef->GetAsPlainText($sStateValue);
+				$aStateLabels[$sStateValue] = $aValues[$sStateValue];
 				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 					? $aCountsQueryResults[$sStateValue]
 					: 0;
