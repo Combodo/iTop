@@ -71,7 +71,11 @@ class AuthentLDAPInstaller extends ModuleInstallerAPI
 	public static function AfterDataLoad(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 		// Create missing table entries
-		$sSQL = "insert into priv_user_ldap (id) select U.id from priv_user as U left join priv_user_ldap as L on U.id = L.id where U.finalclass='UserLDAP' and isnull(L.id);";
+		$sTablePrefix = $oConfiguration->Get('db_subname');
+		if (strlen($sTablePrefix) != 0) {
+			$sTablePrefix .= '.';
+		}
+		$sSQL = "insert into {$sTablePrefix}priv_user_ldap (id) select U.id from {$sTablePrefix}priv_user as U left join {$sTablePrefix}priv_user_ldap as L on U.id = L.id where U.finalclass='UserLDAP' and isnull(L.id);";
 		CMDBSource::Query($sSQL);
 	}
 }
