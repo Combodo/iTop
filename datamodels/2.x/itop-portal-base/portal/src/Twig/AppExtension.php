@@ -35,6 +35,7 @@ use MetaModel;
  * @package Combodo\iTop\Portal\Twig
  * @since   2.7.0
  * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
+ * @deprected 3.1.0 N°4287
  */
 class AppExtension extends AbstractExtension
 {

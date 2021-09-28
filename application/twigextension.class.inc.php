@@ -11,6 +11,13 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use utils;
 
+/**
+ * Class TwigExtension
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop
+ * @deprecated 3.1.0 N°4034
+ */
 class TwigExtension
 {
 	/**
