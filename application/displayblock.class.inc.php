@@ -2323,8 +2323,8 @@ class MenuBlock extends DisplayBlock
 						break;
 
 					default:
-						$sIconClass = $aAction['icon_class'] ?? '';
-						if ($sIconClass != '') {
+						if (isset($aAction['icon_class']) && (strlen($aAction['icon_class']) > 0)) {
+							$sIconClass = $aAction['icon_class'];
 							$sLabel = '';
 						}
 				}
