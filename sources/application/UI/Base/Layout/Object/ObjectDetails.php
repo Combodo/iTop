@@ -59,7 +59,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sObjectMode;
 	/** @var string */
 	protected $sIconUrl;
-	/** @var string Code of the current value of the attribute carrying the state for $sClassName */
+	/** @var string|null Code of the current value of the attribute carrying the state for $sClassName */
 	protected $sStatusCode;
 	/** @var string Label of the current value of the attribute carrying the state for $sClassName  */
 	protected $sStatusLabel;
