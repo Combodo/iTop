@@ -2334,7 +2334,11 @@ class MenuBlock extends DisplayBlock
 				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
-					$oActionButton->SetTooltip(Dict::S($sActionId));
+					if (empty($aAction['tooltip'])) {
+						$oActionButton->SetTooltip(Dict::S($sActionId));
+					} else {
+						$oActionButton->SetTooltip($aAction['tooltip']);
+					}
 				}
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}
