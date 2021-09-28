@@ -121,12 +121,13 @@ class Pill extends UIContentBlock
 	}
 
 	/**
-	 * @param string $sTooltip
-	 *
 	 * @see static::$sTooltip
+	 *
+	 * @param string|null $sTooltip
+	 *
 	 * @return $this
 	 */
-	public function SetTooltip(string $sTooltip)
+	public function SetTooltip(?string $sTooltip)
 	{
 		$this->sTooltip = $sTooltip;
 
