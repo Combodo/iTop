@@ -27,7 +27,6 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
@@ -582,12 +581,14 @@ HTML
 		foreach($aList as $sAttCode) {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 			if ($oAttDef instanceof AttributeDashboard) {
-				$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
-				$oPage->AddAjaxTab($oAttDef->GetLabel(),
-					utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
-					true,
-					'Class:'.$sClass.'/Attribute:'.$sAttCode,
-					AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
+				if (!$this->IsNew()) {
+					$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
+					$oPage->AddAjaxTab($oAttDef->GetLabel(),
+						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
+						true,
+						'Class:'.$sClass.'/Attribute:'.$sAttCode,
+						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
+				}
 				continue;
 			}
 
