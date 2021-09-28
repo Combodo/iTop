@@ -1470,23 +1470,15 @@ abstract class DBObject implements iDisplay
      */
 	public function GetIcon($bImgTag = true)
 	{
-		$sCode = $this->ComputeHighlightCode();
 		$sClass = get_class($this);
 		
-		if($sCode != '')
-		{
-			$aHighlightScale = MetaModel::GetHighlightScale($sClass);
-			if (array_key_exists($sCode, $aHighlightScale))
-			{
-				$sIconUrl = $aHighlightScale[$sCode]['icon'];
-				if($bImgTag)
-				{
-					return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
-				}
-				else
-				{
-					return $sIconUrl;
-				}
+		if($this->HasHighlightIcon()) {
+			$sIconUrl = MetaModel::GetHighlightScale($sClass)[$this->ComputeHighlightCode()]['icon'];
+			if($bImgTag) {
+				return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
+			}
+			else {
+				return $sIconUrl;
 			}
 		}
 
@@ -1525,6 +1517,31 @@ abstract class DBObject implements iDisplay
 		}
 		
 		return $bHasInstanceIcon;
+	}
+
+	/**
+	 * @return bool True if the class has an highlight icon declared for the current object state
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	public function HasHighlightIcon(): bool
+	{
+		$bHasHighlightIcon = false;
+
+		$sCode = $this->ComputeHighlightCode();
+		$sClass = get_class($this);
+
+		if($sCode != '')
+		{
+			$aHighlightScale = MetaModel::GetHighlightScale($sClass);
+			if (array_key_exists($sCode, $aHighlightScale))
+			{
+				$bHasHighlightIcon = true;
+			}
+		}
+		
+		return $bHasHighlightIcon;
 	}
 
 	/**
