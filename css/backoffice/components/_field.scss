@@ -175,16 +175,29 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
     }
   }
 }
+
+.ibo-field--label > .ibo-field--comments {
+  flex: auto;
+  padding-bottom: 2px;
+}
+
+.ibo-fieldset-legend > .ibo-field--comments {
+  display: contents;
+  padding-bottom: 2px;
+  font-size: $ibo-font-size-150;
+}
+
 .ibo-field--comments {
   display: table-cell;
   vertical-align: top;
+  width: 5em;
 
   > input[type="checkbox"] {
     margin-left: 5px;
     float: right;
   }
 
-  > .multi_values, > .mono_value, > .ibo-field--comments--synchro{
+  > .multi_values, > .mono_value, > .ibo-field--comments--synchro {
     float: right;
   }
 }
