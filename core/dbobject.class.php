@@ -1471,9 +1471,11 @@ abstract class DBObject implements iDisplay
 	public function GetIcon($bImgTag = true)
 	{
 		$sCode = $this->ComputeHighlightCode();
+		$sClass = get_class($this);
+		
 		if($sCode != '')
 		{
-			$aHighlightScale = MetaModel::GetHighlightScale(get_class($this));
+			$aHighlightScale = MetaModel::GetHighlightScale($sClass);
 			if (array_key_exists($sCode, $aHighlightScale))
 			{
 				$sIconUrl = $aHighlightScale[$sCode]['icon'];
@@ -1486,8 +1488,43 @@ abstract class DBObject implements iDisplay
 					return $sIconUrl;
 				}
 			}
-		}		
+		}
+
+		// Get object instance own image if it exists
+		$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+		$sIconUrl = $this->HasInstanceIcon() ? $this->Get($sImageAttCode)->GetDisplayURL($sClass, $this->GetKey(), $sImageAttCode) : '';
+		if (strlen($sIconUrl) > 0) {
+			if($bImgTag) {
+				return "<img src=\"$sIconUrl\"/>";
+			}
+			else {
+				return $sIconUrl;
+			}
+		}
 		return MetaModel::GetClassIcon(get_class($this), $bImgTag);
+	}
+
+	/**
+	 * @return bool True if the object has an image attribute as semantic attribute and its value is not empty
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	public function HasInstanceIcon(): bool
+	{
+		$bHasInstanceIcon = false;
+		$sClass = get_class($this);
+		
+		if (!$this->IsNew() && MetaModel::HasImageAttributeCode($sClass)) {
+			$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+			if (!empty($sImageAttCode)) {
+				/** @var \ormDocument $oImage */
+				$oImage = $this->Get($sImageAttCode);
+				$bHasInstanceIcon = !$oImage->IsEmpty();
+			}
+		}
+		
+		return $bHasInstanceIcon;
 	}
 
 	/**

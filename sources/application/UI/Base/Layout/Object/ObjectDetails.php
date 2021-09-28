@@ -204,20 +204,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		// Default icon is the class icon
 		$sIconUrl = $oObject->GetIcon(false);
 		// Note: Class icons are a square image with no margin around, so they need to be zoomed out in the medallion
-		$sIconCoverMethod = static::ENUM_ICON_COVER_METHOD_ZOOMOUT;
-		// Use object image from semantic attribute only if it's not the default image
-		if (!$oObject->IsNew() && MetaModel::HasImageAttributeCode($this->sClassName)) {
-			$sImageAttCode = MetaModel::GetImageAttributeCode($this->sClassName);
-			if (!empty($sImageAttCode)) {
-				/** @var \ormDocument $oImage */
-				$oImage = $oObject->Get($sImageAttCode);
-				if (!$oImage->IsEmpty()) {
-					$sIconUrl = $oImage->GetDisplayURL($this->sClassName, $this->sObjectId, $sImageAttCode);
-					$sIconCoverMethod = static::ENUM_ICON_COVER_METHOD_COVER;
-				}
-			}
-
-		}
+		$sIconCoverMethod = $oObject->HasInstanceIcon() ?  static::ENUM_ICON_COVER_METHOD_COVER : static::ENUM_ICON_COVER_METHOD_ZOOMOUT;
 
 		$this->SetIcon($sIconUrl, $sIconCoverMethod, true);
 	}

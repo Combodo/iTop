@@ -409,7 +409,7 @@ class DisplayableNode extends GraphNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
 						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 						$oNewNode->SetProperty('count', $aGroupProps['count']);
@@ -589,7 +589,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
 						$oNewNode->SetProperty('label', 'x'.count($aGroupProps['nodes']));
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'is_reached'));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('count', count($aGroupProps['nodes']));
