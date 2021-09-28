@@ -24,7 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:PageTitle' => 'Anwendungsupgrade',
     'itop-core-update:UI:SelectUpdateFile' => 'Upgrade-Datei hochladen',
     'itop-core-update:UI:ConfirmUpdate' => 'Upgrade bestätigen',
-    'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade der iTop-Core-Dateien',
+    'itop-core-update:UI:UpdateCoreFiles' => 'Upgrade der '.ITOP_APPLICATION_SHORT.'-Core-Dateien',
 	'iTopUpdate:UI:MaintenanceModeActive' => 'Die Anwendung läuft im Wartungsmodus, Benutzerzugriffe sind nicht möglich. Führen Sie erneut ein Setup oder Restore der Anwendung aus, um in den normalen Betriebsmodus zurückzukehren.',
 	'itop-core-update:UI:UpdateDone' => 'Upgrade abgeschlossen',
 
@@ -61,7 +61,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
     'iTopUpdate:UI:DoBackup:Warning' => 'Wegen geringem verbleibenden Speicherplatz sollte kein Backup mehr erzeugt werden.',
 
     'iTopUpdate:UI:DiskFreeSpace' => 'Freier Speicherplatz',
-    'iTopUpdate:UI:ItopDiskSpace' => 'iTop Speicherplatz',
+    'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' Speicherplatz',
     'iTopUpdate:UI:DBDiskSpace' => 'Datenbankgröße',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Maximale Dateigröße für Uploads',
 
@@ -94,8 +94,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
     'iTopUpdate:Error:BadFileFormat' => 'Die Upgradedatei ist keine ZIP-Datei',
-    'iTopUpdate:Error:BadFileContent' => 'Die Upgradedatei ist kein iTop-Paket',
-    'iTopUpdate:Error:BadItopProduct' => 'Die Upgradedatei ist nicht mit dieser iTop-Version kompatibel.',
+    'iTopUpdate:Error:BadFileContent' => 'Die Upgradedatei ist kein '.ITOP_APPLICATION_SHORT.'-Paket',
+    'iTopUpdate:Error:BadItopProduct' => 'Die Upgradedatei ist nicht mit dieser '.ITOP_APPLICATION_SHORT.'-Version kompatibel.',
 	'iTopUpdate:Error:Copy' => 'Fehler, kopieren von \'%1$s\' nach \'%2$s\' nicht möglich',
     'iTopUpdate:Error:FileNotFound' => 'Datei nicht gefunden',
     'iTopUpdate:Error:NoFile' => 'Keine Datei angegeben',

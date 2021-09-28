@@ -231,6 +231,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:CMDBChange/Attribute:date+' => 'Fecha y Hora en que los Cambios fueron Registrados',
 	'Class:CMDBChange/Attribute:userinfo' => 'Información Adicional',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Información definida por el solicitante',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -696,7 +704,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contacto a Notificar',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact a Notificar en Caso de Error',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icono de URL',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'URL a pequeña imagen representando la aplicación con la que iTop se sincronizará',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'URL a pequeña imagen representando la aplicación con la que '.ITOP_APPLICATION_SHORT.' se sincronizará',
 	'Class:SynchroDataSource/Attribute:url_application' => 'URL a la Aplicación',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'URL a la Aplicación (Si aplica). Posibles lugares: $this->attribute$ y $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política de Reconciliación',

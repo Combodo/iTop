@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -59,6 +61,47 @@ class WebPage implements Page
 	 */
 	public const ENUM_SESSION_MESSAGE_SEVERITY_ERROR = 'error';
 
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected const ENUM_COMPATIBILITY_FILE_TYPE_JS = 'js';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected const ENUM_COMPATIBILITY_FILE_TYPE_CSS = 'css';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected const ENUM_COMPATIBILITY_MODE_MOVED_FILES = 'moved';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	protected const ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES = 'deprecated';
+
+	/**
+	 * @var array Script linked to the page through URIs, which are now included only were necessary instead of in all pages, but can be added back if necessary {@see "compatibility.include_moved_js_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [];
+	/**
+	 * @var array Script linked to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_js_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [];
+	/**
+	 * @var array Stylesheets linked to the page through URIs, which are now included only were necessary instead of in all pages, but can be added back if necessary {@see "compatibility.include_moved_css_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [];
+	/**
+	 * @var array Stylesheets linked to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_css_files" conf. param.}
+	 * @since 3.0.0
+	 */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH = [];
 
 	/**
 	 * @var string
@@ -74,7 +117,13 @@ class WebPage implements Page
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
-	/** @var array Scripts to be put in the page's header */
+	/**
+	 * @var array Scripts to be put in the page's header, therefore executed first, BEFORE the DOM interpretation.
+	 *            /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
+	 * @since 3.0.0
+	 */
+	protected $a_early_scripts;
+	/** @var array Scripts to be executed immediately without waiting for the DOM to be ready */
 	protected $a_scripts;
 	/** @var array Scripts to be executed when the DOM is ready (typical JQuery use), right before "ready scripts" */
 	protected $a_init_scripts;
@@ -85,7 +134,7 @@ class WebPage implements Page
 	protected $a_ready_scripts;
 	/** @var array Scripts linked (externals) to the page through URIs */
 	protected $a_linked_scripts;
-	/** @var array Specific dictionnary entries to be used client side */
+	/** @var array Specific dictionary entries to be used client side */
 	protected $a_dict_entries;
 	/** @var array Sub-sets of dictionary entries (based on the given prefix) for the client side */
 	protected $a_dict_entries_prefixes;
@@ -93,6 +142,15 @@ class WebPage implements Page
 	protected $a_styles;
 	/** @var array Stylesheets linked (external) to the page through URIs */
 	protected $a_linked_stylesheets;
+	/**
+	 * @var array These parameters are used by the page UIBlocks and avoid accessing them directly from external code
+	 * @since 3.0.0
+	 */
+	protected $aBlockParams;
+	/** @var array Contain fonts that needs to be preloaded
+	 * @since 3.0.0
+	 */
+	protected $aPreloadedFonts;
 	protected $a_headers;
 	protected $a_base;
 	protected $iNextId;
@@ -105,6 +163,11 @@ class WebPage implements Page
 	protected $a_OutputOptions;
 	protected $bPrintable;
 	protected $bHasCollapsibleSection;
+	/**
+	 * @var bool Whether the JS dictionary entries should be added to the page or not during the final output
+	 * @see static::add_dict_entry
+	 * @see static::add_dict_entries
+	 */
 	protected $bAddJSDict;
 	/** @var iUIContentBlock $oContentLayout */
 	protected $oContentLayout;
@@ -122,20 +185,25 @@ class WebPage implements Page
 	 * @param string $s_title
 	 * @param bool $bPrintable
 	 */
-	public function __construct($s_title, $bPrintable = false)
+	public function __construct(string $s_title, bool $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		$this->s_title = $s_title;
 		$this->s_content = "";
 		$this->s_deferred_content = '';
+		$this->InitializeEarlyScripts();
 		$this->InitializeScripts();
 		$this->InitializeInitScripts();
 		$this->InitializeReadyScripts();
 		$this->InitializeLinkedScripts();
+		$this->InitializeCompatibilityLinkedScripts();
 		$this->InitializeDictEntries();
 		$this->InitializeStyles();
 		$this->InitializeLinkedStylesheets();
-		$this->a_headers = array();
-		$this->a_base = array('href' => '', 'target' => '');
+		$this->InitializeCompatibilityLinkedStylesheets();
+		$this->aPreloadedFonts = WebResourcesHelper::GetPreloadedFonts();
+		$this->a_headers = [];
+		$this->a_base = ['href' => '', 'target' => ''];
 		$this->iNextId = 0;
 		$this->iTransactionId = 0;
 		$this->sContentType = '';
@@ -143,14 +211,17 @@ class WebPage implements Page
 		$this->sContentFileName = '';
 		$this->bTrashUnexpectedOutput = false;
 		$this->s_OutputFormat = utils::ReadParam('output_format', 'html');
-		$this->a_OutputOptions = array();
+		$this->a_OutputOptions = [];
+		$this->aBlockParams = [];
 		$this->bHasCollapsibleSection = false;
 		$this->bPrintable = $bPrintable;
-		$this->bAddJSDict = true;
+		// Note: JS dict. entries cannot be added to a page if current environment and config file aren't available yet.
+		$this->bAddJSDict = class_exists('\Dict') && file_exists(utils::GetConfigFilePath());
 		$this->oContentLayout = new UIContentBlock();
 		$this->SetTemplateRelPath(static::DEFAULT_PAGE_TEMPLATE_REL_PATH);
 
 		ob_start(); // Start capturing the output
+		$oKpi->ComputeStats(get_class($this).' creation', 'WebPage');
 	}
 
 	/**
@@ -160,10 +231,9 @@ class WebPage implements Page
 	 */
 	public function AddSessionMessages(string $sMessageKey, array $aRanks = [], array $aMessages = []): void
 	{
-		if (array_key_exists('obj_messages', $_SESSION) && array_key_exists($sMessageKey,
-				$_SESSION['obj_messages'])) {
+		if (is_array(Session::Get(['obj_messages', $sMessageKey]))) {
 			$aReadMessages = [];
-			foreach ($_SESSION['obj_messages'][$sMessageKey] as $sMessageId => $aMessageData) {
+			foreach (Session::Get(['obj_messages', $sMessageKey]) as $aMessageData) {
 				if (!in_array($aMessageData['message'], $aReadMessages)) {
 					$aReadMessages[] = $aMessageData['message'];
 					$aRanks[] = $aMessageData['rank'];
@@ -184,7 +254,7 @@ class WebPage implements Page
 					}
 				}
 			}
-			unset($_SESSION['obj_messages'][$sMessageKey]);
+			Session::Unset(['obj_messages', $sMessageKey]);
 		}
 		array_multisort($aRanks, $aMessages);
 		foreach ($aMessages as $oMessage) {
@@ -433,6 +503,45 @@ class WebPage implements Page
 	/**
 	 * Empty all base JS in the page's header
 	 *
+	 * @uses \WebPage::$a_a_early_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyEarlyScripts(): void
+	{
+		$this->a_early_scripts = [];
+	}
+
+	/**
+	 * Initialize base JS in the page's header
+	 *
+	 * @uses \WebPage::$a_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeEarlyScripts(): void
+	{
+		$this->EmptyEarlyScripts();
+	}
+
+	/**
+	 * Add some Javascript to the header of the page, therefore executed first, BEFORE the DOM interpretation.
+	 * /!\ Keep in mind that no external JS files (eg. jQuery) will be loaded yet.
+	 *
+	 * @uses \WebPage::$a_a_early_scripts
+	 * @param string $s_script
+	 * @since 3.0.0
+	 */
+	public function add_early_script($s_script)
+	{
+		if (!empty(trim($s_script))) {
+			$this->a_early_scripts[] = $s_script;
+		}
+	}
+
+	/**
+	 * Empty all base JS
+	 *
 	 * @uses \WebPage::$a_scripts
 	 * @return void
 	 * @since 3.0.0
@@ -443,7 +552,7 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Initialize base JS in the page's header
+	 * Initialize base JS
 	 *
 	 * @uses \WebPage::$a_scripts
 	 * @return void
@@ -455,10 +564,11 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to the header of the page
+	 * Add some Javascript to be executed immediately without waiting for the DOM to be ready
 	 *
 	 * @uses \WebPage::$a_scripts
 	 * @param string $s_script
+	 * @since 3.0.0 These scripts are put at the end of the <body> tag instead of the end of the <head> tag, {@see static::add_early_script} to add script there
 	 */
 	public function add_script($s_script)
 	{
@@ -621,6 +731,27 @@ class WebPage implements Page
 	{
 		if (!empty(trim($s_linked_script))) {
 			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		}
+	}
+
+	/**
+	 * Initialize compatibility linked scripts for the page
+	 *
+	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	protected function InitializeCompatibilityLinkedScripts(): void
+	{
+		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_js_files');
+		if ($bIncludeDeprecatedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
+		}
+
+		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_js_files');
+		if ($bIncludeMovedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_JS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
 		}
 	}
 
@@ -792,6 +923,58 @@ JS;
 	}
 
 	/**
+	 * Initialize compatibility linked stylesheets for the page
+	 *
+	 * @see static::COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH
+	 * @see static::COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	protected function InitializeCompatibilityLinkedStylesheets(): void
+	{
+		$bIncludeDeprecatedFiles = utils::GetConfig()->Get('compatibility.include_deprecated_css_files');
+		if ($bIncludeDeprecatedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_DEPRECATED_FILES);
+		}
+
+		$bIncludeMovedFiles = utils::GetConfig()->Get('compatibility.include_moved_css_files');
+		if ($bIncludeMovedFiles) {
+			$this->AddCompatibilityFiles(static::ENUM_COMPATIBILITY_FILE_TYPE_CSS, static::ENUM_COMPATIBILITY_MODE_MOVED_FILES);
+		}
+	}
+
+	/**
+	 * Add compatibility files of $sFileType from $sMode (which are declared in {@see static::COMPATIBILITY_<MODE>_LINKED_<TYPE>_REL_PATH}) back to the page
+	 *
+	 * @param string $sFileType {@uses static::ENUM_COMPATIBILITY_FILE_TYPE_XXX}
+	 * @param string $sMode {@uses static::ENUM_COMPATIBILITY_MODE_XXX}
+	 *
+	 * @uses static::add_linked_script Depending on $sFileType
+	 * @uses static::add_linked_stylesheet Depending on $sFileType
+	 *
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	protected function AddCompatibilityFiles(string $sFileType, string $sMode): void
+	{
+		$sConstantName = 'COMPATIBILITY_'.strtoupper($sMode).'_LINKED_'. ($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'STYLESHEETS' : 'SCRIPTS') .'_REL_PATH';
+		$sMethodName = 'add_linked_'.($sFileType === static::ENUM_COMPATIBILITY_FILE_TYPE_CSS ? 'stylesheet' : 'script');
+
+		// Add ancestors files
+		foreach (array_reverse(class_parents(static::class)) as $sParentClass) {
+			foreach (constant($sParentClass.'::'.$sConstantName) as $sFile) {
+				$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
+			}
+		}
+
+		// Add current class files
+		foreach (constant('static::'.$sConstantName) as $sFile) {
+			$this->$sMethodName(utils::GetAbsoluteUrlAppRoot().$sFile);
+		}
+	}
+
+	/**
 	 * @param string $sSaasRelPath
 	 *
 	 * @throws \Exception
@@ -919,6 +1102,8 @@ JS;
 			$sDataAttributeCode = isset($aAttrib['attcode']) ? 'data-attribute-code="'.$aAttrib['attcode'].'"' : '';
 			$sDataAttributeType = isset($aAttrib['atttype']) ? 'data-attribute-type="'.$aAttrib['atttype'].'"' : '';
 			$sDataAttributeLabel = isset($aAttrib['attlabel']) ? 'data-attribute-label="'.utils::HtmlEntities($aAttrib['attlabel']).'"' : '';
+			$sDataInputId = isset($aAttrib['inputid']) ? 'data-input-id="'.utils::HtmlEntities($aAttrib['inputid']).'"' : '';
+			$sDataInputType = isset($aAttrib['inputtype']) ? 'data-input-type="'.utils::HtmlEntities($aAttrib['inputtype']).'"' : '';
 			// - Attribute flags
 			$sDataAttributeFlags = '';
 			if(isset($aAttrib['attflags']))
@@ -938,10 +1123,9 @@ JS;
 			// - Value raw
 			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.utils::HtmlEntities($aAttrib['value_raw']).'"' : '';
 
-			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
+			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" data-role=\"ibo-field\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw $sDataInputId $sDataInputType>\n";
 			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
-			$sHtml .= "<div class=\"field_data\">\n";
 			// By Rom, for csv import, proposed to show several values for column selection
 			if (is_array($aAttrib['value']))
 			{
@@ -956,13 +1140,12 @@ JS;
 			$sInfo = (isset($aAttrib['infos'])) ? $aAttrib['infos'] : '';
 			if ($sComment !== '')
 			{
-				$sHtml .= "<div class=\"field_comments\">$sComment</div>\n";
+				$sHtml .= "<div class=\"ibo-field--comments\">$sComment</div>\n";
 			}
 			if ($sInfo !== '')
 			{
-				$sHtml .= "<div class=\"field_infos\">$sInfo</div>\n";
+				$sHtml .= "<div class=\"ibo-field--infos\">$sInfo</div>\n";
 			}
-			$sHtml .= "</div>\n";
 
 			$sHtml .= "</div>\n";
 		}
@@ -1093,6 +1276,7 @@ JS;
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		// Send headers
 		foreach ($this->a_headers as $sHeader) {
 			header($sHeader);
@@ -1116,22 +1300,26 @@ JS;
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => addslashes(utils::GetAbsoluteUrlAppRoot()),
-			'sTitle' => $this->s_title,
-			'aMetadata' => [
+			'sTitle'              => $this->s_title,
+			'aMetadata'           => [
 				'sCharset' => static::PAGES_CHARSET,
-				'sLang' => $this->GetLanguageForMetadata(),
+				'sLang'    => $this->GetLanguageForMetadata(),
 			],
-			'aCssFiles' => $this->a_linked_stylesheets,
-			'aCssInline' => $this->a_styles,
-			'aJsFiles' => $this->a_linked_scripts,
-			'aJsInlineLive' => $this->a_scripts,
+			'aPreloadedFonts'     => $this->aPreloadedFonts,
+			'aCssFiles'           => $this->a_linked_stylesheets,
+			'aCssInline'          => $this->a_styles,
+			'aJsInlineEarly'      => $this->a_early_scripts,
+			'aJsFiles'            => $this->a_linked_scripts,
+			'aJsInlineLive'       => $this->a_scripts,
 			'aJsInlineOnDomReady' => $this->GetReadyScripts(),
-			'aJsInlineOnInit' => $this->a_init_scripts,
+			'aJsInlineOnInit'     => $this->a_init_scripts,
 
 			// TODO 3.0.0: TEMP, used while developing, remove it.
-			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
-			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
+			'sCapturedOutput'     => utils::FilterXSS($s_captured_output),
+			'sDeferredContent'    => utils::FilterXSS($this->s_deferred_content),
 		];
+
+		$aData['aBlockParams'] = $this->GetBlockParams();
 
 		if ($this->a_base['href'] != '') {
 			$aData['aPage']['aMetadata']['sBaseUrl'] = $this->a_base['href'];
@@ -1142,27 +1330,21 @@ JS;
 		}
 
 		// Favicon
-		if (class_exists('MetaModel') && MetaModel::GetConfig()) {
-			$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
-		}
+		$aData['aPage']['sFaviconUrl'] = $this->GetFaviconAbsoluteUrl();
 
 		$oTwigEnv = TwigHelper::GetTwigEnvironment(BlockRenderer::TWIG_BASE_PATH, BlockRenderer::TWIG_ADDITIONAL_PATHS);
 		// Render final TWIG into global HTML
-		$oKpi = new ExecutionKPI();
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
-		$oKpi->ComputeAndReport('TWIG rendering');
+		$oKpi->ComputeAndReport(get_class($this).'output');
 
 		// Echo global HTML
-		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
-		if (class_exists('ExecutionKPI')) {
-			ExecutionKPI::ReportStats();
-		}
+		ExecutionKPI::ReportStats();
 	}
 
 	/**
@@ -1548,5 +1730,42 @@ EOD
 	public function GetTemplateRelPath()
 	{
 		return $this->sTemplateRelPath;
+	}
+
+	/**
+	 *
+	 * @see static::$aBlockParams
+	 *
+	 * @param string $sKey
+	 * @param $value
+	 *
+	 * @return $this
+	 * @since 3.0.0
+	 */
+	public function SetBlockParam(string $sKey, $value)
+	{
+		$this->aBlockParams[$sKey] = $value;
+
+		return $this;
+	}
+
+	/**
+	 * @see static::$aBlockParams
+	 * @return array
+	 * @since 3.0.0
+	 */
+	public function GetBlockParams(): array
+	{
+		return $this->aBlockParams;
+	}
+
+	/**
+	 * @param array $aFonts
+	 *
+	 * @since 3.0.0
+	 */
+	public function AddPreloadedFonts(array $aFonts)
+	{
+		$this->aPreloadedFonts = array_merge($this->aPreloadedFonts, $aFonts);
 	}
 }

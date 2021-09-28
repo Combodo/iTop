@@ -47,46 +47,46 @@ class Panel extends UIContentBlock
 	/** @inheritDoc */
 	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES = true;
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/panel/layout';
-	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/panel/layout';
+	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/panel/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
 		'js/components/panel.js',
 	];
 
 	// Specific constants
-	/** @var string ENUM_COLOR_PRIMARY */
-	public const ENUM_COLOR_PRIMARY = 'primary';
-	/** @var string ENUM_COLOR_SECONDARY */
-	public const ENUM_COLOR_SECONDARY = 'secondary';
+	/** @var string ENUM_COLOR_SCHEME_PRIMARY */
+	public const ENUM_COLOR_SCHEME_PRIMARY = 'primary';
+	/** @var string ENUM_COLOR_SCHEME_SECONDARY */
+	public const ENUM_COLOR_SCHEME_SECONDARY = 'secondary';
 
-	/** @var string ENUM_COLOR_NEUTRAL */
-	public const ENUM_COLOR_NEUTRAL = 'neutral';
-	/** @var string ENUM_COLOR_INFORMATION */
-	public const ENUM_COLOR_INFORMATION = 'information';
-	/** @var string ENUM_COLOR_SUCCESS */
-	public const ENUM_COLOR_SUCCESS = 'success';
-	/** @var string ENUM_COLOR_FAILURE */
-	public const ENUM_COLOR_FAILURE = 'failure';
-	/** @var string ENUM_COLOR_WARNING */
-	public const ENUM_COLOR_WARNING = 'warning';
-	/** @var string ENUM_COLOR_DANGER */
-	public const ENUM_COLOR_DANGER = 'danger';
+	/** @var string ENUM_COLOR_SCHEME_NEUTRAL */
+	public const ENUM_COLOR_SCHEME_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_SCHEME_INFORMATION */
+	public const ENUM_COLOR_SCHEME_INFORMATION = 'information';
+	/** @var string ENUM_COLOR_SCHEME_SUCCESS */
+	public const ENUM_COLOR_SCHEME_SUCCESS = 'success';
+	/** @var string ENUM_COLOR_SCHEME_FAILURE */
+	public const ENUM_COLOR_SCHEME_FAILURE = 'failure';
+	/** @var string ENUM_COLOR_SCHEME_WARNING */
+	public const ENUM_COLOR_SCHEME_WARNING = 'warning';
+	/** @var string ENUM_COLOR_SCHEME_DANGER */
+	public const ENUM_COLOR_SCHEME_DANGER = 'danger';
 
-	/** @var string ENUM_COLOR_GREY */
-	public const ENUM_COLOR_GREY = 'grey';
-	/** @var string ENUM_COLOR_BLUEGREY */
-	public const ENUM_COLOR_BLUEGREY = 'blue-grey';
-	/** @var string ENUM_COLOR_BLUE */
-	public const ENUM_COLOR_BLUE = 'blue';
-	/** @var string ENUM_COLOR_CYAN */
-	public const ENUM_COLOR_CYAN = 'cyan';
-	/** @var string ENUM_COLOR_GREEN */
-	public const ENUM_COLOR_GREEN = 'green';
-	/** @var string ENUM_COLOR_ORANGE */
-	public const ENUM_COLOR_ORANGE = 'orange';
-	/** @var string ENUM_COLOR_RED */
-	public const ENUM_COLOR_RED = 'red';
-	/** @var string ENUM_COLOR_PINK */
-	public const ENUM_COLOR_PINK = 'pink';
+	/** @var string ENUM_COLOR_SCHEME_GREY */
+	public const ENUM_COLOR_SCHEME_GREY = 'grey';
+	/** @var string ENUM_COLOR_SCHEME_BLUEGREY */
+	public const ENUM_COLOR_SCHEME_BLUEGREY = 'blue-grey';
+	/** @var string ENUM_COLOR_SCHEME_BLUE */
+	public const ENUM_COLOR_SCHEME_BLUE = 'blue';
+	/** @var string ENUM_COLOR_SCHEME_CYAN */
+	public const ENUM_COLOR_SCHEME_CYAN = 'cyan';
+	/** @var string ENUM_COLOR_SCHEME_GREEN */
+	public const ENUM_COLOR_SCHEME_GREEN = 'green';
+	/** @var string ENUM_COLOR_SCHEME_ORANGE */
+	public const ENUM_COLOR_SCHEME_ORANGE = 'orange';
+	/** @var string ENUM_COLOR_SCHEME_RED */
+	public const ENUM_COLOR_SCHEME_RED = 'red';
+	/** @var string ENUM_COLOR_SCHEME_PINK */
+	public const ENUM_COLOR_SCHEME_PINK = 'pink';
 
 	/** @var string ENUM_CONTENT_AREA_MAIN The main content area (panel body) */
 	public const ENUM_CONTENT_AREA_MAIN = 'main';
@@ -100,10 +100,10 @@ class Panel extends UIContentBlock
 	/** @var string Icon should cover all the space, best for icons with filled background */
 	public const ENUM_ICON_COVER_METHOD_COVER = 'cover';
 
-	/** @var string DEFAULT_COLOR */
-	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var string DEFAULT_COLOR_SCHEME */
+	public const DEFAULT_COLOR_SCHEME = self::ENUM_COLOR_SCHEME_NEUTRAL;
 	/** @var string Default color for a panel displaying info about a datamodel class */
-	public const DEFAULT_COLOR_FOR_CLASS = self::ENUM_COLOR_BLUE;
+	public const DEFAULT_COLOR_SCHEME_FOR_CLASS = self::ENUM_COLOR_SCHEME_BLUE;
 	/** @var null */
 	public const DEFAULT_ICON_URL = null;
 	/** @var string */
@@ -126,8 +126,8 @@ class Panel extends UIContentBlock
 	protected $sIconCoverMethod;
 	/** @var bool Whether the icon should be rendered as a medallion (rounded with border) or a standalone image */
 	protected $bIconAsMedallion;
-	/** @var string $sColor */
-	protected $sColor;
+	/** @var string $sCSSColorClass CSS class that will be used on the block to define its accent color */
+	protected $sCSSColorClass;
 	/** @var bool $bIsCollapsible */
 	protected $bIsCollapsible;
 	/** @var bool $bIsHeaderVisibleOnScroll True if the header of the panel should remain visible when scrolling */
@@ -138,10 +138,10 @@ class Panel extends UIContentBlock
 	 *
 	 * @param string $sTitle
 	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock[] $aSubBlocks
-	 * @param string $sColor
+	 * @param string $sColorScheme Color scheme code such as "success", "failure", "active", ... {@see css/backoffice/components/_panel.scss}
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sTitle = '', array $aSubBlocks = [], string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
+	public function __construct(string $sTitle = '', array $aSubBlocks = [], string $sColorScheme = self::DEFAULT_COLOR_SCHEME, ?string $sId = null)
 	{
 		parent::__construct($sId);
 
@@ -156,7 +156,7 @@ class Panel extends UIContentBlock
 		$this->sIconUrl = static::DEFAULT_ICON_URL;
 		$this->sIconCoverMethod = static::DEFAULT_ICON_COVER_METHOD;
 		$this->bIconAsMedallion = static::DEFAULT_ICON_AS_MEDALLION;
-		$this->sColor = $sColor;
+		$this->SetColorFromColorSemantic($sColorScheme);
 		$this->SetMainBlocks([]);
 		$this->SetToolBlocks([]);
 		$this->bIsCollapsible = false;
@@ -190,7 +190,7 @@ class Panel extends UIContentBlock
 	 */
 	public function SetTitleBlock(iUIContentBlock $oBlock)
 	{
-		$this->oSubTitleBlock = $oBlock;
+		$this->oTitleBlock = $oBlock;
 
 		return $this;
 	}
@@ -387,56 +387,78 @@ class Panel extends UIContentBlock
 	}
 
 	/**
+	 * @see static::$sCSSColorClass
 	 * @return string
 	 */
-	public function GetColor()
+	public function GetCSSColorClass()
 	{
-		return $this->sColor;
+		return $this->sCSSColorClass;
 	}
 
 	/**
-	 * @param string $sColor
+	 * @param string $sCSSColorClass
 	 *
+	 * @see static::$sCSSColorClass
 	 * @return $this
 	 */
-	public function SetColor(string $sColor)
+	public function SetCSSColorClass(string $sCSSColorClass)
 	{
-		$this->sColor = $sColor;
+		$this->sCSSColorClass = $sCSSColorClass;
 
 		return $this;
 	}
 
 	/**
-	 * Set the panel's color from an ormStyle directly.
+	 * @param string $sSemanticColor
+	 *
+	 * @see static::$sCSSColorClass
+	 * @return $this
+	 */
+	public function SetColorFromColorSemantic(string $sSemanticColor)
+	{
+		$this->SetCSSColorClass("ibo-is-$sSemanticColor");
+
+		return $this;
+	}
+
+	/**
+	 * Set the panel's accent color from an ormStyle directly.
 	 *
 	 * Use cases:
-	 * - Display information about a datamodel class
 	 * - Display information about a particular enum value (linked objects)
 	 *
 	 * @param \ormStyle $oStyle
 	 *
+	 * @see static::$sCSSColorClass
 	 * @return $this
 	 */
 	public function SetColorFromOrmStyle(ormStyle $oStyle)
 	{
-		$sColor = empty($oStyle->GetMainColor()) ? static::DEFAULT_COLOR : $oStyle->GetMainColor();
-		$this->SetColor($sColor);
+		if ($oStyle->HasStyleClass()) {
+			$this->SetCSSColorClass($oStyle->GetStyleClass());
+		} else {
+			$this->SetColorFromColorSemantic(static::DEFAULT_COLOR_SCHEME);
+		}
 
 		return $this;
 	}
 
 	/**
-	 * Set the panel's color to the one corresponding to the $sClass datamodel class
+	 * Set the panel's accent color to the one corresponding to the $sClass datamodel class
+	 *
+	 * Use cases:
+	 * - Display information about a specific datamodel class
 	 *
 	 * @param string $sClass
 	 *
+	 * @see static::$sCSSColorClass
 	 * @return $this
 	 */
 	public function SetColorFromClass(string $sClass)
 	{
 		$oStyle = MetaModel::GetClassStyle($sClass);
 		if (empty($oStyle)) {
-			$this->SetColor(static::DEFAULT_COLOR_FOR_CLASS);
+			$this->SetColorFromColorSemantic(static::DEFAULT_COLOR_SCHEME_FOR_CLASS);
 		} else {
 			$this->SetColorFromOrmStyle($oStyle);
 		}

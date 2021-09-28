@@ -366,7 +366,7 @@ JS
 			"btn_remove_".$iAttId);
 		$oButton->AddCSSClass('btn_hidden')
 			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");")
-			->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
+			->SetColor(Button::ENUM_COLOR_SCHEME_DESTRUCTIVE);
 		
 		return $oButton;
 	}

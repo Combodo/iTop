@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
@@ -239,9 +240,9 @@ class utils
 
 	public static function InitArchiveMode()
 	{
-		if (isset($_SESSION['archive_mode']))
+		if (Session::IsSet('archive_mode'))
 		{
-			$iDefault = $_SESSION['archive_mode'];
+			$iDefault = Session::Get('archive_mode');
 		}
 		else
 		{
@@ -249,9 +250,9 @@ class utils
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		if (isset($_SESSION))
+		if (Session::IsInitialized())
 		{
-			$_SESSION['archive_mode'] = $iCurrent;
+			Session::Set('archive_mode', $iCurrent);
 		}
 		// Read and use the value for the current page (web services)
 		$iCurrent = self::ReadParam('with_archive', $iCurrent, true);
@@ -860,6 +861,8 @@ class utils
 	}
 
 	/**
+	 * @param boolean $bForceGetFromDisk if true then will always read from disk without using instances in memory
+	 *
 	 * @return \Config Get object in the following order :
 	 * <ol>
 	 * <li>from {@link MetaModel::GetConfig} if loaded
@@ -872,25 +875,26 @@ class utils
 	 * @throws \CoreException
 	 *
 	 * @since 2.7.0 N°2478 this method will now always call {@link MetaModel::GetConfig} first, and cache in this class is only set when loading from disk
+	 * @since 3.0.0 N°4158 new $bReadFromDisk parameter
 	 */
-	public static function GetConfig()
+	public static function GetConfig($bForceGetFromDisk = false)
 	{
-		$oMetaModelConfig = MetaModel::GetConfig();
-		if ($oMetaModelConfig !== null)
-		{
-			return $oMetaModelConfig;
-		}
+		if (!$bForceGetFromDisk) {
+			$oMetaModelConfig = MetaModel::GetConfig();
+			if ($oMetaModelConfig !== null) {
+				return $oMetaModelConfig;
+			}
 
-		if (self::$oConfig !== null)
-		{
-			return self::$oConfig;
+			if (self::$oConfig !== null) {
+				return self::$oConfig;
+			}
 		}
 
 		$sCurrentEnvConfigPath = self::GetConfigFilePath();
-		if (file_exists($sCurrentEnvConfigPath))
-		{
+		if (file_exists($sCurrentEnvConfigPath)) {
 			$oCurrentEnvDiskConfig = new Config($sCurrentEnvConfigPath);
 			self::SetConfig($oCurrentEnvDiskConfig);
+
 			return self::$oConfig;
 		}
 
@@ -1210,7 +1214,7 @@ class utils
 	 */
 	static function CanLogOff()
 	{
-		return (isset($_SESSION['can_logoff']) ? $_SESSION['can_logoff'] : false);
+		return Session::Get('can_logoff', false);
 	}
 
 	/**
@@ -1219,7 +1223,7 @@ class utils
 	 */
 	public static function GetSessionLog()
 	{
-		return print_r($_SESSION, true);
+		return Session::GetLog();
 	}
 
 	 static function DebugBacktrace($iLimit = 5)
@@ -1312,14 +1316,7 @@ class utils
 	 */
 	public static function GetCurrentEnvironment()
 	{
-		if (isset($_SESSION['itop_env']))
-		{
-			return $_SESSION['itop_env'];
-		}
-		else
-		{
-			return ITOP_DEFAULT_ENV;
-		}
+		return Session::Get('itop_env', ITOP_DEFAULT_ENV);
 	}
 
 	/**
@@ -1922,7 +1919,7 @@ class utils
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
 		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
+		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
 		// Setting our variables
 		$oSass->setVariables($aVariables);
 		// Setting our imports paths
@@ -2638,24 +2635,36 @@ class utils
 		if(!empty($aMentionsAllowedClasses)) {
 			$aDefaultConf['mentions'] = [];
 
-			foreach($aMentionsAllowedClasses as $sMentionChar => $sMentionClass) {
+			foreach($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
+				// Retrieve mention class
+				// - First test if the conf is a simple Datamodel class
+				if (MetaModel::IsValidClass($sMentionScope)) {
+					$sMentionClass = $sMentionScope;
+				}
+				// - Otherwise it must be a valid OQL
+				else {
+					$oTmpSearch = DBSearch::FromOQL($sMentionScope);
+					$sMentionClass = $oTmpSearch->GetClass();
+					unset($oTmpSearch);
+				}
+
 				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
-				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&target_class='.$sMentionClass.'&needle={encodedQuery}';
+				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.$sMentionMarker.'&needle={encodedQuery}';
 				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
 
 				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
-<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="background-image: url('{picture_url}');">{initials}</span>
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="{picture_style}">{initials}</span>
 HTML;
 				$sMentionItemTemplate = <<<HTML
 <li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
 HTML;
 				$sMentionOutputTemplate = <<<HTML
-<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionChar}{friendlyname}</a>
+<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionMarker}{friendlyname}</a>
 HTML;
 
 				$aDefaultConf['mentions'][] = [
 					'feed' => $sMentionEndpoint,
-					'marker' => $sMentionChar,
+					'marker' => $sMentionMarker,
 					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 					'itemTemplate' => $sMentionItemTemplate,
 					'outputTemplate' => $sMentionOutputTemplate,
@@ -2811,20 +2820,19 @@ HTML;
 	//----------------------------------------------
 
 	/**
-	 * Check if iTop is in a development environment (VCS vs build number)
+	 * Check if iTop is in a development environment
 	 *
-	 * @return bool
+	 * @return bool true if development environment
 	 *
 	 * @since 2.6.0 method creation
 	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
 	 *
-	 * @use `developer_mode.enabled` config parameter
-	 * @use ITOP_REVISION
+	 * @uses GetDeveloperModeParam
+	 * @uses ITOP_REVISION constant (check 'svn' value)
 	 */
 	public static function IsDevelopmentEnvironment()
 	{
-		$oConfig = utils::GetConfig();
-		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+		$bIsDevEnvInConfig = static::GetDeveloperModeParam();
 		if ($bIsDevEnvInConfig === true) {
 			return true;
 		}
@@ -2842,7 +2850,36 @@ HTML;
 	}
 
 	/**
-	 * @return bool : indicate whether we run under a windows environnement or not
+	 * In the setup there are times when the MetaModel config attribute is loaded but partially (only setup parameters are set, others have the default value)
+	 * So we need to load from disk then !
+	 *
+	 * But in other scenario we want to read from memory : for example when changing the option in a PHPUnit setUp method
+	 *
+	 * This method will first try to get the `developer_mode.enabled` config parameter the standard way (call to GetConfig without modification).
+	 * If we are getting null (not defined parameter), then we will load config from disk only (GetConfig(true))
+	 *
+	 * @return bool|null
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @uses developer_mode.enabled config parameter
+	 */
+	private static function GetDeveloperModeParam(): ?bool
+	{
+		$oConfig = static::GetConfig(false);
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+
+		if (!is_null($bIsDevEnvInConfig)) {
+			return $bIsDevEnvInConfig;
+		}
+
+		$oConfigFromDisk = static::GetConfig(true);
+
+		return $oConfigFromDisk->Get('developer_mode.enabled');
+	}
+
+	/**
+	 * @return bool true if we are running under a Windows environment
 	 * @since 2.7.4 : N°3412
 	 */
 	public static function IsWindowsEnvironment()
@@ -3007,5 +3044,27 @@ HTML;
 		}
 
 		return $aMentionedObjects;
+	}
+
+	/**
+	 * @param $sUrl
+	 * @param string $sParamName
+	 * @param string $sParamValue
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public static function AddParameterToUrl(string $sUrl, string $sParamName, string $sParamValue): string
+	{
+		if (strpos($sUrl, '?') === false)
+		{
+			$sUrl = $sUrl.'?'.urlencode($sParamName).'='.urlencode($sParamValue);
+		}
+		else
+		{
+			$sUrl = $sUrl.'&'.urlencode($sParamName).'='.urlencode($sParamValue);
+		}
+
+		return $sUrl;
 	}
 }

@@ -4123,7 +4123,8 @@ class AttributeText extends AttributeString
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "<span class=\"wiki_broken_link\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
+						$sToolTipForHtml = utils::EscapeHtml(Dict::Format('Core:UnknownObjectLabel', $sClass, $sName));
+						$sReplacement = "<span class=\"wiki_broken_link ibo-is-broken-hyperlink\" data-tooltip-content=\"$sToolTipForHtml\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
 						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
@@ -4159,13 +4160,13 @@ class AttributeText extends AttributeString
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
 
-			return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
+			return "<div $sStyle>$sValue</div>";
 		}
 		else
 		{
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 
-			return "<div class=\"HTML\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
+			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
 		}
 
 	}
@@ -10282,7 +10283,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			} else {
 				$sTooltipContent = <<<HTML
 <h4>$sLabel</h4>
-<br>
 <div>$sDescription</div>
 HTML;
 				$sTooltipHtmlEnabled = 'true';
@@ -11573,7 +11573,6 @@ class AttributeTagSet extends AttributeSet
 				} else {
 					$sTooltipContent = <<<HTML
 <h4>$sTagLabel</h4>
-<br>
 <div>$sTagDescription</div>
 HTML;
 					$sTooltipHtmlEnabled = 'true';
@@ -12544,10 +12543,12 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
 	{
-		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),
-			true);
-
-		return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),	true);
+		if ($aRawData != null) {
+			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+		} else{
+			return null;
+		}
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObject)

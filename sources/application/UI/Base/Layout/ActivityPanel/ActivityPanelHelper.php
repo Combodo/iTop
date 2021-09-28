@@ -88,6 +88,7 @@ class ActivityPanelHelper
 	 * @param string $sObjectClass
 	 * @param string $sObjectId
 	 * @param string|null $sChangeOpIdToOffsetFrom Entries will be retrieved after this CMDBChangeOp ID. Typically used for pagination.
+	 * @param bool $bLimitResultsLength True to limit to the X previous entries, false to retrieve them all
 	 *
 	 * @return array The 'max_history_length' edits entries from the CMDBChangeOp of the object, starting from $sChangeOpIdToOffsetFrom. Flag to know if more entries are available and the ID of the last returned entry are also provided.
 	 *
@@ -99,8 +100,13 @@ class ActivityPanelHelper
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
-	public static function GetCMDBChangeOpEditsEntriesForObject(string $sObjectClass, string $sObjectId, ?string $sChangeOpIdToOffsetFrom = null): array
+	public static function GetCMDBChangeOpEditsEntriesForObject(string $sObjectClass, string $sObjectId, ?string $sChangeOpIdToOffsetFrom = null, bool $bLimitResultsLength = true): array
 	{
 		$iMaxHistoryLength = MetaModel::GetConfig()->Get('max_history_length');
 		$aResults = [
@@ -111,7 +117,7 @@ class ActivityPanelHelper
 
 		// - Prepare query to retrieve changes
 		// N°3924: The "CO.objkey > 0" clause is there to avoid retrieving orphan elements from objects that have not been completely created / cleaned. There seem to be a lot of them due to some cron tasks.
-		$oSearch = DBObjectSearch::FromOQL('SELECT CO FROM CMDBChangeOp AS CO WHERE CO.objclass = :obj_class AND CO.objkey = :obj_key AND CO.objkey > 0 AND CO.finalclass NOT IN (:excluded_optypes)');
+		$oSearch = DBObjectSearch::FromOQL('SELECT CO, C FROM CMDBChangeOp AS CO JOIN CMDBChange AS C ON CO.change = C.id WHERE CO.objclass = :obj_class AND CO.objkey = :obj_key AND CO.objkey > 0 AND CO.finalclass NOT IN (:excluded_optypes)');
 		$aArgs = ['obj_class' => $sObjectClass, 'obj_key' => $sObjectId, 'excluded_optypes' => ['CMDBChangeOpSetAttributeCaseLog']];
 
 		// - Optional offset condition
@@ -126,11 +132,15 @@ class ActivityPanelHelper
 
 		// Note: We can't order by date (only) as something multiple CMDBChangeOp rows are inserted at the same time (eg. Delivery model of the "Demo" Organization in the sample data).
 		// As the DB returns rows "chronologically", we get the older first and it messes with the processing. Ordering by the ID is way much simpler and less DB CPU consuming.
-		$oSet = new DBObjectSet($oSearch, ['id' => false], $aArgs);
+		$oSet = new DBObjectSet($oSearch, ['CO.id' => false], $aArgs);
 
 		// - Limit history entries to display
-		$bMoreEntriesToLoad = $oSet->CountExceeds($iMaxHistoryLength);
-		$oSet->SetLimit($iMaxHistoryLength);
+		if ($bLimitResultsLength) {
+			$bMoreEntriesToLoad = $oSet->CountExceeds($iMaxHistoryLength);
+			$oSet->SetLimit($iMaxHistoryLength);
+		} else {
+			$bMoreEntriesToLoad = false;
+		}
 
 		// Prepare previous values to group edits within a same CMDBChange
 		$iPreviousChangeId = 0;
@@ -139,7 +149,10 @@ class ActivityPanelHelper
 		$oPreviousEditsEntry = null;
 
 		/** @var \CMDBChangeOp $oChangeOp */
-		while ($oChangeOp = $oSet->Fetch()) {
+		while ($aElements = $oSet->FetchAssoc()) {
+			$oChange = $aElements['C'];
+			$oChangeOp = $aElements['CO'];
+
 			// Skip case log changes as they are handled directly from the attributes themselves (most of them should have been excluded by the OQL above, but some derivated classes could still be retrieved)
 			if ($oChangeOp instanceof CMDBChangeOpSetAttributeCaseLog) {
 				continue;
@@ -148,7 +161,7 @@ class ActivityPanelHelper
 			// Make entry from CMDBChangeOp
 			$iChangeId = $oChangeOp->Get('change');
 			try {
-				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp);
+				$oEntry = ActivityEntryFactory::MakeFromCmdbChangeOp($oChangeOp, $oChange);
 			}
 			catch (Exception $oException) {
 				IssueLog::Debug(static::class.': Could not create entry from CMDBChangeOp #'.$oChangeOp->GetKey().' related to '.$oChangeOp->Get('objclass').'::'.$oChangeOp->Get('objkey').': '.$oException->getMessage());

@@ -16,6 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -203,6 +204,24 @@ abstract class Dashlet
 	}
 
 	/**
+	 * @return array Rel. path to the app. root of the JS files required by the dashlet
+	 * @since 3.0.0
+	 */
+	public function GetJSFilesRelPaths(): array
+	{
+		return [];
+	}
+
+	/**
+	 * @return array Rel. path to the app. root of the CSS files required by the dashlet
+	 * @since 3.0.0
+	 */
+	public function GetCSSFilesRelPaths(): array
+	{
+		return [];
+	}
+
+	/**
 	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param bool $bEnclosingDiv
@@ -223,6 +242,9 @@ abstract class Dashlet
 			$oDashletContainer = new DashletContainer();
 			$oDashletContainer->AddCSSClasses($this->aCSSClasses);
 		}
+
+		$oDashletContainer->AddMultipleJsFilesRelPaths($this->GetJSFilesRelPaths());
+		$oDashletContainer->AddMultipleCssFilesRelPaths($this->GetCSSFilesRelPaths());
 
 		try {
 			if (get_class($this->oModelReflection) == 'ModelReflectionRuntime') {
@@ -604,8 +626,7 @@ class DashletUnknown extends Dashlet
 
 		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
+		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div><div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		return $oDashletContainer;
 	}
@@ -624,8 +645,7 @@ class DashletUnknown extends Dashlet
 
 		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
-		$oDashletContainer->AddHtml('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
+		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div><div class="dashlet-ukn-text">'.$sExplainText.'</div>');
 
 		return $oDashletContainer;
 	}
@@ -1272,9 +1292,9 @@ abstract class DashletGroupBy extends Dashlet
 		$aExtraParams["surround_with_panel"] = true;
 		$aExtraParams["panel_title"] = Dict::S($sTitle);
 		$aExtraParams["panel_class"] = $sClass;
-		$oPanel = $oBlock->GetDisplay($oPage, $sType, array_merge($aExtraParams, $aParams));
+		$oPanel = $oBlock->GetDisplay($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
 		if ($bEditMode) {
-			$oPanel->AddHtml('<div class="dashlet-blocker"></div>');
+			$oPanel->AddHtml('<div class="ibo-dashlet-blocker dashlet-blocker"></div>');
 		}
 
 		return $oPanel;
@@ -1673,6 +1693,28 @@ class DashletGroupByPie extends DashletGroupBy
 			'label' => Dict::S('UI:DashletGroupByPie:Label'),
 			'icon' => 'images/dashlets/icons8-pie-chart-48.png',
 			'description' => Dict::S('UI:DashletGroupByPie:Description'),
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetJSFilesRelPaths(): array
+	{
+		return array_merge(
+			parent::GetJSFilesRelPaths(),
+			WebResourcesHelper::GetJSFilesRelPathsForC3JS()
+		);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetCSSFilesRelPaths(): array
+	{
+		return array_merge(
+			parent::GetCSSFilesRelPaths(),
+			WebResourcesHelper::GetCSSFilesRelPathsForC3JS()
 		);
 	}
 

@@ -22,15 +22,58 @@
  */
 class NiceWebPage extends WebPage
 {
+	/** @inheritDoc */
+	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [
+		// - DisplayableGraph, impact analysis
+		'js/jquery.positionBy.js',
+		'js/jquery.popupmenu.js',
+		// - SearchForm
+		'js/search/search_form_handler.js',
+		'js/search/search_form_handler_history.js',
+		'js/search/search_form_criteria.js',
+		'js/search/search_form_criteria_raw.js',
+		'js/search/search_form_criteria_string.js',
+		'js/search/search_form_criteria_external_field.js',
+		'js/search/search_form_criteria_numeric.js',
+		'js/search/search_form_criteria_enum.js',
+		'js/search/search_form_criteria_tag_set.js',
+		'js/search/search_form_criteria_external_key.js',
+		'js/search/search_form_criteria_hierarchical_key.js',
+		'js/search/search_form_criteria_date_abstract.js',
+		'js/search/search_form_criteria_date.js',
+		'js/search/search_form_criteria_date_time.js',
+		// - DataTable UIBlock
+		'js/field_sorter.js',
+		'js/table-selectable-lines.js',
+		// - Not used internally or by extensions yet
+		'js/clipboard.min.js',
+		'js/clipboardwidget.js',
+		// - SearchForm
+		'js/searchformforeignkeys.js',
+	];
+	/** @inheritDoc */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
+		/** @deprecated 3.0.0 Not used in the backoffice since the introduction of the new tooltip lib. */
+		'js/hovertip.js',
+		/** @deprecated 3.0.0 N°2737 - Migrate table to DataTables plugin to be iso with the end-users portal, will be removed in 3.x */
+		'js/datatable.js',
+		'js/jquery.tablesorter.js',
+		'js/jquery.tablesorter.pager.js',
+		'js/jquery.tablehover.js',
+	];
+
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/nicewebpage/layout';
+
 	var $m_sRootUrl;
 
 	public function __construct($s_title, $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		$this->m_sRootUrl = $this->GetAbsoluteUrlAppRoot();
 		parent::__construct($s_title, $bPrintable);
 
-	    $this->LoadTheme();
+		$this->LoadTheme();
+		$oKpi->ComputeStats(get_class($this).' creation', 'NiceWebPage');
 	}
 
 	/**
@@ -99,7 +142,9 @@ EOF
 	{
 		parent::InitializeLinkedScripts();
 
+		// Used throughout the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
 		if (utils::IsDevelopmentEnvironment()) // Needed since many other plugins still rely on oldies like $.browser
 		{
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.dev-params.js');
@@ -108,39 +153,10 @@ EOF
 			$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-migrate.prod.min.js');
 		}
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui.custom.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/hovertip.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/table-selectable-lines.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/field_sorter.js');
-		//TODO deprecated in 3.0.0
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/datatable.js');
-		// table sorting
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablesorter.pager.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.tablehover.js');
-		//TODO end deprecated in 3.0.0
 
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.positionBy.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.popupmenu.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/searchformforeignkeys.js');
+		// Used throughout the app.
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/latinise/latinise.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_handler_history.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_raw.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_string.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_field.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_numeric.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_enum.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_tag_set.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_external_key.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_hierarchical_key.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_abstract.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/search/search_form_criteria_date_time.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboard.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/clipboardwidget.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js');
 	}
 
 	/**

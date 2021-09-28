@@ -44,24 +44,24 @@ class Button extends UIBlock
 	/** @var string DEFAULT_ACTION_TYPE */
 	public const DEFAULT_ACTION_TYPE = self::ENUM_ACTION_TYPE_REGULAR;
 
-	/** @var string ENUM_COLOR_NEUTRAL */
-	public const ENUM_COLOR_NEUTRAL = 'neutral';
-	/** @var string ENUM_COLOR_VALIDATION */
-	public const ENUM_COLOR_VALIDATION = 'success';
-	/** @var string ENUM_COLOR_DESTRUCTIVE */
-	public const ENUM_COLOR_DESTRUCTIVE = 'danger';
-	/** @var string ENUM_COLOR_PRIMARY */
-	public const ENUM_COLOR_PRIMARY = 'primary';
-	/** @var string ENUM_COLOR_SECONDARY */
-	public const ENUM_COLOR_SECONDARY = 'secondary';
-	/** @var string ENUM_COLOR_GREEN */
-	public const ENUM_COLOR_GREEN = 'green';
-	/** @var string ENUM_COLOR_RED */
-	public const ENUM_COLOR_RED = 'red';
-	/** @var string ENUM_COLOR_CYAN */
-	public const ENUM_COLOR_CYAN = 'cyan';
-	/** @var string DEFAULT_COLOR */
-	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var string ENUM_COLOR_SCHEME_NEUTRAL */
+	public const ENUM_COLOR_SCHEME_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_SCHEME_VALIDATION */
+	public const ENUM_COLOR_SCHEME_VALIDATION = 'success';
+	/** @var string ENUM_COLOR_SCHEME_DESTRUCTIVE */
+	public const ENUM_COLOR_SCHEME_DESTRUCTIVE = 'danger';
+	/** @var string ENUM_COLOR_SCHEME_PRIMARY */
+	public const ENUM_COLOR_SCHEME_PRIMARY = 'primary';
+	/** @var string ENUM_COLOR_SCHEME_SECONDARY */
+	public const ENUM_COLOR_SCHEME_SECONDARY = 'secondary';
+	/** @var string ENUM_COLOR_SCHEME_GREEN */
+	public const ENUM_COLOR_SCHEME_GREEN = 'green';
+	/** @var string ENUM_COLOR_SCHEME_RED */
+	public const ENUM_COLOR_SCHEME_RED = 'red';
+	/** @var string ENUM_COLOR_SCHEME_CYAN */
+	public const ENUM_COLOR_SCHEME_CYAN = 'cyan';
+	/** @var string DEFAULT_COLOR_SCHEME */
+	public const DEFAULT_COLOR_SCHEME = self::ENUM_COLOR_SCHEME_NEUTRAL;
 
 	/** @var string $sLabel */
 	protected $sLabel;
@@ -88,11 +88,11 @@ class Button extends UIBlock
 	 * @param string $sTooltip
 	 * @param string $sIconClass
 	 * @param string $sActionType
-	 * @param string $sColor
+	 * @param string $sColorScheme
 	 * @param string $sJsCode
 	 * @param string $sOnClickJsCode
 	 */
-	public function __construct(string $sLabel, string $sId = null, string $sTooltip = '', string $sIconClass = '', string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColor = self::DEFAULT_COLOR, string $sJsCode = '', string $sOnClickJsCode = '')
+	public function __construct(string $sLabel, string $sId = null, string $sTooltip = '', string $sIconClass = '', string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColorScheme = self::DEFAULT_COLOR_SCHEME, string $sJsCode = '', string $sOnClickJsCode = '')
 	{
 		parent::__construct($sId);
 
@@ -100,7 +100,7 @@ class Button extends UIBlock
 		$this->sTooltip = $sTooltip;
 		$this->sIconClass = $sIconClass;
 		$this->sActionType = $sActionType;
-		$this->sColor = $sColor;
+		$this->sColor = $sColorScheme;
 		$this->sJsCode = $sJsCode;
 		$this->sOnClickJsCode = $sOnClickJsCode;
 		$this->aDataAttributes = ['role' => 'ibo-button'];
@@ -125,7 +125,6 @@ class Button extends UIBlock
 		$this->sLabel = $sLabel;
 		return $this;
 	}
-
 
 	/**
 	 * @return string

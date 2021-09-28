@@ -29,11 +29,13 @@ class CSVPage extends WebPage
 {
     function __construct($s_title)
     {
+	    $oKpi = new ExecutionKPI();
 	    parent::__construct($s_title);
 	    $this->add_header("Content-type: text/plain; charset=".self::PAGES_CHARSET);
 	    $this->no_cache();
 	    $this->add_xframe_options();
 	    //$this->add_header("Content-Transfer-Encoding: binary");
+	    $oKpi->ComputeStats(get_class($this).' creation', 'CSVPage');
     }	
 
     public function output()
@@ -54,9 +56,7 @@ class CSVPage extends WebPage
 	    if (class_exists('DBSearch')) {
 		    DBSearch::RecordQueryTrace();
 	    }
-	    if (class_exists('ExecutionKPI')) {
-		    ExecutionKPI::ReportStats();
-	    }
+	    ExecutionKPI::ReportStats();
     }
 
 	public function small_p($sText)

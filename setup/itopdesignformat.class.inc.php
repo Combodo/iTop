@@ -785,6 +785,12 @@ class iTopDesignFormat
 			if ($oFieldsSemanticNodeList->length > 0) {
 				$oSemanticNode = $oFieldsSemanticNodeList->item(0);
 			} else {
+				if (is_null($oPropertiesNode)) {
+					// No properties node found, create it
+					$oClassNode = $oXPath->query("../..", $oNode)->item(0);
+					$oPropertiesNode = $oClassNode->ownerDocument->createElement("properties");
+					$oClassNode->appendChild($oPropertiesNode);
+				}
 				$oSemanticNode = $oPropertiesNode->ownerDocument->createElement("fields_semantic");
 				$oPropertiesNode->appendChild($oSemanticNode);
 			}
@@ -793,8 +799,9 @@ class iTopDesignFormat
 			$this->MoveNode($oNode, $oSemanticNode, "state_attribute");
 		}
 
-		// New Enum values format
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		// New field format, value contains code
+		// Note: In the XPath there is no filter on the xsi:type as this (XML) attribute is not present on fields overloads. The main drawback is that it will convert any custom AttributeXXX with the same syntax.
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field/values/value");
 		foreach ($oNodeList as $oNode) {
 			$sCode = $oNode->textContent;
 			$oNode->textContent = '';
@@ -802,15 +809,6 @@ class iTopDesignFormat
 			$oNode->appendChild($oCodeNode);
 		}
 
-		// MetaEnum
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
-		foreach ($oNodeList as $oNode) {
-			$sCode = $oNode->textContent;
-			$oNode->textContent = '';
-			$oCodeNode = $oNode->ownerDocument->createElement("code", $sCode);
-			$oNode->appendChild($oCodeNode);
-		}
-		
 		// N°3516 Remove legacy backoffice theme
 		// Remove completely light-grey theme
 		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="light-grey"]');
@@ -891,8 +889,10 @@ class iTopDesignFormat
 		$sPath = "/itop_design//class/properties/fields_semantic";
 		$this->RemoveNodeFromXPath($sPath);
 
-		// New Enum values format
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		// New field format
+		// Note: In the XPath there is no filter on the xsi:type as this (XML) attribute is not present on fields overloads. The main drawback is that it will convert any custom AttributeXXX with the same syntax.
+		// - Values
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field/values/value");
 		foreach ($oNodeList as $oNode) {
 			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
 			if ($oCodeNode) {
@@ -905,24 +905,8 @@ class iTopDesignFormat
 				$oNode->textContent = $sCode;
 			}
 		}
-
-		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/default_style";
-		$this->RemoveNodeFromXPath($sPath);
-
-		// MetaEnum
-		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
-		foreach ($oNodeList as $oNode) {
-			$oCodeNode = $oXPath->query('code', $oNode)->item(0);
-			$sCode = $oCodeNode->textContent;
-			$this->DeleteNode($oCodeNode);
-			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
-			if ($oStyleNode) {
-				$this->DeleteNode($oStyleNode);
-			}
-			$oNode->textContent = $sCode;
-		}
-
-		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/default_style";
+		// - Style
+		$sPath = "/itop_design/classes//class/fields/field/default_style";
 		$this->RemoveNodeFromXPath($sPath);
 
 		// N°3516 Bring back legacy themes

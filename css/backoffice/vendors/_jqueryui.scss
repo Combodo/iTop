@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -96,8 +96,8 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 	}
 	.ui-dialog-titlebar-close {
 		position: absolute;
-		right: $ibo-vendors-jqueryui--ui-dialog--padding-x;
-		top: 50%;
+		right: 0;
+		top: $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y;
 		width: 20px;
 		margin: -10px 0 0 0;
 		padding: 1px;
@@ -167,9 +167,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 		top: 0;
 	}
 	.ui-button {
-		@extend .ibo-button;
-		@extend .ibo-is-regular;
-		@extend .ibo-is-secondary;
+		@extend .ibo-button, .ibo-is-regular, .ibo-is-secondary;
 		> .ui-icon {
 			background-image: none;
 			float: unset;
@@ -301,7 +299,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
   background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
   border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
   box-shadow: $ibo-vendors-jqueryui--ui-datepicker--box-shadow;
-  z-index: 21 !important;
+  z-index: 32 !important;
   padding: 0px 8px 5px 8px;
 
   .ui-datepicker-header {
@@ -569,6 +567,9 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
   left: 0;
   cursor: default;
   z-index: 100;
+  .ui-menu-item{
+    padding: 0;
+  }
 }
 .ui-autocomplete-input{
   @extend .ibo-input;
@@ -598,4 +599,9 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
   padding: 0;
   position: absolute;
   width: 1px;
+}
+
+// Tabs
+.ui-tabs-tab.ui-state-disabled a{
+  cursor: not-allowed !important;
 }

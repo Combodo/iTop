@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
@@ -26,6 +27,7 @@ use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactor
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 use Combodo\iTop\Application\UI\Base\Layout\TabContainer\TabContainer;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\CMDBChange\CMDBChangeOrigin;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 try {
@@ -209,7 +211,18 @@ try {
 	 {
 		 $oP->AddSubBlock(AlertUIBlockFactory::MakeForInformation(MetaModel::GetClassIcon($sClass)."&nbsp;".Dict::Format('UI:Title:BulkSynchro_nbItem_ofClass_class', $iCount, MetaModel::GetName($sClass))));
 	 }
-	 
+
+	/**
+	 * Add a paragraph to the body of the page
+	 *
+	 * @param string $s_html
+	 *
+	 * @return string
+	 */
+	function GetDivAlert($s_html)
+	{
+		return "<div class=\"ibo-csv-import--cell-error ibo-csv-import--cell-message\">$s_html</div>\n";
+	}
 	/**
 	 * Process the CSV data, for real or as a simulation
 	 * @param WebPage $oPage The page used to display the wizard
@@ -343,6 +356,7 @@ try {
 			// We're doing it for real, let's create a change
 			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
 			CMDBObject::SetTrackInfo($sUserString);
+			CMDBObject::SetTrackOrigin(CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
 		CMDBObject::SetTrackOrigin('csv-interactive');
@@ -395,7 +409,7 @@ try {
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sStatus = '<img src="../images/unchanged.png" title="'.Dict::S('UI:CSVReport-Icon-Unchanged').'">';
-					$sCSSRowClass = 'row_unchanged';
+					$sCSSRowClass = 'ibo-csv-import--row-unchanged';
 					break;
 
 				case 'RowStatus_Modify':
@@ -404,7 +418,7 @@ try {
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sStatus = '<img src="../images/modified.png" title="'.Dict::S('UI:CSVReport-Icon-Modified').'">';
-					$sCSSRowClass = 'row_modified';
+					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					break;
 
 				case 'RowStatus_Disappeared':
@@ -413,7 +427,7 @@ try {
 					$oObj = MetaModel::GetObject($sFinalClass, $aResRow['id']->GetPureValue());
 					$sUrl = $oObj->GetHyperlink();
 					$sStatus = '<img src="../images/delete.png" title="'.Dict::S('UI:CSVReport-Icon-Missing').'">';
-					$sCSSRowClass = 'row_modified';
+					$sCSSRowClass = 'ibo-csv-import--row-modified';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-MissingToUpdate');
 					} else {
@@ -425,7 +439,7 @@ try {
 					$iCreated++;
 					$sFinalClass = $aResRow['finalclass'];
 					$sStatus = '<img src="../images/added.png" title="'.Dict::S('UI:CSVReport-Icon-Created').'">';
-					$sCSSRowClass = 'row_added';
+					$sCSSRowClass = 'ibo-csv-import--row-added';
 					if ($bSimulate) {
 						$sMessage = Dict::S('UI:CSVReport-Object-ToCreate');
 					} else {
@@ -438,10 +452,10 @@ try {
 
 				case 'RowStatus_Issue':
 					$iErrors++;
-					$sMessage .= $oPage->GetP($oStatus->GetDescription());
+					$sMessage .= GetDivAlert($oStatus->GetDescription());
 					$sStatus = '<img src="../images/error.png" title="'.Dict::S('UI:CSVReport-Icon-Error').'">';//translate
-					$sCSSMessageClass = 'cell_error';
-					$sCSSRowClass = 'row_error';
+					$sCSSMessageClass = 'ibo-csv-import--cell-error';
+					$sCSSRowClass = 'ibo-csv-import--row-error';
 					if (array_key_exists($iLine, $aData)) {
 						$aRow = $aData[$iLine];
 						$aResult[] = $sTextQualifier.implode($sTextQualifier.$sSeparator.$sTextQualifier, $aRow).$sTextQualifier; // Remove the first line and store it in case of error
@@ -465,7 +479,7 @@ try {
 							case 'CellStatus_SearchIssue':
 							case 'CellStatus_NullIssue':
 							case 'CellStatus_Ambiguous':
-								$sCellMessage .= $oPage->GetP($oExtKeyCellStatus->GetDescription());
+								$sCellMessage .= GetDivAlert($oExtKeyCellStatus->GetDescription());
 								break;
 
 							default:
@@ -475,22 +489,22 @@ try {
 					$sHtmlValue = $oCellStatus->GetDisplayableValue();
 					switch (get_class($oCellStatus)) {
 						case 'CellStatus_Issue':
-							$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
+							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription());
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error">'.Dict::Format('UI:CSVReport-Object-Error', $sHtmlValue).$sCellMessage.'</div>';
 							break;
 
 						case 'CellStatus_SearchIssue':
-							$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_error">ERROR: '.$sHtmlValue.$sCellMessage.'</div>';
+							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription());
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error">ERROR: '.$sHtmlValue.$sCellMessage.'</div>';
 							break;
 
 						case 'CellStatus_Ambiguous':
-							$sCellMessage .= $oPage->GetP($oCellStatus->GetDescription());
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_error" >'.Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue).$sCellMessage.'</div>';
+							$sCellMessage .= GetDivAlert($oCellStatus->GetDescription());
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-error" >'.Dict::Format('UI:CSVReport-Object-Ambiguous', $sHtmlValue).$sCellMessage.'</div>';
 							break;
 
 						case 'CellStatus_Modify':
-							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="cell_modified"><b>'.$sHtmlValue.'</b></div>';
+							$aTableRow[$sClassName.'/'.$sAttCode] = '<div class="ibo-csv-import--cell-modified"><b>'.$sHtmlValue.'</b></div>';
 							break;
 
 						default:
@@ -558,28 +572,28 @@ try {
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('row_unchanged')})");
+		$oPage->add_ready_script("$('#show_unchanged').on('click', function(){ToggleRows('ibo-csv-import--row-unchanged')})");
 
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/modified.png">&nbsp;'.sprintf($aDisplayFilters['modified'], $iModified), '', "1", "show_modified", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('row_modified')})");
+		$oPage->add_ready_script("$('#show_modified').on('click', function(){ToggleRows('ibo-csv-import--row-modified')})");
 
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/added.png">&nbsp;'.sprintf($aDisplayFilters['added'], $iCreated), '', "1", "show_created", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('row_added')})");
+		$oPage->add_ready_script("$('#show_created').on('click', function(){ToggleRows('ibo-csv-import--row-added')})");
 
 		$oCheckBoxUnchanged = InputUIBlockFactory::MakeForInputWithLabel('<img src="../images/error.png">&nbsp;'.sprintf($aDisplayFilters['errors'], $iErrors), '', "1", "show_errors", "checkbox");
 		$oCheckBoxUnchanged->GetInput()->SetIsChecked(true);
 		$oCheckBoxUnchanged->SetBeforeInput(false);
 		$oCheckBoxUnchanged->GetInput()->AddCSSClass('ibo-input-checkbox');
 		$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oCheckBoxUnchanged));
-		$oPage->add_ready_script("$('#show_errors').on('click', function(){ToggleRows('row_error')})");
+		$oPage->add_ready_script("$('#show_errors').on('click', function(){ToggleRows('ibo-csv-import--row-error')})");
 
 		$oPanel = PanelUIBlockFactory::MakeNeutral('');
 		$oPanel->AddCSSClasses(['ibo-datatable-panel', 'mb-5']);
@@ -659,6 +673,10 @@ EOF
 		$sCreated = json_encode(Dict::Format('UI:CSVImportCreated_items', $iCreated));
 		$sModified = json_encode(Dict::Format('UI:CSVImportModified_items', $iModified));
 		$sUnchanged = json_encode(Dict::Format('UI:CSVImportUnchanged_items', $iUnchanged));
+
+		// Add graphs dependencies
+		WebResourcesHelper::EnableC3JSToWebPage($oPage);
+
 		$oPage->add_script(		
 <<< EOF
 function CSVGoBack()
@@ -1007,7 +1025,7 @@ EOF
 					if ($(this).val() == sRefValue)
 					{
 						iOccurences++;
-					}c
+					}
 				});
 				if ((iOccurences > 1) && (sRefValue != ':none:'))
 				{

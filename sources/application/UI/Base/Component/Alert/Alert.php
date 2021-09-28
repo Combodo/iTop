@@ -42,43 +42,43 @@ class Alert extends UIContentBlock
 	];
 
 	// Specific constants
-	/** @var string ENUM_COLOR_PRIMARY */
-	public const ENUM_COLOR_PRIMARY = 'primary';
-	/** @var string ENUM_COLOR_SECONDARY */
-	public const ENUM_COLOR_SECONDARY = 'secondary';
+	/** @var string ENUM_COLOR_SCHEME_PRIMARY */
+	public const ENUM_COLOR_SCHEME_PRIMARY = 'primary';
+	/** @var string ENUM_COLOR_SCHEME_SECONDARY */
+	public const ENUM_COLOR_SCHEME_SECONDARY = 'secondary';
 
-	/** @var string ENUM_COLOR_NEUTRAL */
-	public const ENUM_COLOR_NEUTRAL = 'neutral';
-	/** @var string ENUM_COLOR_INFORMATION */
-	public const ENUM_COLOR_INFORMATION = 'information';
-	/** @var string ENUM_COLOR_SUCCESS */
-	public const ENUM_COLOR_SUCCESS = 'success';
-	/** @var string ENUM_COLOR_FAILURE */
-	public const ENUM_COLOR_FAILURE = 'failure';
-	/** @var string ENUM_COLOR_WARNING */
-	public const ENUM_COLOR_WARNING = 'warning';
-	/** @var string ENUM_COLOR_DANGER */
-	public const ENUM_COLOR_DANGER = 'danger';
+	/** @var string ENUM_COLOR_SCHEME_NEUTRAL */
+	public const ENUM_COLOR_SCHEME_NEUTRAL = 'neutral';
+	/** @var string ENUM_COLOR_SCHEME_INFORMATION */
+	public const ENUM_COLOR_SCHEME_INFORMATION = 'information';
+	/** @var string ENUM_COLOR_SCHEME_SUCCESS */
+	public const ENUM_COLOR_SCHEME_SUCCESS = 'success';
+	/** @var string ENUM_COLOR_SCHEME_FAILURE */
+	public const ENUM_COLOR_SCHEME_FAILURE = 'failure';
+	/** @var string ENUM_COLOR_SCHEME_WARNING */
+	public const ENUM_COLOR_SCHEME_WARNING = 'warning';
+	/** @var string ENUM_COLOR_SCHEME_DANGER */
+	public const ENUM_COLOR_SCHEME_DANGER = 'danger';
 
-	/** @var string ENUM_COLOR_GREY */
-	public const ENUM_COLOR_GREY = 'grey';
-	/** @var string ENUM_COLOR_BLUEGREY */
-	public const ENUM_COLOR_BLUEGREY = 'blue-grey';
-	/** @var string ENUM_COLOR_BLUE */
-	public const ENUM_COLOR_BLUE = 'blue';
-	/** @var string ENUM_COLOR_CYAN */
-	public const ENUM_COLOR_CYAN = 'cyan';
-	/** @var string ENUM_COLOR_GREEN */
-	public const ENUM_COLOR_GREEN = 'green';
-	/** @var string ENUM_COLOR_ORANGE */
-	public const ENUM_COLOR_ORANGE = 'orange';
-	/** @var string ENUM_COLOR_RED */
-	public const ENUM_COLOR_RED = 'red';
-	/** @var string ENUM_COLOR_PINK */
-	public const ENUM_COLOR_PINK = 'pink';
+	/** @var string ENUM_COLOR_SCHEME_GREY */
+	public const ENUM_COLOR_SCHEME_GREY = 'grey';
+	/** @var string ENUM_COLOR_SCHEME_BLUEGREY */
+	public const ENUM_COLOR_SCHEME_BLUEGREY = 'blue-grey';
+	/** @var string ENUM_COLOR_SCHEME_BLUE */
+	public const ENUM_COLOR_SCHEME_BLUE = 'blue';
+	/** @var string ENUM_COLOR_SCHEME_CYAN */
+	public const ENUM_COLOR_SCHEME_CYAN = 'cyan';
+	/** @var string ENUM_COLOR_SCHEME_GREEN */
+	public const ENUM_COLOR_SCHEME_GREEN = 'green';
+	/** @var string ENUM_COLOR_SCHEME_ORANGE */
+	public const ENUM_COLOR_SCHEME_ORANGE = 'orange';
+	/** @var string ENUM_COLOR_SCHEME_RED */
+	public const ENUM_COLOR_SCHEME_RED = 'red';
+	/** @var string ENUM_COLOR_SCHEME_PINK */
+	public const ENUM_COLOR_SCHEME_PINK = 'pink';
 
-	/** @var string DEFAULT_COLOR */
-	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var string DEFAULT_COLOR_SCHEME */
+	public const DEFAULT_COLOR_SCHEME = self::ENUM_COLOR_SCHEME_NEUTRAL;
 	/** @var bool Default value for static::$bIsClosable */
 	public const DEFAULT_IS_CLOSABLE = true;
 	/** @var bool Default value for static::$bIsCollapsible */
@@ -106,14 +106,14 @@ class Alert extends UIContentBlock
 	 *
 	 * @param string $sTitle
 	 * @param string $sContent
-	 * @param string $sColor
+	 * @param string $sColorScheme
 	 * @param string|null $sId
 	 */
-	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
+	public function __construct(string $sTitle = '', string $sContent = '', string $sColorScheme = self::DEFAULT_COLOR_SCHEME, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sTitle = $sTitle;
-		$this->sColor = $sColor;
+		$this->sColor = $sColorScheme;
 		$this->bIsClosable = static::DEFAULT_IS_CLOSABLE;
 		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
 		$this->bIsOpenedByDefault = static::DEFAULT_IS_OPENED_BY_DEFAULT;
@@ -228,6 +228,10 @@ class Alert extends UIContentBlock
 	 */
 	public function IsCollapsible(): bool
 	{
+		if (empty($this->sTitle)) {
+			return false;
+		}
+
 		return $this->bIsCollapsible;
 	}
 

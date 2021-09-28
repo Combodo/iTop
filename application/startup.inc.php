@@ -15,9 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
+
 require_once(APPROOT.'/core/cmdbobject.class.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/contexttag.class.inc.php');
+require_once(APPROOT.'/core/kpi.class.inc.php');
 
 
 /**
@@ -26,6 +29,9 @@ require_once(APPROOT.'/core/contexttag.class.inc.php');
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+ExecutionKPI::EnableDuration(1);
+ExecutionKPI::EnableMemory(1);
 
 // This storage is freed on error (case of allowed memory exhausted)
 $sReservedMemory = str_repeat('*', 1024 * 1024);
@@ -62,14 +68,16 @@ register_shutdown_function(function()
 		}
 	}
 });
+$oKPI = new ExecutionKPI();
+Session::Start();
+Session::WriteClose();
+$oKPI->ComputeAndReport("Session Start");
 
-session_name('itop-'.md5(APPROOT));
-session_start();
 $sSwitchEnv = utils::ReadParam('switch_env', null);
 $bAllowCache = true;
-if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE)) && isset($_SESSION['itop_env']) && ($_SESSION['itop_env'] !== $sSwitchEnv))
+if (($sSwitchEnv != null) && file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FILE) &&( Session::Get('itop_env') !== $sSwitchEnv))
 {
-	$_SESSION['itop_env'] = $sSwitchEnv;
+	Session::Set('itop_env', $sSwitchEnv);
 	$sEnv = $sSwitchEnv;
     $bAllowCache = false;
     // Reset the opcache since otherwise the PHP "model" files may still be cached !!
@@ -85,14 +93,14 @@ if (($sSwitchEnv != null) && (file_exists(APPCONF.$sSwitchEnv.'/'.ITOP_CONFIG_FI
     }
 	// TODO: reset the credentials as well ??
 }
-else if (isset($_SESSION['itop_env']))
+else if (Session::IsSet('itop_env'))
 {
-	$sEnv = $_SESSION['itop_env'];
+	$sEnv = Session::Get('itop_env');
 }
 else
 {
 	$sEnv = ITOP_DEFAULT_ENV;
-	$_SESSION['itop_env'] = ITOP_DEFAULT_ENV;
+	Session::Set('itop_env', ITOP_DEFAULT_ENV);
 }
 $sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
 MetaModel::Startup($sConfigFile, false /* $bModelOnly */, $bAllowCache, false /* $bTraceSourceFiles */, $sEnv);

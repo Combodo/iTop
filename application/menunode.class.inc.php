@@ -4,6 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -58,6 +59,10 @@ class ApplicationMenu
 	 * @var array
 	 */
 	static $aMenusIndex = array();
+	/**
+	 * @var array
+	 */
+	static $aMenusById = [];
 	/**
 	 * @var string
 	 */
@@ -166,6 +171,7 @@ class ApplicationMenu
 			$aBacktrace = debug_backtrace();
 			$sFile = isset($aBacktrace[2]["file"]) ? $aBacktrace[2]["file"] : $aBacktrace[1]["file"];
 			self::$aMenusIndex[$index] = array('node' => $oMenuNode, 'children' => array(), 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile);
+			self::$aMenusById[$oMenuNode->GetMenuId()] = $index;
 		}
 		else
 		{
@@ -506,17 +512,11 @@ EOF
 	 */
 	public static function GetMenuIndexById($sTitle)
 	{
-		$index = -1;
-		/** @var MenuNode[] $aMenu */
-		foreach(self::$aMenusIndex as $aMenu)
-		{
-			if ($aMenu['node']->GetMenuId() == $sTitle)
-			{
-				$index = $aMenu['node']->GetIndex();
-				break;
-			}
+		if (isset(self::$aMenusById[$sTitle])) {
+			return self::$aMenusById[$sTitle];
 		}
-		return $index;
+
+		return -1;
 	}
 	
 	/**
@@ -715,8 +715,9 @@ abstract class MenuNode
 	{
 		// Count the entries up to 99
 		$oSearch = DBSearch::FromOQL($sOQL);
-
+		$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
 		DBSearchHelper::AddContextFilter($oSearch);
+
 
 		$oSet = new DBObjectSet($oSearch);
 		$iCount = $oSet->CountWithLimit(99);
@@ -1125,15 +1126,13 @@ class OQLMenuNode extends MenuNode
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-		//$sIcon = MetaModel::GetClassIcon($oSearch->GetClass(), false);
 
 		if ($bSearchPane) {
-			$aParams = array_merge(array('open' => $bSearchOpen, 'table_id' => $sUsageId), $aExtraParams);
+			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}
 
-		//$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
 		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
 		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
 		$oPage->AddUiBlock($oTitle);
@@ -1209,7 +1208,8 @@ class SearchMenuNode extends MenuNode
 		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oSearch = new DBObjectSearch($this->sClass);
-		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
+		$sUsageId =  'Menu_'.utils::GetSafeId($this->GetMenuId());
+		$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
 	}
@@ -1415,6 +1415,8 @@ class DashboardMenuNode extends MenuNode
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null)
 		{
+			WebResourcesHelper::EnableC3JSToWebPage($oPage);
+
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
 			$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;

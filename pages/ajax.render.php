@@ -4,8 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Controller\AjaxRenderController;
@@ -15,14 +16,6 @@ use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleFormRenderer;
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'application/wizardhelper.class.inc.php');
-require_once(APPROOT.'application/ui.linkswidget.class.inc.php');
-require_once(APPROOT.'application/ui.searchformforeignkeys.class.inc.php');
-require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
-require_once(APPROOT.'application/excelexporter.class.inc.php');
-
 
 function LogErrorMessage($sMsgPrefix, $aContextInfo) {
 	$sCurrentUserLogin = UserRights::GetUser();
@@ -35,6 +28,10 @@ try
 {
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/user.preferences.class.inc.php');
+	$oKPI = new ExecutionKPI();
+	$oKPI->ComputeAndReport('Data model loaded');
+
+	$oKPI = new ExecutionKPI();
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	$operation = utils::ReadParam('operation', '');
@@ -55,6 +52,7 @@ try
 			break;
 	}
 	LoginWebPage::DoLoginEx($sRequestedPortalId, false);
+	$oKPI->ComputeAndReport('User login');
 
 	$oPage = new AjaxPage("");
 
@@ -137,20 +135,16 @@ try
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sTitle = utils::ReadParam('sTitle', '', false, 'raw_data');
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
 			$oWidget->ShowModalSearchForeignKeys($oPage, $sTitle);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.searchformforeignkeys
 		case 'GetFullListForeignKeysFromSelection':
 			$oPage->SetContentType('application/json');
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UISearchFormForeignKeys($sClass);
 			$oFullSetFilter = new DBObjectSearch($sClass);
 			$oWidget->GetFullListForeignKeysFromSelection($oPage, $oFullSetFilter);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.searchformforeignkeys
@@ -159,10 +153,8 @@ try
 			$sTargetClass = utils::ReadParam('sTargetClass', '', false, 'class');
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sRemoteClass = utils::ReadParam('sRemoteClass', '', false, 'class');
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UISearchFormForeignKeys($sTargetClass, $iInputId);
 			$oWidget->ListResultsSearchForeignKeys($oPage, $sRemoteClass);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.linkswidget
@@ -185,7 +177,7 @@ try
 			}
 			$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 			$oAppContext = new ApplicationContext();
-			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			$aPrefillFormParam = array( 'user' => Session::Get("auth_user"),
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
 				'origin' => 'console',
@@ -205,10 +197,8 @@ try
 			$sSuffix = utils::ReadParam('sSuffix', '');
 			$bDuplicates = (utils::ReadParam('bDuplicates', 'false') == 'false') ? false : true;
 			$aAlreadyLinked = utils::ReadParam('aAlreadyLinked', array());
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidget($sClass, $sAttCode, $iInputId, $sSuffix, $bDuplicates);
 			$oWidget->SearchObjectsToAdd($oPage, $sRemoteClass, $aAlreadyLinked);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		//ui.linksdirectwidget
@@ -240,10 +230,8 @@ try
 			$iTempId = utils::ReadParam('tempId', '');
 			$aValues = utils::ReadParam('values', array(), false, 'raw_data');
 			$oPage->SetContentType('text/html');
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 			$oPage->add($oWidget->GetRow($oPage, $sRealClass, $aValues, -$iTempId));
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.linksdirectwidget
@@ -265,17 +253,15 @@ try
 			$iCurrObjectId = utils::ReadParam('iObjId', 0);
 			$oPage->SetContentType('text/html');
 			$oAppContext = new ApplicationContext();
-			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			$aPrefillFormParam = array( 'user' => Session::Get('auth_user'),
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
 				'origin' => 'console',
 				'source_obj' => $oObj,
 			);
 			$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 			$oWidget->GetObjectsSelectionDlg($oPage, $oObj, $aAlreadyLinked, $aPrefillFormParam);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.linksdirectwidget
@@ -294,17 +280,15 @@ try
 				$oObj = $oWizardHelper->GetTargetObject();
 			}
 			$oAppContext = new ApplicationContext();
-			$aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+			$aPrefillFormParam = array( 'user' => Session::Get('auth_user'),
 				'context' => $oAppContext->GetAsHash(),
 				'att_code' => $sAttCode,
 				'origin' => 'console',
 				'source_obj' => $oObj,
 			);
 			$aPrefillFormParam['dest_class'] = ($oObj === null ? '' : $oObj->Get($sAttCode)->GetClass());
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 			$oWidget->SearchObjectsToAdd($oPage, $sRealClass, $aAlreadyLinked, $oObj, $aPrefillFormParam);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.linksdirectwidget
@@ -338,10 +322,8 @@ try
 					$oFullSetFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 				}
 			}
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
 			$oWidget->DoAddObjects($oPage, $oFullSetFilter);
-			$oKPI->ComputeAndReport('Data write');
 			break;
 
 		////////////////////////////////////////////////////////////
@@ -366,10 +348,8 @@ try
 				// Search form: no current object
 				$oObj = null;
 			}
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
 			$oWidget->SearchObjectsToSelect($oPage, $sFilter, $sRemoteClass, $oObj);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.extkeywidget: autocomplete
@@ -395,10 +375,8 @@ try
 					// Search form: no current object
 					$oObj = null;
 				}
-				$oKPI = new ExecutionKPI();
 				$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
 				$oWidget->AutoComplete($oPage, $sFilter, $oObj, $sContains, $sOutputFormat, $sAutocompleteOperation);
-				$oKPI->ComputeAndReport('Data fetch and format');
 			}
 			break;
 
@@ -445,7 +423,7 @@ try
 		            $oWizardHelper = WizardHelper::FromJSON($sJson);
 		            $oObj = $oWizardHelper->GetTargetObject();
 		            $oAppContext = new ApplicationContext();
-		            $aPrefillFormParam = array( 'user' => $_SESSION["auth_user"],
+		            $aPrefillFormParam = array( 'user' => Session::Get('auth_user'),
 			                                    'context' => $oAppContext->GetAsHash(),
 			                                    'att_code' => $sAttCode,
 		                                        'source_obj' => $oObj,
@@ -468,11 +446,9 @@ try
 			$iInputId = utils::ReadParam('iInputId', '');
 			$sFormPrefix = utils::ReadParam('sFormPrefix', '');
 			$sAttCode = utils::ReadParam('sAttCode', '');
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, false);
 			$aResult = $oWidget->DoCreateObject($oPage);
 			echo json_encode($aResult);
-			$oKPI->ComputeAndReport('Data write');
 			break;
 
 		// ui.extkeywidget
@@ -483,11 +459,9 @@ try
 			$iObjectId = utils::ReadParam('iObjectId', '');
 			$bSearchMode = (utils::ReadParam('bSearchMode', 'false') == 'true');
 			$sFormAttCode = utils::ReadParam('sFormAttCode', null);
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, '', $bSearchMode);
 			$sName = $oWidget->GetObjectName($iObjectId, $sFormAttCode);
 			echo json_encode(array('name' => $sName));
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		// ui.extkeywidget
@@ -509,10 +483,8 @@ try
 				// Search form: no current object
 				$oObj = null;
 			}
-			$oKPI = new ExecutionKPI();
 			$oWidget = new UIExtKeyWidget($sTargetClass, $sInputId, '', $bSearchMode);
 			$oWidget->DisplayHierarchy($oPage, $sFilter, $currValue, $oObj);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		////////////////////////////////////////////////////
@@ -657,11 +629,9 @@ try
 						break;
 					}
 				}
-				$oKPI = new ExecutionKPI();
 				$oDisplayBlock = new DisplayBlock($oFilter, $sStyle, false);
 				$aExtraParams['display_limit'] = true;
 				$oDisplayBlock->RenderContent($oPage, $aExtraParams);
-				$oKPI->ComputeAndReport('Data fetch and format');
 			}
 			else
 			{
@@ -672,9 +642,7 @@ try
 		case 'displayCSVHistory':
 			$oPage->SetContentType('text/html');
 			$bShowAll = (utils::ReadParam('showall', 'false') == 'true');
-			$oKPI = new ExecutionKPI();
 			BulkChange::DisplayImportHistory($oPage, true, $bShowAll);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'details':
@@ -682,10 +650,8 @@ try
 			$key = utils::ReadParam('id', 0);
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition('id', $key, '=');
-			$oKPI = new ExecutionKPI();
 			$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
 			$oDisplayBlock->RenderContent($oPage);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'pie_chart':
@@ -701,10 +667,8 @@ try
 				{
 					$oFilter = DBSearch::unserialize($sFilter);
 				}
-				$oKPI = new ExecutionKPI();
 				$oDisplayBlock = new DisplayBlock($oFilter, 'pie_chart_ajax', false);
 				$oDisplayBlock->RenderContent($oPage, array('group_by' => $sGroupBy));
-				$oKPI->ComputeAndReport('Data fetch and format');
 			}
 			else
 			{
@@ -720,7 +684,6 @@ try
 				$aParams = utils::ReadParam('params', array(), false, 'raw_data');
 				if ($sFilter != '') {
 					$oFilter = DBObjectSearch::FromOQL($sFilter);
-					$oKPI = new ExecutionKPI();
 					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
 					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams);
 					$sChartType = isset($aParams['chart_type']) ? $aParams['chart_type'] : 'pie';
@@ -746,7 +709,6 @@ try
 								',onclick: function (d) {  var aURLs = $.parseJSON('.str_replace('"', '\'', $oBlock->sJSURLs).'); window.location.href= aURLs[d.index]; }})';
 							break;
 					}
-					$oKPI->ComputeAndReport('Data fetch and format');
 				} else {
 					$aResult = [];
 				}
@@ -762,10 +724,8 @@ try
 				$aParams = utils::ReadParam('params', array(), false, 'raw_data');
 				if ($sFilter != '') {
 					$oFilter = DBSearch::unserialize($sFilter);
-					$oKPI = new ExecutionKPI();
 					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
 					$oDisplayBlock->RenderContent($oPage, $aParams);
-					$oKPI->ComputeAndReport('Data fetch and format');
 				} else {
 
 					$oPage->add("<chart>\n<chart_type>3d pie</chart_type><!-- empty filter '$sFilter' --></chart>\n.");
@@ -779,10 +739,8 @@ try
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition('id', $key, '=');
 			$oPage->Add("<p style=\"width:100%; margin-top:-5px;padding:3px; background-color:#33f; color:#fff;\">Object Details</p>\n");
-			$oKPI = new ExecutionKPI();
 			$oDisplayBlock = new DisplayBlock($oFilter, 'details', false);
 			$oDisplayBlock->RenderContent($oPage);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			$oPage->Add("<input type=\"button\" class=\"jqmClose\" value=\" Close \" />\n");
 			break;
 
@@ -797,26 +755,22 @@ try
 			$oFilter = new DBObjectSearch($sClass);
 			$oFilter->AddCondition($sAttCode, $sName, 'Begins with');
 			//$oFilter->AddCondition('org_id', $sOrg, '=');
-			$oKPI = new ExecutionKPI();
 			$oSet = new CMDBObjectSet($oFilter, array($sAttCode => true));
 			while (($iCount < $iMaxCount) && ($oObj = $oSet->fetch()))
 			{
 				$oPage->add($oObj->GetAsHTML($sAttCode)."|".$oObj->GetKey()."\n");
 				$iCount++;
 			}
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'combo_options':
 			$oPage->SetContentType('text/html');
 			$oFilter = DBSearch::FromOQL($sFilter);
-			$oKPI = new ExecutionKPI();
 			$oSet = new CMDBObjectSet($oFilter);
 			while ($oObj = $oSet->fetch())
 			{
 				$oPage->add('<option title="Here is more information..." value="'.$oObj->GetKey().'">'.$oObj->GetName().'</option>');
 			}
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'display_document':
@@ -824,7 +778,6 @@ try
 			$sField = utils::ReadParam('field', '');
 			if (!empty($sClass) && ($sClass != 'InlineImage') && !empty($id) && !empty($sField))
 			{
-				$oKPI = new ExecutionKPI();
 				$oPage = new DownloadPage('');
 				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
 				// so we're resetting its value ! (see N°3416)
@@ -832,8 +785,12 @@ try
 				$iCacheSec = (int)utils::ReadParam('cache', 0);
 				$oPage->set_cache($iCacheSec);
 
+				// N°4129 - Prevent XSS attacks & other script executions
+				if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+					$oPage->add_header('Content-Security-Policy: sandbox;');
+				}
+
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'inline');
-				$oKPI->ComputeAndReport('Data fetch and format');
 			}
 			break;
 
@@ -851,7 +808,6 @@ try
 
 			$oFilter = new DBObjectSearch($sClass);
 			$oSet = new CMDBObjectSet($oFilter);
-			$oKPI = new ExecutionKPI();
 			$sHtml = cmdbAbstractObject::GetSearchForm($oPage, $oSet, array('currentId' => $currentId,
 																			'baseClass' => $sRootClass,
 																			'action' => $sAction,
@@ -861,7 +817,6 @@ try
 																			'cssCount' => $scssCount,
 																			'table_inner_id' => $sTableInnerId));
 			$oPage->add($sHtml);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'set_pref':
@@ -910,18 +865,15 @@ try
 			$oPage->SetContentType('text/html');
 			$id = (int)utils::ReadParam('id', 0);
 			$sAttCode = utils::ReadParam('attcode', '');
-			$oKPI = new ExecutionKPI();
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $id);
 			$oObj->DisplayDashboard($oPage, $sAttCode);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'export_dashboard':
 			$oPage = new DownloadPage('');
 			$sDashboardId = utils::ReadParam('id', '', false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$oKPI = new ExecutionKPI();
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			if (!is_null($oDashboard)) {
 				$oPage->TrashUnexpectedOutput();
@@ -929,7 +881,6 @@ try
 				$oPage->SetContentDisposition('attachment', 'dashboard_'.$oDashboard->GetTitle().'.xml');
 				$oPage->add($oDashboard->ToXml());
 			}
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'import_dashboard':
@@ -1074,12 +1025,10 @@ EOF
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
-			$oKPI = new ExecutionKPI();
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->SetReloadURL($sReloadURL);
 			$oDashboard->Render($oPage, true /* bEditMode */, $aExtraParams);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'dashboard_editor':
@@ -1088,7 +1037,6 @@ EOF
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
-			$oKPI = new ExecutionKPI();
 			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
 			if (!is_null($oDashboard)) {
 				if (!empty($sReloadURL)) {
@@ -1096,7 +1044,6 @@ EOF
 				}
 				$oDashboard->RenderEditor($oPage, $aExtraParams);
 			}
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'new_dashlet_id':
@@ -1277,7 +1224,8 @@ EOF
 				$oPage->add_script(<<<JS
 $('body').trigger('add_shortcut_node.navigation_menu.itop', {
 	parent_menu_node_id: '{$sMenuGroupId}',
-	new_menu_node_html_rendering: `{$sHtml}`
+	new_menu_node_html_rendering: `{$sHtml}`,
+	new_menu_name: `{$aValues['name']}`
 });
 JS
 				);
@@ -1423,7 +1371,7 @@ EOF
 			foreach($aLicenses as $oLicense)
 			{
 				$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
-				$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
+				$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
 				$oPage->add_ready_script(<<<JS
 $("#toggle_$index").on('click', function() { 
 	$(this).toggleClass('open');
@@ -1448,20 +1396,23 @@ JS
 			$aChoices = $oExtensionsMap->GetChoices();
 			foreach($aChoices as $oExtension)
 			{
+				$sDecorationClass = '';
 				switch ($oExtension->sSource)
 				{
 					case iTopExtension::SOURCE_REMOTE:
-						$sSource = ' <span class="extension-source">'.Dict::S('UI:About:RemoteExtensionSource').'</span>';
+						$sSource = Dict::S('UI:About:RemoteExtensionSource');
+						$sDecorationClass = 'fc fc-chameleon-icon';
 						break;
 
 					case iTopExtension::SOURCE_MANUAL:
-						$sSource = ' <span class="extension-source">'.Dict::S('UI:About:ManualExtensionSource').'</span>';
+						$sSource = Dict::S('UI:About:ManualExtensionSource');
+						$sDecorationClass = 'fas fa-folder';
 						break;
 
 					default:
 						$sSource = '';
 				}
-				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.$sSource.'</li>');
+				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.'<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sSource.'"></i></li>');
 			}
 			$oPage->add('</ul>');
 			$oPage->add("</div>");
@@ -1540,10 +1491,8 @@ JS
 			$id = (int)utils::ReadParam('id', 0);
 			$iStart = (int)utils::ReadParam('start', 0);
 			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oKPI = new ExecutionKPI();
 			$oObj = MetaModel::GetObject($sClass, $id);
 			$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
-			$oKPI->ComputeAndReport('Data fetch and format');
 			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
 			// widgets: ['myZebra', 'truncatedList']} );");
 			break;
@@ -1554,11 +1503,9 @@ JS
 			$oHistoryFilter = DBSearch::unserialize($sFilter);
 			$iStart = (int)utils::ReadParam('start', 0);
 			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oKPI = new ExecutionKPI();
 			$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
 			$oBlock->SetLimit($iCount, $iStart);
 			$oBlock->Display($oPage, 'history');
-			$oKPI->ComputeAndReport('Data fetch and format');
 			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
 			// widgets: ['myZebra', 'truncatedList']} );");
 			break;
@@ -1959,7 +1906,6 @@ EOF
 			ini_set('max_execution_time', max(300, ini_get('max_execution_time'))); // At least 5 minutes
 
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
-			$oKPI = new ExecutionKPI();
 			$oExcelExporter = new ExcelExporter($sToken);
 			$aStatus = $oExcelExporter->Run();
 			$aResults = array('status' => $aStatus['code'], 'percentage' => $aStatus['percentage'], 'message' => $aStatus['message']);
@@ -1967,7 +1913,6 @@ EOF
 				$aResults['statistics'] = $oExcelExporter->GetStatistics('html');
 			}
 			$oPage->add(json_encode($aResults));
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'xlsx_download':
@@ -2225,47 +2170,45 @@ EOF
 		case 'relation_groups':
 			$aGroups = utils::ReadParam('groups');
 			$iBlock = 1; // Zero is not a valid blockid
-			$oKPI = new ExecutionKPI();
 			foreach($aGroups as $idx => $aDefinition)
 			{
 				$sListClass = $aDefinition['class'];
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->add("<h1>".Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))."</h1>\n");
-				$oPage->add("<div id=\"relation_group_$idx\" class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass))."</h2>\n");
-				$oPage->add("</div>\n");
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))));
 				$oBlock = new DisplayBlock($oSearch, 'list');
-				$oBlock->Display($oPage, 'group_'.$iBlock++);
-				$oPage->p('&nbsp;'); // Some space ?
+				$oBlock->Display($oPage, 'group_'.$iBlock++, array('surround_with_panel' => true,
+				                                                    'panel_class' => $sListClass,
+				                                                    'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aDefinition['keys']), Metamodel::GetName($sListClass)),
+				                                                    'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
+				));
 			}
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'relation_lists':
 			$aLists = utils::ReadParam('lists');
 			$iBlock = 1; // Zero is not a valid blockid
-			$oKPI = new ExecutionKPI();
 			foreach($aLists as $sListClass => $aKeys)
 			{
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aKeys, 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->add("<div class=\"page_header\">\n");
-				$oPage->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass))."</h2>\n");
-				$oPage->add("</div>\n");
 				$oBlock = new DisplayBlock($oSearch, 'list');
-				$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass));
-				$oPage->p('&nbsp;'); // Some space ?
+				$oBlock->Display($oPage, 'list_'.$iBlock++, array('table_id' => 'ImpactAnalysis_'.$sListClass,
+				                                                  'surround_with_panel' => true,
+				                                                  'panel_class' => $sListClass,
+				                                                  'panel_title' => Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aKeys), Metamodel::GetName($sListClass)),
+				                                                  'panel_icon' => MetaModel::GetClassIcon($sListClass, false),
+				));
 			}
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'ticket_impact':
 			require_once(APPROOT.'core/simplegraph.class.inc.php');
 			require_once(APPROOT.'core/relationgraph.class.inc.php');
 			require_once(APPROOT.'core/displayablegraph.class.inc.php');
+
 			$sRelation = utils::ReadParam('relation', 'impacts');
 			$sDirection = utils::ReadParam('direction', 'down');
 			$iGroupingThreshold = utils::ReadParam('g', 5);
@@ -2275,8 +2218,9 @@ EOF
 			$sImpactAttCodeValue = utils::ReadParam('impact_attcode_value', 'manual');
 			$iId = (int)utils::ReadParam('id', 0, false, 'integer');
 
+			WebResourcesHelper::EnableSimpleGraphInWebPage($oPage);
+
 			// Get the list of source objects
-			$oKPI = new ExecutionKPI();
 			$oTicket = MetaModel::GetObject($sClass, $iId);
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
@@ -2314,7 +2258,6 @@ EOF
 			$sContextKey = 'itop-tickets/relation_context/'.$sClass.'/'.$sRelation.'/'.$sDirection;
 			$oAppContext = new ApplicationContext();
 			$oGraph->Display($oPage, $aResults, $sRelation, $oAppContext, $aExcludedObjects, $sClass, $iId, $sContextKey, array('this' => $oTicket));
-			$oKPI->ComputeAndReport('Data fetch and format');
 			break;
 
 		case 'export_build':
@@ -2678,19 +2621,38 @@ EOF
 		// TODO 3.0.0: Move this to new ajax render controller?
 		case 'cke_mentions':
 			$oPage->SetContentType('application/json');
-			$sTargetClass = utils::ReadParam('target_class', '', false, 'class');
+			$sMarker = utils::ReadParam('marker', '', false, 'raw_data');
 			$sNeedle = utils::ReadParam('needle', '', false, 'raw_data');
 
 			// Check parameters
-			if($sTargetClass === '') {
-				throw new Exception('Invalid parameters, target_class must be specified.');
+			if($sMarker === '') {
+				throw new Exception('Invalid parameters, marker must be specified.');
+			}
+
+			$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+			if (isset($aMentionsAllowedClasses[$sMarker]) === false) {
+				throw new Exception('Invalid marker "'.$sMarker.'"');
 			}
 
 			$aMatches = array();
 			if ($sNeedle !== '') {
-				$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sTargetClass);
+				// Retrieve scope from marker
+				$sScope = $aMentionsAllowedClasses[$sMarker];
+				if (MetaModel::IsValidClass($sScope)) {
+					$sScope = "SELECT $sScope";
+				}
+				$oSearch = DBSearch::FromOQL($sScope);
 
-				$oSearch = DBObjectSearch::FromOQL("SELECT $sTargetClass WHERE friendlyname LIKE :needle");
+				$sSearchMainClassName = $oSearch->GetClass();
+				$sSearchMainClassAlias = $oSearch->GetClassAlias();
+
+				$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
+
+				// Add condition to filter on the friendlyname
+				$oSearch->AddConditionExpression(
+					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
+				);
+
 				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
@@ -2702,10 +2664,9 @@ EOF
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
 					$aMatch = [
-						'class' => $sObjectClass,
-						'id' => $iObjectId,
+						'class'        => $sObjectClass,
+						'id'           => $iObjectId,
 						'friendlyname' => $oObject->Get('friendlyname'),
-						'initials' => '',
 					];
 
 					// Try to retrieve image for contact
@@ -2713,12 +2674,14 @@ EOF
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
 						if (!$oImage->IsEmpty()) {
-							$aMatch['picture_url'] = $oImage->GetDisplayURL($sTargetClass, $iObjectId, $sObjectImageAttCode);
+							$aMatch['picture_style'] = "background-image: url('".$oImage->GetDisplayURL($sObjectClass, $iObjectId, $sObjectImageAttCode)."')";
+							$aMatch['initials'] = '';
+						} else {
+							// If no image found, fallback on initials
+							$aMatch['picture_style'] = '';
+							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
 						}
 					}
-
-					// If no image found, fallback on initials
-					$aMatch['initials'] = array_key_exists('picture_url', $aMatch) ? '' : utils::ToAcronym($oObject->Get('friendlyname'));
 
 					$aMatches[] = $aMatch;
 				}
@@ -2835,7 +2798,7 @@ EOF
 		default:
 			$oPage->p("Invalid query.");
 	}
-
+	$oKPI->ComputeAndReport('Data fetch and format');
 	$oPage->output();
 } catch (Exception $e)
 {
@@ -2843,4 +2806,3 @@ EOF
 	echo htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8');
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
-ExecutionKPI::ReportStats();

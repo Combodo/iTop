@@ -388,15 +388,18 @@ class SQLObjectQuery extends SQLQuery
 		{
 			if (count($this->__aSelectedIdFields) > 0)
 			{
-				$aCountFields = array();
-				foreach ($this->__aSelectedIdFields as $sFieldExpr)
-				{
-					$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
+				$aCountFields = [];
+				$aCountI = [];
+				$i = 0;
+				foreach ($this->__aSelectedIdFields as $sFieldExpr) {
+					$aCountFields[] = "COALESCE($sFieldExpr, 0) AS idCount$i"; // Null values are excluded from the count
+					$aCountI[] = 'idCount'.$i++;
 				}
 				$sCountFields = implode(', ', $aCountFields);
+				$sCountI = implode('+ ', $aCountI);
 				// Count can be limited for performance reason, in this case the total amount is not important,
 				// we only need to know if the number of entries is greater than a certain amount.
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_ WHERE $sCountI>0";
 			}
 			else
 			{

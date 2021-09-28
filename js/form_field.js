@@ -21,9 +21,8 @@ $(function()
 		{
 			var me = this;
 			
-			this.element
-			.addClass('form_field');
-		   
+			this.element.addClass('form_field');
+
 			this.element
 			.bind('set_validators', function(oEvent, oData){
 				oEvent.stopPropagation();

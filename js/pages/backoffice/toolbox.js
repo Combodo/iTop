@@ -116,20 +116,6 @@ const CombodoBackofficeToolbox = {
 	}
 };
 
-// For disabling the CKEditor at init time when the corresponding textarea is disabled !
-CKEDITOR.plugins.add( 'disabler',
-	{
-		init : function( editor )
-		{
-			editor.on( 'instanceReady', function(e)
-			{
-				e.removeListener();
-				$('#'+ editor.name).trigger('update');
-			});
-		}
-
-	});
-
 // Processing on each pages of the backoffice
 $(document).ready(function(){
 	// Initialize global keyboard shortcuts

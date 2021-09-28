@@ -1,0 +1,18 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/**
+ * Adjust the lightness of $sColor to the absolute $fTargetLightness value.
+ * It is different than lighten() / darken() that shift the current lightness by X%
+ */
+@function ibo-adjust-lightness($sColor, $fTargetLightness) {
+  $iHue: hue($sColor);
+  $fSaturation: saturation($sColor);
+  $fLightness: lightness($sColor);
+  $fAlpha: alpha($sColor);
+
+  @return hsla($iHue, $fSaturation, $fTargetLightness, $fAlpha);
+}
+

@@ -115,11 +115,10 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 		// IMPORTANT: the ajax request MUST BE synchronous to be executed in this context
 		$.ajax({
 			url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			async: true,
+			async: false,
 			method: 'POST',
 			data: {operation: 'on_form_cancel', transaction_id: sTransactionId, obj_class: sObjClass, obj_key: iObjKey, token: sToken }
 		});
-		CombodoGlobalToolbox.Pause(1000);
 	}
 }
 
@@ -423,11 +422,14 @@ function ValidatePasswordField(id, sFormId)
 				oFormErrors['input_'+sFormId] = id;
 			}
 			// Visual feedback
-			$('#v_'+id).html('<img src="../images/validation_error.png"  style="vertical-align:middle"/>');
+			$('#v_'+id).html(Dict.S('UI:Component:Input:Password:DoesNotMatch'));
+			$('#field_'+id +' .ibo-input-wrapper').addClass('is-error');
+
 			return false;
 		}
 	}
-	$('#v_'+id).html(''); //<img src="../images/validation_ok.png" />');
+	$('#v_'+id).html('');
+	$('#field_'+id +' .ibo-input-wrapper').removeClass('is-error');
 	return true;
 }
 

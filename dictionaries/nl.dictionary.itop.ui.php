@@ -126,7 +126,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:User/Error:UserOrganizationNotAllowed' => 'De gebruikersaccount behoort niet tot de organisaties waar je zelf rechten voor hebt.',
 	'Class:User/Error:PersonIsMandatory' => 'De persoon moet ingevuld zijn.',
 	'Class:UserInternal' => 'Interne gebruiker',
-	'Class:UserInternal+' => 'Gebruiker gedefinieerd in iTop',
+	'Class:UserInternal+' => 'Gebruiker gedefinieerd in '.ITOP_APPLICATION_SHORT,
 ));
 
 //
@@ -333,9 +333,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'BooleanLabel:no' => 'Nee',
 	'UI:Login:Title' => 'Aanmelden in ITOP_APPLICATION_SHORT',
 	'Menu:WelcomeMenu' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Welkom in iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Welkom in iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Welkom in ITOP_APPLICATION_SHORT',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>ITOP_APPLICATION_SHORT is een compleet en open source portaal voor IT-operaties.</p>
@@ -372,8 +372,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Aan mij toegewezen incidenten',
 	'UI:AllOrganizations' => ' Alle Organisaties ',
 	'UI:YourSearch' => 'Jouw zoekopdracht',
-	'UI:LoggedAsMessage' => 'Ingelogd als %1$s',
-	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (Beheerder)',
+	'UI:LoggedAsMessage' => 'Ingelogd als %1$s (%2$s)~~',
+	'UI:LoggedAsMessage+Admin' => 'Ingelogd als %1$s (%2$s, Beheerder)~~',
 	'UI:Button:Logoff' => 'Log uit',
 	'UI:Button:GlobalSearch' => 'Zoek',
 	'UI:Button:Search' => ' Zoek ',
@@ -626,7 +626,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Zorg dat er voor elk veld slechts één mapping is',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Selecteer tenminste een zoekcriterium.',
 	'UI:CSVImport:Encoding' => 'Tekstencodering',
-	'UI:UniversalSearchTitle' => 'iTop - Universele zoekopdracht',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Universele zoekopdracht',
 	'UI:UniversalSearch:Error' => 'Fout: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Selecteer de klasse om te zoeken: ',
 
@@ -703,6 +703,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-expressie',
 	'UI:RunQuery:HeaderOQLExpression+' => 'De query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressie om te evalueren: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Geserialiseerde filter: ',
@@ -712,7 +713,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:ResultSQL' => 'Resulterende SQL',
 	'UI:RunQuery:Error' => 'Er trad een fout op tijdens het uitvoeren van deze query',
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webquery\'s',
-	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
+	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van '.ITOP_APPLICATION_SHORT.'. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
 	'UI:Schema:Title' => 'ITOP_APPLICATION_SHORT objecten-schema',
 	'UI:Schema:CategoryMenuItem' => 'Categorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relaties',
@@ -1045,7 +1046,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Help',
-	'UI:PasswordConfirm' => '(Bevestig)',
+	'UI:PasswordConfirm' => 'Bevestig',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Sla dit object op voordat je meer %1$s objecten toevoegt.',
 	'UI:DisplayThisMessageAtStartup' => 'Geef dit bericht weer bij het opstarten',
 	'UI:RelationshipGraph' => 'Grafische weergave',
@@ -1623,9 +1624,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:DataSources' => 'Synchronisatie-databronnen',
 	'Menu:DataSources+' => 'Alle Synchronisatie-databronnen',
 	'Menu:WelcomeMenu' => 'Welkom',
-	'Menu:WelcomeMenu+' => 'Welkom in iTop',
+	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Welkom',
-	'Menu:WelcomeMenuPage+' => 'Welkom in iTop',
+	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Admintools',
 	'Menu:AdminTools+' => 'Beheertools',
 	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',

@@ -23,7 +23,7 @@ class BlockIndirectLinksEdit extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-block-indirect-links-edit';
-	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-links-edit/layout';
+	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'application/links/indirect/block-indirect-links-edit/layout';
 
 	/** @var int */
 	public $iInputId;

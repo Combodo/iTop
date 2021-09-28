@@ -32,6 +32,7 @@ class DownloadPage extends AjaxPage
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		if (!empty($this->sContentType)) {
 			$this->add_header('Content-type: '.$this->sContentType);
 		}
@@ -48,8 +49,9 @@ class DownloadPage extends AjaxPage
 		} else {
 			$sContent = $this->sContent;
 		}
-		$oKpi = new ExecutionKPI();
+		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sContent;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sContent) / 1024).' Kb)');
+		ExecutionKPI::ReportStats();
 	}
 }

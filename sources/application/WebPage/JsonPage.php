@@ -26,7 +26,9 @@ class JsonPage extends WebPage
 	 */
 	public function __construct()
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct('');
+		$oKpi->ComputeStats(get_class($this).' creation', 'JsonPage');
 	}
 
 	/**
@@ -79,6 +81,7 @@ class JsonPage extends WebPage
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
 		$this->add_header('Content-type: application/json');
 
 		foreach ($this->a_headers as $s_header) {
@@ -88,14 +91,15 @@ class JsonPage extends WebPage
 		$aScripts = array_merge($this->a_init_scripts, $this->a_scripts, $this->a_ready_scripts);
 
 		$aJson = $this->bOutputDataOnly ? $this->aData : [
-			'data' => $this->aData,
+			'data'    => $this->aData,
 			'scripts' => $aScripts,
 		];
-
-		$oKpi = new ExecutionKPI();
 		$sJSON = json_encode($aJson);
+		$oKpi->ComputeAndReport(get_class($this).' output');
+
 		echo $sJSON;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
+		ExecutionKPI::ReportStats();
 	}
 
 }

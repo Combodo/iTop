@@ -388,7 +388,12 @@ class AsyncSendEmail extends AsyncTask
 			return "Bug - the email should be sent in synchronous mode";
 
 		case EMAIL_SEND_ERROR:
-			return "Failed: ".implode(', ', $aIssues);
+		    if (is_array($aIssues)) {
+		        $sMessage = "Sending eMail failed: ".implode(', ', $aIssues);
+		    } else {
+		        $sMessage = "Sending eMail failed.";
+		    }
+		    throw new Exception($sMessage);
 		}
 		return '';
 	}

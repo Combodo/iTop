@@ -281,14 +281,9 @@ class _Ticket extends cmdbAbstractObject
 		// Display the impact analysis for tickets not in 'closed' or 'resolved' status... and not in edition
 		if ((!$bEditMode) && (!in_array($this->Get('status'), array('resolved', 'closed'))))
 		{
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
 			$oPage->AddAjaxTab('Ticket:ImpactAnalysis',
 				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(),
 				true, null, AjaxTab::ENUM_TAB_PLACEHOLDER_MISC);
 		}
 	}
 }
-?>

@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Pill;
 
 
 use Combodo\iTop\Application\UI\Helper\UIHelper;
+use MetaModel;
 
 /**
  * Class PillFactory
@@ -25,12 +26,21 @@ class PillFactory
 	 * @param string $sStateCode
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Pill\Pill
+	 * @throws \CoreException
 	 */
 	public static function MakeForState(string $sClass, string $sStateCode)
 	{
-		$sColor = UIHelper::GetColorFromStatus($sClass, $sStateCode);
+		$oPill = new Pill();
 
-		return new Pill($sColor);
+		// First we try to apply style defined in the DM if any, otherwise we fallback on the default colors
+		$oStyle = MetaModel::GetEnumStyle($sClass, MetaModel::GetStateAttributeCode($sClass), $sStateCode);
+		if ($oStyle !== null) {
+			$oPill->SetCSSColorClass($oStyle->GetStyleClass());
+		} else {
+			$oPill->SetSemanticColor(UIHelper::GetColorNameFromStatusCode($sStateCode));
+		}
+
+		return $oPill;
 	}
 
 }

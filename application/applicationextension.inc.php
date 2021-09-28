@@ -909,6 +909,8 @@ abstract class ApplicationPopupMenuItem
 /**
  * Class for adding an item into a popup menu that browses to the given URL
  *
+ * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
+ *
  * @api
  * @package     Extensibility
  * @since 2.0
@@ -962,6 +964,8 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 
 /**
  * Class for adding an item into a popup menu that triggers some Javascript code
+ *
+ * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
  *
  * @api
  * @package     Extensibility

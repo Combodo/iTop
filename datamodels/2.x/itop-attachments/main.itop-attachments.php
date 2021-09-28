@@ -111,6 +111,11 @@ class AttachmentPlugIn implements iApplicationUIExtension, iApplicationObjectExt
 
 	public function OnFormCancel($sTempId)
 	{
+		// Protection against unfortunate massive delete of attachments when a null temp ID is passed
+		if (strlen($sTempId) === 0) {
+			return;
+		}
+
 		// Delete all "pending" attachments for this form
 		$sOQL = 'SELECT Attachment WHERE temp_id = :temp_id';
 		$oSearch = DBObjectSearch::FromOQL($sOQL);

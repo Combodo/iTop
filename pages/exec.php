@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
+
 require_once('../approot.inc.php');
 
 // Needed to read the parameters (with sanitization)
@@ -41,10 +43,11 @@ if ($sPage == '')
 }
 $sPage = basename($sPage); // protect against ../.. ...
 
-session_name('itop-'.md5(APPROOT));
-session_start();
+$oKPI = new ExecutionKPI();
+Session::Start();
 $sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
-session_write_close();
+Session::WriteClose();
+$oKPI->ComputeAndReport("Session Start");
 
 $sTargetPage = APPROOT.'env-'.$sEnvironment.'/'.$sModule.'/'.$sPage;
 

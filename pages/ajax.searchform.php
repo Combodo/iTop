@@ -10,14 +10,7 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
-require_once(APPROOT.'/application/user.preferences.class.inc.php');
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/sources/application/search/ajaxsearchexception.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 try
 {
@@ -139,5 +132,3 @@ try
 	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
-
-ExecutionKPI::ReportStats();

@@ -12,8 +12,8 @@
 // Class: UserLocal
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'Class:UserLocal' => 'Пользователь iTop',
-	'Class:UserLocal+' => 'Пользователь, аутентифицируемый через iTop',
+	'Class:UserLocal' => 'Пользователь '.ITOP_APPLICATION_SHORT,
+	'Class:UserLocal+' => 'Пользователь, аутентифицируемый через '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Пароль',
 	'Class:UserLocal/Attribute:password+' => 'Строка аутентификации пользователя',
 

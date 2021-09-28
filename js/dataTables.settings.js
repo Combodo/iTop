@@ -37,7 +37,6 @@ $(function () {
 				$('#sfl_'+me.options.sListId).fieldsorter({hasKeyColumn: bViewLink, labels: this.options.oLabels, fields: this.options.oColumns, onChange: function() { me._onSpecificSettings(); } });
 				$('#datatable_dlg_'+me.options.sListId).find('input[name=page_size]').on('click', function() { me._onSpecificSettings(); });
 				$('#datatable_dlg_'+me.options.sListId).find('input[name=save_settings]').on('click', function() { me._updateSaveScope(); });
-				this.element.find('.itop_popup > ul li').popupmenu();
 				this._updateSaveScope();
 				this._saveDlgState();
 			},
@@ -79,7 +78,6 @@ $(function () {
 					if (window.pager_params) {
 						window.pager_params['pager'+me.options.sListId] = undefined;
 					}
-
 					var parentElt = $('#'+me.options.sListId).closest('.dataTables_wrapper').parent();
 					var aOptions = $('#'+me.options.sListId).DataTable().context[0].oInit;
 					window['bSelectAllowed'+me.options.sListId] = false;
@@ -89,6 +87,16 @@ $(function () {
 						sThead += "<th></th>";
 					}
 					aOptions = $.extend(aOptions, JSON.parse(data));
+					if (aOptions.js_files) {
+						$.each(aOptions.js_files, function (i, item) {
+							if ($.inArray(item, aListJsFiles) === -1)
+							{
+								sFileUrl = CombodoGlobalToolbox.AddParameterToUrl(item, aOptions.js_files_param, aOptions.js_files_value);
+								$.ajax({url:sFileUrl, dataType: 'script', cache: true });
+								aListJsFiles.push(item);
+							}
+						});
+					}
 					$.each(aOptions['allColumns'], function (i, item) {
 						$.each(item, function (j, champs) {
 							if (champs.checked == 'true') {
@@ -265,14 +273,17 @@ $(function () {
 				dlgElement.unblock();
 
 			},
-			IsDialogOpen: function() {
+			IsDialogOpen: function () {
 				//TODO 3.0.0 voir si on accede à cette fonction. il y a de grandes chances pour qu'elle ne soit plus utilisée
 				var oDlgOpen = $('#datatable_dlg_'+this.options.sListId+' :visible');
 
 				return (oDlgOpen.length > 0);
 			},
-			DoRefresh: function() {
+			DoRefresh: function () {
 				this._refresh();
+			},
+			GetColumns: function () {
+				return this.options.oColumns;
 			}
 		});
 });

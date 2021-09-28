@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -23,11 +23,20 @@ $ibo-field--fullscreen-toggler--size: 20px !default;
 $ibo-field--fullscreen-toggler--border-radius: $ibo-border-radius-500 !default;
 $ibo-field--fullscreen-toggler--background-color--on-hover: $ibo-color-white-200 !default;
 
+$ibo-field--value--scrollbar-track-background-color: $ibo-color-white-200 !default;
 $ibo-field--value--padding-x--is-fullscreen: $ibo-field--label--padding-x--is-fullscreen !default;
 $ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + 32px !default;
 $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen !default;
 
 $ibo-field--value-decoration--spacing-x: 0.5rem !default;
+
+$ibo-field--enable-bulk--padding-y: 2px !default;
+$ibo-field--enable-bulk--padding-x: 5px !default;
+$ibo-field--enable-bulk--margin-left: 5px !default;
+$ibo-field--enable-bulk--height: calc(100% - #{$ibo-field--enable-bulk--padding-x}) !default;
+$ibo-field--enable-bulk--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
 
 /* SCSS rules */
 .ibo-field {
@@ -35,12 +44,19 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   /* Avoid value to overflow from its container with very long strings (typically URLs) */
   /* Note: Some types of attribute must be excluding as it can alter their rendering    */
-  &:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not(.ibo-input-file-select--container) {
-    /* We need the rule to apply for the class and all its descendants */
+  &:not([data-attribute-type="AttributeBlob"]):not([data-attribute-type="AttributeFile"]):not([data-attribute-type="AttributeImage"]):not([data-attribute-type="AttributeCustomFields"]):not(.ibo-input-file-select--container) {
+    /* We need the rule to apply for the class and all its descendants, hence the "&, & *" */
     .ibo-field--value {
-      * {
+      &, & * {
         word-break: break-word;
-        white-space: pre-wrap;
+        white-space: inherit; /* Here we don't put break-spaces as it would put ".ibo-field-small .ibo-field-value" on a new line due to the spaces/indentation of the HTML templates. For now we rather have this rule than diminish the templates readability/maintenability */
+      }
+    }
+    &.ibo-field-large {
+      .ibo-field--value {
+        &, & * {
+          white-space: break-spaces; /* For large fields we don't have the issue stated above */
+        }
       }
     }
   }
@@ -57,7 +73,6 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
   .ibo-field--label {
     position: relative; /* Necessary for fullscreen toggler */
     display: flex;
-    justify-content: space-between;
     align-items: center;
     max-width: initial;
     width: 100%;
@@ -71,6 +86,11 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     min-width: 100px;
     max-width: 145px;
     width: 30%;
+  }
+
+  /* N°4318 - Visible scrollbar background for large fields overflowing to ease "limits" visualization by the user */
+  .ibo-field--value > * {
+    --ibo-scrollbar--scrollbar-track-background-color: $ibo-field--value--scrollbar-track-background-color;
   }
 
   /* Fullscreen mode */
@@ -113,7 +133,7 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
   @extend %ibo-hyperlink-inherited-colors;
   @extend %ibo-fully-centered-content;
-  @extend %ibo-font-size-100;
+  @extend %ibo-font-size-50;
 
   &:hover {
     background-color: $ibo-field--fullscreen-toggler--background-color--on-hover;
@@ -138,6 +158,9 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
     }
   }
 }
+.ibo-field--label-small .ibo-field--label{
+  width: 20em;
+}
 .ibo-field--value {
   display: table;
   width: 100%;
@@ -155,14 +178,13 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 .ibo-field--comments {
   display: table-cell;
   vertical-align: top;
-  padding-right: 10px;
 
   > input[type="checkbox"] {
     margin-left: 5px;
     float: right;
   }
 
-  > .multi_values, > .mono_value {
+  > .multi_values, > .mono_value, > .ibo-field--comments--synchro{
     float: right;
   }
 }
@@ -187,21 +209,20 @@ $ibo-field--value-decoration--spacing-x: 0.5rem !default;
   }
 }
 
-.multi_values, .mono_value {
-  display: inline-block;
-  padding: 1px 3px;
-  margin-left: 5px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border-radius: 5px;
-  color: #fff;
+.ibo-field--enable-bulk, .ibo-field--comments--synchro {
+  display: inline;
+  padding: $ibo-field--enable-bulk--padding-y $ibo-field--enable-bulk--padding-x;
+  margin: 0 0 0 $ibo-field--enable-bulk--margin-left;
+  height: $ibo-field--enable-bulk--height;
+  border-radius: $ibo-field--enable-bulk--border-radius;
   font-weight: bold;
+  white-space: nowrap;
 }
 
-.mono_value {
-  background-color: #3c3;
+.ibo-field--enable-bulk--checkbox {
+  margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
-.multi_values {
-  background-color: #c33;
-}
+ .form_field ~ .form_field {
+    margin-top: $ibo-field--sibling-spacing;
+ }

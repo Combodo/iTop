@@ -1082,6 +1082,12 @@ class ObjectController extends BrickController
 			$aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
 			// Reset the value set previously
 			$aHeaders['Pragma'] = 'cache';
+
+			// N°3423 Fix bug in Symphony 3.x in Response::sendHeaders(): Headers need to send directly as SF doesn't replace header of page except for Content-Type
+			header('Cache-Control: no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec);
+			header('Pragma: cache');
+			header('Expires: ');
+
 			// An arbitrary date in the past is ok
 			$aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
 		}
@@ -1090,6 +1096,11 @@ class ObjectController extends BrickController
 		$oDocument = $oObject->Get($sObjectField);
 		$aHeaders['Content-Type'] = $oDocument->GetMimeType();
 		$aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment').';filename="'.$oDocument->GetFileName().'"';
+
+		// N°4129 - Prevent XSS attacks & other script executions
+		if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+			$aHeaders['Content-Security-Policy'] = 'sandbox';
+		}
 
 		return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
 	}

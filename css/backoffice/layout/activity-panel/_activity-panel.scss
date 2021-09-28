@@ -1,19 +1,6 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
@@ -96,9 +83,12 @@ $ibo-activity-panel--add-caselog-entry-button--right: 12px !default;
 $ibo-activity-panel--add-caselog-entry-button--top: 76px + $ibo-activity-panel--add-caselog-entry-button--right !default;
 $ibo-activity-panel--add-caselog-entry-button--diameter: 36px !default;
 $ibo-activity-panel--add-caselog-entry-button--background-color: $ibo-color-primary-600 !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color--on-hover: $ibo-color-primary-500 !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color--is-active: $ibo-color-primary-700 !default;
 $ibo-activity-panel--add-caselog-entry-button--color: $ibo-color-white-100 !default;
 $ibo-activity-panel--add-caselog-entry-button--border-radius: $ibo-border-radius-full !default;
 $ibo-activity-panel--add-caselog-entry-button--box-shadow: $ibo-elevation-100 !default;
+$ibo-activity-panel--add-caselog-entry-button--hover--box-shadow: $ibo-elevation-200 !default;
 
 $ibo-activity-panel--add-caselog-entry-button--icon--height: 100% !default;
 $ibo-activity-panel--add-caselog-entry-button--icon--width: $ibo-activity-panel--add-caselog-entry-button--icon--height !default;
@@ -379,6 +369,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 
 	border-radius: $ibo-activity-panel--add-caselog-entry-button--border-radius;
 	box-shadow: $ibo-activity-panel--add-caselog-entry-button--box-shadow;
+
 	> i{
 		text-align: center;
 		height: $ibo-activity-panel--add-caselog-entry-button--icon--height;
@@ -388,7 +379,13 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	}
 	&:hover {
 		color: $ibo-activity-panel--add-caselog-entry-button--color;
-	}
+    background-color: $ibo-activity-panel--add-caselog-entry-button--background-color--on-hover;
+    box-shadow: $ibo-activity-panel--add-caselog-entry-button--hover--box-shadow;
+  }
+  &:active {
+    color: $ibo-activity-panel--add-caselog-entry-button--color;
+    background-color: $ibo-activity-panel--add-caselog-entry-button--background-color--is-active;
+  }
 	&.ibo-is-hidden{
 		display: none;
 	}

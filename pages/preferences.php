@@ -199,13 +199,14 @@ JS
 
 	$oBlock = new DisplayBlock($oShortcutsFilter, 'list', false);
 	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, $oShortcutsBlock->sIdShortcuts, [
-		'view_link' => false,
-		'menu' => false,
-		'toolkit_menu' => false,
-		'selection_mode' => true,
-		'selection_type' => 'multiple',
-		'table_id' => 'user_prefs_shortcuts',
+		'view_link'           => false,
+		'menu'                => false,
+		'toolkit_menu'        => false,
+		'selection_mode'      => true,
+		'selection_type'      => 'multiple',
+		'table_id'            => 'user_prefs_shortcuts',
 		'surround_with_panel' => false,
+		'id_for_select'       => 'Shortcut/_key_',
 	]));
 
 	$oSet = new DBObjectSet($oShortcutsFilter);

@@ -272,8 +272,6 @@ else
 }
 $oP->Output();
 
-$oKPI->ComputeAndReport('REST outputed');
-
 // Log usage
 //
 if (MetaModel::GetConfig()->Get('log_rest_service'))
@@ -295,7 +293,4 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('json_output', $sResponse);
 
 	$oLog->DBInsertNoReload();
-	$oKPI->ComputeAndReport('Log inserted');
 }
-
-ExecutionKPI::ReportStats();

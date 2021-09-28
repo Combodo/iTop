@@ -34,8 +34,8 @@
 // Class: UserLocal
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:UserLocal' => 'iTop 用户',
-	'Class:UserLocal+' => '用户由 iTop 验证身份',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' 用户',
+	'Class:UserLocal+' => '用户由 '.ITOP_APPLICATION_SHORT.' 验证身份',
 	'Class:UserLocal/Attribute:password' => '密码',
 	'Class:UserLocal/Attribute:password+' => '用于验证用户身份的字符串',
 

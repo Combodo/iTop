@@ -543,7 +543,7 @@ EOF
 
 		if ($bFromDasboardPage) {
 			$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
-			$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\">{$sTitleForHTML}</div>";
+			$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\" title=\"{$sTitleForHTML}\">{$sTitleForHTML}</div>";
 			if ($oPage instanceof iTopWebPage) {
 				$oTopBar = $oPage->GetTopBarLayout();
 				$oToolbar = ToolbarUIBlockFactory::MakeStandard();
@@ -552,7 +552,7 @@ EOF
 				$oToolbar->AddHtml($sHtml);
 			} else {
 				$oPage->add_script(<<<JS
-$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML");
+$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML").attr("title", "$sTitleForHTML");
 JS
 				);
 			}

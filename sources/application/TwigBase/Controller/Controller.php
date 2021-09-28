@@ -25,6 +25,7 @@ use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
 use ErrorPage;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 use iTopWebPage;
 use LoginWebPage;
@@ -65,6 +66,12 @@ abstract class Controller
 	private $m_aLinkedStylesheets;
 	private $m_aSaas;
 	private $m_aAjaxTabs;
+	/** parameters for page's blocks
+	 *
+	 * @var array
+	 * @since 3.0.0
+	 */
+	private $m_aBlockParams;
 	/** @var string */
 	private $m_sAccessTokenConfigParamId = null;
 
@@ -76,21 +83,19 @@ abstract class Controller
 	 */
 	public function __construct($sViewPath, $sModuleName = 'core')
 	{
-		$this->m_aLinkedScripts = array();
-		$this->m_aLinkedStylesheets = array();
-		$this->m_aSaas = array();
-		$this->m_aAjaxTabs = array();
-		$this->m_aDefaultParams = array();
+		$this->m_aLinkedScripts = [];
+		$this->m_aLinkedStylesheets = [];
+		$this->m_aSaas = [];
+		$this->m_aAjaxTabs = [];
+		$this->m_aDefaultParams = [];
+		$this->m_aBlockParams = [];
 		$this->SetViewPath($sViewPath);
 		$this->SetModuleName($sModuleName);
-		if ($sModuleName != 'core')
-		{
-			try
-			{
-				$this->m_aDefaultParams = array('sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'));
+		if ($sModuleName != 'core') {
+			try {
+				$this->m_aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				IssueLog::Error($e->getMessage());
 			}
 		}
@@ -157,6 +162,8 @@ abstract class Controller
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
 			$sMethodName = 'Operation'.$this->m_sOperation;
+			$oKPI = new ExecutionKPI();
+			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
 			if (method_exists($this, $sMethodName))
 			{
 				$this->$sMethodName();
@@ -372,10 +379,17 @@ abstract class Controller
 		}
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
 		$this->CreatePage($sPageType);
-		$this->AddToPage($this->RenderTemplate($aParams, $sTemplateName, 'html'));
-		$this->AddScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'js'));
-		$this->AddReadyScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'ready.js'));
-		$this->AddStyleToPage($this->RenderTemplate($aParams, $sTemplateName, 'css'));
+		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html');
+		$this->AddToPage($sHTMLContent);
+		$sJSScript = $this->RenderTemplate($aParams, $sTemplateName, 'js');
+		$this->AddScriptToPage($sJSScript);
+		$sReadyScript = $this->RenderTemplate($aParams, $sTemplateName, 'ready.js');
+		$this->AddReadyScriptToPage($sReadyScript);
+		$sStyle = $this->RenderTemplate($aParams, $sTemplateName, 'css');
+		$this->AddStyleToPage($sStyle);
+		if (strlen($sHTMLContent) == 0 && strlen($sJSScript) == 0 && strlen($sReadyScript) == 0 && strlen($sStyle) == 0) {
+			IssueLog::Error("Missing TWIG template for $sTemplateName");
+		}
 		if (!empty($this->m_aAjaxTabs)) {
 			$this->m_oPage->AddTabContainer('TwigBaseTabContainer');
 			$this->m_oPage->SetCurrentTabContainer('TwigBaseTabContainer');
@@ -392,6 +406,9 @@ abstract class Controller
 		foreach ($this->m_aSaas as $sSaasRelPath) {
 			$this->AddSaasToPage($sSaasRelPath);
 		}
+		foreach ($this->m_aBlockParams as $sKey => $value) {
+			$this->SetBlockParamToPage($sKey, $value);
+		}
 		$this->OutputPage();
 	}
 
@@ -406,13 +423,18 @@ abstract class Controller
 	 */
 	public function DisplayJSONPage($aParams = array(), $iResponseCode = 200, $aHeaders = array())
 	{
+		$oKpi = new ExecutionKPI();
 		http_response_code($iResponseCode);
 		header('Content-Type: application/json');
 		foreach ($aHeaders as $sHeader)
 		{
 			header($sHeader);
 		}
-		echo json_encode($aParams);
+		$sJSON = json_encode($aParams);
+		echo $sJSON;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
+
+		ExecutionKPI::ReportStats();
 	}
 
 	/**
@@ -550,11 +572,19 @@ abstract class Controller
 	 */
 	public function AddAjaxTab($sCode, $sURL, $bCache = true, $sLabel = null)
 	{
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			$sLabel = Dict::S($sCode);
 		}
 		$this->m_aAjaxTabs[$sCode] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
+	}
+
+	/**
+	 * @param array $aBlockParams
+	 * @since 3.0.0
+	 */
+	public function SetBlockParams(array $aBlockParams)
+	{
+		$this->m_aBlockParams = $aBlockParams;
 	}
 
 	/**
@@ -595,7 +625,7 @@ abstract class Controller
 		switch ($sPageType)
 		{
 			case self::ENUM_PAGE_TYPE_HTML:
-				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
+				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
 				$this->m_oPage->add_xframe_options();
 				break;
 
@@ -677,6 +707,16 @@ abstract class Controller
 	private function AddAjaxTabToPage($sCode, $sTitle, $sURL, $bCache)
 	{
 		$this->m_oPage->AddAjaxTab($sCode, $sURL, $bCache, $sTitle);
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param $value
+	 * @since 3.0.0
+	 */
+	private function SetBlockParamToPage(string $sKey, $value)
+	{
+		$this->m_oPage->SetBlockParam($sKey, $value);
 	}
 
 	/**

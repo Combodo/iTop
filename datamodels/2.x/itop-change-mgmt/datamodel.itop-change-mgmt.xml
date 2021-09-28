@@ -44,16 +44,16 @@
                         <value id="new">
                             <code>new</code>
                             <style>
-                                <main_color>#2C5382</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
+                                <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
                                 <decoration_classes/>
                             </style>
                         </value>
                         <value id="assigned">
                             <code>assigned</code>
                             <style>
-                                <main_color>#2C5382</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
+                                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
                                 <decoration_classes/>
                             </style>
                         </value>
@@ -63,31 +63,31 @@
                         <value id="approved">
                             <code>approved</code>
                             <style>
-                                <main_color>#689F38</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
+                                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
                                 <decoration_classes>fas fa-user-check</decoration_classes>
                             </style>
                         </value>
                         <value id="closed">
                             <code>closed</code>
                             <style>
-                                <main_color>#E1E7EC</main_color>
-                                <complementary_color>#6E7A8A</complementary_color>
+                                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
                                 <decoration_classes/>
                             </style>
                         </value>
                         <value id="rejected">
                             <code>rejected</code>
                             <style>
-                                <main_color>#B83280</main_color>
-                                <complementary_color>#FFFFFF</complementary_color>
+                                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
                                 <decoration_classes>fas fa-user-times</decoration_classes>
                             </style>
                         </value>
                     </values>
                     <default_style>
-                        <main_color>#2B6CB0</main_color>
-                        <complementary_color>#FFFFFF</complementary_color>
+                        <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                        <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
                         <decoration_classes/>
                     </default_style>
                     <sql>status</sql>

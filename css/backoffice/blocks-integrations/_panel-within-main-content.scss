@@ -1,7 +1,9 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+$ibo-panel-within-main-content--margin-bottom: 200px !default;
 
 $ibo-panel-within-main-content--sticky-sentinel-top--top: -1 * $ibo-main-content--padding-top !default;
 $ibo-panel-within-main-content--sticky-sentinel-top--height: $ibo-main-content--padding-top !default;
@@ -17,6 +19,8 @@ $ibo-panel-within-main-content--header--top--is-sticky: -1 * $ibo-main-content--
    * - Unlike in JS, there no easy way to find the closest descendant
    */
   .ibo-panel.ibo-has-sticky-header {
+    margin-bottom: $ibo-panel-within-main-content--margin-bottom; /* Add a margin below the panel so the dropdown lists can open without problem (N°4039) */
+
     /* Stickable header rules */
     > .ibo-sticky-sentinel-top {
       top: $ibo-panel-within-main-content--sticky-sentinel-top--top;

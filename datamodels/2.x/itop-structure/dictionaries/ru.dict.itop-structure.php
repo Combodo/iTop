@@ -44,7 +44,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Organization/Attribute:overview' => 'Обзор',
 	'Organization:Overview:FunctionalCIs' => 'Конфигурационные единицы этой организации',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'по типу',
-	'Organization:Overview:Users' => 'Пользователи iTop этой организации',
+	'Organization:Overview:Users' => 'Пользователи '.ITOP_APPLICATION_SHORT.' этой организации',
 ));
 
 //

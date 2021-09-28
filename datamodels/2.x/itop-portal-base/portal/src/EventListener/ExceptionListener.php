@@ -23,6 +23,7 @@ namespace Combodo\iTop\Portal\EventListener;
 
 
 use Dict;
+use ExceptionLog;
 use IssueLog;
 use Symfony\Component\Debug\Exception\FlattenException;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -86,7 +87,9 @@ class ExceptionListener implements ContainerAwareInterface
 		}
 
 		// Log exception in iTop log
-		IssueLog::Error($sErrorTitle.': '.$sErrorMessage);
+		ExceptionLog::LogException($oException, [
+			'uri' => $oEvent->getRequest()->getUri(),
+		]);
 
 		// Prepare data for template
 		$aData = array(
@@ -104,8 +107,7 @@ class ExceptionListener implements ContainerAwareInterface
 		else
 		{
 			$oResponse = new Response();
-			$oResponse->setContent($this->oContainer->get('twig')->render('itop-portal-base/portal/templates/errors/layout.html.twig',
-				$aData));
+			$oResponse->setContent($this->oContainer->get('twig')->render('itop-portal-base/portal/templates/errors/layout.html.twig', $aData));
 		}
 		$oResponse->setStatusCode($iStatusCode);
 

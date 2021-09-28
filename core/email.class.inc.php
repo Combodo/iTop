@@ -24,6 +24,10 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Pelago\Emogrifier\CssInliner;
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
+use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+
 Swift_Preferences::getInstance()->setCharset('UTF-8');
 
 
@@ -335,8 +339,9 @@ class EMail
 	{
 		if (($sMimeType === 'text/html') && ($sCustomStyles !== null))
 		{
-			$emogrifier = new \Pelago\Emogrifier($sBody, $sCustomStyles);
-			$sBody = $emogrifier->emogrify(); // Adds html/body tags if not already present
+			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
+			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
+			$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
 		}
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 		$this->m_oMessage->setBody($sBody, $sMimeType);

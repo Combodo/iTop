@@ -22,6 +22,7 @@ SetupWebPage::AddModule(
 		),
 		'mandatory' => false,
 		'visible' => true,
+		'installer' => 'AuthentLDAPInstaller',
 
 		// Components
 		//
@@ -58,8 +59,21 @@ SetupWebPage::AddModule(
 			),
 			'start_tls' => false,
 			'debug' => false,
+			'servers' => array(),
 		),
 	)
 );
+
+// Module installation handler
+//
+class AuthentLDAPInstaller extends ModuleInstallerAPI
+{
+	public static function AfterDataLoad(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{
+		// Create missing table entries
+		$sSQL = "insert into priv_user_ldap (id) select U.id from priv_user as U left join priv_user_ldap as L on U.id = L.id where U.finalclass='UserLDAP' and isnull(L.id);";
+		CMDBSource::Query($sSQL);
+	}
+}
 
 } // if (function_exists('ldap_connect'))

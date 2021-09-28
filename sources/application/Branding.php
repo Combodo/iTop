@@ -41,23 +41,19 @@ class Branding
 	/** @var string Default logo */
 	public const DEFAULT_LOGO_TYPE = self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL;
 
-	/** @var \string[][] Relative paths to the default/custom logos from the current environment folder */
+	/** @var \string[][] Relative paths to the logos from the current environment folder */
 	public static $aLogoPaths = [
 		self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL => [
 			'default' => 'images/itop-logo.png',
-			'custom' => 'branding/main-logo-full.png',
 		],
 		self::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT => [
 			'default' => 'images/itop-logo-square.png',
-			'custom' => 'branding/main-logo-compact.png',
 		],
 		self::ENUM_LOGO_TYPE_PORTAL_LOGO => [
 			'default' => 'images/logo-itop-dark-bg.svg',
-			'custom' => 'branding/portal-logo.png',
 		],
 		self::ENUM_LOGO_TYPE_LOGIN_LOGO => [
 			'default' => 'images/itop-logo.png',
-			'custom' => 'branding/login-logo.png',
 		],
 	];
 
@@ -73,25 +69,22 @@ class Branding
 	public static function GetLogoAbsoluteUrl($sType = self::DEFAULT_LOGO_TYPE)
 	{
 		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
-		$sCustomLogoPath = static::$aLogoPaths[$sType]['custom'];
-
-		if (file_exists(MODULESROOT.$sCustomLogoPath))
-		{
-			$sUrl = utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath;
+		$sWorkingPath =  APPROOT.'env-'.utils::GetCurrentEnvironment();
+		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'/branding/logos.json'), true);
+		if ( isset( $aThemeParameters[$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sType];
+			if (file_exists(MODULESROOT.$sCustomLogoPath)) {
+				return utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+			}
 		}
-		else
-		{
-			$sUrl = utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath;
-		}
-
-		return $sUrl.'?t='.utils::GetCacheBusterTimestamp();
+		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
 	}
 
 	/**
 	 * Return the absolute URL for the full main logo
 	 *
 	 * @return string
-	 * @throws \Exception
+	 * @throws \Exception<
 	 */
 	public static function GetFullMainLogoAbsoluteUrl()
 	{

@@ -152,5 +152,9 @@ Stickers' design might change from one year to another. For the first year we wa
 * White hat: Find and/or fix a vulnerability
 * Contributor: Contribute by finding a bug, making an extension or any other way
 * Partner: For Combodo's official partners
+* Graduated: Follow a Combodo's iTop training
+* Ambassador: Outstanding community contributors
+* Beta tester: Test and give feedback on beta releases
+* Extension developer: Develop and publish an extension
 
 ![](documentation/contributing-guide/contributing-stickers-side-by-side.png)

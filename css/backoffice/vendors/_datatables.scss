@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -23,9 +23,12 @@ $ibo-vendors-datatables--page-length-selector--border-color: $ibo-color-grey-500
 $ibo-vendors-datatables--page-length-selector--border-radius: $ibo-border-radius-300 !default;
 $ibo-vendors-datatables--page-length-selector--border-color--on-focus: $ibo-color-primary-600 !default;
 
+$ibo-vendors-datatables--cell--padding-x: 12px !default;
+$ibo-vendors-datatables--cell--padding-y: 10px !default;
+
 $ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;
 $ibo-vendors-datatables--column-sorting-icon--opacity--is-sorted: 1 !default;
-$ibo-vendors-datatables--column-sorting-icon--right: 1em !default;
+$ibo-vendors-datatables--column-sorting-icon--right: calc((#{$ibo-vendors-datatables--cell--padding-x} - 8px) / 2) !default;
 $ibo-vendors-datatables--column-sorting-icon--content: "\f0dc" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-asc: "\f0d8" !default;
 $ibo-vendors-datatables--column-sorting-icon--content--is-sorted-desc: "\f0d7" !default;
@@ -137,7 +140,7 @@ $ibo-vendors-datatables--row-highlight--colors:(
 .dataTable {
   th, td {
     position: relative;
-    padding: 10px 12px;
+    padding: $ibo-vendors-datatables--cell--padding-y $ibo-vendors-datatables--cell--padding-x;
     @extend %ibo-font-ral-med-100; /* Necessary to set the font-size as its container can have a different one */
   }
 

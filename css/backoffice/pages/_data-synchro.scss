@@ -1,3 +1,8 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-data-synchro-source--replicas-status--is-light--opacity: 0.5 !default;
 
 $ibo-data-synchro-source--replicas-table--cell--padding: 10px !default;
@@ -45,6 +50,9 @@ $ibo-data-synchro-source--replicas-status--color: (
       background-color: $bg-color;
   }
 }
+.ibo-data-synchro-source--replicas-status-separator {
+  border-top: 2px solid $ibo-color-white-100;
+}
 
 .ibo-data-synchro-source--replicas-status.ibo-is-light{
   opacity: $ibo-data-synchro-source--replicas-status--is-light--opacity;
@@ -57,8 +65,9 @@ $ibo-data-synchro-source--replicas-status--color: (
   min-width: $ibo-data-synchro-source--replicas-table--cell--min-width;
   vertical-align: middle;
   text-align: center;
-  &.arrow{
+  &.arrow {
     min-width: $ibo-data-synchro-source--replicas-table--cell--arrow--min-width;
+    border-top: 2px solid $ibo-color-grey-50;
   }
 }
 .ibo-data-synchro-source--replicas-status--warning{

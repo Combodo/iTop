@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
 use Combodo\iTop\Renderer\BlockRenderer;
@@ -464,7 +465,7 @@ class DisplayableNode extends GraphNode
 				{
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
-				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
+				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
 			}
 			$sHtml .= '<hr/>';
 		}
@@ -805,7 +806,7 @@ class DisplayableGroupNode extends DisplayableNode
 		$sHtml .= '<a href="#" onclick="$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
 		$sHtml .= '<hr/>';
 		$sHtml .= '<table><tbody><tr>';
-		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
+		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img class="ibo-class-icon ibo-is-small" src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
 		$sHtml .= Dict::Format('UI_CountOfObjectsShort', $this->GetObjectCount()).'</td>';
 		$sHtml .= '</tr></tbody></table>';
 		return $sHtml;
@@ -1446,9 +1447,9 @@ class DisplayableGraph extends SimpleGraph
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
 		$sSearchToggle = Dict::S('UI:Search:Toggle');
 		$oP->add("<div class=\"not-printable\">\n");
-		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_CYAN, 'ds_flash');
+		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_SCHEME_CYAN, 'ds_flash');
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
-
+		$oUiSearchBlock->SetIsCollapsible(true);
 		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
 <<<EOF
  <div id="ds_flash" class="search_box ibo-display-graph--search-box">
@@ -1499,11 +1500,8 @@ EOF
 		
 		$sDirection = utils::ReadParam('d', 'horizontal');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
-	
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+
+		WebResourcesHelper::EnableSimpleGraphInWebPage($oP);
 		try
 		{
 			$this->InitFromGraphviz();

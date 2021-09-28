@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 
 /**
  * Class UIHTMLEditorWidget
@@ -83,6 +84,7 @@ class UIHTMLEditorWidget
 		}
 		$sConfigJS = json_encode($aConfig);
 
+		WebResourcesHelper::EnableCKEditorToWebPage($oPage);
 		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 
 		// Please read...

@@ -4,6 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 /**
  * All objects to be displayed in the application (either as a list or as details)
  * must implement this interface.
@@ -946,10 +948,9 @@ abstract class DBObject implements iDisplay
      */
 	protected function ComputeHighlightCode()
 	{
-		// First if the state defines a HiglightCode, apply it
-		$sState = $this->GetState();
-		if ($sState != '')
+		if (MetaModel::HasLifecycle(get_class($this)))
 		{
+			$sState = $this->GetState();
 			$sCode = MetaModel::GetHighlightCode(get_class($this), $sState);
 			$this->SetHighlightCode($sCode);
 		}
@@ -1277,13 +1278,20 @@ abstract class DBObject implements iDisplay
 		{
 			// If the object if not issued from a query but constructed programmatically
 			// the label may be empty. In this case run a query to get the object's friendly name
-			$oTmpObj = MetaModel::GetObject($sObjClass, $sObjKey, false);
-			if (is_object($oTmpObj))
-			{
+			$sObjOql = 'SELECT '.$sObjClass.' WHERE id='.$sObjKey;
+			$oObjFilter = DBSearch::FromOQL($sObjOql);
+			$oSet = new DBObjectSet($oObjFilter);
+
+			// we will only use id and friendlyname, so let's remove other fields !
+			$aAttToLoad = [
+				$sObjClass => [],
+			];
+			$oSet->OptimizeColumnLoad($aAttToLoad);
+
+			$oTmpObj = $oSet->Fetch();
+			if (is_object($oTmpObj)) {
 				$sHtmlLabel = $oTmpObj->GetName();
-			}
-			else
-			{
+			} else {
 				// May happen in case the target object is not in the list of allowed values for this attribute
 				$sHtmlLabel = "<em>$sObjClass::$sObjKey</em>";
 			}
@@ -1518,14 +1526,15 @@ abstract class DBObject implements iDisplay
 	 * Helper to get the friendly name in a safe manner for displaying inside a web page
 	 *
 	 * @internal
-	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
-	 *
 	 * @return string
 	 * @throws \CoreException
+	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°580 New $sType parameter
+	 *
 	 */
-	public function GetName()
+	public function GetName($sType = FriendlyNameType::SHORT)
 	{
-		return htmlentities($this->GetRawName(), ENT_QUOTES, 'UTF-8');
+		return htmlentities($this->GetRawName($sType), ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
@@ -1539,11 +1548,17 @@ abstract class DBObject implements iDisplay
 	 * @return string
 	 * @throws \CoreException
 	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
-	public function GetRawName()
+	public function GetRawName($sType = FriendlyNameType::SHORT)
 	{
-		return $this->Get('friendlyname');
+		if ($sType == FriendlyNameType::SHORT) {
+			return $this->Get('friendlyname');
+		} else {
+			$oExpression = MetaModel::GetNameExpression(get_class($this), $sType);
+			$this->EvaluateExpression($oExpression);
+		}
 	}
 
 	/**
@@ -1859,9 +1874,7 @@ abstract class DBObject implements iDisplay
 			{
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
-				$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
-				if (is_null($oTargetObj))
-				{
+				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
 					return "Target object not found ($sTargetClass::$toCheck)";
 				}
 			}
@@ -2129,28 +2142,23 @@ abstract class DBObject implements iDisplay
 		}
 
 		if ($oAttDef->DuplicatesAllowed()) {
-			return true;
+			return;
 		}
 
+		// To control duplicates go through all the entries and check if the remote has been seen
 		/** @var \ormLinkSet $value */
-		$aModifiedLnk = $value->ListModifiedLinks();
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-		$aExistingRemotesId = $value->GetColumnAsArray($sExtKeyToRemote, true);
-		$aExistingRemotesFriendlyName = $value->GetColumnAsArray($sExtKeyToRemote.'_friendlyname', true);
+		$aCurrentRemoteIds = [];
 		$aDuplicatesFields = [];
-		foreach ($aModifiedLnk as $oModifiedLnk) {
-			$iModifiedLnkId = $oModifiedLnk->GetKey();
-			$iModifiedLnkRemoteId = $oModifiedLnk->Get($sExtKeyToRemote);
-			$aExistingRemotesIdToCheck = array_filter($aExistingRemotesId, function ($iLnkKey) use ($iModifiedLnkId) {
-				return ($iLnkKey != $iModifiedLnkId);
-			}, ARRAY_FILTER_USE_KEY);
-
-			if (!in_array($iModifiedLnkRemoteId, $aExistingRemotesIdToCheck, true)) {
-				continue;
+		$value->rewind();
+		while ($oCurrentLnk = $value->current()) {
+			$iExtKeyToRemote = $oCurrentLnk->Get($sExtKeyToRemote);
+			if (isset($aCurrentRemoteIds[$iExtKeyToRemote])) {
+				$aDuplicatesFields[] = $oCurrentLnk->Get($sExtKeyToRemote.'_friendlyname');
+			} else {
+				$aCurrentRemoteIds[$iExtKeyToRemote] = true;
 			}
-
-			$iLnkId = $oModifiedLnk->GetKey();
-			$aDuplicatesFields[] = $aExistingRemotesFriendlyName[$iLnkId];
+			$value->next();
 		}
 
 		if (!empty($aDuplicatesFields)) {

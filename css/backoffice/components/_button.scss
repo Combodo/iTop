@@ -1,3 +1,8 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-button--sibling-spacing: 5px !default;
 $ibo-button--padding-y: 6px !default;
 $ibo-button--padding-x: 9px !default;
@@ -461,6 +466,7 @@ $ibo-button-colors: (
 }
 
 .ibo-button {
+  position: relative;
   display: inline-block; /* Used to allow truncated text on .ibo-button--label */
   padding: $ibo-button--padding-y $ibo-button--padding-x;
   border: $ibo-button--border;
@@ -470,7 +476,7 @@ $ibo-button-colors: (
   white-space: nowrap; /* To force sub elements to be on 1 line */
   @extend %ibo-font-ral-sembol-100;
 
-  & ~ .ibo-button {
+  & + .ibo-button {
     margin-left: $ibo-button--sibling-spacing;
 	}
 

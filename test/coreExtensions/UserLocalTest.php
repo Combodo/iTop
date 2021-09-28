@@ -9,14 +9,7 @@ namespace coreExtensions;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use UserLocal;
-use UserLocalPasswordPolicyMockNotValid;
-use UserLocalPasswordPolicyMockNotValidBis;
-use UserLocalPasswordPolicyMockValid;
-use UserLocalPasswordPolicyMockValidBis;
-use UserLocalPasswordValidity;
-use UserPasswordPolicyRegex;
 
 /**
  * test class for UserLocal class
@@ -46,14 +39,17 @@ class UserLocalTest extends ItopDataTestCase
 	 */
 	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{
+		// We are calling methods that generates DEPRECATED warnings :( Like PHPUnit\Framework\MockObject\Generator::generateMock
+		// Since N°3002 this would make the test fail, so this is a workaround !
+		// changing ways to do mock will be done in N°4224
+		set_error_handler(array(__CLASS__, 'VoidErrorHandlerForDeprecated'));
 		$configMock = $this->createMock(\Config::class);
-
 		$configMock
 			->method('GetModuleSetting')
 			->willReturnMap($aConfigValueMap);
+		restore_error_handler();
 
-		if (isset($sUserLanguage))
-		{
+		if (isset($sUserLanguage)) {
 			\Dict::SetUserLanguage($sUserLanguage);
 		}
 
@@ -74,38 +70,59 @@ class UserLocalTest extends ItopDataTestCase
 
 		$oUserLocal->ValidatePassword($sPassword, $configMock, $aValidatorCollection);
 
-		list($bCheckStatus, $aCheckIssues, $aSecurityIssues) =  $oUserLocal->CheckToWrite();
+		list($bCheckStatus, $aCheckIssues, $aSecurityIssues) = $oUserLocal->CheckToWrite();
 
 		$this->assertSame($bExpectedCheckStatus, $bCheckStatus);
 
-		if (isset($expectedCheckIssues))
-		{
+		if (isset($expectedCheckIssues)) {
 			$this->assertContains($expectedCheckIssues, $aCheckIssues);
 		}
+	}
+
+	/**
+	 * Fake error handler to silently discard DEPRECATED warnings
+	 *
+	 * @param int $iErrNo
+	 * @param string $sErrStr
+	 * @param string $sErrFile
+	 * @param int $iErrLine
+	 *
+	 * @return boolean
+	 */
+	public static function VoidErrorHandlerForDeprecated($iErrno, $sErrStr, $sErrFile, $iErrLine)
+	{
+		if (
+			(\E_USER_DEPRECATED !== $iErrno)
+			&& (\E_DEPRECATED !== $iErrno)
+		) {
+			return false;
+		}
+
+		return true; // Ignore the error
 	}
 
 	public function ProviderValidatePassword()
 	{
 		return array(
-			'validPattern' => array(
-				'password' => 'foo',
+			'validPattern'    => array(
+				'password'             => 'foo',
 				'aValidatorCollection' => array(
 					'UserPasswordPolicyRegex',
 				),
-				'valueMap' => array(
-					array('authent-local', 'password_validation.pattern', null, '.{1,10}')
+				'valueMap'             => array(
+					array('authent-local', 'password_validation.pattern', null, '.{1,10}'),
 				),
-				'expectedCheckStatus' => true,
+				'expectedCheckStatus'  => true,
 			),
 			'notValidPattern' => array(
-				'password' => 'foo',
+				'password'             => 'foo',
 				'aValidatorCollection' => array(
 					'UserPasswordPolicyRegex',
 				),
-				'valueMap' => array(
-					array('authent-local', 'password_validation.pattern', null, '.{6,10}')
+				'valueMap'             => array(
+					array('authent-local', 'password_validation.pattern', null, '.{6,10}'),
 				),
-				'expectedCheckStatus' => false,
+				'expectedCheckStatus'  => false,
 			),
 			'noPattern' => array(
 				'password' => 'foo',
@@ -258,6 +275,7 @@ class UserLocalTest extends ItopDataTestCase
 	public function testPasswordRenewal($sBefore, $sExpectedAfter)
 	{
 		$oBefore = is_null($sBefore) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sBefore));
+		$oNow = date(\AttributeDate::GetInternalFormat());
 		$oExpectedAfter = is_null($sExpectedAfter) ? null : date(\AttributeDate::GetInternalFormat(), strtotime($sExpectedAfter));
 
 		$aUserLocalValues = array('login' => 'john');
@@ -281,7 +299,7 @@ class UserLocalTest extends ItopDataTestCase
 		//INSERT
 		$oUserLocal->Set('password', 'fooBar1???');
 		$oUserLocal->DBWrite();
-		$this->assertEquals($oBefore, $oUserLocal->Get('password_renewed_date'), 'INSERT changes the "password_renewed_date"');
+		$this->assertEquals($oNow, $oUserLocal->Get('password_renewed_date'), 'INSERT sets the "password_renewed_date" to the current date');
 
 		//UPDATE password_renewed_date
 		$oUserLocal->Set('password_renewed_date', $oBefore);

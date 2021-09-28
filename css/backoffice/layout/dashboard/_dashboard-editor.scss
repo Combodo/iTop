@@ -1,3 +1,8 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 $ibo-dashboard-editor--pane--padding: 16px 30px 16px 15px !default;
 
 $ibo-dashboard-editor--available-dashlet-icon--height: 34px !default;
@@ -100,7 +105,9 @@ $ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
 	right: $ibo-dashboard-editor--delete-dashlet-icon--right;
 	padding: $ibo-dashboard-editor--delete-dashlet-icon--padding;
 	z-index: $ibo-dashboard-editor--delete-dashlet-icon--z-index;
-	@extend .ibo-button;
-	@extend .ibo-is-alternative;
-	@extend .ibo-is-danger;
+}
+.ibo-dashboard-editor .itop-dashboard{
+  a{
+    cursor: not-allowed;
+  }
 }

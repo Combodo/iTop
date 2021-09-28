@@ -204,7 +204,7 @@
 				liElem.append(aElem);
 				
 				// Building tooltip for the node
-				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
+				if( (item.tooltip !== undefined) && ($(item.tooltip).text() !== '') )
 				{
 					nameElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'right'});
 				}

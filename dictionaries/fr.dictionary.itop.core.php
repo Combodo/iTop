@@ -127,13 +127,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEnum+' => 'Valeur choisie parmi un liste de chaîne de caractères',
 
 	'Core:AttributeTemplateString' => 'Modèle de chaîne de caractères',
-	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateString+' => 'Chaîne de caractères d\'une ligne, contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeTemplateText' => 'Modèle de texte',
-	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateText+' => 'Texte contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeTemplateHTML' => 'Modèle HTML',
-	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données iTop',
+	'Core:AttributeTemplateHTML+' => 'HTML contenant des espaces réservés pour des données '.ITOP_APPLICATION_SHORT,
 
 	'Core:AttributeDateTime' => 'Date/heure',
 	'Core:AttributeDateTime+' => 'Date et heure (année-mois-jour hh:mm:ss)',
@@ -229,6 +229,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:CMDBChange/Attribute:date+' => '',
 	'Class:CMDBChange/Attribute:userinfo' => 'Autres informations',
 	'Class:CMDBChange/Attribute:userinfo+' => '',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Action utilisateur dans l\'IHM',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'Script d\'import CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'Import CSV dans l\'IHM',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Traitement d\'email',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Source de données synchronisée',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'Webservices REST/JSON',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'Webservices SOAP',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Par une extension',
 ));
 
 //

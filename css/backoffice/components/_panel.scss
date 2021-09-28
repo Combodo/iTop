@@ -1,19 +1,6 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
@@ -32,11 +19,31 @@ $ibo-panel--base-transition: $ibo-panel--base-transition-property $ibo-panel--ba
   transition: $ibo-panel--base-transition;
 }
 
+$ibo-panel-colors: (
+        'primary': $ibo-color-primary-600,
+        'secondary': $ibo-color-secondary-600,
+        'neutral': $ibo-color-grey-600,
+        'information': $ibo-color-information-600,
+        'success': $ibo-color-success-600,
+        'failure': $ibo-color-danger-600,
+        'warning': $ibo-color-warning-600,
+        'danger': $ibo-color-danger-600,
+        'grey' : $ibo-color-grey-600,
+        'blue-grey': $ibo-color-blue-grey-600,
+        'blue': $ibo-color-blue-800,
+        'cyan': $ibo-color-cyan-600,
+        'green': $ibo-color-green-600,
+        'orange' : $ibo-color-orange-600,
+        'red': $ibo-color-red-600,
+        'pink': $ibo-color-pink-600,
+) !default;
+
 /* - Specific variables for the block */
 $ibo-panel--spacing-top: 24px !default;
 
 $ibo-panel--highlight--width: 100% !default;
 $ibo-panel--highlight--height: 8px !default;
+$ibo-panel--highlight--background-color: 8px !default;
 $ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
 $ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
 
@@ -81,47 +88,14 @@ $ibo-panel--collapsible-toggler--margin-right: 8px !default;
 $ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
 $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
-$ibo-panel-colors: (
-        'primary': $ibo-color-primary-600,
-        'secondary': $ibo-color-secondary-600,
-        'neutral': $ibo-color-grey-600,
-        'information': $ibo-color-information-600,
-        'success': $ibo-color-success-600,
-        'failure': $ibo-color-danger-600,
-        'warning': $ibo-color-warning-600,
-        'danger': $ibo-color-danger-600,
-        'grey' : $ibo-color-grey-600,
-        'blue-grey': $ibo-color-blue-grey-600,
-        'blue': $ibo-color-blue-800,
-        'cyan': $ibo-color-cyan-600,
-        'green': $ibo-color-green-600,
-        'orange' : $ibo-color-orange-600,
-        'red': $ibo-color-red-600,
-        'pink': $ibo-color-pink-600,
-) !default;
-
-@each $sColor, $sColorValue in $ibo-panel-colors {
-  .ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-
-    background-color: $sColorValue;
-    content: "";
-
-    width: $ibo-panel--highlight--width;
-    height: $ibo-panel--highlight--height;
-    padding-bottom: $ibo-panel--highlight--padding-bottom;
-  }
-}
-
 /* Rules */
 .ibo-panel + .ibo-panel {
   margin-top: $ibo-panel--spacing-top;
 }
 
 .ibo-panel {
+  --ibo-main-color: map-get($ibo-panel-colors, 'neutral'); /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
+
   position: relative;
 
   &.ibo-has-icon {
@@ -227,6 +201,26 @@ $ibo-panel-colors: (
   overflow: hidden; /* To force highlight color to be cropped by the border radius */
 
   @extend %ibo-font-size-150;
+
+  &::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+
+    background-color: var(--ibo-main-color); /* Default value defined in .ibo-panel, can be overloaded by custom CSS classes */
+    content: "";
+
+    width: $ibo-panel--highlight--width;
+    height: $ibo-panel--highlight--height;
+    padding-bottom: $ibo-panel--highlight--padding-bottom;
+  }
+}
+
+@each $sColor, $sColorValue in $ibo-panel-colors {
+  .ibo-panel.ibo-is-#{$sColor} > .ibo-panel--body::before {
+    background-color: $sColorValue;
+  }
 }
 
 .ibo-panel--collapsible-toggler {
@@ -237,26 +231,28 @@ $ibo-panel-colors: (
   cursor: pointer;
 }
 
-.ibo-panel--collapsible-toggler--opened {
-  display: block;
-}
-
-.ibo-panel--collapsible-toggler--closed {
-  display: none;
-}
 
 /* Collapsible rules */
-.ibo-panel:not(.ibo-is-opened) {
-  .ibo-panel--collapsible-toggler--closed {
+.ibo-panel {
+  .ibo-panel--collapsible-toggler--opened {
     display: block;
   }
 
-  .ibo-panel--collapsible-toggler--opened {
+  .ibo-panel--collapsible-toggler--closed {
     display: none;
   }
+  &:not(.ibo-is-opened) {
+    .ibo-panel--collapsible-toggler--closed {
+      display: block;
+    }
 
-  .ibo-panel--body {
-    display: none;
+    .ibo-panel--collapsible-toggler--opened {
+      display: none;
+    }
+
+    .ibo-panel--body {
+      display: none;
+    }
   }
 }
 

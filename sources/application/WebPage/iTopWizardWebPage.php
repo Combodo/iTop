@@ -33,9 +33,11 @@ class iTopWizardWebPage extends iTopWebPage
 	var $m_aSteps;
     public function __construct($sTitle, $currentOrganization, $iCurrentStep, $aSteps)
     {
-    	parent::__construct($sTitle." - step $iCurrentStep of ".count($aSteps)." - ".$aSteps[$iCurrentStep - 1], $currentOrganization);
+	    $oKpi = new ExecutionKPI();
+	    parent::__construct($sTitle." - step $iCurrentStep of ".count($aSteps)." - ".$aSteps[$iCurrentStep - 1], $currentOrganization);
 		$this->m_iCurrentStep = $iCurrentStep;
-		$this->m_aSteps = $aSteps;
+	    $this->m_aSteps = $aSteps;
+	    $oKpi->ComputeStats(get_class($this).' creation', 'iTopWizardWebPage');
     }
     
     public function output()
@@ -53,4 +55,3 @@ class iTopWizardWebPage extends iTopWebPage
     	parent::output();
 	}
 }
-?>

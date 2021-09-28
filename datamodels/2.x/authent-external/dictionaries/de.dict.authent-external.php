@@ -24,5 +24,5 @@
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserExternal' => 'Externer Benutzer',
-	'Class:UserExternal+' => 'Externe authentifizierter iTop-Benutzer',
+	'Class:UserExternal+' => 'Externe authentifizierter '.ITOP_APPLICATION_SHORT.'-Benutzer',
 ));

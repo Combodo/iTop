@@ -91,6 +91,8 @@ $(function()
 					load_more_entries_container: '[data-role="ibo-activity-panel--load-more-entries-container"]',
 					load_more_entries: '[data-role="ibo-activity-panel--load-more-entries"]',
 					load_more_entries_icon: '[data-role="ibo-activity-panel--load-more-entries-icon"]',
+					load_all_entries: '[data-role="ibo-activity-panel--load-all-entries"]',
+					load_all_entries_icon: '[data-role="ibo-activity-panel--load-all-entries-icon"]',
 				},
 			enums: {
 				tab_types: {
@@ -176,11 +178,11 @@ $(function()
 				});
 				// - Click on open all case log messages
 				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function () {
-					me._onCaseLogOpenAllClick($(this));
+					me._onOpenAllEntriesClick();
 				});
 				// - Click on close all case log messages
 				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function () {
-					me._onCaseLogCloseAllClick($(this));
+					me._onCloseAllEntriesClick();
 				});
 
 				// Entry form
@@ -212,7 +214,7 @@ $(function()
 				// Entries
 				// - Click on a closed case log message
 				this.element.on('click', this.js_selectors.entry+'.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
-					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
+					me._onClosedEntryClick($(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an edits entry's long description toggler
 				this.element.on('click', this.js_selectors.edits_entry_long_description_toggler, function (oEvent) {
@@ -226,14 +228,26 @@ $(function()
 				this.element.find(this.js_selectors.load_more_entries).on('click', function (oEvent) {
 					me._onLoadMoreEntriesButtonClick(oEvent);
 				});
+				// - Click on load all entries button
+				this.element.find(this.js_selectors.load_all_entries).on('click', function (oEvent) {
+					me._onLoadAllEntriesButtonClick(oEvent);
+				});
 
 				// Page exit
-				// - Show confirm dialog if draft entries (IMPORTANT: Lock is NOT released, see N°3786)
-				window.onbeforeunload = function (oEvent) {
+				// - Show confirm dialog if draft entries
+				if (window.onbeforeunload === null) {
+					window.onbeforeunload = function (oEvent) {
+						if (true === me._HasDraftEntries()) {
+							return true;
+						}
+					};
+				}
+				// - Processing / cleanup when the leaving page
+				$(window).on('unload', function() {
 					if (true === me._HasDraftEntries()) {
-						return true;
+						return me._onUnload();
 					}
-				};
+				});
 
 				// Mostly for outside clicks that should close elements
 				oBodyElem.on('click', function (oEvent) {
@@ -322,15 +336,13 @@ $(function()
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ApplyEntriesFilters();
 			},
-			_onCaseLogOpenAllClick: function(oIconElem)
+			_onOpenAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._OpenAllMessages(sCaseLogAttCode);
+				this._OpenAllEntries();
 			},
-			_onCaseLogCloseAllClick: function(oIconElem)
+			_onCloseAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._CloseAllMessages(sCaseLogAttCode);
+				this._CloseAllEntries();
 			},
 			/**
 			 * @param oEvent {Object}
@@ -380,6 +392,16 @@ $(function()
 				this._LoadMoreEntries();
 			},
 			/**
+			 * @param oEvent {Object}
+			 * @return {void}
+			 * @private
+			 */
+			_onLoadAllEntriesButtonClick: function (oEvent) {
+				oEvent.preventDefault();
+
+				this._LoadMoreEntries(false);
+			},
+			/**
 			 * Indicate that there is a draft entry and will request lock on the object
 			 *
 			 * @param sCaseLogAttCode {string} Attribute code of the case log entry form being draft
@@ -388,8 +410,14 @@ $(function()
 			_onDraftEntryForm: function (sCaseLogAttCode) {
 				// Put draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').addClass(this.css_classes.is_draft);
-				// Request lock
-				this._RequestLock();
+
+				if (this.options.lock_enabled === true) {
+					// Request lock
+					this._RequestLock();
+				} else {
+					// Only enable buttons
+					this.element.find(this.js_selectors.caselog_entry_form + '[data-attribute-code="' + sCaseLogAttCode + '"]').trigger('enable_submission.caselog_entry_form.itop');
+				}
 			},
 			/**
 			 * Remove indication of a draft entry and will cancel the lock (acquired or pending) if no draft entry left
@@ -400,9 +428,15 @@ $(function()
 			_onEmptyEntryForm: function (sCaseLogAttCode) {
 				// Remove draft indicator
 				this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="'+this.enums.tab_types.caselog+'"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]').removeClass(this.css_classes.is_draft);
-				// Cancel lock if all forms empty
-				if (false === this._HasDraftEntries()) {
-					this._CancelLock();
+
+				if (this.options.lock_enabled === true) {
+					// Cancel lock if all forms empty
+					if (false === this._HasDraftEntries()) {
+						this._CancelLock();
+					}
+				} else {
+					// Only disable buttons
+					this.element.find(this.js_selectors.caselog_entry_form + '[data-attribute-code="' + sCaseLogAttCode + '"]').trigger('disable_submission.caselog_entry_form.itop');
 				}
 			},
 			_onCancelledEntryForm: function () {
@@ -416,7 +450,7 @@ $(function()
 			 */
 			_onRequestSubmission: function (oEvent, oData) {
 				// Check lock state
-				if (this.enums.lock_status.locked_by_myself !== this.options.lock_status) {
+				if ((this.options.lock_enabled === true) && (this.enums.lock_status.locked_by_myself !== this.options.lock_status)) {
 					CombodoJSConsole.Debug('ActivityPanel: Could not submit entries, current user does not have the lock on the object');
 					return;
 				}
@@ -431,14 +465,14 @@ $(function()
 					this._SendEntriesToServer(sStimulusCode);
 				}
 			},
-			_onCaseLogClosedMessageClick: function (oEntryElem) {
-				this._OpenMessage(oEntryElem);
+			_onClosedEntryClick: function (oEntryElem) {
+				this._OpenEntry(oEntryElem);
 			},
 			_onEntryLongDescriptionTogglerClick: function (oEvent, oEntryElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
-				oEntryElem.toggleClass(this.css_classes.is_opened);
+				oEntryElem.toggleClass(this.css_classes.is_closed);
 			},
 			/**
 			 * Callback for mouse clicks that should interact with the activity panel (eg. Clic outside a dropdown should close it, ...)
@@ -466,6 +500,13 @@ $(function()
 					// Hide all filters's options
 					this._HideAllFiltersOptions();
 				}
+			},
+			/**
+			 * Called when the user leave the page, will remove the current lock if any draft entries
+			 * @private
+			 */
+			_onUnload: function() {
+				return OnUnload(this.options.transaction_id, this.element.attr('data-object-class'), this.element.attr('data-object-id'), this.options.lock_token);
 			},
 
 			// Methods
@@ -745,6 +786,22 @@ $(function()
 				return oEntries;
 			},
 			/**
+			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
+			 * @private
+			 */
+			_GetExtraInputsFromAllForms: function () {
+				const me = this;
+
+				let oExtraInputs = {};
+				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
+					const oEntryFormElem = $(this);
+					oExtraInputs = $.extend(oExtraInputs, oEntryFormElem.triggerHandler('get_extra_inputs.caselog_entry_form.itop'));
+				});
+
+				return oExtraInputs;
+			},
+
+			/**
 			 * @return {boolean} True if at least 1 of the entry form is draft (has some text in it)
 			 * @private
 			 */
@@ -820,6 +877,7 @@ $(function()
 			_SendEntriesToServer: function (sStimulusCode = null) {
 				const me = this;
 				const oEntries = this._GetEntriesFromAllForms();
+				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
 				if (Object.keys(oEntries).length === 0) {
@@ -827,13 +885,13 @@ $(function()
 				}
 
 				// Prepare parameters
-				let oParams = {
+				let oParams = $.extend(oExtraInputs, {
 					operation: 'activity_panel_add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
 					entries: oEntries,
-				};
+				});
 
 				// Freeze case logs
 				this._FreezeCaseLogsEntryForms();
@@ -1040,10 +1098,6 @@ $(function()
 			_UpdateLockDependencies: function (sNewLockStatus, sMessage) {
 				const sOldLockStatus = this.options.lock_status;
 
-				if (sOldLockStatus === sNewLockStatus) {
-					return false;
-				}
-
 				// Update lock indicator
 				this.options.lock_status = sNewLockStatus;
 				this.element.find(this.js_selectors.lock_message).text(sMessage);
@@ -1059,20 +1113,23 @@ $(function()
 			},
 
 			// - Helpers on messages
-			_OpenMessage: function (oEntryElem) {
+			_OpenEntry: function (oEntryElem) {
 				oEntryElem.removeClass(this.css_classes.is_closed);
 			},
-			_OpenAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('open', sCaseLogAttCode);
+			_OpenAllEntries: function () {
+				this._SwitchAllEntries('open');
 			},
-			_CloseAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('close', sCaseLogAttCode);
+			_CloseAllEntries: function () {
+				this._SwitchAllEntries('close');
 			},
-			_SwitchAllMessages: function (sMode, sCaseLogAttCode = null) {
-				const sExtraSelector = (sCaseLogAttCode === null) ? '' : '[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]';
+			/**
+			 *
+			 * @param sMode {string} Which way to switch the entries, can be either "open" or "close".
+			 * @private
+			 */
+			_SwitchAllEntries: function (sMode) {
 				const sCallback = (sMode === 'open') ? 'removeClass' : 'addClass';
-
-				this.element.find(this.js_selectors.entry+sExtraSelector)[sCallback](this.css_classes.is_closed);
+				this.element.find(this.js_selectors.entry)[sCallback](this.css_classes.is_closed);
 			},
 			/**
 			 * Update the messages and users counters in the tabs toolbar
@@ -1143,6 +1200,7 @@ $(function()
 				});
 
 				this._UpdateEntryGroupsVisibility();
+				this._UpdateLoadMoreEntriesButtonVisibility();
 				this._UpdateMessagesCounters();
 			},
 			_ShowAllEntries: function()
@@ -1200,6 +1258,12 @@ $(function()
 
 				this._UpdateEntryGroupsVisibility();
 			},
+			/**
+			 * Update the entry groups visibility regarding if they have visible entries themself
+			 *
+			 * @private
+			 * @return {void}
+			 */
 			_UpdateEntryGroupsVisibility: function () {
 				const me = this;
 
@@ -1212,6 +1276,30 @@ $(function()
 				});
 			},
 			/**
+			 * Update the "load more entries" button visibility regarding the current filters
+			 *
+			 * @private
+			 * @return {void}
+			 */
+			_UpdateLoadMoreEntriesButtonVisibility: function () {
+				const oMoreButtonElem = this.element.find(this.js_selectors.load_more_entries);
+				const oAllButtonElem = this.element.find(this.js_selectors.load_all_entries);
+
+				// Check if button exists (if all entries have been loaded, we might have remove it
+				if (oMoreButtonElem.length === 0) {
+					return;
+				}
+
+				// Show button only if the states / edits filters are selected as log entries are always fully loaded
+				if (this._GetActiveTabToolbarElement().find(this.js_selectors.activity_filter + '[data-target-entry-types!="'+this.enums.entry_types.caselog+'"]:checked').length > 0) {
+					oMoreButtonElem.removeClass(this.css_classes.is_hidden);
+					oAllButtonElem.removeClass(this.css_classes.is_hidden);
+				} else {
+					oMoreButtonElem.addClass(this.css_classes.is_hidden);
+					oAllButtonElem.addClass(this.css_classes.is_hidden);
+				}
+			},
+			/**
 			 * Load the next entries and append them to the current ones
 			 *
 			 * IMPORTANT: For now the logic is naive, the entries come from 3 different sources : case logs, CMDB change ops and notifications.
@@ -1221,13 +1309,17 @@ $(function()
 			 * be placed between already present entries (case logs, notifications) to keep the chronological order. This is a known limitation
 			 * and might be worked on in a future version.
 			 *
+			 * @param {boolean} bLimitResultsLength True to limit the results length to the X previous entries, false to retrieve them all
 			 * @private
 			 * @return {void}
 			 */
-			_LoadMoreEntries: function () {
+			_LoadMoreEntries: function (bLimitResultsLength = true) {
 				const me = this;
 
 				// Change icon to spinning
+				// - Hide second button
+				this.element.find(this.js_selectors.load_all_entries).addClass(this.css_classes.is_hidden);
+				// - Transform first button
 				this.element.find(this.js_selectors.load_more_entries_icon)
 					.removeClass('fas fa-angle-double-down')
 					.addClass('fas fa-sync-alt fa-spin');
@@ -1238,6 +1330,7 @@ $(function()
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					last_loaded_entries_ids: this.options.last_loaded_entries_ids,
+					limit_results_length: bLimitResultsLength,
 				};
 				$.post(
 					this.options.load_more_entries_endpoint,
@@ -1266,16 +1359,23 @@ $(function()
 						me.options.last_loaded_entries_ids = oData.data.last_loaded_entries_ids;
 						// - Update button state
 						if (Object.keys(me.options.last_loaded_entries_ids).length === 0) {
-							me.element.find(me.js_selectors.load_more_entries).addClass(me.css_classes.is_hidden);
+							me.element.find(me.js_selectors.load_more_entries).remove();
+							me.element.find(me.js_selectors.load_all_entries).remove();
 						}
 					})
 					.always(function () {
-						// Change icon back to original (whether it should be displayed or not will be handle by thes other callbacks)
-						// - fail => keep displayed for retry
-						// - done => display only if more entries to load
-						me.element.find(me.js_selectors.load_more_entries_icon)
-							.removeClass('fas fa-sync-alt fa-spin')
-							.addClass('fas fa-angle-double-down');
+						// IF is a protection against cases when the button have be removed from the DOM (when no more entries to load)
+						if (me.element.find(me.js_selectors.load_more_entries_icon).length > 0) {
+							// Restore second button
+							me.element.find(me.js_selectors.load_all_entries).removeClass(me.css_classes.is_hidden);
+
+							// Change first button icon back to original (whether it should be displayed or not will be handle by thes other callbacks)
+							// - fail => keep displayed for retry
+							// - done => display only if more entries to load
+							me.element.find(me.js_selectors.load_more_entries_icon)
+								.removeClass('fas fa-sync-alt fa-spin')
+								.addClass('fas fa-angle-double-down');
+						}
 					});
 			},
 			/**

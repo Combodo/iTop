@@ -25,10 +25,10 @@
 // Class: UserLocal
 //
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:UserLocal' => 'iTop-gebruiker',
-	'Class:UserLocal+' => 'Gebruiker die aanmeldt met gegevens aangemaakt in het gebruikersbeheer van iTop',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-gebruiker',
+	'Class:UserLocal+' => 'Gebruiker die aanmeldt met gegevens aangemaakt in het gebruikersbeheer van '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Wachtwoord',
-	'Class:UserLocal/Attribute:password+' => 'Het wachtwoord waarmee de gebruiker zich aanmeldt bij iTop',
+	'Class:UserLocal/Attribute:password+' => 'Het wachtwoord waarmee de gebruiker zich aanmeldt bij '.ITOP_APPLICATION_SHORT,
 
 	'Class:UserLocal/Attribute:expiration' => 'Wachtwoord verloopt',
 	'Class:UserLocal/Attribute:expiration+' => 'Of het wachtwoord al dan niet verlopen is (vereist een extensie vooraleer dit werkt)',

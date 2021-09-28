@@ -1772,6 +1772,23 @@ table .group-actions .item-action-wrapper .panel-body > p:last-child{
 .cke_toolbox_collapser .cke_arrow{
 	cursor: pointer !important;
 }
+.cke_toolbox_collapser.cke_toolbox_collapser_min ~ .editor-fullscreen-button {
+  display: block;
+  width: 12px;
+  height: 11px;
+  border: 1px solid $gray-lighter;
+  cursor: pointer;
+
+  /* !important so it overrides the .cke_reset_all style */
+  background-position: center center !important;
+  background-repeat: no-repeat !important;
+  background-size: 100% !important;
+  background-image: url('../../../../../images/full-screen.png') !important;
+
+  &:hover {
+    background-color: #E5E5E5;
+  }
+}
 
 /* DataTables : Selection inputs */
 .dataTable.table th span.row_input,

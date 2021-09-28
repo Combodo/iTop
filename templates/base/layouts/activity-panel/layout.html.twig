@@ -12,6 +12,7 @@
                      data-role="ibo-activity-panel--tab-toggler"
                      data-tab-type="caselog"
                      data-caselog-attribute-code="{{ sCaseLogAttCode }}"
+                     data-caselog-attribute-label="{{ aCaseLogData.title }}"
                      data-caselog-rank="{{ loop.index }}">
                     <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
                         <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
@@ -35,24 +36,27 @@
             <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
                 <a href="#" class="ibo-activity-panel--expand-icon"
                    data-role="ibo-activity-panel--expand-icon"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-expand-alt"></span>
                 </a>
                 <a href="#" class="ibo-activity-panel--reduce-icon"
                    data-role="ibo-activity-panel--reduce-icon"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-compress-alt"></span>
                 </a>
                 <a href="#" class="ibo-activity-panel--close-icon"
                    data-role="ibo-activity-panel--close-icon"
-                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}">
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}">
                     <span class="fas fa-fw fa-chevron-right"></span>
                 </a>
             </div>
         </div>
         <div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
             {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
-                {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
+                {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), sAttCode: sCaseLogAttCode, aData: aCaseLogData, aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
             {% endfor %}
             {{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0), bPrefilterStateChanges: true, bPrefilterEdits: true}) }}
             <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title'|dict_s }}">
@@ -69,7 +73,8 @@
            id="ibo-activity-panel--add-caselog-entry-button"
            class="ibo-activity-panel--add-caselog-entry-button {% if oUIBlock.IsEntryFormOpened() %}ibo-is-hidden{% endif %}"
            data-role="ibo-activity-panel--add-caselog-entry-button"
-           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
+           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}"
+           aria-label="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
             <i class="fas fa-feather"></i>
         </a>
         {% if oUIBlock.HasComposeMenu() %}
@@ -83,8 +88,13 @@
             {% endfor %}
             {% if oUIBlock.HasMoreEntriesToLoad() %}
                 <div class="ibo-activity-panel--load-more-entries-container" data-role="ibo-activity-panel--load-more-entries-container">
-                    <a href="#" class="ibo-activity-panel--load-more-entries" data-role="ibo-activity-panel--load-more-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip'|dict_s }}">
-                        <span class="ibo-activity-panel--load-more-entries-icon fas fa-fw fa-angle-double-down" data-role="ibo-activity-panel--load-more-entries-icon"></span>
+                    {# Note: The "more entries" button is hidden by default to avoid a visual glitch. #}
+                    {# Otherwise when the page is loaded, the button is displayed even if the current tab only show log entries (which are all loaded) #}
+                    <a href="#" class="ibo-activity-panel--load-more-entries ibo-activity-panel--load-entries-button ibo-is-hidden" data-role="ibo-activity-panel--load-more-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip'|dict_s }}">
+                        <span class="ibo-activity-panel--load-entries-icon fas fa-fw fa-angle-down" data-role="ibo-activity-panel--load-more-entries-icon"></span>
+                    </a>
+                    <a href="#" class="ibo-activity-panel--load-all-entries ibo-activity-panel--load-entries-button ibo-is-hidden" data-role="ibo-activity-panel--load-all-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip'|dict_s }}">
+                        <span class="ibo-activity-panel--load-entries-icon fas fa-fw fa-angle-double-down" data-role="ibo-activity-panel--load-all-entries-icon"></span>
                     </a>
                 </div>
             {% endif %}

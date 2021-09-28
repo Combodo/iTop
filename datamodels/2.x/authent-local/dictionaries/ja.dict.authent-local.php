@@ -21,8 +21,8 @@
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Class:UserLocal' => 'iTopユーザー',
-	'Class:UserLocal+' => 'iTopローカル認証ユーザー',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'ユーザー',
+	'Class:UserLocal+' => ITOP_APPLICATION_SHORT.'ローカル認証ユーザー',
 	'Class:UserLocal/Attribute:password' => 'パスワード',
 	'Class:UserLocal/Attribute:password+' => '認証文字列',
 

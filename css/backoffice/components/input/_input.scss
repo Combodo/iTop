@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -54,6 +54,10 @@ $ibo-input--margin-x: 5px !default;
 		background-color: $ibo-input-wrapper--is-error--background-color;
     border: 1px solid $ibo-input-wrapper--is-error--border-color;
   }
+}
+.ibo-input-wrapper--with-buttons{
+  position: relative;
+  display: flex;
 }
 
 .ibo-field-validation {

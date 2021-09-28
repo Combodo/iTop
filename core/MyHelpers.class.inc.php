@@ -66,9 +66,8 @@ class MyHelpers
 	// getmicrotime()
 	// format sss.mmmuuupppnnn 
 	public static function getmicrotime()
-	{ 
-		list($usec, $sec) = explode(" ",microtime()); 
-		return ((float)$usec + (float)$sec); 
+	{
+		return microtime(true);
 	}
 
 	/*

@@ -6,13 +6,9 @@
                 {% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}">
         <label class="ibo-input-file-select">
             <input id="{{ oUIBlock.GetId() }}" class="ibo-input-file-select--file-input" type="file" name="{{ oUIBlock.GetName() }}">
-            <span class="ibo-button ibo-is-regular ibo-is-primary">
-                {{ oUIBlock.GetButtonText() }}
-            </span>
+            <span class="ibo-button ibo-is-regular ibo-is-primary">{{ oUIBlock.GetButtonText() }}</span>
             {% if oUIBlock.GetShowFilename() %}
-            <span id="{{ oUIBlock.GetId() }}-file-name" class="ibo-input-file-select--file-name">
-                {{ oUIBlock.GetFileName() }}
-            </span>
+            <span id="{{ oUIBlock.GetId() }}-file-name" class="ibo-input-file-select--file-name">{{ oUIBlock.GetFileName() }}</span>
             {% endif %}
         </label>
     </div>

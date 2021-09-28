@@ -15,7 +15,10 @@
         <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version|raw }}">
     {% endif %}
     <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
-
+    {# Main fonts have to be preloaded to avoid blocking content rendering #}
+    {% for aPreloadedFont in aPage.aPreloadedFonts %}
+        <link rel="preload" href="{{ aPreloadedFont['font'] }}" as="font" type="font/{{ aPreloadedFont['type'] }}" crossorigin>
+    {% endfor %}
     {# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
 	- Visual glitches
 	- jQuery scripts spurious problems (like failing on a 'reload') #}
@@ -33,6 +36,15 @@
             <style>
                 {{ sCssInline|raw }}
             </style>
+        {% endfor %}
+    {% endblock %}
+
+    {% block iboPageJsInlineEarly %}
+        {% for sJsInline in aPage.aJsInlineEarly %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+            {{ sJsInline|raw }}
+            </script>
         {% endfor %}
     {% endblock %}
 </head>

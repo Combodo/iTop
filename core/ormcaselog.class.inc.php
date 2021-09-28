@@ -16,6 +16,12 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
+
 define('CASELOG_VISIBLE_ITEMS', 2);
 define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\n\n");
 
@@ -168,7 +174,6 @@ class ormCaseLog {
 		return $aEntries;
 	}
 
-
 	/**
 	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the 'html' entries have been removed
 	 * @return string
@@ -200,6 +205,15 @@ class ormCaseLog {
 	public function IsEmpty()
     {
         return ($this->m_sLog === null);
+    }
+
+	/**
+	 * @return int The number of entries in this log
+	 * @since 3.0.0
+	 */
+    public function GetEntryCount(): int
+    {
+    	return count($this->m_aIndex);
     }
 	
 	public function ClearModifiedFlag()
@@ -389,7 +403,7 @@ class ormCaseLog {
 	{
 		$bPrintableVersion = (utils::ReadParam('printable', '0') == '1');
 
-		$sHtml = '<table style="width:100%;table-layout:fixed"><tr><td>'; // Use table-layout:fixed to force the with to be independent from the actual content
+		$oBlock =  UIContentBlockUIBlockFactory::MakeStandard(null, ['ibo-caselog-list']);
 		$iPos = 0;
 		$aIndex = $this->m_aIndex;
 		if (($bEditMode) && (count($aIndex) > 0) && $this->m_bModified)
@@ -403,20 +417,16 @@ class ormCaseLog {
 		{
 			if (!$bPrintableVersion && ($index < count($aIndex) - CASELOG_VISIBLE_ITEMS))
 			{
-				$sOpen = '';
-				$sDisplay = 'style="display:none;"';
+				$bIsOpen = false;
 			}
 			else
 			{
-				$sOpen = ' open';
-				$sDisplay = '';
+				$bIsOpen = true;
 			}
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			$sCSSClass= 'caselog_entry_html';
 			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
 			{
-				$sCSSClass= 'caselog_entry';
 				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
 				if (!is_null($aTransfoHandler))
 				{
@@ -433,7 +443,6 @@ class ormCaseLog {
 			}
 			$iPos += $aIndex[$index]['text_length'];
 
-			$sEntry = '<div class="caselog_header'.$sOpen.'">';
 			// Workaround: PHP < 5.3 cannot unserialize correctly DateTime objects,
 			// therefore we have changed the format. To preserve the compatibility with existing
 			// installations of iTop, both format are allowed:
@@ -456,14 +465,11 @@ class ormCaseLog {
 					$sDate = '';
 				}
 			}
-			$sEntry .= sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $sDate, $aIndex[$index]['user_name']);
-			$sEntry .= '</div>';
-			$sEntry .= '<div class="'.$sCSSClass.'"'.$sDisplay.'>';
-			$sEntry .= $sTextEntry;
-			$sEntry .= '</div>';
-			$sHtml = $sHtml.$sEntry;
+			$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard( sprintf(Dict::S('UI:CaseLog:Header_Date_UserName'), $sDate, $aIndex[$index]['user_name']));
+			$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
+			$oCollapsibleBlock->SetOpenedByDefault($bIsOpen);
+			$oBlock->AddSubBlock($oCollapsibleBlock);
 		}
-
 		// Process the case of an eventual remainder (quick migration of AttributeText fields)
 		if ($iPos < (strlen($this->m_sLog) - 1))
 		{
@@ -477,47 +483,70 @@ class ormCaseLog {
 
 			if (count($this->m_aIndex) == 0)
 			{
-				$sHtml .= '<div class="caselog_entry open">';
-				$sHtml .= $sTextEntry;
-				$sHtml .= '</div>';
+				$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard(  '');
+				$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
+				$oCollapsibleBlock->SetOpenedByDefault(true);
+				$oBlock->AddSubBlock($oCollapsibleBlock);
 			}
 			else
 			{
 				if (!$bPrintableVersion && (count($this->m_aIndex) - CASELOG_VISIBLE_ITEMS > 0))
 				{
-					$sOpen = '';
-					$sDisplay = 'style="display:none;"';
+					$bIsOpen = false;
 				}
 				else
 				{
-					$sOpen = ' open';
-					$sDisplay = '';
+					$bIsOpen = true;
 				}
-				$sHtml .= '<div class="caselog_header'.$sOpen.'">';
-				$sHtml .= Dict::S('UI:CaseLog:InitialValue');
-				$sHtml .= '</div>';
-				$sHtml .= '<div class="caselog_entry"'.$sDisplay.'>';
-				$sHtml .= $sTextEntry;
-				$sHtml .= '</div>';
+				$oCollapsibleBlock = CollapsibleSectionUIBlockFactory::MakeStandard(  Dict::S('UI:CaseLog:InitialValue'));
+				$oCollapsibleBlock->AddSubBlock(new Html($sTextEntry));
+				$oCollapsibleBlock->SetOpenedByDefault($bIsOpen);
 			}
 		}
-		$sHtml .= '</td></tr></table>';
-		return $sHtml;
+		$oBlockRenderer = new BlockRenderer($oBlock);
+		$sHtml = $oBlockRenderer->RenderHtml();
+		$sScript = $oBlockRenderer->RenderJsInlineRecursively($oBlock,iUIBlock::ENUM_JS_TYPE_ON_READY);
+		if ($sScript!=''){
+			if ($oP == null) {
+				$sScript = '<script>'.$sScript.'</script>';
+				$sHtml .= $sScript;
+			} else {
+				$oP->add_ready_script($sScript);
+			}
+		}
+		return  $sHtml;
 	}
-	
+
 	/**
-	 * Add a new entry to the log or merge the given text into the currently modified entry 
+	 * Add a new entry to the log or merge the given text into the currently modified entry
 	 * and updates the internal index
-	 * @param $sText string The text of the new entry 
+	 *
+	 * @param string $sText The text of the new entry
+	 * @param string $sOnBehalfOf Display this name instead of current user name
+	 * @param null|int $iOnBehalfOfId Use this UserId to author this Entry. If $sOnBehalfOf equals '', it'll be replaced by this User friendlyname
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 * 
+	 * @since 3.0.0 New $iOnBehalfOfId parameter
+	 * @since 3.0.0 May throw \ArchivedObjectException exception
 	 */
-	public function AddLogEntry($sText, $sOnBehalfOf = '')
+	public function AddLogEntry(string $sText, $sOnBehalfOf = '', $iOnBehalfOfId = null)
 	{
 		$sText = HTMLSanitizer::Sanitize($sText);
 		$sDate = date(AttributeDateTime::GetInternalFormat());
-		if ($sOnBehalfOf == '')
-		{
+		if ($sOnBehalfOf == '' && $iOnBehalfOfId === null) {
 			$sOnBehalfOf = UserRights::GetUserFriendlyName();
 			$iUserId = UserRights::GetUserId();
+		}
+		elseif ($iOnBehalfOfId !== null) {
+			$iUserId = $iOnBehalfOfId;
+			/* @var User $oUser */
+			$oUser = MetaModel::GetObject('User', $iUserId, false, true);
+			if ($oUser !== null && $sOnBehalfOf === '') {
+				$sOnBehalfOf = $oUser->GetFriendlyName();
+			}
 		}
 		else
 		{
@@ -552,7 +581,6 @@ class ormCaseLog {
 		);
 		$this->m_bModified = true;
 	}
-
 
 	public function AddLogEntryFromJSON($oJson, $bCheckUserId = true)
 	{
@@ -629,7 +657,6 @@ class ormCaseLog {
 
 		$this->m_bModified = true;
 	}
-
 
 	public function GetModifiedEntry($sFormat = 'text')
 	{
@@ -709,4 +736,3 @@ class ormCaseLog {
 		return $sText;
 	}
 }
-?>

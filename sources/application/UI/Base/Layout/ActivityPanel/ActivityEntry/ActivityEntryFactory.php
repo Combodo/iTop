@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry;
 
 
 use AttributeDateTime;
+use CMDBChange;
 use CMDBChangeOp;
 use DateTime;
 use DBObject;
@@ -43,11 +44,13 @@ class ActivityEntryFactory
 	 * Make an ActivityEntry entry (for ActivityPanel) based on the $oChangeOp.
 	 *
 	 * @param \CMDBChangeOp $oChangeOp
+	 * @param \CMDBChange $oChange
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry
+	 * @throws \ReflectionException
 	 * @throws \Exception
 	 */
-	public static function MakeFromCmdbChangeOp(CMDBChangeOp $oChangeOp)
+	public static function MakeFromCmdbChangeOp(CMDBChangeOp $oChangeOp, CMDBChange $oChange)
 	{
 		$sFactoryFqcn = static::GetFactoryClass($oChangeOp, 'CMDBChangeOp');
 
@@ -59,6 +62,7 @@ class ActivityEntryFactory
 		/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\ActivityEntry $oEntry */
 		/** @noinspection PhpUndefinedMethodInspection Call static method from the $sFactoryFqcn class */
 		$oEntry = $sFactoryFqcn::MakeFromCmdbChangeOp($oChangeOp);
+		$oEntry->SetOrigin($oChange->Get('origin'));
 
 		return $oEntry;
 	}
@@ -83,7 +87,8 @@ class ActivityEntryFactory
 			DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $aOrmEntry['date']),
 			$sUserLogin,
 			$sAttCode,
-			$aOrmEntry['message_html']
+			$aOrmEntry['message_html'],
+			$aOrmEntry['user_login']
 		);
 
 		return $oEntry;

@@ -39,7 +39,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Attachments:Error:FileTooLarge' => 'Die Datei ist zu groß für den Upload: %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'Die Datei ist leer und kann nicht angehängt werden.
 Entweder ist die von Ihnen hochdeladene Datei leer,
-oder melden Sie dem iTop Administrator diesen Fehler, weil eventuell kein ausreichender Speicherplatz zur Verfügung steht',
+oder melden Sie dem '.ITOP_APPLICATION_SHORT.' Administrator diesen Fehler, weil eventuell kein ausreichender Speicherplatz zur Verfügung steht',
 	'Attachments:Render:Icons' => 'Als Icons anzeigen',
 	'Attachments:Render:Table' => 'Als Liste anzeigen',
 	'UI:Attachments:DropYourFileHint' => 'Dateien in diesem Bereich ablegen...',

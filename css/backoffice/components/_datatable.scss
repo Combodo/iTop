@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -75,11 +75,6 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 .ibo-list-column {
   max-height: $ibo-list-column--max-height;
   overflow-y: auto;
-}
-
-.ibo-datatable .ibo-field-badge {
-	margin: 0;
-	padding: 0px 4px;
 }
 
 // Datatables configure this list dialog

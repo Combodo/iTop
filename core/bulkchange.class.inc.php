@@ -1199,9 +1199,6 @@ EOF
 		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);
-				var table = $('#$sAjaxDivId .listResults');
-				table.tableHover(); // hover tables
-				table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 			}
 		);
 	}

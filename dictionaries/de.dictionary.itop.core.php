@@ -230,6 +230,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChange/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChange/Attribute:userinfo' => 'Sonstige Informationen',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Aufruferdefinierte Informationen',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -695,9 +703,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Zu benachrichtigender Kontakt',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Kontakt, der im Fehlerfall benachrichtigt werden muss',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Hyperlink zum Icon',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Ein (kleines) Bild verlinken, das die Applikation repräsentiert, mit der iTop synchronisiert wird',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Ein (kleines) Bild verlinken, das die Applikation repräsentiert, mit der '.ITOP_APPLICATION_SHORT.' synchronisiert wird',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hyperlink zur Applikation',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink zum iTop Objekt in der externen Applikation mit der iTop synchronisiert wird (falls anwendbar). Mögliche Platzhalter: $this->attribute$ und $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink zum '.ITOP_APPLICATION_SHORT.' Objekt in der externen Applikation mit der '.ITOP_APPLICATION_SHORT.' synchronisiert wird (falls anwendbar). Mögliche Platzhalter: $this->attribute$ und $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Abgleichsvorgehen',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervall zwischen zwei vollständigen Reloads',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Ein vollständiger Reload des gesamten Datenbestands muss mindestens in diesem Intervall erfolgen',

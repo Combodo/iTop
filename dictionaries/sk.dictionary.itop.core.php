@@ -228,6 +228,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:CMDBChange/Attribute:date+' => '',
 	'Class:CMDBChange/Attribute:userinfo' => 'Rozl. info',
 	'Class:CMDBChange/Attribute:userinfo+' => '',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -2192,7 +2200,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Class:UserExternal+' => '',
  'Class:UserLDAP' => 'LDAP užívateľ',
  'Class:UserLDAP+' => '',
- 'Class:UserLocal' => 'iTop užívateľ',
+ 'Class:UserLocal' => ITOP_APPLICATION_SHORT.' užívateľ',
  'Class:UserLocal+' => '',
  'Class:UserLocal/Attribute:password' => 'Heslo',
  'Class:UserLocal/Attribute:password+' => '',

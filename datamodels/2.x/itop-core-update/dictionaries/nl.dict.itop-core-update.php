@@ -63,7 +63,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'iTopUpdate:UI:DoBackup:Warning' => 'Een backup maken wordt afgeraden doordat er weinig schijfruimte is',
 
     'iTopUpdate:UI:DiskFreeSpace' => 'Vrije schijfruimte',
-    'iTopUpdate:UI:ItopDiskSpace' => 'iTop schijfgebruik',
+    'iTopUpdate:UI:ItopDiskSpace' => ITOP_APPLICATION_SHORT.' schijfgebruik',
     'iTopUpdate:UI:DBDiskSpace' => 'Database schijfgebruik',
 	'iTopUpdate:UI:FileUploadMaxSize' => 'Maximale bestandsgrootte (upload)',
 

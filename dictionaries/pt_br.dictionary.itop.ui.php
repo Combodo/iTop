@@ -126,7 +126,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Error:UserOrganizationNotAllowed' => 'A conta de usuário não pertence às suas organizações permitidas.',
 	'Class:User/Error:PersonIsMandatory' => 'O contato é obrigatório.',
 	'Class:UserInternal' => 'Usuário Interno',
-	'Class:UserInternal+' => 'Usuário definido dentro do iTop',
+	'Class:UserInternal+' => 'Usuário definido dentro do '.ITOP_APPLICATION_SHORT,
 ));
 
 //
@@ -331,12 +331,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'BooleanLabel:yes' => 'Sim',
 	'BooleanLabel:no' => 'Não',
-	'UI:Login:Title' => 'iTop login',
-	'Menu:WelcomeMenu' => 'Bem-vindo ao iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Bem-vindo ao iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Bem-vindo ao iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Bem-vindo ao iTop',
+	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
+	'Menu:WelcomeMenu' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop é um completo, OpenSource, portal de operação IT.</p>
 <ul>Inclui:
@@ -372,8 +372,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Incidentes atribuídos a mim',
 	'UI:AllOrganizations' => ' Todas organizações ',
 	'UI:YourSearch' => 'Sua pesquisa',
-	'UI:LoggedAsMessage' => 'Logado como %1$s',
-	'UI:LoggedAsMessage+Admin' => 'Logado como %1$s (Administrador)',
+	'UI:LoggedAsMessage' => 'Logado como %1$s (%2$s)~~',
+	'UI:LoggedAsMessage+Admin' => 'Logado como %1$s (%2$s, Administrador)~~',
 	'UI:Button:Logoff' => 'Sair',
 	'UI:Button:GlobalSearch' => 'Pesquisar',
 	'UI:Button:Search' => ' Pesquisar ',
@@ -525,7 +525,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Login:PasswordPrompt' => 'Senha',
 	'UI:Login:ForgotPwd' => 'Esqueceu sua senha?',
 	'UI:Login:ForgotPwdForm' => 'Esqueceu sua senha',
-	'UI:Login:ForgotPwdForm+' => 'iTop pode enviar um e-mail em que você vai encontrar instruções para seguir para redefinir sua conta.',
+	'UI:Login:ForgotPwdForm+' => ITOP_APPLICATION_SHORT.' pode enviar um e-mail em que você vai encontrar instruções para seguir para redefinir sua conta.',
 	'UI:Login:ResetPassword' => 'Enviar agora',
 	'UI:Login:ResetPwdFailed' => 'Falha para enviar email: %1$s',
 	'UI:Login:SeparatorOr' => 'Or~~',
@@ -562,7 +562,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:AccessRO-Users' => 'Somente leitura para usuário final',
 	'UI:ApplicationEnvironment' => 'Ambiente da aplicação: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Nova senha e Repetir nova senha são diferentes. Tente novamente!',
-	'UI:Button:Login' => 'Entrar iTop',
+	'UI:Button:Login' => 'Entrar '.ITOP_APPLICATION_SHORT,
 	'UI:Login:Error:AccessRestricted' => 'Acesso restrito. Por favor, contacte o administrador.',
 	'UI:Login:Error:AccessAdmin' => 'Acesso restrito somente para privilégios administrativo. Por favor, contacte o administrador.',
 	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
@@ -703,6 +703,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'A consulta na sintaxe OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'A consulta na sintaxe OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressão para avaliar: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Mais informações sobre a consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro serializado: ',
@@ -829,7 +830,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Por favor, realize as operações manuais listados acima antes de solicitar a exclusão do referido objeto',
 	'UI:Delect:Confirm_Object' => 'Por favor, confirme se você deseja excluir %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Por favor, confirme que você deseja excluir o seguinte %1$d objetos da classe %2$s.',
-	'UI:WelcomeToITop' => 'Bem-vindo ao iTop',
+	'UI:WelcomeToITop' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
 	'UI:DetailsPageTitle' => '%1$s - %2$s detalhes',
 	'UI:ErrorPageTitle' => 'Erro',
 	'UI:ObjectDoesNotExist' => 'Desculpe, este objeto não existe (ou você não tem permissão para vê-lo).',
@@ -1042,7 +1043,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Ajuda',
-	'UI:PasswordConfirm' => '(Confirmar)',
+	'UI:PasswordConfirm' => 'Confirmar',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Antes de adicionar mais %1$s objetos, salvar este objeto.',
 	'UI:DisplayThisMessageAtStartup' => 'Exibir esta mensagem na inicialização',
 	'UI:RelationshipGraph' => 'Visualizar gráfico',
@@ -1411,7 +1412,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:SelectionOf_Class' => 'Selecionar objetos do tipo %1$s',
 
 	'UI:AboutBox' => 'Sobre o iTop ...',
-	'UI:About:Title' => 'Sobre o iTop',
+	'UI:About:Title' => 'Sobre o '.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => 'Modelo de dados',
 	'UI:About:Support' => 'Informações de suporte',
 	'UI:About:Licenses' => 'Licenças',
@@ -1436,7 +1437,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'ExcelExport:PreparingExport' => 'Preparando a exportação ...',
 	'ExcelExport:Statistics' => 'Estatísticas',
 	'portal:legacy_portal' => 'Portal do usuário final',
-	'portal:backoffice' => 'Interface de usuário back-office do iTop',
+	'portal:backoffice' => 'Interface de usuário back-office do '.ITOP_APPLICATION_SHORT,
 
 	'UI:CurrentObjectIsLockedBy_User' => 'O objeto está bloqueado, pois está sendo modificado por %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'O objeto está sendo modificado por %1$s. Suas modificações não podem ser enviadas, pois seriam sobrescritas.',
@@ -1619,10 +1620,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:DataSources' => 'Fontes de dados de sincronização',
 	'Menu:DataSources+' => 'Todas fontes de dados de sincronização',
-	'Menu:WelcomeMenu' => 'Bem-vindo ao iTop',
-	'Menu:WelcomeMenu+' => 'Bem-vindo ao iTop',
-	'Menu:WelcomeMenuPage' => 'Bem-vindo ao iTop',
-	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao iTop',
+	'Menu:WelcomeMenu' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenu+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
+	'Menu:WelcomeMenuPage+' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Ferramentas Administrativas',
 	'Menu:AdminTools+' => 'Ferramentas Administrativas',
 	'Menu:AdminTools?' => 'Ferramentas acessíveis apenas para usuários com o perfil do administrador',

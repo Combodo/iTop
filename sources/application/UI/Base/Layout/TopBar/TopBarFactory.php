@@ -41,6 +41,7 @@ class TopBarFactory
 	 * @param array|null $aBreadcrumbsEntry Current breadcrumbs entry to add
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar
+	 * @throws \ConfigException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
@@ -49,18 +50,15 @@ class TopBarFactory
 	{
 		$oTopBar = new TopBar(TopBar::BLOCK_CODE);
 
-		if (utils::GetConfig()->Get('quick_create.enabled') === true)
-		{
+		if (utils::GetConfig()->Get('quick_create.enabled') === true) {
 			$oTopBar->SetQuickCreate(QuickCreateFactory::MakeFromUserHistory());
 		}
 
-		if (utils::GetConfig()->Get('global_search.enabled') === true)
-		{
+		if (utils::GetConfig()->Get('global_search.enabled') === true) {
 			$oTopBar->SetGlobalSearch(GlobalSearchFactory::MakeFromUserHistory());
 		}
 
-		if(utils::GetConfig()->Get('breadcrumb.enabled') === true)
-		{
+		if (utils::GetConfig()->Get('breadcrumb.enabled') === true) {
 			$oBreadcrumbs = new Breadcrumbs($aBreadcrumbsEntry, Breadcrumbs::BLOCK_CODE);
 
 			$oTopBar->SetBreadcrumbs($oBreadcrumbs);

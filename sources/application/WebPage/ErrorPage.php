@@ -1,5 +1,6 @@
 <?php
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
@@ -17,12 +18,14 @@ class ErrorPage extends NiceWebPage
 {
 	public function __construct($sTitle)
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
 		$this->add_saas("css/setup.scss");
+		$oKpi->ComputeStats(get_class($this).' creation', 'ErrorPage');
 	}
 
 	public function info($sText)
@@ -57,7 +60,7 @@ class ErrorPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot(true).'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$sLogo = Branding::GetFullMainLogoAbsoluteUrl();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard('ibo_setup_container', ['ibo-setup']);
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);

@@ -17,6 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once APPROOT.'core/modulehandler.class.inc.php';
 require_once APPROOT.'core/querymodifier.class.inc.php';
 require_once APPROOT.'core/metamodelmodifier.inc.php';
@@ -443,10 +445,10 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
-	 * @param bool $bImgTag
-	 * @param string $sMoreStyles
+	 * @param bool $bImgTag Whether to surround the icon URL with an HTML IMG tag or not
+	 * @param string $sMoreStyles Additional inline CSS style to add to the IMG tag. Only used if $bImgTag is set to true
 	 *
-	 * @return string
+	 * @return string Absolute URL the class icon
 	 * @throws \CoreException
 	 */
 	final public static function GetClassIcon($sClass, $bImgTag = true, $sMoreStyles = '')
@@ -457,7 +459,7 @@ abstract class MetaModel
 		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
 			/** @var ormStyle $oStyle */
 			$oStyle = self::$m_aClassParams[$sClass]['style'];
-			$sIcon = $oStyle->GetIcon();
+			$sIcon = $oStyle->GetIconAsAbsUrl();
 		}
 		if (strlen($sIcon) == 0) {
 			$sParentClass = self::GetParentPersistentClass($sClass);
@@ -492,7 +494,7 @@ abstract class MetaModel
 			$oStyle = new ormStyle("ibo-class-style--$sClass", "ibo-class-style-alt--$sClass");
 		}
 
-		if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIcon()) > 0)) {
+		if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIconAsRelPath()) > 0)) {
 			// all the parameters are set, no need to search in the parent classes
 			return $oStyle;
 		}
@@ -510,10 +512,10 @@ abstract class MetaModel
 					$oStyle->SetComplementaryColor($oParentStyle->GetComplementaryColor());
 					$oStyle->SetAltStyleClass($oParentStyle->GetAltStyleClass());
 				}
-				if (strlen($oStyle->GetIcon()) == 0) {
-					$oStyle->SetIcon($oParentStyle->GetIcon());
+				if (strlen($oStyle->GetIconAsRelPath()) == 0) {
+					$oStyle->SetIcon($oParentStyle->GetIconAsRelPath());
 				}
-				if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIcon()) > 0)) {
+				if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIconAsRelPath()) > 0)) {
 					// all the parameters are set, no need to search in the parent classes
 					return $oStyle;
 				}
@@ -521,7 +523,7 @@ abstract class MetaModel
 			$sParentClass = self::GetParentPersistentClass($sParentClass);
 		}
 
-		if ((strlen($oStyle->GetMainColor()) == 0) && (strlen($oStyle->GetComplementaryColor()) == 0) && (strlen($oStyle->GetIcon()) == 0)) {
+		if ((strlen($oStyle->GetMainColor()) == 0) && (strlen($oStyle->GetComplementaryColor()) == 0) && (strlen($oStyle->GetIconAsRelPath()) == 0)) {
 			return null;
 		}
 
@@ -752,17 +754,56 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
-	final public static function GetNameSpec($sClass)
+	final public static function GetNameSpec($sClass, $sType = FriendlyNameType::SHORT)
 	{
 		self::_check_subclass($sClass);
-		$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+
+		switch ($sType) {
+			case FriendlyNameType::COMPLEMENTARY:
+				if (!isset(self::$m_aClassParams[$sClass]["complementary_name_attcode"])) {
+					return [$sClass, []];
+				}
+				$nameRawSpec = self::$m_aClassParams[$sClass]["complementary_name_attcode"];
+				$sDictName = 'ComplementaryName';
+				break;
+			case FriendlyNameType::LONG:
+				$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+				if (!isset(self::$m_aClassParams[$sClass]["complementary_name_attcode"])) {
+					return self::GetNameSpec($sClass, FriendlyNameType::SHORT);
+				}
+				$complementaryNameRawSpec = self::$m_aClassParams[$sClass]["complementary_name_attcode"];
+				if (is_array($nameRawSpec)) {
+					if (is_array($complementaryNameRawSpec)) {
+						$nameRawSpec = merge($nameRawSpec, $complementaryNameRawSpec);
+					} elseif (!empty($nameRawSpec)) {
+						$nameRawSpec = merge($nameRawSpec, [$complementaryNameRawSpec]);
+					}
+				} elseif (empty($nameRawSpec)) {
+					$nameRawSpec = $complementaryNameRawSpec;
+				} else {
+					if (is_array($complementaryNameRawSpec)) {
+						$nameRawSpec = merge([$nameRawSpec], $complementaryNameRawSpec);
+					} elseif (!empty($nameRawSpec)) {
+						$nameRawSpec = [$nameRawSpec, $complementaryNameRawSpec];
+					}
+				}
+				$sDictName = 'LongName';
+				break;
+			default:
+				$nameRawSpec = self::$m_aClassParams[$sClass]["name_attcode"];
+				$sDictName = 'Name';
+		}
+
 		if (is_array($nameRawSpec)) {
-			$sFormat = Dict::S("Class:$sClass/Name", '');
+			$sFormat = Dict::S("Class:$sClass/$sDictName", '');
 			if (strlen($sFormat) == 0) {
 				// Default to "%1$s %2$s..."
 				for ($i = 1; $i <= count($nameRawSpec); $i++) {
@@ -774,12 +815,12 @@ abstract class MetaModel
 				}
 			}
 
-			return array($sFormat, $nameRawSpec);
+			return [$sFormat, $nameRawSpec];
 		} elseif (empty($nameRawSpec)) {
-			return array($sClass, array());
+			return [$sClass, []];
 		} else {
 			// string -> attcode
-			return array('%1$s', array($nameRawSpec));
+			return ['%1$s', [$nameRawSpec]];
 		}
 	}
 
@@ -787,24 +828,38 @@ abstract class MetaModel
 	 *
 	 * @param string $sClass
 	 * @param bool $bWithAttributeDefinition
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array of attribute codes used by friendlyname
 	 * @throws \CoreException
 	 * @since 3.0.0
 	 */
-	final public static function GetNameAttributes(string $sClass, $bWithAttributeDefinition = false): array
+	final public static function GetNameAttributes(string $sClass, $bWithAttributeDefinition = false, $sType = FriendlyNameType::SHORT): array
 	{
 		self::_check_subclass($sClass);
-		$rawNameAttCodes = self::$m_aClassParams[$sClass]["name_attcode"];
 		$aNameAttCodes = [];
-		if (!is_array($rawNameAttCodes)) {
-			if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
-				$aNameAttCodes[] = $rawNameAttCodes;
+		if ($sType == FriendlyNameType::SHORT || FriendlyNameType::LONG) {
+			$rawNameAttCodes = self::$m_aClassParams[$sClass]["name_attcode"];
+			if (!is_array($rawNameAttCodes)) {
+				if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
+					$aNameAttCodes[] = $rawNameAttCodes;
+				}
+			} else {
+				$aNameAttCodes = $rawNameAttCodes;
 			}
-		} else {
-			$aNameAttCodes = $rawNameAttCodes;
 		}
-
+		if ($sType == FriendlyNameType::COMPLEMENTARY || FriendlyNameType::LONG) {
+			$rawNameAttCodes = self::$m_aClassParams[$sClass]["complementary_name_attcode"];
+			if (!isEmpty($rawNameAttCodes)) {
+				if (!is_array($rawNameAttCodes)) {
+					if (self::IsValidAttCode($sClass, $rawNameAttCodes)) {
+						$aNameAttCodes[] = array_merge($aNameAttCodes, [$rawNameAttCodes]);
+					}
+				} else {
+					$aNameAttCodes = array_merge($rawNameAttCodes, $rawNameAttCodes);
+				}
+			}
+		}
 		if ($bWithAttributeDefinition) {
 			$aResults = [];
 			foreach ($aNameAttCodes as $sAttCode) {
@@ -843,67 +898,20 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @param string $sClass
-	 *
-	 * @return array
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 */
-	final static public function GetComplementAttributeSpec($sClass)
-	{
-		self::_check_subclass($sClass);
-		if (!isset(self::$m_aClassParams[$sClass]["name_complement_for_select"]))
-		{
-			$sParentClass = static::GetParentClass($sClass);
-			if (is_null($sParentClass)) {
-				return array($sClass, array());
-			} else {
-				return static::GetComplementAttributeSpec($sParentClass);
-			}
-		}
-		$nameRawSpec = self::$m_aClassParams[$sClass]["name_complement_for_select"];
-		if (is_array($nameRawSpec))
-		{
-			$sFormat = Dict::S("Class:$sClass/ComplementForSelect", '');
-			if (strlen($sFormat) == 0)
-			{
-				// Default to "%1$s %2$s..."
-				for($i = 1; $i <= count($nameRawSpec); $i++)
-				{
-					if (empty($sFormat))
-					{
-						$sFormat .= '%'.$i.'$s';
-					}
-					else
-					{
-						$sFormat .= ' %'.$i.'$s';
-					}
-				}
-			}
-			return array($sFormat, $nameRawSpec);
-		}
-		elseif (empty($nameRawSpec))
-		{
-			return array($sClass, array());
-		}
-		else
-		{
-			// string -> attcode
-			return array('%1$s', array($nameRawSpec));
-		}
-	}
-	/**
 	 * Get the friendly name expression for a given class
 	 *
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return Expression
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
-	final public static function GetNameExpression($sClass)
+	final public static function GetNameExpression($sClass, $sType = FriendlyNameType::SHORT)
 	{
-		$aNameSpec = self::GetNameSpec($sClass);
+		$aNameSpec = self::GetNameSpec($sClass, $sType);
 		$sFormat = $aNameSpec[0];
 		$aAttributes = $aNameSpec[1];
 
@@ -935,14 +943,17 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return string The friendly name IIF it is equivalent to a single attribute
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
-	final public static function GetFriendlyNameAttributeCode($sClass)
+	final public static function GetFriendlyNameAttributeCode($sClass, $sType = FriendlyNameType::SHORT)
 	{
-		$aNameSpec = self::GetNameSpec($sClass);
+		$aNameSpec = self::GetNameSpec($sClass, $sType);
 		$sFormat = trim($aNameSpec[0]);
 		$aAttributes = $aNameSpec[1];
 		if (($sFormat != '') && ($sFormat != '%1$s')) {
@@ -958,13 +969,16 @@ abstract class MetaModel
 	/**
 	 * Returns the list of attributes composing the friendlyname
 	 *
-	 * @param $sClass
+	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
-	final public static function GetFriendlyNameAttributeCodeList($sClass)
+	final public static function GetFriendlyNameAttributeCodeList($sClass, $sType = FriendlyNameType::SHORT)
 	{
-		$aNameSpec = self::GetNameSpec($sClass);
+		$aNameSpec = self::GetNameSpec($sClass, $sType);
 		$aAttributes = $aNameSpec[1];
 
 		return $aAttributes;
@@ -1116,7 +1130,6 @@ abstract class MetaModel
 	 */
 	final public static function GetFilterCodeOrigin($sClass, $sAttCode)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		self::_check_subclass($sClass);
 
 		return self::$m_aFilterOrigins[$sClass][$sAttCode];
@@ -1134,7 +1147,8 @@ abstract class MetaModel
 	{
 		self::_check_subclass($sClass);
 		$oAtt = self::GetAttributeDef($sClass, $sAttCode);
-		return $oAtt->GetPrerequisiteAttributes();
+
+		return $oAtt->GetPrerequisiteAttributes($sClass);
 	}
 
 	/**
@@ -5115,7 +5129,7 @@ abstract class MetaModel
 			foreach($aErrors as $sClass => $aMessages)
 			{
 				echo "<p>Wrong declaration for class <b>$sClass</b></p>\n";
-				echo "<ul class=\"treeview\">\n";
+				echo "<ul >\n";
 				$i = 0;
 				foreach($aMessages as $sMsg)
 				{
@@ -6510,6 +6524,7 @@ abstract class MetaModel
 	 */
 	public static function LoadConfig($oConfiguration, $bAllowCache = false)
 	{
+		$oKPI = new ExecutionKPI();
 		self::$m_oConfig = $oConfiguration;
 
 		// N°2478 utils has his own private attribute
@@ -6530,6 +6545,7 @@ abstract class MetaModel
 			ToolsLog::Enable(APPROOT.'log/tools.log');
 			DeadLockLog::Enable();
 			DeprecatedCallsLog::Enable();
+			ExceptionLog::Enable();
 		}
 		else
 		{
@@ -6586,6 +6602,7 @@ abstract class MetaModel
 
 		$sSource = self::$m_oConfig->Get('db_name');
 		$sTablePrefix = self::$m_oConfig->Get('db_subname');
+		$oKPI->ComputeAndReport('Load config');
 
 		if (self::$m_bUseAPCCache)
 		{
@@ -6957,7 +6974,7 @@ abstract class MetaModel
 	 * @param int $iKey id value of the object to retrieve
 	 * @param bool $bMustBeFound see throws ArchivedObjectException
 	 * @param bool $bAllowAllData if true then user rights will be bypassed - use with care!
-	 * @param null $aModifierProperties
+	 * @param array $aModifierProperties properties for {@see iQueryModifier} impl
 	 *
 	 * @return \DBObject null if : (the object is not found) or (archive mode disabled and object is archived and
 	 *     $bMustBeFound=false)
@@ -6977,17 +6994,43 @@ abstract class MetaModel
 
 		if (!utils::IsArchiveMode() && $oObject->IsArchived())
 		{
-			if ($bMustBeFound)
-			{
+			if ($bMustBeFound) {
 				throw new ArchivedObjectException("The object $sClass::$iKey is archived");
-			}
-			else
-			{
+			} else {
 				return null;
 			}
 		}
 
 		return $oObject;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param int $iKey
+	 *
+	 * @return bool True if the object of $sClass and $iKey exists in the DB -no matter the current user restrictions-, false otherwise meaning:
+	 * - It could be in memory for now and is not persisted yet
+	 * - It is neither in memory nor DB
+	 *
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLQueryHasNoResultException
+	 * @since 3.0.0 N°4173
+	 */
+	public static function IsObjectInDB(string $sClass, int $iKey): bool
+	{
+		// Note: We take the root class to ensure that there is a corresponding table in the DB
+		// as some intermediate classes can have no table in the DB.
+		$sRootClass = MetaModel::GetRootClass($sClass);
+
+		$sTable = MetaModel::DBGetTable($sRootClass);
+		$sKeyCol = MetaModel::DBGetKey($sRootClass);
+		$sEscapedKey = CMDBSource::Quote($iKey);
+
+		$sQuery = "SELECT count(*) FROM `{$sTable}` WHERE `{$sKeyCol}` = {$sEscapedKey}";
+		$iCount = (int) CMDBSource::QueryToScalar($sQuery);
+
+		return $iCount === 1;
 	}
 
 	/**
@@ -7191,21 +7234,6 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 2.7.0 N°1627, use ItopCounter::incRootClass($sClass) instead
-	 *
-	 * @param string $sClass
-	 *
-	 * @return int
-	 * @throws \CoreException
-	 */
-	public static function GetNextKey($sClass)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ItopCounter::incRootClass($sClass) instead');
-
-		return ItopCounter::IncClass($sClass);
-	}
-
-	/**
 	 * Deletion of records, bypassing {@link DBObject::DBDelete} !!!
 	 * It is NOT recommended to use this shortcut
 	 * In particular, it will not work
@@ -7244,7 +7272,6 @@ abstract class MetaModel
 	 */
 	public static function BulkUpdate(DBObjectSearch $oFilter, array $aValues)
 	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
 		// $aValues is an array of $sAttCode => $value
 		$sSQL = $oFilter->MakeUpdateQuery($aValues);
 		if (!self::DBIsReadOnly()) {
@@ -7691,14 +7718,18 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
-	 * @param string $sValue
+	 * @param string|null $sValue Code of the state value, can be null if allowed by the attribute definition
 	 *
 	 * @return \ormStyle|null
 	 * @throws \Exception
 	 * @throws \CoreException
 	 */
-	public static function GetEnumStyle(string $sClass, string $sAttCode, string $sValue = ''): ?ormStyle
+	public static function GetEnumStyle(string $sClass, string $sAttCode, ?string $sValue = ''): ?ormStyle
 	{
+		if (strlen($sAttCode) === 0) {
+			return null;
+		}
+
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		if (!$oAttDef instanceof AttributeEnum) {
 			throw new CoreException("MetaModel::GetEnumStyle() Attribute $sAttCode of class $sClass is not an AttributeEnum\n");

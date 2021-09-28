@@ -63,7 +63,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Organization/Attribute:overview' => 'Überblick',
 	'Organization:Overview:FunctionalCIs' => 'CIs dieser Organisation',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'nach Typ',
-	'Organization:Overview:Users' => 'iTop Benutzer innerhalb dieser Organisation',
+	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Benutzer innerhalb dieser Organisation',
 ));
 
 //

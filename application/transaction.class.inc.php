@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * This class records the pending "transactions" corresponding to forms that have not been
@@ -100,7 +101,8 @@ class privUITransaction
 
 /**
  * The original (and by default) mechanism for storing transaction information
- * as an array in the $_SESSION variable
+ * as an array in the _SESSION variable
+ * @see \Combodo\iTop\Application\Helper\Session
  *
  */
 class privUITransactionSession
@@ -112,15 +114,15 @@ class privUITransactionSession
 	 */
 	public static function GetNewTransactionId()
 	{
-		if (!isset($_SESSION['transactions']))
+		if (!Session::IsSet('transactions'))
 		{
-				$_SESSION['transactions'] = array();
+			Session::Set('transactions', []);
 		}
 		// Strictly speaking, the two lines below should be grouped together
 		// by a critical section
 		// sem_acquire($rSemIdentified);
-		$id = static::GetUserPrefix() . str_replace(array('.', ' '), '', microtime()); //1 + count($_SESSION['transactions']);
-		$_SESSION['transactions'][$id] = true;
+		$id = static::GetUserPrefix() . str_replace(array('.', ' '), '', microtime());
+		Session::Set(['transactions', $id], true);
 		// sem_release($rSemIdentified);
 		
 		return (string)$id;
@@ -137,17 +139,17 @@ class privUITransactionSession
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
 		$bResult = false;
-		if (isset($_SESSION['transactions']))
+		if (Session::IsSet('transactions'))
 		{
 			// Strictly speaking, the eight lines below should be grouped together
 			// inside the same critical section as above
 			// sem_acquire($rSemIdentified);
-			if (isset($_SESSION['transactions'][$id]))
+			if (Session::IsSet(['transactions', $id]))
 			{
 				$bResult = true;
 				if ($bRemoveTransaction)
 				{
-					unset($_SESSION['transactions'][$id]);
+					Session::Unset(['transactions', $id]);
 				}
 			}
 			// sem_release($rSemIdentified);
@@ -162,14 +164,14 @@ class privUITransactionSession
 	 */
 	public static function RemoveTransaction($id)
 	{
-		if (isset($_SESSION['transactions']))
+		if (Session::IsSet('transactions'))
 		{
 			// Strictly speaking, the three lines below should be grouped together
 			// inside the same critical section as above
 			// sem_acquire($rSemIdentified);
-			if (isset($_SESSION['transactions'][$id]))
+			if (Session::IsSet(['transactions', $id]))
 			{
-				unset($_SESSION['transactions'][$id]);
+				Session::Unset(['transactions', $id]);
 			}
 			// sem_release($rSemIdentified);
 		}		

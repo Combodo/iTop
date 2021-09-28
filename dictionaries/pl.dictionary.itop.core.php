@@ -231,6 +231,14 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:CMDBChange/Attribute:date+' => 'data i czas zarejestrowania zmian',
 	'Class:CMDBChange/Attribute:userinfo' => 'misc. info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'zdefiniowane informacje gościa',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -303,7 +311,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Change:TwoAttributesChanged' => 'Zmodyfikowano %1$s i %2$s',
 	'Change:ThreeAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i 1 inny',
 	'Change:FourOrMoreAttributesChanged' => 'Zmodyfikowano %1$s, %2$s i %3$s inne',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmianiono na %2$s (poprzednia wartość: %3$s)',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s zmieniono na %2$s (poprzednia wartość: %3$s)',
 	'Change:AttName_SetTo' => '%1$s zmieniono na %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s dołączone do %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s zmodyfikowano, poprzednia wartość: %2$s',

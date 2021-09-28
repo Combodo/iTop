@@ -55,6 +55,25 @@ class SearchForm
 	public function GetSearchFormUIBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oUiBlock =  new UIContentBlock();
+		$oUiBlock->AddMultipleJsFilesRelPaths([
+			'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
+			'js/searchformforeignkeys.js',
+			'js/search/search_form_handler.js',
+			'js/search/search_form_handler_history.js',
+			'js/search/search_form_criteria.js',
+			'js/search/search_form_criteria_raw.js',
+			'js/search/search_form_criteria_string.js',
+			'js/search/search_form_criteria_external_field.js',
+			'js/search/search_form_criteria_numeric.js',
+			'js/search/search_form_criteria_enum.js',
+			'js/search/search_form_criteria_tag_set.js',
+			'js/search/search_form_criteria_external_key.js',
+			'js/search/search_form_criteria_hierarchical_key.js',
+			'js/search/search_form_criteria_date_abstract.js',
+			'js/search/search_form_criteria_date.js',
+			'js/search/search_form_criteria_date_time.js',
+		]);
+
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aListParams = array();
@@ -154,9 +173,10 @@ class SearchForm
 			$aCSSClasses[] = 'no_auto_submit';
 		}
 		$oForm = FormUIBlockFactory::MakeStandard();
+		$oForm->SetAction($sAction);
 		$oForm->AddSubBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
 
-		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_CYAN, $sSearchFormId);
+		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_SCHEME_CYAN, $sSearchFormId);
 		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
 			->AddTitleBlock($oForm);
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
@@ -199,8 +219,7 @@ class SearchForm
 		}
 
 		$bUseApplicationContext = true;
-		if (isset($aExtraParams['selection_mode']) && ($aExtraParams['selection_mode']))
-		{
+		if (isset($aExtraParams['selection_mode']) && ($aExtraParams['selection_mode'])) {
 			// Don't use application context for selections
 			$bUseApplicationContext = false;
 		}
@@ -210,33 +229,49 @@ class SearchForm
 		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable, $bUseApplicationContext);
 		$aClasses = $oSearch->GetSelectedClasses();
 		$sClassAlias = '';
-		foreach($aClasses as $sAlias => $sClass)
-		{
+		foreach ($aClasses as $sAlias => $sClass) {
 			$sClassAlias = $sAlias;
 		}
 
 		$oBaseSearch = $oSearch->DeepClone();
-		if ($oSearch instanceof DBObjectSearch)
-		{
+		if ($oSearch instanceof DBObjectSearch) {
 			$oBaseSearch->ResetCondition();
 		}
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
-		if (!isset($aExtraParams['table_inner_id']))
-		{
+		if (!isset($aExtraParams['table_inner_id'])) {
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
+		$bSubmitOnLoad = (isset($aExtraParams['submit_on_load'])) ? $aExtraParams['submit_on_load'] : true;
 
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
-		if ($sDebug == 'true')
-		{
+		if ($sDebug == 'true') {
 			$aListParams['debug'] = 'true';
 		}
 
-		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
-			Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
-		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
-			Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
+		$aDaysMin = array(
+			Dict::S('DayOfWeek-Sunday-Min'),
+			Dict::S('DayOfWeek-Monday-Min'),
+			Dict::S('DayOfWeek-Tuesday-Min'),
+			Dict::S('DayOfWeek-Wednesday-Min'),
+			Dict::S('DayOfWeek-Thursday-Min'),
+			Dict::S('DayOfWeek-Friday-Min'),
+			Dict::S('DayOfWeek-Saturday-Min'),
+		);
+		$aMonthsShort = array(
+			Dict::S('Month-01-Short'),
+			Dict::S('Month-02-Short'),
+			Dict::S('Month-03-Short'),
+			Dict::S('Month-04-Short'),
+			Dict::S('Month-05-Short'),
+			Dict::S('Month-06-Short'),
+			Dict::S('Month-07-Short'),
+			Dict::S('Month-08-Short'),
+			Dict::S('Month-09-Short'),
+			Dict::S('Month-10-Short'),
+			Dict::S('Month-11-Short'),
+			Dict::S('Month-12-Short'),
+		);
 
 		$sDateTimeFormat = \AttributeDateTime::GetFormat()->ToDatePicker();
 		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
@@ -244,15 +279,16 @@ class SearchForm
 		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
 
 		$aSearchParams = array(
-			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
+			'criterion_outer_selector'   => "#fs_{$sSearchFormId}_criterion_outer",
 			'result_list_outer_selector' => "#{$aExtraParams['result_list_outer_selector']}",
-			'data_config_list_selector' => "#{$aExtraParams['result_list_outer_selector']}",
-			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
-			'init_opened' => $bOpen,
-			'auto_submit' => $bAutoSubmit,
-			'list_params' => $aListParams,
-			'show_obsolete_data' => $bShowObsoleteData,
-			'search' => array(
+			'data_config_list_selector'  => "#{$aExtraParams['result_list_outer_selector']}",
+			'endpoint'                   => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php?'.$sContext,
+			'init_opened'                => $bOpen,
+			'submit_on_load'             => $bSubmitOnLoad,
+			'auto_submit'                => $bAutoSubmit,
+			'list_params'                => $aListParams,
+			'show_obsolete_data'         => $bShowObsoleteData,
+			'search'                     => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
 				'fields' => $aFields,
 				'criterion' => $aCriterion,

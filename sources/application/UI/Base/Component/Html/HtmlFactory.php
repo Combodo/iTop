@@ -50,4 +50,16 @@ class HtmlFactory
 	{
 		return new Html('<p>'.$sContent.'</p>');
 	}
+
+	/**
+	 * Create a container for contents having multiple HTML tags, for which we want to preserve style and don't apply minireset
+	 *
+	 * @param string $sContent
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Html\Html
+	 */
+	public static function MakeHtmlContent(string $sContent): Html
+	{
+		return new Html('<div class="ibo-is-html-content">'.$sContent.'</div>');
+	}
 }

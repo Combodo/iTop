@@ -28,6 +28,8 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         infoEmpty: "{{ 'UI:Datatables:Language:InfoEmpty'|dict_s }}",
         infoFiltered: "({{ 'UI:Datatables:Language:InfoFiltered'|dict_s }})",
         emptyTable: "{{ 'UI:Datatables:Language:EmptyTable'|dict_s }}",
+        errorMessage: "{{ 'UI:Datatables:Language:Error'|dict_s }}",
+        buttonOk: "{{ 'UI:Button:Ok'|dict_s }}",
         paginate: {
             first: "<i class=\"fas fa-angle-double-left\"></i>",
             previous: "<i class=\"fas fa-angle-left\"></i>",
@@ -83,7 +85,8 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             } else {
                 $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
             }
-            
+
+            $(this).closest('.dataTables_wrapper').unblock();
             $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
                 //disable select action when there is a link
                 e.stopPropagation();
@@ -91,6 +94,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         },
     {% else %}
         drawCallback: function () {
+            $(this).closest('.dataTables_wrapper').unblock();
             // Hiding pagination if only one page
             if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
                 $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
@@ -160,13 +164,16 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endfor %}
     ],
     ajax: $.fn.dataTable.pipeline({
-        url: "{{ oUIBlock.GetAjaxUrl() }}",
-        data: {{ oUIBlock.GetJsonAjaxData() |raw }},
-        method: "post",
-        pages: 1 // number of pages to cache
-    }),
-    createdRow: function( row, data, dataIndex ) {
-        if (data['@class'] !== undefined) {
+                url: "{{ oUIBlock.GetAjaxUrl() }}",
+                data: {{ oUIBlock.GetJsonAjaxData() |raw }},
+                method: "post",
+                pages: 1
+            }, // number of pages to cache
+            {{ oUIBlock.GetJsonInitDisplayData() |raw }}
+    ),
+    createdRow: function (row, data, dataIndex) {
+        if (data['@class'] !== undefined)
+        {
             $(row).addClass(data['@class']);
         }
     },
@@ -174,17 +181,14 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         this.api().columns.adjust().draw();
         if (this.api().page.info().pages < 2)
         {
-            this.parent().find('.dataTables_paginate').hide();
-            this.parent().find('.dataTables_length').hide();
+            this.closest('.dataTables_wrapper').find('.dataTables_length').hide();
         }
-        this.find('.ibo-dataTables--processing').remove();
-        this.find('tbody').unblock();
-        this.find('thead').unblock();
+        this.closest('.dataTables_wrapper').unblock();
 
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
         {% if oUIBlock.GetOption("select_mode") != "single" %}
-        this.api().on('select', function (oEvent, dt, type, indexes) {
+            this.api().on('select', function (oEvent, dt, type, indexes) {
             if (bSelectAllowed{{ oUIBlock.GetId() }})
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
@@ -296,9 +300,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% endif %}
 
         {% if oUIBlock.GetDisabledSelect() is not empty %}
-            {% for key in oUIBlock.GetDisabledSelect() %}
-                $('.selectList{{ oUIBlock.GetId() }}[value={{ key }}]').prop("disabled","disabled");
-            {% endfor %}
+        {% for key in oUIBlock.GetDisabledSelect() %}
+        $('.selectList{{ oUIBlock.GetId() }}[value={{ key }}]').prop("disabled", "disabled");
+        {% endfor %}
         {% endif %}
         {% endif %}
     }
@@ -338,7 +342,7 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
     sSelectedItemsName: "oSelectedItems{{ sListId }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
-    iPageSize: '{{ oUIBlock.GetOption("iPageSize") }}',
+    iPageSize: ' {{ iPageSize }}',
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),
     sTableId: '{{ oUIBlock.GetOption("sTableId") }}',
     sRenderUrl: "{{ oUIBlock.GetAjaxUrl() }}",
@@ -347,7 +351,8 @@ var aOptions{{ sListIDForVarSuffix }} = {
     oLabels: {moveup: "{{ 'UI:Button:MoveUp'|dict_s }}", movedown: "{{ 'UI:Button:MoveDown'|dict_s }}"},
 };
 
-if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable')) {
+if ($('#datatable_dlg_{{ oUIBlock.GetId() }}').hasClass('itop-datatable'))
+{
     $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings('destroy');
 }
 $('#datatable_dlg_{{ oUIBlock.GetId() }}').DataTableSettings(aOptions{{ sListIDForVarSuffix }});

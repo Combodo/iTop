@@ -5,7 +5,7 @@
         <div>
             <table style="width:100%" class="transparent">
                 <tr>
-                    <td><a href="{{ oUIBlock.sDownloadLink }}" class="ibo-block-csv--download-link">{{ 'UI:Download-CSV'|dict_format(oUIBlock.sCsvFile) }}</a>{{ oUIBlock.sCharsetNotice }}</td>
+                    <td><a href="{{ oUIBlock.sDownloadLink }}" class="ibo-block-csv--download-link ibo-button ibo-is-alternative ibo-is-primary">{{ 'UI:Download-CSV'|dict_format(oUIBlock.sCsvFile) }}</a>{{ oUIBlock.sCharsetNotice }}</td>
                     <td style="text-align:right">
                         <input type="checkbox" {{ oUIBlock.sChecked }} onClick="window.location.href='{{ oUIBlock.sLinkToToggle }}'">
                         &nbsp;{{ 'UI:CSVExport:AdvancedMode'|dict_s }}

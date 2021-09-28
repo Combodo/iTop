@@ -59,11 +59,11 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sObjectMode;
 	/** @var string */
 	protected $sIconUrl;
-	/** @var string */
+	/** @var string|null Code of the current value of the attribute carrying the state for $sClassName */
 	protected $sStatusCode;
-	/** @var string */
+	/** @var string Label of the current value of the attribute carrying the state for $sClassName  */
 	protected $sStatusLabel;
-	/** @var string */
+	/** @var string Color value (eg. #ABCDEF, var(--foo-color), ...) */
 	protected $sStatusColor;
 
 	/**
@@ -87,7 +87,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 
 		$this->ComputeObjectName($oObject);
 
-		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR, $sId);
+		parent::__construct($this->sObjectName, [], static::DEFAULT_COLOR_SCHEME, $sId);
 
 		$this->SetColorFromClass($this->sClassName);
 		$this->ComputeIconUrl($oObject);
@@ -150,7 +150,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 */
 	public function SetStatus(string $sCode, string $sLabel, string $sColor)
 	{
-		$this->sStatusCode = $sColor;
+		$this->sStatusCode = $sCode;
 		$this->sStatusLabel = $sLabel;
 		$this->sStatusColor = $sColor;
 
@@ -159,9 +159,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 
 	/**
 	 * @see self::$sStatusCode
-	 * @return string
+	 * @return string|null
 	 */
-	public function GetStatusCode(): string
+	public function GetStatusCode(): ?string
 	{
 		return $this->sStatusCode;
 	}
@@ -223,18 +223,28 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	}
 
 	/**
-	 * @param \DBObject $oObject
 	 * @see static::$oObject
 	 *
+	 * @param \DBObject $oObject
+	 *
 	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @throws \CoreException*@throws \Exception
 	 */
 	protected function ComputeState(DBObject $oObject): void
 	{
 		if (MetaModel::HasStateAttributeCode($this->sClassName)) {
 			$this->sStatusCode = $oObject->GetState();
 			$this->sStatusLabel = $oObject->GetStateLabel();
-			$this->sStatusColor = UIHelper::GetColorFromStatus($this->sClassName, $this->sStatusCode);
+
+			$oStyle = MetaModel::GetEnumStyle($this->sClassName, MetaModel::GetStateAttributeCode($this->sClassName), $this->sStatusCode);
+			if ($oStyle !== null) {
+				$this->sStatusColor = $oStyle->GetMainColor();
+			}
+			// If no style defined, fallback on a default color
+			else {
+				$sColorName = UIHelper::GetColorNameFromStatusCode($this->sStatusCode);
+				$this->sStatusColor = "var(--ibo-lifecycle-$sColorName-state-primary-color)";
+			}
 		}
 	}
 

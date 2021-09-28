@@ -57,7 +57,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:overview' => 'Visão geral',
 	'Organization:Overview:FunctionalCIs' => 'Itens de configuração desta organização',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
-	'Organization:Overview:Users' => 'Usuários iTop dentro desta organização',
+	'Organization:Overview:Users' => 'Usuários '.ITOP_APPLICATION_SHORT.' dentro desta organização',
 ));
 
 //

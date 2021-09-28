@@ -17,6 +17,17 @@
     </themes>
   </branding>
   <classes>
+    <class id="ClassWithNewValueInFieldWhichHasNoXsiTypeDueToMustExistFlag" _delta="must_exist">
+      <fields>
+        <field id="status" _delta="must_exist">
+          <values>
+            <value id="test" _delta="define">
+              <code>test</code>
+            </value>
+          </values>
+        </field>
+      </fields>
+    </class>
     <class id="ClassWithLifecycle">
       <properties>
         <fields_semantic>
@@ -27,6 +38,14 @@
         </style>
       </properties>
       <lifecycle/>
+    </class>
+    <class id="ClassWithLifecycleNoProperties">
+      <lifecycle/>
+      <properties>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
     </class>
     <class id="OtherClass">
       <properties>

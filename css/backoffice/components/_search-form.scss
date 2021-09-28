@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -11,11 +11,13 @@ $ibo-search-form-panel--body--padding-x: 14px !default;
 
 $ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
 $ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
+$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-300 !default;
 $ibo-search-form-panel--criteria--locked--background-color: $ibo-color-grey-300 !default;
 
 $ibo-search-form-panel--more-criteria--color: $ibo-color-blue-grey-800 !default;
 $ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !default;
 $ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
+$ibo-search-form-panel--more-criteria--border-color: $ibo-search-form-panel--criteria--border-color !default;
 
 $ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
 $ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
@@ -182,7 +184,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 				display: inline;
 				.sfc_fg_button,
 				.sfc_header {
-					border: 1px solid #E1E7EC; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+					border: 1px solid $ibo-search-form-panel--criteria--border-color; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
 					border-radius: 3px;
 				}
 			}
@@ -211,7 +213,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			> * {
 				padding: 7px 8px;
 				vertical-align: top;
-				border: solid 1px $ibo-color-grey-300;
+				border: solid 1px $ibo-search-form-panel--more-criteria--border-color;
 				border-radius: $ibo-border-radius-300;
 			}
 
@@ -657,7 +659,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 
 			> * {
 				background-color: $ibo-search-form-panel--more-criteria--background-color;
-				color: $ibo-search-form-panel--more-criteria--icon--color;
+				color: $ibo-search-form-panel--more-criteria--color;
 			}
 
 			.sfm_toggler {
@@ -845,9 +847,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	
 	button {
 		margin-top: 8px;
-		@extend .ibo-button;
-		@extend .ibo-is-primary;
-		@extend .ibo-is-regular;
 		> span {
 			margin-right: 0.5em;
 		}
@@ -874,16 +873,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	padding-top: $ibo-panel--spacing-top ;
 }
 
-.sfc_fg_button{
-	@extend .ibo-button;
-	@extend .ibo-is-neutral;
-	&.sfc_fg_search, &.sfc_fg_apply, &.sfc_fg_cancel {
-		@extend .ibo-is-regular;
-	}
-	&.sfc_fg_more {
-		@extend .ibo-is-alternative;
-	}
-}
 .sfm_tg_title{
   display: none;
 }
@@ -905,25 +894,23 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
       border-bottom-color: transparent;
   }
 }
-.sf_results_area {
-  .ibo-datatable-panel.ibo-is-sticking {
-    .ibo-panel--header {
-      z-index: 0;
-    }
-    .ibo-datatable--toolbar {
-      position: fixed;
-      z-index: 2;
-      padding-bottom: 4px;
-      background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
-      border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
-      border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
-    }
-    .dataTables_scrollHead {
-      position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
-      z-index: 2;
-      background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
-      border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
-      border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
-    }
+.ibo-datatable-panel.ibo-is-sticking {
+  .ibo-panel--header {
+    z-index: 0;
+  }
+  .ibo-datatable--toolbar {
+    position: fixed;
+    z-index: 2;
+    padding-bottom: 4px;
+    background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+    border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+  }
+  .dataTables_scrollHead {
+    position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
+    z-index: 2;
+    background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+    border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
   }
 }

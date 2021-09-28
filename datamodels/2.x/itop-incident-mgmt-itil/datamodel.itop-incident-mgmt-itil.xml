@@ -26,7 +26,7 @@
 				</fields_semantic>
 				<style>
 					<icon>images/incident.png</icon>
-          <main_color>red</main_color>
+          <main_color>$ibo-color-red-600</main_color>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -46,63 +46,63 @@
 						<value id="new">
 							<code>new</code>
 							<style>
-								<main_color>#2C5382</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="assigned">
 							<code>assigned</code>
 							<style>
-								<main_color>#2C5382</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 						<value id="pending">
 							<code>pending</code>
 							<style>
-								<main_color>#F6AE55</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
 								<decoration_classes>fas fa-hourglass-half</decoration_classes>
 							</style>
 						</value>
 						<value id="escalated_tto">
 							<code>escalated_tto</code>
 							<style>
-								<main_color>#B83280</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
 								<decoration_classes>fas fa-fire</decoration_classes>
 							</style>
 						</value>
 						<value id="escalated_ttr">
 							<code>escalated_ttr</code>
 							<style>
-								<main_color>#B83280</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
 								<decoration_classes>fas fa-fire</decoration_classes>
 							</style>
 						</value>
 						<value id="resolved">
 							<code>resolved</code>
 							<style>
-								<main_color>#689F38</main_color>
-								<complementary_color>#FFFFFF</complementary_color>
+								<main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
 								<decoration_classes>fas fa-check</decoration_classes>
 							</style>
 						</value>
 						<value id="closed">
 							<code>closed</code>
 							<style>
-								<main_color>#E1E7EC</main_color>
-								<complementary_color>#6E7A8A</complementary_color>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
 								<decoration_classes/>
 							</style>
 						</value>
 					</values>
 					<default_style>
-						<main_color>#2B6CB0</main_color>
-						<complementary_color>#FFFFFF</complementary_color>
+						<main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+						<complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
 						<decoration_classes/>
 					</default_style>
 					<sql>status</sql>

@@ -39,9 +39,14 @@ class SetupPage extends NiceWebPage
 	{
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script("../setup/setup.js");
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+
 		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");
 	}
@@ -218,5 +223,13 @@ class SetupPage extends NiceWebPage
 	protected function LoadTheme()
 	{
 		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return utils::GetAbsoluteUrlAppRoot().'setup/favicon.ico';
 	}
 }

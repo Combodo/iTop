@@ -8,6 +8,7 @@ namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
 use AttributeDateTime;
+use AttributeText;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Dict;
@@ -64,7 +65,6 @@ class Extension
 				})
 		);
 
-
 		// Filter to format output
 		// example a DateTime is converted to user format
 		// Usage in twig: {{ 'String:ToFormat'|output_format }}
@@ -98,16 +98,23 @@ class Extension
 			})
 		);
 
+		/**
+		 * Filter to transform the wiki syntax ONLY into HTML.
+		 *
+		 * @uses \AttributeText::RenderWikiHtml()
+		 * @since 3.0.0
+		 */
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('render_wiki_to_html', function ($sString) {
+				return AttributeText::RenderWikiHtml($sString, true /* Important, otherwise hyperlinks will be tranformed as well */);
+			})
+		);
+
 		// Filter to add a parameter at the end of the URL to force cache invalidation after an upgrade.
 		// Previously we put the iTop version but now it's the last setup/toolkit timestamp to avoid cache issues when building several times the same version during tests
 		//
 		// Note: This could be rename "add_cache_buster" instead.
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
-			if (strpos($sUrl, '?') === false) {
-				$sUrl = $sUrl."?t=".utils::GetCacheBusterTimestamp();
-			} else {
-				$sUrl = $sUrl."&t=".utils::GetCacheBusterTimestamp();
-			}
+			$sUrl = utils::AddParameterToUrl($sUrl, 't', utils::GetCacheBusterTimestamp());
 
 			return $sUrl;
 		}));
@@ -115,12 +122,7 @@ class Extension
 		// Filter to add a module's version to an url
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_module_version', function ($sUrl, $sModuleName) {
 			$sModuleVersion = utils::GetCompiledModuleVersion($sModuleName);
-
-			if (strpos($sUrl, '?') === false) {
-				$sUrl = $sUrl."?moduleversion=".$sModuleVersion;
-			} else {
-				$sUrl = $sUrl."&moduleversion=".$sModuleVersion;
-			}
+			$sUrl = utils::AddParameterToUrl($sUrl, 'moduleversion', $sModuleVersion);
 
 			return $sUrl;
 		}));

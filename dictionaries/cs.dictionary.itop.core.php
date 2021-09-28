@@ -233,6 +233,14 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:CMDBChange/Attribute:date+' => 'datum a čas při kterém byly změny zaznamenány',
 	'Class:CMDBChange/Attribute:userinfo' => 'informace',
 	'Class:CMDBChange/Attribute:userinfo+' => 'informace definované zadavatelem',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -698,9 +706,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Kontakt k upozornění',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => '',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Ikona',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hypertextový odkaz na ikonu reprezentující aplikaci, se kterou je iTop synchronizovnán',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hypertextový odkaz na ikonu reprezentující aplikaci, se kterou je '.ITOP_APPLICATION_SHORT.' synchronizovnán',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Aplikace',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'Hypertextový odkaz na iTop objekt v externí aplikaci, se kterou je iTop synchronizován (pokud je to relevantní). Možné zástupné symboly: $this->attribute$ a $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hypertextový odkaz na '.ITOP_APPLICATION_SHORT.' objekt v externí aplikaci, se kterou je '.ITOP_APPLICATION_SHORT.' synchronizován (pokud je to relevantní). Možné zástupné symboly: $this->attribute$ a $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Způsob párování',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Interval mezi dvěma kompletními načteními',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Kompletní načtení všech dat musí proběhnout nejméně tak často, jak je uvedeno zde',

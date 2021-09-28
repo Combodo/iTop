@@ -230,6 +230,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChange/Attribute:date+' => '变更被记录的日期和时间',
 	'Class:CMDBChange/Attribute:userinfo' => '杂项. 信息',
 	'Class:CMDBChange/Attribute:userinfo+' => '呼叫者已定义的信息',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -695,9 +703,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '要通知的人',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error',
 	'Class:SynchroDataSource/Attribute:url_icon' => '图标的超链接',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which '.ITOP_APPLICATION_SHORT.' is synchronized',
 	'Class:SynchroDataSource/Attribute:url_application' => '应用的超链接',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the iTop object in the external application with which iTop is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the '.ITOP_APPLICATION_SHORT.' object in the external application with which '.ITOP_APPLICATION_SHORT.' is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here',

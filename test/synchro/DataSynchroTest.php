@@ -25,7 +25,12 @@ use SynchroDataSource;
 use UserLocal;
 use utils;
 
-
+/**
+ * Class DataSynchroTest
+ *
+ * @package Combodo\iTop\Test\UnitTest\Synchro
+ * @group dataSynchro
+ */
 class DataSynchroTest extends ItopDataTestCase
 {
 	protected const AUTH_USER = 'DataSynchroTest';

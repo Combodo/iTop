@@ -20,11 +20,6 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/nicewebpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
-require_once(APPROOT.'/application/csvpage.class.inc.php');
-require_once(APPROOT.'/application/xmlpage.class.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
 require_once(APPROOT.'/application/excelexporter.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');

@@ -1,20 +1,9 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+$ibo-breadcrumbs--margin-right: 32px !default;
 
 $ibo-breadcrumbs--item--text-color: $ibo-color-grey-800 !default;
 
@@ -27,8 +16,26 @@ $ibo-breadcrumbs--item-label--max-width: 100px !default;
 $ibo-breadcrumbs--item-separator--margin-x: 12px !default;
 $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 
+$ibo-breadcrumbs--previous-items-list-toggler--text-color: $ibo-color-grey-700 !default;
+$ibo-breadcrumbs--previous-items-list-toggler--margin-right: 2 * $ibo-breadcrumbs--item-separator--margin-x !default;
+
+$ibo-breadcrumbs--previous-items-list--top: 37px !default;
+$ibo-breadcrumbs--previous-items-list--padding-y: 8px !default;
+$ibo-breadcrumbs--previous-items-list--background-color: $ibo-color-white-100 !default;
+
+$ibo-breadcrumbs--previous-item--text-color: $ibo-breadcrumbs--item--text-color !default;
+$ibo-breadcrumbs--previous-item--padding-x: 12px !default;
+$ibo-breadcrumbs--previous-item--padding-y: 12px !default;
+$ibo-breadcrumbs--previous-item-label--max-width: 200px !default;
+
 .ibo-breadcrumbs{
-	@extend %ibo-full-height-content;
+  position: relative;
+  margin-right: $ibo-breadcrumbs--margin-right;
+  @extend %ibo-full-height-content;
+
+  &.ibo-is-overflowing {
+    justify-content: right;
+  }
 
 	* {
 		display: flex;
@@ -40,13 +47,6 @@ $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 	@extend %ibo-font-ral-med-100;
 
 	&:not(:last-child){
-		&::after{
-			content: '\f054';
-			margin: 0 $ibo-breadcrumbs--item-separator--margin-x;
-			color: $ibo-breadcrumbs--item-separator--text-color;
-			@extend %fa-solid-base;
-		}
-
 		&:hover{
 			.ibo-breadcrumbs--item-icon{
 				> *{
@@ -77,4 +77,51 @@ $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 	display: inline; /* Otherwise the "truncate" doesn't work with th default display: flex */
 	max-width: $ibo-breadcrumbs--item-label--max-width;
 	@extend %ibo-text-truncated-with-ellipsis;
+}
+
+.ibo-breadcrumbs--item,
+.ibo-breadcrumbs--previous-items-list-toggler {
+  &:not(:last-child){
+    &::after{
+      content: '\f054';
+      margin: 0 $ibo-breadcrumbs--item-separator--margin-x;
+      color: $ibo-breadcrumbs--item-separator--text-color;
+      @extend %fa-solid-base;
+    }
+  }
+}
+
+.ibo-breadcrumbs--previous-items-list-toggler {
+  margin-right: $ibo-breadcrumbs--previous-items-list-toggler--margin-right;
+  color: $ibo-breadcrumbs--previous-items-list-toggler--text-color !important;
+  @extend %ibo-font-ral-med-100;
+
+  &:not(:last-child) {
+    &::after {
+      position: absolute; /* To be outside of the button */
+      right: -1 * $ibo-breadcrumbs--previous-items-list-toggler--margin-right;
+    }
+  }
+}
+.ibo-breadcrumbs--previous-items-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* For the items to occupy the full width */
+
+  position: fixed;
+  top: $ibo-breadcrumbs--previous-items-list--top;
+  padding: $ibo-breadcrumbs--previous-items-list--padding-y 0;
+
+  background-color: $ibo-breadcrumbs--previous-items-list--background-color;
+  @extend %ibo-elevation-300;
+}
+
+.ibo-breadcrumbs--previous-item {
+  color: $ibo-breadcrumbs--previous-item--text-color;
+  @extend %ibo-font-ral-med-100;
+  padding: $ibo-breadcrumbs--previous-item--padding-y $ibo-breadcrumbs--previous-item--padding-x;
+
+  .ibo-breadcrumbs--item-label {
+    max-width: 200px;
+  }
 }

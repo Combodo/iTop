@@ -51,19 +51,19 @@ $(function()
 			{
 				this.element.addClass("itop-property-field-modified");
 				if (this.options.can_apply) {
-					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: ''});
+					this.element.find(".prop_icon.ibo-prop--apply > span").show();
 					CombodoTooltip.InitTooltipFromMarkup(this.element.find(".prop_icon.ibo-prop--apply [data-tooltip-content]"), true);
 				} else {
-					this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
+					this.element.find(".prop_icon.ibo-prop--apply > span").hide();
 				}
-				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: ''});
+				this.element.find(".prop_icon.ibo-prop--cancel > span").show();
 				CombodoTooltip.InitTooltipFromMarkup(this.element.find(".prop_icon.ibo-prop--cancel [data-tooltip-content]"), true);
 			}
 			else
 			{
 				this.element.removeClass("itop-property-field-modified");
-				this.element.find(".prop_icon.ibo-prop--apply").css({visibility: 'hidden'});
-				this.element.find(".prop_icon.ibo-prop--cancel").css({visibility: 'hidden'});
+				this.element.find(".prop_icon.ibo-prop--apply > span").hide();
+				this.element.find(".prop_icon.ibo-prop--cancel > span").hide();
 			}
 		},
 	
@@ -539,7 +539,7 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 	if (!bValid)
 	{
-		$('#v_'+sFieldId).addClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').addClass('ui-state-error');
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
 		if (iFieldIdPos == -1)
 		{
@@ -556,7 +556,7 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 	}
 	else
 	{
-		$('#v_'+sFieldId).removeClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').removeClass('ui-state-error');
 		if ($('#'+sFieldId).data('uiTooltip'))
 		{
 			$('#'+sFieldId).tooltip('close');
@@ -611,7 +611,7 @@ function ValidateInteger(sFieldId, bMandatory, sFormId, iMin, iMax, sExplainForm
 	if (oFormValidation[sFormId] == undefined) oFormValidation[sFormId] = [];
 	if (!bValid)
 	{
-		$('#v_'+sFieldId).addClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').addClass('ui-state-error');
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
 		if (iFieldIdPos == -1)
 		{
@@ -628,7 +628,7 @@ function ValidateInteger(sFieldId, bMandatory, sFormId, iMin, iMax, sExplainForm
 	}
 	else
 	{
-		$('#v_'+sFieldId).removeClass('ui-state-error');
+		$('#v_'+sFieldId).parent('.ibo-prop--apply').removeClass('ui-state-error');
 		if ($('#'+sFieldId).data('uiTooltip'))
 		{
 			$('#'+sFieldId).tooltip('close');

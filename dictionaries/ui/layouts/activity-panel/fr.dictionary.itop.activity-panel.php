@@ -22,18 +22,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Replier',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fermer',
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Charger les entrées précédentes',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Charger toutes les entrées',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activité',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Brouillon',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Journaux',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Afficher / masquer les entrées de journaux sur cet onglet',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choisir les journaux à afficher sur cet onglet',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Statuts',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Afficher / masquer les changements de statut sur cet onglet',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Modif.',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Afficher / masquer les modifications sur cet onglet',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Ouvrir tous les messages',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fermer tous les messages',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Ouvrir toutes les entrées',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fermer toutes les entrées',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Nombre de personnes ayant contribué aux entrées affichées',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Nombre de messages dans le(s) journal / journaux affichés',
 

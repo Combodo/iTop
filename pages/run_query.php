@@ -8,6 +8,7 @@ use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
@@ -163,14 +164,15 @@ try
 		}
 	}
 
+	$oPanelQuery = PanelUIBlockFactory::MakeWithBrandingPrimaryColor(Dict::S('UI:RunQuery:ExpressionToEvaluate'));
+	$oP->AddSubBlock($oPanelQuery);
 	$oQueryForm = new Form();
-	$oP->AddUiBlock($oQueryForm);
+	$oPanelQuery->AddSubBlock($oQueryForm);
 
 	$oHiddenParams = new Html($oAppContext->GetForForm());
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
 	//--- Query textarea
-	$oQueryForm->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:ExpressionToEvaluate'), 2));
 	$oQueryTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), 'expression', 120, 8);
 	$oQueryTextArea->AddCSSClass('ibo-queryoql');
 	$oQueryForm->AddSubBlock($oQueryTextArea);
@@ -186,15 +188,14 @@ EOF
 
 	if (count($aArgs) > 0) {
 		//--- Query arguments
-		$oQueryArgsContainer = PanelUIBlockFactory::MakeForInformation('Query arguments')
-			->SetCSSClasses(['wizContainer']);
+		$oQueryForm->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryArguments'),2)->AddCSSClass("ibo-collapsible-section--title"));
+		$oQueryArgsContainer = UIContentBlockUIBlockFactory::MakeStandard(null,['wizContainer']);
 		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {
-			$oArgInput = InputUIBlockFactory::MakeForInputWithLabel(
-				$sParam,
-				'arg_'.$sParam,
-				$sValue
-			);
+			$oInput = InputUIBlockFactory::MakeStandard("text",'arg_'.$sParam,	$sValue);
+			$oArgInput = \Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory::MakeFromObject($sParam,$oInput,Field::ENUM_FIELD_LAYOUT_SMALL);
+			$oArgInput->AddCSSClass("ibo-field--label-small");
+			//$oArgInput = InputUIBlockFactory::MakeForInputWithLabel(				$sParam,				'arg_'.$sParam,				$sValue			);
 			$oQueryArgsContainer->AddSubBlock($oArgInput);
 		}
 	}
@@ -214,10 +215,10 @@ EOF
 
 	if ($oFilter) {
 		//--- Query filter
-		$oP->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryResults'), 2));
-
+		$oPanelResult= PanelUIBlockFactory::MakeWithBrandingSecondaryColor(Dict::S('UI:RunQuery:QueryResults'));
+		$oP->AddSubBlock($oPanelResult);
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
-		$oResultBlock->Display($oP, 'runquery');
+		$oPanelResult->AddSubBlock($oResultBlock->GetDisplay($oP, 'runquery'));
 
 		// Breadcrumb
 		//$iCount = $oResultBlock->GetDisplayedCount();
@@ -235,8 +236,7 @@ EOF
 			}
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal',
-			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 
 		//--- More info
@@ -319,12 +319,7 @@ EOF
 
 					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
 					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
-					$oUseSuggestedQueryButton->SetOnClickJsCode(<<<JS
-let \$oQueryTextarea = $('textarea[name=expression]');
-\$oQueryTextarea.val('$sEscapedExpression').focus();
-\$oQueryTextarea.closest('form').submit();
-JS
-					);
+					$oUseSuggestedQueryButton->SetOnClickJsCode("let \$oQueryTextarea = $('textarea[name=expression]');\$oQueryTextarea.val('$sEscapedExpression').focus();\$oQueryTextarea.closest('form').submit();");
 					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
 					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));

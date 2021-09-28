@@ -288,10 +288,9 @@ h3.clickable.open {
 fieldset {
   border: none;
   padding: 0;
-  margin: 30px 0 0 0;
+  margin: 15px 0 0 0;
 
   > legend {
-    margin-top: 25px;
     margin-bottom: 7px;
     padding-bottom: 7px;
     width: 100%;
@@ -367,14 +366,10 @@ body {
     border-bottom: none;
     border-radius: $ibo-border-radius-300 $ibo-border-radius-300 0 0;
 
-    img {
+    .ibo-title--icon {
       border: 0;
       vertical-align: middle;
       margin-right: 20px;
-    }
-
-    h1 {
-      margin-top: 10px;
     }
   }
 
@@ -396,6 +391,10 @@ body {
       height: 100%;
       .ibo-setup--wizard--content{
         overflow: auto;
+
+        input#db_backup {
+          margin-right: 0.4rem;
+        }
       }
       .ibo-setup--wizard--buttons-container{
         margin-top: auto;
@@ -433,10 +432,10 @@ body {
     }
 
     .ibo-fieldset {
-      margin-top: 25px;
+      margin-top: 12px;
 
       & ~ .ibo-fieldset {
-        margin-top: 25px;
+        margin-top: 12px;
       }
     }
 
@@ -485,6 +484,22 @@ body {
         overflow: auto;
       }
     }
+    .ibo-input{
+      width: auto;
+      display: inline-block;
+    }
+    table {
+        td{
+        white-space: nowrap;
+        line-height: 2.5rem;
+        padding-right: 8px;
+        padding-bottom: 1rem;
+      }
+    }
+    .setup-content-title, h2{
+      @extend %ibo-font-ral-nor-250;
+      margin-bottom: 18px;
+    }
   }
 }
 
@@ -506,4 +521,140 @@ body {
   font-size: $ibo-font-size-150;
 }
 
+#ibo-setup-licenses--components-list {
+  background-color: $ibo-color-white-200;
+  padding: 12px;
+  box-shadow: inset 0px 2px 4px 1px rgb(0, 0, 0, 0.15);
+  @extend %ibo-border-radius-300;
+}
+
+
+.setup-prefix-toggler--input--container, .setup-tls--input--container, .setup-disk-location--input--container, .setup-backup--input--container {
+  display: flex;
+  line-height: 2.5rem;
+  margin: 1rem 0;
+  input{
+    margin: 0 8px;
+  }
+}
+.setup-disk-location--input--container, .setup-backup--input--container{
+  input{
+    flex-grow: 1;
+  }
+}
+.collapsable-options{
+  margin-bottom: 18px;
+  [data-role="setup-collapsable-options--toggler"]::before {
+    margin-right: 8px;
+    @extend %fa-solid-base;
+    cursor: pointer;
+  }
+  &:not(.setup-is-opened) [data-role="setup-collapsable-options--toggler"]::before{
+    content: '\f078';
+  }
+  &.setup-is-opened [data-role="setup-collapsable-options--toggler"]::before{
+    content: '\f077';
+  }
+}
+.setup-input--hint--icon{
+  color: $ibo-color-grey-700
+}
+.setup-invalid-field--icon{
+  color: $ibo-color-red-700;
+  margin-left: 8px;
+}
+.setup-accept-licenses{
+  margin-top: 18px;
+  input{
+    margin-right: 8px;
+  }
+}
+.module-selection-banner{
+  display: flex;
+  >img{
+    margin-right: 12px;
+  }
+}
+.setup-end-placeholder{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  >div {
+    padding: 0px 15px;
+  }
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @extend %ibo-font-ral-nor-250;
+    svg{
+      max-height: 150px;
+      margin-bottom: 15px;
+      width: auto;
+    }
+  }
+}
+.setup-extension--icon{
+  margin-right: 5px;
+  color: $ibo-color-blue-700;
+  font-size: $ibo-font-size-200;
+}
 /* integrityCheck: end (do not remove/edit) */
+
+/* Legacy inline stuff */
+#params_summary {
+  overflow: auto;
+}
+#params_summary div {
+  width:100%;
+  margin-top:0;
+  padding-top: 0.5em;
+  padding-left: 0;
+}
+#params_summary div ul {
+  margin-left:0;
+  padding-left: 40px;
+}
+#params_summary div.closed ul {
+  display:none;
+}
+#params_summary div li {
+  list-style: none;
+  width: 100%;
+  margin-left:0;
+  padding-left: 0em;
+}
+.title {
+  padding-left: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#params_summary div {
+  &.closed .title::before {
+    margin-right: 5px;
+    @extend %fa-solid-base;
+    content: '\f078';
+  }
+  &:not(.closed) .title::before {
+    margin-right: 5px;
+    @extend %fa-solid-base;
+    content: '\f077';
+  }
+}
+
+  #progress_content {
+    height: 200px;
+    overflow: auto;
+    text-align: center;
+  }
+  #installation_progress {
+    display: none;
+  }
+  #fresh_content{
+    border: 0;
+    min-height: 300px;
+    min-width: 600px;
+    display:none;
+    margin-left: auto;
+    margin-right: auto;
+  }

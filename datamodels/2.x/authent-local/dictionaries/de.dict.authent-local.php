@@ -23,8 +23,8 @@
 *		
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:UserLocal' => 'iTop-Benutzer',
-	'Class:UserLocal+' => 'Benutzer, der von iTop authentifiziert wird',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.'-Benutzer',
+	'Class:UserLocal+' => 'Benutzer, der von '.ITOP_APPLICATION_SHORT.' authentifiziert wird',
 	'Class:UserLocal/Attribute:password' => 'Passwort',
 	'Class:UserLocal/Attribute:password+' => 'Benutzerpasswort',
 
@@ -36,10 +36,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'abgelaufen',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'einmaliges Passwort',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => '',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Letzte Passworterneuerung',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Letztes Änderungsdatum',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort entspricht nicht dem in den Konfigurationsregeln hinterlegten RegEx-Ausdruck',
 
-	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine iTop Erweiterung'
+	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine '.ITOP_APPLICATION_SHORT.' Erweiterung'
 ));

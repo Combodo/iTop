@@ -35,6 +35,31 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	/** @var string DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE */
 	const DEFAULT_BREADCRUMB_ENTRY_ICON_TYPE = self::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_IMAGE;
 
+	/** @inheritDoc */
+	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [
+		// - TabContainer
+		'js/jquery.ba-bbq.min.js',
+		// - DashletGroupBy & other specific places
+		'js/d3.js',
+		'js/c3.js',
+		// - DisplayableGraph, impact analysis
+		'js/raphael-min.js',
+		'js/jquery.mousewheel.js',
+	];
+	/** @inheritDoc */
+	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [
+		'js/date.js',
+		'js/jquery.layout.min.js',
+		/** @deprecated 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
+		'js/jquery.qtip-1.0.min.js',
+	];
+	/** @inheritDoc */
+	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [
+		// Moved files
+		// - DashletGroupBy & other specific places
+		'css/c3.min.css',
+	];
+
 	/** @var string DEFAULT_PAGE_TEMPLATE_REL_PATH The relative path (from <ITOP>/templates/) to the default page template */
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/itopwebpage/layout';
 
@@ -72,10 +97,15 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	 * @param string $sTitle
 	 * @param bool $bPrintable
 	 *
-	 * @throws \Exception
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MySQLException
 	 */
 	public function __construct($sTitle, $bPrintable = false)
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($sTitle, $bPrintable);
 		$this->m_oTabs = new TabManager();
 		$this->oCtx = new ContextTag(ContextTag::TAG_CONSOLE);
@@ -102,13 +132,13 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
 		$this->add_xframe_options();
-		if (!$this->IsPrintableVersion())
-		{
+		if (!$this->IsPrintableVersion()) {
 			$this->PrepareLayout();
-		} else{
+		} else {
 			$oPrintHeader = $this->OutputPrintable();
 			$this->AddUiBlock($oPrintHeader);
 		}
+		$oKpi->ComputeStats(get_class($this).' creation', 'iTopWebPage');
 	}
 
 	/**
@@ -119,41 +149,43 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedScripts();
 
-		// TODO 3.0.0: Add only what's necessary
-		// jquery.layout : not used anymore in the whole console but only in some pages (datamodel viewer, dashboard edit, ...)
-		// TODO : remove adding jquery.layout in iTopWebPage, and only add it when necessary (component level)
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.layout.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.ba-bbq.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/date.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.js');
+		// Used by external keys, DM viewer
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.treeview.min.js');
+
+		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery-ui-timepicker-addon-i18n.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.blockUI.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/utils.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/ckeditor.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/adapters/jquery.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js');
-		/** @deprecated since 3.0.0 N°3748 qTip will be removed in 3.x, use Tippy.js instead */
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.qtip-1.0.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/raphael-min.js');
+
+		// Tooltips
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.min.js');
+
+		// Used by external keys and other drop down lists
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/d3.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/c3.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
-		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.mousewheel.js');
+
+		// Used by inline image, CKEditor and other places
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
+
+		// Used by date(time) attibutes, activity panel, ...
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/moment-with-locales.min.js');
+
+		// Used by the newsroom
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/showdown.min.js');
+
+		// Keyboard shortcuts
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/mousetrap/mousetrap-record.min.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/keyboard-shortcuts.js');
+
+		// Used throughout the app.
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/toolbox.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/pages/backoffice/on-ready.js');
+
+		// Used by dashboard editor
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/property_field.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/icon_select.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/ajaxfileupload.js');
 	}
 
 	/**
@@ -188,15 +220,24 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	{
 		parent::InitializeLinkedStylesheets();
 
-		// TODO 3.0.0: Add only what's necessary
+		// Used by advanced search, date(time) attributes. Coupled to the PrepareWidgets() JS function.
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery-ui-timepicker-addon.css');
+
+		// Used by inline image, CKEditor and other places
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/magnific-popup.css');
-		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/c3.min.css');
+
+		// Tooltips
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+
+		// Icons
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+
+		// Note: CKEditor files can't be moved easily as we need to find a way to init the "disabler" plugin, {@see js/toolbox.js}
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css');
+
+		// Used by external keys and other drop down lists
 		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
 	}
 
@@ -356,7 +397,7 @@ JS
 	
 	// Default values for blockui
 	$.blockUI.defaults.css = {}; 
-	$.blockUI.defaults.message= '<i class="fas fa-fw fa-spin fa-sync"></i>'; 
+	$.blockUI.defaults.message= '<i class="fas fa-fw fa-spin fa-sync-alt"></i>'; 
 	$.blockUI.defaults.overlayCSS = {} 
 JS
 		);
@@ -777,6 +818,8 @@ HTML;
 	 */
 	public function output()
 	{
+		$oKpi = new ExecutionKPI();
+
 		// Data to be passed to the view
 		$aData = [];
 
@@ -790,7 +833,10 @@ HTML;
 
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
 		// - Generate necessary dict. files
-		$this->output_dict_entries();
+		if ($this->bAddJSDict) {
+			$this->output_dict_entries();
+		}
+
 		// TODO 3.0.0 not displayed ?
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
 
@@ -800,15 +846,17 @@ HTML;
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
 			'sAbsoluteUrlAppRoot' => $sAbsoluteUrlAppRoot,
-			'sTitle' => $this->s_title,
-			'sFaviconUrl' => $sFaviconUrl,
-			'aMetadata' => [
+			'sTitle'              => $this->s_title,
+			'sFaviconUrl'         => $sFaviconUrl,
+			'aMetadata'           => [
 				'sCharset' => static::PAGES_CHARSET,
-				'sLang' => $sMetadataLanguage,
+				'sLang'    => $sMetadataLanguage,
 			],
-			'oPrintHeader' => $oPrintHeader,
-			'isPrintable' => $this->IsPrintableVersion(),
+			'oPrintHeader'        => $oPrintHeader,
+			'isPrintable'         => $this->IsPrintableVersion(),
 		];
+
+		$aData['aBlockParams'] = $this->GetBlockParams();
 
 		// Base tag
 		// Note: We might consider to put the app_root_url parameter here, but that would need a BIG rework on iTop AND the extensions to replace all the "../images|js|css/xxx.yyy"...
@@ -859,8 +907,10 @@ HTML;
 		$aData['aPage'] = array_merge(
 			$aData['aPage'],
 			[
+				'aPreloadedFonts' => $this->aPreloadedFonts,
 				'aCssFiles' => $this->a_linked_stylesheets,
 				'aCssInline' => $this->a_styles,
+				'aJsInlineEarly' => $this->a_early_scripts,
 				'aJsFiles' => $this->a_linked_scripts,
 				'aJsInlineOnInit' => $this->a_init_scripts,
 				'aJsInlineOnDomReady' => $this->GetReadyScripts(),
@@ -881,16 +931,12 @@ HTML;
 			}
 		}
 
-
 		// Render final TWIG into global HTML
-		$oKpi = new ExecutionKPI();
 		$sHtml = TwigHelper::RenderTemplate($oTwigEnv, $aData, $this->GetTemplateRelPath());
 
-
-		$oKpi->ComputeAndReport('TWIG rendering');
-
+		$oKpi->ComputeAndReport(get_class($this).' output');
+		
 		// Echo global HTML
-		$oKpi = new ExecutionKPI();
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 
@@ -1165,5 +1211,25 @@ EOF
 		$oBlock = new BlockPrintHeader();
 
 		return $oBlock;
+	}
+
+	/**
+	 * @param string $sKey
+	 * @param $value
+	 *
+	 * @return \iTopWebPage
+	 * @since 3.0.0
+	 */
+	public function SetBlockParam(string $sKey, $value)
+	{
+		$oGlobalSearch = $this->GetTopBarLayout()->GetGlobalSearch();
+		$sGlobalSearchId = $oGlobalSearch->GetId();
+		switch ($sKey) {
+			case "$sGlobalSearchId.sQuery":
+				$oGlobalSearch->SetQuery($value);
+				break;
+		}
+
+		return parent::SetBlockParam($sKey, $value);
 	}
 }

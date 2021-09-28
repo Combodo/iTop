@@ -37,6 +37,7 @@ class XMLPage extends WebPage
 	
 	function __construct($s_title, $bPassThrough = false)
 	{
+		$oKpi = new ExecutionKPI();
 		parent::__construct($s_title);
 		$this->m_bPassThrough = $bPassThrough;
 		$this->m_bHeaderSent = false;
@@ -44,12 +45,15 @@ class XMLPage extends WebPage
 		$this->no_cache();
 		$this->add_xframe_options();
 		$this->add_header("Content-location: export.xml");
+		$oKpi->ComputeStats(get_class($this).' creation', 'XMLPage');
 	}	
 
 	public function output()
 	{
 		if (!$this->m_bPassThrough)
 		{
+			$oKpi = new ExecutionKPI();
+
 			// Get the unexpected output but do nothing with it
 			$sTrash = $this->ob_get_clean_safe();
 
@@ -60,11 +64,14 @@ class XMLPage extends WebPage
 			{
 				header($s_header);
 			}
+			$oKpi->ComputeAndReport(get_class($this).' output');
 			echo $this->s_content;
+			$oKpi->ComputeAndReport('Echoing ('.round(strlen($this->s_content) / 1024).' Kb)');
 		}
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
+		ExecutionKPI::ReportStats();
 	}
 
 	public function add($sText)

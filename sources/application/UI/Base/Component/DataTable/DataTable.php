@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\UI\Base\Component\DataTable;
 
 
+use ApplicationContext;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\tJSRefreshCallback;
 use DataTableConfig;
@@ -28,11 +29,13 @@ class DataTable extends UIContentBlock
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_LIVE_TEMPLATE_REL_PATH = 'base/components/datatable/layout';
 	public const DEFAULT_JS_FILES_REL_PATH = [
-		'node_modules/datatables.net/js/jquery.dataTables.js',
-		'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.js',
-		'node_modules/datatables.net-responsive/js/dataTables.responsive.js',
-		'node_modules/datatables.net-scroller/js/dataTables.scroller.js',
-		'node_modules/datatables.net-select/js/dataTables.select.js',
+		'node_modules/datatables.net/js/jquery.dataTables.min.js',
+		'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js',
+		'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js',
+		'node_modules/datatables.net-scroller/js/dataTables.scroller.min.js',
+		'node_modules/datatables.net-select/js/dataTables.select.min.js',
+		'js/field_sorter.js',
+		'js/table-selectable-lines.js',
 		'js/dataTables.main.js',
 		'js/dataTables.settings.js',
 		'js/dataTables.pipeline.js',
@@ -43,6 +46,10 @@ class DataTable extends UIContentBlock
 	protected $aAjaxData;
 	protected $aDisplayColumns;
 	protected $aResultColumns;
+	/*
+	 * array of data to display the first page
+	 */
+	protected $aInitDisplayData;
 
 	/**
 	 * Panel constructor.
@@ -56,6 +63,7 @@ class DataTable extends UIContentBlock
 		$this->aDisplayColumns = [];
 		$this->aOptions = [];
 		$this->aResultColumns = [];
+		$this->sJsonData = '';
 	}
 
 	/**
@@ -71,7 +79,19 @@ class DataTable extends UIContentBlock
 	 */
 	public function SetAjaxUrl(string $sAjaxUrl): void
 	{
-		$this->sAjaxUrl = $sAjaxUrl;
+		if (strlen($sAjaxUrl) > 0)
+		{
+			$oAppContext = new ApplicationContext();
+			if(strpos ($sAjaxUrl,'?')) {
+				$this->sAjaxUrl = $sAjaxUrl."&".$oAppContext->GetForLink();
+			} else {
+				$this->sAjaxUrl = $sAjaxUrl."?".$oAppContext->GetForLink();
+			}
+		}
+		else
+		{
+			$this->sAjaxUrl = $sAjaxUrl;
+		}
 	}
 
 	/**
@@ -86,6 +106,7 @@ class DataTable extends UIContentBlock
 	}
 
 	/**
+	 * Get $aAjaxData as a JSON
 	 * @return mixed
 	 */
 	public function GetJsonAjaxData(): string
@@ -163,6 +184,36 @@ class DataTable extends UIContentBlock
 		$this->aOptions = $aOptions;
 	}
 
+	/**
+	 *  Get $aInitDisplayData as a JSON This is data of first page
+	 * @return string
+	 */
+	public function GetJsonInitDisplayData(): string
+	{
+		return json_encode($this->aInitDisplayData);
+	}
+
+	/**
+	 *  Get $aInitDisplayData
+	 * @return array
+	 */
+	public function GetInitDisplayData(): array
+	{
+		return $this->aInitDisplayData;
+	}
+
+	/**
+	 * @param string $aData
+	 *
+	 * @return $this
+	 */
+	public function SetInitDisplayData(array $aData)
+	{
+		$this->aInitDisplayData = $aData;
+
+		return $this;
+	}
+
 	public function GetJSRefresh(): string
 	{
 		return "$('#".$this->sId."').DataTable().clearPipeline();
@@ -172,15 +223,17 @@ class DataTable extends UIContentBlock
 	public function GetDisabledSelect(): array
 	{
 		$aExtraParams = $this->aAjaxData['extra_params'];
-		if(isset($aExtraParams['selection_enabled']) ){
+		if (isset($aExtraParams['selection_enabled'])) {
 			$aListDisabled = [];
-			foreach( $aExtraParams['selection_enabled'] as $sKey=>$bValue){
+			foreach ($aExtraParams['selection_enabled'] as $sKey => $bValue) {
 				if ($bValue == false) {
 					$aListDisabled[] = $sKey;
 				}
 			}
+
 			return $aListDisabled;
 		}
+
 		return [];
 	}
 }

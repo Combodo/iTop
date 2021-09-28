@@ -51,7 +51,7 @@ class EditsEntry extends ActivityEntry
 	 * EditsEntry constructor.
 	 *
 	 * @param \DateTime $oDateTime
-	 * @param \User $sAuthorLogin
+	 * @param string $sAuthorLogin
 	 * @param string $sObjectClass Class of the object concerned by the edits
 	 * @param string|null $sId
 	 *

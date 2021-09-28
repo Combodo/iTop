@@ -1,19 +1,6 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
@@ -97,7 +84,7 @@ body.ibo-has-fullscreen-descendant {
 .ibo-has-fullscreen-descendant {
   position: static !important;
   overflow: visible !important;
-  z-index: 9000 !important;
+  z-index: 1050 !important;
 }
 
 /* Used on a fullscreen element (see .ibo-has-fullscreen-descendant) */
@@ -110,7 +97,7 @@ body.ibo-has-fullscreen-descendant {
   width: 100vw;
   height: 100vh;
   overflow: auto;
-  z-index: 9000;
+  z-index: 1050;
 }
 
 /****************/
@@ -136,11 +123,37 @@ body.ibo-has-fullscreen-descendant {
   }
 }
 
+.ibo-is-broken-hyperlink {
+  text-decoration: line-through;
+  cursor: help;
+}
+
 .ibo-is-code {
   background-color: $ibo-is-code--background-color;
   padding: $ibo-is-code--padding;
   @extend %ibo-font-code-150;
 }
+
+/*
+ * A single class to handle WYSIWYG generated content, where only HTML tags are available
+ * See https://bulma.io/documentation/elements/content/
+ */
+.ibo-is-html-content {
+  @extend .content;
+
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+  table {
+    width: unset !important;
+    max-width: max-content;
+  }
+
+  /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
+  & > code,
+  :not(pre.hljs) code {
+    color: inherit;
+  }
+}
+
 
 /***********************************************************************/
 /* Sticky headers                                                      */

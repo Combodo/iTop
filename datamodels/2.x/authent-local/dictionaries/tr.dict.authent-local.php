@@ -35,8 +35,8 @@
 // Class: UserLocal
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:UserLocal' => 'iTop kullanıcısı',
-	'Class:UserLocal+' => 'Yetki kontorlünü iTop tarafından yapılan kullanıcı',
+	'Class:UserLocal' => ITOP_APPLICATION_SHORT.' kullanıcısı',
+	'Class:UserLocal+' => 'Yetki kontorlünü '.ITOP_APPLICATION_SHORT.' tarafından yapılan kullanıcı',
 	'Class:UserLocal/Attribute:password' => 'Şifre',
 	'Class:UserLocal/Attribute:password+' => 'şifre',
 

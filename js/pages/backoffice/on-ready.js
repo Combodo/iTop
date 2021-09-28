@@ -67,4 +67,16 @@ $(document).ready(function () {
 			PrepareWidgets();
 		}, 500);
 	});
+
+	// jQuery dialogs handling
+	// - Force dialog to be stacked correctly
+	//
+	//   Note: This should be handle natively by jQuery, but we couldn't find why it's not.
+	//         Might be related to the fact that we set the content on the pre-existing dialog content instead of passing it as an option.
+	$('body').on('dialogopen', '.ui-dialog-content', function(oEvent, oUI) {
+		$(this).dialog('moveToTop');
+
+		let oDialogElem = $(this).dialog('instance').uiDialog;
+		oDialogElem.next('.ui-widget-overlay').css('z-index', oDialogElem.css('z-index') - 1);
+	} );
 });
