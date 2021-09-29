@@ -5182,6 +5182,7 @@ EOF
 				foreach ($aDeletes as $iId => $aData) {
 					$oToDelete = $aData['to_delete'];
 					$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
+					$sRowCssClass = '';
 					if (array_key_exists('issue', $aData))
 					{
 						if ($bAutoDel)
@@ -5201,6 +5202,7 @@ EOF
 							$sConsequence = Dict::Format('UI:Delete:MustBeDeletedManuallyButNotPossible',
 								$aData['issue']);
 						}
+						$sRowCssClass = 'ibo-is-alert';
 					}
 					else
 					{
@@ -5218,9 +5220,11 @@ EOF
 						else
 						{
 							$sConsequence = Dict::S('UI:Delete:MustBeDeletedManually');
+							$sRowCssClass = 'ibo-is-warning';
 						}
 					}
 					$aDisplayData[] = array(
+						'@class' => $sRowCssClass,
 						'class' => MetaModel::GetName(get_class($oToDelete)),
 						'object' => $oToDelete->GetHyperLink(),
 						'consequence' => $sConsequence,
@@ -5232,9 +5236,11 @@ EOF
 				foreach($aToUpdate as $iId => $aData)
 				{
 					$oToUpdate = $aData['to_reset'];
+					$sRowCssClass = '';
 					if (array_key_exists('issue', $aData))
 					{
 						$sConsequence = Dict::Format('UI:Delete:CannotUpdateBecause_Issue', $aData['issue']);
+						$sRowCssClass = 'ibo-is-alert';
 					}
 					else
 					{
@@ -5242,6 +5248,7 @@ EOF
 							$aData['attributes_list']);
 					}
 					$aDisplayData[] = array(
+						'@class' => $sRowCssClass,
 						'class' => MetaModel::GetName(get_class($oToUpdate)),
 						'object' => $oToUpdate->GetHyperLink(),
 						'consequence' => $sConsequence,
@@ -5285,13 +5292,16 @@ EOF
 
 			if ($oDeletionPlan->FoundStopper()) {
 				if ($oDeletionPlan->FoundSecurityIssue()) {
-					$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
-				} elseif ($oDeletionPlan->FoundManualOperation()) {
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-				} else // $bFoundManualOp
-				{
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+					$oFailAlertBlock = AlertUIBlockFactory::MakeForDanger('', Dict::S('UI:Delete:SorryDeletionNotAllowed'));
+					$oFailAlertBlock->SetIsClosable(false);
+					$oP->AddUiBlock($oFailAlertBlock);
+				} 
+				else {
+					$oWarningAlertBlock = AlertUIBlockFactory::MakeForWarning('', Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+					$oWarningAlertBlock->SetIsClosable(false);
+					$oP->AddUiBlock($oWarningAlertBlock);
 				}
+				
 				$oForm = FormUIBlockFactory::MakeStandard('');
 				$oP->AddSubBlock($oForm);
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));
