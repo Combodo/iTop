@@ -132,9 +132,8 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 		$this->add_header("Content-type: text/html; charset=".self::PAGES_CHARSET);
 		$this->no_cache();
 		$this->add_xframe_options();
-		if (!$this->IsPrintableVersion()) {
-			$this->PrepareLayout();
-		} else {
+		$this->PrepareLayout();
+		if ($this->IsPrintableVersion()) {
 			$oPrintHeader = $this->OutputPrintable();
 			$this->AddUiBlock($oPrintHeader);
 		}
@@ -362,21 +361,21 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 	}
 JS
 		);
-
-		// TODO 3.0.0: Change CSS class and extract this in backoffice/toolbox.js
-		// Make image attributes zoomable
-		$this->add_ready_script(
-			<<<JS
+		if (!$this->IsPrintableVersion()) {
+			// TODO 3.0.0: Change CSS class and extract this in backoffice/toolbox.js
+			// Make image attributes zoomable
+			$this->add_ready_script(
+				<<<JS
 		$('.ibo-input-image--image-view img').each(function(){
 			$(this).attr('href', $(this).attr('src'))
 		})
 		.magnificPopup({type: 'image', closeOnContentClick: true });
 JS
-		);
+			);
 
-		// TODO 3.0.0: What is this for?
-		$this->add_ready_script(
-			<<< JS
+			// TODO 3.0.0: What is this for?
+			$this->add_ready_script(
+				<<< JS
 	PrepareWidgets();
 
 	// Make sortable, everything that claims to be sortable
@@ -450,6 +449,7 @@ JS
 		}
 JS
 		);
+		}
 	}
 
 

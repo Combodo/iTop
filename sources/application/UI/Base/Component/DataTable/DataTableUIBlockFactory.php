@@ -85,6 +85,10 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForObject(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		$oDataTable = DataTableUIBlockFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
+		if ($oPage->IsPrintableVersion()) {
+			$oDataTable->AddOption('printVersion', true);
+		}
+
 		return self::RenderDataTable($oDataTable, 'listInObject', $oPage, $sListId, $oSet, $aExtraParams);
 	}
 

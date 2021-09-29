@@ -46,14 +46,6 @@ $.fn.dataTable.pipeline = function (opts, initJson) {
 		}
 		var requestEnd = requestStart+requestLength;
 
-		//Manage case requestLength=-1 => all the row are display 
-		if (requestLength == -1) {
-			requestLength = cacheLastJson.recordsTotal;
-			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
-				//new server request is mandatory
-				ajax = true;
-			}
-		}
 		if (request.draw == 1 && initJson != null) {
 			//do nothing
 			cacheLastJson = $.extend(true, {}, initJson);
@@ -76,15 +68,24 @@ $.fn.dataTable.pipeline = function (opts, initJson) {
 			ajax = true;
 		}
 
+		//Manage case requestLength=-1 => all the row are display 
+		if (requestLength == -1) {
+			requestLength = cacheLastJson.recordsTotal;
+			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
+				//new server request is mandatory
+				ajax = true;
+			}
+		}
+		
 		// Store the request for checking next time around
-		cacheLastRequest = $.extend( true, {}, request );
+		cacheLastRequest = $.extend(true, {}, request);
 
-		if ( ajax ) {
+		if (ajax) {
 			// Need data from the server
-			if ( requestStart < cacheLower ) {
-				requestStart = requestStart - (requestLength*(conf.pages-1));
+			if (requestStart < cacheLower) {
+				requestStart = requestStart-(requestLength * (conf.pages-1));
 
-				if ( requestStart < 0 ) {
+				if (requestStart < 0) {
 					requestStart = 0;
 				}
 			}

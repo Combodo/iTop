@@ -185,7 +185,17 @@ class DataTable extends UIContentBlock
 	}
 
 	/**
+	 * @param string $sName
+	 * @param mixed $sValue
+	 */
+	public function AddOption($sName, $sValue): void
+	{
+		$this->aOptions[$sName] = $sValue;
+	}
+
+	/**
 	 *  Get $aInitDisplayData as a JSON This is data of first page
+	 *
 	 * @return string
 	 */
 	public function GetJsonInitDisplayData(): string

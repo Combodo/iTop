@@ -1050,15 +1050,12 @@ HTML
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 
-		if ($sMode === static::ENUM_OBJECT_MODE_VIEW)
-		{
+		if ($sMode === static::ENUM_OBJECT_MODE_VIEW) {
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
-			if ($LockEnabled)
-			{
+			if ($LockEnabled) {
 				$aLockInfo = iTopOwnershipLock::IsLocked($sClass, $iKey);
-				if ($aLockInfo['locked'] === true && $aLockInfo['owner']->GetKey() == UserRights::GetUserId() && $bBlockReentrance === false)
-				{
+				if ($aLockInfo['locked'] === true && $aLockInfo['owner']->GetKey() == UserRights::GetUserId() && $bBlockReentrance === false) {
 					// If the object is locked by the current user, it's worth trying again, since
 					// the lock may be released by 'onunload' which is called AFTER loading the current page.
 					//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
@@ -1072,6 +1069,9 @@ HTML
 
 		// Object's details
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
+		if ($oPage->IsPrintableVersion()) {
+			$oObjectDetails->SetIsHeaderVisibleOnScroll(false);
+		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
 		/** @var \iTopWebPage $oPage */
@@ -2057,10 +2057,8 @@ HTML;
 					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
 					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
 					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES,
-							'UTF-8')."\"/>";
-					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes,
-							$sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>";
+					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
 					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
 					break;
 
@@ -4699,7 +4697,9 @@ HTML
 
 			$aFieldsMap[$sAttCode] = $sInputId;
 
-			$oFieldset = FieldSetUIBlockFactory::MakeStandard($sAttLabel);
+			$sCommentAsHtml = ($sComment != '') ? ' <div class="ibo-field--comments">'.$sComment.'</div>' : '';
+
+			$oFieldset = FieldSetUIBlockFactory::MakeStandard($sAttLabel.$sCommentAsHtml);
 			$oPage->AddSubBlock($oFieldset);
 
 			$oDivField = FieldUIBlockFactory::MakeLarge("");
@@ -4713,10 +4713,9 @@ HTML
 			$oDivField->AddDataAttribute("attribute-flag-must-prompt", $sAttMetaDataFlagMustPrompt);
 			$oDivField->AddDataAttribute("attribute-flag-slave", false);
 			$oFieldset->AddSubBlock($oDivField);
-
-			$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
+			//$oDivField->SetComments($sComment);
 			$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
-			$sHTMLValue = $sCommentAsHtml.$sFieldAsHtml;
+			$sHTMLValue = $sFieldAsHtml;
 			$oDivField->AddSubBlock(new Html($sHTMLValue));
 		}
 	}

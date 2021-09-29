@@ -49,11 +49,15 @@
     {% endblock %}
 </head>
 <body data-gui-type="backoffice">
-{% block iboPageBodyHtml %}
-    <div id="ibo-page-container">
-        {{ render_block(oLayout, {aPage: aPage}) }}
-    </div>
-{% endblock %}
+{% if aPage.isPrintable %}
+<div class="printable-content" style="width: 27.7cm;"> {% endif %}
+    {% block iboPageBodyHtml %}
+
+        <div id="ibo-page-container">
+            {{ render_block(oLayout, {aPage: aPage}) }}
+        </div>
+    {% endblock %}
+    {% if aPage.isPrintable %}</div> {% endif %}
 
 {% block iboDeferredBlocks %}
     {% for oBlock in aDeferredBlocks %}
@@ -62,8 +66,8 @@
 {% endblock %}
 {% if aPage.aJsFiles is not empty %}
     <script type="text/javascript">
-        var aListJsFiles = [];
-        {% for sJsFile in aPage.aJsFiles %}
+    var aListJsFiles = [];
+    {% for sJsFile in aPage.aJsFiles %}
             aListJsFiles.push("{{ sJsFile|raw }}");
         {% endfor %}
     </script>

@@ -43,30 +43,38 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     scrollX: true,
     {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
-        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+    scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
     {% endif %}
     scrollCollapse: true,
+    {% if oUIBlock.GetOption('printVersion') is not empty %}
+    paging: false,
+    info: false,
+    {% endif %}
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% if( oUIBlock.GetOption("sort")[0] is defined ) %}
-        order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
+    order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
     {% else %}
-        order: [],
+    order: [],
     {% endif %}
     ordering: true,
     {% if oUIBlock.GetOption("select_mode") is not empty %}
-        select: {
-            style: "{% if oUIBlock.GetOption("select_mode") == "multiple" %}multi{% else %}single{% endif %}",
-            info: false
-        },
-        rowCallback: function (oRow, oData) {
-            if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-                if (oSelectedItems{{ sListId }}.indexOf(oData.id) === -1) {
-                    this.api().row($(oRow)).select();
-                    //   $(oRow).addClass('selected');
-                    $(oRow).find('td:first-child input').prop('checked', true);
-                }
-            } else {
+    select: {
+        style: "{% if oUIBlock.GetOption("select_mode") == "multiple" %}multi{% else %}single{% endif %}",
+        info: false
+    },
+    rowCallback: function (oRow, oData) {
+        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+        {
+            if (oSelectedItems{{ sListId }}.indexOf(oData.id) === -1)
+            {
+                this.api().row($(oRow)).select();
+                //   $(oRow).addClass('selected');
+                $(oRow).find('td:first-child input').prop('checked', true);
+            }
+        }
+        else
+        {
                 if (oSelectedItems{{ sListId }}.indexOf(oData.id) > -1) {
                     this.api().row($(oRow)).select();
                     $(oRow).find('td:first-child input').prop('checked', true);
