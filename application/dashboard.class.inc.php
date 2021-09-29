@@ -552,7 +552,7 @@ EOF
 				$oToolbar->AddHtml($sHtml);
 			} else {
 				$oPage->add_script(<<<JS
-$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML").attr("title", "$sTitleForHTML");
+$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML").attr("title",  $('<div>').html("$sTitleForHTML").text());
 JS
 				);
 			}
