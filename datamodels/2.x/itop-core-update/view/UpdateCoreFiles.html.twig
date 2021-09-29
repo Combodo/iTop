@@ -60,7 +60,7 @@
                         {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:RunSetup'|dict_s, sId:'run_setup', bIsSubmit:true, IsDisabled:false} %}
                     {% EndUIForm %}
                 {% EndUIContentBlock %}
-                {% UIContentBlock Standard {aContainerClasses:["ibo-setup--button-spacer"]} %}{% EndUIContentBlock %}
+                {% UIToolbarSpacer Standard {} %}
                 {% UIForm Standard {CSSClasses:['form-inline']} %}
                     {% UIButton ForPrimaryAction {sLabel:'iTopUpdate:UI:Continue'|dict_s, sId:'setup_continue', bIsSubmit:true, IsDisabled:true} %}
                 {% EndUIForm %}
