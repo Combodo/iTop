@@ -76,7 +76,3 @@ body{
   padding-bottom: $ibo-main-content--padding-bottom;
   overflow: auto; /* For scroll to happen in the main content instead of the center content */
 }
-
-.ui-dialog, .ui-dialog-content {
-  box-sizing: content-box;
-}

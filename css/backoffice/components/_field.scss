@@ -23,7 +23,11 @@ $ibo-field--fullscreen-toggler--size: 20px !default;
 $ibo-field--fullscreen-toggler--border-radius: $ibo-border-radius-500 !default;
 $ibo-field--fullscreen-toggler--background-color--on-hover: $ibo-color-white-200 !default;
 
+$ibo-field--comments--size: 5em !default;
+$ibo-field--comments--font-size: $ibo-font-size-150 !default;
+
 $ibo-field--value--scrollbar-track-background-color: $ibo-color-white-200 !default;
+$ibo-field--value--margin-top--for-large: 2px !default;
 $ibo-field--value--padding-x--is-fullscreen: $ibo-field--label--padding-x--is-fullscreen !default;
 $ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + 32px !default;
 $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen !default;
@@ -86,6 +90,10 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
     min-width: 100px;
     max-width: 145px;
     width: 30%;
+  }
+
+  .ibo-field--value {
+    margin-top: $ibo-field--value--margin-top--for-large; /* Mostly used to have a clear separation from elements in .ibo-field--comments */
   }
 
   /* N°4318 - Visible scrollbar background for large fields overflowing to ease "limits" visualization by the user */
@@ -178,19 +186,19 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
 
 .ibo-field--label > .ibo-field--comments {
   flex: auto;
-  padding-bottom: 2px;
 }
 
+/* For log fields in the bulk operation screens */
 .ibo-fieldset-legend > .ibo-field--comments {
   display: contents;
-  padding-bottom: 2px;
-  font-size: $ibo-font-size-150;
+  padding-bottom: $ibo-field--value--margin-top--for-large;
+  font-size: $ibo-field--comments--font-size;
 }
 
 .ibo-field--comments {
   display: table-cell;
   vertical-align: top;
-  width: 5em;
+  width: $ibo-field--comments--size; /* Ensure that inputs have all the same width (this is due to the of display table / table-cell) */
 
   > input[type="checkbox"] {
     margin-left: 5px;
@@ -236,6 +244,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
   margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
- .form_field ~ .form_field {
+.form_field ~ .form_field {
     margin-top: $ibo-field--sibling-spacing;
  }
