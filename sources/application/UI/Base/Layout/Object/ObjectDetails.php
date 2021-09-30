@@ -61,9 +61,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sIconUrl;
 	/** @var string|null Code of the current value of the attribute carrying the state for $sClassName */
 	protected $sStatusCode;
-	/** @var string Label of the current value of the attribute carrying the state for $sClassName  */
+	/** @var string|null Label of the current value of the attribute carrying the state for $sClassName  */
 	protected $sStatusLabel;
-	/** @var string Color value (eg. #ABCDEF, var(--foo-color), ...) */
+	/** @var string|null Color value (eg. #ABCDEF, var(--foo-color), ...) */
 	protected $sStatusColor;
 
 	/**
@@ -164,6 +164,15 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	public function GetStatusCode(): ?string
 	{
 		return $this->sStatusCode;
+	}
+
+	/**
+	 * @see static::$sStatusCode
+	 * @return bool
+	 */
+	public function HasStatus(): bool
+	{
+		return $this->sStatusCode !== null;
 	}
 
 	/**
