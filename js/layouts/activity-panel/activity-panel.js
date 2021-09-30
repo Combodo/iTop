@@ -455,13 +455,13 @@ $(function()
 					return;
 				}
 
+				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 				// If several entry forms filled, show a confirmation message
 				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
-					this._ShowEntriesSubmitConfirmation();
+					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
 				else {
-					let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 					this._SendEntriesToServer(sStimulusCode);
 				}
 			},
@@ -820,6 +820,7 @@ $(function()
 					minWidth: 400,
 					modal: true,
 					position: {my: "center center", at: "center center", of: this.js_selectors.tabs_toolbars},
+					close: function () { me._HideEntriesSubmitConfirmation(); },
 					buttons: [
 						{
 							text: Dict.S('UI:Button:Cancel'),
@@ -836,8 +837,11 @@ $(function()
 								if (bDoNotShowAgain) {
 									me._SaveSubmitConfirmationPref();
 								}
+
+								// Needs to be retrieved before hiding the dialog as it will wipe out the value in the process
+								const sStimulusCode = $(this).attr('data-stimulus-code');
 								me._HideEntriesSubmitConfirmation();
-								me._SendEntriesToServer();
+								me._SendEntriesToServer(sStimulusCode);
 							}
 						},
 					],
@@ -845,11 +849,14 @@ $(function()
 			},
 			/**
 			 * Show the confirmation dialog when multiple case log entries have been editied
+			 * @param sStimulusCode {string|null} Code of the stimulus to apply if confirmation is given
 			 * @private
 			 */
-			_ShowEntriesSubmitConfirmation: function()
+			_ShowEntriesSubmitConfirmation: function(sStimulusCode = null)
 			{
-				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('open');
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog)
+					.dialog('open')
+					.attr('data-stimulus-code', sStimulusCode);
 			},
 			/**
 			 * Hide the confirmation dialog for multiple edited case log entries
@@ -857,7 +864,9 @@ $(function()
 			 */
 			_HideEntriesSubmitConfirmation: function()
 			{
-				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('close');
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog)
+					.dialog('close')
+					.attr('data-stimulus-code', '');
 			},
 			/**
 			 * Save that the user don't want the confirmation dialog to be shown in the future
@@ -870,7 +879,7 @@ $(function()
 			},
 			/**
 			 * Send the edited case logs entries to the server
-			 * @param sStimulusCode {string} Stimulus code to apply after the entries are saved
+			 * @param sStimulusCode {string|null} Stimulus code to apply after the entries are saved
 			 * @return {void}
 			 * @private
 			 */
@@ -923,6 +932,8 @@ $(function()
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
 						// Redirect to stimulus
+						// - Convert undefined, null and empty string to null
+						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
 							window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
 						}
