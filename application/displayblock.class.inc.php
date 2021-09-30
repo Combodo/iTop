@@ -268,6 +268,8 @@ class DisplayBlock
 			'surround_with_panel',
 			/** string title of panel block */
 			'panel_title',
+			/** string true if panel title should be displayed as html */
+			'panel_title_is_html',
 			/** string class for panel block style */
 			'panel_class',
 			/** string class for panel block style */

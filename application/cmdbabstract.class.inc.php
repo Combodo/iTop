@@ -5335,6 +5335,7 @@ EOF
 					'menu' => false,
 					'surround_with_panel' => true,
 					'panel_title' => $sSubtitle,
+					'panel_title_is_html' => true,
 					'panel_icon' => MetaModel::GetClassIcon($sClass, false),
 					'panel_class' => $sClass,
 				)));
