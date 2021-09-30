@@ -1793,7 +1793,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TEXT';
+		$aColumns[$this->GetCode()] = 'TEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -5994,7 +5994,7 @@ class AttributeDateTime extends AttributeDBField
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'VARCHAR(19)';
+		$aColumns[$this->GetCode()] = 'VARCHAR(19)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -6482,7 +6482,7 @@ class AttributeDate extends AttributeDateTime
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'VARCHAR(10)';
+		$aColumns[$this->GetCode()] = 'VARCHAR(10)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}

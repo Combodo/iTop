@@ -4531,15 +4531,15 @@ abstract class MetaModel
 	/**
 	 * Check (and updates if needed) the hierarchical keys
 	 *
-	 * @param boolean $bDiagnosticsOnly If true only a diagnostic pass will be run, returning true or false
-	 * @param boolean $bVerbose Displays some information about what is done/what needs to be done
-	 * @param boolean $bForceComputation If true, the _left and _right parameters will be recomputed even if some
+	 * @param bool $bDiagnosticsOnly If true only a diagnostic pass will be run, returning true or false
+	 * @param bool $bVerbose Displays some information about what is done/what needs to be done
+	 * @param bool $bForceComputation If true, the _left and _right parameters will be recomputed even if some
 	 *     values already exist in the DB
 	 *
+	 * @return bool
 	 * @throws \CoreException
-	 * @throws \Exception
 	 */
-	public static function CheckHKeys($bDiagnosticsOnly = false, $bVerbose = false, $bForceComputation = false)
+	public static function CheckHKeys(bool $bDiagnosticsOnly = false, bool $bVerbose = false, bool $bForceComputation = false)
 	{
 		$bChangeNeeded = false;
 		foreach(self::GetClasses() as $sClass)
