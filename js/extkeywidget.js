@@ -145,7 +145,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 							val = '<span class="ibo-input-select--autocomplete-item-image">'+item.initials+'</span>';
 						}
 					}
-					val = val+'<span class="ibo-input-select--autocomplete-item-txt" >';
+					val = val+'<span class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
 					if (item.obsolescence_flag == 1) {
 						val = val+'<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
 					} else {
@@ -257,7 +257,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					val = '<span class="ibo-input-select--autocomplete-item-image");">'+item.initials+'</span>';
 				}
 			}
-			val = val+'<div class="ibo-input-select--autocomplete-item-txt">';
+			val = val+'<div class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
 			if (item.obsolescence_flag == '1') {
 				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
 			}
