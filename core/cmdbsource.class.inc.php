@@ -849,20 +849,19 @@ class CMDBSource
 	 */
 	public static function QueryToScalar($sSql, $iCol = 0, $oMysqli = null)
 	{
+		$oMysqliForQuery = $oMysqli ?: DbConnectionWrapper::GetDbConnection(true);
+
 		$oKPI = new ExecutionKPI();
-		try
-		{
-			/** @noinspection NullPointerExceptionInspection this shouldn't be called with un-init DB */
-			$oResult = DbConnectionWrapper::GetDbConnection(true)->query($sSql);
+		try {
+			/** @noinspection NullPointerExceptionInspection this shouldn't happen : either cnx is passed or the DB was init */
+			$oResult = $oMysqliForQuery->query($sSql);
 		}
-		catch(mysqli_sql_exception $e)
-		{
+		catch (mysqli_sql_exception $e) {
 			$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql, $e));
 		}
 		$oKPI->ComputeStats('Query exec (mySQL)', $sSql);
-		if ($oResult === false)
-		{
+		if ($oResult === false) {
 			throw new MySQLException('Failed to issue SQL query', array('query' => $sSql));
 		}
 

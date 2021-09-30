@@ -4,6 +4,7 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
+use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use utils;
 
@@ -123,16 +124,17 @@ class CMDBSourceTest extends ItopTestCase
 	 * @throws \MySQLException
 	 * @since 3.0.0 N°4215
 	 */
-	public function testIsOpenedDbConnectionUsingTls() {
+	public function testIsOpenedDbConnectionUsingTls()
+	{
 		$oConfig = utils::GetConfig();
 		CMDBSource::InitFromConfig($oConfig);
 		$oMysqli = CMDBSource::GetMysqli();
 
 		// resets \CMDBSource::$oMySQLiForQuery to simulate call to \CMDBSource::Init with a TLS connexion
-		$this->InvokeNonPublicStaticMethod(CMDBSource::class, 'SetMySQLiForQuery',[null]);
+		DbConnectionWrapper::SetDbConnection(null);
 
 		// before N°4215 fix, this was crashing : "Call to a member function query() on null"
-		$bIsTlsCnx = $this->InvokeNonPublicStaticMethod(CMDBSource::class, 'IsOpenedDbConnectionUsingTls',[$oMysqli]);
+		$bIsTlsCnx = $this->InvokeNonPublicStaticMethod(CMDBSource::class, 'IsOpenedDbConnectionUsingTls', [$oMysqli]);
 		$this->assertFalse($bIsTlsCnx);
 	}
 }

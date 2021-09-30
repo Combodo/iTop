@@ -49,7 +49,7 @@ class DbConnectionWrapper
 		return static::$oDbCnxStandard;
 	}
 
-	public static function SetDbConnection(mysqli $oMysqli): void
+	public static function SetDbConnection(?mysqli $oMysqli): void
 	{
 		static::$oDbCnxStandard = $oMysqli;
 		static::SetDbConnectionMockForQuery($oMysqli);
@@ -58,9 +58,9 @@ class DbConnectionWrapper
 	/**
 	 * Use this to register a mock that will handle {@see mysqli::query()}
 	 *
-	 * @param \mysqli $oMysqli
+	 * @param \mysqli|null $oMysqli
 	 */
-	public static function SetDbConnectionMockForQuery(mysqli $oMysqli): void
+	public static function SetDbConnectionMockForQuery(?mysqli $oMysqli): void
 	{
 		static::$oDbCnxMockableForQuery = $oMysqli;
 	}
