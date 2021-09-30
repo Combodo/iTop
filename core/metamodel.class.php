@@ -3083,8 +3083,7 @@ abstract class MetaModel
 							// Set attribute code
 							self::$m_aClassParams[$sPHPClass]['state_attcode'] = self::$m_aClassParams[$sParent]['state_attcode'];
 
-							// Set states
-							self::$m_aStates[$sPHPClass] = self::$m_aStates[$sParent];
+							// Note: Don't set self::$m_aStates[$sPHPClass], it has already been done by self::Init_DefineState()
 						}
 						// - Image attribute
 						$bParentHasImageAttribute = (isset(self::$m_aClassParams[$sParent]['image_attcode']) && !empty(self::$m_aClassParams[$sParent]['image_attcode']));
