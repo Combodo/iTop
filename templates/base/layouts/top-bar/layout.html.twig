@@ -1,5 +1,5 @@
-<nav id="{{ oUIBlock.GetId() }}" class="ibo-top-bar">
-	<div class="ibo-top-bar--quick-actions">
+<nav id="{{ oUIBlock.GetId() }}" class="ibo-top-bar" data-role="ibo-top-bar">
+	<div class="ibo-top-bar--quick-actions" data-role="ibo-top-bar--quick-actions">
 		{% if oUIBlock.HasQuickCreate() %}
 			{{ render_block(oUIBlock.GetQuickCreate(), {aPage: aPage}) }}
 		{% endif %}

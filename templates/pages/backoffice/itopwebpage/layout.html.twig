@@ -3,8 +3,8 @@
 {% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
 {% block iboPageBodyHtml %}
 		{{ render_block(aLayouts.oNavigationMenu, {aPage: aPage}) }}
-		<div id="ibo-page-container">
-			<div id="ibo-top-container">
+		<div id="ibo-page-container" data-role="ibo-page-container">
+			<div id="ibo-top-container" data-role="ibo-top-container">
 				{{ include('pages/backoffice/extension-blocks/banner.html.twig') }}
 				{{ render_block(aLayouts.oTopBar, {aPage: aPage}) }}
 			</div>
