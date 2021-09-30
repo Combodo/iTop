@@ -732,6 +732,9 @@ abstract class LogAPI
 	}
 
 	/**
+	 * **Warning** : during \MFCompiler::Compile the config will be partial, so when logging in this method you won't get the proper log config !
+	 * See N°4345
+	 *
 	 * @uses m_oMockMetaModelConfig if defined
 	 * @uses \MetaModel::GetConfig()
 	 */
