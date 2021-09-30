@@ -147,6 +147,8 @@ class CMDBSource
 	 *
 	 * @return \mysqli
 	 * @throws \MySQLException
+	 *
+	 * @uses IsOpenedDbConnectionUsingTls when asking for a TLS connection, to check if it was really opened using TLS
 	 */
 	public static function GetMysqliInstance(
 		$sDbHost, $sUser, $sPwd, $sSource = '', $bTlsEnabled = false, $sTlsCa = null, $bCheckTlsAfterConnection = false
@@ -249,41 +251,41 @@ class CMDBSource
 	 * parameters were used.<br>
 	 * This method can be called to ensure that the DB connection really uses TLS.
 	 *
-	 * <p>We're using this object connection : {@see self::$m_oMysqli}
+	 * <p>We're using our own mysqli instance to do the check as this check is done when creating the mysqli instance : the consumer
+	 * might want a dedicated object, and if so we don't want to overwrite the one saved in CMDBSource !<br>
+	 * This is the case for example with {@see \iTopMutex} !
 	 *
 	 * @param \mysqli $oMysqli
 	 *
-	 * @return boolean true if the connection was really established using TLS
+	 * @return boolean true if the connection was really established using TLS, false otherwise
 	 * @throws \MySQLException
 	 *
+	 * @used-by GetMysqliInstance
 	 * @uses IsMySqlVarNonEmpty
+	 * @uses 'ssl_version' MySQL var
+	 * @uses 'ssl_cipher' MySQL var
 	 */
 	private static function IsOpenedDbConnectionUsingTls($oMysqli)
 	{
-		if (self::$m_oMysqli == null)
-		{
-			self::$m_oMysqli = $oMysqli;
-		}
-
-		$bNonEmptySslVersionVar = self::IsMySqlVarNonEmpty('ssl_version');
-		$bNonEmptySslCipherVar = self::IsMySqlVarNonEmpty('ssl_cipher');
+		$bNonEmptySslVersionVar = self::IsMySqlVarNonEmpty('ssl_version', $oMysqli);
+		$bNonEmptySslCipherVar = self::IsMySqlVarNonEmpty('ssl_cipher', $oMysqli);
 
 		return ($bNonEmptySslVersionVar && $bNonEmptySslCipherVar);
 	}
 
 	/**
 	 * @param string $sVarName
+	 * @param mysqli $oMysqli connection to use for the query
 	 *
 	 * @return bool
 	 * @throws \MySQLException
-	 *
-	 * @uses SHOW STATUS queries
+	 * @uses 'SHOW SESSION STATUS' queries
 	 */
-	private static function IsMySqlVarNonEmpty($sVarName)
+	private static function IsMySqlVarNonEmpty($sVarName, $oMysqli)
 	{
 		try
 		{
-			$sResult = self::QueryToScalar("SHOW SESSION STATUS LIKE '$sVarName'", 1);
+			$sResult = self::QueryToScalar("SHOW SESSION STATUS LIKE '$sVarName'", 1, $oMysqli);
 		}
 		catch (MySQLQueryHasNoResultException $e)
 		{
@@ -838,12 +840,14 @@ class CMDBSource
 	/**
 	 * @param string $sSql
 	 * @param int $iCol beginning at 0
+	 * @param mysqli $oMysqli if not null will query using this connection, otherwise will use {@see GetMySQLiForQuery}
 	 *
 	 * @return string corresponding cell content on the first line
 	 * @throws \MySQLException
 	 * @throws \MySQLQueryHasNoResultException
+	 * @since 2.7.5-2 2.7.6 3.0.0 N°4215 new optional mysqli param
 	 */
-	public static function QueryToScalar($sSql, $iCol = 0)
+	public static function QueryToScalar($sSql, $iCol = 0, $oMysqli = null)
 	{
 		$oKPI = new ExecutionKPI();
 		try
