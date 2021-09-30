@@ -147,7 +147,8 @@ $(function () {
 					me._mark_as_selected($(this).val(), bChecked);
 				});
 				jSelector.find('.tfs_checkbox_multi').each(function () {
-					var oField = me._get_main_field_by_code($(this).val());
+					var sMultiFieldCode = $(this).val();
+					var oField = me._get_main_field_by_code(sMultiFieldCode);
 					if (oField != null) {
 						$(this).prop('checked', bChecked);
 						$(this).prop('indeterminate', false);
@@ -158,6 +159,7 @@ $(function () {
 							sElementId = (sPrefix+oField.subattr[k].code).replace('.', '_');
 							$(sElementId).prop('checked', bChecked);
 						}
+						me._update_tooltips(sMultiFieldCode);
 					}
 				});
 				this._update_holder();
