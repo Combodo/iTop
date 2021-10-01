@@ -69,19 +69,28 @@ $ibo-keyboard-shortcut--input--is-focus--border-color: $ibo-color-primary-600 !d
   width: auto;
   text-transform: capitalize;
   text-align: center;
-  
+
   color: $ibo-keyboard-shortcut--input--color;
   background-color: $ibo-keyboard-shortcut--input--background-color;
   border: 1px solid $ibo-keyboard-shortcut--input--border-color;
   border-bottom: 2px solid $ibo-keyboard-shortcut--input--border-color;
   border-radius: $ibo-keyboard-shortcut--input--border-radius;
-  
+
   padding: $ibo-keyboard-shortcut--input--padding-y $ibo-keyboard-shortcut--input--padding-x;
   margin-bottom: $ibo-keyboard-shortcut--input--margin-bottom;
-  
-  &.ibo-is-focus{
+
+  &.ibo-is-focus {
     text-transform: none;
     color: $ibo-keyboard-shortcut--input--is-focus--color;
     border-color: $ibo-keyboard-shortcut--input--is-focus--border-color;
   }
+}
+
+#ibo-favorite-organizations .ibo-toolbar {
+  float: right;
+  vertical-align: top;
+}
+
+#ibo-favorite-organizations .ibo-datatable--toolbar {
+  padding-top: $ibo-button--padding-y/2;
 }

@@ -522,6 +522,18 @@ JS
 	}
 
 	/**
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenu $oNavigationMenuLayout
+	 *
+	 * @return $this
+	 * @uses static::$oNavigationMenuLayout
+	 * @since 3.0.0
+	 */
+	public function ResetNavigationMenuLayout()
+	{
+		$this->SetNavigationMenuLayout(NavigationMenuFactory::MakeStandard());
+	}
+
+	/**
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\TopBar\TopBar
 	 * @uses static::$oTopBarLayout
 	 * @since 3.0.0

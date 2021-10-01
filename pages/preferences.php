@@ -375,7 +375,12 @@ JS
 	// - Submit button
 	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
-	
+
+	// - Submit button
+	$oKeyboardShortcutResetButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'), 'operation', 'reset_keyboard_shortcuts', true);
+	$oKeyboardShortcutResetButton->SetTooltip(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip'));
+	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutResetButton);
+
 	$oContentLayout->AddMainBlock($oKeyboardShortcutBlock);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -703,6 +708,7 @@ try {
 					$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
 					appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
 				}
+				$oPage->ResetNavigationMenuLayout();
 				DisplayPreferences($oPage);
 				break;
 
@@ -772,6 +778,11 @@ try {
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);
+
+				DisplayPreferences($oPage);
+				break;
+			case 'reset_keyboard_shortcuts':
+				appUserPreferences::UnsetPref('keyboard_shortcuts');
 
 				DisplayPreferences($oPage);
 				break;
