@@ -243,7 +243,7 @@ class UIExtKeyWidget
 					foreach ($aAdditionalField as $sAdditionalField) {
 						array_push($aArguments, $oObj->Get($sAdditionalField));
 					}
-					$aOption['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+					$aOption['additional_field'] = utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments));
 				}
 				if (!empty($sObjectImageAttCode)) {
 					// Try to retrieve image for contact
