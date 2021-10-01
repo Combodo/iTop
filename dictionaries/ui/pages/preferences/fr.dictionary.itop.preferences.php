@@ -35,7 +35,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint'           => 'Saisissez un raccourci clavier',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip'       => 'Enregistrer un raccourci clavier',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'         => 'Réinitialiser',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip' => 'Remet les raccourcis claviers par défaut',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip' => 'Remettre les raccourcis claviers par défaut',
 	'UI:Preferences:Tabs:Title'                                        => 'Onglets',
 	'UI:Preferences:Tabs:Layout:Label'                                 => 'Affichage',
 	'UI:Preferences:Tabs:Layout:Horizontal'                            => 'Horizontal',
