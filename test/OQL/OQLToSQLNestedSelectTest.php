@@ -32,28 +32,8 @@ class OQLToSQLNestedSelectTest extends ItopDataTestCase
 	}
 
 	/**
-	 * @doesNotPerformAssertions
-	 *
-	 * @throws \ConfigException
-	 * @throws \CoreException
-	 */
-	public function testOQLSetup()
-	{
-		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
-		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
-		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
-		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
-		$sConfigFile = utils::GetConfig()->GetLoadedFile();
-		@chmod($sConfigFile, 0770);
-		utils::GetConfig()->WriteToFile();
-		@chmod($sConfigFile, 0444); // Read-only
-
-	}
-
-	/**
 	 * @group itopConfigMgmt
 	 * @dataProvider OQLSelectProvider
-	 * @depends testOQLSetup
 	 *
 	 * @param $sOQL
 	 *
@@ -70,6 +50,11 @@ class OQLToSQLNestedSelectTest extends ItopDataTestCase
 	 */
 	public function testOQLSelect($sOQL, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 20, $iLimitStart = 0)
 	{
+		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
+		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
+		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
+
 		$this->assertFalse(utils::GetConfig()->Get('use_legacy_dbsearch'));
 		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
