@@ -167,6 +167,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
 			// To avoid dropdown to be cut by the container's overflow hidden rule
 			dropdownParent: 'body',
+			onDropdownOpen: function(oDropdownElem){
+				me.UpdateDropdownPosition(this.$control, oDropdownElem);
+			},
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
@@ -240,6 +243,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (dialog.length > 0) {
 						$('.ui-autocomplete.ui-front').css('z-index', parseInt(dialog.css("z-index"))+1);
 					}
+					me.UpdateDropdownPosition($(this), $('.ui-autocomplete.selectize-dropdown:visible'));
 					me.ManageScroll();
 				},
 				close: function (event, ui) {
@@ -304,6 +308,35 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id).parent().find('.ibo-input-select').css('padding-right', iPaddingRight);
 	};
 
+	/**
+	 * Update the dropdown's position so it always fits in the screen
+	 *
+	 * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
+	 * @param {object} oDropdownElem jQuery object representing the results dropdown
+	 * @return {void}
+	 */
+	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+		const fWindowHeight = window.innerHeight;
+
+		const fControlTopY = oControlElem.offset().top;
+		const fControlHeight = oControlElem.outerHeight();
+
+		const fDropdownTopY = oDropdownElem.offset().top;
+		// This one is "let" as it might be updated if necessary
+		let fDropdownHeight = oDropdownElem.outerHeight();
+		const fDropdownBottomY = fDropdownTopY + fDropdownHeight;
+
+		if (fDropdownBottomY > fWindowHeight) {
+			// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
+			oDropdownElem.css('max-height', '30vh');
+			fDropdownHeight = oDropdownElem.outerHeight();
+
+			// Position dropdown above input if not enough space on the bottom part of the screen
+			if ((fDropdownTopY / fWindowHeight) > 0.6) {
+				oDropdownElem.css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
+			}
+		}
+	};
 	this.ManageScroll = function () {
 		if ($('#label_'+me.id).scrollParent()[0].tagName != 'HTML') {
 			$('#label_'+me.id).scrollParent().on(['scroll.'+me.id, 'resize.'+me.id].join(" "), function () {
@@ -407,9 +440,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		);
 	};
 
+	/**
+	 * Update the dialog size to fit into the screen
+	 * @constructor
+	 */
 	this.UpdateSizes = function () {
 		var dlg = $('#ac_dlg_'+me.id);
-		// Adjust the dialog's size to fit into the screen
 		if (dlg.width() > ($(window).width()-40)) {
 			dlg.width($(window).width()-40);
 		}
