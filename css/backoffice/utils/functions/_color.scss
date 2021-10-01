@@ -6,6 +6,8 @@
 /**
  * Adjust the lightness of $sColor to the absolute $fTargetLightness value.
  * It is different than lighten() / darken() that shift the current lightness by X%
+ *
+ * @return Modified color value in HSLA format
  */
 @function ibo-adjust-lightness($sColor, $fTargetLightness) {
   $iHue: hue($sColor);
@@ -16,3 +18,17 @@
   @return hsla($iHue, $fSaturation, $fTargetLightness, $fAlpha);
 }
 
+/**
+ * Adjust the alpha chanel (opacity) of $sColor to the absolute $fTargetAlpha value.
+ * It is different than opacify() / transparentize() that shift the current alpha value by X%
+ *
+ * @return Modified color value in HSLA format
+ */
+@function ibo-adjust-alpha($sColor, $fTargetAlpha) {
+  $iHue: hue($sColor);
+  $fSaturation: saturation($sColor);
+  $fLightness: lightness($sColor);
+  $fAlpha: alpha($sColor);
+
+  @return hsla($iHue, $fSaturation, $fLightness, $fTargetAlpha);
+}

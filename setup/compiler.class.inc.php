@@ -2314,8 +2314,9 @@ EOF
 				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
 
 				$sCssRegularClassMainColorDeclaration = "--ibo-main-color: $sMainColorScssVariableName;";
-				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100);";
-				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900);";
+				// Note: We have to manually force the alpha chanel in case the given color is transparent
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100);";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900);";
 
 				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: $sMainColorScssVariableName;";
 			} else {
