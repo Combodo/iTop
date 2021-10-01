@@ -376,7 +376,7 @@ JS
 	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
 
-	// - Submit button
+	// - Reset button
 	$oKeyboardShortcutResetButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'), 'operation', 'reset_keyboard_shortcuts', true);
 	$oKeyboardShortcutResetButton->SetTooltip(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip'));
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutResetButton);
