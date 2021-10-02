@@ -8159,24 +8159,27 @@ class AttributeImage extends AttributeBlob
 		$sRet = '';
 		$bIsCustomImage = false;
 
-		$iMaxWidthPx = $this->Get('display_max_width').'px';
-		$iMaxHeightPx = $this->Get('display_max_height').'px';
+		$iMaxWidth = $this->Get('display_max_width');
+		$sMaxWidthPx = $iMaxWidth.'px';
+		$iMaxHeight = $this->Get('display_max_height');
+		$sMaxHeightPx = $iMaxHeight.'px';
 
 		$sDefaultImageUrl = $this->Get('default_image');
 		if ($sDefaultImageUrl !== null) {
-			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $sMaxWidthPx, $sMaxHeightPx);
 		}
 
 		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
 		if ($sCustomImageUrl !== null) {
 			$bIsCustomImage = true;
-			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $sMaxWidthPx, $sMaxHeightPx);
 		}
 
 		$sCssClasses = 'ibo-input-image--image-view attribute-image';
 		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
 
-		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';">'.$sRet.'</div>';
+		// Important: If you change this, mind updating edit_image.js as well
+		return '<div class="'.$sCssClasses.'" style="max-width: '.$sMaxWidthPx.'; max-height: '.$sMaxHeightPx.'; aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
 	}
 
 	/**
