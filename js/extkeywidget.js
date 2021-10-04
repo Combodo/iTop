@@ -230,8 +230,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				},
 				select: function (event, ui) {
 					$('#'+me.id).val(ui.item.value);
-					$('#label_'+me.id).val(ui.item.label);
-					$('#label_'+me.id).data('selected_value', ui.item.label);
+					let labelValue = $('<div>').html(ui.item.label).text();
+					$('#label_'+me.id).val(labelValue);
+					$('#label_'+me.id).data('selected_value', labelValue);
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
