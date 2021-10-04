@@ -372,9 +372,6 @@ JS
 	$oKeyboardShortcutCancelButton = ButtonUIBlockFactory::MakeForCancel();
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutCancelButton);
 	$oKeyboardShortcutCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
-	// - Submit button
-	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
-	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
 
 	// - Reset button
 	$oKeyboardShortcutResetButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'), 'operation', 'reset_keyboard_shortcuts', true);
