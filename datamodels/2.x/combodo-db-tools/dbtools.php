@@ -234,17 +234,19 @@ function DisplayErrorDetails($aResults, $bVerbose)
 			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLquery'));
 			$oCollapsible->AddSubBlock($oFieldSet);
 
-			$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($aError['query']);
-			$oFieldSet->AddSubBlock($oCode);
+			if (array_key_exists('query', $aError)) {
+				$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($aError['query']);
+				$oFieldSet->AddSubBlock($oCode);
 
-			if (isset($aError['fixit'])) {
-				$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:FixitSQLquery'));
-				$oCollapsible->AddSubBlock($oFieldSet);
+				if (isset($aError['fixit'])) {
+					$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:FixitSQLquery'));
+					$oCollapsible->AddSubBlock($oFieldSet);
 
-				$aQueries = $aError['fixit'];
-				foreach ($aQueries as $sFixQuery) {
-					$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($sFixQuery);
-					$oFieldSet->AddSubBlock($oCode);
+					$aQueries = $aError['fixit'];
+					foreach ($aQueries as $sFixQuery) {
+						$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($sFixQuery);
+						$oFieldSet->AddSubBlock($oCode);
+					}
 				}
 			}
 

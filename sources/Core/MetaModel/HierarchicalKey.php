@@ -44,8 +44,8 @@ class HierarchicalKey {
 			$iMinLeft = $iParentLeft;
 
 			foreach ($aTreeIds as $aValues) {
-				$iChildLeft = $aValues[$sLeft];
-				$iChildRight = $aValues[$sRight];
+				$iChildLeft = $aValues['ctrl_left'];
+				$iChildRight = $aValues['ctrl_right'];
 				if ($iChildLeft <= $iMinLeft || $iParentRight <= $iChildRight || $iChildRight <= $iChildLeft) {
 					throw new CoreException("Wrong HK control values");
 				}
