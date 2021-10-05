@@ -3299,7 +3299,7 @@ EOF
 			}
 		}
 
-		if ($bExistFieldToDisplay) {
+		if ($bExistFieldToDisplay || MetaModel::GetConfig()->Get('force_transition_confirmation')) {
 			$oPage->set_title($sActionLabel);
 			$oPage->add(<<<HTML
 	<!-- Beginning of object-transition -->
