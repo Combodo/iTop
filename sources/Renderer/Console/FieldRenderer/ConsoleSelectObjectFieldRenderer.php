@@ -49,7 +49,6 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 		$oOutput = parent::Render();
 
 		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
-		$oBlock->SetValueId($this->oField->GetGlobalId());
 		$oBlock->AddDataAttribute("input-id", $this->oField->GetGlobalId());
 
 		$sEditType = 'none';
