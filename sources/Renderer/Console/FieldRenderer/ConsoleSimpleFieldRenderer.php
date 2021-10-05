@@ -206,6 +206,14 @@ EOF
 							if ($bVertical) {
 								$oValue->AddSubBlock(new Html("<br>"));
 							}
+							$oOutput->AddJs(
+								<<<EOF
+	                    $("#{$sId}_{$idx}").off("change").on("change", function(){
+	                    console.warn('bobo');
+	                        $('#{$sId}').val(this.value).trigger('change');
+	                    });
+EOF
+							);
 							$idx++;
 						}
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$value,$sId));
