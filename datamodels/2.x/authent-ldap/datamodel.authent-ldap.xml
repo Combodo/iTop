@@ -14,7 +14,7 @@
                     * @copyright   Copyright (C) 2010-2020 Combodo SARL
                     * @license     http://opensource.org/licenses/AGPL-3.0
                     */</comment>
-                <category>addon/authentication,grant_by_profile</category>
+                <category>addon/authentication,grant_by_profile,silo</category>
                 <abstract>false</abstract>
                 <key_type>autoincrement</key_type>
                 <db_table>priv_user_ldap</db_table>

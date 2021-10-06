@@ -37,7 +37,7 @@ class UserExternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "addon/authentication,grant_by_profile",
+			"category" => "addon/authentication,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
