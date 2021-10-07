@@ -71,13 +71,29 @@ class Branding
 		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
 		$sWorkingPath =  APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
 		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
-		if ( isset( $aThemeParameters[$sType])) {
+		if (isset($aThemeParameters[$sType])) {
 			$sCustomLogoPath = $aThemeParameters[$sType];
 			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
 				return utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath.'?t='.utils::GetCacheBusterTimestamp();
 			}
 		}
+
 		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+	}
+
+	public static function GetLogoRelativePath($sType = self::DEFAULT_LOGO_TYPE)
+	{
+		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
+		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
+		if (isset($aThemeParameters[$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sType];
+			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
+				return $sWorkingPath.$sCustomLogoPath;
+			}
+		}
+
+		return $sWorkingPath.$sDefaultLogoPath;
 	}
 
 	/**

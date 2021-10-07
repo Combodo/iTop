@@ -93,7 +93,7 @@ class iTopPDF extends TCPDF
 			'', true, 0, false, true, 15, 'M' /* $valign */);
 
 		// Branding logo
-		$sBrandingIcon = Branding::GetFullMainLogoAbsoluteUrl();
+		$sBrandingIcon = Branding::GetLogoRelativePath(Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL);
 		$this->Image($sBrandingIcon, $aMargins['left'], 5, 0, 10);
 	}
 
