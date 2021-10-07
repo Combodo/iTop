@@ -75,7 +75,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					}
 					else
 					{
-						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-wrapper", "ibo-input-datetime-wrapper"]);
+						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone bob", "field_input_datetime", "ibo-input-wrapper", "ibo-input-datetime-wrapper"]);
 						$oValue->AddSubBlock($oField);
 						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" autocomplete="off"/>'));
 						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
@@ -209,7 +209,6 @@ EOF
 							$oOutput->AddJs(
 								<<<EOF
 	                    $("#{$sId}_{$idx}").off("change").on("change", function(){
-	                    console.warn('bobo');
 	                        $('#{$sId}').val(this.value).trigger('change');
 	                    });
 EOF
@@ -298,36 +297,40 @@ EOF
 <<<EOF
 			var oInput = "#{$this->oField->GetGlobalId()}";
 			$(oInput).addClass('is-widget-ready');
-			$('<div class="ibo-input-datetime--action-button"><i class="fas fa-calendar-alt"></i></i>')
-						.insertAfter($(oInput))
-						.on('click', function(){
-							$(oInput)
-								.datetimepicker({
-								showOn: 'button',
-								buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
-								dateFormat: $sJSDateFormat,
-								constrainInput: false,
-								changeMonth: true,
-								changeYear: true,
-								dayNamesMin: $sJSDaysMin,
-								monthNamesShort: $sJSMonthsShort,
-								firstDay: $iFirstDayOfWeek,
-								// time picker options	
-								timeFormat: $sJSTimeFormat,
-								controlType: 'select',
-								closeText: $sJSOk
-						})
-						.datetimepicker('show')
-						.datetimepicker('option', 'onClose', function(dateText,inst){
-							$(oInput).datetimepicker('destroy');
-						})
-						.on('click keypress', function(){
-							$(oInput).datetimepicker('hide');
-						});
-				});
+			
+				$(oInput).datetimepicker({
+							showOn: 'button',
+							buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
+							dateFormat: $sJSDateFormat,
+							constrainInput: false,
+							changeMonth: true,
+							changeYear: true,
+							dayNamesMin: $sJSDaysMin,
+							monthNamesShort: $sJSMonthsShort,
+							firstDay: $iFirstDayOfWeek,
+							// time picker options	
+							timeFormat: $sJSTimeFormat,
+							controlType: 'select',
+							closeText: $sJSOk
+					});
 EOF
 					);
 				}
+
+				$oOutput->AddJs(
+					<<<EOF
+                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+                    });
+EOF
+				);
 				break;				
 			break;
 			
@@ -350,6 +353,24 @@ EOF
 				break;
 
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+				$oOutput->AddJs(
+					<<<EOF
+ $("#{$this->oField->GetGlobalId()}").selectize({
+    sortField: 'text',
+    onChange: function(value){
+    			 var me = this.\$input;
+
+                me.closest(".field_set").trigger("field_change", {
+                    id: me.attr("id"),
+                    name: me.closest(".form_field").attr("data-field-id"),
+                    value: me.val()
+                })
+                .closest('.form_handler').trigger('value_change');
+    }
+});
+EOF
+				);
+				break;
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\DurationField':
 				$oOutput->AddJs(
@@ -393,16 +414,8 @@ EOF
 		{
 			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-			oValidationElement.tooltip({
-				items: 'span',
-				classes: {
-			        'ui-tooltip': 'form_field_error'
-			    },
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
+			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip-content="'+sExplain+'"/>');
+			CombodoTooltip.InitTooltipFromMarkup(oValidationElement, true);
 		}
 	}
 }
