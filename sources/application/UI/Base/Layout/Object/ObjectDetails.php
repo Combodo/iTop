@@ -61,9 +61,9 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sIconUrl;
 	/** @var string|null Code of the current value of the attribute carrying the state for $sClassName */
 	protected $sStatusCode;
-	/** @var string Label of the current value of the attribute carrying the state for $sClassName  */
+	/** @var string|null Label of the current value of the attribute carrying the state for $sClassName  */
 	protected $sStatusLabel;
-	/** @var string Color value (eg. #ABCDEF, var(--foo-color), ...) */
+	/** @var string|null Color value (eg. #ABCDEF, var(--foo-color), ...) */
 	protected $sStatusColor;
 
 	/**
@@ -167,6 +167,15 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	}
 
 	/**
+	 * @see static::$sStatusCode
+	 * @return bool
+	 */
+	public function HasStatus(): bool
+	{
+		return $this->sStatusCode !== null;
+	}
+
+	/**
 	 * @see self::$sStatusLabel
 	 * @return string
 	 */
@@ -204,20 +213,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 		// Default icon is the class icon
 		$sIconUrl = $oObject->GetIcon(false);
 		// Note: Class icons are a square image with no margin around, so they need to be zoomed out in the medallion
-		$sIconCoverMethod = static::ENUM_ICON_COVER_METHOD_ZOOMOUT;
-		// Use object image from semantic attribute only if it's not the default image
-		if (!$oObject->IsNew() && MetaModel::HasImageAttributeCode($this->sClassName)) {
-			$sImageAttCode = MetaModel::GetImageAttributeCode($this->sClassName);
-			if (!empty($sImageAttCode)) {
-				/** @var \ormDocument $oImage */
-				$oImage = $oObject->Get($sImageAttCode);
-				if (!$oImage->IsEmpty()) {
-					$sIconUrl = $oImage->GetDisplayURL($this->sClassName, $this->sObjectId, $sImageAttCode);
-					$sIconCoverMethod = static::ENUM_ICON_COVER_METHOD_COVER;
-				}
-			}
-
-		}
+		$sIconCoverMethod = $oObject->HasInstanceIcon() && !$oObject->HasHighlightIcon() ?  static::ENUM_ICON_COVER_METHOD_COVER : static::ENUM_ICON_COVER_METHOD_ZOOMOUT;
 
 		$this->SetIcon($sIconUrl, $sIconCoverMethod, true);
 	}

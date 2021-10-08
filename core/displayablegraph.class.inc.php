@@ -127,10 +127,8 @@ class DisplayableNode extends GraphNode
 		if ($this->GetProperty('source')) {
 			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
-		}
-		else if ($this->GetProperty('sink'))
-		{
-			$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
+		} else if ($this->GetProperty('sink')) {
+			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
 		}
 
@@ -409,7 +407,7 @@ class DisplayableNode extends GraphNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
 						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 						$oNewNode->SetProperty('count', $aGroupProps['count']);
@@ -589,7 +587,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
 						$oNewNode->SetProperty('label', 'x'.count($aGroupProps['nodes']));
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'is_reached'));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('count', count($aGroupProps['nodes']));
@@ -767,12 +765,9 @@ class DisplayableGroupNode extends DisplayableNode
 	{
 		$bReached = $this->GetProperty('is_reached');
 		$oPdf->SetFillColor(255, 255, 255);
-		if ($bReached)
-		{
+		if ($bReached) {
 			$aBorderColor = array(100, 100, 100);
-		}
-		else
-		{
+		} else {
 			$aBorderColor = array(200, 200, 200);
 		}
 		$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
@@ -780,14 +775,11 @@ class DisplayableGroupNode extends DisplayableNode
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
 		$oPdf->SetAlpha(1);
-		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, $this->GetWidth() / 2 * $fScale, 0, 360, 'DF');
-		
-		if ($bReached)
-		{
+		$oPdf->Circle($this->x * $fScale, $this->y * $fScale, $this->GetWidth() / 2 * $fScale, 0, 360, 'DF');
+
+		if ($bReached) {
 			$oPdf->SetAlpha(1);
-		}
-		else
-		{
+		} else {
 			$oPdf->SetAlpha(0.4);
 		}
 		$oPdf->AddImage($sIconPath, ($this->x - 17) * $fScale, ($this->y - 17) * $fScale, 16 * $fScale, 16 * $fScale);
@@ -855,66 +847,68 @@ class DisplayableGraph extends SimpleGraph
 			@unlink($sTempFile);
 		}
 	}
-	
+
 	/**
 	 * Build a DisplayableGraph from a RelationGraph
+	 *
 	 * @param RelationGraph $oGraph
 	 * @param number $iGroupingThreshold
 	 * @param string $bDirectionDown
+	 *
 	 * @return DisplayableGraph
 	 */
-	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true)
+	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true, $bForPdf = false)
 	{
 		$oNewGraph = new DisplayableGraph();
 		$oNewGraph->bDirectionDown = $bDirectionDown;
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		
+
 		$oNodesIter = new RelationTypeIterator($oGraph, 'Node');
-		foreach($oNodesIter as $oNode)
-		{
+		foreach ($oNodesIter as $oNode) {
 			set_time_limit(intval($iLoopTimeLimit));
-			switch(get_class($oNode))
-			{
-				case 'RelationObjectNode':				
-				$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
-				
-				$oObj = $oNode->GetProperty('object');
-				$sClass = get_class($oObj);
-				if ($oNode->GetProperty('source'))
-				{
-					if (!array_key_exists($sClass, $oNewGraph->aSourceObjects))
-					{
-						$oNewGraph->aSourceObjects[$sClass] = array();
+			switch (get_class($oNode)) {
+				case 'RelationObjectNode':
+					$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
+
+					$oObj = $oNode->GetProperty('object');
+					$sClass = get_class($oObj);
+					if ($oNode->GetProperty('source')) {
+						if (!array_key_exists($sClass, $oNewGraph->aSourceObjects)) {
+							$oNewGraph->aSourceObjects[$sClass] = array();
+						}
+						$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
+						$oNewNode->SetProperty('source', true);
 					}
-					$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
-					$oNewNode->SetProperty('source', true);
-				}
-				if ($oNode->GetProperty('sink'))
-				{
-					if (!array_key_exists($sClass, $oNewGraph->aSinkObjects))
-					{
-						$oNewGraph->aSinkObjects[$sClass] = array();
+					if ($oNode->GetProperty('sink')) {
+						if (!array_key_exists($sClass, $oNewGraph->aSinkObjects)) {
+							$oNewGraph->aSinkObjects[$sClass] = array();
+						}
+						$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
+						$oNewNode->SetProperty('sink', true);
 					}
-					$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
-					$oNewNode->SetProperty('sink', true);
-				}
-				$oNewNode->SetProperty('object', $oObj);
-				$oNewNode->SetProperty('icon_url', $oObj->GetIcon(false));
-				$oNewNode->SetProperty('label', $oObj->GetRawName());
-				$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter
-				$oNewNode->SetProperty('is_reached_allowed', $oNode->GetProperty('is_reached_allowed'));
-				$oNewNode->SetProperty('context_root_causes', $oNode->GetProperty('context_root_causes'));
-				break;
-				
+					$oNewNode->SetProperty('object', $oObj);
+					$sIconUrl = $oObj->GetIcon(false);
+					//when icons are displayed in a PDF file, puts the image data in place of the url
+					if ($bForPdf && strpos($sIconUrl, 'display_document') > 0) {
+						$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+						$sIconUrl = '@'.$oObj->Get($sImageAttCode)->GetData();
+					}
+					$oNewNode->SetProperty('icon_url', $sIconUrl);
+					$oNewNode->SetProperty('label', $oObj->GetRawName());
+					$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter
+					$oNewNode->SetProperty('is_reached_allowed', $oNode->GetProperty('is_reached_allowed'));
+					$oNewNode->SetProperty('context_root_causes', $oNode->GetProperty('context_root_causes'));
+					break;
+
 				default:
-				$oNewNode = new DisplayableRedundancyNode($oNewGraph, $oNode->GetId(), 0, 0);
-				$iNbReached = (is_null($oNode->GetProperty('is_reached_count'))) ? 0 : $oNode->GetProperty('is_reached_count');
-				$oNewNode->SetProperty('label', $iNbReached."/".($oNode->GetProperty('min_up') + $oNode->GetProperty('threshold')));
-				$oNewNode->SetProperty('min_up', $oNode->GetProperty('min_up'));
-				$oNewNode->SetProperty('threshold', $oNode->GetProperty('threshold'));
-				$oNewNode->SetProperty('is_reached_count', $iNbReached);
-				$oNewNode->SetProperty('is_reached', true);
+					$oNewNode = new DisplayableRedundancyNode($oNewGraph, $oNode->GetId(), 0, 0);
+					$iNbReached = (is_null($oNode->GetProperty('is_reached_count'))) ? 0 : $oNode->GetProperty('is_reached_count');
+					$oNewNode->SetProperty('label', $iNbReached."/".($oNode->GetProperty('min_up') + $oNode->GetProperty('threshold')));
+					$oNewNode->SetProperty('min_up', $oNode->GetProperty('min_up'));
+					$oNewNode->SetProperty('threshold', $oNode->GetProperty('threshold'));
+					$oNewNode->SetProperty('is_reached_count', $iNbReached);
+					$oNewNode->SetProperty('is_reached', true);
 			}
 		}
 		$oEdgesIter = new RelationTypeIterator($oGraph, 'Edge');

@@ -70,8 +70,9 @@ body{
     height: 100%;
   }
 }
-#ibo-main-content{
-	padding-top: $ibo-main-content--padding-top;
-	padding-bottom: $ibo-main-content--padding-bottom;
+
+#ibo-main-content {
+  padding-top: $ibo-main-content--padding-top;
+  padding-bottom: $ibo-main-content--padding-bottom;
   overflow: auto; /* For scroll to happen in the main content instead of the center content */
 }

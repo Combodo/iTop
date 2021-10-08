@@ -313,7 +313,6 @@ $('#ibo-datamodel-viewer--class-search').selectize({
     onChange: function(value){
     			    var preUrl = "?operation=details_class&class=";
 			var sufUrl = "&c[menu]=DataModelMenu";
-			console.log(value);
 			window.location = preUrl + value + sufUrl;
     }
 });

@@ -3083,8 +3083,7 @@ abstract class MetaModel
 							// Set attribute code
 							self::$m_aClassParams[$sPHPClass]['state_attcode'] = self::$m_aClassParams[$sParent]['state_attcode'];
 
-							// Set states
-							self::$m_aStates[$sPHPClass] = self::$m_aStates[$sParent];
+							// Note: Don't set self::$m_aStates[$sPHPClass], it has already been done by self::Init_DefineState()
 						}
 						// - Image attribute
 						$bParentHasImageAttribute = (isset(self::$m_aClassParams[$sParent]['image_attcode']) && !empty(self::$m_aClassParams[$sParent]['image_attcode']));
@@ -4531,15 +4530,15 @@ abstract class MetaModel
 	/**
 	 * Check (and updates if needed) the hierarchical keys
 	 *
-	 * @param boolean $bDiagnosticsOnly If true only a diagnostic pass will be run, returning true or false
-	 * @param boolean $bVerbose Displays some information about what is done/what needs to be done
-	 * @param boolean $bForceComputation If true, the _left and _right parameters will be recomputed even if some
+	 * @param bool $bDiagnosticsOnly If true only a diagnostic pass will be run, returning true or false
+	 * @param bool $bVerbose Displays some information about what is done/what needs to be done
+	 * @param bool $bForceComputation If true, the _left and _right parameters will be recomputed even if some
 	 *     values already exist in the DB
 	 *
+	 * @return bool
 	 * @throws \CoreException
-	 * @throws \Exception
 	 */
-	public static function CheckHKeys($bDiagnosticsOnly = false, $bVerbose = false, $bForceComputation = false)
+	public static function CheckHKeys(bool $bDiagnosticsOnly = false, bool $bVerbose = false, bool $bForceComputation = false)
 	{
 		$bChangeNeeded = false;
 		foreach(self::GetClasses() as $sClass)

@@ -1051,28 +1051,22 @@ EOF
 	{
 		$bFixNeeded = false;
 		$bTriggerRebuildNeeded = false;
-		$aMissingFields = array();
+		$aMissingFields = [];
 		$oAttributeSet = $this->Get('attribute_list');
-		$aAttributes = array();
+		$aAttributes = [];
 
-		while ($oAttribute = $oAttributeSet->Fetch())
-		{
+		while ($oAttribute = $oAttributeSet->Fetch()) {
 			$sAttCode = $oAttribute->Get('attcode');
-			if (MetaModel::IsValidAttCode($this->GetTargetClass(), $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($this->GetTargetClass(), $sAttCode)) {
 				$aAttributes[$sAttCode] = $oAttribute;
-			}
-			else
-			{
+			} else {
 				// Old field remaining
 				$bTriggerRebuildNeeded = true;
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "Irrelevant field description for the field '$sAttCode', for the data synchro task ".$this->GetName().' ('.$this->GetKey()."), will be removed.\n";
 				}
 				$bFixNeeded = true;
-				if (!$bDiagnostics)
-				{
+				if (!$bDiagnostics) {
 					// Fix the issue
 					$oAttribute->DBDelete();
 				}
@@ -1080,40 +1074,31 @@ EOF
 		}
 
 		$sTable = $this->GetDataTable();
-		foreach ($this->ListTargetAttributes() as $sAttCode => $oAttDef)
-		{
-			if (!isset($aAttributes[$sAttCode]))
-			{
+		foreach ($this->ListTargetAttributes() as $sAttCode => $oAttDef) {
+			if (!isset($aAttributes[$sAttCode])) {
 				$bFixNeeded = true;
 				$aMissingFields[] = $sAttCode;
 				$bTriggerRebuildNeeded = true;
 				// New field missing...
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "Missing field description for the field '$sAttCode', for the data synchro task ".$this->GetName().' ('.$this->GetKey()."), will be created with default values.\n";
 				}
-				if (!$bDiagnostics)
-				{
+				if (!$bDiagnostics) {
 					// Fix the issue
 					$oAttribute = $this->CreateSynchroAtt($sAttCode);
 					$oAttribute->DBInsert();
 				}
-			}
-			else
-			{
-				$aColumns = $this->GetSQLColumns(array($sAttCode));
-				foreach ($aColumns as $sColName => $sColumnDef)
-				{
+			} else {
+				$aColumns = $this->GetSQLColumns([$sAttCode]);
+				foreach ($aColumns as $sColName => $sColumnDef) {
 					$bOneColIsMissing = false;
-					if (!CMDBSource::IsField($sTable, $sColName))
-					{
+					if (!CMDBSource::IsField($sTable, $sColName)) {
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
-						if ($bVerbose)
-						{
+						if ($bVerbose) {
 							if (count($aColumns) > 1) {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
-										$aColumns)." will be re-created.'.\n";
+										$aColumns)." will be added.'.\n";
 							} else {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
 							}
@@ -1122,16 +1107,15 @@ EOF
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
 						if (count($aColumns) > 1) {
-							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
+							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldSpec($sTable,
 									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
 									$aColumns)." will be re-created.'.\n";
 						} else {
-							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
-									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
+							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldSpec($sTable,
+									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be re-created.\n";
 						}
 					}
-					if ($bOneColIsMissing)
-					{
+					if ($bOneColIsMissing) {
 						$bTriggerRebuildNeeded = true;
 						$aMissingFields[] = $sAttCode;
 					}
@@ -1140,60 +1124,47 @@ EOF
 		}
 
 		$sDBName = MetaModel::GetConfig()->Get('db_name');
-		try
-		{
+		try {
 			// Note: as per the MySQL documentation, using information_schema behaves exactly like SHOW TRIGGERS (user privileges)
 			//       and this is in fact the recommended way for better portability
 			$iTriggerCount = CMDBSource::QueryToScalar("select count(*) from information_schema.triggers where EVENT_OBJECT_SCHEMA='$sDBName' and EVENT_OBJECT_TABLE='$sTable'");
 		}
-		catch (Exception $e)
-		{
-			if ($bVerbose)
-			{
+		catch (Exception $e) {
+			if ($bVerbose) {
 				echo 'Failed to investigate on the synchro triggers (skipping the check): '.$e->getMessage().".\n";
 			}
 			// Ignore this error: consider that the trigger are there
 			$iTriggerCount = 3;
 		}
-		if ($iTriggerCount < 3)
-		{
+		if ($iTriggerCount < 3) {
 			$bFixNeeded = true;
 			$bTriggerRebuildNeeded = true;
-			if ($bVerbose)
-			{
+			if ($bVerbose) {
 				echo 'Missing trigger(s) for the data synchro task '.$this->GetName()." (table {$sTable}).\n";
 			}
 		}
 
-		$aRepairQueries = array();
+		$aRepairQueries = [];
 
-		if (count($aMissingFields) > 0)
-		{
+		if (count($aMissingFields) > 0) {
 			// The structure of the table needs adjusting
 			$aColumns = $this->GetSQLColumns($aMissingFields);
-			$aFieldDefs = array();
-			foreach ($aColumns as $sAttCode => $sColumnDef)
-			{
-				if (CMDBSource::IsField($sTable, $sAttCode))
-				{
+			$aFieldDefs = [];
+			foreach ($aColumns as $sAttCode => $sColumnDef) {
+				if (CMDBSource::IsField($sTable, $sAttCode)) {
 					$aRepairQueries[] = "ALTER TABLE `$sTable` CHANGE `$sAttCode` `$sAttCode` $sColumnDef";
-				}
-				else
-				{
+				} else {
 					$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 				}
 
 			}
-			if (count($aFieldDefs) > 0)
-			{
+			if (count($aFieldDefs) > 0) {
 				$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).');';
 			}
 
-			if ($bDiagnostics)
-			{
-				if ($bVerbose)
-				{
-					echo "The structure of the table $sTable for the data synchro task ".$this->GetName().' ('.$this->GetKey().') must be altered (missing or incorrect fields: '.implode(',',
+			if ($bDiagnostics) {
+				if ($bVerbose) {
+					echo "The structure of the table $sTable for the data synchro task ".$this->GetName().' ('.$this->GetKey().') must be altered (missing or incorrect fields: '.implode(', ',
 							$aMissingFields).").\n";
 				}
 			}
@@ -1201,11 +1172,10 @@ EOF
 
 		// Repair the triggers
 		// Must be done after updating the columns because MySQL does check the validity of the query found into the procedure!
-		if ($bTriggerRebuildNeeded)
-		{
+		if ($bTriggerRebuildNeeded) {
 			// The triggers as well must be adjusted
 			$aTriggersDefs = $this->GetTriggersDefinition();
-			$aTriggerRepair = array();
+			$aTriggerRepair = [];
 			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_bi`;";
 			$aTriggerRepair[] = $aTriggersDefs['bi'];
 			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_bu`;";
@@ -1213,10 +1183,8 @@ EOF
 			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_ad`;";
 			$aTriggerRepair[] = $aTriggersDefs['ad'];
 
-			if ($bDiagnostics)
-			{
-				if ($bVerbose)
-				{
+			if ($bDiagnostics) {
+				if ($bVerbose) {
 					echo "The triggers {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName().' ('.$this->GetKey().") must be re-created.\n";
 					echo implode("\n", $aTriggerRepair)."\n";
 				}
@@ -1226,14 +1194,11 @@ EOF
 
 		// Execute the repair statements
 		//
-		if (!$bDiagnostics && (count($aRepairQueries) > 0))
-		{
+		if (!$bDiagnostics && (count($aRepairQueries) > 0)) {
 			// Fix the issue
-			foreach ($aRepairQueries as $sSQL)
-			{
+			foreach ($aRepairQueries as $sSQL) {
 				CMDBSource::Query($sSQL);
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "$sSQL\n";
 				}
 			}
@@ -1338,7 +1303,7 @@ EOF
 			if ($oAttDef->IsExternalKey())
 			{
 				// The pkey might be used as well as any other key column
-				$aColumns[$sAttCode] = 'VARCHAR(255)';
+				$aColumns[$sAttCode] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 			}
 			else
 			{

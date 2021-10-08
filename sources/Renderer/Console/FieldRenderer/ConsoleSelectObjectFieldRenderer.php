@@ -49,7 +49,6 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 		$oOutput = parent::Render();
 
 		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
-		$oBlock->SetValueId($this->oField->GetGlobalId());
 		$oBlock->AddDataAttribute("input-id", $this->oField->GetGlobalId());
 
 		$sEditType = 'none';
@@ -138,9 +137,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$sId = $this->oField->GetGlobalId();
 
 				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
-				$oBlock->SetValue($oValue);
 
-				$oOutput->AddHtml('<div>');
 				while ($oObject = $oSet->Fetch())
 				{
 					$iObject = $oObject->GetKey();
@@ -174,6 +171,22 @@ EOF
 					$idx++;
 				}
 				$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden($sId,$value,$sId));
+				$oBlock->AddSubBlock($oValue);
+				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+				$oOutput->AddJs(
+					<<<EOF
+	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+                    });
+EOF
+				);
 			}
 			else
 			{
@@ -191,21 +204,26 @@ EOF
 					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
 					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject,$sLabel, ($this->oField->GetCurrentValue() == $iObject)));
 				}
-			}
-			$oOutput->AddJs(
-				<<<EOF
-	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
-                    	var me = this;
-
-                        $(this).closest(".field_set").trigger("field_change", {
-                            id: $(me).attr("id"),
-                            name: $(me).closest(".form_field").attr("data-field-id"),
-                            value: $(me).val()
+				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+				$oOutput->AddJs(
+					<<<JS
+ $("#{$this->oField->GetGlobalId()}").selectize({
+    sortField: 'text',
+    onChange: function(value){
+    			  var me = this.\$input;
+    			  me.trigger("field_change", {
+                            id: me.attr("id"),
+                            name: me.closest(".form_field").attr("data-field-id"),
+                            value: me.val()
                         })
                         .closest('.form_handler').trigger('value_change');
-                    });
-EOF
-			);
+    }
+});
+JS
+				);
+			}
+
+
 		}
 		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 		// JS Form field widget construct
@@ -237,16 +255,8 @@ EOF
 		{
 			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-			oValidationElement.tooltip({
-				items: 'span',
-				classes: {
-			        "ui-tooltip": "form_field_error"
-			    },
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
+			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip-content="'+sExplain+'"/>');
+			CombodoTooltip.InitTooltipFromMarkup(oValidationElement, true);
 		}
 	}
 }
@@ -262,19 +272,14 @@ EOF
 		{
 			case 'autocomplete':
 			case 'radio':
+			case 'select':
 				$oOutput->AddJs(
 					<<<EOF
 	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('#{$this->oField->GetGlobalId()}').val();});
 EOF
 				);
 				break;
-			case 'select':
-				$oOutput->AddJs(
-					<<<EOF
-	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('select').val();});
-EOF
-				);
-				break;
+
 
 			case 'none':
 			default:

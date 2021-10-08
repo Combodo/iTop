@@ -6,6 +6,7 @@
     data-object-class="{{ oUIBlock.GetClassName() }}"
     data-object-id="{{ oUIBlock.GetObjectId() }}"
     data-object-mode="{{ oUIBlock.GetObjectMode() }}"
+    {% if oUIBlock.HasStatus() %}data-object-state="{{ oUIBlock.GetStatusCode() }}"{% endif %}
     data-role="ibo-object-details"
 {% endblock %}
 

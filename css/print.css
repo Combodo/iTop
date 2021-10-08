@@ -2,9 +2,32 @@
 @media print {
 	html {
 		font-size: 10px;
-		break-after:auto;
+		break-after: auto;
 	}
+
 	.not-printable {
+		display: none;
+	}
+
+	.ibo-panel--icon {
+		-webkit-print-color-adjust: exact !important; /* Chrome, Safari, Edge */
+		color-adjust: exact !important; /*Firefox*/
+	}
+
+	.printable-content legend::before,
+	.printable-content .ibo-activity-panel--tab-toolbar-action::before {
+		display: none;
+	}
+
+	.printable-content .strikethrough {
+		display: none;
+	}
+
+	#hiddeable_chapters .ibo-block-print--tab.strikethrough {
+		display: none;
+	}
+
+	#hiddeable_chapters .ibo-block-print--tab span::before {
 		display: none;
 	}
 
@@ -95,6 +118,10 @@
 	.printable-version legend {
 		padding-left: 8px;
 		background-image: none;
+	}
+
+	.ibo-field--label > .ibo-has-description::after {
+		display: none;
 	}
 
 	/**

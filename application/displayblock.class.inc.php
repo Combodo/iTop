@@ -268,6 +268,8 @@ class DisplayBlock
 			'surround_with_panel',
 			/** string title of panel block */
 			'panel_title',
+			/** string true if panel title should be displayed as html */
+			'panel_title_is_html',
 			/** string class for panel block style */
 			'panel_class',
 			/** string class for panel block style */
@@ -2334,7 +2336,11 @@ class MenuBlock extends DisplayBlock
 				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
-					$oActionButton->SetTooltip(Dict::S($sActionId));
+					if (empty($aAction['tooltip'])) {
+						$oActionButton->SetTooltip(Dict::S($sActionId));
+					} else {
+						$oActionButton->SetTooltip($aAction['tooltip']);
+					}
 				}
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}

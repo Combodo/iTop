@@ -88,6 +88,11 @@ class PopoverMenuItemFactory
 			'tooltip' => isset($aActionData['tooltip']) ? $aActionData['tooltip'] : '',
 		];
 
+		// Avoid meaningless tooltips which are identical to the label
+		if ($aRefactoredItem['tooltip'] == $aRefactoredItem['label']) {
+			$aRefactoredItem['tooltip'] = '';
+		}
+
 		if (!empty($aRefactoredItem['on_click'])) {
 			// JS
 			$oPopoverMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(

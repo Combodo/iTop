@@ -380,14 +380,22 @@ abstract class Controller
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
 		$this->CreatePage($sPageType);
 		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html');
-		$this->AddToPage($sHTMLContent);
+		if ($sHTMLContent !== false) {
+			$this->AddToPage($sHTMLContent);
+		}
 		$sJSScript = $this->RenderTemplate($aParams, $sTemplateName, 'js');
-		$this->AddScriptToPage($sJSScript);
+		if ($sJSScript !== false) {
+			$this->AddScriptToPage($sJSScript);
+		}
 		$sReadyScript = $this->RenderTemplate($aParams, $sTemplateName, 'ready.js');
-		$this->AddReadyScriptToPage($sReadyScript);
+		if ($sReadyScript !== false) {
+			$this->AddReadyScriptToPage($sReadyScript);
+		}
 		$sStyle = $this->RenderTemplate($aParams, $sTemplateName, 'css');
-		$this->AddStyleToPage($sStyle);
-		if (strlen($sHTMLContent) == 0 && strlen($sJSScript) == 0 && strlen($sReadyScript) == 0 && strlen($sStyle) == 0) {
+		if ($sStyle !== false) {
+			$this->AddStyleToPage($sStyle);
+		}
+		if ($sHTMLContent === false && $sJSScript === false && $sReadyScript === false && $sStyle === false) {
 			IssueLog::Error("Missing TWIG template for $sTemplateName");
 		}
 		if (!empty($this->m_aAjaxTabs)) {
@@ -592,7 +600,7 @@ abstract class Controller
 	 * @param $sName
 	 * @param $sTemplateFileExtension
 	 *
-	 * @return string
+	 * @return string|false
 	 * @throws \Exception
 	 */
 	private function RenderTemplate($aParams, $sName, $sTemplateFileExtension)
@@ -612,7 +620,7 @@ abstract class Controller
 			}
 		}
 
-		return '';
+		return false;
 	}
 
 	/**

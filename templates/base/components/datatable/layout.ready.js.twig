@@ -43,66 +43,82 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     },
     scrollX: true,
     {% if oUIBlock.GetOption('sMaxHeight') is not empty %}
-        scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
+    scrollY: "{{ oUIBlock.GetOption('sMaxHeight') }}",
     {% endif %}
     scrollCollapse: true,
+    {% if oUIBlock.GetOption('printVersion') is not empty %}
+    paging: false,
+    info: false,
+    {% endif %}
     lengthMenu: [[ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, -1], [ {{ iPageSize }},  {{ iPageSize*2 }},  {{ iPageSize*3 }}, {{ iPageSize*4 }}, "{{ 'UI:Datatables:Language:DisplayLength:All'|dict_s }}"]],
     dom: "<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>t<'ibo-datatable--toolbar'<'ibo-datatable--toolbar-left' pl><'ibo-datatable--toolbar-right' i>>",
     {% if( oUIBlock.GetOption("sort")[0] is defined ) %}
-        order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
+    order: [[{{ oUIBlock.GetOptions()["sort"][0] }}, '{{ oUIBlock.GetOptions()["sort"][1] }}']],
     {% else %}
-        order: [],
+    order: [],
     {% endif %}
     ordering: true,
     {% if oUIBlock.GetOption("select_mode") is not empty %}
-        select: {
-            style: "{% if oUIBlock.GetOption("select_mode") == "multiple" %}multi{% else %}single{% endif %}",
-            info: false
-        },
-        rowCallback: function (oRow, oData) {
-            if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-                if (oSelectedItems{{ sListId }}.indexOf(oData.id) === -1) {
-                    this.api().row($(oRow)).select();
-                    //   $(oRow).addClass('selected');
-                    $(oRow).find('td:first-child input').prop('checked', true);
-                }
-            } else {
-                if (oSelectedItems{{ sListId }}.indexOf(oData.id) > -1) {
-                    this.api().row($(oRow)).select();
-                    $(oRow).find('td:first-child input').prop('checked', true);
-                }
+    select: {
+        style: "{% if oUIBlock.GetOption("select_mode") == "multiple" %}multi{% else %}single{% endif %}",
+        info: false
+    },
+    rowCallback: function (oRow, oData) {
+        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+        {
+            if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(oData.id) === -1)
+            {
+                this.api().row($(oRow)).select();
+                //   $(oRow).addClass('selected');
+                $(oRow).find('td:first-child input').prop('checked', true);
             }
-        },
-        drawCallback: function () {
-            if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative") {
-                $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
+        }
+        else
+        {
+            if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(oData.id) > -1)
+            {
+                this.api().row($(oRow)).select();
+                $(oRow).find('td:first-child input').prop('checked', true);
             }
-            bSelectAllowed{{ oUIBlock.GetId() }} = true;
+        }
+    },
+    drawCallback: function () {
+        if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
+        {
+            $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
+        }
+        bSelectAllowed{{ sListIDForVarSuffix }} = true;
 
-            // Hiding pagination if only one page
-            if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
-                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
-            } else {
-                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
-            }
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+        {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        }
+        else
+        {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
 
-            $(this).closest('.dataTables_wrapper').unblock();
-            $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
-                //disable select action when there is a link
-                e.stopPropagation();
-            });
-        },
+        $(this).closest('.dataTables_wrapper').unblock();
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            //disable select action when there is a link
+            e.stopPropagation();
+        });
+    },
     {% else %}
-        drawCallback: function () {
-            $(this).closest('.dataTables_wrapper').unblock();
-            // Hiding pagination if only one page
-            if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2) {
-                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
-            } else {
-                $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
-            }
-        },
-        {% endif %}
+    drawCallback: function () {
+        $(this).closest('.dataTables_wrapper').unblock();
+        // Hiding pagination if only one page
+        if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
+        {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').hide();
+        }
+        else
+        {
+            $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
+        }
+    },
+    {% endif %}
     rowId: "id",
     filter: false,
     retrieve: true,
@@ -188,8 +204,8 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {% if oUIBlock.GetOption("select_mode") is not empty %}
         updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
         {% if oUIBlock.GetOption("select_mode") != "single" %}
-            this.api().on('select', function (oEvent, dt, type, indexes) {
-            if (bSelectAllowed{{ oUIBlock.GetId() }})
+        this.api().on('select', function (oEvent, dt, type, indexes) {
+            if (bSelectAllowed{{ sListIDForVarSuffix }})
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
                 if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
@@ -200,9 +216,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     for (let i in aData)
                     {
                         let iItemId = aData[i].id;
-                        if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
+                        if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId) > -1)
                         {
-                            oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
+                            oSelectedItems{{ sListIDForVarSuffix }}.splice(oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId), 1);
                             updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
@@ -215,9 +231,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     for (let i in aData)
                     {
                         let iItemId = aData[i].id;
-                        if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
+                        if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId) === -1)
                         {
-                            oSelectedItems{{ sListId }}.push(iItemId);
+                            oSelectedItems{{ sListIDForVarSuffix }}.push(iItemId);
                             updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
@@ -226,7 +242,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         });
 
         this.api().off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-            if (bSelectAllowed{{ oUIBlock.GetId() }} )
+            if (bSelectAllowed{{ sListIDForVarSuffix }} )
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
                 // Checking input
@@ -237,9 +253,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     for (let i in aData)
                     {
                         let iItemId = aData[i].id;
-                        if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
+                        if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId) === -1)
                         {
-                            oSelectedItems{{ sListId }}.push(iItemId);
+                            oSelectedItems{{ sListIDForVarSuffix }}.push(iItemId);
                             updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
@@ -249,9 +265,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                     for (let i in aData)
                     {
                         let iItemId = aData[i].id;
-                        if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
+                        if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId) > -1)
                         {
-                            oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
+                            oSelectedItems{{ sListIDForVarSuffix }}.splice(oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId), 1);
                             updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                         }
                     }
@@ -260,7 +276,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         });
         {% else %}
         this.api().off('select').on('select', function (oEvent, dt, type, indexes) {
-            if (bSelectAllowed{{ oUIBlock.GetId() }} )
+            if (bSelectAllowed{{ sListIDForVarSuffix }} )
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
                 // Checking input
@@ -269,9 +285,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 for (let i in aData)
                 {
                     let iItemId = aData[i].id;
-                    if (oSelectedItems{{ sListId }}.indexOf(iItemId) === -1)
+                    if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId) === -1)
                     {
-                        oSelectedItems{{ sListId }}.push(iItemId);
+                        oSelectedItems{{ sListIDForVarSuffix }}.push(iItemId);
                         updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                     }
                 }
@@ -279,7 +295,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         });
 
         this.api().off('deselect').on('deselect', function (oEvent, dt, type, indexes) {
-            if (bSelectAllowed{{ oUIBlock.GetId() }} )
+            if (bSelectAllowed{{ sListIDForVarSuffix }} )
             {
                 let aData = oTable{{ sListIDForVarSuffix }}.rows(indexes).data().toArray();
 
@@ -289,9 +305,9 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 for (let i in aData)
                 {
                     let iItemId = aData[i].id;
-                    if (oSelectedItems{{ sListId }}.indexOf(iItemId) > -1)
+                    if (oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId) > -1)
                     {
-                        oSelectedItems{{ sListId }}.splice(oSelectedItems{{ sListId }}.indexOf(iItemId), 1);
+                        oSelectedItems{{ sListIDForVarSuffix }}.splice(oSelectedItems{{ sListIDForVarSuffix }}.indexOf(iItemId), 1);
                         updateDataTableSelection('{{ sListId }}', '{{ oUIBlock.GetId() }}');
                     }
                 }
@@ -340,7 +356,7 @@ var aOptions{{ sListIDForVarSuffix }} = {
     sListId: '{{ oUIBlock.GetId() }}',
     oColumns: {{ oUIBlock.GetResultColumnsAsJson()|raw }},
     sSelectMode: "{{ oUIBlock.GetOption("select_mode") }}",
-    sSelectedItemsName: "oSelectedItems{{ sListId }}",
+    sSelectedItemsName: "oSelectedItems{{ sListIDForVarSuffix }}",
     sViewLink: '{{ oUIBlock.GetOption("bViewLink") }}',
     iPageSize: ' {{ iPageSize }}',
     oClassAliases: JSON.parse('{{ oUIBlock.GetOption("oClassAliases") |raw }}'),

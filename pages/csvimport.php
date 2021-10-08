@@ -462,7 +462,7 @@ try {
 					}
 					break;
 			}
-			$aTableRow['CSSClass'] = $sCSSRowClass;
+			$aTableRow['@class'] = $sCSSRowClass;
 			$aTableRow['line'] = sprintf("%0{$sMaxLen}d", 1 + $iLine + $iRealSkippedLines);
 			$aTableRow['status'] = $sStatus;
 			$aTableRow['object'] = $sUrl;

@@ -34,6 +34,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
+			// iTop 3.0 minimum (not compatible with 2.7)
 		),
 		'mandatory' => false,
 		'visible' => true,

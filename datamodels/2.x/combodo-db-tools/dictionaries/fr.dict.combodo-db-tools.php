@@ -46,10 +46,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'DBTools:DetailedErrorTitle' => '%2$s erreur(s) dans la classe %1$s : %3$s',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Enregistrement orphelin dans `%1$s`, il devrait avoir son équivalent dans la table `%2$s`',
-	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clef externe invalide %1$s (colonne: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-MissingExtKey' => 'Clef externe manquante %1$s (colonne: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-InvalidExtKey' => 'Clé externe invalide %1$s (colonne: `%2$s.%3$s`)',
+	'DBAnalyzer-Integrity-MissingExtKey' => 'Clé externe manquante %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => 'Valeur invalide pour %1$s (colonne: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Certains comptes utilisateurs n\'ont aucun profile',
+	'DBAnalyzer-Integrity-HKInvalid' => 'Clé hiérarchique `%1$s` invalide',
 	'DBAnalyzer-Fetch-Count-Error' => 'Erreur de récupération dans `%1$s`, %2$d enregistrements récupérés / %3$d comptés',
 	'DBAnalyzer-Integrity-FinalClass' => 'Le champ `%2$s`.`%1$s` doit avoir la même valeur que `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Le champ `%2$s`.`%1$s` doit contenir une classe valide',

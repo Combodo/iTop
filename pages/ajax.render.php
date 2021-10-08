@@ -2000,20 +2000,20 @@ EOF
 				}
 			}
 
-			$oPage = new PDFPage($sTitle, $sPageFormat, $sPageOrientation);
-			$oPage->SetContentDisposition('attachment', $sTitle.'.pdf');
+		$oPage = new PDFPage($sTitle, $sPageFormat, $sPageOrientation);
+		$oPage->SetContentDisposition('attachment', $sTitle.'.pdf');
 
-			$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'));
-			$oGraph->InitFromGraphviz();
-			if ($aPositions != null) {
-				$oGraph->UpdatePositions($aPositions);
-			}
+		$oGraph = DisplayableGraph::FromRelationGraph($oRelGraph, $iGroupingThreshold, ($sDirection == 'down'), true);
+		$oGraph->InitFromGraphviz();
+		if ($aPositions != null) {
+			$oGraph->UpdatePositions($aPositions);
+		}
 
-			$aGroups = array();
-			$oIterator = new RelationTypeIterator($oGraph, 'Node');
-			foreach ($oIterator as $oNode) {
-				if ($oNode instanceof DisplayableGroupNode) {
-					$aGroups[$oNode->GetProperty('group_index')] = $oNode->GetObjects();
+		$aGroups = array();
+		$oIterator = new RelationTypeIterator($oGraph, 'Node');
+		foreach ($oIterator as $oNode) {
+			if ($oNode instanceof DisplayableGroupNode) {
+				$aGroups[$oNode->GetProperty('group_index')] = $oNode->GetObjects();
 				}
 			}
 			// First page is the graph

@@ -28,6 +28,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreCannotSaveObjectException;
+use CoreException;
 use DBObject;
 use DBObjectSet;
 use DeleteException;
@@ -305,6 +306,36 @@ class UserRightsTest extends ItopDataTestCase
 	{
 		return [
 			'Administrator'         => [1],
+		];
+	}
+
+	/**
+	 * @dataProvider ProfileCannotModifySelfProvider
+	 * @doesNotPerformAssertions
+	 *
+	 * @throws \CoreException
+	 * @throws \DictExceptionUnknownLanguage
+	 * @throws \OQLException
+	 */
+	public function testProfileCannotModifySelf(int $iProfileId)
+	{
+		$oUser = $this->AddUser('test1', $iProfileId);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		try {
+			$this->AddProfileToUser($oUser, 1); // trying to become an admin
+			$this->fail('User should not modify self');
+		} catch (CoreException $e) {
+		}
+
+		// logout
+		$_SESSION = [];
+	}
+
+	public function ProfileCannotModifySelfProvider(): array
+	{
+		return [
 			'Configuration manager' => [3],
 		];
 	}
@@ -391,6 +422,7 @@ class UserRightsTest extends ItopDataTestCase
 			$this->AddProfileToUser($oUser, 1);
 			$this->fail('Should not be able to upgrade to Administrator');
 		} catch (CoreCannotSaveObjectException $e) {
+		} catch (CoreException $e) {
 		}
 
 		// logout

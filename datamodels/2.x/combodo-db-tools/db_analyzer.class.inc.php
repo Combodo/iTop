@@ -17,6 +17,8 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
+use Combodo\iTop\Core\MetaModel\HierarchicalKey;
+
 class DatabaseAnalyzer
 {
 	var $iTimeLimitPerOperation;
@@ -162,6 +164,9 @@ class DatabaseAnalyzer
 				if ($oAttDef->IsExternalKey())
 				{
 					$this->CheckExternalKeys($oAttDef, $sTable, $sKeyField, $sAttCode, $sClass, $aErrorsAndFixes);
+					if ((MetaModel::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey()) {
+						$this->CheckHK($sClass, $sAttCode, $aErrorsAndFixes);
+					}
 				}
 				elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeTagSet))
 				{
@@ -506,5 +511,24 @@ class DatabaseAnalyzer
 		$this->ExecQuery($sSelWrongRecs, $sFixit, $sErrorDesc, $sClass, $aErrorsAndFixes);
 	}
 
-
+	/**
+	 * Check hierarchical keys
+	 *
+	 * @param $sClass
+	 * @param $sAttCode
+	 * @param $aErrorsAndFixes
+	 *
+	 * @throws \Exception
+	 */
+	private function CheckHK($sClass, $sAttCode, &$aErrorsAndFixes)
+	{
+		try {
+			HierarchicalKey::VerifyIntegrity($sClass, $sAttCode, MetaModel::GetAttributeDef($sClass, $sAttCode));
+		} catch (CoreException $e) {
+			$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-HKInvalid', $sAttCode);
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['count'] = 1;
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['query'] = '-- N/A';
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = ['-- Run script env-'.utils::GetCurrentEnvironment().DIRECTORY_SEPARATOR.'combodo-db-tools'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'rebuildhk.php' ];
+		}
+	}
 }

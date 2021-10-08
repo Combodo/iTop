@@ -23,13 +23,21 @@
             {% endfor %}
         {% endif %}
 >
-    <div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}</div>
+    <div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}
+        {% if oUIBlock.GetLayout() == constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
+            {% if oUIBlock.GetComments() %}
+                <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>
+            {% endif %}
+        {% endif %}
+    </div>
     <div class="ibo-field--value" {% if oUIBlock.GetValueId() %}id="{{ oUIBlock.GetValueId() }}"{% endif %}>
         {% for oSubBlock in oUIBlock.GetSubBlocks() %}
             {{ render_block(oSubBlock, {aPage: aPage}) }}
         {% endfor %}
     </div>
-    {% if oUIBlock.GetComments() %}
-        <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>
+    {% if oUIBlock.GetLayout() != constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
+        {% if oUIBlock.GetComments() %}
+            <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>
+        {% endif %}
     {% endif %}
 </div>

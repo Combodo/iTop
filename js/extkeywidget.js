@@ -145,7 +145,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 							val = '<span class="ibo-input-select--autocomplete-item-image">'+item.initials+'</span>';
 						}
 					}
-					val = val+'<span class="ibo-input-select--autocomplete-item-txt" >';
+					val = val+'<span class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
 					if (item.obsolescence_flag == 1) {
 						val = val+'<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+item.label;
 					} else {
@@ -167,6 +167,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
 			// To avoid dropdown to be cut by the container's overflow hidden rule
 			dropdownParent: 'body',
+			onDropdownOpen: function(oDropdownElem){
+				me.UpdateDropdownPosition(this.$control, oDropdownElem);
+			},
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
@@ -227,8 +230,9 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				},
 				select: function (event, ui) {
 					$('#'+me.id).val(ui.item.value);
-					$('#label_'+me.id).val(ui.item.label);
-					$('#label_'+me.id).data('selected_value', ui.item.label);
+					let labelValue = $('<div>').html(ui.item.label).text();
+					$('#label_'+me.id).val(labelValue);
+					$('#label_'+me.id).data('selected_value', labelValue);
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
@@ -240,6 +244,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					if (dialog.length > 0) {
 						$('.ui-autocomplete.ui-front').css('z-index', parseInt(dialog.css("z-index"))+1);
 					}
+					me.UpdateDropdownPosition($(this), $('.ui-autocomplete.selectize-dropdown:visible'));
 					me.ManageScroll();
 				},
 				close: function (event, ui) {
@@ -257,12 +262,11 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					val = '<span class="ibo-input-select--autocomplete-item-image");">'+item.initials+'</span>';
 				}
 			}
-			val = val+'<div class="ibo-input-select--autocomplete-item-txt">';
+			val = val+'<div class="ibo-input-select--autocomplete-item-txt" title="'+item.label+'">';
 			if (item.obsolescence_flag == '1') {
 				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
 			}
-			let labelValue = $('<div>').text(item.label).html();
-			labelValue = labelValue.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+			let labelValue = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
 			val = val+labelValue;
 			if (item.additional_field != undefined) {
 				val = val+'<br><i>'+item.additional_field+'</i>';
@@ -304,6 +308,35 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		$('#'+this.id).parent().find('.ibo-input-select').css('padding-right', iPaddingRight);
 	};
 
+	/**
+	 * Update the dropdown's position so it always fits in the screen
+	 *
+	 * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
+	 * @param {object} oDropdownElem jQuery object representing the results dropdown
+	 * @return {void}
+	 */
+	this.UpdateDropdownPosition = function (oControlElem, oDropdownElem) {
+		const fWindowHeight = window.innerHeight;
+
+		const fControlTopY = oControlElem.offset().top;
+		const fControlHeight = oControlElem.outerHeight();
+
+		const fDropdownTopY = oDropdownElem.offset().top;
+		// This one is "let" as it might be updated if necessary
+		let fDropdownHeight = oDropdownElem.outerHeight();
+		const fDropdownBottomY = fDropdownTopY + fDropdownHeight;
+
+		if (fDropdownBottomY > fWindowHeight) {
+			// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
+			oDropdownElem.css('max-height', '30vh');
+			fDropdownHeight = oDropdownElem.outerHeight();
+
+			// Position dropdown above input if not enough space on the bottom part of the screen
+			if ((fDropdownTopY / fWindowHeight) > 0.6) {
+				oDropdownElem.css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
+			}
+		}
+	};
 	this.ManageScroll = function () {
 		if ($('#label_'+me.id).scrollParent()[0].tagName != 'HTML') {
 			$('#label_'+me.id).scrollParent().on(['scroll.'+me.id, 'resize.'+me.id].join(" "), function () {
@@ -407,9 +440,12 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		);
 	};
 
+	/**
+	 * Update the dialog size to fit into the screen
+	 * @constructor
+	 */
 	this.UpdateSizes = function () {
 		var dlg = $('#ac_dlg_'+me.id);
-		// Adjust the dialog's size to fit into the screen
 		if (dlg.width() > ($(window).width()-40)) {
 			dlg.width($(window).width()-40);
 		}

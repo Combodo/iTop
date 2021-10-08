@@ -11,6 +11,13 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use utils;
 
+/**
+ * Class TwigExtension
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop
+ * @deprecated 3.1.0 N°4034
+ */
 class TwigExtension
 {
 	/**
@@ -105,6 +112,14 @@ class TwigExtension
 		{
 			$oConfig = MetaModel::GetConfig();
 			return $oConfig->Get($sParamName);
+		}));
+
+		// Function to get a module setting
+		// Usage in twig: {{ get_module_setting(<MODULE_CODE>, <PROPERTY_CODE> [, <DEFAULT_VALUE>]) }}
+		// since 3.0.0, but see N°4034 for upcoming evolutions in the 3.1
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_module_setting', function (string $sModuleCode, string $sPropertyCode, $defaultValue = null) {
+			$oConfig = MetaModel::GetConfig();
+			return $oConfig->GetModuleSetting($sModuleCode, $sPropertyCode, $defaultValue);
 		}));
 
 		// Function to get the URL of a static page in a module

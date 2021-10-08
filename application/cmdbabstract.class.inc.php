@@ -1050,15 +1050,12 @@ HTML
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 
-		if ($sMode === static::ENUM_OBJECT_MODE_VIEW)
-		{
+		if ($sMode === static::ENUM_OBJECT_MODE_VIEW) {
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
-			if ($LockEnabled)
-			{
+			if ($LockEnabled) {
 				$aLockInfo = iTopOwnershipLock::IsLocked($sClass, $iKey);
-				if ($aLockInfo['locked'] === true && $aLockInfo['owner']->GetKey() == UserRights::GetUserId() && $bBlockReentrance === false)
-				{
+				if ($aLockInfo['locked'] === true && $aLockInfo['owner']->GetKey() == UserRights::GetUserId() && $bBlockReentrance === false) {
 					// If the object is locked by the current user, it's worth trying again, since
 					// the lock may be released by 'onunload' which is called AFTER loading the current page.
 					//$bTryAgain = $oOwner->GetKey() == UserRights::GetUserId();
@@ -1072,6 +1069,9 @@ HTML
 
 		// Object's details
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
+		if ($oPage->IsPrintableVersion()) {
+			$oObjectDetails->SetIsHeaderVisibleOnScroll(false);
+		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
 		/** @var \iTopWebPage $oPage */
@@ -2057,10 +2057,8 @@ HTML;
 					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
 					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
 					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES,
-							'UTF-8')."\"/>";
-					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes,
-							$sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>";
+					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
 					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
 					break;
 
@@ -2760,7 +2758,11 @@ JS
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+			if ($sMode == static::ENUM_OBJECT_MODE_CREATE) {
+				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel)); // Set title will take care of the encoding
+			} else {
+				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
+			}
 		}
 
 		$oToolbarButtons = ToolbarUIBlockFactory::MakeStandard(null);
@@ -3297,7 +3299,7 @@ EOF
 			}
 		}
 
-		if ($bExistFieldToDisplay) {
+		if ($bExistFieldToDisplay || MetaModel::GetConfig()->Get('force_transition_confirmation')) {
 			$oPage->set_title($sActionLabel);
 			$oPage->add(<<<HTML
 	<!-- Beginning of object-transition -->
@@ -4699,7 +4701,9 @@ HTML
 
 			$aFieldsMap[$sAttCode] = $sInputId;
 
-			$oFieldset = FieldSetUIBlockFactory::MakeStandard($sAttLabel);
+			$sCommentAsHtml = ($sComment != '') ? ' <div class="ibo-field--comments">'.$sComment.'</div>' : '';
+
+			$oFieldset = FieldSetUIBlockFactory::MakeStandard($sAttLabel.$sCommentAsHtml);
 			$oPage->AddSubBlock($oFieldset);
 
 			$oDivField = FieldUIBlockFactory::MakeLarge("");
@@ -4713,10 +4717,9 @@ HTML
 			$oDivField->AddDataAttribute("attribute-flag-must-prompt", $sAttMetaDataFlagMustPrompt);
 			$oDivField->AddDataAttribute("attribute-flag-slave", false);
 			$oFieldset->AddSubBlock($oDivField);
-
-			$sCommentAsHtml = ($sComment != '') ? '<span>'.$sComment.'</span><br/>' : '';
+			//$oDivField->SetComments($sComment);
 			$sFieldAsHtml = self::GetFormElementForField($oPage, $sClass, $sAttCode, $oAttDef, $sValue, $sDisplayValue, $sInputId, '', $iFlags, $aArgs);
-			$sHTMLValue = $sCommentAsHtml.$sFieldAsHtml;
+			$sHTMLValue = $sFieldAsHtml;
 			$oDivField->AddSubBlock(new Html($sHTMLValue));
 		}
 	}
@@ -5179,6 +5182,7 @@ EOF
 				foreach ($aDeletes as $iId => $aData) {
 					$oToDelete = $aData['to_delete'];
 					$bAutoDel = (($aData['mode'] == DEL_SILENT) || ($aData['mode'] == DEL_AUTO));
+					$sRowCssClass = '';
 					if (array_key_exists('issue', $aData))
 					{
 						if ($bAutoDel)
@@ -5198,6 +5202,7 @@ EOF
 							$sConsequence = Dict::Format('UI:Delete:MustBeDeletedManuallyButNotPossible',
 								$aData['issue']);
 						}
+						$sRowCssClass = 'ibo-is-alert';
 					}
 					else
 					{
@@ -5215,9 +5220,11 @@ EOF
 						else
 						{
 							$sConsequence = Dict::S('UI:Delete:MustBeDeletedManually');
+							$sRowCssClass = 'ibo-is-warning';
 						}
 					}
 					$aDisplayData[] = array(
+						'@class' => $sRowCssClass,
 						'class' => MetaModel::GetName(get_class($oToDelete)),
 						'object' => $oToDelete->GetHyperLink(),
 						'consequence' => $sConsequence,
@@ -5229,9 +5236,11 @@ EOF
 				foreach($aToUpdate as $iId => $aData)
 				{
 					$oToUpdate = $aData['to_reset'];
+					$sRowCssClass = '';
 					if (array_key_exists('issue', $aData))
 					{
 						$sConsequence = Dict::Format('UI:Delete:CannotUpdateBecause_Issue', $aData['issue']);
+						$sRowCssClass = 'ibo-is-alert';
 					}
 					else
 					{
@@ -5239,6 +5248,7 @@ EOF
 							$aData['attributes_list']);
 					}
 					$aDisplayData[] = array(
+						'@class' => $sRowCssClass,
 						'class' => MetaModel::GetName(get_class($oToUpdate)),
 						'object' => $oToUpdate->GetHyperLink(),
 						'consequence' => $sConsequence,
@@ -5282,13 +5292,16 @@ EOF
 
 			if ($oDeletionPlan->FoundStopper()) {
 				if ($oDeletionPlan->FoundSecurityIssue()) {
-					$oP->p(Dict::S('UI:Delete:SorryDeletionNotAllowed'));
-				} elseif ($oDeletionPlan->FoundManualOperation()) {
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
-				} else // $bFoundManualOp
-				{
-					$oP->p(Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+					$oFailAlertBlock = AlertUIBlockFactory::MakeForDanger('', Dict::S('UI:Delete:SorryDeletionNotAllowed'));
+					$oFailAlertBlock->SetIsClosable(false);
+					$oP->AddUiBlock($oFailAlertBlock);
+				} 
+				else {
+					$oWarningAlertBlock = AlertUIBlockFactory::MakeForWarning('', Dict::S('UI:Delete:PleaseDoTheManualOperations'));
+					$oWarningAlertBlock->SetIsClosable(false);
+					$oP->AddUiBlock($oWarningAlertBlock);
 				}
+				
 				$oForm = FormUIBlockFactory::MakeStandard('');
 				$oP->AddSubBlock($oForm);
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('transaction_id', utils::ReadParam('transaction_id', '', false, 'transaction_id')));
@@ -5322,6 +5335,7 @@ EOF
 					'menu' => false,
 					'surround_with_panel' => true,
 					'panel_title' => $sSubtitle,
+					'panel_title_is_html' => true,
 					'panel_icon' => MetaModel::GetClassIcon($sClass, false),
 					'panel_class' => $sClass,
 				)));

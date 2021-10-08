@@ -58,6 +58,8 @@ class WebResourcesHelper
 	 */
 	public static function EnableCKEditorToWebPage(WebPage &$oPage): void
 	{
+		//when ckeditor is loaded in ajax,  CKEDITOR_BASEPATH  is not well defined (this constant is used to load additional js)
+		$oPage->add_script("if (! window.CKEDITOR_BASEPATH) { var CKEDITOR_BASEPATH = '".utils::GetAbsoluteUrlAppRoot()."js/ckeditor/';}");
 		foreach (static::GetJSFilesRelPathsForCKEditor() as $sFile) {
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().$sFile);
 		}

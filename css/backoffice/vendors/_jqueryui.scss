@@ -66,6 +66,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 // Tabs
 
 .ui-dialog{
+  box-sizing: content-box; /* Necessary to overload our theme default setting */
 	display: flex;
 	flex-direction: column;
 	position: absolute;
@@ -104,6 +105,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 		height: 20px;
 	}
 	.ui-dialog-content {
+    box-sizing: content-box; /* Necessary to overload our theme default setting */
 		position: relative;
 		padding: $ibo-vendors-jqueryui--ui-dialog-content--padding-y $ibo-vendors-jqueryui--ui-dialog-content--padding-x;
     overflow: auto;

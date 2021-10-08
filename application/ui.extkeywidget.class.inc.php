@@ -243,7 +243,7 @@ class UIExtKeyWidget
 					foreach ($aAdditionalField as $sAdditionalField) {
 						array_push($aArguments, $oObj->Get($sAdditionalField));
 					}
-					$aOption['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+					$aOption['additional_field'] = utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments));
 				}
 				if (!empty($sObjectImageAttCode)) {
 					// Try to retrieve image for contact
@@ -823,9 +823,9 @@ JS
 
 				$aJsonMap = array();
 				foreach ($aValues as $sKey => $aValue) {
-					$aElt = ['value' => $sKey, 'label' => $aValue['label'], 'obsolescence_flag' => $aValue['obsolescence_flag']];
+					$aElt = ['value' => $sKey, 'label' => utils::HtmlEntities($aValue['label']), 'obsolescence_flag' => $aValue['obsolescence_flag']];
 					if ($aValue['additional_field'] != '') {
-						$aElt['additional_field'] = $aValue['additional_field'];
+						$aElt['additional_field'] = utils::HtmlEntities($aValue['additional_field']);
 					}
 
 					if (array_key_exists('initials', $aValue)) {

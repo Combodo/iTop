@@ -638,7 +638,7 @@ abstract class UserInternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "core,grant_by_profile",
+			"category" => "core,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",

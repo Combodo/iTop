@@ -393,7 +393,7 @@ try {
 	$sEnvironment = addslashes(utils::GetCurrentEnvironment());
 
 	$oP->add_script(
-<<<JS
+		<<<JS
 function LaunchBackupNow()
 {
 	$('#backup_success').addClass('ibo-is-hidden');
@@ -420,7 +420,7 @@ function LaunchBackupNow()
 			{
 				window.location.reload();
 			}
-			$('#waitbackup').modal('close');
+			$('#waitbackup').dialog('close');
 		});
 	}
 }
@@ -464,11 +464,11 @@ function LaunchRestoreNow(sBackupFile, sConfirmationMessage)
 					$('#backup_success').html('$sRestoreDone');
 					$('#backup_success').removeClass('ibo-is-hidden');
 				}
-			$('#waitrestore').modal('close');
+				$('#waitrestore').dialog('close');
 			});
 		} else {
 			$('button.restore').prop('disabled', true);
-			$('#waitrestore').modal('close');
+			$('#waitrestore').dialog('close');
 		}
 	});
 }
