@@ -586,6 +586,8 @@ abstract class LogAPI
 	 */
 	protected static $m_oMockMetaModelConfig = null;
 
+	protected static $oLastEventIssue = null;
+
 	public static function Enable($sTargetFile)
 	{
 		// m_oFileLog is not defined as a class attribute so that each impl will have its own
@@ -707,29 +709,34 @@ abstract class LogAPI
 	 */
 	protected static function GetMinLogLevel($sChannel, $sCode = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		$sConfiguredLevelForChannel = static::GetMinLogLevelFromChannel($sChannel, $sCode);
+		$sLogLevelMin = static::GetLogConfig($sCode);
+
+		$sConfiguredLevelForChannel = static::GetMinLogLevelFromChannel($sLogLevelMin, $sChannel);
 		if (!is_null($sConfiguredLevelForChannel)) {
 			return $sConfiguredLevelForChannel;
 		}
 
-		return static::GetMinLogLevelFromDefault($sChannel, $sCode);
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sChannel);
 	}
 
-	/**
-	 * @param string $sChannel
-	 * @param string $sCode
-	 *
-	 * @return string|null null if not defined
-	 */
-	protected static function GetMinLogLevelFromChannel($sChannel, $sCode = self::ENUM_CONFIG_PARAM_FILE)
+	final protected static function GetLogConfig($sCode = self::ENUM_CONFIG_PARAM_FILE)
 	{
 		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
 			return static::GetLevelDefault();
 		}
 
-		$sLogLevelMin = $oConfig->Get($sCode);
+		return $oConfig->Get($sCode);
+	}
 
+	/**
+	 * @param string|array $sLogLevelMin log config parameter value
+	 * @param string $sChannel
+	 *
+	 * @return string|null null if not defined
+	 */
+	protected static function GetMinLogLevelFromChannel($sLogLevelMin, $sChannel)
+	{
 		if (empty($sLogLevelMin)) {
 			return static::GetLevelDefault();
 		}
@@ -745,7 +752,7 @@ abstract class LogAPI
 		return null;
 	}
 
-	protected static function GetMinLogLevelFromDefault($sChannel, $sCode = self::ENUM_CONFIG_PARAM_FILE)
+	protected static function GetMinLogLevelFromDefault($sLogLevelMin, $sChannel)
 	{
 		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT])) {
 			return $sLogLevelMin[static::CHANNEL_DEFAULT];
@@ -1208,8 +1215,6 @@ class ExceptionLog extends LogAPI
 	public const CHANNEL_DEFAULT = 'Exception';
 	public const CONTEXT_EXCEPTION = '__exception';
 
-	private static $oLastEventIssue = null;
-
 	protected static $m_oFileLog = null;
 
 	/**
@@ -1258,22 +1263,24 @@ class ExceptionLog extends LogAPI
 	 */
 	protected static function GetMinLogLevel($sExceptionClass, $sCode = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		$sConfiguredLevelForChannel = null;
+		$sLogLevelMin = static::GetLogConfig($sCode);
+
+		$sConfiguredLevelForExceptionClass = null;
 		$sExceptionClassInHierarchy = $sExceptionClass;
 		while ($sExceptionClassInHierarchy !== false) {
-			$sConfiguredLevelForChannel = static::GetMinLogLevelFromChannel($sExceptionClassInHierarchy, $sCode);
-			if (!is_null($sConfiguredLevelForChannel)) {
+			$sConfiguredLevelForExceptionClass = static::GetMinLogLevelFromChannel($sLogLevelMin, $sExceptionClassInHierarchy);
+			if (!is_null($sConfiguredLevelForExceptionClass)) {
 				break;
 			}
 
 			$sExceptionClassInHierarchy = get_parent_class($sExceptionClassInHierarchy);
 		}
 
-		if (!is_null($sConfiguredLevelForChannel)) {
-			return $sConfiguredLevelForChannel;
+		if (!is_null($sConfiguredLevelForExceptionClass)) {
+			return $sConfiguredLevelForExceptionClass;
 		}
 
-		return static::GetMinLogLevelFromDefault($sExceptionClass, $sCode);
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass);
 	}
 
 	protected static function GetEventIssue(string $sMessage, string $sChannel, array $aContext): EventIssue
