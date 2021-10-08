@@ -645,7 +645,6 @@ abstract class LogAPI
 	 */
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
 	{
-
 		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
 
@@ -1249,12 +1248,20 @@ class ExceptionLog extends LogAPI
 	 */
 	public static function LogException(Exception $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING): void
 	{
+		if (!isset(self::$aLevelsPriority[$sLevel])) {
+			IssueLog::Error("invalid log level '{$sLevel}'");
+
+			return;
+		}
+
+		$sExceptionClass = get_class($oException);
+
 		if (empty($aContext[self::CONTEXT_EXCEPTION])) {
 			$aContext[self::CONTEXT_EXCEPTION] = $oException;
 		}
 
 		if (empty($aContext['exception class'])) {
-			$aContext['exception class'] = get_class($oException);
+			$aContext['exception class'] = $sExceptionClass;
 		}
 
 		if (empty($aContext['file'])) {
@@ -1262,10 +1269,33 @@ class ExceptionLog extends LogAPI
 		}
 
 		if (empty($aContext['line'])) {
-			$aContext['line'] =$oException->getLine();
+			$aContext['line'] = $oException->getLine();
 		}
 
-		self::Log($sLevel, $oException->getMessage(), get_class($oException), $aContext);
+		self::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
+	}
+
+	/** @noinspection PhpParameterNameChangedDuringInheritanceInspection */
+	public static function Log($sLevel, $sMessage, $sExceptionClass = null, $aContext = array())
+	{
+		if (
+			(null !== static::$m_oFileLog)
+			&& static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_FILE)
+		) {
+			$sExceptionClassConfiguredForFile = static::GetExceptionClassInConfig($sExceptionClass, static::ENUM_CONFIG_PARAM_FILE);
+			if (null === $sExceptionClassConfiguredForFile) {
+				$sExceptionClassConfiguredForFile = $sExceptionClass;
+			}
+			static::$m_oFileLog->$sLevel($sMessage, $sExceptionClassConfiguredForFile, $aContext);
+		}
+
+		if (static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_DB)) {
+			$sExceptionClassConfiguredForDb = static::GetExceptionClassInConfig($sExceptionClass, static::ENUM_CONFIG_PARAM_DB);
+			if (null === $sExceptionClassConfiguredForDb) {
+				$sExceptionClassConfiguredForDb = $sExceptionClass;
+			}
+			self::WriteToDb($sMessage, $sExceptionClassConfiguredForDb, $aContext);
+		}
 	}
 
 	/**
@@ -1288,8 +1318,23 @@ class ExceptionLog extends LogAPI
 	protected static function GetMinLogLevel($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
 		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
+		$sExceptionClassInConfig = static::GetExceptionClassInConfig($sExceptionClass, $sLogConfigKey);
 
-		$sConfiguredLevelForExceptionClass = null;
+		if (null !== $sExceptionClassInConfig) {
+			return $sLogConfigKey[$sExceptionClassInConfig];
+		}
+
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass, $sLogConfigKey);
+	}
+
+	protected static function GetExceptionClassInConfig($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
+	{
+		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
+
+		if (false === is_array($sLogLevelMin)) {
+			return null;
+		}
+
 		$sExceptionClassInHierarchy = $sExceptionClass;
 		while ($sExceptionClassInHierarchy !== false) {
 			$sConfiguredLevelForExceptionClass = static::GetMinLogLevelFromChannel($sLogLevelMin, $sExceptionClassInHierarchy, $sLogConfigKey);
@@ -1300,11 +1345,11 @@ class ExceptionLog extends LogAPI
 			$sExceptionClassInHierarchy = get_parent_class($sExceptionClassInHierarchy);
 		}
 
-		if (!is_null($sConfiguredLevelForExceptionClass)) {
-			return $sConfiguredLevelForExceptionClass;
+		if ($sExceptionClassInHierarchy === false) {
+			return null;
 		}
 
-		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass, $sLogConfigKey);
+		return $sExceptionClassInHierarchy;
 	}
 
 	protected static function GetEventIssue(string $sMessage, string $sChannel, array $aContext): EventIssue
