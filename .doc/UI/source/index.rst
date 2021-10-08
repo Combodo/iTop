@@ -10,8 +10,6 @@ Welcome to iTop 3.0 UI's documentation!
 
     TwigBase/TwigBase
     TwigBaseTuto/TwigBaseTuto
-    TwigBaseReference/TwigBaseReference
-
 
 .. toctree::
     :maxdepth: 1

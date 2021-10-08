@@ -59,7 +59,7 @@ Let's create the template ``my-module/templates/HelloWorld.html.twig`` with a ni
 
 Twig syntax can be found `Here <https://twig.symfony.com/doc/3.x/>`_.
 
-For more information on specific iTop Twig tags you can check :ref:`Components` and :ref:`Layouts`
+For more information on specific iTop Twig tags you can check :ref:`Components` and :ref:`Layouts`, *note that UI blocks are new in iTop 3.0 and cannot be used in iTop 2.7*
 
 The end point
 -------------
