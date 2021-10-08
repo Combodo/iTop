@@ -1,4 +1,8 @@
 <?php
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 
 /**
  * Created by PhpStorm.
@@ -7,7 +11,7 @@
  * Time: 17:03
  */
 
-namespace Combodo\iTop\Test\UnitTest\Core;
+namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
