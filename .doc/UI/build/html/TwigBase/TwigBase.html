@@ -77,8 +77,28 @@
              
   <section id="twig-base-presentation">
 <h1>Twig Base Presentation<a class="headerlink" href="#twig-base-presentation" title="Permalink to this headline"></a></h1>
+<p>This feature is intended to help extension creators to design forms in a <em>modern</em> way.</p>
 <p>The <strong>Twig Base</strong> feature is based on MVC structure:</p>
 <img alt="../_images/MVC.png" src="../_images/MVC.png" />
+<p>When creating an extension following this structure, some parts have to be done:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Model</dt>
+<dd class="field-odd"><p>Optional part to define the specific data model for the extension</p>
+</dd>
+<dt class="field-even">Service</dt>
+<dd class="field-even"><p>Recommended part to produce the data to be displayed</p>
+</dd>
+<dt class="field-odd">Controller</dt>
+<dd class="field-odd"><p>Mandatory part to gather the data from the <em>Service</em> and display using the <em>View</em>.
+The <em>Controller</em> contains an automatic routing mechanism to be selected by the <em>operation</em> parameter.</p>
+</dd>
+<dt class="field-even">View</dt>
+<dd class="field-even"><p>Mandatory part to display the data given by the <em>Controller</em></p>
+</dd>
+<dt class="field-odd">End point</dt>
+<dd class="field-odd"><p>Mandatory part receiving the request and calling the <em>Controller</em></p>
+</dd>
+</dl>
 </section>
 
 

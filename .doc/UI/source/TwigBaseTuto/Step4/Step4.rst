@@ -56,6 +56,8 @@ Now add the operation in the controller:
         }
     }
 
+*Disclaimer: The code is for tutorial only, don't use it in production as no check is done on the entries*
+
 The corresponding template must be created ``templates/SelectMonth.html.twig``
 
 .. code-block:: twig
