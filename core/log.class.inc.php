@@ -648,7 +648,7 @@ abstract class LogAPI
 		}
 
 		if (
-			(false === is_null(static::$m_oFileLog))
+			(null !== static::$m_oFileLog)
 			&& static::IsLogLevelEnabled($sLevel, $sChannel, static::ENUM_CONFIG_PARAM_FILE)
 		) {
 			static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
