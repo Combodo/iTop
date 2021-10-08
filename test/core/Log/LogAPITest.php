@@ -67,8 +67,10 @@ class LogAPITest extends ItopTestCase
 	{
 		$this->oMetaModelConfig
 			->method("Get")
-			->with('log_level_min')
-			->willReturn($ConfigReturnedObject);
+			->willReturnMap([
+				[\LogAPI::ENUM_CONFIG_PARAM_FILE, $ConfigReturnedObject],
+				[\LogAPI::ENUM_CONFIG_PARAM_DB, $ConfigReturnedObject],
+			]);
 
 		\IssueLog::MockStaticObjects($this->mockFileLog, $this->oMetaModelConfig);
 
@@ -115,8 +117,10 @@ class LogAPITest extends ItopTestCase
 	{
 		$this->oMetaModelConfig
 			->method("Get")
-			->with('log_level_min')
-			->willReturn($ConfigReturnedObject);
+			->willReturnMap([
+				[\LogAPI::ENUM_CONFIG_PARAM_FILE, $ConfigReturnedObject],
+				[\LogAPI::ENUM_CONFIG_PARAM_DB, $ConfigReturnedObject],
+			]);
 
 		\IssueLog::MockStaticObjects($this->mockFileLog, $this->oMetaModelConfig);
 
@@ -124,17 +128,14 @@ class LogAPITest extends ItopTestCase
 			->method($sExpectedLevel)
 			->with("log msg", "GaBuZoMeuChannel");
 
-		try{
+		try {
 			\IssueLog::Ok("log msg", "GaBuZoMeuChannel");
-			if ($bExceptionRaised)
-			{
+			if ($bExceptionRaised) {
 				$this->fail("raised should have been raised");
 			}
 		}
-		catch(\Exception $e)
-		{
-			if (!$bExceptionRaised)
-			{
+		catch (\Exception $e) {
+			if (!$bExceptionRaised) {
 				$this->fail("raised should NOT have been raised");
 			}
 		}
