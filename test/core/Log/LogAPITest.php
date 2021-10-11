@@ -14,14 +14,14 @@
 namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class LogAPITest extends ItopTestCase
+class LogAPITest extends ItopDataTestCase
 {
 	private $mockFileLog;
 	private $oMetaModelConfig;
@@ -53,11 +53,11 @@ class LogAPITest extends ItopTestCase
 	public function LogApiProvider()
 	{
 		return [
-			[ $this->oMetaModelConfig, "log msg", '' , "Error", "log msg"],
-			[ $this->oMetaModelConfig, "log msg", 'PoudlardChannel' , "Error", "log msg", 'PoudlardChannel'],
+			[$this->oMetaModelConfig, "log msg", '', "Error", "log msg"],
+			[$this->oMetaModelConfig, "log msg", 'PoudlardChannel', "Error", "log msg", 'PoudlardChannel'],
 		];
 	}
-	
+
 	/**
 	 * @dataProvider LogWarningWithASpecificChannelProvider
 	 * @test
@@ -80,15 +80,12 @@ class LogAPITest extends ItopTestCase
 
 		try{
 			\IssueLog::Warning("log msg", "GaBuZoMeuChannel");
-			if ($bExceptionRaised)
-			{
+			if ($bExceptionRaised) {
 				$this->fail("raised should have been raised");
 			}
 		}
-		catch(\Exception $e)
-		{
-			if (!$bExceptionRaised)
-			{
+		catch(\Exception $e) {
+			if (!$bExceptionRaised) {
 				$this->fail("raised should NOT have been raised");
 			}
 		}
@@ -97,14 +94,14 @@ class LogAPITest extends ItopTestCase
 	public function LogWarningWithASpecificChannelProvider()
 	{
 		return [
-			"empty config" => [ 0, "Ok", ''],
-			"Default Unknown Level" => [ 0, "Ok", 'TotoLevel', true],
-			"Info as Default Level" => [ 1 , "Warning", 'Info'],
-			"Error as Default Level" => [ 0, "Warning", 'Error'],
-			"Empty array" => [ 0, "Ok", array()],
+			"empty config"                             => [ 0, "Ok", ''],
+			"Default Unknown Level"                    => [ 0, "Ok", 'TotoLevel', true],
+			"Info as Default Level"                    => [ 1 , "Warning", 'Info'],
+			"Error as Default Level"                   => [ 0, "Warning", 'Error'],
+			"Empty array"                              => [ 0, "Ok", array()],
 			"Channel configured on an undefined level" => [ 0, "Ok", ["GaBuZoMeuChannel" => "TotoLevel"], true],
-			"Channel defined with Error" => [ 0, "Warning", ["GaBuZoMeuChannel" => "Error"]],
-			"Channel defined with Info" => [ 1, "Warning", ["GaBuZoMeuChannel" => "Info"]],
+			"Channel defined with Error"               => [ 0, "Warning", ["GaBuZoMeuChannel" => "Error"]],
+			"Channel defined with Info"                => [ 1, "Warning", ["GaBuZoMeuChannel" => "Info"]],
 		];
 	}
 
@@ -144,9 +141,37 @@ class LogAPITest extends ItopTestCase
 	public function LogOkWithASpecificChannel()
 	{
 		return [
-			"empty config" => [ 1, "Ok", ''],
-			"Empty array" => [ 1, "Ok", array()],
+			"empty config" => [1, "Ok", ''],
+			"Empty array"  => [1, "Ok", array()],
 		];
 	}
 
+	/**
+	 * Tests that we are creating a valid object, with all its mandatory fields set !
+	 *
+	 * @throws \CoreException
+	 */
+	public function testGetEventIssue(): void
+	{
+		$oEventIssue = $this->InvokeNonPublicStaticMethod(\LogAPI::class, 'GetEventIssue', [
+			'My message',
+			\LogChannels::CORE,
+			['context' => 'hop'],
+		]);
+
+		// Finding mandatory fields in EventIssue class
+		$aEventIssueAllAttributes = \MetaModel::ListAttributeDefs(\EventIssue::class);
+		$aEventIssueMandatoryAttributes = array_filter($aEventIssueAllAttributes, static function ($oAttDef, $sAttCode) {
+			if (false === $oAttDef->IsNullAllowed()) {
+				return $oAttDef;
+			}
+		}, ARRAY_FILTER_USE_BOTH);
+
+		// remove fields set in the OnInsert method
+		unset($aEventIssueMandatoryAttributes['page']);
+
+		foreach ($aEventIssueMandatoryAttributes as $sAttCode => $oAttDef) {
+			$this->assertNotEmpty($oEventIssue->Get($sAttCode), "In the EventIssue instance returned by LogAPI the '$sAttCode' mandatory attr is empty :(");
+		}
+	}
 }
