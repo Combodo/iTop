@@ -674,6 +674,7 @@ abstract class LogAPI
 	{
 		$sMinLogLevel = self::GetMinLogLevel($sChannel, $sLogConfigKey);
 
+		// the is_bool call is to remove a IDE O:) warning as $sMinLogLevel is typed as string
 		if ((is_bool($sMinLogLevel) && ($sMinLogLevel === false)) || $sMinLogLevel === 'false') {
 			return false;
 		}
@@ -807,7 +808,7 @@ abstract class LogAPI
 		$oEventIssue = new EventIssue();
 		$oEventIssue->Set('message', $sMessage);
 		$oEventIssue->Set('userinfo', UserRights::GetUserFriendlyName());
-		$oEventIssue->Set('callstack', $sCurrentCallStack); // FIXME current stack trace
+		$oEventIssue->Set('callstack', $sCurrentCallStack);
 		$oEventIssue->Set('data', $aContext);
 
 		return $oEventIssue;
@@ -1231,7 +1232,7 @@ class LogFileRotationProcess implements iScheduledProcess
  *
  * Please use {@see ExceptionLog::LogException()} to log exceptions
  *
- * @since 3.0.0 N°4261 class creation to allow to easier logging when exception occurs
+ * @since 3.0.0 N°4261 class creation to ease logging when an exception occurs
  */
 class ExceptionLog extends LogAPI
 {
@@ -1275,7 +1276,11 @@ class ExceptionLog extends LogAPI
 		self::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
 	}
 
-	/** @noinspection PhpParameterNameChangedDuringInheritanceInspection */
+	/**
+	 * Do not call this method directly as you do in other LogAPI impl ! Prefer calling {@see \ExceptionLog::LogException()} instead, providing your exception instance !
+	 *
+	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
+	 */
 	public static function Log($sLevel, $sMessage, $sExceptionClass = null, $aContext = array())
 	{
 		if (
@@ -1303,15 +1308,7 @@ class ExceptionLog extends LogAPI
 	}
 
 	/**
-	 * Searching config first for the current exception class
-	 * If not found we are seeking for config for all the parent classes
-	 *
-	 * That means if we are logging a UnknownClassOqlException, we will seek log config all the way the class hierarchy :
-	 * 1. UnknownClassOqlException
-	 * 2. OqlNormalizeException
-	 * 3. OQLException
-	 * 4. CoreException
-	 * 5. Exception
+	 * Will seek for the configuration based on the exception class, using {@see \ExceptionLog::GetExceptionClassInConfig()}
 	 *
 	 * @param string $sExceptionClass
 	 * @param string $sLogConfigKey
@@ -1331,6 +1328,22 @@ class ExceptionLog extends LogAPI
 		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass, $sLogConfigKey);
 	}
 
+	/**
+	 * Searching config first for the current exception class
+	 * If not found we are seeking for config for all the parent classes
+	 *
+	 * That means if we are logging a UnknownClassOqlException, we will seek log config all the way the class hierarchy :
+	 * 1. UnknownClassOqlException
+	 * 2. OqlNormalizeException
+	 * 3. OQLException
+	 * 4. CoreException
+	 * 5. Exception
+	 *
+	 * @param string $sExceptionClass
+	 * @param string $sLogConfigKey
+	 *
+	 * @return string|null the current or parent class name defined in the config, otherwise null if no class of the hierarchy found in the config
+	 */
 	protected static function GetExceptionClassInConfig($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
 		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
