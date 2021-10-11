@@ -134,7 +134,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					} else {
 						val = item.label;
 					}
-					return $("<div>").append(val);
+					return $("<div title ='"+item.label+"'>").append(val);
 				},
 				option: function(item) {
 					val = '';
