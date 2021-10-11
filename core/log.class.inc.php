@@ -1286,7 +1286,11 @@ class ExceptionLog extends LogAPI
 			if (null === $sExceptionClassConfiguredForFile) {
 				$sExceptionClassConfiguredForFile = $sExceptionClass;
 			}
-			static::$m_oFileLog->$sLevel($sMessage, $sExceptionClassConfiguredForFile, $aContext);
+
+			// clearing the Exception object as it is too verbose to write to a file !
+			$aContextForFile = array_diff_key($aContext, [self::CONTEXT_EXCEPTION => null]);
+
+			static::$m_oFileLog->$sLevel($sMessage, $sExceptionClassConfiguredForFile, $aContextForFile);
 		}
 
 		if (static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_DB)) {

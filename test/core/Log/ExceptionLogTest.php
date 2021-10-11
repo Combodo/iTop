@@ -83,7 +83,6 @@ class ExceptionLogTest extends ItopDataTestCase
 					'exception class'               => get_class($oException),
 					'file'                          => $sExpectedFile,
 					'line'                          => $sExpectedLine,
-					ExceptionLog::CONTEXT_EXCEPTION => $oException,
 				]
 			); //The context is preserved, and, if the key 'exception class' is not yet in the array, it is added
 			$mockFileLog->expects($this->exactly($iExpectedWriteNumber))
