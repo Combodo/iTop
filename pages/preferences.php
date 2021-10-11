@@ -72,6 +72,7 @@ function DisplayPreferences($oP)
 	$oUICancelButton = ButtonUIBlockFactory::MakeForCancel();
 	$oUIToolbar->AddSubBlock($oUICancelButton);
 	$oUICancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+
 	// - Submit button
 	$oUISubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_user_interface', true);
 	$oUIToolbar->AddSubBlock($oUISubmitButton);

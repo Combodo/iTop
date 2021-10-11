@@ -10,6 +10,13 @@ use CMDBSource;
 use CoreException;
 use MetaModel;
 
+/**
+ * Helper class to check and rebuild data integrity of hierarchical keys
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Core\MetaModel
+ * @since 3.0.0 N°2527
+ */
 class HierarchicalKey {
 
 	/**
