@@ -664,8 +664,6 @@ abstract class LogAPI
 		}
 		if (static::IsLogLevelEnabled($sLevel, $sChannel, static::ENUM_CONFIG_PARAM_DB)) {
 			self::WriteToDb($sMessage, $sChannel, $aContext);
-		} else {
-			static::$oLastEventIssue = null;
 		}
 	}
 
