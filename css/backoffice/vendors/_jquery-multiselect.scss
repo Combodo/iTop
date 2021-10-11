@@ -21,15 +21,16 @@ $ibo-vendors-jquery-multiselect--ui-multiselect-menu--z-index: 10000 !default;
 
 
 
-.ui-multiselect { 
+.ui-multiselect {
   @extend .ibo-input;
   @extend .ibo-input-select;
   width: auto !important;
   padding-left: $ibo-vendors-jquery-multiselect--ui-multiselect--padding-left !important;
   padding-right: $ibo-vendors-jquery-multiselect--ui-multiselect--padding-right !important;
-  text-align:left;
-  white-space:nowrap;
-  overflow:hidden;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  display: grid;
 }
 
 button.ui-multiselect > span { 

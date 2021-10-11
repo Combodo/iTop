@@ -18,6 +18,10 @@ $ibo-fieldset--legend--border-bottom-style: solid !default;
   }
 }
 
+.ibo-column > .ibo-fieldset {
+  display: contents;
+}
+
 .ibo-multi-column ~ .ibo-fieldset {
   margin-top: $ibo-fieldset--sibling-spacing;
 }
