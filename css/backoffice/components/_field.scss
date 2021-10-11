@@ -125,6 +125,11 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
 
     .ibo-field--value {
       padding: $ibo-field--value--padding-top--is-fullscreen $ibo-field--value--padding-x--is-fullscreen $ibo-field--value--padding-bottom--is-fullscreen $ibo-field--value--padding-x--is-fullscreen;
+
+      > * {
+        height: initial !important; /* !important is necessary to overload the inline style put by the lib */
+        width: initial !important;
+      }
     }
   }
 }
