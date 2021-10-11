@@ -14,6 +14,7 @@ $ibo-input-select-selectize--value--min-midth: 150px;
 $ibo-input-select-selectize--value--height: 100% !default;
 $ibo-input-select-selectize--value--line-height: $ibo-input--height !default;
 $ibo-input-select-selectize--dropdown--max-height: 50vh !default;
+$ibo-input-select-selectize--dropdown--max-width: 50em !default;
 
 $ibo-input-select-wrapper--width: 100% !default;
 
@@ -84,6 +85,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 }
 .ibo-input-select-autocomplete{
   min-width: $ibo-input-select-autocomplete--value--min-midth !important;
+  text-overflow: ellipsis;
 }
 .ibo-input-selectize {
   min-width: $ibo-input-select-selectize--value--min-midth !important;
@@ -181,6 +183,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 .selectize-dropdown.plugin-custom_itop {
   z-index: 2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container. */
   max-height: $ibo-input-select-selectize--dropdown--max-height;
+  max-width: $ibo-input-select-selectize--dropdown--max-width ;
   overflow-y: auto;
 }
 
