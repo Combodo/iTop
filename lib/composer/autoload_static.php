@@ -518,6 +518,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'ListExpression' => __DIR__ . '/../..' . '/core/oql/expression.class.inc.php',
         'ListOqlExpression' => __DIR__ . '/../..' . '/core/oql/oqlquery.class.inc.php',
         'LogAPI' => __DIR__ . '/../..' . '/core/log.class.inc.php',
+        'LogChannels' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'LogFileNameBuilderFactory' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'LogFileRotationProcess' => __DIR__ . '/../..' . '/core/log.class.inc.php',
         'LoginBlockExtension' => __DIR__ . '/../..' . '/application/logintwig.class.inc.php',

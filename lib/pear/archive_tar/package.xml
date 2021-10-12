@@ -32,10 +32,10 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
   <email>stig@php.net</email>
   <active>no</active>
  </helper>
- <date>2021-02-16</date>
- <time>10:49:28</time>
+ <date>2021-07-20</date>
+ <time>18:00:00</time>
  <version>
-  <release>1.4.13</release>
+  <release>1.4.14</release>
   <api>1.4.0</api>
  </version>
  <stability>
@@ -44,7 +44,7 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
  </stability>
  <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
  <notes>
-* Fix Bug #27010: Relative symlinks failing (out-of path file extraction) [mrook]
+* Properly fix symbolic link path traversal (CVE-2021-32610)
  </notes>
  <contents>
   <dir name="/">
@@ -74,6 +74,21 @@ Also Lzma2 compressed archives are supported with xz extension.</description>
  </dependencies>
  <phprelease />
  <changelog>
+  <release>
+   <version>
+    <release>1.4.13</release>
+    <api>1.4.0</api>
+   </version>
+   <stability>
+    <release>stable</release>
+    <api>stable</api>
+   </stability>
+   <date>2021-02-16</date>
+   <license uri="http://www.opensource.org/licenses/bsd-license.php">New BSD License</license>
+   <notes>
+    * Fix Bug #27010: Relative symlinks failing (out-of path file extraction) [mrook]
+   </notes>
+  </release>
   <release>
    <version>
     <release>1.4.12</release>

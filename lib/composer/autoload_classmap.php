@@ -288,6 +288,7 @@ return array(
     'ListExpression' => $baseDir . '/core/oql/expression.class.inc.php',
     'ListOqlExpression' => $baseDir . '/core/oql/oqlquery.class.inc.php',
     'LogAPI' => $baseDir . '/core/log.class.inc.php',
+    'LogChannels' => $baseDir . '/core/log.class.inc.php',
     'LogFileNameBuilderFactory' => $baseDir . '/core/log.class.inc.php',
     'LogFileRotationProcess' => $baseDir . '/core/log.class.inc.php',
     'LoginBlockExtension' => $baseDir . '/application/logintwig.class.inc.php',

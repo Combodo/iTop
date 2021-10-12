@@ -2124,36 +2124,44 @@ class Archive_Tar extends PEAR
                             }
                         }
                     } elseif ($v_header['typeflag'] == "2") {
-                        $link_depth = 0;
-                        foreach (explode("/", $v_header['filename']) as $dir) {
-                            if ($dir === "..") {
-                                $link_depth--;
-                            } elseif ($dir !== "" && $dir !== "." ) {
-                                $link_depth++;
-                            }
-                        }
-                        foreach (explode("/", $v_header['link']) as $dir){
-                            if ($link_depth <= 0) {
-                                break;
-                            }
-                            if ($dir === "..") {
-                                $link_depth--;
-                            } elseif ($dir !== "" && $dir !== ".") {
-                                $link_depth++;
-                            }
-                        }
-                        if (strpos($v_header['link'], "/") === 0 or $link_depth <= 0) {
-                            $this->_error(
-                                 'Out-of-path file extraction {'
-                                 . $v_header['filename'] . ' --> ' .
-                                 $v_header['link'] . '}'
-                            );
-                            return false;
-                        }
                         if (!$p_symlinks) {
                             $this->_warning('Symbolic links are not allowed. '
                                 . 'Unable to extract {'
                                 . $v_header['filename'] . '}'
+                            );
+                            return false;
+                        }
+                        $absolute_link = FALSE;
+                        $link_depth = 0;
+                        if (strpos($v_header['link'], "/") === 0 || strpos($v_header['link'], ':') !== FALSE) {
+                          $absolute_link = TRUE;
+                        }
+                        else {
+                            $s_filename = preg_replace('@^' . preg_quote($p_path) . '@', "", $v_header['filename']);
+                            $s_linkname = str_replace('\\', '/', $v_header['link']);
+                            foreach (explode("/", $s_filename) as $dir) {
+                                if ($dir === "..") {
+                                    $link_depth--;
+                                } elseif ($dir !== "" && $dir !== "." ) {
+                                    $link_depth++;
+                                }
+                            }
+                            foreach (explode("/", $s_linkname) as $dir){
+                                if ($link_depth <= 0) {
+                                    break;
+                                }
+                                if ($dir === "..") {
+                                    $link_depth--;
+                                } elseif ($dir !== "" && $dir !== ".") {
+                                    $link_depth++;
+                                }
+                            }
+                        }
+                        if ($absolute_link || $link_depth <= 0) {
+                            $this->_error(
+                                 'Out-of-path file extraction {'
+                                 . $v_header['filename'] . ' --> ' .
+                                 $v_header['link'] . '}'
                             );
                             return false;
                         }
