@@ -45,7 +45,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 	this.RemoveSelected = function () {
 		let my_id = '#'+me.id;
-		$('#linkedset_'+me.id+' tr.selected').each(function () {
+		$('#linkedset_'+me.id+' .selection:checked').closest('tr').each(function () {
 			$('#datatable_'+me.id).DataTable().row($(this)).remove().draw();
 			var oCheckbox = $(this).find('.selection');
 			let iLink = $(oCheckbox).attr('data-link-id');
