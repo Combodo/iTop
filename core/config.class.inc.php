@@ -1471,6 +1471,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.hide_administrators' => [
+			'type' => 'bool',
+			'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
@@ -1503,14 +1511,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-	'security.hide_administrators' => [
-		'type' => 'bool',
-		'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
-		'default' => false,
-		'value' => false,
-		'source_of_value' => '',
-		'show_in_conf_sample' => false,
-	],
 	];
 
 	public function IsProperty($sPropCode)
