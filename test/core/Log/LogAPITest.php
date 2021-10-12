@@ -15,6 +15,7 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use MetaModel;
 
 /**
  * @runTestsInSeparateProcesses
@@ -35,7 +36,7 @@ class LogAPITest extends ItopDataTestCase
 		// disabling devenv is easier than changing log config O:)
 		$oConfig = MetaModel::GetConfig();
 		$oConfig->Set('developer_mode.enabled', false);
-		
+
 		$this->mockFileLog = $this->createMock('FileLog');
 		$this->oMetaModelConfig = $this->createMock('Config');
 	}
