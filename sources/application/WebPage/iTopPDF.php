@@ -94,7 +94,8 @@ class iTopPDF extends TCPDF
 
 		// Branding logo
 		$sBrandingIcon = Branding::GetLogoRelativePath(Branding::ENUM_LOGO_TYPE_MAIN_LOGO_FULL);
-		$this->Image($sBrandingIcon, $aMargins['left'], 5, 0, 10);
+
+		$this->AddImage($sBrandingIcon, $aMargins['left'], 5, 0, 10);
 	}
 
 	// Page footer
