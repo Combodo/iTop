@@ -253,10 +253,9 @@ JS
 		}
 		else
 		{
-			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip-content="'+sExplain+'"/>');
-			CombodoTooltip.InitTooltipFromMarkup(oValidationElement, true);
+			oValidationElement.html(sExplain);
+			oValidationElement.addClass('ibo-field-validation');
 		}
 	}
 }

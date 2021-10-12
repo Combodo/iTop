@@ -75,7 +75,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					}
 					else
 					{
-						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone bob", "field_input_datetime", "ibo-input-wrapper", "ibo-input-datetime-wrapper"]);
+						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
 						$oValue->AddSubBlock($oField);
 						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" autocomplete="off"/>'));
 						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
@@ -280,13 +280,15 @@ EOF
 			$(oInput).datepicker({
 								"showOn":"button",
 								"buttonText":"<i class=\"fas fa-calendar-alt\"><\/i>",
-								"format": $sJSDateFormat,
+								"dateFormat": $sJSDateFormat,
 								"constrainInput":false,
 								"changeMonth":true,
 								"changeYear":true,
 								"dayNamesMin":$sJSDaysMin,
 								"monthNamesShort": $sJSMonthsShort,
-								"firstDay":$iFirstDayOfWeek}).next("img").wrap("<span>");
+								"firstDay":$iFirstDayOfWeek,
+								"onSelect":function(a,b){ $("#{$this->oField->GetGlobalId()}").trigger("change");},
+								}).next("img").wrap("<span>");
 
 EOF
 					);
@@ -412,10 +414,9 @@ EOF
 		}
 		else
 		{
-			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip-content="'+sExplain+'"/>');
-			CombodoTooltip.InitTooltipFromMarkup(oValidationElement, true);
+			oValidationElement.html(sExplain);
+			oValidationElement.addClass('ibo-field-validation');
 		}
 	}
 }
