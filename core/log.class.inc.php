@@ -1252,7 +1252,7 @@ class ExceptionLog extends LogAPI
 	 * As it encapsulate the operations performed using the Exception, you should prefer it to the standard API inherited from LogApi `ExceptionLog::Error($oException->getMessage(), get_class($oException), ['__exception' => $oException]);`
 	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way !
 	 */
-	public static function LogException(Exception $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING): void
+	public static function LogException(Throwable $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING): void
 	{
 		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
