@@ -704,7 +704,7 @@ class WizStepLicense extends WizardStep
 		$oPage->add_style(
 <<<CSS
 fieldset ul {
-	max-height: 30em;
+	max-height: min(30em, 40vh); /* Allow usage of the UI up to 150% zoom */
 	overflow: auto;
 }
 CSS
