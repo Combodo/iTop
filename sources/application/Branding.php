@@ -58,7 +58,7 @@ class Branding
 	];
 
 	/**
-	 * Return the absolute URL for the full main logo
+	 * Return the absolute URL for the type of logo defined by $sType
 	 *
 	 * @param string $sType Type of the logo to return
 	 * @see static::ENUM_LOGO_TYPE_XXX
@@ -81,6 +81,15 @@ class Branding
 		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
 	}
 
+	/**
+	 * Return the relative path for the type of logo defined by $sType
+	 *
+	 * @param string $sType Type of the logo to return
+	 * @see static::ENUM_LOGO_TYPE_XXX
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
 	public static function GetLogoRelativePath($sType = self::DEFAULT_LOGO_TYPE)
 	{
 		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
