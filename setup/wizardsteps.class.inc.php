@@ -2523,7 +2523,9 @@ class WizStepDone extends WizardStep
 		{
 			if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
 			{
-				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sRootUrl.$aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$sUrl = $aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$sManualStepUrl = utils::IsURL($sUrl) ? $sUrl : $sRootUrl.$sUrl;
+				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sManualStepUrl;
 			}
 		}
 		$oPage->add('<div class="ibo-is-html-content">');
@@ -2531,8 +2533,7 @@ class WizStepDone extends WizardStep
 		{
 			$oPage->add("<h2>Manual operations required</h2>");
 			$oPage->p("In order to complete the installation, the following manual operations are required:");
-			foreach($aManualSteps as $sModuleLabel => $sUrl)
-			{
+			foreach($aManualSteps as $sModuleLabel => $sUrl) {
 				$oPage->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
 			}
 			$oPage->add("<h2>Congratulations for installing ".ITOP_APPLICATION."</h2>");
