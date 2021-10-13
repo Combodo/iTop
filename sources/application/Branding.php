@@ -75,7 +75,7 @@ class Branding
 			}
 		}
 
-		return $sLinkPath.$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
 	}
 
 	/**
