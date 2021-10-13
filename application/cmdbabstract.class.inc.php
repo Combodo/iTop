@@ -3329,8 +3329,10 @@ HTML
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 			}
 
-			// Note: Remove the table if we want fields to occupy the whole width of the container
-			$sHtml = '<table><tr><td>';
+			// Note: Remove the table if we want fields to occupy the whole width of the container, BUT with today's layout, fields' label will occupy way too much space. This should be part of the field layout rework.
+			// Note 2: The hardcoded width allows the fields to be a bit wider (useful for long values) while still working on different screen sizes
+			// Note 3: The inline style is not ideal but we are still wondring how transition form should be displayed
+			$sHtml = '<table style="width: min(100%, 32rem); margin-bottom: 12px;"><tr><td>';
 			$sHtml .= $oPage->GetDetails($aDetails);
 			$sHtml .= '</td></tr></table>';
 
@@ -3338,8 +3340,10 @@ HTML
 			$sHtml .= $oAppContext->GetForForm();
 			$oForm->AddHtml($sHtml);
 
-			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
-			$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')
+				// Action type is changed on purpose so the button is more visible in the form.
+				->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
+				->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
 			$oForm->AddSubBlock($oCancelButton);
 
 			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
