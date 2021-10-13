@@ -3332,7 +3332,7 @@ HTML
 			// Note: Remove the table if we want fields to occupy the whole width of the container, BUT with today's layout, fields' label will occupy way too much space. This should be part of the field layout rework.
 			// Note 2: The hardcoded width allows the fields to be a bit wider (useful for long values) while still working on different screen sizes
 			// Note 3: The inline style is not ideal but we are still wondring how transition form should be displayed
-			$sHtml = '<table style="width: min(100%, 32rem); margin-bottom: 12px;"><tr><td>';
+			$sHtml = '<table style="width: min(100%, 35rem); margin-bottom: 12px;"><tr><td>';
 			$sHtml .= $oPage->GetDetails($aDetails);
 			$sHtml .= '</td></tr></table>';
 
