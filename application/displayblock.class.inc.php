@@ -1017,7 +1017,7 @@ JS
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
 			$aValues = $oAttDef->GetAllowedValues();
 			foreach ($aStates as $sStateValue) {
-				$aStateLabels[$sStateValue] = $aValues[$sStateValue];
+				$aStateLabels[$sStateValue] = $aValues[$sStateValue] ?? '';
 				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 					? $aCountsQueryResults[$sStateValue]
 					: 0;
