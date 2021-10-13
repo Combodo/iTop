@@ -344,7 +344,7 @@ class ObjectController extends BrickController
 			'sObjectClass' => get_class($oTargetObject),
 		);
 
-		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
+		return $this->ForwardToRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 	/**
@@ -1182,7 +1182,7 @@ class ObjectController extends BrickController
 					'sObjectField' => 'contents',
 				);
 
-				$oResponse = $this->forward($this->GetControllerNameFromRoute('p_object_document_download'), $aRouteParams, $oRequest->query->all());
+				$oResponse = $this->ForwardToRoute('p_object_document_download', $aRouteParams, $oRequest->query->all());
 
 				break;
 

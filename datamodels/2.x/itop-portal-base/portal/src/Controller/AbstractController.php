@@ -32,11 +32,36 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 abstract class AbstractController extends Controller
 {
 	/**
+	 * Unlike {@see Controller::redirectToRoute()}, this method directly calls the route controller without creating a redirection client side
+	 *
+	 * Default route params will be preserved (see N°4356)
+	 *
 	 * @param string $sRouteName
 	 * @param array  $aRouteParams
 	 * @param array  $aQueryParameters
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
+	 */
+	protected function ForwardToRoute($sRouteName, $aRouteParams, $aQueryParameters, $bPreserveDefaultRouteParams = true)
+	{
+		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
+
+		if ($bPreserveDefaultRouteParams) {
+			$aRouteParams = array_merge($aRouteDefaults, $aRouteParams);
+		}
+
+		return $this->forward($aRouteDefaults['_controller'], $aRouteParams, $aQueryParameters);
+	}
+
+	/**
+	 * @param string $sRouteName
+	 * @param array  $aRouteParams
+	 * @param array  $aQueryParameters
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @deprecated 2.7.6 N°4356 use {@link ForwardToRoute} instead !
 	 */
 	protected function ForwardFromRoute($sRouteName, $aRouteParams, $aQueryParameters)
 	{
@@ -51,6 +76,8 @@ abstract class AbstractController extends Controller
 	 * @param string $sRouteName
 	 *
 	 * @return string
+	 *
+	 * @deprecated 2.7.6 N°4356 use {@link ForwardToRoute} instead !
 	 */
 	protected function GetControllerNameFromRoute($sRouteName)
 	{

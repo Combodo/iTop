@@ -68,7 +68,7 @@ class CreateBrickController extends BrickController
 			$aRouteParams['ar_token'] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aRules);
 		}
 
-		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
+		return $this->ForwardToRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 }
