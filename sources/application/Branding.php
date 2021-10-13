@@ -58,6 +58,27 @@ class Branding
 	];
 
 	/**
+	 * @param string $sType
+	 * @param string $sLinkPath
+	 *
+	 * @return string
+	 */
+	protected static function GetLogoPath(string $sType, string $sLinkPath): string
+	{
+		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
+		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
+		if (isset($aThemeParameters[$sType])) {
+			$sCustomLogoPath = $aThemeParameters[$sType];
+			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
+				return $sLinkPath.$sCustomLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+			}
+		}
+
+		return $sLinkPath.$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+	}
+
+	/**
 	 * Return the absolute URL for the type of logo defined by $sType
 	 *
 	 * @param string $sType Type of the logo to return
@@ -68,17 +89,7 @@ class Branding
 	 */
 	public static function GetLogoAbsoluteUrl($sType = self::DEFAULT_LOGO_TYPE)
 	{
-		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
-		$sWorkingPath =  APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
-		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
-		if (isset($aThemeParameters[$sType])) {
-			$sCustomLogoPath = $aThemeParameters[$sType];
-			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
-				return utils::GetAbsoluteUrlModulesRoot().$sCustomLogoPath.'?t='.utils::GetCacheBusterTimestamp();
-			}
-		}
-
-		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+		return self::GetLogoPath($sType, utils::GetAbsoluteUrlModulesRoot());
 	}
 
 	/**
@@ -92,17 +103,7 @@ class Branding
 	 */
 	public static function GetLogoRelativePath($sType = self::DEFAULT_LOGO_TYPE)
 	{
-		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
-		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
-		$aThemeParameters = json_decode(@file_get_contents($sWorkingPath.'branding/logos.json'), true);
-		if (isset($aThemeParameters[$sType])) {
-			$sCustomLogoPath = $aThemeParameters[$sType];
-			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
-				return $sWorkingPath.$sCustomLogoPath;
-			}
-		}
-
-		return $sWorkingPath.$sDefaultLogoPath;
+		return self::GetLogoPath($sType, APPROOT.'env-'.utils::GetCurrentEnvironment().'/');
 	}
 
 	/**
@@ -148,4 +149,5 @@ class Branding
 	{
 		return static::GetLogoAbsoluteUrl(static::ENUM_LOGO_TYPE_LOGIN_LOGO);
 	}
+
 }
