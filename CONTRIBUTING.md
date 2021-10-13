@@ -157,4 +157,4 @@ Stickers' design might change from one year to another. For the first year we wa
 * Beta tester: Test and give feedback on beta releases
 * Extension developer: Develop and publish an extension
 
-![](documentation/contributing-guide/contributing-stickers-side-by-side.png)
+![](.doc/contributing-guide/contributing-stickers-side-by-side.png)
