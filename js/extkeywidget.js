@@ -173,7 +173,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		});
 		let $selectize = $select[0].selectize; // This stores the selectize object to a variable (with name 'selectize')
 		$selectize.setValue(initValue, true);
-		var iPaddingRight = 	$('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
+		var iPaddingRight = $('#'+this.id).parent().find('.ibo-input-select--action-buttons')[0].childElementCount*20+15;
 		 $('#'+this.id).parent().find('.ibo-input-select').css('padding-right',iPaddingRight);
 
 	}
@@ -182,7 +182,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 		var hasFocus = 0;
 		var cache = {};
 		$('#label_'+me.id).data('selected_value', $('#label_'+me.id).val());
-		$('#label_'+me.id).prop('title', $('#label_'+me.id).val());
+		$('#label_'+me.id).attr('title', $('#label_'+me.id).val());
 		$('#label_'+me.id).autocomplete({
 				source: function (request, response) {
 					term = request.term.toLowerCase().latinise().replace(/[\u0300-\u036f]/g, "");
@@ -234,7 +234,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					let labelValue = $('<div>').html(ui.item.label).text();
 					$('#label_'+me.id).val(labelValue);
 					$('#label_'+me.id).data('selected_value', labelValue);
-					$('#label_'+me.id).prop('title',labelValue);
+					$('#label_'+me.id).attr('title',labelValue);
 					$('#'+me.id).trigger('validate');
 					$('#'+me.id).trigger('extkeychange');
 					$('#'+me.id).trigger('change');
