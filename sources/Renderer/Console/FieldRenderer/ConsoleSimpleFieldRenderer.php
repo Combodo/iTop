@@ -91,7 +91,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",[""]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["ibo-input-field-wrapper"]);
 
 					if ($this->oField->GetReadOnly())
 					{
@@ -107,11 +107,12 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content", "ibo-input-field-wrapper"]);
 
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
 					$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+					$oText->AddCSSClass('ibo-input-field-wrapper ibo-input');
 					$oValue->AddSubBlock($oText);
 					if ($this->oField->GetReadOnly())
 					{
@@ -147,7 +148,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content","ibo-input-field-wrapper"]);
 					if ($this->oField->GetReadOnly())
 					{
 						$aChoices = $this->oField->GetChoices();
@@ -158,6 +159,7 @@ EOF
 					else
 					{
 						$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+						$oSelect->AddCSSClass('ibo-input-field-wrapper');
 						if ($this->oField->GetMultipleValuesEnabled()) {
 							$oSelect->SetIsMultiple(true);
 						}
@@ -198,7 +200,7 @@ EOF
 							} else {
 								$sSelected = ($value == $sChoice) ? 'checked' : '';
 							}
-							$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_".$sId, $sChoice, "{$sId}_{$idx}", "radio");;
+							$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_".$sId, $sChoice, "{$sId}_{$idx}", "radio");
 							$oRadio->GetInput()->SetIsChecked($sSelected);
 							$oRadio->SetBeforeInput(false);
 							$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -222,7 +224,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\DurationField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content","ibo-input-field-wrapper"]);
 					$value = $this->oField->GetCurrentValue();
 					if ($this->oField->GetReadOnly())
 					{
@@ -233,10 +235,10 @@ EOF
 						$sId = $this->oField->GetGlobalId();
 
 						$aVal = AttributeDuration::SplitDuration($value);
-						$sDays = "<input type=\"text\" size=\"3\" name=\"{$sId}[d]\" value=\"{$aVal['days']}\" id=\"{$sId}_d\"/>";
-						$sHours = "<input type=\"text\" size=\"2\" name=\"{$sId}[h]\" value=\"{$aVal['hours']}\" id=\"{$sId}_h\"/>";
-						$sMinutes = "<input type=\"text\" size=\"2\" name=\"{$sId}[m]\" value=\"{$aVal['minutes']}\" id=\"{$sId}_m\"/>";
-						$sSeconds = "<input type=\"text\" size=\"2\" name=\"{$sId}[s]\" value=\"{$aVal['seconds']}\" id=\"{$sId}_s\"/>";
+						$sDays = "<input type=\"text\" size=\"3\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[d]\" value=\"{$aVal['days']}\" id=\"{$sId}_d\"/>";
+						$sHours = "<input type=\"text\" size=\"2\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[h]\" value=\"{$aVal['hours']}\" id=\"{$sId}_h\"/>";
+						$sMinutes = "<input type=\"text\" size=\"2\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[m]\" value=\"{$aVal['minutes']}\" id=\"{$sId}_m\"/>";
+						$sSeconds = "<input type=\"text\" size=\"2\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[s]\" value=\"{$aVal['seconds']}\" id=\"{$sId}_s\"/>";
 						$oTime = UIContentBlockUIBlockFactory::MakeStandard("",["pt-2"]);
 						$oTime->AddSubBlock(new Html(Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds)));
 						$oValue->AddSubBlock($oTime);
@@ -361,7 +363,6 @@ EOF
     sortField: 'text',
     onChange: function(value){
     			 var me = this.\$input;
-
                 me.closest(".field_set").trigger("field_change", {
                     id: me.attr("id"),
                     name: me.closest(".form_field").attr("data-field-id"),
@@ -411,12 +412,14 @@ EOF
 		if (oResult.is_valid)
 		{
 			oValidationElement.html('');
+			 $(me.element).find('.ibo-input-field-wrapper').removeClass("is-error");
 		}
 		else
 		{
 			var sExplain = oResult.error_messages.join(', ');
 			oValidationElement.html(sExplain);
 			oValidationElement.addClass('ibo-field-validation');
+			 $(me.element).find('.ibo-input-field-wrapper').addClass("is-error");
 		}
 	}
 }

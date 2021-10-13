@@ -153,6 +153,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 						$sSelected = ($value == $iObject) ? 'checked' : '';
 					}
 					$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
+					$oRadioCustom->AddCSSClass('ibo-input-field-wrapper');
 					$oRadioCustom->GetInput()->SetIsChecked($sSelected);
 					$oRadioCustom->SetBeforeInput(false);
 					$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -193,6 +194,7 @@ EOF
 				// Drop-down select
 				//
 				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
+				$oBlock->AddCSSClass('ibo-input-field-wrapper');
 				$sEditType = 'select';
 				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
 				$oBlock->AddSubBlock($oSelect);
@@ -217,7 +219,8 @@ EOF
                             value: me.val()
                         })
                         .closest('.form_handler').trigger('value_change');
-    }
+    },
+	inputClass: 'ibo-input-vanilla ibo-input',	
 });
 JS
 				);
@@ -250,12 +253,15 @@ JS
 		if (oResult.is_valid)
 		{
 			oValidationElement.html('');
+			 $(me.element).find('.ibo-input-field-wrapper').removeClass("is-error");
 		}
 		else
 		{
+			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
 			oValidationElement.html(sExplain);
-			oValidationElement.addClass('ibo-field-validation');
+			oValidationElement.addClass(' ibo-field-validation');
+			 $(me.element).find('.ibo-input-field-wrapper').addClass("is-error");
 		}
 	}
 }

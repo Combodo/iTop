@@ -65,7 +65,7 @@ class UIHTMLEditorWidget
 		$sHelpText = $this->m_sHelpText;
 		$sValidationField = $this->m_sValidationField;
 
-		$sHtmlValue = "<div class=\"field_input_zone field_input_html\"><textarea class=\"htmlEditor\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" rows=\"10\" cols=\"10\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
+		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" rows=\"10\" cols=\"10\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
 
 		// Replace the text area with CKEditor
 		// To change the default settings of the editor,
