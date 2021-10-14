@@ -1190,6 +1190,25 @@ HTML
 		return "";
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \DBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock|string
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 *
+	 * @since 3.0.0
+	 */
 	public static function GetDisplaySetBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		if ($oPage->IsPrintableVersion() || $oPage->is_pdf()) {
