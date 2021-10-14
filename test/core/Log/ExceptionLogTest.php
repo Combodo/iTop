@@ -203,7 +203,7 @@ class ExceptionLogTest extends ItopDataTestCase
 	/**
 	 * @dataProvider exceptionClassProvider
 	 */
-	public function testGetExceptionClassInConfig($aLogConfig, $sActualExceptionClass, $sExpectedExceptionClass)
+	public function testExceptionClassFromHierarchy($aLogConfig, $sActualExceptionClass, $sExpectedExceptionClass)
 	{
 		$oMockConfig = $this->createMock('Config');
 
@@ -212,7 +212,7 @@ class ExceptionLogTest extends ItopDataTestCase
 			->willReturn($aLogConfig);
 
 		ExceptionLog::MockStaticObjects(null, $oMockConfig);
-		$sReturnedExceptionClass = $this->InvokeNonPublicStaticMethod(ExceptionLog::class, 'GetExceptionClassInConfig', [$sActualExceptionClass]);
+		$sReturnedExceptionClass = $this->InvokeNonPublicStaticMethod(ExceptionLog::class, 'ExceptionClassFromHierarchy', [$sActualExceptionClass]);
 
 		static::assertEquals($sExpectedExceptionClass, $sReturnedExceptionClass, 'Not getting correct exception in hierarchy !');
 	}
