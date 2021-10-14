@@ -12,5 +12,5 @@
             {% if oUIBlock.GetAdditionalCSSClassesAsString() %} class="{{ oUIBlock.GetAdditionalCSSClassesAsString() }}"{% endif %}
             {% if oUIBlock.GetPlaceHolder() %}  placeholder="{{ oUIBlock.GetPlaceHolder() }}" {% endif %}
             {% if oUIBlock.IsDisabled() %} disabled {% endif %}
-	>{{ oUIBlock.GetValue() }}</textarea>
+	>{{ oUIBlock.GetValue()|raw }}</textarea>
 {% endblock %}
