@@ -58,12 +58,14 @@ class Branding
 	];
 
 	/**
+	 * Return url or path of logo defined by $sType
 	 * @param string $sType
-	 * @param string $sLinkPath
+	 * @param string $sAppPath
+	 * @param ?string $sModulePath
 	 *
 	 * @return string
 	 */
-	protected static function GetLogoPath(string $sType, string $sLinkPath): string
+	protected static function GetLogoPath(string $sType, string $sAppPath, ?string $sModulePath = null): string
 	{
 		$sDefaultLogoPath = static::$aLogoPaths[$sType]['default'];
 		$sWorkingPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
@@ -71,11 +73,11 @@ class Branding
 		if (isset($aThemeParameters[$sType])) {
 			$sCustomLogoPath = $aThemeParameters[$sType];
 			if (file_exists($sWorkingPath.$sCustomLogoPath)) {
-				return $sLinkPath.$sCustomLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+				return ($sModulePath??$sAppPath).$sCustomLogoPath;
 			}
 		}
 
-		return utils::GetAbsoluteUrlAppRoot().$sDefaultLogoPath.'?t='.utils::GetCacheBusterTimestamp();
+		return $sAppPath.$sDefaultLogoPath;
 	}
 
 	/**
@@ -89,7 +91,7 @@ class Branding
 	 */
 	public static function GetLogoAbsoluteUrl($sType = self::DEFAULT_LOGO_TYPE)
 	{
-		return self::GetLogoPath($sType, utils::GetAbsoluteUrlModulesRoot());
+		return self::GetLogoPath($sType,  utils::GetAbsoluteUrlAppRoot(), utils::GetAbsoluteUrlModulesRoot()).'?t='.utils::GetCacheBusterTimestamp();
 	}
 
 	/**
@@ -103,7 +105,8 @@ class Branding
 	 */
 	public static function GetLogoRelativePath($sType = self::DEFAULT_LOGO_TYPE)
 	{
-		return self::GetLogoPath($sType, APPROOT.'env-'.utils::GetCurrentEnvironment().'/');
+		$sPath =APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+		return self::GetLogoPath($sType, $sPath);
 	}
 
 	/**
