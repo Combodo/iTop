@@ -11,7 +11,12 @@ use UserRightsProfile;
 use utils;
 
 
-
+/**
+ * @group getSelectFilterTest
+ * Class GetSelectFilterTest
+ *
+ * @package Combodo\iTop\Test\UnitTest\Webservices
+ */
 class GetSelectFilterTest extends ItopDataTestCase
 {
 	private $sLogin;
