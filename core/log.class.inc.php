@@ -1292,7 +1292,7 @@ class ExceptionLog extends LogAPI
 			(null !== static::$m_oFileLog)
 			&& static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_FILE)
 		) {
-			$sExceptionClassConfiguredForFile = static::GetExceptionClassInConfig($sExceptionClass, static::ENUM_CONFIG_PARAM_FILE);
+			$sExceptionClassConfiguredForFile = static::ExceptionClassFromHierarchy($sExceptionClass, static::ENUM_CONFIG_PARAM_FILE);
 			if (null === $sExceptionClassConfiguredForFile) {
 				$sExceptionClassConfiguredForFile = $sExceptionClass;
 			}
@@ -1304,7 +1304,7 @@ class ExceptionLog extends LogAPI
 		}
 
 		if (static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_DB)) {
-			$sExceptionClassConfiguredForDb = static::GetExceptionClassInConfig($sExceptionClass, static::ENUM_CONFIG_PARAM_DB);
+			$sExceptionClassConfiguredForDb = static::ExceptionClassFromHierarchy($sExceptionClass, static::ENUM_CONFIG_PARAM_DB);
 			if (null === $sExceptionClassConfiguredForDb) {
 				$sExceptionClassConfiguredForDb = $sExceptionClass;
 			}
@@ -1313,7 +1313,7 @@ class ExceptionLog extends LogAPI
 	}
 
 	/**
-	 * Will seek for the configuration based on the exception class, using {@see \ExceptionLog::GetExceptionClassInConfig()}
+	 * Will seek for the configuration based on the exception class, using {@see \ExceptionLog::ExceptionClassFromHierarchy()}
 	 *
 	 * @param string $sExceptionClass
 	 * @param string $sLogConfigKey
@@ -1324,7 +1324,7 @@ class ExceptionLog extends LogAPI
 	protected static function GetMinLogLevel($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
 		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
-		$sExceptionClassInConfig = static::GetExceptionClassInConfig($sExceptionClass, $sLogConfigKey);
+		$sExceptionClassInConfig = static::ExceptionClassFromHierarchy($sExceptionClass, $sLogConfigKey);
 
 		if (null !== $sExceptionClassInConfig) {
 			return $sLogConfigKey[$sExceptionClassInConfig];
@@ -1349,7 +1349,7 @@ class ExceptionLog extends LogAPI
 	 *
 	 * @return string|null the current or parent class name defined in the config, otherwise null if no class of the hierarchy found in the config
 	 */
-	protected static function GetExceptionClassInConfig($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
+	protected static function ExceptionClassFromHierarchy($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
 		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
 
