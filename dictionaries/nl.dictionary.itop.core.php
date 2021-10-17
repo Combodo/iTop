@@ -584,7 +584,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Toegepast op klasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Verkeerde filter-query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'De filter-query moet verwijzen naar objecten van klasse "%1$s"',
 ));

@@ -577,7 +577,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
 ));

@@ -580,7 +580,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Cílová třída',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtr',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Špatný filtrační dotaz: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Filtrační dotaz musí vrátit objekty třídy "%1$s"',
 ));

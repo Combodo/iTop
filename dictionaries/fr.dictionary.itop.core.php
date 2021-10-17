@@ -576,7 +576,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe cible',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Permet de limiter la liste des objets (de la classe cible) pour lesquels le déclencheur s\'activera',
 	'TriggerOnObject:WrongFilterQuery' => 'Requête de filtrage incorrecte: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'La requête de filtrage doit retourner des objets de la classe "%1$s"',
 ));

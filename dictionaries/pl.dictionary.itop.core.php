@@ -578,7 +578,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Klasa docelowa',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtr',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Błędne zapytanie filtru: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Zapytanie filtru musi zwracać obiekty klasy "%1$s"',
 ));

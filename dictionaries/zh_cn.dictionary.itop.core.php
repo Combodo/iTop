@@ -577,7 +577,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObject/Attribute:target_class' => '目标类',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => '过滤器',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"',
 ));
