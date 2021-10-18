@@ -105,8 +105,9 @@ class Branding
 	 */
 	public static function GetLogoRelativePath($sType = self::DEFAULT_LOGO_TYPE)
 	{
-		$sPath =APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
-		return self::GetLogoPath($sType, $sPath);
+		$sPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/';
+
+		return self::GetLogoPath($sType, APPROOT, $sPath);
 	}
 
 	/**
