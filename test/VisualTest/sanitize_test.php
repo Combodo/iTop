@@ -50,14 +50,14 @@ $aValues = array(
 );
 
 $aTypes = array(
-	'context_param',
-	'element_identifier',
-	'field_name',
-	'integer',
-	'parameter',
-	'string',
-	'transaction_id',
-	'variable_name', // introduced in 3.0.0
+	utils::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM,
+	utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER,
+	utils::ENUM_SANITIZATION_FILTER_FIELD_NAME,
+	utils::ENUM_SANITIZATION_FILTER_INTEGER,
+	utils::ENUM_SANITIZATION_FILTER_PARAMETER,
+	utils::ENUM_SANITIZATION_FILTER_STRING,
+	utils::ENUM_SANITIZATION_FILTER_TRANSACTION_ID,
+	utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME,
 );
 
 ?>
