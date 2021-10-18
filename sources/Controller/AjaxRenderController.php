@@ -101,7 +101,7 @@ class AjaxRenderController
 	 *
 	 * @throws \Exception
 	 */
-	public function ExportBuild(AjaxPage $oPage, bool $bTokenOnly)
+	public static function ExportBuild(ajax_page $oPage, $bTokenOnly)
 	{
 		register_shutdown_function(function () {
 			$aErr = error_get_last();

@@ -703,14 +703,14 @@ JS
 HTML
 		);
 
-		$sDialogTitle = addslashes($sTitle);
+		$sDialogTitleSanitized = utils::HtmlToText($sTitle);
 		$oPage->add_ready_script(<<<JS
 		$('#ac_dlg_{$this->iId}').dialog({ 
 				width: $(window).width()*0.8, 
 				height: $(window).height()*0.8, 
 				autoOpen: false, 
 				modal: true, 
-				title: '$sDialogTitle', 
+				title: '$sDialogTitleSanitized', 
 				resizeStop: oACWidget_{$this->iId}.UpdateSizes, 
 				close: oACWidget_{$this->iId}.OnClose,
 				buttons: [
