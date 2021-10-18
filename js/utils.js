@@ -750,3 +750,69 @@ Dict.Format = function () {
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
 }
+
+
+
+/**
+ * Helper to Sanitize string
+ *
+ * Note: Same as in php (see \utils::Sanitize)
+ *
+ * @api
+ * @since 2.6.5 2.7.6 3.0.0 N°4367
+ */
+const CombodoSanitizer = {
+	ENUM_SANITIZATION_FILTER_INTEGER: 'integer',
+	ENUM_SANITIZATION_FILTER_STRING: 'string',
+	ENUM_SANITIZATION_FILTER_CONTEXT_PARAM: 'context_param',
+	ENUM_SANITIZATION_FILTER_PARAMETER: 'parameter',
+	ENUM_SANITIZATION_FILTER_FIELD_NAME: 'field_name',
+	ENUM_SANITIZATION_FILTER_TRANSACTION_ID: 'transaction_id',
+	ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER: 'element_identifier',
+	ENUM_SANITIZATION_FILTER_VARIABLE_NAME: 'variable_name',
+
+	/**
+	 * @param {String} sValue The string to sanitize
+	 * @param {String} sDefaultValue The string to return if sValue not match (used for some filters)
+	 * @param {String} sSanitizationFilter one of the ENUM_SANITIZATION_FILTERs
+	 */
+	Sanitize: function (sValue, sDefaultValue, sSanitizationFilter) {
+		switch (sSanitizationFilter) {
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_INTEGER:
+				return this._CleanString(sValue, sDefaultValue, /[^0-9-+]*/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_STRING:
+				return $("<div>").text(sValue).text();
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
+				return this._ReplaceString(sValue, sDefaultValue, /^([\. A-Za-z0-9_=-]*)$/g, '');
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_PARAMETER:
+				return this._ReplaceString(sValue, sDefaultValue, /^([ A-Za-z0-9_=-]*)$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_FIELD_NAME:
+				return this._ReplaceString(sValue, sDefaultValue, /^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+				return this._ReplaceString(sValue, sDefaultValue, /^[ A-Za-z0-9_=%:+-]*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_]/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_]/g);
+
+		}
+		return sDefaultValue;
+	},
+	_CleanString: function (sValue, sDefaultValue, sRegExp) {
+		return sValue.replace(sRegExp, '');
+	},
+	_ReplaceString: function (sValue, sDefaultValue, sRegExp) {
+		if (sRegExp.test(sValue)) {
+			return sValue;
+		} else {
+			return sDefaultValue;
+		}
+	}
+}

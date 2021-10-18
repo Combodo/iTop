@@ -372,10 +372,10 @@ EOF
 		$sHTML .= "</form>\n";
 		$sHTML .= '</div></div>';
 
-		$sDialogTitle = addslashes($sTitle);
+		$sDialogTitleSanitized = utils::HtmlToText($sTitle);
 		$oPage->add_ready_script(
 <<<EOF
-		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
+		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitleSanitized', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
 		$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
 EOF

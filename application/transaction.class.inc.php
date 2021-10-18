@@ -26,8 +26,6 @@
  * @copyright   Copyright (C) 2010-2012 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-
 class privUITransaction
 {
 	/**
@@ -101,7 +99,6 @@ class privUITransaction
 /**
  * The original (and by default) mechanism for storing transaction information
  * as an array in the $_SESSION variable
- *
  */
 class privUITransactionSession
 {
@@ -269,27 +266,26 @@ class privUITransactionFile
 	/**
 	 * Removes the transaction specified by its id
 	 * @param int $id The Identifier (as returned by GetNewTransactionId) of the transaction to be removed.
-	 * @return void
+	 * @return bool true if the token can be removed
 	 */
 	public static function RemoveTransaction($id)
 	{
-		$bSuccess = true;
 		$sFilepath = APPROOT.'data/transactions/'.$id;
 		clearstatcache(true, $sFilepath);
-		if(!file_exists($sFilepath))
-		{
+		if (!file_exists($sFilepath)) {
 			$bSuccess = false;
-			self::Error("RemoveTransaction: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
+			self::Error("RemoveTransaction: Transaction '$id' not found. Pending transactions for this user:\n"
+				.implode("\n", self::GetPendingTransactions()));
+		} else {
+			$bSuccess = @unlink($sFilepath);
 		}
-		$bSuccess = @unlink($sFilepath);
-		if (!$bSuccess)
-		{
+
+		if (!$bSuccess) {
 			self::Error('RemoveTransaction: FAILED to remove transaction '.$id);
-		}
-		else
-		{
+		} else {
 			self::Info('RemoveTransaction: OK '.$id);
 		}
+
 		return $bSuccess;
 	}
 
