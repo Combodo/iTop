@@ -51,6 +51,7 @@ abstract class Action extends cmdbAbstractObject
 			"db_table" => "priv_action",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
+			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-in-transit.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
