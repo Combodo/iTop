@@ -848,11 +848,13 @@ abstract class LogAPI
 	 */
 	protected static function GetLevelDefault(string $sConfigKey): string
 	{
-		if ($sConfigKey === self::ENUM_CONFIG_PARAM_DB) {
-			return static::LEVEL_DEFAULT_DB;
+		switch ($sConfigKey) {
+			case static::ENUM_CONFIG_PARAM_DB:
+				return static::LEVEL_DEFAULT_DB;
+			case static::ENUM_CONFIG_PARAM_FILE:
+			default:
+				return static::LEVEL_DEFAULT;
 		}
-
-		return static::LEVEL_DEFAULT;
 	}
 }
 
