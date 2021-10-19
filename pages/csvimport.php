@@ -233,8 +233,7 @@ try {
 	{
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		// Class access right check for the import
-		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO)
-		{
+		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO) {
 			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
 		}
 
@@ -245,8 +244,7 @@ try {
 		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iSkippedLines = 0;
-		if (utils::ReadParam('box_skiplines', '0') == 1)
-		{
+		if (utils::ReadParam('box_skiplines', '0') == 1) {
 			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		}
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
@@ -1150,7 +1148,7 @@ EOF
 				$sCSVData = $oDocument->GetData();
 			}
 			break;
-			
+
 			default:
 			$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 		}
@@ -1515,7 +1513,7 @@ EOF
 		$oTabPaste->AddSubBlock($oFormPaste);
 
 
-		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
+		$sCSVData = utils::ReadParam('csvdata', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$oTextarea = new TextArea('csvdata', $sCSVData, '', 120, 30);
 		$oFieldPaste = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:PasteData'), $oTextarea);
 		$oFormPaste->AddSubBlock($oFieldPaste);
