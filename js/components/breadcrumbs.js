@@ -114,8 +114,8 @@ $(function()
 						if (sTitle.length === 0) {
 							sTitle = sLabel;
 						}
-						sTitle = CombodoSanitizer.EscapeHtml(sTitle, false);
-						sLabel = CombodoSanitizer.EscapeHtml(sLabel, false);
+						sTitle = CombodoSanitizer.EscapeHtml(sTitle, true);
+						sLabel = CombodoSanitizer.EscapeHtml(sLabel, true);
 
 						if ((this.options.new_entry !== null) && (iEntry === aBreadCrumb.length-1)) {
 							// Last entry is the current page
