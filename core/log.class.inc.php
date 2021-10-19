@@ -671,9 +671,9 @@ abstract class LogAPI
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
 	 */
-	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE): bool
+	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sConfigKey = self::ENUM_CONFIG_PARAM_FILE): bool
 	{
-		$sMinLogLevel = self::GetMinLogLevel($sChannel, $sLogConfigKey);
+		$sMinLogLevel = self::GetMinLogLevel($sChannel, $sConfigKey);
 
 		// the is_bool call is to remove a IDE O:) warning as $sMinLogLevel is typed as string
 		if ((is_bool($sMinLogLevel) && ($sMinLogLevel === false)) || $sMinLogLevel === 'false') {
@@ -694,7 +694,7 @@ abstract class LogAPI
 
 	/**
 	 * @param string $sChannel
-	 * @param string $sLogConfigKey
+	 * @param string $sConfigKey
 	 *
 	 * @return string one of the LEVEL_* const value : the one configured it if exists, otherwise default log level for this channel
 	 *       Config can be set :
@@ -715,39 +715,39 @@ abstract class LogAPI
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Aadmin%3Alog iTop log reference
 	 */
-	protected static function GetMinLogLevel($sChannel, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
+	protected static function GetMinLogLevel($sChannel, $sConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
+		$sLogLevelMin = static::GetLogConfig($sConfigKey);
 
-		$sConfiguredLevelForChannel = static::GetMinLogLevelFromChannel($sLogLevelMin, $sChannel, $sLogConfigKey);
+		$sConfiguredLevelForChannel = static::GetMinLogLevelFromChannel($sLogLevelMin, $sChannel, $sConfigKey);
 		if (!is_null($sConfiguredLevelForChannel)) {
 			return $sConfiguredLevelForChannel;
 		}
 
-		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sChannel, $sLogConfigKey);
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sChannel, $sConfigKey);
 	}
 
-	final protected static function GetLogConfig($sLogConfigKey)
+	final protected static function GetLogConfig($sConfigKey)
 	{
 		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
-			return static::GetLevelDefault($sLogConfigKey);
+			return static::GetLevelDefault($sConfigKey);
 		}
 
-		return $oConfig->Get($sLogConfigKey);
+		return $oConfig->Get($sConfigKey);
 	}
 
 	/**
 	 * @param string|array $sLogLevelMin log config parameter value
 	 * @param string $sChannel
-	 * @param string $sLogConfigKey config option key
+	 * @param string $sConfigKey config option key
 	 *
 	 * @return string|null null if not defined
 	 */
-	protected static function GetMinLogLevelFromChannel($sLogLevelMin, $sChannel, $sLogConfigKey)
+	protected static function GetMinLogLevelFromChannel($sLogLevelMin, $sChannel, $sConfigKey)
 	{
 		if (empty($sLogLevelMin)) {
-			return static::GetLevelDefault($sLogConfigKey);
+			return static::GetLevelDefault($sConfigKey);
 		}
 
 		if (!is_array($sLogLevelMin)) {
@@ -761,7 +761,7 @@ abstract class LogAPI
 		return null;
 	}
 
-	protected static function GetMinLogLevelFromDefault($sLogLevelMin, $sChannel, $sLogConfigKey)
+	protected static function GetMinLogLevelFromDefault($sLogLevelMin, $sChannel, $sConfigKey)
 	{
 		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT])) {
 			return $sLogLevelMin[static::CHANNEL_DEFAULT];
@@ -772,7 +772,7 @@ abstract class LogAPI
 			return $sLogLevelMin[''];
 		}
 
-		return static::GetLevelDefault($sLogConfigKey);
+		return static::GetLevelDefault($sConfigKey);
 	}
 
 	protected static function WriteToDb(string $sMessage, string $sChannel, array $aContext): void
@@ -836,7 +836,7 @@ abstract class LogAPI
 	 *
 	 * @used-by GetMinLogLevel
 	 *
-	 * @param string $sLogConfigKey config key used for log
+	 * @param string $sConfigKey config key used for log
 	 *
 	 * @return string
 	 *
@@ -846,9 +846,9 @@ abstract class LogAPI
 	 * @since 3.0.0 N°3731
 	 * @since 3.0.0 N°4261 add specific default level for DB write
 	 */
-	protected static function GetLevelDefault(string $sLogConfigKey): string
+	protected static function GetLevelDefault(string $sConfigKey): string
 	{
-		if ($sLogConfigKey === self::ENUM_CONFIG_PARAM_DB) {
+		if ($sConfigKey === self::ENUM_CONFIG_PARAM_DB) {
 			return static::LEVEL_DEFAULT_DB;
 		}
 
@@ -1072,21 +1072,21 @@ class DeprecatedCallsLog extends LogAPI
 	 *
 	 * In other words, when in dev mode all deprecated calls will be logged to file
 	 *
-	 * @param string $sLogConfigKey
+	 * @param string $sConfigKey
 	 *
 	 * @return string
 	 */
-	protected static function GetLevelDefault(string $sLogConfigKey): string
+	protected static function GetLevelDefault(string $sConfigKey): string
 	{
-		if ($sLogConfigKey === self::ENUM_CONFIG_PARAM_DB) {
-			return parent::GetLevelDefault($sLogConfigKey);
+		if ($sConfigKey === self::ENUM_CONFIG_PARAM_DB) {
+			return parent::GetLevelDefault($sConfigKey);
 		}
 
 		if (utils::IsDevelopmentEnvironment()) {
 			return static::LEVEL_DEBUG;
 		}
 
-		return parent::GetLevelDefault($sLogConfigKey);
+		return parent::GetLevelDefault($sConfigKey);
 	}
 
 	/**
@@ -1327,21 +1327,21 @@ class ExceptionLog extends LogAPI
 	 * Will seek for the configuration based on the exception class, using {@see \ExceptionLog::ExceptionClassFromHierarchy()}
 	 *
 	 * @param string $sExceptionClass
-	 * @param string $sLogConfigKey
+	 * @param string $sConfigKey
 	 *
 	 * @return string
 	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
 	 */
-	protected static function GetMinLogLevel($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
+	protected static function GetMinLogLevel($sExceptionClass, $sConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
-		$sExceptionClassInConfig = static::ExceptionClassFromHierarchy($sExceptionClass, $sLogConfigKey);
+		$sLogLevelMin = static::GetLogConfig($sConfigKey);
+		$sExceptionClassInConfig = static::ExceptionClassFromHierarchy($sExceptionClass, $sConfigKey);
 
 		if (null !== $sExceptionClassInConfig) {
-			return $sLogConfigKey[$sExceptionClassInConfig];
+			return $sConfigKey[$sExceptionClassInConfig];
 		}
 
-		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass, $sLogConfigKey);
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass, $sConfigKey);
 	}
 
 	/**
@@ -1356,13 +1356,13 @@ class ExceptionLog extends LogAPI
 	 * 5. Exception
 	 *
 	 * @param string $sExceptionClass
-	 * @param string $sLogConfigKey
+	 * @param string $sConfigKey
 	 *
 	 * @return string|null the current or parent class name defined in the config, otherwise null if no class of the hierarchy found in the config
 	 */
-	protected static function ExceptionClassFromHierarchy($sExceptionClass, $sLogConfigKey = self::ENUM_CONFIG_PARAM_FILE)
+	protected static function ExceptionClassFromHierarchy($sExceptionClass, $sConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		$sLogLevelMin = static::GetLogConfig($sLogConfigKey);
+		$sLogLevelMin = static::GetLogConfig($sConfigKey);
 
 		if (false === is_array($sLogLevelMin)) {
 			return null;
@@ -1370,7 +1370,7 @@ class ExceptionLog extends LogAPI
 
 		$sExceptionClassInHierarchy = $sExceptionClass;
 		while ($sExceptionClassInHierarchy !== false) {
-			$sConfiguredLevelForExceptionClass = static::GetMinLogLevelFromChannel($sLogLevelMin, $sExceptionClassInHierarchy, $sLogConfigKey);
+			$sConfiguredLevelForExceptionClass = static::GetMinLogLevelFromChannel($sLogLevelMin, $sExceptionClassInHierarchy, $sConfigKey);
 			if (!is_null($sConfiguredLevelForExceptionClass)) {
 				break;
 			}
