@@ -1065,17 +1065,28 @@ class DeprecatedCallsLog extends LogAPI
 		return true;
 	}
 
+	/**
+	 * Override so that :
+	 * - if we are in dev mode ({@see \utils::IsDevelopmentEnvironment()}), the level for file will be DEBUG
+	 * - else call parent method
+	 *
+	 * In other words, when in dev mode all deprecated calls will be logged to file
+	 *
+	 * @param string $sLogConfigKey
+	 *
+	 * @return string
+	 */
 	protected static function GetLevelDefault(string $sLogConfigKey): string
 	{
 		if ($sLogConfigKey === self::ENUM_CONFIG_PARAM_DB) {
-			return static::LEVEL_DEFAULT_DB;
+			return parent::GetLevelDefault($sLogConfigKey);
 		}
 
 		if (utils::IsDevelopmentEnvironment()) {
 			return static::LEVEL_DEBUG;
 		}
 
-		return static::LEVEL_DEFAULT;
+		return parent::GetLevelDefault($sLogConfigKey);
 	}
 
 	/**
