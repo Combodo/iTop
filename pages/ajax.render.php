@@ -2042,9 +2042,11 @@ EOF
 					set_time_limit($iLoopTimeLimit * count($aObjects));
 					$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
 					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
-					$sIconUrl = MetaModel::GetClassIcon($sListClass, false);
+					/* cf N°3928 - Polishing: Impact analysis - remove icons in pdf list
+					 $sIconUrl = MetaModel::GetClassIcon($sListClass, false);
 					$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
-					$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));
+					$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));*/
+					$oTitle = new Html(Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));
 					$oPage->AddSubBlock(TitleUIBlockFactory::MakeStandard($oTitle, 2));
 					$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet, array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass)));
 				}
