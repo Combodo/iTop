@@ -4131,19 +4131,26 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param int $iOption one of ENUM_CHILD_CLASSES_EXCLUDETOP, ENUM_CHILD_CLASSES_ALL
+	 * @param bool $bRootFirst Only when $iOption NOT set to ENUM_CHILD_CLASSES_EXCLUDETOP. If true, the $sClass will be the first element of the returned array, otherwise it will be the last (legacy behavior)
 	 *
 	 * @return array
 	 * @throws \CoreException
+	 * @since 3.0.0 Added $bRootFirst param.
 	 */
-	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
+	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP, $bRootFirst = false)
 	{
 		self::_check_subclass($sClass);
 
 		$aRes = self::$m_aChildClasses[$sClass];
 		if ($iOption != ENUM_CHILD_CLASSES_EXCLUDETOP)
 		{
-			// Add it to the list
-			$aRes[] = $sClass;
+			if ($bRootFirst) {
+				// Root class on top
+				array_unshift($aRes, $sClass);
+			} else {
+				// Root class at the end, legacy behavior
+				$aRes[] = $sClass;
+			}
 		}
 
 		return $aRes;
