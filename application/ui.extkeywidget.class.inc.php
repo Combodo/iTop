@@ -226,7 +226,8 @@ class UIExtKeyWidget
 			while ($oObj = $oAllowedValues->Fetch()) {
 				$aOption = [];
 				$aOption['value'] = $oObj->GetKey();
-				$aOption['label'] = $oObj->GetName();//.'<span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>';
+				$aOption['label'] = $oObj->GetName();
+				$aOption['search_label'] = utils::HtmlEntityDecode($oObj->GetName());
 
 				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
 					// When there is only once choice, select it by default
@@ -260,7 +261,7 @@ class UIExtKeyWidget
 			}
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
 			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
-			$sJsonOptions = str_replace('\\', '\\\\', json_encode($aOptions));
+			$sJsonOptions = str_replace("'", "\'", str_replace('\\', '\\\\', json_encode($aOptions)));
 			$oPage->add_ready_script(
 				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);

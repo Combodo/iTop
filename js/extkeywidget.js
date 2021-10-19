@@ -58,6 +58,7 @@ Selectize.define('custom_itop', function(aOptions) {
 			original.apply(self);
 		}
 	})();
+
 	ManageScroll = function (self) {
 		let id = self.$input[0].id;
 		if (self.$input.scrollParent()[0].tagName != 'HTML') {
@@ -160,14 +161,14 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			},
 			valueField: 'value',
 			labelField: 'label',
-			searchField: 'label',
+			searchField: 'search_label',
 			options: JSON.parse(options),
 			maxItems: 1,
 			copyClassesToDropdown: false,
 			inputClass: 'ibo-input ibo-input-select ibo-input-selectize',
 			// To avoid dropdown to be cut by the container's overflow hidden rule
 			dropdownParent: 'body',
-			onDropdownOpen: function(oDropdownElem){
+			onDropdownOpen: function (oDropdownElem) {
 				me.UpdateDropdownPosition(this.$control, oDropdownElem);
 			},
 		});
