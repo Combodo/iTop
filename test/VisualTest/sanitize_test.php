@@ -47,6 +47,8 @@ $aValues = array(
 	"",
 	"()=°²€",
 	"éèç",
+	"q<div>&egrave;</div>=hcb test",
+//	"<script>console.debug('((\'&egrave;é&');</script>q<div>&egrave;</div>=hcb test",
 );
 
 $aTypes = array(

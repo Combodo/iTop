@@ -103,8 +103,7 @@ $(function()
                         if (oEntry['icon_type'] === 'css_classes')
                         {
 	                        sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><span class="'+oEntry['icon']+'"/></span></span>';
-                        }
-                        else if (oEntry['icon'].length > 0) {
+                        } else if (oEntry['icon'].length > 0) {
 	                        // Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/
 	                        sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><img src="'+oEntry['icon']+'" alt=""/></span>';
                         }
@@ -114,8 +113,8 @@ $(function()
 						if (sTitle.length === 0) {
 							sTitle = sLabel;
 						}
-						sTitle = CombodoSanitizer.EscapeHtml(sTitle, true);
-						sLabel = CombodoSanitizer.EscapeHtml(sLabel, true);
+						sTitle = CombodoSanitizer.EscapeHtml(sTitle, false);
+						sLabel = CombodoSanitizer.EscapeHtml(sLabel, false);
 
 						if ((this.options.new_entry !== null) && (iEntry === aBreadCrumb.length-1)) {
 							// Last entry is the current page

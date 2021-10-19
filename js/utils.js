@@ -1046,22 +1046,29 @@ const CombodoSanitizer = {
 
 	/**
 	 * @param sValue value to escape
-	 * @param bOutputInHtml if true return html ("<" become "&lt;")
-	 *                                        if false return text ("<" stay "<")
+	 * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+	 *
 	 * @returns {string} escaped value, ready to insert in the DOM without XSS risk
 	 *
 	 * @since 2.6.5, 2.7.2, 3.0.0 N°3332
-	 * @since 3.0.0 N°4367 deprecate EncodeHtml and replace by this new method  (CombodoSanitizer.EscapeHtml) - params and script are not exactly the same
+	 * @since 3.0.0 N°4367 deprecate EncodeHtml and copy the method here (CombodoSanitizer.EscapeHtml)
 	 *
 	 * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
 	 * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
 	 *        example the text() JQuery way) isn't safe
 	 */
-	EscapeHtml: function (sValue, bOutputInHtml = true) {
-		if (bOutputInHtml) {
-			return $('<div>').text(sValue).html();
+	EscapeHtml: function (sValue, bReplaceAmp) {
+		if (bReplaceAmp) {
+			return $('<div/>').text(sValue).html();
 		}
-		return $('<div>').text(sValue).text();
-	//	return sValue;
+
+		let sEncodedValue = (sValue+'')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;')
+			.replace(/\//g, '&#x2F;');
+
+		return sEncodedValue;
 	}
 }
