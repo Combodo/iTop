@@ -10,7 +10,7 @@ function checkAllDataTable(tableId, value, listId) {
 	if (value) {
 		selectionMode = 'negative';
 	}
-	window['oSelectedItems'+listId.replace(/[^a-zA-Z0-9_]/, '')] = [];
+	window['oSelectedItems'+CombodoSanitizer.Sanitize(listId, '', CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME)] = [];
 	// Mark all the displayed items as check or unchecked depending on the value
 	tableSelector.find(':checkbox[name^=selectObj]:not([disabled])').each(function () {
 		let currentCheckbox = $(this);
@@ -40,7 +40,7 @@ function updateDataTableSelection(listId, tableId) {
 	let selectionMode = $('#'+listId+' [name=selectionMode]').val();
 
 	selectionContainer.html('');
-	let currentSelection = window['oSelectedItems'+listId.replace(/[^a-zA-Z0-9_]/, '')];
+	let currentSelection = window['oSelectedItems'+CombodoSanitizer.Sanitize(listId, '', CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME)];
 	for (let i in currentSelection) {
 		let value = currentSelection[i];
 		selectionContainer.append('<input type="hidden" name="storedSelection[]" value="'+value+'">');
