@@ -596,8 +596,10 @@ function DisplayHistory(sSelector, sFilter, iCount, iStart) {
 }
 
 /**
+ * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
+ *
  * @param sValue value to escape
- * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contrains html entities we want to keep)
+ * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
  * @returns {string} escaped value, ready to insert in the DOM without XSS risk
  *
  * @since 2.6.5, 2.7.2, 3.0.0 N°3332
@@ -1033,11 +1035,40 @@ const CombodoSanitizer = {
 	_CleanString: function (sValue, sDefaultValue, sRegExp) {
 		return sValue.replace(sRegExp, '');
 	},
+
 	_ReplaceString: function (sValue, sDefaultValue, sRegExp) {
 		if (sRegExp.test(sValue)) {
 			return sValue;
 		} else {
 			return sDefaultValue;
 		}
+	},
+
+	/**
+	 * @param sValue value to escape
+	 * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+	 *
+	 * @returns {string} escaped value, ready to insert in the DOM without XSS risk
+	 *
+	 * @since 2.6.5, 2.7.2, 3.0.0 N°3332
+	 * @since 3.0.0 N°4367 deprecate EncodeHtml and copy the method here (CombodoSanitizer.EscapeHtml)
+	 *
+	 * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+	 * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
+	 *        example the text() JQuery way) isn't safe
+	 */
+	EscapeHtml: function (sValue, bReplaceAmp) {
+		let sEncodedValue = (sValue+'')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;')
+			.replace(/\//g, '&#x2F;');
+
+		if (bReplaceAmp) {
+			sEncodedValue = sEncodedValue.replace(/&/g, '&amp;');
+		}
+
+		return sEncodedValue;
 	}
 }
