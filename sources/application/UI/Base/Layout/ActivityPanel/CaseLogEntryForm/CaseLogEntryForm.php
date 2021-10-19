@@ -11,6 +11,7 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 use DBObject;
 use MetaModel;
+use utils;
 
 /**
  * Class CaseLogEntryForm
@@ -203,6 +204,17 @@ class CaseLogEntryForm extends UIContentBlock
 	protected function InitTextInput()
 	{
 		$this->oTextInput = new RichText();
+
+		// Add the "host_class" to the mention endpoints so it can filter objects regarding the triggers
+		$aConfig = $this->oTextInput->GetConfig();
+		if (isset($aConfig['mentions'])) {
+			foreach ($aConfig['mentions'] as $iIdx => $aData) {
+				$sFeed = $aConfig['mentions'][$iIdx]['feed'];
+				$aConfig['mentions'][$iIdx]['feed'] = utils::AddParameterToUrl($sFeed, 'host_class', $this->GetObjectClass());
+			}
+		}
+		$this->oTextInput->SetConfig($aConfig);
+
 		return $this;
 	}
 

@@ -3220,17 +3220,19 @@ abstract class DBObject implements iDisplay
 				foreach ($aMentionedIds as $sMentionedId) {
 					/** @var \DBObject $oMentionedObject */
 					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
-					// Important: Here the "$this->object()$" placeholder is actually the mentioned object and not the current object. The current object can be used through the $source->object()$ placeholder.
-					// This is due to the current implementation of triggers, the events will only be visible on the object the trigger's OQL is based on... 😕
-					$aTriggerArgs = $this->ToArgs('source') + array('this->object()' => $oMentionedObject);
+					$aTriggerArgs = $this->ToArgs('this') + array('mentioned->object()' => $oMentionedObject);
 
-					$aParams = array('class_list' => MetaModel::EnumParentClasses($sMentionedClass, ENUM_PARENT_CLASSES_ALL));
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"),
-						array(), $aParams);
+					$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 					while ($oTrigger = $oSet->Fetch())
 					{
 						/** @var \TriggerOnObjectMention $oTrigger */
 						try {
+							// Ensure to handle only mentioned object in the trigger's scope
+							if ($oTrigger->IsMentionedObjectInScope($oMentionedObject) === false) {
+								continue;
+							}
+
 							$oTrigger->DoActivate($aTriggerArgs);
 						}
 						catch (Exception $e) {

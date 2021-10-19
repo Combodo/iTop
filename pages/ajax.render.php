@@ -2412,8 +2412,9 @@ EOF
 		// TODO 3.0.0: Move this to new ajax render controller?
 		case 'cke_mentions':
 			$oPage->SetContentType('application/json');
-			$sMarker = utils::ReadParam('marker', '', false, 'raw_data');
-			$sNeedle = utils::ReadParam('needle', '', false, 'raw_data');
+			$sMarker = utils::ReadParam('marker', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			$sNeedle = utils::ReadParam('needle', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			$sHostClass = utils::ReadParam('host_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
 
 			// Check parameters
 			if($sMarker === '') {
@@ -2427,12 +2428,46 @@ EOF
 
 			$aMatches = array();
 			if ($sNeedle !== '') {
-				// Retrieve scope from marker
-				$sScope = $aMentionsAllowedClasses[$sMarker];
-				if (MetaModel::IsValidClass($sScope)) {
-					$sScope = "SELECT $sScope";
+				// Retrieve mentioned class from marker
+				$sMentionedClass = $aMentionsAllowedClasses[$sMarker];
+				if (MetaModel::IsValidClass($sMentionedClass) === false) {
+					throw new Exception('Invalid class "'.$sMentionedClass.'" for marker "'.$sMarker.'"');
 				}
-				$oSearch = DBSearch::FromOQL($sScope);
+
+				// Base search used when no trigger configured
+				$oSearch = DBSearch::FromOQL("SELECT $sMentionedClass");
+
+				// Retrieve restricting scopes from triggers if any
+				if (strlen($sHostClass) > 0) {
+					$aTriggerMentionedSearches = [];
+
+					$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
+					$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
+					/** @var \TriggerOnObjectMention $oTrigger */
+					while ($oTrigger = $oTriggerSet->Fetch()) {
+						$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
+
+						// No filter on mentioned objects, don't restrict the scope at all, it can be any object of $sMentionedClass
+						if (strlen($sTriggerMentionedOQL) === 0) {
+							$aTriggerMentionedSearches = [$oSearch];
+							break;
+						}
+
+						$oTriggerMentionedSearch = DBSearch::FromOQL($sTriggerMentionedOQL);
+						$sTriggerMentionedClass = $oTriggerMentionedSearch->GetClass();
+
+						// Filter is not about the mentioned class, don't mind it
+						if (is_a($sMentionedClass, $sTriggerMentionedClass, true) === false) {
+							continue;
+						}
+
+						$aTriggerMentionedSearches[] = $oTriggerMentionedSearch;
+					}
+
+					if (count($aTriggerMentionedSearches) > 0) {
+						$oSearch = new DBUnionSearch($aTriggerMentionedSearches);
+					}
+				}
 
 				$sSearchMainClassName = $oSearch->GetClass();
 				$sSearchMainClassAlias = $oSearch->GetClassAlias();
@@ -2451,7 +2486,7 @@ EOF
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 				while ($oObject = $oSet->Fetch()) {
-					// Note $oObject finalclass might be different than $sTargetClass
+					// Note $oObject finalclass might be different than $sMentionedClass
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
 					$aMatch = [

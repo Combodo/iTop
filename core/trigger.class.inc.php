@@ -239,7 +239,8 @@ abstract class TriggerOnObject extends Trigger
 	 * @param $iObjectId
 	 * @param array $aChanges
 	 *
-	 * @return bool
+	 * @return bool True if the object of ID $iObjectId is within the scope of the OQL defined by the "filter" attribute
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -583,12 +584,44 @@ class TriggerOnObjectMention extends TriggerOnObject
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeOQL("mentioned_filter", array("allowed_values" => null, "sql" => "mentioned_filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
 
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'mentioned_filter', 'action_list')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool True if $oObject is within the scope of the OQL defined by the "mentioned_filter" attribute OR if no mentioned_filter defined. Otherwise, returns false.
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function IsMentionedObjectInScope(DBObject $oObject)
+	{
+		$sFilter = trim($this->Get('mentioned_filter'));
+		if (strlen($sFilter) > 0)
+		{
+			$oSearch = DBObjectSearch::FromOQL($sFilter);
+			$oSearch->AddCondition('id', $oObject->GetKey(), '=');
+			$oSearch->AddCondition('finalclass', get_class($oObject), '=');
+			$oSet = new DBObjectSet($oSearch);
+			$bRet = $oSet->CountExceeds(0);
+		}
+		else
+		{
+			$bRet = true;
+		}
+
+		return $bRet;
 	}
 }
 
