@@ -2627,7 +2627,8 @@ class utils
 		$aDefaultConf = array(
 			'language'=> $sLanguage,
 			'contentsLanguage' => $sLanguage,
-			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut',
+			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut,font,uploadimage',
+			'uploadUrl' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
 		);
 
 		// Mentions
