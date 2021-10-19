@@ -2415,6 +2415,7 @@ EOF
 			$sMarker = utils::ReadParam('marker', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 			$sNeedle = utils::ReadParam('needle', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 			$sHostClass = utils::ReadParam('host_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+			$iHostId = (int) utils::ReadParam('host_id', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 
 			// Check parameters
 			if($sMarker === '') {
@@ -2439,6 +2440,13 @@ EOF
 
 				// Retrieve restricting scopes from triggers if any
 				if (strlen($sHostClass) > 0) {
+					if ($iHostId > 0) {
+						$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
+					} else {
+						// Object is being created, use a dummy object as we have no way to recreate it
+						$oHostObj = MetaModel::NewObject($sHostClass);
+					}
+
 					$aTriggerMentionedSearches = [];
 
 					$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
@@ -2479,7 +2487,7 @@ EOF
 					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
 				);
 
-				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
+				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%", 'this' => $oHostObj));
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.

@@ -210,7 +210,8 @@ class CaseLogEntryForm extends UIContentBlock
 		if (isset($aConfig['mentions'])) {
 			foreach ($aConfig['mentions'] as $iIdx => $aData) {
 				$sFeed = $aConfig['mentions'][$iIdx]['feed'];
-				$aConfig['mentions'][$iIdx]['feed'] = utils::AddParameterToUrl($sFeed, 'host_class', $this->GetObjectClass());
+				$sFeed = utils::AddParameterToUrl($sFeed, 'host_class', $this->GetObjectClass());
+				$aConfig['mentions'][$iIdx]['feed'] = utils::AddParameterToUrl($sFeed, 'host_id', $this->GetObjectId());
 			}
 		}
 		$this->oTextInput->SetConfig($aConfig);
