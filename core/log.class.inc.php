@@ -804,12 +804,11 @@ abstract class LogAPI
 		}
 
 		// Protect against reentrance
-		static $aWriteToDbReentrance = array();
-		$sKey = $sChannel.$sMessage;
-		if (array_key_exists($sKey, $aWriteToDbReentrance)) {
+		static $bWriteToDbReentrance;
+		if ($bWriteToDbReentrance === true) {
 			return;
 		}
-		$aWriteToDbReentrance[$sKey] = true;
+		$bWriteToDbReentrance = true;
 
 		try {
 			self::$oLastEventIssue = static::GetEventIssue($sMessage, $sChannel, $aContext);
@@ -823,7 +822,7 @@ abstract class LogAPI
 			]);
 		}
 		finally {
-			unset($aWriteToDbReentrance[$sKey]);
+			$bWriteToDbReentrance = false;
 		}
 	}
 
