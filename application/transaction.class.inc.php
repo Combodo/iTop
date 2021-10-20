@@ -100,7 +100,7 @@ class privUITransaction
  * The original mechanism for storing transaction information as an array in the $_SESSION variable
  *
  * Warning, since 2.6.0 the session is regenerated on each login (see PR #20) !
- * Also, we saw some problems when using memcached as the PHP session implementation (see N°1835)
+ * Also, we saw some problems when using memcached as the PHP session implementation (see NÂ°1835)
  */
 class privUITransactionSession
 {
@@ -353,22 +353,35 @@ class privUITransactionFile
 	{
 		self::Write('Error | '.$sText);
 	}
-	
+
+	protected static function IsLogEnabled() {
+		$oConfig = MetaModel::GetConfig();
+		if (is_null($oConfig)) {
+			return false;
+		}
+
+		$bLogTransactions = $oConfig->Get('log_transactions');
+		if (true === $bLogTransactions) {
+			return true;
+		}
+
+		return false;
+	}
+
 	protected static function Write($sText)
 	{
-		$bLogEnabled = MetaModel::GetConfig()->Get('log_transactions');
-		if ($bLogEnabled)
-		{
+		if (false === static::IsLogEnabled()) {
+			return;
+		}
+
 		$hLogFile = @fopen(APPROOT.'log/transactions.log', 'a');
-		if ($hLogFile !== false)
-		{
+		if ($hLogFile !== false) {
 			flock($hLogFile, LOCK_EX);
 			$sDate = date('Y-m-d H:i:s');
 			fwrite($hLogFile, "$sDate | $sText\n");
 			fflush($hLogFile);
 			flock($hLogFile, LOCK_UN);
 			fclose($hLogFile);
-			}
 		}
 	}
 }
