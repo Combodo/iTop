@@ -502,20 +502,22 @@ class FileLog
 
 	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
 	{
-		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7).' | ');
+		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7));
+		$sTextPrefix .= ' | ';
 		$sTextPrefix .= str_pad(UserRights::GetUserId(), 5)." | ";
-		$sTextSuffix = empty($sChannel) ? '' : " | $sChannel";
-		$sText = "{$sTextPrefix}{$sText}{$sTextSuffix}";
-		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
 
-		if (empty($sLogFilePath))
-		{
+		$sTextSuffix = ' | '.(empty($sChannel) ? '' : $sChannel);
+		$sTextSuffix .= ' |||';
+
+		$sText = "{$sTextPrefix}{$sText}{$sTextSuffix}";
+
+		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
+		if (empty($sLogFilePath)) {
 			return;
 		}
 
 		$hLogFile = @fopen($sLogFilePath, 'a');
-		if ($hLogFile !== false)
-		{
+		if ($hLogFile !== false) {
 			flock($hLogFile, LOCK_EX);
 			$sDate = date('Y-m-d H:i:s');
 			if (empty($aContext)) {
