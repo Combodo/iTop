@@ -97,8 +97,10 @@ class privUITransaction
 }
 
 /**
- * The original (and by default) mechanism for storing transaction information
- * as an array in the $_SESSION variable
+ * The original mechanism for storing transaction information as an array in the $_SESSION variable
+ *
+ * Warning, since 2.6.0 the session is regenerated on each login (see PR #20) !
+ * Also, we saw some problems when using memcached as the PHP session implementation (see N°1835)
  */
 class privUITransactionSession
 {
