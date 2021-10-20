@@ -504,7 +504,7 @@ class FileLog
 	{
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7));
 		$sTextPrefix .= ' | ';
-		$sTextPrefix .= str_pad(UserRights::GetUserId(), 5)." | ";
+		$sTextPrefix .= str_pad(LogAPI::GetUserInfo(), 5)." | ";
 
 		$sTextSuffix = ' | '.(empty($sChannel) ? '' : $sChannel);
 		$sTextSuffix .= ' |||';
@@ -676,6 +676,16 @@ abstract class LogAPI
 		}
 	}
 
+	public static function GetUserInfo(): ?string
+	{
+		$oConnectedUser = UserRights::GetUserObject();
+		if (is_null($oConnectedUser)) {
+			return 'null';
+		}
+
+		return $oConnectedUser->GetKey();
+	}
+
 	/**
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
@@ -832,7 +842,7 @@ abstract class LogAPI
 		$oEventIssue->Set('issue', $sMessage);
 		$oEventIssue->Set('message', $sMessage);
 		$oEventIssue->Set('date', $sDate);
-		$oEventIssue->Set('userinfo', UserRights::GetUserFriendlyName());
+		$oEventIssue->Set('userinfo', static::GetUserInfo());
 		$oEventIssue->Set('callstack', $sCurrentCallStack);
 		$oEventIssue->Set('data', $aContext);
 
@@ -889,6 +899,16 @@ class SetupLog extends LogAPI
 	const LEVEL_DEFAULT = self::LEVEL_INFO;
 
 	protected static $m_oFileLog = null;
+
+	/**
+	 * In the setup there is no user logged...
+	 *
+	 * @return string|null
+	 */
+	public static function GetUserInfo(): ?string
+	{
+		return 'SETUP';
+	}
 }
 
 class IssueLog extends LogAPI
