@@ -656,12 +656,21 @@ abstract class LogAPI
 			$sChannel = static::CHANNEL_DEFAULT;
 		}
 
+		static::WriteLog($sLevel, $sMessage, $sChannel, $aContext);
+	}
+
+	/**
+	 * @throws \ConfigException
+	 */
+	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sChannel = null, ?array $aContext = array()): void
+	{
 		if (
 			(null !== static::$m_oFileLog)
 			&& static::IsLogLevelEnabled($sLevel, $sChannel, static::ENUM_CONFIG_PARAM_FILE)
 		) {
 			static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
 		}
+
 		if (static::IsLogLevelEnabled($sLevel, $sChannel, static::ENUM_CONFIG_PARAM_DB)) {
 			self::WriteToDb($sMessage, $sChannel, $aContext);
 		}
@@ -1305,12 +1314,14 @@ class ExceptionLog extends LogAPI
 		self::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
 	}
 
-	/**
-	 * Do not call this method directly as you do in other LogAPI impl ! Prefer calling {@see \ExceptionLog::LogException()} instead, providing your exception instance !
-	 *
-	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
-	 */
-	public static function Log($sLevel, $sMessage, $sExceptionClass = null, $aContext = array())
+	/** @noinspection PhpUnhandledExceptionInspection */
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	{
+		throw new ApplicationException('Do not call this directly, prefer using ExceptionLog::LogException() instead');
+	}
+
+	/** @noinspection PhpParameterNameChangedDuringInheritanceInspection */
+	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sExceptionClass = null, ?array $aContext = array()): void
 	{
 		if (
 			(null !== static::$m_oFileLog)
