@@ -504,7 +504,7 @@ class FileLog
 	{
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7));
 		$sTextPrefix .= ' | ';
-		$sTextPrefix .= str_pad(UserRights::GetUserId(), 5)." | ";
+		$sTextPrefix .= str_pad(LogAPI::GetUserInfo(), 5)." | ";
 
 		$sTextSuffix = ' | '.(empty($sChannel) ? '' : $sChannel);
 		$sTextSuffix .= ' |||';
@@ -542,12 +542,13 @@ class FileLog
  */
 class LogChannels
 {
-	public const CLI = 'CLI';
-	public const CONSOLE = 'console';
-	public const DEADLOCK = 'DeadLock';
+	public const CLI          = 'CLI';
+	public const CONSOLE      = 'console';
+	public const DEADLOCK     = 'DeadLock';
 	public const INLINE_IMAGE = 'InlineImage';
-	public const PORTAL = 'portal';
-	public const CMDB_SOURCE = 'cmdbsource';
+	public const PORTAL       = 'portal';
+	public const CMDB_SOURCE  = 'cmdbsource';
+	public const CORE         = 'core';
 }
 
 
@@ -562,26 +563,38 @@ abstract class LogAPI
 	public const LEVEL_DEBUG = 'Debug';
 	public const LEVEL_TRACE = 'Trace';
 	/**
-	 * @var string default log level
-	 * @see GetMinLogLevel
+	 * @see     GetMinLogLevel
 	 * @used-by GetLevelDefault
+	 * @var string default log level
 	 * @since 2.7.1 N°2977
 	 */
 	public const LEVEL_DEFAULT = self::LEVEL_OK;
+	/**
+	 * @see     GetMinLogLevel
+	 * @used-by GetLevelDefault
+	 * @var string default log level when writing to DB
+	 * @since 3.0.0 N°4261
+	 */
+	public const LEVEL_DEFAULT_DB = self::LEVEL_ERROR;
 
 	protected static $aLevelsPriority = array(
-		self::LEVEL_ERROR => 400,
+		self::LEVEL_ERROR   => 400,
 		self::LEVEL_WARNING => 300,
-		self::LEVEL_INFO => 200,
-		self::LEVEL_OK => 200,
-		self::LEVEL_DEBUG => 100,
-		self::LEVEL_TRACE => 50,
+		self::LEVEL_INFO    => 200,
+		self::LEVEL_OK      => 200,
+		self::LEVEL_DEBUG   => 100,
+		self::LEVEL_TRACE   => 50,
 	);
+
+	public const ENUM_CONFIG_PARAM_FILE = 'log_level_min';
+	public const ENUM_CONFIG_PARAM_DB = 'log_level_min.write_in_db';
 
 	/**
 	 * @var \Config attribute allowing to mock config in the tests
 	 */
 	protected static $m_oMockMetaModelConfig = null;
+
+	protected static $oLastEventIssue = null;
 
 	public static function Enable($sTargetFile)
 	{
@@ -633,10 +646,6 @@ abstract class LogAPI
 	 */
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
 	{
-		if (!static::$m_oFileLog) {
-			return;
-		}
-
 		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
 
@@ -647,22 +656,46 @@ abstract class LogAPI
 			$sChannel = static::CHANNEL_DEFAULT;
 		}
 
-		if (!static::IsLogLevelEnabled($sLevel, $sChannel)) {
-			return;
+		static::WriteLog($sLevel, $sMessage, $sChannel, $aContext);
+	}
+
+	/**
+	 * @throws \ConfigException
+	 */
+	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sChannel = null, ?array $aContext = array()): void
+	{
+		if (
+			(null !== static::$m_oFileLog)
+			&& static::IsLogLevelEnabled($sLevel, $sChannel, static::ENUM_CONFIG_PARAM_FILE)
+		) {
+			static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
 		}
 
-		static::$m_oFileLog->$sLevel($sMessage, $sChannel, $aContext);
+		if (static::IsLogLevelEnabled($sLevel, $sChannel, static::ENUM_CONFIG_PARAM_DB)) {
+			self::WriteToDb($sMessage, $sChannel, $aContext);
+		}
+	}
+
+	public static function GetUserInfo(): ?string
+	{
+		$oConnectedUser = UserRights::GetUserObject();
+		if (is_null($oConnectedUser)) {
+			return 'null';
+		}
+
+		return $oConnectedUser->GetKey();
 	}
 
 	/**
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
 	 */
-	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sCode = 'log_level_min'): bool
+	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sConfigKey = self::ENUM_CONFIG_PARAM_FILE): bool
 	{
-		$sMinLogLevel = self::GetMinLogLevel($sChannel, $sCode);
+		$sMinLogLevel = self::GetMinLogLevel($sChannel, $sConfigKey);
 
-		if ($sMinLogLevel === false || $sMinLogLevel === 'false') {
+		// the is_bool call is to remove a IDE O:) warning as $sMinLogLevel is typed as string
+		if ((is_bool($sMinLogLevel) && ($sMinLogLevel === false)) || $sMinLogLevel === 'false') {
 			return false;
 		}
 		if (!is_string($sMinLogLevel)) {
@@ -680,7 +713,7 @@ abstract class LogAPI
 
 	/**
 	 * @param string $sChannel
-	 * @param string $sCode
+	 * @param string $sConfigKey
 	 *
 	 * @return string one of the LEVEL_* const value : the one configured it if exists, otherwise default log level for this channel
 	 *       Config can be set :
@@ -696,21 +729,44 @@ abstract class LogAPI
 	 *
 	 * @uses \LogAPI::GetConfig()
 	 * @uses `log_level_min` config parameter
+	 * @uses `log_level_min.write_to_db` config parameter
 	 * @uses \LogAPI::GetLevelDefault
 	 *
 	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Aadmin%3Alog iTop log reference
 	 */
-	protected static function GetMinLogLevel($sChannel, $sCode = 'log_level_min')
+	protected static function GetMinLogLevel($sChannel, $sConfigKey = self::ENUM_CONFIG_PARAM_FILE)
+	{
+		$sLogLevelMin = static::GetLogConfig($sConfigKey);
+
+		$sConfiguredLevelForChannel = static::GetMinLogLevelFromChannel($sLogLevelMin, $sChannel, $sConfigKey);
+		if (!is_null($sConfiguredLevelForChannel)) {
+			return $sConfiguredLevelForChannel;
+		}
+
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sChannel, $sConfigKey);
+	}
+
+	final protected static function GetLogConfig($sConfigKey)
 	{
 		$oConfig = static::GetConfig();
 		if (!$oConfig instanceof Config) {
-			return static::GetLevelDefault();
+			return static::GetLevelDefault($sConfigKey);
 		}
 
-		$sLogLevelMin = $oConfig->Get($sCode);
+		return $oConfig->Get($sConfigKey);
+	}
 
+	/**
+	 * @param string|array $sLogLevelMin log config parameter value
+	 * @param string $sChannel
+	 * @param string $sConfigKey config option key
+	 *
+	 * @return string|null null if not defined
+	 */
+	protected static function GetMinLogLevelFromChannel($sLogLevelMin, $sChannel, $sConfigKey)
+	{
 		if (empty($sLogLevelMin)) {
-			return static::GetLevelDefault();
+			return static::GetLevelDefault($sConfigKey);
 		}
 
 		if (!is_array($sLogLevelMin)) {
@@ -721,16 +777,75 @@ abstract class LogAPI
 			return $sLogLevelMin[$sChannel];
 		}
 
+		return null;
+	}
+
+	protected static function GetMinLogLevelFromDefault($sLogLevelMin, $sChannel, $sConfigKey)
+	{
 		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT])) {
-		    return $sLogLevelMin[static::CHANNEL_DEFAULT];
+			return $sLogLevelMin[static::CHANNEL_DEFAULT];
 		}
 
-		// Even though the *self*::CHANNEL_DEFAULT is set to '' in the current class (LogAPI), the test below is necessary as the CHANNEL_DEFAULT constant can be (and is!) overloaded in derivated classes, don't remove this test to factorize it with the previous one.
+		// Even though the *self*::CHANNEL_DEFAULT is set to '' in the current class (LogAPI), the test below is necessary as the CHANNEL_DEFAULT constant can be (and is!) overloaded in children classes, don't remove this test to factorize it with the previous one.
 		if (isset($sLogLevelMin[''])) {
-		    return $sLogLevelMin[''];
+			return $sLogLevelMin[''];
 		}
 
-		return static::GetLevelDefault();
+		return static::GetLevelDefault($sConfigKey);
+	}
+
+	protected static function WriteToDb(string $sMessage, string $sChannel, array $aContext): void
+	{
+		if (false === MetaModel::IsLogEnabledIssue()) {
+			return;
+		}
+		if (false === MetaModel::IsValidClass('EventIssue')) {
+			return;
+		}
+
+		// Protect against reentrance
+		static $bWriteToDbReentrance;
+		if ($bWriteToDbReentrance === true) {
+			return;
+		}
+		$bWriteToDbReentrance = true;
+
+		try {
+			self::$oLastEventIssue = static::GetEventIssue($sMessage, $sChannel, $aContext);
+			self::$oLastEventIssue->DBInsertNoReload();
+		}
+		catch (Exception $e) {
+			// calling low level methods : if we would call Error() for example we would try to write to DB again...
+			static::$m_oFileLog->Error('Failed to log issue into the DB', LogChannels::CORE, [
+				'exception message' => $e->getMessage(),
+				'exception stack'   => $e->getTraceAsString(),
+			]);
+		}
+		finally {
+			$bWriteToDbReentrance = false;
+		}
+	}
+
+	/**
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \OQLException
+	 */
+	protected static function GetEventIssue(string $sMessage, string $sChannel, array $aContext): EventIssue
+	{
+		$sDate = date('Y-m-d H:i:s');
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 5);
+		$sCurrentCallStack = var_export($aStack, true);
+
+		$oEventIssue = new EventIssue();
+		$oEventIssue->Set('issue', $sMessage);
+		$oEventIssue->Set('message', $sMessage);
+		$oEventIssue->Set('date', $sDate);
+		$oEventIssue->Set('userinfo', static::GetUserInfo());
+		$oEventIssue->Set('callstack', $sCurrentCallStack);
+		$oEventIssue->Set('data', $aContext);
+
+		return $oEventIssue;
 	}
 
 	/**
@@ -746,16 +861,29 @@ abstract class LogAPI
 	}
 
 	/**
-	 * A method to override if default log level needs to be computed. Otherwise simply override the {@see LEVEL_DEFAULT} constant
+	 * A method to override if default log level needs to be computed. Otherwise, simply override the corresponding constants
 	 *
 	 * @used-by GetMinLogLevel
+	 *
+	 * @param string $sConfigKey config key used for log
+	 *
+	 * @return string
+	 *
 	 * @uses    \LogAPI::LEVEL_DEFAULT
+	 * @uses    \LogAPI::LEVEL_DEFAULT_DB
 	 *
 	 * @since 3.0.0 N°3731
+	 * @since 3.0.0 N°4261 add specific default level for DB write
 	 */
-	protected static function GetLevelDefault(): string
+	protected static function GetLevelDefault(string $sConfigKey): string
 	{
-		return static::LEVEL_DEFAULT;
+		switch ($sConfigKey) {
+			case static::ENUM_CONFIG_PARAM_DB:
+				return static::LEVEL_DEFAULT_DB;
+			case static::ENUM_CONFIG_PARAM_FILE:
+			default:
+				return static::LEVEL_DEFAULT;
+		}
 	}
 }
 
@@ -770,6 +898,16 @@ class SetupLog extends LogAPI
 	const LEVEL_DEFAULT = self::LEVEL_INFO;
 
 	protected static $m_oFileLog = null;
+
+	/**
+	 * In the setup there is no user logged...
+	 *
+	 * @return string|null
+	 */
+	public static function GetUserInfo(): ?string
+	{
+		return 'SETUP';
+	}
 }
 
 class IssueLog extends LogAPI
@@ -808,6 +946,7 @@ class DeadLockLog extends LogAPI
 		parent::Enable($sTargetFile);
 	}
 
+	/** @noinspection PhpUnreachableStatementInspection we want to keep the break statements to keep clarity and avoid errors */
 	private static function GetChannelFromMysqlErrorNo($iMysqlErrorNo)
 	{
 		switch ($iMysqlErrorNo)
@@ -967,13 +1106,28 @@ class DeprecatedCallsLog extends LogAPI
 		return true;
 	}
 
-	protected static function GetLevelDefault(): string
+	/**
+	 * Override so that :
+	 * - if we are in dev mode ({@see \utils::IsDevelopmentEnvironment()}), the level for file will be DEBUG
+	 * - else call parent method
+	 *
+	 * In other words, when in dev mode all deprecated calls will be logged to file
+	 *
+	 * @param string $sConfigKey
+	 *
+	 * @return string
+	 */
+	protected static function GetLevelDefault(string $sConfigKey): string
 	{
+		if ($sConfigKey === self::ENUM_CONFIG_PARAM_DB) {
+			return parent::GetLevelDefault($sConfigKey);
+		}
+
 		if (utils::IsDevelopmentEnvironment()) {
 			return static::LEVEL_DEBUG;
 		}
 
-		return static::LEVEL_DEFAULT;
+		return parent::GetLevelDefault($sConfigKey);
 	}
 
 	/**
@@ -1135,14 +1289,12 @@ class LogFileRotationProcess implements iScheduledProcess
  *
  * Please use {@see ExceptionLog::LogException()} to log exceptions
  *
- * @since 3.0.0
+ * @since 3.0.0 N°4261 class creation to ease logging when an exception occurs
  */
 class ExceptionLog extends LogAPI
 {
-	const CHANNEL_DEFAULT = 'Exception';
-	const CONTEXT_EXCEPTION = '__exception';
-
-	private static $oLastEventIssue = null;
+	public const CHANNEL_DEFAULT = 'Exception';
+	public const CONTEXT_EXCEPTION = '__exception';
 
 	protected static $m_oFileLog = null;
 
@@ -1150,16 +1302,24 @@ class ExceptionLog extends LogAPI
 	 * This method should be used to write logs.
 	 *
 	 * As it encapsulate the operations performed using the Exception, you should prefer it to the standard API inherited from LogApi `ExceptionLog::Error($oException->getMessage(), get_class($oException), ['__exception' => $oException]);`
-	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way.
+	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way !
 	 */
-	public static function LogException(Exception $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING)
+	public static function LogException(Throwable $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING): void
 	{
+		if (!isset(self::$aLevelsPriority[$sLevel])) {
+			IssueLog::Error("invalid log level '{$sLevel}'");
+
+			return;
+		}
+
+		$sExceptionClass = get_class($oException);
+
 		if (empty($aContext[self::CONTEXT_EXCEPTION])) {
 			$aContext[self::CONTEXT_EXCEPTION] = $oException;
 		}
 
 		if (empty($aContext['exception class'])) {
-			$aContext['exception class'] = get_class($oException);
+			$aContext['exception class'] = $sExceptionClass;
 		}
 
 		if (empty($aContext['file'])) {
@@ -1167,73 +1327,124 @@ class ExceptionLog extends LogAPI
 		}
 
 		if (empty($aContext['line'])) {
-			$aContext['line'] =$oException->getLine();
+			$aContext['line'] = $oException->getLine();
 		}
 
-		self::Log($sLevel, $oException->getMessage(), get_class($oException), $aContext);
+		parent::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
+	}
+
+	/** @noinspection PhpUnhandledExceptionInspection */
+	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array())
+	{
+		throw new ApplicationException('Do not call this directly, prefer using ExceptionLog::LogException() instead');
+	}
+
+	/** @noinspection PhpParameterNameChangedDuringInheritanceInspection */
+	protected static function WriteLog(string $sLevel, string $sMessage, ?string $sExceptionClass = null, ?array $aContext = array()): void
+	{
+		if (
+			(null !== static::$m_oFileLog)
+			&& static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_FILE)
+		) {
+			$sExceptionClassConfiguredForFile = static::ExceptionClassFromHierarchy($sExceptionClass, static::ENUM_CONFIG_PARAM_FILE);
+			if (null === $sExceptionClassConfiguredForFile) {
+				$sExceptionClassConfiguredForFile = $sExceptionClass;
+			}
+
+			// clearing the Exception object as it is too verbose to write to a file !
+			$aContextForFile = array_diff_key($aContext, [self::CONTEXT_EXCEPTION => null]);
+
+			static::$m_oFileLog->$sLevel($sMessage, $sExceptionClassConfiguredForFile, $aContextForFile);
+		}
+
+		if (static::IsLogLevelEnabled($sLevel, $sExceptionClass, static::ENUM_CONFIG_PARAM_DB)) {
+			$sExceptionClassConfiguredForDb = static::ExceptionClassFromHierarchy($sExceptionClass, static::ENUM_CONFIG_PARAM_DB);
+			if (null === $sExceptionClassConfiguredForDb) {
+				$sExceptionClassConfiguredForDb = $sExceptionClass;
+			}
+			self::WriteToDb($sMessage, $sExceptionClassConfiguredForDb, $aContext);
+		}
 	}
 
 	/**
-	 * @inheritDoc
-	 * @throws \ConfigException if log wrongly configured
+	 * Will seek for the configuration based on the exception class, using {@see \ExceptionLog::ExceptionClassFromHierarchy()}
+	 *
+	 * @param string $sExceptionClass
+	 * @param string $sConfigKey
+	 *
+	 * @return string
+	 * @noinspection PhpParameterNameChangedDuringInheritanceInspection
 	 */
-	public static function Log($sLevel, $sMessage, $sClass = null, $aContext = array())
+	protected static function GetMinLogLevel($sExceptionClass, $sConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		if (!static::$m_oFileLog) {
-			return;
+		$sLogLevelMin = static::GetLogConfig($sConfigKey);
+		$sExceptionClassInConfig = static::ExceptionClassFromHierarchy($sExceptionClass, $sConfigKey);
+
+		if (null !== $sExceptionClassInConfig) {
+			return $sConfigKey[$sExceptionClassInConfig];
 		}
 
-		if (!isset(self::$aLevelsPriority[$sLevel])) {
-			IssueLog::Error("invalid log level '{$sLevel}'");
-
-			return;
-		}
-
-
-		$sChannel = self::FindClassChannel($sClass);
-		if (static::IsLogLevelEnabled($sLevel, $sChannel)) {
-			static::$m_oFileLog->$sLevel($sMessage, $sChannel, array_diff_key($aContext, [self::CONTEXT_EXCEPTION => null])); //The exception should not be included in the error.log because of its verbosity.
-		}
-
-		$sDbChannel = self::FindClassChannel($sClass, 'log_level_min.write_in_db');
-		if (static::IsLogLevelEnabled($sLevel, $sDbChannel, 'log_level_min.write_in_db')) {
-			self::WriteToDb($aContext);
-		}
-
+		return static::GetMinLogLevelFromDefault($sLogLevelMin, $sExceptionClass, $sConfigKey);
 	}
 
-	protected static function FindClassChannel($sClass, $sCode = 'log_level_min')
+	/**
+	 * Searching config first for the current exception class
+	 * If not found we are seeking for config for all the parent classes
+	 *
+	 * That means if we are logging a UnknownClassOqlException, we will seek log config all the way the class hierarchy :
+	 * 1. UnknownClassOqlException
+	 * 2. OqlNormalizeException
+	 * 3. OQLException
+	 * 4. CoreException
+	 * 5. Exception
+	 *
+	 * @param string $sExceptionClass
+	 * @param string $sConfigKey
+	 *
+	 * @return string|null the current or parent class name defined in the config, otherwise null if no class of the hierarchy found in the config
+	 */
+	protected static function ExceptionClassFromHierarchy($sExceptionClass, $sConfigKey = self::ENUM_CONFIG_PARAM_FILE)
 	{
-		$oConfig = static::GetConfig();
-		if (!$oConfig instanceof Config) {
-			return static::GetLevelDefault();
+		$sLogLevelMin = static::GetLogConfig($sConfigKey);
+
+		if (false === is_array($sLogLevelMin)) {
+			return null;
 		}
 
-		$sLogLevelMin = $oConfig->Get($sCode);
+		$sExceptionClassInHierarchy = $sExceptionClass;
+		while ($sExceptionClassInHierarchy !== false) {
+			$sConfiguredLevelForExceptionClass = static::GetMinLogLevelFromChannel($sLogLevelMin, $sExceptionClassInHierarchy, $sConfigKey);
+			if (!is_null($sConfiguredLevelForExceptionClass)) {
+				break;
+			}
 
-		if (empty($sLogLevelMin)) {
-			return $sClass;
+			$sExceptionClassInHierarchy = get_parent_class($sExceptionClassInHierarchy);
 		}
 
-		if (!is_array($sLogLevelMin)) {
-			return $sClass;
+		if ($sExceptionClassInHierarchy === false) {
+			return null;
 		}
 
-		$sParentClass = $sClass;
-		while (
-			(!isset($sLogLevelMin[$sParentClass]))
-			&&
-			($sParentClass !== false)
-		)
-		{
-			$sParentClass = get_parent_class($sParentClass);
-		}
+		return $sExceptionClassInHierarchy;
+	}
 
-		if (isset($sLogLevelMin[$sParentClass])) {
-			return $sParentClass;
-		}
+	protected static function GetEventIssue(string $sMessage, string $sChannel, array $aContext): EventIssue
+	{
+		$oEventIssue = parent::GetEventIssue($sMessage, $sChannel, $aContext);
 
-		return $sClass;
+		$oContextException = $aContext[self::CONTEXT_EXCEPTION];
+		unset($aContext[self::CONTEXT_EXCEPTION]);
+
+		$sIssue = ($oContextException instanceof CoreException) ? $oContextException->GetIssue() : 'PHP Exception';
+		$sErrorStackTrace = ($oContextException instanceof CoreException) ? $oContextException->getFullStackTraceAsString() : $oContextException->getTraceAsString();
+		$aContextData = ($oContextException instanceof CoreException) ? $oContextException->getContextData() : [];
+
+		$oEventIssue->Set('issue', $sIssue);
+		$oEventIssue->Set('message', $oContextException->getMessage());
+		$oEventIssue->Set('callstack', $sErrorStackTrace);
+		$oEventIssue->Set('data', array_merge($aContextData, $aContext));
+
+		return $oEventIssue;
 	}
 
 	/**
@@ -1241,41 +1452,10 @@ class ExceptionLog extends LogAPI
 	 */
 	public static function Enable($sTargetFile = null)
 	{
-		if (empty($sTargetFile))
-		{
+		if (empty($sTargetFile)) {
 			$sTargetFile = APPROOT.'log/error.log';
 		}
 		parent::Enable($sTargetFile);
-	}
-
-	private static function WriteToDb(array $aContext): void
-	{
-		$oContextException = $aContext[self::CONTEXT_EXCEPTION];
-		unset($aContext[self::CONTEXT_EXCEPTION]);
-
-		if (MetaModel::IsLogEnabledIssue()) {
-			if (MetaModel::IsValidClass('EventIssue')) {
-				try {
-					self::$oLastEventIssue = new EventIssue();
-
-					$sIssue = ($oContextException instanceof CoreException) ? $oContextException->GetIssue() : 'PHP Exception';
-					$sErrorStackTrace = ($oContextException instanceof CoreException) ? $oContextException->getFullStackTraceAsString() : $oContextException->getTraceAsString();
-					$aContextData = ($oContextException instanceof CoreException) ? $oContextException->getContextData() : [];
-
-
-					self::$oLastEventIssue->Set('message', $oContextException->getMessage());
-					self::$oLastEventIssue->Set('userinfo', '');
-					self::$oLastEventIssue->Set('issue', $sIssue);
-					self::$oLastEventIssue->Set('impact', '');
-					self::$oLastEventIssue->Set('callstack', $sErrorStackTrace);
-					self::$oLastEventIssue->Set('data', array_merge($aContextData, $aContext));
-					self::$oLastEventIssue->DBInsertNoReload();
-				}
-				catch (Exception $e) {
-					IssueLog::Error("Failed to log issue into the DB");
-				}
-			}
-		}
 	}
 
 	/**

@@ -72,17 +72,22 @@ class ExceptionLogTest extends ItopDataTestCase
 		$aContext = ['contextKey1' => 'value'];
 
 		foreach ($aLevels as $i => $sLevel) {
-
 			$sExpectedFile = __FILE__;
+			// @formatter:off
 			$oException = new $aExceptions[$i]("Iteration number $i"); $sExpectedLine = __LINE__; //Both should remain on the same line
+			// @formatter:on
 
 			$iExpectedWriteNumber = $aExpectedWriteNumber[$i];
 			$iExpectedDbWriteNumber = $aExpectedDbWriteNumber[$i];
-			$aExpectedFileContext = array_merge($aContext, ['exception class' => get_class($oException), 'file' => $sExpectedFile, 'line' => $sExpectedLine]); //The context is preserved, and, if the key 'exception class' is not yet in the array, it is added
+			$aExpectedFileContext = array_merge($aContext, [
+					'exception class'               => get_class($oException),
+					'file'                          => $sExpectedFile,
+					'line'                          => $sExpectedLine,
+				]
+			); //The context is preserved, and, if the key 'exception class' is not yet in the array, it is added
 			$mockFileLog->expects($this->exactly($iExpectedWriteNumber))
 				->method($sLevel)
-				->with($oException->GetMessage(), $sChannel, $aExpectedFileContext)
-			;
+				->with($oException->GetMessage(), $sChannel, $aExpectedFileContext);
 
 			ExceptionLog::MockStaticObjects($mockFileLog, $oMockConfig);
 
@@ -165,7 +170,7 @@ class ExceptionLogTest extends ItopDataTestCase
 				'iExpectedDbWriteNumber' => [0],
 				'logLevelMinWriteInDb' =>  ['Exception' => 'Error'],
 			],
-			'default channel, default conf' => [
+			'default channel, default conf'                          => [
 				'aLevels' => ['Warning'],
 				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
@@ -174,7 +179,7 @@ class ExceptionLogTest extends ItopDataTestCase
 				'iExpectedDbWriteNumber' => [0],
 				'logLevelMinWriteInDb' => null,
 			],
-			'enabled' => [
+			'enabled'                                                => [
 				'aLevels' => ['Debug'],
 				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
@@ -184,17 +189,84 @@ class ExceptionLogTest extends ItopDataTestCase
 				'logLevelMinWriteInDb' => ['Exception' => 'Debug'],
 			],
 			'file: 2 enabled, 2 filtered, db: 1 enabled, 3 filtered' => [
-				'aLevels' => ['Debug', 'Trace', 'Warning', 'Error'],
-				'aExceptions' => [\Exception::class, \Exception::class, \Exception::class, \Exception::class],
-				'sChannel' => 'Exception',
-				'aExpectedWriteNumber' => [0, 0, 1, 1],
-				'logLevelMin' => null,
+				'aLevels'                => ['Debug', 'Trace', 'Warning', 'Error'],
+				'aExceptions'            => [\Exception::class, \Exception::class, \Exception::class, \Exception::class],
+				'sChannel'               => 'Exception',
+				'aExpectedWriteNumber'   => [0, 0, 1, 1],
+				'logLevelMin'            => null,
 				'iExpectedDbWriteNumber' => [0, 0, 0, 1],
-				'logLevelMinWriteInDb' => null,
+				'logLevelMinWriteInDb'   => null,
+			],
+			'Simple Error (testing Throwable signature)'             => [
+				'aLevels'                => ['Debug'],
+				'aExceptions'            => [\Error::class],
+				'sChannel'               => 'Error',
+				'aExpectedWriteNumber'   => [1],
+				'logLevelMin'            => 'Debug',
+				'iExpectedDbWriteNumber' => [1],
+				'logLevelMinWriteInDb'   => 'Debug',
 			],
 		];
 	}
 
+	/**
+	 * @dataProvider exceptionClassProvider
+	 */
+	public function testExceptionClassFromHierarchy($aLogConfig, $sActualExceptionClass, $sExpectedExceptionClass)
+	{
+		$oMockConfig = $this->createMock('Config');
+
+		$oMockConfig
+			->method('Get')
+			->willReturn($aLogConfig);
+
+		ExceptionLog::MockStaticObjects(null, $oMockConfig);
+		$sReturnedExceptionClass = $this->InvokeNonPublicStaticMethod(ExceptionLog::class, 'ExceptionClassFromHierarchy', [$sActualExceptionClass]);
+
+		static::assertEquals($sExpectedExceptionClass, $sReturnedExceptionClass, 'Not getting correct exception in hierarchy !');
+	}
+
+	public function exceptionClassProvider()
+	{
+		// WARNING : cannot use Exception::class or LogAPI constants for levels :/
+		return [
+			'Exception, defined in config'                          => [
+				'aLogConfig'              => ['Exception' => 'Debug'],
+				'sActualExceptionClass'   => 'Exception',
+				'sExpectedExceptionClass' => 'Exception',
+			],
+			'Child of Exception, Exception defined in config'       => [
+				'aLogConfig'              => ['Exception' => 'Debug'],
+				'sActualExceptionClass'   => 'ChildException',
+				'sExpectedExceptionClass' => 'Exception',
+			],
+			'Grand child of Exception, Exception defined in config' => [
+				'aLogConfig'              => ['Exception' => 'Debug'],
+				'sActualExceptionClass'   => 'GrandChildException',
+				'sExpectedExceptionClass' => 'Exception',
+			],
+			'Exception, just a default level defined in config'     => [
+				'aLogConfig'              => 'Debug',
+				'sActualExceptionClass'   => 'Exception',
+				'sExpectedExceptionClass' => null,
+			],
+			'Exception, no exception class defined in config'       => [
+				'aLogConfig'              => ['IssueLog' => 'Debug'],
+				'sActualExceptionClass'   => 'Exception',
+				'sExpectedExceptionClass' => null,
+			],
+			'Exception, just the child defined in config'           => [
+				'aLogConfig'              => ['ChildException' => 'Debug'],
+				'sActualExceptionClass'   => 'Exception',
+				'sExpectedExceptionClass' => null,
+			],
+			'Exception, Exception and the child defined in config'  => [
+				'aLogConfig'              => ['Exception' => 'Debug', 'ChildException' => 'Debug'],
+				'sActualExceptionClass'   => 'Exception',
+				'sExpectedExceptionClass' => 'Exception',
+			],
+		];
+	}
 }
 
 
