@@ -784,6 +784,14 @@ abstract class LogAPI
 			return;
 		}
 
+		// Protect against reentrance
+		static $aWriteToDbReentrance = array();
+		$sKey = $sChannel.$sMessage;
+		if (array_key_exists($sKey, $aWriteToDbReentrance)) {
+			return;
+		}
+		$aWriteToDbReentrance[$sKey] = true;
+
 		try {
 			self::$oLastEventIssue = static::GetEventIssue($sMessage, $sChannel, $aContext);
 			self::$oLastEventIssue->DBInsertNoReload();
@@ -794,6 +802,9 @@ abstract class LogAPI
 				'exception message' => $e->getMessage(),
 				'exception stack'   => $e->getTraceAsString(),
 			]);
+		}
+		finally {
+			unset($aWriteToDbReentrance[$sKey]);
 		}
 	}
 
