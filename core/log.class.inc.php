@@ -1330,7 +1330,7 @@ class ExceptionLog extends LogAPI
 			$aContext['line'] = $oException->getLine();
 		}
 
-		self::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
+		parent::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
 	}
 
 	/** @noinspection PhpUnhandledExceptionInspection */
