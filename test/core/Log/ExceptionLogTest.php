@@ -170,7 +170,7 @@ class ExceptionLogTest extends ItopDataTestCase
 				'iExpectedDbWriteNumber' => [0],
 				'logLevelMinWriteInDb' =>  ['Exception' => 'Error'],
 			],
-			'default channel, default conf' => [
+			'default channel, default conf'                          => [
 				'aLevels' => ['Warning'],
 				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
@@ -179,7 +179,7 @@ class ExceptionLogTest extends ItopDataTestCase
 				'iExpectedDbWriteNumber' => [0],
 				'logLevelMinWriteInDb' => null,
 			],
-			'enabled' => [
+			'enabled'                                                => [
 				'aLevels' => ['Debug'],
 				'aExceptions' => [\Exception::class],
 				'sChannel' => 'Exception',
@@ -196,6 +196,15 @@ class ExceptionLogTest extends ItopDataTestCase
 				'logLevelMin'            => null,
 				'iExpectedDbWriteNumber' => [0, 0, 0, 1],
 				'logLevelMinWriteInDb'   => null,
+			],
+			'Simple Error (testing Throwable signature)'             => [
+				'aLevels'                => ['Debug'],
+				'aExceptions'            => [\Error::class],
+				'sChannel'               => 'Error',
+				'aExpectedWriteNumber'   => [1],
+				'logLevelMin'            => 'Debug',
+				'iExpectedDbWriteNumber' => [1],
+				'logLevelMinWriteInDb'   => 'Debug',
 			],
 		];
 	}
