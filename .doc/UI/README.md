@@ -1,3 +1,7 @@
+# Twig based UI blocks documentation
+
+This documentation explains how to use UI blocks (new in 3.0) in twig based extensions.
+
 # How to build UI Documentation
 
 ## Generating the documentation
