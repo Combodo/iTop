@@ -95,7 +95,7 @@ if (!class_exists('StructureInstaller'))
 		 */
 		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 		{
-			if (version_compare($sPreviousVersion, '3.1.0', '<'))
+			if (version_compare($sPreviousVersion, '3.0.0', '<'))
 			{
 				SetupLog::Info("Adding default triggers/action for Person objects mentions. All DM classes with at least 1 log attribute will be concerned...");
 
