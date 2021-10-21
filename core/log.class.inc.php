@@ -1315,21 +1315,13 @@ class ExceptionLog extends LogAPI
 
 		$sExceptionClass = get_class($oException);
 
-		if (empty($aContext[self::CONTEXT_EXCEPTION])) {
-			$aContext[self::CONTEXT_EXCEPTION] = $oException;
-		}
-
-		if (empty($aContext['exception class'])) {
-			$aContext['exception class'] = $sExceptionClass;
-		}
-
-		if (empty($aContext['file'])) {
-			$aContext['file'] = $oException->getFile();
-		}
-
-		if (empty($aContext['line'])) {
-			$aContext['line'] = $oException->getLine();
-		}
+		$aDefaultValues = [
+			self::CONTEXT_EXCEPTION => $oException,
+			'exception class' => $sExceptionClass,
+			'file' => $oException->getFile(),
+			'line' => $oException->getLine(),
+		];
+		$aContext = array_merge($aDefaultValues, $aContext);
 
 		parent::Log($sLevel, $oException->getMessage(), $sExceptionClass, $aContext);
 	}
