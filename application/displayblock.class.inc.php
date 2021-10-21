@@ -469,10 +469,8 @@ class DisplayBlock
 				$oHtml->AddSubBlock($this->GetRenderContent($oPage, $aExtraParams, $sId));
 			} catch (Exception $e) {
 				if (UserRights::IsAdministrator()) {
-					$sExceptionContent = <<<HTML
-Exception thrown:<br>
-<code>{$e->getMessage()}</code>
-HTML;
+					$sExceptionContent = 'Exception thrown:<br><code>'.utils::Sanitize($e->getMessage(), '', utils::ENUM_SANITIZATION_FILTER_STRING).'</code>';
+
 					$oExceptionAlert = AlertUIBlockFactory::MakeForFailure('Cannot display results', $sExceptionContent);
 					$oHtml->AddSubBlock($oExceptionAlert);
 				}
