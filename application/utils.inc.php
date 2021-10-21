@@ -1320,6 +1320,16 @@ class utils
 	}
 
 	/**
+	 * @return string Absolute path to the folder into which the current environment has been compiled.
+	 *                The corresponding folder is created or cleaned upon code compilation
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledEnvironmentPath(): string
+	{
+		return APPROOT . 'env-' . MetaModel::GetEnvironment() . '/';
+	}
+
+	/**
 	 * @return string A path to a folder into which any module can store cache data
 	 * The corresponding folder is created or cleaned upon code compilation
 	 */
@@ -1327,6 +1337,7 @@ class utils
 	{
 		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
 	}
+
 	/**
 	 * @return string A path to a folder into which any module can store log
 	 * @since 2.7.0
