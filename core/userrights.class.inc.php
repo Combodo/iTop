@@ -952,6 +952,21 @@ class UserRights
 		return self::$m_oRealUser;
 	}
 
+	/**
+	 * @return int|string ID of the connected user : if impersonate then use {@see m_oRealUser}, else {@see m_oUser}. If no user set then return ''
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
+	 */
+	public static function GetConnectedUserId() {
+		if (false === is_null(static::$m_oRealUser)) {
+			return static::$m_oRealUser->GetKey();
+		}
+		if (false === is_null(static::$m_oUser)) {
+			return static::$m_oUser->GetKey();
+		}
+
+		return '';
+	}
+
 	public static function GetRealUserId()
 	{
 		if (is_null(self::$m_oRealUser))
@@ -1212,7 +1227,7 @@ class UserRights
 		elseif ((self::$m_oUser !== null) && ($oUser->GetKey() == self::$m_oUser->GetKey()))
 		{
 			// Data about the current user can be found into the session data
-			if (array_key_exists('profile_list', $_SESSION))
+			if ((false === utils::IsModeCLI()) && array_key_exists('profile_list', $_SESSION))
 			{
 				$aProfiles = $_SESSION['profile_list'];
 			}
