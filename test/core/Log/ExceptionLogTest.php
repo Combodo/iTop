@@ -206,6 +206,15 @@ class ExceptionLogTest extends ItopDataTestCase
 				'iExpectedDbWriteNumber' => [1],
 				'logLevelMinWriteInDb'   => 'Debug',
 			],
+			"use '' to enable all" => [
+				'aLevels' => ['Debug'],
+				'aExceptions' => [\GrandChildException::class, \Exception::class],
+				'sChannel' => 'GrandChildException',
+				'aExpectedWriteNumber' => [1, 1],
+				'logLevelMin' => ['' => 'Debug'],
+				'iExpectedDbWriteNumber' => [1, 1],
+				'logLevelMinWriteInDb' => ['' => 'Debug'],
+			],
 		];
 	}
 
@@ -273,7 +282,7 @@ class ExceptionLogTest extends ItopDataTestCase
 		$resultFile = $this->InvokeNonPublicStaticMethod(\ExceptionLog::class, 'GetLevelDefault', [\ExceptionLog::ENUM_CONFIG_PARAM_FILE]);
 		$resultFilePerDefaultWhenKeyNotFound = $this->InvokeNonPublicStaticMethod(\ExceptionLog::class, 'GetLevelDefault', ['foo']);
 
-		$this->assertEquals('Error', $resultDb);
+		$this->assertEquals(false, $resultDb);
 		$this->assertEquals('Ok', $resultFile);
 		$this->assertEquals('Ok', $resultFilePerDefaultWhenKeyNotFound);
 	}
