@@ -49,6 +49,8 @@ $ibo-tab--temporary-remote-content--button--hover--opacity: 0.5 !default;
 $ibo-tab--temporary-remote-content--button--hover--background-color: $ibo-color-grey-900 !default;
 $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !default;
 
+$ibo-tab-container--tab-container--min-height: auto !default;
+$ibo-tab-container--tab-container--last--min-height: 60vh !default;
 
 /* Rules */
 .ibo-tab-container--tabs-list {
@@ -140,8 +142,16 @@ $ibo-tab--temporary-remote-content--button--hover--color: $ibo-color-grey-200 !d
   overflow-x: auto;
 }
 
-.ibo-is-scrollable .ibo-tab-container--tab-container--label {
-  display: block;
+.ibo-tab-container--tab-container-list.ibo-is-scrollable {
+  .ibo-tab-container--tab-container--label {
+    display: block;
+  }
+  .ibo-tab-container--tab-container {
+    min-height: $ibo-tab-container--tab-container--min-height;
+  }  
+  .ibo-tab-container--tab-container:last-child {
+    min-height: $ibo-tab-container--tab-container--last--min-height;
+  }
 }
 
 .ibo-tab-container--tab-container--label {
