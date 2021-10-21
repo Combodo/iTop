@@ -562,20 +562,22 @@ abstract class LogAPI
 	public const LEVEL_OK = 'Ok';
 	public const LEVEL_DEBUG = 'Debug';
 	public const LEVEL_TRACE = 'Trace';
+
 	/**
 	 * @see     GetMinLogLevel
 	 * @used-by GetLevelDefault
-	 * @var string default log level
+	 * @var string default log level.
 	 * @since 2.7.1 N°2977
 	 */
 	public const LEVEL_DEFAULT = self::LEVEL_OK;
+
 	/**
 	 * @see     GetMinLogLevel
 	 * @used-by GetLevelDefault
-	 * @var string default log level when writing to DB
+	 * @var string|bool default log level when writing to DB: false by default in order to disable EventIssue creation, and so on, do not change the behavior.
 	 * @since 3.0.0 N°4261
 	 */
-	public const LEVEL_DEFAULT_DB = self::LEVEL_ERROR;
+	public const LEVEL_DEFAULT_DB = false;
 
 	protected static $aLevelsPriority = array(
 		self::LEVEL_ERROR   => 400,
@@ -867,15 +869,15 @@ abstract class LogAPI
 	 *
 	 * @param string $sConfigKey config key used for log
 	 *
-	 * @return string
+	 * @return string|bool if false, then disable log for any level
 	 *
 	 * @uses    \LogAPI::LEVEL_DEFAULT
 	 * @uses    \LogAPI::LEVEL_DEFAULT_DB
 	 *
-	 * @since 3.0.0 N°3731
+	 * @since 3.0.0 N°3731 Method creation
 	 * @since 3.0.0 N°4261 add specific default level for DB write
 	 */
-	protected static function GetLevelDefault(string $sConfigKey): string
+	protected static function GetLevelDefault(string $sConfigKey)
 	{
 		switch ($sConfigKey) {
 			case static::ENUM_CONFIG_PARAM_DB:
@@ -1113,11 +1115,8 @@ class DeprecatedCallsLog extends LogAPI
 	 *
 	 * In other words, when in dev mode all deprecated calls will be logged to file
 	 *
-	 * @param string $sConfigKey
-	 *
-	 * @return string
 	 */
-	protected static function GetLevelDefault(string $sConfigKey): string
+	protected static function GetLevelDefault(string $sConfigKey)
 	{
 		if ($sConfigKey === self::ENUM_CONFIG_PARAM_DB) {
 			return parent::GetLevelDefault($sConfigKey);
@@ -1295,6 +1294,8 @@ class ExceptionLog extends LogAPI
 {
 	public const CHANNEL_DEFAULT = 'Exception';
 	public const CONTEXT_EXCEPTION = '__exception';
+
+	public const LEVEL_DEFAULT_DB = self::LEVEL_ERROR;
 
 	protected static $m_oFileLog = null;
 

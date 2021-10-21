@@ -183,4 +183,17 @@ class LogAPITest extends ItopDataTestCase
 			$this->assertNotEmpty($oEventIssue->Get($sAttCode), "In the EventIssue instance returned by LogAPI the '$sAttCode' mandatory attr is empty :(");
 		}
 	}
+
+
+	public function testGetLevelDefault()
+	{
+		$resultDb = $this->InvokeNonPublicStaticMethod(\LogAPI::class, 'GetLevelDefault', [\LogAPI::ENUM_CONFIG_PARAM_DB]);
+		$resultFile = $this->InvokeNonPublicStaticMethod(\LogAPI::class, 'GetLevelDefault', [\LogAPI::ENUM_CONFIG_PARAM_FILE]);
+		$resultFilePerDefaultWhenKeyNotFound = $this->InvokeNonPublicStaticMethod(\LogAPI::class, 'GetLevelDefault', ['foo']);
+
+		$this->assertEquals(false, $resultDb);
+		$this->assertEquals('Ok', $resultFile);
+		$this->assertEquals('Ok', $resultFilePerDefaultWhenKeyNotFound);
+	}
+
 }

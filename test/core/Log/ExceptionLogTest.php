@@ -267,6 +267,16 @@ class ExceptionLogTest extends ItopDataTestCase
 			],
 		];
 	}
+	public function testGetLevelDefault()
+	{
+		$resultDb = $this->InvokeNonPublicStaticMethod(\ExceptionLog::class, 'GetLevelDefault', [\ExceptionLog::ENUM_CONFIG_PARAM_DB]);
+		$resultFile = $this->InvokeNonPublicStaticMethod(\ExceptionLog::class, 'GetLevelDefault', [\ExceptionLog::ENUM_CONFIG_PARAM_FILE]);
+		$resultFilePerDefaultWhenKeyNotFound = $this->InvokeNonPublicStaticMethod(\ExceptionLog::class, 'GetLevelDefault', ['foo']);
+
+		$this->assertEquals('Error', $resultDb);
+		$this->assertEquals('Ok', $resultFile);
+		$this->assertEquals('Ok', $resultFilePerDefaultWhenKeyNotFound);
+	}
 }
 
 
