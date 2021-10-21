@@ -105,12 +105,11 @@ class AjaxRenderController
 
 	/**
 	 * @param \AjaxPage $oPage
-	 *
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
 	 */
-	public static function ExportBuild(ajax_page $oPage, $bTokenOnly)
+	public static function ExportBuild(AjaxPage $oPage, $bTokenOnly)
 	{
 		register_shutdown_function(function () {
 			$aErr = error_get_last();
