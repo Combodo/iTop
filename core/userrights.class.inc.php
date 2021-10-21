@@ -1438,6 +1438,21 @@ class UserRights
 	}
 
 	/**
+	 * @return int|string ID of the connected user : if impersonate then use {@see m_oRealUser}, else {@see m_oUser}. If no user set then return ''
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
+	 */
+	public static function GetConnectedUserId() {
+		if (false === is_null(static::$m_oRealUser)) {
+			return static::$m_oRealUser->GetKey();
+		}
+		if (false === is_null(static::$m_oUser)) {
+			return static::$m_oUser->GetKey();
+		}
+
+		return '';
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function GetRealUserId()
