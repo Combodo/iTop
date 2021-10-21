@@ -14,7 +14,7 @@
 	            <dashlet id="1" xsi:type="DashletHeaderStatic">
                   <rank>0</rank>
                   <title>Menu:ConfigManagementCI</title>
-                    <icon>itop-welcome-itil/images/database.png</icon>
+                    <icon>../images/icons/icons8-database.svg</icon>
                 </dashlet>
               <dashlet id="4" xsi:type="DashletBadge">
                 <rank>3</rank>

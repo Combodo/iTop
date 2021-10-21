@@ -969,7 +969,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/switch.png</icon>
+					<icon>../../images/icons/icons8-switch.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2035,7 +2035,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/middleware.png</icon>
+					<icon>../../images/icons/icons8-automatic.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2293,7 +2293,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/webserver.png</icon>
+					<icon>../../images/icons/icons8-server-custom.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2756,7 +2756,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/database-schema.png</icon>
+					<icon>../../images/icons/icons8-database-custom.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -4916,7 +4916,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/subnet.png</icon>
+					<icon>../../images/icons/icons8-network.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>

@@ -720,7 +720,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/pdu.png</icon>
+          <icon>../../images/icons/icons8-plug-socket.svg</icon>
         </style>
         <reconciliation>
           <attributes>

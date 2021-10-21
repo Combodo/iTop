@@ -1444,7 +1444,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/document.png</icon>
+          <icon>../../images/icons/icons8-note.svg</icon>
         </style>
         <reconciliation>
           <attributes>
