@@ -2096,12 +2096,12 @@ EOF
 
 	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false)
 	{
-		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
+		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
 		$sSourceLabel = isset($aChoice['source_label']) ? $aChoice['source_label'] : '';
 		$sId = htmlentities($aChoice['extension_code'], ENT_QUOTES, 'UTF-8');
-		$oPage->add('<label for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
+		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
 		$sDescription = isset($aChoice['description']) ? htmlentities($aChoice['description'], ENT_QUOTES, 'UTF-8') : '';
-		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
+		$oPage->add('<div class="setup--wizard-choice--description description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options']))
 		{
 			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled);
