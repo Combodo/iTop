@@ -1295,8 +1295,6 @@ class ExceptionLog extends LogAPI
 	public const CHANNEL_DEFAULT = 'Exception';
 	public const CONTEXT_EXCEPTION = '__exception';
 
-	public const LEVEL_DEFAULT_DB = self::LEVEL_ERROR;
-
 	protected static $m_oFileLog = null;
 
 	/**
@@ -1305,7 +1303,7 @@ class ExceptionLog extends LogAPI
 	 * As it encapsulate the operations performed using the Exception, you should prefer it to the standard API inherited from LogApi `ExceptionLog::Error($oException->getMessage(), get_class($oException), ['__exception' => $oException]);`
 	 * The parameter order is not standard, but in our use case, the resulting API is way more convenient this way !
 	 */
-	public static function LogException(Throwable $oException, $aContext = array(), $sLevel = self::LEVEL_WARNING): void
+	public static function LogException(Throwable $oException, $aContext = array(), $sLevel = self::LEVEL_ERROR): void
 	{
 		if (!isset(self::$aLevelsPriority[$sLevel])) {
 			IssueLog::Error("invalid log level '{$sLevel}'");
