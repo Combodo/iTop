@@ -107,7 +107,7 @@ class Config
 	protected $m_aSettings = [
 		'log_level_min' => [
 			'type' => 'array',
-			'description' => 'Optional min log level per channel',
+			'description' => 'Optional min log level, per channel.',
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
@@ -115,9 +115,9 @@ class Config
 		],
 		'log_level_min.write_in_db' => [
 			'type' => 'array',
-			'description' => 'Additional configuration that enable "in DB" logs for Exception on compatible code.',
-			'default' => [ 'Exception' => 'Error', ],
-			'value' => [ 'Exception' => 'Error', ],
+			'description' => 'Optional min log level IN DB, per channel.',
+			'default' => '',
+			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
