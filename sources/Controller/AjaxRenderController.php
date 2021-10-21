@@ -73,9 +73,14 @@ class AjaxRenderController
 			foreach ($aClassAliases as $sAlias => $sClass) {
 				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
 					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
+					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+						$oRawValue = $aObject[$sAlias]->Get($sAttCode);
+						if (is_scalar($oRawValue)) {
+							$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
+						}
 					}
 					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
 					if (!empty($sObjHighlightClass)) {
