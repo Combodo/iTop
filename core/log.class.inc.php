@@ -682,7 +682,7 @@ abstract class LogAPI
 	{
 		$oConnectedUser = UserRights::GetUserObject();
 		if (is_null($oConnectedUser)) {
-			return 'null';
+			return '';
 		}
 
 		return $oConnectedUser->GetKey();
