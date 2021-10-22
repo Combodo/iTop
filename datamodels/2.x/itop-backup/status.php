@@ -44,10 +44,12 @@ function GenerateBackupsList(string $sListTitleDictKey, string $sNoRecordDictKey
 	$oFieldsetForList = new FieldSet(Dict::S($sListTitleDictKey));
 
 	if (count($aListData) > 0) {
+		$oTable = DataTableUIBlockFactory::MakeForStaticData('', $aListConfig, array_reverse($aListData), utils::Sanitize(uniqid('form_', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
+
 		$oTablePanel = PanelUIBlockFactory::MakeForInformation('');
-		$oTablePanel->AddSubBlock(
-			DataTableUIBlockFactory::MakeForForm(utils::Sanitize(uniqid('form_', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER), $aListConfig, array_reverse($aListData))
-		);
+		$oTablePanel->AddSubBlock($oTable);
+		$oTablePanel->AddCSSClass('ibo-datatable-panel');
+
 		$oFieldsetForList->AddSubBlock($oTablePanel);
 	} else {
 		$oFieldsetForList->AddSubBlock(
