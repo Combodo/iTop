@@ -2437,15 +2437,12 @@ EOF
 
 				// Base search used when no trigger configured
 				$oSearch = DBSearch::FromOQL("SELECT $sMentionedClass");
+				$aSearchParams = ['needle' => "%$sNeedle%"];
 
 				// Retrieve restricting scopes from triggers if any
-				if (strlen($sHostClass) > 0) {
-					if ($iHostId > 0) {
-						$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
-					} else {
-						// Object is being created, use a dummy object as we have no way to recreate it
-						$oHostObj = MetaModel::NewObject($sHostClass);
-					}
+				if ((strlen($sHostClass) > 0) && ($iHostId > 0)) {
+					$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
+					$aSearchParams['this'] = $oHostObj;
 
 					$aTriggerMentionedSearches = [];
 
@@ -2487,7 +2484,7 @@ EOF
 					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
 				);
 
-				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%", 'this' => $oHostObj));
+				$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
 				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
