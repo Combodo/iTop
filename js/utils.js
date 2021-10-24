@@ -868,6 +868,8 @@ const CombodoTooltip = {
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
 
+		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
+
 		tippy(oElem[0], oOptions);
 
 		// Mark tooltip as instantiated
