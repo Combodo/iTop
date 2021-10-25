@@ -24,6 +24,13 @@ function ShowAboutBox()
 	});
 	return false;
 }
+function ShowDebug()
+{
+	if ($('#rawOutput > div').html() != '')
+	{
+		$('#rawOutput').dialog( {autoOpen: true, modal:false, width: '80%'});
+	}
+}
 function ArchiveMode(bEnable)
 {
 	var sPrevUrl = StripArchiveArgument(window.location.search);
@@ -40,6 +47,31 @@ function StripArchiveArgument(sUrl)
 {
 	var res = sUrl.replace(/&with-archive=[01]/g, '');
 	return res;
+}
+function goBack()
+{
+	window.history.back();
+}
+function BackToDetails(sClass, id, sDefaultUrl, sOwnershipToken)
+{
+	window.bInCancel = true;
+	if (id > 0)
+	{
+		sToken = '';
+		if (sOwnershipToken != undefined)
+		{
+			sToken = '&token='+sOwnershipToken;
+		}
+		window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=release_lock_and_details&class='+sClass+'&id='+id+sToken);
+	}
+	else
+	{
+		window.location.href = sDefaultUrl; // Already contains the context...
+	}
+}
+function BackToList(sClass)
+{
+	window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0');
 }
 
 /**
