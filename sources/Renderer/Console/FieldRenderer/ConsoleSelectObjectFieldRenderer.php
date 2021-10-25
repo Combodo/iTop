@@ -220,8 +220,9 @@ EOF
                         })
                         .closest('.form_handler').trigger('value_change');
     },
-	inputClass: 'ibo-input-vanilla ibo-input',	
+	inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
 });
+ $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
 JS
 				);
 			}
