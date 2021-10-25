@@ -26,9 +26,12 @@ function ShowAboutBox()
 }
 function ShowDebug()
 {
-	if ($('#rawOutput > div').html() != '')
+	if ($('#ibo-raw-output').html() !== '')
 	{
-		$('#rawOutput').dialog( {autoOpen: true, modal:false, width: '80%'});
+		$('#ibo-raw-output')
+			// Note: We remove the CSS class before opening the dialog, otherwise the dialog will not be positioned correctly due to its content being still hidden
+			.removeClass('ibo-is-hidden')
+			.dialog( {autoOpen: true, modal: true, width: '80%', maxHeight: window.innerHeight * 0.8});
 	}
 }
 function ArchiveMode(bEnable)

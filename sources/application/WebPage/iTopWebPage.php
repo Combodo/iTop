@@ -408,47 +408,6 @@ JS
 		// see GetUserPreference() in utils.js
 		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script("var oUserPreferences = $sUserPrefs;");
-
-		// TODO 3.0.0: What is this for?
-		$this->add_script(
-			<<<JS
-		function goBack()
-		{
-			window.history.back();
-		}
-		
-		function BackToDetails(sClass, id, sDefaultUrl, sOwnershipToken)
-		{
-			window.bInCancel = true;
-			if (id > 0)
-			{
-				sToken = '';
-				if (sOwnershipToken != undefined)
-				{
-					sToken = '&token='+sOwnershipToken;
-				}
-				window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=release_lock_and_details&class='+sClass+'&id='+id+sToken);
-			}
-			else
-			{
-				window.location.href = sDefaultUrl; // Already contains the context...				
-			}
-		}
-
-		function BackToList(sClass)
-		{
-			window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0');
-		}
-		
-		function ShowDebug()
-		{
-			if ($('#rawOutput > div').html() != '')
-			{
-				$('#rawOutput').dialog( {autoOpen: true, modal:false, width: '80%'});
-			}
-		}
-JS
-		);
 		}
 	}
 
@@ -835,8 +794,6 @@ HTML;
 		// Data to be passed to the view
 		$aData = [];
 
-		$s_captured_output = $this->ob_get_clean_safe();
-
 		// Prepare page metadata
 		$sAbsoluteUrlAppRoot = addslashes($this->m_sRootUrl);
 		$sFaviconUrl = $this->GetFaviconAbsoluteUrl();
@@ -930,7 +887,7 @@ HTML;
 				// TODO 3.0.0: TEMP, used while developping, remove it.
 				'sSanitizedContent' => utils::FilterXSS($this->s_content),
 				'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
-				'sCapturedOutput' => utils::FilterXSS($s_captured_output),
+				'sCapturedOutput' => utils::FilterXSS(trim($this->ob_get_clean_safe())),
 			]
 		);
 

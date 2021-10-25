@@ -109,7 +109,9 @@
     {% endblock %}
 {% endblock %}
 
-{{ aPage.sCapturedOutput|raw }}
+{% block iboCapturedOutput %}
+    {{ aPage.sCapturedOutput|raw }}
+{% endblock %}
 
 </body>
 </html>

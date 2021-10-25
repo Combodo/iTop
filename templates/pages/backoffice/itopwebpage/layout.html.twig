@@ -35,5 +35,6 @@
 	{% endif %}
 {% endblock %}
 
-
-
+{% block iboCapturedOutput %}
+    <div id="ibo-raw-output" class="ibo-is-hidden" title="Debug Output">{{ aPage.sCapturedOutput|raw }}</div>
+{% endblock %}
