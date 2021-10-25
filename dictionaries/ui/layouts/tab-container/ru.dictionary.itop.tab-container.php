@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Other tabs~~',
-	'UIBlock:Error:AddBlockNotTabForbidden' => 'Cannot add block %1$s to %2$s (only Tab blocks are allowed)~~',
-	'UIBlock:TabContainer:RemoteTabLoad' => 'Нажмите',
+	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Другие вкладки',
+	'UIBlock:Error:AddBlockNotTabForbidden' => 'Невозможно добавить блок %1$s к %2$s (разрешены только блоки типа Tab). Пожалуйста, свяжитесь с администратором',
+	'UIBlock:TabContainer:RemoteTabLoad' => 'Нажмите, чтобы загрузить эту вкладку',
 ]);
