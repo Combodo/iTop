@@ -811,7 +811,27 @@ field.filter(function(d) {
 	.attr("height", 36)
     .attr("xlink:href", function(d, i) { return d.icon })
 	.attr("transform", "translate(-12, -24)");
-			
+
+// When the schema is visible for the first time, initialize SVG viewbox based on content height/width
+
+let oSvgElement = document.getElementsByClassName("dataModelSchema")[0];
+if(window.IntersectionObserver) {
+    const oDatamodelSchemaIntersectObs = new IntersectionObserver(function(aEntries, oDatamodelSchemaIntersectObs){
+        aEntries.forEach(oEntry => {
+            let bIsVisible = oEntry.isIntersecting;
+            if(bIsVisible) {
+				let oSvgBB = oSvgElement.getBBox();
+				let aSvgViewbox = [oSvgBB.x, oSvgBB.y , oSvgBB.width, oSvgBB.height];
+				oSvgElement.setAttribute("viewBox", aSvgViewbox.join(" "));
+				oDatamodelSchemaIntersectObs.unobserve(oSvgElement);
+            }
+        });
+    }, {
+        root: $('#dataModelGraph')[0],
+        threshold: [1] // Must be completely visible
+    });
+    oDatamodelSchemaIntersectObs.observe(oSvgElement);
+}
 JS
 		);
 	}
