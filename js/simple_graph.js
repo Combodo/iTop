@@ -65,43 +65,49 @@ $(function()
 			this.fSliderZoom = 1.0;
 			this.bInUpdateSliderZoom = false;
 			this.bRedrawNeeded = false;
-			
-			this.oPaper = Raphael(this.element.get(0), this.element.width(), this.element.height());
+
+			this.oPaper = Raphael(this.element.get(0), this.element.width(), screen.availHeight * 2 / 3);
 
 			this.element
-			.addClass('panel-resized')
-			.addClass('itop-simple-graph')
-			.addClass('graph');
-			
+				.addClass('panel-resized')
+				.addClass('itop-simple-graph')
+				.addClass('graph');
+
 			this._create_toolkit_menu();
 			this._build_context_menus();
 			this.sTabId = null;
 			var jTabPanel = this.element.closest('.ui-tabs-panel');
-			if (jTabPanel.length > 0)
-			{
+			if (jTabPanel.length > 0) {
 				// We are inside a tab, find out which one and hook its activation
 				this.sTabId = jTabPanel.attr('id');
 				var jTabs = this.element.closest('.ibo-tab-container');
-				jTabs.on( "tabsactivate", function( event, ui ) {
+				jTabs.on("tabsactivate", function (event, ui) {
 					me._on_tabs_activate(ui);
-				});					
+				});
 			}
-			$(window).bind('resized', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
-			$('#dh_flash').bind('toggle_complete', function() { var that = me; window.setTimeout(function() { that._on_resize(); }, 50); } );
-			this.element.on('mousewheel', function(event, delta, deltaX, deltaY) {
-			    return me._on_mousewheel(event, delta, deltaX, deltaY);
+			$(window).bind('resized', function () {
+				var that = me;
+				window.setTimeout(function () {
+					that._on_resize();
+				}, 50);
+			});
+			$('#dh_flash').bind('toggle_complete', function () {
+				var that = me;
+				window.setTimeout(function () {
+					that._on_resize();
+				}, 50);
+			});
+			this.element.on('mousewheel', function (event, delta, deltaX, deltaY) {
+				return me._on_mousewheel(event, delta, deltaX, deltaY);
 			});
 			$(document).on('click', function (e) {
 				if ($(e.target).closest(me.element).length === 0) {
 					me.element.removeClass(me.css_classes.has_focus);
-				}
-				else
-				{
+				} else {
 					me.element.addClass(me.css_classes.has_focus);
 				}
 			});
-			if (this.options.source_url != null)
-			{
+			if (this.options.source_url != null) {
 				this.load_from_url(this.options.source_url);
 			}
 		},
