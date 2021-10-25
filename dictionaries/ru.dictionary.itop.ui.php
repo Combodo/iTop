@@ -1606,11 +1606,11 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 //
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:NoNewMessage' => 'Нет новых сообщений',
-	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
-	'UI:Newsroom:MarkAllAsRead' => 'Отметить все как прочитанные сообщения',
+	'UI:Newsroom:XNewMessage' => 'Новые сообщения (%1$s)',
+	'UI:Newsroom:MarkAllAsRead' => 'Отметить все как прочитанные',
 	'UI:Newsroom:ViewAllMessages' => 'Посмотреть все сообщения',
-	'UI:Newsroom:Preferences' => 'Настройки новостей',
-	'UI:Newsroom:ConfigurationLink' => 'конфигурация',
+	'UI:Newsroom:Preferences' => 'Центр новостей',
+	'UI:Newsroom:ConfigurationLink' => 'Конфигурация',
 	'UI:Newsroom:ResetCache' => 'Сбросить кеш',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
