@@ -986,9 +986,12 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		'moreinfo' => array('label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')),
 		'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
 	);
-	
+	$oTablePanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+	$oTablePanel->AddCSSClass('ibo-datatable-panel');
+
 	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table', [], "", array('pageLength' => -1));
-	$oPage->AddUiBlock($oAttributesTable);
+	$oTablePanel->AddSubBlock($oAttributesTable);
+	$oPage->AddUiBlock($oTablePanel);
 	$sOrigins = json_encode(array_keys($aOrigins));
 
 	//color calculation in order to keep 1 color for 1 extended class. Colors are interpolated and will be used for
