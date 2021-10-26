@@ -867,6 +867,8 @@ try
 			$sAttCode = utils::ReadParam('attcode', '');
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $id);
+			// - Add graphs dependencies
+			WebResourcesHelper::EnableC3JSToWebPage($oPage);
 			$oObj->DisplayDashboard($oPage, $sAttCode);
 			break;
 
