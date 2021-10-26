@@ -17,6 +17,9 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 	.ibo-activity-entry--main-information-icon{
 		display: none;
 	}
+  .ibo-activity-entry--main-information-content{
+    @extend .ibo-vendors-ckeditor--display-content;
+  }
 
 	/* Highlight color */
 	.ibo-activity-entry--main-information::before{

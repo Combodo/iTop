@@ -2640,6 +2640,7 @@ class utils
 			'contentsLanguage' => $sLanguage,
 			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut,font,uploadimage',
 			'uploadUrl' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
+			'contentsCss' => array(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/contents.css', utils::GetAbsoluteUrlAppRoot().'css/ckeditor/contents.css'),
 		);
 
 		// Mentions

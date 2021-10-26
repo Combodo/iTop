@@ -86,3 +86,18 @@ ul.cke_autocomplete_panel{
 		@extend %ibo-font-weight-700;
 	}
 }
+
+/* These rules should be the same as those in css/ckeditor/contents.css */
+.ibo-vendors-ckeditor--display-content{
+  .cke_editable{
+    line-height: 1.4;
+  }
+  figure{
+    border: solid 1px #ccc;
+    border-radius: 2px;
+  }
+  p{
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+}

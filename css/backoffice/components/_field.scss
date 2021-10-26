@@ -189,6 +189,8 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
   /* Hack to force a table to fit its container without overflow (see N°2127) */
   /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
   .HTML {
+    @extend .ibo-vendors-ckeditor--display-content;
+
     table {
       table-layout: fixed;
       width: 100%;
