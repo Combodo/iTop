@@ -23,7 +23,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Menu:WaitingApproval' => 'Ожидающие утверждения',
 	'Menu:WaitingApproval+' => 'Изменения, ожидающие утверждения',
 	'Menu:Changes' => 'Открытые',
-	'Menu:Changes+' => 'Все открытые изменения',
+	'Menu:Changes+' => 'Открытые изменения',
 	'Menu:MyChanges' => 'Назначенные мне',
 	'Menu:MyChanges+' => 'Изменения, назначенные мне',
 	'UI-ChangeManagementOverview-ChangeByCategory-last-7-days' => 'Изменения по категориям за 7 дней',
