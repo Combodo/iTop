@@ -21,16 +21,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Расширить',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Уменьшить',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Закрыть',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Загрузить предыдущие записи',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Загрузить все записи',
 
 	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'История',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Активность',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Черновик',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Журналы',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Показать / скрыть изменения журналов',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Статус',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Показать / скрыть изменения статусов',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Показать / скрыть изменение статуса',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Изменения',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Показать / скрыть изменения полей',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Показать детализацию изменений',
@@ -42,8 +42,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Создать новую запись в журнале',
 
 	// Case log entry
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save~~',
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.~~',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Одновременное обновление журналов',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Нажав кнопку "Отправить", вы добавите записи во все редактируемые журнал одновременно.',
 
 	// Notification entry
 	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Открыть дополнительную информацию по уведомлению',
@@ -52,6 +52,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Здесь пока пусто...',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Панель действий',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Открыть панель действий',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Активность',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Открыть панель активности',
 ));
