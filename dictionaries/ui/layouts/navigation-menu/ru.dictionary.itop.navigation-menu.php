@@ -24,8 +24,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Фильтр...',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip' => 'Введите ключевые слова для фильтра',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Hint' => 'Отображаются совпадения в каждой группе меню',
-	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Ничего не найдено',
-	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Добро пожаловать %1$s!',
-	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Фотография контакта',
+	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'Нет совпадений',
+	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Добрый день, %1$s!',
+	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => 'Фотография',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Фильтр пунктов меню',
 ));
