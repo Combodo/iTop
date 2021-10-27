@@ -28,7 +28,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Preferences:RichText:ToolbarState' => 'Панель инструментов по умолчанию',
 	'UI:Preferences:RichText:ToolbarState:Expanded' => 'Развёрнута',
 	'UI:Preferences:RichText:ToolbarState:Collapsed' => 'Свёрнута',
-	'UI:Preferences:ActivityPanel:Title' => 'Панель действий',
+	'UI:Preferences:ActivityPanel:Title' => 'Панель активности',
 	'UI:Preferences:ActivityPanel:EntryFormOpened' => 'Форма записи журнала открыта по умолчанию',
 	'UI:Preferences:ActivityPanel:EntryFormOpened+' => 'Состояние формы добавления записи журнала при отображении объекта. Если флажок снят, форму можно будет открыть с помощью соответствующей кнопки.',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title' => 'Сочетания клавиш',
