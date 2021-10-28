@@ -1077,6 +1077,7 @@ switch ($operation)
 		//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
 		if ($sClass != '')
 		{
+			$oPage->set_title(Dict::Format('UI:Schema:TitleForClass', $sClass));
 			DisplayClassDetails($oPage, $sClass, $sContext);
 			break;
 		}

@@ -717,6 +717,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'UI:Query:UrlForExcel' => 'Adres URL do użycia w kwerendach web MS-Excel',
 	'UI:Query:UrlV1' => 'Lista pól pozostała nieokreślona. Strona <em>export-V2.php</em> nie może zostać wywołana bez tych informacji. Dlatego sugerowany poniżej adres URL wskazuje na starszą stronę: <em>export.php</em>. Ta starsza wersja eksportu ma następujące ograniczenie: lista eksportowanych pól może się różnić w zależności od formatu wyjściowego i modelu danych '.ITOP_APPLICATION_SHORT.'. <br/> Jeśli chcesz zagwarantować, że lista eksportowanych kolumn pozostanie stabilna w dłuższej perspektywie, musisz określić wartość dla atrybutu "Pola" i użyć strony <em>export-V2.php</em >.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' schemat obiektów',
+	'UI:Schema:TitleForClass' => '%1$s schemat~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategoria <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relacje',
 	'UI:Schema:AbstractClass' => 'Klasa abstrakcyjna: nie można utworzyć instancji obiektu z tej klasy.',
