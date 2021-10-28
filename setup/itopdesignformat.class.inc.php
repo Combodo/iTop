@@ -17,7 +17,9 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '3.0');
+if (! defined('ITOP_DESIGN_LATEST_VERSION')){
+	define('ITOP_DESIGN_LATEST_VERSION', '3.0');
+}
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
