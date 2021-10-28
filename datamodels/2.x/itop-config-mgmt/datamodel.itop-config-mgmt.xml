@@ -4443,6 +4443,14 @@
 						<attribute id="contact_id"/>
 					</attributes>
 				</reconciliation>
+				<uniqueness_rules>
+					<rule id="unique_link" _delta="define">
+						<attributes>
+							<attribute id="functionalci_id"/>
+							<attribute id="contact_id"/>
+						</attributes>
+					</rule>
+				</uniqueness_rules>
 			</properties>
 			<fields>
 				<field id="functionalci_id" xsi:type="AttributeExternalKey">
