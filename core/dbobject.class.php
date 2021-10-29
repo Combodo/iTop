@@ -4631,8 +4631,9 @@ abstract class DBObject implements iDisplay
 	public function GetRelatedObjectsUp($sRelCode, $iMaxDepth = 99, $bEnableRedundancy = true)
 	{
 		$oGraph = new RelationGraph();
-		$oGraph->AddSourceObject($this);
+		$oGraph->AddSinkObject($this);
 		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
+
 		return $oGraph;
 	}
 
