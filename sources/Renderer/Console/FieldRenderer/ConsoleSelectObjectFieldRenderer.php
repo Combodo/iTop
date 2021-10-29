@@ -194,10 +194,9 @@ EOF
 				// Drop-down select
 				//
 				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
-				$oBlock->AddCSSClass('ibo-input-field-wrapper');
 				$sEditType = 'select';
 				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
-				$oBlock->AddSubBlock($oSelect);
+				$oBlock->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard(null,['ibo-input-field-wrapper'])->AddSubBlock($oSelect));
 				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
 				while ($oObject = $oSet->Fetch())
 				{
