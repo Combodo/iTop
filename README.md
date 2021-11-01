@@ -102,6 +102,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Rosenke, Stephan
 - Seki, Shoji
 - Shilov, Vladimir
+- Stukalov, Ilya (a.k.a @ilya-stukalov)
 - Tulio, Marco
 - Turrubiates, Miguel
 
