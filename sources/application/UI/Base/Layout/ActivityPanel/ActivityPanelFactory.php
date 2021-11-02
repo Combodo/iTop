@@ -78,6 +78,11 @@ class ActivityPanelFactory
 				$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
 			}
 
+			if ($oObject->IsNew()) {
+				// Skip unnecessary sql requests in creation
+				continue;
+			}
+
 			// Retrieve CMDBChange of the log entries to find their origins
 			//
 			// IMPORTANT: We don't have an easy way to find a log entry's origin, so we have to cross it with the corresponding CMDBChange
@@ -117,45 +122,47 @@ class ActivityPanelFactory
 			}
 		}
 
-		// Retrieve history changes (excluding case logs entries)
-		$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjClass, $sObjId);
+		if (!$oObject->IsNew()) {
+			// Retrieve history changes (excluding case logs entries)
+			$aChangesData = ActivityPanelHelper::GetCMDBChangeOpEditsEntriesForObject($sObjClass, $sObjId);
 
-		// - Set metadata for pagination
-		if (true === $aChangesData['more_entries_to_load']) {
-			$oActivityPanel->SetHasMoreEntriesToLoad(true);
-			$oActivityPanel->SetLastEntryId('cmdbchangeop', $aChangesData['last_loaded_entry_id']);
-		}
+			// - Set metadata for pagination
+			if (true === $aChangesData['more_entries_to_load']) {
+				$oActivityPanel->SetHasMoreEntriesToLoad(true);
+				$oActivityPanel->SetLastEntryId('cmdbchangeop', $aChangesData['last_loaded_entry_id']);
+			}
 
-		// - Add history entries
-		/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EditsEntry $oEntry */
-		foreach ($aChangesData['entries'] as $oEntry) {
-			$oActivityPanel->AddEntry($oEntry);
-		}
+			// - Add history entries
+			/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EditsEntry $oEntry */
+			foreach ($aChangesData['entries'] as $oEntry) {
+				$oActivityPanel->AddEntry($oEntry);
+			}
 
-		// Retrieving notification events for cmdbAbstractObject only
-		if ($oObject instanceof cmdbAbstractObject) {
-			$aRelatedTriggersIDs = $oObject->GetRelatedTriggersIDs();
+			// Retrieving notification events for cmdbAbstractObject only
+			if ($oObject instanceof cmdbAbstractObject) {
+				$aRelatedTriggersIDs = $oObject->GetRelatedTriggersIDs();
 
-			// Protection for classes which have no related trigger
-			if (false === empty($aRelatedTriggersIDs)) {
-				// - Prepare query to retrieve events
-				$oNotifEventsSearch = DBObjectSearch::FromOQL('SELECT EN FROM EventNotification AS EN JOIN Action AS A ON EN.action_id = A.id WHERE EN.trigger_id IN (:triggers_ids) AND EN.object_id = :object_id');
-				$oNotifEventsSet = new DBObjectSet($oNotifEventsSearch, ['id' => false], ['triggers_ids' => $aRelatedTriggersIDs, 'object_id' => $sObjId]);
-				$oNotifEventsSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
+				// Protection for classes which have no related trigger
+				if (false === empty($aRelatedTriggersIDs)) {
+					// - Prepare query to retrieve events
+					$oNotifEventsSearch = DBObjectSearch::FromOQL('SELECT EN FROM EventNotification AS EN JOIN Action AS A ON EN.action_id = A.id WHERE EN.trigger_id IN (:triggers_ids) AND EN.object_id = :object_id');
+					$oNotifEventsSet = new DBObjectSet($oNotifEventsSearch, ['id' => false], ['triggers_ids' => $aRelatedTriggersIDs, 'object_id' => $sObjId]);
+					$oNotifEventsSet->SetLimit(MetaModel::GetConfig()->Get('max_history_length'));
 
-				/** @var \EventNotification $oNotifEvent */
-				while ($oNotifEvent = $oNotifEventsSet->Fetch()) {
-					try {
-						$oEntry = ActivityEntryFactory::MakeFromEventNotification($oNotifEvent);
+					/** @var \EventNotification $oNotifEvent */
+					while ($oNotifEvent = $oNotifEventsSet->Fetch()) {
+						try {
+							$oEntry = ActivityEntryFactory::MakeFromEventNotification($oNotifEvent);
+						}
+						catch (Exception $oException) {
+							IssueLog::Debug(static::class.': Could not create entry from EventNotification #'.$oNotifEvent->GetKey().' related to trigger "'.$oNotifEvent->Get('trigger_id_friendlyname').'" / action "'.$oNotifEvent->Get('action_id_friendlyname').'" / object #'.$oNotifEvent->Get('object_id').': '.$oException->getMessage());
+							continue;
+						}
+
+						$oActivityPanel->AddEntry($oEntry);
 					}
-					catch (Exception $oException) {
-						IssueLog::Debug(static::class.': Could not create entry from EventNotification #'.$oNotifEvent->GetKey().' related to trigger "'.$oNotifEvent->Get('trigger_id_friendlyname').'" / action "'.$oNotifEvent->Get('action_id_friendlyname').'" / object #'.$oNotifEvent->Get('object_id').': '.$oException->getMessage());
-						continue;
-					}
-
-					$oActivityPanel->AddEntry($oEntry);
+					unset($oNotifEventsSet);
 				}
-				unset($oNotifEventsSet);
 			}
 		}
 
