@@ -260,6 +260,9 @@ $.widget('itop.set_widget',
 				$item.addClass(setWidget.ITEM_CSS_CLASS);
 				$item.addClass(setWidget.ITEM_CSS_CLASS + '-' + setItemCode); // no escape as codes are already pretty restrictive
 
+				// Set text as tooltip in case it would be truncated
+				$item.attr('data-tooltip-content', $item[0].childNodes[0].nodeValue.trim());
+
 				if (setWidget._isCodeInPartialValues(setItemCode)) {
 					inputWidget.getItem(setItemCode).addClass(setWidget.ITEM_PARTIAL_CSS_CLASS);
 				}
@@ -273,6 +276,10 @@ $.widget('itop.set_widget',
 			this.setItemsCodesStatus[setItemCode] = this.STATUS_ADDED;
 
 			$item.addClass(this.ITEM_CSS_CLASS);
+
+			// Set text as tooltip in case it would be truncated
+			$item.attr('data-tooltip-content', $item[0].childNodes[0].nodeValue.trim());
+			CombodoTooltip.InitTooltipFromMarkup($item);
 
 			if (this._isCodeInPartialValues(setItemCode)) {
 				this._partialCodeRemove(setItemCode);
