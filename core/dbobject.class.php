@@ -4062,6 +4062,58 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Helper to set a date computed from another date with extra logic
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode attribute code of a date or date-time which will be set
+	 * @param string $sModifier string specifying how to modify the date time
+	 * @param string $sAttCodeSource attribute code of a date or date-time used as source
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @since 3.0.0
+	 */
+	public function SetComputedDate($sAttCode, $sModifier = '', $sAttCodeSource = '')
+	{
+		$oDate = new DateTime(); // Use now if no Source provided
+		if ($sAttCodeSource != "") {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCodeSource);
+			$oSourceValue = $this->Get($sAttCodeSource);
+			if (!$oAttDef->IsNull($oSourceValue)) {
+				// Use the existing value as the Source date
+				$oDate = new DateTime($oSourceValue);
+			}
+		}
+		$oDate->modify($sModifier);
+		$this->Set($sAttCode, $oDate->format('Y-m-d H:i:s'));
+	}
+
+	/**
+	 * Helper to set a date computed from another date with extra logic
+	 * Call SetComputedDate() only of the internal representation of the attribute is null.
+	 *
+	 * @api
+	 * @see SetComputedDate()
+	 *
+	 * @param string $sAttCode attribute code which will be set
+	 * @param string $sModifier string specifying how to modify the date time
+	 * @param string $sAttCodeSource attribute code used as source
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @since 3.0.0
+	 */
+	public function SetComputedDateIfNull($sAttCode, $sModifier = '', $sAttCodeSource = '')
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$oCurrentValue = $this->Get($sAttCode);
+		if ($oAttDef->IsNull($oCurrentValue)) {
+			$this->SetComputedDate($sAttCode, $sModifier, $sAttCodeSource);
+		}
+	}
+
+	/**
 	 * Helper to set a value only if it is currently undefined
 	 *
 	 * Call SetCurrentDate() only of the internal representation of the attribute is null.
@@ -4079,40 +4131,35 @@ abstract class DBObject implements iDisplay
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		$oCurrentValue = $this->Get($sAttCode);
-		if ($oAttDef->IsNull($oCurrentValue))
-		{
+		if ($oAttDef->IsNull($oCurrentValue)) {
 			$this->SetCurrentDate($sAttCode);
 		}
 	}
 
-    /**
-     * Helper to set the current logged in user for the given attribute
-     * Suitable for use as a lifecycle action
-     *
-     * @api
-     *
-     * @param string $sAttCode
-     *
-     * @return bool
-     *
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     */
+
+	/**
+	 * Helper to set the current logged in user for the given attribute
+	 * Suitable for use as a lifecycle action
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @return bool
+	 *
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 */
 	public function SetCurrentUser($sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		if ($oAttDef instanceof AttributeString)
-		{
+		if ($oAttDef instanceof AttributeString) {
 			// Note: the user friendly name is the contact friendly name if a contact is attached to the logged in user
 			$this->Set($sAttCode, UserRights::GetUserFriendlyName());
-		}
-		else
-		{
-			if ($oAttDef->IsExternalKey())
-			{
+		} else {
+			if ($oAttDef->IsExternalKey()) {
 				/** @var \AttributeExternalKey $oAttDef */
-				if ($oAttDef->GetTargetClass() != 'User')
-				{
+				if ($oAttDef->GetTargetClass() != 'User') {
 					throw new Exception("SetCurrentUser: the attribute $sAttCode must be an external key to 'User', found '".$oAttDef->GetTargetClass()."'");
 				}
 			}
