@@ -588,6 +588,8 @@ HTML
 						true,
 						'Class:'.$sClass.'/Attribute:'.$sAttCode,
 						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
+					// Add graphs dependencies
+					WebResourcesHelper::EnableC3JSToWebPage($oPage);
 				}
 				continue;
 			}
