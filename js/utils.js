@@ -740,8 +740,7 @@ else {
 Dict.S = function (sEntry) {
 	if (sEntry in Dict._entries) {
 		return Dict._entries[sEntry];
-	}
-	else {
+	} else {
 		return sEntry;
 	}
 };
@@ -749,7 +748,7 @@ Dict.Format = function () {
 	var args = Array.from(arguments);
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
-}
+};
 
 
 
@@ -761,7 +760,7 @@ Dict.Format = function () {
  * @api
  * @since 2.6.5 2.7.6 3.0.0 N°4367
  */
-const CombodoSanitizer = {
+var CombodoSanitizer = {
 	ENUM_SANITIZATION_FILTER_INTEGER: 'integer',
 	ENUM_SANITIZATION_FILTER_STRING: 'string',
 	ENUM_SANITIZATION_FILTER_CONTEXT_PARAM: 'context_param',
@@ -815,4 +814,4 @@ const CombodoSanitizer = {
 			return sDefaultValue;
 		}
 	}
-}
+};
