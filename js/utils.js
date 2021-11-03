@@ -666,7 +666,7 @@ Dict.Format = function () {
 	var args = Array.from(arguments);
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
-}
+};
 
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
 /**
@@ -1073,4 +1073,4 @@ const CombodoSanitizer = {
 
 		return sEncodedValue;
 	}
-}
+};
