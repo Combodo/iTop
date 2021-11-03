@@ -613,7 +613,9 @@ class TriggerOnObjectMention extends TriggerOnObject
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
 			$oSearch->AddCondition('id', $oObject->GetKey(), '=');
 			$oSearch->AddCondition('finalclass', get_class($oObject), '=');
-			$oSet = new DBObjectSet($oSearch);
+
+			$aParams = $oObject->ToArgs('this');
+			$oSet = new DBObjectSet($oSearch, [], $aParams);
 			$bRet = $oSet->CountExceeds(0);
 		}
 		else
