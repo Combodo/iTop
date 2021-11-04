@@ -14,6 +14,7 @@ use AttributeOneWayPassword;
 use BinaryExpression;
 use BulkExport;
 use BulkExportException;
+use cmdbAbstractObject;
 use CMDBObjectSet;
 use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
@@ -77,8 +78,20 @@ class AjaxRenderController
 					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
 					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
 						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
-						$oRawValue = $aObject[$sAlias]->Get($sAttCode);
-						if (is_scalar($oRawValue)) {
+						$bExcludeRawValue = false;
+						// Only retrieve raw (stored) value for simple fields
+						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+						{
+							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+							if (is_a($oAttDef, $sAttDefClassToExclude, true))
+							{
+								$bExcludeRawValue = true;
+								break;
+							}
+						}
+
+						if (!$bExcludeRawValue) {
+							$oRawValue = $aObject[$sAlias]->Get($sAttCode);
 							$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
 						}
 					}

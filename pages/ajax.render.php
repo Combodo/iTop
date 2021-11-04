@@ -77,9 +77,11 @@ try
 
 	switch ($operation) {
 		case 'search_and_refresh':
-			$oPage->SetContentType('application/json');
+			$oPage = new JsonPage();
+			// Feeds dataTables directly
+			$oPage->SetOutputDataOnly(true);
 			$aResult = AjaxRenderController::SearchAndRefresh($sFilter);
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'search':
