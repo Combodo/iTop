@@ -148,10 +148,14 @@ class privUITransactionFileTest extends ItopDataTestCase
 	 */
 	public function testIsTransactionValid()
 	{
-		$this->markTestSkipped('on Jenkins, develop branch we have "Login with user2 throw an error"');
-
 		$this->CreateUser(static::USER1_TEST_LOGIN, self::SAMPLE_DATA_SUPPORT_PROFILE_ID);
 		$this->CreateUser(static::USER2_TEST_LOGIN, self::SAMPLE_DATA_SUPPORT_PROFILE_ID);
+
+		// created users aren't admin, so each one can't see the other (\UserRights::GetSelectFilter)
+		// If calling \UserRights::Login(user1) then \UserRights::Login(user2) we won't be able to load user2 !
+		// As now we are in the admin context, we are calling FindUser() directly so that user objects will be saved in the UserRights cache !
+		// user1 can be omitted as the first \UserRights::Login cache will initialize the UserRights cache
+		$this->InvokeNonPublicStaticMethod(UserRights::class, 'FindUser', [self::USER2_TEST_LOGIN]);
 
 		// create token in the user1 context
 		$bUser1Login1 = UserRights::Login(self::USER1_TEST_LOGIN);
