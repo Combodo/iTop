@@ -123,6 +123,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
+							$oText->AddCSSClass('ibo-input-select-placeholder');
 							$aConfig = utils::GetCkeditorPref();
 							$aConfig['extraPlugins'] = 'codesnippet';
 							$sJsConfig = json_encode($aConfig);

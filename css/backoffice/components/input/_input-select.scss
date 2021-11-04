@@ -218,3 +218,9 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 .ibo-input-select--autocomplete-item-txt {
   @extend %ibo-text-truncated-with-ellipsis;
 }
+
+/* Use "select" in order to avoid stylizing selectize wrapper that copy select classes*/
+select.ibo-input-select-placeholder{
+  @extend .ibo-input;
+  @extend .ibo-input-select;
+}

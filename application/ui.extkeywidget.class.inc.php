@@ -260,7 +260,7 @@ class UIExtKeyWidget
 				array_push($aOptions, $aOption);
 			}
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
-			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
+			$sHTMLValue .= "<select class=\"ibo-input-select-placeholder\" title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
 			$sJsonOptions = str_replace("'", "\'", str_replace('\\', '\\\\', json_encode($aOptions)));
 			$oPage->add_ready_script(
 				<<<EOF
@@ -538,7 +538,7 @@ JS
 							$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
 						}
 					} else {
-						$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+						$sHTMLValue .= "<select class=\"ibo-input-select-placeholder\" title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 					}
 
