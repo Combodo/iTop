@@ -195,7 +195,7 @@
       <banner>/images/icons/icons8-important-book.svg</banner>
 			<options type="array">
 				<choice>
-					<extension_code>itop-kown-error-mgmt</extension_code>
+					<extension_code>itop-known-error-mgmt</extension_code>
 					<title>Known Errors Management and FAQ</title>
 					<description>Select this option to track "Known Errors" and FAQs in iTop.</description>
 					<modules type="array">

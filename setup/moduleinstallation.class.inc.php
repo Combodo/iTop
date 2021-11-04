@@ -25,17 +25,17 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class ModuleInstallation extends cmdbAbstractObject
+class ModuleInstallation extends DBObject
 {
 	public static function Init()
 	{
 		$aParams = array
 		(
-			"category" => "core,view_in_gui",
-			"key_type" => "autoincrement",
-			'name_attcode' => array('name', 'version'),
-			"state_attcode" => "",
-			"reconc_keys" => array(),
+			"category"            => "core,view_in_gui",
+			"key_type"            => "autoincrement",
+			'name_attcode'        => array('name', 'version'),
+			"state_attcode"       => "",
+			"reconc_keys"         => array(),
 			"db_table" => "priv_module_install",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
@@ -66,18 +66,17 @@ class ModuleInstallation extends cmdbAbstractObject
  * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-class ExtensionInstallation extends cmdbAbstractObject
+class ExtensionInstallation extends DBObject
 {
 	public static function Init()
 	{
 		$aParams = array
 		(
-				"category" => "core,view_in_gui",
-				"key_type" => "autoincrement",
-				"name_attcode" => "",
-				"state_attcode" => "",
-				"reconc_keys" => array(),
+			"category"                => "core,view_in_gui",
+			"key_type"                => "autoincrement",
+			"name_attcode"            => "",
+			"state_attcode"           => "",
+			"reconc_keys"             => array(),
 				"db_table" => "priv_extension_install",
 				"db_key_field" => "id",
 				"db_finalclass_field" => "",
