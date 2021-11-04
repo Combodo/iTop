@@ -1859,8 +1859,8 @@ class UserRights
 			{
 				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
 			}
-			
-			if (!isset($sLogin, self::$m_aCacheUsers[$sAuthentication]))
+
+			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
 			{
 				switch($sAuthentication)
 				{
