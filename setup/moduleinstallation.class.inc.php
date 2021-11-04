@@ -25,7 +25,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class ModuleInstallation extends DBObject
+class ModuleInstallation extends cmdbAbstractObject
 {
 	public static function Init()
 	{
@@ -66,7 +66,7 @@ class ModuleInstallation extends DBObject
  * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-class ExtensionInstallation extends DBObject
+class ExtensionInstallation extends cmdbAbstractObject
 {
 	public static function Init()
 	{
