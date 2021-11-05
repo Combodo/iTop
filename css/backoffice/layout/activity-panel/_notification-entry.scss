@@ -24,7 +24,7 @@ a.ibo-notification-entry--short-description {
 }
 /* - Long desc. opened */
 .ibo-notification-entry{
-  &.ibo-is-opened{
+  &:not(.ibo-is-closed){
     .ibo-notification-entry--long-description-toggler-icon{
       transform: rotateX(180deg);
     }
