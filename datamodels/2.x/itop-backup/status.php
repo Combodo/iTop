@@ -258,7 +258,7 @@ try {
 		} else {
 			$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton));
 		}
-		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
+		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").off("click").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
 	}
 	$aConfig = array(
 		'file' => array('label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')),
@@ -309,7 +309,7 @@ JS
 		$oButton = ButtonUIBlockFactory::MakeNeutral("$sRestore");
 		$oButton->SetIsDisabled($oRestoreMutex->IsLocked());
 		$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton));
-		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
+		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").off("click").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
 	}
 	$aConfig = array(
 		'file' => array('label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')),
