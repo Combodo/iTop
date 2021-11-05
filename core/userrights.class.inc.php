@@ -1507,7 +1507,7 @@ class UserRights
 		try
 		{
 			// Check Bug 1436 for details
-			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo'))
+			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'filter'))
 			{
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 			}

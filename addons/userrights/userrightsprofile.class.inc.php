@@ -34,7 +34,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,silo",
+			"category" => "addon/userrights,grant_by_profile,filter",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -219,7 +219,7 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile,silo",
+			"category" => "addon/userrights,grant_by_profile,filter",
 			"key_type" => "autoincrement",
 			"name_attcode" => array("userlogin", "profile"),
 			"state_attcode" => "",
@@ -610,8 +610,11 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		$this->LoadCache();
 
-		if (!static::IsAdministrator($oUser)) // Let us pass an administrator for testing without the need of setting up complex profile
+		// Let us pass an administrator for bypassing the grant matrix check in order to test this method without the need to set up a complex profile
+		// In the nominal case Administrators never end up here (since they completely bypass GetSelectFilter)
+		if (!static::IsAdministrator($oUser) && (MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'bizmodel')))
 		{
+			// N°4354 - Categories 'silo' and 'bizmodel' do check the grant matrix. Whereas 'filter' always allows to read (but the result can be filtered)
 			$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, UR_ACTION_READ);
 			if ($aObjectPermissions['permission'] == UR_ALLOWED_NO)
 			{
