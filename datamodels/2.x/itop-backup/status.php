@@ -255,10 +255,10 @@ try {
 				'size' => $sSize,
 				'actions' => BlockRenderer::RenderBlockTemplates($oButton),
 			);
-			$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
 		} else {
 			$aDetails[] = array('file' => $sName, 'size' => $sSize, 'actions' => BlockRenderer::RenderBlockTemplates($oButton));
 		}
+		$sButtonOnClickJS .= '$("#'.$oButton->GetId().'").on("click", function () {LaunchRestoreNow("'.$sFileEscaped.'", "'.$sConfirmRestore.'");});';
 	}
 	$aConfig = array(
 		'file' => array('label' => Dict::S('bkp-table-file'), 'description' => Dict::S('bkp-table-file+')),
