@@ -44,11 +44,9 @@ register_shutdown_function(function()
 			}
 		}
 		// Log additional info but message from $err (since 2.7.6 N°4174)
-		IssueLog::error($sMessage, null, [
-			'type' => $err['type'],
-			'file' => $err['file'],
-			'line' => $err['line'],
-		]);
+		$aErrToLog = $err;
+		unset($aErrToLog['message']);
+		IssueLog::error($sMessage, null, $aErrToLog);
 		if (strpos($err['message'], 'Allowed memory size of') !== false) {
 			$sLimit = ini_get('memory_limit');
 			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase 'memory_limit' in php.ini</p>\n";
