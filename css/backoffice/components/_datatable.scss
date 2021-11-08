@@ -91,13 +91,34 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   &.ibo-is-ascending::after{
     content: '\f0de';
   }
-  &.ibo-is-none::after{
+
+  &.ibo-is-none::after {
     content: '\f0dc';
   }
 }
 
-.itop-fieldsorter{
-  >.selected{
+.itop-fieldsorter {
+  > .selected {
     background-color: $ibo-fieldsorter--selected--background-color;
+  }
+}
+
+
+.ibo-datatable {
+  tbody > tr.selected > * {
+    background-color: $ibo-color-orange-600;
+  }
+
+  tbody > tr > * {
+    transition: background-color 400ms linear;
+  }
+
+  tbody > tr:hover > * {
+    cursor: pointer;
+  }
+
+  tbody > tr.selected:hover > * {
+    /* hover on lines is currently done toggling td.hover, and having a rule for links */
+    background-color: lighten($ibo-color-orange-600, 20%);
   }
 }
