@@ -19,11 +19,14 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 class FormTable extends StaticTable
 {
 	// Overloaded constants
-	public const BLOCK_CODE = 'ibo-formtable';
-	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
-	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES = true;
-	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtable/layout';
+	public const BLOCK_CODE                            = 'ibo-formtable';
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES   = true;
+	public const REQUIRES_ANCESTORS_DEFAULT_CSS_FILES  = true;
+	public const DEFAULT_HTML_TEMPLATE_REL_PATH        = 'base/components/datatable/static/formtable/layout';
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = 'base/components/datatable/static/formtable/layout';
+	public const DEFAULT_JS_FILES_REL_PATH             = [
+		'js/table-selectable-lines.js',
+	];
 
 	/** @var string */
 	private $sRef;
