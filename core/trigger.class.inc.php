@@ -611,8 +611,17 @@ class TriggerOnObjectMention extends TriggerOnObject
 		if (strlen($sFilter) > 0)
 		{
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
+			$sSearchClass = $oSearch->GetClass();
+
+			// If filter not on current object class (or descendants), consider it as not in scope
+			if (is_a($oObject, $sSearchClass, true) === false) {
+				return false;
+			}
+
 			$oSearch->AddCondition('id', $oObject->GetKey(), '=');
-			$oSearch->AddCondition('finalclass', get_class($oObject), '=');
+			if (MetaModel::IsAbstract($oSearch->GetClass())) {
+				$oSearch->AddCondition('finalclass', get_class($oObject), '=');
+			}
 
 			$aParams = $oObject->ToArgs('this');
 			$oSet = new DBObjectSet($oSearch, [], $aParams);
