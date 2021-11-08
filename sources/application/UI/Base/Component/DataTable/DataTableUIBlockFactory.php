@@ -764,19 +764,27 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$aColumnDefinition["type"] = "html";
 
 					if ($sAttCode == '_key_') {
+						$sAttrLabel = $aData['alias'];
 						$aColumnDefinition["title"] = $aData['alias'];
 						$aColumnDefinition['metadata'] = [
-							'object_class' => $sClassName,
-							'class_alias' => $sClassAlias,
-							'attribute_code' => $sAttCode,
-							'attribute_type' => '_key_',
-							'attribute_label' => $aData['alias'],
+							'object_class'    => $sClassName,
+							'class_alias'     => $sClassAlias,
+							'attribute_code'  => $sAttCode,
+							'attribute_type'  => '_key_',
+							'attribute_label' => $sAttrLabel,
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
 						$aColumnDefinition["render"] = [
-							"display" =>  "return row['".$sClassAlias."/hyperlink'];",
-							"_" => $sClassAlias."/".$sAttCode,
+							"display" => "return row['".$sClassAlias."/hyperlink'];",
+							"_"       => $sClassAlias."/".$sAttCode,
 						];
+						$aColumnDefinition["createdCell"] = <<<JS
+						$(td).attr('data-object-class', '$sClassName');
+						$(td).attr('data-attribute-label', '$sAttrLabel');
+						if (rowData["$sClassAlias/$sAttCode/raw"]) {
+							$(td).attr('data-value-raw', rowData["$sClassAlias/$sAttCode/raw"]);
+		                }
+JS;
 					} else {
 						$oAttDef = MetaModel::GetAttributeDef($sClassName, $sAttCode);
 						if ($oAttDef instanceof \AttributeCaseLog) {
@@ -789,17 +797,26 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 						$sAttLabel = MetaModel::GetLabel($sClassName, $sAttCode);
 						$aColumnDefinition["title"] = $sAttLabel;
 						$aColumnDefinition['metadata'] = [
-							'object_class' => $sClassName,
-							'class_alias' => $sClassAlias,
-							'attribute_code' => $sAttCode,
-							'attribute_type' => $sAttDefClass,
+							'object_class'    => $sClassName,
+							'class_alias'     => $sClassAlias,
+							'attribute_code'  => $sAttCode,
+							'attribute_type'  => $sAttDefClass,
 							'attribute_label' => $sAttLabel,
 						];
 						$aColumnDefinition["data"] = $sClassAlias."/".$sAttCode;
 						$aColumnDefinition["render"] = [
 							"display" => $oAttDef->GetRenderForDataTable($sClassAlias),
-							"_" => $sClassAlias."/".$sAttCode,
+							"_"       => $sClassAlias."/".$sAttCode,
 						];
+						$aColumnDefinition["createdCell"] = <<<JS
+						$(td).attr('data-object-class', '$sClassName');
+						$(td).attr('data-attribute-label', '$sAttrLabel');
+						$(td).attr('data-attribute-code', '$sAttCode');
+						$(td).attr('data-attribute-type', '$sAttDefClass');
+						if (rowData["$sClassAlias/$sAttCode/raw"]) {
+							$(td).attr('data-value-raw', rowData["$sClassAlias/$sAttCode/raw"]);
+		                }
+JS;
 					}
 					array_push($aColumnsDefinitions, $aColumnDefinition);
 				}

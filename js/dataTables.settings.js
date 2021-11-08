@@ -107,6 +107,9 @@ $(function () {
 					$.each(aOptions['columns'], function (i, item) {
 						aOptions["columns"][i]["render"]["display"] = new Function("data, type, row", aOptions["columns"][i]["render"]["display"]);
 					});
+					$.each(aOptions['columns'], function (i, item) {
+						aOptions["columns"][i]["createdCell"] = new Function("td, cellData, rowData, row, col", aOptions["columns"][i]["createdCell"]);
+					});
 
 					parentElt.append("<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">"+
 						"<thead><tr>"+sThead+"</tr></thead></table>");
