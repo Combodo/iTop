@@ -793,9 +793,8 @@ class DisplayableGroupNode extends DisplayableNode
 	
 	public function GetTooltip($aContextDefs)
 	{
-		$sHtml = '';
 		$iGroupIdx = $this->GetProperty('group_index');
-		$sHtml .= '<a href="#" onclick="$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
+		$sHtml = '<a href="#" id="a_'.$iGroupIdx.'" onclick="$(this).closest(\'.tippy-box\').parent().hide();$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');return false;">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
 		$sHtml .= '<hr/>';
 		$sHtml .= '<table><tbody><tr>';
 		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img class="ibo-class-icon ibo-is-small" src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';

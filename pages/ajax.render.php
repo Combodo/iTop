@@ -1971,7 +1971,7 @@ EOF
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))));
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx)),1,"relation_group_$idx"));
 				$oBlock = new DisplayBlock($oSearch, 'list');
 				$oBlock->Display($oPage, 'group_'.$iBlock++, array('surround_with_panel' => true,
 				                                                    'panel_class' => $sListClass,
