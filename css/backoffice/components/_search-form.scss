@@ -23,6 +23,7 @@ $ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--m
 $ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
 
 $ibo-search-results-area--z-index: $ibo-search-form-panel--z-index - 2 !default; /* Minus 2 because the criteria expands between the search form panel and the results area */
+$ibo-search-results-area--margin-bottom: 300px !default; /* Arbitrary value, must be greater than the position (y) of the first result line in non sticking state, should be discussed to find a clever way to adjust it in both search page and search modals (linkedsets) */
 
 $ibo-search-results-area--datatable-toolbar--background-color--is-sticking: $ibo-panel--body--background-color !default;
 $ibo-search-results-area--datatable-toolbar--border--is-sticking: $ibo-panel--body--border !default;
@@ -881,6 +882,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 }
 .sf_results_area {
   z-index: $ibo-search-results-area--z-index;
+  margin-bottom: $ibo-search-results-area--margin-bottom; /* This is mostly to avoid glitches when the result list's bottom limit is just around the window bottom limit and the user scrolls down (boucing effect, see N°4427) */
 }
 
 /***********************/
