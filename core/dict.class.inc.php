@@ -238,6 +238,7 @@ class Dict
 	}
 
 	/**
+	 * @since 2.7.6 N°4125
 	 * @return \ApcService
 	 */
 	public static function GetApcService() {
@@ -248,6 +249,7 @@ class Dict
 	}
 
 	/**
+	 * @since 2.7.6 N°4125
 	 * @param \ApcService $m_oApcService
 	 */
 	public static function SetApcService($oApcService) {

@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Class ApcService
+ * @since 2.7.6 N°4125
+ */
 class ApcService {
 	public function __construct() {
 	}
@@ -11,6 +15,7 @@ class ApcService {
 	/**
 	 * @param $key string|array
 	 * @return mixed
+	 * @see apc_fetch
 	 */
 	function apc_fetch($key)
 	{
@@ -22,6 +27,7 @@ class ApcService {
 	 * @param $var
 	 * @param int $ttl
 	 * @return array|bool
+	 * @see apc_store
 	 */
 	function apc_store($key, $var = NULL, $ttl = 0)
 	{
