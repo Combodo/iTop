@@ -2569,6 +2569,7 @@ EOF
 			$oPage->add(json_encode($aResult));
 			break;
 
+		/** @noinspection PhpMissingBreakStatementInspection cke_upload_and_browse and cke_browse are chained */
 		case 'cke_upload_and_browse':
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
@@ -2614,10 +2615,31 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
+			/** @noinspection SuspiciousAssignmentsInspection cke_upload_and_browse and cke_browse are chained */
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
 			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');
+
+			if (empty($sTempId)) {
+				throw new SecurityException('Cannot access endpoint with empty temp_id parameter');
+			}
+			if (false === privUITransaction::IsTransactionValid($sTempId, false)) {
+				throw new SecurityException('Access rejected');
+			}
+			if (false === MetaModel::IsValidClass($sClass)) {
+				throw new CoreUnexpectedValue('Invalid object');
+			}
+			if ($iObjectId > 0) {
+				// searching for object in the DB with a count query
+				// using DBSearch so that user rights are applied !
+				$oSearch = new DBObjectSearch($sClass);
+				$oSearch->AddCondition(MetaModel::DBGetKey($sClass), $iObjectId, '=');
+				$oSet = new CMDBObjectSet($oSearch);
+				if (false === $oSet->CountExceeds(0)) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+			}
 
 			$sPostUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
 
