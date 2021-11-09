@@ -5,7 +5,7 @@ class ApcService {
 	}
 
 	public function function_exists($function_name) {
-		return $this->function_exists($function_name);
+		return function_exists($function_name);
 	}
 
 	/**
