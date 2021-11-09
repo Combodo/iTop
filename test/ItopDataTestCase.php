@@ -79,11 +79,6 @@ class ItopDataTestCase extends ItopTestCase
 
 		$sEnv = 'production';
 		$sConfigFile = APPCONF.$sEnv.'/'.ITOP_CONFIG_FILE;
-
-		if (! defined('ITOP_DESIGN_LATEST_VERSION')){
-			define('ITOP_DESIGN_LATEST_VERSION', '3.0');
-		}
-		
 		MetaModel::Startup($sConfigFile, false /* $bModelOnly */, true /* $bAllowCache */, false /* $bTraceSourceFiles */, $sEnv);
 
 		if (static::USE_TRANSACTION)
