@@ -2331,7 +2331,7 @@ class MenuBlock extends DisplayBlock
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, utils::Sanitize($sActionId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
 					if (empty($aAction['tooltip'])) {

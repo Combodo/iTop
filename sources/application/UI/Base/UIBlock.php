@@ -347,7 +347,7 @@ abstract class UIBlock implements iUIBlock
 	protected function GenerateId()
 	{
 		$sUniqId = uniqid(static::BLOCK_CODE.'-', true);
-		$sUniqId = str_replace('.', '-', $sUniqId);
+		$sUniqId = utils::Sanitize($sUniqId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
 
 		return $sUniqId;
 	}

@@ -13,15 +13,42 @@
 
     {% block iboKeyboardShortcutsHandlers %}
         $('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
-            $(this).find('button[name="UI:Menu:Modify"]').click();
+            let oFavoriteButton = $(this).find('#UIMenuModify');
+            if(oFavoriteButton[0]){
+                oFavoriteButton[0].click();
+            }
+            else{
+                let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-uid="UI:Menu:Modify"]');
+                if(oPopupItemButton[0]){
+                    oPopupItemButton[0].click();
+                }
+            }
         });
 
         $('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
-            $(this).find('button[name="UI:Menu:Delete"]').click();
+            let oFavoriteButton = $(this).find('#UIMenuDelete');
+            if(oFavoriteButton[0]){
+                oFavoriteButton[0].click();
+            }
+            else{
+                let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-uid="UI:Menu:Delete"]');
+                if(oPopupItemButton[0]){
+                    oPopupItemButton[0].click();
+                }
+            }
         });
 
         $('#{{ oUIBlock.GetId() }}').on('new_object', function(){
-            $(this).find('button[name="UI:Menu:New"]').click();
+            let oFavoriteButton = $(this).find('#UIMenuNew');
+            if(oFavoriteButton[0]){
+                oFavoriteButton[0].click();
+            }
+            else{
+                let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-uid="UI:Menu:New"]');
+                if(oPopupItemButton[0]){
+                    oPopupItemButton[0].click();
+                }
+            }
         });
         {% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE') %}
             $('#{{ oUIBlock.GetId() }}').on('save_object', function(){

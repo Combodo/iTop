@@ -22,6 +22,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem
 
 use ApplicationPopupMenuItem;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class PopoverMenuItem
@@ -56,7 +57,7 @@ class PopoverMenuItem extends UIBlock
 	 */
 	protected function GenerateId()
 	{
-		return static::BLOCK_CODE.'-'.$this->oPopupMenuItem->GetUID();
+		return parent::GenerateId().'--'.utils::GetSafeId($this->oPopupMenuItem->GetUID());
 	}
 
 	/**
@@ -147,5 +148,17 @@ class PopoverMenuItem extends UIBlock
 		$this->oPopupMenuItem->SetTooltip($sTooltip);
 		return $this;
 	}
+
+
+	/**
+	 * @return string
+	 * @uses oPopupMenuItem
+	 * @uses \ApplicationPopupMenuItem::GetUID()
+	 */
+	public function GetUID()
+	{
+		return $this->oPopupMenuItem->GetUID();
+	}
+
 
 }
