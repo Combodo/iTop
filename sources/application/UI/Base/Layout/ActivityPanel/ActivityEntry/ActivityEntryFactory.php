@@ -83,11 +83,12 @@ class ActivityEntryFactory
 		$oUser = MetaModel::GetObject('User', $aOrmEntry['user_id'], false, true);
 		$sUserLogin = ($oUser === null) ? '' : $oUser->Get('login');
 
+		// We sanitize OrmEntry even if it's already sanitized: if the entry is somehow truncated or metadata are wrong we may break whole page DOM 
 		$oEntry = new CaseLogEntry(
 			DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $aOrmEntry['date']),
 			$sUserLogin,
 			$sAttCode,
-			$aOrmEntry['message_html'],
+			\HTMLSanitizer::Sanitize($aOrmEntry['message_html']),
 			$aOrmEntry['user_login']
 		);
 
