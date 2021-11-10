@@ -11,6 +11,14 @@ namespace Combodo\iTop\Application\UI\Base\Component\FieldBadge;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use ormStyle;
 
+/**
+ * Class FieldBadgeUIBlockFactory
+ *
+ * @author Eric espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\FieldBadge
+ * @since 3.0.0
+ * @internal
+ */
 class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIFieldBadge';

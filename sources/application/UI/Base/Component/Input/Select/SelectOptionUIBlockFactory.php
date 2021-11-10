@@ -10,6 +10,13 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input\Select;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
+/**
+ * Class SelectOptionUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Input\Select
+ * @since 3.0.0
+ */
 class SelectOptionUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UISelectOption';

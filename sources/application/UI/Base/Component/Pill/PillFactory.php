@@ -42,5 +42,4 @@ class PillFactory
 
 		return $oPill;
 	}
-
 }

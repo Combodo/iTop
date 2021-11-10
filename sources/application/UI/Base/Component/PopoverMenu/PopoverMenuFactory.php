@@ -273,5 +273,4 @@ class PopoverMenuFactory
 
 		return $oMenu;
 	}
-
 }

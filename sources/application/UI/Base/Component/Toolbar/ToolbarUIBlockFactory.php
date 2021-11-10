@@ -10,6 +10,14 @@ namespace Combodo\iTop\Application\UI\Base\Component\Toolbar;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
+/**
+ * Class ToolbarUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Toolbar
+ * @since 3.0.0
+ * @internal
+ */
 class ToolbarUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIToolbar';

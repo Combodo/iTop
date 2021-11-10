@@ -11,6 +11,13 @@ namespace Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
+/**
+ * Class ColumnUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column
+ * @since 3.0.0
+ */
 class ColumnUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIColumn';

@@ -10,11 +10,24 @@ namespace Combodo\iTop\Application\UI\Base\Component\Form;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
+/**
+ * Class FormUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Form
+ * @since 3.0.0
+ * @internal
+ */
 class FormUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIForm';
 	public const UI_BLOCK_CLASS_NAME = Form::class;
 
+	/**
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Component\Form\Form An HTML form in which you can add UIBlocks
+	 */
 	public static function MakeStandard(string $sId = null)
 	{
 		return new Form($sId);

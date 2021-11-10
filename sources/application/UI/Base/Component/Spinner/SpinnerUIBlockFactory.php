@@ -10,6 +10,13 @@ namespace Combodo\iTop\Application\UI\Base\Component\Spinner;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 
+/**
+ * Class SpinnerUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Spinner
+ * @since 3.0.0
+ */
 class SpinnerUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UISpinner';

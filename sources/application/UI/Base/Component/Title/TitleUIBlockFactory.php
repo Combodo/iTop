@@ -12,6 +12,14 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Text\Text;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
+/**
+ * Class TitleUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Title
+ * @since 3.0.0
+ * @internal
+ */
 class TitleUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UITitle';

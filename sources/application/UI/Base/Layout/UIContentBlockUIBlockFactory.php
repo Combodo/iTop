@@ -11,6 +11,13 @@ namespace Combodo\iTop\Application\UI\Base\Layout;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
+/**
+ * Class UIContentBlockUIBlockFactory
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Layout
+ * @since 3.0.0
+ */
 class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIContentBlock';
@@ -20,7 +27,6 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	{
 		return new UIContentBlock($sId, $aContainerClasses);
 	}
-
 
 	/**
 	 * Used to display a block of code like <pre> but allows line break.

@@ -11,6 +11,14 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input;
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
 
+/**
+ * Class InputUIBlockFactory
+ *
+ * @author Eric Espie <eric.espie@combodo.com>
+ * @package Combodo\iTop\Application\UI\Base\Component\Input
+ * @since 3.0.0
+ * @internal
+ */
 class InputUIBlockFactory extends AbstractUIBlockFactory
 {
 	public const TWIG_TAG_NAME = 'UIInput';

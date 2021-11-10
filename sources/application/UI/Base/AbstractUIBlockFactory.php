@@ -14,6 +14,7 @@ namespace Combodo\iTop\Application\UI\Base;
  * @package Combodo\iTop\Application\UI\Base
  * @author  Eric Espie <eric.espie@combodo.com>
  * @since 3.0.0
+ * @internal
  */
 abstract class AbstractUIBlockFactory implements iUIBlockFactory
 {

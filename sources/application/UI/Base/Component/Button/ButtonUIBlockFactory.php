@@ -314,6 +314,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 
 		return $oButton;
 	}
+
 	//----------------------------------------------------------------------------------------------
 	// Link buttons, mostly used outside forms, to redirect somewhere whilst keeping a button aspect
 	//----------------------------------------------------------------------------------------------

@@ -12,7 +12,13 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
+ * Class FieldUIBlockFactory
+ *
+ * Use it to make a "field" which is composed of a label and a value (which can be read-only or editable)
+ *
+ * @author Pierre Goiffon <pierre.goiffon@combodo.com>
  * @since 3.0.0
+ * @internal
  */
 class FieldUIBlockFactory extends AbstractUIBlockFactory
 {

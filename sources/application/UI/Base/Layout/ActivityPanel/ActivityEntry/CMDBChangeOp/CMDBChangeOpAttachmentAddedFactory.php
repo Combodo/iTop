@@ -25,6 +25,8 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CM
  *
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\CMDBChangeOp
+ * @since 3.0.0
+ * @internal
  */
 class CMDBChangeOpAttachmentAddedFactory extends CMDBChangeOpFactory
 {

@@ -28,6 +28,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\Ev
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityEntry\EventNotification
  * @since 3.0.0
+ * @internal
  */
 class EventNotificationEmailFactory extends EventNotificationFactory
 {
