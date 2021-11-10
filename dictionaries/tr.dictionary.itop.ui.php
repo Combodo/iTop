@@ -378,7 +378,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:GlobalSearch' => 'Arama',
 	'UI:Button:Search' => ' Arama ',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Sorgu ',
 	'UI:Button:Ok' => 'Tamam',
 	'UI:Button:Save' => 'Save~~',

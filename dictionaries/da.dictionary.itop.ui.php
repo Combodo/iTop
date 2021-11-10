@@ -367,7 +367,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'UI:Button:GlobalSearch' => 'Søg',
 	'UI:Button:Search' => ' Søg ',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Forespørgsel ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Gem',

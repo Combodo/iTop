@@ -367,7 +367,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:GlobalSearch' => 'Keresés',
 	'UI:Button:Search' => ' Keresés',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Lekérdezés',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => 'Save~~',

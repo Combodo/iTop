@@ -368,7 +368,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Button:GlobalSearch' => 'Globálne Vyhľadávanie',
 	'UI:Button:Search' => ' Vyhľadávanie',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Dopyt ',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => 'Uložiť',

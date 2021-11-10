@@ -367,7 +367,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Button:GlobalSearch' => '検索',
 	'UI:Button:Search' => '　検索　',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' クエリ',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => '　保存　',

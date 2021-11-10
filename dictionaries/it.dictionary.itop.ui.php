@@ -378,7 +378,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'UI:Button:GlobalSearch' => 'Cerca',
 	'UI:Button:Search' => ' Cerca',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Domanda',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Save~~',

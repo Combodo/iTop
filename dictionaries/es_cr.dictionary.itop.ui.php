@@ -378,7 +378,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Button:GlobalSearch' => 'Buscar',
 	'UI:Button:Search' => 'Buscar',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => 'Consultar',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Guardar',

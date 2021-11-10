@@ -394,7 +394,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:GlobalSearch' => 'Search',
 	'UI:Button:Search' => ' Search ',
 	'UI:Button:Clear' => ' Clear ',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy',
 	'UI:Button:Query' => ' Query ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Save',
