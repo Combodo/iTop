@@ -51,6 +51,13 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
       }
     }
   }
+
+  // Note: Direct child selector is mandatory, otherwise a panel within a panel will have be impacted (eg. n:n relations tabs)
+  > .ibo-panel--header {
+    .ibo-panel--subtitle {
+      @extend %ibo-text-truncated-with-ellipsis;
+    }
+  }
 }
 
 .ibo-object-details--status {

@@ -25,6 +25,8 @@ $(function()
 		_create: function()
 		{
 			this._super();
+
+			this._initializeSubmittingButtonsObserver();
 		},
 		// events bound via _bind are removed automatically
 		// revert other modifications here
@@ -38,7 +40,8 @@ $(function()
 			this._super();
 
 			// Keep URL's hash parameters when clicking on a link of the header
-			this.element.on('click', '[data-role="ibo-panel--header-right"] a', function() {
+			// Note: ":first" used to only target the header of the object, not what could be in the content of its body
+			this.element.on('click', '[data-role="ibo-panel--header-right"]:first a', function() {
 				aMatches = /#(.*)$/.exec(window.location.href);
 				if (aMatches != null) {
 					currentHash = aMatches[1];
@@ -48,5 +51,73 @@ $(function()
 				}
 			});
 		},
+		/**
+		 * Initialize the observer on the submitting buttons (cancel, apply, transitions, ...) to display only the grouped button depending on the available space
+		 * @private
+		 */
+		_initializeSubmittingButtonsObserver: function()
+		{
+			// This only applies in edit mode
+			if (this._getObjectMode() !== 'edit') {
+				return false;
+			}
+
+			// If no ResizeObserver, fallback is that transition buttons will overflow on smaller screen
+			if (window.ResizeObserver === undefined) {
+				return false;
+			}
+
+			// Check if transition available
+			const oHeaderElem = this.element.find('[data-role="ibo-panel--header"]:first');
+			const oButtonsToolbarElem = oHeaderElem.find('[data-role="ibo-panel--header-right"] [data-role="ibo-toolbar"]');
+			const oTransitionButtonsElems = oButtonsToolbarElem.find('[name="next_action"][data-role="ibo-button"]');
+			if (oHeaderElem.find('[name="next_action"][data-role="ibo-button"]').length === 0) {
+				return false;
+			}
+
+			let iCurrentHeaderWidth = 0;
+			let hTimeout = null;
+			const oObserver = new ResizeObserver(function(aEntries) {
+				// We hide the transition buttons during the resize to minimize visual glitches
+				oTransitionButtonsElems.addClass('ibo-is-hidden');
+				// Throttle the processing in order to limit CPU usage
+				clearTimeout(hTimeout);
+				hTimeout = setTimeout(() => {
+					let iNewHeaderWidth = parseInt(oHeaderElem.outerWidth());
+					if (Math.abs(iNewHeaderWidth - iCurrentHeaderWidth) < 5) {
+						return;
+					}
+					oTransitionButtonsElems.removeClass('ibo-is-hidden');
+
+					let oLastTransitionButton = oButtonsToolbarElem.find('[name="next_action"][data-role="ibo-button"]:last');
+					let iLastTransitionButtonBorderY = oLastTransitionButton.offset().left + oLastTransitionButton.outerWidth();
+					let iPanelRightBorderY = oHeaderElem.offset().left + oHeaderElem.outerWidth();
+
+					if (iLastTransitionButtonBorderY > iPanelRightBorderY) {
+						oButtonsToolbarElem.find('.action[data-role="ibo-button"]:not([name="cancel"])').addClass('ibo-is-hidden');
+						oButtonsToolbarElem.find('[data-role="ibo-button-group"]:last').removeClass('ibo-is-hidden');
+					}
+					else {
+						oButtonsToolbarElem.find('.action[data-role="ibo-button"]:not([name="cancel"])').removeClass('ibo-is-hidden');
+						oButtonsToolbarElem.find('[data-role="ibo-button-group"]:last').addClass('ibo-is-hidden');
+					}
+
+					iCurrentHeaderWidth = parseInt(oHeaderElem.outerWidth());
+
+				}, 100);
+			});
+			// Note: ":first" used to only target the header of the object, not what could be in the content of its body
+			oObserver.observe(oHeaderElem[0]);
+		},
+
+		// Helpers
+		/**
+		 * @return {String} The current object display mode ({@see PHP \cmdbAbstractObject for possible values})
+		 * @private
+		 */
+		_getObjectMode: function()
+		{
+			return this.element.attr('data-object-mode');
+		}
 	});
 });

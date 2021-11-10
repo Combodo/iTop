@@ -10,6 +10,7 @@ use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -27,6 +28,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\JsPopoverMenuItem;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
@@ -2805,23 +2808,40 @@ JS
 
 		$aTransitions = $this->EnumTransitions();
 		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
-			// transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
+			// Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
 			$oSetToCheckRights = DBObjectSet::FromObject($this);
+
+			$oTransitionPopoverMenu = new PopoverMenu();
+			$sTPMSectionId = 'transitions';
+			$oTransitionPopoverMenu->AddSection($sTPMSectionId);
 			$aStimuli = Metamodel::EnumStimuli($sClass);
 			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
 				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
 					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
+						// Button to be displayed on its own on large screens
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClass('action');
 						$oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
 						$oToolbarButtons->AddSubBlock($oButton);
+
+						// Button to be displayed in a grouped button on smaller screens
+						$oTPMPopupMenuItem = new JSPopupMenuItem('next_action--'.$oButton->GetId(), $oButton->GetLabel(), "$(`#{$oButton->GetId()}`).trigger(`click`);");
+						$oTransitionPopoverMenu->AddItem($sTPMSectionId, new JsPopoverMenuItem($oTPMPopupMenuItem));
 						break;
 
 					default:
 						// Do nothing
 				}
+			}
+
+			// If there are some allowed transitions, build the grouped button
+			if ($oTransitionPopoverMenu->HasItems()) {
+				$oApplyForButtonGroup = ButtonUIBlockFactory::MakeForPrimaryAction($oApplyButton->GetLabel(), null, null, true);
+				$oApplyAndTransitionsButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oApplyForButtonGroup, $oTransitionPopoverMenu)
+					->SetIsHidden(true);
+				$oToolbarButtons->AddSubBlock($oApplyAndTransitionsButtonGroup);
 			}
 		}
 
