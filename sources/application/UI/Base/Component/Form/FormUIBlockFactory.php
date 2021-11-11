@@ -16,11 +16,13 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @author Eric Espie <eric.espie@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Form
  * @since 3.0.0
- * @internal
+ * @api
  */
 class FormUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIForm';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Form::class;
 
 	/**

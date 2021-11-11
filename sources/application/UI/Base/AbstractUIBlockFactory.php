@@ -14,18 +14,18 @@ namespace Combodo\iTop\Application\UI\Base;
  * @package Combodo\iTop\Application\UI\Base
  * @author  Eric Espie <eric.espie@combodo.com>
  * @since 3.0.0
- * @internal
+ * @api
  */
 abstract class AbstractUIBlockFactory implements iUIBlockFactory
 {
 	/**
 	 * @var string
-	 * @used-by static::GetTwigTagName()
+	 * @see static::GetTwigTagName()
 	 */
 	public const TWIG_TAG_NAME = 'UIBlock';
 	/**
 	 * @var string
-	 * @useb-by static::GetUIBlockClassName()
+	 * @see static::GetUIBlockClassName()
 	 */
 	public const UI_BLOCK_CLASS_NAME = UIBlock::class;
 

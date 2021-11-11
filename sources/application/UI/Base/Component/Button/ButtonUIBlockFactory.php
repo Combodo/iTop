@@ -25,16 +25,18 @@ use Dict;
 /**
  * Class ButtonUIBlockFactory
  *
- * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Button
  * @since 3.0.0
+ * @api
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-buttons to see live examples
  */
 class ButtonUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIButton';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Button::class;
 
 	//---------------------------------------------
@@ -50,7 +52,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
-	public static function MakeNeutral(string $sLabel, string $sName = null, ?string $sId = null): Button
+	public static function MakeNeutral(string $sLabel, string $sName = null, ?string $sId = null)
 	{
 		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
@@ -80,7 +82,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_PRIMARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
@@ -101,7 +103,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_SECONDARY, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
@@ -122,7 +124,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_VALIDATION, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName, $bIsSubmit, $sId);
 	}
 
@@ -144,7 +146,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_REGULAR, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -170,7 +172,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_NEUTRAL, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -193,7 +195,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_PRIMARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -215,7 +217,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_SECONDARY, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -237,7 +239,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_VALIDATION, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -259,7 +261,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		return static::MakeForAction($sLabel, Button::ENUM_COLOR_SCHEME_DESTRUCTIVE, Button::ENUM_ACTION_TYPE_ALTERNATIVE, $sValue, $sName,
 			$bIsSubmit, $sId);
 	}
@@ -281,7 +283,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sValue = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		$sLabel = $sLabel ?? Dict::S('UI:Button:Cancel');
 		$sName = $sName ?? 'cancel';
 
@@ -333,7 +335,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeLinkNeutral(
 		string $sURL, ?string $sLabel = '', ?string $sIconClasses = null, ?string $sTarget = null,
 		?string $sId = null
-	): Button {
+	) {
 		if (empty($sTarget)) {
 			$sTarget = ButtonURL::DEFAULT_TARGET;
 		}
@@ -416,7 +418,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sName = null,
 		bool $bIsSubmit = false,
 		?string $sId = null
-	): Button {
+	) {
 		$oButton = new ButtonJS($sLabel, $sId);
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);
@@ -459,7 +461,7 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		string $sActionType,
 		string $sTarget = null,
 		?string $sId = null
-	): Button {
+	) {
 		$oButton = new ButtonURL($sLabel, $sURL, $sId, $sTarget);
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);

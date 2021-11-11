@@ -22,7 +22,9 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  */
 class TitleUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UITitle';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Title::class;
 
 	public static function MakeForPage(string $sTitle, ?string $sId = null)

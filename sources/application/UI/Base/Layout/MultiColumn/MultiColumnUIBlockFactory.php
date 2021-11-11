@@ -15,13 +15,16 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @author Eric Espie <eric.espie@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Layout\MultiColumn
  * @since 3.0.0
+ * @api
  */
 class MultiColumnUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIMultiColumn';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = MultiColumn::class;
 
-	public static function MakeStandard(?string $sId = null): MultiColumn
+	public static function MakeStandard(?string $sId = null)
 	{
 		$oInput = new MultiColumn($sId);
 

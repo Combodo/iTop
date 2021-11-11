@@ -24,10 +24,10 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 /**
  * Class PanelUIBlockFactory
  *
- * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Panel
  * @since 3.0.0
+ * @api
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-panels to see live examples
  */

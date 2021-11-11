@@ -21,7 +21,9 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\Select;
  */
 class SelectUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UISelect';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Select::class;
 
 	/**
@@ -32,7 +34,7 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\Select
 	 */
-	public static function MakeForSelect(string $sName, ?string $sId = null): Select
+	public static function MakeForSelect(string $sName, ?string $sId = null)
 	{
 		$oInput = new Select($sId);
 		$oInput->SetName($sName);
@@ -51,7 +53,7 @@ class SelectUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\Select\Select
 	 */
-	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null): Select
+	public static function MakeForSelectWithLabel(string $sName, string $sLabel, ?string $sId = null)
 	{
 		$oInput = new Select($sId);
 		$oInput->SetName($sName);

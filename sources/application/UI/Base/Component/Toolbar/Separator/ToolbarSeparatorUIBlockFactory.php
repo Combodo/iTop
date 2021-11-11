@@ -13,10 +13,10 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 /**
  * Class ToolbarSeparatorUIBlockFactory
  *
- * @api
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
- * @since 3.0.0
  * @package Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator
+ * @since 3.0.0
+ * @api
  */
 class ToolbarSeparatorUIBlockFactory extends AbstractUIBlockFactory
 {

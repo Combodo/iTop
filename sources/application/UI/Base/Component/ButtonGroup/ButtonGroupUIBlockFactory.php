@@ -14,14 +14,16 @@ use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 /**
  * Class ButtonGroupUIBlockFactory
  *
- * @internal
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Button
  * @since 3.0.0
+ * @api
  */
 class ButtonGroupUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIButtonGroup';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = ButtonGroup::class;
 
 	/**

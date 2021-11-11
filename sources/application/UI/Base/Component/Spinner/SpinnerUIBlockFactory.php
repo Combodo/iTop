@@ -16,10 +16,13 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @author Eric Espie <eric.espie@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Spinner
  * @since 3.0.0
+ * @internal
  */
 class SpinnerUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UISpinner';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Spinner::class;
 
 	public static function MakeStandard(?string $sId = null)

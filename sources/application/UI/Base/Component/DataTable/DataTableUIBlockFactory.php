@@ -33,13 +33,16 @@ use WebPage;
 /**
  * Class DataTableUIBlockFactory
  *
- * @internal
+ * @author Anne-Catherine Cognet <anne-catherine.cognet@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\DataTable
  * @since 3.0.0
+ * @api
  */
 class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIDataTable';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = DataTable::class;
 
 	/**
@@ -937,7 +940,7 @@ JS;
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable
 	 */
-	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = ''): FormTable
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = [], string $sFilter = '')
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);

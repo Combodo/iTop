@@ -20,9 +20,19 @@ use Combodo\iTop\Application\UI\Base\Component\Html\Html;
  */
 class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIContentBlock';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = UIContentBlock::class;
 
+	/**
+	 * Make an empty UIContentBlock which can be used to embed anything or to surround another block with specific CSS classes.
+	 *
+	 * @param string|null $sId
+	 * @param array $aContainerClasses
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 */
 	public static function MakeStandard(string $sId = null, array $aContainerClasses = [])
 	{
 		return new UIContentBlock($sId, $aContainerClasses);
@@ -34,6 +44,8 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @param string $sCode
 	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
 	 */
 	public static function MakeForCode(string $sCode, string $sId = null)
 	{
@@ -44,6 +56,14 @@ class UIContentBlockUIBlockFactory extends AbstractUIBlockFactory
 		return $oCode;
 	}
 
+	/**
+	 * Used to display a block of preformatted text in a <pre> tag.
+	 *
+	 * @param string $sCode
+	 * @param string|null $sId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 */
 	public static function MakeForPreformatted(string $sCode, string $sId = null)
 	{
 		$sCode = '<pre>'.$sCode.'</pre>';

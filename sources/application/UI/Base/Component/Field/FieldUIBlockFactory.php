@@ -22,7 +22,9 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  */
 class FieldUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIField';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Field::class;
 
 	public static function MakeFromParams($aParams)

@@ -16,13 +16,16 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @author Eric Espie <eric.espie@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Input\Select
  * @since 3.0.0
+ * @internal
  */
 class SelectOptionUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UISelectOption';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = SelectOption::class;
 
-	public static function MakeForSelectOption(string $sValue, string $sLabel, bool $bSelected, ?string $sId = null): SelectOption
+	public static function MakeForSelectOption(string $sValue, string $sLabel, bool $bSelected, ?string $sId = null)
 	{
 		$oInput = new SelectOption($sId);
 

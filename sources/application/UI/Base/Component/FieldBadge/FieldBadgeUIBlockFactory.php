@@ -21,7 +21,9 @@ use ormStyle;
  */
 class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIFieldBadge';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = FieldBadge::class;
 
 	/**

@@ -21,10 +21,12 @@ use Combodo\iTop\Application\UI\Base\Component\Field\Field;
  */
 class InputUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIInput';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Input::class;
 
-	public static function MakeForHidden(string $sName, string $sValue, ?string $sId = null): Input
+	public static function MakeForHidden(string $sName, string $sValue, ?string $sId = null)
 	{
 		$oInput = new Input($sId);
 
@@ -35,7 +37,7 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 		return $oInput;
 	}
 
-	public static function MakeStandard(string $sType, string $sName, string $sValue, ?string $sId = null): Input
+	public static function MakeStandard(string $sType, string $sName, string $sValue, ?string $sId = null)
 	{
 		$oInput = new Input($sId);
 
@@ -60,7 +62,7 @@ class InputUIBlockFactory extends AbstractUIBlockFactory
 	public static function MakeForInputWithLabel(
 		string $sLabel, string $sInputName, ?string $sInputValue = null,
 		?string $sInputId = null, string $sInputType = 'type'
-	): InputWithLabel
+	)
 	{
 		$oInput = new Input($sInputId);
 		$oInput->SetType($sInputType);

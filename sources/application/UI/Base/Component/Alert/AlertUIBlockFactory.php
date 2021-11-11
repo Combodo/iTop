@@ -27,12 +27,15 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Alert
  * @since 3.0.0
+ * @api
  *
  * @link <itop_url>/test/VisualTest/Backoffice/RenderAllUiBlocks.php#title-alerts to see live examples
  */
 class AlertUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIAlert';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Alert::class;
 
 	/**

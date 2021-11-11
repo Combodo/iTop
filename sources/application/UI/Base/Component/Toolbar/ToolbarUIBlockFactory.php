@@ -20,20 +20,22 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  */
 class ToolbarUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIToolbar';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = Toolbar::class;
 
-	public static function MakeForAction(string $sId = null): Toolbar
+	public static function MakeForAction(string $sId = null)
 	{
 		return new Toolbar($sId, ['ibo-toolbar--action']);
 	}
 
-	public static function MakeStandard(string $sId = null, array $aContainerClasses = []): Toolbar
+	public static function MakeStandard(string $sId = null, array $aContainerClasses = [])
 	{
 		return new Toolbar($sId, $aContainerClasses);
 	}
 
-	public static function MakeForButton(string $sId = null, array $aContainerClasses = []): Toolbar
+	public static function MakeForButton(string $sId = null, array $aContainerClasses = [])
 	{
 		return new Toolbar($sId, array_merge($aContainerClasses, ['ibo-toolbar--button']));
 	}

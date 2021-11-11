@@ -16,10 +16,13 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  * @author Eric Espie <eric.espie@combodo.com>
  * @package Combodo\iTop\Application\UI\Base\Component\Input\FileSelect
  * @since 3.0.0
+ * @api
  */
 class FileSelectUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIFileSelect';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = FileSelect::class;
 
 	/**
@@ -28,7 +31,7 @@ class FileSelectUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelect A styled file input selector
 	 */
-	public static function MakeStandard(string $sName, string $sId = null): FileSelect
+	public static function MakeStandard(string $sName, string $sId = null)
 	{
 		return new FileSelect($sName, $sId);
 	}

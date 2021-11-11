@@ -20,7 +20,9 @@ use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
  */
 class ToolbarSpacerUIBlockFactory extends AbstractUIBlockFactory
 {
+	/** @inheritDoc */
 	public const TWIG_TAG_NAME = 'UIToolbarSpacer';
+	/** @inheritDoc */
 	public const UI_BLOCK_CLASS_NAME = ToolbarSpacer::class;
 
 	/**
@@ -28,7 +30,7 @@ class ToolbarSpacerUIBlockFactory extends AbstractUIBlockFactory
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarSpacer\ToolbarSpacer
 	 */
-	public static function MakeStandard(string $sId = null): ToolbarSpacer
+	public static function MakeStandard(string $sId = null)
 	{
 		return new ToolbarSpacer($sId);
 	}
