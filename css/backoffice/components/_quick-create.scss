@@ -24,7 +24,7 @@ $ibo-quick-create--input-options--border-radius: 0 !default;
 $ibo-quick-create--drawer--max-height: 300px !default;
 $ibo-quick-create--drawer--padding-x: $ibo-quick-create--icon-padding-x !default;
 $ibo-quick-create--drawer--padding-y: 16px !default;
-$ibo-quick-create--drawer--top: -1 * ($ibo-quick-create--drawer--max-height) !default;
+$ibo-quick-create--drawer--top: -1 * ($ibo-quick-create--drawer--max-height) - 10 !default; /* 10px of margin to avoid to be slightly visible when closed and has a lot of history */
 $ibo-quick-create--drawer--top--is-opened: 100% !default;
 $ibo-quick-create--drawer--background-color: $ibo-color-white-100 !default;
 

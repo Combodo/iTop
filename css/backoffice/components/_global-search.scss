@@ -20,7 +20,7 @@ $ibo-global-search--input--placeholder-color: $ibo-color-grey-600 !default;
 $ibo-global-search--drawer--max-height: 300px !default;
 $ibo-global-search--drawer--padding-x: $ibo-global-search--icon-padding-x !default;
 $ibo-global-search--drawer--padding-y: 16px !default;
-$ibo-global-search--drawer--top: -1 * ($ibo-global-search--drawer--max-height) !default;
+$ibo-global-search--drawer--top: -1 * ($ibo-global-search--drawer--max-height) - 10 !default; /* 10px of margin to avoid to be slightly visible when closed and has a lot of history */
 $ibo-global-search--drawer--top--is-opened: 100% !default;
 $ibo-global-search--drawer--background-color: $ibo-color-white-100 !default;
 
