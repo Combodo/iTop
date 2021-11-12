@@ -11,6 +11,7 @@ use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
 use AttributeOneWayPassword;
+use AttributeTagSet;
 use BinaryExpression;
 use BulkExport;
 use BulkExportException;
@@ -32,6 +33,7 @@ use iTopExtension;
 use iTopExtensionsMap;
 use JsonPage;
 use MetaModel;
+use ormSet;
 use RunTimeEnvironment;
 use ScalarExpression;
 use SetupUtils;
@@ -92,7 +94,11 @@ class AjaxRenderController
 
 						if (!$bExcludeRawValue) {
 							$oRawValue = $aObject[$sAlias]->Get($sAttCode);
-							$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
+							if($oRawValue instanceof  AttributeTagSet or $oRawValue instanceof ormSet  ){
+								$aObj[$sAlias."/".$sAttCode."/raw"] = implode(", ", $oRawValue->GetValues());
+							} else {
+								$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
+							}
 						}
 					}
 					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
