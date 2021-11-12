@@ -27,7 +27,7 @@ if (file_exists(dirname(__FILE__).'/'.$sConfigFile))
 		{
 			echo "<p><b>Security Warning</b>: the configuration file '$sConfigFile' should be read-only.</p>";
 			echo "<p>Please modify the access rights to this file.</p>";
-			echo "<p>Click <a href=\"$sStartPage\">here</a> to ignore this warning and continue to run iTop.</p>";
+			echo "<p>Click <a href=\"$sStartPage\">here</a> to ignore this warning and continue to run iTop.</p>"; //FIXME should also allow to : chg permissions, or goto setup !
 		}
 	}
 	else
