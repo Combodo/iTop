@@ -19,7 +19,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/known-error.png</icon>
+          <icon>../../images/icons/icons8-book-error.svg</icon>
         </style>
         <reconciliation>
           <attributes>

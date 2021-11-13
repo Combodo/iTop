@@ -200,7 +200,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/enclosure.png</icon>
+          <icon>../../images/icons/icons8-stack.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -559,7 +559,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>../../images/icons/icons8-power-plant.svg</icon>
+          <icon>../../images/icons/icons8-electricity.svg</icon>
         </style>
         <reconciliation>
           <attributes>

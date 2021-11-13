@@ -25,7 +25,7 @@
                     <state_attribute>status</state_attribute>
                 </fields_semantic>
                 <style>
-                    <icon>images/problem.png</icon>
+                    <icon>../../images/icons/icons8-solve.svg</icon>
                 </style>
                 <reconciliation>
                     <attributes>

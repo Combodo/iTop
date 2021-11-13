@@ -1291,7 +1291,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/change.png</icon>
+          <icon>../../images/icons/icons8-change-routine.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -2089,7 +2089,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/change.png</icon>
+          <icon>../../images/icons/icons8-change-approved.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -3092,7 +3092,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/change.png</icon>
+          <icon>../../images/icons/icons8-change-normal.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -3787,7 +3787,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/change.png</icon>
+          <icon>../../images/icons/icons8-change-emergency.svg</icon>
         </style>
         <reconciliation>
           <attributes>

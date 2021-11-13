@@ -16,7 +16,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/storageArea.png</icon>
+          <icon>../../images/icons/icons8-server-storage.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -267,7 +267,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/switch-san.png</icon>
+          <icon>../../images/icons/icons8-switch-san.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -515,7 +515,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/tapelibrary.png</icon>
+          <icon>../../images/icons/icons8-tape-library.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -1105,7 +1105,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/filesystem.png</icon>
+          <icon>../../images/icons/icons8-map-as-drive.svg</icon>
         </style>
         <reconciliation>
           <attributes>

@@ -1839,7 +1839,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>../../images/icons/icons8-software.svg</icon>
+					<icon>../../images/icons/icons8-software-instance.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2530,7 +2530,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/application.png</icon>
+					<icon>../../images/icons/icons8-software-other.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -2637,7 +2637,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/middleware.png</icon>
+					<icon>../../images/icons/icons8-automatic.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
@@ -3000,7 +3000,7 @@
 					</attributes>
 				</naming>
 				<style>
-					<icon>images/software.png</icon>
+					<icon>../../images/icons/icons8-software.svg</icon>
 				</style>
 				<reconciliation>
 					<attributes>
