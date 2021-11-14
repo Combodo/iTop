@@ -145,7 +145,7 @@ class TabContainer extends UIContentBlock
 		return $oTab;
 	}
 
-	public function RemoveTab(string $sTabCode): self
+	public function RemoveTab(string $sTabCode)
 	{
 		$this->RemoveSubBlock($sTabCode);
 		return $this;

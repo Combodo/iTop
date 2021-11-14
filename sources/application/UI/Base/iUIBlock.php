@@ -23,102 +23,93 @@ namespace Combodo\iTop\Application\UI\Base;
 /**
  * Interface iUIBlock
  *
+ * UIBlocks are the foundation of the new UI system. They aim at providing reusable components with better maintenability and segreagtion.
+ * Used only in the backoffice for now.
+ *
  * @package Combodo\iTop\Application\UI
  * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
  * @internal
  * @since   3.0.0
  */
 interface iUIBlock {
-	public const ENUM_JS_TYPE_ON_INIT = "js";
+	/** @var string "Live" or "inline" JS is to be executed immediately when the code is parsed */
 	public const ENUM_JS_TYPE_LIVE = "live.js";
+	/** @var string "On init" JS is to be executed immediately when the DOM is ready */
+	public const ENUM_JS_TYPE_ON_INIT = "js";
+	/** @var string "On ready" JS is to be executed slightly after the "on init" JSs when the DOM is ready */
 	public const ENUM_JS_TYPE_ON_READY = "ready.js";
-	/**
-	 * Return the relative path (from <ITOP>/templates/) of the global template (HTML, JS, CSS) to use or null if it's not provided. Should not be used to often as JS/CSS files would be duplicated making the browser parsing time way longer.
-	 *
-	 * @return string|null
-	 */
-	public function GetGlobalTemplateRelPath();
+
+	/** @var string */
+	public const ENUM_BLOCK_FILES_TYPE_JS = 'js';
+	/** @var string */
+	public const ENUM_BLOCK_FILES_TYPE_CSS = 'css';
+	/** @var string */
+	public const ENUM_BLOCK_FILES_TYPE_FILES = 'files';
+	/** @var string */
+	public const ENUM_BLOCK_FILES_TYPE_TEMPLATE = 'template';
 
 	/**
-	 * Return the relative path (from <ITOP>/templates/) of the HTML template to use or null if no HTML to render
+	 * Should not be used too often as JS/CSS files would be duplicated making the browser parsing time way longer.
 	 *
-	 * @return string|null
+	 * @return string|null The relative path (from <ITOP>/templates/) of the "global" template (which contains HTML, JS inline, JS files, CSS inline, CSS files) to use or null if it's not provided.
 	 */
-	public function GetHtmlTemplateRelPath();
+	public function GetGlobalTemplateRelPath(): ?string;
 
 	/**
-	 * Return the relative path (from <ITOP>/templates/) of the JS template to use or null if there is no inline JS to render
-	 *
-	 * @param string $sType javascript type only ENUM_JS_TYPE_ON_INIT / ENUM_JS_TYPE_ON_READY / ENUM_JS_TYPE_LIVE
-	 *
-	 * @return string|null
+	 * @return string|null The relative path (from <ITOP>/templates/) of the HTML template to use or null if no HTML to render
 	 */
-	public function GetJsTemplatesRelPath(string $sType) ;
+	public function GetHtmlTemplateRelPath(): ?string;
 
 	/**
-	 * Return an array of the relative paths (from <ITOP>/) of the JS files to use for the block itself
+	 * @param string $sType Javascript type {@see static::ENUM_JS_TYPE_LIVE and others}
 	 *
-	 * @return array
+	 * @return string|null The relative path (from <ITOP>/templates/) of the JS template (for $sType) to use or null if there is no inline JS (for $sType) to render
 	 */
-	public function GetJsFilesRelPaths();
+	public function GetJsTemplatesRelPath(string $sType): ?string;
 
 	/**
-	 * Return the relative path (from <ITOP>/templates/) of the CSS template to use or null if there is no inline CSS to render
-	 *
-	 * @return string|null
+	 * @return array Array of the relative paths (from <ITOP>/) of the JS files to use for the block itself
 	 */
-	public function GetCssTemplateRelPath();
+	public function GetJsFilesRelPaths(): array;
 
 	/**
-	 * Return an array of the relative paths (from <ITOP>/) of the CSS files to use for the block itself
-	 *
-	 * @return array
+	 * @return string|null The relative path (from <ITOP>/templates/) of the CSS template to use or null if there is no inline CSS to render
 	 */
-	public function GetCssFilesRelPaths();
+	public function GetCssTemplateRelPath(): ?string;
 
 	/**
-	 * Return the ID of the block
-	 *
-	 * @return string
+	 * @return array Array of the relative paths (from <ITOP>/) of the CSS files to use for the block itself
 	 */
-	public function GetId();
+	public function GetCssFilesRelPaths(): array;
 
 	/**
-	 * Return an array iUIBlock embedded in this iUIBlock
-	 * Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
+	 * @return string ID of the block
 	 */
-	public function GetSubBlocks();
+	public function GetId(): string;
 
 	/**
-	 * Return an array of iUIBlock to add at the end of the page
-	 * Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[] Array iUIBlock embedded in this iUIBlock. Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
+	 */
+	public function GetSubBlocks(): array;
+
+	/**
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[] Array of iUIBlock to add at the end of the page. Must be an associative array (<BLOCK_ID> => <BLOCK_INSTANCE>)
 	 */
 	public function GetDeferredBlocks(): array;
 
 	/**
-	 * Return an array of the JS files URL necessary for the block and all its sub blocks.
-	 * URLs are relative unless the $bAbsolutePath is set to true.
+	 * @param bool $bAbsoluteUrl If set to true, URLs will be absolute, otherwise they will be relative to the app. root
 	 *
-	 * @param bool $bAbsoluteUrl
-	 *
-	 * @return string[]
+	 * @return string[] Array of the JS files URL necessary for the block and all its sub blocks.
 	 */
-	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false);
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false): array;
 
 	/**
-	 * Return an array of the CSS files URL necessary for the block and all its sub blocks.
-	 * URLs are relative unless the $bAbsolutePath is set to true.
+	 * @param bool $bAbsoluteUrl If set to true, URLs will be absolute, otherwise they will be relative to the app. root
 	 *
-	 * @param bool $bAbsoluteUrl
-	 *
-	 * @return string[]
-	 * @throws \Exception
+	 * @return string[] Array of the CSS files URL necessary for the block and all its sub blocks.
 	 */
-	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false);
+	public function GetCssFilesUrlRecursively(bool $bAbsoluteUrl = false): array;
 
 	/**
 	 * Add HTML code to the current block
@@ -130,9 +121,7 @@ interface iUIBlock {
 	public function AddHtml(string $sHTML);
 
 	/**
-	 * Return block specific parameters
-	 *
-	 * @return array
+	 * @return array Block's specific parameters
 	 */
 	public function GetParameters(): array;
 

@@ -372,7 +372,7 @@ class PopoverMenu extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasSection(string $sId)
+	public function HasSection(string $sId): bool
 	{
 		return array_key_exists($sId, $this->aSections);
 	}
@@ -402,7 +402,7 @@ class PopoverMenu extends UIBlock
 	 *
 	 * @return array
 	 */
-	public function GetSections()
+	public function GetSections(): array
 	{
 		return $this->aSections;
 	}
@@ -520,7 +520,7 @@ class PopoverMenu extends UIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		$aSubBlocks = [];
 

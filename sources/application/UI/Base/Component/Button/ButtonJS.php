@@ -42,11 +42,11 @@ class ButtonJS extends Button
 	/** @var string DEFAULT_TYPE */
 	public const DEFAULT_TYPE = self::ENUM_TYPE_BUTTON;
 
-	/** @var string $sType The HTML type of the button (eg. 'submit', 'button', ...) */
+	/** @var string The HTML type of the button (eg. 'submit', 'button', ...) */
 	protected $sType;
-	/** @var string $sName The HTML name of the button, used by forms */
+	/** @var string The HTML name of the button, used by forms */
 	protected $sName;
-	/** @var string $sValue The HTML value of the button, used by forms */
+	/** @var string The HTML value of the button, used by forms */
 	protected $sValue;
 
 	/**
@@ -81,7 +81,7 @@ class ButtonJS extends Button
 	/**
 	 * @return string
 	 */
-	public function GetType()
+	public function GetType(): string
 	{
 		return $this->sType;
 	}
@@ -100,7 +100,7 @@ class ButtonJS extends Button
 	/**
 	 * @return string
 	 */
-	public function GetName()
+	public function GetName(): string
 	{
 		return $this->sName;
 	}
@@ -119,7 +119,7 @@ class ButtonJS extends Button
 	/**
 	 * @return string
 	 */
-	public function GetValue()
+	public function GetValue(): string
 	{
 		return $this->sValue;
 	}

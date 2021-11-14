@@ -45,9 +45,9 @@ class ButtonURL extends Button
 	public const DEFAULT_TARGET = self::ENUM_TARGET_SELF;
 
 
-	/** @var string $sURL */
+	/** @var string */
 	protected $sURL;
-	/** @var string $sTarget */
+	/** @var string */
 	protected $sTarget;
 
 	/**

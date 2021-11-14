@@ -46,7 +46,7 @@ class CaseLogEntry extends ActivityEntry
 	/** @var string $sAttCode Code of the corresponding case log attribute */
 	protected $sAttCode;
 	/** @var int $iCaseLogRank Rank of its case log in the host panel, can be used for highlight purposes for example */
-	protected $iCaseLogRank;	
+	protected $iCaseLogRank;
 	/** @var string $sAuthorName Fallback name used if $sAuthorLogin is empty */
 	protected $sAuthorName;
 
@@ -104,7 +104,7 @@ class CaseLogEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetAttCode()
+	public function GetAttCode(): string
 	{
 		return $this->sAttCode;
 	}
@@ -128,7 +128,7 @@ class CaseLogEntry extends ActivityEntry
 	 *
 	 * @return int
 	 */
-	public function GetCaseLogRank()
+	public function GetCaseLogRank(): int
 	{
 		return $this->iCaseLogRank;
 	}

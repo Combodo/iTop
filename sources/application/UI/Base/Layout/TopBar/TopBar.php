@@ -95,7 +95,7 @@ class TopBar extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasQuickCreate()
+	public function HasQuickCreate(): bool
 	{
 		return ($this->oQuickCreate !== null);
 	}
@@ -128,7 +128,7 @@ class TopBar extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasGlobalSearch()
+	public function HasGlobalSearch(): bool
 	{
 		return ($this->oGlobalSearch !== null);
 	}
@@ -161,7 +161,7 @@ class TopBar extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasBreadcrumbs()
+	public function HasBreadcrumbs(): bool
 	{
 		return ($this->oBreadcrumbs !== null);
 	}
@@ -179,7 +179,7 @@ class TopBar extends UIBlock
 	 *
 	 * @return TopBar
 	 */
-	public function SetToolbar(?Toolbar $oToolbar): TopBar
+	public function SetToolbar(?Toolbar $oToolbar)
 	{
 		$this->oToolbar = $oToolbar;
 		return $this;
@@ -190,7 +190,7 @@ class TopBar extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasToolbar()
+	public function HasToolbar(): bool
 	{
 		return ($this->oToolbar !== null);
 	}
@@ -198,7 +198,7 @@ class TopBar extends UIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		$aSubBlocks = [];
 

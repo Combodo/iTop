@@ -125,7 +125,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	/**
 	 * @return string
 	 */
-	public function GetAppRevisionNumber()
+	public function GetAppRevisionNumber(): string
 	{
 		return $this->sAppRevisionNumber;
 	}
@@ -134,7 +134,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 * @uses $sAppSquareIconUrl
 	 * @return string
 	 */
-	public function GetAppSquareIconUrl()
+	public function GetAppSquareIconUrl(): string
 	{
 		return $this->sAppSquareIconUrl;
 	}
@@ -143,7 +143,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 * @uses $sAppFullIconUrl
 	 * @return string
 	 */
-	public function GetAppFullIconUrl()
+	public function GetAppFullIconUrl(): string
 	{
 		return $this->sAppFullIconUrl;
 	}
@@ -152,7 +152,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 * @uses $sAppIconLink
 	 * @return string
 	 */
-	public function GetAppIconLink()
+	public function GetAppIconLink(): string
 	{
 		return $this->sAppIconLink;
 	}
@@ -200,7 +200,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	/**
 	 * @return array
 	 */
-	public function GetMenuGroups()
+	public function GetMenuGroups(): array
 	{
 		return $this->aMenuGroups;
 	}
@@ -208,7 +208,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	/**
 	 * @return array
 	 */
-	public function GetUserData()
+	public function GetUserData(): array
 	{
 		return $this->aUserData;
 	}
@@ -234,7 +234,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 *
 	 * @return bool
 	 */
-	public function IsExpanded()
+	public function IsExpanded(): bool
 	{
 		return $this->bIsExpanded;
 	}
@@ -251,7 +251,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	/**
 	 * @inheritDoc
 	 */
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		return [$this->oUserMenu->GetId() => $this->oUserMenu, $this->GetNewsroomMenu()->GetId() => $this->GetNewsroomMenu()];
 	}
@@ -259,7 +259,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	/**
 	 * @return boolean
 	 */
-	public function IsNewsroomEnabled()
+	public function IsNewsroomEnabled(): bool
 	{
 		return MetaModel::GetConfig()->Get('newsroom_enabled');
 	}

@@ -74,7 +74,7 @@ class Breadcrumbs extends UIBlock
 	/**
 	 * @return array|null
 	 */
-	public function GetNewEntry()
+	public function GetNewEntry(): ?array
 	{
 		return $this->aNewEntry;
 	}
@@ -85,7 +85,7 @@ class Breadcrumbs extends UIBlock
 	 * @throws \CoreException
 	 * @throws \Exception
 	 */
-	public function GetJsWidgetOptions()
+	public function GetJsWidgetOptions(): array
 	{
 		$aJsWidgetOptions = [];
 

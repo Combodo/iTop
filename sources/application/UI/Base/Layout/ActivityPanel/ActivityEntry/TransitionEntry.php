@@ -94,7 +94,7 @@ class TransitionEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetOriginalStateCode()
+	public function GetOriginalStateCode(): string
 	{
 		return $this->sOriginStateCode;
 	}
@@ -104,7 +104,7 @@ class TransitionEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetOriginalStateLabel()
+	public function GetOriginalStateLabel(): string
 	{
 		return $this->sOriginStateLabel;
 	}
@@ -131,7 +131,7 @@ class TransitionEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetTargetStateCode()
+	public function GetTargetStateCode(): string
 	{
 		return $this->sTargetStateCode;
 	}
@@ -141,7 +141,7 @@ class TransitionEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetTargetStateLabel()
+	public function GetTargetStateLabel(): string
 	{
 		return $this->sTargetStateLabel;
 	}

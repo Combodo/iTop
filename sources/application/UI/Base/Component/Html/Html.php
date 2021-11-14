@@ -55,7 +55,7 @@ class Html extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetHtml()
+	public function GetHtml(): string
 	{
 		return $this->sHtml;
 	}

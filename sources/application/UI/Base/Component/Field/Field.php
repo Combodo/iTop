@@ -72,7 +72,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sLayout
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetLayout(string $sLayout)
 	{
@@ -92,9 +92,9 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sAttCode
 	 *
-	 * @return Field
+	 * @return $this
 	 */
-	public function SetAttCode(string $sAttCode): Field
+	public function SetAttCode(string $sAttCode)
 	{
 		$this->sAttCode = $sAttCode;
 
@@ -112,9 +112,9 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sAttType
 	 *
-	 * @return Field
+	 * @return $this
 	 */
-	public function SetAttType(string $sAttType): Field
+	public function SetAttType(string $sAttType)
 	{
 		$this->sAttType = $sAttType;
 
@@ -132,9 +132,9 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sAttLabel
 	 *
-	 * @return Field
+	 * @return $this
 	 */
-	public function SetAttLabel(string $sAttLabel): Field
+	public function SetAttLabel(string $sAttLabel)
 	{
 		$this->sAttLabel = $sAttLabel;
 
@@ -152,7 +152,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param bool $bIsReadOnly
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetIsReadOnly(bool $bIsReadOnly)
 	{
@@ -172,7 +172,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param bool $bIsMandatory
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetIsMandatory(bool $bIsMandatory)
 	{
@@ -192,7 +192,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param bool $bIsMustChange
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetMustChange(bool $bIsMustChange)
 	{
@@ -212,7 +212,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param bool $bIsMustPrompt
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetMustPrompt(bool $bIsMustPrompt)
 	{
@@ -232,7 +232,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param bool $bIsSlave
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetIsSlave(bool $bIsSlave)
 	{
@@ -252,7 +252,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sValueRaw
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetValueRaw(string $sValueRaw)
 	{
@@ -272,7 +272,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sLabel
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetLabel(string $sLabel)
 	{
@@ -292,7 +292,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param \Combodo\iTop\Application\UI\Base\UIBlock $oValue
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetValue(UIBlock $oValue)
 	{
@@ -312,7 +312,7 @@ class Field extends UIContentBlock
 	/**
 	 * @param string $sComments
 	 *
-	 * @return Field
+	 * @return $this
 	 */
 	public function SetComments(string $sComments)
 	{
@@ -344,10 +344,14 @@ class Field extends UIContentBlock
 	public function SetInputId(string $sInputId)
 	{
 		$this->AddDataAttribute('input-id', $sInputId);
+
+		return $this;
 	}
 
 	public function SetInputType(string $sInputType)
 	{
 		$this->AddDataAttribute('input-type', $sInputType);
+
+		return $this;
 	}
 }

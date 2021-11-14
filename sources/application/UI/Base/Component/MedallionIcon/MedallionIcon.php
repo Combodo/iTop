@@ -32,9 +32,9 @@ class MedallionIcon extends UIBlock
 	 *
 	 * @param string $sImageUrl
 	 * @param string $sIconClass
-	 * @param null $sId
+	 * @param string|null $sId
 	 */
-	public function __construct($sImageUrl = '', $sIconClass = '', $sId = null)
+	public function __construct(string $sImageUrl = '', string $sIconClass = '', ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sImageUrl = $sImageUrl;
@@ -44,7 +44,7 @@ class MedallionIcon extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetImageUrl()
+	public function GetImageUrl(): string
 	{
 		return $this->sImageUrl;
 	}
@@ -63,7 +63,7 @@ class MedallionIcon extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetIconClass()
+	public function GetIconClass(): string
 	{
 		return $this->sIconClass;
 	}

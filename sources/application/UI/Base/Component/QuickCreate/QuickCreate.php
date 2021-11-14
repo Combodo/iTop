@@ -107,7 +107,7 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetEndpoint()
+	public function GetEndpoint(): string
 	{
 		return $this->sEndpoint;
 	}
@@ -117,7 +117,7 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	 *
 	 * @return array
 	 */
-	public function GetAvailableClasses()
+	public function GetAvailableClasses(): array
 	{
 		return $this->aAvailableClasses;
 	}
@@ -171,7 +171,7 @@ class QuickCreate extends UIBlock implements iKeyboardShortcut
 	 *
 	 * @return array
 	 */
-	public function GetLastClasses()
+	public function GetLastClasses(): array
 	{
 		return $this->aLastClasses;
 	}

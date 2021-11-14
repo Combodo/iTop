@@ -35,9 +35,9 @@ class DashboardRow extends UIBlock
 	 *
 	 * @param \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn $oDashboardColumn
 	 *
-	 * @return DashboardRow
+	 * @return $this
 	 */
-	public function AddDashboardColumn(DashboardColumn $oDashboardColumn): DashboardRow
+	public function AddDashboardColumn(DashboardColumn $oDashboardColumn)
 	{
 		$oDashboardColumn->SetColumnIndex($this->iCols);
 		$this->aDashboardColumns[] = $oDashboardColumn;
@@ -45,7 +45,7 @@ class DashboardRow extends UIBlock
 		return $this;
 	}
 
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		return $this->aDashboardColumns;
 	}
@@ -61,9 +61,9 @@ class DashboardRow extends UIBlock
 	/**
 	 * @param int $iRowIndex
 	 *
-	 * @return DashboardRow
+	 * @return $this
 	 */
-	public function SetRowIndex(int $iRowIndex): DashboardRow
+	public function SetRowIndex(int $iRowIndex)
 	{
 		$this->iRowIndex = $iRowIndex;
 		return $this;

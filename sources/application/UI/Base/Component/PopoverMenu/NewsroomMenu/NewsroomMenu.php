@@ -61,7 +61,7 @@ class NewsroomMenu extends PopoverMenu
 	 *
 	 * @return false|string
 	 */
-	public function GetParamsAsJson()
+	public function GetParamsAsJson(): string
 	{
 		return json_encode($this->aParams);
 	}

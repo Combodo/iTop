@@ -42,7 +42,7 @@ class DashboardColumn extends UIBlock
 	 *
 	 * @param UIBlock $oUIBlock
 	 *
-	 * @return DashboardColumn
+	 * @return $this
 	 */
 	public function AddUIBlock(UIBlock $oUIBlock): DashboardColumn
 	{
@@ -50,7 +50,7 @@ class DashboardColumn extends UIBlock
 		return $this;
 	}
 
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		return $this->aUIBlocks;
 	}
@@ -66,9 +66,9 @@ class DashboardColumn extends UIBlock
 	/**
 	 * @param int $iColumnIndex
 	 *
-	 * @return DashboardColumn
+	 * @return $this
 	 */
-	public function SetColumnIndex(int $iColumnIndex): DashboardColumn
+	public function SetColumnIndex(int $iColumnIndex)
 	{
 		$this->iColumnIndex = $iColumnIndex;
 		return $this;
@@ -85,9 +85,9 @@ class DashboardColumn extends UIBlock
 	/**
 	 * @param bool $bEditMode
 	 *
-	 * @return DashboardColumn
+	 * @return $this
 	 */
-	public function SetEditMode(bool $bEditMode): DashboardColumn
+	public function SetEditMode(bool $bEditMode)
 	{
 		$this->bEditMode = $bEditMode;
 		return $this;
@@ -104,9 +104,9 @@ class DashboardColumn extends UIBlock
 	/**
 	 * @param int $iCellIndex
 	 *
-	 * @return DashboardColumn
+	 * @return $this
 	 */
-	public function SetCellIndex(int $iCellIndex): DashboardColumn
+	public function SetCellIndex(int $iCellIndex)
 	{
 		$this->iCellIndex = $iCellIndex;
 		return $this;
@@ -123,9 +123,9 @@ class DashboardColumn extends UIBlock
 	/**
 	 * @param bool $bLastRow
 	 *
-	 * @return DashboardColumn
+	 * @return $this
 	 */
-	public function SetLastRow(bool $bLastRow): DashboardColumn
+	public function SetLastRow(bool $bLastRow)
 	{
 		$this->bLastRow = $bLastRow;
 		return $this;

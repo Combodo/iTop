@@ -78,7 +78,7 @@ class DashletBadge extends DashletContainer
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetCreateActionUrl(?string $sCreateActionUrl): DashletBadge
+	public function SetCreateActionUrl(?string $sCreateActionUrl)
 	{
 		$this->sCreateActionUrl = $sCreateActionUrl;
 
@@ -98,7 +98,7 @@ class DashletBadge extends DashletContainer
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetCreateActionLabel(?string $sCreateActionLabel): DashletBadge
+	public function SetCreateActionLabel(?string $sCreateActionLabel)
 	{
 		$this->sCreateActionLabel = $sCreateActionLabel;
 
@@ -118,7 +118,7 @@ class DashletBadge extends DashletContainer
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetClassIconUrl(string $sClassIconUrl): DashletBadge
+	public function SetClassIconUrl(string $sClassIconUrl)
 	{
 		$this->sClassIconUrl = $sClassIconUrl;
 
@@ -138,7 +138,7 @@ class DashletBadge extends DashletContainer
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetHyperlink(string $sHyperlink): DashletBadge
+	public function SetHyperlink(string $sHyperlink)
 	{
 		$this->sHyperlink = $sHyperlink;
 
@@ -158,7 +158,7 @@ class DashletBadge extends DashletContainer
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetCount(string $iCount): DashletBadge
+	public function SetCount(string $iCount)
 	{
 		$this->iCount = $iCount;
 
@@ -178,7 +178,7 @@ class DashletBadge extends DashletContainer
 	 *
 	 * @return DashletBadge
 	 */
-	public function SetClassLabel(string $sClassLabel): DashletBadge
+	public function SetClassLabel(string $sClassLabel)
 	{
 		$this->sClassLabel = $sClassLabel;
 

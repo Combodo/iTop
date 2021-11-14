@@ -25,7 +25,7 @@ class DataTableConfig extends UIContentBlock
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\Component\DataTable\DataTable
 	 */
-	private function GetDataTable(): DataTable
+	private function GetDataTable()
 	{
 		return $this->oDataTable;
 	}

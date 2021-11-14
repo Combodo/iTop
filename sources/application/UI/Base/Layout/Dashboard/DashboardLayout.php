@@ -48,7 +48,7 @@ class DashboardLayout extends UIBlock
 		return $this;
 	}
 
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		return array_merge($this->aDashboardRows, [$this->oToolbar]);
 	}

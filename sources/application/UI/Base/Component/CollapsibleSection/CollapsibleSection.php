@@ -68,7 +68,7 @@ class CollapsibleSection extends UIContentBlock
 		return $this;
 	}
 
-	public function IsOpenedByDefault()
+	public function IsOpenedByDefault(): bool
 	{
 		return $this->bIsOpenedByDefault;
 	}
@@ -85,7 +85,7 @@ class CollapsibleSection extends UIContentBlock
 		return $this;
 	}
 
-	public function GetTitle()
+	public function GetTitle(): string
 	{
 		return $this->sTitle;
 	}

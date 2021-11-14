@@ -97,7 +97,7 @@ class InputWithLabel extends UIBlock
 	 *
 	 * @return InputWithLabel
 	 */
-	public function SetLabel(string $sLabel): InputWithLabel
+	public function SetLabel(string $sLabel)
 	{
 		$this->sLabel = $sLabel;
 		return $this;

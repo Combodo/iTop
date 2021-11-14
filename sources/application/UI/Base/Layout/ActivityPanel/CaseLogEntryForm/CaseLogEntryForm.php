@@ -252,7 +252,7 @@ class CaseLogEntryForm extends UIContentBlock
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\UIBlock[]
 	 */
-	public function GetExtraActionButtons()
+	public function GetExtraActionButtons(): array
 	{
 		return $this->aExtraActionButtons;
 	}

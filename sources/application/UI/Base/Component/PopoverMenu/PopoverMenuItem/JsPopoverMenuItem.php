@@ -57,7 +57,7 @@ class JsPopoverMenuItem extends PopoverMenuItem
 	 * @inheritDoc
 	 * @throws \Exception
 	 */
-	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false)
+	public function GetJsFilesUrlRecursively(bool $bAbsoluteUrl = false): array
 	{
 		$aJsFiles = array_merge(parent::GetJsFilesUrlRecursively($bAbsoluteUrl), $this->oPopupMenuItem->GetLinkedScripts());
 

@@ -89,8 +89,10 @@ class Select extends UIContentBlock
 	/**
 	 * @param bool $bIsMultiple {@see Select::$bIsMultiple}
 	 */
-	public function SetIsMultiple(bool $bIsMultiple): void
+	public function SetIsMultiple(bool $bIsMultiple)
 	{
 		$this->bIsMultiple = $bIsMultiple;
+
+		return $this;
 	}
 }

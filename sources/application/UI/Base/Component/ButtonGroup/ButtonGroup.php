@@ -71,7 +71,7 @@ class ButtonGroup extends UIBlock
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button[]
 	 * @use static::$aButtons
 	 */
-	public function GetButtons()
+	public function GetButtons(): array
 	{
 		return $this->aButtons;
 	}

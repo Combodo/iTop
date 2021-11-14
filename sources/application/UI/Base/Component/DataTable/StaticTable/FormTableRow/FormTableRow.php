@@ -67,10 +67,14 @@ class FormTableRow extends UIBlock
 
 	/**
 	 * @param string $sRef
+	 *
+	 * @return $this
 	 */
-	public function SetRef(string $sRef): void
+	public function SetRef(string $sRef)
 	{
 		$this->sRef = $sRef;
+
+		return $this;
 	}
 
 	/**
@@ -83,10 +87,14 @@ class FormTableRow extends UIBlock
 
 	/**
 	 * @param array $aColumns
+	 *
+	 * @return $this
 	 */
-	public function SetColumns(array $aColumns): void
+	public function SetColumns(array $aColumns)
 	{
 		$this->aColumns = $aColumns;
+
+		return $this;
 	}
 
 	/**
@@ -99,10 +107,14 @@ class FormTableRow extends UIBlock
 
 	/**
 	 * @param array $aData
+	 *
+	 * @return $this
 	 */
-	public function SetData(array $aData): void
+	public function SetData(array $aData)
 	{
 		$this->aData = $aData;
+
+		return $this;
 	}
 
 	/**
@@ -115,9 +127,13 @@ class FormTableRow extends UIBlock
 
 	/**
 	 * @param int $iRowId
+	 *
+	 * @return $this
 	 */
-	public function SetRowId(int $iRowId): void
+	public function SetRowId(int $iRowId)
 	{
 		$this->iRowId = $iRowId;
+
+		return $this;
 	}
 }

@@ -49,9 +49,11 @@ class FormTable extends StaticTable
 	/**
 	 * @param string $sRef
 	 */
-	public function SetRef(string $sRef): void
+	public function SetRef(string $sRef)
 	{
 		$this->sRef = $sRef;
+
+		return $this;
 	}
 
 	public function GetRows(): array
@@ -59,7 +61,7 @@ class FormTable extends StaticTable
 		return $this->aRows;
 	}
 
-	public function AddRow(FormTableRow $oRow): self
+	public function AddRow(FormTableRow $oRow)
 	{
 		$this->aRows[] = $oRow;
 		return $this;

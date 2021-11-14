@@ -76,8 +76,10 @@ class DataTable extends UIContentBlock
 
 	/**
 	 * @param mixed $sAjaxUrl
+	 *
+	 * @return $this
 	 */
-	public function SetAjaxUrl(string $sAjaxUrl): void
+	public function SetAjaxUrl(string $sAjaxUrl)
 	{
 		if (strlen($sAjaxUrl) > 0)
 		{
@@ -92,6 +94,8 @@ class DataTable extends UIContentBlock
 		{
 			$this->sAjaxUrl = $sAjaxUrl;
 		}
+
+		return $this;
 	}
 
 	/**

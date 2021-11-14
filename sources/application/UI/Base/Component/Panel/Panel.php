@@ -390,7 +390,7 @@ class Panel extends UIContentBlock
 	 * @see static::$sCSSColorClass
 	 * @return string
 	 */
-	public function GetCSSColorClass()
+	public function GetCSSColorClass(): string
 	{
 		return $this->sCSSColorClass;
 	}

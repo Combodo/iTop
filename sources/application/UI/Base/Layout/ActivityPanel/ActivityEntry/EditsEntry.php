@@ -70,7 +70,7 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetObjectClass()
+	public function GetObjectClass(): string
 	{
 		return $this->sObjectClass;
 	}
@@ -94,7 +94,7 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @return array
 	 */
-	public function GetAttributes()
+	public function GetAttributes(): array
 	{
 		return $this->aAttributes;
 	}
@@ -175,7 +175,7 @@ class EditsEntry extends ActivityEntry
 	 *
 	 * @return string
 	 */
-	public function GetShortDescriptionAsHtml()
+	public function GetShortDescriptionAsHtml(): string
 	{
 		// We need the array to be indexed by numbers instead of being associative
 		$aAttributesData = array_values($this->GetAttributes());

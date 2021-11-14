@@ -39,7 +39,7 @@ class FileSelect extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetFileName()
+	public function GetFileName(): string
 	{
 		return $this->sFileName;
 	}

@@ -123,11 +123,11 @@ class Alert extends UIContentBlock
 	}
 
 	/**
-	 * @param $sSectionStateStorageKey
+	 * @param string $sSectionStateStorageKey
 	 *
 	 * @return self
 	 */
-	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
+	public function EnableSaveCollapsibleState(string $sSectionStateStorageKey)
 	{
 		$this->bIsSaveCollapsibleStateEnabled = true;
 		$this->sSectionStateStorageKey = 'UI-Collapsible__'.$sSectionStateStorageKey;
@@ -138,7 +138,7 @@ class Alert extends UIContentBlock
 	/**
 	 * @return string
 	 */
-	public function GetTitle()
+	public function GetTitle(): string
 	{
 		return $this->sTitle;
 	}
@@ -160,7 +160,7 @@ class Alert extends UIContentBlock
 	 *
 	 * @return string
 	 */
-	public function GetContent()
+	public function GetContent(): string
 	{
 		return $this->sContent;
 	}
@@ -274,11 +274,19 @@ class Alert extends UIContentBlock
 		return $this;
 	}
 
+	/**
+	 * @return bool
+	 * @see static::$bIsSaveCollapsibleStateEnabled
+	 */
 	public function IsSaveCollapsibleStateEnabled(): bool
 	{
 		return $this->bIsSaveCollapsibleStateEnabled;
 	}
 
+	/**
+	 * @return string
+	 * @see static::$sSectionStateStorageKey
+	 */
 	public function GetSessionCollapsibleStateStorageKey(): string
 	{
 		return $this->sSectionStateStorageKey;

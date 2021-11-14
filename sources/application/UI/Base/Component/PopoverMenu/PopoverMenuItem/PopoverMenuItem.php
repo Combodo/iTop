@@ -55,7 +55,7 @@ class PopoverMenuItem extends UIBlock
 	/**
 	 * @inheritDoc
 	 */
-	protected function GenerateId()
+	protected function GenerateId(): string
 	{
 		return parent::GenerateId().'--'.utils::GetSafeId($this->oPopupMenuItem->GetUID());
 	}

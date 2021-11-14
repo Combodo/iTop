@@ -110,7 +110,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetLabel()
+	public function GetLabel(): string
 	{
 		return $this->sLabel;
 	}
@@ -129,7 +129,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetTooltip()
+	public function GetTooltip(): string
 	{
 		return $this->sTooltip;
 	}
@@ -148,7 +148,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetIconClass()
+	public function GetIconClass(): string
 	{
 		return $this->sIconClass;
 	}
@@ -167,7 +167,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetActionType()
+	public function GetActionType(): string
 	{
 		return $this->sActionType;
 	}
@@ -187,7 +187,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetColor()
+	public function GetColor(): string
 	{
 		return $this->sColor;
 	}
@@ -206,7 +206,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetOnClickJsCode()
+	public function GetOnClickJsCode(): string
 	{
 		return $this->sOnClickJsCode;
 	}
@@ -226,7 +226,7 @@ class Button extends UIBlock
 	/**
 	 * @return string
 	 */
-	public function GetJsCode()
+	public function GetJsCode(): string
 	{
 		return $this->sJsCode;
 	}
@@ -246,7 +246,7 @@ class Button extends UIBlock
 	/**
 	 * @return bool
 	 */
-	public function IsDisabled()
+	public function IsDisabled(): bool
 	{
 		return $this->bIsDisabled;
 	}

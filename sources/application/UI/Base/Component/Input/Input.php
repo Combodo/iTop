@@ -61,7 +61,7 @@ class Input extends AbstractInput
 	/**
 	 * @return bool
 	 */
-	public function IsChecked()
+	public function IsChecked(): bool
 	{
 		return $this->bIsChecked;
 	}
@@ -69,7 +69,7 @@ class Input extends AbstractInput
 	/**
 	 * @return bool
 	 */
-	public function IsDisabled()
+	public function IsDisabled(): bool
 	{
 		return $this->bIsDisabled;
 	}
@@ -88,7 +88,7 @@ class Input extends AbstractInput
 	/**
 	 * @return bool
 	 */
-	public function IsReadonly()
+	public function IsReadonly(): bool
 	{
 		return $this->bIsReadonly;
 	}
@@ -107,7 +107,7 @@ class Input extends AbstractInput
 	/**
 	 * @return string|null
 	 */
-	public function GetLabel()
+	public function GetLabel(): ?string
 	{
 		return $this->sLabel;
 	}
@@ -124,7 +124,7 @@ class Input extends AbstractInput
 		return $this;
 	}
 
-	public function HasLabel()
+	public function HasLabel(): bool
 	{
 		return !is_null($this->sLabel);
 	}

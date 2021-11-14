@@ -32,7 +32,7 @@ class Form extends UIContentBlock
 		$this->sAction = null;
 	}
 
-	public function SetOnSubmitJsCode(string $sJsCode): Form
+	public function SetOnSubmitJsCode(string $sJsCode)
 	{
 		$this->sOnSubmitJsCode = $sJsCode;
 		return $this;
@@ -59,7 +59,7 @@ class Form extends UIContentBlock
 	 *
 	 * @return Form
 	 */
-	public function SetAction(string $sAction): Form
+	public function SetAction(string $sAction)
 	{
 		$this->sAction = $sAction;
 		return $this;

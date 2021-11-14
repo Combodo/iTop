@@ -295,7 +295,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return ActivityEntry[]
 	 */
-	public function GetEntries()
+	public function GetEntries(): array
 	{
 		if ($this->bAreEntriesSorted === false)
 		{
@@ -311,7 +311,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return array
 	 */
-	public function GetGroupedEntries()
+	public function GetGroupedEntries(): array
 	{
 		$aGroupedEntries = [];
 
@@ -462,7 +462,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasEntries()
+	public function HasEntries(): bool
 	{
 		return !empty($this->aEntries);
 	}
@@ -518,7 +518,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return array
 	 */
-	public function GetCaseLogTabs()
+	public function GetCaseLogTabs(): array
 	{
 		return $this->aCaseLogs;
 	}
@@ -611,7 +611,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasCaseLogTab(string $sAttCode)
+	public function HasCaseLogTab(string $sAttCode): bool
 	{
 		return isset($this->aCaseLogs[$sAttCode]);
 	}
@@ -621,7 +621,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function HasCaseLogTabs()
+	public function HasCaseLogTabs(): bool
 	{
 		return !empty($this->aCaseLogs);
 	}
@@ -811,7 +811,7 @@ class ActivityPanel extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetDateTimeFormatForJSWidget()
+	public function GetDateTimeFormatForJSWidget(): string
 	{
 		$oDateTimeFormat = AttributeDateTime::GetFormat();
 
@@ -848,7 +848,7 @@ class ActivityPanel extends UIBlock
 	/**
 	 * @inheritdoc
 	 */
-	public function GetSubBlocks()
+	public function GetSubBlocks(): array
 	{
 		$aSubBlocks = array();
 

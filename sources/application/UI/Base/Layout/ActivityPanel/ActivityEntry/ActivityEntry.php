@@ -115,7 +115,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetType()
+	public function GetType(): string
 	{
 		return $this->sType;
 	}
@@ -139,7 +139,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetDecorationClasses()
+	public function GetDecorationClasses(): string
 	{
 		return $this->sDecorationClasses;
 	}
@@ -163,7 +163,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetContent()
+	public function GetContent(): string
 	{
 		return $this->sContent;
 	}
@@ -183,7 +183,7 @@ class ActivityEntry extends UIBlock
 	 * Return the date time without formatting, as per the mysql format
 	 * @return string
 	 */
-	public function GetRawDateTime()
+	public function GetRawDateTime(): string
 	{
 		return $this->oDateTime->format(AttributeDateTime::GetInternalFormat());
 	}
@@ -194,7 +194,7 @@ class ActivityEntry extends UIBlock
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetFormattedDateTime()
+	public function GetFormattedDateTime(): string
 	{
 		$oDateTimeFormat = AttributeDateTime::GetFormat();
 		return $oDateTimeFormat->Format($this->oDateTime);
@@ -277,7 +277,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return bool
 	 */
-	public function IsFromCurrentUser()
+	public function IsFromCurrentUser(): bool
 	{
 		return $this->bIsFromCurrentUser;
 	}
@@ -301,7 +301,7 @@ class ActivityEntry extends UIBlock
 	 *
 	 * @return string
 	 */
-	public function GetOrigin()
+	public function GetOrigin(): string
 	{
 		return $this->sOrigin;
 	}

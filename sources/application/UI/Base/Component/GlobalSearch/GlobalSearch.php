@@ -97,7 +97,7 @@ class GlobalSearch extends UIBlock implements iKeyboardShortcut
 	 * @return string
 	 * @throws \Exception
 	 */
-	public function GetEndpoint()
+	public function GetEndpoint(): string
 	{
 		return $this->sEndpoint;
 	}
@@ -151,7 +151,7 @@ class GlobalSearch extends UIBlock implements iKeyboardShortcut
 	 *
 	 * @return array
 	 */
-	public function GetLastQueries()
+	public function GetLastQueries(): array
 	{
 		return $this->aLastQueries;
 	}

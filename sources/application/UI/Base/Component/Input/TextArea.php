@@ -78,10 +78,14 @@ class TextArea extends AbstractInput
 
 	/**
 	 * @param bool $bIsDisabled
+	 *
+	 * @return $this
 	 */
-	public function SetIsDisabled(bool $bIsDisabled): void
+	public function SetIsDisabled(bool $bIsDisabled)
 	{
 		$this->bIsDisabled = $bIsDisabled;
+
+		return $this;
 	}
 
 

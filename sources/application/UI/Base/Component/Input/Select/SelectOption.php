@@ -38,7 +38,7 @@ class SelectOption extends UIBlock
 	 *
 	 * @return SelectOption
 	 */
-	public function SetValue(string $sValue): SelectOption
+	public function SetValue(string $sValue)
 	{
 		$this->sValue = $sValue;
 		return $this;
@@ -57,7 +57,7 @@ class SelectOption extends UIBlock
 	 *
 	 * @return SelectOption
 	 */
-	public function SetLabel(string $sLabel): SelectOption
+	public function SetLabel(string $sLabel)
 	{
 		$this->sLabel = $sLabel;
 		return $this;
@@ -76,7 +76,7 @@ class SelectOption extends UIBlock
 	 *
 	 * @return SelectOption
 	 */
-	public function SetSelected(bool $bSelected): SelectOption
+	public function SetSelected(bool $bSelected)
 	{
 		$this->bSelected = $bSelected;
 		return $this;

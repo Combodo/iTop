@@ -70,7 +70,7 @@ class PageContentWithSideContent extends PageContent {
 	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock[]
 	 * @throws \Exception
 	 */
-	public function GetSideBlocks() {
+	public function GetSideBlocks(): array {
 		return $this->GetContentAreaBlocks(static::ENUM_CONTENT_AREA_SIDE);
 	}
 
