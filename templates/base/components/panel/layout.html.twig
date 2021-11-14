@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
     <div id="{{ oUIBlock.GetId() }}"
-         class="ibo-panel {{ oUIBlock.GetCSSColorClass() }} {{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %} {% if oUIBlock.IsIconAsMedallion() %}ibo-has-medallion-icon{% endif %} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} ibo-is-opened"
+         class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {{ oUIBlock.GetCSSColorClass() }} {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %} {% if oUIBlock.IsIconAsMedallion() %}ibo-has-medallion-icon{% endif %} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} ibo-is-opened"
             {% block iboPanelMetaData %}{% endblock %}
          data-role="ibo-panel">
         <div class="ibo-panel--header" data-role="ibo-panel--header">

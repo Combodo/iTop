@@ -3,7 +3,7 @@
 {# Toolbar #}
 {% apply spaceless %}
     <div id="{{ oUIBlock.GetId() }}"
-         class="ibo-toolbar {% if oUIBlock.GetAdditionalCSSClassesAsString() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+         class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
          data-role="ibo-toolbar"
     >
 

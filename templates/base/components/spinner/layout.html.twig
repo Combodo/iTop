@@ -1,5 +1,5 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 {% apply spaceless %}
-    <i id="{{ oUIBlock.GetId() }}" class="fas fa-sync-alt fa-spin {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} {% if oUIBlock.GetAdditionalCSSClassesAsString() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}" aria-hidden="true"></i>
+    <i id="{{ oUIBlock.GetId() }}" class="fas fa-sync-alt fa-spin {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} {{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" aria-hidden="true"></i>
 {% endapply %}

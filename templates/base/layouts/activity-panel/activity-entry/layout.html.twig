@@ -1,5 +1,5 @@
 {% apply spaceless %}
-<div class="ibo-activity-entry {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
+<div class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
      data-role="ibo-activity-entry"
      data-entry-type="{% block iboActivityEntryType %}{{ oUIBlock.GetType() }}{% endblock %}"
      data-entry-datetime-raw="{{ oUIBlock.GetRawDateTime() }}"

@@ -193,7 +193,7 @@ $(function()
 		_buildDismissAllSection: function()
 		{
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications-dismiss-all" data-role="ibo-popover-menu--section"><a class="ibo-popover-menu--item" data-role="ibo-navigation-menu--notifications-dismiss-all" ><i class="fas fa-fw fa-check' +
-				' ibo-navigation-menu--notifications-dismiss-all--icon"></i>' + Dict.S(this.options.labels.mark_all_as_read) + '</a><hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
+				' ibo-navigation-menu--notifications-dismiss-all--icon"></i>' + Dict.S(this.options.labels.mark_all_as_read) + '</a><hr class="ibo-popover-menu--item ibo-popover-menu--item-separator"></div>';
 		},
 		_buildMessageSection: function () {
 			return '<div class="ibo-popover-menu--section ibo-navigation-menu--notifications--messages-section" data-role="ibo-popover-menu--section">';
@@ -272,7 +272,7 @@ $(function()
 				var sNoMessageItem = this._buildNoMessageItem();
 				sMessageSection += sNoMessageItem;
 			}
-			sMessageSection += '<hr class="ibo-popover-menu--item ibo-popover-menu--separator"></div>';
+			sMessageSection += '<hr class="ibo-popover-menu--item ibo-popover-menu--item-separator"></div>';
 
 			if (this.options.providers.length == 1)
 			{

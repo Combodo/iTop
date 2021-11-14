@@ -8,7 +8,7 @@
     {% block iboContentBlockContainer %}
         {% if bHasDiv %}
             <div id="{{ oUIBlock.GetId() }}"
-            class="{% if oUIBlock.GetAdditionalCSSClassesAsString() %}{{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+            class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
             {% if oUIBlock.GetDataAttributes() %}
                 {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                     data-{{ sName }}="{{ sValue }}"

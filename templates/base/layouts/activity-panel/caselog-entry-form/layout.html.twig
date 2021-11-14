@@ -1,6 +1,6 @@
 {% apply spaceless %}
 <form id="{{ oUIBlock.GetId() }}"
-      class="ibo-caselog-entry-form {% if oUIBlock.IsSubmitAutonomous() and (bInitOpened == false) %}ibo-is-closed{% endif %}"
+      class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsSubmitAutonomous() and (bInitOpened == false) %}ibo-is-closed{% endif %}"
       data-role="ibo-caselog-entry-form"
       data-object-class="{{ oUIBlock.GetObjectClass() }}"
       data-object-id="{{ oUIBlock.GetObjectId() }}"

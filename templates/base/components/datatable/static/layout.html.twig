@@ -2,7 +2,7 @@
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 {% set columns = oUIBlock.GetColumns() %}
-<table id="{{ oUIBlock.GetId() }}" width="100%" class="ibo-datatable listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable">
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable">
     <thead>
     <tr>
         {% for column in columns %}

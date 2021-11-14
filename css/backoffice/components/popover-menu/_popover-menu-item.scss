@@ -11,9 +11,9 @@ $ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
 $ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
 $ibo-popover-menu--item--hover-background-color: $ibo-color-grey-200 !default;
 
-$ibo-popover-menu--separator--padding: 0 !default;
-$ibo-popover-menu--separator--margin: 0 !default;
-$ibo-popover-menu--separator--background-color: $ibo-color-grey-200 !default;
+$ibo-popover-menu--item-separator--padding: 0 !default;
+$ibo-popover-menu--item-separator--margin: 0 !default;
+$ibo-popover-menu--item-separator--background-color: $ibo-color-grey-200 !default;
 
 $ibo-popover-menu--item--icon--color: $ibo-color-grey-700 !default;
 $ibo-popover-menu--item--icon--font-size: $ibo-font-size-200 !default;
@@ -31,10 +31,10 @@ $ibo-popover-menu--item--icon--padding-right: 5px !default;
     background-color: $ibo-popover-menu--item--hover-background-color;
     color: inherit;
   }
-  &.ibo-popover-menu--separator{
-    padding: $ibo-popover-menu--separator--padding;
-    margin: $ibo-popover-menu--separator--margin;
-    background-color: $ibo-popover-menu--separator--background-color
+  &.ibo-popover-menu--item-separator{
+    padding: $ibo-popover-menu--item-separator--padding;
+    margin: $ibo-popover-menu--item-separator--margin;
+    background-color: $ibo-popover-menu--item-separator--background-color
   }
 }
 

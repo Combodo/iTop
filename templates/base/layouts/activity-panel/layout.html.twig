@@ -1,5 +1,5 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-activity-panel {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
      data-role="ibo-activity-panel"
      data-object-class="{{ oUIBlock.GetObjectClass() }}"
      data-object-id="{{ oUIBlock.GetObjectId() }}"

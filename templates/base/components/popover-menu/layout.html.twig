@@ -1,4 +1,4 @@
-<div {% if oUIBlock.GetId() is defined %}id="{{ oUIBlock.GetId() }}"{% endif %} class="ibo-popover-menu" data-role="ibo-popover-menu">
+<div {% if oUIBlock.GetId() is defined %}id="{{ oUIBlock.GetId() }}"{% endif %} class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-popover-menu">
     {% for aSection in oUIBlock.GetSections() %}
         {% if aSection.aItems|length > 0 %}
             <div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">

@@ -1,4 +1,4 @@
-<div id="{{ oUIBlock.GetId() }}" class="ibo-quick-create" data-role="ibo-quick-create">
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-quick-create">
 	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-quick-create--head" data-role="ibo-quick-create--head">
 		<input type="hidden" name="operation" value="new">
 		<a href="#" class="ibo-quick-create--icon" data-role="ibo-quick-create--icon"

@@ -9,6 +9,7 @@ $ibo-search-form-panel--body--padding-top: 18px !default;
 $ibo-search-form-panel--body--padding-bottom: 10px !default;
 $ibo-search-form-panel--body--padding-x: 14px !default;
 
+$ibo-search-form-panel--criteria--margin-bottom: 5px !default;
 $ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
 $ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
 $ibo-search-form-panel--criteria--border-color: $ibo-color-grey-300 !default;
@@ -198,7 +199,8 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			position: relative;
 			display: inline-block;
 			margin-right: 10px;
-			margin-bottom: 5px;
+			margin-top: 3px;
+			margin-bottom: 3px; /* Bottom spacing (6px) for next criteria line is actually splitted between top and bottom margin in order to center the criteria within the container. The cumulated margins fo the lines will do the trick. */
 			vertical-align: top;
 
 			&.opened {
@@ -869,9 +871,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 }
 #ibo-main-content .search_form_handler .sf_criterion_area{
 	padding: 0;
-}
-.ibo-search-form{
-	padding-top: $ibo-panel--spacing-top ;
 }
 
 .sfm_tg_title{

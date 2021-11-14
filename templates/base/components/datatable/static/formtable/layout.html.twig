@@ -4,7 +4,7 @@
 <input type="hidden" name="attr_{{ oUIBlock.GetRef() }}" value="">
 
 {% set columns = oUIBlock.GetColumns() %}
-<table id="{{ oUIBlock.GetId() }}" class="ibo-datatable listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable">
+<table id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} listResults{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable">
     <thead>
     <tr>
         {% for column in columns %}
