@@ -1877,6 +1877,7 @@ class UserRights
 					assert(false); // should never happen
 				}
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+				$oSearch->AllowAllData();
 				if (!$bAllowDisabledUsers)
 				{
 					$oSearch->AddCondition('status', 'enabled');
