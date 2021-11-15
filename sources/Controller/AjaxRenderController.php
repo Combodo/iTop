@@ -94,7 +94,7 @@ class AjaxRenderController
 
 						if (!$bExcludeRawValue) {
 							$oRawValue = $aObject[$sAlias]->Get($sAttCode);
-							if($oRawValue instanceof  AttributeTagSet or $oRawValue instanceof ormSet  ){
+							if(($oRawValue instanceof AttributeTagSet) || ($oRawValue instanceof ormSet)){
 								$aObj[$sAlias."/".$sAttCode."/raw"] = implode(", ", $oRawValue->GetValues());
 							} else {
 								$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
