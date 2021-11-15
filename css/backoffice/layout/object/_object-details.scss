@@ -28,6 +28,8 @@ $ibo-object-details--tag--separator--diameter: 5px !default;
 $ibo-object-details--tag--separator--margin-right: 12px !default;
 $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !default;
 
+$ibo-object-details--header-right--padding-right--is-sticking: 8px !default;
+
 /* Parent block overloads (!= than blocks integrations) */
 .ibo-object-details {
   &.ibo-has-icon.ibo-has-medallion-icon {
@@ -144,6 +146,9 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
         &.ibo-is-sticking {
           .ibo-panel--header-left {
             padding-left: $ibo-object-details--icon--size--is-sticking;
+          }
+          .ibo-panel--header-right {
+            padding-right: $ibo-object-details--header-right--padding-right--is-sticking;
           }
 
           .ibo-panel--titles {
