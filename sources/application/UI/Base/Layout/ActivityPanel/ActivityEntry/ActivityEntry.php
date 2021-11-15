@@ -275,9 +275,9 @@ class ActivityEntry extends UIBlock
 	/**
 	 * Return true if the current user is the author of the activity entry
 	 *
-	 * @return bool
+	 * @return bool|null Can be null depending on the source of creation of the entry
 	 */
-	public function IsFromCurrentUser(): bool
+	public function IsFromCurrentUser(): ?bool
 	{
 		return $this->bIsFromCurrentUser;
 	}
