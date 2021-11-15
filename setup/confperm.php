@@ -14,8 +14,10 @@ if (false === $aPreviousInstance['found']) {
 	exit(2);
 }
 
-$sTransactionId = utils::ReadParam('transaction_id');
-if ((empty($sTransactionId)) || (false === privUITransaction::IsTransactionValid($sTransactionId))) {
+try {
+	SetupUtils::CheckSetupToken(true);
+}
+catch (SecurityException $e) {
 	echo 'Invalid user';
 	exit(3);
 }

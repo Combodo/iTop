@@ -182,7 +182,21 @@ class WizardController
 					$oP->add("<h2>Fatal error</h2>\n");
 					$oP->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
 					$oP->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
-					$oP->p('<button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.reload()">Reload</button>');
+
+					$sButtonsHtml = <<<HTML
+<button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.reload()">Reload</button>
+HTML;
+					if (utils::IsDevelopmentEnvironment()) {
+						$sSetupToken = SetupUtils::CreateSetupToken();
+						$sButtonsHtml .= <<<HTML
+<form method="post" action="confperm.php">
+	<input type="hidden" name="authent" value="{$sSetupToken}">
+	<button type="submit" class="ibo-button ibo-is-regular ibo-is-success">Change permissions & Reload</button>
+</form>
+HTML;
+					}
+					$oP->p($sButtonsHtml);
+
 					$oP->output();
 					// Prevent token creation
 					exit;
