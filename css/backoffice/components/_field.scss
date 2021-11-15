@@ -190,6 +190,7 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
   /* Note that along with with, we now display a "expand" icon on large fields so we can have a better view of its content */
   .HTML {
     @extend .ibo-vendors-ckeditor--display-content;
+    display: grid;
 
     table {
       table-layout: fixed;
@@ -204,7 +205,7 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
 
 /* For log fields in the bulk operation screens */
 .ibo-fieldset-legend > .ibo-field--comments {
-  display: contents;
+//  display: contents;
   padding-bottom: $ibo-field--value--margin-top--for-large;
   font-size: $ibo-field--comments--font-size;
 }
