@@ -101,6 +101,12 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	 * @since 3.0.0
 	 */
 	public const ENUM_DISPLAY_MODE_PRINT = 'print';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_BULK_EDIT = self::ENUM_DISPLAY_MODE_EDIT;
 
 	// N°3750 rendering used
 	/** @var string */
@@ -201,6 +207,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 			static::ENUM_DISPLAY_MODE_EDIT,
 			static::ENUM_DISPLAY_MODE_CREATE,
 			static::ENUM_DISPLAY_MODE_STIMULUS,
+			static::ENUM_DISPLAY_MODE_PRINT,
+			static::ENUM_DISPLAY_MODE_BULK_EDIT,
 		];
 	}
 
@@ -4971,7 +4979,7 @@ HTML
 			// Now create an object that has values for the homogeneous values only
 			/** @var \cmdbAbstractObject $oDummyObj */
 			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
-			$oDummyObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_EDIT);
+			$oDummyObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_BULK_EDIT);
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
 			{
