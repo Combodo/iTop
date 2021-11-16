@@ -109,7 +109,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 
 .ibo-datatable {
   tbody > tr {
-    transition: background-color 400ms linear;
+    transition: background-color 300ms linear;
 
     &:hover, &.selected:hover {
       cursor: pointer;
