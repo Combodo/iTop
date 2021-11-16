@@ -67,7 +67,7 @@ $(function()
 				return false;
 			}
 
-			// Check if transition available
+			// Check if transitions available
 			const oHeaderElem = this.element.find('[data-role="ibo-panel--header"]:first');
 			const oButtonsToolbarElem = oHeaderElem.find('[data-role="ibo-panel--header-right"] [data-role="ibo-toolbar"]');
 			const oTransitionButtonsElems = oButtonsToolbarElem.find('[name="next_action"][data-role="ibo-button"]');
@@ -76,21 +76,29 @@ $(function()
 			}
 
 			let iCurrentHeaderWidth = 0;
+			let iCurrentHeaderHeight = 0;
 			let hTimeout = null;
 			const oObserver = new ResizeObserver(function(aEntries) {
-				// We hide the transition buttons during the resize to minimize visual glitches
-				oTransitionButtonsElems.addClass('ibo-is-hidden');
 				// Throttle the processing in order to limit CPU usage
 				clearTimeout(hTimeout);
 				hTimeout = setTimeout(() => {
 					let iNewHeaderWidth = parseInt(oHeaderElem.outerWidth());
-					if (Math.abs(iNewHeaderWidth - iCurrentHeaderWidth) < 5) {
+					let iNewHeaderHeight = parseInt(oHeaderElem.outerHeight());
+					if (Math.abs(iNewHeaderWidth - iCurrentHeaderWidth) < 5 && Math.abs(iNewHeaderHeight - iCurrentHeaderHeight) === 0) {
 						return;
 					}
-					oTransitionButtonsElems.removeClass('ibo-is-hidden');
 
 					let oLastTransitionButton = oButtonsToolbarElem.find('[name="next_action"][data-role="ibo-button"]:last');
+
+					// 1. Make transition buttons invisible BUT occuping space, so we can check where the last one would be
+					oTransitionButtonsElems.css('visibility', 'hidden');
+					oTransitionButtonsElems.removeClass('ibo-is-hidden');
+					// 2. Measure position
 					let iLastTransitionButtonBorderY = oLastTransitionButton.offset().left + oLastTransitionButton.outerWidth();
+					// 3. Make transition buttons invisible AND not occuping space again
+					oTransitionButtonsElems.addClass('ibo-is-hidden');
+					oTransitionButtonsElems.css('visibility', '');
+
 					let iPanelRightBorderY = oHeaderElem.offset().left + oHeaderElem.outerWidth();
 
 					if (iLastTransitionButtonBorderY > iPanelRightBorderY) {
@@ -103,6 +111,7 @@ $(function()
 					}
 
 					iCurrentHeaderWidth = parseInt(oHeaderElem.outerWidth());
+					iCurrentHeaderHeight = parseInt(oHeaderElem.outerHeight());
 
 				}, 100);
 			});
