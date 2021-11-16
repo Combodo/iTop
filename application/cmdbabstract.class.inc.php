@@ -71,16 +71,36 @@ require_once(APPROOT.'sources/application/search/criterionconversion/criterionto
  */
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
-	/** @var string ENUM_OBJECT_MODE_VIEW */
-	public const ENUM_OBJECT_MODE_VIEW = 'view';
-	/** @var string ENUM_OBJECT_MODE_EDIT */
-	public const ENUM_OBJECT_MODE_EDIT = 'edit';
-	/** @var string ENUM_OBJECT_MODE_CREATE */
-	public const ENUM_OBJECT_MODE_CREATE = 'create';
-	/** @var string ENUM_OBJECT_MODE_STIMULUS */
-	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
-	/** @var string ENUM_OBJECT_MODE_PRINT */
-	public const ENUM_OBJECT_MODE_PRINT = 'print';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_VIEW = 'view';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_EDIT = 'edit';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_CREATE = 'create';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_STIMULUS = 'stimulus';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_PRINT = 'print';
 
 	// N°3750 rendering used
 	/** @var string */
@@ -115,10 +135,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_LINKEDSET = 'linkedset';
 
 	/**
-	 * @var string DEFAULT_OBJECT_MODE
+	 * @var string DEFAULT_DISPLAY_MODE
+	 * @see static::$sDisplayMode
 	 * @since 3.0.0
 	 */
-	public const DEFAULT_OBJECT_MODE = self::ENUM_OBJECT_MODE_VIEW;
+	public const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_VIEW;
 
 	/**
 	 * @var string Prefix for tags in the subtitle, allows to identify them more easily
@@ -130,7 +151,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
 	/**
-	 * @var string Mode in which the object is displayed {@see static::ENUM_OBJECT_MODE_VIEW}, ...)
+	 * @var string Mode in which the object is displayed {@see static::ENUM_DISPLAY_MODE_VIEW}, ...)
 	 * @since 3.0.0
 	 */
 	protected $sDisplayMode;
@@ -160,7 +181,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
-		$this->sDisplayMode = static::DEFAULT_OBJECT_MODE;
+		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
 		$this->bAllowWrite = false;
 		$this->bAllowDelete = false;
 	}
@@ -168,7 +189,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	/**
 	 * Return the allowed object modes
 	 *
-	 * @see static::ENUM_OBJECT_MODE_XXX
+	 * @see static::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return string[]
 	 * @since 3.0.0
@@ -176,10 +197,10 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public static function EnumObjectModes(): array
 	{
 		return [
-			static::ENUM_OBJECT_MODE_VIEW,
-			static::ENUM_OBJECT_MODE_EDIT,
-			static::ENUM_OBJECT_MODE_CREATE,
-			static::ENUM_OBJECT_MODE_STIMULUS,
+			static::ENUM_DISPLAY_MODE_VIEW,
+			static::ENUM_DISPLAY_MODE_EDIT,
+			static::ENUM_DISPLAY_MODE_CREATE,
+			static::ENUM_DISPLAY_MODE_STIMULUS,
 		];
 	}
 
@@ -315,7 +336,7 @@ JS
 	 * To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
 	 *
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
@@ -356,7 +377,7 @@ JS
 			$oPage->AddSessionMessages($sMessageKey, $aRanks, $aMessages);
 		}
 
-		if (!$oPage->IsPrintableVersion() && ($this->GetDisplayMode() === static::ENUM_OBJECT_MODE_VIEW)) {
+		if (!$oPage->IsPrintableVersion() && ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_VIEW)) {
 			// action menu
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
@@ -508,7 +529,7 @@ HTML
 	 * Display properties tab of an object
 	 *
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
 	 *
@@ -588,7 +609,7 @@ HTML
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -882,7 +903,7 @@ HTML
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
 	 *
@@ -1099,7 +1120,7 @@ HTML
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 
-		if ($this->GetDisplayMode() === static::ENUM_OBJECT_MODE_VIEW) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_VIEW) {
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
 			if ($LockEnabled) {
@@ -2734,10 +2755,10 @@ JS
 		$iKey = $this->GetKey();
 		$sClass = get_class($this);
 
-		$this->SetDisplayMode(($iKey > 0) ? static::ENUM_OBJECT_MODE_EDIT : static::ENUM_OBJECT_MODE_CREATE);
+		$this->SetDisplayMode(($iKey > 0) ? static::ENUM_DISPLAY_MODE_EDIT : static::ENUM_DISPLAY_MODE_CREATE);
 		$sDisplayMode = $this->GetDisplayMode();
 
-		if ($sDisplayMode === static::ENUM_OBJECT_MODE_EDIT)
+		if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -2787,7 +2808,7 @@ JS
 		if (isset($aExtraParams['custom_button'])) {
 			$sApplyButton = $aExtraParams['custom_button'];
 		} else {
-			if ($sDisplayMode === static::ENUM_OBJECT_MODE_EDIT) {
+			if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sApplyButton = Dict::S('UI:Button:Apply');
 			} else {
 				$sApplyButton = Dict::S('UI:Button:Create');
@@ -2797,7 +2818,7 @@ JS
 		if (isset($aExtraParams['custom_operation'])) {
 			$sOperation = $aExtraParams['custom_operation'];
 		} else {
-			if ($sDisplayMode === static::ENUM_OBJECT_MODE_EDIT) {
+			if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sOperation = 'apply_modify';
 			} else {
 				$sOperation = 'apply_new';
@@ -2812,7 +2833,7 @@ JS
 			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
 		$oContentBlock->AddSubBlock($oForm);
 
-		if ($sDisplayMode === static::ENUM_OBJECT_MODE_EDIT) {
+		if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
@@ -2827,7 +2848,7 @@ JS
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			if ($sDisplayMode == static::ENUM_OBJECT_MODE_CREATE) {
+			if ($sDisplayMode == static::ENUM_DISPLAY_MODE_CREATE) {
 				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel)); // Set title will take care of the encoding
 			} else {
 				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
@@ -2968,7 +2989,7 @@ EOF
 		if (!is_array($aFieldsMap)) {
 			$aFieldsMap = array();
 		}
-		if ($sDisplayMode === static::ENUM_OBJECT_MODE_EDIT) {
+		if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
 		// Now display the relations, one tab per relation
@@ -3159,7 +3180,7 @@ EOF
 		} else {
 			$oObj = clone $oSourceObject;
 		}
-		$oObj->SetDisplayMode(static::ENUM_OBJECT_MODE_CREATE);
+		$oObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_CREATE);
 
 		// Pre-fill the object with default values, when there is only on possible choice
 		// AND the field is mandatory (otherwise there is always the possiblity to let it empty)
@@ -3232,7 +3253,7 @@ EOF
 	 */
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
-		$this->SetDisplayMode(static::ENUM_OBJECT_MODE_STIMULUS);
+		$this->SetDisplayMode(static::ENUM_DISPLAY_MODE_STIMULUS);
 
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
@@ -4950,7 +4971,7 @@ HTML
 			// Now create an object that has values for the homogeneous values only
 			/** @var \cmdbAbstractObject $oDummyObj */
 			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
-			$oDummyObj->SetDisplayMode(static::ENUM_OBJECT_MODE_EDIT);
+			$oDummyObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_EDIT);
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
 			{

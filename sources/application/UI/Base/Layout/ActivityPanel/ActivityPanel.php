@@ -62,11 +62,11 @@ class ActivityPanel extends UIBlock
 	/** @var \DBObject $oObject The object for which the activity panel is for */
 	protected $oObject;
 	/**
-	 * @see \cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see \cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 * @var string $sObjectMode Display mode of $oObject (create, edit, view, ...)
 	 */
 	protected $sObjectMode;
-	/** @var null|string $sTransactionId Only when $sObjectMode is set to \cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW */
+	/** @var null|string $sTransactionId Only when $sObjectMode is set to \cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW */
 	protected $sTransactionId;
 	/** @var array $aCaseLogs Metadata of the case logs (att. code, color, ...), will be use to make the tabs and identify them easily */
 	protected $aCaseLogs;
@@ -107,7 +107,7 @@ class ActivityPanel extends UIBlock
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
 		$this->InitializeComposeMenu();
-		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_OBJECT_MODE);
+		$this->SetObjectMode(cmdbAbstractObject::DEFAULT_DISPLAY_MODE);
 		$this->SetObject($oObject);
 		$this->SetEntries($aEntries);
 		$this->bAreEntriesSorted = false;
@@ -184,7 +184,7 @@ class ActivityPanel extends UIBlock
 	 * Set the display mode of the $oObject
 	 *
 	 * @param string $sMode
-	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return $this
 	 * @throws \Exception
@@ -204,7 +204,7 @@ class ActivityPanel extends UIBlock
 	/**
 	 * Return the display mode of the $oObject
 	 *
-	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 * @return string
 	 */
 	public function GetObjectMode(): string
@@ -260,13 +260,13 @@ class ActivityPanel extends UIBlock
 
 	/**
 	 * @return bool True if the lock mechanism has to be enabled
-	 * @uses \cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW
+	 * @uses \cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW
 	 * @uses static::HasAnEditableCaseLogTab()
 	 * @uses "concurrent_lock_enabled" config. param.
 	 */
 	public function IsLockEnabled(): bool
 	{
-		return (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode) && (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) && (true === $this->HasAnEditableCaseLogTab());
+		return (cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW === $this->sObjectMode) && (MetaModel::GetConfig()->Get('concurrent_lock_enabled')) && (true === $this->HasAnEditableCaseLogTab());
 	}
 
 	/**
@@ -567,8 +567,8 @@ class ActivityPanel extends UIBlock
 				// - There is a least 1 *writable* case log
 				// - And object is in view mode (in edit mode, it will be handled by the general form)
 				// Otherwise we generate unnecessary transaction IDs that could saturate the system
-				if ((false === $bIsReadOnly) && (false === $this->HasTransactionId()) && (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode)) {
-					$this->sTransactionId = (cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW === $this->sObjectMode) ? utils::GetNewTransactionId() : null;
+				if ((false === $bIsReadOnly) && (false === $this->HasTransactionId()) && (cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW === $this->sObjectMode)) {
+					$this->sTransactionId = (cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW === $this->sObjectMode) ? utils::GetNewTransactionId() : null;
 				}
 
 				// Add log to compose button menu only if it is editable

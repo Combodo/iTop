@@ -143,20 +143,20 @@ class CaseLogEntryForm extends UIContentBlock
 	 *
 	 * @param string $sObjectMode
 	 * @see $sSubmitMode
-	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return $this
 	 */
 	public function SetSubmitModeFromHostObjectMode($sObjectMode)
 	{
 		switch ($sObjectMode){
-			case cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE:
-			case cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT:
+			case cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE:
+			case cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT:
 				$sSubmitMode = static::ENUM_SUBMIT_MODE_BRIDGED;
 				break;
 
-			case cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW:
-			case cmdbAbstractObject::ENUM_OBJECT_MODE_STIMULUS:
+			case cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW:
+			case cmdbAbstractObject::ENUM_DISPLAY_MODE_STIMULUS:
 			default:
 				$sSubmitMode = static::ENUM_SUBMIT_MODE_AUTONOMOUS;
 				break;

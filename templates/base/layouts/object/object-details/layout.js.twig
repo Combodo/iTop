@@ -50,11 +50,11 @@
                 }
             }
         });
-        {% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE') %}
+        {% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE') %}
             $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
                 $(this).find('button[type="submit"][name=""][value=""]').click();
             });
-        {% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_OBJECT_MODE_STIMULUS') %}
+        {% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_STIMULUS') %}
             $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
                 $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
             });

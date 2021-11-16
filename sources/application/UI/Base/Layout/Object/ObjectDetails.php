@@ -54,7 +54,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	protected $sObjectName;
 	/**
 	 * @var string The mode in which the object should be displayed (read, edit, create, ...)
-	 * @see \cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see \cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 */
 	protected $sObjectMode;
 	/** @var string */
@@ -70,14 +70,14 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 * ObjectDetails constructor.
 	 *
 	 * @param \DBObject $oObject The object for which we display the details
-	 * @param string $sMode See \cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @param string $sMode See \cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 * @param string|null $sId ID of the block itself, not the $oObject ID
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	public function __construct(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE, ?string $sId = null)
+	public function __construct(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE, ?string $sId = null)
 	{
 		$this->sClassName = get_class($oObject);
 		$this->sClassLabel = MetaModel::GetName($this->GetClassName());
@@ -252,7 +252,7 @@ class ObjectDetails extends Panel implements iKeyboardShortcut
 	 */
 	protected function ComputeObjectName(DBObject $oObject): void
 	{
-		if ($this->sObjectMode === cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE) {
+		if ($this->sObjectMode === cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE) {
 			$this->sObjectName = Dict::Format('UI:CreationTitle_Class', $this->sClassLabel);
 		} else {
 			$this->sObjectName = $oObject->GetRawName();

@@ -51,12 +51,12 @@ class PageContentFactory
 	 * @param \DBObject   $oObject
 	 * @param string      $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
 	 *
-	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentWithSideContent
 	 * @throws \CoreException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
 		$oLayout = new PageContentWithSideContent();
 
