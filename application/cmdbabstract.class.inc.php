@@ -2766,7 +2766,7 @@ JS
 		$this->SetDisplayMode(($iKey > 0) ? static::ENUM_DISPLAY_MODE_EDIT : static::ENUM_DISPLAY_MODE_CREATE);
 		$sDisplayMode = $this->GetDisplayMode();
 
-		if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT)
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -2816,7 +2816,7 @@ JS
 		if (isset($aExtraParams['custom_button'])) {
 			$sApplyButton = $aExtraParams['custom_button'];
 		} else {
-			if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
+			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sApplyButton = Dict::S('UI:Button:Apply');
 			} else {
 				$sApplyButton = Dict::S('UI:Button:Create');
@@ -2826,7 +2826,7 @@ JS
 		if (isset($aExtraParams['custom_operation'])) {
 			$sOperation = $aExtraParams['custom_operation'];
 		} else {
-			if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
+			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sOperation = 'apply_modify';
 			} else {
 				$sOperation = 'apply_new';
@@ -2841,7 +2841,7 @@ JS
 			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
 		$oContentBlock->AddSubBlock($oForm);
 
-		if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
@@ -2856,7 +2856,7 @@ JS
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			if ($sDisplayMode == static::ENUM_DISPLAY_MODE_CREATE) {
+			if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_CREATE) {
 				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel)); // Set title will take care of the encoding
 			} else {
 				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
@@ -2966,7 +2966,7 @@ EOF
 			$oObjectDetails->SetIcon($sClassIcon);
 			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
 		} else {
-			$oObjectDetails = ObjectFactory::MakeDetails($this, $sDisplayMode);
+			$oObjectDetails = ObjectFactory::MakeDetails($this, $this->GetDisplayMode());
 			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
 			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
 		}
@@ -2997,7 +2997,7 @@ EOF
 		if (!is_array($aFieldsMap)) {
 			$aFieldsMap = array();
 		}
-		if ($sDisplayMode === static::ENUM_DISPLAY_MODE_EDIT) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
 		// Now display the relations, one tab per relation
