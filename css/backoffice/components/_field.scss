@@ -195,6 +195,12 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
     table {
       table-layout: fixed;
       width: 100%;
+
+      /* N°2788 - Force table containing <pre> to wrap as much as they can in the object details, otherwise it overflows on the other columns. We do this terrible hack only here as this is due to how the columns / fieldsets works. We might have the opportunity to improve it one day. */
+      pre {
+        white-space: unset;
+        word-break: break-all;
+      }
     }
   }
 }
