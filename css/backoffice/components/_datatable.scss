@@ -14,6 +14,9 @@ $ibo-datatable-header--text-color: $ibo-base-variable--text-color !default;
 $ibo-datatable-panel--table-spacing: 48px !default;
 $ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
 
+$ibo-datatable--row--background-color--is-hover: $ibo-color-primary-200 !default;
+$ibo-datatable--row--background-color--is-selected: $ibo-color-primary-300 !default;
+
 $ibo-datatable--selection-validation-buttons-toolbar--margin-top: 10px !default;
 $ibo-list-column--max-height: 150px !default;
 
@@ -105,20 +108,16 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
 
 
 .ibo-datatable {
-  tbody > tr.selected > * {
-    background-color: $ibo-color-orange-600;
-  }
-
-  tbody > tr > * {
+  tbody > tr {
     transition: background-color 400ms linear;
-  }
 
-  tbody > tr:hover > * {
-    cursor: pointer;
-  }
+    &:hover, &.selected:hover {
+      cursor: pointer;
+      background-color: $ibo-datatable--row--background-color--is-hover;
+    }
 
-  tbody > tr.selected:hover > * {
-    /* hover on lines is currently done toggling td.hover, and having a rule for links */
-    background-color: lighten($ibo-color-orange-600, 20%);
+    &.selected {
+      background-color: $ibo-datatable--row--background-color--is-selected;
+    }
   }
 }
