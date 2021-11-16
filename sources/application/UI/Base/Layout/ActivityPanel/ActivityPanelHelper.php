@@ -48,8 +48,8 @@ class ActivityPanelHelper
 			throw new Exception('"'.$sObjectClass.'" must be a valid class.');
 		}
 
-		if (false === in_array($sObjectMode, cmdbAbstractObject::EnumObjectModes())) {
-			throw new Exception('Wrong object mode "'.$sObjectMode.'", must be among '.implode(' / ', cmdbAbstractObject::EnumObjectModes()));
+		if (false === in_array($sObjectMode, cmdbAbstractObject::EnumDisplayModes())) {
+			throw new Exception('Wrong object mode "'.$sObjectMode.'", must be among '.implode(' / ', cmdbAbstractObject::EnumDisplayModes()));
 		}
 
 		$aStates = appUserPreferences::GetPref('activity_panel.is_expanded', []);
@@ -75,8 +75,8 @@ class ActivityPanelHelper
 			throw new Exception('"'.$sObjectClass.'" must be a valid class.');
 		}
 
-		if (false === in_array($sObjectMode, cmdbAbstractObject::EnumObjectModes())) {
-			throw new Exception('Wrong object mode "'.$sObjectMode.'", must be among '.implode(' / ', cmdbAbstractObject::EnumObjectModes()));
+		if (false === in_array($sObjectMode, cmdbAbstractObject::EnumDisplayModes())) {
+			throw new Exception('Wrong object mode "'.$sObjectMode.'", must be among '.implode(' / ', cmdbAbstractObject::EnumDisplayModes()));
 		}
 
 		$aStates = appUserPreferences::GetPref('activity_panel.is_closed', []);

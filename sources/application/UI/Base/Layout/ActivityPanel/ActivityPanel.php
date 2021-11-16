@@ -192,8 +192,8 @@ class ActivityPanel extends UIBlock
 	public function SetObjectMode(string $sMode)
 	{
 		// Consistency check
-		if(!in_array($sMode, cmdbAbstractObject::EnumObjectModes())){
-			throw new Exception("Activity panel: Object mode '$sMode' not allowed, should be either ".implode(' / ', cmdbAbstractObject::EnumObjectModes()));
+		if(!in_array($sMode, cmdbAbstractObject::EnumDisplayModes())){
+			throw new Exception("Activity panel: Object mode '$sMode' not allowed, should be either ".implode(' / ', cmdbAbstractObject::EnumDisplayModes()));
 		}
 
 		$this->sObjectMode = $sMode;

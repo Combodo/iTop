@@ -193,14 +193,14 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	}
 
 	/**
-	 * Return the allowed object modes
+	 * Return the allowed display modes
 	 *
 	 * @see static::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return string[]
 	 * @since 3.0.0
 	 */
-	public static function EnumObjectModes(): array
+	public static function EnumDisplayModes(): array
 	{
 		return [
 			static::ENUM_DISPLAY_MODE_VIEW,
