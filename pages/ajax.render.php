@@ -1066,7 +1066,7 @@ try
 			break;
 
 		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'element_identifier');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$sJSExtraParams = json_encode($aExtraParams);
@@ -1079,17 +1079,16 @@ try
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
-			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'raw_data'));
-			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
-<<<EOF
-			$('.dashboard_contents#$sDivId').block();
+				<<<EOF
+			$('.dashboard_contents#$sDashboardId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 			   function(data){
-				 $('.dashboard_contents#$sDivId').html(data);
-				 $('.dashboard_contents#$sDivId').unblock();
+				 $('.dashboard_contents#$sDashboardId').html(data);
+				 $('.dashboard_contents#$sDashboardId').unblock();
 				}
 			 );
 EOF
