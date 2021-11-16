@@ -29,7 +29,7 @@ class ObjectFactory
 	 * @return \Combodo\iTop\Application\UI\Base\Layout\Object\ObjectDetails
 	 * @throws \CoreException
 	 */
-	public static function MakeDetails(DBObject $oObject, ?string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
+	public static function MakeDetails(DBObject $oObject, ?string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
 		$oObjectDetails = new ObjectDetails($oObject, $sMode);
 		$oObjectDetails->SetIsHeaderVisibleOnScroll(true);

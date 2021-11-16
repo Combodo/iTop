@@ -43,7 +43,7 @@ class ActivityPanelFactory
 	/**
 	 * Make an activity panel for an object details layout, meaning that it should contain the case logs and the activity.
 	 *
-	 * @see cmdbAbstractObject::ENUM_OBJECT_MODE_XXX
+	 * @see cmdbAbstractObject::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @param \DBObject $oObject
 	 * @param string $sMode Mode the object is being displayed (view, edit, create, ...), default is view.
@@ -56,14 +56,14 @@ class ActivityPanelFactory
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
-	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
+	public static function MakeForObjectDetails(DBObject $oObject, string $sMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
 		$sObjClass = get_class($oObject);
 		$sObjId = $oObject->GetKey();
 
-		if ($sMode == cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT) {
+		if ($sMode == cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT) {
 			$oActivityPanel = new ActivityPanelPrint($oObject, [], ActivityPanel::BLOCK_CODE);
-			$sMode = cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW;
+			$sMode = cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW;
 		} else {
 			$oActivityPanel = new ActivityPanel($oObject, [], ActivityPanel::BLOCK_CODE);
 		}

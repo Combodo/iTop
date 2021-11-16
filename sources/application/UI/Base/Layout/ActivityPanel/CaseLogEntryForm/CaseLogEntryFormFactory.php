@@ -33,7 +33,7 @@ use UserRights;
  */
 class CaseLogEntryFormFactory
 {
-	public static function MakeForCaselogTab(DBObject $oObject, string $sCaseLogAttCode, string $sObjectMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
+	public static function MakeForCaselogTab(DBObject $oObject, string $sCaseLogAttCode, string $sObjectMode = cmdbAbstractObject::DEFAULT_DISPLAY_MODE)
 	{
 		$oCaseLogEntryForm = new CaseLogEntryForm($oObject, $sCaseLogAttCode);
 		$oCaseLogEntryForm->SetSubmitModeFromHostObjectMode($sObjectMode)
