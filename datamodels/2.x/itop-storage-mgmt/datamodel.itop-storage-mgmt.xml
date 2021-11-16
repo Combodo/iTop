@@ -1214,7 +1214,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/fc-interface.png</icon>
+          <icon>../../images/icons/icons8-globe-fiber.svg</icon>
         </style>
         <reconciliation>
           <attributes>

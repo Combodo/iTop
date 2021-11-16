@@ -25,7 +25,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-					<icon>images/incident.png</icon>
+					<icon>images/incident.svg</icon>
           <main_color>$ibo-color-red-600</main_color>
 				</style>
 				<reconciliation>
@@ -483,17 +483,17 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-							<icon>images/incident-deadline.png</icon>
+							<icon>images/incident-deadline.svg</icon>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-							<icon>images/incident-escalated.png</icon>
+							<icon>images/incident-escalated.svg</icon>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-							<icon>images/incident-closed.png</icon>
+							<icon>images/incident-closed.svg</icon>
 					</item>
 				</highlight_scale>
 				<stimuli>

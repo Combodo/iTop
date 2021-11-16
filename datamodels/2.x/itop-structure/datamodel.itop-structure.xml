@@ -97,7 +97,7 @@
                     <rank>0</rank>
                     <title>Organization:Overview:FunctionalCIs</title>
                     <style>
-                      <icon>itop-config-mgmt/images/server.png</icon>
+                      <icon>../images/icons/icons8-server.svg</icon>
                     </style>
                     <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
                     <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
@@ -1766,7 +1766,7 @@
                 <rank>1</rank>
                 <title>Menu:Contact</title>
                 <style>
-                  <icon>itop-structure/images/team.png</icon>
+                  <icon>../images/icons/icons8-team.svg</icon>
                 </style>
                 <subtitle>Menu:Contact:Count</subtitle>
                 <query>SELECT Contact</query>
@@ -1822,7 +1822,7 @@
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Typology</title>
                 <style>
-                  <icon>itop-structure/images/typology.png</icon>
+                  <icon>../images/icons/icons8-new-item.svg</icon>
                 </style>
               </dashlet>
               <dashlet id="9" xsi:type="DashletBadge">

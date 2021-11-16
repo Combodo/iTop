@@ -25,7 +25,7 @@
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
 				<style>
-          <icon>images/user-request.png</icon>
+          <icon>images/user-request.svg</icon>
           <main_color>$ibo-color-blue-800</main_color>
         </style>
 				<reconciliation>
@@ -534,17 +534,17 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-							<icon>images/user-request-deadline.png</icon>
+							<icon>images/user-request-deadline.svg</icon>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-							<icon>images/user-request-escalated.png</icon>
+							<icon>images/user-request-escalated.svg</icon>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-							<icon>images/user-request-closed.png</icon>
+							<icon>images/user-request-closed.svg</icon>
 					</item>
 				</highlight_scale>
 				<stimuli>
@@ -1881,7 +1881,7 @@
 									<dashlet id="9" xsi:type="DashletHeaderDynamic">
 										<rank>0</rank>
 										<title>Organization:Overview:UserRequests</title>
-											<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+											<icon>itop-welcome-itil/images/user-request-deadline.svg</icon>
 										<subtitle>Menu:UserRequest:OpenRequests</subtitle>
 										<query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
 										<group_by>status</group_by>
@@ -1928,7 +1928,7 @@
 							<dashlet id="11" xsi:type="DashletHeaderDynamic">
 								<rank>0</rank>
 								<title>Menu:RequestManagement</title>
-									<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+									<icon>itop-welcome-itil/images/user-request-deadline.svg</icon>
 								<subtitle>Menu:UserRequest:OpenRequests</subtitle>
 								<query>SELECT UserRequest WHERE status != "closed"</query>
 								<group_by>status</group_by>

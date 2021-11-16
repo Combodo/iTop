@@ -780,7 +780,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/interface.png</icon>
+          <icon>../../images/icons/icons8-globe-cable.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -901,7 +901,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                  <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
+                  <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

@@ -210,17 +210,17 @@
                     <item id="approved">
                         <rank>1</rank>
                         <color>HIGHLIGHT_CLASS_NONE</color>
-                            <icon>images/change-approved.png</icon>
+                            <icon>images/change-approved.svg</icon>
                     </item>
                     <item id="rejected">
                         <rank>2</rank>
                         <color>HIGHLIGHT_CLASS_NONE</color>
-                            <icon>images/change-rejected.png</icon>
+                            <icon>images/change-rejected.svg</icon>
                     </item>
                     <item id="closed">
                         <rank>3</rank>
                         <color>HIGHLIGHT_CLASS_NONE</color>
-                            <icon>images/change-closed.png</icon>
+                            <icon>images/change-closed.svg</icon>
                     </item>
                 </highlight_scale>
                 <stimuli>

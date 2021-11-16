@@ -1390,7 +1390,7 @@
               <dashlet id="25" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:EndUsers</title>
-                  <icon>itop-config-mgmt/images/team.png</icon>
+                  <icon>../images/icons/icons8-team.svg</icon>
               </dashlet>
               <dashlet id="26" xsi:type="DashletBadge">
                 <rank>1</rank>
