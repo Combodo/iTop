@@ -7351,6 +7351,11 @@ class AttributeImage extends AttributeBlob
 	{
 		if ($value instanceof ormDocument && !$value->IsEmpty())
 		{
+			if ($value->GetMimeType() === 'image/svg+xml') {
+				// N°4360 SVG can contain JavaScript...
+				return false;
+			}
+
 			return ($value->GetMainMimeType() == 'image');
 		}
 
