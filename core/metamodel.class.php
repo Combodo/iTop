@@ -7330,9 +7330,11 @@ abstract class MetaModel
 	 * @param string $sInput
 	 * @param array $aParams
 	 *
-	 * @return mixed
+	 * @return string
+	 *
+	 * @throws \Exception
 	 */
-	static public function ApplyParams($sInput, $aParams)
+	public static function ApplyParams($sInput, $aParams)
 	{
 		$aParams = static::AddMagicPlaceholders($aParams);
 
@@ -7342,7 +7344,7 @@ abstract class MetaModel
 
 		$aSearches = array();
 		$aReplacements = array();
-		foreach($aParams as $sSearch => $replace)
+		foreach ($aParams as $sSearch => $replace)
 		{
 			// Some environment parameters are objects, we just need scalars
 			if (is_object($replace))
