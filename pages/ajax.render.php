@@ -1137,7 +1137,7 @@ EOF
 		case 'dashboard_editor':
 			$sId = utils::ReadParam('id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'string');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sId);
 			if (!is_null($oDashboard))
