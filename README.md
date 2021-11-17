@@ -99,6 +99,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Lucas, Jonathan
 - Malik, Remie
 - Mindêllo de Andrade, Lucas (a.k.a @rokam)
+- Raenker, Martin
 - Rosenke, Stephan
 - Seki, Shoji
 - Shilov, Vladimir

@@ -361,8 +361,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:WelcomeMenu:MyIncidents' => 'An mich zugewiesene Incidents',
 	'UI:AllOrganizations' => ' Alle Organisationen ',
 	'UI:YourSearch' => 'Ihre Suche',
-	'UI:LoggedAsMessage' => 'Angemeldet als %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Angemeldet als %1$s (%2$s, Administrator)~~',
+	'UI:LoggedAsMessage' => 'Angemeldet als %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Angemeldet als %1$s (%2$s, Administrator)',
 	'UI:Button:Logoff' => 'Abmelden',
 	'UI:Button:GlobalSearch' => 'Suche',
 	'UI:Button:Search' => 'Suche ',
@@ -692,7 +692,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-Ausdruck',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Die Abfrage in OQL-Syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Auszuwertender Ausdruck: ',
-	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
+	'UI:RunQuery:QueryArguments' => 'Query-Argumente',
 	'UI:RunQuery:MoreInfo' => 'Mehr Informationen zur Abfrage: ',
 	'UI:RunQuery:DevelopedQuery' => 'Überarbeiteter Abfrageausdruck: ',
 	'UI:RunQuery:SerializedFilter' => 'Serieller Filter: ',
@@ -1466,9 +1466,9 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Noch keine',
 
 	// - Criteria header actions
-	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
-	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Locked' => 'Locked~~',
+	'UI:Search:Criteria:Toggle' => 'Minimieren / Expandieren',
+	'UI:Search:Criteria:Remove' => 'Entfernen',
+	'UI:Search:Criteria:Locked' => 'Gesperrt',
 
 	// - Criteria titles
 	//   - Default widget
