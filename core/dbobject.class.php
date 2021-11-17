@@ -1955,16 +1955,7 @@ abstract class DBObject implements iDisplay
 			}
 			if (!$oAtt->CheckFormat($toCheck))
 			{
-				$sErrorMessage = 'Wrong format';
-				if ($oAtt instanceof AttributeDBFieldVoid) {
-					$sErrorMessage .= " [$toCheck]";
-				}
-				if ($oAtt instanceof AttributeBlob) {
-					/** @var $toCheck \ormDocument */
-					$sErrorMessage .= ' ['.$toCheck->GetFileName().']';
-				}
-
-				return $sErrorMessage;
+				return "Wrong format [$toCheck]";
 			}
 		}
 		else
