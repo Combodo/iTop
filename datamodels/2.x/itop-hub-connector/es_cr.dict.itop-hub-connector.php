@@ -2,8 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -47,7 +48,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'iTopHub:Landing:Install' => 'Instalando extensiones...',
 	'iTopHub:CompiledOK' => 'Compilación éxitosa.',
 	'iTopHub:ConfigurationSafelyReverted' => 'Error detectado durante la instalación!<br/>La configuración de iTop NO fue modificada.',
-	'iTopHub:FailAuthent' => 'Authentication failed for this action.~~',
+	'iTopHub:FailAuthent' => 'Autenticación fallida para esta acciónn.',
 
 	'iTopHub:InstalledExtensions' => 'Extensiones instaladas en esta instancia',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensiones instaladas manualmente',
@@ -75,11 +76,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'iTopHub:InstallationProgress:ExtensionsInstallation' => 'Instalación de extensiones',
 	'iTopHub:InstallationEffect:MissingDependencies' => 'Esta extensión no puede ser instalad porque no cumple con las dependencias.',
 	'iTopHub:InstallationEffect:MissingDependencies_Details' => 'La extensión require el/los módulo(s): %1$s',
-	'iTopHub:InstallationProgress:InstallationSuccessful' => 'Instalación éxitosa!',
+	'iTopHub:InstallationProgress:InstallationSuccessful' => '¡Instalación éxitosa!',
 
-	'iTopHub:InstallationStatus:Installed_Version' => '%1$s version: %2$s.',
+	'iTopHub:InstallationStatus:Installed_Version' => '%1$s versión: %2$s.',
 	'iTopHub:InstallationStatus:Installed' => 'Instalada',
-	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Version %1$s <b>NO</b> está instalada.',
+	'iTopHub:InstallationStatus:Version_NotInstalled' => 'Versión %1$s <b>NO</b> está instalada.',
 ));
 
 

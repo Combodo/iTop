@@ -15,10 +15,10 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
@@ -216,8 +216,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => 'Cambio Padre',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_change_ref+' => 'Ref. Cambio',
-	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. Inciente Padre',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:public_log' => 'Bitácora Pública',
@@ -268,7 +268,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+	'Organization:Overview:UserRequests' => 'Requerimientos para esta Organización',
+	'Organization:Overview:MyUserRequests' => 'Mis Requerimientos para esta Organización',
+	'Organization:Overview:Tickets' => 'Tickets para esta Organización',
 ));

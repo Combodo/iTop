@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Spanish Localized data
+ *
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -33,7 +37,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:Button:Delete' => 'Borrar',
 	'Portal:EnvironmentBanner:Title' => 'Se encuentra en modo <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Regresar a modo PRODUCTION',
-	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:400' => 'Solicitud Incorrecta',
 	'Error:HTTP:401' => 'Autenticación',
 	'Error:HTTP:404' => 'Página no encontrada',
 	'Error:HTTP:500' => '¡Vaya! Ha ocurrido un error.',
@@ -59,9 +63,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:Attachments:DropZone:Message' => 'Agrega tus archivos para agregarlos como documentos adjuntos',
 	'Portal:File:None' => 'No hay archivo',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
-	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Download</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Descarga</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'es', //work with moment.js locales
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
+	'Portal:Form:Close:Warning' => '¿Desea abandorar esta forma? Datos modificados se perderan',
 ));
 
 // UserProfile brick
@@ -125,12 +129,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, proporcione la siguiente información:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Guardado',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar liga al objeto',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
 ));
 
 // CreateBrick brick

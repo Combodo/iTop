@@ -2,8 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -42,9 +43,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'bkp-table-file' => 'Archivo',
 	'bkp-table-file+' => 'Solo archivos con la extensión .zip son considerados como archivos de respaldos',
 	'bkp-table-size' => 'Tamaño',
-	'bkp-table-size+' => '',
+	'bkp-table-size+' => 'Tamaño',
 	'bkp-table-actions' => 'Acciones',
-	'bkp-table-actions+' => '',
+	'bkp-table-actions+' => 'Acciones',
 	'bkp-status-backups-auto' => 'Respaldos Programandos',
 	'bkp-status-backups-manual' => 'Respaldos Manuales',
 	'bkp-status-backups-none' => 'No hay respaldos',

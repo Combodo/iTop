@@ -2,8 +2,9 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -22,13 +23,13 @@
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'iTopUpdate:UI:PageTitle' => 'Actualización de aplicación',
-    'itop-core-update:UI:SelectUpdateFile' => 'Application Upgrade~~',
-    'itop-core-update:UI:ConfirmUpdate' => 'Application Upgrade~~',
-    'itop-core-update:UI:UpdateCoreFiles' => 'Application Upgrade~~',
+    'itop-core-update:UI:SelectUpdateFile' => 'Seleccionar archivo',
+    'itop-core-update:UI:ConfirmUpdate' => 'Confirmar actualización',
+    'itop-core-update:UI:UpdateCoreFiles' => 'Actualizar aplicación',
 	'iTopUpdate:UI:MaintenanceModeActive' => 'La aplicación está actualmente en mantenimiento, ningún usuario puede acceder. UStede debe ejecutar la instalación o restaturar la aplicación para regresar al modo normal.',
-	'itop-core-update:UI:UpdateDone' => 'Application Upgrade~~',
+	'itop-core-update:UI:UpdateDone' => 'Actualización realizada',
 
-	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Application Upgrade~~',
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Seleccionar archivo',
 	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar actualización de la aplicación',
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Actualizando aplicación',
 	'itop-core-update/Operation:UpdateDone/Title' => 'Actualización de aplicación terminada',
@@ -60,21 +61,21 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'iTopUpdate:UI:DoBackup:Label' => 'Respaldo de archivos y base de datos',
     'iTopUpdate:UI:DoBackup:Warning' => 'El respaldo no está recomendado por el limitado espacio en el dispositivo',
 
-    'iTopUpdate:UI:DiskFreeSpace' => 'Espaciolibre en el dispositivo',
-    'iTopUpdate:UI:ItopDiskSpace' => 'Espacio en diso de iTop',
-    'iTopUpdate:UI:DBDiskSpace' => 'Espacio en diso de base de datos',
-	'iTopUpdate:UI:FileUploadMaxSize' => 'Máximo tamaño de subida de archivos',
+    'iTopUpdate:UI:DiskFreeSpace' => 'Espacio libre en el dispositivo',
+    'iTopUpdate:UI:ItopDiskSpace' => 'Espacio en disco de iTop',
+    'iTopUpdate:UI:DBDiskSpace' => 'Espacio en disco de base de datos',
+	'iTopUpdate:UI:FileUploadMaxSize' => 'Máximo tamaño de carga de archivos',
 
-	'iTopUpdate:UI:PostMaxSize' => 'Valor post_max_size en PHP ini: %1$s~~',
-	'iTopUpdate:UI:UploadMaxFileSize' => 'Valor upload_max_filesize en PHP ini: %1$s~~',
+	'iTopUpdate:UI:PostMaxSize' => 'Valor post_max_size en PHP ini: %1$s',
+	'iTopUpdate:UI:UploadMaxFileSize' => 'Valor upload_max_filesize en PHP ini: %1$s',
 
     'iTopUpdate:UI:CanCoreUpdate:Loading' => 'Revisando sistema de archivos',
     'iTopUpdate:UI:CanCoreUpdate:Error' => 'La revisión del sistema de archivos falló (%1$s)',
-    'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'La revisión del sistema de archivos falló (Archivo no existe %1$s)~~',
+    'iTopUpdate:UI:CanCoreUpdate:ErrorFileNotExist' => 'La revisión del sistema de archivos falló (Archivo no existe %1$s)',
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'La revisión del sistema de archivos falló',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'La aplicación puede ser actualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'La aplicación no puede ser actualizada: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Advertencia: la actualización de la aplicación puede fallar: %1$s',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Listo para empezar',
@@ -90,12 +91,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 	// Errors
 	'iTopUpdate:Error:MissingFunction' => 'Imposible comenzar actualización, función no disponible',
-	'iTopUpdate:Error:MissingFile' => 'Archivo no encontrado: %1$s~~',
+	'iTopUpdate:Error:MissingFile' => 'Archivo no encontrado: %1$s',
 	'iTopUpdate:Error:CorruptedFile' => 'El archivo %1$s está corrupto',
     'iTopUpdate:Error:BadFileFormat' => 'El archivo de actualización no es un archivo zip',
     'iTopUpdate:Error:BadFileContent' => 'El archivo de actualización no es correcto',
     'iTopUpdate:Error:BadItopProduct' => 'El archivo de actualización no es compatible con su producto',
-	'iTopUpdate:Error:Copy' => 'Error, no puedo copiar \'%1$s\' a \'%2$s\'~~',
+	'iTopUpdate:Error:Copy' => 'Error, no puedo copiar \'%1$s\' a \'%2$s\'',
     'iTopUpdate:Error:FileNotFound' => 'Archivo no encontrado',
     'iTopUpdate:Error:NoFile' => 'Archivo no seleccionado',
 	'iTopUpdate:Error:InvalidToken' => 'Token inválido',
@@ -104,7 +105,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 	'iTopUpdate:UI:RestoreArchive' => 'Usted puede restaurar su aplicación desde el archivo \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Usted puede restaurar la base de datos desde \'%1$s\'',
-	'iTopUpdate:UI:UpdateDone' => 'Actualización exitosa',
+	'iTopUpdate:UI:UpdateDone' => 'Actualización éxitosa',
 	'Menu:iTopUpdate' => 'Actualización de aplicación',
 	'Menu:iTopUpdate+' => 'Actualización de aplicación',
 
@@ -112,7 +113,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
     'Class:ModuleInstallation/Attribute:installed' => 'Instalado en',
     'Class:ModuleInstallation/Attribute:name' => 'Nombre',
     'Class:ModuleInstallation/Attribute:version' => 'Versión',
-    'Class:ModuleInstallation/Attribute:comment' => 'Commentario',
+    'Class:ModuleInstallation/Attribute:comment' => 'Comentario',
 ));
 
 

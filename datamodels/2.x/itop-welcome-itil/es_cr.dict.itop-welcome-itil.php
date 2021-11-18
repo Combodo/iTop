@@ -15,9 +15,12 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * @copyright   Copyright (C) 2010-2014 Combodo SARL
+ /**
+ * Spanish Localized data
+ *
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
@@ -64,7 +67,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:AbstractResource' => 'Recurso abstracto',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -73,7 +76,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ResourceAdminMenu' => 'Recursos de Menú de Administración',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -82,7 +85,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ResourceRunQueriesMenu' => 'Recurso Libreta de Consultas',
-	'Class:ResourceRunQueriesMenu+' => '~~',
+	'Class:ResourceRunQueriesMenu+' => '',
 ));
 
 //
@@ -91,5 +94,5 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
-	'Class:ResourceSystemMenu+' => '~~',
+	'Class:ResourceSystemMenu+' => '',
 ));
