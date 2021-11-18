@@ -2663,6 +2663,7 @@ class WizStepDone extends WizardStep
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
+		SetupUtils::EraseSetupToken();
 		// For security reasons: add the extension now so that this action can be used to read *only* .tar.gz files from the disk...
 		$sBackupFile = $aParameters['backup'].'.tar.gz';
 		if (file_exists($sBackupFile))
