@@ -2419,7 +2419,6 @@ EOF
 		<span class="fas fa-trash"></span>
 	</button>
 </div>
-<br/>
 <input title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]" type="file" id="file_{$iId}" onChange="UpdateFileName('{$iId}', this.value)"/>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
@@ -3643,7 +3642,7 @@ HTML;
 					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
 
 					$sDisplayValue = <<<HTML
-{$sFieldAsHtml}<br>
+{$sFieldAsHtml}
 <a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
 HTML;
 				} else {
