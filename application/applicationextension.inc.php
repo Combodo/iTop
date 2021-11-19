@@ -1278,7 +1278,7 @@ interface iBackofficeLinkedScriptsExtension
  * @api
  * @since 3.0.0
  */
-interface iBackofficeEarlyScriptExtension
+interface iBackofficeEarlyScriptsExtension
 {
 	/**
 	 * @see \iTopWebPage::$a_early_scripts
