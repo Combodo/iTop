@@ -676,7 +676,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:CSVExport:LostChars' => 'Tekstcoderingsprobleem',
 	'UI:CSVExport:LostChars+' => 'Het gedownloade bestand zal worden gecodeerd in %1$s. ITOP_APPLICATION_SHORT heeft een aantal karakters gedetecteerd die niet compatibel zijn met dit formaat. Deze karakters zullen worden vervangen door een ander karakter (bijvoorbeeld karakters met accent kunnen het accent verliezen), of ze zullen worden verwijderd. Je kan data kopiëren en plakken van jouw webbrowser. Ook kan je de beheerder contacteren om de codes te veranderen (Zie parameter \'csv_file_default_charset\').',
 
-	'UI:Audit:Title' => 'ITOP_APPLICATION_SHORT - CMDB Audit',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Audit',
 	'UI:Audit:InteractiveAudit' => 'Interactieve Audit',
 	'UI:Audit:HeaderAuditRule' => 'Auditregel',
 	'UI:Audit:HeaderNbObjects' => '# objecten',
