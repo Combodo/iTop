@@ -45,7 +45,7 @@
 			{% endif %}
             <div class="ibo-navigation-menu--user-info">
                 <div class="ibo-navigation-menu--user-picture">
-                    <a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+                    <a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
                         <img class="ibo-navigation-menu--user-picture--image"
                              data-role="ibo-navigation-menu--user-picture--image"
                              src="{{ oUIBlock.GetUserData().sPictureUrl }}"
@@ -57,7 +57,7 @@
 					</a>
 				</div>
 				<div class="ibo-navigation-menu--user-welcome-message">
-					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
 						<div class="ibo-navigation-menu--user-welcome-message--text">
 							<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#">
 								{{ oUIBlock.GetUserData().sWelcomeMessage }}

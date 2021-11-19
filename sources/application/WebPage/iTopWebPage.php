@@ -161,6 +161,7 @@ class iTopWebPage extends NiceWebPage implements iTabbedPage
 
 		// Used by external keys and other drop down lists
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/selectize-plugin-a11y/selectize-plugin-a11y.js');
 		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.multiselect.js');
 
 		// Used by inline image, CKEditor and other places

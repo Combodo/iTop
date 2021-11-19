@@ -19,6 +19,7 @@
 // Navigation menu
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Bedrijfslogo',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Vergroot / Verberg',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Vergroot / Verberg (Gefilterd op %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter…',
@@ -27,6 +28,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Welkom %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s profielfoto',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
 
 ));

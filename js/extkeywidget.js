@@ -127,7 +127,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 	}
 	this.AddSelectize = function (options, initValue) {
 		let $select = $('#'+me.id).selectize({
-			plugins:['custom_itop'],
+			plugins:['custom_itop', 'selectize-plugin-a11y'],
 			render: {
 				item: function (item) {
 					if (item.obsolescence_flag == 1) {
@@ -156,7 +156,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 						val = val+'<br><i>'+item.additional_field+'</i>';
 					}
 					val = val+'</span>';
-					return $("<div class=\"option ibo-input-select--autocomplete-item\">").append(val);
+					return $("<div class=\"option ibo-input-select--autocomplete-item\" role=\"option\" id=\"${$item.text.replace(' ', '')}\">g").append(val);
 				}
 			},
 			valueField: 'value',

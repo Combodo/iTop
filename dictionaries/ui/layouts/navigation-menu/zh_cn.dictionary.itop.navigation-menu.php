@@ -19,6 +19,7 @@
 // Navigation menu
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => '公司logo',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => '展开 / 折叠',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => '展开 / 折叠 (Filtered on %1$s)~~',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => '过滤器...',
@@ -27,6 +28,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint' => 'No result for this menu filter~~',
 	'UI:Layout:NavigationMenu:UserInfo:WelcomeMessage:Text' => 'Hi %1$s!',
 	'UI:Layout:NavigationMenu:UserInfo:Picture:AltText' => '%1$s\'s contact picture~~',
+	'UI:Layout:NavigationMenu:UserMenu:Toggler:Label' => 'Open user menu~~',
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu entries~~',
 
 ));

@@ -196,7 +196,7 @@ class UIExtKeyWidget
 
 		$bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
 		$sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\"  data-accessibility-selectize-label=\"$sTitle\">";
 		
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
 		if (!$bIsAutocomplete) {

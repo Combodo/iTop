@@ -338,7 +338,7 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 				
 				$oWidget = new UIExtKeyWidget('Organization', 'org_id', '', true /* search mode */);
 				$iMaxComboLength = MetaModel::GetConfig()->Get('max_combo_length');
-				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, '', $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
+				$this->aSiloSelection['html'] .= $oWidget->DisplaySelect($oPage, $iMaxComboLength, false, Dict::S('UI:Layout:NavigationMenu:Silo:Label'), $oSet, $iCurrentOrganization, false, 'c[org_id]', '',
 					array(
 						'iFieldSize' => 20,
 						'iMinChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
