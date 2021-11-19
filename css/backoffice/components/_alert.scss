@@ -49,7 +49,10 @@ $ibo-alert-colors: (
 	.ibo-alert.ibo-is-#{$sColor} {
 		background-color: $bg-color;
 		color: $text-color;
-
+    a {
+      color: $text-color;
+      @extend %ibo-font-ral-bol-150;
+    }
 		&::before {
 			background-color: $highlight-color;
 		}
