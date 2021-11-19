@@ -391,10 +391,6 @@ body {
       height: 100%;
       .ibo-setup--wizard--content{
         overflow: auto;
-
-        input#db_backup {
-          margin-right: 0.4rem;
-        }
       }
       .ibo-setup--wizard--buttons-container{
         margin-top: auto;
@@ -565,9 +561,6 @@ body {
 }
 .setup-accept-licenses{
   margin-top: 18px;
-  input{
-    margin-right: 8px;
-  }
 }
 .module-selection-banner{
   display: flex;

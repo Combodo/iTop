@@ -87,3 +87,10 @@ a{
 		color: var(--ibo-hyperlink-color--on-active);
 	}
 }
+
+/* Input reset */
+/* - Standard spacing between label and input */
+select + label, label + select, label > select,
+input + label, label + input, label > input {
+  margin-left: 0.5rem;
+}
