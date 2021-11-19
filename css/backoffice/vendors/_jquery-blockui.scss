@@ -4,15 +4,15 @@
  */
 
 $ibo-vendors-blockui--blockoverlay--background-color: $ibo-color-white-200 !default;
-$ibo-vendors-blockui--blockomsg--color: $ibo-color-grey-700 !default;
+$ibo-vendors-blockui--blockmsg--color: $ibo-color-grey-700 !default;
 
 .blockUI.blockOverlay{
-  background-color: $ibo-color-white-200;
+  background-color: $ibo-vendors-blockui--blockoverlay--background-color;
 }
 .blockUI.blockMsg{
   font-size: 6em;
   text-align: center;
-  color: $ibo-color-grey-700;
+  color: $ibo-vendors-blockui--blockmsg--color;
   border: none;
   background-color: transparent;
 }

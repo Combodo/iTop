@@ -15,6 +15,8 @@ $ibo-input-select-selectize--value--height: 100% !default;
 $ibo-input-select-selectize--value--line-height: $ibo-input--height !default;
 $ibo-input-select-selectize--dropdown--max-height: 50vh !default;
 $ibo-input-select-selectize--dropdown--max-width: 50em !default;
+$ibo-input-select-selectize--item--active--text-color: $ibo-color-grey-800 !default;
+$ibo-input-select-selectize--item--active--background-color: $ibo-color-blue-100 !default;
 
 $ibo-input-select-wrapper--width: 100% !default;
 
@@ -189,8 +191,8 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 
 .selectize-dropdown.ui-menu .ui-state-active {
   margin: unset;
-  background-color: #f5fafd;
-  color: #495c68;
+  background-color: $ibo-input-select-selectize--item--active--background-color;
+  color: $ibo-input-select-selectize--item--active--text-color;
 }
 
 .ibo-input-select--autocomplete-item {

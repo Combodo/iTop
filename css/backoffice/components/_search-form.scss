@@ -20,6 +20,10 @@ $ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !d
 $ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
 $ibo-search-form-panel--more-criteria--border-color: $ibo-search-form-panel--criteria--border-color !default;
 
+$ibo-search-form-panel--items--hover--color: $ibo-color-grey-200 !default;
+
+$ibo-search-form-panel--multiple-choice--hover--color: $ibo-color-grey-200 !default;
+
 $ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
 $ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
 
@@ -425,7 +429,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 											padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
 
 											&:hover {
-												background-color: $ibo-color-grey-200;
+												background-color: $ibo-search-form-panel--multiple-choice--hover--color;
 											}
 
 											label {
@@ -689,7 +693,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 					.sfl_items {
 						> li {
 							&:hover {
-								background-color: $ibo-color-grey-200;
+								background-color: $ibo-search-form-panel--items--hover--color;
 							}
 						}
 					}
@@ -748,7 +752,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 				white-space: nowrap;
 
 				&:hover {
-					background-color: $ibo-color-white-100;
+					background-color: $ibo-search-form-panel--items--hover--color;
 				}
 
 				&.sfl_i_placeholder {
