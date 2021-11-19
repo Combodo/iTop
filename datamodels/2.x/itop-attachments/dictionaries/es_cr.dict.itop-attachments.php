@@ -53,17 +53,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => 'Anexo',
 	'Class:Attachment/Attribute:expire' => 'Expira',
-	'Class:Attachment/Attribute:expire+' => 'Expira',
+	'Class:Attachment/Attribute:expire+' => '',
 	'Class:Attachment/Attribute:temp_id' => 'Id Temporal',
-	'Class:Attachment/Attribute:temp_id+' => 'Id Temporal',
+	'Class:Attachment/Attribute:temp_id+' => '',
 	'Class:Attachment/Attribute:item_class' => 'Clase de Elemento',
-	'Class:Attachment/Attribute:item_class+' => 'Clase de Elemento',
+	'Class:Attachment/Attribute:item_class+' => '',
 	'Class:Attachment/Attribute:item_id' => 'Elemento',
-	'Class:Attachment/Attribute:item_id+' => 'Elemento',
+	'Class:Attachment/Attribute:item_id+' => '',
 	'Class:Attachment/Attribute:item_org_id' => 'Organización de Elemento',
-	'Class:Attachment/Attribute:item_org_id+' => 'Organización de Elemento',
+	'Class:Attachment/Attribute:item_org_id+' => '',
 	'Class:Attachment/Attribute:contents' => 'Contenido',
-	'Class:Attachment/Attribute:contents+' => 'Contenido',
+	'Class:Attachment/Attribute:contents+' => '',
 ));
 
 
@@ -81,9 +81,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Attachment/Attribute:creation_date' => 'Fecha de Creación',
-	'Class:Attachment/Attribute:creation_date+' => 'Fecha de Creación',
+	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Id del Usuario',
-	'Class:Attachment/Attribute:user_id+' => 'Id del Usuario',
+	'Class:Attachment/Attribute:user_id+' => '',
 	'Class:Attachment/Attribute:contact_id' => 'Id del Contacto',
-	'Class:Attachment/Attribute:contact_id+' => 'Id del Contacto',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));
