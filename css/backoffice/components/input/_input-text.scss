@@ -17,6 +17,6 @@ $ibo-input-text--padding-y: 10px !default;
   min-height: 15em;
 }
 
-textarea.ibo-queryoql, .ibo-queryoql:not(:nth-child(n)), .ibo-queryoql > :not(.ibo-field--label) {
+.ibo-query-oql, .ibo-query-oql > :not(.ibo-field--label) {
   @extend %ibo-font-code-150;
 }

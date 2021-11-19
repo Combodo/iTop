@@ -2193,7 +2193,10 @@ HTML;
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
+					$aTextareaCssClasses = [];
+
 					if ($oAttDef->GetEditClass() == 'OQLExpression') {
+						$aTextareaCssClasses[] = 'ibo-query-oql';
 						// N°3227 button to open predefined queries dialog
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
@@ -2263,14 +2266,16 @@ JS
 					} else {
 						$sAdditionalStuff = '';
 					}
+
 					// Ok, the text area is drawn here
+					$sTextareCssClassesAsString = implode(' ', $aTextareaCssClasses);
 					$sHTMLValue = <<<HTML
 {$sAdditionalStuff}
 <div class="field_input_zone field_input_text ibo-input-wrapper ibo-input-text-wrapper" data-validation="untouched">
 	<div class="f_i_text_header">
 		<span class="fullscreen_button" title="{$sFullscreenLabelForHtml}"></span>
 	</div>
-	<textarea class="ibo-input ibo-input-text" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
+	<textarea class="ibo-input ibo-input-text {$sTextareCssClassesAsString}" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
 </div>
 {$sValidationSpan}{$sReloadSpan}
 HTML;

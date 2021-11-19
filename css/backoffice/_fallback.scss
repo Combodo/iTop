@@ -23,3 +23,7 @@ fieldset {
 legend {
   @extend .ibo-fieldset-legend;
 }
+
+textarea {
+  @extend .ibo-input-text;
+}
