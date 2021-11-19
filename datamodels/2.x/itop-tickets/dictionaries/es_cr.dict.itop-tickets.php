@@ -15,8 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -180,17 +180,17 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentUser' => 'Asignar Usuario actual',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+' => 'Asignar Usuario actual',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1' => 'Campo Destino',
-	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+' => 'If the field is a string then the friendly name will be used, otherwise the identifier will be used. That friendly name is the name of the person if any is attached to the user, otherwise it is the login.',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+' => 'Si el campo es una cadena de caracteres, entonces el nombre completo será usado, de otra manera el identificador será usado. El nombre completo es el nombre de una persona que está ligado a un usurio, si no será su clave de acceso.',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson' => 'Asignar Persona actual',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson+' => 'Asignar Persona actual',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1' => 'Campo Destino',
-	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+' => 'If the field is a string then the friendly name will be used, otherwise the identifier will be used.',
+	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+' => 'Si el campo es una cadena de caracteres, entonces el nombre completo será usado, de otra manera el identificador será usado.',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime' => 'Asignar tiempo transcurrido',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime+' => 'Asignar tiempo transcurrido (segundos)',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:1' => 'Campo Destino',
-	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:1+' => 'The field to set, in the current object',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:1+' => 'El campo a configurar, en el objeto actual',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2' => 'Campo de Referencia',
-	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'The field from which to get the reference date',
+	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:2+' => 'El campo desde el que se obtienen los datos referenciados',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3' => 'Horas Trabajadas',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:3+' => 'Dejar vacio para utilizar el horario de trabajo estandar, o dejar por omisión para usar esquema 7x24',
 	'Class:cmdbAbstractObject/Method:Reset' => 'Restablecer',
@@ -204,9 +204,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:2' => 'Campo Origen',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2+' => 'Campo de donde se obtendrá valor',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus' => 'Aplicar Stimulus',
-	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Apply the specified stimulus to the current object',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus+' => 'Aplicar stimulus específico a objeto actual',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1' => 'Código Stimulus',
-	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'A valid stimulus code for the current class',
+	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1+' => 'Un código de stimulus válido para la clase actual',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer' => 'Tiempo a Pertenencia',
 	'Class:ResponseTicketTTO/Interface:iMetricComputer+' => 'Objetivo basado en SLT de tipo TTO',
 	'Class:ResponseTicketTTR/Interface:iMetricComputer' => 'Tiempo a Resolución',

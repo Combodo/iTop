@@ -15,8 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -1060,8 +1060,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Brand+' => 'Marca',
 	'Class:Brand/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Brand/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
-	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
-	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
+	'Class:Brand/UniquenessRule:name+' => 'El nombre debe ser único',
+	'Class:Brand/UniquenessRule:name' => 'Esta Marca ya existe',
 ));
 
 //
@@ -1115,8 +1115,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Model/Attribute:type/Value:Phone+' => 'Teléfono',
 	'Class:Model/Attribute:physicaldevices_list' => 'Dispositivo Físico',
 	'Class:Model/Attribute:physicaldevices_list+' => 'Dispositivo Físico',
-	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
-	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
+	'Class:Model/UniquenessRule:name_brand+' => 'El nombre debe ser único dentro de la Marca',
+	'Class:Model/UniquenessRule:name_brand' => 'este modelo ya existe para esta Marca',
 ));
 
 //
@@ -1220,8 +1220,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Subnet+' => 'SubRed',
 	'Class:Subnet/Attribute:description' => 'Descripción',
 	'Class:Subnet/Attribute:description+' => 'Descripción',
-	'Class:Subnet/Attribute:subnet_name' => 'Subnet name~~',
-	'Class:Subnet/Attribute:subnet_name+' => '~~',
+	'Class:Subnet/Attribute:subnet_name' => 'Nombre de Subred',
+	'Class:Subnet/Attribute:subnet_name+' => 'Nombre de Subred',
 	'Class:Subnet/Attribute:org_id' => 'Organización',
 	'Class:Subnet/Attribute:org_id+' => 'Organización',
 	'Class:Subnet/Attribute:org_name' => 'Organización',
@@ -1574,8 +1574,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Menu:ConfigManagement:Misc' => 'Misceláneo',
 	'Menu:Group' => 'Grupos de ECs',
 	'Menu:Group+' => 'Grupos de ECs',
-	'Menu:OSVersion' => 'OS versions~~',
-	'Menu:OSVersion+' => '~~',
+	'Menu:OSVersion' => 'Versión de Sistema Operativo',
+	'Menu:OSVersion+' => '',
 	'Menu:Software' => 'Catálogo de Software',
 	'Menu:Software+' => 'Catálogo de Software',
 ));

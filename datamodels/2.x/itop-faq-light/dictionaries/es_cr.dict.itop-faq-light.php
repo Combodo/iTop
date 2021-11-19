@@ -47,6 +47,9 @@
 //
 // Class: FAQ
 //
+//
+// Class: FAQ
+//
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
@@ -64,13 +67,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQ/Attribute:error_code+' => 'Código de Error',
 	'Class:FAQ/Attribute:key_words' => 'Palabras Clave',
 	'Class:FAQ/Attribute:key_words+' => 'Palabras Clave',
-	'Class:FAQ/Attribute:domains' => 'Domains~~',
+	'Class:FAQ/Attribute:domains' => 'Ámbito',
 ));
 
 //
 // Class: FAQCategory
 //
-
 Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',

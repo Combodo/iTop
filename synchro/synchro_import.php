@@ -491,16 +491,16 @@ try
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		$oMutex = new iTopMutex('synchro_import_'.$oDataSource->GetKey());
 		$oMutex->Lock();
-		set_time_limit(intval($iLoopTimeLimit));
 		foreach ($aData as $iRow => $aRow)
 		{
+			/** @noinspection DisconnectedForeachInstructionInspection */
+			set_time_limit($iLoopTimeLimit);
 			$sReconciliationCondition = '`primary_key` = '.CMDBSource::Quote($aRow[$iPrimaryKeyCol]);
 			$sSelect = "SELECT COUNT(*) FROM `$sTable` WHERE $sReconciliationCondition";
 			$aRes = CMDBSource::QueryToArray($sSelect);
 			$iCount = (int)$aRes[0]['COUNT(*)'];
 
-			if ($iCount === 0)
-			{
+			if ($iCount === 0) {
 				// No record... create it
 				//
 				$iCountCreations++;

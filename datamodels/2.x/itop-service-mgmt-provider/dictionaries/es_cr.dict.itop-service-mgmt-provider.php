@@ -15,8 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -123,7 +123,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Contract/Attribute:cost_currency/Value:dollars' => 'Dólares',
 	'Class:Contract/Attribute:cost_currency/Value:dollars+' => 'Dólares de E.U.A',
 	'Class:Contract/Attribute:cost_currency/Value:euros' => 'Euros',
-	'Class:Contract/Attribute:cost_currency/Value:euros+' => '~~',
+	'Class:Contract/Attribute:cost_currency/Value:euros+' => '',
 	'Class:Contract/Attribute:contracttype_id' => 'Tipo de Contrato',
 	'Class:Contract/Attribute:contracttype_id+' => 'Tipo de Contrato',
 	'Class:Contract/Attribute:contracttype_name' => 'Tipo de Contrato',
@@ -369,7 +369,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:SLA/Attribute:slts_list+' => 'Objetivos de Nivel de Servicio',
 	'Class:SLA/Attribute:customercontracts_list' => 'Acuerdos con Clientes',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Acuerdos con Clientes',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Could not save link with Customer contract %1$s and service %2$s : SLA already exists~~',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'No se puede guardar la relación entre Acuerdo con Cliente %1$s y Servicio %2$s : El SLA ya existe',
 ));
 
 //
@@ -428,15 +428,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkSLAToSLT/Attribute:slt_id+' => 'SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name' => 'SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_name+' => 'SLT',
-	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Slt metric~~',
+	'Class:lnkSLAToSLT/Attribute:slt_metric' => 'Métrica de SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_metric+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Slt request type~~',
+	'Class:lnkSLAToSLT/Attribute:slt_request_type' => 'Tipo de Requerimiento de SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_request_type+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'Slt ticket priority~~',
+	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority' => 'SLT prioridad de ticket',
 	'Class:lnkSLAToSLT/Attribute:slt_ticket_priority+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Slt value~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value' => 'Valor de SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value+' => '',
-	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Slt value unit~~',
+	'Class:lnkSLAToSLT/Attribute:slt_value_unit' => 'Unidad de valor de SLT',
 	'Class:lnkSLAToSLT/Attribute:slt_value_unit+' => '',
 ));
 

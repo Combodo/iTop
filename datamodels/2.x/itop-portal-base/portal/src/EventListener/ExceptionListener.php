@@ -58,11 +58,17 @@ class ExceptionListener implements ContainerAwareInterface
 		$oException = $oEvent->getException();
 
 		// Prepare / format exception data
-		$sErrorMessage = $oException->getMessage();
+		if ($oException instanceof \MySQLException) {
+			// Those exceptions should be caught before (in the metamodel startup, before event starting Symfony !)
+			// They could contain far too much info :/
+			// So as an extra precaution we are filtering here anyway !
+			$sErrorMessage = 'DB Server error, check error log !';
+		} else {
+			$sErrorMessage = $oException->getMessage();
+		}
 		// - For none HTTP exception, status code will be a generic 500
 		$iStatusCode = ($oException instanceof HttpExceptionInterface) ? $oException->getStatusCode() : Response::HTTP_INTERNAL_SERVER_ERROR;
-		switch ($iStatusCode)
-		{
+		switch ($iStatusCode) {
 			case 404:
 				$sErrorTitle = Dict::S('Error:HTTP:404');
 				break;
@@ -93,10 +99,10 @@ class ExceptionListener implements ContainerAwareInterface
 
 		// Prepare data for template
 		$aData = array(
-			'exception' => $oFlattenException,
-			'code' => $iStatusCode,
-			'error_title' => $sErrorTitle,
-			'error_message' => '',
+			'exception'     => $oFlattenException,
+			'code'          => $iStatusCode,
+			'error_title'   => $sErrorTitle,
+			'error_message' => $sErrorMessage,
 		);
 
 		// Generate the response

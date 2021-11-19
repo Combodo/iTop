@@ -965,7 +965,7 @@ try
 			break;
 
 		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'element_identifier');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
@@ -979,17 +979,16 @@ try
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
-			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'raw_data'));
-			$sDivId = utils::Sanitize($sDashboardId, '', 'element_identifier');
+			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
 <<<EOF
-			$('.ibo-dashboard#$sDivId').block();
+			$('.ibo-dashboard#$sDashboardId').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 			   function(data){
-				 $('.ibo-dashboard#$sDivId').html(data);
-				 $('.ibo-dashboard#$sDivId').unblock();
+				 $('.ibo-dashboard#$sDashboardId').html(data);
+				 $('.ibo-dashboard#$sDashboardId').unblock();
 				}
 			 );
 EOF
@@ -1039,7 +1038,7 @@ EOF
 			$sId = utils::ReadParam('id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
-			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'string');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
 			if (!is_null($oDashboard)) {
@@ -2252,6 +2251,7 @@ EOF
 			$oPage->add(json_encode($aResult));
 			break;
 
+		/** @noinspection PhpMissingBreakStatementInspection cke_upload_and_browse and cke_browse are chained */
 		case 'cke_upload_and_browse':
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
@@ -2308,10 +2308,31 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
+			/** @noinspection SuspiciousAssignmentsInspection cke_upload_and_browse and cke_browse are chained */
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
 			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');
+
+			if (empty($sTempId)) {
+				throw new SecurityException('Cannot access endpoint with empty temp_id parameter');
+			}
+			if (false === privUITransaction::IsTransactionValid($sTempId, false)) {
+				throw new SecurityException('Access rejected');
+			}
+			if (false === MetaModel::IsValidClass($sClass)) {
+				throw new CoreUnexpectedValue('Invalid object');
+			}
+			if ($iObjectId > 0) {
+				// searching for object in the DB with a count query
+				// using DBSearch so that user rights are applied !
+				$oSearch = new DBObjectSearch($sClass);
+				$oSearch->AddCondition(MetaModel::DBGetKey($sClass), $iObjectId, '=');
+				$oSet = new CMDBObjectSet($oSearch);
+				if (false === $oSet->CountExceeds(0)) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+			}
 
 			$sPostUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
 

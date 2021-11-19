@@ -41,29 +41,25 @@ register_shutdown_function(function()
 	$sReservedMemory = null;
 	if (!is_null($err = error_get_last()) && ($err['type'] == E_ERROR))
 	{
-		// Remove stack trace from MySQLException
+		// Remove stack trace from MySQLException (since 2.7.2 see N°3174)
 		$sMessage = $err['message'];
-		if (strpos($sMessage, 'MySQLException') !== false)
-		{
+		if (strpos($sMessage, 'MySQLException') !== false) {
 			$iStackTracePos = strpos($sMessage, 'Stack trace:');
-			if ($iStackTracePos !== false)
-			{
+			if ($iStackTracePos !== false) {
 				$sMessage = substr($sMessage, 0, $iStackTracePos);
 			}
 		}
-		IssueLog::error($sMessage, null, $err);
-		if (strpos($err['message'], 'Allowed memory size of') !== false)
-		{
+		// Log additional info but message from $err (since 2.7.6 N°4174)
+		$aErrToLog = $err;
+		unset($aErrToLog['message']);
+		IssueLog::error($sMessage, null, $aErrToLog);
+		if (strpos($err['message'], 'Allowed memory size of') !== false) {
 			$sLimit = ini_get('memory_limit');
 			echo "<p>iTop: Allowed memory size of $sLimit exhausted, contact your administrator to increase 'memory_limit' in php.ini</p>\n";
-		}
-		elseif (strpos($err['message'], 'Maximum execution time') !== false)
-		{
+		} elseif (strpos($err['message'], 'Maximum execution time') !== false) {
 			$sLimit = ini_get('max_execution_time');
 			echo "<p>iTop: Maximum execution time of $sLimit exceeded, contact your administrator to increase 'max_execution_time' in php.ini</p>\n";
-		}
-		else
-		{
+		} else {
 			echo "<p>iTop: An error occurred, check server error log for more information.</p>\n";
 		}
 	}

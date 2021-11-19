@@ -2544,11 +2544,13 @@ class WizStepDone extends WizardStep
 			$oPage->ok("The installation completed successfully.");
 		}
 
+		$bHasBackup = false;
 		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false) && $this->oWizard->GetParameter('authent', false))
 		{
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			if (file_exists($sBackupDestination.'.tar.gz'))
 			{
+				$bHasBackup = true;
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
 				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot(true).'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent','').'" target="_blank"><img src="../images/icons/icons8-archive-folder.svg" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
@@ -2675,7 +2677,10 @@ class WizStepDone extends WizardStep
 		// avoid leaving in a dirty state
 		SetupUtils::ExitMaintenanceMode(false);
 		SetupUtils::ExitReadOnlyMode(false);
-		SetupUtils::EraseSetupToken();
+
+		if (false === $bHasBackup) {
+			SetupUtils::EraseSetupToken();
+		}
 	}
 
 	public function CanMoveForward()
@@ -2698,6 +2703,7 @@ class WizStepDone extends WizardStep
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
+		SetupUtils::EraseSetupToken();
 		// For security reasons: add the extension now so that this action can be used to read *only* .tar.gz files from the disk...
 		$sBackupFile = $aParameters['backup'].'.tar.gz';
 		if (file_exists($sBackupFile))
