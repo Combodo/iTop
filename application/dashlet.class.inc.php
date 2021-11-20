@@ -1009,6 +1009,7 @@ HTML;
 		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $this->aProperties['query']);
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
+		$oField->AddCSSClass("ibo-is-code");
 		$oForm->AddField($oField);
 
 		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
@@ -1046,6 +1047,7 @@ HTML;
 		$oField = new DesignerHiddenField('query', Dict::S('UI:DashletObjectList:Prop-Query'), $sOQL);
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
+		$oField->AddCSSClass("ibo-is-code");
 		$oForm->AddField($oField);
 
 		$oField = new DesignerBooleanField('menu', Dict::S('UI:DashletObjectList:Prop-Menu'), $this->aProperties['menu']);
@@ -1396,6 +1398,7 @@ abstract class DashletGroupBy extends Dashlet
 		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletGroupBy:Prop-Query'), $this->aProperties['query']);
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
+		$oField->AddCSSClass("ibo-is-code");
 		$oForm->AddField($oField);
 
 		try {
@@ -1653,6 +1656,7 @@ abstract class DashletGroupBy extends Dashlet
 		$oField = new DesignerHiddenField('query', Dict::S('UI:DashletGroupBy:Prop-Query'), $sOQL);
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
+		$oField->AddCSSClass("ibo-is-code");
 		$oForm->AddField($oField);
 
 		if (!is_null($sOQL)) {
@@ -2226,6 +2230,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oField = new DesignerLongTextField('query', Dict::S('UI:DashletHeaderDynamic:Prop-Query'), $this->aProperties['query']);
 		$oField->SetMandatory();
 		$oField->AddCSSClass("ibo-query-oql");
+		$oField->AddCSSClass("ibo-is-code");
 		$oForm->AddField($oField);
 
 		try

@@ -2197,6 +2197,7 @@ HTML;
 
 					if ($oAttDef->GetEditClass() == 'OQLExpression') {
 						$aTextareaCssClasses[] = 'ibo-query-oql';
+						$aTextareaCssClasses[] = 'ibo-is-code';
 						// N°3227 button to open predefined queries dialog
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');

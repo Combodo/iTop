@@ -1515,6 +1515,7 @@ EOF
 
 		$sCSVData = utils::ReadParam('csvdata', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$oTextarea = new TextArea('csvdata', $sCSVData, '', 120, 30);
+		$oTextarea->AddCSSClasses(['ibo-input-text', 'ibo-is-code']);
 		$oFieldPaste = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:PasteData'), $oTextarea);
 		$oFormPaste->AddSubBlock($oFieldPaste);
 
