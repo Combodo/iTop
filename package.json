@@ -3,7 +3,7 @@
     "@fontsource/raleway": "^4.5.0",
     "@popperjs/core": "^2.4.4",
     "bulma-scss": "^0.9.0-1",
-    "datatables.net": "^1.10.12",
+    "datatables.net": "^1.11.3",
     "datatables.net-fixedheader": "^3.1.2",
     "datatables.net-responsive": "^2.1.0",
     "datatables.net-scroller": "^1.4.2",
