@@ -10,7 +10,7 @@
 
 use Combodo\iTop\Core\MetaModel\HierarchicalKey;
 
-require_once('../approot.inc.php');
+require_once ('../../../approot.inc.php');
 require_once APPROOT.'application/startup.inc.php';
 
 foreach(MetaModel::GetClasses() as $sClass)
