@@ -146,8 +146,11 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus) {
 			var sAttCode = this.m_oData.m_aAllowedValuesRequested[i];
 			var sFieldId = this.m_oData.m_oFieldsMap[sAttCode];
 			var bDisabled = $('#'+sFieldId).prop('disabled');
-			//console.log('Setting #field_'+sFieldId+' to: '+this.m_oData.m_oAllowedValues[sAttCode]);
-			$('#field_'+sFieldId).replaceWith(this.m_oData.m_oAllowedValues[sAttCode]);
+
+			// N°4408 Depending if the returned field contains an input or only the display value; we replace the wrapper to avoid dummy nesting (replaceWith), otherwise we replace the content like before (html)
+			const sMethodToCall = ($(this.m_oData.m_oAllowedValues[sAttCode]).attr('id') === 'field_'+sFieldId) ? 'replaceWith' : 'html';
+			$('#field_'+sFieldId)[sMethodToCall](this.m_oData.m_oAllowedValues[sAttCode]);
+
 			if (bDisabled)
 			{
 				$('#'+sFieldId).prop('disabled', true);
