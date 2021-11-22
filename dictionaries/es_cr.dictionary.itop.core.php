@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:DeletedObjectLabel' => '%1s (eliminado)',
 	'Core:DeletedObjectTip'   => 'Elemento ha sido Eliminado en %1$s (%2$s)',
 
@@ -223,7 +223,7 @@ Operadores:<br/>
 // Class: CMDBChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChange' => 'Cambio',
 	'Class:CMDBChange+' => 'Cambios',
 	'Class:CMDBChange/Attribute:date' => 'Fecha',
@@ -236,7 +236,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOp
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOp' => 'Operación de Cambios',
 	'Class:CMDBChangeOp+' => 'Operación de Cambios',
 	'Class:CMDBChangeOp/Attribute:change' => 'Cambio',
@@ -257,7 +257,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOpCreate
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpCreate' => 'Creación de Objeto',
 	'Class:CMDBChangeOpCreate+' => 'Creación de Objeto',
 ));
@@ -266,7 +266,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOpDelete
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpDelete' => 'Borrado de Objeto',
 	'Class:CMDBChangeOpDelete+' => 'Borrado de Objeto',
 ));
@@ -275,7 +275,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOpSetAttribute
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttribute' => 'Cambio en Objeto',
 	'Class:CMDBChangeOpSetAttribute+' => 'Cambio en Objeto',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atributo',
@@ -286,7 +286,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOpSetAttributeScalar
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeScalar' => 'Cambio de Propiedad',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Cambio de Propiedades escalares del Objeto',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Valor Anterior',
@@ -295,7 +295,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'Nuevo Valor del Atributo',
 ));
 // Used by CMDBChangeOp... & derived classes
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Change:ObjectCreated' => 'Objeto Creado',
 	'Change:ObjectDeleted' => 'Objeto Eliminado',
 	'Change:ObjectModified' => 'Objeto Modificado',
@@ -314,7 +314,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOpSetAttributeBlob
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Cambio de Datos',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'Cambio de Datos',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Valor Anterior',
@@ -325,7 +325,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: CMDBChangeOpSetAttributeText
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeText' => 'Cambio de Texto',
 	'Class:CMDBChangeOpSetAttributeText+' => 'Cambio de Texto',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Valor Anterior',
@@ -336,7 +336,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Event
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Event' => 'Bitácora de Eventos',
 	'Class:Event+' => 'Evento interno de aplicación',
 	'Class:Event/Attribute:message' => 'Mensaje',
@@ -353,7 +353,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EventNotification
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventNotification' => 'Notificación de Evento',
 	'Class:EventNotification+' => 'Notificación de Evento',
 	'Class:EventNotification/Attribute:trigger_id' => 'Disparador',
@@ -368,7 +368,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EventNotificationEmail
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventNotificationEmail' => 'Correo Electrónico de Notificación de Evento',
 	'Class:EventNotificationEmail+' => 'Correo Electrónico de Notificación de Evento',
 	'Class:EventNotificationEmail/Attribute:to' => 'Para',
@@ -391,7 +391,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EventIssue
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventIssue' => 'Registro de Evento',
 	'Class:EventIssue+' => 'Evidencia de un evento (warning, error, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Evento',
@@ -414,7 +414,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EventWebService
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventWebService' => 'Evento de WebService',
 	'Class:EventWebService+' => 'Evidencia de una llamada de servicio Web',
 	'Class:EventWebService/Attribute:verb' => 'Verbo',
@@ -431,7 +431,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:EventWebService/Attribute:data+' => 'Datos de Resultado',
 ));
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventRestService' => 'Llamada REST/JSON',
 	'Class:EventRestService+' => 'Traza de llamada a servicio REST/JSON',
 	'Class:EventRestService/Attribute:operation' => 'Operación',
@@ -452,7 +452,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EventLoginUsage
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventLoginUsage' => 'Uso de la Cuenta',
 	'Class:EventLoginUsage+' => 'Uso de la Cuenta',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Usuario',
@@ -467,7 +467,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Action
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action' => 'Acción Personalizada',
 	'Class:Action+' => 'Acción definida por el usuario',
 	'Class:Action/Attribute:name' => 'Nombre',
@@ -492,7 +492,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ActionNotification
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ActionNotification' => 'Notificación',
 	'Class:ActionNotification+' => 'Notificación (resúmen)',
 ));
@@ -501,7 +501,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ActionEmail
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ActionEmail' => 'Notificación por Correo Electrónico',
 	'Class:ActionEmail+' => 'Notificación por Correo Electrónico',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Destinatario de Prueba',
@@ -534,7 +534,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Trigger
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Trigger'                        => 'Disparador',
 	'Class:Trigger+'                       => 'Disparador',
 	'Class:Trigger/Attribute:description'  => 'Descripción',
@@ -551,7 +551,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnObject
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnObject' => 'Disparador (Depende de la clase)',
 	'Class:TriggerOnObject+' => 'Disparador en una clase de objeto dada',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Clase destino',
@@ -566,7 +566,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnPortalUpdate
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnPortalUpdate' => 'Disparador (cuando se actualiza desde el portal)',
 	'Class:TriggerOnPortalUpdate+' => 'Disparador cuando un usuario actualiza desde el portal',
 ));
@@ -575,7 +575,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnStateChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnStateChange' => 'Disparador (en cambio de estado)',
 	'Class:TriggerOnStateChange+' => 'Disparador en cambio de estado de objeto',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Estado',
@@ -586,7 +586,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnStateEnter
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnStateEnter' => 'Disparador (entrando a un estado)',
 	'Class:TriggerOnStateEnter+' => 'Disparador en cambio de estado de objeto - entrando',
 ));
@@ -595,7 +595,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnStateLeave
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnStateLeave' => 'Disparador (saliendo de un estado)',
 	'Class:TriggerOnStateLeave+' => 'Disparador en cambio de estado de objeto - saliendo',
 ));
@@ -604,7 +604,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnObjectCreate
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnObjectCreate' => 'Disparador (creación de objeto)',
 	'Class:TriggerOnObjectCreate+' => 'Disparador en la creación de objeto (hija de clase) de una clase dada',
 ));
@@ -613,7 +613,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnObjectDelete
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnObjectDelete' => 'Disparador (eliminando un objecto)',
 	'Class:TriggerOnObjectDelete+' => 'Disparador al eliminar un objecto de la clase dada [o una clase hija] ',
 ));
@@ -622,7 +622,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnObjectUpdate
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnObjectUpdate' => 'Disparador (actualizando un objecto)',
 	'Class:TriggerOnObjectUpdate+' => 'Disparador al actualizar un objeto de la clase dada [o una clase hija]',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos objetivo',
@@ -633,7 +633,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: TriggerOnThresholdReached
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnThresholdReached' => 'Disparador (en umbral)',
 	'Class:TriggerOnThresholdReached+' => 'Disparador en umbral Stop-Watch alcanzado',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Detener watch',
@@ -646,7 +646,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkTriggerAction
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkTriggerAction' => 'Relación Acción y Disparador',
 	'Class:lnkTriggerAction+' => 'Relación Acción y Disparador',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Acción',
@@ -664,7 +664,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Synchro Data Source
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Nombre',
 	'Class:SynchroDataSource/Attribute:name+' => 'Nombre de la Fuente de Datos',
 	'Class:SynchroDataSource/Attribute:description' => 'Descripción',
@@ -956,7 +956,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: TagSetFieldData
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TagSetFieldData'  => '%2$s para la clase %1$s',
 	'Class:TagSetFieldData+' => 'Datos de campo',
 
@@ -985,7 +985,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: DBProperty
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DBProperty' => 'Propiedad BD',
 	'Class:DBProperty+' => 'Propiedad de Base de Datos',
 	'Class:DBProperty/Attribute:name' => 'Nombre',
@@ -1003,7 +1003,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: BackgroundTask
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:BackgroundTask' => 'Tarea en Segundo Plano',
 	'Class:BackgroundTask+' => 'Tarea en Segundo Plano',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nombre de Clase',
@@ -1033,7 +1033,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: AsyncTask
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AsyncTask' => 'Tarea Asíncrona',
 	'Class:AsyncTask+' => 'Tarea Asíncrona',
 	'Class:AsyncTask/Attribute:created' => 'Creado',

@@ -33,7 +33,7 @@
 //
 // Class: AuditCategory
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AuditCategory' => 'Auditoría de Categorías',
 	'Class:AuditCategory+' => 'Auditoría de Categorías',
 	'Class:AuditCategory/Attribute:name' => 'Nombre de Categoría',
@@ -50,7 +50,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: AuditRule
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AuditRule'                                   => 'Regla de Auditoría',
 	'Class:AuditRule+'                                  => 'Regla a revisar para una categoría de auditoría específica',
 	'Class:AuditRule/Attribute:name'                    => 'Nombre de la Regla',
@@ -78,7 +78,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: QueryOQL
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Query' => 'Consulta',
 	'Class:Query+' => 'Un query es un set de datos definidos de manera dinámica',
 	'Class:Query/Attribute:name' => 'Nombre',
@@ -102,7 +102,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: User
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:User'                                 => 'Usuario',
 	'Class:User+'                                => 'Credencial de usuario',
 	'Class:User/Attribute:finalclass'            => 'Tipo de Cuenta',
@@ -148,7 +148,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_Profiles
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_Profiles' => 'Perfil',
 	'Class:URP_Profiles+' => 'Perfil de usuario',
 	'Class:URP_Profiles/Attribute:name' => 'Nombre',
@@ -163,7 +163,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_Dimensions
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_Dimensions' => 'Dimensión',
 	'Class:URP_Dimensions+' => 'Dimensión de Aplicación (definiendo silos)',
 	'Class:URP_Dimensions/Attribute:name' => 'Nombre',
@@ -178,7 +178,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_UserProfile
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_UserProfile' => 'Asignación de Perfiles',
 	'Class:URP_UserProfile+' => 'Perfiles de Usuarios',
 	'Class:URP_UserProfile/Attribute:userid' => 'Usuario',
@@ -198,7 +198,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_UserOrg'                             => 'Organizaciones de Usuario',
 	'Class:URP_UserOrg+'                            => 'Organizaciones Permitidas',
 	'Class:URP_UserOrg/Attribute:userid'            => 'Usuario',
@@ -217,7 +217,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_ProfileProjection
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_ProfileProjection' => 'Proyecciones de Perfil',
 	'Class:URP_ProfileProjection+' => 'Proyecciones de Perfil',
 	'Class:URP_ProfileProjection/Attribute:dimensionid' => 'Dimensión',
@@ -238,7 +238,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_ClassProjection
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_ClassProjection' => 'Proyecciones de Clase',
 	'Class:URP_ClassProjection+' => 'Proyecciones de Clase',
 	'Class:URP_ClassProjection/Attribute:dimensionid' => 'Dimensión',
@@ -257,7 +257,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_ActionGrant
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_ActionGrant' => 'Permisos sobre Acciones',
 	'Class:URP_ActionGrant+' => 'Permisos sobre Acciones',
 	'Class:URP_ActionGrant/Attribute:profileid' => 'Perfil',
@@ -280,7 +280,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_StimulusGrant
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_StimulusGrant'                                 => 'Permisos de Cambio de Estado',
 	'Class:URP_StimulusGrant+'                                => 'Permisos de Cambio de Estado en el Ciclo de Vida del Objeto',
 	'Class:URP_StimulusGrant/Attribute:profileid'             => 'Perfil',
@@ -303,7 +303,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: URP_AttributeGrant
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:URP_AttributeGrant' => 'Permisos en Atributos',
 	'Class:URP_AttributeGrant+' => 'Permisos en Atributos',
 	'Class:URP_AttributeGrant/Attribute:actiongrantid' => 'Concesión de Acción',
@@ -315,7 +315,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: UserDashboard
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserDashboard' => 'Tablero de Usuario',
 	'Class:UserDashboard+' => 'Tablero de Usuario',
 	'Class:UserDashboard/Attribute:user_id' => 'Usuario',
@@ -329,7 +329,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Expression to Natural language
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Expression:Unit:Short:DAY' => 'd',
 	'Expression:Unit:Short:WEEK' => 's',
 	'Expression:Unit:Short:MONTH' => 'm',
@@ -341,7 +341,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // String from the User Interface: menu, messages, buttons, etc...
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'BooleanLabel:yes' => 'Si',
 	'BooleanLabel:no' => 'No',
 	'UI:Login:Title' => 'Inicio de Sesión',
@@ -1577,7 +1577,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 //
 // Expression to Natural language
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Expression:Operator:AND' => ' Y ',
 	'Expression:Operator:OR' => ' O ',
 	'Expression:Operator:=' => ': ',
@@ -1598,7 +1598,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // iTop Newsroom menu
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Newsroom:NoNewMessage'                => 'Sin Mensajes',
 	'UI:Newsroom:MarkAllAsRead'               => 'Marcar todos los mensajes como leídos',
 	'UI:Newsroom:ViewAllMessages'             => 'Ver todos los mensajes',

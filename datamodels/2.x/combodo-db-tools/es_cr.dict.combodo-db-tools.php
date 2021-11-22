@@ -28,7 +28,7 @@
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
 // Database inconsistencies
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// Dictionary entries go here
 	'Menu:DBToolsMenu' => 'Integridad de Base de Datos',
 	'DBTools:Class' => 'Clase',
@@ -63,14 +63,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 // Database Info
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBTools:DatabaseInfo' => 'Información de Base de Datos',
 	'DBTools:Base' => 'Base',
 	'DBTools:Size' => 'Tamaño',
 ));
 
 // Lost attachments
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'DBTools:LostAttachments' => 'Adjuntos perdidos',
 	'DBTools:LostAttachments:Disclaimer' => 'Aquí usted puede buscar anexos perdidos o fuera de lugar. Esta NO es una herramienta de recuperación de datos, no obtiene datos borrados.',
 

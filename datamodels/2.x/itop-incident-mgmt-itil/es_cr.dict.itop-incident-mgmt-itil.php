@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:IncidentManagement' => 'Administración de Incidentes',
 	'Menu:IncidentManagement+' => 'Administración de Incidentes',
 	'Menu:Incident:Overview' => 'Resumen de Incidentes',
@@ -61,7 +61,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Incident
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Incident' => 'Incidente',
 	'Class:Incident+' => 'Incidente',
 	'Class:Incident/Attribute:status' => 'Estatus',

@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ChangeManagement' => 'Administración de Cambios',
 	'Menu:Change:Overview' => 'Resumen de Cambios',
 	'Menu:Change:Overview+' => 'Resumen de Cambios',
@@ -63,7 +63,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Change
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => 'Cambio',
 	'Class:Change/Attribute:status' => 'Estatus',

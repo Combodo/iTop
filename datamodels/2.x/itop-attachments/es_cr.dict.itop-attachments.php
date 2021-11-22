@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
@@ -48,7 +48,7 @@ o pregunte al administador de iTop si el servidor que ha quedado sin espacio en 
 // Class: Attachment
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Attachment' => 'Anexo',
 	'Class:Attachment+' => 'Anexo',
 	'Class:Attachment/Attribute:expire' => 'Expira',
@@ -66,7 +66,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:File:Thumbnail' => 'Ícono',
 	'Attachments:File:Name' => 'Nombre de Archivo',
 	'Attachments:File:Date' => 'Fecha de Carga',
@@ -78,7 +78,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Attachment
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Attachment/Attribute:creation_date' => 'Fecha de Creación',
 	'Class:Attachment/Attribute:creation_date+' => '',
 	'Class:Attachment/Attribute:user_id' => 'Id del Usuario',

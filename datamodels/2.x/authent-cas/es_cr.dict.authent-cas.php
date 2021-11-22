@@ -8,7 +8,7 @@
  * @notas       Utilizar codificación UTF-8 para mostrar acentos y otros caracteres especiales 
  */
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'CAS:Error:UserNotAllowed' => 'Usuario no permitido',
 	'CAS:Login:SignIn' => 'Iniciar sesión con CAS',
 	'CAS:Login:SignInTooltip' => 'Click para autenticarse con servidor CAS',

@@ -34,7 +34,7 @@
 //
 // Class: UserLocal
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserLocal' => 'Usuario de iTop',
 	'Class:UserLocal+' => 'Usuario Autenticado vía iTop',
 	'Class:UserLocal/Attribute:password' => 'Contraseña',

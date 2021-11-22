@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ChangeManagement' => 'Administración de Cambios',
 	'Menu:Change:Overview' => 'Resumen de Cambios',
 	'Menu:Change:Overview+' => 'Resumen de Cambios',
@@ -63,7 +63,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Change
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Change' => 'Cambio',
 	'Class:Change+' => 'Cambio',
 	'Class:Change/Attribute:status' => 'Estatus',
@@ -166,7 +166,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: RoutineChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:RoutineChange' => 'Cambio Rutinario',
 	'Class:RoutineChange+' => 'Cambio Rutinario',
 	'Class:RoutineChange/Stimulus:ev_validate' => 'Validar',
@@ -197,7 +197,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ApprovedChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ApprovedChange' => 'Cambios Aprobados',
 	'Class:ApprovedChange+' => 'Cambios Aprobados',
 	'Class:ApprovedChange/Attribute:approval_date' => 'Fecha de Aprobación',
@@ -232,7 +232,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: NormalChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:NormalChange' => 'Cambio Normal',
 	'Class:NormalChange+' => 'Cambio Normal',
 	'Class:NormalChange/Attribute:acceptance_date' => 'Fecha de Aceptación',
@@ -267,7 +267,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: EmergencyChange
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EmergencyChange' => 'Cambio de Emergencia',
 	'Class:EmergencyChange+' => 'Cambio de Emergencia',
 	'Class:EmergencyChange/Stimulus:ev_validate' => 'Validar',

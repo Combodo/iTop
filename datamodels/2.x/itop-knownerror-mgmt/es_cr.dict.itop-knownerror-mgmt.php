@@ -47,7 +47,7 @@
 //
 // Class: KnownError
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:KnownError' => 'Error Conocido',
 	'Class:KnownError+' => 'Documentación para un error conocido',
 	'Class:KnownError/Attribute:name' => 'Nombre',
@@ -96,7 +96,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
@@ -115,7 +115,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkDocumentToError
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDocumentToError' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError+' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
@@ -134,7 +134,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: FAQ
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQ' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ+' => 'Preguntas y Respuestas Frecuentes',
 	'Class:FAQ/Attribute:title' => 'Asunto',
@@ -158,7 +158,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: FAQCategory
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FAQCategory' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory+' => 'Categoría de Preguntas y Respuesta Frecuentes',
 	'Class:FAQCategory/Attribute:name' => 'Nombre',
@@ -166,7 +166,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
 	'Class:FAQCategory/Attribute:faq_list+' => 'FAQs',
 ));
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ProblemManagement' => 'Gestión de problemas',
 	'Menu:ProblemManagement+' => 'Gestión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',

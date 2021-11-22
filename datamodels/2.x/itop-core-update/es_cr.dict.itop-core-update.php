@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'iTopUpdate:UI:PageTitle' => 'Actualización de aplicación',
     'itop-core-update:UI:SelectUpdateFile' => 'Seleccionar archivo',
     'itop-core-update:UI:ConfirmUpdate' => 'Confirmar actualización',

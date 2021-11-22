@@ -34,7 +34,7 @@
 //
 // Class: Ticket
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Ticket' => 'Ticket',
 	'Class:Ticket+' => 'Ticket',
 	'Class:Ticket/Attribute:ref' => 'Ref',
@@ -93,7 +93,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkContactToTicket
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkContactToTicket' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket+' => 'Relación Contacto y Ticket',
 	'Class:lnkContactToTicket/Attribute:ticket_id' => 'Ticket',
@@ -116,7 +116,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkFunctionalCIToTicket
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToTicket' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket+' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
@@ -142,7 +142,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: WorkOrder
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:WorkOrder' => 'Orden de Trabajo',
 	'Class:WorkOrder+' => 'Orden de Trabajo',
 	'Class:WorkOrder/Attribute:name' => 'Nombre',
@@ -179,7 +179,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 
 // Fieldset translation
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 	'Ticket:baseinfo' => 'Información General',
 	'Ticket:date' => 'Fechas',

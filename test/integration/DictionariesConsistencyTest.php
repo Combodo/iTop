@@ -30,21 +30,21 @@ class DictionariesConsistencyTest extends ItopTestCase
 	public function testDictionariesLanguage($sDictFile)
 	{
 		$aPrefixToLanguageData = array(
-			'cs' => array('CS CZ', 'Czech', 'Čeština'),
-			'da' => array('DA DA', 'Danish', 'Dansk'),
-			'de' => array('DE DE', 'German', 'Deutsch'),
-			'en' => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellaño'),
-			'fr' => array('FR FR', 'French', 'Français'),
-			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
-			'it' => array('IT IT', 'Italian', 'Italiano'),
-			'ja' => array('JA JP', 'Japanese', '日本語'),
-			'nl' => array('NL NL', 'Dutch', 'Nederlands'),
+			'cs'    => array('CS CZ', 'Czech', 'Čeština'),
+			'da'    => array('DA DA', 'Danish', 'Dansk'),
+			'de'    => array('DE DE', 'German', 'Deutsch'),
+			'en'    => array('EN US', 'English', 'English'),
+			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellano'),
+			'fr'    => array('FR FR', 'French', 'Français'),
+			'hu'    => array('HU HU', 'Hungarian', 'Magyar'),
+			'it'    => array('IT IT', 'Italian', 'Italiano'),
+			'ja'    => array('JA JP', 'Japanese', '日本語'),
+			'nl'    => array('NL NL', 'Dutch', 'Nederlands'),
 			'pt_br' => array('PT BR', 'Brazilian', 'Brazilian'),
-			'ru' => array('RU RU', 'Russian', 'Русский'),
-			'sk' => array('SK SK', 'Slovak', 'Slovenčina'),
-			'tr' => array('TR TR', 'Turkish', 'Türkçe'),
-			'zh_cn' => array('ZH CN', 'Chinese', '简体中文')
+			'ru'    => array('RU RU', 'Russian', 'Русский'),
+			'sk'    => array('SK SK', 'Slovak', 'Slovenčina'),
+			'tr'    => array('TR TR', 'Turkish', 'Türkçe'),
+			'zh_cn' => array('ZH CN', 'Chinese', '简体中文'),
 		);
 
 		if (!preg_match('/^(.*)\\.dict/', basename($sDictFile), $aMatches))

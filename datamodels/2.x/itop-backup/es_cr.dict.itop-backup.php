@@ -21,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 	'bkp-backup-running' => 'Un respaldo está en ejecuión.  Por favor espere...',
 	'bkp-restore-running' => 'Una restauración está en ejecución. Por favor espere...',

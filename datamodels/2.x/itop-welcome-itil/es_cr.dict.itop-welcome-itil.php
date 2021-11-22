@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables',
 	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables',
 	'Menu:WelcomeMenu' => 'Bienvenido',
@@ -65,7 +65,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: AbstractResource
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AbstractResource' => 'Recurso abstracto',
 	'Class:AbstractResource+' => '',
 ));
@@ -74,7 +74,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ResourceAdminMenu
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResourceAdminMenu' => 'Recursos de Menú de Administración',
 	'Class:ResourceAdminMenu+' => '',
 ));
@@ -83,7 +83,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ResourceRunQueriesMenu
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResourceRunQueriesMenu' => 'Recurso Libreta de Consultas',
 	'Class:ResourceRunQueriesMenu+' => '',
 ));
@@ -92,7 +92,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Action
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ResourceSystemMenu' => 'Recurso Menú de Sistema',
 	'Class:ResourceSystemMenu+' => '',
 ));

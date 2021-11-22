@@ -22,7 +22,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
 	'Menu:RequestManagement+' => 'Administración de Requerimientos',
 	'Menu:RequestManagementProvider' => 'Proveedor de Mesa de Ayuda',
@@ -73,7 +73,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: UserRequest
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest' => 'Requerimiento',
 	'Class:UserRequest+' => 'Requerimiento',
 	'Class:UserRequest/Attribute:status' => 'Estatus',
@@ -266,7 +266,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:TitleDetailsFor_Request' => 'Detalles del Requerimiento',
 	'Portal:ButtonUpdate' => 'Actualizar',
 	'Portal:ButtonClose' => 'Cerrar',
@@ -295,7 +295,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Organization:Overview:UserRequests' => 'Requerimientos para esta Organización',
 	'Organization:Overview:MyUserRequests' => 'Mis Requerimientos para esta Organización',
 	'Organization:Overview:Tickets' => 'Tickets para esta Organización',
