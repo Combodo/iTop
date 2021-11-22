@@ -34,7 +34,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 			'da' => array('DA DA', 'Danish', 'Dansk'),
 			'de' => array('DE DE', 'German', 'Deutsch'),
 			'en' => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellaño'),
+			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellano'),
 			'fr' => array('FR FR', 'French', 'Français'),
 			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
 			'it' => array('IT IT', 'Italian', 'Italiano'),

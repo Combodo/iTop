@@ -30,7 +30,7 @@
 //
 // Class: lnkFunctionalCIToTicket
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToTicket' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket+' => 'Relación EC Funcional y Ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Ticket',
@@ -55,7 +55,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkFunctionalCIToProviderContract
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToProviderContract' => 'Relación EC Funcional y Contrato con Proveedor',
 	'Class:lnkFunctionalCIToProviderContract+' => 'Relación EC Funcional y Contrato con Proveedor',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato con Proveedor',
@@ -72,7 +72,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkFunctionalCIToService
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkFunctionalCIToService' => 'Relación EC Funcional y Servicio',
 	'Class:lnkFunctionalCIToService+' => 'Relación EC Funcional y Servicio',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Servicio',
@@ -89,7 +89,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: FunctionalCI
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contratos',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Contratos',
 	'Class:FunctionalCI/Attribute:services_list' => 'Servicios',

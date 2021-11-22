@@ -34,7 +34,7 @@
 //
 // Class: UserLocal
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserLocal' => 'Usuario de '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Usuario Autenticado vía '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Contraseña',
