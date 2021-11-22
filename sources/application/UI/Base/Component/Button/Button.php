@@ -94,6 +94,11 @@ class Button extends UIBlock
 	 */
 	public function __construct(string $sLabel, string $sId = null, string $sTooltip = '', string $sIconClass = '', string $sActionType = self::DEFAULT_ACTION_TYPE, string $sColorScheme = self::DEFAULT_COLOR_SCHEME, string $sJsCode = '', string $sOnClickJsCode = '')
 	{
+		// We only use resource ID (not sanitized) on button for now, but this might be reworked back into \UIBlock if needed
+		if (!is_null($sId)) {
+			$this->AddDataAttribute('resource-id', $sId);
+		}
+
 		parent::__construct($sId);
 
 		$this->sLabel = $sLabel;

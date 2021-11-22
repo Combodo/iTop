@@ -107,7 +107,7 @@ abstract class UIBlock implements iUIBlock
 	/** @var array Cache for the CSS classes of a block inheritance. Key is the block class, value is an array of CSS classes */
 	private static $aBlocksInheritanceCSSClassesCache = [];
 
-	/** @var string $sId */
+	/** @var string ID of the block */
 	protected $sId;
 
 	/**
