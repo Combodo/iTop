@@ -28,6 +28,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
@@ -448,10 +449,13 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		if ($bWithDeleteButton) {
 			$aAttribs['delete'] = array('label' => '', 'description' => '');
 		}
-
+		$oPanel = PanelUIBlockFactory::MakeNeutral('');
+		$oPanel->AddCSSClass('ibo-datatable-panel');
 		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
-		$this->oPage->AddUiBlock($oAttachmentTableBlock);
+		$oPanel->AddSubBlock($oAttachmentTableBlock);
+
+		$this->oPage->AddUiBlock($oPanel);
 
 		$sTableId = $oAttachmentTableBlock->GetId();
 
