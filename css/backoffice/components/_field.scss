@@ -68,15 +68,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
         white-space: inherit;
       }
     }
-    &.ibo-field-large {
-      /* We need the rule to apply for the class and all its descendants, hence the "& *" */
-      .ibo-field--value {
-        white-space: break-spaces; /* For large fields we don't have the issue stated above */
-        & * {
-          white-space: break-spaces;
-        }
-      }
-    }
   }
 
   & ~ .ibo-field {
