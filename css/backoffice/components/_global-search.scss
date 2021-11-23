@@ -8,6 +8,10 @@ $ibo-global-search--head--background-color: $ibo-color-white-100 !default;
 
 $ibo-global-search--icon-padding-x: 16px !default;
 $ibo-global-search--icon-padding-y: 0 !default;
+$ibo-global-search--icon--color: $ibo-color-primary-600 !default;
+$ibo-global-search--icon--color--on-hover: $ibo-color-primary-700 !default;
+$ibo-global-search--icon--color--on-active: $ibo-color-primary-800 !default;
+
 
 $ibo-global-search--input--padding: 0 !default;
 $ibo-global-search--input--padding-x--is-opened: 8px !default;
@@ -81,9 +85,17 @@ $ibo-global-search--compartment--placeholder-hint--text-color: $ibo-color-grey-7
 	background-color: $ibo-global-search--head--background-color;
 }
 .ibo-global-search--icon{
+  color: $ibo-global-search--icon--color;
 	align-self: center;
 	padding: $ibo-global-search--icon-padding-y $ibo-global-search--icon-padding-x;
 	@extend %ibo-font-ral-nor-400;
+
+  &:hover{
+    color: $ibo-global-search--icon--color--on-hover;
+  }
+  &:active{
+    color: $ibo-global-search--icon--color--on-active;
+  }
 }
 .ibo-global-search--input{
 	padding: $ibo-global-search--input--padding;
