@@ -4159,6 +4159,7 @@ class AttributeText extends AttributeString
 		{
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
+			$sValue = nl2br($sValue);
 
 			return "<div $sStyle>$sValue</div>";
 		}
