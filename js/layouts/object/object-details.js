@@ -94,14 +94,14 @@ $(function()
 					oTransitionButtonsElems.css('visibility', 'hidden');
 					oTransitionButtonsElems.removeClass('ibo-is-hidden');
 					// 2. Measure position
-					let iLastTransitionButtonBorderY = oLastTransitionButton.offset().left + oLastTransitionButton.outerWidth();
+					let iLastTransitionButtonBorderX = parseInt(oLastTransitionButton.offset().left + oLastTransitionButton.outerWidth());
 					// 3. Make transition buttons invisible AND not occuping space again
 					oTransitionButtonsElems.addClass('ibo-is-hidden');
 					oTransitionButtonsElems.css('visibility', '');
 
-					let iPanelRightBorderY = oHeaderElem.offset().left + oHeaderElem.outerWidth();
+					let iPanelRightBorderX = parseInt(oHeaderElem.offset().left + oHeaderElem.outerWidth());
 
-					if (iLastTransitionButtonBorderY > iPanelRightBorderY) {
+					if (iLastTransitionButtonBorderX > iPanelRightBorderX) {
 						oButtonsToolbarElem.find('.action[data-role="ibo-button"]:not([name="cancel"])').addClass('ibo-is-hidden');
 						oButtonsToolbarElem.find('[data-role="ibo-button-group"]:last').removeClass('ibo-is-hidden');
 					}
