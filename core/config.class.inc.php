@@ -1049,6 +1049,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'svg_sanitizer' => array(
+			'type' => 'string',
+			'description' => 'The class to use for SVG sanitization : allow to provide a custom made sanitizer',
+			'default' => 'SvgDOMSanitizer',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		),
 		'inline_image_max_display_width' => array(
 			'type' => 'integer',
 			'description' => 'The maximum width (in pixels) when displaying images inside an HTML formatted attribute. Images will be displayed using this this maximum width.',
