@@ -34,7 +34,10 @@ class DictionariesConsistencyTest extends ItopTestCase
 			'da'    => array('DA DA', 'Danish', 'Dansk'),
 			'de'    => array('DE DE', 'German', 'Deutsch'),
 			'en'    => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellano'),
+			'es_cr' => array('ES CR', 'Spanish', array(
+				'Español, Castellaño', // old value
+				'Español, Castellano', // new value since N°3635
+			)),
 			'fr'    => array('FR FR', 'French', 'Français'),
 			'hu'    => array('HU HU', 'Hungarian', 'Magyar'),
 			'it'    => array('IT IT', 'Italian', 'Italiano'),
@@ -60,10 +63,10 @@ class DictionariesConsistencyTest extends ItopTestCase
 
 		$sExpectedLanguageCode = $aPrefixToLanguageData[$sLangPrefix][0];
 		$sExpectedEnglishLanguageDesc = $aPrefixToLanguageData[$sLangPrefix][1];
-		$sExpectedLocalizedLanguageDesc = $aPrefixToLanguageData[$sLangPrefix][2];
+		$aExpectedLocalizedLanguageDesc = $aPrefixToLanguageData[$sLangPrefix][2];
 
 		$sDictPHP = file_get_contents($sDictFile);
-		if ($iCount = preg_match_all("@Dict::Add\('(.*)'\s*,\s*'(.*)'\s*,\s*'(.*)'@", $sDictPHP, $aMatches) === false)
+		if ($iCount = (preg_match_all("@Dict::Add\('(.*)'\s*,\s*'(.*)'\s*,\s*'(.*)'@", $sDictPHP, $aMatches) === false))
 		{
 			static::fail("Pattern not working");
 		}
@@ -84,7 +87,10 @@ class DictionariesConsistencyTest extends ItopTestCase
 		}
 		foreach ($aMatches[3] as $sLocalizedLanguageDesc)
 		{
-			static::assertSame($sExpectedLocalizedLanguageDesc, $sLocalizedLanguageDesc,
+			if (false === is_array($aExpectedLocalizedLanguageDesc)) {
+				$aExpectedLocalizedLanguageDesc = array($aExpectedLocalizedLanguageDesc);
+			}
+			static::assertContains($sLocalizedLanguageDesc,$aExpectedLocalizedLanguageDesc,
 				"Unexpected language description for Dict::Add in dictionary $sDictFile");
 		}
 	}
