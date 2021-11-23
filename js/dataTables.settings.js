@@ -106,7 +106,9 @@ $(function () {
 					});
 					$.each(aOptions['columns'], function (i, item) {
 						aOptions["columns"][i]["render"]["display"] = new Function("data, type, row", aOptions["columns"][i]["render"]["display"]);
-						aOptions["columns"][i]["createdCell"] = new Function("td, cellData, rowData, row, col", aOptions["columns"][i]["createdCell"]);
+						if(aOptions["columns"][i]["createdCell"] != undefined) {
+							aOptions["columns"][i]["createdCell"] = new Function("td, cellData, rowData, row, col", aOptions["columns"][i]["createdCell"]);
+						}
 					});
 
 					parentElt.append("<table id=\""+me.options.sListId+"\" width=\"100%\" class=\"ibo-datatable\">"+
