@@ -7978,6 +7978,13 @@ class AttributeImage extends AttributeBlob
 	{
 		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
 
+		if (($oDoc instanceof ormDocument)
+			&& (false === $oDoc->IsEmpty())
+			&& ($oDoc->GetMimeType() === 'image/svg+xml')) {
+			$sCleanSvg = HTMLSanitizer::Sanitize($oDoc->GetData(), 'svg_sanitizer');
+			$oDoc = new ormDocument($sCleanSvg, $oDoc->GetMimeType(), $oDoc->GetFileName());
+		}
+
 		// The validation of the MIME Type is done by CheckFormat below
 		return $oDoc;
 	}
