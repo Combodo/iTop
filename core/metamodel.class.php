@@ -5970,7 +5970,8 @@ abstract class MetaModel
 
 
 	/**
-	 * @deprecated 2.7.0 N°2369 will be removed in 2.8
+	 * @deprecated 2.7.0 N°2369 Method will not be removed any time soon as we still need to drop view if the instance is migrating from an iTop 2.x to an iTop 3.0 or newer, even if they skip iTop 3.0.
+	 * @since 3.0.0 Does not recreate SQL views, only drops them. Method has not been renamed to avoid regressions
 	 *
 	 * @return array
 	 * @throws \CoreException
