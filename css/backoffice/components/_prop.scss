@@ -42,6 +42,9 @@ $ibo-prop--apply--error--color: $ibo-color-grey-800 !default;
 		width: $ibo-prop--apply-cancel--span--width;
 		text-align: center;
     > div{
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
       width: 100%;
       height: 100%;
     }
