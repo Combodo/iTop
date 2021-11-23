@@ -164,7 +164,11 @@ $.widget('itop.set_widget',
 				onItemRemove: function (value) {
 					var selectizeWidget = this;
 					setWidget._onTagRemove(value, selectizeWidget);
-				}
+				},
+				onDropdownOpen: function (oDropdownElem) {
+					oDropdownElem.addClass('set-dropdown');
+					setWidget._updateDropdownPosition(this.$control, oDropdownElem);
+				},
 			});
 
 			this.selectizeWidget = $inputWidget[0].selectize; // keeping this for set widget public methods
@@ -348,5 +352,34 @@ $.widget('itop.set_widget',
 
 		_isCodeInPartialValues: function (setItemCode) {
 			return (this.partialValues.indexOf(setItemCode) >= 0);
+		},
+		/**
+		 * Update the dropdown's position so it always fits in the screen
+		 *
+		 * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
+		 * @param {object} oDropdownElem jQuery object representing the results dropdown
+		 * @return {void}
+		 */
+		_updateDropdownPosition: function (oControlElem, oDropdownElem) {
+			const fWindowHeight = window.innerHeight;
+
+			const fControlTopY = oControlElem.offset().top;
+			const fControlHeight = oControlElem.outerHeight();
+
+			const fDropdownTopY = oDropdownElem.offset().top;
+			// This one is "let" as it might be updated if necessary
+			let fDropdownHeight = oDropdownElem.outerHeight();
+			const fDropdownBottomY = fDropdownTopY + fDropdownHeight;
+
+			if (fDropdownBottomY > fWindowHeight) {
+				// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
+				oDropdownElem.css('max-height', '30vh');
+				fDropdownHeight = oDropdownElem.outerHeight();
+
+				// Position dropdown above input if not enough space on the bottom part of the screen
+				if ((fDropdownTopY / fWindowHeight) > 0.6) {
+					oDropdownElem.css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
+				}
+			}
 		}
 	});

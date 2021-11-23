@@ -182,6 +182,7 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 
 /*2 types of selectize to manage (select + autocomplete)*/
 .selectize-dropdown.ui-autocomplete,
+.selectize-dropdown.set-dropdown,
 .selectize-dropdown.plugin-custom_itop {
   z-index: 2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container. */
   max-height: $ibo-input-select-selectize--dropdown--max-height;
