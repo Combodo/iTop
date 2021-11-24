@@ -152,13 +152,13 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 
 	.sf_message {
 		display: none;
-		margin: 8px 8px 0px 8px;
+		margin: $ibo-spacing-300 $ibo-spacing-300 $ibo-spacing-0 $ibo-spacing-300;
 		border-radius: 0px;
 	}
 
 	.sf_criterion_area {
 		/*display: none;*/
-		padding: 8px 8px 3px 8px; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
+		padding: $ibo-spacing-300 $ibo-spacing-300 3px $ibo-spacing-300; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
 
 		.sf_criterion_row {
 
@@ -208,7 +208,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			vertical-align: top;
 
 			&.opened {
-				margin-bottom: 0px; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+				margin-bottom: $ibo-spacing-0; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
 
 				.sfc_header,
 				.sfm_header {
@@ -218,7 +218,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 			}
 
 			> * {
-				padding: 7px 8px;
+				padding: 7px $ibo-spacing-300;
 				vertical-align: top;
 				border: solid 1px $ibo-search-form-panel--more-criteria--border-color;
 				border-radius: $ibo-border-radius-300;
@@ -369,7 +369,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 
 						.sfc_op_radio {
 							width: 12px;
-							margin: 0px;
+							margin: $ibo-spacing-0;
 							margin-right: 7px;
 						}
 
@@ -388,7 +388,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 						.sfc_opc_multichoices {
 							label > input {
 								vertical-align: text-top;
-								margin-left: 0px;
+								margin-left: $ibo-spacing-0;
 								margin-right: 8px;
 							}
 
@@ -399,7 +399,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 							.sfc_opc_mc_items_wrapper {
 								max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
 								overflow-y: auto;
-								margin: 0px -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+								margin: $ibo-spacing-0 -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
 
 								.sfc_opc_mc_items {
 									.sfc_opc_mc_items_list {
@@ -426,7 +426,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 										}
 
 										.sfc_opc_mc_item {
-											padding: 4px 8px; /* Putting back the padding remove by .sfc_opc_mc_items */
+											padding: $ibo-spacing-200 $ibo-spacing-300; /* Putting back the padding remove by .sfc_opc_mc_items */
 
 											&:hover {
 												background-color: $ibo-search-form-panel--multiple-choice--hover--color;
@@ -510,7 +510,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 						margin-bottom: 3px;
 
 						&:last-of-type {
-							margin-bottom: 0px;
+							margin-bottom: $ibo-spacing-0;
 						}
 					}
 
@@ -684,8 +684,8 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
 
 				.sfm_lists {
-					margin: 0px -8px;
-					padding: 0px 8px;
+					margin: $ibo-spacing-0 -8px;
+					padding: $ibo-spacing-0 8px;
 					max-height: 400px;
 					overflow-x: hidden;
 					overflow-y: auto;
@@ -709,7 +709,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 						font-size: 11px;
 
 						&:last-of-type {
-							margin-right: 0px;
+							margin-right: $ibo-spacing-0;
 						}
 					}
 				}
@@ -742,12 +742,12 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 		}
 
 		.sfl_items {
-			margin: 5px -8px 0px -8px;
-			padding: 0px;
+			margin: 5px -8px $ibo-spacing-0 -8px;
+			padding: $ibo-spacing-0;
 			text-align: left;
 
 			> li {
-				padding: 4px 8px;
+				padding: $ibo-spacing-200 $ibo-spacing-300;
 				list-style: none;
 				white-space: nowrap;
 
@@ -769,8 +769,8 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 					}
 
 					> input[type="checkbox"] {
-						margin-left: 0px;
-						margin-right: 8px;
+						margin-left: $ibo-spacing-0;
+						margin-right: $ibo-spacing-300;
 					}
 				}
 			}

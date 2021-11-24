@@ -3,8 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-first-dashlet: 0 !default;
-$ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-not-first-dashlet: 12px !default;
+$ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-first-dashlet: $ibo-spacing-0 !default;
+$ibo-dashlet-within-dashboard--dashlet-header-static--margin-top--is-not-first-dashlet: $ibo-spacing-400 !default;
 
 .ibo-dashboard--grid-row{
   // Margin on top to have a better visual separation like with fieldsets

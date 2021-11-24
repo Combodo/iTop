@@ -5,7 +5,7 @@
 
 $ibo-input-select--padding-x: $ibo-input--padding-x !default;
 $ibo-input-select--option--padding-x: $ibo-input-select--padding-x !default;
-$ibo-input-select--option--padding-y: 4px !default;
+$ibo-input-select--option--padding-y: $ibo-spacing-200 !default;
 
 $ibo-input-select--value--min-midth: 50px;
 
@@ -30,16 +30,16 @@ $ibo-input-select-wrapper--after--color: $ibo-color-grey-900 !default;
 
 $ibo-input-select--action-button--height: 28px !default;
 $ibo-input-select--action-button--width: 23px !default;
-$ibo-input-select--action-button--margin-top: 0px !default;
+$ibo-input-select--action-button--margin-top: $ibo-spacing-0 !default;
 $ibo-input-select--action-button--margin-right: 3px !default;
 $ibo-input-select--action-button--background-color: inherit !default;
 $ibo-input-select--action-button--color: $ibo-color-grey-800 !default;
-$ibo-input-select--action-button--padding-x: 2px !default;
-$ibo-input-select--action-button--padding-y: 0px !default;
+$ibo-input-select--action-button--padding-x: $ibo-spacing-100 !default;
+$ibo-input-select--action-button--padding-y: $ibo-spacing-0 !default;
 $ibo-input-select--select-wrapper--action-button--margin-right: 20px !default;
 
 $ibo-input-select--action-button--padding-left: 6px !default;
-$ibo-input-select--action-button--padding-right: 2px !default;
+$ibo-input-select--action-button--padding-right: $ibo-spacing-100 !default;
 
 $ibo-input-select--autocomplete-item-image--size: 25px !default;
 $ibo-input-select--autocomplete-item-image--margin-right: 0.5rem !default;

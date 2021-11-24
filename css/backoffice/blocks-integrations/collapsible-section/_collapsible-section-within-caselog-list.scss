@@ -5,7 +5,7 @@
 
 /* SCSS variables */
 $ibo-caselog-entry-in-collapsible-section--body--background-color: transparentize($ibo-color-grey-100,0.5) !default;
-$ibo-caselog-entry-in-collapsible-section--body--padding: 8px !default;
+$ibo-caselog-entry-in-collapsible-section--body--padding: $ibo-spacing-300 !default;
 $ibo-caselog-entry-in-collapsible-section--body--color: $ibo-color-grey-900 !default;
 
 /* - caselog display in ormcaselog */

@@ -6,8 +6,8 @@
 /* SCSS variables */
 $ibo-dashlet--width: 100% !default;
 $ibo-dashlet--width--is-inline: auto !default;
-$ibo-dashlet--elements-spacing-x: 24px !default;
-$ibo-dashlet--elements-spacing-y: 24px !default;
+$ibo-dashlet--elements-spacing-x: $ibo-spacing-600 !default;
+$ibo-dashlet--elements-spacing-y: $ibo-spacing-600 !default;
 
 /* Rules */
 .ibo-dashlet {

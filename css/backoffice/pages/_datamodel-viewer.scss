@@ -3,8 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-datamodel-viewer--parent--spacer--padding-y: 0 !default;
-$ibo-datamodel-viewer--parent--spacer--padding-x: 8px !default;
+$ibo-datamodel-viewer--parent--spacer--padding-y: $ibo-spacing-0 !default;
+$ibo-datamodel-viewer--parent--spacer--padding-x: $ibo-spacing-300 !default;
 
 $ibo-datamodel-viewer--attributes-table--first-column--width: 3px !default;
 
@@ -13,7 +13,7 @@ $ibo-datamodel-viewer--origin-cell--border-radius: $ibo-border-radius-full !defa
 
 $ibo-datamodel-viewer--classes-list--height: 100% !default;
 $ibo-datamodel-viewer--classes-list--max-width: 350px !default;
-$ibo-datamodel-viewer--classes-list--padding-left: 24px !default;
+$ibo-datamodel-viewer--classes-list--padding-left: $ibo-spacing-600 !default;
 
 $ibo-datamodel-viewer--lifecycle--code--color: $ibo-color-grey-700 !default;
 $ibo-datamodel-viewer--lifecycle--stimuli--color: $ibo-color-blue-900 !default;

@@ -4,7 +4,7 @@
  */
 
 /* SCSS variables */
-$ibo-pill--margin-y: 4px !default;
+$ibo-pill--margin-y: $ibo-spacing-200 !default;
 $ibo-pill--padding: 6px 10px !default;
 $ibo-pill--max-width: 240px !default;
 $ibo-pill--border-radius: $ibo-border-radius-300 !default;

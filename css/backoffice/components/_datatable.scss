@@ -4,15 +4,15 @@
  */
 
 $ibo-datatable--toolbar--padding-x: 6px !default;
-$ibo-datatable--toolbar--padding-y: 0 !default;
+$ibo-datatable--toolbar--padding-y: $ibo-spacing-0 !default;
 $ibo-datatable--toolbar--text-color: $ibo-color-grey-800 !default;
 $ibo-datatable--toolbar--elements-spacing: 1rem !default;
 $ibo-datatable--toolbar--table-spacing: 18px !default;
 
 $ibo-datatable-header--text-color: $ibo-base-variable--text-color !default;
 
-$ibo-datatable-panel--table-spacing: 48px !default;
-$ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top 0px $ibo-panel--body--padding-bottom !default;
+$ibo-datatable-panel--table-spacing: $ibo-spacing-800 !default;
+$ibo-datatable-panel--body--padding: $ibo-panel--body--padding-top $ibo-spacing-0 $ibo-panel--body--padding-bottom !default;
 
 $ibo-datatable--row--background-color--is-hover: $ibo-color-primary-200 !default;
 $ibo-datatable--row--background-color--is-selected: $ibo-color-primary-300 !default;

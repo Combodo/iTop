@@ -9,8 +9,8 @@ $ibo-body-background-color: $ibo-color-white-200 !default;
 
 $ibo-page-container--elements-padding-x: 36px !default;
 
-$ibo-main-content--padding-top: 16px !default;
-$ibo-main-content--padding-bottom: 16px !default;
+$ibo-main-content--padding-top: $ibo-spacing-500 !default;
+$ibo-main-content--padding-bottom: $ibo-spacing-500 !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{

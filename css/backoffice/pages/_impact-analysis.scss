@@ -15,9 +15,9 @@ $ibo-simple-graph--grouping-threshold-additional-context--container--margin-righ
 $ibo-simple-graph--grouping-threshold-additional-context--content--margin-right: 1em !default;
 
 $ibo-impact-analysis--graph-zoom-slider--width: 10em !default;
-$ibo-impact-analysis--impacted-objects-lists--elements-spacing: 24px !default;
+$ibo-impact-analysis--impacted-objects-lists--elements-spacing: $ibo-spacing-600 !default;
 
-$ibo-display-graph--search-box--criterion--content--padding-y: 0 !default;
+$ibo-display-graph--search-box--criterion--content--padding-y: $ibo-spacing-0 !default;
 $ibo-display-graph--search-box--criterion--content--padding-x: 15px !default;
 
 $ibo-display-graph--search-box--criterion--content--checkbox--margin-right: 10px !default;

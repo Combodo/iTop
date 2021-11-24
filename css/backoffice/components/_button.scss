@@ -10,10 +10,10 @@ $ibo-button--border-radius: $ibo-border-radius-400 !default;
 $ibo-button--box-shadow-bottom: 0px 2px 0px !default;
 $ibo-button--box-shadow-top: inset 0px 2px 0px !default;
 
-$ibo-button--label--margin-left: 4px !default;
+$ibo-button--label--margin-left: $ibo-spacing-200 !default;
 
-$ibo-button--vertical-align--margin-bottom: 4px !default;
-$ibo-button--vertical-align--margin-top: 4px !default;
+$ibo-button--vertical-align--margin-bottom: $ibo-spacing-200 !default;
+$ibo-button--vertical-align--margin-top: $ibo-spacing-200 !default;
 
 /**
 * - Text color

@@ -12,9 +12,9 @@ $ibo-collapsible-section--maximize-minimize-button--color: $ibo-panel--collapsib
 $ibo-collapsible-section--maximize-minimize-button--right: $ibo-panel--collapsible-toggler--margin-right !default;
 
 
-$ibo-collapsible-section--body--padding-bottom: 16px !default;
+$ibo-collapsible-section--body--padding-bottom: $ibo-spacing-500 !default;
 $ibo-collapsible-section--body--padding-top: $ibo-collapsible-section--body--padding-bottom + $ibo-collapsible-section--highlight--height !default;
-$ibo-collapsible-section--body--padding-x: 16px !default;
+$ibo-collapsible-section--body--padding-x: $ibo-spacing-500 !default;
 $ibo-collapsible-section--body--border-radius: $ibo-panel--body--border-radius !default;
 $ibo-collapsible-section--body--border-size: 1px !default;
 $ibo-collapsible-section--body--border-color: $ibo-panel--base-border-color !default;

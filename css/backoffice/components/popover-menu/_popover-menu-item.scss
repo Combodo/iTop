@@ -4,15 +4,15 @@
  */
 
 /* SCSS variables */
-$ibo-popover-menu--item--padding-y: 12px !default;
-$ibo-popover-menu--item--padding-right: 24px !default;
-$ibo-popover-menu--item--padding-left: 16px !default;
+$ibo-popover-menu--item--padding-y: $ibo-spacing-400 !default;
+$ibo-popover-menu--item--padding-right: $ibo-spacing-600 !default;
+$ibo-popover-menu--item--padding-left: $ibo-spacing-500 !default;
 $ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
 $ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
 $ibo-popover-menu--item--hover-background-color: $ibo-color-grey-200 !default;
 
-$ibo-popover-menu--item-separator--padding: 0 !default;
-$ibo-popover-menu--item-separator--margin: 0 !default;
+$ibo-popover-menu--item-separator--padding: $ibo-spacing-0 !default;
+$ibo-popover-menu--item-separator--margin: $ibo-spacing-0 !default;
 $ibo-popover-menu--item-separator--background-color: $ibo-color-grey-200 !default;
 
 $ibo-popover-menu--item--icon--color: $ibo-color-grey-700 !default;

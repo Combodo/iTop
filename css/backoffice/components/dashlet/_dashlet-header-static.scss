@@ -4,18 +4,18 @@
  */
 
 /* SCSS variables */
-$ibo-dashlet-header-static--padding-top: 16px !default;
-$ibo-dashlet-header-static--padding-bottom: 0 !default;
-$ibo-dashlet-header-static--padding-x: 16px !default;
+$ibo-dashlet-header-static--padding-top: $ibo-spacing-500 !default;
+$ibo-dashlet-header-static--padding-bottom: $ibo-spacing-0 !default;
+$ibo-dashlet-header-static--padding-x: $ibo-spacing-500 !default;
 
-$ibo-dashlet-header-static--body--margin-left: 48px !default;
+$ibo-dashlet-header-static--body--margin-left: $ibo-spacing-800 !default;
 $ibo-dashlet-header-static--body--text-color: $ibo-color-grey-900 !default;
 
-$ibo-dashlet-header-static--title--margin-right: 8px !default;
+$ibo-dashlet-header-static--title--margin-right: $ibo-spacing-300 !default;
 
 $ibo-dashlet-header-static--text--text-color: inherit !default;
 
-$ibo-dashlet-header-static--icon-container--margin-right: 16px !default;
+$ibo-dashlet-header-static--icon-container--margin-right: $ibo-spacing-500 !default;
 $ibo-dashlet-header-static--icon--size: 48px !default;
 
 $ibo-dashlet-header-static--body--separator--top: 50% !default;

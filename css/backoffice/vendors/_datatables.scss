@@ -8,7 +8,7 @@ $ibo-vendors-datatables--pagination--color: $ibo-color-grey-800 !default;
 
 $ibo-vendors-datatables--pagination-button--min-size: 20px !default;
 $ibo-vendors-datatables--pagination-button--padding-x: 5px !default;
-$ibo-vendors-datatables--pagination-button--padding-y: 0 !default;
+$ibo-vendors-datatables--pagination-button--padding-y: $ibo-spacing-0 !default;
 $ibo-vendors-datatables--pagination-button--border-radius: $ibo-border-radius-300 !default;
 $ibo-vendors-datatables--pagination-button--background-color--on-hover: $ibo-color-grey-100 !default;
 $ibo-vendors-datatables--pagination-button--text-color--is-active: $ibo-color-grey-900 !default;
@@ -23,7 +23,7 @@ $ibo-vendors-datatables--page-length-selector--border-color: $ibo-color-grey-500
 $ibo-vendors-datatables--page-length-selector--border-radius: $ibo-border-radius-300 !default;
 $ibo-vendors-datatables--page-length-selector--border-color--on-focus: $ibo-color-primary-600 !default;
 
-$ibo-vendors-datatables--cell--padding-x: 12px !default;
+$ibo-vendors-datatables--cell--padding-x: $ibo-spacing-400 !default;
 $ibo-vendors-datatables--cell--padding-y: 10px !default;
 
 $ibo-vendors-datatables--column-sorting-icon--opacity: 0.3 !default;

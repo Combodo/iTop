@@ -7,14 +7,14 @@
 $ibo-field--value--color: $ibo-color-grey-800 !default;
 
 $ibo-field--label--description--content: "?" !default;
-$ibo-field--label--description--padding-left: 4px !default;
+$ibo-field--label--description--padding-left: $ibo-spacing-200 !default;
 $ibo-field--label--description--color: $ibo-color-grey-600 !default;
 
 $ibo-field--background-color--is-fullscreen: $ibo-color-white-100 !default;
 
 $ibo-field--label--width--is-fullscreen: 100% !default;
-$ibo-field--label--padding-x--is-fullscreen: 8px !default;
-$ibo-field--label--padding-y--is-fullscreen: 4px !default;
+$ibo-field--label--padding-x--is-fullscreen: $ibo-spacing-300 !default;
+$ibo-field--label--padding-y--is-fullscreen: $ibo-spacing-200 !default;
 $ibo-field--label--background-color--is-fullscreen: $ibo-color-grey-100 !default;
 $ibo-field--label--border-bottom--is-fullscreen: 1px solid $ibo-color-grey-400 !default;
 
@@ -26,20 +26,20 @@ $ibo-field--comments--size: 5em !default;
 $ibo-field--comments--font-size: $ibo-font-size-150 !default;
 
 $ibo-field--value--scrollbar-track-background-color: $ibo-color-white-200 !default;
-$ibo-field--value--margin-top--for-large: 2px !default;
+$ibo-field--value--margin-top--for-large: $ibo-spacing-100 !default;
 $ibo-field--value--padding-x--is-fullscreen: $ibo-field--label--padding-x--is-fullscreen !default;
-$ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + 32px !default;
+$ibo-field--value--padding-top--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen + $ibo-spacing-700 !default;
 $ibo-field--value--padding-bottom--is-fullscreen: $ibo-field--label--padding-y--is-fullscreen !default;
 
 $ibo-field--value-decoration--spacing-x: 0.5rem !default;
 
-$ibo-field--enable-bulk--padding-y: 2px !default;
+$ibo-field--enable-bulk--padding-y: $ibo-spacing-100 !default;
 $ibo-field--enable-bulk--padding-x: 5px !default;
 $ibo-field--enable-bulk--margin-left: 5px !default;
 $ibo-field--enable-bulk--height: calc(100% - #{$ibo-field--enable-bulk--padding-x}) !default;
 $ibo-field--enable-bulk--border-radius: $ibo-border-radius-500 !default;
 
-$ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
+$ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
 
 /* SCSS rules */
 .ibo-field {

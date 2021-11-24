@@ -5,8 +5,8 @@
 
 /* SCSS variables */
 $ibo-notification-entry--short-description--text-color: inherit !default;
-$ibo-notification-entry--long-description-toggler-icon--margin-left: 12px !default;
-$ibo-notification-entry--long-description--margin-top: 8px !default;
+$ibo-notification-entry--long-description-toggler-icon--margin-left: $ibo-spacing-400 !default;
+$ibo-notification-entry--long-description--margin-top: $ibo-spacing-300 !default;
 
 /* CSS rules */
 /* - Long description */

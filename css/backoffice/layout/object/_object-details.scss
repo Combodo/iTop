@@ -14,10 +14,10 @@ $ibo-object-details--icon--size--is-sticking: $ibo-panel--icon--size-as-medallio
 $ibo-object-details--icon--spacing--as-medallion--is-sticking: $ibo-object-details--icon--spacing--as-medallion !default;
 
 $ibo-object-details--status-dot--size: 10px !default;
-$ibo-object-details--status-dot--spacing: 8px !default;
+$ibo-object-details--status-dot--spacing: $ibo-spacing-300 !default;
 $ibo-object-details--status-dot--border-radius: $ibo-border-radius-full !default;
 
-$ibo-object-details--tag--sibling-spacing: 12px !default;
+$ibo-object-details--tag--sibling-spacing: $ibo-spacing-400 !default;
 $ibo-object-details--tag--color: $ibo-panel--subtitle--color !default;
 
 $ibo-object-details--tag-icon--margin-right: 6px !default;
@@ -25,10 +25,10 @@ $ibo-object-details--tag-icon--color: $ibo-color-grey-700 !default;
 
 $ibo-object-details--tag--separator--background-color: $ibo-color-grey-800 !default;
 $ibo-object-details--tag--separator--diameter: 5px !default;
-$ibo-object-details--tag--separator--margin-right: 12px !default;
+$ibo-object-details--tag--separator--margin-right: $ibo-spacing-400 !default;
 $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !default;
 
-$ibo-object-details--header-right--padding-right--is-sticking: 8px !default;
+$ibo-object-details--header-right--padding-right--is-sticking: $ibo-spacing-300 !default;
 
 /* Parent block overloads (!= than blocks integrations) */
 .ibo-object-details {

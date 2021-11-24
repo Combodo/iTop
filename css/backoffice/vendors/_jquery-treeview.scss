@@ -3,26 +3,26 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-vendors-jquery-treeview--treeview--ul--padding: 0 !default;
-$ibo-vendors-jquery-treeview--treeview--ul--margin: 0 !default;
+$ibo-vendors-jquery-treeview--treeview--ul--padding: $ibo-spacing-0 !default;
+$ibo-vendors-jquery-treeview--treeview--ul--margin: $ibo-spacing-0 !default;
 
 $ibo-vendors-jquery-treeview--treeview--hitarea--height: 15px !default;
 $ibo-vendors-jquery-treeview--treeview--hitarea--width: 15px !default;
 $ibo-vendors-jquery-treeview--treeview--hitarea--margin-left: -15px !default;
 
-$ibo-vendors-jquery-treeview--treeview--li--margin: 0 !default;
-$ibo-vendors-jquery-treeview--treeview--li--padding: 3px 0 3px 16px !default;
+$ibo-vendors-jquery-treeview--treeview--li--margin: $ibo-spacing-0 !default;
+$ibo-vendors-jquery-treeview--treeview--li--padding: 3px $ibo-spacing-0 3px $ibo-spacing-500 !default;
 
 $ibo-vendors-jquery-treeview--treeview--selected: $ibo-color-grey-100 !default;
 
 $ibo-vendors-jquery-treeview--treecontrol--margin-y: 1em !default;
-$ibo-vendors-jquery-treeview--treecontrol--margin-x: 0 !default;
+$ibo-vendors-jquery-treeview--treecontrol--margin-x: $ibo-spacing-0 !default;
 
 $ibo-vendors-jquery-treeview--treecontrol--hover: $ibo-color-primary-600 !default;
 
-$ibo-vendors-jquery-treeview--filetree--li--padding: 3px 0 1px 16px !default;
+$ibo-vendors-jquery-treeview--filetree--li--padding: 3px $ibo-spacing-0 1px $ibo-spacing-500 !default;
 
-$ibo-vendors-jquery-treeview--filetree--folder-file--padding-left: 16px !default;
+$ibo-vendors-jquery-treeview--filetree--folder-file--padding-left: $ibo-spacing-500 !default;
 $ibo-vendors-jquery-treeview--filetree--folder-file--height: 15px !default;
 
 

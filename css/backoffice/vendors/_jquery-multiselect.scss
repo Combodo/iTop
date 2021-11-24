@@ -8,13 +8,13 @@ $ibo-vendors-jquery-multiselect--ui-multiselect--padding-right: 1.5em !default;
 
 $ibo-vendors-jquery-multiselect--ui-multiselect-header--margin-bottom: 3px !default;
 $ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-y: 3px !default;
-$ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-x: 0 !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-x: $ibo-spacing-0 !default;
 
-$ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--padding-left: 24px !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--padding-left: $ibo-spacing-600 !default;
 
 $ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--li--padding-right: 10px !default;
 
-$ibo-vendors-jquery-multiselect--ui-multiselect-header--li--ui-multiselect-close--padding-right: 0 !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--li--ui-multiselect-close--padding-right: $ibo-spacing-0 !default;
 
 $ibo-vendors-jquery-multiselect--ui-multiselect-menu--padding: 3px !default;
 $ibo-vendors-jquery-multiselect--ui-multiselect-menu--z-index: 10000 !default;
@@ -124,7 +124,7 @@ button.ui-multiselect > span {
   padding-right: 20px;
 }
 .ui-dialog-titlebar.ui-multiselect-header ul {
-  padding-left: 0px;
+  padding-left: $ibo-spacing-0;
   width:100%;
 }
 .ui-dialog-titlebar.ui-multiselect-header a{

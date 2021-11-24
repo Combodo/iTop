@@ -6,9 +6,9 @@
 $ibo-column--min-width: 300px !default;
 $ibo-mini-column--min-width: 30px !default;
 $ibo-column--padding-x: abs($ibo-multi-column--margin-x) !default;
-$ibo-column--padding-y: 0 !default;
+$ibo-column--padding-y: $ibo-spacing-0 !default;
 
-$ibo-column--margin-bottom--is-last-element: 48px !default;
+$ibo-column--margin-bottom--is-last-element: $ibo-spacing-800 !default;
 
 .ibo-column {
   min-width: $ibo-column--min-width;

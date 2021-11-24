@@ -3,8 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-prop--apply--padding-left: 12px !default;
-$ibo-prop--cancel--padding-left: 7px !default;
+$ibo-prop--apply--padding-left: $ibo-spacing-400 !default;
+$ibo-prop--cancel--padding-left: $ibo-spacing-300 !default;
 
 $ibo-prop--apply-cancel--span--height: 28px !default;
 $ibo-prop--apply-cancel--span--width: 32px !default;

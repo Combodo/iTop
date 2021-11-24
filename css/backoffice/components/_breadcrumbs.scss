@@ -3,29 +3,29 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-breadcrumbs--margin-right: 32px !default;
+$ibo-breadcrumbs--margin-right: $ibo-spacing-700 !default;
 
 $ibo-breadcrumbs--item--text-color: $ibo-color-grey-800 !default;
 
-$ibo-breadcrumbs--item-icon--margin-x: 8px !default;
+$ibo-breadcrumbs--item-icon--margin-x: $ibo-spacing-300 !default;
 $ibo-breadcrumbs--item-icon--max-width: 16px !default;
 $ibo-breadcrumbs--item-icon--text-color: $ibo-color-grey-600 !default;
 
 $ibo-breadcrumbs--item-label--max-width: 100px !default;
 
-$ibo-breadcrumbs--item-separator--margin-x: 12px !default;
+$ibo-breadcrumbs--item-separator--margin-x: $ibo-spacing-400 !default;
 $ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
 
 $ibo-breadcrumbs--previous-items-list-toggler--text-color: $ibo-color-grey-700 !default;
 $ibo-breadcrumbs--previous-items-list-toggler--margin-right: 2 * $ibo-breadcrumbs--item-separator--margin-x !default;
 
 $ibo-breadcrumbs--previous-items-list--top: 37px !default;
-$ibo-breadcrumbs--previous-items-list--padding-y: 8px !default;
+$ibo-breadcrumbs--previous-items-list--padding-y: $ibo-spacing-300 !default;
 $ibo-breadcrumbs--previous-items-list--background-color: $ibo-color-white-100 !default;
 
 $ibo-breadcrumbs--previous-item--text-color: $ibo-breadcrumbs--item--text-color !default;
-$ibo-breadcrumbs--previous-item--padding-x: 12px !default;
-$ibo-breadcrumbs--previous-item--padding-y: 12px !default;
+$ibo-breadcrumbs--previous-item--padding-x: $ibo-spacing-400 !default;
+$ibo-breadcrumbs--previous-item--padding-y: $ibo-spacing-400 !default;
 $ibo-breadcrumbs--previous-item-label--max-width: 200px !default;
 
 .ibo-breadcrumbs{

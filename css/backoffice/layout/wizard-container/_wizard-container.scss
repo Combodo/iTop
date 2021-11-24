@@ -3,7 +3,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-wizard-container--padding: 10px 16px !default;
+$ibo-wizard-container--padding: 10px $ibo-spacing-500 !default;
 $ibo-wizard-container--background-color: $ibo-color-blue-200 !default;
 $ibo-wizard-container--border-color: $ibo-color-blue-600 !default;
 $ibo-wizard-container--border-width: 3px !default;

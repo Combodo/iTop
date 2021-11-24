@@ -5,7 +5,7 @@
 
 $ibo-input-text--width: 100% !default;
 $ibo-input-text--min-height: 12rem !default;
-$ibo-input-text--padding-x: 12px !default;
+$ibo-input-text--padding-x: $ibo-spacing-400 !default;
 $ibo-input-text--padding-y: 10px !default;
 
 .ibo-input-text {
