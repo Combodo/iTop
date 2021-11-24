@@ -3,17 +3,22 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-@import "dashlet-within-dashboard";
+@import "alert/all";
+@import "button/all";
+@import "collapsible-section/all";
+@import "datatable/all";
+@import "display-block/all";
+@import "field/all";
+@import "fieldset/all";
+@import "input/all";
+@import "panel/all";
+@import "pill/all";
+@import "dashlet/all";
 @import "add-to-dashboard";
 @import "caselog-entry-form-within-activity-panel";
-@import "datatable-within-panel";
 @import "tab-container-within-panel";
-@import "panel-within-main-content";
-@import "panel-within-modal";
 @import "object-details-with-tab-container";
 @import "medallion-with-blocklist";
-@import "input-within-datatable";
 @import "field-badge-within-datatable";
 @import "jquery-blockui-within-dialog";
 @import "jquery-blockui-within-datatable";
-@import "collapsible-section-within-caselog-list";

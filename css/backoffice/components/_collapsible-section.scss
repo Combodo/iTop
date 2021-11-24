@@ -4,7 +4,6 @@
  */
 
 /* SCSS variables */
-$ibo-collapsible-section--margin-top: 3rem !default;
 $ibo-collapsible-section--title--color: $ibo-panel--title--color !default;
 $ibo-collapsible-section--body--background-color: $ibo-panel--body--background-color !default;
 $ibo-collapsible-section--highlight--height: 8px !default;
@@ -22,9 +21,6 @@ $ibo-collapsible-section--body--border-color: $ibo-panel--base-border-color !def
 
 
 /* Rules */
-.ibo-collapsible-section {
-	margin: $ibo-collapsible-section--margin-top auto;
-}
 
 .ibo-collapsible-section--header {
 	display: flex;
@@ -64,6 +60,7 @@ $ibo-collapsible-section--body--border-color: $ibo-panel--base-border-color !def
 		}
 
 		.ibo-collapsible-section--action-button {
+      align-self: center;
 			&.ibo-collapsible-section--maximize-button, &.ibo-collapsible-section--minimize-button {
         color: $ibo-collapsible-section--maximize-minimize-button--color;
 				margin-right: $ibo-collapsible-section--maximize-minimize-button--right;

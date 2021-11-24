@@ -4,7 +4,7 @@
  */
 
 /* SCSS variables */
-$ibo-pill--margin: 4px 8px !default;
+$ibo-pill--margin-y: 4px !default;
 $ibo-pill--padding: 6px 10px !default;
 $ibo-pill--max-width: 240px !default;
 $ibo-pill--border-radius: $ibo-border-radius-300 !default;
@@ -84,7 +84,8 @@ $ibo-pill-states-colors: (
 
   @extend %ibo-fully-centered-content;
   max-width: $ibo-pill--max-width;
-  margin: $ibo-pill--margin;
+  margin-top: $ibo-pill--margin-y;
+  margin-bottom: $ibo-pill--margin-y;
   padding: $ibo-pill--padding;
   border-radius: $ibo-pill--border-radius;
 

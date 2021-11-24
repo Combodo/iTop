@@ -39,8 +39,6 @@ $ibo-panel-colors: (
 ) !default;
 
 /* - Specific variables for the block */
-$ibo-panel--spacing-top: 24px !default;
-
 $ibo-panel--highlight--width: 100% !default;
 $ibo-panel--highlight--height: 8px !default;
 $ibo-panel--highlight--background-color: 8px !default;
@@ -84,14 +82,12 @@ $ibo-panel--title--color: $ibo-color-grey-900 !default;
 $ibo-panel--subtitle--font-size--is-sticking: $ibo-font-size-100 !default;
 $ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
 
-$ibo-panel--collapsible-toggler--margin-right: 8px !default;
+$ibo-panel--collapsible-toggler--margin-right: $ibo-spacing-300 !default;
 $ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
 $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
 /* Rules */
-.ibo-panel + .ibo-panel {
-  margin-top: $ibo-panel--spacing-top;
-}
+
 
 .ibo-panel {
   --ibo-main-color: map-get($ibo-panel-colors, 'neutral'); /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */

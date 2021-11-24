@@ -4,7 +4,6 @@
  */
 
 /* SCSS variables */
-$ibo-field--sibling-spacing: 16px !default;
 $ibo-field--value--color: $ibo-color-grey-800 !default;
 
 $ibo-field--label--description--content: "?" !default;
@@ -68,10 +67,6 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
         white-space: inherit;
       }
     }
-  }
-
-  & ~ .ibo-field {
-    margin-top: $ibo-field--sibling-spacing;
   }
 }
 
@@ -255,6 +250,3 @@ $ibo-field--enable-bulk--checkbox--margin-left: 8px !default;
   margin-left: $ibo-field--enable-bulk--checkbox--margin-left;
 }
 
-.form_field ~ .form_field {
-    margin-top: $ibo-field--sibling-spacing;
- }
