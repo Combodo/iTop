@@ -20,6 +20,8 @@
 
 namespace Combodo\iTop\Renderer;
 
+use utils;
+
 /**
  * Description of RenderingOutput
  *
@@ -118,7 +120,7 @@ class RenderingOutput
      */
 	public function AddHtml($sHtml, $bEncodeHtmlEntities = false)
 	{
-		$this->sHtml .= ($bEncodeHtmlEntities) ? htmlentities($sHtml, ENT_QUOTES, 'UTF-8') : $sHtml;
+		$this->sHtml .= ($bEncodeHtmlEntities) ? utils::HtmlEntities($sHtml) : $sHtml;
 		return $this;
 	}
 

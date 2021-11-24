@@ -21,6 +21,7 @@
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
 use MetaModel;
+use utils;
 
 /**
  * Description of BsSetFieldRenderer
@@ -105,18 +106,36 @@ EOF
 			// ... in view mode
 			else
 			{
-				$aItems = $oOrmItemSet->GetTags();
+				if ($oOrmItemSet instanceof \ormTagSet) {
+					$aItems = $oOrmItemSet->GetTags();
+					$fExtractTagData = static function($oTag, &$sItemLabel, &$sItemDescription) {
+						$sItemLabel = $oTag->Get('label');
+						$sItemDescription = $oTag->Get('description');
+					};
+				} else {
+					$aItems = $oOrmItemSet->GetValues();
+					$oAttDef = MetaModel::GetAttributeDef($oOrmItemSet->GetClass(), $oOrmItemSet->GetAttCode());
+					$fExtractTagData = static function($sEnumSetValue, &$sItemLabel, &$sItemDescription) use ($oAttDef) {
+						$sItemLabel = $oAttDef->GetValueLabel($sEnumSetValue);
+						$sItemDescription = '';
+					};
+				}
+
 				$oOutput->AddHtml('<div class="form-control-static">')
 						->AddHtml('<span class="label-group">');
-				foreach($aItems as $sItemCode => $oItem)
+				foreach($aItems as $sItemCode => $value)
 				{
-					$sItemLabel = $oItem->Get('label');
-					$sItemDescription = $oItem->Get('description');
+					$fExtractTagData($value, $sItemLabel, $sItemDescription);
+
+					$sDescriptionAttr = (empty($sItemDescription))
+						? ''
+						: ' data-description="'.utils::HtmlEntities($sItemDescription).'"';
+
 					$oOutput->AddHtml('<span class="label label-default" data-code="'.$sItemCode.'" data-label="')
 							->AddHtml($sItemLabel, true)
-							->AddHtml('" data-description="')
-							->AddHtml($sItemDescription, true)
-							->AddHtml('">')
+							->AddHtml('"')
+							->AddHtml($sDescriptionAttr)
+							->AddHtml('>')
 							->AddHtml($sItemLabel, true)
 							->AddHtml('</span>');
 				}
