@@ -2162,7 +2162,7 @@ JS
 			'dom',
 			'zlib',
 			'zip',
-			'fileinfo', // N°3123
+			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
 			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];
