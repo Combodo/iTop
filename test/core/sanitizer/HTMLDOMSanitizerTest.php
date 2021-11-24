@@ -1,20 +1,19 @@
 <?php
+namespace Combodo\iTop\Test\UnitTest\Core\Sanitizer;
 
-namespace Combodo\iTop\Test\UnitTest\Core;
-
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use HTMLDOMSanitizer;
+
+
+require_once __DIR__.'/AbstractDOMSanitizerTest.php';
+
 
 /**
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class HTMLDOMSanitizerTest extends ItopTestCase
+class HTMLDOMSanitizerTest extends AbstractDOMSanitizerTest
 {
-	const INPUT_DIRECTORY = 'sanitizer/input';
-	const OUTPUT_DIRECTORY = 'sanitizer/output';
-
 	/**
 	 * @dataProvider DoSanitizeProvider
 	 *
@@ -41,33 +40,14 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		$this->assertEquals($sOutputHtml, $sRes);
 	}
 
-	private function ReadTestFile($sFileToTest, $sFolderName)
-	{
-		$sCurrentPath = __DIR__;
-
-		return file_get_contents($sCurrentPath.DIRECTORY_SEPARATOR
-			.$sFolderName.DIRECTORY_SEPARATOR
-			.$sFileToTest);
-	}
-
-	private function RemoveNewLines($sText)
-	{
-		$sText = str_replace("\r\n", "\n", $sText);
-		$sText = str_replace("\r", "\n", $sText);
-		$sText = str_replace("\n", '', $sText);
-
-		return $sText;
-	}
-
 	public function DoSanitizeProvider()
 	{
 		return array(
 			array(
-				'utf-8_wrong_character_email_truncated.txt',
+				'scripts.html',
 			),
 		);
 	}
-
 
 	/**
 	 * @dataProvider WhiteListProvider
@@ -146,13 +126,11 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		$aTestCaseArray = array();
 
 		$sInputText = $this->ReadTestFile('whitelist_test.html', self::INPUT_DIRECTORY);
-		foreach ($aTagsWhiteList as $sTag => $aTagAttributes)
-		{
+		foreach ($aTagsWhiteList as $sTag => $aTagAttributes) {
 			$sTestCaseText = $sInputText;
 			$sStartTag = "<$sTag";
 			$iAttrCounter = 0;
-			foreach ($aTagAttributes as $sTagAttribute)
-			{
+			foreach ($aTagAttributes as $sTagAttribute) {
 				$sStartTag .= $this->GetTagAttributeValue($sTagAttribute, $iAttrCounter);
 				$iAttrCounter++;
 			}
@@ -166,41 +144,6 @@ class HTMLDOMSanitizerTest extends ItopTestCase
 		}
 
 		return $aTestCaseArray;
-	}
-
-	/**
-	 * Generates an appropriate value for the given attribute, or use the counter if needed.
-	 * This is necessary as most of the attributes with empty or inappropriate values (like a numeric for a href) are removed by the parser
-	 *
-	 * @param string $sTagAttribute
-	 * @param int $iAttributeCounter
-	 *
-	 * @return string attribute value
-	 */
-	private function GetTagAttributeValue($sTagAttribute, $iAttributeCounter)
-	{
-		$sTagAttrValue = ' '.$sTagAttribute.'="';
-		if (in_array($sTagAttribute, array('href', 'src')))
-		{
-			return $sTagAttrValue.'http://www.combodo.com"';
-		}
-
-		if ($sTagAttribute === 'style')
-		{
-			return $sTagAttrValue.'color: black"';
-		}
-
-		return $sTagAttrValue.$iAttributeCounter.'"';
-	}
-
-	private function IsClosingTag($sTag)
-	{
-		if (in_array($sTag, array('br', 'img', 'hr')))
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 	/**
