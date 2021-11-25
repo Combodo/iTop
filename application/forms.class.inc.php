@@ -234,9 +234,9 @@ class DesignerForm
 						.$this->EndRow();
 
 					if (is_null($aRow['label'])) {
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value ibo-field--value" colspan="2">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value" colspan="2">'.$aRow['value'];
 					} else {
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label ibo-field--label">'.$aRow['label'].'</td><td class="prop_value ibo-field--value">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
 					}
 					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField)) {
 						$sReturn .= $sValidationFields;
@@ -710,7 +710,9 @@ class DesignerFormField
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
-		$this->aCSSClasses = array('ibo-input');
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses = array('ibo-input');
+		}
 		$this->bDisplayed = true;
 		$this->aWidgetExtraParams = array();
 	}
@@ -1065,7 +1067,10 @@ class DesignerLongTextField extends DesignerTextField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
-		$this->aCSSClasses[] = 'ibo-input-text';
+
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-text';
+		}
 	}
 
 	/**
@@ -1199,7 +1204,10 @@ class DesignerComboField extends DesignerFormField
 		$this->bMultipleSelection = false;
 		$this->bOtherChoices = false;
 		$this->sNullLabel = Dict::S('UI:SelectOne');
-		$this->aCSSClasses[] = 'ibo-input-select';
+
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-select';
+		}
 
 		$this->bAutoApply = true;
 		$this->bSorted = true; // Sorted by default
@@ -1356,7 +1364,9 @@ class DesignerBooleanField extends DesignerFormField
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->bAutoApply = true;
-		$this->aCSSClasses[] = 'ibo-input-checkbox';
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-checkbox';
+		}
 	}
 
 	/**
@@ -1503,7 +1513,8 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
 		if (!$this->IsReadOnly()) {
 			$sDefaultValue = ($this->defaultValue !== '') ? $this->defaultValue : $this->aAllowedValues[$idx]['value'];
-			$sValue = "<span class=\"ibo-input-select-wrapper\"><input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/></span>";
+			$sCSSClasses = ContextTag::Check(ContextTag::TAG_CONSOLE) ? 'class="ibo-input-select-wrapper"' : '';
+			$sValue = "<span $sCSSClasses><input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/></span>";
 			$oP->add_ready_script(
 				<<<EOF
 	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
@@ -1681,7 +1692,9 @@ class DesignerFormSelectorField extends DesignerFormField
 		$this->defaultRealValue = $defaultValue;
 		$this->aSubForms = array();
 		$this->bSorted = true;
-		$this->aCSSClasses[] = 'ibo-input-select';
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-select';
+		}
 	}
 
 	/**

@@ -47,7 +47,7 @@ $ibo-input-select--autocomplete-item-image--background-color: $ibo-color-blue-10
 $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
 
 .ibo-input-select {
-  display: inline-block;
+  display: inline-flex;
   min-width: $ibo-input-select--value--min-midth;
 
   &:not(.ibo-input-select-autocomplete):not(.ibo-input-selectize) {
