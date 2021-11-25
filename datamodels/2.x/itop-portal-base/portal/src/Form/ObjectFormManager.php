@@ -91,26 +91,34 @@ class ObjectFormManager extends FormManager
 	 * - formmode : view|edit|create
 	 * - values for parent
 	 *
+	 * @param bool $bTrustContent if false then won't allow TWIG content
+	 *
 	 * @inheritDoc
 	 * @throws \Exception
+	 * @throws \SecurityException if twig content is present and $bTrustContent is false
 	 */
-	static function FromJSON($sJson)
+	public static function FromJSON($sJson, $bTrustContent = false)
 	{
-		if (is_array($sJson))
-		{
+		if (is_array($sJson)) {
 			$aJson = $sJson;
-		}
-		else
-		{
+		} else {
 			$aJson = json_decode($sJson, true);
+		}
+
+		if (false === $bTrustContent) {
+			/** @noinspection NestedPositiveIfStatementsInspection */
+			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
+				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
+				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
+				throw new \SecurityException('Twig content not allowed in this context!');
+			}
 		}
 
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
 
 		// Retrieving object to edit
-		if (!isset($aJson['formobject_class']))
-		{
+		if (!isset($aJson['formobject_class'])) {
 			throw new Exception('Object class must be defined in order to generate the form');
 		}
 		$sObjectClass = $aJson['formobject_class'];
@@ -151,12 +159,42 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Retrieving callback urls
-		if (!isset($aJson['formcallbacks']))
-		{
+		if (!isset($aJson['formcallbacks'])) {
 			// TODO
 		}
 
 		return $oFormManager;
+	}
+
+	/**
+	 * @param string $sPostedFormManagerData received data from the browser
+	 * @param array $aOriginalFormProperties data generated server side
+	 *
+	 * @return bool true if the data are identical
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 check formmanager_data
+	 */
+	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
+	{
+		$aPostedFormManagerData = json_decode($sPostedFormManagerData, true);
+		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
+
+		if ($sPostedFormLayoutType === 'xhtml') {
+			return true;
+		}
+
+		// we need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
+		$oHtmlDocument = new \DOMDocument();
+
+		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
+		$oHtmlDocument->loadXML('<root>'.$sPostedFormLayoutContent.'</root>');
+		$sPostedFormLayoutRendered = $oHtmlDocument->saveHTML();
+
+		$sOriginalFormLayoutContent = (isset($aOriginalFormProperties['layout']['content'])) ? $aOriginalFormProperties['layout']['content'] : '';
+		$oHtmlDocument->loadXML('<root>'.$sOriginalFormLayoutContent.'</root>');
+		$sOriginalFormLayoutContentRendered = $oHtmlDocument->saveHTML();
+
+		return ($sPostedFormLayoutRendered === $sOriginalFormLayoutContentRendered);
 	}
 
 	/**
