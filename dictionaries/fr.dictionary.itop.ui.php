@@ -766,7 +766,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'UI:Schema:Links:n-n' => 'Classes liées à %1$s (liens n:n) :',
 	'UI:Schema:Links:All' => 'Graphe de toutes les classes liées',
 	'UI:Schema:NoLifeCyle' => 'Aucun cycle de vie n\'est défini pour cette classe.',
-	'UI:Schema:LifeCycleTransitions' => 'Etats et Transitions',
+	'UI:Schema:LifeCycleTransitions' => 'États et Transitions',
 	'UI:Schema:LifeCyleAttributeOptions' => 'Options des attributs',
 	'UI:Schema:LifeCycleHiddenAttribute' => 'Caché',
 	'UI:Schema:LifeCycleReadOnlyAttribute' => 'Lecture seule',
