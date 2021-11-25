@@ -120,7 +120,7 @@ function DisplayLifecycle($oPage, $sClass)
 	{
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
-		$oPage->add("<img id=\"img-lifecycle\" attr=\"$sClass lifecycle graph\" src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
+		$oPage->add("<img id=\"img-lifecycle\" class=\"ibo-datamodel-viewer--lifecycle-image\" attr=\"$sClass lifecycle graph\" src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
 		$oPage->add_ready_script(
 			<<<EOF
 			$("#img-lifecycle").attr('href',$("#img-lifecycle").attr('src'));
@@ -146,7 +146,7 @@ JS
 		);
 		$oPage->AddUiBlock($oOpenAllButton);
 		$oPage->AddUiBlock($oCloseAllButton);
-		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCycleTransitions')."</h3>\n");
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Schema:LifeCycleTransitions'), 3));
 		$oPage->add("<ul id=\"LifeCycleList\" >\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
@@ -193,7 +193,7 @@ JS
 			$oPage->add("</ul></li>\n");
 		}
 		$oPage->add("</ul>\n");
-		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCyleAttributeOptions')."</h3>\n");
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Schema:LifeCyleAttributeOptions'), 3));
 		$oPage->add("<ul id=\"LifeCycleAttrOptList\">\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{

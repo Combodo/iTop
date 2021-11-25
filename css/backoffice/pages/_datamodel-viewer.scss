@@ -33,6 +33,8 @@ $ibo-datamodel-viewer--schema--tooltip--span--margin: 3px !default;
 $ibo-datamodel-viewer--schema--tooltip-top--border-color: $ibo-color-grey-700 !default;
 $ibo-datamodel-viewer--schema--tooltip-top--padding: 3px !default;
 
+$ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default;
+
 .ibo-datamodel-viewer--details{
   .ibo-panel--subtitle{
     @extend %ibo-font-ral-nor-150;
@@ -119,4 +121,8 @@ $ibo-datamodel-viewer--schema--tooltip-top--padding: 3px !default;
   @extend %ibo-font-ral-bol-100;
   border-bottom: 1px solid $ibo-datamodel-viewer--schema--tooltip-top--border-color;
   padding: $ibo-datamodel-viewer--schema--tooltip-top--padding;
+}
+
+.ibo-datamodel-viewer--lifecycle-image{
+  margin-bottom: $ibo-datamodel-viewer--lifecycle-image--margin-bottom;
 }

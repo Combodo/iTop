@@ -188,7 +188,7 @@ EOF
 
 	if (count($aArgs) > 0) {
 		//--- Query arguments
-		$oQueryForm->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryArguments'),2)->AddCSSClass("ibo-collapsible-section--title"));
+		$oQueryForm->AddSubBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:RunQuery:QueryArguments'), 3)->AddCSSClass("ibo-collapsible-section--title"));
 		$oQueryArgsContainer = UIContentBlockUIBlockFactory::MakeStandard(null,['wizContainer']);
 		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {

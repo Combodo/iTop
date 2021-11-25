@@ -14,6 +14,7 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
  */
 abstract class AbstractInput extends UIBlock
 {
+	public const BLOCK_CODE = 'ibo-input';
 	/** @var string */
 	protected $sName;
 	/** @var string */

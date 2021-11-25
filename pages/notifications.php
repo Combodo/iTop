@@ -51,9 +51,9 @@ $oP->AddTabContainer('Tabs_0');
 $oP->SetCurrentTabContainer('Tabs_0');
 
 $oP->SetCurrentTab('UI:NotificationsMenu:Triggers');
-$oP->add('<h2>'.Dict::S('UI:NotificationsMenu:AvailableTriggers').'</h2>');
+
 $oFilter = new DBObjectSearch('Trigger');
-$aParams = array();
+$aParams = array('panel_title' => Dict::S('UI:NotificationsMenu:AvailableTriggers'));
 $oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
 $oBlock->Display($oP, 'block_0', $aParams);
 
@@ -68,11 +68,11 @@ foreach(MetaModel::EnumChildClasses('Action', ENUM_CHILD_CLASSES_EXCLUDETOP) as 
 }
 
 $oP->SetCurrentTab('UI:NotificationsMenu:Actions');
-
+$sNbOfActionClassesTitle = '';
 if (count($aActionClasses) == 1)
 {
 	// Preserve old style
-	$oP->add('<h2>'.Dict::S('UI:NotificationsMenu:AvailableActions').'</h2>');
+	$sNbOfActionClassesTitle = Dict::S('UI:NotificationsMenu:AvailableActions');
 }
 
 $iBlock = 0;
@@ -81,11 +81,11 @@ foreach($aActionClasses as $sActionClass)
 	if (count($aActionClasses) > 1)
 	{
 		// New style
-		$oP->add('<h2>'.MetaModel::GetName($sActionClass).'</h2>');
+		$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
 	}
 	$oFilter = new DBObjectSearch($sActionClass);
 	$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
-	$aParams = array();
+	$aParams = array('panel_title' => $sNbOfActionClassesTitle);
 	$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
 	$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
 	$iBlock++;
