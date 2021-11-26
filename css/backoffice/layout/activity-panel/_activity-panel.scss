@@ -145,7 +145,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	background-color: $ibo-activity-panel--header--background-color;
 
 	/* Remove hyperlinks default color */
-	a{
+	> .ibo-activity-panel--tabs-togglers a{
 		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
@@ -290,6 +290,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 }
 .ibo-activity-panel--filter-options-toggler{
   padding-left: $ibo-activity-panel--filter-options-toggler--padding-left;
+  color: $ibo-activity-panel--tab-toolbar-action--color;
 
   &.ibo-is-closed{
     transform: rotateX(180deg);
