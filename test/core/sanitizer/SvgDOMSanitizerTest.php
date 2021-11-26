@@ -2,7 +2,7 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core\Sanitizer;
 
-use SvgDOMSanitizer;
+use SVGDOMSanitizer;
 
 
 require_once __DIR__.'/AbstractDOMSanitizerTest.php';
@@ -13,7 +13,7 @@ require_once __DIR__.'/AbstractDOMSanitizerTest.php';
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class SvgDOMSanitizerTest extends AbstractDOMSanitizerTest
+class SVGDOMSanitizerTest extends AbstractDOMSanitizerTest
 {
 	/**
 	 * @dataProvider DoSanitizeProvider
@@ -26,7 +26,7 @@ class SvgDOMSanitizerTest extends AbstractDOMSanitizerTest
 		$sOutputHtml = $this->ReadTestFile($sFileToTest, self::OUTPUT_DIRECTORY);
 		$sOutputHtml = $this->RemoveNewLines($sOutputHtml);
 
-		$oSanitizer = new SvgDOMSanitizer();
+		$oSanitizer = new SVGDOMSanitizer();
 		$sRes = $oSanitizer->DoSanitize($sInputHtml);
 
 		// Removing newlines as the parser gives different results depending on the PHP version
