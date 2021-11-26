@@ -49,7 +49,7 @@ class dictApcuTest extends ItopTestCase
 		require_once (APPROOT.'core' . DIRECTORY_SEPARATOR . 'dict.class.inc.php');
 		require_once (APPROOT.'core' . DIRECTORY_SEPARATOR . 'apc-service.class.inc.php');
 
-		$this->sEnvName = date("c");
+		$this->sEnvName = time();
 		$_SESSION['itop_env'] = $this->sEnvName;
 
 		$this->oApcService = $this->createMock(\ApcService::class);

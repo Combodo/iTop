@@ -45,7 +45,7 @@ class dictTest extends ItopTestCase
 		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'coreexception.class.inc.php');
 		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'dict.class.inc.php');
 		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'apc-service.class.inc.php');
-		$this->sEnvName = date("c");
+		$this->sEnvName = time();
 		$sDictionaryFolder = APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries";
 		@mkdir($sDictionaryFolder, 0777, true);
 
