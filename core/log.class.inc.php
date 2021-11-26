@@ -542,6 +542,7 @@ class LogChannels
 	const DEADLOCK = 'DeadLock';
 	const INLINE_IMAGE = 'InlineImage';
 	const PORTAL = 'portal';
+	const APC = 'apc';
 }
 
 

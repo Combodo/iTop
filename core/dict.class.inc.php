@@ -152,7 +152,7 @@ class Dict
 
 		if (!array_key_exists($sLangCode, self::$m_aData))
 		{
-			IssueLog::Warning("Cannot find $sLangCode in dictionnaries. default labels displayed");
+			IssueLog::Error("Cannot find $sLangCode in dictionnaries. default labels displayed", LogChannels::APC);
 			// It may happen, when something happens before the dictionaries get loaded
 			return $sStringCode;
 		}
