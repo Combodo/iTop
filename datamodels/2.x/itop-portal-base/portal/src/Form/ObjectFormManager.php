@@ -22,8 +22,7 @@ namespace Combodo\iTop\Portal\Form;
 
 use AttachmentPlugIn;
 use AttributeDateTime;
-use AttributeEnumSet;
-use AttributeTagSet;
+use AttributeSet;
 use CMDBChangeOpAttachmentAdded;
 use CMDBChangeOpAttachmentRemoved;
 use Combodo\iTop\Form\Field\Field;
@@ -1324,7 +1323,7 @@ class ObjectFormManager extends FormManager
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
-						} elseif (($oAttDef instanceof AttributeEnumSet) || ($oAttDef instanceof AttributeTagSet)) {
+						} elseif ($oAttDef instanceof AttributeSet) {
 							/** @var \ormSet $oTagSet */
 							$oOrmSet = $this->oObject->Get($sAttCode);
 							if (is_null($oOrmSet)) {
