@@ -1052,7 +1052,7 @@ class Config
 		'svg_sanitizer' => array(
 			'type' => 'string',
 			'description' => 'The class to use for SVG sanitization : allow to provide a custom made sanitizer',
-			'default' => 'SvgDOMSanitizer',
+			'default' => 'SVGDOMSanitizer',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
