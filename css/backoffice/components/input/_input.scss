@@ -26,7 +26,7 @@ $ibo-input-wrapper--is-error--background-color: $ibo-color-red-200 !default;
 $ibo-input-wrapper--is-error--border-color: $ibo-color-red-600 !default;
 $ibo-field-validation: $ibo-color-red-700 !default;
 
-$ibo-input--margin-x: 5px !default;
+$ibo-input--margin-x: $ibo-spacing-200 !default;
 
 .ibo-input {
   @extend %ibo-vertically-centered-content;
