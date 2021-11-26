@@ -119,16 +119,30 @@ PHP;
 		rmdir(APPROOT."env-$this->sEnvName");
 	}
 
-	public function testInitLangIfNeeded_NoApc(){
-		$this->oApcService->expects($this->any())
-			->method('function_exists')
-			->willReturn(false);
+	public function InitLangIfNeeded_NoApcProvider(){
+		return [
+			'apcu mocked' => [ 'bApcuMocked' => true ],
+			'integration test - apcu service like in production - install php-apcu before' => [ 'bApcuMocked' => false ],
+		];
+	}
 
-		$this->oApcService->expects($this->never())
-			->method('apc_fetch');
+	/**
+	 * @dataProvider InitLangIfNeeded_NoApcProvider
+	 */
+	public function testInitLangIfNeeded_NoApc($bApcuMocked){
+		if ($bApcuMocked) {
+			$this->oApcService->expects($this->any())
+				->method('function_exists')
+				->willReturn(false);
 
-		$this->oApcService->expects($this->never())
-			->method('apc_store');
+			$this->oApcService->expects($this->never())
+				->method('apc_fetch');
+
+			$this->oApcService->expects($this->never())
+				->method('apc_store');
+		} else {
+			Dict::SetApcService(null);
+		}
 
 		//EN US default language
 		$this->assertEquals('en1', Dict::S('label1'));
