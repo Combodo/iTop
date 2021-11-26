@@ -19,14 +19,14 @@
 
 namespace Combodo\iTop\Renderer\Bootstrap\FieldRenderer;
 
-use Exception;
 use ApplicationContext;
-use IssueLog;
-use Dict;
-use MetaModel;
 use AttributeFriendlyName;
 use Combodo\iTop\Renderer\FieldRenderer;
 use Combodo\iTop\Renderer\RenderingOutput;
+use Dict;
+use Exception;
+use IssueLog;
+use MetaModel;
 
 /**
  * Description of BsLinkedSetFieldRenderer
@@ -123,7 +123,7 @@ EOF
 			$sSelectionInputHtml = ($this->oField->GetReadOnly()) ? '' : '<span class="row_input"><input type="checkbox" name="' . $this->oField->GetGlobalId() . '" /></span>';
 			// - Output
 			$oOutput->AddJs(
-<<<EOF
+<<<JS
 				// Collapse handlers
 				// - Collapsing by default to optimize form space
 				// It would be better to be able to construct the widget as collapsed, but in this case, datatables thinks the container is very small and therefore renders the table as if it was in microbox.
@@ -164,7 +164,7 @@ EOF
 								"sortable": false,
 								"title": '{$sSelectionInputGlobalHtml}',
 								"type": "html",
-								"data": "",
+								"data": "id",
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
@@ -310,7 +310,7 @@ EOF
 						updateRemoveButtonState_{$this->oField->GetGlobalId()}();
 					});
 				};
-EOF
+JS
 			);
 
 			// Additional features if in edition mode
