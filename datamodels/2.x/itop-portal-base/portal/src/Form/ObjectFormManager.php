@@ -22,6 +22,7 @@ namespace Combodo\iTop\Portal\Form;
 
 use AttachmentPlugIn;
 use AttributeDateTime;
+use AttributeEnumSet;
 use AttributeTagSet;
 use CMDBChangeOpAttachmentAdded;
 use CMDBChangeOpAttachmentRemoved;
@@ -42,7 +43,6 @@ use Exception;
 use InlineImage;
 use IssueLog;
 use MetaModel;
-use ormTagSet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -1324,25 +1324,19 @@ class ObjectFormManager extends FormManager
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
-						}
-						elseif ($oAttDef instanceof AttributeTagSet)
-						{
-							/** @var \ormTagSet $oTagSet */
-							$oTagSet = $this->oObject->Get($sAttCode);
-							if (is_null($oTagSet))
-							{
-								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
+						} elseif (($oAttDef instanceof AttributeEnumSet) || ($oAttDef instanceof AttributeTagSet)) {
+							/** @var \ormSet $oTagSet */
+							$oOrmSet = $this->oObject->Get($sAttCode);
+							if (is_null($oOrmSet)) {
+								$oOrmSet = new \ormSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
 							}
-							$oTagSet->ApplyDelta(json_decode($value, true));
-							$this->oObject->Set($sAttCode, $oTagSet);
-						}
-						elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+							$oOrmSet->ApplyDelta(json_decode($value, true));
+							$this->oObject->Set($sAttCode, $oOrmSet);
+						} elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 						{
-							if ($value != null)
-							{
+							if ($value != null) {
 								$value = $oAttDef->GetFormat()->Parse($value);
-								if (is_object($value))
-								{
+								if (is_object($value)) {
 									$value = $value->format($oAttDef->GetInternalFormat());
 								}
 							}
