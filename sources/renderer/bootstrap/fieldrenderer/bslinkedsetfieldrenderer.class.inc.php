@@ -161,7 +161,7 @@ EOF
 								"sortable": false,
 								"title": '{$sSelectionInputGlobalHtml}',
 								"type": "html",
-								"data": "",
+								"data": "id",
 								"render": function(data, type, row)
 								{
 									var oCheckboxElem = $('{$sSelectionInputHtml}');
@@ -269,7 +269,7 @@ EOF
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tbody tr[role="row"].selected td:first-child input').prop('checked', true);
+						$('#{$sTableId} tbody tr[id].selected td:first-child input').prop('checked', true);
 						// Saving values in temp array
 						for(var i in aData)
 						{
@@ -287,7 +287,7 @@ EOF
 						var aData = oTable_{$this->oField->GetGlobalId()}.rows(indexes).data().toArray();
 
 						// Checking input
-						$('#{$sTableId} tbody tr[role="row"]:not(.selected) td:first-child input').prop('checked', false);
+						$('#{$sTableId} tbody tr[id]:not(.selected) td:first-child input').prop('checked', false);
 						// Saving values in temp array
 						for(var i in aData)
 						{
