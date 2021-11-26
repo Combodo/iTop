@@ -45,9 +45,9 @@ class dictApcuTest extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		require_once (APPROOT.'core/coreexception.class.inc.php');
-		require_once (APPROOT.'core/dict.class.inc.php');
-		require_once (APPROOT.'core/apc-service.class.inc.php');
+		require_once (APPROOT.'core' . DIRECTORY_SEPARATOR . 'coreexception.class.inc.php');
+		require_once (APPROOT.'core' . DIRECTORY_SEPARATOR . 'dict.class.inc.php');
+		require_once (APPROOT.'core' . DIRECTORY_SEPARATOR . 'apc-service.class.inc.php');
 
 		$this->sEnvName = date("c");
 		$_SESSION['itop_env'] = $this->sEnvName;
@@ -63,7 +63,7 @@ class dictApcuTest extends ItopTestCase
 
 	private function InitDictionnaries(){
 		clearstatcache();
-		$this->sDictionaryFolder = APPROOT."env-$this->sEnvName/dictionaries";
+		$this->sDictionaryFolder = APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries";
 		@mkdir($this->sDictionaryFolder, 0777, true);
 
 		$sLabels = <<<STR
@@ -96,7 +96,7 @@ Dict::SetEntries('$sLanguageCode', array(
         $sLabels
 ));
 PHP;
-		file_put_contents("$sDictionaryFolder/$sLanguageCodeInFilename.dict.php", $sContent);
+		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "$sLanguageCodeInFilename.dict.php", $sContent);
 	}
 
 	private function InitBrokenDictionnary($sDictionaryFolder, $sLanguageCode, $sLanguageCodeInFilename){
@@ -107,15 +107,15 @@ PHP;
 //
 Dict::SetEntries('$sLanguageCode', 'stringinsteadofanarray');
 PHP;
-		file_put_contents("$sDictionaryFolder/$sLanguageCodeInFilename.dict.php", $sContent);
+		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "$sLanguageCodeInFilename.dict.php", $sContent);
 	}
 
 	protected function tearDown()
 	{
-		foreach (glob(APPROOT."env-$this->sEnvName/dictionaries/*") as $sFile){
+		foreach (glob(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries" . DIRECTORY_SEPARATOR . "*") as $sFile){
 			unlink($sFile);
 		}
-		rmdir(APPROOT."env-$this->sEnvName/dictionaries");
+		rmdir(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
 	}
 

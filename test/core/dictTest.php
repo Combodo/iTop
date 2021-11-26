@@ -42,11 +42,11 @@ class dictTest extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		require_once (APPROOT.'core/coreexception.class.inc.php');
-		require_once (APPROOT.'core/dict.class.inc.php');
-		require_once (APPROOT.'core/apc-service.class.inc.php');
+		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'coreexception.class.inc.php');
+		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'dict.class.inc.php');
+		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'apc-service.class.inc.php');
 		$this->sEnvName = date("c");
-		$sDictionaryFolder = APPROOT."env-$this->sEnvName/dictionaries";
+		$sDictionaryFolder = APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries";
 		@mkdir($sDictionaryFolder, 0777, true);
 
 		$sContent = <<<PHP
@@ -58,7 +58,7 @@ Dict::SetEntries('FR FR', array(
         'label1' => 'gabu',
 ));
 PHP;
-		file_put_contents("$sDictionaryFolder/fr-fr.dict.php", $sContent);
+		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "fr-fr.dict.php", $sContent);
 		$sContent = <<<PHP
 <?php
 //
@@ -68,7 +68,7 @@ Dict::SetEntries('EN EN', array(
         'label1' => 'zomeu',
 ));
 PHP;
-		file_put_contents("$sDictionaryFolder/en-en.dict.php", $sContent);
+		file_put_contents($sDictionaryFolder . DIRECTORY_SEPARATOR . "en-en.dict.php", $sContent);
 
 		$_SESSION['itop_env'] = $this->sEnvName;
 		//require_once 'mockDict.incphp';
@@ -76,10 +76,10 @@ PHP;
 
 	protected function tearDown()
 	{
-		foreach (glob(APPROOT."env-$this->sEnvName/dictionaries/*") as $sFile){
+		foreach (glob(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries" . DIRECTORY_SEPARATOR . "*") as $sFile){
 			unlink($sFile);
 		}
-		rmdir(APPROOT."env-$this->sEnvName/dictionaries");
+		rmdir(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
 	}
 
