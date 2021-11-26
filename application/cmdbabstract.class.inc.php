@@ -1925,6 +1925,7 @@ HTML
 					}
 				}
 			}
+			$sHtml .= "<tr>";
 			$sHtml .= implode("\n", $aRow);
 			$sHtml .= "</tr>\n";
 		}
