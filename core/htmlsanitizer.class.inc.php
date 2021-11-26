@@ -419,7 +419,7 @@ class HTMLDOMSanitizer extends DOMSanitizer
 /**
  * @since 2.6.5 2.7.6 3.0.0 N°4360
  */
-class SvgDOMSanitizer extends DOMSanitizer
+class SVGDOMSanitizer extends DOMSanitizer
 {
 	public function GetTagsWhiteList()
 	{

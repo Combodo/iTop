@@ -178,6 +178,12 @@ SQL;
 			SetupLog::Info("Initializing attachment/item_org_id - zero to the container");
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_org_id = 0");
 			$oSet = new DBObjectSet($oSearch);
+			$oSet->OptimizeColumnLoad([
+				'Attachment' => [
+					'item_class',
+					'item_id',
+				]
+			]);
 			$iUpdated = 0;
 			while ($oAttachment = $oSet->Fetch())
 			{
