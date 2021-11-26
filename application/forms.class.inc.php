@@ -710,8 +710,9 @@ class DesignerFormField
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
+		$this->aCSSClasses = [];
 		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
-			$this->aCSSClasses = array('ibo-input');
+			$this->aCSSClasses[] = 'ibo-input';
 		}
 		$this->bDisplayed = true;
 		$this->aWidgetExtraParams = array();
