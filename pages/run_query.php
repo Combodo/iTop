@@ -174,7 +174,7 @@ try
 
 	//--- Query textarea
 	$oQueryTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), 'expression', 120, 8);
-	$oQueryTextArea->AddCSSClasses(['ibo-query-oql', 'ibo-is-code']);
+	$oQueryTextArea->AddCSSClasses(['ibo-input-text', 'ibo-query-oql', 'ibo-is-code']);
 	$oQueryForm->AddSubBlock($oQueryTextArea);
 
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
