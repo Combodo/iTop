@@ -152,7 +152,7 @@ class Dict
 
 		if (!array_key_exists($sLangCode, self::$m_aData))
 		{
-			IssueLog::Error("Cannot find $sLangCode in dictionnaries. default labels displayed", LogChannels::APC);
+			IssueLog::Warning("Cannot find $sLangCode in dictionnaries. default labels displayed");
 			// It may happen, when something happens before the dictionaries get loaded
 			return $sStringCode;
 		}
@@ -276,8 +276,9 @@ class Dict
 			if (self::$m_aData[$sLangCode] === false) {
 				unset(self::$m_aData[$sLangCode]);
 			} else if (! is_array(self::$m_aData[$sLangCode])) {
-				IssueLog::Warning("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...");
-				//N°4125: we dont fix issue on iTop side. just add some log to be aware of it and fix APCu instead.
+				// N°4125: we dont fix dictionnary corrupted cache (on iTop side).
+				// but we log an error in a dedicated channel to let itop administrator be aware of a potential APCu issue to fix.
+				IssueLog::Error("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...", LogChannels::APC);
 				$bResult = true;
 			} else {
 				$bResult = true;
