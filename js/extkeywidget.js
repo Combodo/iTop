@@ -269,7 +269,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 			if (item.obsolescence_flag == '1') {
 				val = val+' <span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>';
 			}
-			let labelValue = $('<div/>').html(item.label).text().replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
+			let labelValue = item.label.replace(new RegExp("(?![^&;]+;)(?!<[^<>]*)("+term+")(?![^<>]*>)(?![^&;]+;)", "gi"), "<strong>$1</strong>");
 			val = val+labelValue;
 			if (item.additional_field != undefined) {
 				val = val+'<br><i>'+item.additional_field+'</i>';
