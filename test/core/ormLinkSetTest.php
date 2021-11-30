@@ -304,14 +304,14 @@ class ormLinkSetTest extends ItopDataTestCase
 	public function testListPreviousValuesForUpdatedAttributes_AttributeString()
 	{
 		$oServer = $this->CreateServer(1);
-		$oServer->Set('analysis', 'my analysis');
+		$oServer->Set('serialnumber', 'my serialnumber');
 		$oServer->DBUpdate();
-		static::assertEquals('',  $oServer->ListPreviousValuesForUpdatedAttributes()['analysis']);
+		static::assertEquals('',  $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
 
 		$this->ReloadObject($oServer);
-		$oServer->Set('analysis', 'my analysis2');
+		$oServer->Set('serialnumber', 'my serialnumber2');
 		$oServer->DBUpdate();
-		static::assertEquals('my analysis',  $oServer->ListPreviousValuesForUpdatedAttributes()['analysis']);
+		static::assertEquals('my serialnumber',  $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
 
 	}
 	/**
