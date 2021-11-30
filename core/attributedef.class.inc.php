@@ -10852,7 +10852,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 							}
 						}
 
-						$sLabelForHtmlAttribute = MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)";
+						$sLabelForHtmlAttribute = utils::HtmlEntities(MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)");
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
@@ -11045,7 +11045,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				$aLocalizedValues = array();
 				foreach ($value as $sAttCode) {
 					if (isset($aAllowedAttributes[$sAttCode])) {
-						$sLabelForHtmlAttribute = $aAllowedAttributes[$sAttCode];
+						$sLabelForHtmlAttribute = utils::HtmlEntities($aAllowedAttributes[$sAttCode]);
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					}
 				}
@@ -11594,13 +11594,14 @@ class AttributeTagSet extends AttributeSet
 					$sTooltipContent = $sTagLabel;
 					$sTooltipHtmlEnabled = 'false';
 				} else {
+					$sTagLabelEscaped = utils::EscapeHtml($sTagLabel);
 					$sTooltipContent = <<<HTML
-<h4>$sTagLabel</h4>
+<h4>$sTagLabelEscaped</h4>
 <div>$sTagDescription</div>
 HTML;
 					$sTooltipHtmlEnabled = 'true';
 				}
-				$sTooltipContent = utils::EscapeHtml($sTooltipContent);
+				$sTooltipContent = utils::HtmlEntities($sTooltipContent);
 
 				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sLabelForHtml.'" data-description="'.$sDescriptionForHtml.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabelForHtml.'</a>';
 			}
