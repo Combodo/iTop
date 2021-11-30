@@ -2164,7 +2164,7 @@ HTML;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password\"><input title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
 							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
