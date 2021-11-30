@@ -359,7 +359,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 </p>',
 	'UI:WelcomeMenu:Text'=> '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
 
-<div>Cette version présente un tout nouveau design moderne, accessible et responsive pour la console de support.</div>
+<div>Cette version présente un tout nouveau design moderne et accessible pour la console de support.</div>
 
 <div>Nous avons conservé les fonctions de base d\''.ITOP_APPLICATION.' que vous aviez apprécié et les avons modernisées pour vous les faire adorer.
 Nous espérons que vous aimerez cette version autant que nous avons eu du plaisir à l\'imaginer et à la créer.</div>

@@ -375,7 +375,7 @@ Dict::Add('EN US', 'English', 'English', array(
 </p>',
 	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
-<div>This version features a modern brand new accessible and responsive backoffice design.</div>
+<div>This version features a brand new modern and accessible backoffice design.</div>
 
 <div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
 We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
