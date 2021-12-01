@@ -14,7 +14,6 @@
     {% for data in oUIBlock.GetData() %}
        
         <tr {% if data['@id'] is not empty %}id="{{ data['@id'] }}" {% endif %}
-            role="row"
             {% if data['@class'] is not empty %} class="{{ data['@class'] }}"{% endif %}
             {% if data['@meta'] is not empty %} {{ data['@meta'] | raw}}{% endif %}>
         {% for name,column in columns %}
