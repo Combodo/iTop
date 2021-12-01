@@ -174,6 +174,8 @@ class DisplayBlock
 				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
 				'localize_values',
 				/** param for export.php */
+				'sRefreshAction',
+				/**to add refresh button in datatable*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
