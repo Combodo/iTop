@@ -814,18 +814,18 @@ HTML;
 			$this->add_early_script($oExtensionInstance->GetEarlyScript());
 		}
 		// - API: Inline scripts
-		/** @var \iBackofficeScriptsExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeScriptsExtension') as $oExtensionInstance) {
+		/** @var \iBackofficeScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeScriptExtension') as $oExtensionInstance) {
 			$this->add_early_script($oExtensionInstance->GetScript());
 		}
 		// - API: Init. scripts
-		/** @var \iBackofficeInitScriptsExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeInitScriptsExtension') as $oExtensionInstance) {
+		/** @var \iBackofficeInitScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeInitScriptExtension') as $oExtensionInstance) {
 			$this->add_init_script($oExtensionInstance->GetInitScript());
 		}
 		// - API: Ready scripts
-		/** @var \iBackofficeReadyScriptsExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeReadyScriptsExtension') as $oExtensionInstance) {
+		/** @var \iBackofficeReadyScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeReadyScriptExtension') as $oExtensionInstance) {
 			$this->add_ready_script($oExtensionInstance->GetReadyScript());
 		}
 		// - API: External stylesheet files
@@ -836,8 +836,8 @@ HTML;
 			}
 		}
 		// - API: Inline style
-		/** @var \iBackofficeStylesExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeStylesExtension') as $oExtensionInstance) {
+		/** @var \iBackofficeStyleExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeStyleExtension') as $oExtensionInstance) {
 			$this->add_style($oExtensionInstance->GetStyle());
 		}
 		// - Generate necessary dict. files

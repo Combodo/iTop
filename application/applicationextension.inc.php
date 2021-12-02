@@ -1101,9 +1101,9 @@ class JSButtonItem extends JSPopupMenuItem
  * @api
  * @package     Extensibility
  * @since 2.0
- * @deprecated 3.0.0
- *   * If you need to include JS/CSS files/snippets use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
- *   * If you need to include HTML (and optionally JS/CSS) use {@see \iPageUIBlockExtension} to manipulate {@see \Combodo\iTop\Application\UI\Base\UIBlock} instead
+ * @deprecated 3.0.0 If you need to include:
+ *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
+ *   * HTML (and optionally JS/CSS), use {@see \iPageUIBlockExtension} to manipulate {@see \Combodo\iTop\Application\UI\Base\UIBlock} instead
  */
 interface iPageUIExtension
 {
@@ -1264,7 +1264,7 @@ abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
 interface iBackofficeLinkedScriptsExtension
 {
 	/**
-	 * @see \iTopWebPage::$a_linked_scripts
+	 * @see \iTopWebPage::$a_linked_scripts Each script will be included using this property
 	 * @return array An array of absolute URLs to the files to include
 	 */
 	public function GetLinkedScriptsAbsUrls(): array;
@@ -1278,7 +1278,7 @@ interface iBackofficeLinkedScriptsExtension
  * @api
  * @since 3.0.0
  */
-interface iBackofficeEarlyScriptsExtension
+interface iBackofficeEarlyScriptExtension
 {
 	/**
 	 * @see \iTopWebPage::$a_early_scripts
@@ -1294,7 +1294,7 @@ interface iBackofficeEarlyScriptsExtension
  * @api
  * @since 3.0.0
  */
-interface iBackofficeScriptsExtension
+interface iBackofficeScriptExtension
 {
 	/**
 	 * @see \iTopWebPage::$a_scripts
@@ -1310,7 +1310,7 @@ interface iBackofficeScriptsExtension
  * @api
  * @since 3.0.0
  */
-interface iBackofficeInitScriptsExtension
+interface iBackofficeInitScriptExtension
 {
 	/**
 	 * @see \iTopWebPage::$a_init_scripts
@@ -1326,7 +1326,7 @@ interface iBackofficeInitScriptsExtension
  * @api
  * @since 3.0.0
  */
-interface iBackofficeReadyScriptsExtension
+interface iBackofficeReadyScriptExtension
 {
 	/**
 	 * @see \iTopWebPage::$a_ready_scripts
@@ -1358,7 +1358,7 @@ interface iBackofficeLinkedStylesheetsExtension
  * @api
  * @since 3.0.0
  */
-interface iBackofficeStylesExtension
+interface iBackofficeStyleExtension
 {
 	/**
 	 * @see \iTopWebPage::$a_styles
