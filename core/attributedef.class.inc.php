@@ -11607,7 +11607,7 @@ HTML;
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-set-item">'.utils::EscapeHtml($oTag).'</span>';
 			}
 		}
 		$sHtml .= '</span>';
