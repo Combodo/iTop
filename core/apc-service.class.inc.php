@@ -39,3 +39,4 @@ class ApcService {
 		return apc_store($key, $var, $ttl);
 	}
 }
+?>
