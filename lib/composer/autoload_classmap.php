@@ -17,6 +17,7 @@ return array(
     'ActionChecker' => $baseDir . '/core/userrights.class.inc.php',
     'ActionEmail' => $baseDir . '/core/action.class.inc.php',
     'ActionNotification' => $baseDir . '/core/action.class.inc.php',
+    'ApcService' => $baseDir . '/core/apc-service.class.inc.php',        
     'ApplicationContext' => $baseDir . '/application/applicationcontext.class.inc.php',
     'ApplicationException' => $baseDir . '/application/application.inc.php',
     'ApplicationMenu' => $baseDir . '/application/menunode.class.inc.php',
