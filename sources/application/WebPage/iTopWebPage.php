@@ -802,6 +802,45 @@ HTML;
 		$oPrintHeader = null;
 
 		// Prepare internal parts (js files, css files, js snippets, css snippets, ...)
+		// - API: External script files
+		/** @var \iBackofficeLinkedScriptsExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeLinkedScriptsExtension') as $oExtensionInstance) {
+			foreach ($oExtensionInstance->GetLinkedScriptsAbsUrls() as $sScriptUrl) {
+				$this->add_linked_script($sScriptUrl);
+			}
+		}
+		// - API: Early inline scripts
+		/** @var \iBackofficeEarlyScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeEarlyScriptExtension') as $oExtensionInstance) {
+			$this->add_early_script($oExtensionInstance->GetEarlyScript());
+		}
+		// - API: Inline scripts
+		/** @var \iBackofficeScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeScriptExtension') as $oExtensionInstance) {
+			$this->add_early_script($oExtensionInstance->GetScript());
+		}
+		// - API: Init. scripts
+		/** @var \iBackofficeInitScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeInitScriptExtension') as $oExtensionInstance) {
+			$this->add_init_script($oExtensionInstance->GetInitScript());
+		}
+		// - API: Ready scripts
+		/** @var \iBackofficeReadyScriptExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeReadyScriptExtension') as $oExtensionInstance) {
+			$this->add_ready_script($oExtensionInstance->GetReadyScript());
+		}
+		// - API: External stylesheet files
+		/** @var \iBackofficeLinkedStylesheetsExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeLinkedStylesheetsExtension') as $oExtensionInstance) {
+			foreach ($oExtensionInstance->GetLinkedStylesheetsAbsUrls() as $sStylesheetUrl) {
+				$this->add_linked_stylesheet($sStylesheetUrl);
+			}
+		}
+		// - API: Inline style
+		/** @var \iBackofficeStyleExtension $oExtensionInstance */
+		foreach (MetaModel::EnumPlugins('iBackofficeStyleExtension') as $oExtensionInstance) {
+			$this->add_style($oExtensionInstance->GetStyle());
+		}
 		// - Generate necessary dict. files
 		if ($this->bAddJSDict) {
 			$this->output_dict_entries();
