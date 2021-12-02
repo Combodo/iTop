@@ -503,17 +503,17 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	catch(MissingQueryArgument $e)
 	{
 		$oSearch = null;
-		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndUsage("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(OQLException $e)
 	{
 		$oSearch = null;
-		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndExit("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(Exception $e)
 	{
 		$oSearch = null;
-		ReportErrorAndExit($e->getMessage());
+		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
 	}
 
 	$oExporter->SetFormat($sFormat);
@@ -569,7 +569,7 @@ if (utils::IsModeCLI()) {
 		utils::UseParamFile();
 	}
 	catch (Exception $e) {
-		echo "Error: ".$e->GetMessage()."<br/>\n";
+		echo "Error: ".utils::HtmlEntities($e->getMessage())."<br/>\n";
 		exit(EXIT_CODE_FATAL);
 	}
 
@@ -660,15 +660,15 @@ if (utils::IsModeCLI()) {
 	}
 	catch(MissingQueryArgument $e)
 	{
-		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(OQLException $e)
 	{
-		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(Exception $e)
 	{
-		ReportErrorAndExit($e->getMessage());
+		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
 	}
 
 	exit;
@@ -725,14 +725,14 @@ try
 }
 catch (BulkExportMissingParameterException $e) {
 	$oP = new AjaxPage('iTop Export');
-	$oP->add($e->getMessage());
+	$oP->add(utils::HtmlEntities($e->getMessage()));
 	Usage($oP);
 	$oP->output();
 }
 catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
 	$oP->add_xframe_options();
-	$oP->add('Error: '.$e->getMessage());
-	IssueLog::Error($e->getMessage()."\n".$e->getTraceAsString());
+	$oP->add('Error: '.utils::HtmlEntities($e->getMessage()));
+	IssueLog::Error(utils::HtmlEntities($e->getMessage())."\n".$e->getTraceAsString());
 	$oP->output();
 }
