@@ -340,7 +340,7 @@ EOF
 						}
 						else if ($oAttDef instanceof AttributeTagSet)
 						{
-							$sField = $oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, '');
+							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
 						}
 						else
