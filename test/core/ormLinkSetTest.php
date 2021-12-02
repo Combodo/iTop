@@ -308,4 +308,103 @@ class ormLinkSetTest extends ItopDataTestCase
 		];
 	}
 
+
+	/**
+	 * don't work cf bug N°4402
+	 * @throws Exception
+	 */
+	/*public function testListPreviousValuesForUpdatedAttributes_AttributeLinkedSetIndirect()
+	{
+		$oServer = $this->CreateServer(1);
+		$oPerson = $this->CreatePerson(0);
+		$this->AddContactToCI($oPerson, $oServer);
+
+		$oServer->DBUpdate();
+		$this->ReloadObject($oServer);
+
+		$oPerson = $this->CreatePerson(1);
+		$this->AddContactToCI($oPerson, $oServer);
+
+		$oServer->DBUpdate();
+		$oSetOldFcisList = $oServer->ListPreviousValuesForUpdatedAttributes()['contacts_list']->ToDBObjectSet();
+
+		static::assertEquals(1, $oSetOldFcisList->Count());
+	}*/
+
+
+	/**
+	 * @throws Exception
+	 */
+	public function testListPreviousValuesForUpdatedAttributes_AttributeString()
+	{
+		$oServer = $this->CreateServer(1);
+		$oServer->Set('serialnumber', 'my serialnumber');
+		$oServer->DBUpdate();
+		static::assertEquals('',  $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
+
+		$this->ReloadObject($oServer);
+		$oServer->Set('serialnumber', 'my serialnumber2');
+		$oServer->DBUpdate();
+		static::assertEquals('my serialnumber',  $oServer->ListPreviousValuesForUpdatedAttributes()['serialnumber']);
+
+	}
+	/**
+	 * @throws Exception
+	 */
+	public function testListPreviousValuesForUpdatedAttributes_AttributeExternalKey()
+	{
+		$oServer = $this->CreateServer(1);
+		$idOrgInit = $oServer->Get('org_id');
+
+		$oOrganization = $this->CreateOrganization(1);
+		$oServer->Set('org_id',$oOrganization);
+		$oServer->DBUpdate();
+		static::assertEquals($idOrgInit,  $oServer->ListPreviousValuesForUpdatedAttributes()['org_id']);
+		static::assertNotEquals($oOrganization->GetKey(),  $oServer->ListPreviousValuesForUpdatedAttributes()['org_id']);
+		static::assertEquals($oOrganization->GetKey(),  $oServer->Get('org_id'));
+	}
+	/**
+	 * don't work cf bug N°4402
+	 * @throws Exception
+	 */
+	/*public function testListPreviousValuesForUpdatedAttributes_AttributeExternalField()
+	{
+		$oServer = $this->CreateServer(1);
+		$OrgInit = $oServer->Get('organization_name');
+
+		$oOrganization = $this->CreateOrganization('Serv1');
+		$oServer->Set('org_id',$oOrganization);
+		$oServer->DBUpdate();
+		//static::assertEquals($OrgInit,  json_encode($oServer->ListPreviousValuesForUpdatedAttributes()));
+		static::assertEquals($OrgInit,  $oServer->ListPreviousValuesForUpdatedAttributes()['organization_name']);
+		static::assertNotEquals($oOrganization->Get('name'),  $oServer->ListPreviousValuesForUpdatedAttributes()['organization_name']);
+		static::assertEquals($oOrganization->Get('name'),  $oServer->Get('organization_name'));
+	}*/
+
+	/**
+	 * don't work cf bug N°4402
+	 * @throws Exception
+	 */
+	/*public function testListPreviousValuesForUpdatedAttributes_AttributeLinkedSet()
+	{
+		$oServer = $this->CreateServer(1);
+		$oPhysicalInterface = $this->CreatePhysicalInterface(1, 1000, $oServer->GetKey());
+		$this->debug("Created PhysicalInterface {$oPhysicalInterface->GetName()} ({$oPhysicalInterface->GetKey()})");
+		$oServer->DBUpdate();
+		$this->ReloadObject($oServer);
+		$this->debug("Nb PhysicalInterface".$oServer->Get('physicalinterface_list')->Count());
+		$oPhysicalInterface2 = $this->CreatePhysicalInterface(2, 1000, $oServer->GetKey());
+		$this->debug("Created PhysicalInterface {$oPhysicalInterface2->GetName()} ({$oPhysicalInterface2->GetKey()})");
+		$oServer->DBUpdate();
+		$oSetOldFcisList=$oServer->Get('physicalinterface_list')->ToDBObjectSet();
+		while ($oObject = $oSetOldFcisList->Fetch())
+		{
+			$this->debug("PI: ".get_class($oObject).": ".$oObject->GetKey());
+		}
+		$this->debug("Nb PhysicalInterface".$oServer->Get('physicalinterface_list')->Count());
+		//$oSetOldFcisList = $oServer->ListPreviousValuesForUpdatedAttributes()['physicalinterface_list']->ToDBObjectSet();
+
+		static::assertEquals(1, $oSetOldFcisList->Count());
+	}*/
+
 }
