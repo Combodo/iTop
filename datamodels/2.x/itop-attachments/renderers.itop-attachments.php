@@ -551,7 +551,7 @@ JS
 	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
 	  <td role="formatted-size" data-order="$iFileSize">$sFileFormattedSize</td>
 	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDateFormatted</td>
-	  <td role="uploader">$sAttachmentUploader</td>
+	  <td role="uploader">$sAttachmentUploaderForHtml</td>
 	  <td role="type">$sFileType</td>
 	  $sDeleteColumn
 	</tr>
