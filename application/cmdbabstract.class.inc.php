@@ -5296,7 +5296,7 @@ EOF
 		if ($bPreview) {
 			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName());
+				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetRawName());
 			} else {
 				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects),
 					MetaModel::GetName($sClass));
@@ -5497,7 +5497,7 @@ EOF
 			//
 			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName());
+				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetRawName());
 			} else {
 				$sTitle = Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass));
 			}
