@@ -65,7 +65,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-
+                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{" data-role="ibo-tab-container--tab-container-list">
                 {% for oTab in oUIBlock.GetSubBlocks() %}
                     <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                          class="ibo-tab-container--tab-container">
@@ -79,6 +79,7 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                </div>
             {% endif %}
         {% endblock %}
 
