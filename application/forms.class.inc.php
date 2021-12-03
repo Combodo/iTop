@@ -354,7 +354,7 @@ EOF
 <<<EOF
 $('#$sDialogId').dialog({
 		height: 'auto',
-		maxHeight: $(window).height() - 8,
+		maxHeight: $(window).height() * 0.9,
 		width: $iDialogWidth,
 		modal: true,
 		autoOpen: $sAutoOpen,
