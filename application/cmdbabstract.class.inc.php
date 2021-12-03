@@ -4219,7 +4219,7 @@ HTML;
 			case 'Image':
 				$value = null;
 				$oImage = utils::ReadPostedDocument("attr_{$sFormPrefix}{$sAttCode}", 'fcontents');
-				if (!is_null($oImage->GetData()))
+				if (!is_null($oImage->GetData()) && $oImage->GetMimeType() != "image/svg+xml")
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
 					$oImage = utils::ResizeImageToFit(
