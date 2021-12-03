@@ -506,6 +506,7 @@ class ormCaseLog {
 		$oBlockRenderer = new BlockRenderer($oBlock);
 		$sHtml = $oBlockRenderer->RenderHtml();
 		$sScript = $oBlockRenderer->RenderJsInlineRecursively($oBlock,iUIBlock::ENUM_JS_TYPE_ON_READY);
+		$aJsFiles = $oBlockRenderer->GetJsFiles();
 		if ($sScript!=''){
 			if ($oP == null) {
 				$sScript = '<script>'.$sScript.'</script>';
@@ -514,6 +515,18 @@ class ormCaseLog {
 				$oP->add_ready_script($sScript);
 			}
 		}
+		// Ugly hack as we use a block and strip its content above, we'll also need JS files it depends on
+		if(count($aJsFiles) > 0){
+			foreach ($aJsFiles as $sFileAbsUrl) {
+				if ($oP === null) {
+					$sScript = '<script src="'.$sFileAbsUrl.'"></></script>';
+					$sHtml .= $sScript;
+				} else {
+					$oP->add_linked_script($sFileAbsUrl);
+				}
+			}
+		}
+		
 		return  $sHtml;
 	}
 
