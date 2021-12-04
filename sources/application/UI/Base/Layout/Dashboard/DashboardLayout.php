@@ -54,11 +54,29 @@ class DashboardLayout extends UIBlock
 	}
 
 	/**
+	 * @see static::$sTitle
+	 * @return bool
+	 */
+	public function HasTitle(): bool
+	{
+		return strlen($this->sTitle) > 0;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function GetTitle(): string
 	{
 		return $this->sTitle;
+	}
+
+	/**
+	 * @see static::$oToolbar
+	 * @return bool
+	 */
+	public function HasToolbar(): bool
+	{
+		return $this->oToolbar->HasSubBlocks();
 	}
 
 	/**
