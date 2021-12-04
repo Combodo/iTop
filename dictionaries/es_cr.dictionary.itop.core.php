@@ -500,6 +500,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action/Attribute:trigger_list+' => 'Disparadores Asociados a esta Acción',
 	'Class:Action/Attribute:finalclass' => 'Clase',
 	'Class:Action/Attribute:finalclass+' => 'Clase',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

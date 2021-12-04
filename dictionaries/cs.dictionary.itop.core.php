@@ -501,6 +501,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Class:Action/Attribute:trigger_list+' => 'Triggery spojené s touto akcí',
 	'Class:Action/Attribute:finalclass' => 'Typ',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

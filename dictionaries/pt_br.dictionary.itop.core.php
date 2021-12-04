@@ -499,6 +499,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Action/Attribute:trigger_list+' => 'Gatilhos ligados a esta ação',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

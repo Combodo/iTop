@@ -499,6 +499,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:Action/Attribute:trigger_list+' => 'Wyzwalacze powiązane z działaniem',
 	'Class:Action/Attribute:finalclass' => 'Podklasa działania',
 	'Class:Action/Attribute:finalclass+' => 'Nazwa ostatniej klasy',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

@@ -497,6 +497,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Action/Attribute:trigger_list+' => 'このアクションにリンクされたトリガー',
 	'Class:Action/Attribute:finalclass' => 'タイプ',
 	'Class:Action/Attribute:finalclass+' => 'タイプ',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

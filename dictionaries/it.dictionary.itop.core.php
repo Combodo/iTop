@@ -499,6 +499,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:Action/Attribute:trigger_list+' => 'Triggers colleagati a questa azione',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

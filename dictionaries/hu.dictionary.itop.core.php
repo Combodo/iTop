@@ -497,6 +497,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Class:Action/Attribute:trigger_list+' => '',
 	'Class:Action/Attribute:finalclass' => 'Típus',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //

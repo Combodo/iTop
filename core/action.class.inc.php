@@ -118,6 +118,39 @@ abstract class Action extends cmdbAbstractObject
 				return false;
 		}
 	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	public function AfterInsert()
+	{
+		parent::AfterInsert();
+		$this->DoCheckIfHasTrigger();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	public function AfterUpdate()
+	{
+		parent::AfterUpdate();
+		$this->DoCheckIfHasTrigger();
+	}
+
+	/**
+	 * Check if the Action has at least 1 trigger linked. Otherwise, it adds a warning.
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function DoCheckIfHasTrigger()
+	{
+		$oTriggersSet = $this->Get('trigger_list');
+		if ($oTriggersSet->Count() === 0) {
+			$this->m_aCheckWarnings[] = Dict::S('Action:WarningNoTriggerLinked');
+		}
+	}
 }
 
 /**

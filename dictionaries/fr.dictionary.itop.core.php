@@ -497,6 +497,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Action/Attribute:trigger_list+' => '',
 	'Class:Action/Attribute:finalclass' => 'Sous-classe d\'Action',
 	'Class:Action/Attribute:finalclass+' => 'Nom de la classe instanciable',
+	'Action:WarningNoTriggerLinked' => 'Attention, aucun déclencheur n\'est associé à l\'action. Elle ne sera pas active tant qu\'elle n\'en aura pas au moins 1.',
 ));
 
 //
