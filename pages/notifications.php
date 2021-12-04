@@ -30,6 +30,70 @@ require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 
+/**
+ * @param \iTopWebPage $oP
+ * @param string $sClassToDisplay
+ * @param array $aClassesToExclude
+ *
+ * @throws \ApplicationException
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ * @since 3.0.0
+ */
+function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aClassesToExclude = []): void
+{
+	// Check if class exists
+	if (! MetaModel::IsValidClass($sClassToDisplay)) {
+		return;
+	}
+
+	$aActionClasses = array();
+	foreach(MetaModel::EnumChildClasses($sClassToDisplay, ENUM_CHILD_CLASSES_ALL, true) as $sActionClass) {
+		// Ignore abstract classes
+		if (MetaModel::IsAbstract($sActionClass)) {
+			continue;
+		}
+
+		// Ignore specific classes
+		foreach ($aClassesToExclude as $sClassToExclude) {
+			if (is_a($sActionClass, $sClassToExclude, true)) {
+				continue 2;
+			}
+		}
+
+		$aActionClasses[] = $sActionClass;
+	}
+
+	// Don't display tab if no action class
+	if (count($aActionClasses) === 0) {
+		return;
+	}
+
+	$oP->SetCurrentTab('UI:NotificationsMenu:Actions:'.$sClassToDisplay);
+	$sNbOfActionClassesTitle = '';
+	if (count($aActionClasses) == 1)
+	{
+		// Preserve old style
+		$sNbOfActionClassesTitle = Dict::S('UI:NotificationsMenu:AvailableActions');
+	}
+
+	$iBlock = 0;
+	foreach($aActionClasses as $sActionClass)
+	{
+		if (count($aActionClasses) > 1)
+		{
+			// New style
+			$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
+		}
+		$oFilter = new DBObjectSearch($sActionClass);
+		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
+		$aParams = array('panel_title' => $sNbOfActionClassesTitle);
+		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
+		$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
+		$iBlock++;
+	}
+}
+
 // Main program
 //
 $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
@@ -47,6 +111,10 @@ $oConfigurationHelp
 	->EnableSaveCollapsibleState('notifications__home');
 $oPageContentLayout->AddMainBlock($oConfigurationHelp);
 
+/*************************************
+ *           Triggers tab
+ ************************************/
+
 $oP->AddTabContainer('Tabs_0');
 $oP->SetCurrentTabContainer('Tabs_0');
 
@@ -57,39 +125,17 @@ $aParams = array('panel_title' => Dict::S('UI:NotificationsMenu:AvailableTrigger
 $oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
 $oBlock->Display($oP, 'block_0', $aParams);
 
+/*************************************
+ *           Actions tabs
+ ************************************/
 
-$aActionClasses = array();
-foreach(MetaModel::EnumChildClasses('Action', ENUM_CHILD_CLASSES_EXCLUDETOP) as $sActionClass)
-{
-	if (!MetaModel::IsAbstract($sActionClass))
-	{
-		$aActionClasses[] = $sActionClass;
-	}
-}
+DisplayActionsTab($oP, 'ActionEmail');
+DisplayActionsTab($oP, 'ActionWebhook');
+DisplayActionsTab($oP, 'Action', ['ActionEmail', 'ActionWebhook']);
 
-$oP->SetCurrentTab('UI:NotificationsMenu:Actions');
-$sNbOfActionClassesTitle = '';
-if (count($aActionClasses) == 1)
-{
-	// Preserve old style
-	$sNbOfActionClassesTitle = Dict::S('UI:NotificationsMenu:AvailableActions');
-}
-
-$iBlock = 0;
-foreach($aActionClasses as $sActionClass)
-{
-	if (count($aActionClasses) > 1)
-	{
-		// New style
-		$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
-	}
-	$oFilter = new DBObjectSearch($sActionClass);
-	$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
-	$aParams = array('panel_title' => $sNbOfActionClassesTitle);
-	$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
-	$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
-	$iBlock++;
-}
+/*************************************
+ *           End reset
+ ************************************/
 
 $oP->SetCurrentTab('');
 $oP->SetCurrentTabContainer('');

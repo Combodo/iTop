@@ -965,19 +965,25 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	<li>Einige Trigger werden ausgeführt, wenn ein Objekt einer bestimmten Klasse einen bestimmten <b>Zustand</b> <b>erreicht</b> oder <b>verlässt</b>.</li>
 	<li>Einige Trigger werden ausgeführt, wenn ein <b>Schwellenwert</b> auf <b>TTO</b> oder <b>TTR</b> <b>erreicht</b> ist.</li>
 </ol>
+</p><p>
+<i><b>Aktionen</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Eine spezielle Seite: <a href="../setup/email.test.php" target="_blank">email.test.php</a> steht zum Testen und zur Fehlerbehebung Ihrer PHP-Mailkonfiguration bereit.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>
-<i><b>Aktionen</b></i> definieren Aktionen, die ausgeführt werden sollen, wenn ein Trigger ausgeführt wird. Derzeit steht nur eine Art an Aktion zur Verfügung: Das Senden einer Email-Nachricht.
-Derartige Aktionen definieren auch das Template, welches für das Versenden der Email, aber auch für anderen Parameter der Nachricht wie Empfänger, Priorität usw. zuständig ist.</p>
-<p>Eine spezielle Seite: <a href="../setup/email.test.php" target="_blank">email.test.php</a> steht zum Testen und zur Fehlerbehebung Ihrer PHP-Mailkonfiguration bereit.</p>
 <p>Um Aktionen auszuführen, müssen diese mit Trigger verknüpft sein.
-Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>',
+Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Trigger',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Verfügbare Trigger',
 	'UI:NotificationsMenu:OnCreate' => 'Wenn ein Objekt erstellt wird',
 	'UI:NotificationsMenu:OnStateEnter' => 'Wenn ein Objekt einen gegebenen Status erlangt',
 	'UI:NotificationsMenu:OnStateLeave' => 'Wenn ein Objekt einen gegebenen Status verlässt',
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
 
 	'Menu:TagAdminMenu' => 'Tag-Konfiguration',

@@ -969,8 +969,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:NotificationsMenu+' => '配置通知', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => '配置 通知',
 	'UI:NotificationsMenu:Help' => '帮助',
-	'UI:NotificationsMenu:HelpContent' => '<p>在iTop 中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
-<p><i><b>触发器</b></i> 定义了什么时候发送通知. iTop core 自带一些触发器, 另一些触发器可由扩展提供:
+	'UI:NotificationsMenu:HelpContent' => '<p>在'.ITOP_APPLICATION_SHORT.' 中, 通知可以被自定义. 它们是基于两个对象集: <i>触发器和操作</i>.</p>
+<p><i><b>触发器</b></i> 定义了什么时候发送通知. '.ITOP_APPLICATION_SHORT.' core 自带一些触发器, 另一些触发器可由扩展提供:
 <ol>
 	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
 	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
@@ -978,10 +978,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 </ol>
 </p>
 <p>
-<i><b>操作</b></i> 定义了触发时要执行的操作. 目前, 仅有的一种操作就是外发邮件.
-包含邮件模板（定义发件人、收件人、重要性等）.
+<i><b>操作</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	这里有一个专用的页面: <a href="../setup/email.test.php" target="_blank">email.test.php</a> 可用于测试和调试PHP 的邮件配置.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>这里有一个专用的页面: <a href="../setup/email.test.php" target="_blank">email.test.php</a> 可用于测试和调试PHP 的邮件配置.</p>
 <p>若要执行, 操作必须和触发器相关联.
 当与一个触发器关联时, 每个操作都被赋予一个顺序号, 规定了按什么样的顺序执行这些操作.</p>~~',
 	'UI:NotificationsMenu:Triggers' => '触发器',
@@ -990,6 +993,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:NotificationsMenu:OnStateEnter' => '当对象进入指定状态',
 	'UI:NotificationsMenu:OnStateLeave' => '当对象离开指定状态',
 	'UI:NotificationsMenu:Actions' => '操作',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => '有效的操作',
 
 	'Menu:TagAdminMenu' => '标签配置',

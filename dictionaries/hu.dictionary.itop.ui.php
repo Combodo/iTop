@@ -967,9 +967,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 </ol>
 </p>
 <p>
-<i><b>Akciók</b></i> határozzák meg mit kell végrehjatani a kiváltó ok bekövetkezésekor. Jelenleg egyetlen akció fajta van: e-mail küldés.Természetesen az egyedi akciókbna meg lehet határozni a levél alapját képző sablont és az abba beépülő speciális paramétereket, pl.: címzett, fontossás, stb.
+<i><b>Akciók</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Speciális oldal: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Speciális oldal: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</p>
 <p>Akció végrehjatásához azt kiváltó okhoz kell rendelni.
 Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az akciók végrehatási sorrendjét.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Kiváltó okok',
@@ -978,6 +982,9 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:NotificationsMenu:OnStateEnter' => 'Objketum állapotba való belépése',
 	'UI:NotificationsMenu:OnStateLeave' => 'Objektum állotból való kilépése',
 	'UI:NotificationsMenu:Actions' => 'Akciók',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Lehetséges akciók',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',

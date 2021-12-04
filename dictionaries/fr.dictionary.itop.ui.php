@@ -969,7 +969,7 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 	'Menu:NotificationsMenu+' => 'Configuration des Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuration des Notifications',
 	'UI:NotificationsMenu:Help' => 'Aide',
-	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>Dans '.ITOP_APPLICATION_SHORT.' les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
 <p><i><b>Les déclencheurs</b></i> définissent quand une notification sera exécutée. Il y a différents déclencheurs qui font partie du noyau d\'iTop, mais d\'autres peuvent être apportés par des extensions :
 <ol>
 	<li>Certains déclencheurs sont exécutés lorsqu\'un objet de la classe spécifiée est <b>créé</b>, <b>mis à jour</b> ou <b>supprimé</b>.</li>
@@ -978,9 +978,13 @@ Nous espérons que vous aimerez cette version autant que nous avons eu du plaisi
 </ol>
 </p>
 <p>
-<i><b>Les actions</b></i> définissent ce qui doit être exécuté. Pour le moment il existe un seul type d\'action: l\'envoi de mail.
-Les actions de type mail définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.)</p>
-<p>Une page spéciale: <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</p>
+<i><b>Les actions</b></i> définissent ce qui doit être exécuté. Pour le moment il existe deux types d\'actions :
+<ol>
+    <li>L\'envoi de mél : Les actions de type mél définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.).<br />
+    Une page spéciale : <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</li>
+    <li>Les webhooks sortants : Les actions de type webhooks permettent l\'intégration avec une application tierce en transmettant des données structurées à une URL définie.</li>
+</ol>
+</p>
 <p>Les actions doivent être associées à des déclencheurs pour pouvoir être exécutées.
 Lors de l\'association à un déclencheur, on attribue à chaque action un numéro d\'ordre, qui définit la séquence des actions à exécuter.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Déclencheurs',
@@ -989,6 +993,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NotificationsMenu:OnStateEnter' => 'Quand un objet entre dans un état donné',
 	'UI:NotificationsMenu:OnStateLeave' => 'Quand un objet quitte un état donné',
 	'UI:NotificationsMenu:Actions' => 'Actions',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Actions de type mél',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Actions de type webhook (intégrations sortantes)',
+	'UI:NotificationsMenu:Actions:Action' => 'Autres types d\'actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Actions existantes',
 
 	'Menu:TagAdminMenu' => 'Étiquettes',

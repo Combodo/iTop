@@ -978,10 +978,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 </ol>
 </p>
 <p>
-<i><b>Ações</b></i> define the actions to be performed when the triggers execute. For now there is only one kind of action consisting in sending an email message.
-Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.
+<i><b>Ações</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</p>
 <p>To be executed, actions must be associated to triggers.
 When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Gatilhos',
@@ -990,6 +993,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:NotificationsMenu:OnStateEnter' => 'When an object enters a given state',
 	'UI:NotificationsMenu:OnStateLeave' => 'When an object leaves a given state',
 	'UI:NotificationsMenu:Actions' => 'Ações',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
 
 	'Menu:TagAdminMenu' => 'Configuração de tags',

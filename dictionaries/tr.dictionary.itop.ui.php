@@ -969,7 +969,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Uyarıların yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
-	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
 	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
@@ -978,10 +978,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 </ol>
 </p>
 <p>
-<i><b>Actions</b></i> tetikleme olduğunda yapılacak işlemleri belirler. Şimdilik sadece e-posta gönderme işlemi yapılabilmektedir.
-E-posta için şablon tanımlanabilmektedir. Şablona parametreler girilebilmektedir (recipients, importance, etc.).
+<i><b>Actions</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Özel sayfa: <a href="../setup/email.test.php" target="_blank">email.test.php</a> PHP e-posta konfigürnunu test ediniz.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Özel sayfa: <a href="../setup/email.test.php" target="_blank">email.test.php</a> PHP e-posta konfigürnunu test ediniz.</p>
 <p>İşlemin gerçekleşmesi için bir tetikleme ile ilişkilendirilmesi gerekir.
 Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Tetikleyiciler',
@@ -990,6 +993,9 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:NotificationsMenu:OnStateEnter' => 'Nesnenin durumuna girişinde',
 	'UI:NotificationsMenu:OnStateLeave' => 'Nesnenin durumdan çıkışında',
 	'UI:NotificationsMenu:Actions' => 'İşlemler',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Kullanılabilir işlemler',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',

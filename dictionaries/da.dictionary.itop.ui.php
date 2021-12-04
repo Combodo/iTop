@@ -967,10 +967,13 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 </ol>
 </p>
 <p>
-<i><b>Handlinger</b></i> definer de handlinger som udføres når triggeren udløses. For nuværende er der kun en handling, som består af at sende en email besked.
-Sådanne handlinger definerer den skabelon som bruges til afsendelse af email såvel som andre parametre indhold i beskeden, modtger, vigtighed, etc.
+<i><b>Handlinger</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	En speciel side: <a href="../setup/email.test.php" target="_blank">email.test.php</a> er til rådighed for test og problemløsning af PHP mail konfigurationen.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>En speciel side: <a href="../setup/email.test.php" target="_blank">email.test.php</a> er til rådighed for test og problemløsning af PHP mail konfigurationen.</p>
 <p>For udførelse, handlinger skal være knyttet til triggers.
 Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge" nummer, der specificerer i hvilken rækkefølge handlingerne udføres.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
@@ -979,6 +982,9 @@ Ved tilknytningen til en trigger, bliver hver handling tildelt et "rækkefølge"
 	'UI:NotificationsMenu:OnStateEnter' => 'Når et objekt indtræder i en give tilstand',
 	'UI:NotificationsMenu:OnStateLeave' => 'Når et objekt forlader en give tilstand',
 	'UI:NotificationsMenu:Actions' => 'Handlinger',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Tilgængelige handlinger',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',

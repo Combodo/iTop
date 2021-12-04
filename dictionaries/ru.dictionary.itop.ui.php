@@ -986,17 +986,23 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 </ol>
 </p>
 <p>
-<i><b>Действия</b></i> определяют, что произойдет при срабатывании триггера. Базовое действие в '.ITOP_APPLICATION_SHORT.' – <b>Уведомление по email</b>, дополнительные действия добавляются расширениями.
-Действие <b>Уведомление по email</b> задаёт шаблон сообщения, который будет использоваться для отправки письма, а также другие параметры, такие как получатели, важность и т.д.
+<i><b>Действия</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Для тестирования и устранения неполадок в настройках почты доступна специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a>.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Для тестирования и устранения неполадок в настройках почты доступна специальная страница: <a href="../setup/email.test.php" target="_blank">email.test.php</a>.</p>
-<p>Для выполнения действия связываются с триггерами. При связывании с триггером каждому действию присваивается порядковый номер, который указывает на очерёдность выполнения действий при срабатывании триггера.</p>',
+<p>Для выполнения действия связываются с триггерами. При связывании с триггером каждому действию присваивается порядковый номер, который указывает на очерёдность выполнения действий при срабатывании триггера.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Триггеры',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Доступные триггеры',
 	'UI:NotificationsMenu:OnCreate' => 'При создании объекта',
 	'UI:NotificationsMenu:OnStateEnter' => 'При входе объекта в заданное состояние',
 	'UI:NotificationsMenu:OnStateLeave' => 'При выходе объекта из заданного состояния',
 	'UI:NotificationsMenu:Actions' => 'Действия',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Доступные действия',
 
 	'Menu:TagAdminMenu' => 'Теги',

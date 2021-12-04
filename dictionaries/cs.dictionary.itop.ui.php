@@ -977,10 +977,13 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
 </ol>
 </p>
-<p>
-<i><b>Akce</b></i> definují činnosti, které mají být provedeny, když se triggery spustí. V současné verzi iTop je definována jedna akce spočívající v zaslání emailové zprávy. Tato akce také definuje šablonu, která se použije pro zasílání emailových zpráv a také pro definici dalších parametrů (příjemci, důležitost apod.).
+<i><b>Akce</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Speciální stránka <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pro testování a řešení problémů s configurací PHP mailu.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Speciální stránka <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pro testování a řešení problémů s configurací PHP mailu.</p>
 <p>Aby mohly být akce spuštěny, musí být přiřazeny ke triggerům. Každá akce pak dostane své "pořadové" číslo, které určí v jakém pořadí se akce spustí.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Triggery',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné triggery',
@@ -988,6 +991,9 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:NotificationsMenu:OnStateEnter' => 'Při změně stavu na',
 	'UI:NotificationsMenu:OnStateLeave' => 'Při změně stavu z',
 	'UI:NotificationsMenu:Actions' => 'Akce',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostupné akce',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',

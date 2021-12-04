@@ -969,7 +969,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuratie van Meldingen',
 	'UI:NotificationsMenu:Help' => 'Help',
-	'UI:NotificationsMenu:HelpContent' => '<p>In ITOP_APPLICATION_SHORT zijn de meldingen volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' zijn de meldingen volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
 <p><i><b>Triggers</b></i> bepalen wanneer er een melding is. Er zijn verschillende triggers als onderdeel van ITOP_APPLICATION_SHORT core, maar andere kunnen door middel van uitbreidingen worden toegevoegd.
 
 <p>Sommige triggers worden uitgevoerd:</p>
@@ -981,18 +981,24 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 </ol>
 </p>
 <p>
-<i><b>Acties</b></i> bepalen de acties (zoals het versturen van meldingen) die uitgevoerd worden bij een bepaalde trigger. 
-Op dit moment is er slechts een standaardactie: het verzenden van een e-mail. 
-Per actie kan je ook het sjabloon instellen die gebruikt moet worden voor het versturen van de e-mail, maar ook andere e-mailparameters zoals de ontvangers, de prioriteit, enz. </p>
-<p>Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</p>
+<i><b>Acties</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
+</p>
 <p>Acties moeten gekoppeld zijn aan triggers.
-Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>',
+Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt in welke volgorde de acties moeten worden uitgevoerd.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Triggers',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Beschikbare triggers',
 	'UI:NotificationsMenu:OnCreate' => 'Wanneer een object is aangemaakt',
 	'UI:NotificationsMenu:OnStateEnter' => 'Wanneer een object een bepaalde fase intreedt',
 	'UI:NotificationsMenu:OnStateLeave' => 'Wanneer een object een bepaalde fase uittreedt',
 	'UI:NotificationsMenu:Actions' => 'Acties',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Beschikbare acties',
 
 	'Menu:TagAdminMenu' => 'Tags-configuratie',

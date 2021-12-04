@@ -980,18 +980,24 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 </ol>
 </p>
 <p>
-<i><b>Działania</b></i> definiuje działania, które mają zostać wykonane, gdy wyzwalacze zostaną wykonane. Na razie istnieje tylko jeden rodzaj działania polegający na wysłaniu wiadomości e-mail.
-Takie działania definiują również szablon, który ma być używany do wysyłania wiadomości e-mail, a także inne parametry wiadomości, takie jak odbiorcy, ważność itp.
+<i><b>Działania</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Specjalna strona: <a href="../setup/email.test.php" target="_blank">email.test.php</a> jest dostępna do testowania i rozwiązywania problemów z konfiguracją poczty PHP.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Specjalna strona: <a href="../setup/email.test.php" target="_blank">email.test.php</a> jest dostępna do testowania i rozwiązywania problemów z konfiguracją poczty PHP.</p>
 <p>Aby zostały wykonane, działania muszą być powiązane z wyzwalaczami.
-W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>',
+W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porządkowy", określający, w jakiej kolejności mają być wykonywane.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Wyzwalacze',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostępne wyzwalacze',
 	'UI:NotificationsMenu:OnCreate' => 'Kiedy obiekt jest tworzony',
 	'UI:NotificationsMenu:OnStateEnter' => 'Kiedy obiekt wejdzie w określony stan',
 	'UI:NotificationsMenu:OnStateLeave' => 'Kiedy obiekt opuszcza dany stan',
 	'UI:NotificationsMenu:Actions' => 'Działania',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostępne działania',
 
 	'Menu:TagAdminMenu' => 'Konfiguracja tagów',

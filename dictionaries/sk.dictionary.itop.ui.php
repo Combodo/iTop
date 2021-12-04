@@ -970,18 +970,24 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 </ol>
 </p>
 <p>
-<i><b>Akcie</b></i> definujte akcie, ktoré budú vykonané, keď sa spúštače spustia. Zatiaľ je tu iba 1 druh akcie pozostávajúci zo zasielania emailovej správy.
-Také akcie tiež definujú šablónu, ktorá bude použitá pre zasielanie emailov ako aj ostatné parametre správy ako prijímatelia, dôležitosť, atď.
+<i><b>Akcie</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Špeciálna stránka: <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pre testovanie a odstraňovanie problémov Vašej PHP mailovej konfigurácie.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Špeciálna stránka: <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pre testovanie a odstraňovanie problémov Vašej PHP mailovej konfigurácie.</p>
 <p>Na vykonanie, akcie musia byť priradené spúštačom.
-Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>',
+Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Spúštače',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné spúštače',
 	'UI:NotificationsMenu:OnCreate' => 'Keď je objekt vytvorený',
 	'UI:NotificationsMenu:OnStateEnter' => 'Keď objekt vstupuje do daného stavu',
 	'UI:NotificationsMenu:OnStateLeave' => 'Keď objekt vychádza z daného stavu',
 	'UI:NotificationsMenu:Actions' => 'Akcie',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostupné akcie',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
