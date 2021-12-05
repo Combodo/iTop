@@ -1023,7 +1023,7 @@ HTML
 										// Attribute description
 										$sDescription = $oAttDef->GetDescription();
 										$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'" data-tooltip-max-width="600px"';
 
 										$val = array(
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -1040,7 +1040,7 @@ HTML
 									// Attribute description
 									$sDescription = $oAttDef->GetDescription();
 									$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.' "data-tooltip-max-width="600px"';
 
 									$val = array(
 										'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -3616,7 +3616,7 @@ EOF
 			// - Attribute description
 			$sDescription = $oAttDef->GetDescription();
 			$sDescriptionForHTMLAttributes = utils::HtmlEntities($sDescription);
-			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
+			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'" data-tooltip-max-width="600px"';
 
 			// - Fullscreen toggler for large fields
 			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
