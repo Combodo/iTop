@@ -849,6 +849,12 @@ const CombodoTooltip = {
 			oOptions['appendTo'] = mAppendTo;
 		}
 
+		// Max. width overload
+		const sMaxWidth = oElem.attr('data-tooltip-max-width');
+		if ((sMaxWidth !== undefined) && (sMaxWidth !== '')) {
+			oOptions['maxWidth'] = sMaxWidth;
+		}
+
 		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
 		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
 
