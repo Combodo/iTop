@@ -2843,9 +2843,20 @@ class AttributeDecimal extends AttributeDBField
 	{
 		$iNbDigits = $this->Get('digits');
 		$iPrecision = $this->Get('decimals');
-		$iNbIntegerDigits = $iNbDigits - $iPrecision - 1; // -1 because the first digit is treated separately in the pattern below
+		$iNbIntegerDigits = $iNbDigits - $iPrecision;
 
-		return "^[-+]?[0-9]\d{0,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+		return "^[-+]?\d{1,$iNbIntegerDigits}(\.\d{0,$iPrecision})?$";
+	}
+
+	/**
+	 * @param $value
+	 *
+	 * @return bool|int
+	 */
+	public function CheckFormat($value)
+	{
+		$sRegExp = $this->GetValidationPattern();
+		return preg_match("/$sRegExp/", $value);
 	}
 
 	public function GetBasicFilterOperators()
