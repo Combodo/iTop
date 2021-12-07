@@ -3,7 +3,7 @@
 {# Content Block #}
 {% apply spaceless %}
 
-    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or oUIBlock.GetDataAttributes() or oUIBlock.IsHidden()) %}
+    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or oUIBlock.GetBlocksInheritanceCSSClassesAsString()  or oUIBlock.GetDataAttributes() or oUIBlock.IsHidden()) %}
 
     {% block iboContentBlockContainer %}
         {% if bHasDiv %}
