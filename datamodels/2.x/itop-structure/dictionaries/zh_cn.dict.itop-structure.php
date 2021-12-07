@@ -147,6 +147,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Person' => '个人',
 	'Class:Person+' => '',
+	'Class:Person/Name' => '%2$s %1$s',
 	'Class:Person/Attribute:name' => '姓',
 	'Class:Person/Attribute:name+' => '',
 	'Class:Person/Attribute:first_name' => '名',
