@@ -1010,14 +1010,40 @@ JS
 		{
 			$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
 		}
-
-		$oPage->add("<input type=\"button\" class=\"ibo-button ibo-is-regular ibo-is-neutral\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
-		$oPage->add("<input type=\"button\" class=\"ibo-button ibo-is-regular ibo-is-primary\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
-
+		
 		$oPage->add('</div></div>');
-
+		
+		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview({ control: '#treecontrolid',	persist: 'false'});\n");
-		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
+		$oPage->add_ready_script(<<<JS
+$('#dlg_tree_$this->iId').dialog({
+	width: 'auto',
+	height: 'auto',
+	autoOpen: true,
+	modal: true,
+	title: '$sDialogTitle',
+    create: function() {
+        $(this).css("maxHeight", $(window).height()*0.8);        
+    },
+	buttons: [
+		{ 
+			text: "$sOkButtonLabel",
+		   	class: "ibo-is-primary",
+			click: function() {
+				oACWidget_{$this->iId}.DoHKOk();
+			},
+		},
+		{ 
+			text: "$sCancelButtonLabel", 
+			click: function() { $(this).dialog( "close" ); } },
+		],
+
+	resizeStop: oACWidget_{$this->iId}.OnHKResize,
+	close: oACWidget_{$this->iId}.OnHKClose 
+});
+JS
+		);
 	}
 
 	/**
