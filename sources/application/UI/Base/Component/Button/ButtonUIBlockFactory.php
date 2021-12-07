@@ -423,11 +423,11 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);
 
-		if (empty($sValue) === false) {
+		if (strlen($sValue) > 0) {
 			$oButton->SetValue($sValue);
 		}
 
-		if (empty($sName) === false) {
+		if (strlen($sName) > 0) {
 			$oButton->SetName($sName);
 		}
 
