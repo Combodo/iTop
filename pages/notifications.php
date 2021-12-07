@@ -85,11 +85,15 @@ function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aCl
 			// New style
 			$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
 		}
+
 		$oFilter = new DBObjectSearch($sActionClass);
 		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
+
 		$aParams = array('panel_title' => $sNbOfActionClassesTitle);
+
+		$sBlockId = 'block_'.utils::Sanitize($sClassToDisplay, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_'.$iBlock;
 		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
-		$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
+		$oBlock->Display($oP, $sBlockId, $aParams);
 		$iBlock++;
 	}
 }
