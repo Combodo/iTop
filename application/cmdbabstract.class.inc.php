@@ -4222,7 +4222,7 @@ HTML;
 				if (!is_null($oImage->GetData()))
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
-					if (is_array($aSize))
+					if (is_array($aSize) && count($aSize) > 1)
 					{
 						$oImage = utils::ResizeImageToFit(
 							$oImage,
@@ -4231,6 +4231,10 @@ HTML;
 							$oAttDef->Get('storage_max_width'),
 							$oAttDef->Get('storage_max_height')
 						);
+					}
+					else
+					{
+						IssueLog::Warning($sClass . ":" . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType());
 					}
 				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
