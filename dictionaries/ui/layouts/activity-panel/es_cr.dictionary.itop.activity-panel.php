@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Activity panel
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',

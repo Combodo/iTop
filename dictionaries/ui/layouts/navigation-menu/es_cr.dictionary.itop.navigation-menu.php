@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Navigation menu
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Company logo~~',
 	'UI:Layout:NavigationMenu:Silo:Label' => 'Select organization to filter on~~',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Expand / Collapse~~',

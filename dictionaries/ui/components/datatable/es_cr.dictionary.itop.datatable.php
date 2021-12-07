@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Display DataTable
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Datatables:Language:Processing' => 'Please wait...~~',
 	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
 	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
