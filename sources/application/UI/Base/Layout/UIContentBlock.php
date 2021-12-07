@@ -31,7 +31,9 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	/** @var array */
 	protected $aSubBlocks;
 	/** @var array */
-	protected $aDeferredBlocks;
+	protected $aDeferredBlocks;	
+	/** @var array */
+	protected $bHasForcedDiv;
 
 	/**
 	 * UIContentBlock constructor.
@@ -46,6 +48,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 
 		$this->aSubBlocks = [];
 		$this->aDeferredBlocks = [];
+		$this->bHasForcedDiv = false;
 		$this->SetCSSClasses($aContainerClasses);
 	}
 
@@ -197,5 +200,15 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 
 		return $this;
 	}
-
+	
+	public function HasForcedDiv(): bool
+	{
+		return $this->bHasForcedDiv;
+	}
+	
+	public function SetHasForcedDiv(bool $bHasForcedDiv)
+	{
+		$this->bHasForcedDiv = $bHasForcedDiv;
+		return $this;
+	}
 }
