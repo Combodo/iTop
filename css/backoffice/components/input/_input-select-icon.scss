@@ -13,13 +13,16 @@ $ibo-input-select-icon--menu--icon--max-width: 45px !default;
 $ibo-input-select-icon--menu--icon--margin-right: 10px !default;
 
 .ibo-input-select-icon{
-  display: inline-block;
+  display: inline-flex;
   text-align: left;
 	>img{
 		max-height: 100%;
 		max-width: 100%;
 		padding-right: $ibo-input-select-icon--icon--padding-right;
 	}
+  >span{
+    overflow: hidden;
+  }
 }
 
 .ibo-input-select-icon--menu {
