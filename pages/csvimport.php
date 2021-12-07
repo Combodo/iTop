@@ -658,10 +658,17 @@ try {
 			autoOpen: false, 
 			title:'$sDlgTitle',
 			buttons:
-			{
-				'$sYesButton': RunImport,
-				'$sNoButton': CancelImport 
-			} 
+			[
+				{ 
+					text: "$sYesButton",
+				    class: "ibo-is-primary",
+					click: RunImport,
+				},
+				{ 
+					text: "$sNoButton",
+					click: CancelImport,
+				} 
+			]
 		});
 EOF
 			);
