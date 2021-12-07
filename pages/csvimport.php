@@ -638,12 +638,12 @@ try {
 		if ($bShouldConfirm) {
 			$sYesButton = Dict::S('UI:Button:Ok');
 			$sNoButton = Dict::S('UI:Button:Cancel');
-			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->AddCSSClass('ibo-is-visible');
+			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation");
 			$oPage->AddSubBlock($oDlg);
 			$oDlg->AddSubBlock(new Html($sMessage));
 			$oDlg->AddSubBlock(new Html(htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8')));
 
-			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->AddCSSClass('ibo-is-visible');
+			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart");
 			$oDlg->AddSubBlock($oDlgConfirm);
 
 			$sDlgTitle = Dict::S('UI:CSVImportConfirmTitle');
