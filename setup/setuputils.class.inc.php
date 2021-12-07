@@ -768,7 +768,9 @@ class SetupUtils
 		{
 			$parent = dirname($dir);
 			self::builddir($parent);
-			mkdir($dir);
+			if (!mkdir($dir) && !is_dir($dir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+			}
 		}
 	}
 
