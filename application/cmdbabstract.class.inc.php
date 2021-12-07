@@ -4222,7 +4222,7 @@ HTML;
 				if (!is_null($oImage->GetData()))
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
-					if (is_array($aSize) && count($aSize) > 1)
+					if (is_array($aSize) && $aSize[0] > 0 && $aSize[1] > 0)
 					{
 						$oImage = utils::ResizeImageToFit(
 							$oImage,
