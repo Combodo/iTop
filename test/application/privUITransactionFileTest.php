@@ -171,5 +171,13 @@ class privUITransactionFileTest extends ItopDataTestCase
 		$this->assertTrue($bUser1Login2, 'Login with user1 throw an error');
 		$bResult = privUITransactionFile::RemoveTransaction($sTransactionIdUserSupport);
 		$this->assertTrue($bResult, 'Token created by support user must be removed in the support user context');
+
+		// test when no user logged (combodo-unauthenticated-form module for example)
+		UserRights::_ResetSessionCache();
+		$sTransactionIdUnauthenticatedUser = privUITransactionFile::GetNewTransactionId();
+		$bResult = privUITransactionFile::IsTransactionValid($sTransactionIdUnauthenticatedUser, false);
+		$this->assertTrue($bResult, 'Token created by unauthenticated user must be valid when no user logged');
+		$bResult = privUITransactionFile::RemoveTransaction($sTransactionIdUnauthenticatedUser);
+		$this->assertTrue($bResult, 'Token created by unauthenticated user must be removed when no user logged');
 	}
 }
