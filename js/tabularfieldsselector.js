@@ -252,7 +252,7 @@ $(function () {
 					for (var k in this.aSelected) {
 						var sField = this.aSelected[k];
 						if ($.inArray(sField, this.aSelected) != -1) {
-							var sRemoveBtn = '&nbsp;<span style="display:inline-block;float:right;cursor:pointer;" class="export-field-close" data-attcode="'+sField+'">×</span>';
+							var sRemoveBtn = '<span class="export-field-close ibo-table-preview--remove-column" data-attcode="'+sField+'"><span class="fas fa-times"></span></span>';
 							sHtml += '<th data-attcode="'+sField+'"><span class="drag-handle">'+this.aFieldsByCode[sField].unique_label+'</span>'+sRemoveBtn+'</th>';
 						}
 					}
@@ -430,9 +430,9 @@ $(function () {
 					sDataParent = ' data-parent="'+sParentId+'" ';
 				}
 				if (bHasTooltip) {
-					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox_multi" type="checkbox" id="'+sElementId+'_multi" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'">&nbsp;'+sLabel+'</label></div>';
+					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox_multi" type="checkbox" id="'+sElementId+'_multi" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'">'+sLabel+'</label></div>';
 				} else {
-					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox" type="checkbox" id="'+sElementId+'" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'" for="'+sElementId+'">&nbsp;'+sLabel+'</label></div>';
+					sContent = '<div style="display:block; clear:both;"><span style="white-space: nowrap;"><input data-instance-id="'+this.sId+'" class="tfs_checkbox" type="checkbox" id="'+sElementId+'" value="'+sCode+'"'+sChecked+sDataParent+'><label data-attcode="'+sCode+'" class="'+aClasses.join(' ')+'" title="'+sCode+'" for="'+sElementId+'">'+sLabel+'</label></div>';
 				}
 				return sContent;
 			}
