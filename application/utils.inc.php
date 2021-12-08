@@ -1944,28 +1944,18 @@ class utils
 
 		return $sCss;
 	}
-	
+
+	/**
+	 * Get the size of an image from a string.
+	 *
+	 * @see \getimagesizefromstring()
+	 * @param $sImageData string The image data, as a string.
+	 *
+	 * @return array|false
+	 */
 	public static function GetImageSize($sImageData)
 	{
-		if (function_exists('getimagesizefromstring')) // PHP 5.4.0 or higher
-		{
-			$aRet = @getimagesizefromstring($sImageData);
-		}
-		else if(ini_get('allow_url_fopen'))
-		{
-			// work around to avoid creating a tmp file
-			$sUri = 'data://application/octet-stream;base64,'.base64_encode($sImageData);
-			$aRet = @getimagesize($sUri);
-		}
-		else
-		{
-			// Damned, need to create a tmp file
-			$sTempFile = tempnam(SetupUtils::GetTmpDir(), 'img-');
-			@file_put_contents($sTempFile, $sImageData);
-			$aRet = @getimagesize($sTempFile);
-			@unlink($sTempFile);
-		}
-		return $aRet;
+		return @getimagesizefromstring($sImageData);
 	}
 
 	/**
