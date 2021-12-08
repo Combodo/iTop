@@ -362,13 +362,8 @@ class InlineImage extends DBObject
 		{
 			$sJS =
 <<<JS
-$('img[data-img-id]').each(function() {
-	if ($(this).width() > {$iMaxWidth})
-	{
-		$(this).css({'max-width': '{$iMaxWidth}px', width: '', height: '', 'max-height': ''});
-	}
-	$(this).addClass('inline-image').attr('href', $(this).attr('src'));
-}).magnificPopup({type: 'image', closeOnContentClick: true });
+CombodoInlineImage.SetMaxWidth('{$iMaxWidth}');
+CombodoInlineImage.FixImagesWidth();
 JS
 			;
 		}

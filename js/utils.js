@@ -986,8 +986,6 @@ const CombodoJSConsole = {
 	}
 }
 
-
-
 /**
  * Helper to Sanitize string
  *
@@ -1080,3 +1078,32 @@ const CombodoSanitizer = {
 		return sEncodedValue;
 	}
 };
+
+/**
+ * Helper for InlineImages
+ * @since 3.0.0
+ */
+const CombodoInlineImage = {
+	/**
+	 * Max width to apply on inline images
+	 */
+	max_width: 600,
+	/**
+	 * @param sMaxWidth {string} {@see CombodoInlineImage.max_width}
+	 */
+	SetMaxWidth: function (sMaxWidth) {
+		this.max_width = sMaxWidth;
+	},
+	/**
+	 * Apply the {@see CombodoInlineImage.max_width} to all inline images
+	 */
+	FixImagesWidth: function () {
+		$('img[data-img-id]').each(function() {
+			if ($(this).width() > CombodoInlineImage.max_width)
+			{
+				$(this).css({'max-width': CombodoInlineImage.max_width+'px', width: '', height: '', 'max-height': ''});
+			}
+			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
+		}).magnificPopup({type: 'image', closeOnContentClick: true });
+	}
+}

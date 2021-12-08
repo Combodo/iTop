@@ -928,6 +928,9 @@ $(function()
 						}
 						me._ApplyEntriesFilters();
 
+						// Try to fix inline images width
+						CombodoInlineImage.FixImagesWidth();
+
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
