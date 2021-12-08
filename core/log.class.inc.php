@@ -549,6 +549,7 @@ class LogChannels
 	public const PORTAL       = 'portal';
 	public const CMDB_SOURCE  = 'cmdbsource';
 	public const CORE         = 'core';
+	public const APC = 'apc';
 }
 
 

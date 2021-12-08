@@ -249,6 +249,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'ActionEmail' => __DIR__ . '/../..' . '/core/action.class.inc.php',
         'ActionNotification' => __DIR__ . '/../..' . '/core/action.class.inc.php',
         'AjaxPage' => __DIR__ . '/../..' . '/sources/application/WebPage/AjaxPage.php',
+        'ApcService' => __DIR__ . '/../..' . '/core/apc-service.class.inc.php',        
         'ApplicationContext' => __DIR__ . '/../..' . '/application/applicationcontext.class.inc.php',
         'ApplicationException' => __DIR__ . '/../..' . '/application/exceptions/ApplicationException.php',
         'ApplicationMenu' => __DIR__ . '/../..' . '/application/menunode.class.inc.php',

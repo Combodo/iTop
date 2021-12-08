@@ -225,7 +225,7 @@ $(function()
 			for (var i in aSortedValues)
 			{
 				var sValCode = aSortedValues[i][0];
-				var sValLabel = aSortedValues[i][1];
+				var sValLabel = $('<div/>').html(aSortedValues[i][1]).text();
 				//_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 				var oValueElem = this._makeListItemElement(sValLabel, sValCode, false, false, aSortedValues[i][2], aSortedValues[i][3]);
 				oValueElem.appendTo(oDynamicListElem);

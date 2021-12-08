@@ -556,7 +556,7 @@ JS
 			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
-			'uploader' => $sAttachmentUploader,
+			'uploader' => $sAttachmentUploaderForHtml,
 			'type' => $sFileType,
 			'js' => '',
 		);

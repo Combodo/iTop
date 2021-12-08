@@ -19,6 +19,7 @@ return array(
     'ActionEmail' => $baseDir . '/core/action.class.inc.php',
     'ActionNotification' => $baseDir . '/core/action.class.inc.php',
     'AjaxPage' => $baseDir . '/sources/application/WebPage/AjaxPage.php',
+    'ApcService' => $baseDir . '/core/apc-service.class.inc.php',        
     'ApplicationContext' => $baseDir . '/application/applicationcontext.class.inc.php',
     'ApplicationException' => $baseDir . '/application/exceptions/ApplicationException.php',
     'ApplicationMenu' => $baseDir . '/application/menunode.class.inc.php',
