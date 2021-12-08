@@ -5985,7 +5985,7 @@ abstract class MetaModel
 
 		// Reporting views (must be created after any other table)
 		//
-		foreach(self::GetClasses('bizmodel') as $sClass)
+		foreach(self::GetClasses() as $sClass)
 		{
 			$sView = self::DBGetView($sClass);
 			if (CMDBSource::IsTable($sView))
