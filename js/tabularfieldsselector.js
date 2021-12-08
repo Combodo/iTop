@@ -393,11 +393,8 @@ $(function () {
 				});
 			},
 			_update_tooltips: function (sDataAttCode) {
-				/*var sTooltipContent = this._get_tooltip_content(sDataAttCode);
-				const tippyInstance = $('#'+this.sId+' label[data-attcode='+sDataAttCode+']')._tippy;
-				tippyInstance.setContent('New content');*/
 				let sTooltipContent = this._get_tooltip_content(sDataAttCode);
-				$('#'+this.sId+'  label[data-attcode='+sDataAttCode+']').each(function (index, elt) {
+				$('#'+this.sId+'  label[data-attcode="'+sDataAttCode+'"]').each(function (index, elt) {
 					let tippyInstance = elt._tippy;
 					tippyInstance.setContent(sTooltipContent);
 				});
