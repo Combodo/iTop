@@ -325,6 +325,7 @@ $(function () {
 				var me = this;
 				$('#'+this.sId+' .tfs_checkbox_multi').each(function () {
 					me._update_tristate($(this).attr('id'));
+					me._update_tooltips($(this).val());
 				});
 			},
 			_format: function () {
