@@ -1008,7 +1008,7 @@ JS
 
 		if ($bHasChildLeafs)
 		{
-			$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
+			$oPage->add('<span class="treecontrol ibo-button-group" id="treecontrolid"><a class="ibo-button ibo-is-regular ibo-is-neutral" href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a><a class="ibo-button ibo-is-regular ibo-is-neutral" href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></span>');
 		}
 		
 		$oPage->add('</div></div>');
@@ -1036,12 +1036,16 @@ $('#dlg_tree_$this->iId').dialog({
 		},
 		{ 
 			text: "$sCancelButtonLabel", 
-			click: function() { $(this).dialog( "close" ); } },
+			click: function() { $(this).dialog( "close" ); } 
+		},
 		],
 
 	resizeStop: oACWidget_{$this->iId}.OnHKResize,
 	close: oACWidget_{$this->iId}.OnHKClose 
 });
+
+$('#dlg_tree_$this->iId + .ui-dialog-buttonpane .ui-dialog-buttonset').prepend($('#treecontrolid'));
+
 JS
 		);
 	}
