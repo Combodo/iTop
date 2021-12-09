@@ -66,6 +66,9 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
         word-break: break-word;
         white-space: inherit;
       }
+      & pre {
+        white-space: break-spaces;
+      }
     }
   }
 }
