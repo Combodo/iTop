@@ -43,6 +43,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Das Passwort entspricht nicht dem in den Konfigurationsregeln hinterlegten RegEx-Ausdruck',
 
-	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine '.ITOP_APPLICATION_SHORT.' Erweiterung'
+	'UserLocal:password:expiration' => 'Die folgenden Felder benötigen eine '.ITOP_APPLICATION_SHORT.' Erweiterung',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));
