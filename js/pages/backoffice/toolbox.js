@@ -147,7 +147,7 @@ const CombodoBackofficeToolbox = {
 		const sComplementarySelector = bForce ? '' : ':not(.hljs)';
 
 		// AttributeHTML and HTML AttributeText
-		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
+		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"], [data-attribute-type="AttributeTemplateHTML"]').find('.HTML pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
 			hljs.highlightBlock(oElem);
 		});
 		// CaseLogs
