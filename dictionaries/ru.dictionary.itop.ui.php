@@ -122,6 +122,10 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Логин должен быть уникальным - "%1s" уже используется.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Как минимум один профиль должен быть назначен данному пользователю.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Этому пользователю должна быть назначена хотя бы одна организация.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Организация не разрешена.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Учетная запись пользователя не принадлежит вашим разрешенным организациям.',
@@ -333,9 +337,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'BooleanLabel:yes' => 'да',
 	'BooleanLabel:no' => 'нет',
 	'UI:Login:Title' => 'Вход в '.ITOP_APPLICATION_SHORT,
-	'Menu:WelcomeMenu' => 'Добро пожаловать', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Добро пожаловать',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Добро пожаловать', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Добро пожаловать',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage+' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Добро пожаловать в '.ITOP_APPLICATION_SHORT,
 
@@ -555,46 +559,46 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:ResetPwd-Ready' => 'Пароль успешно изменён.',
 	'UI:ResetPwd-Login' => 'Войти...',
 
-	'UI:Login:About' => '',
-	'UI:Login:ChangeYourPassword' => 'Изменение пароля',
-	'UI:Login:OldPasswordPrompt' => 'Старый пароль',
-	'UI:Login:NewPasswordPrompt' => 'Новый пароль',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Повторите новый пароль',
-	'UI:Login:IncorrectOldPassword' => 'Ошибка: старый пароль неверный',
-	'UI:LogOffMenu' => 'Выход',
+	'UI:Login:About'                               => '',
+	'UI:Login:ChangeYourPassword'                  => 'Изменение пароля',
+	'UI:Login:OldPasswordPrompt'                   => 'Старый пароль',
+	'UI:Login:NewPasswordPrompt'                   => 'Новый пароль',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Повторите новый пароль',
+	'UI:Login:IncorrectOldPassword'                => 'Ошибка: старый пароль неверный',
+	'UI:LogOffMenu'                                => 'Выход',
 	'UI:LogOff:ThankYou' => 'Спасибо за использование '.ITOP_APPLICATION_SHORT,
-	'UI:LogOff:ClickHereToLoginAgain' => 'Нажмите здесь, чтобы снова войти...',
-	'UI:ChangePwdMenu' => 'Изменить пароль...',
-	'UI:Login:PasswordChanged' => 'Пароль успешно изменён!',
-	'UI:AccessRO-All' => 'Только чтение~~',
-	'UI:AccessRO-Users' => 'Только чтение для конечных пользователей~~',
-	'UI:ApplicationEnvironment' => 'Application environment: %1$s~~',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Пароли не совпадают',
-	'UI:Button:Login' => 'Войти',
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Нажмите здесь, чтобы снова войти...',
+	'UI:ChangePwdMenu'                             => 'Изменить пароль...',
+	'UI:Login:PasswordChanged'                     => 'Пароль успешно изменён!',
+	'UI:AccessRO-All'                              => 'Только чтение~~',
+	'UI:AccessRO-Users'                            => 'Только чтение для конечных пользователей~~',
+	'UI:ApplicationEnvironment'                    => 'Application environment: %1$s~~',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Пароли не совпадают',
+	'UI:Button:Login'                              => 'Войти',
 	'UI:Login:Error:AccessRestricted' => 'Доступ к '.ITOP_APPLICATION_SHORT.' ограничен. Пожалуйста, свяжитесь с администратором '.ITOP_APPLICATION_SHORT.'.',
 	'UI:Login:Error:AccessAdmin' => 'Доступ ограничен для лиц с административными привилегиями. Пожалуйста, свяжитесь с администратором '.ITOP_APPLICATION_SHORT.'.',
-	'UI:Login:Error:WrongOrganizationName' => 'Неизвестная организация',
+	'UI:Login:Error:WrongOrganizationName'         => 'Неизвестная организация',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Несколько контактов имеют один и тот же адрес электронной почты',
-	'UI:Login:Error:NoValidProfiles' => 'Нет допустимого профиля',
-	'UI:CSVImport:MappingSelectOne' => '-- выберите значение --',
-	'UI:CSVImport:MappingNotApplicable' => '-- игнорировать это поле --',
-	'UI:CSVImport:NoData' => 'Пустой набор данных..., пожалуйста введите что-нибудь!',
-	'UI:Title:DataPreview' => 'Предпросмотр данных',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Ошибка: данные содержат только один столбец (выбран правильный разделитель?).',
-	'UI:CSVImport:FieldName' => 'Поле %1$d',
-	'UI:CSVImport:DataLine1' => 'Строка данных 1',
-	'UI:CSVImport:DataLine2' => 'Строка данных 2',
-	'UI:CSVImport:idField' => 'id (Первичный ключ)',
+	'UI:Login:Error:NoValidProfiles'               => 'Нет допустимого профиля',
+	'UI:CSVImport:MappingSelectOne'                => '-- выберите значение --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- игнорировать это поле --',
+	'UI:CSVImport:NoData'                          => 'Пустой набор данных..., пожалуйста введите что-нибудь!',
+	'UI:Title:DataPreview'                         => 'Предпросмотр данных',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Ошибка: данные содержат только один столбец (выбран правильный разделитель?).',
+	'UI:CSVImport:FieldName'                       => 'Поле %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Строка данных 1',
+	'UI:CSVImport:DataLine2'                       => 'Строка данных 2',
+	'UI:CSVImport:idField'                         => 'id (Первичный ключ)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Пакетный импорт',
-	'UI:Title:BulkImport+' => 'Мастер импорта CSV',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronization of %1$d objects of class %2$s~~',
-	'UI:CSVImport:ClassesSelectOne' => '-- выберите значение --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Внутренняя ошибка: "%1$s" некорректный код потому, что "%2$s" НЕ является внешним ключом класса "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d объект(ов) останутся неизменными.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d объект(ов) будут изменены.',
+	'UI:Title:BulkImport+'                         => 'Мастер импорта CSV',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronization of %1$d objects of class %2$s~~',
+	'UI:CSVImport:ClassesSelectOne'                => '-- выберите значение --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Внутренняя ошибка: "%1$s" некорректный код потому, что "%2$s" НЕ является внешним ключом класса "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d объект(ов) останутся неизменными.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d объект(ов) будут изменены.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d объект(ов) будут добавлены.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d объект(ов) будут содержать ошибки.',
-	'UI:CSVImport:ObjectsReчmainedUnchanged' => '%1$d объект(ов) не изменились.',
+	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objects(s) remained unchanged.~~',
 	'UI:CSVImport:ObjectsWereModified' => '%1$d объект(ов) изменены.',
 	'UI:CSVImport:ObjectsWereAdded' => '%1$d объект(ов) добавлены.',
 	'UI:CSVImport:ObjectsHadErrors' => '%1$d объект(ов) содержат ошибки.',
@@ -916,9 +920,9 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Не определён жизненный цикл для данного класса',
 	'UI:UserManagement:GrantMatrix' => 'Матрица разрешений',
 
-	'Menu:AdminTools' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Инструменты администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Инструменты администратора',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Инструменты администратора',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Инструменты доступны только для пользователей c правами администратора',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'Система',
 
 	'UI:ChangeManagementMenu' => 'Управление изменениями',
@@ -964,17 +968,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI-ContactsMenu-ContactsByType' => 'Договоры по типу',
 	'UI-ContactsMenu-ContactsByStatus' => 'Договоры по статусу',
 
-	'Menu:CSVImportMenu' => 'Импорт CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'Импорт CSV',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Пакетное создание или обновление',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Модель данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Обзор модели данных', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Модель данных',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Обзор модели данных',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Экспорт', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Экспорт',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Экспорт результатов любого запроса в HTML, CSV или XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Уведомления', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Настройка уведомлений', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Уведомления',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Настройка уведомлений',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Настройка Уведомлений',
 	'UI:NotificationsMenu:Help' => 'Помощь',
 	'UI:NotificationsMenu:HelpContent' => '<p>В '.ITOP_APPLICATION_SHORT.' полностью настраиваемые уведомления, которые основаны на двух наборах объектов: <i>триггерах и действиях</i>.</p>
@@ -1011,27 +1015,27 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:TagAdminMenu:NoTags' => 'Не настроены поля тегов',
 	'UI:TagSetFieldData:Error' => 'Ошибка: %1$s',
 
-	'Menu:AuditCategories' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Категории аудита', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Категории аудита',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Категории аудита',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Категории аудита',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Выполнение запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Выполнение запросов',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Выполнение любых запросов',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Книга запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Книга запросов', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Книга запросов',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Книга запросов',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Администрирование данных', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Администрирование данных', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Администрирование данных',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Администрирование данных',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Универсальный поиск', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Универсальный поиск',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Поиск чего угодно...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Управление пользователями', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Управление пользователями',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Управление пользователями',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Профили', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Профили пользователей', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Профили',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Профили пользователей',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Профили пользователей',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1233,6 +1237,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:DashboardEdit:AutoReload' => 'Обновлять автоматически',
 	'UI:DashboardEdit:AutoReloadSec' => 'Интервал обновления (секунды)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Минимальный интервал %1$d секунд',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Макет',
 	'UI:DashboardEdit:Properties' => 'Свойства дашборда',
@@ -1369,13 +1375,13 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Month-10-Short' => 'Окт.',
 	'Month-11-Short' => 'Ноя.',
 	'Month-12-Short' => 'Дек.',
-	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '1',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Добавить в избранное...',
 	'UI:ShortcutRenameDlg:Title' => 'Переименовать ссылку',
 	'UI:ShortcutListDlg:Title' => 'Добавить в избранное ссылку на список',
 	'UI:ShortcutDelete:Confirm' => 'Подтвердите удаление ссылки (ссылок).',
-	'Menu:MyShortcuts' => 'Избранное', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Избранное',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Ссылка',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Название',
@@ -1555,12 +1561,12 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Заканч. на',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Регуляр. выраж.',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Равно',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Больше',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Больше / равно',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Меньше',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Меньше / равно',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Не равно',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Равно',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Больше',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Больше / равно',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Меньше',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Меньше / равно',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Не равно',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Совпадает',
 
@@ -1672,6 +1678,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 // Additional language entries not present in English dict
 Dict::Add('RU RU', 'Russian', 'Русский', array(
+ 'UI:CSVImport:ObjectsReчmainedUnchanged' => '%1$d объект(ов) не изменились.',
  'UI:Toggle:StandardDashboard' => 'Стандартный',
  'UI:Toggle:CustomDashboard' => 'Пользовательский',
  'UI:Dashboard:Edit' => 'Редактировать дашборд...',

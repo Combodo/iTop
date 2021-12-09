@@ -15,7 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
- /**
+/**
  * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
@@ -48,10 +48,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expirado',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Renovación de contraseña',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Cuando fue el último cambio de contraseña',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'La contraseña debe ser de al menos 8 caracteres e incluír mayúsculas, minúsculas, números y caracteres especiales.',
 
-	'UserLocal:password:expiration' => 'El siguiente campo requiere una extensión'
+	'UserLocal:password:expiration' => 'El siguiente campo requiere una extensión',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

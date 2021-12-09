@@ -121,6 +121,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn - "%1s" is al in gebruik',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Minstens één profiel moet toegewezen zijn aan deze gebruiker',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Minstens één organisatie moet toegewezen zijn aan deze gebruiker',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisatie is niet toegestaan.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'De gebruikersaccount behoort niet tot de organisaties waar je zelf rechten voor hebt.',
@@ -332,9 +336,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nee',
 	'UI:Login:Title' => 'Aanmelden in ITOP_APPLICATION_SHORT',
-	'Menu:WelcomeMenu' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Welkom',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Welkom in '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Welkom', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Welkom',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage+' => 'Welkom in '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Welkom in ITOP_APPLICATION_SHORT',
 
@@ -547,43 +551,43 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ResetPwd-Ready' => 'Het wachtwoord is veranderd',
 	'UI:ResetPwd-Login' => 'Klik hier om in te loggen',
 
-	'UI:Login:About' => 'ITOP_APPLICATION',
-	'UI:Login:ChangeYourPassword' => 'Verander jouw wachtwoord',
-	'UI:Login:OldPasswordPrompt' => 'Oud wachtwoord',
-	'UI:Login:NewPasswordPrompt' => 'Nieuw wachtwoord',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Herhaal nieuwe wachtwoord',
-	'UI:Login:IncorrectOldPassword' => 'Fout: het oude wachtwoord is incorrect',
-	'UI:LogOffMenu' => 'Log uit',
-	'UI:LogOff:ThankYou' => 'Bedankt voor het gebruiken van ITOP_APPLICATION',
-	'UI:LogOff:ClickHereToLoginAgain' => 'Klik hier om in te loggen',
-	'UI:ChangePwdMenu' => 'Verander wachtwoord',
-	'UI:Login:PasswordChanged' => 'Wachtwoord met succes aangepast',
-	'UI:AccessRO-All' => 'ITOP_APPLICATION is alleen-lezen',
-	'UI:AccessRO-Users' => 'ITOP_APPLICATION is alleen-lezen voor eindgebruikers',
-	'UI:ApplicationEnvironment' => 'Omgeving van de applicatie: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Het nieuwe wachtwoord en de herhaling van het nieuwe wachtwoord komen niet overeen',
-	'UI:Button:Login' => 'Ga naar ITOP_APPLICATION',
-	'UI:Login:Error:AccessRestricted' => 'Geen toegang tot ITOP_APPLICATION_SHORT. Neem contact op met een ITOP_APPLICATION_SHORT-beheerder.',
-	'UI:Login:Error:AccessAdmin' => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een ITOP_APPLICATION_SHORT-beheerder',
-	'UI:Login:Error:WrongOrganizationName' => 'Onbekende organisatie',
+	'UI:Login:About'                               => 'ITOP_APPLICATION',
+	'UI:Login:ChangeYourPassword'                  => 'Verander jouw wachtwoord',
+	'UI:Login:OldPasswordPrompt'                   => 'Oud wachtwoord',
+	'UI:Login:NewPasswordPrompt'                   => 'Nieuw wachtwoord',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Herhaal nieuwe wachtwoord',
+	'UI:Login:IncorrectOldPassword'                => 'Fout: het oude wachtwoord is incorrect',
+	'UI:LogOffMenu'                                => 'Log uit',
+	'UI:LogOff:ThankYou'                           => 'Bedankt voor het gebruiken van ITOP_APPLICATION',
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Klik hier om in te loggen',
+	'UI:ChangePwdMenu'                             => 'Verander wachtwoord',
+	'UI:Login:PasswordChanged'                     => 'Wachtwoord met succes aangepast',
+	'UI:AccessRO-All'                              => 'ITOP_APPLICATION is alleen-lezen',
+	'UI:AccessRO-Users'                            => 'ITOP_APPLICATION is alleen-lezen voor eindgebruikers',
+	'UI:ApplicationEnvironment'                    => 'Omgeving van de applicatie: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Het nieuwe wachtwoord en de herhaling van het nieuwe wachtwoord komen niet overeen',
+	'UI:Button:Login'                              => 'Ga naar ITOP_APPLICATION',
+	'UI:Login:Error:AccessRestricted'              => 'Geen toegang tot ITOP_APPLICATION_SHORT. Neem contact op met een ITOP_APPLICATION_SHORT-beheerder.',
+	'UI:Login:Error:AccessAdmin'                   => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een ITOP_APPLICATION_SHORT-beheerder',
+	'UI:Login:Error:WrongOrganizationName'         => 'Onbekende organisatie',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Meerdere contacten hebben hetzelfde e-mailadres',
-	'UI:Login:Error:NoValidProfiles' => 'Geen geldig profiel opgegeven',
-	'UI:CSVImport:MappingSelectOne' => '-- Selecteer --',
-	'UI:CSVImport:MappingNotApplicable' => '-- Negeer dit veld --',
-	'UI:CSVImport:NoData' => 'Lege dataset..., voeg data toe',
-	'UI:Title:DataPreview' => 'Datavoorbeeld',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Fout: De data bevat slechts één kolom. Is het juiste scheidingsteken geselecteerd?',
-	'UI:CSVImport:FieldName' => 'Veld %1$d',
-	'UI:CSVImport:DataLine1' => 'Dataregel 1',
-	'UI:CSVImport:DataLine2' => 'Dataregel 2',
-	'UI:CSVImport:idField' => 'id (Primaire sleutel (key))',
-	'UI:Title:BulkImport' => 'ITOP_APPLICATION_SHORT - Bulk import',
-	'UI:Title:BulkImport+' => 'CSV Import Wizard',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisatie van %1$d objecten van klasse "%2$s"',
-	'UI:CSVImport:ClassesSelectOne' => '-- selecteer een --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Interne fout: "%1$s" is een incorrecte code omdat "%2$s" geen externe sleutel (key) van klasse "%3$s" is',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objecten(s) zullen onveranderd blijven.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objecten(s) zullen worden aangepast.',
+	'UI:Login:Error:NoValidProfiles'               => 'Geen geldig profiel opgegeven',
+	'UI:CSVImport:MappingSelectOne'                => '-- Selecteer --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- Negeer dit veld --',
+	'UI:CSVImport:NoData'                          => 'Lege dataset..., voeg data toe',
+	'UI:Title:DataPreview'                         => 'Datavoorbeeld',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Fout: De data bevat slechts één kolom. Is het juiste scheidingsteken geselecteerd?',
+	'UI:CSVImport:FieldName'                       => 'Veld %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Dataregel 1',
+	'UI:CSVImport:DataLine2'                       => 'Dataregel 2',
+	'UI:CSVImport:idField'                         => 'id (Primaire sleutel (key))',
+	'UI:Title:BulkImport'                          => 'ITOP_APPLICATION_SHORT - Bulk import',
+	'UI:Title:BulkImport+'                         => 'CSV Import Wizard',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronisatie van %1$d objecten van klasse "%2$s"',
+	'UI:CSVImport:ClassesSelectOne'                => '-- selecteer een --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Interne fout: "%1$s" is een incorrecte code omdat "%2$s" geen externe sleutel (key) van klasse "%3$s" is',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objecten(s) zullen onveranderd blijven.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objecten(s) zullen worden aangepast.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objecten(s) zullen worden toegevoegd.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objecten(s) zullen fouten bevatten.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objecten(s) zijn onveranderd gebleven.',
@@ -908,9 +912,9 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Er is geen levenscyclus gedefinieerd voor deze klasse',
 	'UI:UserManagement:GrantMatrix' => 'Rechtenmatrix',
 
-	'Menu:AdminTools' => 'Admintools', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Beheertools', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Admintools',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Beheertools',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Tools die enkel toegankelijk zijn voor gebruikers met een administratorprofiel.',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'Systeem',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
@@ -956,17 +960,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI-ContactsMenu-ContactsByType' => 'Contacten aan de hand van soort',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacten aan de hand van status',
 
-	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'In bulk aanmaken of aanpassen van objecten', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'In bulk aanmaken of aanpassen van objecten',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Datamodel', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Overzicht van het datamodel', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Datamodel',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Overzicht van het datamodel',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Exporteer de resultaten van query\'s als HTML, CSV of XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Meldingen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Configuratie van de meldingen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Configuratie van Meldingen',
 	'UI:NotificationsMenu:Help' => 'Help',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' zijn de meldingen volledig aan te passen. Ze zijn gebaseerd op twee sets van objecten: <i>triggers and actions</i>.</p>
@@ -1007,27 +1011,27 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:TagAdminMenu:NoTags' => 'Geen tags geconfigureerd',
 	'UI:TagSetFieldData:Error' => 'Fout: %1$s',
 
-	'Menu:AuditCategories' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Auditcategorieën', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Auditcategorieën',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Auditcategorieën',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Auditcategorieën',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Voer een query uit', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Query\'s uitvoeren',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Voer een query uit',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Favoriete query\'s', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Favoriete query\'s', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Favoriete query\'s',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Favoriete query\'s',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Databeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Databeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Databeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Databeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Globale zoekopdracht',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Zoek in alle data...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Gebruikersbeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Gebruikersbeheer', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Gebruikersbeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Gebruikersbeheer',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profielen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profielen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profielen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profielen',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1229,6 +1233,8 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:DashboardEdit:AutoReload' => 'Automatisch vernieuwen',
 	'UI:DashboardEdit:AutoReloadSec' => 'Interval voor het automatisch vernieuwen (seconden)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Het toegestane minimum is 5 seconden',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Eigenschappen van dashboard',
@@ -1365,13 +1371,13 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'Month-10-Short' => 'Okt',
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dec',
-	'Calendar-FirstDayOfWeek' => '0', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Maak een snelkoppeling aan...',
 	'UI:ShortcutRenameDlg:Title' => 'Hernoem de snelkoppeling',
 	'UI:ShortcutListDlg:Title' => 'Maak een snelkoppeling voor de lijst aan',
 	'UI:ShortcutDelete:Confirm' => 'Bevestig dat je de snelkoppeling(en) wil verwijderen.',
-	'Menu:MyShortcuts' => 'Mijn snelkoppelingen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Mijn snelkoppelingen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Snelkoppelingen',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Naam',
@@ -1551,12 +1557,12 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Eindigt in',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regex ',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Gelijk aan',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Groter',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Groter of gelijk aan',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Kleiner',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Kleiner of gelijk aan',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Verschillend van',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Gelijk aan',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Groter',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Groter of gelijk aan',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Kleiner',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Kleiner of gelijk aan',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Verschillend van',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Bevat',
 

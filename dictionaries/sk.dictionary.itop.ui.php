@@ -110,6 +110,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Prihlasovacie meno musí byť jedinečné - "%1s" sa už používa.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Aspoň jeden profil musí byť priradený k profilu.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
@@ -321,10 +325,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
-	'Menu:WelcomeMenu' => 'Vitajte', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Vitajte', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Vitajte',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Vitajte',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Vitajte v '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je kompletne voľne šíriteľný operačný IT program.</p>
@@ -537,43 +541,43 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
 
-	'UI:Login:About' => 'O účte',
-	'UI:Login:ChangeYourPassword' => 'Zmeň heslo',
-	'UI:Login:OldPasswordPrompt' => 'Staré heslo',
-	'UI:Login:NewPasswordPrompt' => 'Nové heslo',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Znova zadaj nové heslo',
-	'UI:Login:IncorrectOldPassword' => 'Chyba: staré heslo je nesprávne',
-	'UI:LogOffMenu' => 'Odhlásenie',
+	'UI:Login:About'                               => 'O účte',
+	'UI:Login:ChangeYourPassword'                  => 'Zmeň heslo',
+	'UI:Login:OldPasswordPrompt'                   => 'Staré heslo',
+	'UI:Login:NewPasswordPrompt'                   => 'Nové heslo',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Znova zadaj nové heslo',
+	'UI:Login:IncorrectOldPassword'                => 'Chyba: staré heslo je nesprávne',
+	'UI:LogOffMenu'                                => 'Odhlásenie',
 	'UI:LogOff:ThankYou' => 'Ďakujeme za používanie '.ITOP_APPLICATION_SHORT,
-	'UI:LogOff:ClickHereToLoginAgain' => 'Kliknite sem pre nové prihlásenie...',
-	'UI:ChangePwdMenu' => 'Zmeniť heslo...',
-	'UI:Login:PasswordChanged' => 'Heslo úspešne nastavené !',
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Kliknite sem pre nové prihlásenie...',
+	'UI:ChangePwdMenu'                             => 'Zmeniť heslo...',
+	'UI:Login:PasswordChanged'                     => 'Heslo úspešne nastavené !',
 	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' je iba na čítanie',
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' je iba na čítanie pre uživatelov',
-	'UI:ApplicationEnvironment' => 'Aplikačné prostredie: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Nové heslo a znova zadané nové heslo sa nezhodujú !',
+	'UI:ApplicationEnvironment'                    => 'Aplikačné prostredie: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Nové heslo a znova zadané nové heslo sa nezhodujú !',
 	'UI:Button:Login' => 'Vstup do '.ITOP_APPLICATION_SHORT,
 	'UI:Login:Error:AccessRestricted' => 'Prístup do '.ITOP_APPLICATION_SHORT.'u je obmedzený. Kontaktujte prosím '.ITOP_APPLICATION_SHORT.' administrátora.',
 	'UI:Login:Error:AccessAdmin' => 'Prístup je vyhradený len pre ľudí, ktorí majú oprávnenia od administrátora. Kontaktujte prosím '.ITOP_APPLICATION_SHORT.' administrátora.',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne' => '-- vyberte jeden --',
-	'UI:CSVImport:MappingNotApplicable' => '-- ignorujte toto pole --',
-	'UI:CSVImport:NoData' => 'Prázdny dátový súbor..., prosím poskytnite nejaké dáta!',
-	'UI:Title:DataPreview' => 'Zobrazenie dát',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Chyba: Dáta obsahujú iba jeden stĺpec. Vybrali ste vhodný oddelovací znak ?',
-	'UI:CSVImport:FieldName' => 'Pole %1$d',
-	'UI:CSVImport:DataLine1' => 'Dátovy riadok 1',
-	'UI:CSVImport:DataLine2' => 'Dátovy riadok 2',
-	'UI:CSVImport:idField' => 'ID (Primárny kľúč)',
+	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne'                => '-- vyberte jeden --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- ignorujte toto pole --',
+	'UI:CSVImport:NoData'                          => 'Prázdny dátový súbor..., prosím poskytnite nejaké dáta!',
+	'UI:Title:DataPreview'                         => 'Zobrazenie dát',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Chyba: Dáta obsahujú iba jeden stĺpec. Vybrali ste vhodný oddelovací znak ?',
+	'UI:CSVImport:FieldName'                       => 'Pole %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Dátovy riadok 1',
+	'UI:CSVImport:DataLine2'                       => 'Dátovy riadok 2',
+	'UI:CSVImport:idField'                         => 'ID (Primárny kľúč)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - hromadná importácia',
-	'UI:Title:BulkImport+' => '',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronizácia %1$d objektov triedy %2$s',
-	'UI:CSVImport:ClassesSelectOne' => '-- vyberte jeden --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Interná chyba: "%1$s" je nesprávny kód pretože "%2$s" nie je externý kľuč triedy "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objektov ktoré ostanú nezmené.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objektov bude upravených.',
+	'UI:Title:BulkImport+'                         => '',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronizácia %1$d objektov triedy %2$s',
+	'UI:CSVImport:ClassesSelectOne'                => '-- vyberte jeden --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Interná chyba: "%1$s" je nesprávny kód pretože "%2$s" nie je externý kľuč triedy "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objektov ktoré ostanú nezmené.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objektov bude upravených.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objektov bude pridaných.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objektov bude mať chyby.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objektov zostalo nezmenených.',
@@ -898,9 +902,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Udelovacia matica',
 
-	'Menu:AdminTools' => 'Administrátorské pomôcky', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Administrátorské pomôcky',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Manažment zmien',
@@ -946,17 +950,17 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-ContactsMenu-ContactsByType' => 'Kontakty podľa typu',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakty podľa stavu',
 
-	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Dátový model', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Dátový model',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Upozornenia', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Upozornenia',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Konfigurácia Upozornení',
 	'UI:NotificationsMenu:Help' => 'Pomoc',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' upozornenia sú plne upraviteľné. Sú založené na dvoch setoch objektov: <i>spúštače a akcie</i>.</p>
@@ -996,27 +1000,27 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
-	'Menu:AuditCategories' => 'Kategórie auditu', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Kategórie auditu', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Kategórie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Kategórie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Spustiť dopyty', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Spustiť dopyty',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Dopyt frázy', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Dopyt frázy',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Dátová administrácia', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Dátová administrácia',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Univerzálne vyhľadávanie', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Univerzálne vyhľadávanie',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Užívateľský manažment', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Užívateľský manažment',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profily', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profily',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profily',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1218,6 +1222,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)~~',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Rozloženie',
 	'UI:DashboardEdit:Properties' => 'Vlastnosti panelu',
@@ -1354,13 +1360,13 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Vytvorenie skratky...',
 	'UI:ShortcutRenameDlg:Title' => 'Premenovanie skratky',
 	'UI:ShortcutListDlg:Title' => 'Vytvoriť skratku pre zoznam',
 	'UI:ShortcutDelete:Confirm' => 'Prosím potvrďte, že si želáte vymazať skratku/y.',
-	'Menu:MyShortcuts' => 'Moje skratky', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Moje skratky',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Skratka',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Názov',
@@ -1540,12 +1546,12 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 

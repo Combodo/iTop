@@ -33,10 +33,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expirada',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Renovação de senha',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Quando a senha foi trocada antiormente',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A senha deve ter no mínimo 8 caracteres e incluir letras maiúsculas, minúsculas, números e símbolos.',
 
-	'UserLocal:password:expiration' => 'O campo abaixo requer uma extensão'
+	'UserLocal:password:expiration' => 'O campo abaixo requer uma extensão',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

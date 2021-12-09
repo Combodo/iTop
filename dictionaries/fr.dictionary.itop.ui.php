@@ -1226,13 +1226,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashboardEdit:AutoReload' => 'Réactualisation automatique',
 	'UI:DashboardEdit:AutoReloadSec' => 'Réactualisation toutes les (secondes)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Le minimum permis est de %1$d secondes',
+	'UI:DashboardEdit:Revert' => 'Revenir à la valeur précédente',
+	'UI:DashboardEdit:Apply' => 'Appliquer',
 
 	'UI:DashboardEdit:Layout' => 'Mise en page',
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
 	'UI:DashboardEdit:Dashlets' => 'Indicateurs',
 	'UI:DashboardEdit:DashletProperties' => 'Propriétés de l\'Indicateur',
-	'UI:DashboardEdit:Revert' => 'Revenir à la valeur précédente',
-	'UI:DashboardEdit:Apply' => 'Appliquer',
 
 	'UI:Form:Property' => 'Propriété',
 	'UI:Form:Value' => 'Valeur',
