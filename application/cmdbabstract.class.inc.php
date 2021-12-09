@@ -5654,7 +5654,7 @@ EOF
 						oOwnershipLockModal.text(data.popup_message);
 						oOwnershipLockModal.dialog('open');
 					}
-					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('.ibo-object-details .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 				else if ((data.operation == 'lost') || (data.operation == 'expired'))
@@ -5665,7 +5665,7 @@ EOF
 						oOwnershipLockModal.text(data.popup_message);
 						oOwnershipLockModal.dialog('open');
 					}
-					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('.ibo-object-details .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 			}, 'json');
