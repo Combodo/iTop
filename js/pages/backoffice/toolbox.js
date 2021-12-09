@@ -134,12 +134,6 @@ const CombodoBackofficeToolbox = {
 	 * @constructor
 	 */
 	InitCodeHighlighting: function (oContainerElem = null, bForce = false) {
-		// Check if the lib is loaded
-		if (typeof hljs === 'undefined') {
-			CombodoJSConsole.Error('Cannot format code snippets as the highlight.js lib is not loaded');
-			return;
-		}
-
 		if (oContainerElem === null) {
 			oContainerElem = $('body');
 		}
@@ -147,13 +141,28 @@ const CombodoBackofficeToolbox = {
 		const sComplementarySelector = bForce ? '' : ':not(.hljs)';
 
 		// AttributeHTML and HTML AttributeText
-		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"], [data-attribute-type="AttributeTemplateHTML"]').find('.HTML pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
-			hljs.highlightBlock(oElem);
-		});
+		let oCodeElements = oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"], [data-attribute-type="AttributeTemplateHTML"]').find('.HTML pre'+sComplementarySelector+' > code');
+		if (oCodeElements.length > 0) {
+			if (typeof hljs === 'undefined') {
+				CombodoJSConsole.Error('Cannot format code snippets in HTML fields as the highlight.js lib is not loaded');
+			} else {
+				oCodeElements.parent().each(function (iIdx, oElem) {
+					hljs.highlightBlock(oElem);
+				});
+			}
+		}
+
 		// CaseLogs
-		oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
-			hljs.highlightBlock(oElem);
-		});
+		oCodeElements = oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector+' > code');
+		if (oCodeElements.length > 0) {
+			if (typeof hljs === 'undefined') {
+				CombodoJSConsole.Error('Cannot format code snippets in log entries as the highlight.js lib is not loaded');
+			} else {
+				oCodeElements.parent().each(function (iIdx, oElem) {
+					hljs.highlightBlock(oElem);
+				});
+			}
+		}
 	}
 };
 
