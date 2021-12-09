@@ -1023,8 +1023,8 @@ $('#dlg_tree_$this->iId').dialog({
 	autoOpen: true,
 	modal: true,
 	title: '$sDialogTitle',
-    create: function() {
-        $(this).css("maxHeight", $(window).height()*0.8);        
+    open: function() {
+        $(this).css("max-height", parseInt($(window).height()*0.7)+'px');        
     },
 	buttons: [
 		{ 
