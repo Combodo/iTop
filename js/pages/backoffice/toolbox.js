@@ -134,6 +134,12 @@ const CombodoBackofficeToolbox = {
 	 * @constructor
 	 */
 	InitCodeHighlighting: function (oContainerElem = null, bForce = false) {
+		// Check if the lib is loaded
+		if (typeof hljs === 'undefined') {
+			CombodoJSConsole.Error('Cannot format code snippets as the highlight.js lib is not loaded');
+			return;
+		}
+
 		if (oContainerElem === null) {
 			oContainerElem = $('body');
 		}
