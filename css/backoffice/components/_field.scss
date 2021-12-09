@@ -58,11 +58,11 @@ $ibo-field--enable-bulk--checkbox--margin-left: $ibo-spacing-300 !default;
     [data-attribute-type="AttributeQueryAttCodeSet"],
     .ibo-input-file-select--container
   ) {
-    /* We need the rule to apply for the class and all its descendants, hence the "& *" */
+    /* We need the rule to apply for the class and all its descendants (but only in read-only), hence the "& *" */
     .ibo-field--value {
       word-break: break-word;
       white-space: inherit; /* Here we don't put break-spaces as it would put ".ibo-field-small .ibo-field-value" on a new line due to the spaces/indentation of the HTML templates. For now we rather have this rule than diminish the templates readability/maintenability */
-      & * {
+      & *:not(input, select, textarea) {
         word-break: break-word;
         white-space: inherit;
       }
