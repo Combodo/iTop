@@ -85,16 +85,19 @@ class ObjectFormManager extends FormManager
 	protected $aHiddenFieldsId = array();
 
 	/**
-	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
-	 * - formobject_class : The class of the object that is being edited/viewed
-	 * - formmode : view|edit|create
-	 * - values for parent
+	 * @param string $sJson JSON data that must contain at least :
+	 *       - formobject_class : The class of the object that is being edited/viewed
+	 *       - formmode : view|edit|create
+	 *       - values for parent
+	 * @param bool $bTrustContent if false then won't allow modified TWIG content
 	 *
-	 * @param bool $bTrustContent if false then won't allow TWIG content
+	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
 	 *
 	 * @inheritDoc
 	 * @throws \Exception
 	 * @throws \SecurityException if twig content is present and $bTrustContent is false
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
 	 */
 	public static function FromJSON($sJson, $bTrustContent = false)
 	{
@@ -104,7 +107,9 @@ class ObjectFormManager extends FormManager
 			$aJson = json_decode($sJson, true);
 		}
 
-		if (false === $bTrustContent) {
+		$oConfig = utils::GetConfig();
+		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
+		if ($bIsContentCheckEnabled && (false === $bTrustContent)) {
 			/** @noinspection NestedPositiveIfStatementsInspection */
 			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
 				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
