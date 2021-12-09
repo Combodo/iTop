@@ -12,7 +12,8 @@ use utils;
 
 
 /**
- * @group getSelectFilterTest
+ * @group getSelectFilterTest 
+ * @group sampleDataNeeded
  * Class GetSelectFilterTest
  *
  * @package Combodo\iTop\Test\UnitTest\Webservices
