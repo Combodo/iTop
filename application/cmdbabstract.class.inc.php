@@ -936,6 +936,7 @@ HTML
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 
+		$bHasFieldsWithRichTextEditor = false;
 		foreach ($aDetailsStruct as $sTab => $aCols) {
 			ksort($aCols);
 			$oPage->SetCurrentTab($sTab);
@@ -958,6 +959,10 @@ HTML
 						// Skip case logs as they will be handled by the activity panel
 						if ($oAttDef instanceof AttributeCaseLog) {
 							continue;
+						}
+
+						if (($oAttDef instanceof AttributeText) && ($oAttDef->GetFormat() === 'html')) {
+							$bHasFieldsWithRichTextEditor = true;
 						}
 
 						$sAttDefClass = get_class($oAttDef);
@@ -1098,6 +1103,11 @@ HTML
 					}
 				}
 			}
+		}
+
+		// Fields with CKEditor need to have the highlight.js lib loaded even if they are in read-only, as it is needed to format code snippets
+		if ($bHasFieldsWithRichTextEditor) {
+			WebResourcesHelper::EnableCKEditorToWebPage($oPage);
 		}
 
 		return $aFieldsMap;
