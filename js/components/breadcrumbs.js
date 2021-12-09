@@ -149,7 +149,9 @@ $(function()
 			this.element.find(this.js_selectors.previous_items_list_toggler).off('click');
 
 			// Remove observers
-			this.items_observer.disconnect();
+			if (this.items_observer !== null) {
+				this.items_observer.disconnect();
+			}
 
 			// Clear any existing entries in the markup
 			this.element.find(this.js_selectors.item).remove();
