@@ -9,6 +9,8 @@ $ibo-search-form-panel--body--padding-top: 18px !default;
 $ibo-search-form-panel--body--padding-bottom: 10px !default;
 $ibo-search-form-panel--body--padding-x: 14px !default;
 
+$ibo-search-form-panel--highlight--border-radius: $ibo-panel--body--border-radius $ibo-panel--body--border-radius 0 0 !default;
+
 $ibo-search-form-panel--criteria--margin-bottom: 5px !default;
 $ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
 $ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
@@ -868,6 +870,10 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	.ibo-panel--body {
     padding: $ibo-search-form-panel--body--padding-top $ibo-search-form-panel--body--padding-x $ibo-search-form-panel--body--padding-bottom;
     overflow: initial;
+
+    &::before {
+      border-radius: $ibo-search-form-panel--highlight--border-radius;
+    }
   }
 }
 .ibo-criterion-area{
