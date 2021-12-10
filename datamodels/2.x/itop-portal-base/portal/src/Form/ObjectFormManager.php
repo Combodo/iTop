@@ -79,10 +79,27 @@ class ObjectFormManager extends FormManager
 	protected $aCallbackUrls = array();
 	/**
 	 * List of hidden fields, used for form update (eg. remove them from the form regarding they dependencies)
+	 *
 	 * @var array $aHiddenFieldsId
 	 * @since 2.7.5
 	 */
 	protected $aHiddenFieldsId = array();
+
+	/**
+	 * @param string|array $formManagerData value of the formmanager_data portal parameter, either JSON or object
+	 *
+	 * @return array formmanager_data as a PHP array
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 */
+	protected static function DecodeFormManagerData($formManagerData)
+	{
+		if (is_array($formManagerData)) {
+			return $formManagerData;
+		}
+
+		return json_decode($formManagerData, true);
+	}
 
 	/**
 	 * @param string $sJson JSON data that must contain at least :
@@ -101,11 +118,7 @@ class ObjectFormManager extends FormManager
 	 */
 	public static function FromJSON($sJson, $bTrustContent = false)
 	{
-		if (is_array($sJson)) {
-			$aJson = $sJson;
-		} else {
-			$aJson = json_decode($sJson, true);
-		}
+		$aJson = static::DecodeFormManagerData($sJson);
 
 		$oConfig = utils::GetConfig();
 		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
@@ -180,7 +193,7 @@ class ObjectFormManager extends FormManager
 	 */
 	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
 	{
-		$aPostedFormManagerData = json_decode($sPostedFormManagerData, true);
+		$aPostedFormManagerData = static::DecodeFormManagerData($sPostedFormManagerData);
 		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
 
 		if ($sPostedFormLayoutType === 'xhtml') {

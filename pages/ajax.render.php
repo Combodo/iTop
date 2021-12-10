@@ -965,7 +965,7 @@ try
 			break;
 
 		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'element_identifier');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
@@ -976,22 +976,26 @@ try
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
 			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
+
 			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
+			$sDashboardDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
-<<<EOF
-			$('.ibo-dashboard#$sDashboardId').block();
+				<<<JS
+			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
 			   function(data){
-				 $('.ibo-dashboard#$sDashboardId').html(data);
-				 $('.ibo-dashboard#$sDashboardId').unblock();
+				 $('.ibo-dashboard#{$sDashboardDivId}').html(data);
+				 $('.ibo-dashboard#{$sDashboardDivId}').unblock();
 				}
 			 );
-EOF
+JS
 			);
 			break;
 
