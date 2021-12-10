@@ -704,7 +704,7 @@ JS
 HTML
 		);
 
-		$sDialogTitleSanitized = utils::HtmlToText($sTitle);
+		$sDialogTitleSanitized = addslashes(utils::EscapeHtml($sTitle));
 		$oPage->add_ready_script(<<<JS
 		$('#ac_dlg_{$this->iId}').dialog({ 
 				width: $(window).width()*0.8, 
