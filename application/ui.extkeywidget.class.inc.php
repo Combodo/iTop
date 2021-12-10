@@ -1028,15 +1028,15 @@ $('#dlg_tree_$this->iId').dialog({
     },
 	buttons: [
 		{ 
+			text: "$sCancelButtonLabel", 
+			click: function() { $(this).dialog( "close" ); } 
+		},
+		{ 
 			text: "$sOkButtonLabel",
 		   	class: "ibo-is-primary",
 			click: function() {
 				oACWidget_{$this->iId}.DoHKOk();
 			},
-		},
-		{ 
-			text: "$sCancelButtonLabel", 
-			click: function() { $(this).dialog( "close" ); } 
 		},
 		],
 
