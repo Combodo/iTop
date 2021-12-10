@@ -1066,7 +1066,7 @@ try
 			break;
 
 		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'element_identifier');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$sJSExtraParams = json_encode($aExtraParams);
