@@ -1483,7 +1483,7 @@ Bij die koppeling wordt aan elke actie een volgorde-nummer gegeven. Dit bepaalt 
 	// Search form
 	'UI:Search:Toggle' => 'Inklappen / uitklappen',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Direct zoeken werd uitgeschakeld voor deze klasse.',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Door jouw voorkeuren worden objecten met status "buiten dienst" verborgen',
+	'UI:Search:Obsolescence:DisabledHint' => 'Door jouw voorkeuren worden objecten met status "buiten dienst" verborgen',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Voeg enkele criteria toe in het zoekveld of klik op de zoekknop om objecten te zien.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Voeg nieuw criterium toe',
 	// - Add new criteria button

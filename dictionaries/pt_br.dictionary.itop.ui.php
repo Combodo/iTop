@@ -1480,7 +1480,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar / Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'O envio automático foi desativado para esta classe',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Baseado nas suas preferências, dados obsoletos estão escondidos',
+	'UI:Search:Obsolescence:DisabledHint' => 'Baseado nas suas preferências, dados obsoletos estão escondidos',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Adicione algum critério na caixa de pesquisa ou clique no botão de pesquisa para visualizar os objetos.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Adicionar novos critérios',
 	// - Add new criteria button

@@ -1480,7 +1480,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Search form
 	'UI:Search:Toggle' => '折叠 / 展开',
 	'UI:Search:AutoSubmit:DisabledHint' => '该类别已禁用自动提交',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> 根据您的设置, 废弃的数据会被隐藏',
+	'UI:Search:Obsolescence:DisabledHint' => '根据您的设置, 废弃的数据会被隐藏',
 	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则，或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button

@@ -1484,7 +1484,7 @@ Cuando se asocien con un disparador, cada acción recibe un número de "orden", 
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar/ Expandir',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto enviar ha sido deshabilitado para esta clase',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Basado en sus preferencias, datos obsoletos están ocultos',
+	'UI:Search:Obsolescence:DisabledHint' => 'Basado en sus preferencias, datos obsoletos están ocultos',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Agregue algún criterio en el cuadro de búsqueda o haga click en el botón de búsqueda para ver los objetos.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Agregar nuevo criterio',
 	// - Add new criteria button

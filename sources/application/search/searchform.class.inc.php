@@ -182,12 +182,14 @@ class SearchForm
 		$oUiBlock->AddSubBlock($oUiSearchBlock);
 		$sHtml = "";
 		if (!$bShowObsoleteData) {
+			$sShowObsoleteLabel = Dict::S('UI:Search:Obsolescence:DisabledHint');
 			$sHtml .= "<span class=\"pull-right\">";
-			$sHtml .= "<span class=\"sfobs_hint pull-right\">".Dict::S('UI:Search:Obsolescence:DisabledHint')."</span>";
+			$sHtml .= "<span class=\"sfobs_hint pull-right\"><span class=\"fas fa-eye-slash fa-1x\" aria-label=\"$sShowObsoleteLabel\" data-tooltip-content=\"$sShowObsoleteLabel\"></span></span>";
 		}
 		if ($bAutoSubmit === false) {
-			$sHtml .= "<br class='clearboth' />";
-			$sHtml .= "<span class=\"sft_hint pull-right\">".Dict::S('UI:Search:AutoSubmit:DisabledHint')."</span>";
+			$sAutoSubmit = Dict::S('UI:Search:AutoSubmit:DisabledHint');
+		$sHtml .= "<span class=\"sft_hint pull-right\"><span class=\"fa-stack fa-fw\" aria-label=\"$sAutoSubmit\" data-tooltip-content=\"$sAutoSubmit\"><span class=\"fas fa-sync-alt fa-stack-1x\"></span><span class=\"fas fa-slash fa-stack-1x\"></span
+></span></span>";
 			$sHtml .= "</span>";
 		}
 		$sHtml .= "<br class='clearboth' />";

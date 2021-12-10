@@ -1474,8 +1474,8 @@ W przypadku powiązania z wyzwalaczem, każde działanie otrzymuje numer "porzą
 
 	// Search form
 	'UI:Search:Toggle' => 'Zwiń / Rozwiń',
-	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync-alt fa-1x"></i> Automatyczne przesyłanie zostało wyłączone dla tej klasy',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> W oparciu o Twoje preferencje wycofane dane są ukrywane',
+	'UI:Search:AutoSubmit:DisabledHint' => 'Automatyczne przesyłanie zostało wyłączone dla tej klasy',
+	'UI:Search:Obsolescence:DisabledHint' => 'W oparciu o Twoje preferencje wycofane dane są ukrywane',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Dodaj jakieś kryterium w polu wyszukiwania lub kliknij przycisk wyszukiwania, aby wyświetlić obiekty.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Dodaj nowe kryteria',
 	// - Add new criteria button

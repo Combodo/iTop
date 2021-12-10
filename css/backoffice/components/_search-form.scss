@@ -26,6 +26,9 @@ $ibo-search-form-panel--items--hover--color: $ibo-color-grey-200 !default;
 
 $ibo-search-form-panel--multiple-choice--hover--color: $ibo-color-grey-200 !default;
 
+$ibo-search-form-panel--hint--margin-left: $ibo-spacing-300 !default;
+$ibo-search-form-panel--hint--color: $ibo-color-grey-800 !default;
+
 $ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
 $ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
 
@@ -70,11 +73,6 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 				display: none;
 			}
 
-			.sft_hint,
-			.sfobs_hint,
-			.sft_toggler {
-				margin-top: 4px;
-			}
 
 			.sft_toggler {
 				transform: rotateX(180deg);
@@ -848,6 +846,12 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
 	}
 }
 
+.sft_hint,
+.sfobs_hint,
+.sft_toggler {
+  margin-left: $ibo-search-form-panel--hint--margin-left;
+  color: $ibo-search-form-panel--hint--color;
+}
 
 .sf_results_placeholder {
 	@extend %ibo-font-size-150;

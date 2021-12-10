@@ -1469,7 +1469,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
