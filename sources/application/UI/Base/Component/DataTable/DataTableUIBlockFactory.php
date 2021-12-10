@@ -119,7 +119,7 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 	{
 		if (!isset($aExtraParams['menu']) || $aExtraParams['menu']) {
 			$oMenuBlock = new MenuBlock($oSet->GetFilter(), $sStyle);
-			$aExtraParams['sRefreshAction'] = $oDataTable->GetJSRefresh();
+			$aExtraParams['refresh_action'] = $oDataTable->GetJSRefresh();
 			$oBlockMenu = $oMenuBlock->GetRenderContent($oPage, $aExtraParams, $sListId);
 		} else {
 			$bToolkitMenu = true;
