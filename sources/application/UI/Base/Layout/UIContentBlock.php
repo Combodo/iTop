@@ -32,7 +32,7 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 	protected $aSubBlocks;
 	/** @var array */
 	protected $aDeferredBlocks;	
-	/** @var array */
+	/** @var bool If set to true, the content block will have a surrounding <div> no matter its options / CSS classes / ... */
 	protected $bHasForcedDiv;
 
 	/**
@@ -200,12 +200,22 @@ class UIContentBlock extends UIBlock implements iUIContentBlock
 
 		return $this;
 	}
-	
+
+	/**
+	 * @see static::$bHasForcedDiv
+	 * @return bool
+	 */
 	public function HasForcedDiv(): bool
 	{
 		return $this->bHasForcedDiv;
 	}
-	
+
+	/**
+	 * @param bool $bHasForcedDiv
+	 * @see static::$bHasForcedDiv
+	 *
+	 * @return $this
+	 */
 	public function SetHasForcedDiv(bool $bHasForcedDiv)
 	{
 		$this->bHasForcedDiv = $bHasForcedDiv;
