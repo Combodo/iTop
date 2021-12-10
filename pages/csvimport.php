@@ -660,14 +660,14 @@ try {
 			buttons:
 			[
 				{ 
+					text: "$sNoButton",
+					click: CancelImport,
+				},
+				{ 
 					text: "$sYesButton",
 				    class: "ibo-is-primary",
 					click: RunImport,
 				},
-				{ 
-					text: "$sNoButton",
-					click: CancelImport,
-				} 
 			]
 		});
 EOF
