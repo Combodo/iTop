@@ -61,7 +61,8 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
 
     input {
       border-width: 0px;
-      border-color: white;
+      color: inherit;
+      border-color: $ibo-color-white-100;
       padding-left: $ibo-input-select--padding-x;
     }
 
