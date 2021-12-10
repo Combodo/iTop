@@ -372,7 +372,7 @@ EOF
 		$sHTML .= "</form>\n";
 		$sHTML .= '</div></div>';
 
-		$sDialogTitleSanitized = utils::HtmlToText($sTitle);
+		$sDialogTitleSanitized = addslashes(utils::HtmlToText($sTitle));
 		$oPage->add_ready_script(
 <<<EOF
 		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitleSanitized', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
