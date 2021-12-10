@@ -3,6 +3,7 @@
 {# Content Block #}
 {% apply spaceless %}
 
+    {# Important: We don't want the UIContentBlock have a div node based on the inherited CSS classes, otherwise the node would always be present, which is not what we want #}
     {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or  oUIBlock.GetDataAttributes() or oUIBlock.IsHidden() or oUIBlock.HasForcedDiv()) %}
 
     {% block iboContentBlockContainer %}
