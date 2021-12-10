@@ -691,7 +691,7 @@ $(function()
 				for(var skey in oResponse)
 				{
 					var sValue = oResponse[skey].value;
-				    var sLabel = oResponse[skey].label;
+				    var sLabel =  $('<div/>').html(oResponse[skey].label).text();;
 					// Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
 					var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
 					var bInitChecked = bSelected;
