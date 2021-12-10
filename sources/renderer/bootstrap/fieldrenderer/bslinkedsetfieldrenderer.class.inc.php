@@ -430,7 +430,7 @@ EOF
 				$sAddButtonEndpoint = str_replace('-sMode-', 'from-attribute', $this->oField->GetSearchEndpoint());
 				// - Output
 				$oOutput->AddJs(
-	<<<EOF
+	<<<JS
 					// Handles items selection/deselection
 					// - Remove button state handler
 					var updateRemoveButtonState_{$this->oField->GetGlobalId()} = function()
@@ -527,7 +527,7 @@ EOF
 						);
 						oModalElem.modal('show');
 					});
-EOF
+JS
 				);
 			}
 		}
