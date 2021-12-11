@@ -17,8 +17,15 @@ $body-overflow-y: auto !default;
  * customize Bulma content variables
  * See https://bulma.io/documentation/elements/content/
  */
-$content-table-cell-border: 1px solid black;
-$content-table-cell-border-width: 1px;
-$content-table-head-cell-border-width: 1px;
-$content-table-foot-cell-border-width: 1px;
-$content-table-foot-cell-color: black;
+/* Table: Reset style as much as possible to match rich text editor preview, which is the browser's default stylesheet.
+ * As there is no way to avoid bulma rules, we simply make them invalid by setting an invalid variable value, the rules will then be ignored by the browser.
+ * See N°4481 for more information
+ */
+$content-table-cell-border: 'invalid on purpose';
+$content-table-cell-border-width: 'invalid on purpose';
+$content-table-cell-padding: 'invalid on purpose';
+$content-table-cell-heading-color: 'invalid on purpose';
+$content-table-head-cell-border-width: 'invalid on purpose';
+$content-table-head-cell-color: 'invalid on purpose';
+$content-table-foot-cell-border-width: 'invalid on purpose';
+$content-table-foot-cell-color: 'invalid on purpose';

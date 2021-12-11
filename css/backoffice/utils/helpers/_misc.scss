@@ -147,6 +147,15 @@ body.ibo-has-fullscreen-descendant {
     max-width: max-content;
   }
 
+  /* For table to render like in CKEditor, works with bulma lib. overload see:
+   * - ../../vendors/_bulma-variables-overload.scss)
+   * - ../../_shame.scss
+   */
+  table {
+    border-collapse: separate;
+    border-spacing: 2px;
+  }
+
   /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
   & > code,
   :not(pre.hljs) code {
