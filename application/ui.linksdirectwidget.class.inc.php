@@ -474,6 +474,33 @@ HTML
 		}
 		return $oPage->GetTableRow($aRow, $aAttribs);		
 	}
+
+	/**
+	 * @param WebPage $oPage
+	 * @param $sRealClass
+	 * @param $aValues
+	 * @param int $iTempId
+	 *
+	 * @return array
+	 */
+	public function GetFormRow($oPage, $sRealClass, $aValues, $iTempId)
+	{
+		if ($sRealClass == '')
+		{
+			$sRealClass = $this->sLinkedClass;
+		}
+		$oLinkObj = new $sRealClass();
+		$oLinkObj->UpdateObjectFromPostedForm($this->sInputid);
+
+		$aAttribs = $this->GetTableConfig();
+		$aRow = array();
+		$aRow[] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.($iTempId).'"/>';
+		foreach($this->aZlist as $sLinkedAttCode)
+		{
+			$aRow[] = $oLinkObj->GetAsHTML($sLinkedAttCode);
+		}
+		return $aRow;
+	}
 	
 	/**
 	 * Initializes the default search parameters based on 1) a 'current' object and 2) the silos defined by the context

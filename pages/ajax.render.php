@@ -224,7 +224,7 @@ try
 		
 		// ui.linksdirectwidget
 		case 'getLinksetRow':
-			$oPage->SetContentType('text/html');
+			$oPage = new JsonPage();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sRealClass = utils::ReadParam('real_class', '', false, 'class');
 			$sAttCode = utils::ReadParam('att_code', '');
@@ -233,7 +233,7 @@ try
 			$aValues = utils::ReadParam('values', array(), false, 'raw_data');
 			$oPage->SetContentType('text/html');
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oPage->add($oWidget->GetRow($oPage, $sRealClass, $aValues, -$iTempId));
+			$oPage->AddData($oWidget->GetFormRow($oPage, $sRealClass, $aValues, -$iTempId));
 			break;
 
 		// ui.linksdirectwidget
