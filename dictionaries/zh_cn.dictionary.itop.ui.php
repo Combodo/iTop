@@ -633,8 +633,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:CommentsAndHeader' => '注释和头',
 	'UI:CSVImport:SelectClass' => '选择要导入的类别:',
 	'UI:CSVImport:AdvancedMode' => '高级模式',
-	'UI:CSVImport:AdvancedMode+' => '在高级模式中,对象的"id" (主键) 可以被用来修改和重命名对象.'
-	'不管怎样,列 "id" (如果存在) 只能被用做一个搜索条件,不能与其它搜索条件混用.',
+	'UI:CSVImport:AdvancedMode+' => '在高级模式中,对象的"id" (主键) 可以被用来修改和重命名对象. 不管怎样,列 "id" (如果存在) 只能被用做一个搜索条件,不能与其它搜索条件混用.',
 	'UI:CSVImport:SelectAClassFirst' => '要配置映射，请先选择一个类.',
 	'UI:CSVImport:HeaderFields' => '栏目',
 	'UI:CSVImport:HeaderMappings' => '映射',
@@ -1178,8 +1177,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ArchiveMode:Banner' => '归档模式',
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
-	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问.'
-		'请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
+	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问. 请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
 	'UI:FavoriteLanguage' => '语言',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
