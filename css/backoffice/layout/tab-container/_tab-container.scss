@@ -4,6 +4,8 @@
  */
 
 /* SCSS variables */
+$ibo-tab-container--hidden-tabs-on-init--display: none !default;
+
 $ibo-tab-container--tabs-list--height: 36px !default;
 $ibo-tab-container--tabs-list--padding-x: $ibo-spacing-600 !default;
 $ibo-tab-container--tabs-list--background-color: $ibo-color-grey-100 !default;
@@ -53,6 +55,12 @@ $ibo-tab-container--tab-container--min-height: auto !default;
 $ibo-tab-container--tab-container--last--min-height: 60vh !default;
 
 /* Rules */
+.ibo-tab-container:not(.ibo-is-scrollable):not([data-status="loaded"]) {
+  .ibo-tab-container--tab-container:not(:first-child) {
+    display: $ibo-tab-container--hidden-tabs-on-init--display;
+  }
+}
+
 .ibo-tab-container--tabs-list {
   position: relative;
   @extend %ibo-full-height-content;
