@@ -33,6 +33,17 @@ define('CASELOG_SEPARATOR', "\n".'========== %1$s : %2$s (%3$d) ============'."\
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class ormCaseLog {
+	/**
+	 * @var string "plain text" format for the log
+	 * @since 3.0.0
+	 */
+	public const ENUM_FORMAT_TEXT = 'text';
+	/**
+	 * @var string "HTML" format for the log
+	 * @since 3.0.0
+	 */
+	public const ENUM_FORMAT_HTML = 'html';
+
 	protected $m_sLog;
 	protected $m_aIndex;
 	protected $m_bModified;
@@ -53,7 +64,7 @@ class ormCaseLog {
 	{
 		if ($bConvertToPlainText)
 		{
-			// Rebuild the log, but filtering any HTML markup for the all 'html' entries in the log
+			// Rebuild the log, but filtering any HTML markup for the all {@see static::ENUM_FORMAT_HTML} entries in the log
 			return $this->GetAsPlainText();
 		}
 		else
@@ -136,14 +147,14 @@ class ormCaseLog {
 					$sDate = '';
 				}
 			}
-			$sFormat = array_key_exists('format',  $this->m_aIndex[$index]) ?  $this->m_aIndex[$index]['format'] : 'text';
+			$sFormat = array_key_exists('format',  $this->m_aIndex[$index]) ?  $this->m_aIndex[$index]['format'] : static::ENUM_FORMAT_TEXT;
 			switch($sFormat)
 			{
-				case 'text':
+				case static::ENUM_FORMAT_TEXT:
 					$sHtmlEntry = utils::TextToHtml($sTextEntry);
 					break;
 
-				case 'html':
+				case static::ENUM_FORMAT_HTML:
 					$sHtmlEntry = $sTextEntry;
 					$sTextEntry = utils::HtmlToText($sHtmlEntry);
 					break;
@@ -175,7 +186,8 @@ class ormCaseLog {
 	}
 
 	/**
-	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the 'html' entries have been removed
+	 * Returns a "plain text" version of the log (equivalent to $this->m_sLog) where all the HTML markup from the {@see static::ENUM_FORMAT_HTML} entries have been removed
+	 *
 	 * @return string
 	 */
 	public function GetAsPlainText()
@@ -237,7 +249,7 @@ class ormCaseLog {
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
 			$sCSSClass = 'caselog_entry_html';
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
 			{
 				$sCSSClass = 'caselog_entry';
 				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
@@ -320,7 +332,7 @@ class ormCaseLog {
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
 			$sCSSClass = 'case_log_simple_html_entry_html';
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
 			{
 				$sCSSClass = 'case_log_simple_html_entry';
 				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
@@ -425,7 +437,7 @@ class ormCaseLog {
 			}
 			$iPos += $aIndex[$index]['separator_length'];
 			$sTextEntry = substr($this->m_sLog, $iPos, $aIndex[$index]['text_length']);
-			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == 'text'))
+			if (!array_key_exists('format', $aIndex[$index]) || ($aIndex[$index]['format'] == static::ENUM_FORMAT_TEXT))
 			{
 				$sTextEntry = str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sTextEntry, ENT_QUOTES, 'UTF-8'));
 				if (!is_null($aTransfoHandler))
@@ -590,7 +602,7 @@ class ormCaseLog {
 			'date' => time(),
 			'text_length' => $iTextlength,
 			'separator_length' => $iSepLength,
-			'format' => 'html',
+			'format' => static::ENUM_FORMAT_HTML,
 		);
 		$this->m_bModified = true;
 	}
@@ -644,11 +656,11 @@ class ormCaseLog {
 		else
 		{
 			// The default is HTML
-			$sFormat = 'html';
+			$sFormat = static::ENUM_FORMAT_HTML;
 		}
 
 		$sText = isset($oJson->message) ? $oJson->message : '';
-		if ($sFormat == 'html')
+		if ($sFormat == static::ENUM_FORMAT_HTML)
 		{
 			$sText = HTMLSanitizer::Sanitize($sText);
 		}
@@ -671,7 +683,7 @@ class ormCaseLog {
 		$this->m_bModified = true;
 	}
 
-	public function GetModifiedEntry($sFormat = 'text')
+	public function GetModifiedEntry($sFormat = self::ENUM_FORMAT_TEXT)
 	{
 		$sModifiedEntry = '';
 		if ($this->m_bModified)
@@ -686,15 +698,15 @@ class ormCaseLog {
 	 * @param string The expected output format text|html
 	 * @return string
 	 */
-	public function GetLatestEntry($sFormat = 'text')
+	public function GetLatestEntry($sFormat = self::ENUM_FORMAT_TEXT)
 	{
 		$sRes = '';
 		$aLastEntry = end($this->m_aIndex);
 		$sRaw = substr($this->m_sLog, $aLastEntry['separator_length'], $aLastEntry['text_length']);
 		switch($sFormat)
 		{
-			case 'text':
-			if ($aLastEntry['format'] == 'text')
+			case static::ENUM_FORMAT_TEXT:
+			if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT)
 			{
 				$sRes = $sRaw;
 			}
@@ -704,8 +716,8 @@ class ormCaseLog {
 			}
 			break;
 			
-			case 'html':
-			if ($aLastEntry['format'] == 'text')
+			case static::ENUM_FORMAT_HTML:
+			if ($aLastEntry['format'] == static::ENUM_FORMAT_TEXT)
 			{
 				$sRes = utils::TextToHtml($sRaw);
 			}
