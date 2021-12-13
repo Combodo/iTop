@@ -19,5 +19,5 @@
 
 // Global search
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => '上一页',
 ));
