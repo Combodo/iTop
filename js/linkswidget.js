@@ -3,8 +3,23 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
-function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch) {
+/**
+ *
+ * @param id
+ * @param sClass
+ * @param sAttCode
+ * @param iInputId
+ * @param sSuffix
+ * @param bDuplicates
+ * @param oWizHelper
+ * @param sExtKeyToRemote
+ * @param bDoSearch
+ * @param iMaxAddedId
+ * @constructor
+ *
+ * @since 3.0.0 Add iMaxAddedId parameter
+ */
+function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizHelper, sExtKeyToRemote, bDoSearch, iMaxAddedId = 0) {
 	this.id = id;
 	this.iInputId = iInputId;
 	this.sClass = sClass;
@@ -13,7 +28,7 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 	this.bDuplicates = bDuplicates;
 	this.oWizardHelper = oWizHelper;
 	this.sExtKeyToRemote = sExtKeyToRemote;
-	this.iMaxAddedId = 0;
+	this.iMaxAddedId = iMaxAddedId;
 	this.aAdded = [];
 	this.aRemoved = [];
 	this.aModified = {};
@@ -417,5 +432,14 @@ function LinksWidget(id, sClass, sAttCode, iInputId, sSuffix, bDuplicates, oWizH
 
 		// Remove unused inputs
 		$('#linkedset_'+me.id+' :input[name^="attr_'+me.sAttCode+'["]').prop("disabled", true);
+	};
+
+	this.UpdateMaxAddedId = function () {
+		const iCurrentMaxAddedId = this.iMaxAddedId;
+		this.iMaxAddedId = Math.max(iCurrentMaxAddedId, this.GetMaxAddedId());
+	};
+
+	this.GetMaxAddedId = function () {
+		this.oWizardHelper;
 	};
 }

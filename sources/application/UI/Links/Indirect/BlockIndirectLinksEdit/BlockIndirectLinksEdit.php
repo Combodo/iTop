@@ -43,6 +43,8 @@ class BlockIndirectLinksEdit extends UIContentBlock
 	public $sExtKeyToRemote;
 	/** @var bool */
 	public $bJSDoSearch;
+	/** @var int */
+	public $iMaxAddedId = 0;
 
 	/** @var string */
 	public $sFormPrefix;
