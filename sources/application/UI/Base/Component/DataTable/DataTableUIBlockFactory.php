@@ -16,6 +16,7 @@ use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSec
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
@@ -154,7 +155,15 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 					$oContainer->SetTitle($aExtraParams['panel_title']);
 				}
 			}
-			$oContainer->SetSubTitle(Dict::Format("UI:Pagination:HeaderNoSelection", $iCount));
+			if ($oDataTable->GetOption("select_mode") == 'multiple')
+			{
+				$sSubTitle =Dict::Format('UI:Pagination:HeaderSelection', $iCount, '<span class="ibo-datatable--selected-count">0</span>');
+			}
+			else
+			{
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $iCount);
+			}
+			$oContainer->AddSubTitleBlock(new Html($sSubTitle));
 			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
 				$oContainer->SetIcon($aExtraParams["panel_icon"]);
 			}
