@@ -19,5 +19,5 @@
 
 // Input
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:Component:Input:Password:DoesNotMatch' => 'Passwords do not match~~',
+	'UI:Component:Input:Password:DoesNotMatch' => '密码不匹配',
 ));
