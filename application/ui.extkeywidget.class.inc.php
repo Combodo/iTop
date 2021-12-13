@@ -913,8 +913,8 @@ JS
 		$oClassForm = FormUIBlockFactory::MakeStandard();
 		$oBlock->AddSubBlock($oClassForm);
 		$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sClassLabel, $this->sTargetClass,   $aPossibleClasses));
-
-        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
+		$sDialogTitleEscaped = addslashes($sDialogTitle);
+        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitleEscaped'});\n");
         $oPage->add_ready_script("$('#ac_create_{$this->iId} form').removeAttr('onsubmit');");
         $oPage->add_ready_script("$('#ac_create_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
