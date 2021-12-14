@@ -270,7 +270,8 @@ function DisplayTriggers($oPage, $sClass)
  */
 function DisplayClassesList($oPage, $oLayout, $sContext)
 {
-
+	$sSelectedClass = utils::ReadParam('class', '', false, 'class');
+	
 	$oLayout->AddSideHtml("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br>");
 	
 	$oListSearch = new Select("ibo-datamodel-viewer--class-search");
@@ -296,7 +297,7 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 		}
 		$sLabelClassName = MetaModel::GetName($sClassName);
 
-		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", false);
+		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", $sClassName === $sSelectedClass);
 		$oListSearch->AddOption($oOptionSearch);
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
@@ -342,6 +343,8 @@ $('#ibo-datamodel-viewer--class-search').selectize({
     onType: DatamodelViewerFilterList,
     maxOptions: 7,
 });
+
+DatamodelViewerFilterList('$sSelectedClass');
 JS
 	);
 
