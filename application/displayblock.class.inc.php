@@ -2222,8 +2222,14 @@ class MenuBlock extends DisplayBlock
 		}
 		if ($oPopupMenuItemsBlock->HasSubBlocks()) {
 			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
+		} else {
+			foreach ($oPopupMenuItemsBlock->GetJsFilesRelPaths() as $sJsPath) {
+				$oRenderBlock->AddJsFileRelPath($sJsPath);
+			}
+			foreach ($oPopupMenuItemsBlock->GetCssFilesRelPaths() as $sCssPath) {
+				$oRenderBlock->AddCssFileRelPath($sCssPath);
+			}
 		}
-
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
 		$aFavoriteTransitionActions = [];
