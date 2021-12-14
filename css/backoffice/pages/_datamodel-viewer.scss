@@ -12,7 +12,7 @@ $ibo-datamodel-viewer--origin-cell--diameter: 8px !default;
 $ibo-datamodel-viewer--origin-cell--border-radius: $ibo-border-radius-full !default;
 
 $ibo-datamodel-viewer--classes-list--height: 100% !default;
-$ibo-datamodel-viewer--classes-list--max-width: 350px !default;
+$ibo-datamodel-viewer--classes-list--width: 350px !default;
 $ibo-datamodel-viewer--classes-list--padding-left: $ibo-spacing-600 !default;
 
 $ibo-datamodel-viewer--lifecycle--code--color: $ibo-color-grey-700 !default;
@@ -63,7 +63,7 @@ $ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default
 .ibo-datamodel-viewer--classes-list{
   position: relative;
   height: $ibo-datamodel-viewer--classes-list--height;
-  max-width: $ibo-datamodel-viewer--classes-list--max-width;
+  width: $ibo-datamodel-viewer--classes-list--width;
   padding-left: $ibo-datamodel-viewer--classes-list--padding-left;
   overflow-y: scroll;
 }

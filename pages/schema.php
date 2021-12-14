@@ -308,13 +308,39 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 	$oLayout->AddSideBlock($oListSearch);
 	$oPage->add_ready_script(
 		<<<JS
+let DatamodelViewerFilterList = function(sFilter){
+	if(sFilter !== ""){
+		var search_result = [];
+			$('#ibo-datamodel-viewer--classes-list--list').find("li").each(function(){
+			if( ! ~$(this).children("a").text().toLowerCase().indexOf(sFilter.toLowerCase())){
+				$(this).hide();
+			}
+			else{
+				search_result.push($(this));
+			}
+		});
+		search_result.forEach(function(e){
+			e.show();
+			e.find('ul > li').show();
+			e.parents().show();
+		});
+	}
+	else{
+		$('#ibo-datamodel-viewer--classes-list--list').find("li").each(function(){
+			$(this).show();
+		});
+	}
+};
+
 $('#ibo-datamodel-viewer--class-search').selectize({
     sortField: 'text',
     onChange: function(value){
     			    var preUrl = "?operation=details_class&class=";
 			var sufUrl = "&c[menu]=DataModelMenu";
 			window.location = preUrl + value + sufUrl;
-    }
+    },
+    onType: DatamodelViewerFilterList,
+    maxOptions: 7,
 });
 JS
 	);
