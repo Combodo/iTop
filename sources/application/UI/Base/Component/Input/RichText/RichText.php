@@ -28,6 +28,8 @@ class RichText extends UIBlock
 		'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css',
 	];
 
+	/** @var string|null */
+	protected $sValue;
 	/** @var array Configuration parameters for the CKEditor instance used with Richtext block */
 	protected $aConfig;
 
@@ -39,7 +41,30 @@ class RichText extends UIBlock
 	public function __construct(?string $sId = null)
 	{
 		parent::__construct($sId);
+		$this->sValue = null;
 		$this->aConfig = utils::GetCkeditorPref();
+	}
+
+	/**
+	 * @see static::$sValue
+	 * @return string|null
+	 */
+	public function GetValue(): ?string
+	{
+		return $this->sValue;
+	}
+
+	/**
+	 * @param string|null $sValue
+	 * @see static::$sValue
+	 *
+	 * @return $this
+	 */
+	public function SetValue(?string $sValue)
+	{
+		$this->sValue = $sValue;
+
+		return $this;
 	}
 
 	/**

@@ -73,9 +73,17 @@ class ActivityPanelFactory
 		$aCaseLogTabs = $oActivityPanel->GetCaseLogTabs();
 		foreach($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData)
 		{
+			/** @var \ormCaseLog $oCaseLog */
+			$oCaseLog = $oObject->Get($sCaseLogAttCode);
+
 			// Add new entry block only if the case log is not read only
 			if (false === $aCaseLogData['is_read_only']) {
 				$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
+
+				// Prefill input if default value passed for new object
+				if ($oObject->IsNew() && !$oCaseLog->IsEmpty()) {
+					$oActivityPanel->GetCaseLogTabEntryForm($sCaseLogAttCode)->GetTextInput()->SetValue($oCaseLog->GetModifiedEntry(\ormCaseLog::ENUM_FORMAT_HTML));
+				}
 			}
 
 			if ($oObject->IsNew()) {
@@ -99,9 +107,6 @@ class ActivityPanelFactory
 			$oCaseLogEntriesOriginsSet->OptimizeColumnLoad(['C' => ['origin'], 'CO' => ['lastentry']]);
 
 			// Retrieve log entries
-			/** @var \ormCaseLog $oCaseLog */
-			$oCaseLog = $oObject->Get($sCaseLogAttCode);
-
 			// Debug message to help understand why there could be anomalies on the log entries origins
 			if ($oCaseLog->GetEntryCount() !== $oCaseLogEntriesOriginsSet->Count()) {
 				IssueLog::Debug(static::class.": Number of log entries ({$oCaseLog->GetEntryCount()}) don't match number of corresponding CMDBChanges ({$oCaseLogEntriesOriginsSet->Count()}) for object {$sObjClass}::{$sObjId} / attribute {$sCaseLogAttCode}");
