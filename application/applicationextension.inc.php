@@ -1368,6 +1368,38 @@ interface iBackofficeStyleExtension
 }
 
 /**
+ * Implement this interface to add Dict entries
+ *
+ * @see \iTopWebPage::$a_dict_entries
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries
+	 * @return array
+	 */
+	public function GetDictEntries(): array;
+}
+
+/**
+ * Implement this interface to add Dict entries prefixes
+ *
+ * @see \iTopWebPage::$a_dict_entries_prefixes
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesPrefixesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries_prefixes
+	 * @return array
+	 */
+	public function GetDictEntriesPrefixes(): array;
+}
+
+/**
  * Implement this interface to add content to any enhanced portal page
  *
  * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
