@@ -223,11 +223,9 @@
 			{
 				$sBlockId = __class__.'_opened_'.$sSubClass;
 
-				$oPage->add('<fieldset>');
-				$oPage->add('<legend>'.MetaModel::GetName($sSubClass).'</legend>');
+				$oPage->AddUiBlock(\Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory::MakeNeutral(MetaModel::GetName($sSubClass), 2));
 				$oBlock = new DisplayBlock($oSearch, 'list', false);
 				$oBlock->Display($oPage, $sBlockId, array('menu' => false));
-				$oPage->add('</fieldset>');
 			}
 		}
 	}]]></code>
