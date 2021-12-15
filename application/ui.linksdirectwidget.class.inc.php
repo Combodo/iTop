@@ -197,7 +197,6 @@ class UILinksWidgetDirect
 
 		if ($sRealClass != '')
 		{
-			$oPage->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($sRealClass))."</h1>\n");
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
 			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
