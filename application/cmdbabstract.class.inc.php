@@ -251,7 +251,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param \DBObject $oObj
+	 * @param \cmdbAbstractObject $oObj
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
@@ -285,6 +285,7 @@ JS
 		);
 
 		$oObj->Reload();
+		$oObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_VIEW);
 		$oObj->DisplayDetails($oPage, false);
 	}
 
