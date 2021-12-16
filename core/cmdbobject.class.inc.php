@@ -161,7 +161,7 @@ abstract class CMDBObject extends DBObject
 	 *
 	 * @param string $sId ID of the user doing the change, null if not done by a user (eg. background task)
 	 *
-	 * @since 3.0.0
+	 * @since 3.0.0 N°2847 following the addition of CMDBChange.user_id
 	 */
 	public static function SetTrackUserId($sId)
 	{
