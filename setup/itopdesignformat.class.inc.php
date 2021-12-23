@@ -92,6 +92,12 @@ class iTopDesignFormat
 		'3.0' => array(
 			'previous' => '1.7',
 			'go_to_previous' => 'From30To17',
+			'next' => '3.1',
+			'go_to_next' => 'From30To31',
+		),
+		'3.1' => array(
+			'previous' => '3.0',
+			'go_to_previous' => 'From31To30',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -947,7 +953,24 @@ class iTopDesignFormat
 			}
 		}
 	}
-	
+	/**
+	 * Upgrade the format from version 3.0 to 3.1
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From30To31($oFactory)
+	{
+		//nothing
+	}
+	/**
+	 * Downgrade the format from version 3.1 to 3.0
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From31To30($oFactory)
+	{
+		//nothing
+	}
 	/**
 	 * @param string $sPath
 	 *
