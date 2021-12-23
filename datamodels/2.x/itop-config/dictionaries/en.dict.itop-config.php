@@ -28,6 +28,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'config-edit-intro' => 'Be very cautious when editing the configuration file.',
 	'config-apply' => 'Apply',
 	'config-apply-title' => 'Apply (Ctrl+S)',
+	'config-cghperm-setup' => 'Change perm & setup',
 	'config-cancel' => 'Reset',
 	'config-saved' => 'Successfully recorded.',
 	'config-confirm-cancel' => 'Your changes will be lost.',
