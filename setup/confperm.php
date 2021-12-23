@@ -3,11 +3,6 @@ require_once '../approot.inc.php';
 require_once APPROOT.'setup/setuputils.class.inc.php';
 
 
-if (false === utils::IsDevelopmentEnvironment()) {
-	echo 'Action forbidden';
-	exit(1);
-}
-
 $aPreviousInstance = SetupUtils::GetPreviousInstance(APPROOT);
 if (false === $aPreviousInstance['found']) {
 	echo 'Action forbidden';
