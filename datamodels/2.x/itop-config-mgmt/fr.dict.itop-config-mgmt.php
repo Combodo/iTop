@@ -32,6 +32,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Relation:depends on/Description' => 'Eléments dont dépend',
 	'Relation:depends on/DownStream' => 'Dépend de...',
 	'Relation:depends on/UpStream' => 'Impacte...',
+	'Relation:impacts/LoadData'       => 'Charger les données',
+	'Relation:impacts/NoFilteredData' => 'Veuillez sélectionner des objets dans l\'onglet Graph',
 ));
 
 

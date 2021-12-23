@@ -838,6 +838,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		'impact_analysis_lazy_loading' => [
+			'type'                => 'bool',
+			'description'         => 'In the impact analysis view: display the analysis or filter before display',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'url_validation_pattern' => array(
 			'type' => 'string',
 			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',

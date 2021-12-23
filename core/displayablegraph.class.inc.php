@@ -1435,79 +1435,20 @@ class DisplayableGraph extends SimpleGraph
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array())
-	{	
-		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
-		$aExcludedByClass = array();
-		foreach($aExcludedObjects as $oObj)
-		{
-			if (!array_key_exists(get_class($oObj), $aExcludedByClass))
-			{
-				$aExcludedByClass[get_class($oObj)] = array();
-			}
-			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
-		}
-		$sSftShort = Dict::S('UI:ElementsDisplayed');
-		$sSearchToggle = Dict::S('UI:Search:Toggle');
-		$oP->add("<div class=\"not-printable\">\n");
-		$oP->add(
-<<<EOF
- <div id="ds_flash" class="search_box">
-	<form id="dh_flash" class="search_form_handler closed">
-	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
-	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
-EOF
-		);
-		
-		$oP->add_ready_script(
-<<<EOF
-	$("#dh_flash > .sf_title").click( function() {
-		$("#dh_flash").toggleClass('closed');
-	});
-    $('#ReloadMovieBtn').button().button('disable');
-EOF
-		);
-		$aSortedElements = array();
-		foreach($aResults as $sClassIdx => $aObjects)
-		{
-			foreach($aObjects as $oCurrObj)
-			{
-				$sSubClass = get_class($oCurrObj);
-				$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
-			}
-		}
-				
-		asort($aSortedElements);
-		$idx = 0;
-		foreach($aSortedElements as $sSubClass => $sClassName)
-		{
-			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
-			$idx++;
-		}
-		$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
-		$oP->add("</div></div></form>");
-		$oP->add("</div>\n");
-	 	$oP->add("</div>\n"); // class="not-printable"
-
-		$aAdditionalContexts = array();
-		foreach($aContextDefs as $sKey => $aDefinition)
-		{
-			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition)  && ($aDefinition['default'] == 'yes')));
-		}
-		
-		$sDirection = utils::ReadParam('d', 'horizontal');
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), $sLazyLoading = false)
+	{
+		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $sLazyLoading);
 		$iGroupingThreshold = utils::ReadParam('g', 5);
-	
+
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
 		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+
 		try
 		{
 			$this->InitFromGraphviz();
-			$sExportAsPdfURL = '';
 			$sExportAsPdfURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_pdf&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
-			$oAppcontext = new ApplicationContext();
 			$sContext = $oAppContext->GetForLink();
 			$sDrillDownURL = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class=%1$s&id=%2$s&'.$sContext;
 			$sExportAsDocumentURL = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=relation_attachment&relation='.$sRelation.'&direction='.($this->bDirectionDown ? 'down' : 'up');
@@ -1586,7 +1527,14 @@ EOF
 				// Export as Attachment requires GD (for building the PDF) AND a valid objclass/objkey couple
 				unset($aParams['export_as_attachment']);
 			}
-			$oP->add_ready_script("$('#$sId').simple_graph(".json_encode($aParams).");");
+			if ($oP->IsPrintableVersion() || !$sLazyLoading) {
+				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
+			} else {
+				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
+				$oP->add_ready_script("$('#impacted_objects_lists').html('".Dict::S('Relation:impacts/NoFilteredData')."');$('#impacted_groups').html('".Dict::S('Relation:impacts/NoFilteredData')."');");
+
+			}
+
 		}
 		catch(Exception $e)
 		{
@@ -1617,6 +1565,87 @@ EOF
 	}
 EOF
 		);
+	}
+
+	/**
+	 * @param $sContextKey
+	 * @param array $aContextParams
+	 * @param array $aExcludedObjects
+	 * @param \WebPage $oP
+	 * @param array $aResults
+	 * @param bool $sLazyLoading
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \DictExceptionMissingString
+	 * @since 2.7.7 & 3.0.1
+	 */
+	protected function DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $sLazyLoading)
+	{
+		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
+		$aExcludedByClass = array();
+		foreach ($aExcludedObjects as $oObj) {
+			if (!array_key_exists(get_class($oObj), $aExcludedByClass)) {
+				$aExcludedByClass[get_class($oObj)] = array();
+			}
+			$aExcludedByClass[get_class($oObj)][] = $oObj->GetKey();
+		}
+		$sSftShort = Dict::S('UI:ElementsDisplayed');
+		$sSearchToggle = Dict::S('UI:Search:Toggle');
+		$oP->add("<div class=\"not-printable\">\n");
+		$oP->add(
+			<<<EOF
+ <div id="ds_flash" class="search_box">
+	<form id="dh_flash" class="search_form_handler">
+	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
+EOF
+		);
+
+		$oP->add_ready_script(
+			<<<EOF
+	$("#dh_flash > .sf_title").click( function() {
+		$("#dh_flash").toggleClass('closed');
+	});
+    $('#ReloadMovieBtn').button().button('disable');
+EOF
+		);
+		if ($sLazyLoading) {
+			$oP->add_ready_script("$('#ReloadMovieBtn').button('enable');");
+		} else {
+			$oP->add_ready_script("$('#dh_flash').addClass('closed');");
+		}
+		$aSortedElements = array();
+		foreach ($aResults as $sClassIdx => $aObjects) {
+			foreach ($aObjects as $oCurrObj) {
+				$sSubClass = get_class($oCurrObj);
+				$aSortedElements[$sSubClass] = MetaModel::GetName($sSubClass);
+			}
+		}
+
+		asort($aSortedElements);
+		$idx = 0;
+		foreach ($aSortedElements as $sSubClass => $sClassName) {
+			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
+			$idx++;
+		}
+		if ($sLazyLoading) {
+			$sOnCLick = "Load(); $('#ReloadMovieBtn').attr('onclick','DoReload()');$('#ReloadMovieBtn').html('".Dict::S('UI:Button:Refresh')."');";
+			$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"$sOnCLick\">".Dict::S('Relation:impacts/LoadData')."</button></p>");
+		} else {
+			$sOnCLick = "DoReload()";
+			$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"$sOnCLick\">".Dict::S('UI:Button:Refresh')."</button></p>");
+		}
+		$oP->add("</div></div></form>");
+		$oP->add("</div>\n");
+		$oP->add("</div>\n"); // class="not-printable"
+
+		$aAdditionalContexts = array();
+		foreach ($aContextDefs as $sKey => $aDefinition) {
+			$aAdditionalContexts[] = array('key' => $sKey, 'label' => Dict::S($aDefinition['dict']), 'oql' => $aDefinition['oql'], 'default' => (array_key_exists('default', $aDefinition) && ($aDefinition['default'] == 'yes')));
+		}
+
+		return array($aExcludedByClass, $aAdditionalContexts);
 	}
 	
 }

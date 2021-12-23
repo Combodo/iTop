@@ -287,6 +287,16 @@ function DisplayMultipleSelectionForm($oP, $oFilter, $sNextOperation, $oChecker,
 		$oP->add_ready_script("$('#1 table.listResults').trigger('check_all');");
 }
 
+/**
+ * @param $oP
+ * @param $aResults
+ * @param $sRelation
+ * @param $sDirection
+ * @param $oObj
+ * for operation :  'swf_navigator'
+ *
+ * @throws \DictExceptionMissingString
+ */
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
 	$oP->SetCurrentTab('UI:RelationshipList');
@@ -299,22 +309,7 @@ function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 	$oP->add("<h1>".MetaModel::GetRelationDescription($sOldRelation).' '.$oObj->GetName()."</h1>\n");
 	$oP->add("<div id=\"impacted_objects_lists\">");
 	$oP->add('<img src="../images/indicator.gif">');
-	/*
-	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
-	 */
-	/*
-	$iBlock = 1; // Zero is not a valid blockid
-	foreach($aResults as $sListClass => $aObjects)
-	{
-		$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
-		$oP->add("<div class=\"page_header\">\n");
-		$oP->add("<h2>".MetaModel::GetClassIcon($sListClass)."&nbsp;<span class=\"hilite\">".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', count($aObjects), Metamodel::GetName($sListClass))."</h2>\n");
-		$oP->add("</div>\n");
-		$oBlock = DisplayBlock::FromObjectSet($oSet, 'list');
-		$oBlock->Display($oP, $iBlock++, array('table_id' => get_class($oObj).'_'.$sRelation.'_'.$sDirection.'_'.$sListClass));
-		$oP->P('&nbsp;'); // Some space ?				
-	}
-	*/
+
 	$oP->add("</div>");
 	$oP->add("</div>");
 }
@@ -1903,6 +1898,7 @@ EOF
 		$oP->SetCurrentTabContainer('Navigator');
 		
 		$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+		$sLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
 		$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 		
 		// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
@@ -1926,13 +1922,13 @@ EOF
 		{
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
 			DisplayNavigatorGroupTab($oP);
 		}
 		else
 		{
 			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
+			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
 			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 			DisplayNavigatorGroupTab($oP);
 		}
