@@ -186,15 +186,6 @@ class WizardController
 					$sButtonsHtml = <<<HTML
 <button type="button" class="ibo-button ibo-is-regular ibo-is-primary" onclick="window.location.reload()">Reload</button>
 HTML;
-					if (utils::IsDevelopmentEnvironment()) {
-						$sSetupToken = SetupUtils::CreateSetupToken();
-						$sButtonsHtml .= <<<HTML
-<form method="post" action="confperm.php">
-	<input type="hidden" name="authent" value="{$sSetupToken}">
-	<button type="submit" class="ibo-button ibo-is-regular ibo-is-success">Change permissions & Reload</button>
-</form>
-HTML;
-					}
 					$oP->p($sButtonsHtml);
 
 					$oP->output();
