@@ -72,9 +72,11 @@ $sEnvFullPath = APPROOT.'env-'.$sEnvironment;
 $sPageRelativePath = $sModule.'/'.$sPage;
 $sPageEnvFullPath = $sEnvFullPath.'/'.$sPageRelativePath;
 if (is_link($sPageEnvFullPath)) {
+	$oConfig = utils::GetConfig();
+	$sSourceDir = $oConfig->Get('source_dir'); // generated at compile time, works for legacy build with datamodels/1.x
 	// in case module was compiled to symlink, we need to check against real linked path as symlink is resolved
 	$aPossibleBasePaths = [
-		APPROOT.'datamodels/2.x', // warning, won't work for datamodels/1.x for example !
+		APPROOT.$sSourceDir,
 		APPROOT.'extensions',
 		APPROOT.'data/'.$sEnvironment.'-modules',
 		APPROOT.'data/downloaded-extensions', // Hub connector
