@@ -225,7 +225,7 @@ catch(Exception $e)
 {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
-	exit -2;
+	exit(-2);
 }
 
 if (utils::IsModeCLI())
@@ -244,14 +244,14 @@ if (utils::IsModeCLI())
 	{
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 
 	if (!is_readable($sCsvFile))
 	{
 		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 	$sCSVData = file_get_contents($sCsvFile);
 
