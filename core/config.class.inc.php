@@ -1603,11 +1603,11 @@ class Config
 	}
 
 	/**
-	 * @param string $sPropCode
-	 *
 	 * @return mixed
+	 *
+	 * @since 3.0.1 N°4515
 	 */
-	public function GetDefault($sPropCode)
+	public function GetDefault(string $sPropCode)
 	{
 		return $this->m_aSettings[$sPropCode]['default'];
 	}
