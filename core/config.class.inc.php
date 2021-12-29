@@ -854,10 +854,12 @@ class Config
 		'url_validation_pattern' => [
 			'type' => 'string',
 			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
-			'default' => '(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
-			//            SHEME.......... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH........................ GET............................................ ANCHOR............................
+			'default' => /** @lang RegExp */
+			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
+			// SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
 			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
-			// Origin of this regexp: http://www.php.net/manual/fr/function.preg-match.php#93824
+			// RegExp source: http://www.php.net/manual/fr/function.preg-match.php#93824
+			// Update with N°4515
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
@@ -1598,6 +1600,16 @@ class Config
 	public function Get($sPropCode)
 	{
 		return $this->m_aSettings[$sPropCode]['value'];
+	}
+
+	/**
+	 * @param string $sPropCode
+	 *
+	 * @return mixed
+	 */
+	public function GetDefault($sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['default'];
 	}
 
 	/**
