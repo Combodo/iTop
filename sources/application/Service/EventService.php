@@ -58,16 +58,13 @@ class EventService
 		});
 		self::$aEvents[$sEvent] = $aEventCallbacks;
 
-//		if (IssueLog::CanLog(IssueLog::LEVEL_DEBUG, LOG_EVENT_SERVICE_CHANNEL))
-//		{
-			$iTotalRegistrations = 0;
-			foreach (self::$aEvents as $aEvent)
-			{
-				$iTotalRegistrations += count($aEvent);
-			}
-			$sEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
-			IssueLog::Trace("Registering event '$sEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)", LOG_EVENT_SERVICE_CHANNEL);
-//		}
+		$iTotalRegistrations = 0;
+		foreach (self::$aEvents as $aEvent)
+		{
+			$iTotalRegistrations += count($aEvent);
+		}
+		$sEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
+		IssueLog::Trace("Registering event '$sEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)", LOG_EVENT_SERVICE_CHANNEL);
 		return $sId;
 	}
 
