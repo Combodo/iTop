@@ -1295,7 +1295,7 @@ EOF
 						}
 						if (strpos($sCallback, '::') === false)
 						{
-							$sEventListener = 'array($this, \''.$sCallback.'\')';
+							$sEventListener = '[$this, \''.$sCallback.'\']';
 						}
 						else
 						{
@@ -3574,7 +3574,7 @@ EOF;
 					}
 					else
 					{
-						$sEventSource = 'array("'.implode('", "', $aFilters).'")';
+						$sEventSource = '["'.implode('", "', $aFilters).'"]';
 					}
 
 					$aContexts = array();
@@ -3592,7 +3592,7 @@ EOF;
 					}
 					else
 					{
-						$sContext = 'array("'.implode('", "', $aContexts).'")';
+						$sContext = '["'.implode('", "', $aContexts).'"]';
 					}
 
 					$aHooks[] = array(

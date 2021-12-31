@@ -1231,6 +1231,24 @@
                     </state>
                 </states>
             </lifecycle>
+            <hooks>
+              <hook id="BeforeInsert">
+                <listeners>
+                  <listener id="OnBeforeInsertEvent">
+                    <callback>OnBeforeInsertEvent</callback>
+                    <priority>0</priority>
+                  </listener>
+                </listeners>
+              </hook>
+              <hook id="BeforeUpdate">
+                <listeners>
+                  <listener id="OnBeforeUpdateEvent">
+                    <callback>OnBeforeUpdateEvent</callback>
+                    <priority>0</priority>
+                  </listener>
+                </listeners>
+              </hook>
+            </hooks>
             <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
@@ -1581,28 +1599,26 @@
 		$this->UpdateImpactedItems();
 	}]]></code>
                 </method>
-                <method id="OnInsert">
+                <method id="OnBeforeInsertEvent">
                     <static>false</static>
-                    <access>protected</access>
-                    <type>Overload-DBObject</type>
+                    <access>public</access>
+                    <type>Internal</type>
                     <code><![CDATA[
-    protected function OnInsert()
+    public function OnBeforeInsertEvent(Combodo\iTop\Service\EventData $oEventData)
 	{
-        parent::OnInsert();
 		$this->ComputeImpactedItems();
 
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
 	}]]></code>
                 </method>
-                <method id="OnUpdate">
+                <method id="OnBeforeUpdateEvent">
                     <static>false</static>
-                    <access>protected</access>
-                    <type>Overload-DBObject</type>
+                    <access>public</access>
+                    <type>Internal</type>
                     <code><![CDATA[
-   	protected function OnUpdate()
+   	public function OnBeforeUpdateEvent(Combodo\iTop\Service\EventData $oEventData)
 	{
-        parent::OnUpdate();
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {

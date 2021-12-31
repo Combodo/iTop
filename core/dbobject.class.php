@@ -4,9 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Service\EventService;
-use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
 
 /**
  * All objects to be displayed in the application (either as a list or as details)
@@ -5735,9 +5735,8 @@ abstract class DBObject implements iDisplay
 	{
 		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
 		$aEventData['object'] = $this;
-		$aEventSources = array($this->m_sEventUniqId);
-		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass)
-		{
+		$aEventSources = [$this->m_sEventUniqId];
+		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
 			$aEventSources[] = $sClass;
 		}
 		EventService::FireEvent($sEvent, $aEventSources, $aEventData);
