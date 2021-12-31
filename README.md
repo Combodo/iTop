@@ -72,50 +72,57 @@ iTop development is sponsored, led and supported by [Combodo][0].
 
 ## Contributors
 
-We would like to give a special thank you to the people from the community who contributed to this project, including:
+We would like to give a special thank you 🤗 to the people from the community who contributed to this project, including:
 
 ### Names
- - Alves, David
- - Beck, Pedro
- - Bilger, Jean-François
- - Bostoen, Jeffrey
- - Cardoso, Anderson
- - Cassaro, Bruno
- - Casteleyn, Thomas
- - Castro, Randall Badilla
- - Colantoni, Maria Laura
- - Couronné, Guy
- - Dvořák, Lukáš
- - Goethals, Stefan
- - Gumble, David
- - Hippler, Lars
- - Khamit, Shamil
- - Kincel, Martin
- - Konečný, Kamil
- - Kunin, Vladimir
- - Lassiter, Dennis
- - Lazcano, Federico
- - Lucas, Jonathan
- - Malik, Remie
- - Rosenke, Stephan
- - Seki, Shoji
- - Shilov, Vladimir
- - Tulio, Marco
- - Turrubiates, Miguel
+
+- Alves, David
+- Beck, Pedro
+- Bilger, Jean-François
+- Bostoen, Jeffrey (a.k.a @jbostoen)
+- Cardoso, Anderson
+- Cassaro, Bruno
+- Casteleyn, Thomas (a.k.a @Hipska)
+- Castro, Randall Badilla
+- Colantoni, Maria Laura
+- Couronné, Guy
+- Dvořák, Lukáš
+- Goethals, Stefan
+- Gumble, David
+- Kaltefleiter, Lars (a.k.a @larhip)
+- Khamit, Shamil
+- Kincel, Martin
+- Konečný, Kamil
+- Kunin, Vladimir
+- Lassiter, Dennis
+- Lazcano, Federico
+- Lucas, Jonathan
+- Malik, Remie
+- Mindêllo de Andrade, Lucas (a.k.a @rokam)
+- Raenker, Martin
+- Rosenke, Stephan
+- Seki, Shoji
+- Shilov, Vladimir
+- Stukalov, Ilya (a.k.a @ilya-stukalov)
+- Tulio, Marco
+- Turrubiates, Miguel
 
 ### Aliases
- - chifu1234
- - cprobst
- - Karkoff1212
- - larhip
- - Laura
- - Purple Grape
- - Schlobinux
- - theBigOne
- - ulmerspatz
+
+- chifu1234
+- cprobst
+- DudekArtur
+- Karkoff1212
+- Laura
+- Purple Grape
+- Schlobinux
+- theBigOne
+- ulmerspatz
 
 ### Companies
- - Hardis
- - ITOMIG
- - Pimkie
+
+- [Hardis](https://www.hardis-group.com/)
+- [ITOMIG](https://www.itomig.de/)
+- [Pimkie](https://www.pimkie.com/)
+- [Super-Visions](https://www.super-visions.com/)
 

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -71,8 +71,8 @@ final class ItopCounter
 				'key_name'  => $sCounterName,
 				'namespace' => $sSelfClassName,
 			));
-			$oAttDef = MetaModel::GetAttributeDef('KeyValueStore', 'value');
-			$aAttToLoad = array('KeyValueStore' => array('value' => $oAttDef));
+			$oAttDef = MetaModel::GetAttributeDef(KeyValueStore::class, 'value');
+			$aAttToLoad = array(KeyValueStore::class => array('value' => $oAttDef));
 			$sSql = $oFilter->MakeSelectQuery(array(), array(), $aAttToLoad);
 			$hResult = mysqli_query($hDBLink, $sSql);
 			$aCounter = mysqli_fetch_array($hResult, MYSQLI_NUM);
@@ -200,7 +200,7 @@ final class ItopCounter
 /**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

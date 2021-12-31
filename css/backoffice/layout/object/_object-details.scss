@@ -1,0 +1,161 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-object-details--icon--size: 96px !default;
+$ibo-object-details--icon--spacing--as-medallion: 32px !default;
+$ibo-object-details--icon--bottom--as-medallion: -12px !default;
+$ibo-object-details--icon--background-color--as-medallion: $ibo-color-grey-100 !default;
+$ibo-object-details--icon--border--as-medallion: 2px solid $ibo-color-blue-grey-300 !default;
+$ibo-object-details--icon--border-radius--as-medallion: $ibo-border-radius-full !default;
+
+$ibo-object-details--icon--size--is-sticking: $ibo-panel--icon--size-as-medallion--is-sticking !default;
+$ibo-object-details--icon--spacing--as-medallion--is-sticking: $ibo-object-details--icon--spacing--as-medallion !default;
+
+$ibo-object-details--status-dot--size: 10px !default;
+$ibo-object-details--status-dot--spacing: $ibo-spacing-300 !default;
+$ibo-object-details--status-dot--border-radius: $ibo-border-radius-full !default;
+
+$ibo-object-details--tag--sibling-spacing: $ibo-spacing-400 !default;
+$ibo-object-details--tag--color: $ibo-panel--subtitle--color !default;
+
+$ibo-object-details--tag-icon--margin-right: 6px !default;
+$ibo-object-details--tag-icon--color: $ibo-color-grey-700 !default;
+
+$ibo-object-details--tag--separator--background-color: $ibo-color-grey-800 !default;
+$ibo-object-details--tag--separator--diameter: 5px !default;
+$ibo-object-details--tag--separator--margin-right: $ibo-spacing-400 !default;
+$ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !default;
+
+$ibo-object-details--header-right--padding-right--is-sticking: $ibo-spacing-300 !default;
+
+/* Parent block overloads (!= than blocks integrations) */
+.ibo-object-details {
+  &.ibo-has-icon.ibo-has-medallion-icon {
+    // Note: Direct child selector is mandatory, otherwise a panel within a panel with a medallion icon will have its icon as a medallion too (eg. dashboard in an object)
+    > .ibo-panel--header {
+      .ibo-panel--header-left {
+        margin-left: $ibo-object-details--icon--spacing--as-medallion;
+        padding-left: $ibo-object-details--icon--size;
+
+        .ibo-panel--icon {
+          bottom: calc(-1 * #{$ibo-object-details--icon--size} / 2 + #{$ibo-object-details--icon--bottom--as-medallion});
+          width: $ibo-object-details--icon--size;
+          height: $ibo-object-details--icon--size;
+          min-width: $ibo-object-details--icon--size;
+          min-height: $ibo-object-details--icon--size;
+        }
+
+        .ibo-panel--titles {
+          padding-left: $ibo-object-details--icon--spacing--as-medallion;
+        }
+      }
+    }
+  }
+
+  // Note: Direct child selector is mandatory, otherwise a panel within a panel will have be impacted (eg. n:n relations tabs)
+  > .ibo-panel--header {
+    .ibo-panel--subtitle {
+      @extend %ibo-text-truncated-with-ellipsis;
+    }
+  }
+}
+
+.ibo-object-details--status {
+  @extend %ibo-baseline-centered-content;
+}
+
+.ibo-object-details--status-dot {
+  @extend %ibo-fully-centered-content;
+
+  width: $ibo-object-details--status-dot--size;
+  height: $ibo-object-details--status-dot--size;
+  min-width: $ibo-object-details--status-dot--size;
+  min-height: $ibo-object-details--status-dot--size;
+
+  border-radius: $ibo-object-details--status-dot--border-radius;
+}
+
+.ibo-object-details--status-dot + .ibo-object-details--status-label {
+  margin-left: $ibo-object-details--status-dot--spacing;
+}
+
+.ibo-object-details--status + .ibo-object-details--object-class {
+  margin-left: 0.5rem;
+
+  &::before {
+    content: "(";
+  }
+
+  &::after {
+    content: ")";
+  }
+}
+
+.ibo-object-details--tag {
+  color: $ibo-object-details--tag--color;
+
+  &:not(:first-child) {
+    margin-left: $ibo-object-details--tag--sibling-spacing;
+  }
+}
+
+.ibo-object-details--tag-icon {
+  margin-right: $ibo-object-details--tag-icon--margin-right;
+  color: $ibo-object-details--tag-icon--color;
+}
+
+.ibo-object-details--object-class,
+.ibo-object-details--tag {
+  ~ .ibo-object-details--tag::before {
+    content: " ";
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: $ibo-object-details--tag--separator--margin-right;
+    width: $ibo-object-details--tag--separator--diameter;
+    height: $ibo-object-details--tag--separator--diameter;
+    border-radius: $ibo-object-details--tag--separator--border-radius;
+    background-color: $ibo-object-details--tag--separator--background-color;
+  }
+}
+
+/* Sticky header rules */
+.ibo-object-details.ibo-has-sticky-header {
+  // Note: Direct child selector is mandatory, otherwise a panel within a panel could be affected too when it shouldn't (eg. dashboard in an object, n:n panel)
+  > .ibo-panel--header {
+    /* All transitions should have a specific duration except for the header's "top" property otherwise it feels laggy */
+    /* - Impacted descendants (we don't put "*" as it can get shaky otherwise) */
+    .ibo-panel--header-left {
+      @extend %ibo-panel--base-transition;
+    }
+
+    /* Transition rules */
+    &.ibo-is-sticking {
+      .ibo-object-details--object-class {
+        display: none; /* Make space by hiding unnecessary info */
+      }
+    }
+  }
+
+  &.ibo-has-icon {
+    &.ibo-has-medallion-icon {
+      // Note: Direct child selector is mandatory, otherwise a panel within a panel with a medallion icon will have its icon as a medallion too (eg. dashboard in an object)
+      > .ibo-panel--header {
+        /* Transition rules */
+        &.ibo-is-sticking {
+          .ibo-panel--header-left {
+            padding-left: $ibo-object-details--icon--size--is-sticking;
+          }
+          .ibo-panel--header-right {
+            padding-right: $ibo-object-details--header-right--padding-right--is-sticking;
+          }
+
+          .ibo-panel--titles {
+            padding-left: $ibo-object-details--icon--spacing--as-medallion--is-sticking;
+          }
+        }
+      }
+    }
+  }
+}

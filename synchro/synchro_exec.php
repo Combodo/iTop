@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -30,9 +30,6 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/csvpage.class.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -45,7 +42,7 @@ function UsageAndExit($oP)
 	if ($bModeCLI)
 	{
 		$oP->p("USAGE:\n");
-		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources> [max_chunk_size=<limit the count of replica loaded in a single pass>]\n");		
+		$oP->p("php -q synchro_exec.php --auth_user=<login> --auth_pwd=<password> --data_sources=<comma_separated_list_of_data_sources> [--max_chunk_size=<limit the count of replica loaded in a single pass>] [--simulate=<If set to 1, then the synchro will not be executed, but the expected report will be produced>]\n");
 	}
 	else
 	{
@@ -92,12 +89,8 @@ catch(Exception $e)
 
 if (utils::IsModeCLI())
 {
-	// Next steps:
-	//   specific arguments: 'csvfile'
-	//   
 	$sAuthUser = ReadMandatoryParam($oP, 'auth_user', 'raw_data');
 	$sAuthPwd = ReadMandatoryParam($oP, 'auth_pwd', 'raw_data');
-	$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
 	if (UserRights::CheckCredentials($sAuthUser, $sAuthPwd))
 	{
 		UserRights::Login($sAuthUser); // Login & set the user's language
@@ -113,16 +106,15 @@ else
 {
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
-
-	$sDataSourcesList = utils::ReadParam('data_sources', null, true, 'raw_data');
-	
-	if ($sDataSourcesList == null)
-	{
-		UsageAndExit($oP);
-	}
 }
 
 $bSimulate = (utils::ReadParam('simulate', '0', true) == '1');
+$sDataSourcesList = ReadMandatoryParam($oP, 'data_sources', 'raw_data'); // May contain commas
+
+if ($sDataSourcesList == null)
+{
+	UsageAndExit($oP);
+}
 
 
 foreach(explode(',', $sDataSourcesList) as $iSDS)
@@ -142,6 +134,7 @@ foreach(explode(',', $sDataSourcesList) as $iSDS)
 		}
 		try
 		{
+			$oP->p("Working on ".utils::HtmlEntities($oSynchroDataSource->Get('name'))." (id=".utils::HtmlEntities($iSDS).")...");
 			$oSynchroExec = new SynchroExecution($oSynchroDataSource);
 			$oStatLog = $oSynchroExec->Process();
 			if ($bSimulate)

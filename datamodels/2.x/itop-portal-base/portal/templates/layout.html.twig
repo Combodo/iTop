@@ -26,33 +26,36 @@
 	<link rel="shortcut icon" href="{{ app['combodo.absolute_url'] ~ 'images/favicon.ico'|add_itop_version }}" />
 
 	{% block pPageStylesheets %}
-		{# First bootstrap core, lib themes, then bootstrap theme, portal adjustements #}
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/css/bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
-		{# - Bootstrap Datetime picker #}
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css'|add_itop_version }}" rel="stylesheet">
-		{# - Datatables #}
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/dataTables.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/fixedHeader.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/responsive.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/scroller.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/select.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/select.dataTables.min.css'|add_itop_version }}" rel="stylesheet">
+        {# First bootstrap core, lib themes, then bootstrap theme, portal adjustements #}
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/css/bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+        {# - Bootstrap Datetime picker #}
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/css/bootstrap-datetimepicker.min.css'|add_itop_version }}" rel="stylesheet">
+        {# - Datatables #}
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/dataTables.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/fixedHeader.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/responsive.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/scroller.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/select.bootstrap.min.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/css/select.dataTables.min.css'|add_itop_version }}" rel="stylesheet">
         {# - Font OpenSans #}
-		<link href="{{ app['combodo.absolute_url'] ~ 'css/font-open-sans/font-open-sans.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.absolute_url'] ~ 'css/font-open-sans/font-open-sans.css'|add_itop_version }}" rel="stylesheet">
         {# - Font Combodo #}
-		<link href="{{ app['combodo.absolute_url'] ~ 'css/font-combodo/font-combodo.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.absolute_url'] ~ 'css/font-combodo/font-combodo.css'|add_itop_version }}" rel="stylesheet">
         {# - Font awesome #}
         <link href="{{ app['combodo.absolute_url'] ~ 'css/font-awesome/css/all.min.css'|add_itop_version }}" rel="stylesheet">
-		{# - Misc libs #}
-		<link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/css/typeaheadjs.bootstrap.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.absolute_url'] ~ 'css/selectize.default.css'|add_itop_version }}" rel="stylesheet">
-		<link href="{{ app['combodo.absolute_url'] ~ 'css/magnific-popup.css'|add_itop_version }}" rel="stylesheet">
+        {# - Misc libs #}
+        <link href="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/css/typeaheadjs.bootstrap.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.absolute_url'] ~ 'css/selectize.default.css'|add_itop_version }}" rel="stylesheet">
+        <link href="{{ app['combodo.absolute_url'] ~ 'css/magnific-popup.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'css/c3.min.css'|add_itop_version }}" rel="stylesheet">
 		<link href="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/styles/obsidian.css'|add_itop_version }}" rel="stylesheet">
 		{# - Bootstrap theme #}
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.bootstrap|add_itop_version }}" rel="stylesheet" id="css_bootstrap_theme">
 		{# - Portal adjustments for BS theme #}
 		<link href="{{ app['combodo.portal.instance.conf'].properties.themes.portal|add_itop_version }}" rel="stylesheet" id="css_portal">
+		{# Tippy for tooltips and Popper for their placement #}
+		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy.css'|add_itop_version }}" rel="stylesheet">
+		<link href="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/animations/shift-away-subtle.css'|add_itop_version }}" rel="stylesheet">
 		{# UI Extensions CSS, in an undefined order #}
         {% if app['ui_extensions_helper'].css_files is defined %}
             {% for css_file in app['ui_extensions_helper'].css_files %}
@@ -85,55 +88,58 @@
 		{% if is_development_environment() %}
 				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.dev.js'|add_itop_version }}"></script>
 		{% else %}
-				<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.prod.min.js'|add_itop_version }}"></script>
-		{% endif %}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-ui-1.11.4.custom.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.magnific-popup.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.iframe-transport.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.fileupload.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/utils.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/toolbox.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/d3.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/c3.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/js/bootstrap.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-patches.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-portal-modal.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/latinise/latinise.min.js'|add_itop_version }}"></script>
-		{# Visible.js to check if an element is visible on screen #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-migrate.prod.min.js'|add_itop_version }}"></script>
+        {% endif %}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery-ui.custom.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.magnific-popup.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.iframe-transport.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.fileupload.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/utils.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/toolbox.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/d3.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/c3.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap/js/bootstrap.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-patches.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/bootstrap-portal-modal.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/latinise/latinise.min.js'|add_itop_version }}"></script>
+        {# Tippy for tooltips and Popper for their placement #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/@popperjs/core/dist/umd/popper.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/tippy.js/dist/tippy-bundle.umd.js'|add_itop_version }}"></script>
+        {# Visible.js to check if an element is visible on screen #}
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-visible/js/jquery.visible.min.js'|add_itop_version }}"></script>
         {# Base64.js #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-base64/js/jquery.base64.min.js'|add_itop_version }}"></script>
-		{# Moment.js with locales#}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/moment-with-locales.min.js'|add_itop_version }}"></script>
-		{# Datatables #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/jquery.dataTables.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.bootstrap.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.fixedHeader.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.responsive.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.scroller.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.select.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/datetime-moment.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/dataTables.accentNeutraliseForFilter.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/jquery-base64/js/jquery.base64.min.js'|add_itop_version }}"></script>
+        {# Moment.js with locales #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/moment-with-locales.min.js'|add_itop_version }}"></script>
+        {# Datatables #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net/js/jquery.dataTables.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/dataTables.bootstrap.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-fixedheader/js/dataTables.fixedHeader.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-responsive/js/dataTables.responsive.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-scroller/js/dataTables.scroller.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'node_modules/datatables.net-select/js/dataTables.select.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/datatables/js/datetime-moment.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/dataTables.accentNeutraliseForFilter.js'|add_itop_version }}"></script>
         {# Export for Datatables #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/export.js'|add_itop_version }}"></script>
-		{# CKEditor files for HTML WYSIWYG #}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/ckeditor.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/adapters/jquery.js'|add_itop_version }}"></script>
-		{# Hilighter for code snippets created with CKEditor#}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js'|add_itop_version }}"></script>
-		{# Date-time picker for Bootstrap #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'|add_itop_version }}"></script>
-		{# Typeahead files for autocomplete #}
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/js/typeahead.bundle.min.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/handlebars/js/handlebars.min-768ddbd.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/export.js'|add_itop_version }}"></script>
+        {# CKEditor files for HTML WYSIWYG #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/ckeditor.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/adapters/jquery.js'|add_itop_version }}"></script>
+        {# Hilighter for code snippets created with CKEditor #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/ckeditor/plugins/codesnippet/lib/highlight/highlight.pack.js'|add_itop_version }}"></script>
+        {# Date-time picker for Bootstrap #}
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js'|add_itop_version }}"></script>
+        {# Typeahead files for autocomplete #}
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/typeahead/js/typeahead.bundle.min.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'lib/handlebars/js/handlebars.min-768ddbd.js'|add_itop_version }}"></script>
 
-		<script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_leave_handler.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.portal.base.absolute_url'] ~ 'js/portal_leave_handler.js'|add_itop_version }}"></script>
 
-		{# Selectize for sets #}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/selectize.js'|add_itop_version }}"></script>
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.itop-set-widget.js'|add_itop_version }}"></script>
-		{# Form files #}
-		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_handler.js'|add_itop_version }}"></script>
+        {# Selectize for sets #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/selectize.js'|add_itop_version }}"></script>
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/jquery.itop-set-widget.js'|add_itop_version }}"></script>
+        {# Form files #}
+        <script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_handler.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/form_field.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/subform_field.js'|add_itop_version }}"></script>
 		<script type="text/javascript" src="{{ app['combodo.absolute_url'] ~ 'js/field_set.js'|add_itop_version }}"></script>
@@ -414,13 +420,20 @@
 				{
 					return '{{ app['url_generator'].generate('p_session_message_add')|raw }}';
 				};
-				// Helper to add a parameter to an url
+				/**
+				 * @param sUrl {string} The URL to append the new param to
+				 * @param sParamName {string} Name of the parameter
+				 * @param sParamValue {string} Value of the param, needs to be already URL encoded
+				 * @return {string} The sUrl parameters with the sParamName / sParamValue append at the right place
+				 * @deprecated 3.0.0 N°4176
+				 */
 				var AddParameterToUrl = function(sUrl, sParamName, sParamValue)
 				{
 					sUrl += (sUrl.split('?')[1] ? '&':'?') + sParamName + '=' + sParamValue;
 					return sUrl;
 				};
 				// Test is sString is a valid JSON string
+				// TODO 3.0.0: Move to CombodoGlobalToolbox and deprecate this one
 				var IsJSONString = function(sString)
 				{
 					try {
@@ -430,10 +443,12 @@
 					}
 					return true;
 				};
+				// TODO 3.0.0: Move to CombodoPortalToolbox and deprecate this one
 				var GetContentLoaderTemplate = function()
 				{
 					return '<div class="content_loader"><div class="icon glyphicon glyphicon-refresh"></div><div class="message">{{ 'Page:PleaseWait'|dict_s }}</div></div>';
 				};
+				// TODO 3.0.0: Move to CombodoPortalToolbox and deprecate this one
 				var ShowLoginDialog = function()
 				{
                     var oModalElem = $('#modal-for-alert').clone();
@@ -446,6 +461,7 @@
                     oModalElem.appendTo('body');
                     oModalElem.modal('show');
 				};
+				// TODO 3.0.0: Move to CombodoPortalToolbox and deprecate this one
 				var ShowErrorDialog = function(sBody, sTitle)
 				{
 				    if(sTitle === undefined)
@@ -462,9 +478,12 @@
                     oModalElem.modal('show');
 				};
 			{% endblock %}
-			
-			$(document).ready(function(){
-				{% block pPageReadyScripts %}
+
+            $(document).ready(function ()
+            {
+                const oBodyElem = $('body');
+
+                {% block pPageReadyScripts %}
 					// Add proprietary header to identify our XHR calls
 					$(document).ajaxSend(function(oEvent, oXHR, oOptions) {
 						oXHR.setRequestHeader('X-Combodo-Ajax', 'true');
@@ -479,6 +498,10 @@
                         {
                             ShowErrorDialog('{{ 'UI:ObjectDoesNotExist'|dict_s|escape('js') }}', '{{ 'Error:HTTP:404'|dict_s|escape('js') }}');
                         }
+                      else if(oXHR.status === 0 && oXHR.readyState === 0)
+                        {
+                            //DO NOTHING the ajax call has been aborted
+                        }
                         else if(oXHR.responseText !== undefined && IsJSONString(oXHR.responseText) === true)
                         {
                             var oData = JSON.parse(oXHR.responseText);
@@ -486,21 +509,41 @@
                             if( (oData.error_message !== undefined) && (oData.error_title !== undefined) )
                             {
                                 ShowErrorDialog(oData.error_message, oData.error_title);
-                            }
-                            else
+                            } else
                             {
                                 ShowErrorDialog();
                             }
-                        }
-                        else
+                        } else
                         {
                             ShowErrorDialog();
                         }
-					});
-					
-					// Initialize confirmation message handler when a form with touched fields is closed
-					$('body').portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
-				{% endblock %}
+                    });
+                // All processing that should be done on an ajax return
+                $(document).ajaxSuccess(function ()
+                {
+                    // Init tooltips from async. markup, small timeout to allow markup to be built if necessary
+                    setTimeout(function ()
+                    {
+                        CombodoTooltip.InitAllNonInstantiatedTooltips();
+                    }, 1000);
+                });
+
+                // Enable tooltips based on existing HTML markup, for markup added dynamically after DOM ready (AJAX, ...) see .ajaxSuccess()...
+                CombodoTooltip.InitAllNonInstantiatedTooltips();
+                // ... object form which are handled with the following
+                oBodyElem.on('form_built', function (oEvent)
+                {
+                    CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target), true);
+                });
+                // ... refresh of the dataTables
+                oBodyElem.on('init.dt draw.dt', function (oEvent)
+                {
+                    CombodoTooltip.InitAllNonInstantiatedTooltips($(oEvent.target), true);
+                });
+
+                // Initialize confirmation message handler when a form with touched fields is closed
+                oBodyElem.portal_leave_handler({'message': '{{ 'Portal:Form:Close:Warning'|dict_s }}'});
+                {% endblock %}
 			});
 		</script>
 	{% endblock %}

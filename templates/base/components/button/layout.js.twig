@@ -1,0 +1,10 @@
+{% if (oUIBlock.GetOnClickJsCode() is not empty) or (oUIBlock.GetJsCode() is not empty) %}
+{% if oUIBlock.GetOnClickJsCode() is not empty %}
+$('#{{ oUIBlock.GetId() }}').on('click', function () {
+    {{ oUIBlock.GetOnClickJsCode()|raw }}
+});
+{% endif %}
+{% if oUIBlock.GetJsCode() is not empty %}
+{{ oUIBlock.GetJsCode()|raw }}
+{% endif %}
+{% endif %}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,8 @@
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 /**
  * This class manages the special template format used internally to build the iTop web pages
+ *
+ * @deprecated 3.0.0
  */
 class DisplayTemplate
 {
@@ -29,14 +31,15 @@ class DisplayTemplate
 	
 	public function __construct($sTemplate)
 	{
-		$this->m_aTags = array (
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		$this->m_aTags = array(
 			'itopblock',
 			'itopcheck',
 			'itoptabs',
 			'itoptab',
 			'itoptoggle',
 			'itopstring',
-			'sqlblock'
+			'sqlblock',
 		);
 		$this->m_sTemplate = $sTemplate;
 	}

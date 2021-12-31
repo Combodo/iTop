@@ -1,22 +1,7 @@
 <?php
-/**
- * Copyright (C) 2010-2018 Combodo SARL
- *
- * This file is part of iTop.
- *
- *  iTop is free software; you can redistribute it and/or modify
- *  it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
- *
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
@@ -31,6 +16,12 @@ use AttributeFriendlyName;
 use AttributeTagSet;
 use CMDBObjectSet;
 use Combodo\iTop\Application\Search\CriterionConversion\CriterionToSearchForm;
+use Combodo\iTop\Application\UI\Base\Component\Form\Form;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use CoreException;
 use DBObjectSearch;
 use DBObjectSet;
@@ -42,9 +33,9 @@ use IssueLog;
 use MetaModel;
 use MissingQueryArgument;
 use TrueExpression;
+use UserRights;
 use utils;
 use WebPage;
-use UserRights;
 
 class SearchForm
 {
@@ -54,13 +45,35 @@ class SearchForm
 	 * @param array $aExtraParams
 	 *
 	 * @return string
-	 * @throws \CoreException
-	 * @throws \DictExceptionMissingString
-	 * @throws \Exception
 	 */
 	public function GetSearchForm(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
-		$sHtml = '';
+		$oPage->AddUiBlock($this->GetSearchFormUIBlock($oPage, $oSet, $aExtraParams));
+		return '';
+	}
+
+	public function GetSearchFormUIBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
+	{
+		$oUiBlock =  new UIContentBlock();
+		$oUiBlock->AddMultipleJsFilesRelPaths([
+			'node_modules/scrollmagic/scrollmagic/minified/ScrollMagic.min.js',
+			'js/searchformforeignkeys.js',
+			'js/search/search_form_handler.js',
+			'js/search/search_form_handler_history.js',
+			'js/search/search_form_criteria.js',
+			'js/search/search_form_criteria_raw.js',
+			'js/search/search_form_criteria_string.js',
+			'js/search/search_form_criteria_external_field.js',
+			'js/search/search_form_criteria_numeric.js',
+			'js/search/search_form_criteria_enum.js',
+			'js/search/search_form_criteria_tag_set.js',
+			'js/search/search_form_criteria_external_key.js',
+			'js/search/search_form_criteria_hierarchical_key.js',
+			'js/search/search_form_criteria_date_abstract.js',
+			'js/search/search_form_criteria_date.js',
+			'js/search/search_form_criteria_date_time.js',
+		]);
+
 		$oAppContext = new ApplicationContext();
 		$sClassName = $oSet->GetFilter()->GetClass();
 		$aListParams = array();
@@ -71,77 +84,59 @@ class SearchForm
 		}
 
 		// Simple search form
-		if (isset($aExtraParams['currentId']))
-		{
-			$sSearchFormId = $aExtraParams['currentId'];
-		}
-		else
-		{
-			$iSearchFormId = $oPage->GetUniqueId();
+		if (isset($aExtraParams['currentId'])) {
+			$sSearchFormId = 'sf_'.$aExtraParams['currentId'];
+		} else {
+			$iSearchFormId = utils::GetUniqueId();
 			$sSearchFormId = 'SimpleSearchForm'.$iSearchFormId;
-			$sHtml .= "<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">\n";
+			$oUiBlock->AddHtml("<div id=\"ds_$sSearchFormId\" class=\"mini_tab{$iSearchFormId}\">");
 			$aListParams['currentId'] = "$iSearchFormId";
 		}
 		// Check if the current class has some sub-classes
-		if (isset($aExtraParams['baseClass']))
-		{
+		if (isset($aExtraParams['baseClass'])) {
 			$sRootClass = $aExtraParams['baseClass'];
-		}
-		else
-		{
+		} else {
 			$sRootClass = $sClassName;
 		}
 		//should the search be opened on load?
-		if (isset($aExtraParams['open']))
-		{
+		if (isset($aExtraParams['open'])) {
 			$bOpen = $aExtraParams['open'];
-		}
-		else
-		{
+		} else {
 			$bOpen = true;
 		}
 
 		$sJson = utils::ReadParam('json', '', false, 'raw_data');
-		if (!empty($sJson))
-		{
+		if (!empty($sJson)) {
 			$aListParams['json'] = json_decode($sJson, true);
 		}
 
-		if (!isset($aExtraParams['result_list_outer_selector']))
-		{
-			if (isset($aExtraParams['table_id']))
-			{
+		if (!isset($aExtraParams['result_list_outer_selector'])) {
+			if (isset($aExtraParams['table_id'])) {
 				$aExtraParams['result_list_outer_selector'] = $aExtraParams['table_id'];
-			}
-			else
-			{
+			} else {
 				$aExtraParams['result_list_outer_selector'] = "search_form_result_{$sSearchFormId}";
 			}
 		}
 
-		if (isset($aExtraParams['search_header_force_dropdown']))
-		{
+		$sContext = $oAppContext->GetForLink();
+		$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
+		$sOuterSelector = $aExtraParams['result_list_outer_selector'];
+
+		if (isset($aExtraParams['search_header_force_dropdown'])) {
 			$sClassesCombo = $aExtraParams['search_header_force_dropdown'];
-		}
-		else
-		{
+		} else {
 			$aSubClasses = MetaModel::GetSubclasses($sRootClass);
-			if (count($aSubClasses) > 0)
-			{
+			if (count($aSubClasses) > 0) {
 				$aOptions = array();
 				$aOptions[MetaModel::GetName($sRootClass)] = "<option value=\"$sRootClass\">".MetaModel::GetName($sRootClass)."</options>\n";
-				foreach($aSubClasses as $sSubclassName)
-				{
-					if (UserRights::IsActionAllowed($sSubclassName, UR_ACTION_READ))
-					{
+				foreach ($aSubClasses as $sSubclassName) {
+					if (UserRights::IsActionAllowed($sSubclassName, UR_ACTION_READ)) {
 						$aOptions[MetaModel::GetName($sSubclassName)] = "<option value=\"$sSubclassName\">".MetaModel::GetName($sSubclassName)."</options>\n";
 					}
 				}
 				$aOptions[MetaModel::GetName($sClassName)] = "<option selected value=\"$sClassName\">".MetaModel::GetName($sClassName)."</options>\n";
 				ksort($aOptions);
-				$sContext = $oAppContext->GetForLink();
-				$sJsonExtraParams = htmlentities(json_encode($aListParams), ENT_QUOTES);
-				$sOuterSelector = $aExtraParams['result_list_outer_selector'];
+
 				$sClassesCombo = "<select name=\"class\" onChange=\"ReloadSearchForm('$sSearchFormId', this.value, '$sRootClass', '$sContext', '$sOuterSelector', $sJsonExtraParams)\">\n".implode('',
 						$aOptions)."</select>\n";
 			}
@@ -160,37 +155,60 @@ class SearchForm
 		else
 		{
 			$mSubmitParam = utils::GetConfig()->Get('high_cardinality_classes');
-			if (is_array($mSubmitParam))
-			{
-				if (in_array($sClassName, $mSubmitParam))
-				{
+			if (is_array($mSubmitParam)) {
+				if (in_array($sClassName, $mSubmitParam)) {
 					$bAutoSubmit = false;
 				}
 			}
 		}
+		$bShowObsoleteData = \appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));// ? What to do when true == utils::IsArchiveMode()
+
 
 		$sAction = (isset($aExtraParams['action'])) ? $aExtraParams['action'] : utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
-		$sStyle = ($bOpen == 'true') ? '' : 'closed';
-		$sStyle .= ($bAutoSubmit === true) ? '' : ' no_auto_submit';
-		$sHtml .= "<form id=\"fs_{$sSearchFormId}\" action=\"{$sAction}\" class=\"{$sStyle}\">\n"; // Don't use $_SERVER['SCRIPT_NAME'] since the form may be called asynchronously (from ajax.php)
-		$sHtml .= "<h2 class=\"sf_title\"><span class=\"sft_long\">" . Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo) . "</span><span class=\"sft_short\">" . Dict::S('UI:SearchToggle') . "</span>";
-		$sHtml .= "<a class=\"sft_toggler fas fa-caret-down pull-right\" href=\"#\" title=\"" . Dict::S('UI:Search:Toggle') . "\"></a>";
-		$sHtml .= "<span class=\"pull-right\">";
-		$sHtml .= "<span class=\"sfobs_hint pull-right\">" . Dict::S('UI:Search:Obsolescence:DisabledHint') . "</span>";
-		$sHtml .= "<br class='clearboth' />";
-		$sHtml .= "<span class=\"sft_hint pull-right\">" . Dict::S('UI:Search:AutoSubmit:DisabledHint') . "</span>";
-		$sHtml .= "</span>";
-		$sHtml .= "<br class='clearboth' />";
-		$sHtml .= "</h2>\n";
-		$sHtml .= "<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>\n";
-		$sHtml .= "<div id=\"fs_{$sSearchFormId}_criterion_outer\">\n</div>\n";
-		$sHtml .= "</form>\n";
-
-		if (isset($aExtraParams['query_params']))
-		{
-			$aArgs = $aExtraParams['query_params'];
+		$aCSSClasses = ["ibo-search-form"];
+		if ($bOpen != 'true') {
+			$aCSSClasses[] = 'closed';
 		}
-		else
+		if ($bAutoSubmit != true) {
+			$aCSSClasses[] = 'no_auto_submit';
+		}
+		$oForm = FormUIBlockFactory::MakeStandard();
+		$oForm->SetAction($sAction);
+		$oForm->AddSubBlock(new Html(Dict::Format('UI:SearchFor_Class_Objects', $sClassesCombo)));
+
+		$oUiSearchBlock = new Panel('', [], Panel::ENUM_COLOR_SCHEME_CYAN, $sSearchFormId);
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"])
+			->AddTitleBlock($oForm);
+		$oUiBlock->AddSubBlock($oUiSearchBlock);
+		$sHtml = "";
+		if (!$bShowObsoleteData) {
+			$sShowObsoleteLabel = Dict::S('UI:Search:Obsolescence:DisabledHint');
+			$sHtml .= "<span class=\"pull-right\">";
+			$sHtml .= "<span class=\"sfobs_hint pull-right\"><span class=\"fas fa-eye-slash fa-1x\" aria-label=\"$sShowObsoleteLabel\" data-tooltip-content=\"$sShowObsoleteLabel\"></span></span>";
+		}
+		if ($bAutoSubmit === false) {
+			$sAutoSubmit = Dict::S('UI:Search:AutoSubmit:DisabledHint');
+		$sHtml .= "<span class=\"sft_hint pull-right\"><span class=\"fa-stack fa-fw\" aria-label=\"$sAutoSubmit\" data-tooltip-content=\"$sAutoSubmit\"><span class=\"fas fa-sync-alt fa-stack-1x\"></span><span class=\"fas fa-slash fa-stack-1x\"></span
+></span></span>";
+			$sHtml .= "</span>";
+		}
+		$sHtml .= "<br class='clearboth' />";
+		$oUiSearchBlock->AddToolbarBlock(new Html($sHtml));
+
+
+		$oFormSearch = new Form("fs_".$sSearchFormId);
+		$oFormSearch->SetAction($sAction)
+			->AddCSSClasses($aCSSClasses);
+		$oUiSearchBlock->AddSubBlock($oFormSearch);
+		$oFormSearch->AddSubBlock(InputUIBlockFactory::MakeForHidden("class", $sClassName));
+		$oFormSearch->AddHtml("<div id=\"fs_{$sSearchFormId}_message\" class=\"sf_message header_message\"></div>");//class sf_message header_message
+
+		$oCriterionBlock = new UIContentBlock("fs_{$sSearchFormId}_criterion_outer", ["sf_criterion_area ibo-criterion-area"]);
+		$oFormSearch->AddSubBlock($oCriterionBlock);
+
+		if (isset($aExtraParams['query_params'])) {
+			$aArgs = $aExtraParams['query_params'];
+		} else
 		{
 			$aArgs = array();
 		}
@@ -203,8 +221,7 @@ class SearchForm
 		}
 
 		$bUseApplicationContext = true;
-		if (isset($aExtraParams['selection_mode']) && ($aExtraParams['selection_mode']))
-		{
+		if (isset($aExtraParams['selection_mode']) && ($aExtraParams['selection_mode'])) {
 			// Don't use application context for selections
 			$bUseApplicationContext = false;
 		}
@@ -214,60 +231,66 @@ class SearchForm
 		$aCriterion = $this->GetCriterion($oSearch, $aFields, $aArgs, $bIsRemovable, $bUseApplicationContext);
 		$aClasses = $oSearch->GetSelectedClasses();
 		$sClassAlias = '';
-		foreach($aClasses as $sAlias => $sClass)
-		{
+		foreach ($aClasses as $sAlias => $sClass) {
 			$sClassAlias = $sAlias;
 		}
 
 		$oBaseSearch = $oSearch->DeepClone();
-		if ($oSearch instanceof DBObjectSearch)
-		{
+		if ($oSearch instanceof DBObjectSearch) {
 			$oBaseSearch->ResetCondition();
 		}
 		$sBaseOQL = str_replace(' WHERE 1', '', $oBaseSearch->ToOQL());
 
-		if (!isset($aExtraParams['table_inner_id']))
-		{
+		if (!isset($aExtraParams['table_inner_id'])) {
 			$aListParams['table_inner_id'] = "table_inner_id_{$sSearchFormId}";
 		}
-
-		if (isset($aExtraParams['result_list_outer_selector']))
-		{
-			$sDataConfigListSelector = $aExtraParams['result_list_outer_selector'];
-		}
-		else
-		{
-			$sDataConfigListSelector = $aExtraParams['table_inner_id'];
-		}
+		$bSubmitOnLoad = (isset($aExtraParams['submit_on_load'])) ? $aExtraParams['submit_on_load'] : true;
 
 		$sDebug = utils::ReadParam('debug', 'false', false, 'parameter');
-		if ($sDebug == 'true')
-		{
+		if ($sDebug == 'true') {
 			$aListParams['debug'] = 'true';
 		}
 
-		$aDaysMin = array(Dict::S('DayOfWeek-Sunday-Min'), Dict::S('DayOfWeek-Monday-Min'), Dict::S('DayOfWeek-Tuesday-Min'), Dict::S('DayOfWeek-Wednesday-Min'),
-			Dict::S('DayOfWeek-Thursday-Min'), Dict::S('DayOfWeek-Friday-Min'), Dict::S('DayOfWeek-Saturday-Min'));
-		$aMonthsShort = array(Dict::S('Month-01-Short'), Dict::S('Month-02-Short'), Dict::S('Month-03-Short'), Dict::S('Month-04-Short'), Dict::S('Month-05-Short'), Dict::S('Month-06-Short'),
-			Dict::S('Month-07-Short'), Dict::S('Month-08-Short'), Dict::S('Month-09-Short'), Dict::S('Month-10-Short'), Dict::S('Month-11-Short'), Dict::S('Month-12-Short'));
+		$aDaysMin = array(
+			Dict::S('DayOfWeek-Sunday-Min'),
+			Dict::S('DayOfWeek-Monday-Min'),
+			Dict::S('DayOfWeek-Tuesday-Min'),
+			Dict::S('DayOfWeek-Wednesday-Min'),
+			Dict::S('DayOfWeek-Thursday-Min'),
+			Dict::S('DayOfWeek-Friday-Min'),
+			Dict::S('DayOfWeek-Saturday-Min'),
+		);
+		$aMonthsShort = array(
+			Dict::S('Month-01-Short'),
+			Dict::S('Month-02-Short'),
+			Dict::S('Month-03-Short'),
+			Dict::S('Month-04-Short'),
+			Dict::S('Month-05-Short'),
+			Dict::S('Month-06-Short'),
+			Dict::S('Month-07-Short'),
+			Dict::S('Month-08-Short'),
+			Dict::S('Month-09-Short'),
+			Dict::S('Month-10-Short'),
+			Dict::S('Month-11-Short'),
+			Dict::S('Month-12-Short'),
+		);
 
 		$sDateTimeFormat = \AttributeDateTime::GetFormat()->ToDatePicker();
 		$iDateTimeSeparatorPos = strpos($sDateTimeFormat, ' ');
 		$sDateFormat = substr($sDateTimeFormat, 0, $iDateTimeSeparatorPos);
 		$sTimeFormat = substr($sDateTimeFormat, $iDateTimeSeparatorPos + 1);
 
-		$bShowObsoleteData = \appUserPreferences::GetPref('show_obsolete_data', MetaModel::GetConfig()->Get('obsolescence.show_obsolete_data'));// ? What to do when true == utils::IsArchiveMode()
-
 		$aSearchParams = array(
-			'criterion_outer_selector' => "#fs_{$sSearchFormId}_criterion_outer",
+			'criterion_outer_selector'   => "#fs_{$sSearchFormId}_criterion_outer",
 			'result_list_outer_selector' => "#{$aExtraParams['result_list_outer_selector']}",
-			'data_config_list_selector' => "#{$sDataConfigListSelector}",
-			'endpoint' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php',
-			'init_opened' => $bOpen,
-			'auto_submit' => $bAutoSubmit,
-			'list_params' => $aListParams,
-			'show_obsolete_data' => $bShowObsoleteData,
-			'search' => array(
+			'data_config_list_selector'  => "#{$aExtraParams['result_list_outer_selector']}",
+			'endpoint'                   => utils::GetAbsoluteUrlAppRoot().'pages/ajax.searchform.php?'.$sContext,
+			'init_opened'                => $bOpen,
+			'submit_on_load'             => $bSubmitOnLoad,
+			'auto_submit'                => $bAutoSubmit,
+			'list_params'                => $aListParams,
+			'show_obsolete_data'         => $bShowObsoleteData,
+			'search'                     => array(
 				'has_hidden_criteria' => (array_key_exists('hidden_criteria', $aListParams) && !empty($aListParams['hidden_criteria'])),
 				'fields' => $aFields,
 				'criterion' => $aCriterion,
@@ -289,9 +312,8 @@ class SearchForm
 
 		$oPage->add_ready_script('$("#fs_'.$sSearchFormId.'").search_form_handler('.json_encode($aSearchParams).');');
 
-		return $sHtml;
+		return $oUiBlock;
 	}
-
     /**
      * @param \DBObjectSet $oSet
      *
@@ -471,7 +493,7 @@ class SearchForm
 				$aAllowedValues = array();
 				while ($oObject = $oSet->Fetch())
 				{
-					$aAllowedValues[$oObject->GetKey()] = $oObject->GetName();
+					$aAllowedValues[] = ["value"=>$oObject->GetKey(), "label" => $oObject->GetName()];
 				}
 				return array('values' => $aAllowedValues);
 			}
@@ -508,8 +530,7 @@ class SearchForm
 				}
 			}
 		}
-
-		$aAllowedValues = $oAttrDef->GetAllowedValues();
+		$aAllowedValues = $oAttrDef->GetAllowedValuesForSelect();
 
 		return array('values' => $aAllowedValues);
 	}

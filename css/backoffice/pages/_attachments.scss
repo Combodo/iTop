@@ -1,0 +1,80 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-attachment--datatable--icon-preview--max-height: 44px !default;
+$ibo-attachment--datatable--icon-preview--max-width: $ibo-attachment--datatable--icon-preview--max-height !default;
+
+$ibo-attachment--datatable--line-height: $ibo-attachment--datatable--icon-preview--max-height !default;
+
+$ibo-attachment--datatable--first-column--line-height: 0px !default;
+
+$ibo-attachment--drag-in--border: 2px $ibo-color-grey-400 dashed !default;
+$ibo-attachment--upload-file--drop-zone-hint--max-height: 200px !default;
+$ibo-attachment--upload-file--drop-zone-hint--margin: 22px $ibo-spacing-0 !default;
+$ibo-attachment--upload-file--drop-zone-hint--color: $ibo-color-grey-700 !default;
+$ibo-attachment--upload-file--drop-zone-hint--image--margin-bottom: 5px !default;
+
+$ibo-attachment--tab-header--drop-in--background-color: $ibo-color-blue-200 !default;
+$ibo-attachment--tab-header--drop-in--color: $ibo-color-blue-800 !default;
+$ibo-attachment--tab-header--drop-in--icon--padding-left: $ibo-spacing-300 !default;
+$ibo-attachment--tab-header--drop-in--icon--content: "\f382" !default;
+$ibo-attachment--tab-header--drop-in--icon--color: $ibo-color-blue-600 !default;
+
+#ibo-attachment--upload-file{
+  .ibo-input-file-select--container{
+    display: inline-block;
+  }
+}
+
+.ibo-attachment--datatable--icon-preview{
+  max-height: $ibo-attachment--datatable--icon-preview--max-height;
+  max-width: $ibo-attachment--datatable--icon-preview--max-width;
+}
+.ibo-attachment--datatable tbody tr td {
+  line-height: $ibo-attachment--datatable--line-height;
+}
+.ibo-attachment--datatable tbody tr td:nth-child(1){
+  line-height: $ibo-attachment--datatable--first-column--line-height;
+}
+
+.ibo-attachment--upload-file--drop-zone-hint{
+  display: none;
+}
+
+.ibo-drag-in {
+  border: $ibo-attachment--drag-in--border;
+  .ibo-attachment--upload-file--drop-zone-hint {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: $ibo-attachment--upload-file--drop-zone-hint--max-height;
+    margin: $ibo-attachment--upload-file--drop-zone-hint--margin;
+    color: $ibo-attachment--upload-file--drop-zone-hint--color;
+    > svg{
+      margin-bottom: $ibo-attachment--upload-file--drop-zone-hint--image--margin-bottom;
+    }
+  }
+
+  #ibo-attachment--upload-file--upload-button-container {
+    display: none;
+  }
+}
+
+.ibo-tab-container--tab-header{
+  &.ibo-drag-in{
+    border: none;
+    background-color: $ibo-attachment--tab-header--drop-in--background-color;
+    color: $ibo-attachment--tab-header--drop-in--color;
+    > a::after{
+      padding-left: $ibo-attachment--tab-header--drop-in--icon--padding-left;
+      font-family: "Font Awesome 5 Free";
+      content: $ibo-attachment--tab-header--drop-in--icon--content;
+      font-weight: 900;
+      color: $ibo-color-blue-600;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     https://www.combodo.com/documentation/combodo-software-license.html
  *
  */
@@ -9,6 +9,7 @@ namespace Combodo\iTop\Cas;
 
 use AbstractLoginFSMExtension;
 use CMDBObject;
+use Combodo\iTop\Application\Helper\Session;
 use DBObjectSearch;
 use DBObjectSet;
 use Dict;
@@ -40,34 +41,34 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnStart(&$iErrorCode)
 	{
-		unset($_SESSION['phpCAS']);
+		Session::Unset('phpCAS');
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if (!isset($_SESSION['login_mode']) || ($_SESSION['login_mode'] == 'cas'))
+		if (Session::Get('login_mode') == 'cas')
 		{
 			static::InitCASClient();
 			if (phpCAS::isAuthenticated())
 			{
-				$_SESSION['login_mode'] = 'cas';
-				$_SESSION['auth_user'] = phpCAS::getUser();
-				unset($_SESSION['login_will_redirect']);
+				Session::Set('login_mode', 'cas');
+				Session::Set('auth_user', phpCAS::getUser());
+				Session::Unset('login_will_redirect');
 			}
 			else
 			{
-				if (!isset($_SESSION['login_will_redirect']))
+				if (!Session::IsSet('login_will_redirect'))
 				{
-					$_SESSION['login_will_redirect'] = true;
+					Session::Set('login_will_redirect', true);
 				}
 				else
 				{
-					unset($_SESSION['login_will_redirect']);
+					Session::Unset('login_will_redirect');
 					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
 					return LoginWebPage::LOGIN_FSM_ERROR;
 				}
-				$_SESSION['login_mode'] = 'cas';
+				Session::Set('login_mode', 'cas');
 				phpCAS::forceAuthentication(); // Redirect to CAS and exit
 			}
 		}
@@ -76,16 +77,16 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (Session::Get('login_mode') == 'cas')
 		{
-			if (!isset($_SESSION['auth_user']))
+			if (!Session::IsSet('auth_user'))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
 			if (Config::Get('cas_user_synchro' ))
 			{
-				self::DoUserProvisioning($_SESSION['auth_user']);
+				self::DoUserProvisioning(Session::Get('auth_user'));
 			}
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -93,24 +94,24 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (Session::Get('login_mode') == 'cas')
 		{
-			$sAuthUser = $_SESSION['auth_user'];
+			$sAuthUser = Session::Get('auth_user');
 			if (!LoginWebPage::CheckUser($sAuthUser))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_NOTAUTHORIZED;
 				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
+			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (Session::Get('login_mode') == 'cas')
 		{
-			unset($_SESSION['phpCAS']);
+			Session::Unset('phpCAS');
 			if ($iErrorCode != LoginWebPage::EXIT_CODE_MISSINGLOGIN)
 			{
 				$oLoginWebPage = new LoginWebPage();
@@ -123,9 +124,9 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'cas')
+		if (Session::Get('login_mode') == 'cas')
 		{
-			$_SESSION['can_logoff'] = true;
+			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -496,7 +497,7 @@ class CASUserProvisioning
 		}
 
 		// Now synchronize the profiles
-		LoginWebPage::SynchroniseProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
+		LoginWebPage::SynchronizeProfiles($oUser, $aProfiles, 'CAS/LDAP Synchro');
 
 		phpCAS::log("Info: the user '".$oUser->GetName()."' (id=".$oUser->GetKey().") now has the following profiles: '".implode("', '", $aProfiles)."'.");
 		if ($oUser->IsModified())

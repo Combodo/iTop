@@ -1,0 +1,37 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+{% if not aPage.isPrintable %}
+$('#{{ oUIBlock.GetId() }}').tab_container({'remote_tab_load_dict': '{{ 'UIBlock:TabContainer:RemoteTabLoad'|dict_s|escape('js') }}'});
+{% else %}
+
+function refresh_status() {
+    var loaded = true;
+    $('#{{ oUIBlock.GetId() }}').find('.ibo-tab-container--tab-container').each(function (i, elt) {
+        if ($(elt).attr('data-status') != 'loaded')
+        {
+            loaded = false;
+        }
+    });
+    if (loaded)
+    {
+        $('#{{ oUIBlock.GetId() }}').attr('data-status', 'loaded');
+    }
+}
+
+{% for oTab in oUIBlock.GetSubBlocks() %}
+oHiddeableChapters['tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}'] = '{{ oTab.GetTitle()|escape('js') }}';
+{% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
+$.post('{{ oTab.GetUrl()|raw }}', {printable: '1'}, function (data) {
+    $('#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }} > .printable-tab-content').append(data);
+    $('#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}').attr('data-status', 'loaded');
+    refresh_status();
+});
+{% else %}
+$('#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}').attr('data-status', 'loaded');
+{% endif %}
+{% endfor %}
+refresh_status();
+{% endif %}
+
+

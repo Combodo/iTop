@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,7 @@
  *
  * @since 2.7.0
  */
-var CombodoPortalToolbox = {
+const CombodoPortalToolbox = {
 	/**
 	 * Close all opened modals on the page
 	 */
@@ -80,7 +80,7 @@ var CombodoPortalToolbox = {
 		);
 
 		// Compute modal selector
-		var oSelectorElem = null;
+		let oSelectorElem = null;
 		switch(typeof oOptions.base_modal.selector)
 		{
 			case 'string':
@@ -96,17 +96,21 @@ var CombodoPortalToolbox = {
 				{
 					console.warn('Could not open modal dialog as the select option was malformed: ', oOptions.content);
 				}
-				break;
+				return false;
 		}
 
 		// Get modal element by either
-		var oModalElem = null;
+		let oModalElem = null;
 		// - Create a new modal from template
 		//   Note : This could be better if we check for an existing modal first instead of always creating a new one
 		if (oOptions.base_modal.usage === 'clone')
 		{
 			oModalElem = oSelectorElem.clone();
-			oModalElem.attr('id', oOptions.id)
+
+			// Force modal to have an HTML ID, otherwise it can lead to complications, especially with the portal_leave_handle.js
+			// See N°3469
+			var sModalID = (oOptions.id !== null) ? oOptions.id : 'modal-with-generated-id-'+Date.now();
+			oModalElem.attr('id', sModalID)
 				.appendTo('body');
 		}
 		// - Get an existing modal in the DOM
@@ -116,7 +120,7 @@ var CombodoPortalToolbox = {
 		}
 
 		// Set attributes
-		for(var sProp in oOptions.attributes)
+		for(let sProp in oOptions.attributes)
 		{
 			oModalElem.attr(sProp, oOptions.attributes[sProp]);
 		}

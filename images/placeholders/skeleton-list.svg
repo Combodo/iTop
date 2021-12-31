@@ -1,0 +1,81 @@
+<svg
+        role="img"
+        aria-labelledby="list-loading-aria"
+        viewBox="0 0 540 100"
+        preserveAspectRatio="xMidYMid meet"
+>
+  <title id="list-loading-aria">Loading...</title>
+  <rect
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          clip-path="url(#list-clip-path)"
+          style='fill: url("#list-fill");'
+  ></rect>
+  <defs>
+    <clipPath id="list-clip-path">
+        <rect x="0" y="0" rx="3" ry="3" width="67" height="11" /> 
+        <rect x="76" y="0" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="377" y="0" rx="3" ry="3" width="53" height="11" /> 
+        <rect x="438" y="0" rx="3" ry="3" width="100" height="11" /> 
+        <rect x="226" y="0" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="0" y="30" rx="3" ry="3" width="67" height="11" /> 
+        <rect x="76" y="30" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="377" y="30" rx="3" ry="3" width="53" height="11" /> 
+        <rect x="438" y="30" rx="3" ry="3" width="100" height="11" /> 
+        <rect x="226" y="30" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="0" y="60" rx="3" ry="3" width="67" height="11" /> 
+        <rect x="76" y="60" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="377" y="60" rx="3" ry="3" width="53" height="11" /> 
+        <rect x="438" y="60" rx="3" ry="3" width="100" height="11" /> 
+        <rect x="226" y="60" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="0" y="90" rx="3" ry="3" width="67" height="11" /> 
+        <rect x="76" y="90" rx="3" ry="3" width="140" height="11" /> 
+        <rect x="377" y="90" rx="3" ry="3" width="53" height="11" /> 
+        <rect x="438" y="90" rx="3" ry="3" width="100" height="11" /> 
+        <rect x="226" y="90" rx="3" ry="3" width="140" height="11" />
+    </clipPath>
+    <linearGradient id="list-fill">
+      <stop
+              offset="0.599964"
+              stop-color="#f3f3f3"
+              stop-opacity="1"
+      >
+        <animate
+                attributeName="offset"
+                values="-2; -2; 1"
+                keyTimes="0; 0.25; 1"
+                dur="2s"
+                repeatCount="indefinite"
+        ></animate>
+      </stop>
+      <stop
+              offset="1.59996"
+              stop-color="#ecebeb"
+              stop-opacity="1"
+      >
+        <animate
+                attributeName="offset"
+                values="-1; -1; 2"
+                keyTimes="0; 0.25; 1"
+                dur="2s"
+                repeatCount="indefinite"
+        ></animate>
+      </stop>
+      <stop
+              offset="2.59996"
+              stop-color="#f3f3f3"
+              stop-opacity="1"
+      >
+        <animate
+                attributeName="offset"
+                values="0; 0; 3"
+                keyTimes="0; 0.25; 1"
+                dur="2s"
+                repeatCount="indefinite"
+        ></animate>
+      </stop>
+    </linearGradient>
+  </defs>
+</svg>

@@ -1,0 +1,16 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-block-csv--textarea--width: 100% !default;
+$ibo-block-csv--textarea--min-height: 10em !default;
+$ibo-block-csv--textarea--margin-top: 10px !default;
+
+.ibo-block-csv{
+  textarea{
+    width: $ibo-block-csv--textarea--width;
+    min-height: $ibo-block-csv--textarea--min-height;
+    margin-top: $ibo-block-csv--textarea--margin-top;
+  }
+}

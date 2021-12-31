@@ -1,0 +1,89 @@
+<div class="ibo-activity-panel--tab-toolbar {% if bIsActive == true %}ibo-is-active{% endif %} {% block bExtraCSSClasses %}{% endblock %}"
+     data-role="ibo-activity-panel--tab-toolbar"
+     data-tab-type="{% block bDataTabType %}{% endblock %}"
+	 {% block bExtraDataAttributes %}{% endblock %}>
+	{% block bTabToolbarFirstRow %}
+	{% endblock %}
+	{% block bTabToolbarSecondRow %}
+        <div class="ibo-activity-panel--tab-toolbar-actions">
+            {% block bTabToolbarActions %}
+                <div class="ibo-activity-panel--tab-toolbar-left-actions">
+                    {% block bTabToolbarLeftActions %}
+                        <a href="#" class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toolbar-action-open-all"
+                           data-role="ibo-activity-panel--caselog-open-all"
+                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip'|dict_s }}"
+                           aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip'|dict_s }}">
+                            <span class="fas fa-book-open"></span>
+                        </a>
+                        <a href="#" class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toolbar-action-close-all"
+                           data-role="ibo-activity-panel--caselog-close-all"
+                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip'|dict_s }}"
+                           aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip'|dict_s }}">
+                            <span class="fas fa-book"></span>
+                        </a>
+                    {% endblock %}
+                </div>
+                <div class="ibo-activity-panel--tab-toolbar-middle-actions">
+                    {% if oUIBlock.HasCaseLogTabs() %}
+                        <label class="ibo-activity-panel--tab-toolbar-action" data-role="ibo-activity-panel--tab-toolbar-action"
+                               data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip'|dict_s }}">
+                            <input type="checkbox" name="caselogs" data-role="ibo-activity-panel--filter" data-target-entry-types="caselog"
+                                   {% if (aFilteredCaseLogsAttCodes is not defined) or (aFilteredCaseLogsAttCodes is empty) or (get_config_parameter('activity_panel.prefilter_only_current_log') == false) %}checked{% endif %}>
+                            {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title'|dict_s }}
+                            {% if oUIBlock.GetCaseLogTabs()|length > 0 %}
+                                <a class="ibo-activity-panel--filter-options-toggler ibo-is-closed" href="#"
+                                    data-role="ibo-activity-panel--filter-options-toggler"
+                                    aria-label="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint'|dict_s }}">
+                                    <span class="fas fa-caret-up"></span>
+                                </a>
+                                <div class="ibo-activity-panel--filter-options" data-role="ibo-activity-panel--filter-options">
+                                    {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+                                        <label class="ibo-activity-panel--filter-option" data-role="ibo-activity-panel--filter-option"
+                                               title="{{ aCaseLogData['title'] }}">
+                                            <input type="checkbox" name="caselog" value="{{ sCaseLogAttCode }}"
+                                                   class="ibo-activity-panel--filter-option-input"
+                                                   data-role="ibo-activity-panel--filter-option-input"
+                                                   {% if (aFilteredCaseLogsAttCodes is not defined) or (sCaseLogAttCode in aFilteredCaseLogsAttCodes) or (get_config_parameter('activity_panel.prefilter_only_current_log') == false) %}checked{% endif %}>
+                                            {{ aCaseLogData['title'] }}
+                                        </label>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </label>
+                    {% endif %}
+                    {% if oUIBlock.HasStates() %}
+                        <label class="ibo-activity-panel--tab-toolbar-action"
+                               data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip'|dict_s }}">
+                            <input type="checkbox" name="transitions" data-role="ibo-activity-panel--filter"
+                                   data-target-entry-types="transition" {% if (bPrefilterStateChanges is defined and bPrefilterStateChanges == true) or (get_config_parameter('activity_panel.prefilter_state_changes_on_logs') == true) %}checked{% endif %}>
+                            {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title'|dict_s }}
+                        </label>
+                    {% endif %}
+                    <label class="ibo-activity-panel--tab-toolbar-action"
+                           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip'|dict_s }}">
+                        <input type="checkbox" name="edits" data-role="ibo-activity-panel--filter" data-target-entry-types="edits" {% if (bPrefilterEdits is defined and bPrefilterEdits == true) or (get_config_parameter('activity_panel.prefilter_edits_on_logs') == true) %}checked{% endif %}>
+                        {{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title'|dict_s }}
+                    </label>
+                </div>
+                <div class="ibo-activity-panel--tab-toolbar-right-actions">
+                    {% block bTabToolbarRightActions %}
+                        <span class="ibo-activity-panel--tab-toolbar-info"
+                              data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip'|dict_s }}">
+							<span class="ibo-activity-panel--tab-toolbar-info-text ibo-activity-panel--tab-toolbar-info-authors-count"
+                                  data-role="ibo-activity-panel--tab-toolbar-info-authors-count">-</span>
+							<span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-users"></span>
+						</span>
+                        {% if oUIBlock.HasCaseLogTabs() %}
+                            <span class="ibo-activity-panel--tab-toolbar-info"
+                                  data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip'|dict_s }}">
+                                <span class="ibo-activity-panel--tab-toolbar-info-text ibo-activity-panel--tab-toolbar-info-messages-count"
+                                      data-role="ibo-activity-panel--tab-toolbar-info-messages-count">-</span>
+                                <span class="ibo-activity-panel--tab-toolbar-info-icon fas fa-comment-alt"></span>
+                            </span>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+    {% endblock %}
+</div>

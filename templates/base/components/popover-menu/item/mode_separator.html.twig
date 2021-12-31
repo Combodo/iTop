@@ -1,0 +1,10 @@
+{% extends 'base/components/popover-menu/item/layout.html.twig' %}
+{% block iboPopoverMenuItem %}
+    <hr class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-popover-menu--item ibo-popover-menu--item-separator"
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+    >
+{% endblock %}

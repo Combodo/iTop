@@ -1,78 +1,62 @@
-{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
 
-<div class="display_block display-files">
+{% UIContentBlock Standard {'aContainerClasses': ['ibo-update-core', 'ibo-setup--wizard']} %}
+
     {% if bSuccess %}
+        {% UIContentBlock Standard {'aContainerClasses': ['ibo-setup--wizard--content']} %}
+            {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Status'|dict_s, 'sId':'update_progress'} %}
+                {% UIAlert ForSuccess {'sContent':sQuestion, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
+                {% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
+                {% UIField Large {'sLabel':'iTopUpdate:UI:CurrentVersion'|dict_s, 'sValueHtml':sVersion} %}{% EndUIField %}
+            {% EndUIFieldSet %}
 
-        <fieldset id="update_progress">
-            <legend>{{ 'iTopUpdate:UI:Status'|dict_s }}</legend>
-            <div class="message message-valid">
-                {{ sQuestion }}
-            </div>
+            {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Backup'|dict_s} %}
 
-            {% set sVersion = 'UI:iTopVersion:Long'|dict_format(constant('ITOP_APPLICATION'), constant('ITOP_VERSION'), constant('ITOP_REVISION'), constant('ITOP_BUILD_DATE')) %}
-            <p>{{ 'iTopUpdate:UI:CurrentVersion'|dict_s }}</p>
-            <div>
-                {{ sVersion }}
-            </div>
-        </fieldset>
-
-        <fieldset>
-            <legend>{{ 'iTopUpdate:UI:Backup'|dict_s }}</legend>
-            {% if bDoBackup or bDoFilesArchive %}
-                {% if bDoBackup %}
-                    <p>{{ 'iTopUpdate:UI:WithDBBackup'|dict_s }}</p>
-                    <div>
-                        {{ sBackupFile }}
-                    </div>
+                {% if bDoBackup or bDoFilesArchive %}
+                    {% if bDoBackup %}
+                        {% UIField Large {'sLabel':'iTopUpdate:UI:WithDBBackup'|dict_s, 'sValueHtml':sBackupFile} %}{% EndUIField %}
+                    {% endif %}
+                    {% if bDoFilesArchive %}
+                        {% UIField Large {'sLabel':'iTopUpdate:UI:WithFilesBackup'|dict_s, 'sValueHtml':sItopArchive} %}{% EndUIField %}
+                    {% endif %}
+                {% else %}
+                    {% UIAlert ForWarning {'sContent':'iTopUpdate:UI:WithoutBackup'|dict_s, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
                 {% endif %}
-                {% if bDoFilesArchive %}
-                    <p>{{ 'iTopUpdate:UI:WithFilesBackup'|dict_s }}</p>
-                    <div>
-                        {{ sItopArchive }}
-                    </div>
-                {% endif %}
-            {%  else %}
-                <div class="message message-warning">
-                    {{ 'iTopUpdate:UI:WithoutBackup'|dict_s }}
-                </div>
-            {% endif %}
-         </fieldset>
 
-        <fieldset>
-            <legend>{{ 'iTopUpdate:UI:Action'|dict_s }}</legend>
-            <div class="message message-warning">
-                {{ 'iTopUpdate:UI:WarningReadOnlyDuringUpdate'|dict_s }}
-            </div>
-            <div>
-                <form enctype="multipart/form-data" method="post" class="form-inline">
-                    <input id="cancel-update" type="submit" value="{{ 'iTopUpdate:UI:Cancel'|dict_s }}" class="ui-button ui-widget ui-state-default ui-corner-all" role="button"/>
-                </form>
-                <form enctype="multipart/form-data" method="post" class="form-inline">
-                    <input id="do-update" type="submit" value="{{ 'iTopUpdate:UI:DoUpdate'|dict_s }}" class="ui-button ui-widget ui-state-default ui-corner-all" role="button"/> <i id="submit-wait" style="display: none" class="fas fa-spinner fa-spin" aria-hidden="true"></i>
-                    <input type="hidden" name="operation" value="UpdateCoreFiles"/>
-                    <input type="hidden" name="transaction_id" value="{{ sTransactionId }}">
-                    <input type="hidden" name="filename" value="{{ sName }}">
-                    <input type="hidden" name="doBackup" value="{{ bDoBackup }}">
-                    <input type="hidden" name="doFilesArchive" value="{{ bDoFilesArchive }}">
-                </form>
-            </div>
-        </fieldset>
+            {% EndUIFieldSet %}
+
+            {% UIFieldSet Standard {'sLegend':'iTopUpdate:UI:Action'|dict_s} %}
+                {% UIAlert ForWarning {'sContent':'iTopUpdate:UI:WarningReadOnlyDuringUpdate'|dict_s, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
+            {% EndUIFieldSet %}
+        {% EndUIContentBlock %}
+
+        {% UIToolbar ForButton {'AddCSSClass':'ibo-setup--wizard--buttons-container'} %}
+            {% UIForm Standard {'CSSClasses':['form-inline']} %}
+                {% UIButton ForCancel {'sId':'cancel-update', 'sLabel':'iTopUpdate:UI:Cancel'|dict_s, 'bIsSubmit':true} %}
+            {% EndUIForm %}
+            {% UIToolbarSpacer Standard {} %}
+            {% UIForm Standard {'CSSClasses':['form-inline']} %}
+                {% UIButton ForPrimaryAction {'sId':'do-update', 'sLabel':'iTopUpdate:UI:DoUpdate'|dict_s, 'bIsSubmit':true} %}
+                {% UIInput ForHidden {'sName':'operation', 'sValue':'UpdateCoreFiles'} %}
+                {% UIInput ForHidden {'sName':'transaction_id', 'sValue':sTransactionId} %}
+                {% UIInput ForHidden {'sName':'filename', 'sValue':sName} %}
+                {% UIInput ForHidden {'sName':'doBackup', 'sValue':bDoBackup} %}
+                {% UIInput ForHidden {'sName':'doFilesArchive', 'sValue':bDoFilesArchive} %}
+            {% EndUIForm %}
+        {% EndUIToolbar %}
 
     {% else %}
 
-        <fieldset>
-            <div class="message message-error">
-                <div>
-                    <span>{{ sError }}</span>
-                </div>
-            </div>
-
-            <form enctype="multipart/form-data" method="post">
-                <p><input type="submit" value="{{ 'iTopUpdate:UI:Back'|dict_s }}"/></p>
-            </form>
-
-        </fieldset>
+        {% UIFieldSet Standard {'sLegend':''} %}
+        {% UIAlert ForFailure {'sContent':sError, 'IsCollapsible':false, 'IsClosable':false} %}{% EndUIAlert %}
+        {% UIForm Standard {} %}
+        {% UIButton ForPrimaryAction {'sLabel':'iTopUpdate:UI:Back'|dict_s, 'bIsSubmit':true} %}
+        {% EndUIForm %}
+        {% EndUIFieldSet %}
 
     {% endif %}
-</div>
+
+{% EndUIContentBlock %}
+{% endapply %}

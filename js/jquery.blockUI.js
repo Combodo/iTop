@@ -231,6 +231,8 @@
 			css = $.extend({}, $.blockUI.defaults.css, opts.css || {});
 			if (opts.onOverlayClick)
 				opts.overlayCSS.cursor = 'pointer';
+			if (opts.enableValidation)
+				opts.overlayCSS.cursor = 'not-allowed';
 
 			themedCSS = $.extend({}, $.blockUI.defaults.themedCSS, opts.themedCSS || {});
 			msg = msg === undefined ? opts.message : msg;
@@ -292,7 +294,12 @@
 				s = '<div class="blockUI ' + opts.blockMsgClass + ' blockPage" style="z-index:'+(z+10)+';display:none;position:fixed"></div>';
 			}
 			else {
-				s = '<div class="blockUI ' + opts.blockMsgClass + ' blockElement" style="z-index:'+(z+10)+';display:none;position:absolute"></div>';
+				if (opts.enableValidation) {
+					s = '<div class="blockUI blockElement" style="z-index:'+(z+10)+';display:none;position:absolute"></div>';
+				}
+				else{
+					s = '<div class="blockUI '+opts.blockMsgClass+' blockElement" style="z-index:'+(z+10)+';display:none;position:absolute"></div>';
+				}
 			}
 			lyr3 = $(s);
 

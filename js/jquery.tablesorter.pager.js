@@ -251,7 +251,6 @@ function sprintf(format, etc) {
 							updatePageDisplay(c);
 							updateCounter(table, table.config.container);
 							renderPager(table, table.config.container);
-							$(table).tableHover();
 							$('#loading', table.config.container).empty();
 
 							saveParams(table.config);

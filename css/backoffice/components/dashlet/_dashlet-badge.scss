@@ -1,0 +1,91 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet-badge--padding-x: $ibo-spacing-500 !default;
+$ibo-dashlet-badge--padding-y: $ibo-spacing-500 !default;
+$ibo-dashlet-badge--min-width: 200px !default;
+$ibo-dashlet-badge--max-width: 350px !default;
+$ibo-dashlet-badge--background-color: $ibo-color-white-100 !default;
+$ibo-dashlet-badge--border: 1px solid $ibo-color-grey-400 !default;
+$ibo-dashlet-badge--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-dashlet-badge--action-list--text-color: inherit !default;
+$ibo-dashlet-badge--action-list-count--margin-right: $ibo-spacing-300 !default;
+
+$ibo-dashlet-badge--icon-container--margin-right: $ibo-spacing-500 !default;
+$ibo-dashlet-badge--icon--size: 48px !default;
+
+$ibo-dashlet-badge--action-icon--margin-right: $ibo-spacing-300 !default;
+
+/* CSS variables (can be changed directly from the browser) */
+:root {
+  --ibo-dashlet-badge--min-width: #{$ibo-dashlet-badge--min-width};
+  --ibo-dashlet-badge--padding-x: #{$ibo-dashlet-badge--padding-x};
+  --ibo-dashlet-badge--padding-y: #{$ibo-dashlet-badge--padding-y};
+  --ibo-dashlet-badge--background-color: #{$ibo-dashlet-badge--background-color};
+  --ibo-dashlet-badge--border: #{$ibo-dashlet-badge--border};
+  --ibo-dashlet-badge--border-radius: #{$ibo-dashlet-badge--border-radius};
+}
+
+/* Rules */
+.ibo-dashlet-badge {
+  max-width: $ibo-dashlet-badge--max-width;
+  //min-width: $ibo-dashlet-badge--min-width;
+  flex-basis: $ibo-dashlet-badge--min-width; /* flex basis/grow/shrink allow the badges to occupy the line as much as possible to avoid having a void at the end of it. This way everything seems to fill the screen smoothly */
+  flex-grow: 1;
+  flex-shrink: 1;
+  padding: $ibo-dashlet-badge--padding-y $ibo-dashlet-badge--padding-x;
+  background-color: $ibo-dashlet-badge--background-color;
+  border: $ibo-dashlet-badge--border;
+  border-radius: $ibo-dashlet-badge--border-radius;
+}
+
+.ibo-dashlet-badge--body {
+  display: flex;
+  justify-items: left;
+  align-items: center;
+}
+
+.ibo-dashlet-badge--icon-container {
+  margin-right: $ibo-dashlet-badge--icon-container--margin-right;
+}
+
+.ibo-dashlet-badge--icon {
+  width: $ibo-dashlet-badge--icon--size;
+  min-width: $ibo-dashlet-badge--icon--size; /* To avoid image being shrinked when container is too small */
+  max-height: $ibo-dashlet-badge--icon--size;
+}
+
+.ibo-dashlet-badge--actions {
+  flex-grow: 1;
+  overflow-x: hidden;
+}
+
+.ibo-dashlet-badge--action-list {
+  @extend %ibo-vertically-centered-content;
+  color: $ibo-dashlet-badge--action-list--text-color;
+  @extend %ibo-font-ral-med-250;
+
+  &:hover,
+  &:active {
+    @extend %ibo-hyperlink-inherited-colors;
+  }
+}
+.ibo-dashlet-badge--action-list-count{
+	margin-right: $ibo-dashlet-badge--action-list-count--margin-right;
+	@extend %ibo-font-ral-bol-450;
+}
+.ibo-dashlet-badge--action-list-label{
+	display: inline-block;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+.ibo-dashlet-badge--action-create{
+	@extend %ibo-baseline-centered-content;
+	@extend %ibo-font-size-150;
+}
+.ibo-dashlet-badge--action-create-icon{
+	margin-right: $ibo-dashlet-badge--action-icon--margin-right;
+}

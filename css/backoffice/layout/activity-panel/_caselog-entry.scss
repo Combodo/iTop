@@ -1,0 +1,79 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-caselog-entry--highlight-colors: $ibo-caselog-highlight-colors !default;
+$ibo-caselog-entry--main-information--padding-y: $ibo-spacing-400 !default;
+$ibo-caselog-entry--main-information--decoration--width: 3px !default;
+
+/* Main information */
+.ibo-caselog-entry{
+	.ibo-activity-entry--main-information{
+		padding-top: $ibo-caselog-entry--main-information--padding-y;
+		padding-bottom: $ibo-caselog-entry--main-information--padding-y;
+	}
+	.ibo-activity-entry--main-information-icon{
+		display: none;
+	}
+  .ibo-activity-entry--main-information-content{
+    @extend .ibo-vendors-ckeditor--display-content;
+  }
+
+	/* Highlight color */
+	.ibo-activity-entry--main-information::before{
+		content: "";
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		width: $ibo-caselog-entry--main-information--decoration--width;
+	}
+	/* - User specific (current or not) */
+	&:not(.ibo-is-current-user){
+		.ibo-activity-entry--main-information::before{
+			left: 0;
+			border-top-left-radius: $ibo-activity-entry--main-information--border-radius;
+			border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius;
+		}
+		&:last-child{
+			.ibo-activity-entry--main-information::before{
+				border-bottom-left-radius: $ibo-activity-entry--main-information--border-radius--for-tip;
+			}
+		}
+	}
+	&.ibo-is-current-user{
+		.ibo-activity-entry--main-information::before{
+			right: 0;
+			border-top-right-radius: $ibo-activity-entry--main-information--border-radius;
+			border-bottom-right-radius: $ibo-activity-entry--main-information--border-radius;
+		}
+		&:last-child{
+			.ibo-activity-entry--main-information::before{
+				border-bottom-right-radius: $ibo-activity-entry--main-information--border-radius--for-tip;
+			}
+		}
+	}
+	/* - Closed entry placeholder specific */
+	&.ibo-is-closed{
+		&.ibo-is-current-user{
+			.ibo-activity-entry--main-information::after{
+				width: calc(100% - #{$ibo-caselog-entry--main-information--decoration--width});
+			}
+		}
+		&:not(.ibo-is-current-user){
+			.ibo-activity-entry--main-information::after{
+				margin-left: $ibo-caselog-entry--main-information--decoration--width;
+			}
+		}
+	}
+}
+/* - Specific decoration regarding the case log rank */
+@each $sColor in $ibo-caselog-entry--highlight-colors {
+	.ibo-caselog-entry--entry-for-caselog-#{index($ibo-caselog-entry--highlight-colors, $sColor)}{
+		.ibo-activity-entry--main-information::before{
+			background-color: $sColor;
+		}
+	}
+}
+  

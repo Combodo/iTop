@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -2602,9 +2602,18 @@ class DBObjectSearch extends DBSearch
 		return $oExpression;
 	}
 
+	/**
+	 * @param array $aAttCodes array of attCodes to search into
+	 * @param string $sNeedle one word to be searched
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+	}
+
 	public function ListParameters()
 	{
 		return $this->GetCriteria()->ListParameters();
 	}
-
 }

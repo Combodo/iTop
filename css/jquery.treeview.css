@@ -30,16 +30,39 @@
 
 #treecontrol { margin: 1em 0; }
 
-.treeview .hover { color: red; cursor: pointer; }
+.treeview .hover {
+	color: red;
+	cursor: pointer;
+}
 
-.treeview li { background: url(../images/tv-item.gif) 0 0 no-repeat; }
-.treeview .collapsable { background-image: url(../images/tv-collapsable.gif); }
-.treeview .expandable { background-image: url(../images/tv-expandable.gif); }
-.treeview .last { background-image: url(../images/tv-item-last.gif); }
-.treeview .lastCollapsable { background-image: url(../images/tv-collapsable-last.gif); }
-.treeview .lastExpandable { background-image: url(../images/tv-expandable-last.gif); }
+.treeview li {
+	background: url(../images/tv-item.gif) 0 0 no-repeat;
+}
 
-.filetree li { padding: 3px 0 1px 16px; }
-.filetree span.folder, .filetree span.file { padding-left: 16px; display: block; height: 15px; }
-.filetree span.folder { background: url(../images/folder.gif) 0 0 no-repeat; }
-.filetree span.file { background: url(../images/file.gif) 0 0 no-repeat; }
+.treeview .collapsable {
+	background-image: url(../images/tv-collapsable.gif);
+}
+
+.treeview .expandable {
+	background-image: url(../images/tv-expandable.gif);
+}
+
+.treeview .last {
+	background-image: url(../images/tv-item-last.gif);
+}
+
+.treeview .lastCollapsable {
+	background-image: url(../images/tv-collapsable-last.gif);
+}
+
+.treeview .lastExpandable {
+	background-image: url(../images/tv-expandable-last.gif);
+}
+
+.filetree span.folder {
+	background: url(../images/tv-folder.gif) 0 0 no-repeat;
+}
+
+.filetree span.file {
+	background: url(../images/tv-file.gif) 0 0 no-repeat;
+}

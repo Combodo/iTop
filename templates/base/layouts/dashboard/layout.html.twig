@@ -1,0 +1,16 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{# Dashboard Layout #}
+{% apply spaceless %}
+    {% if oUIBlock.HasTitle() or oUIBlock.HasToolbar() %}
+        <div class="ibo-dashboard--top-bar" data-role="ibo-dashboard--top-bar">
+            <div class="ibo-dashboard--top-bar-title" data-role="ibo-dashboard--top-bar-title">{{ oUIBlock.GetTitle() }}</div>
+            {{ render_block(oUIBlock.GetToolbar(), {aPage: aPage}) }}
+        </div>
+    {% endif %}
+    <div class="ibo-dashboard--grid" data-role="ibo-dashboard--grid">
+        {% for oSubBlock in oUIBlock.GetDashboardRows() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </div>
+{% endapply %}

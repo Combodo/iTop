@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -68,7 +68,7 @@ class CreateBrickController extends BrickController
 			$aRouteParams['ar_token'] = ContextManipulatorHelper::PrepareAndEncodeRulesToken($aRules);
 		}
 
-		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
+		return $this->ForwardToRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 }

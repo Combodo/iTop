@@ -4,7 +4,7 @@ use Combodo\iTop\Composer\iTopComposer;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
- * Copyright (C) 2010-2020 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  *   This file is part of iTop.
  *

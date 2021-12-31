@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -111,8 +111,14 @@ class CombodoCurrentContactPhotoUrl
 				$oImage = $oContact->Get($sPictureAttCode);
 				if (is_object($oImage) && !$oImage->IsEmpty())
 				{
-					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
-					$sContactPhotoUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($oContact), 'sObjectId' => $oContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400));
+					// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 3.0
+					$sContactPhotoUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', [
+						'sObjectClass' => get_class($oContact),
+						'sObjectId' => $oContact->GetKey(),
+						'sObjectField' => $sPictureAttCode,
+						'cache' => 86400,
+						's' => $oImage->GetSignature(),
+						]);
 				}
 				else
 				{

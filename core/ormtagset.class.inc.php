@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2018 Combodo SARL
+ * Copyright (c) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -138,7 +138,7 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
-	 * @return array of tags indexed by code
+	 * @return array index: code, value: corresponding {@see \TagSetFieldData}
 	 */
 	public function GetTags()
 	{

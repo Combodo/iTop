@@ -1,22 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify	
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- *
- *
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:AuditCategory' => 'Kategória auditu',
@@ -70,8 +55,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Query/Attribute:name+' => '',
 	'Class:Query/Attribute:description' => 'Popis',
 	'Class:Query/Attribute:description+' => '',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Polia',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Dopyt',
 	'Class:QueryOQL+' => '',
 	'Class:QueryOQL/Attribute:oql' => 'Výraz',
@@ -121,12 +110,16 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Prihlasovacie meno musí byť jedinečné - "%1s" sa už používa.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Aspoň jeden profil musí byť priradený k profilu.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'User Internal~~',
-	'Class:UserInternal+' => 'User defined within iTop~~',
+	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
 ));
 
 //
@@ -166,6 +159,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:URP_UserProfile' => 'Z užívateľa na profil',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Spojenie medzi %1$s a %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Užívateľ',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Prihlasovacie meno',
@@ -186,6 +180,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:URP_UserOrg' => 'Užívateľské organizácie',
 	'Class:URP_UserOrg+' => '',
+	'Class:URP_UserOrg/Name' => 'Spojenie medzi %1$s a %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Užívateľ',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Prihlasovacie meno',
@@ -329,14 +324,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'BooleanLabel:yes' => 'yes~~',
 	'BooleanLabel:no' => 'no~~',
-	'UI:Login:Title' => 'iTop login~~',
-	'Menu:WelcomeMenu' => 'Vitajte', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Vitajte', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Vitajte v iTop',
+	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
+	'Menu:WelcomeMenu' => 'Vitajte',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Vitajte',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'Vitajte v '.ITOP_APPLICATION_SHORT,
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop je kompletne voľne šíriteľný operačný IT program.</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' je kompletne voľne šíriteľný operačný IT program.</p>
 	
 <ul>Zahŕňa:
 <li>Kompletnú CMDB (Konfiguračná databáza manažmentu) pre zdokumentovanie a manažovanie IT inventáru.</li>
@@ -348,7 +343,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 </ul>
 <p>Všetky moduly môžu byť nastavené, krok po kroku, nezávisle jeden od druhého.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop orientovaný na poskytovateľa služieb, dovoľuje IT technikom ľahko manažovať viacerých zákazníkov alebo organizácií.
+	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' orientovaný na poskytovateľa služieb, dovoľuje IT technikom ľahko manažovať viacerých zákazníkov alebo organizácií.
 <ul>iTop, dodáva súbor biznis procesov bohatých na služby, ktoré:
 <li>Zdokonalujú efektivitu IT manažmentu</li> 
 <li>Poháňa výkon IT operácií</li> 
@@ -363,6 +358,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 <li>Manažovať najdôležitejšie aktíva Vášho IT: Dokumentáciu.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otvoriť žiadosť: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje žiadosti',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otvoriť incidenty: %1$d',
@@ -370,17 +366,22 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Mne priradené incidenty',
 	'UI:AllOrganizations' => ' Všetky organizácie ',
 	'UI:YourSearch' => 'Vaše vyhľadávanie',
-	'UI:LoggedAsMessage' => 'Prihlásený ako %1$s',
-	'UI:LoggedAsMessage+Admin' => 'Prihlásený ako %1$s (Administrátor)',
+	'UI:LoggedAsMessage' => 'Prihlásený ako %1$s (%2$s)~~',
+	'UI:LoggedAsMessage+Admin' => 'Prihlásený ako %1$s (%2$s, Administrátor)~~',
 	'UI:Button:Logoff' => 'Odhlásenie',
 	'UI:Button:GlobalSearch' => 'Globálne Vyhľadávanie',
 	'UI:Button:Search' => ' Vyhľadávanie',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Dopyt ',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => 'Uložiť',
+	'UI:Button:SaveAnd' => 'Save and %1$s~~',
 	'UI:Button:Cancel' => 'Zrušiť',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Použiť',
+	'UI:Button:Send' => 'Send~~',
+	'UI:Button:SendAnd' => 'Send and %1$s~~',
 	'UI:Button:Back' => ' << Späť ',
 	'UI:Button:Restart' => ' |<< Reštart ',
 	'UI:Button:Next' => ' Ďalší >> ',
@@ -408,9 +409,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Vyhľadávanie',
-	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s',
+	'UI:ClickToCreateNew' => 'Vytvoriť nové %1$s~~',
 	'UI:SearchFor_Class' => 'Vyhľadávanie pre %1$s objekty',
 	'UI:NoObjectToDisplay' => 'Žiadny objekt na zobrazenie.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -440,6 +444,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Chyba: objekty už boli vymazané!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Nemáte povolenie vykonať hromadné vymazanie objektov triedy %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Nemáte povolenie na vymazanie objektov triedy %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Nemáte povolenie na vykonanie hromadnej aktualizácie objektov triedy %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Chyba: objekt už bol klonovaný!',
 	'UI:Error:ObjectAlreadyCreated' => 'Chyba: objekt už bol vytvorený!',
@@ -448,6 +453,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Počet',
 	'UI:GroupBy:Count+' => '',
@@ -475,6 +481,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Loading' => 'Načitavam...',
 	'UI:Menu:Actions' => 'Akcie',
 	'UI:Menu:OtherActions' => 'Ostatné akcie',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Nové...',
 	'UI:Menu:Add' => 'Pridať...',
 	'UI:Menu:Manage' => 'Manažovať...',
@@ -504,14 +512,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:SearchValue:CheckAll' => 'Check All~~',
 	'UI:SearchValue:UncheckAll' => 'Uncheck All~~',
 	'UI:SelectOne' => '-- Vyberte jeden --',
-	'UI:Login:Welcome' => 'Vitajte v iTop!',
+	'UI:Login:Welcome' => 'Vitajte v '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => 'Nesprávne prihlasovacie meno/heslo, prosím skúste znova.',
 	'UI:Login:IdentifyYourself' => 'Identifikujte sa pred pokračovaním',
 	'UI:Login:UserNamePrompt' => 'Užívateľské meno',
 	'UI:Login:PasswordPrompt' => 'Heslo',
 	'UI:Login:ForgotPwd' => 'Forgot your password?~~',
 	'UI:Login:ForgotPwdForm' => 'Forgot your password~~',
-	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
+	'UI:Login:ForgotPwdForm+' => ITOP_APPLICATION_SHORT.' can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
 	'UI:Login:SeparatorOr' => 'Or~~',
@@ -524,8 +532,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:ResetPwd-Error-NoEmail' => 'missing an email address. Please Contact your administrator.~~',
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.~~',
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
-	'UI:ResetPwd-EmailSubject' => 'Reset your iTop password~~',
-	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your iTop password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
+	'UI:ResetPwd-EmailSubject' => 'Reset your '.ITOP_APPLICATION_SHORT.' password~~',
+	'UI:ResetPwd-EmailBody' => '<body><p>You have requested to reset your '.ITOP_APPLICATION_SHORT.' password.</p><p>Please follow this link (single usage) to <a href="%1$s">enter a new password</a></p>.~~',
 
 	'UI:ResetPwd-Title' => 'Reset password~~',
 	'UI:ResetPwd-Error-InvalidToken' => 'Sorry, either the password has already been reset, or you have received several emails. Please make sure that you use the link provided in the very last email received.~~',
@@ -533,43 +541,43 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
 
-	'UI:Login:About' => 'O účte',
-	'UI:Login:ChangeYourPassword' => 'Zmeň heslo',
-	'UI:Login:OldPasswordPrompt' => 'Staré heslo',
-	'UI:Login:NewPasswordPrompt' => 'Nové heslo',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Znova zadaj nové heslo',
-	'UI:Login:IncorrectOldPassword' => 'Chyba: staré heslo je nesprávne',
-	'UI:LogOffMenu' => 'Odhlásenie',
-	'UI:LogOff:ThankYou' => 'Ďakujeme za používanie iTop',
-	'UI:LogOff:ClickHereToLoginAgain' => 'Kliknite sem pre nové prihlásenie...',
-	'UI:ChangePwdMenu' => 'Zmeniť heslo...',
-	'UI:Login:PasswordChanged' => 'Heslo úspešne nastavené !',
-	'UI:AccessRO-All' => 'iTop je iba na čítanie',
-	'UI:AccessRO-Users' => 'iTop je iba na čítanie pre uživatelov',
-	'UI:ApplicationEnvironment' => 'Aplikačné prostredie: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Nové heslo a znova zadané nové heslo sa nezhodujú !',
-	'UI:Button:Login' => 'Vstup do iTop',
-	'UI:Login:Error:AccessRestricted' => 'Prístup do iTopu je obmedzený. Kontaktujte prosím iTop administrátora.',
-	'UI:Login:Error:AccessAdmin' => 'Prístup je vyhradený len pre ľudí, ktorí majú oprávnenia od administrátora. Kontaktujte prosím iTop administrátora.',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:About'                               => 'O účte',
+	'UI:Login:ChangeYourPassword'                  => 'Zmeň heslo',
+	'UI:Login:OldPasswordPrompt'                   => 'Staré heslo',
+	'UI:Login:NewPasswordPrompt'                   => 'Nové heslo',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Znova zadaj nové heslo',
+	'UI:Login:IncorrectOldPassword'                => 'Chyba: staré heslo je nesprávne',
+	'UI:LogOffMenu'                                => 'Odhlásenie',
+	'UI:LogOff:ThankYou' => 'Ďakujeme za používanie '.ITOP_APPLICATION_SHORT,
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Kliknite sem pre nové prihlásenie...',
+	'UI:ChangePwdMenu'                             => 'Zmeniť heslo...',
+	'UI:Login:PasswordChanged'                     => 'Heslo úspešne nastavené !',
+	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' je iba na čítanie',
+	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' je iba na čítanie pre uživatelov',
+	'UI:ApplicationEnvironment'                    => 'Aplikačné prostredie: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Nové heslo a znova zadané nové heslo sa nezhodujú !',
+	'UI:Button:Login' => 'Vstup do '.ITOP_APPLICATION_SHORT,
+	'UI:Login:Error:AccessRestricted' => 'Prístup do '.ITOP_APPLICATION_SHORT.'u je obmedzený. Kontaktujte prosím '.ITOP_APPLICATION_SHORT.' administrátora.',
+	'UI:Login:Error:AccessAdmin' => 'Prístup je vyhradený len pre ľudí, ktorí majú oprávnenia od administrátora. Kontaktujte prosím '.ITOP_APPLICATION_SHORT.' administrátora.',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne' => '-- vyberte jeden --',
-	'UI:CSVImport:MappingNotApplicable' => '-- ignorujte toto pole --',
-	'UI:CSVImport:NoData' => 'Prázdny dátový súbor..., prosím poskytnite nejaké dáta!',
-	'UI:Title:DataPreview' => 'Zobrazenie dát',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Chyba: Dáta obsahujú iba jeden stĺpec. Vybrali ste vhodný oddelovací znak ?',
-	'UI:CSVImport:FieldName' => 'Pole %1$d',
-	'UI:CSVImport:DataLine1' => 'Dátovy riadok 1',
-	'UI:CSVImport:DataLine2' => 'Dátovy riadok 2',
-	'UI:CSVImport:idField' => 'ID (Primárny kľúč)',
-	'UI:Title:BulkImport' => 'iTop - hromadná importácia',
-	'UI:Title:BulkImport+' => '',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronizácia %1$d objektov triedy %2$s',
-	'UI:CSVImport:ClassesSelectOne' => '-- vyberte jeden --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Interná chyba: "%1$s" je nesprávny kód pretože "%2$s" nie je externý kľuč triedy "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objektov ktoré ostanú nezmené.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objektov bude upravených.',
+	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne'                => '-- vyberte jeden --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- ignorujte toto pole --',
+	'UI:CSVImport:NoData'                          => 'Prázdny dátový súbor..., prosím poskytnite nejaké dáta!',
+	'UI:Title:DataPreview'                         => 'Zobrazenie dát',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Chyba: Dáta obsahujú iba jeden stĺpec. Vybrali ste vhodný oddelovací znak ?',
+	'UI:CSVImport:FieldName'                       => 'Pole %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Dátovy riadok 1',
+	'UI:CSVImport:DataLine2'                       => 'Dátovy riadok 2',
+	'UI:CSVImport:idField'                         => 'ID (Primárny kľúč)',
+	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - hromadná importácia',
+	'UI:Title:BulkImport+'                         => '',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronizácia %1$d objektov triedy %2$s',
+	'UI:CSVImport:ClassesSelectOne'                => '-- vyberte jeden --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Interná chyba: "%1$s" je nesprávny kód pretože "%2$s" nie je externý kľuč triedy "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objektov ktoré ostanú nezmené.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objektov bude upravených.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objektov bude pridaných.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objektov bude mať chyby.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objektov zostalo nezmenených.',
@@ -612,7 +620,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Vyberte aspoň jedno alebo viac kritérií vyhladávania',
 	'UI:CSVImport:Encoding' => 'Kódovanie znakov',
-	'UI:UniversalSearchTitle' => 'iTop - Univerzálne vyhľadávanie',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Univerzálne vyhľadávanie',
 	'UI:UniversalSearch:Error' => 'Chyba: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Vyberte triedu na vyhľadávanie: ',
 
@@ -662,22 +670,34 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:CSVExport:LostChars' => 'Kódovanie problému',
 	'UI:CSVExport:LostChars+' => '',
 
-	'UI:Audit:Title' => 'iTop - CMDB audit',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB audit',
 	'UI:Audit:InteractiveAudit' => 'Interaktívny audit',
 	'UI:Audit:HeaderAuditRule' => 'Pravidlo auditu',
 	'UI:Audit:HeaderNbObjects' => '# Objekty',
 	'UI:Audit:HeaderNbErrors' => '# Chyby',
 	'UI:Audit:PercentageOk' => '% OK',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL chyba v pravidle %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL chyba v kategórii %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
 
-	'UI:RunQuery:Title' => 'iTop - Určenie OQL Dopytu',
+
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Určenie OQL Dopytu',
 	'UI:RunQuery:QueryExamples' => 'Príklad dopytu',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Účel',
 	'UI:RunQuery:HeaderPurpose+' => '',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL Výraz',
 	'UI:RunQuery:HeaderOQLExpression+' => '',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Výraz k určeniu: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Viac informácií o dopyte: ',
 	'UI:RunQuery:DevelopedQuery' => 'Dopyt rozvinutého výrazu: ',
 	'UI:RunQuery:SerializedFilter' => 'Serializovaný filter: ',
@@ -685,10 +705,11 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
 	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
-	'UI:RunQuery:Error' => 'Vyskytla sa chyba počas dopytu: %1$s',
+	'UI:RunQuery:Error' => 'Vyskytla sa chyba počas dopytu',
 	'UI:Query:UrlForExcel' => 'URL pre použitie MS-Excel webového dopytu',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
-	'UI:Schema:Title' => 'iTop objektová schéma',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to guarantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objektová schéma',
+	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategória <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Vzťahy',
 	'UI:Schema:AbstractClass' => 'Abstraktná trieda: žiadny objekt z tejto triedy nemôže byť inštancovaný.',
@@ -755,6 +776,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~~~',
 	'UI:LinksWidget:Autocomplete+' => '',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Testovací dopyt',
 	'UI:Combo:SelectValue' => '--- výber hodnoty ---',
 	'UI:Label:SelectedObjects' => 'Zvolené objekty: ',
@@ -803,9 +825,9 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Prosím vykonajte manuálne operácie vypísané vyššie predtým ako budete žiadať o odstraňovanie tohto objektu',
 	'UI:Delect:Confirm_Object' => 'Prosím potvrďte, že chcete vymazať %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Prosím potvrďte, že chcete vymazať nasledovné %1$d objekty triedy %2$s.',
-	'UI:WelcomeToITop' => 'Vitajte to iTop',
-	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s detaily',
-	'UI:ErrorPageTitle' => 'iTop - Chyba',
+	'UI:WelcomeToITop' => 'Vitajte to '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detaily',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Chyba',
 	'UI:ObjectDoesNotExist' => 'Prepáčte, tento objekt neexistuje (alebo nemáte povolenie na jeho čítanie).',
 	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
 	'Tag:Archived' => 'Archived~~',
@@ -815,7 +837,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Tag:Synchronized' => 'Synchronized~~',
 	'ObjectRef:Archived' => 'Archived~~',
 	'ObjectRef:Obsolete' => 'Obsolete~~',
-	'UI:SearchResultsPageTitle' => 'iTop - Výsledky vyhľadávania',
+	'UI:SearchResultsPageTitle' => ITOP_APPLICATION_SHORT.' - Výsledky vyhľadávania',
 	'UI:SearchResultsTitle' => 'Search Results~~',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Nie je nič na vyhľadávanie',
@@ -825,27 +847,27 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:FullTextSearchTitle_Text' => 'Výsledky pre "%1$s":',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%1$d objekt/y/ov triedy %2$s nájdených.',
 	'UI:Search:NoObjectFound' => 'Žiadny objekt nebol nájdený.',
-	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s úprava',
+	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s úprava',
 	'UI:ModificationTitle_Class_Object' => 'Úprava of %1$s: <span class=\\"hilite\\">%2$s</span>',
-	'UI:ClonePageTitle_Object_Class' => 'iTop - Klon %1$s - %2$s úprava',
+	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - Klon %1$s - %2$s úprava',
 	'UI:CloneTitle_Class_Object' => 'Klon of %1$s: <span class=\\"hilite\\">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - Vytvorenie nového %1$s ',
+	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Vytvorenie nového %1$s ',
 	'UI:CreationTitle_Class' => 'Vytvorenie nového %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Zvoľte typ %1$s na vytvorenie:',
 	'UI:Class_Object_NotUpdated' => 'Žiadna zmena nebola zistená, %1$s (%2$s) <strong>nebola</strong> upravená.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) aktualizovaný.',
-	'UI:BulkDeletePageTitle' => 'iTop - Hromadné vymazanie',
+	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - Hromadné vymazanie',
 	'UI:BulkDeleteTitle' => 'Zvoľte objekty, ktoré chcete vymazať:',
-	'UI:PageTitle:ObjectCreated' => 'iTop objekt vytvorený.',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' objekt vytvorený.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s vytvorený.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => 'Použiť %1$s na objekt: %2$s v stave %3$s do cieľového stavu: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Do objekt sa nedá zapisovať: %1$s',
-	'UI:PageTitle:FatalError' => 'iTop - Fatálna chyba',
+	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Fatálna chyba',
 	'UI:SystemIntrusion' => 'Prístup zamietnutý. Snažili ste sa vykonať operáciu, ktorá Vám nie je povolená.',
-	'UI:FatalErrorMessage' => 'Fatálna chyba, iTop nemôže pokračovať.',
+	'UI:FatalErrorMessage' => 'Fatálna chyba, '.ITOP_APPLICATION_SHORT.' nemôže pokračovať.',
 	'UI:Error_Details' => 'Chyba: %1$s.',
 
-	'UI:PageTitle:ProfileProjections' => 'iTop užívateľský manažment - projekcie profilov',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' užívateľský manažment - projekcie profilov',
 	'UI:UserManagement:Class' => 'Trieda',
 	'UI:UserManagement:Class+' => '',
 	'UI:UserManagement:ProjectedObject' => 'Objekt',
@@ -879,12 +901,10 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Udelovacia matica',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Spojenie medzi %1$s a %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Spojenie medzi %1$s a %2$s',
 
-	'Menu:AdminTools' => 'Administrátorské pomôcky', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Administrátorské pomôcky',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Pomôcky prístupné iba užívateľom majúcim administrátorský profil',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Manažment zmien',
@@ -930,20 +950,20 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI-ContactsMenu-ContactsByType' => 'Kontakty podľa typu',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakty podľa stavu',
 
-	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Dátový model', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Dátový model',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Upozornenia', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Konfigurácia <span class="hilite">Upozornení</span>',
+	'Menu:NotificationsMenu' => 'Upozornenia',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:NotificationsMenu:Title' => 'Konfigurácia Upozornení',
 	'UI:NotificationsMenu:Help' => 'Pomoc',
-	'UI:NotificationsMenu:HelpContent' => '<p>In iTop upozornenia sú plne upraviteľné. Sú založené na dvoch setoch objektov: <i>spúštače a akcie</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' upozornenia sú plne upraviteľné. Sú založené na dvoch setoch objektov: <i>spúštače a akcie</i>.</p>
 <p><i><b>Spúštače</b></i> definujte bude spustené nejaké upozornenie. Máme 5 typov spúštačov pre pokrytie 3 rôznych fáz životného cyklu objektu:
 <ol>
 	<li>"pri vytvorení objektu" spúštače budú vykonané keď objekt špecifikovanej triedy je vytvorený</li>
@@ -954,18 +974,24 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 </ol>
 </p>
 <p>
-<i><b>Akcie</b></i> definujte akcie, ktoré budú vykonané, keď sa spúštače spustia. Zatiaľ je tu iba 1 druh akcie pozostávajúci zo zasielania emailovej správy.
-Také akcie tiež definujú šablónu, ktorá bude použitá pre zasielanie emailov ako aj ostatné parametre správy ako prijímatelia, dôležitosť, atď.
+<i><b>Akcie</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Špeciálna stránka: <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pre testovanie a odstraňovanie problémov Vašej PHP mailovej konfigurácie.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Špeciálna stránka: <a href="../setup/email.test.php" target="_blank">email.test.php</a> je dostupná pre testovanie a odstraňovanie problémov Vašej PHP mailovej konfigurácie.</p>
 <p>Na vykonanie, akcie musia byť priradené spúštačom.
-Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>',
+Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", špecifikujúce v akej postupnosti budú akcie vykonané.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Spúštače',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Dostupné spúštače',
 	'UI:NotificationsMenu:OnCreate' => 'Keď je objekt vytvorený',
 	'UI:NotificationsMenu:OnStateEnter' => 'Keď objekt vstupuje do daného stavu',
 	'UI:NotificationsMenu:OnStateLeave' => 'Keď objekt vychádza z daného stavu',
 	'UI:NotificationsMenu:Actions' => 'Akcie',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Dostupné akcie',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
@@ -974,39 +1000,43 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
-	'Menu:AuditCategories' => 'Kategórie auditu', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Kategórie auditu', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Kategórie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Kategórie auditu',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Spustiť dopyty', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Spustiť dopyty',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Dopyt frázy', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Dopyt frázy',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Dátová administrácia', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Dátová administrácia',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Univerzálne vyhľadávanie', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Univerzálne vyhľadávanie',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Užívateľský manažment', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Užívateľský manažment',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profily', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profily', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profily',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profily',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Užívateľské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => '',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Užívateľské účty',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'UI:iTopVersion:Short' => 'iTop verzia %1$s',
-	'UI:iTopVersion:Long' => 'iTop verzia %1$s-%2$s postavená na %3$s',
+	'UI:iTopVersion:Short' => ITOP_APPLICATION_SHORT.' verzia %1$s',
+	'UI:iTopVersion:Long' => ITOP_APPLICATION_SHORT.' verzia %1$s-%2$s postavená na %3$s',
 	'UI:PropertiesTab' => 'Vlastnosti',
 
-	'UI:OpenDocumentInNewWindow_' => 'Otvoriť tento dokument v novom okne: %1$s',
-	'UI:DownloadDocument_' => 'Stiahnuť tento dokument: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Otvoriť~~',
+	'UI:DownloadDocument_' => 'Stiahnuť~~',
 	'UI:Document:NoPreview' => 'Žiadny náhľad nie je dostupný pre tento typ dokumentu',
 	'UI:Download-CSV' => 'Stiahnuť %1$s',
 
@@ -1016,7 +1046,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => 'Pomoc',
-	'UI:PasswordConfirm' => '(Potvrdiť)',
+	'UI:PasswordConfirm' => 'Potvrdiť',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Pred pridaním viacerých %1$s objektov, uložte tento objekt.',
 	'UI:DisplayThisMessageAtStartup' => 'Zobraziť túto správu pri spustení',
 	'UI:RelationshipGraph' => 'Grafický pohľad',
@@ -1051,8 +1081,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:RelationTooltip:Redundancy' => 'Redundancy~~',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# of impacted items: %1$d / %2$d~~',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Critical threshold: %1$d / %2$d~~',
-	'Portal:Title' => 'iTop užívateľský portál',
-	'Portal:NoRequestMgmt' => 'Drahý/á %1$s, boli ste presmerovaný na túto stránku pretože Váš účet je nastavený na profil \'Užívateľ portálu\'. Nanešťastie, iTop nebol nainštalovaný s funkciou \'Manažment žiadostí\'. Prosím kontaktujte Vášho administrátora.',
+	'Portal:Title' => ITOP_APPLICATION_SHORT.' užívateľský portál',
+	'Portal:NoRequestMgmt' => 'Drahý/á %1$s, boli ste presmerovaný na túto stránku pretože Váš účet je nastavený na profil \'Užívateľ portálu\'. Nanešťastie, '.ITOP_APPLICATION_SHORT.' nebol nainštalovaný s funkciou \'Manažment žiadostí\'. Prosím kontaktujte Vášho administrátora.',
 	'Portal:Refresh' => 'Obnoviť',
 	'Portal:Back' => 'Späť',
 	'Portal:WelcomeUserOrg' => 'Vitajte %1$s, z %2$s',
@@ -1128,15 +1158,15 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ArchiveMode:Banner+' => 'Archived objects are visible, and no modification is allowed~~',
 	'UI:FavoriteOrganizations' => 'Obľúbené organizácie',
 	'UI:FavoriteOrganizations+' => '',
-	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania',
+	'UI:FavoriteLanguage' => 'Jazyk užívateľského rozhrania~~',
 	'UI:Favorites:SelectYourLanguage' => 'Vyberte si svoj preferovaný jazyk',
 	'UI:FavoriteOtherSettings' => 'Iné nastavenia',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Štandardná dĺžka pre zoznamy:  %1$s položiek na stránku~~',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Akákoľvek úprava bude zahodená.',
 	'UI:CancelConfirmationMessage' => 'Prídete o všetky svoje zmeny. Chcete pokračovať?',
-	'UI:AutoApplyConfirmationMessage' => 'Niektoré zmeny neboli použité zatiaľ. Chcete aby ich iTop vzal do úvahy?',
+	'UI:AutoApplyConfirmationMessage' => 'Niektoré zmeny neboli použité zatiaľ. Chcete aby ich '.ITOP_APPLICATION_SHORT.' vzal do úvahy?',
 	'UI:Create_Class_InState' => 'Vytvoriť %1$s v stave: ',
 	'UI:OrderByHint_Values' => 'Triediaci príkaz: %1$s',
 	'UI:Menu:AddToDashboard' => 'Pridať na panel...',
@@ -1148,15 +1178,16 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Konfigurovať tento zoznam...',
 	'UI:ListConfigurationTitle' => 'Zoznam konfigurácii',
 	'UI:ColumnsAndSortOrder' => 'Stĺpce a triediaci príkaz:',
 	'UI:UseDefaultSettings' => 'Použite štandardné nastavenia',
 	'UI:UseSpecificSettings' => 'Použite nasledovné nastavenia:',
-	'UI:Display_X_ItemsPerPage' => 'Zobraziť %1$s položiek na stránku',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Zobraziť',
+	'UI:Display_X_ItemsPerPage_suffix' => 'položiek na stránku',
 	'UI:UseSavetheSettings' => 'Uložiť nastavenia',
 	'UI:OnlyForThisList' => 'Iba pre tento zoznam',
 	'UI:ForAllLists' => 'Pre všetky zoznamy',
@@ -1169,13 +1200,16 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:OQL:UnknownClassAndFix' => 'Neznáma trieda "%1$s". Môžete skúsiť "%2$s" namiesto toho.',
 	'UI:OQL:UnknownClassNoFix' => 'Neznáma trieda "%1$s"',
 
-	'UI:Dashboard:Edit' => 'Upraviť túto stránku...',
-	'UI:Dashboard:Revert' => 'Vrátiť sa do originálnej verzie...',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Každá zmena spravená do originálnej verzie bude stratená. Prosím potvrďte, že to chcete urobiť.',
 	'UI:ExportDashBoard' => 'Exportovať do súboru',
 	'UI:ImportDashBoard' => 'Importovať zo súboru...',
 	'UI:ImportDashboardTitle' => 'Importovať zo súboru',
 	'UI:ImportDashboardText' => 'Zvoľte panel súboru na importovanie:',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Vytvoriť a nový Dashlet',
@@ -1188,6 +1222,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)~~',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Rozloženie',
 	'UI:DashboardEdit:Properties' => 'Vlastnosti panelu',
@@ -1324,13 +1360,13 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Vytvorenie skratky...',
 	'UI:ShortcutRenameDlg:Title' => 'Premenovanie skratky',
 	'UI:ShortcutListDlg:Title' => 'Vytvoriť skratku pre zoznam',
 	'UI:ShortcutDelete:Confirm' => 'Prosím potvrďte, že si želáte vymazať skratku/y.',
-	'Menu:MyShortcuts' => 'Moje skratky', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Moje skratky',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Skratka',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Názov',
@@ -1380,8 +1416,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
 
-	'UI:AboutBox' => 'About iTop...~~',
-	'UI:About:Title' => 'About iTop~~',
+	'UI:AboutBox' => 'About '.ITOP_APPLICATION_SHORT.'...~~',
+	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT.'~~',
 	'UI:About:DataModel' => 'Data model~~',
 	'UI:About:Support' => 'Support information~~',
 	'UI:About:Licenses' => 'Licenses~~',
@@ -1406,10 +1442,11 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'ExcelExport:PreparingExport' => 'Preparing the export...~~',
 	'ExcelExport:Statistics' => 'Statistics~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
-	'portal:backoffice' => 'iTop Back-Office User Interface~~',
+	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1427,6 +1464,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1434,7 +1472,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1442,6 +1480,11 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
+
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1503,12 +1546,12 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 
@@ -1538,6 +1581,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1566,6 +1611,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 //
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1574,6 +1620,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
+
 
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:DataSources' => 'Synchronizované zdroje dát',
@@ -1612,4 +1659,12 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Dashboard:Edit' => 'Upraviť túto stránku...',
+ 'UI:Dashboard:Revert' => 'Vrátiť sa do originálnej verzie...',
 ));

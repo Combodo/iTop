@@ -1,0 +1,74 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-audit--audit-rules--row--last-rows--text-align: right !default;
+$ibo-audit--audit-rules--row--last-rows--width: 100px !default;
+
+$ibo-audit--audit-category--panel--body--padding-y: 10px !default;
+$ibo-audit--audit-category--panel--body--padding-x: $ibo-panel--body--padding-x !default;
+
+$ibo-audit--dashboard--padding-y: 18px !default;
+$ibo-audit--dashboard--padding-x: $ibo-spacing-0 !default;
+
+$ibo-audit--first-error-alert--margin-top: $ibo-spacing-600 !default;
+
+$ibo-audit--audit-line--csv-download--height: 2.5em !default;
+
+$ibo-audit--audit-line--status-indicator--diameter: 12px !default;
+$ibo-audit--audit-line--status-indicator--margin-right: 5px !default;
+
+
+$ibo-audit--status--color: (
+  'red': (
+    $ibo-color-red-700,
+  ),
+  'orange': (
+    $ibo-color-orange-700,
+  ),
+  'green': (
+    $ibo-color-green-800,
+  ),
+);
+@each $sColor, $aAttributes in $ibo-audit--status--color {
+  $bg-color: nth($aAttributes, 1);
+  .ibo-audit--audit-category--panel .ibo-panel--body {
+    tr.ibo-is-#{$sColor} td:last-of-type:before {
+      background-color: $bg-color;
+    }
+  }
+}
+
+.ibo-audit--audit-category--panel .ibo-panel--body{
+  padding: $ibo-audit--audit-category--panel--body--padding-y $ibo-panel--body--padding-x;
+  
+  .ibo-datatable{
+    td:not(:nth-child(1)), th:not(:nth-child(1)){
+      text-align: $ibo-audit--audit-rules--row--last-rows--text-align;
+      width: $ibo-audit--audit-rules--row--last-rows--width;
+    }
+  }
+  .ibo-datatable--toolbar{
+    display: none;
+  }
+  tr td:last-of-type:before{
+    content: '';
+    height: $ibo-audit--audit-line--status-indicator--diameter;
+    width: $ibo-audit--audit-line--status-indicator--diameter;
+    border-radius: $ibo-border-radius-full;
+    display: inline-block;
+    margin-right: $ibo-audit--audit-line--status-indicator--margin-right;
+    vertical-align: middle;
+  }
+}
+.ibo-audit--dashboard{
+  padding: $ibo-audit--dashboard--padding-y $ibo-audit--dashboard--padding-x;
+}
+.ibo-dashboard--grid-row + .ibo-audit--error-alert{
+  margin-top: $ibo-audit--first-error-alert--margin-top;
+}
+.ibo-audit--audit-line--csv-download{
+  height: $ibo-audit--audit-line--csv-download--height;
+  vertical-align: middle;
+}

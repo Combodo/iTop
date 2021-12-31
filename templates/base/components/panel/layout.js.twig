@@ -1,0 +1,15 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% block iboWidgetInstantiation %}
+    $('#{{ oUIBlock.GetId() }}').panel({
+        is_header_visible_on_scroll: {{ oUIBlock.IsHeaderVisibleOnScroll|var_export }}
+    });
+{% endblock %}
+
+{% block iboMiscHandlers %}
+    {% if oUIBlock.isCollapsible() %}
+        $('#{{ oUIBlock.GetId() }}').find('[data-role="ibo-panel--collapsible-toggler"]').on('click', function(){
+            $('#{{ oUIBlock.GetId() }}').toggleClass('ibo-is-opened');
+        });
+    {% endif %}
+{% endblock %}

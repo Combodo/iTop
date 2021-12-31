@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2020 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -22,7 +22,7 @@
 /**
  * Any extension to compute things like a stop watch deadline or working hours
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

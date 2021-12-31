@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
 	<constants>
 		<constant id="RESPONSE_TICKET_SLT_QUERY" xsi:type="string" _delta="define"><![CDATA[SELECT SLT AS slt JOIN lnkSLAToSLT AS l1 ON l1.slt_id=slt.id JOIN SLA AS sla ON l1.sla_id=sla.id JOIN lnkCustomerContractToService AS l2 ON l2.sla_id=sla.id JOIN CustomerContract AS sc ON l2.customercontract_id=sc.id WHERE slt.metric = :metric AND l2.service_id = :this->service_id AND sc.org_id = :this->org_id AND slt.request_type = :request_type AND slt.priority = :this->priority]]></constant>
 	</constants>
@@ -13,7 +13,7 @@
 				<comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
 				<category>bizmodel,searchable,structure</category>
@@ -27,7 +27,6 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -54,10 +53,31 @@
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
 					<values>
-						<value id="ongoing">ongoing</value>
-						<value id="resolved">resolved</value>
-						<value id="closed">closed</value>
+						<value id="ongoing">
+							<code>ongoing</code>
+						</value>
+						<value id="resolved">
+							<code>resolved</code>
+							<style>
+								<main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+								<decoration_classes>fas fa-check</decoration_classes>
+							</style>
+						</value>
+						<value id="closed">
+							<code>closed</code>
+							<style>
+								<main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+								<complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
+					<default_style>
+						<main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+						<complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+						<decoration_classes/>
+					</default_style>
 					<sql>operational_status</sql>
 					<default_value>ongoing</default_value>
 					<mappings>
@@ -278,9 +298,6 @@
 						<item id="contacts_list">
 							<rank>130</rank>
 						</item>
-						<item id="functionalcis_list">
-							<rank>140</rank>
-						</item>
 						<item id="workorders_list">
 							<rank>150</rank>
 						</item>
@@ -376,7 +393,6 @@
 						<attribute id="contact_id"/>
 					</attributes>
 				</naming>
-				<display_template/>
 				<icon/>
 				<reconciliation>
 					<attributes>
@@ -413,9 +429,15 @@
 				</field>
 				<field id="role_code" xsi:type="AttributeEnum">
 					<values>
-						<value id="manual">manual</value>
-						<value id="computed">computed</value>
-						<value id="do_not_notify">do_not_notify</value>
+						<value id="manual">
+							<code>manual</code>
+						</value>
+						<value id="computed">
+							<code>computed</code>
+						</value>
+						<value id="do_not_notify">
+							<code>do_not_notify</code>
+						</value>
 					</values>
 					<sql>impact_code</sql>
 					<default_value>manual</default_value>
@@ -460,116 +482,6 @@
 							<rank>20</rank>
 						</item>
 						<item id="role_code">
-							<rank>30</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
-		</class>
-		<class id="lnkFunctionalCIToTicket" _delta="define">
-			<parent>cmdbAbstractObject</parent>
-			<properties>
-				<is_link>1</is_link>
-				<category>bizmodel</category>
-				<abstract>false</abstract>
-				<key_type>autoincrement</key_type>
-				<db_table>lnkfunctionalcitoticket</db_table>
-				<db_key_field>id</db_key_field>
-				<db_final_class_field/>
-				<naming>
-					<attributes>
-						<attribute id="ticket_id"/>
-						<attribute id="functionalci_id"/>
-					</attributes>
-				</naming>
-				<display_template/>
-				<icon/>
-				<reconciliation>
-					<attributes>
-						<attribute id="ticket_id"/>
-						<attribute id="functionalci_id"/>
-					</attributes>
-				</reconciliation>
-			</properties>
-			<fields>
-				<field id="ticket_id" xsi:type="AttributeExternalKey">
-					<sql>ticket_id</sql>
-					<target_class>Ticket</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_AUTO</on_target_delete>
-				</field>
-				<field id="ticket_ref" xsi:type="AttributeExternalField">
-					<extkey_attcode>ticket_id</extkey_attcode>
-					<target_attcode>ref</target_attcode>
-				</field>
-				<field id="ticket_title" xsi:type="AttributeExternalField">
-					<extkey_attcode>ticket_id</extkey_attcode>
-					<target_attcode>title</target_attcode>
-				</field>
-				<field id="functionalci_id" xsi:type="AttributeExternalKey">
-					<sql>functionalci_id</sql>
-					<target_class>FunctionalCI</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_AUTO</on_target_delete>
-				</field>
-				<field id="functionalci_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>functionalci_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="impact" xsi:type="AttributeString">
-					<sql>impact</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="impact_code" xsi:type="AttributeEnum">
-					<values>
-						<value id="manual">manual</value>
-						<value id="computed">computed</value>
-						<value id="not_impacted">not_impacted</value>
-					</values>
-					<sql>impact_code</sql>
-					<default_value>manual</default_value>
-					<is_null_allowed>false</is_null_allowed>
-					<display_style>list</display_style>
-				</field>
-			</fields>
-			<methods/>
-			<presentation>
-				<details>
-					<items>
-						<item id="ticket_id">
-							<rank>10</rank>
-						</item>
-						<item id="functionalci_id">
-							<rank>20</rank>
-						</item>
-						<item id="impact_code">
-							<rank>30</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="ticket_id">
-							<rank>10</rank>
-						</item>
-						<item id="functionalci_id">
-							<rank>20</rank>
-						</item>
-						<item id="impact_code">
-							<rank>30</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="ticket_id">
-							<rank>10</rank>
-						</item>
-						<item id="functionalci_id">
-							<rank>20</rank>
-						</item>
-						<item id="impact_code">
 							<rank>30</rank>
 						</item>
 					</items>
@@ -590,8 +502,12 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<display_template/>
-				<icon>images/workorder.png</icon>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
+				<style>
+					<icon>../../images/icons/icons8-tasklist.svg</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -607,8 +523,12 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="open">open</value>
-						<value id="closed">closed</value>
+						<value id="open">
+							<code>open</code>
+						</value>
+						<value id="closed">
+							<code>closed</code>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>open</default_value>
@@ -623,7 +543,7 @@
 				<field id="ticket_id" xsi:type="AttributeExternalKey">
 					<sql>ticket_id</sql>
 					<target_class>Ticket</target_class>
-					<is_null_allowed>false</is_null_allowed>
+					<is_null_allowed>true</is_null_allowed>
 					<on_target_delete>DEL_AUTO</on_target_delete>
 				</field>
 				<field id="ticket_ref" xsi:type="AttributeExternalField">
@@ -664,7 +584,7 @@
 				<field id="end_date" xsi:type="AttributeDateTime">
 					<sql>end_date</sql>
 					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
+					<is_null_allowed>true</is_null_allowed>
 				</field>
 				<field id="log" xsi:type="AttributeCaseLog">
 					<sql>log</sql>
@@ -673,7 +593,6 @@
 				</field>
 			</fields>
 			<lifecycle>
-				<attribute>status</attribute>
 				<stimuli>
 					<stimulus id="ev_close" xsi:type="StimulusUserAction"/>
 				</stimuli>
@@ -683,7 +602,14 @@
 						<transitions>
 							<transition id="ev_close">
 								<target>closed</target>
-								<actions/>
+                <actions>
+                  <action>
+                    <verb>SetCurrentDateIfNull</verb>
+                    <params>
+                      <param xsi:type="attcode">end_date</param>
+                    </params>
+                  </action>
+                </actions>
 							</transition>
 						</transitions>
 					</state>
@@ -803,6 +729,79 @@
 				</list>
 			</presentation>
 		</class>
+		<class id="Document" _delta="must_exist">
+			<fields>
+				<field id="contracts_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+					<linked_class>lnkContractToDocument</linked_class>
+					<ext_key_to_me>document_id</ext_key_to_me>
+					<count_min>0</count_min>
+					<count_max>0</count_max>
+					<ext_key_to_remote>contract_id</ext_key_to_remote>
+					<duplicates/>
+				</field>
+				<field id="services_list" xsi:type="AttributeLinkedSetIndirect" _delta="define">
+					<linked_class>lnkDocumentToService</linked_class>
+					<ext_key_to_me>document_id</ext_key_to_me>
+					<count_min>0</count_min>
+					<count_max>0</count_max>
+					<ext_key_to_remote>service_id</ext_key_to_remote>
+					<duplicates/>
+				</field>
+			</fields>
+			<methods/>
+			<presentation>
+				<details>
+					<items>
+						<item id="contracts_list" _delta="define">
+							<rank>70</rank>
+						</item>
+						<item id="services_list" _delta="define">
+							<rank>80</rank>
+						</item>
+					</items>
+				</details>
+			</presentation>
+		</class>
+    <class id="Person" _delta="must_exist">
+      <fields>
+        <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>Ticket</linked_class>
+          <ext_key_to_me>caller_id</ext_key_to_me>
+          <edit_mode>add_only</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="tickets_list" _delta="define">
+              <rank>20</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
+    <class id="Team" _delta="must_exist">
+      <fields>
+        <field id="tickets_list" xsi:type="AttributeLinkedSet" _delta="define">
+          <linked_class>Ticket</linked_class>
+          <ext_key_to_me>team_id</ext_key_to_me>
+          <edit_mode>none</edit_mode>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="tickets_list" _delta="define">
+              <rank>90</rank>
+            </item>
+          </items>
+        </details>
+      </presentation>
+    </class>
 	</classes>
 	<meta>
 		<classes>
@@ -819,77 +818,9 @@
 		</classes>
 	</meta>
 	<module_designs>
-		<module_design id="itop-portal" xsi:type="portal" _delta="define">
-			<properties>
-				<name>portal:itop-portal</name>
-				<!-- Can be either a fileref or a relative path to the file (To be tested). Takes over env-xxx/branding/portal-logo.png -->
-				<!-- Priority order is <logo> from xml > env-xxx/branding/portal-logo.png > /images/logo-itop-dark-bg.svg -->
-				<!--<fileref ref="brt_6a2be154b2a62659d3332c513bdad715"  />-->
-				<!--<logo>../images/itop-logo.png</logo>-->
-				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mystyle.css) -->
-				<!-- Available themes must have a unique id. Some ids are loaded in a specific order : bootstrap/portal/custom. Other ids are loaded after them, but their order cannot be predicted -->
-				<themes/>
-				<!-- Can be either a fileref or a relative path to the file from /env-xxx (eg. itop-portal-base/mytemplate.html.twig) -->
-				<!-- Available templates are id="layout|home" -->
-				<templates/>
-				<!-- Class used for generating objects view/edit urls (eg. in linked sets). -->
-				<!-- Note: Notification placeholders are NOT using this but the "DBObject::RegisterURLMakerClass(<PORTAL_ID>, <CLASS_NAME>)" declarations. -->
-				<urlmaker_class>iTopPortalViewUrlMaker</urlmaker_class>
-				<!-- An OQL query to determine which TriggerOnPortalUpdate to use within THIS instance of the portal. This is mostly needed to enable different triggers on several portal instances -->
-				<!-- Note : ":parent_classes" parameter is a reserved name that will be used for the current object class name (and its ancestors) -->
-				<triggers_query><![CDATA[SELECT TriggerOnPortalUpdate AS t WHERE t.target_class IN (:parent_classes)]]></triggers_query>
-				<attachments>
-					<allow_delete>true</allow_delete>
-				</attachments>
-				<allowed_portals>
-					<!-- Defines how other portals -allowed for the current user- will be opened. "tab" for a new tab, "self" for the current window -->
-					<opening_mode>tab</opening_mode>
-				</allowed_portals>
-			</properties>
+		<module_design id="itop-portal" xsi:type="portal" >
 			<bricks>
-				<brick id="user-profile" xsi:type="Combodo\iTop\Portal\Brick\UserProfileBrick">
-					<rank>
-						<!-- Can be either a <default> tag for both home page and navigation menu or distinct <home> or/and <navigation_menu> tags-->
-						<default>1</default>
-					</rank>
-					<title>
-						<!-- Can be either a <default> tag for both home page and navigation menu or distinct <home> or/and <navigation_menu> tags-->
-						<default>Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil</default>
-					</title>
-					<decoration_class>
-						<default>fas fa-user fa-2x</default>
-					</decoration_class>
-					<!-- Show / hide some of the user profile forms by setting the tag value to true|false -->
-					<!--<show_picture_form>true</show_picture_form>-->
-					<!--<show_preferences_form>true</show_preferences_form>-->
-					<!--<show_password_form>true</show_password_form>-->
-					<form>
-						<!-- Optional tag to list the fields. If empty only fields from <twig> tag will be displayed, if omitted fields from zlist details will. -->
-						<fields />
-						<!-- Optional tag to specify the form layout. Fields that are not positioned in the layout will be placed at the end of the form -->
-						<twig>
-							<!-- data-field-id attribute must be an attribute code of the class -->
-							<!-- data-field-flags attribute contains flags among read_only/hidden/mandatory/must_prompt/must_change -->
-							<div class="form_field" data-field-id="first_name" data-field-flags="read_only">
-							</div>
-							<div class="form_field" data-field-id="name" data-field-flags="read_only">
-							</div>
-							<div class="form_field" data-field-id="org_id" data-field-flags="read_only">
-							</div>
-							<div class="form_field" data-field-id="email" data-field-flags="read_only">
-							</div>
-							<div class="form_field" data-field-id="phone">
-							</div>
-							<div class="form_field" data-field-id="location_id">
-							</div>
-							<div class="form_field" data-field-id="function">
-							</div>
-							<div class="form_field" data-field-id="manager_id" data-field-flags="read_only">
-							</div>
-						</twig>
-					</form>
-				</brick>
-				<brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick">
+				<brick id="services" xsi:type="Combodo\iTop\Portal\Brick\BrowseBrick" _delta="define">
 					<active>true</active>
 					<width>6</width>
 					<rank>
@@ -982,7 +913,7 @@
 					<data_loading>auto</data_loading>
 					<!-- lazy|full|auto. Let the consultant choose if the list/tree data are load progressively at each page/level or in one-shot or if it is up to the system regarding the "lazy_loading_threshold" parameter -->
 				</brick>
-				<brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
+				<brick id="ongoing-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick" _delta="define">
 					<active>true</active>
 					<rank>
 						<default>20</default>
@@ -993,16 +924,16 @@
 					</title>
 					<!-- Optional tag to define which display modes can be used in the brick's page and the brick's tile -->
 					<!--<display_modes>-->
-						<!-- Optional tag that must contain at least 1 <mode> tag. -->
-						<!--<availables>-->
-							<!--<mode id="list"/>-->
-							<!--<mode id="pie-chart"/>-->
-							<!--<mode id="bar-chart"/>-->
-						<!--</availables>-->
-						<!-- Optional tag to define which display mode will be used by default when opening the brick -->
-						<!--<default>list</default>-->
-						<!-- Optional tag to define which display mode will be used to render the brick's tile -->
-						<!--<tile>text</tile>-->
+					<!-- Optional tag that must contain at least 1 <mode> tag. -->
+					<!--<availables>-->
+					<!--<mode id="list"/>-->
+					<!--<mode id="pie-chart"/>-->
+					<!--<mode id="bar-chart"/>-->
+					<!--</availables>-->
+					<!-- Optional tag to define which display mode will be used by default when opening the brick -->
+					<!--<default>list</default>-->
+					<!-- Optional tag to define which display mode will be used to render the brick's tile -->
+					<!--<tile>text</tile>-->
 					<!--</display_modes>-->
 					<description>Brick:Portal:OngoingRequests:Title+</description>
 					<decoration_class>
@@ -1055,10 +986,10 @@
 					<!-- <default_list_length>20</default_list_length> -->
 					<data_loading>full</data_loading>
 					<export>
-            			<export_default_fields>true</export_default_fields>
-          			</export>
+						<export_default_fields>true</export_default_fields>
+					</export>
 				</brick>
-				<brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick">
+				<brick id="closed-tickets-for-portal-user" xsi:type="Combodo\iTop\Portal\Brick\ManageBrick" _delta="define">
 					<active>true</active>
 					<rank>
 						<navigation_menu>50</navigation_menu>
@@ -1102,12 +1033,12 @@
 					</grouping>
 					<data_loading>auto</data_loading>
 					<export>
-            			<export_default_fields>true</export_default_fields>
-          			</export>
+						<export_default_fields>true</export_default_fields>
+					</export>
 				</brick>
 			</bricks>
 			<forms>
-				<form id="service-view">
+				<form id="service-view" _delta="define">
 					<class>Service</class>
 					<fields></fields>
 					<twig>
@@ -1132,7 +1063,7 @@
 						<mode id="view" />
 					</modes>
 				</form>
-				<form id="servicesubcategory">
+				<form id="servicesubcategory" _delta="define">
 					<class>ServiceSubcategory</class>
 					<!-- Optional tag to list the fields. If empty only fields from <twig> tag will be displayed, if omitted fields from zlist details will. -->
 					<fields />
@@ -1162,7 +1093,7 @@
 						</div>
 					</twig>
 				</form>
-				<form id="ticket-create">
+				<form id="ticket-create" _delta="define">
 					<class>Ticket</class>
 					<properties>
 						<navigation_rules>
@@ -1209,7 +1140,7 @@
 						<mode id="create"/>
 					</modes>
 				</form>
-				<form id="ticket-edit">
+				<form id="ticket-edit" _delta="define">
 					<class>Ticket</class>
 					<properties>
 						<!-- Optional, display mode of the form fields. "cosy" for a regular labels over values layout; "compact" for a side-by-side
@@ -1220,10 +1151,10 @@
 						<!--<always_show_submit>false</always_show_submit>-->
 						<!-- Optional, navigation rules to define where to go when clicking on the submit/cancel buttons of the form -->
 						<navigation_rules>
-              <submit>
-                <default>go-to-open-requests</default>
-              </submit>
-            </navigation_rules>
+							<submit>
+								<default>go-to-open-requests</default>
+							</submit>
+						</navigation_rules>
 					</properties>
 					<fields></fields>
 					<twig>
@@ -1279,14 +1210,14 @@
 						<mode id="view"/>
 					</modes>
 				</form>
-				<form id="ticket-reopen">
+				<form id="ticket-reopen" _delta="define">
 					<class>Ticket</class>
 					<properties>
 						<navigation_rules>
-              <submit>
-                <default>go-to-open-requests</default>
-              </submit>
-            </navigation_rules>
+							<submit>
+								<default>go-to-open-requests</default>
+							</submit>
+						</navigation_rules>
 					</properties>
 					<fields />
 					<twig>
@@ -1299,19 +1230,19 @@
 					<modes>
 						<mode id="apply_stimulus">
 							<stimuli>
-        						<stimulus id="ev_reopen"/>
-	      					</stimuli>
-	      				</mode>
+								<stimulus id="ev_reopen"/>
+							</stimuli>
+						</mode>
 					</modes>
 				</form>
-				<form id="ticket-apply-stimulus">
+				<form id="ticket-apply-stimulus" _delta="define">
 					<class>Ticket</class>
 					<properties>
 						<navigation_rules>
-              <submit>
-                <default>go-to-open-requests</default>
-              </submit>
-            </navigation_rules>
+							<submit>
+								<default>go-to-open-requests</default>
+							</submit>
+						</navigation_rules>
 					</properties>
 					<fields />
 					<twig />
@@ -1319,7 +1250,7 @@
 						<mode id="apply_stimulus"/>
 					</modes>
 				</form>
-				<form id="person-view">
+				<form id="person-view" _delta="define">
 					<class>Person</class>
 					<fields />
 					<twig>
@@ -1350,64 +1281,7 @@
 			</forms>
 			<classes>
 				<!-- Note : A class (or one of its ancestors) MUST be declared here to be displayed in the portal -->
-				<class id="User">
-					<!-- Allow <allowed_profile>s to apply the <transition>s below. Flags on <field>s will be merged with those from datamodel -->
-					<!-- See example in UserRequest class -->
-					<!--<lifecycle/>-->
-					<scopes>
-						<!-- Note : Silos apply to those scope queries -->
-						<scope id="all">
-							<oql_view><![CDATA[SELECT User AS U JOIN Person AS P ON U.contactid=P.id WHERE P.id = :current_contact_id]]></oql_view>
-							<!-- No object of this class can be edited -->
-							<!--<oql_edit />-->
-							<!-- Everybody -->
-							<!--<allowed_profiles />-->
-						</scope>
-					</scopes>
-				</class>
-				<class id="Organization">
-					<scopes>
-						<scope id="all">
-							<oql_view><![CDATA[SELECT Organization WHERE id = :current_contact->org_id]]></oql_view>
-						</scope>
-					</scopes>
-				</class>
-				<class id="Location">
-					<scopes>
-						<scope id="all">
-							<oql_view><![CDATA[SELECT Location WHERE org_id = :current_contact->org_id]]></oql_view>
-						</scope>
-					</scopes>
-				</class>
-				<class id="Contact">
-					<scopes>
-						<scope id="all">
-							<oql_view><![CDATA[SELECT Contact WHERE org_id = :current_contact->org_id]]></oql_view>
-						</scope>
-						<scope id="admin">
-							<oql_view><![CDATA[SELECT Contact]]></oql_view>
-							<allowed_profiles>
-								<allowed_profile id="Administrator"/>
-							</allowed_profiles>
-						</scope>
-					</scopes>
-					<lists>
-						<list id="default">
-							<items>
-								<item id="status">
-									<rank>10</rank>
-								</item>
-								<item id="org_id">
-									<rank>20</rank>
-								</item>
-								<item id="function">
-									<rank>50</rank>
-								</item>
-							</items>
-						</list>
-					</lists>
-				</class>
-				<class id="ServiceFamily">
+				<class id="ServiceFamily" _delta="define">
 					<scopes>
 						<scope id="all">
 							<oql_view><![CDATA[SELECT ServiceFamily AS sf JOIN Service AS s ON s.servicefamily_id = sf.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id]]></oql_view>
@@ -1415,7 +1289,7 @@
 						</scope>
 					</scopes>
 				</class>
-				<class id="Service">
+				<class id="Service" _delta="define">
 					<scopes>
 						<scope id="all">
 							<oql_view><![CDATA[SELECT Service AS s JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND s.status != 'obsolete']]></oql_view>
@@ -1423,7 +1297,7 @@
 						</scope>
 					</scopes>
 				</class>
-				<class id="ServiceSubcategory">
+				<class id="ServiceSubcategory" _delta="define">
 					<scopes>
 						<scope id="all">
 							<oql_view><![CDATA[SELECT ServiceSubcategory AS ssc JOIN Service AS s ON ssc.service_id=s.id JOIN lnkCustomerContractToService AS l1 ON l1.service_id=s.id JOIN CustomerContract AS cc ON l1.customercontract_id=cc.id WHERE cc.org_id = :current_contact->org_id AND ssc.status != 'obsolete']]></oql_view>
@@ -1431,7 +1305,7 @@
 						</scope>
 					</scopes>
 				</class>
-				<class id="Ticket">
+				<class id="Ticket" _delta="define">
 					<scopes>
 						<scope id="all">
 							<oql_view><![CDATA[SELECT Ticket AS T WHERE T.caller_id = :current_contact_id AND T.finalclass IN ('UserRequest', 'Incident')]]></oql_view>
@@ -1448,7 +1322,7 @@
 				</class>
 			</classes>
 			<action_rules>
-				<action_rule id="contact-to-userrequest">
+				<action_rule id="contact-to-userrequest" _delta="define">
 					<!-- source_oql|source_class is only necessary if there is some copy preset|retrofit -->
 					<source_oql><![CDATA[SELECT Contact AS C WHERE C.id = :current_contact_id]]></source_oql>
 					<presets>
@@ -1459,13 +1333,13 @@
 					</presets>
 					<retrofits/>
 				</action_rule>
-				<action_rule id="service-to-userrequest">
+				<action_rule id="service-to-userrequest" _delta="define">
 					<source_class>Service</source_class>
 					<presets>
 						<preset id="1">copy(id, service_id)</preset>
 					</presets>
 				</action_rule>
-				<action_rule id="servicesubcategory-to-userrequest">
+				<action_rule id="servicesubcategory-to-userrequest" _delta="define">
 					<source_class>ServiceSubcategory</source_class>
 					<presets>
 						<preset id="1">copy(id, servicesubcategory_id)</preset>
@@ -1473,19 +1347,15 @@
 					</presets>
 				</action_rule>
 				<!-- Deprecated, will be removed in iTop 2.8 -->
-				<action_rule id="go-to-open-request-on-submit">
+				<action_rule id="go-to-open-request-on-submit" _delta="define">
 					<submit xsi:type="goto">
 						<brick>ongoing-tickets-for-portal-user</brick>
 					</submit>
 				</action_rule>
 			</action_rules>
 			<navigation_rules>
-				<!-- Close form (either the modal or the whole page) -->
-				<navigation_rule id="close-form" xsi:type="close" />
-				<!-- Go to the homepage -->
-				<navigation_rule id="go-to-homepage" xsi:type="go-to-homepage" />
 				<!-- Open a manage brick (simple method) -->
-				<navigation_rule id="go-to-open-requests" xsi:type="go-to-manage-brick">
+				<navigation_rule id="go-to-open-requests" xsi:type="go-to-manage-brick" _delta="define">
 					<!-- Mandatory, ID of the ManageBrick to go to -->
 					<id>ongoing-tickets-for-portal-user</id>
 					<!-- Optional, must be an ID of the available display modes of the brick (//brick/display_modes/availables/mode) -->
@@ -1496,31 +1366,26 @@
 					<!-- <filter>:this->caller_id_friendlyname</filter> -->
 				</navigation_rule>
 				<!-- Open a browse brick -->
-				<navigation_rule id="go-to-services" xsi:type="go-to-browse-brick">
-				 <!-- Mandatory, ID of the BrowseBrick to go to -->
-				 <id>services</id>
-				 <!-- Optional, must be an ID of the available browse modes of the brick (//brick/browse_modes/availables/mode) -->
-				 <!-- <browse_mode>tree</browse_mode> -->
-				 <!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
-				 <!-- <filter>computer</filter> -->
+				<navigation_rule id="go-to-services" xsi:type="go-to-browse-brick" _delta="define">
+					<!-- Mandatory, ID of the BrowseBrick to go to -->
+					<id>services</id>
+					<!-- Optional, must be an ID of the available browse modes of the brick (//brick/browse_modes/availables/mode) -->
+					<!-- <browse_mode>tree</browse_mode> -->
+					<!-- Optional, a string to preset as filter in the brick. ":this->XXX" can be used for the current object -->
+					<!-- <filter>computer</filter> -->
 				</navigation_rule>
 				<!-- Open a brick, developer method -->
 				<!-- <navigation_rule id="go-to-open-requests-alternate-way" xsi:type="go-to-brick"> -->
-					<!-- <route> -->
-						<!-- <id>p_manage_brick_display_as</id> -->
-						<!-- <params> -->
-							<!-- <param id="sBrickId">ongoing-tickets-for-portal-user</param> -->
-							<!-- <param id="sDisplayMode">pie-chart</param> -->
-							<!-- <param id="sGroupingTab">resolved</param> -->
-							<!-- </params> -->
-					<!-- </route> -->
+				<!-- <route> -->
+				<!-- <id>p_manage_brick_display_as</id> -->
+				<!-- <params> -->
+				<!-- <param id="sBrickId">ongoing-tickets-for-portal-user</param> -->
+				<!-- <param id="sDisplayMode">pie-chart</param> -->
+				<!-- <param id="sGroupingTab">resolved</param> -->
+				<!-- </params> -->
+				<!-- </route> -->
 				<!-- </navigation_rule> -->
-</navigation_rules>
-</module_design>
-</module_designs>
-<module_parameters>
-<parameters id="itop-portal" _delta="define">
-<lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
-		</parameters>
-	</module_parameters>
+			</navigation_rules>
+		</module_design>
+	</module_designs>
 </itop_design>

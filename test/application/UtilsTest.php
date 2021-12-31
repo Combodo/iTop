@@ -54,11 +54,10 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function memoryLimitDataProvider()
 	{
 		return [
-			[true, '-1', 1024],
-			[true, -1, 1024],
-			[true, 1024, 1024],
-			[true, 2048, 1024],
-			[false, 1024, 2048],
+			'current -1, required 1024' => [true, -1, 1024],
+			'current 1024, required 1024' => [true, 1024, 1024],
+			'current 2048, required 1024' => [true, 2048, 1024],
+			'current 1024, required 2048' => [false, 1024, 2048],
 		];
 	}
 
@@ -68,7 +67,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	 */
 	public function testRealPath($sPath, $sBasePath, $expected)
 	{
-		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath));
+		$this->assertSame($expected, utils::RealPath($sPath, $sBasePath), "utils::RealPath($sPath, $sBasePath) does not match $expected");
 	}
 
 	public function realPathDataProvider()
@@ -77,14 +76,19 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 
 		$sSep = DIRECTORY_SEPARATOR;
 		$sItopRootRealPath = realpath(APPROOT).$sSep;
+		$sLicenseFileName = 'license.txt';
+		if (!is_file(APPROOT.$sLicenseFileName))
+		{
+			$sLicenseFileName = 'LICENSE';
+		}
 
 		return [
-			'licence.txt' => [APPROOT.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
+			$sLicenseFileName => [APPROOT.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
 			'unexisting file' => [APPROOT.'license_DOES_NOT_EXIST.txt', APPROOT, false],
-			'/license.txt' => [APPROOT.$sSep.'license.txt', APPROOT, $sItopRootRealPath.'license.txt'],
-			'%2flicense.txt' => [APPROOT.'%2flicense.txt', APPROOT, false],
-			'../license.txt' => [APPROOT.'..'.$sSep.'license.txt', APPROOT, false],
-			'%2e%2e%2flicense.txt' => [APPROOT.'%2e%2e%2flicense.txt', APPROOT, false],
+			'/'.$sLicenseFileName => [APPROOT.$sSep.$sLicenseFileName, APPROOT, $sItopRootRealPath.$sLicenseFileName],
+			'%2f'.$sLicenseFileName => [APPROOT.'%2f'. $sLicenseFileName, APPROOT, false],
+			'../'.$sLicenseFileName => [APPROOT.'..'.$sSep.$sLicenseFileName, APPROOT, false],
+			'%2e%2e%2f'.$sLicenseFileName => [APPROOT.'%2e%2e%2f'.$sLicenseFileName, APPROOT, false],
 			'application/utils.inc.php with basepath=APPROOT' => [
 				APPROOT.'application/utils.inc.php',
 				APPROOT,
@@ -96,9 +100,9 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 				$sItopRootRealPath.'application'.$sSep.'utils.inc.php',
 			],
 			'basepath containing / and \\' => [
-				APPROOT.'sources/form/form.class.inc.php',
-				APPROOT.'sources/form\\form.class.inc.php',
-				$sItopRootRealPath.'sources'.$sSep.'form'.$sSep.'form.class.inc.php',
+				APPROOT.'sources/Form/Form.php',
+				APPROOT.'sources/Form\\Form.php',
+				$sItopRootRealPath.'sources'.$sSep.'Form'.$sSep.'Form.php',
 			],
 		];
 	}
@@ -163,4 +167,412 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 		);
 	}
 
+	public function GetAbsoluteUrlAppRootPersistency() {
+		$this->setUp();
+
+		return [
+			'ForceTrustProxy 111' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 101' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 011' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 110' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => true,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 001' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => true,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+			'ForceTrustProxy 000' => [
+				'bBehindReverseProxy' => false,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'http://example.com/',
+				'bForceTrustProxy2' => false,
+				'sExpectedAppRootUrl2' => 'http://example.com/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'http://example.com/',
+			],
+			'BehindReverseProxy ForceTrustProxy 010' => [
+				'bBehindReverseProxy' => true,
+				'bForceTrustProxy1' => false,
+				'sExpectedAppRootUrl1' => 'https://proxy.com:4443/',
+				'bForceTrustProxy2' => true,
+				'sExpectedAppRootUrl2' => 'https://proxy.com:4443/',
+				'bForceTrustProxy3' => false,
+				'sExpectedAppRootUrl3' => 'https://proxy.com:4443/',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetAbsoluteUrlAppRootPersistency
+	 */
+	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)
+	{
+		utils::GetConfig()->Set('behind_reverse_proxy', $bBehindReverseProxy);
+		utils::GetConfig()->Set('app_root_url', '');
+
+		//should match http://example.com/ when not trusting the proxy
+		//should match https://proxy.com:4443/ when  trusting the proxy
+		$_SERVER = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'SERVER_PORT' => '80',
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+			'HTTP_X_FORWARDED_PORT' => '4443',
+			'HTTP_X_FORWARDED_PROTO' => 'https',
+			'HTTPS' => null,
+		];
+
+		$this->assertEquals($sExpectedAppRootUrl1, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy1));
+
+		$this->assertEquals($sExpectedAppRootUrl2, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy2));
+
+		$this->assertEquals($sExpectedAppRootUrl3, utils::GetAbsoluteUrlAppRoot($bForceTrustProxy3));
+	}
+
+
+	/**
+	 * @dataProvider GetDefaultUrlAppRootProvider
+	 */
+	public function testGetDefaultUrlAppRoot($bForceTrustProxy, $bConfTrustProxy, $aServerVars, $sExpectedAppRootUrl)
+	{
+		$_SERVER = $aServerVars;
+		utils::GetConfig()->Set('behind_reverse_proxy', $bConfTrustProxy);
+		$sAppRootUrl = utils::GetDefaultUrlAppRoot($bForceTrustProxy);
+		$this->assertEquals($sExpectedAppRootUrl, $sAppRootUrl);
+	}
+
+	public function GetDefaultUrlAppRootProvider()
+	{
+		$this->setUp();
+
+		$baseServerVar = [
+			'REMOTE_ADDR' => '127.0.0.1', //is not set, disable IsProxyTrusted
+			'SERVER_NAME' => 'example.com',
+			'HTTP_X_FORWARDED_HOST' => null,
+			'SERVER_PORT' => '80',
+			'HTTP_X_FORWARDED_PORT' => null,
+			'REQUEST_URI' => '/index.php?baz=1',
+			'SCRIPT_NAME' => '/index.php',
+			'SCRIPT_FILENAME' => APPROOT.'index.php',
+			'QUERY_STRING' => 'baz=1',
+			'HTTP_X_FORWARDED_PROTO' => null,
+			'HTTP_X_FORWARDED_PROTOCOL' => null,
+			'HTTPS' => null,
+		];
+
+		return [
+			'no proxy, http' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, []),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'no proxy, subPath, http' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REQUEST_URI' => '/foo/index.php?baz=1',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/foo/',
+			],
+			'IIS lack REQUEST_URI' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REQUEST_URI' => null,
+					'SCRIPT_NAME' => '/foo/index.php',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/foo/',
+			],
+			'no proxy, https' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'SERVER_PORT' => '443',
+					'HTTPS' => 'on',
+				]),
+				'sExpectedAppRootUrl' => 'https://example.com/',
+			],
+			'no proxy, https on 4443' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'SERVER_PORT' => '4443',
+					'HTTPS' => 'on',
+				]),
+				'sExpectedAppRootUrl' => 'https://example.com:4443/',
+			],
+			'with proxy, not enabled' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+			'with proxy, enabled HTTP_X_FORWARDED_PROTO' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled - alt HTTP_X_FORWARDED_PROTO COL' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTOCOL' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, disabled, forced' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled, forced' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+
+			'with proxy, disabled, forced, no remote addr' => [
+				'bForceTrustProxy' => true,
+				'bConfTrustProxy' => false,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REMOTE_ADDR' => null,
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'https://proxy.com:4443/',
+			],
+			'with proxy, enabled, no remote addr' => [
+				'bForceTrustProxy' => false,
+				'bConfTrustProxy' => true,
+				'aServerVars' => array_merge($baseServerVar, [
+					'REMOTE_ADDR' => null,
+					'HTTP_X_FORWARDED_HOST' => 'proxy.com',
+					'HTTP_X_FORWARDED_PORT' => '4443',
+					'HTTP_X_FORWARDED_PROTO' => 'https',
+				]),
+				'sExpectedAppRootUrl' => 'http://example.com/',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider ToAcronymProvider
+	 * @covers       utils::ToAcronym
+	 *
+	 * @param string $sInput
+	 * @param string $sExceptedAcronym
+	 */
+	public function testToAcronym(string $sInput, string $sExceptedAcronym)
+	{
+		$sTestedAcronym = utils::ToAcronym($sInput);
+		$this->assertEquals($sTestedAcronym, $sExceptedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public function ToAcronymProvider()
+	{
+		return [
+			'One word, upper case letter' => [
+				'Carrie',
+				'C',
+			],
+			'One word, lower case letter' => [
+				'carrie',
+				'C',
+			],
+			'Application name' => [
+				'iTop',
+				'I',
+			],
+			'Several words, upper case letters' => [
+				'Carrie Ann Moss',
+				'CAM',
+			],
+			'Several words, mixed case letters' => [
+				'My name My name',
+				'MM',
+			],
+			'Several words, upper case letters, two first hyphened' => [
+				'Lily-Rose Depp',
+				'LRD',
+			],
+			'Several words, mixed case letters, two first hyphened' => [
+				'Lily-rose Depp',
+				'LD',
+			],
+			'Several words, upper case letetrs, two last hypened' => [
+				'Jada Pinkett-Smith',
+				'JPS',
+			],
+			'Several words, mixed case letters, two last hyphened' => [
+				'Jada Pinkett-smith',
+				'JP',
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider GetMentionedObjectsFromTextProvider
+	 * @covers       utils::GetMentionedObjectsFromText
+	 *
+	 * @param string $sInput
+	 * @param string $sFormat
+	 * @param array $aExceptedMentionedObjects
+	 *
+	 * @throws \Exception
+	 */
+	public function testGetMentionedObjectsFromText(string $sInput, string $sFormat, array $aExceptedMentionedObjects)
+	{
+		$aTestedMentionedObjects = utils::GetMentionedObjectsFromText($sInput, $sFormat);
+
+		$sExpectedAsString = print_r($aExceptedMentionedObjects, true);
+		$sTestedAsString = print_r($aTestedMentionedObjects, true);
+
+		$this->assertEquals($sTestedAsString, $sExpectedAsString, "Found mentioned objects don't match. Got: $sTestedAsString, expected $sExpectedAsString");
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public function GetMentionedObjectsFromTextProvider(): array
+	{
+		$sAbsUrlAppRoot = utils::GetAbsoluteUrlAppRoot();
+
+		return [
+			'No object' => [
+				"Begining
+				Second line
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[],
+			],
+			'1 UserRequest' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345'],
+				],
+			],
+			'2 UserRequests' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=987654&foo=bar\">R-987654</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345', '987654'],
+				],
+			],
+			'1 UserRequest, 1 Person' => [
+				"Begining
+				Before link <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=UserRequest&id=12345&foo=bar\">R-012345</a> After link
+				And <a href=\"$sAbsUrlAppRoot/pages/UI.php&operation=details&class=Person&id=3&foo=bar\">Claude Monet</a>
+				End",
+				utils::ENUM_TEXT_FORMAT_HTML,
+				[
+					'UserRequest' => ['12345'],
+					'Person' => ['3'],
+				],
+			],
+		];
+	}
+
+	/**
+	 * @param string $sExpressionToConvert
+	 * @param int $iExpectedConvertedValue
+	 *
+	 * @dataProvider ConvertToBytesProvider
+	 */
+	public function testConvertToBytes($sExpressionToConvert, $iExpectedConvertedValue)
+	{
+		$iCurrentConvertedValue = utils::ConvertToBytes($sExpressionToConvert);
+		self::assertEquals($iExpectedConvertedValue, $iCurrentConvertedValue, 'Converted value wasn\'t the one expected !');
+		self::assertSame($iExpectedConvertedValue, $iCurrentConvertedValue, 'Value was converted but not of the expected type');
+	}
+
+	public function ConvertToBytesProvider()
+	{
+		return [
+			'123 int value' => ['123', 123],
+			'-1 no limit'   => ['-1', -1],
+			'56k'           => ['56k', 56 * 1024],
+			'512M'          => ['512M', 512 * 1024 * 1024],
+			'2G'            => ['2G', 2 * 1024 * 1024 * 1024],
+		];
+	}
 }

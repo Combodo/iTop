@@ -1,0 +1,20 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* These rules should be the same as those in css/backoffice/vendors/ckeditor.css */
+body{
+	margin: 5px 10px;
+}
+.cke_editable{
+	line-height: 1.4;
+}
+figure{
+	 border: solid 1px #ccc;
+	border-radius: 2px;
+ }
+p{
+	margin-top: 0.25em;
+	margin-bottom: 0.25em;
+}

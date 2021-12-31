@@ -1,0 +1,72 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet-header-static--padding-top: $ibo-spacing-500 !default;
+$ibo-dashlet-header-static--padding-bottom: $ibo-spacing-0 !default;
+$ibo-dashlet-header-static--padding-x: $ibo-spacing-500 !default;
+
+$ibo-dashlet-header-static--body--margin-left: $ibo-spacing-800 !default;
+$ibo-dashlet-header-static--body--text-color: $ibo-color-grey-900 !default;
+
+$ibo-dashlet-header-static--title--margin-right: $ibo-spacing-300 !default;
+
+$ibo-dashlet-header-static--text--text-color: inherit !default;
+
+$ibo-dashlet-header-static--icon-container--margin-right: $ibo-spacing-500 !default;
+$ibo-dashlet-header-static--icon--size: 48px !default;
+
+$ibo-dashlet-header-static--body--separator--top: 50% !default;
+$ibo-dashlet-header-static--body--separator--top: 50% !default;
+$ibo-dashlet-header-static--body--separator--width: 10000px !default;
+$ibo-dashlet-header-static--body--separator--height: 1px !default;
+$ibo-dashlet-header-static--body--separator--border: 2px solid $ibo-color-grey-400 !default;
+$ibo-dashlet-header-static--body--separator-before--right: calc(100% + #{$ibo-dashlet-header-static--icon-container--margin-right}) !default;
+$ibo-dashlet-header-static--body--separator-after--left: calc(100% + #{$ibo-dashlet-header-static--icon-container--margin-right}) !default;
+
+
+/* Rules */
+.ibo-dashlet-header-static {
+  padding: $ibo-dashlet-header-static--padding-top $ibo-dashlet-header-static--padding-x $ibo-dashlet-header-static--padding-bottom $ibo-dashlet-header-static--padding-x;
+  overflow-x: hidden; /* To hide separator extra length */
+}
+
+.ibo-dashlet-header-static--body {
+  position: relative;
+	display: inline-flex;
+	justify-items: left;
+	align-items: center;
+  margin-left: $ibo-dashlet-header-static--body--margin-left;
+
+  color: $ibo-dashlet-header-static--body--text-color;
+  @extend %ibo-font-size-350;
+
+  &::before,
+  &::after{
+    content: "";
+    position: absolute;
+    top: $ibo-dashlet-header-static--body--separator--top;
+    width: $ibo-dashlet-header-static--body--separator--width;
+    height: $ibo-dashlet-header-static--body--separator--height;
+    border-bottom: $ibo-dashlet-header-static--body--separator--border;
+  }
+  &::before{
+    right: $ibo-dashlet-header-static--body--separator-before--right;
+  }
+  &::after{
+    left: $ibo-dashlet-header-static--body--separator-after--left;
+  }
+}
+
+.ibo-dashlet-header-static--icon-container {
+	margin-right: $ibo-dashlet-header-static--icon-container--margin-right;
+  @extend %ibo-fully-centered-content;
+}
+
+.ibo-dashlet-header-static--icon {
+	width: $ibo-dashlet-header-static--icon--size;
+	min-width: $ibo-dashlet-header-static--icon--size; /* To avoid image being shrinked when container is too small */
+	max-height: $ibo-dashlet-header-static--icon--size;
+}

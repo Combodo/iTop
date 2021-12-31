@@ -1,9 +1,11 @@
 <?php
 
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * Class LoginForm
@@ -29,8 +31,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if (!isset($_SESSION['login_mode']) || ($_SESSION['login_mode'] == 'form'))
-		{
+		if (!Session::IsSet('login_mode') || Session::Get('login_mode') == 'form') {
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
 			if ($this->bForceFormOnError || empty($sAuthUser) || empty($sAuthPwd))
@@ -50,9 +51,8 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 				$this->bForceFormOnError = false;
 				exit;
 			}
-
-			$_SESSION['login_temp_auth_user'] =  $sAuthUser;
-			$_SESSION['login_mode'] = 'form';
+			Session::Set('login_temp_auth_user', $sAuthUser);
+			Session::Set('login_mode', 'form');
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -62,11 +62,11 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (Session::Get('login_mode') == 'form')
 		{
 			$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			$sAuthPwd = utils::ReadPostedParam('auth_pwd', null, 'raw_data');
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
 				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
@@ -81,19 +81,19 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (Session::Get('login_mode') == 'form')
 		{
-			if (isset($_SESSION['auth_user']))
+			if (Session::IsSet('auth_user'))
 			{
 				// If FSM reenter this state (example 2FA) then the auth_user is not resubmitted
-				$sAuthUser = $_SESSION['auth_user'];
+				$sAuthUser = Session::Get('auth_user');
 			}
 			else
 			{
 				$sAuthUser = utils::ReadPostedParam('auth_user', '', 'raw_data');
 			}
 			// Store 'auth_user' in session for further use
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
+			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -103,7 +103,7 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (Session::Get('login_mode') == 'form')
 		{
 			$this->bForceFormOnError = true;
 		}
@@ -115,9 +115,9 @@ class LoginForm extends AbstractLoginFSMExtension implements iLoginUIExtension
 	 */
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'form')
+		if (Session::Get('login_mode') == 'form')
 		{
-			$_SESSION['can_logoff'] = true;
+			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;

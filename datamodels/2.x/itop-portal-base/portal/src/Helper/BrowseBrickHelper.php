@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -360,12 +360,14 @@ class BrowseBrickHelper
 						{
 							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
 							{
-								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', array(
+								$oOrmDoc = $tmpAttValue;
+								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => $sCurrentObjectClass,
 									'sObjectId' => $sCurrentObjectId,
 									'sObjectField' => $aLevelsProperties[$key][$sOptionalAttribute],
 									'cache' => 86400,
-								));
+									's' => $oOrmDoc->GetSignature(),
+								]);
 							}
 							else
 							{
@@ -410,12 +412,13 @@ class BrowseBrickHelper
 							$oOrmDoc = $value->Get($aField['code']);
 							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
 							{
-								$sUrl = $this->oUrlGenerator->generate('p_object_document_display', array(
+								$sUrl = $this->oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => $sCurrentObjectClass,
 									'sObjectId' => $sCurrentObjectId,
 									'sObjectField' => $aField['code'],
 									'cache' => 86400,
-								));
+									's' => $oOrmDoc->GetSignature(),
+								]);
 							}
 							else
 							{
@@ -530,12 +533,14 @@ class BrowseBrickHelper
 						{
 							if (is_object($tmpAttValue) && !$tmpAttValue->IsEmpty())
 							{
-								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', array(
+								$oOrmDoc = $tmpAttValue;
+								$tmpAttValue = $this->oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => get_class($aCurrentRowValues[0]),
 									'sObjectId' => $aCurrentRowValues[0]->GetKey(),
 									'sObjectField' => $aLevelsProperties[$aCurrentRowKeys[0]][$sOptionalAttribute],
 									'cache' => 86400,
-								));
+									's' => $oOrmDoc->GetSignature(),
+								]);
 							}
 							else
 							{

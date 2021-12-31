@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2020 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -35,7 +35,7 @@ interface iProcess
  * interface iBackgroundProcess
  * Any extension that must be called regularly to be executed in the background 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 interface iBackgroundProcess extends iProcess
@@ -52,7 +52,7 @@ interface iBackgroundProcess extends iProcess
  *
  * @see \AbstractWeeklyScheduledProcess for a bootstrap implementation
  * @license     http://opensource.org/licenses/AGPL-3.0
- * @copyright   Copyright (C) 2013 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  */
 interface iScheduledProcess extends iProcess
 {
@@ -185,12 +185,9 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			static::DEFAULT_MODULE_SETTING_ENABLED
 		);
 
-		$sItopTimeZone = $this->getOConfig()->Get('timezone');
-		$timezone = new DateTimeZone($sItopTimeZone);
-
 		if (!$bEnabled)
 		{
-			return new DateTime('3000-01-01', $timezone);
+			return new DateTime('3000-01-01');
 		}
 
 		// 1st - Interpret the list of days as ordered numbers (monday = 1)
@@ -209,7 +206,7 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			throw new ProcessInvalidConfigException($this->GetModuleName().": wrong format for setting '".static::MODULE_SETTING_TIME."' (found '$sProcessTime')");
 		}
 
-		$oNow = new DateTime($sCurrentTime, $timezone);
+		$oNow = new DateTime($sCurrentTime);
 		$iNextPos = false;
 		$sDay = $oNow->format('N');
 		for ($iDay = (int) $sDay; $iDay <= 7; $iDay++)
@@ -244,7 +241,6 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 			$oRet->modify('+'.$iMove.' days');
 		}
 		list($sHours, $sMinutes) = explode(':', $sProcessTime);
-		/** @noinspection PhpElementIsNotAvailableInCurrentPhpVersionInspection non used new parameter in PHP 7.1 */
 		$oRet->setTime((int)$sHours, (int)$sMinutes);
 
 		return $oRet;
@@ -258,30 +254,4 @@ abstract class AbstractWeeklyScheduledProcess implements iScheduledProcess
 	 * @return string
 	 */
 	abstract public function Process($iUnixTimeLimit);
-}
-
-/**
- * Exception for {@link iProcess} implementations.<br>
- * An error happened during the processing but we can go on with the next implementations.
- * @since 2.5.0 N°1195
- */
-class ProcessException extends CoreException
-{
-}
-
-/**
- * @since 2.7.0 PR #89
- */
-class ProcessInvalidConfigException extends ProcessException
-{
-}
-
-/**
- * Class ProcessFatalException
- * Exception for iProcess implementations.<br>
- * A big error occurred, we have to stop the iProcess processing.
- * @since 2.5.0 N°1195
- */
-class ProcessFatalException extends CoreException
-{
 }

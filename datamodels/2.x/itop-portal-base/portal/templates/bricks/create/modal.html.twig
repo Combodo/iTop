@@ -22,7 +22,7 @@
 	            // Preparing target class url
                 var sUrl = '{{ app['url_generator'].generate('p_object_create', {sObjectClass : '-sObjectClass-'})|raw }}';
 	            sUrl = sUrl.replace(/-sObjectClass-/, $(this).attr('data-target-class') );
-	            sUrl = AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
+	            sUrl = CombodoGlobalToolbox.AddParameterToUrl(sUrl, 'ar_token', '{{ ar_token }}');
 
 	            // Creating a new modal
 	            CombodoPortalToolbox.OpenModal({

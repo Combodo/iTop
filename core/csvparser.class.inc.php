@@ -1,33 +1,9 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * CSV parser
- *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-
-class CSVParserException extends CoreException
-{
-}
 
 define('stSTARTING', 1); //grey zone: the type is undetermined
 define('stRAW', 2); //building a non-qualified string
@@ -135,7 +111,7 @@ class CSVParser
 		// More time for the next row
 		if ($this->m_iTimeLimitPerRow !== null)
 		{
-			set_time_limit($this->m_iTimeLimitPerRow);
+			set_time_limit(intval($this->m_iTimeLimitPerRow));
 		}
 	}
 	protected function __AddCellTrimmed($c = null, $aFieldMap = null)
@@ -194,7 +170,7 @@ class CSVParser
 		{
 			// Give some time for the first row
 			$iTimeLimit = ini_get('max_execution_time');
-			set_time_limit($this->m_iTimeLimitPerRow);
+			set_time_limit(intval($this->m_iTimeLimitPerRow));
 		}
 		for($i = 0; $i <= $iDataLength ; $i++)
 		{
@@ -255,7 +231,7 @@ class CSVParser
 		if ($iTimeLimit !== null)
 		{
 			// Restore the previous time limit
-			set_time_limit($iTimeLimit);
+			set_time_limit(intval($iTimeLimit));
 		}
 		return $this->m_aDataSet;
 	}

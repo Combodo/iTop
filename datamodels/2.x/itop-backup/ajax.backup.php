@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2020 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,7 +20,6 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 if (!defined('APPROOT')) require_once(__DIR__.'/../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
 require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 require_once(APPROOT.'core/mutex.class.inc.php');
@@ -51,7 +50,6 @@ function DisplayErrorAndDie($oPage, $sHtmlErrorMessage, $exitCode = null)
 $sOperation = utils::ReadParam('operation', '');
 
 $oPage = new ajax_page('');
-$oPage->no_cache();
 $oPage->SetContentType('text/html');
 
 
@@ -67,17 +65,16 @@ switch ($sOperation)
 	 */
 	case 'restore_exec':
 		IssueLog::Enable(APPROOT.'log/error.log');
-		if (utils::GetConfig()->Get('demo_mode'))
-		{
-			DisplayErrorAndDie($oPage, '<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
+		if (utils::GetConfig()->Get('demo_mode')) {
+			DisplayErrorAndDie($oPage,
+				'<div data-error-stimulus="Error">Sorry, '.ITOP_APPLICATION_SHORT.' is in <b>demonstration mode</b>: the feature is disabled.</div>');
 		}
 
 		$sToken = utils::ReadParam('token', '', false, 'raw_data');
 		$sBasePath = APPROOT.'/data/';
 		$sTokenFile = $sBasePath.'restore.'.$sToken.'.tok';
 		$tokenRealPath = utils::RealPath($sTokenFile, $sBasePath);
-		if (($tokenRealPath === false) || (!is_file($tokenRealPath)))
-		{
+		if (($tokenRealPath === false) || (!is_file($tokenRealPath))) {
 			IssueLog::Error("ajax.backup.php operation=$sOperation ERROR = inexisting token $sToken");
 			$sEscapedToken = utils::HtmlEntities($sToken);
 			DisplayErrorAndDie($oPage, "<p>Error: missing token file: '$sEscapedToken'</p>");
@@ -173,10 +170,6 @@ JS
 			require_once(dirname(__FILE__).'/dbrestore.class.inc.php');
 
 			$sEnvironment = utils::ReadParam('environment', 'production', false, 'raw_data');
-			$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
-			IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
-			$oRestoreMutex->Lock();
-			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
 			try
 			{
 				set_time_limit(0);
@@ -206,13 +199,15 @@ JS
 			finally
 			{
 				unlink($tokenRealPath);
-				$oRestoreMutex->Unlock();
 			}
 
 			$oPage->output();
 			break;
 
 		case 'download':
+			while (ob_get_level() > 0) {
+				ob_end_clean();
+			}
 			$sFile = utils::ReadParam('file', '', false, 'raw_data');
 			$oBackup = new DBBackupScheduled();
 			$sBackupDir = APPROOT.'data/backups/';

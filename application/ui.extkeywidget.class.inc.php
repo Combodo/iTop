@@ -1,23 +1,13 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once(APPROOT.'/application/webpage.class.inc.php');
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+
 require_once(APPROOT.'/application/displayblock.class.inc.php');
 
 /**
@@ -67,48 +57,110 @@ class UIExtKeyWidget
 
 	protected $iId;
 	protected $sTargetClass;
+	protected $sFilter;
 	protected $sAttCode;
 	protected $bSearchMode;
 
-	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
-	static public function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs, $bSearchMode = false)
+	/**
+	 * @param \WebPage $oPage
+	 * @param string $sAttCode
+	 * @param string $sClass
+	 * @param string $sTitle
+	 * @param object $oAllowedValues
+	 * @param mixed $value
+	 * @param int $iInputId
+	 * @param boolean $bMandatory
+	 * @param string $sFieldName
+	 * @param string $sFormPrefix
+	 * @param array $aArgs
+	 * @param boolean $bSearchMode
+	 * @param string $sInputType type of field rendering, contains one of the \cmdbAbstractObject::ENUM_INPUT_TYPE_* constants
+	 *
+	 * @return string
+	 * @throws \Exception
+	 *
+	 * @since 3.0.0 N°3750 new $sInputType parameter
+	 */
+	public static function DisplayFromAttCode(
+		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '',
+		$aArgs = [], $bSearchMode = false, &$sInputType = ''
+	)
 	{
+		// we will only use key & name, so let's reduce fields loaded !
+		$aAttToLoad = [
+			$sClass => [], // nothing, id and friendlyname are automatically added by the API
+		];
+		$oAllowedValues->OptimizeColumnLoad($aAttToLoad);
+
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
 		$bAllowTargetCreation = $oAttDef->AllowTargetCreation();
-		if (!$bSearchMode)
-		{
+		if (!$bSearchMode) {
 			$sDisplayStyle = $oAttDef->GetDisplayStyle();
-		}
-		else
-		{
+		} else {
 			$sDisplayStyle = 'select'; // In search mode, always use a drop-down list
 		}
 		$oWidget = new UIExtKeyWidget($sTargetClass, $iInputId, $sAttCode, $bSearchMode);
-		return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle);
+		if (!$bSearchMode) {
+			switch ($sDisplayStyle)
+			{
+				case 'radio':
+				case 'radio_horizontal':
+				case 'radio_vertical':
+					$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_RADIO;
+
+					return $oWidget->DisplayRadio($oPage, $iMaxComboLength, $bAllowTargetCreation, $oAllowedValues, $value, $sFieldName, $sDisplayStyle);
+
+				case 'select':
+				case 'list':
+				default:
+					return $oWidget->DisplaySelect($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value,
+						$bMandatory, $sFieldName, $sFormPrefix, $aArgs, $sInputType);
+			}
+		} else {
+			return $oWidget->Display($oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, $oAllowedValues, $value, $iInputId,
+				$bMandatory, $sFieldName, $sFormPrefix, $aArgs, null, $sDisplayStyle, true, $sInputType);
+		}
 	}
 
-	public function __construct($sTargetClass, $iInputId, $sAttCode = '', $bSearchMode = false)
+	public function __construct($sTargetClass, $iInputId, $sAttCode = '', $bSearchMode = false, $sFilter = null)
 	{
 		$this->sTargetClass = $sTargetClass;
+		$this->sFilter = $sFilter;
 		$this->iId = $iInputId;
 		$this->sAttCode = $sAttCode;
 		$this->bSearchMode = $bSearchMode;
 	}
 
 	/**
-	 * Get the HTML fragment corresponding to the ext key editing widget
-	 * @param WebPage $oP The web page used for all the output
+	 * @param \WebPage $oPage
+	 * @param int $iMaxComboLength
+	 * @param bool $bAllowTargetCreation
+	 * @param string $sTitle
+	 * @param \DBObjectset $oAllowedValues
+	 * @param mixed $value
+	 * @param bool $bMandatory
+	 * @param string $sFieldName
+	 * @param string $sFormPrefix
 	 * @param array $aArgs Extra context arguments
-	 * @return string The HTML fragment to be inserted into the page
+	 * @param string $sInputType type of field rendering, contains one of the \cmdbAbstractObject::ENUM_INPUT_TYPE_* constants
+	 *
+	 * @return string the HTML fragment corresponding to the ext key editing widget
+	 * @throws \ArchivedObjectException
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.0.0 N°2508 - Include Obsolescence icon within list and autocomplete
+	 * @since 3.0.0 N°3750 new $sInputType parameter
 	 */
-	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true)
+	public function DisplaySelect(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), &$sInputType = '')
 	{
-		if (!is_null($bSearchMode))
-		{
-			$this->bSearchMode = $bSearchMode;
-		}
 		$sTitle = addslashes($sTitle);
 		$oPage->add_linked_script('../js/extkeywidget.js');
 		$oPage->add_linked_script('../js/forms-json-utils.js');
@@ -118,29 +170,23 @@ class UIExtKeyWidget
 		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
 		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
 
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
+		
+		
 		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
-		if($this->bSearchMode)
-		{
+		if ($this->bSearchMode) {
 			$sWizHelper = 'null';
 			$sWizHelperJSON = "''";
 			$sJSSearchMode = 'true';
-		}
-		else
-		{
-			if (isset($aArgs['wizHelper']))
-			{
+		} else {
+			if (isset($aArgs['wizHelper'])) {
 				$sWizHelper = $aArgs['wizHelper'];
-			}
-			else
-			{
+			} else {
 				$sWizHelper = 'oWizardHelper'.$sFormPrefix;
 			}
 			$sWizHelperJSON = $sWizHelper.'.UpdateWizardToJSON()';
 			$sJSSearchMode = 'false';
 		}
-		if (is_null($oAllowedValues))
-		{
+		if (is_null($oAllowedValues)) {
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -148,106 +194,87 @@ class UIExtKeyWidget
 		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
 		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
 
+		$bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
+		$sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\"  data-accessibility-selectize-label=\"$sTitle\">";
+		
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
-		if (!$oAllowedValues->CountExceeds($iMaxComboLength))
-		{
-            // Discrete list of values, use a SELECT or RADIO buttons depending on the config
-			switch($sDisplayStyle)
-			{
-				case 'radio':
-				case 'radio_horizontal':
-				case 'radio_vertical':
-				$sValidationField = null;
+		if (!$bIsAutocomplete) {
+			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+			$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
+			//$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
+			$aOptions = [];
 
-				$bVertical = ($sDisplayStyle != 'radio_horizontal');
-				$bExtensions = false;
-				$oAllowedValues->Rewind();
-				$aAllowedValues = array();
-				while($oObj = $oAllowedValues->Fetch())
-				{
-					$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
-				}
-				$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
-				$aEventsList[] ='change';
-				break;
+			$aOption = [];
+			$aOption['value'] = "";
+			$aOption['label'] = Dict::S('UI:SelectOne');
+			array_push($aOptions, $aOption);
 
-				case 'select':
-				case 'list':
-				default:
+			$oAllowedValues->Rewind();
+			$sClassAllowed = $oAllowedValues->GetClass();
+			$bAddingValue = false;
 
-				$sHelpText = ''; //$this->oAttDef->GetHelpOnEdition();
-				$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
+			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
+			$sFormatAdditionalField = $aComplementAttributeSpec[0];
+			$aAdditionalField = $aComplementAttributeSpec[1];
 
-				if ($this->bSearchMode)
-				{
-					if ($bSearchMultiple)
-					{
-						$sHTMLValue .= "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
-					}
-					else
-					{
-						$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
-						$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
-						$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
+			if (count($aAdditionalField) > 0) {
+				$bAddingValue = true;
+			}
+			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
+			$bInitValue = false;
+			while ($oObj = $oAllowedValues->Fetch()) {
+				$aOption = [];
+				$aOption['value'] = $oObj->GetKey();
+				$aOption['label'] = $oObj->GetName();
+				$aOption['search_label'] = utils::HtmlEntityDecode($oObj->GetName());
+
+				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
+					// When there is only once choice, select it by default
+					if ($value != $oObj->GetKey()) {
+						$value = $oObj->GetKey();
+						$bInitValue = true;
 					}
 				}
-				else
-				{
-					$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
-					$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+				if ($oObj->IsObsolete()) {
+					$aOption['obsolescence_flag'] = "1";
 				}
-
-				$oAllowedValues->Rewind();
-				while($oObj = $oAllowedValues->Fetch())
-				{
-					$key = $oObj->GetKey();
-					$display_value = $oObj->GetName();
-
-					if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true') )
-					{
-						// When there is only once choice, select it by default
-						$sSelected = 'selected';
-						if($value != $key)
-						{
-							$oPage->add_ready_script(
-								<<<EOF
-$('#$this->iId').attr('data-validate','dependencies');
-EOF
-							);
-						}
+				if ($bAddingValue) {
+					$aArguments = [];
+					foreach ($aAdditionalField as $sAdditionalField) {
+						array_push($aArguments, $oObj->Get($sAdditionalField));
 					}
-					else
-					{
-						$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? 'selected' : '';
+					$aOption['additional_field'] = utils::HtmlEntities(vsprintf($sFormatAdditionalField, $aArguments));
+				}
+				if (!empty($sObjectImageAttCode)) {
+					// Try to retrieve image for contact
+					/** @var \ormDocument $oImage */
+					$oImage = $oObj->Get($sObjectImageAttCode);
+					if (!$oImage->IsEmpty()) {
+						$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
+						$aOption['initials'] = '';
+					} else {
+						$aOption['initials'] = utils::ToAcronym($oObj->Get('friendlyname'));
 					}
-					$sHTMLValue .= "<option value=\"$key\" $sSelected>$display_value</option>\n";
 				}
-				$sHTMLValue .= "</select>\n";
-				$sHTMLValue .= "</div>\n";
-
-				if (($this->bSearchMode) && $bSearchMultiple)
-				{
-					$aOptions = array(
-						'header' => true,
-						'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
-						'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
-						'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
-						'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
-						'selectedList' => 1,
-					);
-					$sJSOptions = json_encode($aOptions);
-					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
-				}
-				$oPage->add_ready_script(
-<<<JS
+				array_push($aOptions, $aOption);
+			}
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
+			$sHTMLValue .= "<select class=\"ibo-input-select-placeholder\" title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
+			$sJsonOptions = str_replace("'", "\'", str_replace('\\', '\\\\', json_encode($aOptions)));
+			$oPage->add_ready_script(
+				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
-		$('#$this->iId').bind('update', function() { oACWidget_{$this->iId}.Update(); } );
-		$('#$this->iId').bind('change', function() { $(this).trigger('extkeychange') } );
-
-JS
-				);
-			} // Switch
+		oACWidget_{$this->iId}.AddSelectize('$sJsonOptions','$value');
+		$('#$this->iId').on('update', function() { oACWidget_{$this->iId}.Update(); } );
+		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange'); } );
+EOF
+			);
+			if ($bInitValue) {
+				$oPage->add_ready_script("$('#$this->iId').one('validate', function() { $(this).trigger('change'); } );");
+			}
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
 		}
 		else
 		{
@@ -264,16 +291,14 @@ JS
 			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
 			{
 				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : '';
-			}
-			else
-			{
+			} else {
 				$sDisplayValue = $this->GetObjectName($value);
 			}
 			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
 
 			// the input for the auto-complete
-			$sHTMLValue .= "<input class=\"field_autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span>";
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
+			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input ibo-input-select ibo-input-select-autocomplete\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\" placeholder='...'/>";
 
 			// another hidden input to store & pass the object's Id
 			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
@@ -281,7 +306,7 @@ JS
 			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
 			// Scripts to start the autocomplete and bind some events to it
 			$oPage->add_ready_script(
-<<<JS
+				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
 		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
 		oACWidget_{$this->iId}.AddAutocomplete($iMinChars, $sWizHelperJSON);
@@ -289,20 +314,101 @@ JS
 		{
 			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
 		}
-JS
-);
+EOF
+			);
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\">";
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--clear ibo-is-hidden\"  id=\"mini_clear_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Clear();\" data-tooltip-content='".Dict::S('UI:Button:Clear')."'><i class=\"fas fa-times\"></i></div>";
 		}
-		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
-		{
-			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
+		if ($bCreate && $bExtensions) {
+			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
+
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--create\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\" data-tooltip-content='".Dict::S('UI:Button:Create')."'><i class=\"fas fa-plus\"></i></div>";
 			$oPage->add_ready_script(
-<<<JS
+				<<<JS
+		if ($('#ajax_{$this->iId}').length == 0)
+		{
+			$('body').append('<div id="ajax_{$this->iId}"></div>');
+		}
+JS
+			);
+		}
+		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-button ibo-input-select--action-button--hierarchy\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\" data-tooltip-content='".Dict::S('UI:Button:SearchInHierarchy')."'><i class=\"fas fa-sitemap\"></i></div>";
+			$oPage->add_ready_script(
+				<<<JS
 			if ($('#ac_tree_{$this->iId}').length == 0)
 			{
 				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
 			}		
 JS
-);
+			);
+		}
+		if ($oAllowedValues->CountExceeds($iMaxComboLength)) {
+			$sHTMLValue .= "	<div class=\"ibo-input-select--action-button ibo-input-select--action-button--search\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\" data-tooltip-content='".Dict::S('UI:Button:Search')."'><i class=\"fas fa-search\"></i></div>";
+		}
+		$sHTMLValue .= "</div>";
+		$sHTMLValue .= "</div>";
+		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
+
+		return $sHTMLValue;
+	}
+
+	/**
+	 * @since 3.0.0 N°2508 - Include Obsolescence icon within list and autocomplete
+	 * Get the HTML fragment corresponding to the ext key editing widget
+	 * @param WebPage $oP The web page used for all the output
+	 * @param array $aArgs Extra context arguments
+	 * @return string The HTML fragment to be inserted into the page
+	 */
+	public function DisplayRadio(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, DBObjectset $oAllowedValues, $value, $sFieldName, $sDisplayStyle)
+	{
+		$oPage->add_linked_script('../js/forms-json-utils.js');
+
+		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
+		$bExtensions = true;
+		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
+
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
+
+		if (is_null($oAllowedValues))
+		{
+			throw new Exception('Implementation: null value for allowed values definition');
+		}
+		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
+
+		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
+		if (!$oAllowedValues->CountExceeds($iMaxComboLength))
+		{
+			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+			$sValidationField = null;
+
+			$bVertical = ($sDisplayStyle != 'radio_horizontal');
+			$bExtensions = false;
+			$oAllowedValues->Rewind();
+			$aAllowedValues = array();
+			while($oObj = $oAllowedValues->Fetch())
+			{
+				$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
+			}
+			$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
+			$aEventsList[] ='change';
+		}
+		else
+		{
+			$sHTMLValue .= "unable to display. Too much values";
+		}
+		$sHTMLValue .= '<div class="ibo-input-select--action-buttons">';
+		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false)
+		{
+			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
+			$oPage->add_ready_script(
+				<<<JS
+			if ($('#ac_tree_{$this->iId}').length == 0)
+			{
+				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
+			}		
+JS
+			);
 		}
 		if ($bCreate && $bExtensions)
 		{
@@ -310,74 +416,321 @@ JS
 
 			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"mini_button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
 			$oPage->add_ready_script(
-<<<JS
+				<<<JS
 		if ($('#ajax_{$this->iId}').length == 0)
 		{
 			$('body').append('<div id="ajax_{$this->iId}"></div>');
 		}
 JS
-);
+			);
 		}
-        $sHTMLValue .= "</div>";
+		$sHTMLValue .= "</div>";
+		$sHTMLValue .= "</div>";
 
 		// Note: This test is no longer necessary as we changed the markup to extract validation decoration in the standard .field_input_xxx container
 		//if (($sDisplayStyle == 'select') || ($sDisplayStyle == 'list'))
 		//{
-			$sHTMLValue .= "<span class=\"form_validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
+		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 		//}
+
+		return $sHTMLValue;
+	}
+
+	/**
+	 * Get the HTML fragment corresponding to the ext key editing widget
+	 *
+	 * @param \WebPage $oPage
+	 * @param int $iMaxComboLength
+	 * @param boolean $bAllowTargetCreation
+	 * @param string $sTitle
+	 * @param \DBObjectset $oAllowedValues
+	 * @param mixed $value
+	 * @param int $iInputId
+	 * @param boolean $bMandatory
+	 * @param strin $sFieldName
+	 * @param string $sFormPrefix
+	 * @param array $aArgs Extra context arguments
+	 * @param null $bSearchMode
+	 * @param string $sDisplayStyle
+	 * @param boolean $bSearchMultiple
+	 * @param string $sInputType type of field rendering, contains one of the \cmdbAbstractObject::ENUM_INPUT_TYPE_* constants
+	 *
+	 * @return string The HTML fragment to be inserted into the page
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 3.0.0 N°3750 new $sInputType parameter
+	 */
+	public function Display(WebPage $oPage, $iMaxComboLength, $bAllowTargetCreation, $sTitle, DBObjectset $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName, $sFormPrefix = '', $aArgs = array(), $bSearchMode = null, $sDisplayStyle = 'select', $bSearchMultiple = true, &$sInputType = '')
+	{
+		if (!is_null($bSearchMode)) {
+			$this->bSearchMode = $bSearchMode;
+		}
+		$sTitle = addslashes($sTitle);
+		$oPage->add_linked_script('../js/extkeywidget.js');
+		$oPage->add_linked_script('../js/forms-json-utils.js');
+
+		$bCreate = (!$this->bSearchMode) && (UserRights::IsActionAllowed($this->sTargetClass, UR_ACTION_BULK_MODIFY) && $bAllowTargetCreation);
+		$bExtensions = true;
+		$sMessage = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sAttrFieldPrefix = ($this->bSearchMode) ? '' : 'attr_';
+
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey\">";
+		$sFilter = addslashes($oAllowedValues->GetFilter()->ToOQL());
+		if ($this->bSearchMode) {
+			$sWizHelper = 'null';
+			$sWizHelperJSON = "''";
+			$sJSSearchMode = 'true';
+		} else {
+			if (isset($aArgs['wizHelper'])) {
+				$sWizHelper = $aArgs['wizHelper'];
+			} else {
+				$sWizHelper = 'oWizardHelper'.$sFormPrefix;
+			}
+			$sWizHelperJSON = $sWizHelper.'.UpdateWizardToJSON()';
+			$sJSSearchMode = 'false';
+		}
+		if (is_null($oAllowedValues)) {
+			throw new Exception('Implementation: null value for allowed values definition');
+		}
+		$oAllowedValues->SetShowObsoleteData(utils::ShowObsoleteData());
+		// Don't automatically launch the search if the table is huge
+		$bDoSearch = !utils::IsHighCardinality($this->sTargetClass);
+		$sJSDoSearch = $bDoSearch ? 'true' : 'false';
+
+		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
+		if (!$oAllowedValues->CountExceeds($iMaxComboLength)) {
+			// Discrete list of values, use a SELECT or RADIO buttons depending on the config
+			switch ($sDisplayStyle) {
+				case 'radio':
+				case 'radio_horizontal':
+				case 'radio_vertical':
+					$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_RADIO;
+					$sValidationField = null;
+
+					$bVertical = ($sDisplayStyle != 'radio_horizontal');
+					$bExtensions = false;
+					$oAllowedValues->Rewind();
+					$aAllowedValues = array();
+					while ($oObj = $oAllowedValues->Fetch()) {
+						$aAllowedValues[$oObj->GetKey()] = $oObj->GetName();
+					}
+					$sHTMLValue .= $oPage->GetRadioButtons($aAllowedValues, $value, $this->iId, "{$sAttrFieldPrefix}{$sFieldName}", false /*  $bMandatory will be placed manually */, $bVertical, $sValidationField);
+					$aEventsList[] = 'change';
+					break;
+
+				case 'select':
+				case 'list':
+				default:
+					$sHelpText = '';
+					$sHTMLValue .= "<div class=\"field_select_wrapper\">\n";
+
+					if ($this->bSearchMode) {
+						if ($bSearchMultiple) {
+							$sHTMLValue .= "<select class=\"multiselect\" multiple title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}[]\" id=\"$this->iId\">\n";
+						} else {
+							$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+							$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : Dict::S('UI:SearchValue:Any');
+							$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
+						}
+					} else {
+						$sHTMLValue .= "<select class=\"ibo-input-select-placeholder\" title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
+					}
+
+					$oAllowedValues->Rewind();
+					while ($oObj = $oAllowedValues->Fetch()) {
+						$key = $oObj->GetKey();
+						$display_value = $oObj->GetName();
+
+						if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
+							// When there is only once choice, select it by default
+							$sSelected = 'selected';
+							if ($value != $key) {
+								$oPage->add_ready_script(
+									<<<EOF
+$('#$this->iId').attr('data-validate','dependencies');
+EOF
+								);
+							}
+						} else {
+							$sSelected = (is_array($value) && in_array($key, $value)) || ($value == $key) ? 'selected' : '';
+						}
+						$sHTMLValue .= "<option value=\"$key\" $sSelected>$display_value</option>\n";
+					}
+				$sHTMLValue .= "</select>\n";
+				$sHTMLValue .= "</div>\n";
+
+				$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_RAW;
+				if (($this->bSearchMode) && $bSearchMultiple) {
+					$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_MULTIPLE_CHOICES;
+					$aOptions = array(
+						'header' => true,
+						'checkAllText' => Dict::S('UI:SearchValue:CheckAll'),
+						'uncheckAllText' => Dict::S('UI:SearchValue:UncheckAll'),
+						'noneSelectedText' => Dict::S('UI:SearchValue:Any'),
+						'selectedText' => Dict::S('UI:SearchValue:NbSelected'),
+						'selectedList' => 1,
+					);
+					$sJSOptions = json_encode($aOptions);
+					$oPage->add_ready_script("$('.multiselect').multiselect($sJSOptions);");
+					}
+					$oPage->add_ready_script(
+						<<<EOF
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
+		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
+		$('#$this->iId').on('update', function() { oACWidget_{$this->iId}.Update(); } );
+		$('#$this->iId').on('change', function() { $(this).trigger('extkeychange') } );
+
+EOF
+					);
+			}
+		} else {
+			// Too many choices, use an autocomplete
+			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_AUTOCOMPLETE;
+			// Check that the given value is allowed
+			$oSearch = $oAllowedValues->GetFilter();
+			$oSearch->AddCondition('id', $value);
+			$oSet = new DBObjectSet($oSearch);
+			if ($oSet->Count() == 0) {
+				$value = null;
+			}
+
+			if (is_null($value) || ($value == 0)) // Null values are displayed as ''
+			{
+				$sDisplayValue = isset($aArgs['sDefaultValue']) ? $aArgs['sDefaultValue'] : '';
+			} else {
+				$sDisplayValue = $this->GetObjectName($value);
+			}
+			$iMinChars = isset($aArgs['iMinChars']) ? $aArgs['iMinChars'] : 2; //@@@ $this->oAttDef->GetMinAutoCompleteChars();
+
+			// the input for the auto-complete
+			$sHTMLValue .= "<input class=\"field_autocomplete ibo-input-select\" type=\"text\"  id=\"label_$this->iId\" value=\"$sDisplayValue\"/>";
+			$sHTMLValue .= "<div class=\"ibo-input-select--action-buttons\"><span class=\"field_input_btn\"><div class=\"mini_button ibo-input-select--action-button\"  id=\"mini_search_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.Search();\"><i class=\"fas fa-search\"></i></div></span></div>";
+
+			// another hidden input to store & pass the object's Id
+			$sHTMLValue .= "<input type=\"hidden\" id=\"$this->iId\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\" />\n";
+
+			$JSSearchMode = $this->bSearchMode ? 'true' : 'false';
+			// Scripts to start the autocomplete and bind some events to it
+			$oPage->add_ready_script(
+				<<<EOF
+		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', false, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
+		oACWidget_{$this->iId}.emptyHtml = "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>$sMessage</p></div>";
+		oACWidget_{$this->iId}.AddAutocomplete($iMinChars, $sWizHelperJSON);
+		if ($('#ac_dlg_{$this->iId}').length == 0)
+		{
+			$('body').append('<div id="ac_dlg_{$this->iId}"></div>');
+		}
+EOF
+			);
+		}
+		if ($bExtensions && MetaModel::IsHierarchicalClass($this->sTargetClass) !== false) {
+			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"ibo-input-select--action-button\" id=\"mini_tree_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.HKDisplay();\"><i class=\"fas fa-sitemap\"></i></div></span>";
+			$oPage->add_ready_script(
+				<<<JS
+			if ($('#ac_tree_{$this->iId}').length == 0)
+			{
+				$('body').append('<div id="ac_tree_{$this->iId}"></div>');
+			}		
+JS
+			);
+		}
+		if ($bCreate && $bExtensions) {
+			$sCallbackName = (MetaModel::IsAbstract($this->sTargetClass)) ? 'SelectObjectClass' : 'CreateObject';
+
+			$sHTMLValue .= "<span class=\"field_input_btn\"><div class=\"ibo-input-select--action-button\" id=\"mini_add_{$this->iId}\" onClick=\"oACWidget_{$this->iId}.{$sCallbackName}();\"><i class=\"fas fa-plus\"></i></div></span>";
+			$oPage->add_ready_script(
+				<<<JS
+		if ($('#ajax_{$this->iId}').length == 0)
+		{
+			$('body').append('<div id="ajax_{$this->iId}"></div>');
+		}
+JS
+			);
+		}
+		$sHTMLValue .= "</div>";
+		$sHTMLValue .= "<span class=\"form_validation ibo-field-validation\" id=\"v_{$this->iId}\"></span><span class=\"field_status\" id=\"fstatus_{$this->iId}\"></span>";
 
 		return $sHTMLValue;
 	}
 
 	public function GetSearchDialog(WebPage $oPage, $sTitle, $oCurrObject = null)
 	{
-		$sHTML = '<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">';
+		$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div id="dc_'.$this->iId.'">');
 
-		if ( ($oCurrObject != null) && ($this->sAttCode != ''))
-		{
+		if (($oCurrObject != null) && ($this->sAttCode != '')) {
 			$oAttDef = MetaModel::GetAttributeDef(get_class($oCurrObject), $this->sAttCode);
 			/** @var \DBObject $oCurrObject */
 			$aArgs = $oCurrObject->ToArgsForQuery();
 			$aParams = array('query_params' => $aArgs);
 			$oSet = $oAttDef->GetAllowedValuesAsObjectSet($aArgs);
 			$oFilter = $oSet->GetFilter();
-		}
-		else
-		{
+		} else if (!empty($this->sFilter)) {
+			$aParams = array();
+			$oFilter = DBObjectSearch::FromOQL($this->sFilter);
+		} else {
 			$aParams = array();
 			$oFilter = new DBObjectSearch($this->sTargetClass);
 		}
 		$oFilter->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oBlock = new DisplayBlock($oFilter, 'search', false, $aParams);
-		$sHTML .= $oBlock->GetDisplay($oPage, $this->iId,
-            array(
-                'menu' => false,
-                'currentId' => $this->iId,
-                'table_id' => "dr_{$this->iId}",
-                'table_inner_id' => "{$this->iId}_results",
-                'selection_mode' => true,
-                'selection_type' => 'single',
-                'cssCount' => '#count_'.$this->iId)
-        );
-		$sHTML .= "<form id=\"fr_{$this->iId}\" OnSubmit=\"return oACWidget_{$this->iId}.DoOk();\">\n";
-		$sHTML .= "<div id=\"dr_{$this->iId}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHTML .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHTML .= "</div>\n";
-		$sHTML .= "<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#ac_dlg_{$this->iId}').dialog('close');\">&nbsp;&nbsp;";
-		$sHTML .= "<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoOk();\">";
-		$sHTML .= "<input type=\"hidden\" id=\"count_{$this->iId}\" value=\"0\">";
-		$sHTML .= "</form>\n";
-		$sHTML .= '</div></div>';
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, $this->iId,
+			array(
+				'menu' => false,
+				'currentId' => $this->iId,
+				'table_id' => "dr_{$this->iId}",
+				'table_inner_id' => "{$this->iId}_results",
+				'selection_mode' => true,
+				'selection_type' => 'single',
+				'cssCount' => '#count_'.$this->iId.'_results',
+			)
+		));
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sOK = Dict::S('UI:Button:Ok');
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$oPage->add(<<<HTML
+<form id="fr_{$this->iId}" OnSubmit="return oACWidget_{$this->iId}.DoOk();">
+		<div id="dr_{$this->iId}">
+		<div><p>{$sEmptyList}</p></div>
+		</div>
+		<input type="hidden" id="count_{$this->iId}_results" value="0">
+		</form>
+		</div></div>
+HTML
+		);
 
-		$sDialogTitle = addslashes($sTitle);
-		$oPage->add_ready_script(
-<<<EOF
-		$('#ac_dlg_{$this->iId}').dialog({ width: $(window).width()*0.8, height: $(window).height()*0.8, autoOpen: false, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.UpdateSizes, close: oACWidget_{$this->iId}.OnClose });
-		$('#fs_{$this->iId}').bind('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
+		$sDialogTitleSanitized = addslashes(utils::HtmlToText($sTitle));
+		$oPage->add_ready_script(<<<JS
+		$('#ac_dlg_{$this->iId}').dialog({ 
+				width: $(window).width()*0.8, 
+				height: $(window).height()*0.8, 
+				autoOpen: false, 
+				modal: true, 
+				title: '$sDialogTitleSanitized', 
+				resizeStop: oACWidget_{$this->iId}.UpdateSizes, 
+				close: oACWidget_{$this->iId}.OnClose,
+				buttons: [
+							{ text: "$sCancel",
+							 class: "ibo-is-alternative ibo-is-neutral",
+							 click: function() {
+								$(this).dialog('close');
+							} },
+							{ text: "$sOK",
+							 class: "ibo-is-regular ibo-is-primary",
+							 click: function() {
+								oACWidget_{$this->iId}.DoOk();
+							} },
+				],
+		});
+		$('#fs_{$this->iId}').on('submit.uiAutocomplete', oACWidget_{$this->iId}.DoSearchObjects);
 		$('#dc_{$this->iId}').resize(oACWidget_{$this->iId}.UpdateSizes);
-EOF
-);
-		$oPage->add($sHTML);
+JS
+		);
 	}
 
 	/**
@@ -408,44 +761,43 @@ EOF
 		$iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
 
 		$oBlock = new DisplayBlock($oFilter, 'list_search', false, array('query_params' => array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId)));
-		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId, 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
+		$oBlock->Display($oP, $this->iId.'_results', array('this' => $oObj, 'cssCount'=> '#count_'.$this->iId.'_results', 'menu' => false, 'selection_mode' => true, 'selection_type' => 'single', 'table_id' => 'select_'.$this->sAttCode)); // Don't display the 'Actions' menu on the results
 	}
 
     /**
      * Search for objects to be selected
      *
-     * @param WebPage  $oP        The page used for the output (usually an AjaxWebPage)
-     * @param string   $sFilter   The OQL expression used to define/limit limit the scope of possible values
-     * @param DBObject $oObj      The current object for the OQL context
-     * @param string   $sContains The text of the autocomplete to filter the results
-     * @param string   $sOutputFormat
-     * @param null     $sOperation for the values @see ValueSetObjects->LoadValues()
+     * @param WebPage $oP The page used for the output (usually an AjaxWebPage)
+     * @param string $sFilter The OQL expression used to define/limit limit the scope of possible values
+     * @param DBObject $oObj The current object for the OQL context
+     * @param string $sContains The text of the autocomplete to filter the results
+     * @param string $sOutputFormat
+     * @param null $sOperation for the values @see ValueSetObjects->LoadValues()
      *
      * @throws CoreException
      * @throws OQLException
      */
-	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null)
+	public function AutoComplete(
+		WebPage $oP, $sFilter, $oObj = null, $sContains = '', $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
+	)
 	{
-		if (is_null($sFilter))
-		{
+		if (is_null($sFilter)) {
 			throw new Exception('Implementation: null value for allowed values definition');
 		}
 
-        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
-        $iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
-
+		// Current extkey value, so we can display event if it is not available anymore (eg. archived).
+		$iCurrentExtKeyId = (is_null($oObj) || $this->sAttCode === '') ? 0 : $oObj->Get($this->sAttCode);
 		$oValuesSet = new ValueSetObjects($sFilter, 'friendlyname'); // Bypass GetName() to avoid the encoding by htmlentities
-		$iMax = 150;
+		$iMax = MetaModel::GetConfig()->Get('max_autocomplete_results');
 		$oValuesSet->SetLimit($iMax);
 		$oValuesSet->SetSort(false);
 		$oValuesSet->SetModifierProperty('UserRightsGetSelectFilter', 'bSearchMode', $this->bSearchMode);
 		$oValuesSet->SetLimit($iMax);
-		$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
+		$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'start_with');
 		asort($aValuesContains);
 		$aValues = $aValuesContains;
-		if (sizeof($aValues) < $iMax)
-		{
-			$aValuesContains = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'contains');
+		if (sizeof($aValues) < $iMax) {
+			$aValuesContains = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains, 'contains');
 			asort($aValuesContains);
 			$iSize = sizeof($aValuesContains);
 			foreach ($aValuesContains as $sKey => $sFriendlyName)
@@ -462,7 +814,7 @@ EOF
 		}
 		elseif (!in_array($sContains, $aValues))
 		{
-			$aValuesEquals = $oValuesSet->GetValues(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
+			$aValuesEquals = $oValuesSet->GetValuesForAutocomplete(array('this' => $oObj, 'current_extkey_id' => $iCurrentExtKeyId), $sContains,	'equals');
 			$aValues = array_merge($aValuesEquals, $aValues);
 		}
 
@@ -470,20 +822,30 @@ EOF
 		{
 			case static::ENUM_OUTPUT_FORMAT_JSON:
 
-			    $aJsonMap = array();
-			    foreach ($aValues as $sKey => $sLabel)
-                {
-                    $aJsonMap[] = array('value' => $sKey, 'label' => $sLabel);
-                }
+				$aJsonMap = array();
+				foreach ($aValues as $sKey => $aValue) {
+					$aElt = ['value' => $sKey, 'label' => utils::EscapeHtml($aValue['label']), 'obsolescence_flag' => $aValue['obsolescence_flag']];
+					if ($aValue['additional_field'] != '') {
+						$aElt['additional_field'] = utils::EscapeHtml($aValue['additional_field']);
+					}
 
-			    $oP->SetContentType('application/json');
-                $oP->add(json_encode($aJsonMap));
+					if (array_key_exists('initials', $aValue)) {
+						$aElt['initials'] = $aValue['initials'];
+						if (array_key_exists('picture_url', $aValue)) {
+							$aElt['picture_url'] = $aValue['picture_url'];
+						}
+					}
+					$aJsonMap[] = $aElt;
+				}
+
+				$oP->SetContentType('application/json');
+				$oP->add(json_encode($aJsonMap));
 				break;
 
 			case static::ENUM_OUTPUT_FORMAT_CSV:
-				foreach($aValues as $sKey => $sFriendlyName)
+				foreach($aValues as $sKey => $aValue)
 				{
-					$oP->add(trim($sFriendlyName)."\t".$sKey."\n");
+					$oP->add(trim($aValue['label'])."\t".$sKey."\n");
 				}
 				break;
 			default:
@@ -493,17 +855,27 @@ EOF
 	}
 
 	/**
-	 * Get the display name of the selected object, to fill back the autocomplete
+	 * @param int $iObjId object ID
+	 * @param string $sFormAttCode attcode if we need a value that isn't the display name
+	 *
+	 * @return string Either the display name of the selected object or the specified attribute value
+	 *
+	 * @uses \DBObject::GetName() to get display name
+	 *
+	 * @since 3.0.0 N°3227 add the $sAttCode parameter and method PHPDoc
 	 */
-	public function GetObjectName($iObjId)
+	public function GetObjectName($iObjId, $sFormAttCode = null)
 	{
 		$aModifierProps = array();
 		$aModifierProps['UserRightsGetSelectFilter']['bSearchMode'] = $this->bSearchMode;
 
 		$oObj = MetaModel::GetObject($this->sTargetClass, $iObjId, false, false, $aModifierProps);
-		if ($oObj)
-		{
-			return $oObj->GetName();
+		if ($oObj) {
+			if (is_null($sFormAttCode)) {
+				return $oObj->GetName();
+			} else {
+				return $oObj->Get($sFormAttCode);
+			}
 		}
 		else
 		{
@@ -534,26 +906,17 @@ EOF
             }
         }
 
-        $sDialogTitle = '';
-        $oPage->add('<div id="ac_create_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div id="dcr_'.$this->iId.'">');
-        $oPage->add('<form>');
-
 		$sClassLabel = MetaModel::GetName($this->sTargetClass);
-		$oPage->add('<p>'.Dict::Format('UI:SelectTheTypeOf_Class_ToCreate', $sClassLabel));
-		$oPage->add('<nobr><select name="class">');
-		asort($aPossibleClasses);
-		foreach($aPossibleClasses as $sClassName => $sClassLabel)
-		{
-			$oPage->add("<option value=\"$sClassName\">$sClassLabel</option>");
-		}
-		$oPage->add('</select>');
-		$oPage->add('&nbsp; <button type="submit" class="action" style="margin-top:15px;"><span>' . Dict::S('UI:Button:Ok') . '</span></button></nobr></p>');
-
-        $oPage->add('</form>');
-        $oPage->add('</div></div></div>');
-        $oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
-        $oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
+        $sDialogTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);;
+        $oBlock = UIContentBlockUIBlockFactory::MakeStandard('ac_create_'.$this->iId,['ibo-is-visible']);
+		$oPage->AddSubBlock($oBlock);
+		$oClassForm = FormUIBlockFactory::MakeStandard();
+		$oBlock->AddSubBlock($oClassForm);
+		$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sClassLabel, $this->sTargetClass,   $aPossibleClasses));
+		$sDialogTitleEscaped = addslashes($sDialogTitle);
+        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitleEscaped'});\n");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').removeAttr('onsubmit');");
+        $oPage->add_ready_script("$('#ac_create_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
 
 	/**
@@ -578,8 +941,7 @@ EOF
 			$sClassAlias = $oSet->GetFilter()->GetClassAlias();
 			if (isset($aConsts[$sClassAlias]))
 			{
-				foreach($aConsts[$sClassAlias] as $sAttCode => $value)
-				{
+				foreach($aConsts[$sClassAlias] as $sAttCode => $value) {
 					$oNewObj->Set($sAttCode, $value);
 				}
 			}
@@ -588,44 +950,35 @@ EOF
 		// 3rd - set values from the page argument 'default'
 		$oNewObj->UpdateObjectFromArg('default');
 
-		$sDialogTitle = '';
 		$sClassLabel = MetaModel::GetName($this->sTargetClass);
-		$sClassIcon = MetaModel::GetClassIcon($this->sTargetClass);
-		$sObjClass = get_class($oNewObj);
-		$sObjKey = $oNewObj->GetKey();
-		$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
+		$sHeaderTitleEscaped = utils::EscapeHtml(Dict::Format('UI:CreationTitle_Class', $sClassLabel));
+
 		$oPage->add(<<<HTML
-<div id="ac_create_{$this->iId}">
-	<!-- Beginning of object-details -->
-	<div class="object-details" data-object-class="$sObjClass" data-object-id="$sObjKey" data-object-mode="create">
-		<!-- Beginning of wizContainer -->
-		<div class="wizContainer" style="vertical-align:top;">
-			<div id="dcr_{$this->iId}">
-				<h1>$sClassIcon&nbsp;$sHeaderTitle</h1>
+<div id="ac_create_{$this->iId}" title="{$sHeaderTitleEscaped}">
+	<div id="dcr_{$this->iId}">
 HTML
 		);
 		$aFieldsFlags = array();
 		$aFieldsComments = array();
-		foreach(MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef)
-		{
-			if (($oAttDef instanceof AttributeBlob) || (false))
-			{
+		foreach (MetaModel::ListAttributeDefs($this->sTargetClass) as $sAttCode => $oAttDef) {
+			if (($oAttDef instanceof AttributeBlob) || (false)) {
 				$aFieldsFlags[$sAttCode] = OPT_ATT_READONLY;
 				$aFieldsComments[$sAttCode] = '&nbsp;<img src="../images/transp-lock.png" style="vertical-align:middle" title="'.htmlentities(Dict::S('UI:UploadNotSupportedInThisMode')).'"/>';
 			}
 		}
-	 	cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
+		cmdbAbstractObject::DisplayCreationForm($oPage, $this->sTargetClass, $oNewObj, array(), array('formPrefix' => $this->iId, 'noRelations' => true, 'fieldsFlags' => $aFieldsFlags, 'fieldsComments' => $aFieldsComments));
 		$oPage->add(<<<HTML
-			</div>
-		</div><!-- End of wizContainer -->
-	</div><!-- End of object-details -->
+	</div>
 </div>
 HTML
 		);
-//		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: $(window).width()*0.8, height: 'auto', autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
-		$oPage->add_ready_script("\$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
-		$oPage->add_ready_script("$('#dcr_{$this->iId} form').removeAttr('onsubmit');");
-		$oPage->add_ready_script("$('#dcr_{$this->iId} form').bind('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);");
+
+		$oPage->add_ready_script(<<<JS
+$('#ac_create_{$this->iId}').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
+$('#dcr_{$this->iId} form').removeAttr('onsubmit');
+$('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);
+JS
+		);
 	}
 
 	/**
@@ -634,7 +987,7 @@ HTML
 	public function DisplayHierarchy(WebPage $oPage, $sFilter, $currValue, $oObj)
 	{
 		$sDialogTitle = addslashes(Dict::Format('UI:HierarchyOf_Class', MetaModel::GetName($this->sTargetClass)));
-		$oPage->add('<div id="dlg_tree_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div style="overflow:auto;background:#fff;margin-bottom:5px;" id="tree_'.$this->iId.'">');
+		$oPage->add('<div id="dlg_tree_'.$this->iId.'"><div class="wizContainer" style="vertical-align:top;"><div style="margin-bottom:5px;" id="tree_'.$this->iId.'">');
 		$oPage->add('<table style="width:100%"><tr><td>');
 		if (is_null($sFilter))
 		{
@@ -655,16 +1008,46 @@ HTML
 
 		if ($bHasChildLeafs)
 		{
-			$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
+			$oPage->add('<span class="treecontrol ibo-button-group" id="treecontrolid"><a class="ibo-button ibo-is-regular ibo-is-neutral" href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a><a class="ibo-button ibo-is-regular ibo-is-neutral" href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></span>');
 		}
-
-		$oPage->add("<input type=\"button\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
-		$oPage->add("<input type=\"button\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
-
+		
 		$oPage->add('</div></div>');
-
+		
+		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview({ control: '#treecontrolid',	persist: 'false'});\n");
-		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
+		$oPage->add_ready_script(<<<JS
+$('#dlg_tree_$this->iId').dialog({
+	width: 'auto',
+	height: 'auto',
+	autoOpen: true,
+	modal: true,
+	title: '$sDialogTitle',
+    open: function() {
+        $(this).css("max-height", parseInt($(window).height()*0.7)+'px');        
+    },
+	buttons: [
+		{ 
+			text: "$sCancelButtonLabel", 
+			click: function() { $(this).dialog( "close" ); } 
+		},
+		{ 
+			text: "$sOkButtonLabel",
+		   	class: "ibo-is-primary",
+			click: function() {
+				oACWidget_{$this->iId}.DoHKOk();
+			},
+		},
+		],
+
+	resizeStop: oACWidget_{$this->iId}.OnHKResize,
+	close: oACWidget_{$this->iId}.OnHKClose 
+});
+
+$('#dlg_tree_$this->iId + .ui-dialog-buttonpane .ui-dialog-buttonset').prepend($('#treecontrolid'));
+
+JS
+		);
 	}
 
 	/**

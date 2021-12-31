@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2010-2018 Combodo SARL
+ *  Copyright (c) 2010-2021 Combodo SARL
  *
  *    This file is part of iTop.
  *
@@ -90,7 +90,7 @@ $(document).ready(function () {
 
 
 	/**
-	 * Our custom handlers chould run only if clicking on somewhere without event already attached !
+	 * Our custom handlers should run only if clicking on somewhere without event already attached !
 	 * @param $eventTarget
 	 * @returns {boolean} true if our custom handler shouldn't be run
 	 */
@@ -101,10 +101,16 @@ $(document).ready(function () {
 		if ($eventTarget.is("a, button")) {
 			return true;
 		}
-		if ($eventTarget.parent().is('a, button')) {
+		if ($eventTarget.is(".fas, i.fa")) { // Font Awesome buttons
+			return true;
+		}
+		if ($eventTarget.parent().is("a, button")) {
 			return true;
 		}
 		if ($eventTarget.is("input, select, option")) {
+			return true;
+		}
+		if ($eventTarget.parent().is(".selectize-control,.selectize-input")) {
 			return true;
 		}
 		if ($eventTarget.is("img")) { // too hard to determine if an event handler is attached so excluding all !

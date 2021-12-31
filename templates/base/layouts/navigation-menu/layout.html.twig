@@ -1,0 +1,123 @@
+<nav id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() == true %}ibo-is-expanded{% endif %}" data-role="ibo-navigation-menu">
+	<div class="ibo-navigation-menu--body">
+		<div class="ibo-navigation-menu--top-part">
+			<a class="ibo-navigation-menu--square-company-logo" data-role="ibo-navigation-menu--square-company-logo" title="{{ oUIBlock.GetAppRevisionNumber() }}" href="{{ oUIBlock.GetAppIconLink() }}">
+				<img src="{{ oUIBlock.GetAppSquareIconUrl() }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}">
+			</a>
+			<a class="ibo-navigation-menu--full-company-logo" data-role="ibo-navigation-menu--full-company-logo" title="{{ oUIBlock.AppRevisionNumber }}" href="{{ oUIBlock.AppIconLink }}">
+				<img src="{{ oUIBlock.AppFullIconUrl }}" alt="{{ 'UI:Layout:NavigationMenu:CompanyLogo:AltText'|dict_s }}">
+			</a>
+			<a class="ibo-navigation-menu--toggler" data-role="ibo-navigation-menu--toggler"
+               aria-label="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+               data-tooltip-content="{% if oUIBlock.HasSiloSelected() %}{{ 'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel'|dict_format(oUIBlock.GetSiloLabel()) }}{% else %}{{ 'UI:Layout:NavigationMenu:Toggler:Tooltip'|dict_s }}{% endif %}"
+			   data-tooltip-placement="right"
+			   data-tooltip-distance-offset="20"
+			   href="#">
+				<span class="ibo-navigation-menu--toggler-icon">
+					<span class="ibo-navigation-menu--toggler-bar"></span>
+					<span class="ibo-navigation-menu--toggler-bar"></span>
+					<span class="ibo-navigation-menu--toggler-bar"></span>
+				</span>
+				{% if oUIBlock.HasSiloSelected() %}
+					<span class="ibo-navigation-menu--silo-visual-hint"></span>
+				{% endif %}
+			</a>
+			<div class="ibo-navigation-menu--silo-selection">
+				{{ oUIBlock.GetSiloSelection().html|raw }}
+			</div>
+		</div>
+		<div class="ibo-navigation-menu--middle-part">
+			{% for aMenuGroup in oUIBlock.GetMenuGroups() %}
+				{{ include('base/layouts/navigation-menu/menu-group.html.twig', { aMenuGroup: aMenuGroup }) }}
+			{% endfor %}
+		</div>
+		<div class="ibo-navigation-menu--bottom-part">
+			{% if oUIBlock.IsNewsroomEnabled() == true %}
+				<div class="ibo-navigation-menu--notifications">
+					<a class="ibo-navigation-menu--notifications-toggler ibo-is-empty" data-role="ibo-navigation-menu--notifications-toggler" data-tooltip-content="{{ 'UI:Newsroom:NoNewMessage'|dict_s }}" data-tooltip-placement="right" data-tooltip-distance-offset="25">
+						<i class="fas fa-bell"></i>
+						<div class="ibo-navigation-menu--notifications-toggler--new-messages"></div>
+					</a>
+					<div class="ibo-navigation-menu--notifications-menu">
+						{{ render_block(oUIBlock.GetNewsroomMenu(), {aPage: aPage}) }}
+					</div>
+				</div>
+			{% endif %}
+            <div class="ibo-navigation-menu--user-info">
+                <div class="ibo-navigation-menu--user-picture">
+                    <a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
+                        <img class="ibo-navigation-menu--user-picture--image"
+                             data-role="ibo-navigation-menu--user-picture--image"
+                             src="{{ oUIBlock.GetUserData().sPictureUrl }}"
+							 alt="{{ 'UI:Layout:NavigationMenu:UserInfo:Picture:AltText'|dict_format(oUIBlock.GetUserData().sFirstname) }}"
+							 data-tooltip-content="{{ oUIBlock.GetUserData().sLogonMessage }}"
+							 data-tooltip-placement="right"
+							 data-tooltip-distance-offset="20"
+						>
+					</a>
+				</div>
+				<div class="ibo-navigation-menu--user-welcome-message">
+					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
+						<div class="ibo-navigation-menu--user-welcome-message--text">
+							<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+								{{ oUIBlock.GetUserData().sWelcomeMessage }}
+								<span class="ibo-navigation-menu--user-welcome-message--toggler">
+									<i class="fas fa-caret-down"></i>
+								</span>
+							</a>
+						</div>
+					</a>
+				</div>
+				{% if oUIBlock.IsNewsroomEnabled() == true %}
+					<div class="ibo-navigation-menu--user-notifications">
+						<a class="ibo-navigation-menu--user-notifications--text ibo-navigation-menu--user-notifications--toggler" data-role="ibo-navigation-menu--notifications-toggler" href="#">
+                            <span class="ibo-navigation-menu--user-notifications--toggler--message" data-role="ibo-navigation-menu--user-notifications--toggler--message">
+                                {{ 'UI:Newsroom:NoNewMessage'|dict_s }}
+                            </span>
+							<span class="ibo-navigation-menu--user-notifications--toggler--icon">
+								<i class="fas fa-bell"></i>
+								<span class="ibo-navigation-menu--notifications-toggler--new-messages"></span>
+							</span>
+						</a>
+						<div class="ibo-navigation-menu--user-notifications-menu"></div>
+					</div>
+				{% endif %}
+				<div class="ibo-navigation-menu--user-organization">
+					<div class="ibo-navigation-menu--user-organization--text">
+						{{ oUIBlock.GetUserData().sOrganization }}
+					</div>
+				</div>
+				<div class="ibo-navigation-menu--user-menu-container" data-role="ibo-navigation-menu--user-menu-container">
+                    {{ render_block(oUIBlock.GetUserMenu(), {aPage: aPage}) }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ibo-navigation-menu--drawer" data-role="ibo-navigation-menu--drawer">
+        <div class="ibo-navigation-menu--menu-filter" data-role="ibo-nav-menu--menu-filter">
+            {# TODO: Retrieve input style from a component? #}
+            <input class="ibo-navigation-menu--menu-filter-input" data-role="ibo-navigation-menu--menu-filter-input" type="text" placeholder="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder'|dict_s }}" data-tooltip-content="{{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Tooltip'|dict_s }}"
+                   data-tooltip-trigger="mouseenter">
+            <a class="ibo-navigation-menu--menu-filter-clear" data-role="ibo-navigation-menu--menu-filter-clear" href="#"><span class="fas fa-times"></span></a>
+            <span class="ibo-navigation-menu--menu-filter-hotkey">{{ oUIBlock.GetMenuFilterHotkeyLabel() }}</span>
+            {% if oUIBlock.HasMenuFilterHint() %}
+                <div class="ibo-navigation-menu--menu-filter-hint" data-role="ibo-navigation-menu--menu-filter-hint">
+                    {{ 'UI:Layout:NavigationMenu:MenuFilter:Input:Hint'|dict_s }}
+                    <a class="ibo-navigation-menu--menu-filter-hint-close" data-role="ibo-navigation-menu--menu-filter-hint-close" aria-label="{{ 'UI:Button:Close'|dict_s }}" href="#"><span class="fas fa-times"></span></a>
+                </div>
+            {% endif %}
+        </div>
+        <div class="ibo-navigation-menu--menu--placeholder" data-role="ibo-navigation-menu--menu--placeholder">
+            <div class="ibo-navigation-menu--menu--placeholder-image ibo-svg-illustration--container">
+                {{ source("illustrations/undraw_empty.svg") }}
+			</div>
+			<div class="ibo-navigation-menu--menu--placeholder-hint">{{ 'UI:Layout:NavigationMenu:MenuFilter:Placeholder:Hint'|dict_s }}</div>
+		</div>
+
+		<div class="ibo-navigation-menu--menu-groups">
+			{% for aMenuGroup in oUIBlock.GetMenuGroups() %}
+				{{ include('base/layouts/navigation-menu/menu-nodes.html.twig', { aMenuGroup: aMenuGroup }) }}
+			{% endfor %}
+		</div>
+	</div>
+</nav>

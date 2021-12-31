@@ -158,8 +158,11 @@
 								return cellElem.prop('outerHTML');
 							},
 	                        sort: function (attribute_code, type, row) {
-                        		return row.attributes[attribute_code].sort_value;
+		                        return row.attributes[attribute_code].sort_value;
 							},
+	                        filter: function (attribute_code, type, row) {
+                        		return $.text($.parseHTML(row.attributes[attribute_code]['value_html']));
+	                        },
 						},
                     });
                 }
@@ -361,7 +364,7 @@
 			});
 
             // Auto collapse item actions popup
-            $('body').click(function () {
+            $('body').on('click', function () {
                 $('table .item-action-wrapper.collapse.in').collapse('hide');
             });
         });

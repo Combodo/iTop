@@ -1,0 +1,62 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+var chart = c3.generate({
+    bindto: d3.select('#my_chart_{{ oUIBlock.sId }}'),
+    data: {
+        json: {{ oUIBlock.sJson|raw }},
+        keys: {
+            x: 'label',
+            value: ["value"]
+        },
+        onclick: function (d) {
+            var aURLs = {{ oUIBlock.sJSURLs|raw }};
+            window.location.href = aURLs[d.index];
+        },
+        selection: {
+            enabled: true
+        },
+        type: 'bar'
+    },
+    axis: {
+        x: {
+            tick: {
+                culling: {max: 25}, // Maximum 24 labels on x axis (2 years).
+                centered: true,
+                rotate: 90,
+                multiline: false
+            },
+            type: 'category'   // this needed to load string x value
+        }
+    },
+    grid: {
+        y: {
+            show: true
+        }
+    },
+    legend: {
+        show: false
+    },
+    tooltip: {
+        grouped: false,
+        format: {
+            title: function() { return '' },
+            name: function (name, ratio, id, index) {
+                var aNames = {{ oUIBlock.sJSNames|raw }};
+                return aNames[index];
+            }
+        }
+    }
+});
+
+if (typeof(charts) === "undefined")
+{
+    charts = [];
+	refreshChart = [];
+}
+var idxChart=charts.length;
+charts.push(chart);
+var refreshChart{{ oUIBlock.sId|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }} = '$.post("{{ oUIBlock.sURLForRefresh|raw }}&refresh='+idxChart+'","", function (data) {'+
+														'charts['+idxChart+'].unload();'+
+														'setTimeout(function () {eval(data.js);},50);'+
+													'})';
+refreshChart.push(refreshChart{{ oUIBlock.sId|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }});

@@ -1,0 +1,25 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Note: We have to wrap it in the ID in order to overload its rules, otherwise, the ID takes over the simple CSS class... */
+#ibo-center-container {
+  &.ibo-center-container--with-side-content {
+    display: flex;
+    align-items: stretch;
+
+    #ibo-main-content {
+      flex-grow: 1; /* To occupy maximum width, side content will handle its width */
+    }
+  }
+}
+
+.ibo-v-spacer {
+  padding-top: 1em;
+}
+
+#ibo-side-content {
+  background-color: $ibo-content-block--background-color;
+  border-left: $ibo-content-block--border;
+}

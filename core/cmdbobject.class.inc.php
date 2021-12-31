@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Class cmdbObject
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,8 +31,6 @@
  *
  * @package     iTopORM
  */
-
-require_once('coreexception.class.inc.php');
 
 require_once('config.class.inc.php');
 require_once('log.class.inc.php');
@@ -94,12 +92,23 @@ abstract class CMDBObject extends DBObject
 	// Note: this value is static, but that could be changed because it is sometimes a real issue (see update of interfaces / connected_to
 	protected static $m_oCurrChange = null;
 	protected static $m_sInfo = null; // null => the information is built in a standard way
+	protected static $m_sUserId = null; // null => the user doing the change is unknown
 	protected static $m_sOrigin = null; // null => the origin is 'interactive'
-	
+
 	/**
-	 * Specify another change (this is mainly for backward compatibility)
+	 * Specify the change to be used by the API to attach any CMDBChangeOp* object created
+	 *
+	 * @see SetTrackInfo if CurrentChange is null, then a new one will be create using trackinfo
+	 *
+	 * @param CMDBChange|null $oChange use null so that the API will recreate a new CMDBChange using TrackInfo & TrackOrigin
+	 *     If providing a CMDBChange, you should persist it first ! Indeed the API will automatically create CMDBChangeOp (see
+	 *     \CMDBObject::RecordObjCreation / RecordAttChange / RecordObjDeletion for example) and link them to the current change : in
+	 *     consequence this CMDBChange must have a key set !
+	 *
+	 * @since 2.7.2 N°3219 can now reset CMDBChange by passing null
+	 * @since 2.7.2 N°3218 PHPDoc about persisting the $oChange parameter first
 	 */
-	public static function SetCurrentChange(CMDBChange $oChange)
+	public static function SetCurrentChange($oChange)
 	{
 		self::$m_oCurrChange = $oChange;
 	}
@@ -112,7 +121,11 @@ abstract class CMDBObject extends DBObject
 	//			GetCurrentChange to create a default change if not already done in the current context
 	//
 	/**
-	 * Get a change record (create it if not existing)	 
+	 * @param bool $bAutoCreate if true calls {@link CreateChange} to get a new persisted object
+	 *
+	 * @return \CMDBChange
+	 *
+	 * @uses CreateChange
 	 */
 	public static function GetCurrentChange($bAutoCreate = true)
 	{
@@ -126,20 +139,44 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Override the additional information (defaulting to user name)
 	 * A call to this verb should replace every occurence of
-	 *    $oMyChange = MetaModel::NewObject("CMDBChange");	  	 
+	 *    $oMyChange = MetaModel::NewObject("CMDBChange");
 	 *    $oMyChange->Set("date", time());
 	 *    $oMyChange->Set("userinfo", 'this is done by ... for ...');
 	 *    $iChangeId = $oMyChange->DBInsert();
-	 */	 	
+	 *
+	 * @see SetCurrentChange to specify a CMDBObject instance instead
+	 *
+	 * @param string $sInfo
+	 */
 	public static function SetTrackInfo($sInfo)
 	{
 		self::$m_sInfo = $sInfo;
 	}
 
 	/**
+	 * Provide information about the user doing the change
+	 *
+	 * @see static::SetTrackInfo
+	 * @see static::SetCurrentChange
+	 *
+	 * @param string $sId ID of the user doing the change, null if not done by a user (eg. background task)
+	 *
+	 * @since 3.0.0 N°2847 following the addition of CMDBChange.user_id
+	 */
+	public static function SetTrackUserId($sId)
+	{
+		self::$m_sUserId = $sId;
+	}
+
+	/**
 	 * Provides information about the origin of the change
-	 * @param $sOrigin String: one of: interactive, csv-interactive, csv-import.php, webservice-soap, webservice-rest, syncho-data-source, email-processing, custom-extension
-	 */	 	
+	 *
+	 * @see SetTrackInfo
+	 * @see SetCurrentChange to specify a CMDBObject instance instead
+	 *
+	 * @param $sOrigin String: one of: interactive, csv-interactive, csv-import.php, webservice-soap, webservice-rest, syncho-data-source,
+	 *     email-processing, custom-extension
+	 */
 	public static function SetTrackOrigin($sOrigin)
 	{
 		self::$m_sOrigin = $sOrigin;
@@ -159,6 +196,25 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sInfo;
 		}
 	}
+
+	/**
+	 * Get the ID of the user doing the change (defaulting to null)
+	 *
+	 * @return string|null
+	 * @throws \OQLException
+	 * @since 3.0.0
+	 */
+	protected static function GetTrackUserId()
+	{
+		if (is_null(self::$m_sUserId))
+		{
+			return CMDBChange::GetCurrentUserId();
+		}
+		else
+		{
+			return self::$m_sUserId;
+		}
+	}
 	
 	/**
 	 * Get the 'origin' information (defaulting to 'interactive')
@@ -174,15 +230,26 @@ abstract class CMDBObject extends DBObject
 			return self::$m_sOrigin;
 		}
 	}
-	
+
 	/**
-	 * Create a standard change record (done here 99% of the time, and nearly once per page)
-	 */	 	
+	 * Set to {@link $m_oCurrChange} a standard change record (done here 99% of the time, and nearly once per page)
+	 *
+	 * The CMDBChange is persisted so that it has a key > 0, and any new CMDBChangeOp can link to it
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \CoreWarning
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
 	protected static function CreateChange()
 	{
 		self::$m_oCurrChange = MetaModel::NewObject("CMDBChange");
 		self::$m_oCurrChange->Set("date", time());
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
+		self::$m_oCurrChange->Set("user_id", self::GetTrackUserId());
 		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
 		self::$m_oCurrChange->DBInsert();
 	}
@@ -488,12 +555,19 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Helper to ultimately check user rights before writing (Insert, Update or Delete)
 	 * The check should never fail, because the UI should prevent from such a usage
-	 * Anyhow, if the user has found a workaround... the security gets enforced here	 	 
+	 * Anyhow, if the user has found a workaround... the security gets enforced here
+	 *
+	 * @deprecated 3.0.0 N°2591 will be removed in 3.1.0
+	 *
+	 * @param bool $bSkipStrongSecurity
+	 * @param int $iActionCode
+	 *
+	 * @throws \SecurityException
 	 */
 	protected function CheckUserRights($bSkipStrongSecurity, $iActionCode)
 	{
-		if (is_null($bSkipStrongSecurity))
-		{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		if (is_null($bSkipStrongSecurity)) {
 			// This is temporary
 			// We have implemented this safety net right before releasing iTop 1.0
 			// and we decided that it was too risky to activate it

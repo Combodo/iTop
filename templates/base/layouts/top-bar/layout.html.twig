@@ -1,0 +1,18 @@
+<nav id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-top-bar">
+	<div class="ibo-top-bar--quick-actions" data-role="ibo-top-bar--quick-actions">
+		{% if oUIBlock.HasQuickCreate() %}
+			{{ render_block(oUIBlock.GetQuickCreate(), {aPage: aPage}) }}
+		{% endif %}
+		{% if oUIBlock.HasGlobalSearch() %}
+			{{ render_block(oUIBlock.GetGlobalSearch(), {aPage: aPage}) }}
+		{% endif %}
+	</div>
+	{% if oUIBlock.HasBreadcrumbs() %}
+		{{ render_block(oUIBlock.GetBreadcrumbs(), {aPage: aPage}) }}
+	{% endif %}
+	{% if oUIBlock.HasToolBar() %}
+		<div class="ibo-top-bar--toolbar">
+			{{ render_block(oUIBlock.GetToolBar(), {aPage: aPage}) }}
+		</div>
+	{% endif %}
+</nav>

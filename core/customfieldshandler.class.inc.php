@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016 Combodo SARL
+// Copyright (C) 2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ use Combodo\iTop\Form\FormManager;
 /**
  * Base class to implement a handler for AttributeCustomFields
  *
- * @copyright   Copyright (C) 2016 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

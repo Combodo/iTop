@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Layout\TabContainer\Tab\AjaxTab;
 
 
 /**
@@ -134,29 +135,31 @@ class _Ticket extends cmdbAbstractObject
 	public function UpdateImpactedItems()
 	{
 		require_once(APPROOT.'core/displayablegraph.class.inc.php');
-
 		/** @var ormLinkSet $oContactsSet */
 		$oContactsSet = $this->Get('contacts_list');
-		/** @var ormLinkSet $oCIsSet */
-		$oCIsSet = $this->Get('functionalcis_list');
-
 		$aCIsToImpactCode = array();
 		$aSources = array();
 		$aExcluded = array();
-    	foreach ($oCIsSet as $oLink)
+		if (MetaModel::IsValidClass('FunctionalCI'))
 		{
-			$iKey = $oLink->Get('functionalci_id');
-			$aCIsToImpactCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code'));
-			if ($oLink->Get('impact_code') == 'manual')
+			/** @var ormLinkSet $oCIsSet */
+			$oCIsSet = $this->Get('functionalcis_list');
+			foreach ($oCIsSet as $oLink)
 			{
-				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
-				$aSources[$iKey] = $oObj;
+				$iKey = $oLink->Get('functionalci_id');
+				$aCIsToImpactCode[$iKey] = array('link' => $oLink->GetKey(), 'code' => $oLink->Get('impact_code'));
+				if ($oLink->Get('impact_code') == 'manual')
+				{
+					$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
+					$aSources[$iKey] = $oObj;
+				}
+				else if ($oLink->Get('impact_code') == 'not_impacted')
+				{
+					$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
+					$aExcluded[] = $oObj;
+				}
 			}
-			else if ($oLink->Get('impact_code') == 'not_impacted')
-			{
-				$oObj = MetaModel::GetObject('FunctionalCI', $iKey);
-				$aExcluded[] = $oObj;
-			}
+
 		}
 
 		$aContactsToRoleCode = array();
@@ -258,7 +261,10 @@ class _Ticket extends cmdbAbstractObject
 				break;
 			}
 		}
-		$this->Set('functionalcis_list', $oCIsSet);
+		if (MetaModel::IsValidClass('FunctionalCI'))
+		{
+			$this->Set('functionalcis_list', $oCIsSet);
+		}
 		$this->Set('contacts_list', $oContactsSet);
 	}
 
@@ -275,12 +281,9 @@ class _Ticket extends cmdbAbstractObject
 		// Display the impact analysis for tickets not in 'closed' or 'resolved' status... and not in edition
 		if ((!$bEditMode) && (!in_array($this->Get('status'), array('resolved', 'closed'))))
 		{
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
-			$oPage->AddAjaxTab('Ticket:ImpactAnalysis', utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(), true);
+			$oPage->AddAjaxTab('Ticket:ImpactAnalysis',
+				utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=ticket_impact&class='.get_class($this).'&id='.$this->GetKey(),
+				true, null, AjaxTab::ENUM_TAB_PLACEHOLDER_MISC);
 		}
 	}
 }
-?>

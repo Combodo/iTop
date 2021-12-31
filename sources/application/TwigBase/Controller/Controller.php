@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,12 +19,13 @@
 
 namespace Combodo\iTop\Application\TwigBase\Controller;
 
-use ajax_page;
+use AjaxPage;
 use ApplicationMenu;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Dict;
 use ErrorPage;
 use Exception;
+use ExecutionKPI;
 use IssueLog;
 use iTopWebPage;
 use LoginWebPage;
@@ -32,12 +33,18 @@ use MetaModel;
 use ReflectionClass;
 use SetupPage;
 use SetupUtils;
-use Twig_Error;
+use Twig\Error\Error;
 use utils;
+use WebPage;
 use ZipArchive;
 
 abstract class Controller
 {
+	const ENUM_PAGE_TYPE_HTML = 'html';
+	const ENUM_PAGE_TYPE_BASIC_HTML = 'basic_html';
+	const ENUM_PAGE_TYPE_AJAX = 'ajax';
+	const ENUM_PAGE_TYPE_SETUP = 'setup';
+
 	/** @var \Twig\Environment */
 	private $m_oTwig;
 	/** @var string */
@@ -59,7 +66,14 @@ abstract class Controller
 	private $m_aLinkedStylesheets;
 	private $m_aSaas;
 	private $m_aAjaxTabs;
-
+	/** parameters for page's blocks
+	 *
+	 * @var array
+	 * @since 3.0.0
+	 */
+	private $m_aBlockParams;
+	/** @var string */
+	private $m_sAccessTokenConfigParamId = null;
 
 	/**
 	 * Controller constructor.
@@ -69,21 +83,19 @@ abstract class Controller
 	 */
 	public function __construct($sViewPath, $sModuleName = 'core')
 	{
-		$this->m_aLinkedScripts = array();
-		$this->m_aLinkedStylesheets = array();
-		$this->m_aSaas = array();
-		$this->m_aAjaxTabs = array();
-		$this->m_aDefaultParams = array();
+		$this->m_aLinkedScripts = [];
+		$this->m_aLinkedStylesheets = [];
+		$this->m_aSaas = [];
+		$this->m_aAjaxTabs = [];
+		$this->m_aDefaultParams = [];
+		$this->m_aBlockParams = [];
 		$this->SetViewPath($sViewPath);
 		$this->SetModuleName($sModuleName);
-		if ($sModuleName != 'core')
-		{
-			try
-			{
-				$this->m_aDefaultParams = array('sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php'));
+		if ($sModuleName != 'core') {
+			try {
+				$this->m_aDefaultParams = ['sIndexURL' => utils::GetAbsoluteUrlModulePage($this->m_sModule, 'index.php')];
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				IssueLog::Error($e->getMessage());
 			}
 		}
@@ -94,7 +106,7 @@ abstract class Controller
 	 */
 	public function InitFromModule()
 	{
-		$sModulePath = dirname(dirname($this->getDir()));
+		$sModulePath = dirname(dirname($this->GetDir()));
 		$this->SetModuleName(basename($sModulePath));
 		$this->SetViewPath($sModulePath.'/view');
 		try
@@ -129,7 +141,10 @@ abstract class Controller
 		$this->m_sModule = $sModule;
 	}
 
-	private function getDir()
+	/**
+	 * @return string
+	 */
+	private function GetDir(): string
 	{
 		return dirname((new ReflectionClass(static::class))->getFileName());
 	}
@@ -147,6 +162,8 @@ abstract class Controller
 			$this->m_sOperation = utils::ReadParam('operation', $this->m_sDefaultOperation);
 
 			$sMethodName = 'Operation'.$this->m_sOperation;
+			$oKPI = new ExecutionKPI();
+			$oKPI->ComputeAndReport('Starting operation '.$this->m_sOperation);
 			if (method_exists($this, $sMethodName))
 			{
 				$this->$sMethodName();
@@ -158,8 +175,6 @@ abstract class Controller
 		}
 		catch (Exception $e)
 		{
-			require_once(APPROOT."/setup/setuppage.class.inc.php");
-
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -219,7 +234,22 @@ abstract class Controller
 			throw new Exception("Sorry, iTop is in <b>demonstration mode</b>: this feature is disabled.");
 		}
 
-		LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		$sExecModule = utils::ReadParam('exec_module', "");
+
+		$sConfiguredAccessTokenValue = empty($this->m_sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId));
+
+		if (empty($sExecModule) || empty($sConfiguredAccessTokenValue)){
+			LoginWebPage::DoLogin($this->m_bMustBeAdmin);
+		}else {
+			//token mode without login required
+			$sPassedToken = utils::ReadParam($this->m_sAccessTokenConfigParamId, null);
+			if ($sPassedToken !== $sConfiguredAccessTokenValue){
+				$sMsg = "Invalid token passed under '$this->m_sAccessTokenConfigParamId' http param to reach '$sExecModule' page.";
+				IssueLog::Error($sMsg);
+				throw new Exception("Invalid token");
+			}
+		}
+
 		if (!empty($this->m_sMenuId))
 		{
 			ApplicationMenu::CheckMenuIdEnabled($this->m_sMenuId);
@@ -253,6 +283,28 @@ abstract class Controller
 	public function AllowOnlyAdmin()
 	{
 		$this->m_bMustBeAdmin = true;
+	}
+
+	/**
+	 * Used to ensure iTop security without logging-in by passing a token.
+	 * This security mechanism is applied to current extension main page when :
+	 *  - '$m_sAccessTokenConfigParamId' is configured under $MyModuleSettings section.
+	 *
+	 * Main page will be allowed as long as
+	 *  - there is an HTTP  parameter with the name '$m_sAccessTokenConfigParamId' parameter
+	 *  - '$m_sAccessTokenConfigParamId' HTTP parameter value matches the value stored in iTop configuration.
+	 *
+	 * Example:
+	 * Let's assume $m_sAccessTokenConfigParamId='access_token' with iTop $MyModuleSettings below configuration:
+	 *      'combodo-shadok' => array ( 'access_token' => 'gabuzomeu')
+	 * 'combodo-shadok' extension main page is rendered only with HTTP requests containing '&access_token=gabuzomeu'
+	 * Otherwise an HTTP error code 500 will be returned.
+	 *
+	 * @param string $m_sAccessTokenConfigParamId
+	 */
+	public function SetAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
+	{
+		$this->m_sAccessTokenConfigParamId = trim($m_sAccessTokenConfigParamId) ?? "";
 	}
 
 	/**
@@ -322,35 +374,48 @@ abstract class Controller
 	 */
 	public function DisplayPage($aParams = array(), $sTemplateName = null, $sPageType = 'html')
 	{
-		if (empty($sTemplateName))
-		{
+		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
 		}
 		$aParams = array_merge($this->GetDefaultParameters(), $aParams);
 		$this->CreatePage($sPageType);
-		$this->AddToPage($this->RenderTemplate($aParams, $sTemplateName, 'html'));
-		$this->AddScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'js'));
-		$this->AddReadyScriptToPage($this->RenderTemplate($aParams, $sTemplateName, 'ready.js'));
-		if (!empty($this->m_aAjaxTabs))
-		{
-			$this->m_oPage->AddTabContainer('');
-			$this->m_oPage->SetCurrentTabContainer('');
+		$sHTMLContent = $this->RenderTemplate($aParams, $sTemplateName, 'html');
+		if ($sHTMLContent !== false) {
+			$this->AddToPage($sHTMLContent);
 		}
-		foreach ($this->m_aAjaxTabs as $sTabCode => $aTabData)
-		{
+		$sJSScript = $this->RenderTemplate($aParams, $sTemplateName, 'js');
+		if ($sJSScript !== false) {
+			$this->AddScriptToPage($sJSScript);
+		}
+		$sReadyScript = $this->RenderTemplate($aParams, $sTemplateName, 'ready.js');
+		if ($sReadyScript !== false) {
+			$this->AddReadyScriptToPage($sReadyScript);
+		}
+		$sStyle = $this->RenderTemplate($aParams, $sTemplateName, 'css');
+		if ($sStyle !== false) {
+			$this->AddStyleToPage($sStyle);
+		}
+		if ($sHTMLContent === false && $sJSScript === false && $sReadyScript === false && $sStyle === false) {
+			IssueLog::Error("Missing TWIG template for $sTemplateName");
+		}
+		if (!empty($this->m_aAjaxTabs)) {
+			$this->m_oPage->AddTabContainer('TwigBaseTabContainer');
+			$this->m_oPage->SetCurrentTabContainer('TwigBaseTabContainer');
+		}
+		foreach ($this->m_aAjaxTabs as $sTabCode => $aTabData) {
 			$this->AddAjaxTabToPage($sTabCode, $aTabData['label'], $aTabData['url'], $aTabData['cache']);
 		}
-		foreach ($this->m_aLinkedScripts as $sLinkedScript)
-		{
+		foreach ($this->m_aLinkedScripts as $sLinkedScript) {
 			$this->AddLinkedScriptToPage($sLinkedScript);
 		}
-		foreach ($this->m_aLinkedStylesheets as $sLinkedStylesheet)
-		{
+		foreach ($this->m_aLinkedStylesheets as $sLinkedStylesheet) {
 			$this->AddLinkedStylesheetToPage($sLinkedStylesheet);
 		}
-		foreach ($this->m_aSaas as $sSaasRelPath)
-		{
+		foreach ($this->m_aSaas as $sSaasRelPath) {
 			$this->AddSaasToPage($sSaasRelPath);
+		}
+		foreach ($this->m_aBlockParams as $sKey => $value) {
+			$this->SetBlockParamToPage($sKey, $value);
 		}
 		$this->OutputPage();
 	}
@@ -366,13 +431,18 @@ abstract class Controller
 	 */
 	public function DisplayJSONPage($aParams = array(), $iResponseCode = 200, $aHeaders = array())
 	{
+		$oKpi = new ExecutionKPI();
 		http_response_code($iResponseCode);
 		header('Content-Type: application/json');
 		foreach ($aHeaders as $sHeader)
 		{
 			header($sHeader);
 		}
-		echo json_encode($aParams);
+		$sJSON = json_encode($aParams);
+		echo $sJSON;
+		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
+
+		ExecutionKPI::ReportStats();
 	}
 
 	/**
@@ -387,8 +457,7 @@ abstract class Controller
 	 */
 	public function DownloadZippedPage($aParams = array(), $sTemplateName = null)
 	{
-		if (empty($sTemplateName))
-		{
+		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
 		}
 		$sReportFolder = str_replace("\\", '/', APPROOT.'log/');
@@ -396,7 +465,10 @@ abstract class Controller
 		$sHTMLReport = $sReportFolder.$sReportFile.'.html';
 		$sZIPReportFile = $sReportFile;
 
-		file_put_contents($sHTMLReport, $this->RenderTemplate($aParams, $sTemplateName, 'html'));
+		ob_start();
+		$this->DisplayPage($aParams, $sTemplateName, self::ENUM_PAGE_TYPE_BASIC_HTML);
+		file_put_contents($sHTMLReport, ob_get_contents());
+		ob_end_clean();
 
 		$this->ZipDownloadRemoveFile(array($sHTMLReport), $sZIPReportFile, true);
 	}
@@ -437,16 +509,14 @@ abstract class Controller
 
 		if ($bFileTransfer)
 		{
-			header('Content-Description: File Transfer');
-			header('Content-Disposition: inline; filename="'.$sDownloadArchiveName);
+			header('Content-Disposition: attachment; filename="'.$sDownloadArchiveName.'"');
 		}
 
-		header('Expires: 0');
 		header('Cache-Control: must-revalidate');
 		header('Pragma: public');
+		header('Expires: 0');
 
-		foreach ($aHeaders as $sKey => $sValue)
-		{
+		foreach ($aHeaders as $sKey => $sValue) {
 			header($sKey.': '.$sValue);
 		}
 
@@ -510,11 +580,19 @@ abstract class Controller
 	 */
 	public function AddAjaxTab($sCode, $sURL, $bCache = true, $sLabel = null)
 	{
-		if (is_null($sLabel))
-		{
+		if (is_null($sLabel)) {
 			$sLabel = Dict::S($sCode);
 		}
 		$this->m_aAjaxTabs[$sCode] = array('label' => $sLabel, 'url' => $sURL, 'cache' => $bCache);
+	}
+
+	/**
+	 * @param array $aBlockParams
+	 * @since 3.0.0
+	 */
+	public function SetBlockParams(array $aBlockParams)
+	{
+		$this->m_aBlockParams = $aBlockParams;
 	}
 
 	/**
@@ -522,7 +600,7 @@ abstract class Controller
 	 * @param $sName
 	 * @param $sTemplateFileExtension
 	 *
-	 * @return string
+	 * @return string|false
 	 * @throws \Exception
 	 */
 	private function RenderTemplate($aParams, $sName, $sTemplateFileExtension)
@@ -535,16 +613,14 @@ abstract class Controller
 		{
 			return $this->m_oTwig->render($sName.'.'.$sTemplateFileExtension.'.twig', $aParams);
 		}
-		catch (Twig_Error $e)
-		{
-			// Ignore errors
-			if (!utils::StartsWith($e->getMessage(), 'Unable to find template'))
+		catch (Error $e) {
+			if (strpos($e->getMessage(), 'Unable to find template') === false)
 			{
 				IssueLog::Error($e->getMessage());
 			}
 		}
 
-		return '';
+		return false;
 	}
 
 	/**
@@ -556,18 +632,25 @@ abstract class Controller
 	{
 		switch ($sPageType)
 		{
-			case 'html':
-				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
+			case self::ENUM_PAGE_TYPE_HTML:
+				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
+				$this->m_oPage->add_xframe_options();
 				break;
 
-			case 'ajax':
-				$this->m_oPage = new ajax_page($this->GetOperationTitle());
+			case self::ENUM_PAGE_TYPE_BASIC_HTML:
+				$this->m_oPage = new WebPage($this->GetOperationTitle());
 				break;
 
-			case 'setup':
+			case self::ENUM_PAGE_TYPE_AJAX:
+				$this->m_oPage = new AjaxPage($this->GetOperationTitle());
+				break;
+
+			case self::ENUM_PAGE_TYPE_SETUP:
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
 		}
+		$this->m_oTwig->addGlobal('UIBlockParent', [$this->m_oPage]);
+		$this->m_oTwig->addGlobal('oPage', $this->m_oPage);
 	}
 
 	/**
@@ -578,6 +661,15 @@ abstract class Controller
 	public function GetOperationTitle()
 	{
 		return Dict::S($this->m_sModule.'/Operation:'.$this->m_sOperation.'/Title');
+	}
+
+	/**
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetOperation(): string
+	{
+		return $this->m_sOperation;
 	}
 
 	/**
@@ -610,6 +702,11 @@ abstract class Controller
 		$this->m_oPage->add_linked_stylesheet($sLinkedStylesheet);
 	}
 
+	private function AddStyleToPage($sStyle)
+	{
+		$this->m_oPage->add_style($sStyle);
+	}
+
 	private function AddSaasToPage($sSaasRelPath)
 	{
 		$this->m_oPage->add_saas($sSaasRelPath);
@@ -621,14 +718,20 @@ abstract class Controller
 	}
 
 	/**
+	 * @param string $sKey
+	 * @param $value
+	 * @since 3.0.0
+	 */
+	private function SetBlockParamToPage(string $sKey, $value)
+	{
+		$this->m_oPage->SetBlockParam($sKey, $value);
+	}
+
+	/**
 	 * @throws \Exception
 	 */
 	private function OutputPage()
 	{
 		$this->m_oPage->output();
 	}
-}
-
-class PageNotFoundException extends Exception
-{
 }

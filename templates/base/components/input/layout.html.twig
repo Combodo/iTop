@@ -1,0 +1,18 @@
+{% block iboInputLabel %}
+{% endblock %}
+{% block iboInput %}
+    <input type="{{ oUIBlock.GetType() }}" id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}" value="{{ oUIBlock.GetValue()|raw }}"
+           class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+           data-role="ibo-input"
+            {% if oUIBlock.IsChecked() %} checked="checked"{% endif %}
+            {% if oUIBlock.IsDisabled() %} disabled{% endif %}
+            {% if oUIBlock.IsReadonly() %} readonly{% endif %}
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+            {% if oUIBlock.GetPlaceHolder() %}  placeholder="{{ oUIBlock.GetPlaceHolder() }}" {% endif %}
+    >
+    {% if oUIBlock.HasLabel() %}<label for="{{ oUIBlock.GetId() }}">{{ oUIBlock.GetLabel() |raw }}</label>{% endif %}
+{% endblock %}

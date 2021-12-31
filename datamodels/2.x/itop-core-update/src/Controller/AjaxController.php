@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -37,7 +37,8 @@ class AjaxController extends Controller
 			}
 			else
 			{
-				$aParams['sMessage'] = Dict::Format("iTopUpdate:UI:CanCoreUpdate:{$sCanUpdateCore}", $sMessage);
+				$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
+				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink);
 			}
 		} catch (FileNotExistException $e)
 		{

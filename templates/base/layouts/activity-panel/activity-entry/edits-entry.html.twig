@@ -1,0 +1,22 @@
+{% extends 'base/layouts/activity-panel/activity-entry/layout.html.twig' %}
+
+{% block iboActivityEntryExtraClasses %}ibo-edits-entry{% endblock %}
+
+{% block iboActivityEntryMainInformationContent %}
+    {% if (oUIBlock.GetAttributes()|length == 1) and (oUIBlock.GetAttributes()|first['descriptions']|length == 1) %}
+        <span class="ibo-edits-entry--short-description">{{ oUIBlock.GetShortDescriptionAsHtml()|raw }}</span>
+    {% else %}
+        <a href="#" class="ibo-edits-entry--short-description" data-role="ibo-edits-entry--long-description-toggler">
+            {# Note: In edits entry, the description toggler is positioned #}
+            <span class="ibo-edits-entry--long-description-toggler-icon fa fa-caret-down"></span>
+            {{ oUIBlock.GetShortDescriptionAsHtml()|raw }}
+        </a>
+        <ul class="ibo-edits-entry--long-description" data-role="ibo-edits-entry--long-description">
+            {% for sAttCode, aAttData in oUIBlock.GetAttributes() %}
+                {% for sAttHtmlDescription in aAttData.descriptions %}
+                    <li class="ibo-edits-entry--attribute-description" data-attribute-code="{{ sAttCode }}">{{ sAttHtmlDescription|raw }}</li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

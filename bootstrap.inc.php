@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,21 +18,35 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+/**
+ * Checks PHP version
+ *
+ * This is a hard-coded check that limits errors : we are stopping for anything < PHP 7.0.0
+ * The "real one" will be done in {@link \SetupUtils::CheckPhpVersion()}
+ *
+ * Note that since Composer 2 there is a platform_check that make this useless, but keeping it anyway to be extra safe !
+ *
+ * @see https://github.com/composer/composer/blob/master/doc/07-runtime.md#platform-check Composer's platform check
+ *
+ * @since 3.0.0 N°2214
+ */
+$bIsValidPhpVersion = false;
+if (PHP_MAJOR_VERSION >= 7) {
+	$bIsValidPhpVersion = true;
+} else {
+	echo 'Your PHP version ('.PHP_VERSION.') isn\'t supported.';
+	exit(-1);
+}
+
+
 define('ITOP_DEFAULT_ENV', 'production');
 define('MAINTENANCE_MODE_FILE', APPROOT.'data/.maintenance');
 define('READONLY_MODE_FILE', APPROOT.'data/.readonly');
 
-if (function_exists('microtime'))
-{
-	$fItopStarted = microtime(true);
-}
-else
-{
-	$fItopStarted = 1000 * time();
-}
+$fItopStarted = microtime(true);
 
-if (! isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false)
-{
+if (!isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false) {
 	require_once APPROOT.'/lib/autoload.php';
 }
 
@@ -41,8 +55,7 @@ if (! isset($GLOBALS['bBypassAutoload']) || $GLOBALS['bBypassAutoload'] == false
 //
 
 // Use 'maintenance' parameter to bypass maintenance mode
-if (!isset($bBypassMaintenance))
-{
+if (!isset($bBypassMaintenance)) {
 	$bBypassMaintenance = isset($_REQUEST['maintenance']) ? boolval($_REQUEST['maintenance']) : false;
 }
 

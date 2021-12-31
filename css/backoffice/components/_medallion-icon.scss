@@ -1,0 +1,31 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-medallion-icon--padding-y: 13px !default;
+$ibo-medallion-icon--padding-x: $ibo-spacing-0 !default;
+
+$ibo-medallion-icon--image--diameter: 48px !default;
+$ibo-medallion-icon--image--padding: $ibo-spacing-100 !default;
+$ibo-medallion-icon--image--border-radius: $ibo-border-radius-full !default;
+$ibo-medallion-icon--image--background-color: $ibo-color-blue-200 !default;
+
+$ibo-medallion-icon--description--padding-left: $ibo-spacing-300 !default;
+
+.ibo-medallion-icon{
+  display: flex;
+  padding: $ibo-medallion-icon--padding-y $ibo-medallion-icon--padding-x;
+}
+.ibo-medallion-icon--image{
+  height: $ibo-medallion-icon--image--diameter;
+  width: $ibo-medallion-icon--image--diameter;
+  padding: $ibo-medallion-icon--image--padding;
+  border-radius: $ibo-medallion-icon--image--border-radius;
+  background-color: $ibo-medallion-icon--image--background-color;
+}
+
+.ibo-medallion-icon--description{
+  display: inline-block;
+  padding-left: $ibo-medallion-icon--description--padding-left;
+}

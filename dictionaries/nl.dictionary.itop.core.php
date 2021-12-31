@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * @author Hipska (2018, 2019)
  * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2019 - 2020)
  * 
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
@@ -38,6 +38,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Core:AttributeLinkedSet' => 'Reeks van objecten',
 	'Core:AttributeLinkedSet+' => 'Elke soort objecten van dezelfde klasse of subklasse',
+
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
 	'Core:AttributeDashboard' => 'Dashboard',
 	'Core:AttributeDashboard+' => '',
@@ -235,6 +237,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChange/Attribute:date+' => 'De datum en tijd waarop de aanpassingen zijn waargenomen ',
 	'Class:CMDBChange/Attribute:userinfo' => 'Info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -304,12 +314,16 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Change:ObjectCreated' => 'Object aangemaakt',
 	'Change:ObjectDeleted' => 'Object verwijderd',
 	'Change:ObjectModified' => 'Object aangepast',
+	'Change:TwoAttributesChanged' => '%1$s en %2$s aangepast',
+	'Change:ThreeAttributesChanged' => '%1$s, %2$s en 1 andere aangepast',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s en %3$s andere aangepast',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s veranderd naar %2$s (vorige waarde: %3$s)',
 	'Change:AttName_SetTo' => '%1$s veranderd naar %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s toegevoegd aan %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s aangepast, vorige waarde: %2$s',
 	'Change:AttName_Changed' => '%1$s aangepast',
 	'Change:AttName_EntryAdded' => '%1$s aangepast, nieuwe invoer toegevoegd: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Veranderd van %2$s naar %1$s',
 	'Change:LinkSet:Added' => 'toegevoegd %1$s',
 	'Change:LinkSet:Removed' => 'verwijderd %1$s',
 	'Change:LinkSet:Modified' => 'aangepast %1$s',
@@ -491,6 +505,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Action/Attribute:trigger_list+' => 'Triggers gelinkt aan deze actie',
 	'Class:Action/Attribute:finalclass' => 'Type',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -509,12 +524,20 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ActionEmail' => 'E-mailmelding',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'Status bepaalt wie op de hoogte zal gesteld worden: enkel de testontvanger, iedereen (Aan, CC en BCC) of niemand',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Enkel de testontvanger zal op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle Aan, CC en BCC bestemingen zullen op de hoogte gesteld worden',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'De e-mailmelding zal niet verstuurd worden',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testontvanger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Bestemming als de status op "Test" staat',
-	'Class:ActionEmail/Attribute:from' => 'Van',
+	'Class:ActionEmail/Attribute:from' => 'Van (e-mail)',
 	'Class:ActionEmail/Attribute:from+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
-	'Class:ActionEmail/Attribute:reply_to' => 'Antwoord',
+	'Class:ActionEmail/Attribute:from_label' => 'Van (label)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
+	'Class:ActionEmail/Attribute:reply_to' => 'Antwoord (e-mail)',
 	'Class:ActionEmail/Attribute:reply_to+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Antwoord (label)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Wordt gebruikt in de hoofdtekst van de e-mail (headers)',
 	'Class:ActionEmail/Attribute:to' => 'Aan',
 	'Class:ActionEmail/Attribute:to+' => 'Bestemming van de e-mail',
 	'Class:ActionEmail/Attribute:cc' => 'CC',
@@ -548,8 +571,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Trigger/Attribute:action_list+' => 'Acties uitgevoerd nadat de trigger is geactiveerd',
 	'Class:Trigger/Attribute:finalclass' => 'Type',
 	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context' => 'Context',
+	'Class:Trigger/Attribute:context+' => 'In welke context de trigger uitgevoerd kan worden',
 ));
 
 //
@@ -562,7 +585,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Toegepast op klasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Verkeerde filter-query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'De filter-query moet verwijzen naar objecten van klasse "%1$s"',
 ));
@@ -632,6 +655,17 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger bij het aanpassen van een object van de opgegeven klasse (of subklasse ervan)',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Doelvelden',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -1051,6 +1085,18 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Uiteindelijke klasse',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Resterende pogingen',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Laatste foutcode',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Laatste fout',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Laatste poging',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1088,3 +1134,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:ResourceSystemMenu' => 'Tool "System Menu"',
 	'Class:ResourceSystemMenu+' => '',
 ));
+
+
+

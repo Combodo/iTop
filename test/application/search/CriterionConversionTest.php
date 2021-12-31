@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2018 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -42,6 +42,8 @@ use DBSearch;
 use Dict;
 
 /**
+ * @group itopRequestMgmt
+ * @group itopServiceMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -98,7 +100,22 @@ class CriterionConversionTest extends ItopDataTestCase
                 }',
 				"(`UserRequest`.`start_date` > '2017-01-01')"
 			),
-			'contains' => array(
+			'contains nothing' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "contains",
+                    "oql": ""
+                }',
+				"1"
+			),
+			'contains a regular string' => array(
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -113,7 +130,38 @@ class CriterionConversionTest extends ItopDataTestCase
                 }',
 				"(`Contact`.`name` LIKE '%toto%')"
 			),
-			'starts_with' => array(
+			// See PR #170
+			'contains 0 as a string' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "0",
+                            "label": "0"
+                        }
+                    ],
+                    "operator": "contains",
+                    "oql": ""
+                }',
+				"(`Contact`.`name` LIKE '%0%')"
+			),
+			'starts_with nothing' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "starts_with",
+                    "oql": ""
+                }',
+				"1"
+			),
+			'starts_with a regular string' => array(
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -128,7 +176,37 @@ class CriterionConversionTest extends ItopDataTestCase
                 }',
 				"(`Contact`.`name` LIKE 'toto%')"
 			),
-			'ends_with' => array(
+			'starts_with a 0 as a string' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "0",
+                            "label": "0"
+                        }
+                    ],
+                    "operator": "starts_with",
+                    "oql": ""
+                }',
+				"(`Contact`.`name` LIKE '0%')"
+			),
+			'ends_with nothing' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "",
+                            "label": ""
+                        }
+                    ],
+                    "operator": "ends_with",
+                    "oql": ""
+                }',
+				"1"
+			),
+			'ends_with a regular string' => array(
 				'Contact',
 				'{
                     "ref": "Contact.name",
@@ -142,6 +220,21 @@ class CriterionConversionTest extends ItopDataTestCase
                     "oql": ""
                 }',
 				"(`Contact`.`name` LIKE '%toto')"
+			),
+			'ends_with 0 as a string' => array(
+				'Contact',
+				'{
+                    "ref": "Contact.name",
+                    "values": [
+                        {
+                            "value": "0",
+                            "label": "0"
+                        }
+                    ],
+                    "operator": "ends_with",
+                    "oql": ""
+                }',
+				"(`Contact`.`name` LIKE '%0')"
 			),
 			'empty' => array(
 				'Contact',
@@ -517,7 +610,8 @@ class CriterionConversionTest extends ItopDataTestCase
 	 */
     function testOqlToForSearchToOqlAltLanguageFR($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
-        $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
+    	\MetaModel::GetConfig()->Set('date_and_time_format', array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')));
+	    $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "FR FR");
     }
 
 
@@ -537,9 +631,9 @@ class CriterionConversionTest extends ItopDataTestCase
 	 */
     function testOqlToForSearchToOqlAltLanguageEN($sOQL, $sExpectedOQL, $aExpectedCriterion)
     {
+	    \MetaModel::GetConfig()->Set('date_and_time_format', array('default' => array('date' => 'Y-m-d', 'time' => 'H:i:s', 'date_time' => '$date $time')));
         $this->OqlToSearchToOqlAltLanguage($sOQL, $sExpectedOQL, $aExpectedCriterion, "EN US");
     }
-
 
     function OqlProviderDates()
     {

@@ -1,0 +1,21 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+	<div class="explain-printable not-printable">
+		<p>{{'UI:ExplainPrintable'| dict_format('<i class="fas fa-eye"></i>')| raw}}</p>
+		<div id="hiddeable_chapters"></div>
+		<button class="ibo-button ibo-is-regular ibo-is-primary action" onclick="window.print()">{{'UI:Button:GoPrint'| dict_s}}</button>&#160;&#160;
+		<button class="ibo-button ibo-is-regular ibo-is-secondary cancel" onclick="window.close()">{{ 'UI:Button:Cancel'| dict_s}}</button>&#160;&#160;
+
+		<select name="text" onchange='$(".printable-content").width(this.value);'>
+			<option value='100%'>{{ 'UI:PrintResolution:FullSize'|dict_s }}</option>
+			<option value='19cm'>{{ 'UI:PrintResolution:A4Portrait'|dict_s }}</option>
+			<option value='27.7cm' selected>{{ 'UI:PrintResolution:A4Landscape'|dict_s }}</option>
+			<option value='19.6cm'>{{ 'UI:PrintResolution:LetterPortrait'|dict_s }}</option>
+			<option value='25.9cm'>{{ 'UI:PrintResolution:LetterLandscape'|dict_s }}</option>
+		</select>
+
+	</div>
+
+{% endapply %}

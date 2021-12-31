@@ -1,0 +1,24 @@
+<div id="ibo-center-container" class="ibo-center-container {% block iboPageCenterContainerExtraClasses %}{% endblock %}" data-role="ibo-center-container">
+	{% block iboPageCenterContainer %}
+		<main id="ibo-main-content">
+			{# Note: The header is inside the main content div to avoid glitches with other layouts (eg. in a side content layout) #}
+			{% block iboPageHeader %}
+				{{ include('pages/backoffice/extension-blocks/header.html.twig') }}
+			{% endblock %}
+
+			{% block iboPageMainContent %}
+				{% for oSubBlock in oUIBlock.GetMainBlocks() %}
+					{{ render_block(oSubBlock, {aPage: aPage}) }}
+				{% endfor %}
+			{% endblock %}
+			{% block iboPageExtraHtml %}
+				{{ oUIBlock.GetExtraHtmlContent()|raw }}
+			{% endblock %}
+
+			{# Note: The footer is inside the main content div to avoid glitches with other layouts (eg. in a side content layout) #}
+			{% block iboPageFooter %}
+				{{ include('pages/backoffice/extension-blocks/footer.html.twig') }}
+			{% endblock %}
+		</main>
+	{% endblock %}
+</div>

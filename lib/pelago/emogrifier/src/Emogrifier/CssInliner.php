@@ -2,6 +2,8 @@
 
 namespace Pelago\Emogrifier;
 
+use Pelago\Emogrifier\HtmlProcessor\AbstractHtmlProcessor;
+use Pelago\Emogrifier\Utilities\CssConcatenator;
 use Symfony\Component\CssSelector\CssSelectorConverter;
 use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
 
@@ -12,8 +14,6 @@ use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
  *
  * For more information, please see the README.md file.
  *
- * @internal This class currently is a new technology preview, and its API is still in flux. Don't use it in production.
- *
  * @author Cameron Brooks
  * @author Jaime Prado
  * @author Oliver Klee <github@oliverklee.de>
@@ -21,7 +21,7 @@ use Symfony\Component\CssSelector\Exception\SyntaxErrorException;
  * @author Sander Kruger <s.kruger@invessel.com>
  * @author Zoli Szabó <zoli.szabo+github@gmail.com>
  */
-class CssInliner
+class CssInliner extends AbstractHtmlProcessor
 {
     /**
      * @var int
@@ -51,37 +51,13 @@ class CssInliner
      *
      * @var string
      */
-    const PSEUDO_CLASS_MATCHER = '\\S+\\-(?:child|type\\()|not\\([[:ascii:]]*\\)';
-
-    /**
-     * @var string
-     */
-    const CONTENT_TYPE_META_TAG = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
-
-    /**
-     * @var string
-     */
-    const DEFAULT_DOCUMENT_TYPE = '<!DOCTYPE html>';
-
-    /**
-     * @var \DOMDocument
-     */
-    protected $domDocument = null;
-
-    /**
-     * @var string
-     */
-    private $css = '';
+    const PSEUDO_CLASS_MATCHER
+        = 'empty|(?:first|last|nth(?:-last)?+|only)-child|(?:first|last|nth(?:-last)?+)-of-type|not\\([[:ascii:]]*\\)';
 
     /**
      * @var bool[]
      */
     private $excludedSelectors = [];
-
-    /**
-     * @var string[]
-     */
-    private $unprocessableHtmlTags = ['wbr'];
 
     /**
      * @var bool[]
@@ -139,14 +115,6 @@ class CssInliner
     private $isStyleBlocksParsingEnabled = true;
 
     /**
-     * Determines whether elements with the `display: none` property are
-     * removed from the DOM.
-     *
-     * @var bool
-     */
-    private $shouldRemoveInvisibleNodes = true;
-
-    /**
      * For calculating selector precedence order.
      * Keys are a regular expression part to match before a CSS name.
      * Values are a multiplier factor per match to weight specificity.
@@ -163,6 +131,14 @@ class CssInliner
     ];
 
     /**
+     * array of data describing CSS rules which apply to the document but cannot be inlined, in the format returned by
+     * `parseCssRules`
+     *
+     * @var string[][]
+     */
+    private $matchingUninlinableCssRules = null;
+
+    /**
      * Emogrifier will throw Exceptions when it encounters an error instead of silently ignoring them.
      *
      * @var bool
@@ -170,208 +146,38 @@ class CssInliner
     private $debug = false;
 
     /**
-     * @param string $unprocessedHtml raw HTML, must be UTF-encoded, must not be empty
+     * Inlines the given CSS into the existing HTML.
      *
-     * @throws \InvalidArgumentException if $unprocessedHtml is anything other than a non-empty string
-     */
-    public function __construct($unprocessedHtml)
-    {
-        if (!\is_string($unprocessedHtml)) {
-            throw new \InvalidArgumentException('The provided HTML must be a string.', 1540403176);
-        }
-        if ($unprocessedHtml === '') {
-            throw new \InvalidArgumentException('The provided HTML must not be empty.', 1540403181);
-        }
-
-        $this->cssSelectorConverter = new CssSelectorConverter();
-
-        $this->setHtml($unprocessedHtml);
-    }
-
-    /**
-     * Sets the HTML to process.
+     * @param string $css the CSS to inline, must be UTF-8-encoded
      *
-     * @param string $html the HTML to process, must be UTF-8-encoded
-     *
-     * @return void
-     */
-    private function setHtml($html)
-    {
-        $this->createUnifiedDomDocument($html);
-    }
-
-    /**
-     * Provides access to the internal DOMDocument representation of the HTML in its current state.
-     *
-     * @return \DOMDocument
-     */
-    public function getDomDocument()
-    {
-        return $this->domDocument;
-    }
-
-    /**
-     * Sets the CSS to merge with the HTML.
-     *
-     * @param string $css the CSS to merge, must be UTF-8-encoded
-     *
-     * @return void
-     */
-    public function setCss($css)
-    {
-        $this->css = $css;
-    }
-
-    /**
-     * Renders the normalized and processed HTML.
-     *
-     * @return string
-     */
-    public function render()
-    {
-        return $this->domDocument->saveHTML();
-    }
-
-    /**
-     * Renders the content of the BODY element of the normalized and processed HTML.
-     *
-     * @return string
-     */
-    public function renderBodyContent()
-    {
-        $bodyNodeHtml = $this->domDocument->saveHTML($this->getBodyElement());
-
-        return \str_replace(['<body>', '</body>'], '', $bodyNodeHtml);
-    }
-
-    /**
-     * Returns the BODY element.
-     *
-     * This method assumes that there always is a BODY element.
-     *
-     * @return \DOMElement
-     */
-    private function getBodyElement()
-    {
-        return $this->domDocument->getElementsByTagName('body')->item(0);
-    }
-
-    /**
-     * Applies $this->css to the given HTML and returns the HTML with the CSS
-     * applied.
-     *
-     * This method places the CSS inline.
-     *
-     * @return string
+     * @return self fluent interface
      *
      * @throws SyntaxErrorException
      */
-    public function emogrify()
-    {
-        $this->process();
-
-        return $this->render();
-    }
-
-    /**
-     * Applies $this->css to the given HTML and returns only the HTML content
-     * within the <body> tag.
-     *
-     * This method places the CSS inline.
-     *
-     * @return string
-     *
-     * @throws SyntaxErrorException
-     */
-    public function emogrifyBodyContent()
-    {
-        $this->process();
-
-        return $this->renderBodyContent();
-    }
-
-    /**
-     * Creates a DOM document from the given HTML and stores it in $this->domDocument.
-     *
-     * The DOM document will always have a BODY element and a document type.
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    private function createUnifiedDomDocument($html)
-    {
-        $this->createRawDomDocument($html);
-        $this->ensureExistenceOfBodyElement();
-    }
-
-    /**
-     * Creates a DOMDocument instance from the given HTML and stores it in $this->domDocument.
-     *
-     * @param string $html
-     *
-     * @return void
-     */
-    private function createRawDomDocument($html)
-    {
-        $domDocument = new \DOMDocument();
-        $domDocument->encoding = 'UTF-8';
-        $domDocument->strictErrorChecking = false;
-        $domDocument->formatOutput = true;
-        $libXmlState = \libxml_use_internal_errors(true);
-        $domDocument->loadHTML($this->prepareHtmlForDomConversion($html));
-        \libxml_clear_errors();
-        \libxml_use_internal_errors($libXmlState);
-        $domDocument->normalizeDocument();
-
-        $this->domDocument = $domDocument;
-    }
-
-    /**
-     * Returns the HTML with added document type and Content-Type meta tag if needed,
-     * ensuring that the HTML will be good for creating a DOM document from it.
-     *
-     * @param string $html
-     *
-     * @return string the unified HTML
-     */
-    private function prepareHtmlForDomConversion($html)
-    {
-        $htmlWithDocumentType = $this->ensureDocumentType($html);
-
-        return $this->addContentTypeMetaTag($htmlWithDocumentType);
-    }
-
-    /**
-     * Applies $this->css to $this->domDocument.
-     *
-     * This method places the CSS inline.
-     *
-     * @return void
-     *
-     * @throws SyntaxErrorException
-     */
-    protected function process()
+    public function inlineCss($css = '')
     {
         $this->clearAllCaches();
         $this->purgeVisitedNodes();
 
-        $xPath = new \DOMXPath($this->domDocument);
-        $this->removeUnprocessableTags();
-        $this->normalizeStyleAttributesOfAllNodes($xPath);
+        $this->normalizeStyleAttributesOfAllNodes();
 
-        // grab any existing style blocks from the html and append them to the existing CSS
+        $combinedCss = $css;
+        // grab any existing style blocks from the HTML and append them to the existing CSS
         // (these blocks should be appended so as to have precedence over conflicting styles in the existing CSS)
-        $allCss = $this->css;
         if ($this->isStyleBlocksParsingEnabled) {
-            $allCss .= $this->getCssFromAllStyleNodes($xPath);
+            $combinedCss .= $this->getCssFromAllStyleNodes();
         }
 
-        $excludedNodes = $this->getNodesToExclude($xPath);
-        $cssRules = $this->parseCssRules($allCss);
-        foreach ($cssRules['inlineable'] as $cssRule) {
+        $cssWithoutComments = $this->removeCssComments($combinedCss);
+        list($cssWithoutCommentsCharsetOrImport, $cssImportRules)
+            = $this->extractImportAndCharsetRules($cssWithoutComments);
+
+        $excludedNodes = $this->getNodesToExclude();
+        $cssRules = $this->parseCssRules($cssWithoutCommentsCharsetOrImport);
+        $cssSelectorConverter = $this->getCssSelectorConverter();
+        foreach ($cssRules['inlinable'] as $cssRule) {
             try {
-                $nodesMatchingCssSelectors = $xPath->query($this->cssSelectorConverter->toXPath($cssRule['selector']));
+                $nodesMatchingCssSelectors = $this->xPath->query($cssSelectorConverter->toXPath($cssRule['selector']));
             } catch (SyntaxErrorException $e) {
                 if ($this->debug) {
                     throw $e;
@@ -384,194 +190,20 @@ class CssInliner
                 if (\in_array($node, $excludedNodes, true)) {
                     continue;
                 }
-                $this->copyInlineableCssToStyleAttribute($node, $cssRule);
+                $this->copyInlinableCssToStyleAttribute($node, $cssRule);
             }
         }
 
         if ($this->isInlineStyleAttributesParsingEnabled) {
             $this->fillStyleAttributesWithMergedStyles();
         }
-        $this->postProcess($xPath);
 
-        $this->removeImportantAnnotationFromAllInlineStyles($xPath);
+        $this->removeImportantAnnotationFromAllInlineStyles();
 
-        $this->copyUninlineableCssToStyleNode($xPath, $cssRules['uninlineable']);
-    }
+        $this->determineMatchingUninlinableCssRules($cssRules['uninlinable']);
+        $this->copyUninlinableCssToStyleNode($cssImportRules);
 
-    /**
-     * Applies some optional post-processing to the HTML in the DOM document.
-     *
-     * @param \DOMXPath $xPath
-     *
-     * @return void
-     */
-    private function postProcess(\DOMXPath $xPath)
-    {
-        if ($this->shouldRemoveInvisibleNodes) {
-            $this->removeInvisibleNodes($xPath);
-        }
-    }
-
-    /**
-     * Searches for all nodes with a style attribute and removes the "!important" annotations out of
-     * the inline style declarations, eventually by rearranging declarations.
-     *
-     * @param \DOMXPath $xPath
-     *
-     * @return void
-     */
-    private function removeImportantAnnotationFromAllInlineStyles(\DOMXPath $xPath)
-    {
-        foreach ($this->getAllNodesWithStyleAttribute($xPath) as $node) {
-            $this->removeImportantAnnotationFromNodeInlineStyle($node);
-        }
-    }
-
-    /**
-     * Removes the "!important" annotations out of the inline style declarations,
-     * eventually by rearranging declarations.
-     * Rearranging needed when !important shorthand properties are followed by some of their
-     * not !important expanded-version properties.
-     * For example "font: 12px serif !important; font-size: 13px;" must be reordered
-     * to "font-size: 13px; font: 12px serif;" in order to remain correct.
-     *
-     * @param \DOMElement $node
-     *
-     * @return void
-     */
-    private function removeImportantAnnotationFromNodeInlineStyle(\DOMElement $node)
-    {
-        $inlineStyleDeclarations = $this->parseCssDeclarationsBlock($node->getAttribute('style'));
-        $regularStyleDeclarations = [];
-        $importantStyleDeclarations = [];
-        foreach ($inlineStyleDeclarations as $property => $value) {
-            if ($this->attributeValueIsImportant($value)) {
-                $importantStyleDeclarations[$property] = \trim(\str_replace('!important', '', $value));
-            } else {
-                $regularStyleDeclarations[$property] = $value;
-            }
-        }
-        $inlineStyleDeclarationsInNewOrder = \array_merge(
-            $regularStyleDeclarations,
-            $importantStyleDeclarations
-        );
-        $node->setAttribute(
-            'style',
-            $this->generateStyleStringFromSingleDeclarationsArray($inlineStyleDeclarationsInNewOrder)
-        );
-    }
-
-    /**
-     * Returns a list with all DOM nodes that have a style attribute.
-     *
-     * @param \DOMXPath $xPath
-     *
-     * @return \DOMNodeList
-     */
-    private function getAllNodesWithStyleAttribute(\DOMXPath $xPath)
-    {
-        return $xPath->query('//*[@style]');
-    }
-
-    /**
-     * Extracts and parses the individual rules from a CSS string.
-     *
-     * @param string $css a string of raw CSS code
-     *
-     * @return string[][][] A 2-entry array with the key "inlineable" containing rules which can be inlined as `style`
-     *         attributes and the key "uninlineable" containing rules which cannot.  Each value is an array of string
-     *         sub-arrays with the keys
-     *         "media" (the media query string, e.g. "@media screen and (max-width: 480px)",
-     *         or an empty string if not from a `@media` rule),
-     *         "selector" (the CSS selector, e.g., "*" or "header h1"),
-     *         "hasUnmatchablePseudo" (true if that selector contains psuedo-elements or dynamic pseudo-classes
-     *         such that the declarations cannot be applied inline),
-     *         "declarationsBlock" (the semicolon-separated CSS declarations for that selector,
-     *         e.g., "color: red; height: 4px;"),
-     *         and "line" (the line number e.g. 42)
-     */
-    private function parseCssRules($css)
-    {
-        $cssKey = \md5($css);
-        if (!isset($this->caches[static::CACHE_KEY_CSS][$cssKey])) {
-            $matches = $this->getCssRuleMatches($css);
-
-            $cssRules = [
-                'inlineable' => [],
-                'uninlineable' => [],
-            ];
-            /** @var string[][] $matches */
-            /** @var string[] $cssRule */
-            foreach ($matches as $key => $cssRule) {
-                $cssDeclaration = \trim($cssRule['declarations']);
-                if ($cssDeclaration === '') {
-                    continue;
-                }
-
-                $selectors = \explode(',', $cssRule['selectors']);
-                foreach ($selectors as $selector) {
-                    // don't process pseudo-elements and behavioral (dynamic) pseudo-classes;
-                    // only allow structural pseudo-classes
-                    $hasPseudoElement = \strpos($selector, '::') !== false;
-                    $hasUnsupportedPseudoClass = (bool)\preg_match(
-                        '/:(?!' . static::PSEUDO_CLASS_MATCHER . ')[\\w\\-]/i',
-                        $selector
-                    );
-                    $hasUnmatchablePseudo = $hasPseudoElement || $hasUnsupportedPseudoClass;
-
-                    $parsedCssRule = [
-                        'media' => $cssRule['media'],
-                        'selector' => \trim($selector),
-                        'hasUnmatchablePseudo' => $hasUnmatchablePseudo,
-                        'declarationsBlock' => $cssDeclaration,
-                        // keep track of where it appears in the file, since order is important
-                        'line' => $key,
-                    ];
-                    $ruleType = ($cssRule['media'] === '' && !$hasUnmatchablePseudo) ? 'inlineable' : 'uninlineable';
-                    $cssRules[$ruleType][] = $parsedCssRule;
-                }
-            }
-
-            \usort($cssRules['inlineable'], [$this, 'sortBySelectorPrecedence']);
-
-            $this->caches[static::CACHE_KEY_CSS][$cssKey] = $cssRules;
-        }
-
-        return $this->caches[static::CACHE_KEY_CSS][$cssKey];
-    }
-
-    /**
-     * Parses a string of CSS into the media query, selectors and declarations for each ruleset in order.
-     *
-     * @param string $css
-     *
-     * @return string[][] Array of string sub-arrays with the keys
-     *         "media" (the media query string, e.g. "@media screen and (max-width: 480px)",
-     *         or an empty string if not from an `@media` rule),
-     *         "selectors" (the CSS selector(s), e.g., "*" or "h1, h2"),
-     *         "declarations" (the semicolon-separated CSS declarations for that/those selector(s),
-     *         e.g., "color: red; height: 4px;"),
-     */
-    private function getCssRuleMatches($css)
-    {
-        $ruleMatches = [];
-
-        $splitCss = $this->splitCssAndMediaQuery($css);
-        foreach ($splitCss as $cssPart) {
-            // process each part for selectors and definitions
-            \preg_match_all('/(?:^|[\\s^{}]*)([^{]+){([^}]*)}/mi', $cssPart['css'], $matches, PREG_SET_ORDER);
-
-            /** @var string[][] $matches */
-            foreach ($matches as $cssRule) {
-                $ruleMatches[] = [
-                    'media' => $cssPart['media'],
-                    'selectors' => $cssRule[1],
-                    'declarations' => $cssRule[2],
-                ];
-            }
-        }
-
-        return $ruleMatches;
+        return $this;
     }
 
     /**
@@ -592,76 +224,6 @@ class CssInliner
     public function disableStyleBlocksParsing()
     {
         $this->isStyleBlocksParsingEnabled = false;
-    }
-
-    /**
-     * Disables the removal of elements with `display: none` properties.
-     *
-     * @deprecated will be removed in Emogrifier 3.0
-     *
-     * @return void
-     */
-    public function disableInvisibleNodeRemoval()
-    {
-        $this->shouldRemoveInvisibleNodes = false;
-    }
-
-    /**
-     * Clears all caches.
-     *
-     * @return void
-     */
-    private function clearAllCaches()
-    {
-        $this->caches = [
-            static::CACHE_KEY_CSS => [],
-            static::CACHE_KEY_SELECTOR => [],
-            static::CACHE_KEY_CSS_DECLARATIONS_BLOCK => [],
-            static::CACHE_KEY_COMBINED_STYLES => [],
-        ];
-    }
-
-    /**
-     * Purges the visited nodes.
-     *
-     * @return void
-     */
-    private function purgeVisitedNodes()
-    {
-        $this->visitedNodes = [];
-        $this->styleAttributesForNodes = [];
-    }
-
-    /**
-     * Marks a tag for removal.
-     *
-     * There are some HTML tags that DOMDocument cannot process, and it will throw an error if it encounters them.
-     * In particular, DOMDocument will complain if you try to use HTML5 tags in an XHTML document.
-     *
-     * Note: The tags will not be removed if they have any content.
-     *
-     * @param string $tagName the tag name, e.g., "p"
-     *
-     * @return void
-     */
-    public function addUnprocessableHtmlTag($tagName)
-    {
-        $this->unprocessableHtmlTags[] = $tagName;
-    }
-
-    /**
-     * Drops a tag from the removal list.
-     *
-     * @param string $tagName the tag name, e.g., "p"
-     *
-     * @return void
-     */
-    public function removeUnprocessableHtmlTag($tagName)
-    {
-        $key = \array_search($tagName, $this->unprocessableHtmlTags, true);
-        if ($key !== false) {
-            unset($this->unprocessableHtmlTags[$key]);
-        }
     }
 
     /**
@@ -719,33 +281,60 @@ class CssInliner
     }
 
     /**
-     * This removes styles from your email that contain display:none.
-     * We need to look for display:none, but we need to do a case-insensitive search. Since DOMDocument only
-     * supports XPath 1.0, lower-case() isn't available to us. We've thus far only set attributes to lowercase,
-     * not attribute values. Consequently, we need to translate() the letters that would be in 'NONE' ("NOE")
-     * to lowercase.
+     * Sets the debug mode.
      *
-     * @param \DOMXPath $xPath
+     * @param bool $debug set to true to enable debug mode
      *
      * @return void
      */
-    private function removeInvisibleNodes(\DOMXPath $xPath)
+    public function setDebug($debug)
     {
-        $nodesWithStyleDisplayNone = $xPath->query(
-            '//*[contains(translate(translate(@style," ",""),"NOE","noe"),"display:none")]'
-        );
-        if ($nodesWithStyleDisplayNone->length === 0) {
-            return;
+        $this->debug = $debug;
+    }
+
+    /**
+     * Gets the array of selectors present in the CSS provided to `inlineCss()` for which the declarations could not be
+     * applied as inline styles, but which may affect elements in the HTML.  The relevant CSS will have been placed in a
+     * `<style>` element.  The selectors may include those used within `@media` rules or those involving dynamic
+     * pseudo-classes (such as `:hover`) or pseudo-elements (such as `::after`).
+     *
+     * @return string[]
+     *
+     * @throws \BadMethodCallException if `inlineCss` has not been called first
+     */
+    public function getMatchingUninlinableSelectors()
+    {
+        if ($this->matchingUninlinableCssRules === null) {
+            throw new \BadMethodCallException('inlineCss must be called first', 1568385221);
         }
 
-        // The checks on parentNode and is_callable below ensure that if we've deleted the parent node,
-        // we don't try to call removeChild on a nonexistent child node
-        /** @var \DOMNode $node */
-        foreach ($nodesWithStyleDisplayNone as $node) {
-            if ($node->parentNode && \is_callable([$node->parentNode, 'removeChild'])) {
-                $node->parentNode->removeChild($node);
-            }
-        }
+        return \array_column($this->matchingUninlinableCssRules, 'selector');
+    }
+
+    /**
+     * Clears all caches.
+     *
+     * @return void
+     */
+    private function clearAllCaches()
+    {
+        $this->caches = [
+            self::CACHE_KEY_CSS => [],
+            self::CACHE_KEY_SELECTOR => [],
+            self::CACHE_KEY_CSS_DECLARATIONS_BLOCK => [],
+            self::CACHE_KEY_COMBINED_STYLES => [],
+        ];
+    }
+
+    /**
+     * Purges the visited nodes.
+     *
+     * @return void
+     */
+    private function purgeVisitedNodes()
+    {
+        $this->visitedNodes = [];
+        $this->styleAttributesForNodes = [];
     }
 
     /**
@@ -754,14 +343,12 @@ class CssInliner
      * We wouldn't have to do this if DOMXPath supported XPath 2.0.
      * Also stores a reference of nodes with existing inline styles so we don't overwrite them.
      *
-     * @param \DOMXPath $xPath
-     *
      * @return void
      */
-    private function normalizeStyleAttributesOfAllNodes(\DOMXPath $xPath)
+    private function normalizeStyleAttributesOfAllNodes()
     {
         /** @var \DOMElement $node */
-        foreach ($this->getAllNodesWithStyleAttribute($xPath) as $node) {
+        foreach ($this->getAllNodesWithStyleAttribute() as $node) {
             if ($this->isInlineStyleAttributesParsingEnabled) {
                 $this->normalizeStyleAttributes($node);
             }
@@ -774,6 +361,16 @@ class CssInliner
     }
 
     /**
+     * Returns a list with all DOM nodes that have a style attribute.
+     *
+     * @return \DOMNodeList
+     */
+    private function getAllNodesWithStyleAttribute()
+    {
+        return $this->xPath->query('//*[@style]');
+    }
+
+    /**
      * Normalizes the value of the "style" attribute and saves it.
      *
      * @param \DOMElement $node
@@ -783,8 +380,8 @@ class CssInliner
     private function normalizeStyleAttributes(\DOMElement $node)
     {
         $normalizedOriginalStyle = \preg_replace_callback(
-            '/[A-z\\-]+(?=\\:)/S',
-            function (array $m) {
+            '/-?+[_a-zA-Z][\\w\\-]*+(?=:)/S',
+            static function (array $m) {
                 return \strtolower($m[0]);
             },
             $node->getAttribute('style')
@@ -802,211 +399,54 @@ class CssInliner
     }
 
     /**
-     * Merges styles from styles attributes and style nodes and applies them to the attribute nodes
+     * Parses a CSS declaration block into property name/value pairs.
      *
-     * @return void
+     * Example:
+     *
+     * The declaration block
+     *
+     *   "color: #000; font-weight: bold;"
+     *
+     * will be parsed into the following array:
+     *
+     *   "color" => "#000"
+     *   "font-weight" => "bold"
+     *
+     * @param string $cssDeclarationsBlock the CSS declarations block without the curly braces, may be empty
+     *
+     * @return string[]
+     *         the CSS declarations with the property names as array keys and the property values as array values
      */
-    private function fillStyleAttributesWithMergedStyles()
+    private function parseCssDeclarationsBlock($cssDeclarationsBlock)
     {
-        foreach ($this->styleAttributesForNodes as $nodePath => $styleAttributesForNode) {
-            $node = $this->visitedNodes[$nodePath];
-            $currentStyleAttributes = $this->parseCssDeclarationsBlock($node->getAttribute('style'));
-            $node->setAttribute(
-                'style',
-                $this->generateStyleStringFromDeclarationsArrays(
-                    $currentStyleAttributes,
-                    $styleAttributesForNode
-                )
-            );
-        }
-    }
-
-    /**
-     * This method merges old or existing name/value array with new name/value array
-     * and then generates a string of the combined style suitable for placing inline.
-     * This becomes the single point for CSS string generation allowing for consistent
-     * CSS output no matter where the CSS originally came from.
-     *
-     * @param string[] $oldStyles
-     * @param string[] $newStyles
-     *
-     * @return string
-     */
-    private function generateStyleStringFromDeclarationsArrays(array $oldStyles, array $newStyles)
-    {
-        $cacheKey = \serialize([$oldStyles, $newStyles]);
-        if (isset($this->caches[static::CACHE_KEY_COMBINED_STYLES][$cacheKey])) {
-            return $this->caches[static::CACHE_KEY_COMBINED_STYLES][$cacheKey];
+        if (isset($this->caches[self::CACHE_KEY_CSS_DECLARATIONS_BLOCK][$cssDeclarationsBlock])) {
+            return $this->caches[self::CACHE_KEY_CSS_DECLARATIONS_BLOCK][$cssDeclarationsBlock];
         }
 
-        // Unset the overridden styles to preserve order, important if shorthand and individual properties are mixed
-        foreach ($oldStyles as $attributeName => $attributeValue) {
-            if (!isset($newStyles[$attributeName])) {
+        $properties = [];
+        foreach (\preg_split('/;(?!base64|charset)/', $cssDeclarationsBlock) as $declaration) {
+            $matches = [];
+            if (!\preg_match('/^([A-Za-z\\-]+)\\s*:\\s*(.+)$/s', \trim($declaration), $matches)) {
                 continue;
             }
 
-            $newAttributeValue = $newStyles[$attributeName];
-            if ($this->attributeValueIsImportant($attributeValue)
-                && !$this->attributeValueIsImportant($newAttributeValue)
-            ) {
-                unset($newStyles[$attributeName]);
-            } else {
-                unset($oldStyles[$attributeName]);
-            }
+            $propertyName = \strtolower($matches[1]);
+            $propertyValue = $matches[2];
+            $properties[$propertyName] = $propertyValue;
         }
+        $this->caches[self::CACHE_KEY_CSS_DECLARATIONS_BLOCK][$cssDeclarationsBlock] = $properties;
 
-        $combinedStyles = \array_merge($oldStyles, $newStyles);
-
-        $style = '';
-        foreach ($combinedStyles as $attributeName => $attributeValue) {
-            $style .= \strtolower(\trim($attributeName)) . ': ' . \trim($attributeValue) . '; ';
-        }
-        $trimmedStyle = \rtrim($style);
-
-        $this->caches[static::CACHE_KEY_COMBINED_STYLES][$cacheKey] = $trimmedStyle;
-
-        return $trimmedStyle;
-    }
-
-    /**
-     * Generates a CSS style string suitable to be used inline from the $styleDeclarations property => value array.
-     *
-     * @param string[] $styleDeclarations
-     *
-     * @return string
-     */
-    private function generateStyleStringFromSingleDeclarationsArray(array $styleDeclarations)
-    {
-        return $this->generateStyleStringFromDeclarationsArrays([], $styleDeclarations);
-    }
-
-    /**
-     * Checks whether $attributeValue is marked as !important.
-     *
-     * @param string $attributeValue
-     *
-     * @return bool
-     */
-    private function attributeValueIsImportant($attributeValue)
-    {
-        return \strtolower(\substr(\trim($attributeValue), -10)) === '!important';
-    }
-
-    /**
-     * Applies $cssRules to $this->domDocument, limited to the rules that actually apply to the document.
-     *
-     * @param \DOMXPath $xPath
-     * @param string[][] $cssRules The "uninlineable" array of CSS rules returned by `parseCssRules`
-     *
-     * @return void
-     */
-    private function copyUninlineableCssToStyleNode(\DOMXPath $xPath, array $cssRules)
-    {
-        $cssRulesRelevantForDocument = \array_filter(
-            $cssRules,
-            function (array $cssRule) use ($xPath) {
-                $selector = $cssRule['selector'];
-                if ($cssRule['hasUnmatchablePseudo']) {
-                    $selector = $this->removeUnmatchablePseudoComponents($selector);
-                }
-                return $this->existsMatchForCssSelector($xPath, $selector);
-            }
-        );
-
-        if ($cssRulesRelevantForDocument === []) {
-            // avoid adding empty style element (or including unneeded class dependency)
-            return;
-        }
-
-        $cssConcatenator = new CssConcatenator();
-        foreach ($cssRulesRelevantForDocument as $cssRule) {
-            $cssConcatenator->append([$cssRule['selector']], $cssRule['declarationsBlock'], $cssRule['media']);
-        }
-
-        $this->addStyleElementToDocument($cssConcatenator->getCss());
-    }
-
-    /**
-     * Removes pseudo-elements and dynamic pseudo-classes from a CSS selector, replacing them with "*" if necessary.
-     *
-     * @param string $selector
-     *
-     * @return string Selector which will match the relevant DOM elements if the pseudo-classes are assumed to apply,
-     *                or in the case of pseudo-elements will match their originating element.
-     */
-    private function removeUnmatchablePseudoComponents($selector)
-    {
-        $pseudoComponentMatcher = ':(?!' . static::PSEUDO_CLASS_MATCHER . '):?+[\\w\\-]++(?:\\([^\\)]*+\\))?+';
-        return \preg_replace(
-            ['/(\\s|^)' . $pseudoComponentMatcher . '/i', '/' . $pseudoComponentMatcher . '/i'],
-            ['$1*', ''],
-            $selector
-        );
-    }
-
-    /**
-     * Copies $cssRule into the style attribute of $node.
-     *
-     * Note: This method does not check whether $cssRule matches $node.
-     *
-     * @param \DOMElement $node
-     * @param string[][] $cssRule
-     *
-     * @return void
-     */
-    private function copyInlineableCssToStyleAttribute(\DOMElement $node, array $cssRule)
-    {
-        // if it has a style attribute, get it, process it, and append (overwrite) new stuff
-        if ($node->hasAttribute('style')) {
-            // break it up into an associative array
-            $oldStyleDeclarations = $this->parseCssDeclarationsBlock($node->getAttribute('style'));
-        } else {
-            $oldStyleDeclarations = [];
-        }
-        $newStyleDeclarations = $this->parseCssDeclarationsBlock($cssRule['declarationsBlock']);
-        $node->setAttribute(
-            'style',
-            $this->generateStyleStringFromDeclarationsArrays($oldStyleDeclarations, $newStyleDeclarations)
-        );
-    }
-
-    /**
-     * Checks whether there is at least one matching element for $cssSelector.
-     * When not in debug mode, it returns true also for invalid selectors (because they may be valid,
-     * just not implemented/recognized yet by Emogrifier).
-     *
-     * @param \DOMXPath $xPath
-     * @param string $cssSelector
-     *
-     * @return bool
-     *
-     * @throws SyntaxErrorException
-     */
-    private function existsMatchForCssSelector(\DOMXPath $xPath, $cssSelector)
-    {
-        try {
-            $nodesMatchingSelector = $xPath->query($this->cssSelectorConverter->toXPath($cssSelector));
-        } catch (SyntaxErrorException $e) {
-            if ($this->debug) {
-                throw $e;
-            }
-            return true;
-        }
-
-        return $nodesMatchingSelector !== false && $nodesMatchingSelector->length !== 0;
+        return $properties;
     }
 
     /**
      * Returns CSS content.
      *
-     * @param \DOMXPath $xPath
-     *
      * @return string
      */
-    private function getCssFromAllStyleNodes(\DOMXPath $xPath)
+    private function getCssFromAllStyleNodes()
     {
-        $styleNodes = $xPath->query('//style');
-
+        $styleNodes = $this->xPath->query('//style');
         if ($styleNodes === false) {
             return '';
         }
@@ -1022,44 +462,241 @@ class CssInliner
     }
 
     /**
-     * Adds a style element with $css to $this->domDocument.
-     *
-     * This method is protected to allow overriding.
-     *
-     * @see https://github.com/jjriv/emogrifier/issues/103
+     * Removes comments from the supplied CSS.
      *
      * @param string $css
      *
-     * @return void
+     * @return string CSS with the comments removed
      */
-    protected function addStyleElementToDocument($css)
+    private function removeCssComments($css)
     {
-        $styleElement = $this->domDocument->createElement('style', $css);
-        $styleAttribute = $this->domDocument->createAttribute('type');
-        $styleAttribute->value = 'text/css';
-        $styleElement->appendChild($styleAttribute);
-
-        $bodyElement = $this->getBodyElement();
-        $bodyElement->appendChild($styleElement);
+        return \preg_replace('%/\\*[^*]*+(?:\\*(?!/)[^*]*+)*+\\*/%', '', $css);
     }
 
     /**
-     * Checks that $this->domDocument has a BODY element and adds it if it is missing.
+     * Extracts `@import` and `@charset` rules from the supplied CSS.  These rules must not be preceded by any other
+     * rules, or they will be ignored.  (From the CSS 2.1 specification: "CSS 2.1 user agents must ignore any '@import'
+     * rule that occurs inside a block or after any non-ignored statement other than an @charset or an @import rule."
+     * Note also that `@charset` is case sensitive whereas `@import` is not.)
      *
-     * @return void
+     * @param string $css CSS with comments removed
+     *
+     * @return string[] The first element is the CSS with the valid `@import` and `@charset` rules removed.  The second
+     * element contains a concatenation of the valid `@import` rules, each followed by whatever whitespace followed it
+     * in the original CSS (so that either unminified or minified formatting is preserved); if there were no `@import`
+     * rules, it will be an empty string.  The (valid) `@charset` rules are discarded.
      */
-    private function ensureExistenceOfBodyElement()
+    private function extractImportAndCharsetRules($css)
     {
-        if ($this->domDocument->getElementsByTagName('body')->item(0) !== null) {
-            return;
+        $possiblyModifiedCss = $css;
+        $importRules = '';
+
+        while (
+            \preg_match(
+                '/^\\s*+(@((?i)import(?-i)|charset)\\s[^;]++;\\s*+)/',
+                $possiblyModifiedCss,
+                $matches
+            )
+        ) {
+            list($fullMatch, $atRuleAndFollowingWhitespace, $atRuleName) = $matches;
+
+            if (\strtolower($atRuleName) === 'import') {
+                $importRules .= $atRuleAndFollowingWhitespace;
+            }
+
+            $possiblyModifiedCss = \substr($possiblyModifiedCss, \strlen($fullMatch));
         }
 
-        $htmlElement = $this->domDocument->getElementsByTagName('html')->item(0);
-        $htmlElement->appendChild($this->domDocument->createElement('body'));
+        return [$possiblyModifiedCss, $importRules];
     }
 
     /**
-     * Splits input CSS code into an array of parts for different media querues, in order.
+     * Find the nodes that are not to be emogrified.
+     *
+     * @return \DOMElement[]
+     *
+     * @throws SyntaxErrorException
+     */
+    private function getNodesToExclude()
+    {
+        $excludedNodes = [];
+        foreach (\array_keys($this->excludedSelectors) as $selectorToExclude) {
+            try {
+                $matchingNodes = $this->xPath->query($this->getCssSelectorConverter()->toXPath($selectorToExclude));
+            } catch (SyntaxErrorException $e) {
+                if ($this->debug) {
+                    throw $e;
+                }
+                continue;
+            }
+            foreach ($matchingNodes as $node) {
+                $excludedNodes[] = $node;
+            }
+        }
+
+        return $excludedNodes;
+    }
+
+    /**
+     * @return CssSelectorConverter
+     */
+    private function getCssSelectorConverter()
+    {
+        if ($this->cssSelectorConverter === null) {
+            $this->cssSelectorConverter = new CssSelectorConverter();
+        }
+
+        return $this->cssSelectorConverter;
+    }
+
+    /**
+     * Extracts and parses the individual rules from a CSS string.
+     *
+     * @param string $css a string of raw CSS code with comments removed
+     *
+     * @return string[][][] A 2-entry array with the key "inlinable" containing rules which can be inlined as `style`
+     *         attributes and the key "uninlinable" containing rules which cannot.  Each value is an array of string
+     *         sub-arrays with the keys
+     *         "media" (the media query string, e.g. "@media screen and (max-width: 480px)",
+     *         or an empty string if not from a `@media` rule),
+     *         "selector" (the CSS selector, e.g., "*" or "header h1"),
+     *         "hasUnmatchablePseudo" (true if that selector contains pseudo-elements or dynamic pseudo-classes
+     *         such that the declarations cannot be applied inline),
+     *         "declarationsBlock" (the semicolon-separated CSS declarations for that selector,
+     *         e.g., "color: red; height: 4px;"),
+     *         and "line" (the line number e.g. 42)
+     */
+    private function parseCssRules($css)
+    {
+        $cssKey = \md5($css);
+        if (isset($this->caches[self::CACHE_KEY_CSS][$cssKey])) {
+            return $this->caches[self::CACHE_KEY_CSS][$cssKey];
+        }
+
+        $matches = $this->getCssRuleMatches($css);
+
+        $cssRules = [
+            'inlinable' => [],
+            'uninlinable' => [],
+        ];
+        /** @var string[][] $matches */
+        /** @var string[] $cssRule */
+        foreach ($matches as $key => $cssRule) {
+            $cssDeclaration = \trim($cssRule['declarations']);
+            if ($cssDeclaration === '') {
+                continue;
+            }
+
+            foreach (\explode(',', $cssRule['selectors']) as $selector) {
+                // don't process pseudo-elements and behavioral (dynamic) pseudo-classes;
+                // only allow structural pseudo-classes
+                $hasPseudoElement = \strpos($selector, '::') !== false;
+                $hasUnsupportedPseudoClass = (bool)\preg_match(
+                    '/:(?!' . self::PSEUDO_CLASS_MATCHER . ')[\\w\\-]/i',
+                    $selector
+                );
+                $hasUnmatchablePseudo = $hasPseudoElement || $hasUnsupportedPseudoClass;
+
+                $parsedCssRule = [
+                    'media' => $cssRule['media'],
+                    'selector' => \trim($selector),
+                    'hasUnmatchablePseudo' => $hasUnmatchablePseudo,
+                    'declarationsBlock' => $cssDeclaration,
+                    // keep track of where it appears in the file, since order is important
+                    'line' => $key,
+                ];
+                $ruleType = ($cssRule['media'] === '' && !$hasUnmatchablePseudo) ? 'inlinable' : 'uninlinable';
+                $cssRules[$ruleType][] = $parsedCssRule;
+            }
+        }
+
+        \usort($cssRules['inlinable'], [$this, 'sortBySelectorPrecedence']);
+
+        $this->caches[self::CACHE_KEY_CSS][$cssKey] = $cssRules;
+
+        return $cssRules;
+    }
+
+    /**
+     * @param string[] $a
+     * @param string[] $b
+     *
+     * @return int
+     */
+    private function sortBySelectorPrecedence(array $a, array $b)
+    {
+        $precedenceA = $this->getCssSelectorPrecedence($a['selector']);
+        $precedenceB = $this->getCssSelectorPrecedence($b['selector']);
+
+        // We want these sorted in ascending order so selectors with lesser precedence get processed first and
+        // selectors with greater precedence get sorted last.
+        $precedenceForEquals = ($a['line'] < $b['line'] ? -1 : 1);
+        $precedenceForNotEquals = ($precedenceA < $precedenceB ? -1 : 1);
+        return ($precedenceA === $precedenceB) ? $precedenceForEquals : $precedenceForNotEquals;
+    }
+
+    /**
+     * @param string $selector
+     *
+     * @return int
+     */
+    private function getCssSelectorPrecedence($selector)
+    {
+        $selectorKey = \md5($selector);
+        if (isset($this->caches[self::CACHE_KEY_SELECTOR][$selectorKey])) {
+            return $this->caches[self::CACHE_KEY_SELECTOR][$selectorKey];
+        }
+
+        $precedence = 0;
+        foreach ($this->selectorPrecedenceMatchers as $matcher => $value) {
+            if (\trim($selector) === '') {
+                break;
+            }
+            $number = 0;
+            $selector = \preg_replace('/' . $matcher . '\\w+/', '', $selector, -1, $number);
+            $precedence += ($value * $number);
+        }
+        $this->caches[self::CACHE_KEY_SELECTOR][$selectorKey] = $precedence;
+
+        return $precedence;
+    }
+
+    /**
+     * Parses a string of CSS into the media query, selectors and declarations for each ruleset in order.
+     *
+     * @param string $css CSS with comments removed
+     *
+     * @return string[][] Array of string sub-arrays with the keys
+     *         "media" (the media query string, e.g. "@media screen and (max-width: 480px)",
+     *         or an empty string if not from an `@media` rule),
+     *         "selectors" (the CSS selector(s), e.g., "*" or "h1, h2"),
+     *         "declarations" (the semicolon-separated CSS declarations for that/those selector(s),
+     *         e.g., "color: red; height: 4px;"),
+     */
+    private function getCssRuleMatches($css)
+    {
+        $splitCss = $this->splitCssAndMediaQuery($css);
+
+        $ruleMatches = [];
+        foreach ($splitCss as $cssPart) {
+            // process each part for selectors and definitions
+            \preg_match_all('/(?:^|[\\s^{}]*)([^{]+){([^}]*)}/mi', $cssPart['css'], $matches, PREG_SET_ORDER);
+
+            /** @var string[][] $matches */
+            foreach ($matches as $cssRule) {
+                $ruleMatches[] = [
+                    'media' => $cssPart['media'],
+                    'selectors' => $cssRule[1],
+                    'declarations' => $cssRule[2],
+                ];
+            }
+        }
+
+        return $ruleMatches;
+    }
+
+    /**
+     * Splits input CSS code into an array of parts for different media queries, in order.
      * Each part is an array where:
      *
      * - key "css" will contain clean CSS code (for @media rules this will be the group rule body within "{...}")
@@ -1089,8 +726,6 @@ class CssInliner
      */
     private function splitCssAndMediaQuery($css)
     {
-        $cssWithoutComments = \preg_replace('/\\/\\*.*\\*\\//sU', '', $css);
-
         $mediaTypesExpression = '';
         if (!empty($this->allowedMediaTypes)) {
             $mediaTypesExpression = '|' . \implode('|', \array_keys($this->allowedMediaTypes));
@@ -1099,9 +734,9 @@ class CssInliner
         $mediaRuleBodyMatcher = '[^{]*+{(?:[^{}]*+{.*})?\\s*+}\\s*+';
 
         $cssSplitForAllowedMediaTypes = \preg_split(
-            '#(@media\\s++(?:only\\s++)?+(?:(?=[{\\(])' . $mediaTypesExpression . ')' . $mediaRuleBodyMatcher
+            '#(@media\\s++(?:only\\s++)?+(?:(?=[{(])' . $mediaTypesExpression . ')' . $mediaRuleBodyMatcher
             . ')#misU',
-            $cssWithoutComments,
+            $css,
             -1,
             PREG_SPLIT_DELIM_CAPTURE
         );
@@ -1135,198 +770,346 @@ class CssInliner
     }
 
     /**
-     * Removes empty unprocessable tags from the DOM document.
+     * Copies $cssRule into the style attribute of $node.
+     *
+     * Note: This method does not check whether $cssRule matches $node.
+     *
+     * @param \DOMElement $node
+     * @param string[][] $cssRule
      *
      * @return void
      */
-    private function removeUnprocessableTags()
+    private function copyInlinableCssToStyleAttribute(\DOMElement $node, array $cssRule)
     {
-        foreach ($this->unprocessableHtmlTags as $tagName) {
-            $nodes = $this->domDocument->getElementsByTagName($tagName);
-            /** @var \DOMNode $node */
-            foreach ($nodes as $node) {
-                $hasContent = $node->hasChildNodes() || $node->hasChildNodes();
-                if (!$hasContent) {
-                    $node->parentNode->removeChild($node);
-                }
-            }
-        }
-    }
-
-    /**
-     * Makes sure that the passed HTML has a document type.
-     *
-     * @param string $html
-     *
-     * @return string HTML with document type
-     */
-    private function ensureDocumentType($html)
-    {
-        $hasDocumentType = \stripos($html, '<!DOCTYPE') !== false;
-        if ($hasDocumentType) {
-            return $html;
+        $newStyleDeclarations = $this->parseCssDeclarationsBlock($cssRule['declarationsBlock']);
+        if ($newStyleDeclarations === []) {
+            return;
         }
 
-        return static::DEFAULT_DOCUMENT_TYPE . $html;
-    }
-
-    /**
-     * Adds a Content-Type meta tag for the charset.
-     *
-     * @param string $html
-     *
-     * @return string the HTML with the meta tag added
-     */
-    private function addContentTypeMetaTag($html)
-    {
-        $hasContentTypeMetaTag = \stripos($html, 'Content-Type') !== false;
-        if ($hasContentTypeMetaTag) {
-            return $html;
-        }
-
-        // We are trying to insert the meta tag to the right spot in the DOM.
-        // If we just prepended it to the HTML, we would lose attributes set to the HTML tag.
-        $hasHeadTag = \stripos($html, '<head') !== false;
-        $hasHtmlTag = \stripos($html, '<html') !== false;
-
-        if ($hasHeadTag) {
-            $reworkedHtml = \preg_replace('/<head(.*?)>/i', '<head$1>' . static::CONTENT_TYPE_META_TAG, $html);
-        } elseif ($hasHtmlTag) {
-            $reworkedHtml = \preg_replace(
-                '/<html(.*?)>/i',
-                '<html$1><head>' . static::CONTENT_TYPE_META_TAG . '</head>',
-                $html
-            );
+        // if it has a style attribute, get it, process it, and append (overwrite) new stuff
+        if ($node->hasAttribute('style')) {
+            // break it up into an associative array
+            $oldStyleDeclarations = $this->parseCssDeclarationsBlock($node->getAttribute('style'));
         } else {
-            $reworkedHtml = static::CONTENT_TYPE_META_TAG . $html;
+            $oldStyleDeclarations = [];
         }
-
-        return $reworkedHtml;
+        $node->setAttribute(
+            'style',
+            $this->generateStyleStringFromDeclarationsArrays($oldStyleDeclarations, $newStyleDeclarations)
+        );
     }
 
     /**
-     * @param string[] $a
-     * @param string[] $b
+     * This method merges old or existing name/value array with new name/value array
+     * and then generates a string of the combined style suitable for placing inline.
+     * This becomes the single point for CSS string generation allowing for consistent
+     * CSS output no matter where the CSS originally came from.
      *
-     * @return int
-     */
-    private function sortBySelectorPrecedence(array $a, array $b)
-    {
-        $precedenceA = $this->getCssSelectorPrecedence($a['selector']);
-        $precedenceB = $this->getCssSelectorPrecedence($b['selector']);
-
-        // We want these sorted in ascending order so selectors with lesser precedence get processed first and
-        // selectors with greater precedence get sorted last.
-        $precedenceForEquals = ($a['line'] < $b['line'] ? -1 : 1);
-        $precedenceForNotEquals = ($precedenceA < $precedenceB ? -1 : 1);
-        return ($precedenceA === $precedenceB) ? $precedenceForEquals : $precedenceForNotEquals;
-    }
-
-    /**
-     * @param string $selector
+     * @param string[] $oldStyles
+     * @param string[] $newStyles
      *
-     * @return int
+     * @return string
      */
-    private function getCssSelectorPrecedence($selector)
+    private function generateStyleStringFromDeclarationsArrays(array $oldStyles, array $newStyles)
     {
-        $selectorKey = \md5($selector);
-        if (!isset($this->caches[static::CACHE_KEY_SELECTOR][$selectorKey])) {
-            $precedence = 0;
-            foreach ($this->selectorPrecedenceMatchers as $matcher => $value) {
-                if (\trim($selector) === '') {
-                    break;
-                }
-                $number = 0;
-                $selector = \preg_replace('/' . $matcher . '\\w+/', '', $selector, -1, $number);
-                $precedence += ($value * $number);
-            }
-            $this->caches[static::CACHE_KEY_SELECTOR][$selectorKey] = $precedence;
+        $cacheKey = \serialize([$oldStyles, $newStyles]);
+        if (isset($this->caches[self::CACHE_KEY_COMBINED_STYLES][$cacheKey])) {
+            return $this->caches[self::CACHE_KEY_COMBINED_STYLES][$cacheKey];
         }
 
-        return $this->caches[static::CACHE_KEY_SELECTOR][$selectorKey];
-    }
-
-    /**
-     * Parses a CSS declaration block into property name/value pairs.
-     *
-     * Example:
-     *
-     * The declaration block
-     *
-     *   "color: #000; font-weight: bold;"
-     *
-     * will be parsed into the following array:
-     *
-     *   "color" => "#000"
-     *   "font-weight" => "bold"
-     *
-     * @param string $cssDeclarationsBlock the CSS declarations block without the curly braces, may be empty
-     *
-     * @return string[]
-     *         the CSS declarations with the property names as array keys and the property values as array values
-     */
-    private function parseCssDeclarationsBlock($cssDeclarationsBlock)
-    {
-        if (isset($this->caches[static::CACHE_KEY_CSS_DECLARATIONS_BLOCK][$cssDeclarationsBlock])) {
-            return $this->caches[static::CACHE_KEY_CSS_DECLARATIONS_BLOCK][$cssDeclarationsBlock];
-        }
-
-        $properties = [];
-        $declarations = \preg_split('/;(?!base64|charset)/', $cssDeclarationsBlock);
-
-        foreach ($declarations as $declaration) {
-            $matches = [];
-            if (!\preg_match('/^([A-Za-z\\-]+)\\s*:\\s*(.+)$/s', \trim($declaration), $matches)) {
+        // Unset the overridden styles to preserve order, important if shorthand and individual properties are mixed
+        foreach ($oldStyles as $attributeName => $attributeValue) {
+            if (!isset($newStyles[$attributeName])) {
                 continue;
             }
 
-            $propertyName = \strtolower($matches[1]);
-            $propertyValue = $matches[2];
-            $properties[$propertyName] = $propertyValue;
+            $newAttributeValue = $newStyles[$attributeName];
+            if (
+                $this->attributeValueIsImportant($attributeValue)
+                && !$this->attributeValueIsImportant($newAttributeValue)
+            ) {
+                unset($newStyles[$attributeName]);
+            } else {
+                unset($oldStyles[$attributeName]);
+            }
         }
-        $this->caches[static::CACHE_KEY_CSS_DECLARATIONS_BLOCK][$cssDeclarationsBlock] = $properties;
 
-        return $properties;
+        $combinedStyles = \array_merge($oldStyles, $newStyles);
+
+        $style = '';
+        foreach ($combinedStyles as $attributeName => $attributeValue) {
+            $style .= \strtolower(\trim($attributeName)) . ': ' . \trim($attributeValue) . '; ';
+        }
+        $trimmedStyle = \rtrim($style);
+
+        $this->caches[self::CACHE_KEY_COMBINED_STYLES][$cacheKey] = $trimmedStyle;
+
+        return $trimmedStyle;
     }
 
     /**
-     * Find the nodes that are not to be emogrified.
+     * Checks whether $attributeValue is marked as !important.
      *
-     * @param \DOMXPath $xPath
+     * @param string $attributeValue
      *
-     * @return \DOMElement[]
+     * @return bool
+     */
+    private function attributeValueIsImportant($attributeValue)
+    {
+        return \strtolower(\substr(\trim($attributeValue), -10)) === '!important';
+    }
+
+    /**
+     * Merges styles from styles attributes and style nodes and applies them to the attribute nodes
+     *
+     * @return void
+     */
+    private function fillStyleAttributesWithMergedStyles()
+    {
+        foreach ($this->styleAttributesForNodes as $nodePath => $styleAttributesForNode) {
+            $node = $this->visitedNodes[$nodePath];
+            $currentStyleAttributes = $this->parseCssDeclarationsBlock($node->getAttribute('style'));
+            $node->setAttribute(
+                'style',
+                $this->generateStyleStringFromDeclarationsArrays(
+                    $currentStyleAttributes,
+                    $styleAttributesForNode
+                )
+            );
+        }
+    }
+
+    /**
+     * Searches for all nodes with a style attribute and removes the "!important" annotations out of
+     * the inline style declarations, eventually by rearranging declarations.
+     *
+     * @return void
+     */
+    private function removeImportantAnnotationFromAllInlineStyles()
+    {
+        foreach ($this->getAllNodesWithStyleAttribute() as $node) {
+            $this->removeImportantAnnotationFromNodeInlineStyle($node);
+        }
+    }
+
+    /**
+     * Removes the "!important" annotations out of the inline style declarations,
+     * eventually by rearranging declarations.
+     * Rearranging needed when !important shorthand properties are followed by some of their
+     * not !important expanded-version properties.
+     * For example "font: 12px serif !important; font-size: 13px;" must be reordered
+     * to "font-size: 13px; font: 12px serif;" in order to remain correct.
+     *
+     * @param \DOMElement $node
+     *
+     * @return void
+     */
+    private function removeImportantAnnotationFromNodeInlineStyle(\DOMElement $node)
+    {
+        $inlineStyleDeclarations = $this->parseCssDeclarationsBlock($node->getAttribute('style'));
+        $regularStyleDeclarations = [];
+        $importantStyleDeclarations = [];
+        foreach ($inlineStyleDeclarations as $property => $value) {
+            if ($this->attributeValueIsImportant($value)) {
+                $importantStyleDeclarations[$property] = \trim(\str_replace('!important', '', $value));
+            } else {
+                $regularStyleDeclarations[$property] = $value;
+            }
+        }
+        $inlineStyleDeclarationsInNewOrder = \array_merge(
+            $regularStyleDeclarations,
+            $importantStyleDeclarations
+        );
+        $node->setAttribute(
+            'style',
+            $this->generateStyleStringFromSingleDeclarationsArray($inlineStyleDeclarationsInNewOrder)
+        );
+    }
+
+    /**
+     * Generates a CSS style string suitable to be used inline from the $styleDeclarations property => value array.
+     *
+     * @param string[] $styleDeclarations
+     *
+     * @return string
+     */
+    private function generateStyleStringFromSingleDeclarationsArray(array $styleDeclarations)
+    {
+        return $this->generateStyleStringFromDeclarationsArrays([], $styleDeclarations);
+    }
+
+    /**
+     * Determines which of `$cssRules` actually apply to `$this->domDocument`, and sets them in
+     * `$this->matchingUninlinableCssRules`.
+     *
+     * @param string[][] $cssRules the "uninlinable" array of CSS rules returned by `parseCssRules`
+     *
+     * @return void
+     */
+    private function determineMatchingUninlinableCssRules(array $cssRules)
+    {
+        $this->matchingUninlinableCssRules = \array_filter($cssRules, [$this, 'existsMatchForSelectorInCssRule']);
+    }
+
+    /**
+     * Checks whether there is at least one matching element for the CSS selector contained in the `selector` element
+     * of the provided CSS rule.
+     *
+     * Any dynamic pseudo-classes will be assumed to apply. If the selector matches a pseudo-element,
+     * it will test for a match with its originating element.
+     *
+     * @param string[] $cssRule
+     *
+     * @return bool
      *
      * @throws SyntaxErrorException
      */
-    private function getNodesToExclude(\DOMXPath $xPath)
+    private function existsMatchForSelectorInCssRule(array $cssRule)
     {
-        $excludedNodes = [];
-        foreach (\array_keys($this->excludedSelectors) as $selectorToExclude) {
-            try {
-                $matchingNodes = $xPath->query($this->cssSelectorConverter->toXPath($selectorToExclude));
-            } catch (SyntaxErrorException $e) {
-                if ($this->debug) {
-                    throw $e;
-                }
-                continue;
-            }
-            foreach ($matchingNodes as $node) {
-                $excludedNodes[] = $node;
-            }
+        $selector = $cssRule['selector'];
+        if ($cssRule['hasUnmatchablePseudo']) {
+            $selector = $this->removeUnmatchablePseudoComponents($selector);
         }
-
-        return $excludedNodes;
+        return $this->existsMatchForCssSelector($selector);
     }
 
     /**
-     * Sets the debug mode.
+     * Checks whether there is at least one matching element for $cssSelector.
+     * When not in debug mode, it returns true also for invalid selectors (because they may be valid,
+     * just not implemented/recognized yet by Emogrifier).
      *
-     * @param bool $debug set to true to enable debug mode
+     * @param string $cssSelector
+     *
+     * @return bool
+     *
+     * @throws SyntaxErrorException
+     */
+    private function existsMatchForCssSelector($cssSelector)
+    {
+        try {
+            $nodesMatchingSelector = $this->xPath->query($this->getCssSelectorConverter()->toXPath($cssSelector));
+        } catch (SyntaxErrorException $e) {
+            if ($this->debug) {
+                throw $e;
+            }
+            return true;
+        }
+
+        return $nodesMatchingSelector !== false && $nodesMatchingSelector->length !== 0;
+    }
+
+    /**
+     * Removes pseudo-elements and dynamic pseudo-classes from a CSS selector, replacing them with "*" if necessary.
+     * If such a pseudo-component is within the argument of `:not`, the entire `:not` component is removed or replaced.
+     *
+     * @param string $selector
+     *
+     * @return string Selector which will match the relevant DOM elements if the pseudo-classes are assumed to apply,
+     *                or in the case of pseudo-elements will match their originating element.
+     */
+    private function removeUnmatchablePseudoComponents($selector)
+    {
+        // The regex allows nested brackets via `(?2)`.
+        // A space is temporarily prepended because the callback can't determine if the match was at the very start.
+        $selectorWithoutNots = \ltrim(\preg_replace_callback(
+            '/(\\s?+):not(\\([^()]*+(?:(?2)[^()]*+)*+\\))/i',
+            [$this, 'replaceUnmatchableNotComponent'],
+            ' ' . $selector
+        ));
+
+        $pseudoComponentMatcher = ':(?!' . self::PSEUDO_CLASS_MATCHER . '):?+[\\w\\-]++(?:\\([^\\)]*+\\))?+';
+        return \preg_replace(
+            ['/(\\s|^)' . $pseudoComponentMatcher . '/i', '/' . $pseudoComponentMatcher . '/i'],
+            ['$1*', ''],
+            $selectorWithoutNots
+        );
+    }
+
+    /**
+     * Helps `removeUnmatchablePseudoComponents()` replace or remove a selector `:not(...)` component if its argument
+     * contains pseudo-elements or dynamic pseudo-classes.
+     *
+     * @param string[] $matches array of elements matched by the regular expression
+     *
+     * @return string the full match if there were no unmatchable pseudo components within; otherwise, any preceding
+     *         whitespace followed by "*", or an empty string if there was no preceding whitespace
+     */
+    private function replaceUnmatchableNotComponent(array $matches)
+    {
+        list($notComponentWithAnyPrecedingWhitespace, $anyPrecedingWhitespace, $notArgumentInBrackets) = $matches;
+
+        $hasUnmatchablePseudo = \preg_match(
+            '/:(?!' . self::PSEUDO_CLASS_MATCHER . ')[\\w\\-:]/i',
+            $notArgumentInBrackets
+        );
+
+        if ($hasUnmatchablePseudo) {
+            return $anyPrecedingWhitespace !== '' ? $anyPrecedingWhitespace . '*' : '';
+        }
+        return $notComponentWithAnyPrecedingWhitespace;
+    }
+
+    /**
+     * Applies `$this->matchingUninlinableCssRules` to `$this->domDocument` by placing them as CSS in a `<style>`
+     * element.
+     *
+     * @param string $cssImportRules This may contain any `@import` rules that should precede the CSS placed in the
+     *        `<style>` element.  If there are no unlinlinable CSS rules to copy there, a `<style>` element will be
+     *        created containing just `$cssImportRules`.  `$cssImportRules` may be an empty string; if it is, and there
+     *        are no unlinlinable CSS rules, an empty `<style>` element will not be created.
      *
      * @return void
      */
-    public function setDebug($debug)
+    private function copyUninlinableCssToStyleNode($cssImportRules)
     {
-        $this->debug = $debug;
+        $css = $cssImportRules;
+
+        // avoid including unneeded class dependency if there are no rules
+        if ($this->matchingUninlinableCssRules !== []) {
+            $cssConcatenator = new CssConcatenator();
+            foreach ($this->matchingUninlinableCssRules as $cssRule) {
+                $cssConcatenator->append([$cssRule['selector']], $cssRule['declarationsBlock'], $cssRule['media']);
+            }
+            $css .= $cssConcatenator->getCss();
+        }
+
+        // avoid adding empty style element
+        if ($css !== '') {
+            $this->addStyleElementToDocument($css);
+        }
+    }
+
+    /**
+     * Adds a style element with $css to $this->domDocument.
+     *
+     * This method is protected to allow overriding.
+     *
+     * @see https://github.com/MyIntervals/emogrifier/issues/103
+     *
+     * @param string $css
+     *
+     * @return void
+     */
+    protected function addStyleElementToDocument($css)
+    {
+        $styleElement = $this->domDocument->createElement('style', $css);
+        $styleAttribute = $this->domDocument->createAttribute('type');
+        $styleAttribute->value = 'text/css';
+        $styleElement->appendChild($styleAttribute);
+
+        $headElement = $this->getHeadElement();
+        $headElement->appendChild($styleElement);
+    }
+
+    /**
+     * Returns the HEAD element.
+     *
+     * This method assumes that there always is a HEAD element.
+     *
+     * @return \DOMElement
+     */
+    private function getHeadElement()
+    {
+        return $this->domDocument->getElementsByTagName('head')->item(0);
     }
 }

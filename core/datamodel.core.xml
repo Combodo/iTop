@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <user_rights>
     <profiles>
       <profile id="1024" _delta="define">
         <name>REST Services User</name>
-        <description>Only users having this profile are allowed to use the REST Web Services (unless 'secure_rest_services' is set to false in the configuration file).</description>
-        <groups />
+        <description>Only users having this profile are allowed to use the REST Web Services (unless 'secure_rest_services' is set to false
+          in the configuration file).
+        </description>
+        <groups/>
       </profile>
     </profiles>
   </user_rights>
@@ -251,6 +253,19 @@
           <field id="action_id_finalclass_recall" xsi:type="AttributeExternalField"/>
           <field id="trigger_id_friendlyname" xsi:type="AttributeExternalField"/>
           <field id="trigger_id_finalclass_recall" xsi:type="AttributeExternalField"/>
+        </fields>
+      </class>
+      <class id="TagSetFieldData" _delta="define">
+        <parent>cmdbAbstractObject</parent>
+        <properties>
+          <category>bizmodel</category>
+        </properties>
+        <fields>
+          <field id="code" xsi:type="AttributeString"/>
+          <field id="label" xsi:type="AttributeString"/>
+          <field id="description" xsi:type="AttributeHTML"/>
+          <field id="obj_class" xsi:type="AttributeString"/>
+          <field id="obj_attcode" xsi:type="AttributeString"/>
         </fields>
       </class>
     </classes>

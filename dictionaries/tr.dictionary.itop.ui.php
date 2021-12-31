@@ -1,25 +1,6 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
- *
- * @author      Izzet Sirin <izzet.sirin@htr.com.tr>
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 //////////////////////////////////////////////////////////////////////
@@ -85,8 +66,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Query/Attribute:name+' => 'Identifies the query~~',
 	'Class:Query/Attribute:description' => 'Description~~',
 	'Class:Query/Attribute:description+' => 'Long description for the query (purpose, usage, etc.)~~',
+	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
 	'Class:QueryOQL/Attribute:fields' => 'Fields~~',
-	'Class:QueryOQL/Attribute:fields+' => 'Coma separated list of attributes (or alias.attribute) to export~~',
+	'Class:QueryOQL/Attribute:fields+' => 'Comma separated list of attributes (or alias.attribute) to export~~',
 	'Class:QueryOQL' => 'OQL Query~~',
 	'Class:QueryOQL+' => 'A query based on the Object Query Language~~',
 	'Class:QueryOQL/Attribute:oql' => 'Expression~~',
@@ -136,12 +121,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Kullanıcı adı tekil olmalı - "%1s" mevcut bir kullanıcıya ait.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'En az bir profil kullanıcıya atanmalı',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
 	'Class:User/Error:PersonIsMandatory' => 'The Contact is mandatory.~~',
 	'Class:UserInternal' => 'User Internal~~',
-	'Class:UserInternal+' => 'User defined within iTop~~',
+	'Class:UserInternal+' => 'User defined within '.ITOP_APPLICATION_SHORT.'~~',
 ));
 
 //
@@ -181,6 +170,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_UserProfile' => 'Kullanıcı Profili',
 	'Class:URP_UserProfile+' => 'Kullanıcı Profili',
+	'Class:URP_UserProfile/Name' => '%1$s ve %2$s arasındaki ilişki',
 	'Class:URP_UserProfile/Attribute:userid' => 'Kullanıcı',
 	'Class:URP_UserProfile/Attribute:userid+' => 'Kullanıcı hesabı',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Kullanıcı adı',
@@ -201,6 +191,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:URP_UserOrg' => 'Kullanıcı Kurumu',
 	'Class:URP_UserOrg+' => 'İzin verilen kurumlar',
+	'Class:URP_UserOrg/Name' => '%1$s ve %2$s arasındaki ilişki',
 	'Class:URP_UserOrg/Attribute:userid' => 'Kullanıcı',
 	'Class:URP_UserOrg/Attribute:userid+' => 'Kullanıcı hesabı',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Kullanıcı',
@@ -344,12 +335,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'BooleanLabel:yes' => 'evet',
 	'BooleanLabel:no' => 'hayır',
-	'UI:Login:Title' => 'iTop login~~',
-	'Menu:WelcomeMenu' => 'Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'iTop\'a Hoşgeldiniz',
+	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
+	'Menu:WelcomeMenu' => 'Hoşgeldiniz',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>iTop açık kaynak Bilişim İşlem Potalıdır.</p>
 <ul>Kapsamı:
@@ -377,6 +368,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 <li>İşletmenin en önemli kaynağı olan dokümantasyonu yönetmesine imkan sağlar.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Açık istekler: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'İsteklerim',
 	'UI:WelcomeMenu:OpenIncidents' => 'Açık Arızalar: %1$d',
@@ -384,17 +376,22 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Bana atanan hatalar',
 	'UI:AllOrganizations' => ' Tüm Kurumlar ',
 	'UI:YourSearch' => 'Arama',
-	'UI:LoggedAsMessage' => '%1$s kullanıcısı ile bağlanıldı',
-	'UI:LoggedAsMessage+Admin' => '%1$s (Administrator) kullanıcısı ile bağlanıldı',
+	'UI:LoggedAsMessage' => '%1$s (%2$s) kullanıcısı ile bağlanıldı~~',
+	'UI:LoggedAsMessage+Admin' => '%1$s (%2$s, Administrator) kullanıcısı ile bağlanıldı~~',
 	'UI:Button:Logoff' => 'Çıkış',
 	'UI:Button:GlobalSearch' => 'Arama',
 	'UI:Button:Search' => ' Arama ',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Sorgu ',
 	'UI:Button:Ok' => 'Tamam',
 	'UI:Button:Save' => 'Save~~',
+	'UI:Button:SaveAnd' => 'Save and %1$s~~',
 	'UI:Button:Cancel' => 'İptal',
 	'UI:Button:Close' => 'Close~~',
 	'UI:Button:Apply' => 'Uygula',
+	'UI:Button:Send' => 'Send~~',
+	'UI:Button:SendAnd' => 'Send and %1$s~~',
 	'UI:Button:Back' => ' << Geri ',
 	'UI:Button:Restart' => ' |<< Restart ~~',
 	'UI:Button:Next' => ' İleri >> ',
@@ -422,9 +419,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Button:Wait' => 'Please wait while updating fields~~',
 	'UI:Treeview:CollapseAll' => 'Collapse All~~',
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
+	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
+	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
+	'UI:InputFile:SelectFile' => 'Select a file~~',
 
 	'UI:SearchToggle' => 'Ara',
-	'UI:ClickToCreateNew' => 'Yeni %1$s yarat',
+	'UI:ClickToCreateNew' => 'Yeni %1$s yarat~~',
 	'UI:SearchFor_Class' => '%1$s Arama',
 	'UI:NoObjectToDisplay' => 'Görüntülenecek nesne bulunamadı.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -454,6 +454,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Hata: nesne hali hazırda silinmiş!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => '%1$s sınıfına ait nesnelerin toplu silimine yetkiniz yok.',
 	'UI:Error:DeleteNotAllowedOn_Class' => '%1$s sınıfına ait nesnelerin silimine yetkiniz yok.',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => '%1$s sınıfına ait nesnelerin toplu güncellenmesine yetkiniz yok.',
 	'UI:Error:ObjectAlreadyCloned' => 'Hata: nesne hali hazırda klonlanmış!',
 	'UI:Error:ObjectAlreadyCreated' => 'Hata: nesne hali hazırda yaratılmış!',
@@ -462,6 +463,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Say',
 	'UI:GroupBy:Count+' => 'Eleman sayısı',
@@ -489,6 +491,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Loading' => 'Yükleniyor...',
 	'UI:Menu:Actions' => 'İşlemler',
 	'UI:Menu:OtherActions' => 'Diğer İşlemler',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Yeni...',
 	'UI:Menu:Add' => 'Ekle...',
 	'UI:Menu:Manage' => 'Yönet...',
@@ -518,14 +522,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:SearchValue:CheckAll' => 'Check All~~',
 	'UI:SearchValue:UncheckAll' => 'Uncheck All~~',
 	'UI:SelectOne' => '-- Birini seçiniz --',
-	'UI:Login:Welcome' => 'iTop\'a Hoşgeldiniz!',
+	'UI:Login:Welcome' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz!',
 	'UI:Login:IncorrectLoginPassword' => 'Hatalı kullanıcı/şifre tekrar deneyiniz.',
 	'UI:Login:IdentifyYourself' => 'Devam etmeden önce kendinizi tanıtınız',
 	'UI:Login:UserNamePrompt' => 'Kullanıcı Adı',
 	'UI:Login:PasswordPrompt' => 'Şifre',
 	'UI:Login:ForgotPwd' => 'Forgot your password?~~',
 	'UI:Login:ForgotPwdForm' => 'Forgot your password~~',
-	'UI:Login:ForgotPwdForm+' => 'iTop can send you an email in which you will find instructions to follow to reset your account.~~',
+	'UI:Login:ForgotPwdForm+' => ITOP_APPLICATION_SHORT.' can send you an email in which you will find instructions to follow to reset your account.~~',
 	'UI:Login:ResetPassword' => 'Send now!~~',
 	'UI:Login:ResetPwdFailed' => 'Failed to send an email: %1$s~~',
 	'UI:Login:SeparatorOr' => 'Or~~',
@@ -547,43 +551,43 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
 
-	'UI:Login:About' => '~~',
-	'UI:Login:ChangeYourPassword' => 'Şifre Değiştir',
-	'UI:Login:OldPasswordPrompt' => 'Mevcut şifre',
-	'UI:Login:NewPasswordPrompt' => 'Yeni şifre',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Yeni şifre tekrar',
-	'UI:Login:IncorrectOldPassword' => 'Hata: mevcut şifre hatalı',
-	'UI:LogOffMenu' => 'Çıkış',
-	'UI:LogOff:ThankYou' => 'iTop Kullanıdığınız için teşekkürler',
-	'UI:LogOff:ClickHereToLoginAgain' => 'Tekrar bağlanmak için tıklayınız...',
-	'UI:ChangePwdMenu' => 'Şifre değiştir...',
-	'UI:Login:PasswordChanged' => 'Password successfully set!~~',
-	'UI:AccessRO-All' => 'iTop is read-only~~',
-	'UI:AccessRO-Users' => 'iTop is read-only for end-users~~',
-	'UI:ApplicationEnvironment' => 'Application environment: %1$s~~',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Yeni şifre eşlenmedi !',
-	'UI:Button:Login' => 'iTop\'a Giriş',
-	'UI:Login:Error:AccessRestricted' => 'iTop erişim sınırlandırıldı. Sistem yöneticisi ile irtibata geçiniz',
-	'UI:Login:Error:AccessAdmin' => 'Erişim sistem yönetci hesaplaları ile mümkün. Sistem yöneticisi ile irtibata geçiniz.',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:About'                               => '~~',
+	'UI:Login:ChangeYourPassword'                  => 'Şifre Değiştir',
+	'UI:Login:OldPasswordPrompt'                   => 'Mevcut şifre',
+	'UI:Login:NewPasswordPrompt'                   => 'Yeni şifre',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Yeni şifre tekrar',
+	'UI:Login:IncorrectOldPassword'                => 'Hata: mevcut şifre hatalı',
+	'UI:LogOffMenu'                                => 'Çıkış',
+	'UI:LogOff:ThankYou' => ITOP_APPLICATION_SHORT.' Kullanıdığınız için teşekkürler',
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Tekrar bağlanmak için tıklayınız...',
+	'UI:ChangePwdMenu'                             => 'Şifre değiştir...',
+	'UI:Login:PasswordChanged'                     => 'Password successfully set!~~',
+	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' is read-only~~',
+	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' is read-only for end-users~~',
+	'UI:ApplicationEnvironment'                    => 'Application environment: %1$s~~',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Yeni şifre eşlenmedi !',
+	'UI:Button:Login' => ITOP_APPLICATION_SHORT.'\'a Giriş',
+	'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.' erişim sınırlandırıldı. Sistem yöneticisi ile irtibata geçiniz',
+	'UI:Login:Error:AccessAdmin'                   => 'Erişim sistem yönetci hesaplaları ile mümkün. Sistem yöneticisi ile irtibata geçiniz.',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne' => '-- Birini seçiniz --',
-	'UI:CSVImport:MappingNotApplicable' => '-- alanı ihmal et --',
-	'UI:CSVImport:NoData' => 'Boş veri seti..., veri giriniz!',
-	'UI:Title:DataPreview' => 'Veri öngörüntüleme',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Hata: Veri sadece bir kolon içeriyor. Doğru ayıraç karakteri seçtiniz mi ?',
-	'UI:CSVImport:FieldName' => 'Alan %1$d',
-	'UI:CSVImport:DataLine1' => 'Veri Satırı 1',
-	'UI:CSVImport:DataLine2' => 'Veri Satırı 2',
-	'UI:CSVImport:idField' => 'id (Tekil anahtar)',
-	'UI:Title:BulkImport' => 'iTop - Toplu giriş',
-	'UI:Title:BulkImport+' => 'CSV içeri aktarma aracı',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronization of %1$d objects of class %2$s~~',
-	'UI:CSVImport:ClassesSelectOne' => '-- Birini seçiniz --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Hata: "%1$s" hatalı kod, çünkü "%2$s" ile "%3$s" tekil ilişkide değil',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d adet nesne değişmeyecek.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d adet nesne değiştirilecek.',
+	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne'                => '-- Birini seçiniz --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- alanı ihmal et --',
+	'UI:CSVImport:NoData'                          => 'Boş veri seti..., veri giriniz!',
+	'UI:Title:DataPreview'                         => 'Veri öngörüntüleme',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Hata: Veri sadece bir kolon içeriyor. Doğru ayıraç karakteri seçtiniz mi ?',
+	'UI:CSVImport:FieldName'                       => 'Alan %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Veri Satırı 1',
+	'UI:CSVImport:DataLine2'                       => 'Veri Satırı 2',
+	'UI:CSVImport:idField'                         => 'id (Tekil anahtar)',
+	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Toplu giriş',
+	'UI:Title:BulkImport+'                         => 'CSV içeri aktarma aracı',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronization of %1$d objects of class %2$s~~',
+	'UI:CSVImport:ClassesSelectOne'                => '-- Birini seçiniz --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Hata: "%1$s" hatalı kod, çünkü "%2$s" ile "%3$s" tekil ilişkide değil',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d adet nesne değişmeyecek.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d adet nesne değiştirilecek.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d adet nesne eklenecek.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d adet nesnede hata oluştu.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d adet nesne değişmedi.',
@@ -626,7 +630,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Please make sure that a target field is mapped only once.~~',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Lütfen en az bir sorgu kriteri seçiniz.',
 	'UI:CSVImport:Encoding' => 'Karakter kodlaması',
-	'UI:UniversalSearchTitle' => 'iTop - Genel arama',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Genel arama',
 	'UI:UniversalSearch:Error' => 'Hata: %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Aranacak sınıfı seçiniz: ',
 
@@ -676,22 +680,34 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:CSVExport:LostChars' => 'Encoding issue~~',
 	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. iTop has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').~~',
 
-	'UI:Audit:Title' => 'iTop - CMDB Denetleme',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - CMDB Denetleme',
 	'UI:Audit:InteractiveAudit' => 'Etkileşimli Denetleme',
 	'UI:Audit:HeaderAuditRule' => 'Denetleme Kuralı',
 	'UI:Audit:HeaderNbObjects' => 'Nesne Sayısı',
 	'UI:Audit:HeaderNbErrors' => 'Hata sayısı',
 	'UI:Audit:PercentageOk' => '% Tamam',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL Error in the Rule %1$s: %2$s.~~',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'OQL Error in the Category %1$s: %2$s.~~',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
 
-	'UI:RunQuery:Title' => 'iTop - OQL Sorgu değerlendirme',
+
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL Sorgu değerlendirme',
 	'UI:RunQuery:QueryExamples' => 'Sorgu örnekleri',
+	'UI:RunQuery:QueryResults' => 'Query Results~~',
 	'UI:RunQuery:HeaderPurpose' => 'Amaç',
 	'UI:RunQuery:HeaderPurpose+' => 'Sorgu açıklaması',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL ifadesi',
 	'UI:RunQuery:HeaderOQLExpression+' => 'OQL yapısında sorgu',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Değerlendirilecek ifade: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Sorgu hakkında detaylı bilgi: ',
 	'UI:RunQuery:DevelopedQuery' => 'Yeniden düzenlenen sorgu: ',
 	'UI:RunQuery:SerializedFilter' => 'Özel filtre: ',
@@ -699,10 +715,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
 	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
-	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu: %1$s',
+	'UI:RunQuery:Error' => 'Sorgu sırasında hata oluştu',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
-	'UI:Schema:Title' => 'iTop objects schema',
+	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objects schema',
+	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategori <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'İlişkiler',
 	'UI:Schema:AbstractClass' => 'Soyut sınıf: bu sınıftan nesne türetilemez.',
@@ -769,6 +786,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Schema:Attribute/Filter' => 'Filter~~',
 	'UI:Schema:DefaultNullValue' => 'Default null : "%1$s"~~',
 	'UI:LinksWidget:Autocomplete+' => 'İlk 3 karakteri giriniz...',
+	'UI:Edit:SearchQuery' => 'Select a predefined query~~',
 	'UI:Edit:TestQuery' => 'Test query~~',
 	'UI:Combo:SelectValue' => '--- değer seçiniz ---',
 	'UI:Label:SelectedObjects' => 'Seçilen nesneler: ',
@@ -817,9 +835,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Bu nesneyi silmeden önce yukarıdaki işlemleri manuel olarak yapınız',
 	'UI:Delect:Confirm_Object' => '%1$s\'i silmek istediğnizden emin misiniz?',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '%1$d nesnesini (sınıfı %2$s) silmek istediğinizden emin misiniz?',
-	'UI:WelcomeToITop' => 'iTop\'a Hoşgeldiniz',
-	'UI:DetailsPageTitle' => 'iTop - %1$s - %2$s detayları',
-	'UI:ErrorPageTitle' => 'iTop - Hata',
+	'UI:WelcomeToITop' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s detayları',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Hata',
 	'UI:ObjectDoesNotExist' => 'Nesne mevcut değil veya yetkiniz yok.',
 	'UI:ObjectArchived' => 'This object has been archived. Please enable the archive mode or contact your administrator.~~',
 	'Tag:Archived' => 'Archived~~',
@@ -829,7 +847,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Tag:Synchronized' => 'Synchronized~~',
 	'ObjectRef:Archived' => 'Archived~~',
 	'ObjectRef:Obsolete' => 'Obsolete~~',
-	'UI:SearchResultsPageTitle' => 'iTop - Arama Sonuçları',
+	'UI:SearchResultsPageTitle' => ITOP_APPLICATION_SHORT.' - Arama Sonuçları',
 	'UI:SearchResultsTitle' => 'Arama Sonuçları',
 	'UI:SearchResultsTitle+' => 'Full-text search results~~',
 	'UI:Search:NoSearch' => 'Nothing to search for',
@@ -839,27 +857,27 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:FullTextSearchTitle_Text' => '"%1$s" için arama sonuçları:',
 	'UI:Search:Count_ObjectsOf_Class_Found' => '%2$s sınıfına ait %1$d nesne bulundu.',
 	'UI:Search:NoObjectFound' => 'Kayıt bulunamadı.',
-	'UI:ModificationPageTitle_Object_Class' => 'iTop - %1$s - %2$s modifikasyon',
+	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s modifikasyon',
 	'UI:ModificationTitle_Class_Object' => '%1$s: <span class=\\"hilite\\">%2$s</span> modifikasyonu',
-	'UI:ClonePageTitle_Object_Class' => 'iTop - %1$s - %2$s modifikasyonunu klonlayınız',
+	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s modifikasyonunu klonlayınız',
 	'UI:CloneTitle_Class_Object' => '%1$s klonu: <span class=\\"hilite\\">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - Yeni %1$s yaratımı',
+	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Yeni %1$s yaratımı',
 	'UI:CreationTitle_Class' => 'Yeni %1$s yarat',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Yaratılacak %1$s nesne tipini seçiniz',
 	'UI:Class_Object_NotUpdated' => 'Değişiklik tespit edilemedi, %1$s (%2$s) <strong>güncellenmedi</strong>.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) güncellendi.',
-	'UI:BulkDeletePageTitle' => 'iTop - Toplu silme işlemi',
+	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - Toplu silme işlemi',
 	'UI:BulkDeleteTitle' => 'Silmek istediğiniz nesneleri seçiniz:',
-	'UI:PageTitle:ObjectCreated' => 'iTop Nesne yaratıldı.',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' Nesne yaratıldı.',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s yaratıldı.',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '%1$s işlemi %2$s durumunda %3$s nesnesine uygulanır. Bir sonraki durum: %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'Nesne kaydedilemedi: %1$s',
-	'UI:PageTitle:FatalError' => 'iTop - Kritik Hata',
+	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Kritik Hata',
 	'UI:SystemIntrusion' => 'Bu işlem için yetkiniz yok',
 	'UI:FatalErrorMessage' => 'Kritik Hata, iTop devam edemiyor.',
 	'UI:Error_Details' => 'Hata: %1$s.',
 
-	'UI:PageTitle:ProfileProjections' => 'iTop Kullanıcı Yönetimi - profil koruması',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' Kullanıcı Yönetimi - profil koruması',
 	'UI:UserManagement:Class' => 'Sınıf',
 	'UI:UserManagement:Class+' => 'Nesnin sınıfı',
 	'UI:UserManagement:ProjectedObject' => 'Nesne',
@@ -893,12 +911,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Bu nesne için yaşam döngüsü tanımsız',
 	'UI:UserManagement:GrantMatrix' => 'Yetkiler',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => '%1$s ve %2$s arasındaki ilişki',
-	'UI:UserManagement:LinkBetween_User_And_Org' => '%1$s ve %2$s arasındaki ilişki',
 
-	'Menu:AdminTools' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Yönetim Araçları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Yönetim Araçları',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Yönetim Araçları',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Değişiklik Yönetimi',
@@ -944,20 +960,20 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI-ContactsMenu-ContactsByType' => 'Tipine göre irtibatlar',
 	'UI-ContactsMenu-ContactsByStatus' => 'Durumuna göre irtibatlar',
 
-	'Menu:CSVImportMenu' => 'CSV dışardan al', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Çoklu yaratım veya güncelleme', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV dışardan al',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Çoklu yaratım veya güncelleme',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Veri Modeli', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Veri Modeli Özeti', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Veri Modeli',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Veri Modeli Özeti',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Dışarı ver', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Dışarı ver',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Sorgu sonucunu HTML, CSV veya XML olarak dışarı aktar',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Uyarılar', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => '<span class="hilite">Uyarıların</span> yapılandırılması',
+	'Menu:NotificationsMenu' => 'Uyarılar',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Uyarıların yapılandırılması',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:NotificationsMenu:Title' => 'Uyarıların yapılandırılması',
 	'UI:NotificationsMenu:Help' => 'Yardım',
-	'UI:NotificationsMenu:HelpContent' => '<p>In iTop uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' uyarı mekanizması ihtiyaca göre uyarlanabilir. Uyarılar iki tip nesne üzerine kurulmuştur: <i>tetikleme (triggers) ve işlemler (actions)</i>.</p>
 <p><i><b>Triggers</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
 <ol>
 	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
@@ -966,10 +982,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 </ol>
 </p>
 <p>
-<i><b>Actions</b></i> tetikleme olduğunda yapılacak işlemleri belirler. Şimdilik sadece e-posta gönderme işlemi yapılabilmektedir.
-E-posta için şablon tanımlanabilmektedir. Şablona parametreler girilebilmektedir (recipients, importance, etc.).
+<i><b>Actions</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Özel sayfa: <a href="../setup/email.test.php" target="_blank">email.test.php</a> PHP e-posta konfigürnunu test ediniz.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Özel sayfa: <a href="../setup/email.test.php" target="_blank">email.test.php</a> PHP e-posta konfigürnunu test ediniz.</p>
 <p>İşlemin gerçekleşmesi için bir tetikleme ile ilişkilendirilmesi gerekir.
 Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçekleştirilir.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Tetikleyiciler',
@@ -978,6 +997,9 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:NotificationsMenu:OnStateEnter' => 'Nesnenin durumuna girişinde',
 	'UI:NotificationsMenu:OnStateLeave' => 'Nesnenin durumdan çıkışında',
 	'UI:NotificationsMenu:Actions' => 'İşlemler',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Kullanılabilir işlemler',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
@@ -986,39 +1008,43 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
-	'Menu:AuditCategories' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Denetleme Kategorileri', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Denetleme Kategorileri',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Denetleme Kategorileri',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Denetleme Kategorileri',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Query phrasebook~~',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Query phrasebook~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Veri Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Veri Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Veri Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Veri Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Genel sorgu', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Genel sorgu',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Kullanıcı Yönetimi',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profiller', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profiller',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profiller',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profiller',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versiyonu %2$s',
 	'UI:iTopVersion:Long' => '%1$s  %4$s tarihli versiyonu %2$s-%3$s',
 	'UI:PropertiesTab' => 'Özellikler',
 
-	'UI:OpenDocumentInNewWindow_' => 'Dokümanı yeni pencerede aç: %1$s',
-	'UI:DownloadDocument_' => 'Dokümanı indir: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Açmak~~',
+	'UI:DownloadDocument_' => 'Indirmek~~',
 	'UI:Document:NoPreview' => 'Bu tip doküman için öngösterim mevcut değil',
 	'UI:Download-CSV' => 'Download %1$s~~',
 
@@ -1028,7 +1054,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$ddk',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$d gün %2$d saat %3$d dk',
 	'UI:Help' => 'Yardım',
-	'UI:PasswordConfirm' => '(Onay)',
+	'UI:PasswordConfirm' => 'Onay',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Yeni %1$s nesneleri eklemeden önce bu nesneyi kaydediniz.',
 	'UI:DisplayThisMessageAtStartup' => 'Bu mesajı başlangıçta göster',
 	'UI:RelationshipGraph' => 'Grafiksel gösterim',
@@ -1063,7 +1089,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:RelationTooltip:Redundancy' => 'Redundancy~~',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# of impacted items: %1$d / %2$d~~',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Critical threshold: %1$d / %2$d~~',
-	'Portal:Title' => 'iTop Kullanıcı Portalı',
+	'Portal:Title' => ITOP_APPLICATION_SHORT.' Kullanıcı Portalı',
 	'Portal:NoRequestMgmt' => 'Dear %1$s, you have been redirected to this page because your account is configured with the profile \'Portal user\'. Unfortunately, iTop has not been installed with the feature \'Request Management\'. Please contact your administrator.~~',
 	'Portal:Refresh' => 'Yenile',
 	'Portal:Back' => 'Geri',
@@ -1143,7 +1169,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:FavoriteLanguage' => 'Language of the User Interface~~',
 	'UI:Favorites:SelectYourLanguage' => 'Select your preferred language~~',
 	'UI:FavoriteOtherSettings' => 'Other Settings~~',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length for lists:  %1$s items per page~~',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Default length:  %1$s items per page~~',
 	'UI:Favorites:ShowObsoleteData' => 'Show obsolete data~~',
 	'UI:Favorites:ShowObsoleteData+' => 'Show obsolete data in search results and lists of items to select~~',
 	'UI:NavigateAwayConfirmationMessage' => 'Any modification will be discarded.~~',
@@ -1160,15 +1186,16 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:PrintResolution:A4Landscape' => 'A4 Landscape~~',
 	'UI:PrintResolution:LetterPortrait' => 'Letter Portrait~~',
 	'UI:PrintResolution:LetterLandscape' => 'Letter Landscape~~',
-	'UI:Toggle:StandardDashboard' => 'Standard~~',
-	'UI:Toggle:CustomDashboard' => 'Custom~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
 
 	'UI:ConfigureThisList' => 'Configure This List...~~',
 	'UI:ListConfigurationTitle' => 'List Configuration~~',
 	'UI:ColumnsAndSortOrder' => 'Columns and sort order:~~',
 	'UI:UseDefaultSettings' => 'Use the Default Settings~~',
 	'UI:UseSpecificSettings' => 'Use the Following Settings:~~',
-	'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Display~~',
+	'UI:Display_X_ItemsPerPage_suffix' => 'items per page~~',
 	'UI:UseSavetheSettings' => 'Save the Settings~~',
 	'UI:OnlyForThisList' => 'Only for this list~~',
 	'UI:ForAllLists' => 'Default for all lists~~',
@@ -1181,13 +1208,16 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:OQL:UnknownClassAndFix' => 'Unknown class \\"%1$s\\". You may try \\"%2$s\\" instead.~~',
 	'UI:OQL:UnknownClassNoFix' => 'Unknown class \\"%1$s\\"~~',
 
-	'UI:Dashboard:Edit' => 'Edit This Page...~~',
-	'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
+	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
+	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
+	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
 	'UI:Dashboard:RevertConfirm' => 'Every changes made to the original version will be lost. Please confirm that you want to do this.~~',
 	'UI:ExportDashBoard' => 'Export to a file~~',
 	'UI:ImportDashBoard' => 'Import from a file...~~',
 	'UI:ImportDashboardTitle' => 'Import From a File~~',
 	'UI:ImportDashboardText' => 'Select a dashboard file to import:~~',
+	'UI:Dashboard:Actions' => 'Dashboard actions~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
 
 
 	'UI:DashletCreation:Title' => 'Create a new Dashlet~~',
@@ -1200,6 +1230,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)~~',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Layout~~',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties~~',
@@ -1336,13 +1368,13 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...~~',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut~~',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list~~',
 	'UI:ShortcutDelete:Confirm' => 'Please confirm that wou wish to delete the shortcut(s).~~',
-	'Menu:MyShortcuts' => 'My Shortcuts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'My Shortcuts~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Shortcut~~',
 	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Name~~',
@@ -1393,7 +1425,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
 
 	'UI:AboutBox' => 'About iTop...~~',
-	'UI:About:Title' => 'About iTop~~',
+	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT.'~~',
 	'UI:About:DataModel' => 'Data model~~',
 	'UI:About:Support' => 'Support information~~',
 	'UI:About:Licenses' => 'Licenses~~',
@@ -1418,10 +1450,11 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'ExcelExport:PreparingExport' => 'Preparing the export...~~',
 	'ExcelExport:Statistics' => 'Statistics~~',
 	'portal:legacy_portal' => 'End-User Portal~~',
-	'portal:backoffice' => 'iTop Back-Office User Interface~~',
+	'portal:backoffice' => ITOP_APPLICATION_SHORT.' Back-Office User Interface~~',
 
 	'UI:CurrentObjectIsLockedBy_User' => 'The object is locked since it is currently being modified by %1$s.~~',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'The object is currently being modified by %1$s. Your modifications cannot be submitted since they would be overwritten.~~',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
 	'UI:CurrentObjectLockExpired' => 'The lock to prevent concurrent modifications of the object has expired.~~',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.~~',
 	'UI:ConcurrentLockKilled' => 'The lock preventing modifications on the current object has been deleted.~~',
@@ -1439,6 +1472,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:ToggleFullScreen' => 'Toggle Maximize / Minimize~~',
 	'UI:Button:ResetImage' => 'Recover the previous image~~',
 	'UI:Button:RemoveImage' => 'Remove the image~~',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'The modification of images or files is not supported in this mode.~~',
 
 	'UI:Button:RemoveDocument' => 'Remove the document~~',
@@ -1446,7 +1480,7 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1454,6 +1488,11 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Most popular~~',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Others~~',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'None yet.~~',
+
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
+	'UI:Search:Criteria:Remove' => 'Remove~~',
+	'UI:Search:Criteria:Locked' => 'Locked~~',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1515,12 +1554,12 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 
@@ -1550,6 +1589,8 @@ Tetikleme gerçekleştiriğinde işlemler tanımlanan sıra numarası ile gerçe
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1578,6 +1619,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:NoNewMessage' => 'No new message~~',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Mark all messages as read~~',
 	'UI:Newsroom:ViewAllMessages' => 'View all messages~~',
 	'UI:Newsroom:Preferences' => 'Newsroom preferences~~',
@@ -1587,13 +1629,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
 ));
 
+
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:DataSources' => 'Synchronization Data Sources~~',
 	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenuPage+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 	'Menu:AdminTools' => 'Yönetim Araçları',
 	'Menu:AdminTools+' => 'Yönetim Araçları',
 	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',
@@ -1624,4 +1667,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',
+));
+
+// Additional language entries not present in English dict
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+ 'UI:Toggle:StandardDashboard' => 'Standard~~',
+ 'UI:Toggle:CustomDashboard' => 'Custom~~',
+ 'UI:Display_X_ItemsPerPage' => 'Display %1$s items per page~~',
+ 'UI:Dashboard:Edit' => 'Edit This Page...~~',
+ 'UI:Dashboard:Revert' => 'Revert To Original Version...~~',
 ));

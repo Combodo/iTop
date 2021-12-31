@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -33,6 +33,7 @@ $(function()
 				category: 'redirect',
 				url: null,
 				modal: false,
+				timeout_duration: 400,
 			},
 			cancel_rule: {
 				category: 'close',
@@ -56,7 +57,7 @@ $(function()
 				this.options.submit_rule.url = this.options.submit_url;
 			if((this.options.cancel_url !== null) && (this.options.cancel_url !== ''))
 				this.options.cancel_rule.url = this.options.cancel_url;
-			
+
 			this._super();
 		},
    
@@ -143,12 +144,14 @@ $(function()
 							// Determine where we go in case validation is successful
 							var sRuleType = me.options.submit_rule.category;
 							var bRedirectInModal = me.options.submit_rule.modal;
+							var iRedirectTimeout = me.options.submit_rule.timeout_duration;
 							var sRedirectUrl = me.options.submit_rule.url;
 							// - The validation might want us to be redirect elsewhere
 							if(oValidation.valid)
 							{
 								// Checking if we have to redirect to another page
 								// Typically this happens when applying a stimulus, we redirect to the transition form
+								// This code let the ajax response override the initial parameters
 								if(oValidation.redirection !== undefined)
 								{
 									var oRedirection = oValidation.redirection;
@@ -159,6 +162,10 @@ $(function()
 									if(oRedirection.url !== undefined)
 									{
 										sRedirectUrl = oRedirection.url;
+									}
+									if(oRedirection.timeout_duration !== undefined)
+									{
+										iRedirectTimeout = oRedirection.timeout_duration;
 									}
 									sRuleType = 'redirect';
 								}
@@ -241,7 +248,7 @@ $(function()
 								// Checking if we have to redirect to another page
 								if(sRuleType === 'redirect')
 								{
-									me._applyRedirectRule(sRedirectUrl, bRedirectInModal);
+									me._applyRedirectRule(sRedirectUrl, bRedirectInModal, iRedirectTimeout);
 								}
 								// Close rule only needs to be applied to non modal forms (modal is always closed on submit)
 								else if(sRuleType === 'close')
@@ -360,9 +367,12 @@ $(function()
 		{
 			$('#page_overlay').fadeOut(200);
 		},
-		_applyRedirectRule: function(sRedirectUrl, bRedirectInModal)
+		_applyRedirectRule: function(sRedirectUrl, bRedirectInModal, iRedirectTimeout)
 		{
 			var me = this;
+
+			//optional argument
+			iRedirectTimeout = (typeof iRedirectTimeout !== 'undefined' && iRedirectTimeout != null ) ? iRedirectTimeout : 400;
 
 			// Always close current modal
 			if(this.options.is_modal)
@@ -391,8 +401,8 @@ $(function()
 					// Showing loader while redirecting, otherwise user tend to click somewhere in the page.
 					// Note: We use a timeout because .always() is called right after here and will hide the loader
 					setTimeout(function(){ me._disableFormBeforeLoading(); }, 50);
-					// Redirecting after a few ms so the user can see what happend
-					setTimeout(function() { location.href = sRedirectUrl; }, 400);
+					// Redirecting after a few ms so the user can see what happened
+					setTimeout(function() { location.href = sRedirectUrl; }, iRedirectTimeout);
 				}
 			}
 		},

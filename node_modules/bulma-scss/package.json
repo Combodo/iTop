@@ -1,0 +1,25 @@
+{
+  "name": "bulma-scss",
+  "version": "0.9.0-1",
+  "description": "The Bulma CSS Framework files converted to SCSS syntax",
+  "main": "bulma.scss",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/j1mc/bulma-scss.git"
+  },
+  "keywords": [
+    "bulma",
+    "css",
+    "scss",
+    "flexbox"
+  ],
+  "author": "Jim Campbell",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/j1mc/bulma-scss/issues"
+  },
+  "homepage": "https://github.com/j1mc/bulma-scss#readme"
+}

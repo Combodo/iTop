@@ -2,7 +2,6 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use Config;
 use DateTime;
 
 
@@ -38,9 +37,7 @@ class WeeklyScheduledProcessTest extends ItopTestCase
 	{
 		$oWeeklyImpl = new \WeeklyScheduledProcessMockConfig($bEnabledValue, $sTimeValue);
 
-		$sItopTimeZone = $oWeeklyImpl->getOConfig()->Get('timezone');
-		$timezone = new \DateTimeZone($sItopTimeZone);
-		$oExpectedDateTime = new DateTime($sExpectedTime, $timezone);
+		$oExpectedDateTime = new DateTime($sExpectedTime);
 
 		$this->assertEquals($oExpectedDateTime, $oWeeklyImpl->GetNextOccurrence($sCurrentTime));
 	}

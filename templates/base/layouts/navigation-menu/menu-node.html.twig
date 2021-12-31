@@ -1,0 +1,23 @@
+<li class="ibo-navigation-menu--menu-node" data-role="ibo-navigation-menu--menu-node" data-menu-node-id="{{ aMenuNode.sId }}">
+	{% if aMenuNode.sUrl is not empty %}
+		{% set sTarget = (aMenuNode.bOpenInNewWindow == true) ? 'target="_blank"' : '' %}
+		<a class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title" href="{{ aMenuNode.sUrl }}" {{ sTarget|raw }}>
+			<span class="ibo-navigation-menu--menu-node-label" data-role="ibo-navigation-menu--menu-node-label" title="{{ aMenuNode.sTitle }}">{{ aMenuNode.sTitle }}</span>
+			{% if aMenuNode.bHasCount %}
+                {# Counters will be shown once the background update is done (see JS widget) #}
+				<span class="ibo-navigation-menu--menu-node-counter ibo-is-hidden" data-menu-id="{{ aMenuNode.sId }}"></span>
+			{% endif %}
+		</a>
+	{% else %}
+		<span class="ibo-navigation-menu--menu-node-title" data-role="ibo-navigation-menu--menu-node-title">
+			<span class="ibo-navigation-menu--menu-node-label" data-role="ibo-navigation-menu--menu-node-label" title="{{ aMenuNode.sTitle }}">{{ aMenuNode.sTitle }}</span>
+		</span>
+	{% endif %}
+	{% if aMenuNode.aSubMenuNodes is defined and aMenuNode.aSubMenuNodes|length > 0 %}
+		<ul>
+			{% for aSubMenuNode in aMenuNode.aSubMenuNodes %}
+				{{ include('base/layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aSubMenuNode }) }}
+			{% endfor %}
+		</ul>
+	{% endif %}
+</li>

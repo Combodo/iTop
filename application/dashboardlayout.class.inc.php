@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,15 +15,17 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
 
 /**
  * Dashboard presentation
- * 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ *
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- */ 
-
-
+ */
 abstract class DashboardLayout
 {
 	abstract public function Render($oPage, $aDashlets, $bEditMode = false);
@@ -114,61 +116,59 @@ abstract class DashboardLayoutMultiCol extends DashboardLayout
 		// Trim the list of cells to remove the invisible/empty ones at the end of the array
 		$aCells = $this->TrimCellsArray($aCells);
 
-		$oPage->add('<table style="width:100%;table-layout:fixed;"><tbody>');
+		$oDashboardLayout = new DashboardLayoutUIBlock();
+		//$oPage->AddUiBlock($oDashboardLayout);
+
 		$iCellIdx = 0;
-		$fColSize = 100 / $this->iNbCols;
-		$sStyle = $bEditMode ? 'border: 1px #ccc dashed; width:'.$fColSize.'%;' : 'width: '.$fColSize.'%;';
-		$sClass = $bEditMode ? 'layout_cell edit_mode' : 'dashboard';
 		$iNbRows = ceil(count($aCells) / $this->iNbCols);
 
-		for($iRows = 0; $iRows < $iNbRows; $iRows++)
-		{
-			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
-			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
-			{
-				$sCellClass = ($iRows == $iNbRows-1) ? $sClass.' layout_last_used_rank' : $sClass;
-				$oPage->add("<td style=\"$sStyle\" class=\"$sCellClass\" data-dashboard-column-index=\"$iCols\" data-dashboard-cell-index=\"$iCellIdx\">");
-				if (array_key_exists($iCellIdx, $aCells))
-				{
+		//Js given by each dashlet to reload
+		$sJSReload = "";
+
+		for ($iRows = 0; $iRows < $iNbRows; $iRows++) {
+			$oDashboardRow = new DashboardRow();
+			$oDashboardLayout->AddDashboardRow($oDashboardRow);
+
+			for ($iCols = 0; $iCols < $this->iNbCols; $iCols++) {
+				$oDashboardColumn = new DashboardColumn($bEditMode);
+				$oDashboardColumn->SetCellIndex($iCellIdx);
+				$oDashboardRow->AddDashboardColumn($oDashboardColumn);
+
+				if (array_key_exists($iCellIdx, $aCells)) {
 					$aDashlets = $aCells[$iCellIdx];
-					if (count($aDashlets) > 0)
-					{
+					if (count($aDashlets) > 0) {
 						/** @var \Dashlet $oDashlet */
-						foreach($aDashlets as $oDashlet)
-						{
-							if ($oDashlet::IsVisible())
-							{
-								$oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams);
+						foreach ($aDashlets as $oDashlet) {
+							if ($oDashlet::IsVisible()) {
+								$oDashboardColumn->AddUIBlock($oDashlet->DoRender($oPage, $bEditMode, true /* bEnclosingDiv */, $aExtraParams));
 							}
 						}
+					} else {
+						$oDashboardColumn->AddUIBlock(new Html('&nbsp;'));
 					}
-					else
-					{
-						$oPage->add('&nbsp;');
-					}
+				} else {
+					$oDashboardColumn->AddUIBlock(new Html('&nbsp;'));
 				}
-				else
-				{
-					$oPage->add('&nbsp;');
-				}
-				$oPage->add('</td>');
 				$iCellIdx++;
 			}
-			$oPage->add('</tr>');
+			$sJSReload .= $oDashboardRow->GetJSRefreshCallback()." ";
 		}
+
+		$oPage->add_script("function updateDashboard".$aExtraParams['dashboard_div_id']."(){".$sJSReload."}");
+
 		if ($bEditMode) // Add one row for extensibility
 		{
-			$sStyle = 'style="border: 1px #ccc dashed; width:'.$fColSize.'%;" class="layout_cell edit_mode layout_extension" data-dashboard-cell-index="'.$iCellIdx.'"';
-			$oPage->add("<tr data-dashboard-row-index=\"$iRows\">");
-			for($iCols = 0; $iCols < $this->iNbCols; $iCols++)
-			{
-				$oPage->add("<td $sStyle data-dashboard-column-index=\"$iCols\">");
-				$oPage->add('&nbsp;');
-				$oPage->add('</td>');
+			$oDashboardRow = new DashboardRow();
+			$oDashboardLayout->AddDashboardRow($oDashboardRow);
+
+			for ($iCols = 0; $iCols < $this->iNbCols; $iCols++) {
+				$oDashboardColumn = new DashboardColumn($bEditMode, true);
+				$oDashboardRow->AddDashboardColumn($oDashboardColumn);
+				$oDashboardColumn->AddUIBlock(new Html('&nbsp;'));
 			}
-			$oPage->add('</tr>');
 		}
-		$oPage->add('</tbody></table>');
+
+		return $oDashboardLayout;
 	}
 
 	/**

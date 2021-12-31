@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,13 +19,14 @@
 
 namespace Combodo\iTop\Portal;
 
-use utils;
+use DeprecatedCallsLog;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\RouteCollectionBuilder;
+use utils;
 
 /**
  * Class Kernel
@@ -121,6 +122,7 @@ class Kernel extends BaseKernel
 	 */
 	public function isClassInActiveBundle($class)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		// TODO: Implement isClassInActiveBundle() method.
 	}
 }

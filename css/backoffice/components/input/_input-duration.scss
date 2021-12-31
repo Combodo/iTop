@@ -1,0 +1,13 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-duration--width: unset !default;
+$ibo-input-duration--text-align: right !default;
+
+.ibo-input-duration{
+	display: inline-block;
+	width: $ibo-input-duration--width;
+	text-align: $ibo-input-duration--text-align;
+}

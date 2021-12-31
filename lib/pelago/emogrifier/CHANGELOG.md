@@ -15,6 +15,200 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Fixed
 
+## 3.1.0
+
+### Added
+- Add support for PHP 7.4
+  ([#821](https://github.com/MyIntervals/emogrifier/pull/821),
+  [#829](https://github.com/MyIntervals/emogrifier/pull/829))
+
+### Changed
+- Upgrade to Symfony 5.0
+  ([#822](https://github.com/MyIntervals/emogrifier/pull/820)
+
+## 3.0.0
+
+### Added
+- Test and document excluding entire subtree with `addExcludedSelector()`
+  ([#347](https://github.com/MyIntervals/emogrifier/issues/347),
+  [#768](https://github.com/MyIntervals/emogrifier/pull/768))
+- Test that rules with `:optional` or `:required` are copied to the `<style>`
+  element ([#748](https://github.com/MyIntervals/emogrifier/issues/748),
+  [#765](https://github.com/MyIntervals/emogrifier/pull/765))
+- Test that rules with `:only-of-type` are copied to the `<style>` element
+  ([#748](https://github.com/MyIntervals/emogrifier/issues/748),
+  [#760](https://github.com/MyIntervals/emogrifier/pull/760))
+- Support `:last-of-type`
+  ([#748](https://github.com/MyIntervals/emogrifier/issues/748),
+  [#758](https://github.com/MyIntervals/emogrifier/pull/758))
+- Support `:first-of-type`
+  ([#748](https://github.com/MyIntervals/emogrifier/issues/748),
+  [#757](https://github.com/MyIntervals/emogrifier/pull/757))
+- Support `:empty`
+  ([#748](https://github.com/MyIntervals/emogrifier/issues/748),
+  [#756](https://github.com/MyIntervals/emogrifier/pull/756))
+- Test that rules with `:any-link` are copied to the `<style>` element
+  ([#748](https://github.com/MyIntervals/emogrifier/issues/748),
+  [#755](https://github.com/MyIntervals/emogrifier/pull/755))
+- Support and test `:only-child`
+  ([#747](https://github.com/MyIntervals/emogrifier/issues/747),
+  [#754](https://github.com/MyIntervals/emogrifier/pull/754))
+- Support and test `:nth-last-of-type`
+  ([#747](https://github.com/MyIntervals/emogrifier/issues/747),
+  [#751](https://github.com/MyIntervals/emogrifier/pull/751))
+- Support and test `:nth-last-child`
+  ([#747](https://github.com/MyIntervals/emogrifier/issues/747),
+  [#750](https://github.com/MyIntervals/emogrifier/pull/750))
+- Support and test general sibling combinator
+  ([#723](https://github.com/MyIntervals/emogrifier/issues/723),
+  [#745](https://github.com/MyIntervals/emogrifier/pull/745))
+- Test universal selector with combinators
+  ([#723](https://github.com/MyIntervals/emogrifier/issues/723),
+  [#743](https://github.com/MyIntervals/emogrifier/pull/743))
+- Preserve `display: none` elements with `-emogrifier-keep` class
+  ([#252](https://github.com/MyIntervals/emogrifier/issues/252),
+  [#737](https://github.com/MyIntervals/emogrifier/pull/737))
+- Preserve valid `@import` rules
+  ([#338](https://github.com/MyIntervals/emogrifier/issues/338),
+  [#334](https://github.com/MyIntervals/emogrifier/pull/334),
+  [#732](https://github.com/MyIntervals/emogrifier/pull/732),
+  [#735](https://github.com/MyIntervals/emogrifier/pull/735))
+- Add `HtmlPruner::removeRedundantClassesAfterCssInlined`
+  ([#380](https://github.com/MyIntervals/emogrifier/issues/380),
+  [#724](https://github.com/MyIntervals/emogrifier/pull/724))
+- Check on Travis that PHP-CS-Fixer will not change anything
+  [#727](https://github.com/MyIntervals/emogrifier/pull/727))
+- Support `:not(…)` as an entire selector
+  ([#469](https://github.com/MyIntervals/emogrifier/issues/469),
+  [#725](https://github.com/MyIntervals/emogrifier/pull/725))
+- Add `HtmlPruner::removeRedundantClasses`
+  ([#380](https://github.com/MyIntervals/emogrifier/issues/380),
+  [#708](https://github.com/MyIntervals/emogrifier/pull/708))
+- Support multiple attributes selectors
+  ([#385](https://github.com/MyIntervals/emogrifier/issues/385),
+  [#721](https://github.com/MyIntervals/emogrifier/pull/721))
+- Support `> :first-child` and `> :last-child` in selectors
+  ([#384](https://github.com/MyIntervals/emogrifier/issues/384),
+  [#720](https://github.com/MyIntervals/emogrifier/pull/720))
+- Add an `ArrayIntersector` class
+  ([#708](https://github.com/MyIntervals/emogrifier/pull/708),
+  [#710](https://github.com/MyIntervals/emogrifier/pull/710))
+- Add `CssInliner::getMatchingUninlinableSelectors`
+  ([#380](https://github.com/MyIntervals/emogrifier/issues/380),
+  [#707](https://github.com/MyIntervals/emogrifier/pull/707))
+- Add tests for `:nth-child` and `:nth-of-type`
+  ([#71](https://github.com/MyIntervals/emogrifier/issues/71),
+  [#698](https://github.com/MyIntervals/emogrifier/pull/698))
+
+### Changed
+- Relax the dependency on `symfony/css-selector`
+  ([#762](https://github.com/MyIntervals/emogrifier/pull/762))
+- Rename `HtmlPruner::removeInvisibleNodes` to
+  `HtmlPruner::removeElementsWithDisplayNone`
+  ([#717](https://github.com/MyIntervals/emogrifier/issues/717),
+  [#718](https://github.com/MyIntervals/emogrifier/pull/718))
+- Mark the utility classes as internal
+  ([#715](https://github.com/MyIntervals/emogrifier/pull/715))
+- Move utility classes to the `Pelago\Emogrifier\Utilities` namespace
+  ([#712](https://github.com/MyIntervals/emogrifier/pull/712))
+- Make the `$css` parameter of the `inlineCss` method optional
+  ([#700](https://github.com/MyIntervals/emogrifier/pull/700))
+- Update the development dependencies
+  ([#691](https://github.com/MyIntervals/emogrifier/pull/691))
+
+### Deprecated
+- Support for PHP 5.6 will be removed in Emogrifier 4.0.
+- Deprecate the `Emogrifier` class
+  ([#701](https://github.com/MyIntervals/emogrifier/pull/701))
+
+### Removed
+- Drop `enableCssToHtmlMapping` and `disableInvisibleNodeRemoval`
+  ([#692](https://github.com/MyIntervals/emogrifier/pull/692))
+- Drop support for PHP 5.5
+  ([#690](https://github.com/MyIntervals/emogrifier/pull/690))
+
+### Fixed
+- Fix PhpStorm code inspection warnings
+  ([#729](https://github.com/MyIntervals/emogrifier/issues/729),
+  [#770](https://github.com/MyIntervals/emogrifier/pull/770))
+- Uppercase type combined with class or ID in selector
+  ([#590](https://github.com/MyIntervals/emogrifier/issues/590),
+  [#769](https://github.com/MyIntervals/emogrifier/pull/769))
+- Dynamic pseudo-class combined with static one (rules copied to `<style>`
+  element, [#746](https://github.com/MyIntervals/emogrifier/pull/746))
+- Descendant attribute selectors (such as `html input[disabled]`)
+  ([#375](https://github.com/MyIntervals/emogrifier/pull/375),
+  [#709](https://github.com/MyIntervals/emogrifier/pull/709))
+- Attribute selectors with hyphen in attribute name
+  ([#284](https://github.com/MyIntervals/emogrifier/issues/284),
+  [#540](https://github.com/MyIntervals/emogrifier/pull/540),
+  [#704](https://github.com/MyIntervals/emogrifier/pull/702))
+- Attribute selectors with space, hyphen, colon, semicolon or (most) other
+  non-alphanumeric characters in attribute value
+  ([#284](https://github.com/MyIntervals/emogrifier/issues/284),
+  [#333](https://github.com/MyIntervals/emogrifier/issues/333),
+  [#550](https://github.com/MyIntervals/emogrifier/issues/550),
+  [#540](https://github.com/MyIntervals/emogrifier/pull/540),
+  [#704](https://github.com/MyIntervals/emogrifier/pull/702))
+- Don’t create empty `style` attributes for unparsable declarations
+  ([#259](https://github.com/MyIntervals/emogrifier/issues/259),
+  [#702](https://github.com/MyIntervals/emogrifier/pull/702))
+- Allow `:not(:behavioural-pseudo-class)` in selectors
+  ([#697](https://github.com/MyIntervals/emogrifier/pull/697),
+  [#703](https://github.com/MyIntervals/emogrifier/pull/703))
+
+## 2.2.0
+
+### Added
+- Add a `HtmlPruner` class
+  ([#679](https://github.com/MyIntervals/emogrifier/pull/679))
+- Add `AbstractHtmlProcessor::fromDomDocument`
+  ([#676](https://github.com/MyIntervals/emogrifier/pull/676))
+- Add `AbstractHtmlProcessor::fromHtml`
+  ([#675](https://github.com/MyIntervals/emogrifier/pull/675))
+
+### Changed
+- Make the closures static
+  ([#674](https://github.com/MyIntervals/emogrifier/pull/674))
+- Keep `<wbr>` elements by default with `CssInliner`
+  ([#665](https://github.com/MyIntervals/emogrifier/pull/665))
+- Make the `CssInliner` inherit `AbstractHtmlProcessor`
+  ([#660](https://github.com/MyIntervals/emogrifier/pull/660))
+- Separate `CssInliner::inlineCss` and the rendering
+  ([#654](https://github.com/MyIntervals/emogrifier/pull/654))
+
+### Removed
+- Drop the removal of unprocessable tags from `CssInliner`
+  ([#685](https://github.com/MyIntervals/emogrifier/pull/685))
+- Drop the removal of invisible nodes from `CssInliner`
+  ([#684](https://github.com/MyIntervals/emogrifier/pull/684))
+
+### Fixed
+- Remove opening `<body>` tag from `body` content when element has attribute(s)
+  ([#677](https://github.com/MyIntervals/emogrifier/issues/677),
+  [#683](https://github.com/MyIntervals/emogrifier/pull/683))
+- Keep development files out of the Composer packages
+  ([#678](https://github.com/MyIntervals/emogrifier/pull/678))
+- Call all static methods statically in `CssConcatenator`
+  ([#670](https://github.com/MyIntervals/emogrifier/pull/670))
+- Support all HTML5 self-closing tags, including `<embed>`, `<source>`,
+  `<track>` and `<wbr>`
+  ([#653](https://github.com/MyIntervals/emogrifier/pull/653))
+- Remove all "unprocessable" (e.g. `<wbr>`) tags
+  ([#650](https://github.com/MyIntervals/emogrifier/pull/650))
+- Correct translated xpath of `:nth-child` selector
+  ([#648](https://github.com/MyIntervals/emogrifier/pull/648))
+
+## 2.1.1
+
+### Changed
+- Add a test that a missing document type gets added
+  ([#641](https://github.com/MyIntervals/emogrifier/pull/641))
+
+### Fixed
+- Keep the `style` element the `head`
+  ([#642](https://github.com/MyIntervals/emogrifier/pull/642))
+
 ## 2.1.0
 
 ### Added
@@ -26,7 +220,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
   ([#633](https://github.com/MyIntervals/emogrifier/pull/633))
 - Add a `getDomDocument()` method
   ([#630](https://github.com/MyIntervals/emogrifier/pull/630))
-- Add a Composer script for PHP CS Fixer 
+- Add a Composer script for PHP CS Fixer
   ([#607](https://github.com/MyIntervals/emogrifier/pull/607))
 - Copy matching rules with dynamic pseudo-classes or pseudo-elements in
   selectors to the style element
@@ -34,18 +228,18 @@ This project adheres to [Semantic Versioning](https://semver.org/).
   [#562](https://github.com/MyIntervals/emogrifier/pull/562),
   [#567](https://github.com/MyIntervals/emogrifier/pull/567))
 - Add a CssToAttributeConverter
-  ([#546](https://github.com/jjriv/emogrifier/pull/546))
+  ([#546](https://github.com/MyIntervals/emogrifier/pull/546))
 - Expose the DOMDocument in AbstractHtmlProcessor
-  ([#520](https://github.com/jjriv/emogrifier/pull/520))
+  ([#520](https://github.com/MyIntervals/emogrifier/pull/520))
 - Add an HtmlNormalizer class
-  ([#513](https://github.com/jjriv/emogrifier/pull/513),
-  [#516](https://github.com/jjriv/emogrifier/pull/516))
+  ([#513](https://github.com/MyIntervals/emogrifier/pull/513),
+  [#516](https://github.com/MyIntervals/emogrifier/pull/516))
 - Add a CssInliner class
-  ([#514](https://github.com/jjriv/emogrifier/pull/514),
-  [#522](https://github.com/jjriv/emogrifier/pull/522))
+  ([#514](https://github.com/MyIntervals/emogrifier/pull/514),
+  [#522](https://github.com/MyIntervals/emogrifier/pull/522))
 - Composer scripts for the various CI build steps
 - Validate the composer.json on Travis
-  ([#476](https://github.com/jjriv/emogrifier/pull/476))
+  ([#476](https://github.com/MyIntervals/emogrifier/pull/476))
 
 ### Changed
 - Mark the work-in-progress classes as `@internal`
@@ -62,20 +256,20 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 - Add type hint checking to the code sniffs
   ([#566](https://github.com/MyIntervals/emogrifier/pull/566))
 - Check the code with PHPMD
-  ([#561](https://github.com/jjriv/emogrifier/pull/561))
+  ([#561](https://github.com/MyIntervals/emogrifier/pull/561))
 - Add the cyclomatic complexity to the checked code sniffs
-  ([#558](https://github.com/jjriv/emogrifier/pull/558))
+  ([#558](https://github.com/MyIntervals/emogrifier/pull/558))
 - Use the Symfony CSS selector component
-  ([#540](https://github.com/jjriv/emogrifier/pull/540))
+  ([#540](https://github.com/MyIntervals/emogrifier/pull/540))
 
 ### Deprecated
 - Support for PHP 5.5 will be removed in Emogrifier 3.0.
 - Support for PHP 5.6 will be removed in Emogrifier 4.0.
 - The removal of invisible nodes will be removed in Emogrifier 3.0.
-  ([#473](https://github.com/jjriv/emogrifier/pull/473))
+  ([#473](https://github.com/MyIntervals/emogrifier/pull/473))
 - Converting CSS styles to (non-CSS) HTML attributes will be removed
   in Emogrifier 3.0. Please use the new CssToAttributeConverter instead.
-  ([#474](https://github.com/jjriv/emogrifier/pull/474))
+  ([#474](https://github.com/MyIntervals/emogrifier/pull/474))
 - Emogrifier 3.x.y will be the last release that supports usage without
   Composer (i.e., you can still require the class file).
   Starting with version 4.0, Emogrifier will only work with Composer.
@@ -114,7 +308,8 @@ This project adheres to [Semantic Versioning](https://semver.org/).
   ignored, [#507](https://github.com/MyIntervals/emogrifier/pull/507))
 - Allow attribute selectors in descendants
   ([#506](https://github.com/MyIntervals/emogrifier/pull/506),
-  [#381](https://github.com/MyIntervals/emogrifier/issues/381))
+  [#381](https://github.com/MyIntervals/emogrifier/issues/381),
+  [#443](https://github.com/MyIntervals/emogrifier/issues/443))
 - Allow adjacent sibling CSS selector combinator in minified CSS
   ([#505](https://github.com/MyIntervals/emogrifier/pull/505))
 - Allow CSS property values containing newlines
@@ -124,7 +319,7 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ### Added
 - Support for CSS :not() selector
-  ([#431](https://github.com/jjriv/emogrifier/pull/431))
+  ([#431](https://github.com/MyIntervals/emogrifier/pull/431))
 - Automatically remove !important annotations from final inline style declarations
   ([#420](https://github.com/MyIntervals/emogrifier/pull/420))
 - Automatically move `<style>` block from `<head>` to `<body>`

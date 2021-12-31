@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -108,10 +108,10 @@ class ObjectFormHandlerHelper
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sMode
-	 * @param string                                    $sObjectClass
-	 * @param string                                    $sObjectId
-	 * @param string                                    $aFormProperties
+	 * @param string $sMode
+	 * @param string $sObjectClass
+	 * @param string $sObjectId
+	 * @param array $aFormProperties
 	 *
 	 * @return array
 	 *
@@ -127,9 +127,10 @@ class ObjectFormHandlerHelper
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
+		$aOriginalFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
 		if ($aFormProperties === null)
 		{
-			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
+			$aFormProperties = $aOriginalFormProperties;
 		}
 
 		// - Create and
@@ -280,28 +281,26 @@ class ObjectFormHandlerHelper
 				->SetFormProperties($aFormProperties);
 
 			$oFormManager->Build();
-
+			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 			// Check the number of editable fields
 			$aFormData['editable_fields_count'] = $oFormManager->GetForm()->GetEditableFieldCount();
-		}
-		else
-		{
+		} else {
 			// Update / Submit / Cancel
+			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $sFormManagerClass */
 			$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 			$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
 			if (empty($sFormManagerClass) || empty($sFormManagerData))
 			{
-				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
-			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
-			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			$bTrustContent = $sFormManagerClass::CanTrustFormLayoutContent($sFormManagerData, $aOriginalFormProperties);
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData, $bTrustContent);
 			$oFormManager->SetContainer($this->oContainer);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -388,6 +387,7 @@ class ObjectFormHandlerHelper
 		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
+		$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 		// - Set a text to be copied on title if the object is not in creation
 		if($sMode !== static::ENUM_MODE_CREATE && !empty($sObjectId))
 		{

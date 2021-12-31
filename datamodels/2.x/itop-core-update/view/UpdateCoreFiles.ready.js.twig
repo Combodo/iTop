@@ -1,4 +1,4 @@
-{# @copyright   Copyright (C) 2010-2019 Combodo SARL #}
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
 
 function UpdateProgress(sMessage, iPercent) {
@@ -20,7 +20,7 @@ var oGetCurrentVersion = {
     dataType: "json",
     success: function(data)
     {
-        var oCurrentVersion = $("#current-version");
+        var oCurrentVersion = $(".ibo-update-core--current-version");
         if (oCurrentVersion)
         {
             oCurrentVersion.html(data.sVersion);
@@ -43,14 +43,14 @@ function GetAjaxRequest(sOperation)
     if (sOperation === "Backup")
     {
         oAjaxRequest.success = function() {
-            $("#do_backup_done").show(300);
+            $("#do_backup_done").removeClass("ibo-is-hidden");
         };
     }
 
     if (sOperation === "FilesArchive")
     {
         oAjaxRequest.success = function() {
-            $("#do_files_archive_done").show(300);
+            $("#do_files_archive_done").removeClass("ibo-is-hidden");
         };
     }
 
@@ -78,6 +78,7 @@ sFilesArchiveStep = "FilesArchive";
 var aStepsAjaxOperation = ["EnterMaintenance", sBackupStep, sFilesArchiveStep, "CopyFiles", "CheckCompile", "Compile", "UpdateDatabase", "ExitMaintenance", null];
 
 var iNextStep = 0;
+var oInstallationProgress = $('#installation_progress')
 function ExecNextStep() {
     if (iNextStep < aStepsAjaxOperation.length)
     {
@@ -98,10 +99,10 @@ function ExecNextStep() {
                     {
                         $("#setup_error").html({{ 'iTopUpdate:Error:UpdateFailed'|dict_s|json_encode|raw }});
                     }
-                    $('#progress').hide();
-                    $("#setup_error_outer").show();
-                    $("#run_setup").show();
-                    $("#setup_continue").hide();
+                    $('#progress').addClass("ibo-is-hidden");
+                    $("#setup_error_outer").removeClass("ibo-is-hidden");
+                    $("#run_setup").removeClass("ibo-is-hidden");
+                    $("#setup_continue").addClass("ibo-is-hidden");
                 });
         }
         else
@@ -112,12 +113,13 @@ function ExecNextStep() {
     else
     {
         $.ajax(oGetCurrentVersion);
-        $("#setup_continue").removeAttr("disabled");
-        $('#installation_progress').hide(300);
-        $('#new_version').show();
-        $("#current_version").removeClass("message-info").addClass("message-valid");
+        $("#setup_continue").prop("disabled", false);
+        oInstallationProgress.hide(300);
+        $('#new_version').removeClass("ibo-is-hidden");
+        $('#current_version').addClass("ibo-is-hidden");
     }
 }
 
+oInstallationProgress.show();
 ExecNextStep();
 

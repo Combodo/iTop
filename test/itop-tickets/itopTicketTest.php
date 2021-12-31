@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -31,6 +31,9 @@ use Exception;
 
 
 /**
+ * @group itopVirtualizationMgmt
+ * @group itopConfigMgmt
+ * @group itopTickets
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -108,17 +111,17 @@ class ItopTicketTest extends ItopDataTestCase
      */
     public function testUpdateImpactedItems_Basic2()
     {
-        $oTicket = $this->CreateTicket(1);
-        $oServer1 = $this->CreateServer(1);
-        $oHypervisor1 = $this->CreateHypervisor(1, $oServer1);
-        $oPerson1 = $this->CreatePerson(1);
-        $this->AddContactToCI($oPerson1, $oHypervisor1);
-        $oHypervisor1->DBUpdate();
+	    $oTicket = $this->CreateTicket(1);
+	    $oServer1 = $this->CreateServer(1);
+	    $oHypervisor1 = $this->CreateHypervisor(1, $oServer1);
+	    $oPerson1 = $this->CreatePerson(1);
+	    $this->AddContactToCI($oPerson1, $oHypervisor1);
+	    $oHypervisor1->DBUpdate();
 
-        $this->AddCIToTicket($oServer1, $oTicket, 'manual');
-        $oTicket->DBUpdate(); // trigger the impact update
+	    $this->AddCIToTicket($oServer1, $oTicket, 'manual');
+	    $oTicket->DBUpdate(); // trigger the impact update
 
-        $this->ReloadObject($oTicket); // reload the links
+	    $this->ReloadObject($oTicket); // reload the links
 
         $this->CheckFunctionalCIList($oTicket);
         $this->CheckContactList($oTicket);

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -23,11 +23,13 @@ namespace Combodo\iTop\Portal\Controller;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDefinition;
+use AttributeEnum;
 use AttributeExternalKey;
 use AttributeImage;
 use AttributeSet;
 use AttributeTagSet;
 use BinaryExpression;
+use BulkExport;
 use CMDBSource;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use Combodo\iTop\Portal\Brick\ManageBrick;
@@ -40,13 +42,14 @@ use Dict;
 use Exception;
 use FieldExpression;
 use iPopupMenuExtension;
+use IssueLog;
 use JSButtonItem;
+use LogChannels;
 use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use UnaryExpression;
 use URLButtonItem;
-use VariableExpression;
 
 /**
  * Class ManageBrickController
@@ -88,10 +91,10 @@ class ManageBrickController extends BrickController
 		/** @var \Combodo\iTop\Portal\Brick\ManageBrick $oBrick */
 		$oBrick = $oBrickCollection->GetBrickById($sBrickId);
 
-		if (is_null($sDisplayMode))
-		{
+		if (is_null($sDisplayMode)) {
 			$sDisplayMode = $oBrick->GetDefaultDisplayMode();
 		}
+
 		$aData = $this->GetData($oRequest, $sBrickId, $sGroupingTab, $oBrick::AreDetailsNeededForDisplayMode($sDisplayMode));
 
 		$aExportFields = $oBrick->GetExportFields();
@@ -101,8 +104,7 @@ class ManageBrickController extends BrickController
 				'iDefaultListLength' => $oBrick->GetDefaultListLength(),
 			);
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			$oResponse = new JsonResponse($aData);
 		}
 		else
@@ -245,11 +247,19 @@ class ManageBrickController extends BrickController
 		}
 
 		$sFields = implode(',', $aFields);
+		$sFormat = 'xlsx';
+		$oSearch->UpdateContextFromUser();
+		$oExporter = BulkExport::FindExporter($sFormat, $oSearch);
+		$oExporter->SetObjectList($oSearch);
+		$oExporter->SetFormat($sFormat);
+		$oExporter->SetChunkSize(EXPORTER_DEFAULT_CHUNK_SIZE);
+		$oExporter->SetLocalizeOutput(true);
+		$oExporter->SetFields($sFields);
+
 		$aData = array(
 			'oBrick' => $oBrick,
 			'sBrickId' => $sBrickId,
-			'sFields' => $sFields,
-			'sOQL' => $oSearch->ToOQL(),
+			'sToken' => $oExporter->SaveState(),
 		);
 
 		return $this->render(static::EXCEL_EXPORT_TEMPLATE_PATH, $aData);
@@ -683,15 +693,17 @@ class ManageBrickController extends BrickController
 						}
 						elseif ($oAttDef instanceof AttributeImage)
 						{
+							/** @var \ormDocument $oOrmDoc */
 							$oOrmDoc = $oCurrentRow->Get($sItemAttr);
 							if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
 							{
-								$sUrl = $oUrlGenerator->generate('p_object_document_display', array(
+								$sUrl = $oUrlGenerator->generate('p_object_document_display', [
 									'sObjectClass' => get_class($oCurrentRow),
 									'sObjectId' => $oCurrentRow->GetKey(),
 									'sObjectField' => $sItemAttr,
 									'cache' => 86400,
-								));
+									's' => $oOrmDoc->GetSignature(),
+								]);
 							}
 							else
 							{
@@ -708,15 +720,14 @@ class ManageBrickController extends BrickController
 							/** @var \AttributeTagSet $oAttDef */
 							$sValue = $oAttDef->GenerateViewHtmlForValues($aCodes, '', false);
 							$sSortValue = implode(' ', $aCodes);
-						}
-						elseif ($oAttDef instanceof AttributeSet)
-						{
+						} elseif ($oAttDef instanceof AttributeSet) {
 							$oAttDef->SetDisplayLink(false);
 							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 							$sSortValue = "".$oCurrentRow->Get($sItemAttr);
-						}
-						else
-						{
+						} elseif ($oAttDef instanceof AttributeEnum) {
+							$sValue = $oAttDef->GetAsPlainText($oCurrentRow->Get($sItemAttr));
+							$sSortValue = $oCurrentRow->Get($sItemAttr);
+						} else {
 							$sValue = $oAttDef->GetAsHTML($oCurrentRow->Get($sItemAttr));
 							$sSortValue = $oCurrentRow->Get($sItemAttr);
 						}
@@ -804,31 +815,32 @@ class ManageBrickController extends BrickController
 					'iItemsCount' => $oSet->Count(),
 					'aColumnsDefinition' => $aColumnsDefinition,
 				);
+
+				IssueLog::Debug('Portal ManageBrick query', LogChannels::PORTAL, array(
+					'sPortalId' => $sPortalId,
+					'sBrickId' => $sBrickId,
+					'sGroupingTab' => $sGroupingTab,
+					'oql' => $oSet->GetFilter()->ToOQL(),
+					'aGroupingTabs' => $aGroupingTabs,
+				));
 			}
-		}
-		else
-		{
+		} else {
 			$aGroupingAreasData = array();
 			$sGroupingArea = null;
 		}
 
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			$aData = $aData + array(
 					'data' => $aGroupingAreasData[$sGroupingArea]['aItems'],
 				);
-		}
-		else
-		{
+		} else {
 			$aDisplayValues = array();
 			$aUrls = array();
 			$aColumns = array();
 			$aNames = array();
-			if ($bHasScope)
-			{
-				foreach ($aGroupingTabsValues as $aValues)
-				{
+			if ($bHasScope) {
+				foreach ($aGroupingTabsValues as $aValues) {
 					$aDisplayValues[] = array(
 						'value' => $aValues['count'],
 						'label' => $aValues['label'],
@@ -886,64 +898,50 @@ class ManageBrickController extends BrickController
 		$oRequestManipulator = $this->get('request_manipulator');
 
 		// Getting search value
-		$sSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
+		$sRawSearchValue = trim($oRequestManipulator->ReadParam('sSearchValue', ''));
+		$sSearchValue = html_entity_decode($sRawSearchValue);
 
 		// - Adding search clause if necessary
 		// Note : This is a very naive search at the moment
-		if (!empty($sSearchValue))
-		{
+		if (strlen($sSearchValue) > 0) {
 			// Putting only valid attributes as one can define attributes of leaf classes in the brick definition (<fields>), but at this stage we are working on the abstract class.
 			// Note: This won't fix everything as the search will not be looking in all fields.
-			$aSearchListItems = array();
-			foreach ($aColumnsAttrs as $sColumnAttr)
-			{
-				// Skip invalid attcodes
-				if (!MetaModel::IsValidAttCode($sClass, $sColumnAttr))
-				{
+			$aSearchListItems = [];
+			foreach ($aColumnsAttrs as $sColumnAttr) {
+				// Skip invalid attCodes
+				if (!MetaModel::IsValidAttCode($sClass, $sColumnAttr)) {
 					continue;
 				}
 
 				// For external key, force search on the friendlyname instead of the ID.
 				// This should be addressed more globally with the bigger issue, see N°1970
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sColumnAttr);
-				if($oAttDef instanceof AttributeExternalKey)
-				{
+				if ($oAttDef instanceof AttributeExternalKey) {
 					$sColumnAttr .= '_friendlyname';
 				}
 
 				$aSearchListItems[] = $sColumnAttr;
 			}
 
-			$oFullBinExpr = null;
-			foreach ($aSearchListItems as $sSearchItemAttr)
-			{
-				$oBinExpr = new BinaryExpression(new FieldExpression($sSearchItemAttr, $oQuery->GetClassAlias()),
-					'LIKE', new VariableExpression('search_value'));
-				// At each iteration we build the complete expression for the search like ( (field1 LIKE %search%) OR (field2 LIKE %search%) OR (field3 LIKE %search%) ...)
-				if (is_null($oFullBinExpr))
-				{
-					$oFullBinExpr = $oBinExpr;
-				}
-				else
-				{
-					$oFullBinExpr = new BinaryExpression($oFullBinExpr, 'OR', $oBinExpr);
+			if (preg_match('/^"(.*)"$/', $sSearchValue, $aMatches)) {
+				// The text is surrounded by double-quotes, remove the quotes and treat it as one single expression
+				$aSearchNeedles = [$aMatches[1]];
+			} else {
+				// Split the text on the blanks and treat this as a search for <word1> AND <word2> AND <word3>
+				$aExplodedSearchNeedles = explode(' ', $sSearchValue);
+				$aSearchNeedles = [];
+				foreach ($aExplodedSearchNeedles as $sValue) {
+					if (strlen($sValue) > 0) {
+						$aSearchNeedles[] = $sValue;
+					}
 				}
 			}
-
-			// Then add the complete expression to the query
-			if (!is_null($oFullBinExpr))
-			{
-				// - Adding expression to the query
-				$oQuery->AddConditionExpression($oFullBinExpr);
-				// - Setting expression parameters
-				// Note : This could be way more simpler if we had a SetInternalParam($sParam, $value) verb
-				$aQueryParams = $oQuery->GetInternalParams();
-				$aQueryParams['search_value'] = '%'.$sSearchValue.'%';
-				$oQuery->SetInternalParams($aQueryParams);
+			foreach ($aSearchNeedles as $sSearchWord) {
+				$oQuery->AddCondition_FullTextOnAttributes($aSearchListItems, $sSearchWord);
 			}
 		}
 
-		$aData['sSearchValue'] = $sSearchValue;
+		$aData['sSearchValue'] = $sRawSearchValue;
 	}
 
 	/**

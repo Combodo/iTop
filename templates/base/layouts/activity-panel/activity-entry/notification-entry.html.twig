@@ -1,0 +1,14 @@
+{% extends 'base/layouts/activity-panel/activity-entry/layout.html.twig' %}
+
+{% block iboActivityEntryExtraClasses %}ibo-notification-entry{% endblock %}
+
+{% block iboActivityEntryMainInformationContent %}
+    <a href="#" class="ibo-notification-entry--short-description" data-role="ibo-notification-entry--long-description-toggler">
+        {{ oUIBlock.GetTitle() }}
+        <span class="ibo-notification-entry--long-description-toggler-icon fa fa-caret-down"></span>
+    </a>
+    <div class="ibo-notification-entry--long-description" data-role="ibo-notification-entry--long-description">
+        {# Note: The #tab_UINotificationsTab is hardcoded for now but we should find a way to make the connection with how it is prepared in the object's details #}
+        <a href="#ObjectProperties=tab_UINotificationsTab" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip'|dict_s }}">{{ oUIBlock.GetMessage() }}</a>
+    </div>
+{% endblock %}

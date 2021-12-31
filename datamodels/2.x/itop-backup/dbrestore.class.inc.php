@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2014-2017 Combodo SARL
+// Copyright (C) 2014-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -28,8 +28,8 @@ class DBRestore extends DBBackup
 	{
 		parent::__construct($oConfig);
 
-		$this->sDBUser = $oConfig->Get('db_user');
-		$this->sDBPwd = $oConfig->Get('db_pwd');
+		$this->sDBUser = $this->oConfig->Get('db_user');
+		$this->sDBPwd = $this->oConfig->Get('db_pwd');
 	}
 
 	protected function LogInfo($sMsg)
@@ -111,6 +111,7 @@ class DBRestore extends DBBackup
 	 */
 	public function RestoreFromZip($sZipFile, $sEnvironment = 'production')
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Use RestoreFromCompressedBackup instead');
 		$this->RestoreFromCompressedBackup($sZipFile, $sEnvironment);
 	}
 
@@ -126,79 +127,88 @@ class DBRestore extends DBBackup
 	 */
 	public function RestoreFromCompressedBackup($sFile, $sEnvironment = 'production')
 	{
-		$this->LogInfo("Starting restore of ".basename($sFile));
+		$oRestoreMutex = new iTopMutex('restore.'.$sEnvironment);
+		IssueLog::Info("Backup Restore - Acquiring the LOCK 'restore.$sEnvironment'");
+		$oRestoreMutex->Lock();
 
-		$sNormalizedFile = strtolower(basename($sFile));
-		if (substr($sNormalizedFile, -4) == '.zip')
-		{
-			$this->LogInfo('zip file detected');
-			$oArchive = new ZipArchiveEx();
-			$oArchive->open($sFile);
-		}
-		elseif (substr($sNormalizedFile, -7) == '.tar.gz')
-		{
-			$this->LogInfo('tar.gz file detected');
-			$oArchive = new TarGzArchive($sFile);
-		}
-		else
-		{
-			throw new BackupException('Unsupported format for a backup file: '.$sFile);
-		}
+		try {
+			IssueLog::Info('Backup Restore - LOCK acquired, executing...');
+			$bReadonlyBefore = SetupUtils::EnterMaintenanceMode(MetaModel::GetConfig());
 
-		// Load the database
-		//
-		$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
+			try {
+				//safe zone for db backup => cron is stopped/ itop in readonly
+				$this->LogInfo("Starting restore of ".basename($sFile));
 
-		SetupUtils::builddir($sDataDir); // Here is the directory
-		$oArchive->extractTo($sDataDir);
 
-		$sDataFile = $sDataDir.'/itop-dump.sql';
-		$this->LoadDatabase($sDataFile);
+				$sNormalizedFile = strtolower(basename($sFile));
+				if (substr($sNormalizedFile, -4) == '.zip') {
+					$this->LogInfo('zip file detected');
+					$oArchive = new ZipArchiveEx();
+					$oArchive->open($sFile);
+				} elseif (substr($sNormalizedFile, -7) == '.tar.gz') {
+					$this->LogInfo('tar.gz file detected');
+					$oArchive = new TarGzArchive($sFile);
+				} else {
+					throw new BackupException('Unsupported format for a backup file: '.$sFile);
+				}
 
-		// Update the code
-		//
-		$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+				// Load the database
+				//
+				$sDataDir = APPROOT.'data/tmp-backup-'.rand(10000, getrandmax());
 
-		if (is_file($sDataDir.'/delta.xml'))
-		{
-			// Extract and rename delta.xml => <env>.delta.xml;
-			rename($sDataDir.'/delta.xml', $sDeltaFile);
-		}
-		else
-		{
-			@unlink($sDeltaFile);
-		}
-		if (is_dir(APPROOT.'data/production-modules/'))
-		{
-			try
-			{
-				SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+				SetupUtils::builddir($sDataDir); // Here is the directory
+				$oArchive->extractTo($sDataDir);
+
+				$sDataFile = $sDataDir.'/itop-dump.sql';
+				$this->LoadDatabase($sDataFile);
+
+				// Update the code
+				//
+				$sDeltaFile = APPROOT.'data/'.$sEnvironment.'.delta.xml';
+
+				if (is_file($sDataDir.'/delta.xml')) {
+					// Extract and rename delta.xml => <env>.delta.xml;
+					rename($sDataDir.'/delta.xml', $sDeltaFile);
+				} else {
+					@unlink($sDeltaFile);
+				}
+				if (is_dir(APPROOT.'data/production-modules/')) {
+					try {
+						SetupUtils::rrmdir(APPROOT.'data/production-modules/');
+					} catch (Exception $e) {
+						throw new BackupException("Can't remove production-modules dir", 0, $e);
+					}
+				}
+				if (is_dir($sDataDir.'/production-modules')) {
+					rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
+				}
+
+				$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
+				@chmod($sConfigFile, 0770); // Allow overwriting the file
+				rename($sDataDir.'/config-itop.php', $sConfigFile);
+				@chmod($sConfigFile, 0440); // Read-only
+
+				try {
+					SetupUtils::rrmdir($sDataDir);
+				} catch (Exception $e) {
+					throw new BackupException("Can't remove data dir", 0, $e);
+				}
+
+				$oEnvironment = new RunTimeEnvironment($sEnvironment);
+				$oEnvironment->CompileFrom($sEnvironment);
+			} finally {
+				if (! $bReadonlyBefore) {
+					SetupUtils::ExitMaintenanceMode();
+				} else {
+					//we are in the scope of main process that needs to handle/keep readonly mode.
+					$this->LogInfo("Keep maintenance mode after restore");
+				}
 			}
-			catch (Exception $e)
-			{
-				throw new BackupException("Can't remove production-modules dir", 0, $e);
-			}
 		}
-		if (is_dir($sDataDir.'/production-modules'))
+		finally
 		{
-			rename($sDataDir.'/production-modules', APPROOT.'data/production-modules/');
+			IssueLog::Info('Backup Restore - LOCK released.');
+			$oRestoreMutex->Unlock();
 		}
-
-		$sConfigFile = APPROOT.'conf/'.$sEnvironment.'/config-itop.php';
-		@chmod($sConfigFile, 0770); // Allow overwriting the file
-		rename($sDataDir.'/config-itop.php', $sConfigFile);
-		@chmod($sConfigFile, 0440); // Read-only
-
-		try
-		{
-			SetupUtils::rrmdir($sDataDir);
-		}
-		catch (Exception $e)
-		{
-			throw new BackupException("Can't remove data dir", 0, $e);
-		}
-
-		$oEnvironment = new RunTimeEnvironment($sEnvironment);
-		$oEnvironment->CompileFrom($sEnvironment);
 	}
 }

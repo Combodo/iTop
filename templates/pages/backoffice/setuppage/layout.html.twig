@@ -1,0 +1,15 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends "pages/backoffice/webpage/layout.html.twig" %}
+
+{% block iboPageBodyHtml %}
+    <div id="ibo_setup_container">
+        {{ render_block(oLayout, {aPage: aPage}) }}
+
+        {# TODO: Remove this when modal development is done #}
+        <div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
+        <div style="display:none" title="ex2" id="ex2">Please wait...</div>
+        <div style="display:none" title="dialog" id="ModalDlg"></div>
+        <div style="display:none" id="ajax_content"></div>
+    </div>
+{% endblock %}

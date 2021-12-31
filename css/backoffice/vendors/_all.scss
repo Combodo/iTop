@@ -1,0 +1,20 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* For Bulma only import what we actual use to limit the final CSS size */
+@import "bulma-variables-overload";
+@import "../../../node_modules/bulma-scss/utilities/all";
+@import "../../../node_modules/bulma-scss/base/all";
+@import "../../../node_modules/bulma-scss/elements/content";
+@import "ckeditor";
+@import "c3";
+@import "tippy";
+@import "jqueryui";
+@import "jquery-multiselect";
+@import "datatables";
+@import "jquery-treeview";
+@import "jquery-blockui";
+@import "magnific-popup";
+@import "selectize";

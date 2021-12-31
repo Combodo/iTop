@@ -1,0 +1,22 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<tr id="{{ oUIBlock.GetRef() }}_row_{{ oUIBlock.GetRowId() }}" {% for cellName,cellValue in oUIBlock.GetData() %}
+        {% if cellName is same as('@class') %} class="{{ cellValue }}"{% endif %}
+        {% if cellName is same as('@meta') %} {{ cellValue | raw}}{% endif %}{% endfor %}
+>
+    {% for colName,column in oUIBlock.GetColumns() %}
+        <td>
+            {% set cellValueHtml = '' %}
+            {% for cellName,cellValue in oUIBlock.GetData() %}
+                {% if cellName == colName %}
+                    {% set cellValueHtml = cellValue %}
+                {% endif %}
+            {% endfor %}
+            {% if cellValueHtml is empty %}
+                {% set cellValueHtml = '&nbsp;' %}
+            {% endif %}
+            {{ cellValueHtml|raw }}
+        </td>
+    {% endfor %}
+</tr>

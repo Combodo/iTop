@@ -1,7 +1,7 @@
 /*
  * Simple popup menu 1.0 (2010-05-15)
  *
- * Copyright (c) 2010 Combodo SARL (www.combodo.com)
+ * Copyright (c) 2021 Combodo SARL (www.combodo.com)
  * Licenced under the GPL licence.
  *
  * http://www.combodo.com/

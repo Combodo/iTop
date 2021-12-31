@@ -1,30 +1,21 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Persistent class Trigger and derived
- * User defined triggers, that may be used in conjunction with user defined actions
+ * Copyright (C) 2013-2021 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
-
 
 /**
  * A user defined trigger, to customize the application
@@ -50,7 +41,7 @@ abstract class Trigger extends cmdbAbstractObject
 			"db_table" => "priv_trigger",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
+			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-conflict.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -168,7 +159,6 @@ abstract class TriggerOnObject extends Trigger
 			"db_table" => "priv_trigger_onobject",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -237,7 +227,7 @@ abstract class TriggerOnObject extends Trigger
 		{
 			/** @var \DBObject $oObject */
 			$oObject = $aContextArgs['this->object()'];
-			$bGo = $this->IsTargetObject($oObject->GetKey(), $oObject->ListChanges());
+			$bGo = $this->IsTargetObject($oObject->GetKey(), $oObject->ListPreviousValuesForUpdatedAttributes());
 		}
 		if ($bGo)
 		{
@@ -249,7 +239,8 @@ abstract class TriggerOnObject extends Trigger
 	 * @param $iObjectId
 	 * @param array $aChanges
 	 *
-	 * @return bool
+	 * @return bool True if the object of ID $iObjectId is within the scope of the OQL defined by the "filter" attribute
+	 *
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -263,6 +254,7 @@ abstract class TriggerOnObject extends Trigger
 		{
 			$oSearch = DBObjectSearch::FromOQL($sFilter);
 			$oSearch->AddCondition('id', $iObjectId, '=');
+			$oSearch->AllowAllData();
 			$oSet = new DBObjectSet($oSearch);
 			$bRet = ($oSet->Count() > 0);
 		}
@@ -295,7 +287,6 @@ class TriggerOnPortalUpdate extends TriggerOnObject
 			"db_table" => "priv_trigger_onportalupdate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -328,7 +319,6 @@ abstract class TriggerOnStateChange extends TriggerOnObject
 			"db_table" => "priv_trigger_onstatechange",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -363,7 +353,6 @@ class TriggerOnStateEnter extends TriggerOnStateChange
 			"db_table" => "priv_trigger_onstateenter",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -397,7 +386,6 @@ class TriggerOnStateLeave extends TriggerOnStateChange
 			"db_table" => "priv_trigger_onstateleave",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -431,7 +419,6 @@ class TriggerOnObjectCreate extends TriggerOnObject
 			"db_table" => "priv_trigger_onobjcreate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -465,7 +452,6 @@ class TriggerOnObjectDelete extends TriggerOnObject
 			"db_table" => "priv_trigger_onobjdelete",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -500,7 +486,6 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 			"db_table" => "priv_trigger_onobjupdate",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -573,6 +558,86 @@ class TriggerOnObjectUpdate extends TriggerOnObject
 }
 
 /**
+ * Class TriggerOnObjectMention
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since 3.0.0
+ */
+class TriggerOnObjectMention extends TriggerOnObject
+{
+	/**
+	 * @throws \CoreException
+	 * @throws \Exception
+	 */
+	public static function Init()
+	{
+		$aParams = array
+		(
+			"category" => "grant_by_profile,core/cmdb,application",
+			"key_type" => "autoincrement",
+			"name_attcode" => "description",
+			"state_attcode" => "",
+			"reconc_keys" => array('description'),
+			"db_table" => "priv_trigger_onobjmention",
+			"db_key_field" => "id",
+			"db_finalclass_field" => "",
+			"display_template" => "",
+		);
+		MetaModel::Init_Params($aParams);
+		MetaModel::Init_InheritAttributes();
+		MetaModel::Init_AddAttribute(new AttributeOQL("mentioned_filter", array("allowed_values" => null, "sql" => "mentioned_filter", "default_value" => null, "is_null_allowed" => true, "depends_on" => array())));
+
+		// Display lists
+		MetaModel::Init_SetZListItems('details', array('description', 'context', 'target_class', 'filter', 'mentioned_filter', 'action_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('list', array('finalclass', 'target_class')); // Attributes to be displayed for a list
+		// Search criteria
+		MetaModel::Init_SetZListItems('standard_search', array('description', 'target_class')); // Criteria of the std search form
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool True if $oObject is within the scope of the OQL defined by the "mentioned_filter" attribute OR if no mentioned_filter defined. Otherwise, returns false.
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function IsMentionedObjectInScope(DBObject $oObject)
+	{
+		$sFilter = trim($this->Get('mentioned_filter'));
+		if (strlen($sFilter) > 0)
+		{
+			$oSearch = DBObjectSearch::FromOQL($sFilter);
+			$sSearchClass = $oSearch->GetClass();
+
+			// If filter not on current object class (or descendants), consider it as not in scope
+			if (is_a($oObject, $sSearchClass, true) === false) {
+				return false;
+			}
+
+			$oSearch->AddCondition('id', $oObject->GetKey(), '=');
+			if (MetaModel::IsAbstract($oSearch->GetClass())) {
+				$oSearch->AddCondition('finalclass', get_class($oObject), '=');
+			}
+
+			$aParams = $oObject->ToArgs('this');
+			$oSet = new DBObjectSet($oSearch, [], $aParams);
+			$bRet = $oSet->CountExceeds(0);
+		}
+		else
+		{
+			$bRet = true;
+		}
+
+		return $bRet;
+	}
+}
+
+/**
  * Class lnkTriggerAction
  */
 class lnkTriggerAction extends cmdbAbstractObject
@@ -593,7 +658,6 @@ class lnkTriggerAction extends cmdbAbstractObject
 			"db_table" => "priv_link_action_trigger",
 			"db_key_field" => "link_id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 			"is_link" => true,
 		);
 		MetaModel::Init_Params($aParams);
@@ -633,7 +697,6 @@ class TriggerOnThresholdReached extends TriggerOnObject
 			"db_table" => "priv_trigger_threshold",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();

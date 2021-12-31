@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -17,7 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
  * @author	Stephan Rosenke <stephan.rosenke@itomig.de>, <martin.raenker@itomig.de>
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
@@ -25,12 +25,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:DeletedObjectTip' => 'Das Objekt wurde gelöscht am %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Objekt nicht gefunden (Klasse: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Das Objekt konnte nicht gefunden werden. Es könnte bereits vor einiger Zeit gelöscht worden sein und das Log seither bereinigt.',
+	'Core:UnknownObjectTip' => 'Das Objekt konnte nicht gefunden werden. Es könnte bereits vor einiger Zeit gelöscht worden sein und das Log wurde seither bereinigt.',
 
 	'Core:UniquenessDefaultError' => 'Eindeutigkeitsfehler: \'%1$s\'',
 
 	'Core:AttributeLinkedSet' => 'Array von Objekten',
 	'Core:AttributeLinkedSet+' => 'Beliebige Art von Objekten der [subclass] der selben Klasse',
+
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Dubletten im \'%1$s\' Feld: %2$s',
 
 	'Core:AttributeDashboard' => 'Dashboard',
 	'Core:AttributeDashboard+' => '',
@@ -78,14 +80,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeArchiveDate/Label' => 'Archivierungs Datum',
 	'Core:AttributeArchiveDate/Label+' => '',
 
-	'Core:AttributeObsolescenceFlag' => 'Obsoleszenz Flag',
+	'Core:AttributeObsolescenceFlag' => 'Obsoleszenz-Flag',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Ja',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Dieses Objekt wird aus der Impact Analyse ausgeschlossen und in den Suchergebnissen versteckt',
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Nein',
 	'Core:AttributeObsolescenceFlag/Label' => 'Obsolet',
 	'Core:AttributeObsolescenceFlag/Label+' => 'Dynamisch berechnet wegen anderer Attribute',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsoleszenz Datum',
-	'Core:AttributeObsolescenceDate/Label+' => 'Ungefähres Datum an dem das Objekt als obsolet betrachtet wird',
+	'Core:AttributeObsolescenceDate/Label' => 'Obsoleszenz-Datum',
+	'Core:AttributeObsolescenceDate/Label+' => 'Ungefähres Datum, ab dem das Objekt als obsolet betrachtet wird',
 
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Alphanumerischer String',
@@ -94,15 +96,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeClass+' => 'Class',
 
 	'Core:AttributeApplicationLanguage' => 'Benutzersprache',
-	'Core:AttributeApplicationLanguage+' => 'Sprache und LAnd (DE DE)',
+	'Core:AttributeApplicationLanguage+' => 'Sprache und Land (DE DE)',
 
 	'Core:AttributeFinalClass' => 'Class (auto)',
-	'Core:AttributeFinalClass+' => 'Echte Klasse des Objekt (automatisch erstellt durch den Core)',
+	'Core:AttributeFinalClass+' => 'Echte Klasse des Objekts (automatisch erstellt durch den Core)',
 
 	'Core:AttributePassword' => 'Passwort',
 	'Core:AttributePassword+' => 'Passwort eines externen Geräts',
 
-	'Core:AttributeEncryptedString' => 'verschlüsselter String',
+	'Core:AttributeEncryptedString' => 'Verschlüsselter String',
 	'Core:AttributeEncryptedString+' => 'mit einem lokalen Schüssel verschlüsselter String',
 	'Core:AttributeEncryptUnknownLibrary' => 'Angegebene Library zur Verschlüsslung (%1$s) ist unbekannt',
 	'Core:AttributeEncryptFailedToDecrypt' => '** Entschlüsslungsfehler **',
@@ -149,7 +151,7 @@ Operatoren:<br/>
 	<b>[</b><em>Datum</em>,<em>Datum</em><b>]</b>
 </p>
 <p>
-Falls der Zeit-Wert weggelassenw ird, ist der Default 00:00:00
+Falls der Zeit-Wert weggelassen wird, ist der Standardwert 00:00:00
 </p>',
 
 	'Core:AttributeDate' => 'Datum',
@@ -228,6 +230,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChange/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChange/Attribute:userinfo' => 'Sonstige Informationen',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Aufruferdefinierte Informationen',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Benutzerinteraktion via GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV Import Skript',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV Import via GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'E-Mailverarbeitung',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchronisationsdatenquelle',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON Webservices',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP Webservices',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Durch eine Extension',
 ));
 
 //
@@ -242,7 +252,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChangeOp/Attribute:date' => 'Datum',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Benutzer',
-	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Wer führte diese Änderung durch',
+	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Wer führte diese Änderung durch?',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Objektklasse',
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'Objektklasse',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'Objekt-ID',
@@ -297,12 +307,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Change:ObjectCreated' => 'Objekt erstellt',
 	'Change:ObjectDeleted' => 'Objekt gelöscht',
 	'Change:ObjectModified' => 'Objekt geändert',
+	'Change:TwoAttributesChanged' => '%1$s und %2$s modifiziert',
+	'Change:ThreeAttributesChanged' => '%1$s, %2$s und 1 anderes Objekt modifiziert',
+	'Change:FourOrMoreAttributesChanged' => '%1$s, %2$s und %3$s andere Objekte modifiziert',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s geändert zu %2$s (vorheriger Wert: %3$s)',
 	'Change:AttName_SetTo' => '%1$s geändert zu %2$s',
-	'Change:Text_AppendedTo_AttName' => '%1$s zugefügt an %2$s',
+	'Change:Text_AppendedTo_AttName' => '%1$s angehängt an %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modifiziert, vorheriger Wert: %2$s',
 	'Change:AttName_Changed' => '%1$s modifiziert',
 	'Change:AttName_EntryAdded' => '%1$s modifiziert, neuer Eintrag hinzugefügt: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => 'Geändert von %2$s auf %1$s',
 	'Change:LinkSet:Added' => 'hinzugefügt: %1$s',
 	'Change:LinkSet:Removed' => 'entfernt: %1$s',
 	'Change:LinkSet:Modified' => 'modifizert: %1$s',
@@ -391,14 +405,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventIssue' => 'Issue Event',
-	'Class:EventIssue+' => 'Protokollierung einer Issue (Warnungen, Fehler, etc.)',
+	'Class:EventIssue+' => 'Protokollierung eines Issues (Warnungen, Fehler, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Issue',
 	'Class:EventIssue/Attribute:issue+' => 'Was passierte?',
 	'Class:EventIssue/Attribute:impact' => 'Auswirkungen',
 	'Class:EventIssue/Attribute:impact+' => 'Was waren die Auswirkungen?',
 	'Class:EventIssue/Attribute:page' => 'Seite',
 	'Class:EventIssue/Attribute:page+' => 'HTTP entry point',
-	'Class:EventIssue/Attribute:arguments_post' => 'Eingegebene Arguments',
+	'Class:EventIssue/Attribute:arguments_post' => 'Eingegebene Argumente',
 	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST-Argumente',
 	'Class:EventIssue/Attribute:arguments_get' => 'URL-Argumente',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET-Argumente',
@@ -419,12 +433,12 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventWebService/Attribute:verb+' => 'Name der Operation',
 	'Class:EventWebService/Attribute:result' => 'Ergebnis',
 	'Class:EventWebService/Attribute:result+' => 'Gesamterfolg/-misserfolg',
-	'Class:EventWebService/Attribute:log_info' => 'Informations-Protokollierung',
-	'Class:EventWebService/Attribute:log_info+' => 'Ergebnis der Informations-Protokollierung',
-	'Class:EventWebService/Attribute:log_warning' => 'Warnungs-Protokollierung',
-	'Class:EventWebService/Attribute:log_warning+' => 'Ergebnis der Warnungs-Protokollierung',
-	'Class:EventWebService/Attribute:log_error' => 'Fehler-Protokollierung',
-	'Class:EventWebService/Attribute:log_error+' => 'Ergebnis der Fehler-Protokollierung',
+	'Class:EventWebService/Attribute:log_info' => 'Informationsprotokollierung',
+	'Class:EventWebService/Attribute:log_info+' => 'Ergebnis der Informationsprotokollierung',
+	'Class:EventWebService/Attribute:log_warning' => 'Warnungsprotokollierung',
+	'Class:EventWebService/Attribute:log_warning+' => 'Ergebnis der Warnungsprotokollierung',
+	'Class:EventWebService/Attribute:log_error' => 'Fehlerprotokollierung',
+	'Class:EventWebService/Attribute:log_error+' => 'Ergebnis der Fehlerprotokollierung',
 	'Class:EventWebService/Attribute:data' => 'Daten',
 	'Class:EventWebService/Attribute:data+' => 'Ergebnisdaten',
 ));
@@ -443,7 +457,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventRestService/Attribute:json_output' => 'Antwort',
 	'Class:EventRestService/Attribute:json_output+' => 'HTTP Antwort (JSON)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
-	'Class:EventRestService/Attribute:provider+' => 'PHP-Klasse die die erwartete Operation implementiert',
+	'Class:EventRestService/Attribute:provider+' => 'PHP-Klasse, die die erwartete Operation implementiert',
 ));
 
 //
@@ -484,6 +498,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Action/Attribute:trigger_list+' => 'Trigger, die mit dieser Aktion verknüpft sind',
 	'Class:Action/Attribute:finalclass' => 'Typ',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -502,12 +517,20 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail' => 'Email-Benachrichtigung',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'Dieser Zustand entscheidet, wer benachrichtigt werden soll: nur der Testempfänger, alle (To, cc und Bcc) oder niemand',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Nur der Testempfänger wird benachrichtigt',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Alle (To, Cc and Bcc) Empfänger werden benachrichtigt',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'Keine Benachrichtigung wird versendet',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testempfänger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Empfänger im Fall eines "Test"-Status',
-	'Class:ActionEmail/Attribute:from' => 'Von',
-	'Class:ActionEmail/Attribute:from+' => 'Wird im Email-Header mitgesendet',
-	'Class:ActionEmail/Attribute:reply_to' => 'Antworten an',
+	'Class:ActionEmail/Attribute:from' => 'Von (E-Mail)',
+	'Class:ActionEmail/Attribute:from+' => 'Absenderad­res­se wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:from_label' => 'Von (Label)',
+	'Class:ActionEmail/Attribute:from_label+' => 'Absendername wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:reply_to' => 'Antworten an (E-Mail)',
 	'Class:ActionEmail/Attribute:reply_to+' => 'Wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Antworten an (Label)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Wird im Email-Header mitgesendet',
 	'Class:ActionEmail/Attribute:to' => 'An',
 	'Class:ActionEmail/Attribute:to+' => 'Empfänger der Nachricht',
 	'Class:ActionEmail/Attribute:cc' => 'Kopie an',
@@ -541,8 +564,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Trigger/Attribute:action_list+' => 'Aktionen, die ausgeführt werden, wenn der Trigger aktiviert ist',
 	'Class:Trigger/Attribute:finalclass' => 'Typ',
 	'Class:Trigger/Attribute:finalclass+' => '',
-	'Class:Trigger/Attribute:context' => 'Context~~',
-	'Class:Trigger/Attribute:context+' => 'Context to allow the trigger to start~~',
+	'Class:Trigger/Attribute:context' => 'Kontext',
+	'Class:Trigger/Attribute:context+' => 'Kontext, der diesen Trigger auslösen lassen darf',
 ));
 
 //
@@ -555,7 +578,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
 ));
@@ -628,6 +651,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 ));
 
 //
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (bei Objekterwähnung)',
+	'Class:TriggerOnObjectMention+' => 'Trigger bei Objekterwähnung (@xxx) einer Objekt mit [eine Kinderklasse von] eine gegebene Klasse in ein Log-Attribut',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+));
+
+//
 // Class: TriggerOnThresholdReached
 //
 
@@ -669,22 +703,22 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Ziel-Klasse',
 	'Class:SynchroDataSource/Attribute:user_id' => 'Benutzer',
-	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'zu benachrichtigender Kontakt',
-	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Kontakt, der im Fehlerfall benachrichtigt werden muß',
+	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Zu benachrichtigender Kontakt',
+	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Kontakt, der im Fehlerfall benachrichtigt werden muss',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Hyperlink zum Icon',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Ein (kleines) Bild verlinken, das die Applikation repräsentiert, mit der iTop synchronisiert wird',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Ein (kleines) Bild verlinken, das die Applikation repräsentiert, mit der '.ITOP_APPLICATION_SHORT.' synchronisiert wird',
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hyperlink zur Applikation',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink zum iTop Objekt in der externen Applikation mit der iTop synchronisiert wird (falls anwendbar). Mögliche Platzhalter: $this->attribute$ und $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink zum '.ITOP_APPLICATION_SHORT.' Objekt in der externen Applikation mit der '.ITOP_APPLICATION_SHORT.' synchronisiert wird (falls anwendbar). Mögliche Platzhalter: $this->attribute$ und $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Abgleichsvorgehen',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervall zwischen zwei vollständigen Reloads',
-	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Ein vollständiger Reload des gesamten Datenbestands muß mindestens in diesem Intervall erfolgen',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Ein vollständiger Reload des gesamten Datenbestands muss mindestens in diesem Intervall erfolgen',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Verhalten bei keinen Treffern',
 	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Verhalten, wenn die Suche keine Objekte zurückgibt',
 	'Class:SynchroDataSource/Attribute:action_on_one' => 'Verhalten bei einem Treffer',
 	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Verhalten, wenn die Suche genau ein Objekt zurückgibt',
 	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Verhalten bei vielen Treffern',
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Verhalten, wenn die Suche mehr als ein Objekt zurückgibt',
-	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'zugelassene Benutzer',
+	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Zugelassene Benutzer',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Benutzer, die synchronisierte Objekte löschen dürfen',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Niemand',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => 'nur Administratoren',
@@ -694,7 +728,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:delete_policy_retention' => 'Zeitraum bis zur endgültigen Löschung',
 	'Class:SynchroDataSource/Attribute:delete_policy_retention+' => 'Zeitraum, nach dem ein obsoletes Objekt endgültig gelöscht wird',
 	'Class:SynchroDataSource/Attribute:database_table_name' => 'Datenbanktabelle',
-	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name der Tabelle, die Speicherung der Daten aus dieser Datenquelle. Ein Default-Name wird automatisch berechnet, wenn dieses Feld leer gelassen wird.',
+	'Class:SynchroDataSource/Attribute:database_table_name+' => 'Name der Tabelle, die die Speicherung der Daten aus dieser Datenquelle enthält. Ein Default-Name wird automatisch berechnet, wenn dieses Feld leer gelassen wird.',
 	'SynchroDataSource:Description' => 'Beschreibung',
 	'SynchroDataSource:Reconciliation' => 'Suche &amp; Abgleich',
 	'SynchroDataSource:Deletion' => 'Löschregeln',
@@ -739,8 +773,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica verarbeitet: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Mindestens ein Abgleichsschlüssel muß angegeben werden oder das Abgleichsvorgehen muß den primären Schlüssel verwenden.',
-	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Der Zeitraum bis zur endgültigen Löschung muß angegeben werden, da die Objekte nach einer Kennzeichnung als obsolet gelöscht werden.',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Mindestens ein Abgleichsschlüssel muss angegeben werden, oder das Abgleichsvorgehen muß den primären Schlüssel verwenden.',
+	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Der Zeitraum bis zur endgültigen Löschung muss angegeben werden, da die Objekte nach einer Kennzeichnung als obsolet gelöscht werden.',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete Objekte werden aktualisiert, aber es wurde keine Aktualisierung angegeben.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Tabelle %1$s existiert bereits in der Datenbank. Bitte benutzen Sie einen anderen Namen für die Datenbanktabelle aus dieser Datenquelle.',
 	'Core:SynchroReplica:PublicData' => 'Öffentliche Daten',
@@ -797,14 +831,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:action_on_one/Value:update' => 'Update',
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Erzeugen',
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Fehler',
-	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'ersten Treffer benutzen',
+	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Ersten Treffer benutzen',
 	'Class:SynchroDataSource/Attribute:delete_policy' => 'Löschungs-Policy',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Löschen',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorieren',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Update',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => 'Update, danach Löschen',
 	'Class:SynchroDataSource/Attribute:attribute_list' => 'Liste der Attribute',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'nur Administratoren',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => 'Nur Administratoren',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Jeder darf solche Objekte löschen',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Niemand',
 	'Class:SynchroAttribute' => 'Synchronisations-Attribut',
@@ -813,9 +847,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroAttribute/Attribute:update' => 'Update',
 	'Class:SynchroAttribute/Attribute:reconcile' => 'Abgleich',
 	'Class:SynchroAttribute/Attribute:update_policy' => 'Update Policy',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'gesperrt',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'entsperrt',
-	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Initialisieren falls leer',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => 'Gesperrt',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => 'Entsperrt',
+	'Class:SynchroAttribute/Attribute:update_policy/Value:write_if_empty' => 'Initialisieren, falls leer',
 	'Class:SynchroAttribute/Attribute:finalclass' => 'Klasse',
 	'Class:SynchroAttExtKey' => 'Synchronisations-Attribut (Externer Schlüssel)',
 	'Class:SynchroAttExtKey/Attribute:reconciliation_attcode' => 'Abgleichsattribut',
@@ -835,7 +869,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroLog/Attribute:stats_nb_obj_deleted' => 'Nb Objekte gelöscht',
 	'Class:SynchroLog/Attribute:stats_nb_obj_deleted_errors' => 'Nb Fehler während des Löschvorgangs',
 	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted' => 'Nb Objekte obsolet',
-	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb Fehler während des Obsolet-Machens',
+	'Class:SynchroLog/Attribute:stats_nb_obj_obsoleted_errors' => 'Nb Fehler während des Obsoletmachens',
 	'Class:SynchroLog/Attribute:stats_nb_obj_created' => 'Nb Objekte erzeugt',
 	'Class:SynchroLog/Attribute:stats_nb_obj_created_errors' => 'Nb oder Fehler während der Erzeugung',
 	'Class:SynchroLog/Attribute:stats_nb_obj_updated' => 'Nb Objekte aktualisiert',
@@ -921,7 +955,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:BulkExportLabelOQLExpression' => 'OQL-Abfrage',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query-Bibliotheks-Eintrag:',
 	'Core:BulkExportMessageEmptyOQL' => 'Bitte geben Sie eine gültige OQL-Abfrage ein.',
-	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Bitte wählen Sie einen gültigen Query-Bibliotheks-Eintrag aus. ',
+	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Bitte wählen Sie einen gültigen Query-Bibliotheks-Eintrag aus.',
 	'Core:BulkExportQueryPlaceholder' => 'Geben Sie eine OQL-Abfrage ein...',
 	'Core:BulkExportCanRunNonInteractive' => 'Klicken Sie hier, um den Export im nicht-interaktiven Modus auszuführen',
 	'Core:BulkExportLegacyExport' => 'Klicken Sie hier, um auf die Legacy-Version des Exports zuzugreifen',
@@ -968,9 +1002,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Objekt-Klasse',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Attributscode',
 
-	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Verwendete tags können nicht gelöscht werden',
-	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tag-Codes oder Labels müssen eindeutig sein',
-	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tags-Code muss zwischen 3 und %1$d alphanumerische Zeichen enthalten',
+	'Core:TagSetFieldData:ErrorDeleteUsedTag' => 'Verwendete Tags können nicht gelöscht werden',
+	'Core:TagSetFieldData:ErrorDuplicateTagCodeOrLabel' => 'Tag-Codes oder Label müssen eindeutig sein',
+	'Core:TagSetFieldData:ErrorTagCodeSyntax' => 'Tag-Code muss zwischen 3 und %1$d alphanumerische Zeichen enthalten',
 	'Core:TagSetFieldData:ErrorTagCodeReservedWord' => 'der gewählte Tag-Code ist ein reservierter Begriff',
 	'Core:TagSetFieldData:ErrorTagLabelSyntax' => 'Tag-Labels dürfen nicht leer sein oder \'%1$s\' enthalten',
 	'Core:TagSetFieldData:ErrorCodeUpdateNotAllowed' => 'Tag-Code kann nicht geändert werden, wenn er in Verwendung ist',
@@ -1044,6 +1078,18 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final Class',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Verbleibende Versuche',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Letzter Fehlercode',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Letzte Fehler',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Letzter Versuch',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1081,3 +1127,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
 	'Class:ResourceSystemMenu+' => '',
 ));
+
+
+

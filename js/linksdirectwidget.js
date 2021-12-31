@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -52,14 +52,15 @@ $(function()
 
 			this.element
 			.addClass('itop-directlinks');
-			
+
+
 			this.datatable = this.element.find('table.listResults');
 			
 			var aButtonsTypes = ['delete', 'remove', 'modify', 'add', 'create'];
 			this.oButtons = {};
 			for(k in aButtonsTypes)
 			{
-				this.oButtons[aButtonsTypes[k]] =  $('<button type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
+				this.oButtons[aButtonsTypes[k]] =  $('<button class="ibo-button ibo-is-regular ibo-is-neutral" type="button">' + this.options.labels[aButtonsTypes[k]] + '</button>');
 			}
 			this.indicator = $('<span></span>');
 			this.inputToBeCreated = $('<input type="hidden" name="'+this.options.input_name+'_tbc" value="{}">');
@@ -85,16 +86,16 @@ $(function()
 			}
 			
 			this.element.find('.selectList'+this.id).bind('change', function() { me._updateButtons(); });
-			this.oButtons['delete'].click(function() {
+			this.oButtons['delete'].on('click', function() {
 				$('.selectList'+me.id+':checked', me.element).each( function() { me._deleteRow($(this)); });
 			});
-			this.oButtons['create'].click(function() {
+			this.oButtons['create'].on('click', function() {
 				me._createRow();
 			});
-			this.oButtons['remove'].click(function() {
+			this.oButtons['remove'].on('click', function() {
 				$('.selectList'+me.id+':checked', me.element).each( function() { me._removeRow($(this)); });
 			});
-			this.oButtons['add'].click(function() {
+			this.oButtons['add'].on('click', function() {
 				me._selectToAdd();
 			});
 						
@@ -154,9 +155,11 @@ $(function()
 		_updateTable: function()
 		{
 			var me = this;
+			/*
 			this.datatable.trigger("update").trigger("applyWidgets");
-			this.datatable.tableHover();
+			this.datatable.tableHover();*/
 			this.datatable.find('.selectList'+this.id).bind('change', function() { me._updateButtons(); });
+
 		},
 		_updateDlgPosition: function()
 		{
@@ -183,7 +186,7 @@ $(function()
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onCreateRow(); return false; } );
-				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
+				me.oDlg.find('button.cancel').off('click').on('click',  function() { me.oDlg.dialog('close'); } );
 				
 				me.oDlg.dialog({
 					title: me.options.labels['creation_title'],
@@ -229,8 +232,6 @@ $(function()
 				$('body').append(me.oDlg);
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onSearchToAdd(); return false; } );
-				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
-				me.oDlg.find('button.ok').unbind('click').click( function() { me._onDoAdd(); } );
 				$('#SearchFormToAdd_'+me.id).resize(function() { me._onSearchDlgUpdateSize(); });
 				
 				me.oDlg.dialog({
@@ -241,7 +242,24 @@ $(function()
 					maxHeight: $(window).height() - 50,
 					position: { my: "center", at: "center", of: window },
 					close: function() { me._onDlgClose(); },
-					resizeStop: function() { me._onSearchDlgUpdateSize(); }
+					resizeStop: function() { me._onSearchDlgUpdateSize(); },
+					buttons: [
+						{
+							text: Dict.S('UI:Button:Cancel'),
+							class: "cancel ibo-is-alternative ibo-is-neutral",
+							click: function() {
+								$(this).dialog('close');
+							}
+						},
+						{
+							text:  Dict.S('UI:Button:Add'),
+							class: "ok ibo-is-regular ibo-is-primary",
+							click: function() {
+								me._onDoAdd();							
+							}
+						},
+					],
+
 				});
 				me.indicator.html('');
 				me.oButtons['add'].prop('disabled', false);
@@ -300,7 +318,6 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data) {
 				
 				$('#SearchResultsToAdd_'+me.id).html(data);
-				$('#SearchResultsToAdd_'+me.id+' .listResults').tableHover();
 				$('#count_'+me.id).change(function() {
 					var c = this.value;
 					me._onUpdateDlgButtons(c);
@@ -335,9 +352,8 @@ $(function()
 					oMap[this.name].push(this.value);
 				});
 				// Retrieve the 'filter' definition
-				var table = $('#ResultsToAdd_'+this.id).find('table.listResults')[0];
-				oMap['filter'] = table.config.filter;
-				oMap['extra_params'] = table.config.extra_params;
+				oMap['filter'] = $(':input[name=filter]', oContext).val();
+				oMap['extra_params'] = $(':input[name=extra_params]', oContext).val();
 			}
 			// Normal table, retrieve all the checked check-boxes
 			$(':checked[name^=selectObject]', oContext).each(
@@ -368,15 +384,16 @@ $(function()
 		{
 			if (iCount > 0)
 			{
-				this.oDlg.find('button.ok').prop('disabled', false);
+				this.oDlg.parent().find('button.ok').prop('disabled', false);
 			}
 			else
 			{
-				this.oDlg.find('button.ok').prop('disabled', true);
+				this.oDlg.parent().find('button.ok').prop('disabled', true);
 			}
 		},
 		_onDoAdd:function()
 		{
+			var oContext = $('#SearchResultsToAdd_'+this.id);
 			var oParams = this._getSelection('selectObject');
 			oParams.operation = 'doAddObjects2';
 			oParams['class'] = this.options.class_name;
@@ -384,9 +401,8 @@ $(function()
 			oParams.iInputId = this.id;
 			
 			// Retrieve the 'filter' definition, BEFORE closing the dialog and destroying its contents
-			var table = $('#ResultsToAdd_'+this.id).find('table.listResults')[0];
-			oParams.filter = table.config.filter;
-			oParams.extra_params = table.config.extra_params;
+			oParams.filter = $(':input[name=filter]', oContext).val();
+			oParams.extra_params= $(':input[name=extra_params]', oContext).val();
 
 			this.oDlg.dialog('close');
 			
@@ -402,6 +418,9 @@ $(function()
 				me.inputToBeAdded.val(JSON.stringify(me.toBeAdded));
 				me.inputToBeRemoved.val(JSON.stringify(me.toBeRemoved));
 				me.inputToBeDeleted.val(JSON.stringify(me.toBeDeleted));
+
+				//me.datatable.find('tbody').append(data);
+				$('#datatable_'+me.id+' .dataTables_empty').hide();
 				me.datatable.find('tbody').append(data);
 				me._updateTable();
 				me.indicator.html('');
@@ -423,7 +442,7 @@ $(function()
 			$.post(this.options.submit_to, oParams, function(data){
 				me.oDlg.html(data);
 				me.oDlg.find('form').removeAttr('onsubmit').bind('submit', function() { me._onCreateRow(); return false; } );
-				me.oDlg.find('button.cancel').unbind('click').click( function() { me.oDlg.dialog('close'); } );
+				me.oDlg.find('button.cancel').off('click').on('click',  function() { me.oDlg.dialog('close'); } );
 				me._updateDlgPosition();				
 			});
 		},
@@ -465,7 +484,10 @@ $(function()
 				this.indicator.html('<img src="../images/indicator.gif">');
 
 				$.post(this.options.submit_to, oParams, function(data){
-					me.datatable.find('tbody').append(data);
+					// From data variable we get data entry and insert the first (and only) one
+					me.datatable.DataTable().row.add(data.data[0]).draw();
+					$('#datatable_'+me.id+' .dataTables_empty').hide();
+
 					me._updateTable();
 					me.indicator.html('');
 					me.oButtons['create'].prop('disabled', false);

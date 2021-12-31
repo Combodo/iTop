@@ -1,35 +1,16 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 use Combodo\iTop\Application\Search\AjaxSearchException;
 use Combodo\iTop\Application\Search\CriterionParser;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 
 require_once('../approot.inc.php');
-require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
-require_once(APPROOT.'/application/user.preferences.class.inc.php');
-require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/sources/application/search/ajaxsearchexception.class.inc.php');
-require_once(APPROOT.'/sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 try
 {
@@ -48,8 +29,7 @@ try
 		throw new AjaxSearchException("Invalid query (empty filter)", 400);
 	}
 
-	$oPage = new ajax_page("");
-	$oPage->no_cache();
+	$oPage = new AjaxPage("");
 	$oPage->SetContentType('text/html');
 
 	$sListParams = utils::ReadParam('list_params', '{}', false, 'raw_data');
@@ -65,8 +45,6 @@ try
 		$sHiddenCriteria = '';
 	}
 	$oFilter = CriterionParser::Parse($aParams['base_oql'], $aParams['criterion'], $sHiddenCriteria);
-
-	//IssueLog::Info('Search OQL: "'.$oFilter->ToOQL().'"');
 	$oDisplayBlock = new DisplayBlock($oFilter, 'list_search', false);
 
 	foreach($aListParams as $key => $value)
@@ -93,11 +71,6 @@ try
 		{
 			$aExtraParams['query_params'] = array('this->object()' => $oObj);
 		}
-
-//        // Current extkey value, so we can display event if it is not available anymore (eg. archived).
-//        $iCurrentExtKeyId = (is_null($oObj)) ? 0 : $oObj->Get($this->sAttCode);
-//        $aExtraParams['current_extkey_id'] = $iCurrentExtKeyId;
-
 	}
 
 	if (!isset($aExtraParams['update_history']))
@@ -106,23 +79,27 @@ try
 	}
 
 	$aExtraParams['display_limit'] = true;
-	$aExtraParams['truncated'] = true;
 
 	if (isset($sListId))
 	{
-		$oDisplayBlock->Display($oPage, $sListId, $aExtraParams);
+		$oPage->AddUiBlock($oDisplayBlock->GetDisplay($oPage, $sListId, $aExtraParams));
 	}
 	else
 	{
 		$oDisplayBlock->RenderContent($oPage, $aExtraParams);
 	}
 
-
 	if (isset($aListParams['debug']) || UserRights::IsAdministrator())
 	{
-		$oPage->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'SearchQuery');
+		$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard(Dict::S('UI:RunQuery:MoreInfo'));
+		$oPage->AddSubBlock($oCollapsible);
+
+		$oHtml = new Html(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
+		$oCollapsible->AddSubBlock($oHtml);
+
+		/*$oPage->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'SearchQuery');
 		$oPage->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
-		$oPage->EndCollapsibleSection();
+		$oPage->EndCollapsibleSection();*/
 	}
 
 	$oPage->output();
@@ -155,5 +132,3 @@ try
 	echo '<html><head></head><body><div>' . htmlentities($e->GetMessage(), ENT_QUOTES, 'utf-8') . '</div></body></html>';
 	IssueLog::Error($e->getMessage()."\nDebug trace:\n".$e->getTraceAsString());
 }
-
-ExecutionKPI::ReportStats();

@@ -1,0 +1,78 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ibo-body-text-color: $ibo-color-grey-900 !default;
+$ibo-body-background-color: $ibo-color-white-200 !default;
+
+$ibo-page-container--elements-padding-x: 36px !default;
+
+$ibo-main-content--padding-top: $ibo-spacing-500 !default;
+$ibo-main-content--padding-bottom: $ibo-spacing-500 !default;
+
+/* CSS variables (can be changed directly from the browser) */
+:root{
+	--ibo-body-text-color: #{$ibo-body-text-color};
+	--ibo-body-background-color: #{$ibo-body-background-color};
+}
+
+/* Layout */
+html{
+	height: 100vh;
+}
+body{
+	display: flex;
+	height: 100vh;
+	color: var(--ibo-body-text-color);
+	background-color: var(--ibo-body-background-color);
+	@extend %ibo-font-ral-med-100;
+}
+
+#ibo-navigation-menu{
+	z-index: 20;
+}
+#ibo-page-container{
+	position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
+	z-index: 10;
+
+	/* Self */
+	height: 100%;
+	overflow: auto;
+	flex-grow: 1;
+
+	/* For children */
+	display: flex;
+	flex-direction: column;
+}
+#ibo-top-bar,
+#ibo-main-content{
+	/* Align both elements content for a slicker touch */
+	padding-left: $ibo-page-container--elements-padding-x;
+	padding-right: $ibo-page-container--elements-padding-x;
+}
+#ibo-top-container{
+	z-index: 20;
+	position: sticky;
+	top: 0;
+	left: 0;
+	right: 0;
+}
+#ibo-center-container{
+	position: relative; /* To avoid having its descendants with "z-index" over siblings of self */
+	z-index: 10;
+
+	flex-grow: 1; /* To occupy all height available */
+  overflow: hidden; /* Only the content areas should scroll */
+
+  > * {
+    height: 100%;
+  }
+}
+
+#ibo-main-content {
+  padding-top: $ibo-main-content--padding-top;
+  padding-bottom: $ibo-main-content--padding-bottom;
+  overflow: auto; /* For scroll to happen in the main content instead of the center content */
+}

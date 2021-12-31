@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
 
 
 /**
  * Static class utils
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 define('ITOP_CONFIG_FILE', 'config-itop.php');
@@ -45,6 +48,82 @@ class FileUploadException extends Exception
 class utils
 {
 	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_INTEGER = 'integer';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_CLASS = 'class';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_STRING = 'string';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_CONTEXT_PARAM = 'context_param';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_PARAMETER = 'parameter';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_FIELD_NAME = 'field_name';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_TRANSACTION_ID = 'transaction_id';
+	/**
+	 * @var string For XML / HTML node identifiers
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER = 'element_identifier';
+	/**
+	 * @var string For variables names
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_VARIABLE_NAME = 'variable_name';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_PLAIN = 'text';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_HTML = 'html';
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 * @used-by static::GetMentionedObjectsFromText
+	 */
+	public const ENUM_TEXT_FORMAT_MARKDOWN = 'markdown';
+
+	/**
+	 * @var string
+	 * @since 3.0.0
+	 */
+	public const DEFAULT_SANITIZATION_FILTER = self::ENUM_SANITIZATION_FILTER_RAW_DATA;
+
+	/**
 	 * Cache when getting config from disk or set externally (using {@link SetConfig})
 	 * @internal
 	 * @var Config $oConfig
@@ -56,20 +135,19 @@ class utils
 	private static $m_aParamsFromFile = null;
 	private static $m_aParamSource = array();
 
+	private static $iNextId = 0;
+
 	protected static function LoadParamFile($sParamFile)
 	{
-		if (!file_exists($sParamFile))
-		{
+		if (!file_exists($sParamFile)) {
 			throw new Exception("Could not find the parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
-		if (!is_readable($sParamFile))
-		{
+		if (!is_readable($sParamFile)) {
 			throw new Exception("Could not load parameter file: '".utils::HtmlEntities($sParamFile)."'");
 		}
 		$sParams = file_get_contents($sParamFile);
 
-		if (is_null(self::$m_aParamsFromFile))
-		{
+		if (is_null(self::$m_aParamsFromFile)) {
 			self::$m_aParamsFromFile = array();
 		}
 
@@ -132,14 +210,26 @@ class utils
 	{
 		$sSAPIName = php_sapi_name();
 		$sCleanName = strtolower(trim($sSAPIName));
-		if ($sCleanName == 'cli')
-		{
+		if ($sCleanName == 'cli') {
 			return true;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
+	}
+
+	/**
+	 * @return bool true if we're in an XHR query
+	 * @see \Symfony\Component\HttpFoundation\Request::IsXmlHttpRequest
+	 *
+	 * @since 3.0.0 N°3750 method creation
+	 */
+	public static function IsXmlHttpRequest()
+	{
+		$sXhrHeaderName = 'X-Requested-With';
+		$sXhrHeaderIndexName = 'HTTP_'.str_replace('-', '_', strtoupper($sXhrHeaderName));
+		$sXhrHeader = $_SERVER[$sXhrHeaderIndexName] ?? null;
+
+		return ('XMLHttpRequest' === $sXhrHeader);
 	}
 
 	protected static $bPageMode = null;
@@ -150,9 +240,9 @@ class utils
 
 	public static function InitArchiveMode()
 	{
-		if (isset($_SESSION['archive_mode']))
+		if (Session::IsSet('archive_mode'))
 		{
-			$iDefault = $_SESSION['archive_mode'];
+			$iDefault = Session::Get('archive_mode');
 		}
 		else
 		{
@@ -160,9 +250,9 @@ class utils
 		}
 		// Read and record the value for switching the archive mode
 		$iCurrent = self::ReadParam('with-archive', $iDefault);
-		if (isset($_SESSION))
+		if (Session::IsInitialized())
 		{
-			$_SESSION['archive_mode'] = $iCurrent;
+			Session::Set('archive_mode', $iCurrent);
 		}
 		// Read and use the value for the current page (web services)
 		$iCurrent = self::ReadParam('with_archive', $iCurrent, true);
@@ -274,41 +364,43 @@ class utils
 
 	/**
 	 * @param string|string[] $value
-	 * @param string $sSanitizationFilter one of : integer, class, string, context_param, parameter, field_name,
-	 *               element_identifier, transaction_id, parameter, raw_data
+	 * @param string $sSanitizationFilter one of utils::ENUM_SANITIZATION_* const
 	 *
 	 * @return string|string[]|bool boolean for :
 	 *   * the 'class' filter (true if valid, false otherwise)
-	 *   * if the filter fails (@see \filter_var())
+	 *   * if the filter fails ({@link \filter_var()} return value)
+	 *
+	 * @throws \CoreException
+	 *
+	 * @uses \filter_var()
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
-	 *
-	 * @throws \CoreException
+	 * @since 3.0.0 new utils::ENUM_SANITIZATION_* const
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
 		switch ($sSanitizationFilter)
 		{
-			case 'integer':
+			case static::ENUM_SANITIZATION_FILTER_INTEGER:
 				$retValue = filter_var($value, FILTER_SANITIZE_NUMBER_INT);
 				break;
 
-			case 'class':
+			case static::ENUM_SANITIZATION_FILTER_CLASS:
 				$retValue = $value;
-				if (!MetaModel::IsValidClass($value))
-				{
+				if (($value != '') && !MetaModel::IsValidClass($value)) {
 					throw new CoreException(Dict::Format('UI:OQL:UnknownClassNoFix', utils::HtmlEntities($value)));
 				}
 				break;
 
-			case 'string':
+			case static::ENUM_SANITIZATION_FILTER_STRING:
 				$retValue = filter_var($value, FILTER_SANITIZE_SPECIAL_CHARS);
 				break;
 
-			case 'context_param':
-			case 'parameter':
-			case 'field_name':
+			case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+			case static::ENUM_SANITIZATION_FILTER_PARAMETER:
+			case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
+			case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 				if (is_array($value))
 				{
 					$retValue = array();
@@ -326,7 +418,7 @@ class utils
 				{
 					switch ($sSanitizationFilter)
 					{
-						case 'transaction_id':
+						case static::ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
 							// same as parameter type but keep the dot character
 							// see N°1835 : when using file transaction_id on Windows you get *.tmp tokens
 							// it must be included at the regexp beginning otherwise you'll get an invalid character error
@@ -334,18 +426,18 @@ class utils
 								array("options" => array("regexp" => '/^[\. A-Za-z0-9_=-]*$/')));
 							break;
 
-						case 'parameter':
+						case static::ENUM_SANITIZATION_FILTER_PARAMETER:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=-]*$/'))); // the '=', '%3D, '%2B', '%2F'
 							// characters are used in serialized filters (starting 2.5, only the url encoded versions are presents, but the "=" is kept for BC)
 							break;
 
-						case 'field_name':
+						case static::ENUM_SANITIZATION_FILTER_FIELD_NAME:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/'))); // att_code or att_code->name or AttCode->Name or AttCode->Key2->Name
 							break;
 
-						case 'context_param':
+						case static::ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
 							$retValue = filter_var($value, FILTER_VALIDATE_REGEXP,
 								array("options" => array("regexp" => '/^[ A-Za-z0-9_=%:+-]*$/')));
 							break;
@@ -354,13 +446,16 @@ class utils
 				}
 				break;
 
-			// For XML / HTML node identifiers
-			case 'element_identifier':
+			case static::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				$retValue = preg_replace('/[^a-zA-Z0-9_-]/', '', $value);
+				break;
+
+			case static::ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
 			default:
-			case 'raw_data':
+			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;
 			// Do nothing
 		}
@@ -446,12 +541,10 @@ class utils
 	{
 		$aSelectedObj = utils::ReadParam('selectObject', array());
 		$sSelectionMode = utils::ReadParam('selectionMode', '');
-		if ($sSelectionMode != '')
-		{
+		if ($sSelectionMode != '') {
 			// Paginated selection
 			$aExceptions = utils::ReadParam('storedSelection', array());
-			if ($sSelectionMode == 'positive')
-			{
+			if ($sSelectionMode == 'positive') {
 				// Only the explicitely listed items are selected
 				$aSelectedObj = $aExceptions;
 			}
@@ -564,48 +657,93 @@ class utils
 
 	public static function ReadFromFile($sFileName)
 	{
-		if (!file_exists($sFileName)) return false;
+		if (!file_exists($sFileName)) {
+			return false;
+		}
+
 		return file_get_contents($sFileName);
 	}
 
 	/**
-	 * Helper function to convert a value expressed in a 'user friendly format'
-	 * as in php.ini, e.g. 256k, 2M, 1G etc. Into a number of bytes
-	 * @param mixed $value The value as read from php.ini
-	 * @return number
+	 * @param mixed $value The value as read from php.ini (eg 256k, 2M, 1G etc.)
+	 *
+	 * @return int conversion to number of bytes
+	 *
+	 * @since 2.7.5 3.0.0 convert to int numeric values
+	 *
+	 * @link https://www.php.net/manual/en/faq.using.php#faq.using.shorthandbytes Shorthand bytes value reference in PHP.net FAQ
 	 */
-	public static function ConvertToBytes( $value )
+	public static function ConvertToBytes($value)
 	{
-		$iReturn = $value;
-	    if ( !is_numeric( $value ) )
-		{
-	        $iLength = strlen( $value );
-	        $iReturn = substr( $value, 0, $iLength - 1 );
-	        $sUnit = strtoupper( substr( $value, $iLength - 1 ) );
-	        switch ( $sUnit )
-			{
-	            case 'G':
-	                $iReturn *= 1024;
-	            case 'M':
-	                $iReturn *= 1024;
-	            case 'K':
-	                $iReturn *= 1024;
-	        }
-	    }
-        return $iReturn;
-    }
-  
-  /**
-   * Checks if the memory limit is at least what is required
-   *
-   * @param int $memoryLimit set limit in bytes
-   * @param int $requiredLimit required limit in bytes
-   * @return bool
-   */
-  public static function IsMemoryLimitOk($memoryLimit, $requiredLimit)
-  {
-      return ($memoryLimit >= $requiredLimit) || ($memoryLimit == -1);
-  }
+		if (!is_numeric($value)) {
+			$iLength = strlen($value);
+			$iReturn = substr($value, 0, $iLength - 1);
+			$sUnit = strtoupper(substr($value, $iLength - 1));
+			switch ($sUnit) {
+				case 'G':
+					$iReturn *= 1024;
+				case 'M':
+					$iReturn *= 1024;
+				case 'K':
+					$iReturn *= 1024;
+			}
+		} else {
+			$iReturn = (int)$value;
+		}
+
+		return $iReturn;
+	}
+
+	/**
+	 * Checks if the memory limit is at least what is required
+	 *
+	 * @param int $iMemoryLimit set limit in bytes, use {@link utils::ConvertToBytes()} to convert current php.ini value
+	 * @param int $iRequiredLimit required limit in bytes
+	 *
+	 * @return bool
+	 */
+	public static function IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)
+	{
+		if ($iMemoryLimit === -1) {
+			// -1 means : no limit (see https://www.php.net/manual/fr/ini.core.php#ini.memory-limit)
+			return true;
+		}
+
+		return ($iMemoryLimit >= $iRequiredLimit);
+	}
+
+	/**
+	 * Set memory_limit to required value
+	 *
+	 * @param string $sRequiredLimit required limit, for example '512M'
+	 *
+	 * @return bool|null null if nothing was done, true if modifying memory_limit was successful, false otherwise
+	 *
+	 * @uses utils::ConvertToBytes()
+	 * @uses \ini_get('memory_limit')
+	 * @uses \ini_set()
+	 * @uses utils::ConvertToBytes()
+	 *
+	 * @since 2.7.5 N°3806
+	 */
+	public static function SetMinMemoryLimit($sRequiredLimit)
+	{
+		$iRequiredLimit = static::ConvertToBytes($sRequiredLimit);
+		$sMemoryLimit = trim(ini_get('memory_limit'));
+		if (empty($sMemoryLimit)) {
+			// On some PHP installations, memory_limit does not exist as a PHP setting!
+			// (encountered on a 5.2.0 under Windows)
+			// In that case, ini_set will not work
+			return false;
+		}
+		$iMemoryLimit = static::ConvertToBytes($sMemoryLimit);
+
+		if (static::IsMemoryLimitOk($iMemoryLimit, $iRequiredLimit)) {
+			return null;
+		}
+
+		return ini_set('memory_limit', $iRequiredLimit);
+	}
 
 	/**
 	 * Format a value into a more friendly format (KB, MB, GB, TB) instead a juste a Bytes amount.
@@ -723,6 +861,8 @@ class utils
 	}
 
 	/**
+	 * @param boolean $bForceGetFromDisk if true then will always read from disk without using instances in memory
+	 *
 	 * @return \Config Get object in the following order :
 	 * <ol>
 	 * <li>from {@link MetaModel::GetConfig} if loaded
@@ -734,26 +874,27 @@ class utils
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 *
-	 * @since 2.7.0 N°2478 always call {@link MetaModel::GetConfig} first, cache is only set when loading from disk
+	 * @since 2.7.0 N°2478 this method will now always call {@link MetaModel::GetConfig} first, and cache in this class is only set when loading from disk
+	 * @since 3.0.0 N°4158 new $bReadFromDisk parameter
 	 */
-	public static function GetConfig()
+	public static function GetConfig($bForceGetFromDisk = false)
 	{
-		$oMetaModelConfig = MetaModel::GetConfig();
-		if ($oMetaModelConfig !== null)
-		{
-			return $oMetaModelConfig;
-		}
+		if (!$bForceGetFromDisk) {
+			$oMetaModelConfig = MetaModel::GetConfig();
+			if ($oMetaModelConfig !== null) {
+				return $oMetaModelConfig;
+			}
 
-		if (self::$oConfig !== null)
-		{
-			return self::$oConfig;
+			if (self::$oConfig !== null) {
+				return self::$oConfig;
+			}
 		}
 
 		$sCurrentEnvConfigPath = self::GetConfigFilePath();
-		if (file_exists($sCurrentEnvConfigPath))
-		{
+		if (file_exists($sCurrentEnvConfigPath)) {
 			$oCurrentEnvDiskConfig = new Config($sCurrentEnvConfigPath);
 			self::SetConfig($oCurrentEnvDiskConfig);
+
 			return self::$oConfig;
 		}
 
@@ -768,37 +909,60 @@ class utils
 		return new Config();
 	}
 
-	public static function InitTimeZone() {
-		$oConfig = self::GetConfig();
+	public static function InitTimeZone($oConfig = null)
+	{
+		if (is_null($oConfig))
+		{
+			$oConfig = self::GetConfig();
+		}
 		$sItopTimeZone = $oConfig->Get('timezone');
-
 		if (!empty($sItopTimeZone))
 		{
 			date_default_timezone_set($sItopTimeZone);
 		}
-		else
-		{
-			// Leave as is... up to the admin to set a value somewhere...
-			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		//		else
+		//		{
+		//			// Leave as is... up to the admin to set a value somewhere...
+		//			// see http://php.net/manual/en/datetime.configuration.php#ini.date.timezone
+		//		}
+	}
+
+	/**
+	 * @return bool The boolean value of the conf. "behind_reverse_proxy" (except if there is no REMOTE_ADDR int his case, it return false)
+	 *
+	 * @since 2.7.4
+	 */
+	public static function IsProxyTrusted()
+	{
+		if (empty($_SERVER['REMOTE_ADDR'])) {
+			return false;
 		}
+
+		$bTrustProxies = (bool) self::GetConfig()->Get('behind_reverse_proxy');
+
+		return $bTrustProxies;
 	}
 
     /**
      * Returns the absolute URL to the application root path
      *
+     * @param bool $bForceTrustProxy
+     *
      * @return string The absolute URL to the application root, without the first slash
      *
      * @throws \Exception
+     *
+     * @since 2.7.4 $bForceTrustProxy param added
      */
-	public static function GetAbsoluteUrlAppRoot()
+	public static function GetAbsoluteUrlAppRoot($bForceTrustProxy = false)
 	{
 		static $sUrl = null;
-		if ($sUrl === null)
+		if ($sUrl === null || $bForceTrustProxy)
 		{
 			$sUrl = self::GetConfig()->Get('app_root_url');
 			if ($sUrl == '')
 			{
-				$sUrl = self::GetDefaultUrlAppRoot();
+				$sUrl = self::GetDefaultUrlAppRoot($bForceTrustProxy);
 			}
 			elseif (strpos($sUrl, SERVER_NAME_PLACEHOLDER) > -1)
 			{
@@ -822,31 +986,116 @@ class utils
 	 * For most usages, when an root url is needed, use utils::GetAbsoluteUrlAppRoot() instead as uses this only as a fallback when the
 	 * app_root_url conf parameter is not defined.
 	 *
+	 * @param bool $bForceTrustProxy
+	 *
 	 * @return string
 	 *
 	 * @throws \Exception
-     */
-    public static function GetDefaultUrlAppRoot()
+	 *
+	 * @since 2.7.4 $bForceTrustProxy param added
+	 */
+	public static function GetDefaultUrlAppRoot($bForceTrustProxy = false)
+	{
+		$sAbsoluteUrl = self::GetCurrentAbsoluteUrl($bForceTrustProxy, true);
+
+		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
+		$sAppRoot       = realpath(APPROOT);
+
+		return self::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl);
+	}
+
+
+	/**
+	 * Build the current absolute URL from the server's variables.
+	 *
+	 * For almost every usage, you should use the more secure utils::GetAbsoluteUrlAppRoot() : instead of reading the current uri, it provide you the configured application's root URL (this is done during the setup and chn be changed in the configuration file)
+	 *
+	 * @see utils::GetAbsoluteUrlAppRoot
+	 *
+	 * @param bool $bForceTrustProxy
+	 * @param bool $bTrimQueryString
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.4
+	 */
+	public static function GetCurrentAbsoluteUrl($bForceTrustProxy = false, $bTrimQueryString = false)
 	{
 		// Build an absolute URL to this page on this server/port
-		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
-		$sProtocol = self::IsConnectionSecure() ? 'https' : 'http';
-		$iPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
-		if ($sProtocol == 'http')
-		{
+		$sServerName = self::GetServerName($bForceTrustProxy);
+		$bIsSecure = self::IsConnectionSecure($bForceTrustProxy);
+		$sProtocol = $bIsSecure ? 'https' : 'http';
+		$iPort = self::GetServerPort($bForceTrustProxy);
+		if ($bIsSecure) {
+			$sPort = ($iPort == 443) ? '' : ':'.$iPort;
+		} else {
 			$sPort = ($iPort == 80) ? '' : ':'.$iPort;
 		}
-		else
-		{
-			$sPort = ($iPort == 443) ? '' : ':'.$iPort;
+
+		$sPath = self::GetRequestUri($bForceTrustProxy);
+
+		if ($bTrimQueryString) {
+			// remove all the parameters from the query string
+			$iQuestionMarkPos = strpos($sPath, '?');
+			if ($iQuestionMarkPos !== false) {
+				$sPath = substr($sPath, 0, $iQuestionMarkPos);
+			}
 		}
+
+		$sAbsoluteUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
+
+		return $sAbsoluteUrl;
+	}
+
+	/**
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.4
+	 */
+	public static function GetServerName($bForceTrustProxy = false)
+	{
+		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
+
+		$sServerName = isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '';
+
+		if ($bTrustProxy) {
+			$sServerName = isset($_SERVER['HTTP_X_FORWARDED_HOST']) ? $_SERVER['HTTP_X_FORWARDED_HOST'] : $sServerName;
+		}
+
+		return $sServerName;
+	}
+
+	/**
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return int|mixed
+	 * @since 2.7.4
+	 */
+	public static function GetServerPort($bForceTrustProxy = false)
+	{
+		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
+
+		$sServerPort = isset($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : 80;
+
+		if ($bTrustProxy) {
+			$sServerPort = isset($_SERVER['HTTP_X_FORWARDED_PORT']) ? $_SERVER['HTTP_X_FORWARDED_PORT'] : $sServerPort;
+		}
+
+		return $sServerPort;
+	}
+
+	/**
+	 * @return string
+	 *
+	 * @since 2.7.4
+	 */
+	public static function GetRequestUri()
+	{
 		// $_SERVER['REQUEST_URI'] is empty when running on IIS
 		// Let's use Ivan Tcholakov's fix (found on www.dokeos.com)
-		if (!empty($_SERVER['REQUEST_URI']))
-		{
-			$sPath = $_SERVER['REQUEST_URI'];
-		}
-		else
+		if (empty($_SERVER['REQUEST_URI']))
 		{
 			$sPath = $_SERVER['SCRIPT_NAME'];
 			if (!empty($_SERVER['QUERY_STRING']))
@@ -857,18 +1106,7 @@ class utils
 		}
 		$sPath = $_SERVER['REQUEST_URI'];
 
-		// remove all the parameters from the query string
-		$iQuestionMarkPos = strpos($sPath, '?');
-		if ($iQuestionMarkPos !== false)
-		{
-			$sPath = substr($sPath, 0, $iQuestionMarkPos);
-		}
-		$sAbsoluteUrl = "$sProtocol://{$sServerName}{$sPort}{$sPath}";
-
-		$sCurrentScript = realpath($_SERVER['SCRIPT_FILENAME']);
-		$sAppRoot       = realpath(APPROOT);
-
-		return self::GetAppRootUrl($sCurrentScript, $sAppRoot, $sAbsoluteUrl);
+		return $sPath;
 	}
 
 	/**
@@ -910,21 +1148,60 @@ class utils
 	}
 
 	/**
+	 * Return the complete revision number of the application
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public static function GetAppRevisionNumber()
+	{
+		if (ITOP_REVISION == 'svn')
+		{
+			// This is NOT a version built using the build system, just display the main version
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
+		}
+		else
+		{
+			// This is a build made from SVN, let display the full information
+			$sRevisionNumber = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		}
+
+		return $sRevisionNumber;
+	}
+
+	/**
 	 * Helper to handle the variety of HTTP servers
 	 * See N°286 (fixed in [896]), and N°634 (this fix)
-	 * 	 
+	 *
 	 * Though the official specs says 'a non empty string', some servers like IIS do set it to 'off' !
 	 * nginx set it to an empty string
-	 * Others might leave it unset (no array entry)	 
-	 */	 	
-	public static function IsConnectionSecure()
+	 * Others might leave it unset (no array entry)
+	 *
+	 * @param bool $bForceTrustProxy
+	 *
+	 * @return bool
+	 *
+	 * @since 2.7.4 reverse proxies handling
+	 */
+	public static function IsConnectionSecure($bForceTrustProxy = false)
 	{
 		$bSecured = false;
 
-		if (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) != 'off'))
+		$bTrustProxy = $bForceTrustProxy || self::IsProxyTrusted();
+
+		if ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTO']))
 		{
-			$bSecured = true;
+			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https');
 		}
+		elseif ($bTrustProxy && !empty($_SERVER['HTTP_X_FORWARDED_PROTOCOL']))
+		{
+			$bSecured = ($_SERVER['HTTP_X_FORWARDED_PROTOCOL'] === 'https');
+		}
+		elseif ((!empty($_SERVER['HTTPS'])) && (strtolower($_SERVER['HTTPS']) != 'off'))
+		{
+			$bSecured = (strcasecmp($_SERVER['HTTPS'], 'off') !== 0);
+		}
+
 		return $bSecured;
 	}
 
@@ -937,21 +1214,16 @@ class utils
 	 */
 	static function CanLogOff()
 	{
-		return (isset($_SESSION['can_logoff']) ? $_SESSION['can_logoff'] : false);
+		return Session::Get('can_logoff', false);
 	}
 
 	/**
 	 * Get the _SESSION variable for logging purpose
-	 * @return false|string
+	 * @return string
 	 */
 	public static function GetSessionLog()
 	{
-		ob_start();
-		print_r($_SESSION);
-		$sSessionLog = ob_get_contents();
-		ob_end_clean();
-
-		return $sSessionLog;
+		return Session::GetLog();
 	}
 
 	 static function DebugBacktrace($iLimit = 5)
@@ -969,84 +1241,73 @@ class utils
 	 * Execute the given iTop PHP script, passing it the current credentials
 	 * Only CLI mode is supported, because of the need to hand the credentials over to the next process
 	 * Throws an exception if the execution fails or could not be attempted (config issue)
-	 * @param string $sScript Name and relative path to the file (relative to the iTop root dir)
-	 * @param hash $aArguments Associative array of 'arg' => 'value'
-	 * @return array(iCode, array(output lines))
-	 */
-	/**
-	 * @param string $sScriptName
-	 * @param array $aArguments
 	 *
-	 * @return array
+	 * @param string $sScriptName Name and relative path to the file (relative to the iTop root dir)
+	 * @param array $aArguments Associative array of 'arg' => 'value'
+	 * @param string|null $sAuthUser
+	 * @param string|null $sAuthPwd
+	 *
+	 * @return array(iCode, array(output lines))
+	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
-	public static function ExecITopScript($sScriptName, $aArguments)
+	public static function ExecITopScript(string $sScriptName, array $aArguments, string $sAuthUser = null, string $sAuthPwd = null)
 	{
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		if (in_array('exec', $aDisabled))
-		{
+		if (in_array('exec', $aDisabled)) {
 			throw new Exception("The PHP exec() function has been disabled on this server");
 		}
 
 		$sPHPExec = trim(self::GetConfig()->Get('php_path'));
-		if (strlen($sPHPExec) == 0)
-		{
+		if (strlen($sPHPExec) == 0) {
 			throw new Exception("The path to php must not be empty. Please set a value for 'php_path' in your configuration file.");
 		}
 
-		$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
-		$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
+		if (is_null($sAuthUser)) {
+			$sAuthUser = self::ReadParam('auth_user', '', 'raw_data');
+			$sAuthPwd = self::ReadParam('auth_pwd', '', 'raw_data');
+		}
 		$sParamFile = self::GetParamSourceFile('auth_user');
-		if (is_null($sParamFile))
-		{
+		if (is_null($sParamFile)) {
 			$aArguments['auth_user'] = $sAuthUser;
 			$aArguments['auth_pwd'] = $sAuthPwd;
-		}
-		else
-		{
+		} else {
 			$aArguments['param_file'] = $sParamFile;
 		}
-		
+
 		$aArgs = array();
-		foreach($aArguments as $sName => $value)
-		{
+		foreach ($aArguments as $sName => $value) {
 			// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 			//    It suggests to rely on pctnl_* function instead of using escapeshellargs
 			$aArgs[] = "--$sName=".escapeshellarg($value);
 		}
 		$sArgs = implode(' ', $aArgs);
-		
+
 		$sScript = realpath(APPROOT.$sScriptName);
-		if (!file_exists($sScript))
-		{
+		if (!file_exists($sScript)) {
 			throw new Exception("Could not find the script file '$sScriptName' from the directory '".APPROOT."'");
 		}
 
 		$sCommand = '"'.$sPHPExec.'" '.escapeshellarg($sScript).' -- '.$sArgs;
 
-		if (version_compare(phpversion(), '5.3.0', '<'))
-		{
-			if (substr(PHP_OS,0,3) == 'WIN')
-			{
+		if (version_compare(phpversion(), '5.3.0', '<')) {
+			if (substr(PHP_OS, 0, 3) == 'WIN') {
 				// Under Windows, and for PHP 5.2.x, the whole command has to be quoted
 				// Cf PHP doc: http://php.net/manual/fr/function.exec.php, comment from the 27-Dec-2010
 				$sCommand = '"'.$sCommand.'"';
 			}
 		}
 
-		$sLastLine = exec($sCommand, $aOutput, $iRes);
-		if ($iRes == 1)
-		{
+		exec($sCommand, $aOutput, $iRes);
+		if ($iRes == 1) {
 			throw new Exception(Dict::S('Core:ExecProcess:Code1')." - ".$sCommand);
-		}
-		elseif ($iRes == 255)
-		{
+		} elseif ($iRes == 255) {
 			$sErrors = implode("\n", $aOutput);
 			throw new Exception(Dict::S('Core:ExecProcess:Code255')." - ".$sCommand.":\n".$sErrors);
 		}
 
-		//$aOutput[] = $sCommand;
 		return array($iRes, $aOutput);
 	}
 
@@ -1055,14 +1316,17 @@ class utils
 	 */
 	public static function GetCurrentEnvironment()
 	{
-		if (isset($_SESSION['itop_env']))
-		{
-			return $_SESSION['itop_env'];
-		}
-		else
-		{
-			return ITOP_DEFAULT_ENV;
-		}
+		return Session::Get('itop_env', ITOP_DEFAULT_ENV);
+	}
+
+	/**
+	 * @return string Absolute path to the folder into which the current environment has been compiled.
+	 *                The corresponding folder is created or cleaned upon code compilation
+	 * @since 3.0.0
+	 */
+	public static function GetCompiledEnvironmentPath(): string
+	{
+		return APPROOT . 'env-' . MetaModel::GetEnvironment() . '/';
 	}
 
 	/**
@@ -1073,6 +1337,7 @@ class utils
 	{
 		return APPROOT.'data/cache-'.MetaModel::GetEnvironment().'/';
 	}
+
 	/**
 	 * @return string A path to a folder into which any module can store log
 	 * @since 2.7.0
@@ -1089,12 +1354,33 @@ class utils
 	 * @param int $iMenuId
 	 * @param \DBObjectSet $param
 	 * @param array $aActions
-	 * @param string $sTableId
-	 * @param string $sDataTableId
+	 * @param string|null $sTableId
+	 * @param string|null $sDataTableId
 	 *
-	 * @throws \Exception
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
 	public static function GetPopupMenuItems($oPage, $iMenuId, $param, &$aActions, $sTableId = null, $sDataTableId = null)
+	{
+		$oBlock = new UIContentBlock();
+		static::GetPopupMenuItemsBlock($oBlock, $iMenuId, $param, $aActions, $sDataTableId);
+		$oPage->AddUiBlock($oBlock);
+	}
+
+	/**
+	 * Merge standard menu items with plugin provided menus items
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oContainerBlock The UIBlock containing the menu
+	 * @param int $iMenuId
+	 * @param \DBObjectSet $param
+	 * @param array $aActions
+	 * @param string|null $sDataTableId
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
+	public static function GetPopupMenuItemsBlock(iUIBlock &$oContainerBlock, $iMenuId, $param, &$aActions, $sDataTableId = null)
 	{
 		// 1st - add standard built-in menu items
 		// 
@@ -1109,9 +1395,9 @@ class utils
 			$sOQL = addslashes($param->GetFilter()->ToOQL(true));
 			$sFilter = urlencode($param->GetFilter()->serialize());
 			$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 
 			$aResult = array();
 			if (strlen($sUrl) < SERVER_MAX_URL_LENGTH)
@@ -1144,12 +1430,12 @@ class utils
 			$oObj = $param;
 			$sOQL = "SELECT ".get_class($oObj)." WHERE id=".$oObj->GetKey();
 			$sUrl = ApplicationContext::MakeObjectUrl(get_class($oObj), $oObj->GetKey());
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/tabularfieldsselector.js');
-			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.dragtable.js');
-			$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
+			$oContainerBlock->AddJsFileRelPath('js/tabularfieldsselector.js');
+			$oContainerBlock->AddJsFileRelPath('js/jquery.dragtable.js');
+			$oContainerBlock->AddCssFileRelPath('css/dragtable.css');
 			
 			$aResult = array(
 				new SeparatorPopupMenuItem(),
@@ -1217,7 +1503,7 @@ class utils
 					
 					foreach($oMenuItem->GetLinkedScripts() as $sLinkedScript)
 					{
-						$oPage->add_linked_script($sLinkedScript);
+						$oContainerBlock->AddJsFileRelPath($sLinkedScript);
 					}
 				}
 			}
@@ -1359,7 +1645,7 @@ class utils
 	 */
 	public static function GetSafeId($sId)
 	{
-		return str_replace(array(':', '[', ']', '+', '-'), '_', $sId);
+		return str_replace(array(':', '[', ']', '+', '-', ' '), '_', $sId);
 	}
 	
 	/**
@@ -1389,13 +1675,12 @@ class utils
 			// For instance fopen does not allow to work around the bug: http://stackoverflow.com/questions/18191672/php-curl-ssl-routinesssl23-get-server-helloreason1112
 			// by setting the SSLVERSION to 3 as done below.
 			$aHeaders = explode("\n", $sOptionnalHeaders);
+			// N°3267 - Webservices: Fix optional headers not being taken into account
+			//          See https://www.php.net/curl_setopt CURLOPT_HTTPHEADER
 			$aHTTPHeaders = array();
 			foreach($aHeaders as $sHeaderString)
 			{
-				if(preg_match('/^([^:]): (.+)$/', $sHeaderString, $aMatches))
-				{
-					$aHTTPHeaders[$aMatches[1]] = $aMatches[2];
-				}
+				$aHTTPHeaders[] = trim($sHeaderString);
 			}
 			// Default options, can be overloaded/extended with the 4th parameter of this method, see above $aCurlOptions
 			$aOptions = array(
@@ -1518,19 +1803,47 @@ class utils
 	}
 
 	/**
-	 * Helper to encapsulation iTop's htmlentities
+	 * @see  utils::EscapeHtml to escape only characters with special meaning in HTML
+	 *
 	 * @param string $sValue
-	 * @return string
+	 *
+	 * @return string ⚠ Warning : will escape any non us-ascii char !
+	 *
+	 * @link https://www.php.net/manual/fr/function.htmlentities.php
+	 * @uses \htmlentities()
 	 */
 	public static function HtmlEntities($sValue)
 	{
 		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
-	}	
-	
+	}
+
+	/**
+	 * @param string $sValue
+	 *
+	 * @return string passed value with only characters having a special meaning in HTML escaped as entities
+	 *    Since 3.0.0 we were using for this {@link HtmlEntities} but it was overkill and leads to double escaping !
+	 *
+	 * @uses \htmlspecialchars()
+	 * @link https://www.php.net/manual/fr/function.htmlspecialchars.php
+	 * @since 3.0.0 N°3623
+	 */
+	public static function EscapeHtml($sValue)
+	{
+		return htmlspecialchars(
+			$sValue,
+			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
+			WebPage::PAGES_CHARSET,
+			false
+		);
+	}
+
 	/**
 	 * Helper to encapsulation iTop's html_entity_decode
+	 *
 	 * @param string $sValue
+	 *
 	 * @return string
+	 * @uses \html_entity_decode()
 	 * @since 2.7.0
 	 */
 	public static function HtmlEntityDecode($sValue)
@@ -1617,7 +1930,7 @@ class utils
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
 		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Expanded');
+		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
 		// Setting our variables
 		$oSass->setVariables($aVariables);
 		// Setting our imports paths
@@ -1627,7 +1940,7 @@ class utils
 		set_time_limit(0);
 		// Compiling SASS
 		$sCss = $oSass->compile($sSassContent);
-		set_time_limit($iCurrentMaxExecTime);
+		set_time_limit(intval($iCurrentMaxExecTime));
 
 		return $sCss;
 	}
@@ -2083,11 +2396,51 @@ class utils
 	 */
 	public static function GetCacheBusterTimestamp()
 	{
-		if(!defined('COMPILATION_TIMESTAMP'))
-		{
+		if (!defined('COMPILATION_TIMESTAMP')) {
 			return ITOP_VERSION;
 		}
+
 		return COMPILATION_TIMESTAMP;
+	}
+
+	/**
+	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 */
+	public static function GetItopVersionWikiSyntax() {
+		$sMinorVersion = self::GetItopMinorVersion();
+
+		return str_replace('.', '_', $sMinorVersion).'_0';
+	}
+
+	/**
+	 * @param string $sPatchVersion if non provided, will call GetItopPatchVersion
+	 *
+	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
+	 * @throws \Exception
+	 */
+	public static function GetItopMinorVersion($sPatchVersion = null) {
+		if (is_null($sPatchVersion)) {
+			$sPatchVersion = self::GetItopPatchVersion();
+		}
+		$aExplodedVersion = explode('.', $sPatchVersion);
+
+		if (count($aExplodedVersion) < 2) {
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+		if (($aExplodedVersion[0] == '') || ($aExplodedVersion[1] == '')) {
+			throw new Exception('iTop version is wrongfully configured!');
+		}
+
+		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
+	}
+
+	/**
+	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
+	 */
+	public static function GetItopPatchVersion() {
+		$aExplodedVersion = explode('-', ITOP_VERSION);
+
+		return $aExplodedVersion[0];
 	}
 
 	/**
@@ -2107,16 +2460,6 @@ class utils
 		}
 		$aHugeClasses = MetaModel::GetConfig()->Get('high_cardinality_classes');
 		return in_array($sClass, $aHugeClasses);
-	}
-
-	/**
-	 * Check if iTop is in a development environment (VCS vs build number)
-	 *
-	 * @return bool
-	 */
-	public static function IsDevelopmentEnvironment()
-	{
-		return ITOP_REVISION  === 'svn';
 	}
 
 	/**
@@ -2154,49 +2497,22 @@ class utils
 	}
 
 	/**
-	 * helper to test if a string starts with another
-	 * @param $haystack
-	 * @param $needle
+	 * @param string $sPath for example `/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz`
+	 *    **Warning**, if path is a symlink, it will be resolved !
+	 *      So `C:\Dev\wamp64\www\itop-dev/env-production/itop-hub-connector/land.php`
+	 *      Will become `C:\Dev\wamp64\www\itop-dev\datamodels\2.x\itop-hub-connector\land.php`
+	 * @param string $sBasePath for example `/var/www/html/itop/data/`
 	 *
-	 * @return bool
-	 */
-	final public static function StartsWith($haystack, $needle)
-	{
-		if (strlen($needle) > strlen($haystack))
-		{
-			return false;
-		}
-
-		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
-	}
-
-	/**
-	 * helper to test if a string ends with another
-	 * @param $haystack
-	 * @param $needle
-	 *
-	 * @return bool
-	 */
-	final public static function EndsWith($haystack, $needle) {
-		if (strlen($needle) > strlen($haystack))
-		{
-			return false;
-		}
-		
-		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
-	}
-
-	/**
-	 * @param string $sPath for example '/var/www/html/itop/data/backups/manual/itop_27-2019-10-03_15_35.tar.gz'
-	 * @param string $sBasePath for example '/var/www/html/itop/data/'
-	 *
-	 * @return bool false if path :
+	 * @return bool|string false if path :
 	 *      * invalid
 	 *      * not allowed
 	 *      * not contained in base path
 	 *    Otherwise return the real path (see realpath())
 	 *
+	 * @uses \realpath()
+	 * @uses static::StartsWith
 	 * @since 2.6.5 2.7.0 N°2538
+	 * @since 2.7.5 details in PHPDoc about symlink resolution
 	 */
 	final public static function RealPath($sPath, $sBasePath)
 	{
@@ -2269,16 +2585,499 @@ class utils
 		return getenv('username');
 	}
 
+	public static function FilterXSS($sHTML)
+	{
+		return str_ireplace('<script', '&lt;script', $sHTML);
+	}
+
+	/**
+	 * @param \cmdbAbstractObject $oCmdbAbstract
+	 * @param \Exception $oException
+	 *
+	 * @throws \Exception
+	 * @since 2.7.2/ 3.0.0
+	 */
+	public static function EnrichRaisedException($oCmdbAbstract, $oException)
+	{
+		if (is_null($oCmdbAbstract) ||
+			! is_a($oCmdbAbstract, \cmdbAbstractObject::class))
+		{
+			throw $oException;
+		}
+
+		$sCmdbAbstractInfo = str_replace("\n", '', "" . $oCmdbAbstract);
+		$sMessage = $oException->getMessage() . " (" . $sCmdbAbstractInfo . ")";
+
+		$e = new CoreException($sMessage, null, '', $oException);
+		throw $e;
+	}
+
+	/**
+	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
+	 *
+	 * @return int The unique ID (in this page)
+	 */
+	public static function GetUniqueId()
+	{
+		return static::$iNextId++;
+	}
+
+	/**
+	 * Return the CKEditor config as an array
+	 *
+	 * @return array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetCkeditorPref()
+	{
+		$sLanguage = strtolower(trim(UserRights::GetUserLanguage()));
+
+		$aDefaultConf = array(
+			'language'=> $sLanguage,
+			'contentsLanguage' => $sLanguage,
+			'extraPlugins' => 'disabler,codesnippet,mentions,objectshortcut,font,uploadimage',
+			'uploadUrl' => utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php',
+			'contentsCss' => array(utils::GetAbsoluteUrlAppRoot().'js/ckeditor/contents.css', utils::GetAbsoluteUrlAppRoot().'css/ckeditor/contents.css'),
+		);
+
+		// Mentions
+		$aMentionsAllowedClasses = MetaModel::GetConfig()->Get('mentions.allowed_classes');
+		if(!empty($aMentionsAllowedClasses)) {
+			$aDefaultConf['mentions'] = [];
+
+			foreach($aMentionsAllowedClasses as $sMentionMarker => $sMentionScope) {
+				// Retrieve mention class
+				// - First test if the conf is a simple Datamodel class
+				if (MetaModel::IsValidClass($sMentionScope)) {
+					$sMentionClass = $sMentionScope;
+				}
+				// - Otherwise it must be a valid OQL
+				else {
+					$oTmpSearch = DBSearch::FromOQL($sMentionScope);
+					$sMentionClass = $oTmpSearch->GetClass();
+					unset($oTmpSearch);
+				}
+
+				// Note: Endpoints are defaults only and should be overloaded by other GUIs such as the end-users portal
+				$sMentionEndpoint = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=cke_mentions&marker='.urlencode($sMentionMarker).'&needle={encodedQuery}';
+				$sMentionItemUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php?operation=details&class='.$sMentionClass.'&id={id}';
+
+				$sMentionItemPictureTemplate = (empty(MetaModel::GetImageAttributeCode($sMentionClass))) ? '' : <<<HTML
+<span class="ibo-vendors-ckeditor--autocomplete-item-image" style="{picture_style}">{initials}</span>
+HTML;
+				$sMentionItemTemplate = <<<HTML
+<li class="ibo-vendors-ckeditor--autocomplete-item" data-id="{id}">{$sMentionItemPictureTemplate}<span class="ibo-vendors-ckeditor--autocomplete-item-title">{friendlyname}</span></li>
+HTML;
+				$sMentionOutputTemplate = <<<HTML
+<a href="$sMentionItemUrl" data-role="object-mention" data-object-class="{class}" data-object-id="{id}">{$sMentionMarker}{friendlyname}</a>
+HTML;
+
+				$aDefaultConf['mentions'][] = [
+					'feed' => $sMentionEndpoint,
+					'marker' => $sMentionMarker,
+					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+					'itemTemplate' => $sMentionItemTemplate,
+					'outputTemplate' => $sMentionOutputTemplate,
+					'throttle' => 500,
+				];
+			}
+		}
+
+		$aRichTextConfig = 	json_decode(appUserPreferences::GetPref('richtext_config', '{}'), true);
+
+
+		return array_merge($aDefaultConf, $aRichTextConfig);
+	}
+
+	/**
+	 * @param string $sInterface
+	 * @param string $sClassNameFilter
+	 * @param array $aExcludedPath Reg. exp. of the paths to exclude. Note that backslashes (typically for Windows env.) need to be 4 backslashes, 2 for the escaping backslash, 2 for the actual backslash 😅
+	 *
+	 * @return array
+	 * @since 3.0.0
+	 */
+	public static function GetClassesForInterface(string $sInterface, string $sClassNameFilter = '', $aExcludedPath = []): array
+	{
+		$aMatchingClasses = [];
+
+		if (!utils::IsDevelopmentEnvironment()) {
+			// Try to read from cache
+			$aFilePath = explode("\\", $sInterface);
+			$sInterfaceName = end($aFilePath);
+			$sCacheFileName = utils::GetCachePath()."ImplementingInterfaces/$sInterfaceName.php";
+			if (is_file($sCacheFileName)) {
+				$aMatchingClasses = include $sCacheFileName;
+			}
+		}
+
+		if (empty($aMatchingClasses)) {
+			$aAutoloadClassMaps = [APPROOT.'lib/composer/autoload_classmap.php'];
+			// guess all the autoload class maps from the extensions
+			$aAutoloadClassMaps = array_merge($aAutoloadClassMaps, glob(APPROOT.'env-'.utils::GetCurrentEnvironment().'/*/vendor/composer/autoload_classmap.php'));
+
+			$aClassMap = [];
+			foreach ($aAutoloadClassMaps as $sAutoloadFile) {
+				$aTmpClassMap = include $sAutoloadFile;
+				$aClassMap = array_merge($aClassMap, $aTmpClassMap);
+			}
+
+			// Add already loaded classes
+			$aCurrentClasses = array_fill_keys(get_declared_classes(), '');
+			$aClassMap = array_merge($aClassMap, $aCurrentClasses);
+
+			foreach ($aClassMap as $sPHPClass => $sPHPFile) {
+				$bSkipped = false;
+				
+				// Check if our class matches name filter, or is in an excluded path
+				if ($sClassNameFilter !== '' && strpos($sPHPClass, $sClassNameFilter) === false) {
+					$bSkipped = true;
+				}
+				else {
+					foreach ($aExcludedPath as $sExcludedPath) {
+						// Note: We use '#' as delimiters as usual '/' is often used in paths.
+						if ($sExcludedPath !== '' && preg_match('#'.$sExcludedPath.'#', $sPHPFile) === 1) {
+							$bSkipped = true;
+							break;
+						}
+					}
+				}
+				
+				if(!$bSkipped){
+					try {
+						$oRefClass = new ReflectionClass($sPHPClass);
+						if ($oRefClass->implementsInterface($sInterface) && $oRefClass->isInstantiable()) {
+							$aMatchingClasses[] = $sPHPClass;
+						}
+					} catch (Exception $e) {
+					}
+				}
+			}
+
+			if (!utils::IsDevelopmentEnvironment()) {
+				// Save to cache
+				$sCacheContent = "<?php\n\nreturn ".var_export($aMatchingClasses, true).";";
+				SetupUtils::builddir(dirname($sCacheFileName));
+				file_put_contents($sCacheFileName, $sCacheContent);
+			}
+		}
+
+		return $aMatchingClasses;
+	}
+
+	/**
+	 * @return array All keyboard shortcuts config as an array
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetAllKeyboardShortcutsPrefs(): array
+	{
+		$aResultPref = [];
+		$aShortcutPrefs = appUserPreferences::GetPref('keyboard_shortcuts', []);
+		// Note: Mind the 4 blackslashes, see utils::GetClassesForInterface()
+		$aShortcutClasses = utils::GetClassesForInterface('iKeyboardShortcut', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+
+		foreach ($aShortcutClasses as $cShortcutPlugin) {
+			$sTriggeredElement = $cShortcutPlugin::GetShortcutTriggeredElementSelector();
+			foreach ($cShortcutPlugin::GetShortcutKeys() as $aShortcutKey) {
+				$sKey = isset($aShortcutPrefs[$aShortcutKey['id']]) ? $aShortcutPrefs[$aShortcutKey['id']] : $aShortcutKey['key'];
+
+				// Format key for display
+				$aKeyParts = explode('+', $sKey);
+				$aFormattedKeyParts = [];
+				foreach ($aKeyParts as $sKeyPart) {
+					$aFormattedKeyParts[] = ucfirst(trim($sKeyPart));
+				}
+				$sFormattedKey = implode(' + ', $aFormattedKeyParts);
+
+				$aResultPref[$aShortcutKey['id']] = [
+					'key' => $sKey,
+					'key_for_display' => $sFormattedKey,
+					'label' => $aShortcutKey['label'],
+					'event' => $aShortcutKey['event'],
+					'triggered_element_selector' => $sTriggeredElement,
+				];
+			}
+		}
+
+		return $aResultPref;
+	}
+
+	/**
+	 * @param string $sShortcutId
+	 *
+	 * @return array The properties of the $sShortcutId shorcut
+	 * @throws \Exception
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.0.0
+	 */
+	public static function GetKeyboardShortcutPref(string $sShortcutId): array
+	{
+		$aPrefs = static::GetAllKeyboardShortcutsPrefs();
+		if (false === array_key_exists($sShortcutId, $aPrefs)) {
+			throw new Exception('No shortcut identified as "'.$sShortcutId.'" is currently handled by the application.');
+		}
+
+		return $aPrefs[$sShortcutId];
+	}
+
+	//----------------------------------------------
+	// Environment helpers
+	//----------------------------------------------
+
+	/**
+	 * Check if iTop is in a development environment
+	 *
+	 * @return bool true if development environment
+	 *
+	 * @since 2.6.0 method creation
+	 * @since 3.0.0 add the `developer_mode.enabled` config parameter
+	 *
+	 * @uses GetDeveloperModeParam
+	 * @uses ITOP_REVISION constant (check 'svn' value)
+	 */
+	public static function IsDevelopmentEnvironment()
+	{
+		$bIsDevEnvInConfig = static::GetDeveloperModeParam();
+		if ($bIsDevEnvInConfig === true) {
+			return true;
+		}
+		if ($bIsDevEnvInConfig === false) {
+			return false;
+		}
+
+		if (!defined('ITOP_REVISION')) {
+			//defensive behaviour: by default we are not in dev environment
+			//can happen even in production (unattended install for example) or with exotic use of iTop
+			return false;
+		}
+
+		return ITOP_REVISION === 'svn';
+	}
+
+	/**
+	 * In the setup there are times when the MetaModel config attribute is loaded but partially (only setup parameters are set, others have the default value)
+	 * So we need to load from disk then !
+	 *
+	 * But in other scenario we want to read from memory : for example when changing the option in a PHPUnit setUp method
+	 *
+	 * This method will first try to get the `developer_mode.enabled` config parameter the standard way (call to GetConfig without modification).
+	 * If we are getting null (not defined parameter), then we will load config from disk only (GetConfig(true))
+	 *
+	 * @return bool|null
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @uses developer_mode.enabled config parameter
+	 */
+	private static function GetDeveloperModeParam(): ?bool
+	{
+		$oConfig = static::GetConfig(false);
+		$bIsDevEnvInConfig = $oConfig->Get('developer_mode.enabled');
+
+		if (!is_null($bIsDevEnvInConfig)) {
+			return $bIsDevEnvInConfig;
+		}
+
+		$oConfigFromDisk = static::GetConfig(true);
+
+		return $oConfigFromDisk->Get('developer_mode.enabled');
+	}
+
+	/**
+	 * @return bool true if we are running under a Windows environment
+	 * @since 2.7.4 : N°3412
+	 */
+	public static function IsWindowsEnvironment()
+	{
+		return (substr(PHP_OS, 0, 3) === 'WIN');
+	}
+
+	/**
+	 * Check if debug is enabled in the current environment.
+	 * Currently just checking if the "debug=true" parameter is in the URL, but could be more complex.
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public static function IsDebugEnabled()
+	{
+		return utils::ReadParam('debug') === 'true';
+	}
+
+	/**
+	 * @since 3.0.0
+	 */
+	public static function IsEasterEggAllowed()
+	{
+		return (stripos(ITOP_VERSION, 'alpha') !== false) || utils::IsDevelopmentEnvironment();
+	}
+
+	//----------------------------------------------
+	// String helpers
+	//----------------------------------------------
+
+	/**
+	 * helper to test if a string starts with another
+	 *
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function StartsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack)) {
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, 0, strlen($needle)) === 0;
+	}
+
+	/**
+	 * helper to test if a string ends with another
+	 *
+	 * @param $haystack
+	 * @param $needle
+	 *
+	 * @return bool
+	 */
+	final public static function EndsWith($haystack, $needle)
+	{
+		if (strlen($needle) > strlen($haystack)) {
+			return false;
+		}
+
+		return substr_compare($haystack, $needle, -strlen($needle)) === 0;
+	}
+
 	/**
 	 * Transform a snake_case $sInput into a CamelCase string
 	 *
-	 * @since 2.7.0
 	 * @param string $sInput
 	 *
 	 * @return string
+	 * @since 2.7.0
 	 */
 	public static function ToCamelCase($sInput)
 	{
 		return str_replace(' ', '', ucwords(strtr($sInput, '_-', '  ')));
+	}
+
+	/**
+	 * @param string $sInput
+	 *
+	 * @return string First letter of first word + first letter of any other word if capitalized
+	 * @since 3.0.0
+	 */
+	public static function ToAcronym(string $sInput): string
+	{
+		$sAcronym = '';
+		// - Capitalize the first letter no matter what
+		$sReworkedInput = ucfirst($sInput);
+		// - Replace dashes with spaces to interpret all parts of the input
+		$sReworkedInput = str_replace('-', ' ', $sReworkedInput);
+		// - Explode input to check parts individually
+		$aInputParts = explode(' ', $sReworkedInput);
+		foreach ($aInputParts as $sInputPart) {
+			// Keep only upper case first letters
+			// eg. "My first name My last name" => "MM"
+			// eg. "Carrie Anne Moss" => "CAM"
+			if (preg_match('/^\p{Lu}/u', $sInputPart) > 0) {
+				$sAcronym .= mb_substr($sInputPart, 0, 1);
+			}
+		}
+
+		return $sAcronym;
+	}
+
+	//----------------------------------------------
+	// Text manipulation
+	//----------------------------------------------
+
+	/**
+	 * Note: Only works for backoffice URLs for now
+	 *
+	 * @param string $sText Text containing the mentioned objects to be found
+	 * @param string $sFormat {@uses static::ENUM_TEXT_FORMAT_HTML, ...}
+	 *
+	 * @return array Array of object classes / IDs for the ones found in $sText
+	 *
+	 * [
+	 *   'ClassA' => ['ID1', 'ID2', ...],
+	 *   'ClassB' => ['ID3'],
+	 * ]
+	 *
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetMentionedObjectsFromText(string $sText, string $sFormat = self::ENUM_TEXT_FORMAT_HTML): array
+	{
+		// First transform text so it can be parsed
+		switch ($sFormat) {
+			case static::ENUM_TEXT_FORMAT_HTML:
+				$sText = static::HtmlToText($sText);
+				break;
+
+			default:
+				// Don't transform it
+				break;
+		}
+
+		// Then parse text to find objects
+		$aMentionedObjects = array();
+		$aMentionMatches = array();
+
+		// Note: As the sanitizer (or CKEditor autocomplete plugin? 🤔) removes data-* attributes from the hyperlink,
+		// - we can't use the following (simpler) regexp that only checks data attributes on hyperlinks, which would have worked for hyperlinks pointing to any GUIs: '/<a\s*([^>]*)data-object-class="([^"]*)"\s*data-object-id="([^"]*)">/i'
+		// - instead we use a regexp to match the following pattern '[Some object label](<APP_ROOT_URL>...&class=<OBJECT_CLASS>&id=<OBJECT_ID>...)' which only works for the backoffice
+		// If we change the sanitizer, we might want to switch to the other regexp as it's universal and easier to read
+		$sAppRootUrlForRegExp = addcslashes(utils::GetAbsoluteUrlAppRoot(), '/&');
+		preg_match_all("/\[([^\]]*)\]\({$sAppRootUrlForRegExp}[^\)]*\&class=([^\)\&]*)\&id=([\d]*)[^\)]*\)/i", $sText, $aMentionMatches);
+
+		foreach ($aMentionMatches[0] as $iMatchIdx => $sCompleteMatch) {
+			$sMatchedClass = $aMentionMatches[2][$iMatchIdx];
+			$sMatchedId = $aMentionMatches[3][$iMatchIdx];
+
+			// Prepare array for matched class if not already present
+			if (!array_key_exists($sMatchedClass, $aMentionedObjects)) {
+				$aMentionedObjects[$sMatchedClass] = array();
+			}
+			// Add matched ID if not already there
+			if (!in_array($sMatchedId, $aMentionedObjects[$sMatchedClass])) {
+				$aMentionedObjects[$sMatchedClass][] = $sMatchedId;
+			}
+		}
+
+		return $aMentionedObjects;
+	}
+
+	/**
+	 * @param $sUrl
+	 * @param string $sParamName
+	 * @param string $sParamValue
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public static function AddParameterToUrl(string $sUrl, string $sParamName, string $sParamValue): string
+	{
+		if (strpos($sUrl, '?') === false)
+		{
+			$sUrl = $sUrl.'?'.urlencode($sParamName).'='.urlencode($sParamValue);
+		}
+		else
+		{
+			$sUrl = $sUrl.'&'.urlencode($sParamName).'='.urlencode($sParamValue);
+		}
+
+		return $sUrl;
 	}
 }

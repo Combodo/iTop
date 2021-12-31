@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
 namespace Combodo\iTop\Portal\Helper;
 
 use ArrayIterator;
+use Combodo\iTop\Application\Helper\Session;
 use IteratorAggregate;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use utils;
@@ -72,17 +73,17 @@ class SessionMessageHelper implements IteratorAggregate
 	public function AddMessage($sId, $sContent, $sSeverity = self::DEFAULT_SEVERITY, $aMetadata = array(), $iRank = 1)
 	{
 		$sKey = $this->GetMessagesKey();
-		if(!isset($_SESSION['obj_messages'][$sKey]))
+		if(!Session::IsSet(['obj_messages', $sKey]))
 		{
-			$_SESSION['obj_messages'][$sKey] = array();
+			Session::Set(['obj_messages', $sKey], []);
 		}
 
-		$_SESSION['obj_messages'][$sKey][$sId] = array(
+		Session::Set(['obj_messages', $sKey, $sId], [
 			'severity' => $sSeverity,
 			'rank' => $iRank,
 			'message' => $sContent,
 			'metadata' => $aMetadata,
-		);
+		]);
 	}
 
 	/**
@@ -93,10 +94,7 @@ class SessionMessageHelper implements IteratorAggregate
 	public function RemoveMessage($sId)
 	{
 		$sKey = $this->GetMessagesKey();
-		if(isset($_SESSION['obj_messages'][$sKey][$sId]))
-		{
-			unset($_SESSION['obj_messages'][$sKey][$sId]);
-		}
+		Session::Unset(['obj_messages', $sKey, $sId]);
 	}
 
 	/**
@@ -133,9 +131,9 @@ class SessionMessageHelper implements IteratorAggregate
 		}
 
 		$this->aAllMessages = array();
-		if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_messages'])))
+		if (is_array(Session::Get('obj_messages')))
 		{
-			foreach ($_SESSION['obj_messages'] as $sMessageKey => $aMessageObjectData)
+			foreach (Session::Get('obj_messages') as $sMessageKey => $aMessageObjectData)
 			{
 				$aObjectMessages = array();
 				$aRanks = array();
@@ -170,7 +168,7 @@ class SessionMessageHelper implements IteratorAggregate
 					$aObjectMessages[] = array('css_classes' => $sMsgClass, 'message' => $aMessageData['message'], 'metadata' => $sMsgMetadata);
 					$aRanks[] = $aMessageData['rank'];
 				}
-				unset($_SESSION['obj_messages'][$sMessageKey]);
+				Session::Unset(['obj_messages', $sMessageKey]);
 
 				array_multisort($aRanks, $aObjectMessages);
 				foreach ($aObjectMessages as $aObjectMessage)

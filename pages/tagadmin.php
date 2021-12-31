@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -52,7 +52,7 @@ try
 	$oP->add('<h1>'.dict::S('UI:TagAdminMenu:Title').'</h1>');
 	$oP->add('</div>');
 
-	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+	$oP->SetBreadCrumbEntry('ui-tool-tag-admin', Dict::S('Menu:TagAdminMenu'), Dict::S('Menu:TagAdminMenu+'), '', 'fas fa-tags', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 	$sSearchHeaderForceDropdown = '<select  id="select_class" name="class" onChange="this.form.submit();">';
 	$aClassLabels = array();

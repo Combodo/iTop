@@ -1,4 +1,4 @@
-<!-- Copyright (c) 2010-2017 Combodo SARL -->
+<!-- Copyright (c) 2010-2021 Combodo SARL -->
 <!-- -->
 <!--   This file is part of iTop. -->
 <!-- -->
@@ -47,6 +47,9 @@
         <testsuite name="Core">
             <directory>core</directory>
         </testsuite>
+        <testsuite name="Webservices">
+          <directory>webservices</directory>
+        </testsuite>
         <testsuite name="Tickets">
             <directory>itop-tickets</directory>
         </testsuite>
@@ -58,6 +61,15 @@
         </testsuite-->
         <testsuite name="Status">
             <directory>status</directory>
+        </testsuite>
+        <testsuite name="Synchro">
+            <directory>synchro</directory>
+        </testsuite>
+        <testsuite name="Setup">
+            <file>setup/SetupUtilsTest.php</file>
+        </testsuite>
+        <testsuite name="Integration">
+            <directory>integration</directory>
         </testsuite>
         <testsuite name="Service">
             <directory>service</directory>

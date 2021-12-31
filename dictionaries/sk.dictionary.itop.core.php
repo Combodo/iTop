@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -29,6 +29,8 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 
 	'Core:AttributeLinkedSet' => 'Pole objektov',
 	'Core:AttributeLinkedSet+' => '',
+
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
 	'Core:AttributeDashboard' => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
@@ -226,6 +228,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:CMDBChange/Attribute:date+' => '',
 	'Class:CMDBChange/Attribute:userinfo' => 'Rozl. info',
 	'Class:CMDBChange/Attribute:userinfo+' => '',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -295,12 +305,16 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Change:ObjectCreated' => 'Objekt vytvorený',
 	'Change:ObjectDeleted' => 'Objekt odstránený',
 	'Change:ObjectModified' => 'Objekt upravený',
+	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
+	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
+	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s nastavené na %2$s (predchádzajúca hodnota: %3$s)',
 	'Change:AttName_SetTo' => '%1$s nastavené na %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s pripojené k %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s upravené, predchádzajúca hodnota: %2$s',
 	'Change:AttName_Changed' => '%1$s upravené',
 	'Change:AttName_EntryAdded' => '%1$s upravené, nový záznam pridaný.',
+	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
 	'Change:LinkSet:Added' => 'Pridané %1$s',
 	'Change:LinkSet:Removed' => 'Odstránené %1$s',
 	'Change:LinkSet:Modified' => 'Upravené %1$s',
@@ -482,6 +496,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:Action/Attribute:trigger_list+' => '',
 	'Class:Action/Attribute:finalclass' => 'Typ',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -500,12 +515,20 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:ActionEmail' => 'Emailová notifikácia',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testovací príjemca',
 	'Class:ActionEmail/Attribute:test_recipient+' => '',
-	'Class:ActionEmail/Attribute:from' => 'Od',
-	'Class:ActionEmail/Attribute:from+' => '',
-	'Class:ActionEmail/Attribute:reply_to' => 'Odpoveď na',
-	'Class:ActionEmail/Attribute:reply_to+' => '',
+	'Class:ActionEmail/Attribute:from' => 'Od~~',
+	'Class:ActionEmail/Attribute:from+' => '~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Odpoveď na~~',
+	'Class:ActionEmail/Attribute:reply_to+' => '~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Komu',
 	'Class:ActionEmail/Attribute:to+' => '',
 	'Class:ActionEmail/Attribute:cc' => 'Kópia',
@@ -553,7 +576,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Cieľová trieda',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"~~',
 ));
@@ -623,6 +646,17 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -1042,7 +1076,58 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:AbstractResource' => 'Abstract Resource~~',
+	'Class:AbstractResource+' => '~~',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
+	'Class:ResourceAdminMenu+' => '~~',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
+));
+
+
+
 
 // Additional language entries not present in English dict
 Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
@@ -2120,7 +2205,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Class:UserExternal+' => '',
  'Class:UserLDAP' => 'LDAP užívateľ',
  'Class:UserLDAP+' => '',
- 'Class:UserLocal' => 'iTop užívateľ',
+ 'Class:UserLocal' => ITOP_APPLICATION_SHORT.' užívateľ',
  'Class:UserLocal+' => '',
  'Class:UserLocal/Attribute:password' => 'Heslo',
  'Class:UserLocal/Attribute:password+' => '',
@@ -2921,40 +3006,4 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
  'Portal:SelectLanguage' => 'Zmeň svoj jazyk',
  'Portal:LanguageChangedTo_Lang' => 'Jazyk zmenený na',
  'Portal:ChooseYourFavoriteLanguage' => 'Vyberte si svoj obľúbený jazyk',
-));
-
-//
-// Class: AbstractResource
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
-));
-
-//
-// Class: ResourceAdminMenu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
-));
-
-//
-// Class: ResourceRunQueriesMenu
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
-));
-
-//
-// Class: Action
-//
-
-Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
 ));

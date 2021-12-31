@@ -1,0 +1,35 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+$('#dlg_{{ oUIBlock.sLinkedSetId }}').dialog({
+    width: $(window).width()*0.8,
+    height: $(window).height()*0.8,
+    title:"{{ 'UI:AddObjectsOf_Class_LinkedWith_Class'|dict_format(oUIBlock.sLinkedClassName, oUIBlock.sClassName) }}" ,
+    autoOpen: false,
+    modal: true,
+    resizeStop: oWidget{{ oUIBlock.iInputId }}.UpdateSizes,
+    buttons: [
+        { 
+            text: "{{ 'UI:Button:Cancel'| dict_s }}",
+            class: "ibo-is-alternative ibo-is-neutral",
+            click: function() {
+                $(this).dialog('close');
+            } 
+        },
+        { 
+            text:  "{{ 'UI:Button:Add'| dict_s }}",
+            class: "ibo-is-regular ibo-is-primary",
+            id: "btn_ok_{{ oUIBlock.sLinkedSetId }}",
+            click: function() {
+                return oWidget{{ oUIBlock.iInputId }}.DoAddObjects();
+            } 
+        },
+    ],
+
+});
+
+$('#SearchFormToAdd_{{ oUIBlock.sLinkedSetId }} form').bind('submit.uilinksWizard', oWidget{{ oUIBlock.iInputId }}.SearchObjectsToAdd);
+$('#SearchFormToAdd_{{ oUIBlock.sLinkedSetId }}').resize(oWidget{{ oUIBlock.iInputId }}.UpdateSizes);
+
+{% endapply %}

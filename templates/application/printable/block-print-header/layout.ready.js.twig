@@ -1,0 +1,32 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+var sHiddeableChapters = '<ul role="tablist" class="ibo-block-print--tablist">';
+for (sId in oHiddeableChapters)
+{
+	sHiddeableChapters += '<li tabindex="-1" role="tab" class="ibo-block-print--tab hideable-chapter" chapter-id="'+sId+'"><span class="tab ui-tabs-anchor">' + oHiddeableChapters[sId] + '</span></li>';
+	//alert(oHiddeableChapters[sId]);
+}
+sHiddeableChapters += '</ul>';
+
+$('#hiddeable_chapters').html(sHiddeableChapters);
+
+$('.hideable-chapter').on('click', function(){
+	var sChapterId = $(this).attr('chapter-id');
+	$('#'+sChapterId).toggle();
+	$(this).toggleClass('strikethrough');
+
+});
+
+$('fieldset').each(function() {
+	var jLegend = $(this).find('legend');
+	jLegend.remove();
+	$(this).wrapInner('<span></span>').prepend(jLegend);
+});
+
+$('legend').css('cursor', 'pointer').on('click', function(){
+	$(this).parent('fieldset').toggleClass('not-printable strikethrough');
+});
+
+{% endapply %}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,6 +20,7 @@
 
 namespace Combodo\iTop\Portal\Controller;
 
+use AttachmentPlugIn;
 use AttributeEnum;
 use AttributeFinalClass;
 use AttributeFriendlyName;
@@ -348,7 +349,7 @@ class ObjectController extends BrickController
 			'sObjectClass' => get_class($oTargetObject),
 		);
 
-		return $this->ForwardFromRoute('p_object_create', $aRouteParams, $oRequest->query->all());
+		return $this->ForwardToRoute('p_object_create', $aRouteParams, $oRequest->query->all());
 	}
 
 	/**
@@ -643,7 +644,7 @@ class ObjectController extends BrickController
 		$oSet = new DBObjectSet($oSearch, array(), array('this' => $oHostObject, 'ac_query' => '%'.$sQuery.'%'));
 		$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array('friendlyname')));
 		// Note : This limit is also used in the field renderer by typeahead to determine how many suggestions to display
-		$oSet->SetLimit(MetaModel::GetConfig()->Get('max_display_limit'));
+		$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 
 		// - Retrieving objects
 		while ($oItem = $oSet->Fetch())
@@ -1029,6 +1030,7 @@ class ObjectController extends BrickController
 		$sObjectClass = $oRequestManipulator->ReadParam('sObjectClass', '');
 		$sObjectId = $oRequestManipulator->ReadParam('sObjectId', '');
 		$sObjectField = $oRequestManipulator->ReadParam('sObjectField', '');
+		$bCheckSecurity = true;
 
 		// When reaching to an Attachment, we have to check security on its host object instead of the Attachment itself
 		if ($sObjectClass === 'Attachment')
@@ -1041,23 +1043,27 @@ class ObjectController extends BrickController
 		{
 			$sHostClass = $sObjectClass;
 			$sHostId = $sObjectId;
+
+			// Security bypass for the image attribute of a class
+			if(MetaModel::GetImageAttributeCode($sObjectClass) === $sObjectField) {
+				$bCheckSecurity = false;
+			}
 		}
 
 		// Checking security layers
 		// Note: Checking if host object already exists as we can try to download document from an object that is being created
-		if (($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
+		if (($bCheckSecurity === true) && ($sHostId > 0) && !$oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $sHostClass, $sHostId))
 		{
 			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to retrieve document from attribute '.$sObjectField.' as it not allowed to read '.$sHostClass.'::'.$sHostId.' object.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */,
-			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass));
+		$bAllowAllDataFlag = ($bCheckSecurity === false) ? true : $oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sHostClass);
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* Must not be found */, $bAllowAllDataFlag);
 		if ($oObject === null)
 		{
-			// We should never be there as the security helper makes sure that the object exists, but just in case.
-			IssueLog::Info(__METHOD__.' at line '.__LINE__.' : Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
+			IssueLog::Info(__METHOD__.' at line '.__LINE__.': Could not load object '.$sObjectClass.'::'.$sObjectId.'.');
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
@@ -1080,6 +1086,12 @@ class ObjectController extends BrickController
 			$aHeaders['Cache-Control'] = 'no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec;
 			// Reset the value set previously
 			$aHeaders['Pragma'] = 'cache';
+
+			// N°3423 Fix bug in Symphony 3.x in Response::sendHeaders(): Headers need to send directly as SF doesn't replace header of page except for Content-Type
+			header('Cache-Control: no-transform, public,max-age='.$iCacheSec.',s-maxage='.$iCacheSec);
+			header('Pragma: cache');
+			header('Expires: ');
+
 			// An arbitrary date in the past is ok
 			$aHeaders['Last-Modified'] = 'Wed, 15 Jun 2015 13:21:15 GMT';
 		}
@@ -1088,6 +1100,11 @@ class ObjectController extends BrickController
 		$oDocument = $oObject->Get($sObjectField);
 		$aHeaders['Content-Type'] = $oDocument->GetMimeType();
 		$aHeaders['Content-Disposition'] = (($sOperation === 'display') ? 'inline' : 'attachment').';filename="'.$oDocument->GetFileName().'"';
+
+		// N°4129 - Prevent XSS attacks & other script executions
+		if (utils::GetConfig()->Get('security.disable_inline_documents_sandbox') === false) {
+			$aHeaders['Content-Security-Policy'] = 'sandbox';
+		}
 
 		return new Response($oDocument->GetData(), Response::HTTP_OK, $aHeaders);
 	}
@@ -1152,9 +1169,13 @@ class ObjectController extends BrickController
 						$iAttId = $oAttachment->DBInsert();
 
 						$aData['msg'] = htmlentities($oDocument->GetFileName(), ENT_QUOTES, 'UTF-8');
-						// TODO : Change icon location when itop-attachment is refactored
-						//$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDoc->GetFileName());
-						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/image.png';
+						$aData['icon'] = utils::GetAbsoluteUrlAppRoot().'env-'.utils::GetCurrentEnvironment().'/itop-attachments/icons/icons8-image-file.svg';
+
+						// Checking if the instance has attachments
+						if (class_exists('AttachmentPlugIn')) {
+							$aData['icon'] = utils::GetAbsoluteUrlAppRoot() . AttachmentPlugIn::GetFileIcon($oDocument->GetFileName());
+						}
+
 						$aData['att_id'] = $iAttId;
 						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
 						$aData['file_size'] = $oDocument->GetFormattedSize();
@@ -1181,7 +1202,7 @@ class ObjectController extends BrickController
 					'sObjectField' => 'contents',
 				);
 
-				$oResponse = $this->forward($this->GetControllerNameFromRoute('p_object_document_download'), $aRouteParams, $oRequest->query->all());
+				$oResponse = $this->ForwardToRoute('p_object_document_download', $aRouteParams, $oRequest->query->all());
 
 				break;
 
@@ -1320,21 +1341,26 @@ class ObjectController extends BrickController
 			}
 			elseif ($oAttDef instanceof AttributeImage)
 			{
+				/** @var \ormDocument $oOrmDoc */
 				$oOrmDoc = $oObject->Get($oAttDef->GetCode());
 				if (is_object($oOrmDoc) && !$oOrmDoc->IsEmpty())
 				{
-					$sUrl = $oUrlGenerator->generate('p_object_document_display', array(
+					$sUrl = $oUrlGenerator->generate('p_object_document_display', [
 						'sObjectClass' => get_class($oObject),
 						'sObjectId' => $oObject->GetKey(),
 						'sObjectField' => $oAttDef->GetCode(),
 						'cache' => 86400,
-					));
+						's' => $oOrmDoc->GetSignature(),
+					]);
 				}
 				else
 				{
 					$sUrl = $oAttDef->Get('default_image');
 				}
 				$aAttData['value'] = '<img src="'.$sUrl.'" />';
+			}
+			elseif ($oAttDef instanceof AttributeEnum) {
+				$aAttData['value'] = $oAttDef->GetAsPlainText($oObject->Get($oAttDef->GetCode()));
 			}
 			else
 			{

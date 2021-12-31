@@ -42,7 +42,7 @@ If you want to use another license, you may [create an extension][wiki new ext].
 When we first start with Git, we were using the [GitFlow](https://nvie.com/posts/a-successful-git-branching-model/) branch model. As
  there was some confusions about branches to use for current developed release and previous maintained release, and also because we were
  using just a very few of the GitFlow commands, we decided to add just a little modification to this branch model : since april 2020
-  we don't have anymore a `master` branch.
+  we don't have a `master` branch anymore.
 
 Here are the branches we use and their meaning : 
 
@@ -52,23 +52,23 @@ Here are the branches we use and their meaning :
 
 For example, if no version is currently prepared for shipping we could have:
 
-- `develop` containing future 2.8.0 version
+- `develop` containing future 3.0.0 version
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version
 
-In this example, when 2.8.0-beta is shipped that will become:
+In this example, when 3.0.0-beta is shipped that will become:
 
-- `develop`: future 2.9.0 version
-- `release/2.8.0`: 2.8.0-beta
+- `develop`: future 3.1.0 version
+- `release/3.0.0`: 3.0.0-beta
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version
 
-And when 2.8.0 final will be out:
+And when 3.0.0 final will be out:
 
-- `develop`: future 2.9.0 version
-- `support/2.8`: 2.8.x maintenance version (will host developments for 2.8.1)
+- `develop`: future 3.1.0 version
+- `support/3.0`: 3.0.x maintenance version (will host developments for 3.0.1)
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 - `support/2.5`: 2.5.x maintenance version
@@ -125,8 +125,7 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
     * ⬆️ `:arrow_up:` when upgrading dependencies
     * ⬇️ `:arrow_down:` when downgrading dependencies
     * ♻️ `:recycle:` code refactoring
-    * 💄 `:lipstick:` Updating the UI and style files.  
-  
+    * 💄 `:lipstick:` Updating the UI and style files.
 
 ## 👥 Pull request
 
@@ -137,3 +136,25 @@ When your code is working, please:
 * create a pull request.
 
 Detailed procedure to work on fork and create PR is available [in GitHub help pages](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
+
+You might check the ["Allow edits from maintainers" PR checkbox][allow_edits_checkbox] to ease review.
+
+[allow_edits_checkbox]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork#enabling-repository-maintainer-permissions-on-existing-pull-requests
+
+### 🙏 We are thankful
+
+We are thankful for all your contributions to the iTop universe! As a thank you gift, we will send stickers to every iTop (& extensions) contributors! 
+
+Stickers' design might change from one year to another. For the first year we wanted to try a "craft beer label" look, see examples below: 
+
+* Bug hunter: Fix a bug
+* Translator: Add/update translations
+* White hat: Find and/or fix a vulnerability
+* Contributor: Contribute by finding a bug, making an extension or any other way
+* Partner: For Combodo's official partners
+* Graduated: Follow a Combodo's iTop training
+* Ambassador: Outstanding community contributors
+* Beta tester: Test and give feedback on beta releases
+* Extension developer: Develop and publish an extension
+
+![](.doc/contributing-guide/contributing-stickers-side-by-side.png)

@@ -1,5 +1,5 @@
 /*!
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -937,3 +937,23 @@ $dl-horizontal-offset:        $component-offset-horizontal !default;
 $dl-horizontal-breakpoint:    $grid-float-breakpoint !default;
 //** Horizontal line color.
 $hr-border:                   $gray-lighter !default;
+
+
+//== Messaging
+//
+//##
+
+$messaging-block-medallion-size: 40px !default;
+$messaging-block-entries-margin-x: 60px !default;
+$messaging-self-primary-color: $combodo-dark-gray !default;
+$messaging-self-secondary-color: $white !default;
+$messaging-1st-peer-primary-color: $white !default;
+$messaging-1st-peer-secondary-color: $gray-dark !default;
+$messaging-2nd-peer-primary-color: $white !default;
+$messaging-2nd-peer-secondary-color: $gray-dark !default;
+$messaging-3rd-peer-primary-color: $white !default;
+$messaging-3rd-peer-secondary-color: $gray-dark !default;
+$messaging-4th-peer-primary-color: $white !default;
+$messaging-4th-peer-secondary-color: $gray-dark !default;
+$messaging-5th-peer-primary-color: $white !default;
+$messaging-5th-peer-secondary-color: $gray-dark !default;

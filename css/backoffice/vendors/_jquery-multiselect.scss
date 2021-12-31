@@ -1,0 +1,143 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-jquery-multiselect--ui-multiselect--padding-left: 0.7em !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect--padding-right: 1.5em !default;
+
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--margin-bottom: 3px !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-y: 3px !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-x: $ibo-spacing-0 !default;
+
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--padding-left: $ibo-spacing-600 !default;
+
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--li--padding-right: 10px !default;
+
+$ibo-vendors-jquery-multiselect--ui-multiselect-header--li--ui-multiselect-close--padding-right: $ibo-spacing-0 !default;
+
+$ibo-vendors-jquery-multiselect--ui-multiselect-menu--padding: 3px !default;
+$ibo-vendors-jquery-multiselect--ui-multiselect-menu--z-index: 10000 !default;
+
+
+
+.ui-multiselect {
+  @extend .ibo-input;
+  @extend .ibo-input-select;
+  width: auto !important;
+  padding-left: $ibo-vendors-jquery-multiselect--ui-multiselect--padding-left !important;
+  padding-right: $ibo-vendors-jquery-multiselect--ui-multiselect--padding-right !important;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  display: grid;
+}
+
+button.ui-multiselect > span { 
+  overflow:hidden;
+}
+
+.ui-multiselect span.ui-icon { 
+  float:right
+}
+
+.ui-multiselect-single .ui-multiselect-checkboxes input {
+  position:absolute !important;
+  top: auto !important;
+  left:-9999px; 
+}
+
+.ui-multiselect-single .ui-multiselect-checkboxes label {
+  padding:5px !important 
+}
+
+.ui-multiselect-header { 
+  margin-bottom: $ibo-vendors-jquery-multiselect--ui-multiselect-header--margin-bottom; 
+  padding: $ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-y $ibo-vendors-jquery-multiselect--ui-multiselect-header--padding-x; 
+}
+
+.ui-multiselect-header ul { 
+  @extend %ibo-font-ral-bol-100;
+  padding-left: $ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--padding-left;
+}
+
+.ui-multiselect-header ul li { 
+  float:left;
+  padding:0 $ibo-vendors-jquery-multiselect--ui-multiselect-header--ul--li--padding-right 0 0;
+}
+
+.ui-multiselect-header span.ui-icon { 
+  float:left 
+}
+
+.ui-multiselect-header li.ui-multiselect-close { 
+  float:right; 
+  text-align:right;
+  padding-right:$ibo-vendors-jquery-multiselect--ui-multiselect-header--li--ui-multiselect-close--padding-right;
+}
+
+.ui-multiselect-menu { 
+  @extend .ibo-popover-menu;
+  display:none;
+  padding: $ibo-vendors-jquery-multiselect--ui-multiselect-menu--padding;
+  position:absolute;
+  z-index: $ibo-vendors-jquery-multiselect--ui-multiselect-menu--z-index;
+  text-align: left
+}
+.ui-multiselect-checkboxes {
+  @extend .ibo-popover-menu--section;
+  position:relative;
+  overflow-y:scroll !important;
+}
+.ui-multiselect-checkboxes label {
+  display: flex;
+  align-items: center;
+  @extend %ibo-font-ral-nor-100;
+  cursor:pointer;
+  padding:3px 1px;
+}
+.ui-multiselect-checkboxes label input {
+  margin-right: 5px;
+  position:relative;
+  top:1px
+}
+.ui-multiselect-checkboxes li {
+  @extend .ibo-popover-menu--item;
+  @extend %ibo-font-ral-med-150;
+  clear:both;
+  padding-right:3px
+}
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label { 
+  text-align:center;
+  @extend %ibo-font-ral-bol-100;
+}
+.ui-multiselect-checkboxes li.ui-multiselect-optgroup-label a {
+  display:block; 
+  padding:3px;
+  margin:1px 0; 
+  text-decoration:none 
+}
+
+/**for multiselect in 3.0*/
+.ui-dialog-titlebar.ui-multiselect-header {
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.ui-dialog-titlebar.ui-multiselect-header ul {
+  padding-left: $ibo-spacing-0;
+  width:100%;
+}
+.ui-dialog-titlebar.ui-multiselect-header a{
+  color:$ibo-color-grey-900;
+  font-weight:normal;
+}
+.ui-multiselect, .ui-multiselect-menu, .ui-multiselect-header{
+  background-color: $ibo-color-grey-100;
+}
+button.ui-multiselect {
+  padding-right:10px !important;
+}
+button.ui-multiselect .fas{
+  float:right;
+  padding-left:10px;
+}

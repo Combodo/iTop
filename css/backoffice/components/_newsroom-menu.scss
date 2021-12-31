@@ -1,0 +1,110 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-navigation-menu--notifications-menu--min-width: 250px;
+
+$ibo-navigation-menu--notifications--item--image--margin-x: 6px !default;
+$ibo-navigation-menu--notifications--item--image--margin-y: $ibo-spacing-0 !default;
+$ibo-navigation-menu--notifications--item--image--max-width: 20px !default;
+$ibo-navigation-menu--notifications--item--image--max-height: 20px !default;
+$ibo-navigation-menu--notifications--item--image--border-radius: $ibo-border-radius-full !default;
+
+$ibo-navigation-menu--notifications--item--bottom-text--margin-left: auto !default;
+
+$ibo-navigation-menu--notifications--item--content--padding-y: $ibo-spacing-0 !default;
+$ibo-navigation-menu--notifications--item--content--padding-x: 14px !default;
+$ibo-navigation-menu--notifications--item--content--img--max-height: 100px !default;
+$ibo-navigation-menu--notifications--item--content--img--padding: 5px !default;
+
+$ibo-navigation-menu--notifications--item--new-message-indicator--width: 10px !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--height: 10px !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--background-color: $ibo-color-blue-500 !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--border-radius: $ibo-border-radius-full !default;
+$ibo-navigation-menu--notifications--item--new-message-indicator--margin-top: $ibo-spacing-200 !default;
+
+$ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right: 15px !default;
+
+$ibo-navigation-menu--notifications-dismiss-all--icon--margin: $ibo-spacing-0 10px $ibo-spacing-0 $ibo-spacing-0 !default;
+
+$ibo-popover-menu--item--no-message--image--svg--width : 100% !default;
+$ibo-popover-menu--item--no-message--image--svg--height : inherit !default;
+$ibo-popover-menu--item--no-message--image--svg--padding : 15px !default;
+
+#ibo-navigation-menu--notifications-menu {
+  flex-flow: column;
+  min-width: $ibo-navigation-menu--notifications-menu--min-width;
+  .ibo-navigation-menu--notifications--messages-section{
+    overflow: auto;
+  }
+}
+.ibo-navigation-menu--notifications--show-all-messages, .ibo-navigation-menu--notifications-dismiss-all, .ibo-navigation-menu--notifications-show-all-multiple{
+  overflow-x: inherit;
+  text-align: center;
+  min-height: 45px;
+}
+
+.ibo-navigation-menu--notifications--item--image{
+  max-width: $ibo-navigation-menu--notifications--item--image--max-width;
+  max-height: $ibo-navigation-menu--notifications--item--image--max-height;
+  margin: $ibo-navigation-menu--notifications--item--image--margin-y $ibo-navigation-menu--notifications--item--image--margin-x;
+  border-radius: $ibo-navigation-menu--notifications--item--image--border-radius;
+}
+
+img.ibo-navigation-menu--notifications--item--image[src=""]{
+  display: none;
+}
+img.ibo-navigation-menu--notifications--item--image:not([src=""]) ~ i.ibo-navigation-menu--notifications--item--image
+{
+  display: none;
+}
+.ibo-navigation-menu--notifications--item--bottom-text{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  float: right;
+  align-self: center;
+  margin-left: $ibo-navigation-menu--notifications--item--bottom-text--margin-left;
+}
+.ibo-navigation-menu--notifications--item--content{
+  padding: $ibo-navigation-menu--notifications--item--content--padding-y $ibo-navigation-menu--notifications--item--content--padding-x;
+  img{
+    max-height: $ibo-navigation-menu--notifications--item--content--img--max-height;
+    padding: $ibo-navigation-menu--notifications--item--content--img--padding;
+  }
+}
+.ibo-navigation-menu--notifications-item{
+  display: flex;
+  flex-direction: row;
+}
+.ibo-navigation-menu--notifications--item--new-message-indicator{
+  width: $ibo-navigation-menu--notifications--item--new-message-indicator--width;
+  height: $ibo-navigation-menu--notifications--item--new-message-indicator--height;
+  background-color: $ibo-navigation-menu--notifications--item--new-message-indicator--background-color;
+  border-radius: $ibo-navigation-menu--notifications--item--new-message-indicator--border-radius;
+  margin-top: $ibo-navigation-menu--notifications--item--new-message-indicator--margin-top;
+}
+
+.ibo-navigation-menu--notifications-show-all-multiple ~ .ibo-popover-menu{
+  .ibo-navigation-menu--notifications--item--new-message-indicator{
+    display: inline-block;
+    margin-right: $ibo-navigation-menu--notifications-show-all-multiple--ibo-popover-menu--indicator--margin-right;
+  }
+  .ibo-navigation-menu--notifications-show-all-multiple--counter{
+    @extend %ibo-font-weight-600;
+  }
+}
+.ibo-navigation-menu--notifications-dismiss-all--icon{
+  margin: $ibo-navigation-menu--notifications-dismiss-all--icon--margin;
+}
+.ibo-popover-menu--item--no-message{
+  text-align: center;
+}
+.ibo-popover-menu--item--no-message--image>svg{
+  display: flex;
+  width: $ibo-popover-menu--item--no-message--image--svg--width;
+  height: $ibo-popover-menu--item--no-message--image--svg--height;
+  padding: $ibo-popover-menu--item--no-message--image--svg--padding;
+}

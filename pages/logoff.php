@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\Helper\Session;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
@@ -42,9 +43,9 @@ if ($operation == 'do_logoff')
 	exit;
 }
 
-if (isset($_SESSION['auth_user']))
+if (Session::IsSet('auth_user'))
 {
-	$sAuthUser = $_SESSION['auth_user'];
+	$sAuthUser = Session::Get('auth_user');
 	UserRights::Login($sAuthUser); // Set the user's language
 }
 

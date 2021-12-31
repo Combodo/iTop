@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -21,7 +21,6 @@ if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/startup.inc.php');
 
 require_once(APPROOT.'core/restservices.class.inc.php');
@@ -65,12 +64,30 @@ if (!function_exists('json_last_error_msg')) {
 //
 // Main
 //
-$oP = new ajax_page('rest');
+$oP = new AjaxPage('rest');
 $oCtx = new ContextTag(ContextTag::TAG_REST);
 
 $sVersion = utils::ReadParam('version', null, false, 'raw_data');
 $sOperation = utils::ReadParam('operation', null);
+
+//read json_data parameter via as a string (standard behaviour)
 $sJsonString = utils::ReadParam('json_data', null, false, 'raw_data');
+
+if (empty($sJsonString)){
+	//N °3455: read json_data parameter via a file passed by http protocol
+	if(isset($_FILES['json_data']['tmp_name']))
+	{
+		$sTmpFilePath = $_FILES['json_data']['tmp_name'];
+		if (is_file($sTmpFilePath)){
+			$sValue = file_get_contents($sTmpFilePath);
+			unlink($sTmpFilePath);
+			if (! empty($sValue)){
+				$sJsonString = utils::Sanitize($sValue, null, 'raw_data');
+			}
+		}
+	}
+}
+
 $sProvider = '';
 
 $oKPI = new ExecutionKPI();
@@ -125,7 +142,7 @@ try
 	{
 		throw new Exception("Missing parameter 'version' (e.g. '1.0')", RestResult::MISSING_VERSION);
 	}
-	
+
 	if ($sJsonString == null)
 	{
 		throw new Exception("Missing parameter 'json_data'", RestResult::MISSING_JSON);
@@ -255,8 +272,6 @@ else
 }
 $oP->Output();
 
-$oKPI->ComputeAndReport('REST outputed');
-
 // Log usage
 //
 if (MetaModel::GetConfig()->Get('log_rest_service'))
@@ -278,7 +293,4 @@ if (MetaModel::GetConfig()->Get('log_rest_service'))
 	$oLog->SetTrim('json_output', $sResponse);
 
 	$oLog->DBInsertNoReload();
-	$oKPI->ComputeAndReport('Log inserted');
 }
-
-ExecutionKPI::ReportStats();

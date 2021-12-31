@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2016-2017 Combodo SARL
+// Copyright (C) 2016-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -97,64 +97,163 @@ class HTMLNullSanitizer extends HTMLSanitizer
 	{
 		return $sHTML;
 	}
-
 }
 
+
+
 /**
- * A standard-compliant HTMLSanitizer based on the HTMLPurifier library by Edward Z. Yang
- * Complete but quite slow
- * http://htmlpurifier.org
+ * Common implementation for sanitizer using DOM parsing
  */
-/*
-class HTMLPurifierSanitizer extends HTMLSanitizer
+abstract class DOMSanitizer extends HTMLSanitizer
 {
-	protected static $oPurifier = null;
+	/** @var DOMDocument */
+	protected $oDoc;
 
-	public function __construct()
-	{
-		if (self::$oPurifier == null)
-		{
-			$sLibPath = APPROOT.'lib/htmlpurifier/HTMLPurifier.auto.php';
-			if (!file_exists($sLibPath))
-			{
-				throw new Exception("Missing library '$sLibPath', cannot use HTMLPurifierSanitizer.");
-			}
-			require_once($sLibPath);
+	abstract public function GetTagsWhiteList();
 
-			$oPurifierConfig = HTMLPurifier_Config::createDefault();
-			$oPurifierConfig->set('Core.Encoding', 'UTF-8'); // defaults to 'UTF-8'
-			$oPurifierConfig->set('HTML.Doctype', 'XHTML 1.0 Strict'); // defaults to 'XHTML 1.0 Transitional'
-			$oPurifierConfig->set('URI.AllowedSchemes', array (
-				'http' => true,
-				'https' => true,
-				'data' => true, // This one is not present by default
-			));
-			$sPurifierCache = APPROOT.'data/HTMLPurifier';
-			if (!is_dir($sPurifierCache))
-			{
-				mkdir($sPurifierCache);
-			}
-			if (!is_dir($sPurifierCache))
-			{
-				throw new Exception("Could not create the cache directory '$sPurifierCache'");
-			}
-			$oPurifierConfig->set('Cache.SerializerPath', $sPurifierCache); // no trailing slash
-			self::$oPurifier = new HTMLPurifier($oPurifierConfig);
-		}
-	}
+	abstract public function GetTagsBlackList();
+
+	abstract public function GetAttrsWhiteList();
+
+	abstract public function GetAttrsBlackList();
+
+	abstract public function GetStylesWhiteList();
 
 	public function DoSanitize($sHTML)
 	{
-		$sCleanHtml = self::$oPurifier->purify($sHTML);
+		$this->oDoc = new DOMDocument();
+		$this->oDoc->preserveWhitespace = true;
+
+		// MS outlook implements empty lines by the mean of <p><o:p></o:p></p>
+		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
+		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
+		// therefore we have to do the transformation upfront
+		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
+
+		$this->LoadDoc($sHTML);
+
+		$this->CleanNode($this->oDoc);
+
+		$sCleanHtml = $this->PrintDoc();
+
 		return $sCleanHtml;
 	}
+
+	abstract public function LoadDoc($sHTML);
+
+	/**
+	 * @return string cleaned source
+	 * @uses \DOMSanitizer::oDoc
+	 */
+	abstract public function PrintDoc();
+
+	protected function CleanNode(DOMNode $oElement)
+	{
+		$aAttrToRemove = array();
+		// Gather the attributes to remove
+		if ($oElement->hasAttributes()) {
+			foreach ($oElement->attributes as $oAttr) {
+				$sAttr = strtolower($oAttr->name);
+				if ((false === empty($this->GetAttrsBlackList()))
+					&& (in_array($sAttr, $this->GetAttrsBlackList(), true))) {
+					$aAttrToRemove[] = $oAttr->name;
+				} else if ((false === empty($this->GetTagsWhiteList()))
+					&& (false === in_array($sAttr, $this->GetTagsWhiteList()[strtolower($oElement->tagName)]))) {
+					$aAttrToRemove[] = $oAttr->name;
+				} else if (!$this->IsValidAttributeContent($sAttr, $oAttr->value)) {
+					// Invalid content
+					$aAttrToRemove[] = $oAttr->name;
+				} else if ($sAttr == 'style') {
+					// Special processing for style tags
+					$sCleanStyle = $this->CleanStyle($oAttr->value);
+					if ($sCleanStyle == '') {
+						// Invalid content
+						$aAttrToRemove[] = $oAttr->name;
+					} else {
+						$oElement->setAttribute($oAttr->name, $sCleanStyle);
+					}
+				}
+			}
+			// Now remove them
+			foreach($aAttrToRemove as $sName)
+			{
+				$oElement->removeAttribute($sName);
+			}
+		}
+
+		if ($oElement->hasChildNodes())
+		{
+			$aChildElementsToRemove = array();
+			// Gather the child noes to remove
+			foreach($oElement->childNodes as $oNode) {
+				if ($oNode instanceof DOMElement) {
+					$sNodeTagName = strtolower($oNode->tagName);
+				}
+				if (($oNode instanceof DOMElement)
+					&& (false === empty($this->GetTagsBlackList()))
+					&& (in_array($sNodeTagName, $this->GetTagsBlackList(), true))) {
+					$aChildElementsToRemove[] = $oNode;
+				} else if (($oNode instanceof DOMElement)
+					&& (false === empty($this->GetTagsWhiteList()))
+					&& (false === array_key_exists($sNodeTagName, $this->GetTagsWhiteList()))) {
+					$aChildElementsToRemove[] = $oNode;
+				} else if ($oNode instanceof DOMComment) {
+					$aChildElementsToRemove[] = $oNode;
+				} else {
+					// Recurse
+					$this->CleanNode($oNode);
+					if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img')) {
+						InlineImage::ProcessImageTag($oNode);
+					}
+				}
+			}
+			// Now remove them
+			foreach($aChildElementsToRemove as $oDomElement)
+			{
+				$oElement->removeChild($oDomElement);
+			}
+		}
+	}
+
+	protected function IsValidAttributeContent($sAttributeName, $sValue)
+	{
+		if ((false === empty($this->GetAttrsBlackList()))
+			&& (in_array($sAttributeName, $this->GetAttrsBlackList(), true))) {
+			return true;
+		}
+
+		if (array_key_exists($sAttributeName, $this->GetAttrsWhiteList())) {
+			return preg_match($this->GetAttrsWhiteList()[$sAttributeName], $sValue);
+		}
+
+		return true;
+	}
+
+	protected function CleanStyle($sStyle)
+	{
+		if (empty($this->GetStylesWhiteList())) {
+			return $sStyle;
+		}
+
+		$aAllowedStyles = array();
+		$aItems = explode(';', $sStyle);
+		{
+			foreach ($aItems as $sItem) {
+				$aElements = explode(':', trim($sItem));
+				if (in_array(trim(strtolower($aElements[0])), $this->GetStylesWhiteList())) {
+					$aAllowedStyles[] = trim($sItem);
+				}
+			}
+		}
+
+		return implode(';', $aAllowedStyles);
+	}
 }
-*/
 
-class HTMLDOMSanitizer extends HTMLSanitizer
+
+
+class HTMLDOMSanitizer extends DOMSanitizer
 {
-	protected $oDoc;
-
 	/**
 	 * @var array
 	 * @see https://www.itophub.io/wiki/page?id=2_6_0%3Aadmin%3Arich_text_limitations
@@ -162,7 +261,7 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 	protected static $aTagsWhiteList = array(
 		'html' => array(),
 		'body' => array(),
-		'a' => array('href', 'name', 'style', 'target', 'title'),
+		'a' => array('href', 'name', 'style', 'target', 'title', 'data-role', 'data-object-class', 'data-object-id'),
 		'p' => array('style'),
 		'blockquote' => array('style'),
 		'br' => array(),
@@ -239,6 +338,31 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		'white-space',
 	);
 
+	public function GetTagsWhiteList()
+	{
+		return static::$aTagsWhiteList;
+	}
+
+	public function GetTagsBlackList()
+	{
+		return [];
+	}
+
+	public function GetAttrsWhiteList()
+	{
+		return static::$aAttrsWhiteList;
+	}
+
+	public function GetAttrsBlackList()
+	{
+		return [];
+	}
+
+	public function GetStylesWhiteList()
+	{
+		return static::$aStylesWhiteList;
+	}
+
 	public function __construct()
 	{
 		parent::__construct();
@@ -264,139 +388,152 @@ class HTMLDOMSanitizer extends HTMLSanitizer
 		}
 	}
 
-	public function DoSanitize($sHTML)
+	public function LoadDoc($sHTML)
 	{
-		$this->oDoc = new DOMDocument();
-		$this->oDoc->preserveWhitespace = true;
-
-		// MS outlook implements empty lines by the mean of <p><o:p></o:p></p>
-		// We have to transform that into <p><br></p> (which is how Thunderbird implements empty lines)
-		// Unfortunately, DOMDocument::loadHTML does not take the tag namespaces into account (once loaded there is no way to know if the tag did have a namespace)
-		// therefore we have to do the transformation upfront
-		$sHTML = preg_replace('@<o:p>(\s|&nbsp;)*</o:p>@', '<br>', $sHTML);
-		// Replace badly encoded non breaking space
-		$sHTML = preg_replace('~\xc2\xa0~', ' ', $sHTML);
-
 		@$this->oDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sHTML); // For loading HTML chunks where the character set is not specified
+		$this->oDoc->preserveWhitespace = true;
+	}
 
-		$this->CleanNode($this->oDoc);
-
+	public function PrintDoc()
+	{
 		$oXPath = new DOMXPath($this->oDoc);
 		$sXPath = "//body";
 		$oNodesList = $oXPath->query($sXPath);
 
-		if ($oNodesList->length == 0)
-		{
+		if ($oNodesList->length == 0) {
 			// No body, save the whole document
 			$sCleanHtml = $this->oDoc->saveHTML();
-		}
-		else
-		{
+		} else {
 			// Export only the content of the body tag
 			$sCleanHtml = $this->oDoc->saveHTML($oNodesList->item(0));
 			// remove the body tag itself
-			$sCleanHtml = str_replace( array('<body>', '</body>'), '', $sCleanHtml);
+			$sCleanHtml = str_replace(array('<body>', '</body>'), '', $sCleanHtml);
 		}
 
 		return $sCleanHtml;
 	}
+}
 
-	protected function CleanNode(DOMNode $oElement)
+
+
+/**
+ * @since 2.6.5 2.7.6 3.0.0 N°4360
+ */
+class SVGDOMSanitizer extends DOMSanitizer
+{
+	public function GetTagsWhiteList()
 	{
-		$aAttrToRemove = array();
-		// Gather the attributes to remove
-		if ($oElement->hasAttributes())
-		{
-			foreach($oElement->attributes as $oAttr)
-			{
-				$sAttr = strtolower($oAttr->name);
-				if (!in_array($sAttr, self::$aTagsWhiteList[strtolower($oElement->tagName)]))
-				{
-					// Forbidden (or unknown) attribute
-					$aAttrToRemove[] = $oAttr->name;
-				}
-				else if (!$this->IsValidAttributeContent($sAttr, $oAttr->value))
-				{
-					// Invalid content
-					$aAttrToRemove[] = $oAttr->name;
-				}
-				else if ($sAttr == 'style')
-				{
-					// Special processing for style tags
-					$sCleanStyle = $this->CleanStyle($oAttr->value);
-					if ($sCleanStyle == '')
-					{
-						// Invalid content
-						$aAttrToRemove[] = $oAttr->name;
-					}
-					else
-					{
-						$oElement->setAttribute($oAttr->name, $sCleanStyle);
-					}
-				}
-			}
-			// Now remove them
-			foreach($aAttrToRemove as $sName)
-			{
-				$oElement->removeAttribute($sName);
-			}
-		}
-
-		if ($oElement->hasChildNodes())
-		{
-			$aChildElementsToRemove = array();
-			// Gather the child noes to remove
-			foreach($oElement->childNodes as $oNode)
-			{
-				if (($oNode instanceof DOMElement) && (!array_key_exists(strtolower($oNode->tagName), self::$aTagsWhiteList)))
-				{
-					$aChildElementsToRemove[] = $oNode;
-				}
-				else if ($oNode instanceof DOMComment)
-				{
-					$aChildElementsToRemove[] = $oNode;
-				}
-				else
-				{
-					// Recurse
-					$this->CleanNode($oNode);
-					if (($oNode instanceof DOMElement) && (strtolower($oNode->tagName) == 'img'))
-					{
-						InlineImage::ProcessImageTag($oNode);
-					}
-				}
-			}
-			// Now remove them
-			foreach($aChildElementsToRemove as $oDomElement)
-			{
-				$oElement->removeChild($oDomElement);
-			}
-		}
+		return [];
 	}
 
-	protected function CleanStyle($sStyle)
+	/**
+	 * @return string[]
+	 * @link https://developer.mozilla.org/en-US/docs/Web/SVG/Element/script
+	 */
+	public function GetTagsBlackList()
 	{
-		$aAllowedStyles = array();
-		$aItems = explode(';', $sStyle);
-		{
-			foreach($aItems as $sItem)
-			{
-				$aElements = explode(':', trim($sItem));
-				if (in_array(trim(strtolower($aElements[0])), static::$aStylesWhiteList))
-				{
-					$aAllowedStyles[] = trim($sItem);
-				}
-			}
-		}
-		return implode(';', $aAllowedStyles);
+		return [
+			'script',
+		];
 	}
 
-	protected function IsValidAttributeContent($sAttributeName, $sValue)
+	public function GetAttrsWhiteList()
 	{
-		if (array_key_exists($sAttributeName, self::$aAttrsWhiteList))
-		{
-			return preg_match(self::$aAttrsWhiteList[$sAttributeName], $sValue);
-		}
-		return true;
+		return [];
+	}
+
+	/**
+	 * @return string[]
+	 * @link https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/Events#document_event_attributes
+	 */
+	public function GetAttrsBlackList()
+	{
+		return [
+			'onbegin',
+			'onbegin',
+			'onrepeat',
+			'onabort',
+			'onerror',
+			'onerror',
+			'onscroll',
+			'onunload',
+			'oncopy',
+			'oncut',
+			'onpaste',
+			'oncancel',
+			'oncanplay',
+			'oncanplaythrough',
+			'onchange',
+			'onclick',
+			'onclose',
+			'oncuechange',
+			'ondblclick',
+			'ondrag',
+			'ondragend',
+			'ondragenter',
+			'ondragleave',
+			'ondragover',
+			'ondragstart',
+			'ondrop',
+			'ondurationchange',
+			'onemptied',
+			'onended',
+			'onerror',
+			'onfocus',
+			'oninput',
+			'oninvalid',
+			'onkeydown',
+			'onkeypress',
+			'onkeyup',
+			'onload',
+			'onloadeddata',
+			'onloadedmetadata',
+			'onloadstart',
+			'onmousedown',
+			'onmouseenter',
+			'onmouseleave',
+			'onmousemove',
+			'onmouseout',
+			'onmouseover',
+			'onmouseup',
+			'onmousewheel',
+			'onpause',
+			'onplay',
+			'onplaying',
+			'onprogress',
+			'onratechange',
+			'onreset',
+			'onresize',
+			'onscroll',
+			'onseeked',
+			'onseeking',
+			'onselect',
+			'onshow',
+			'onstalled',
+			'onsubmit',
+			'onsuspend',
+			'ontimeupdate',
+			'ontoggle',
+			'onvolumechange',
+			'onwaiting',
+			'onactivate',
+			'onfocusin',
+			'onfocusout',
+		];
+	}
+
+	public function GetStylesWhiteList()
+	{
+		return [];
+	}
+
+	public function LoadDoc($sHTML)
+	{
+		@$this->oDoc->loadXml($sHTML, LIBXML_NOBLANKS);
+	}
+
+	public function PrintDoc()
+	{
+		return $this->oDoc->saveXML();
 	}
 }

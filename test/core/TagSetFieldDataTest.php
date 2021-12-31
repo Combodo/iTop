@@ -17,6 +17,7 @@ use MetaModel;
 use TagSetFieldData;
 
 /**
+ * @group itopFaqLight
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -102,6 +103,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
@@ -190,6 +192,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * Test that tag code cannot be modified if used
 	 *
 	 * @throws \CoreException
@@ -244,6 +247,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		static::assertFalse(true);
 	}
 
+	/**
+	 * @group itopFaqLight
+	 */
 	public function testMaxTagsAllowed()
 	{
 		/** @var \AttributeTagSet $oAttDef */

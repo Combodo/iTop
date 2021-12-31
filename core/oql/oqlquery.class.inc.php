@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Classes defined for lexical analyze (see oql-parser.y)
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -173,7 +173,7 @@ class MatchOqlExpression extends MatchExpression implements CheckableExpression
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oLeftExpr->RenderExpression(true), 0));
 		}
 		// Only field MATCHES scalar is allowed
-		if (!$this->m_oRightExpr instanceof ScalarExpression)
+		if (!$this->m_oRightExpr instanceof ScalarExpression && !$this->m_oRightExpr instanceof VariableOqlExpression)
 		{
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oRightExpr->RenderExpression(true), 0));
 		}

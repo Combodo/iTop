@@ -1,0 +1,10 @@
+{% set oFirstEntry = aEntryGroup.entries|first %}
+{# Note: Entry groups are hidden by default to avoid a visual glitch. #]
+{# Otherwise when the page is loaded, all the entry groups are displayed for a brief moment, then they are filtered on the options of the currently displayed tab #}
+<div class="ibo-activity-panel--entry-group {% if oFirstEntry.IsFromCurrentUser() %}ibo-is-current-user{% endif %} ibo-is-hidden"
+     data-role="ibo-activity-panel--entry-group"
+     data-entry-group-author-login="{{ oFirstEntry.GetAuthorLogin() }}">
+	{% for oEntry in aEntryGroup.entries %}
+		{{ render_block(oEntry) }}
+	{% endfor %}
+</div>

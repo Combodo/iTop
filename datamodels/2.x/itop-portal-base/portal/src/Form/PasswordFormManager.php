@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -20,14 +20,15 @@
 
 namespace Combodo\iTop\Portal\Form;
 
-use Exception;
-use Dict;
-use UserRights;
-use IssueLog;
-use Combodo\iTop\Form\FormManager;
-use Combodo\iTop\Form\Form;
+use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Form\Field\HiddenField;
 use Combodo\iTop\Form\Field\PasswordField;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\FormManager;
+use Dict;
+use Exception;
+use IssueLog;
+use UserRights;
 
 /**
  * Description of PasswordFormManager
@@ -47,6 +48,8 @@ class PasswordFormManager extends FormManager
 	{
 		// Building the form
 		$oForm = new Form('change_password');
+
+		$oForm->SetTransactionId(\utils::GetNewTransactionId());
 
 		// Adding hidden field with form type
 		$oField = new HiddenField('form_type');
@@ -93,14 +96,11 @@ class PasswordFormManager extends FormManager
 	 */
 	public function OnSubmit($aArgs = null)
 	{
-		$aData = array(
-			'valid' => true,
-			'messages' => array(
-				'success' => array(),
-				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array(),
-			),
-		);
+		$aData = parent::OnSubmit($aArgs);
+
+		if (! $aData['valid']) {
+			return $aData;
+		}
 
 		// Update object and form
 		$this->OnUpdate($aArgs);
@@ -112,7 +112,7 @@ class PasswordFormManager extends FormManager
 			try
 			{
 				// Updating password
-				$sAuthUser = $_SESSION['auth_user'];
+				$sAuthUser = Session::Get('auth_user');
 				$sOldPassword = $this->oForm->GetField('old_password')->GetCurrentValue();
 				$sNewPassword = $this->oForm->GetField('new_password')->GetCurrentValue();
 				$sConfirmPassword = $this->oForm->GetField('confirm_password')->GetCurrentValue();

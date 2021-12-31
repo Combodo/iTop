@@ -1,0 +1,17 @@
+{% extends 'base/layouts/page-content/layout.html.twig' %}
+
+{% block iboPageCenterContainerExtraClasses %}
+	{{ parent() }}
+	{% if not aPage.isPrintable %} ibo-center-container--with-side-content{% endif %}
+{% endblock %}
+
+{% block iboPageCenterContainer %}
+	{{ parent() }}
+	<aside id="ibo-side-content" data-role="ibo-side-content">
+		{% block iboPageSideContent %}
+			{% for oSubBlock in oUIBlock.GetSideBlocks() %}
+				{{ render_block(oSubBlock, {aPage: aPage}) }}
+			{% endfor %}
+		{% endblock %}
+	</aside>
+{% endblock %}

@@ -1,0 +1,14 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-transition-entry--original-state-label--text-color: $ibo-color-grey-800 !default;
+$ibo-transition-entry--original-state-label--text-decoration: line-through !default;
+
+/* Main information */
+.ibo-transition-entry--original-state-label{
+	color: $ibo-transition-entry--original-state-label--text-color;
+	text-decoration: $ibo-transition-entry--original-state-label--text-decoration;
+}

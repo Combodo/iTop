@@ -215,7 +215,7 @@
 				itemElem.append(aElem);
 				
 				// Building tooltip for the node
-				if( (item.tooltip !== undefined) && (item.tooltip !== '') )
+				if( (item.tooltip !== undefined) && ($(item.tooltip).text() !== '') )
 				{
 					aElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'top'});
 				}
@@ -238,7 +238,7 @@
                         break;
 					case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 						url = levelPrimaryAction.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-						url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[levelPrimaryAction.type]);
+						url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', item.action_rules_token[levelPrimaryAction.type]);
                         SetActionUrl(aElem, url);
                         SetActionOpeningTarget(aElem, levelPrimaryAction.opening_target);
                         break;
@@ -284,7 +284,7 @@
 								break;
 							case '{{ constant('Combodo\\iTop\\Portal\\Brick\\BrowseBrick::ENUM_ACTION_CREATE_FROM_THIS') }}':
 								url = action.url.replace(/-objectClass-/, item.class).replace(/-objectId-/, item.id);
-								url = AddParameterToUrl(url, 'ar_token', item.action_rules_token[action.type]);
+								url = CombodoGlobalToolbox.AddParameterToUrl(url, 'ar_token', item.action_rules_token[action.type]);
 								break;
 							default:
 							    url = '#';
@@ -397,15 +397,16 @@
 				}
 			}
 		};
-		
+
+		// N°3995: Loader is shown immediately, otherwise when we have a huge amount of items, we can have a bottleneck on the buildMosaic() function, blocking the display of the loader
+		showMosaicLoader();
 		$(document).ready(function(){
 			// Auto collapse item actions popup
-			$('body').click(function(){
+			$('body').on('click', function(){
 				$('#brick_content_mosaic .item-action-wrapper.collapse.in').collapse('hide');
 			});
 			
-			// Build the tree (collapsed)
-			showMosaicLoader();
+			// Build the mosaic (collapsed)
 			buildMosaic(oRawDatas);
 			hideMosaicLoader();
 			registerFilterListeners();

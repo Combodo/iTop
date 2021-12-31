@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -23,6 +23,13 @@
  * For the user portal, see \Combodo\iTop\Renderer\Bootstrap\FieldRenderer\BsFileUploadFieldRenderer
  */
 
+
+use Combodo\iTop\Application\UI\Base\Component\Button\Button;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
 define('ATTACHMENTS_RENDERER', 'TableDetailsAttachmentsRenderer');
@@ -65,9 +72,9 @@ class AttachmentsRendererFactory
 abstract class AbstractAttachmentsRenderer
 {
 	/**
-	 * If size (in bits) is above this, then we will display a file icon instead of preview
+	 * If size (in bits) is above this, then we will display a file icon instead of preview. Overloaded by 'icon_preview_max_size' conf param
 	 */
-	const MAX_SIZE_FOR_PREVIEW = 500000;
+	const DEFAULT_MAX_SIZE_FOR_PREVIEW = 500000;
 
 	/**
 	 * Attachments list container HTML id, that must be generated in {@link RenderEditAttachmentsList}
@@ -174,13 +181,22 @@ abstract class AbstractAttachmentsRenderer
 	{
 		$sClass = $this->sObjClass;
 		$sId = $this->iObjKey;
-
-		$this->oPage->add('<div style="clear:both"></div>');
 		$iMaxUploadInBytes = AttachmentPlugIn::GetMaxUploadSize();
 		$sMaxUploadLabel = AttachmentPlugIn::GetMaxUpload();
 		$sFileTooBigLabel = Dict::Format('Attachments:Error:FileTooLarge', $sMaxUploadLabel);
 		$sFileTooBigLabelForJS = addslashes($sFileTooBigLabel);
-		$this->oPage->p(Dict::S('Attachments:AddAttachment').'<input type="file" name="file" id="file"><span style="display:none;" id="attachment_loading">&nbsp;<img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		$this->oPage->add('<div id="ibo-attachment--upload-file">');
+		$this->oPage->add('<div id="ibo-attachment--upload-file--upload-button-container">');
+		$this->oPage->add(Dict::S('Attachments:AddAttachment'));
+		$oAddButton = FileSelectUIBlockFactory::MakeStandard('file', 'file');
+		$oAddButton->SetShowFilename(false);
+		$this->oPage->AddUiBlock($oAddButton);
+		$this->oPage->add('<span style="display:none;" id="attachment_loading"><img src="../images/indicator.gif"></span> '.$sMaxUploadLabel);
+		$this->oPage->add('</div>');
+		$this->oPage->add('<div class="ibo-attachment--upload-file--drop-zone-hint ibo-svg-illustration--container">');
+		$this->oPage->add(file_get_contents(APPROOT.'images/illustrations/undraw_upload.svg'));
+		$this->oPage->add(Dict::S('UI:Attachments:DropYourFileHint').'</div>');
+		
 
 		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$this->oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
@@ -189,7 +205,7 @@ abstract class AbstractAttachmentsRenderer
 			<<<JS
 	function RefreshAttachmentsDisplay(dataUpload)
 	{
-		var sContentNode = '#AttachmentsContent>div#AttachmentsListContainer',
+		var sContentNode = '#AttachmentsListContainer',
 			aAttachmentsDeletedHiddenInputs = $('table.attachmentsList>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
 			aAttachmentsDeletedIds = aAttachmentsDeletedHiddenInputs.map(function() { return $(this).val() }).toArray();
 		$(sContentNode).block();
@@ -250,6 +266,11 @@ abstract class AbstractAttachmentsRenderer
 		}
     });
 
+  $(document).on('drag dragstart dragend dragover dragenter dragleave drop', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  })
+  
 	$(document).bind('dragover', function (e) {
 		var bFiles = false;
 		if (e.dataTransfer && e.dataTransfer.types)
@@ -272,23 +293,31 @@ abstract class AbstractAttachmentsRenderer
 	
 		if (!bFiles) return; // Not dragging files
 		
-		var dropZone = $('#file').closest('fieldset');
-		if (!dropZone.is(':visible'))
+		window.dropZone = $('#file').closest('.ibo-tab');
+		if (!CombodoGlobalToolbox.IsElementVisibleToTheUser(dropZone[0]))
 		{
-			// Hidden, but inside an inactive tab? Higlight the tab
-			var sTabId = dropZone.closest('.ui-tabs-panel').attr('aria-labelledby');
+			// Hidden, but inside an inactive tab? Highlight the tab
+			var sTabId = dropZone.closest('.ibo-tab-container--tab-container').attr('aria-labelledby');
 			dropZone = $('#'+sTabId).closest('li');
 		}
-	    timeout = window.dropZoneTimeout;
-	    if (!timeout) {
-	        dropZone.addClass('drag_in');
-	    } else {
-	        clearTimeout(timeout);
-	    }
-	    window.dropZoneTimeout = setTimeout(function () {
-	        window.dropZoneTimeout = null;
-	        dropZone.removeClass('drag_in');
-	    }, 300);
+
+        window.dropZone.addClass('ibo-drag-in');
+	});
+  
+  // Counter used to fix chrome firing dragenter/dragleave on each $(document) child it encounter
+  window.dropZoneCnt = 0;
+  
+  $(document).on('dragenter', function(ev) {
+        ev.preventDefault(); // needed for IE
+        window.dropZoneCnt++;
+    });
+    
+	$(document).bind('dragend dragleave drop', function(event){
+        window.dropZoneCnt--;
+		if(window.dropZone && window.dropZoneCnt === 0){
+			window.dropZone.removeClass('ibo-drag-in');
+			window.dropZone = null;
+		}
 	});
 	
 	// check if the attachments are used by inline images
@@ -313,16 +342,8 @@ abstract class AbstractAttachmentsRenderer
 	}, 200 );
 JS
 		);
-		$this->oPage->p('<span style="display:none;" id="attachment_loading">Loading, please wait...</span>');
 		$this->oPage->p('<input type="hidden" id="attachment_plugin" name="attachment_plugin"/>');
-
-		$this->oPage->add_style(<<<CSS
-.drag_in {
-	-webkit-box-shadow:inset 0 0 10px 2px #1C94C4;
-	box-shadow:inset 0 0 10px 2px #1C94C4;
-}
-CSS
-		);
+		$this->oPage->add('</div>');
 	}
 
 	protected function GetAttachmentContainerId($iAttachmentId)
@@ -339,7 +360,16 @@ CSS
 
 	protected function GetDeleteAttachmentButton($iAttId)
 	{
-		return '<input id="btn_remove_'.$iAttId.'" type="button" class="btn_hidden" value="'.Dict::S('Attachments:DeleteBtn').'" onClick="RemoveAttachment('.$iAttId.');"/>';
+		$oButton = ButtonUIBlockFactory::MakeIconAction('fas fa-trash', Dict::S('Attachments:DeleteBtn'),
+			'',
+			Dict::S('Attachments:DeleteBtn'),
+			false,
+			"btn_remove_".$iAttId);
+		$oButton->AddCSSClass('btn_hidden')
+			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");")
+			->SetColor(Button::ENUM_COLOR_SCHEME_DESTRUCTIVE);
+		
+		return $oButton;
 	}
 
 	protected function GetDeleteAttachmentJs()
@@ -387,49 +417,7 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
 		$sDeleteColumn = '';
-		if ($bWithDeleteButton)
-		{
-			$sDeleteColumn = '<th role="delete"></th>';
-		}
-		$this->oPage->add(<<<HTML
-<table class="listResults attachmentsList">
-	<thead>
-		<th role="icon">$sThumbnail</th>
-		<th role="filename">$sFileName</th>
-		<th role="formatted-size">$sFileSize</th>
-		<th role="upload-date">$sFileDate</th>
-		<th role="uploader">$sFileUploader</th>
-		<th role="type">$sFileType</th>
-		$sDeleteColumn
-	</thead>
-<tbody>
-HTML
-		);
 
-		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
-		$sPreviewNotAvailable = addslashes(Dict::S('Attachments:PreviewNotAvailable'));
-		$this->oPage->add_ready_script(
-			<<<JS
-$(document).tooltip({
-	items: 'table.attachmentsList>tbody>tr>td a.trigger-preview',
-	position: {
-		my: 'left top', at: 'right top', using: function (position, feedback) {
-			$(this).css(position);
-		}
-	},
-	content: function () {
-		if ($(this).hasClass("preview"))
-		{
-			return ('<img style=\"max-width:{$iMaxWidth}px\" src=\"'+$(this).attr('href')+'\"></img>');
-		}
-		else
-		{
-			return '$sPreviewNotAvailable';
-		}
-	}
-});
-JS
-		);
 		if ($bWithDeleteButton)
 		{
 			$this->oPage->add_script($this->GetDeleteAttachmentJs());
@@ -437,36 +425,51 @@ JS
 
 		$bIsEven = false;
 		$aAttachmentsDate = AttachmentsHelper::GetAttachmentsDateAddedFromDb($this->sObjClass, $this->iObjKey);
+		$aData = array();
 		while ($oAttachment = $this->oAttachmentsSet->Fetch())
 		{
 			$bIsEven = ($bIsEven) ? false : true;
-			$this->AddAttachmentsTableLine($bWithDeleteButton, $bIsEven, $oAttachment, $aAttachmentsDate, $aAttachmentsDeleted);
+			$aData[] = $this->AddAttachmentsTableLine($bWithDeleteButton, $bIsEven, $oAttachment, $aAttachmentsDate, $aAttachmentsDeleted);
 		}
 		while ($oTempAttachment = $this->oTempAttachmentsSet->Fetch())
 		{
 			$bIsEven = ($bIsEven) ? false : true;
-			$this->AddAttachmentsTableLine($bWithDeleteButton, $bIsEven, $oTempAttachment, $aAttachmentsDate, $aAttachmentsDeleted);
+			$aData[] = $this->AddAttachmentsTableLine($bWithDeleteButton, $bIsEven, $oTempAttachment, $aAttachmentsDate, $aAttachmentsDeleted);
 		}
 
-		$this->oPage->add('</tbody>'.PHP_EOL);
-		$this->oPage->add('</table>'.PHP_EOL);
+		$aAttribs = array(
+			'icon' => array('label' => $sThumbnail, 'description' => $sThumbnail),
+			'filename' => array('label' => $sFileName, 'description' => $sFileName),
+			'formatted-size' => array('label' => $sFileSize, 'description' => $sFileSize),
+			'upload-date' => array('label' => $sFileDate, 'description' => $sFileDate),
+			'uploader' => array('label' => $sFileUploader, 'description' => $sFileUploader),
+			'type' => array('label' => $sFileType, 'description' => $sFileType),
+		);
 
-		$this->oPage->add_ready_script(<<<'JS'
-var $attachmentsTable = $("table.attachmentsList");
-$attachmentsTable.tablesorter(
-	{
-		textExtraction : 
-			function(node, table, cellIndex) {
-				if ($(node).is("[data-order]")) {
-					return $(node).attr("data-order");
-				}
-
-				return $(node).text();
-			}
+		if ($bWithDeleteButton) {
+			$aAttribs['delete'] = array('label' => '', 'description' => '');
 		}
-);
+		$oPanel = PanelUIBlockFactory::MakeNeutral('');
+		$oPanel->AddCSSClass('ibo-datatable-panel');
+		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
+		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
+		$oPanel->AddSubBlock($oAttachmentTableBlock);
+
+		$this->oPage->AddUiBlock($oPanel);
+
+		$sTableId = $oAttachmentTableBlock->GetId();
+
+		foreach ($aData as $aAtt){
+			$sJS = $aAtt['js'];
+			$this->oPage->add_ready_script(
+				<<<JS
+$('#$sTableId').on('init.dt draw.dt', function(){
+	$sJS
+});
 JS
 		);
+		}
+		
 	}
 
 	/**
@@ -476,6 +479,7 @@ JS
 	 * @param array $aAttachmentsDate
 	 * @param int[] $aAttachmentsDeleted
 	 *
+	 * @return array
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \Exception
@@ -529,33 +533,43 @@ JS
 
 		$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 		$sIconClass = '';
+		$iMaxWidth = MetaModel::GetModuleSetting('itop-attachments', 'preview_max_width', 290);
+		$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', self::DEFAULT_MAX_SIZE_FOR_PREVIEW);
+
+		$sPreviewNotAvailable = Dict::S('Attachments:PreviewNotAvailable');
+		$sPreviewMarkup = $sPreviewNotAvailable;
 		if ($oDoc->IsPreviewAvailable())
 		{
 			$sIconClass = ' preview';
-			if ($oDoc->GetSize() <= self::MAX_SIZE_FOR_PREVIEW)
+			if ($oDoc->GetSize() <= $iMaxSizeForPreview)
 			{
 				$sAttachmentThumbUrl = $sDocDownloadUrl;
 			}
+			$sPreviewMarkup = utils::HtmlEntities('<img src="'.$sDocDownloadUrl.'" style="max-width: '.$iMaxWidth.'"/>');
 		}
 
-		$sDeleteColumn = '';
+		
+		$aAttachmentLine = array(
+			'@id' => $sTrId,
+			'@meta' => 'data-file-type="'.utils::HtmlEntities($sFileType).'" data-file-size-raw="'.utils::HtmlEntities($iFileSize).'" data-file-size-formatted="'.utils::HtmlEntities($sFileFormattedSize).'" data-file-uploader="'.utils::HtmlEntities($sAttachmentUploader).'"',
+			'icon' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="trigger-preview '.$sIconClass.'"><img class="ibo-attachment--datatable--icon-preview '.$sIconClass.'" data-tooltip-content="'.$sPreviewMarkup.'" data-tooltip-html-enabled="true" src="'.$sAttachmentThumbUrl.'"></a>',
+			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
+			'formatted-size' => $sFileFormattedSize,
+			'upload-date' => $sAttachmentDateFormatted,
+			'uploader' => $sAttachmentUploaderForHtml,
+			'type' => $sFileType,
+			'js' => '',
+		);
+		
 		if ($bWithDeleteButton)
 		{
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);
-			$sDeleteColumn = "<td role=\"delete\">$sDeleteButton</td>";
+			
+			$oBlockRenderer = new BlockRenderer($sDeleteButton);
+			$aAttachmentLine['js'] .= $oBlockRenderer->RenderJsInline($sDeleteButton::ENUM_JS_TYPE_ON_INIT);
+			$aAttachmentLine['delete'] = $oBlockRenderer->RenderHtml();
 		}
 
-		$this->oPage->add(<<<HTML
-	<tr id="$sTrId" $sLineClass $sLineStyle data-file-type="$sFileType" data-file-size-raw="$iFileSize" data-file-size-formatted="$sFileFormattedSize" data-file-uploader="$sAttachmentUploaderForHtml">
-	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="trigger-preview $sIconClass"><img $sIconClass style="max-height: 48px;" src="$sAttachmentThumbUrl"></a></td>
-	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass">$sFileName</a>$sAttachmentMeta</td>
-	  <td role="formatted-size" data-order="$iFileSize">$sFileFormattedSize</td>
-	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDateFormatted</td>
-	  <td role="uploader">$sAttachmentUploader</td>
-	  <td role="type">$sFileType</td>
-	  $sDeleteColumn
-	</tr>
-HTML
-		);
+		return  $aAttachmentLine;
 	}
 }

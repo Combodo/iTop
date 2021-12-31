@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -55,13 +55,16 @@
   <menus>
     <menu id="WelcomeMenu" xsi:type="MenuGroup" _delta="define">
       <rank>10</rank>
+	    <style>
+		    <decoration_classes>fas fa-home</decoration_classes>
+	    </style>
     </menu>
     <menu id="WelcomeMenuPage" xsi:type="DashboardMenuNode" _delta="define">
       <rank>10</rank>
       <parent>WelcomeMenu</parent>
       <definition>
         <layout>DashboardLayoutOneCol</layout>
-        <title/>
+        <title>Menu:WelcomeMenuPage</title>
         <cells>
           <cell id="0">
             <rank>0</rank>
@@ -148,6 +151,9 @@
     </menu>
     <menu id="ConfigurationTools" xsi:type="MenuGroup" _delta="define_if_not_exists">
       <rank>90</rank>
+	    <style>
+		    <decoration_classes>fas fa-cog</decoration_classes>
+	    </style>
     </menu>
     <menu id="DataSources" xsi:type="OQLMenuNode" _delta="define">
       <rank>20</rank>
@@ -166,11 +172,17 @@
     </menu>
     <menu id="AdminTools" xsi:type="MenuGroup" _delta="define">
       <rank>80</rank>
+	    <style>
+		    <decoration_classes>fas fa-tools</decoration_classes>
+	    </style>
     </menu>
     <menu id="SystemTools" xsi:type="MenuGroup" _delta="define">
       <rank>100</rank>
       <enable_class>ResourceSystemMenu</enable_class>
       <enable_action>UR_ACTION_MODIFY</enable_action>
+	    <style>
+		    <decoration_classes>fas fa-terminal</decoration_classes>
+	    </style>
     </menu>
   </menus>
   <meta>
@@ -225,7 +237,104 @@
               </argument>
             </arguments>
           </method>
+          <method id="AddValue">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeInteger"/>
+                    <type id="AttributeDecimal"/>
+                    <type id="AttributePercentage"/>
+                    <type id="AttributeDuration"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>false</mandatory>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetComputedDate">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>false</mandatory>
+              </argument>
+              <argument id="3">
+                <type>attcode</type>
+                <mandatory>false</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetComputedDateIfNull">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>false</mandatory>
+              </argument>
+              <argument id="3">
+                <type>attcode</type>
+                <mandatory>false</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
           <method id="SetCurrentDate">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                    <type id="AttributeString"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetCurrentDateIfNull">
             <arguments>
               <argument id="1">
                 <type>attcode</type>
@@ -356,30 +465,6 @@
             <arguments>
               <argument id="1">
                 <type>string</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="PrefillCreationForm">
-            <arguments>
-              <argument id="1">
-                <type>reference</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="PrefillTransitionForm">
-            <arguments>
-              <argument id="1">
-                <type>reference</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="PrefillSearchForm">
-            <arguments>
-              <argument id="1">
-                <type>reference</type>
                 <mandatory>true</mandatory>
               </argument>
             </arguments>

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,14 +24,11 @@ use cmdbAbstractObject;
 use Combodo\iTop\Portal\Brick\AbstractBrick;
 use DBObjectSearch;
 use DBObjectSet;
+use DeprecatedCallsLog;
 use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
-use Silex\Application;
-use Symfony\Component\Debug\ErrorHandler;
-use Symfony\Component\Debug\ExceptionHandler;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
  * Contains static methods to help loading / registering classes of the application.
@@ -64,6 +61,7 @@ class ApplicationHelper
 	 */
 	public static function LoadClasses($sScannedDir, $sFilePattern, $sType)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		@trigger_error(
 			sprintf(
 				'Usage of legacy LoadClasses is deprecated. You should rely on autoloading (and therefore follow PSR4).',
@@ -134,13 +132,14 @@ class ApplicationHelper
 	 * If not found, tries to find one from the closest parent class.
 	 * Else returns a default form based on zlist 'details'
 	 *
-	 * @param array  $aForms
+	 * @param array $aForms
 	 * @param string $sClass Object class to find a form for
-	 * @param string $sMode  Form mode to find (view|edit|create)
+	 * @param string $sMode Form mode to find (view|edit|create)
 	 *
 	 * @return array
 	 *
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public static function GetLoadedFormFromClass($aForms, $sClass, $sMode)
 	{
@@ -244,10 +243,11 @@ class ApplicationHelper
 	 * Generate the form data for the $sClass.
 	 * Form will look like the "Properties" tab of a $sClass object in the console.
 	 *
-	 * @param string $sClass
-	 * @param bool   $bAddLinksets
+	 * @param string    $sClass
+	 * @param bool      $bAddLinksets
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
 	protected static function GenerateDefaultFormForClass($sClass, $bAddLinksets = false)
 	{
@@ -275,6 +275,13 @@ class ApplicationHelper
 		// - Retrieve zlist details
 		$aDetailsList = MetaModel::GetZListItems($sClass, 'details');
 		$aDetailsStruct = cmdbAbstractObject::ProcessZlist($aDetailsList, array(), 'UI:PropertiesTab', 'col1', '');
+		if(!isset($aDetailsStruct['UI:PropertiesTab']))
+		{
+			// For the iTop administrator
+			IssueLog::Error('Could not generate default form for "'.$sClass.'" class. Is the "details" zlist empty?');
+			// For the end-user
+			throw new Exception('Could not generate form, check the error log for more information.');
+		}
 		$aPropertiesStruct = $aDetailsStruct['UI:PropertiesTab'];
 
 		// Count cols (not linksets)

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,7 +17,10 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'/application/nicewebpage.class.inc.php');
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
@@ -30,11 +33,21 @@ SetupLog::Enable(APPROOT.'/log/setup.log');
  */
 class SetupPage extends NiceWebPage
 {
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/setuppage/layout';
+
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script("../setup/setup.js");
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
+
+		$this->LoadTheme();
 		$this->add_saas("css/setup.scss");
 	}
 
@@ -65,25 +78,25 @@ class SetupPage extends NiceWebPage
 	public function info($sText)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
-		$this->log_info($sText);
+		SetupLog::Info($sText);
 	}
 
 	public function ok($sText)
 	{
 		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
-		$this->log_ok($sText);
+		SetupLog::Ok($sText);
 	}
 
 	public function warning($sText)
 	{
 		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
-		$this->log_warning($sText);
+		SetupLog::Warning($sText);
 	}
 
 	public function error($sText)
 	{
 		$this->add("<div class=\"message message-error\">$sText</div>");
-		$this->log_error($sText);
+		SetupLog::Error($sText);
 	}
 
 	public function form($aData)
@@ -135,7 +148,7 @@ class SetupPage extends NiceWebPage
 			$this->p("<li>$sItem</li>\n");
 		}
 		$this->p('</ul>');
-		$this->add_ready_script("$('#{$sId}').click( function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
+		$this->add_ready_script("$('#{$sId}').on('click', function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
 		if (!$bOpen)
 		{
 			$this->add_ready_script("$('#{$sId}').toggleClass('open'); $('#{$sId}_list').toggle();\n");
@@ -144,35 +157,63 @@ class SetupPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png';
-		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" alt=\" \" src=\"{$sLogo}?t=".utils::GetCacheBusterTimestamp()."\"></a>&nbsp;".htmlentities($this->s_title,
-				ENT_QUOTES, self::PAGES_CHARSET)."</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard();
+		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
+		$oSetupPage->AddSubBlock($oHeader);
+		$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($this->s_title, $sLogo, Title::DEFAULT_ICON_COVER_METHOD, false);
+		$oHeader->AddSubBlock($oTitle);
+		$oSetup = UIContentBlockUIBlockFactory::MakeStandard('setup', ['ibo-setup--body']);
+		$oSetupPage->AddSubBlock($oSetup);
+		$oSetup->AddSubBlock($this->oContentLayout);
+
+		$this->oContentLayout = $oSetupPage;
 
 		return parent::output();
 	}
 
+	/**
+	 * @deprecated 3.0.0 use SetupLog::Error
+	 */
 	public static function log_error($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Error');
 		SetupLog::Error($sText);
 	}
 
+	/**
+	 * @deprecated 3.0.0 use SetupLog::Warning
+	 */
 	public static function log_warning($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Warning');
 		SetupLog::Warning($sText);
 	}
 
+	/**
+	 * @deprecated 3.0.0 use SetupLog::Info
+	 */
 	public static function log_info($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Info');
 		SetupLog::Info($sText);
 	}
 
+	/**
+	 * @deprecated 3.0.0 use SetupLog::Ok
+	 */
 	public static function log_ok($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
 		SetupLog::Ok($sText);
 	}
 
+	/**
+	 * @deprecated 3.0.0 use SetupLog::Ok
+	 */
 	public static function log($sText)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
 		SetupLog::Ok($sText);
 	}
 
@@ -182,5 +223,13 @@ class SetupPage extends NiceWebPage
 	protected function LoadTheme()
 	{
 		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFaviconAbsoluteUrl()
+	{
+		return utils::GetAbsoluteUrlAppRoot().'setup/favicon.ico';
 	}
 }

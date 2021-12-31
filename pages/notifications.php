@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,81 +17,129 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
-
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled("NotificationsMenu");
 
+/**
+ * @param \iTopWebPage $oP
+ * @param string $sClassToDisplay
+ * @param array $aClassesToExclude
+ *
+ * @throws \ApplicationException
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ * @since 3.0.0
+ */
+function DisplayActionsTab(iTopWebPage &$oP, string $sClassToDisplay, array $aClassesToExclude = []): void
+{
+	// Check if class exists
+	if (! MetaModel::IsValidClass($sClassToDisplay)) {
+		return;
+	}
+
+	$aActionClasses = array();
+	foreach(MetaModel::EnumChildClasses($sClassToDisplay, ENUM_CHILD_CLASSES_ALL, true) as $sActionClass) {
+		// Ignore abstract classes
+		if (MetaModel::IsAbstract($sActionClass)) {
+			continue;
+		}
+
+		// Ignore specific classes
+		foreach ($aClassesToExclude as $sClassToExclude) {
+			if (is_a($sActionClass, $sClassToExclude, true)) {
+				continue 2;
+			}
+		}
+
+		$aActionClasses[] = $sActionClass;
+	}
+
+	// Don't display tab if no action class
+	if (count($aActionClasses) === 0) {
+		return;
+	}
+
+	$oP->SetCurrentTab('UI:NotificationsMenu:Actions:'.$sClassToDisplay);
+	$sNbOfActionClassesTitle = '';
+	if (count($aActionClasses) == 1)
+	{
+		// Preserve old style
+		$sNbOfActionClassesTitle = Dict::S('UI:NotificationsMenu:AvailableActions');
+	}
+
+	$iBlock = 0;
+	foreach($aActionClasses as $sActionClass)
+	{
+		if (count($aActionClasses) > 1)
+		{
+			// New style
+			$sNbOfActionClassesTitle = MetaModel::GetName($sActionClass);
+		}
+
+		$oFilter = new DBObjectSearch($sActionClass);
+		$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
+
+		$aParams = array('panel_title' => $sNbOfActionClassesTitle);
+
+		$sBlockId = 'block_'.utils::Sanitize($sClassToDisplay, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER).'_'.$iBlock;
+		$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
+		$oBlock->Display($oP, $sBlockId, $aParams);
+		$iBlock++;
+	}
+}
+
 // Main program
 //
 $oP = new iTopWebPage(Dict::S('Menu:NotificationsMenu+'));
+$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', 'fas fa-bell',
+	iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-$oP->add('<div class="page_header" style="padding:0.5em;">');
-$oP->add('<h1>'.dict::S('UI:NotificationsMenu:Title').'</h1>');
-$oP->add('</div>');
+$oPageContentLayout = PageContentFactory::MakeStandardEmpty();
+$oP->SetContentLayout($oPageContentLayout);
 
-$oP->SetBreadCrumbEntry('ui-tool-notifications', Dict::S('Menu:NotificationsMenu'), Dict::S('Menu:NotificationsMenu+'), '', '../images/bell.png');
+$sAlertTitle = Dict::S('UI:NotificationsMenu:Title');
+$sAlertContent = Dict::S('UI:NotificationsMenu:HelpContent');
+$oConfigurationHelp = new CollapsibleSection($sAlertTitle, [HtmlFactory::MakeHtmlContent($sAlertContent)]);
+$oConfigurationHelp
+	->SetOpenedByDefault(true)
+	->EnableSaveCollapsibleState('notifications__home');
+$oPageContentLayout->AddMainBlock($oConfigurationHelp);
 
-$oP->StartCollapsibleSection(Dict::S('UI:NotificationsMenu:Help'), true, 'notifications-home');
-$oP->add('<div style="padding: 1em; font-size:10pt;background:#E8F3CF;margin-top: 0.25em;">');
-$oP->add('<img src="../images/bell.png" style="margin-top: -60px; margin-right: 10px; float: right;">');
-$oP->add(Dict::S('UI:NotificationsMenu:HelpContent'));
-$oP->add('</div>');
-$oP->add('');
-$oP->add('');
-$oP->EndCollapsibleSection();
-
-$oP->add('<p>&nbsp;</p>');
-
+/*************************************
+ *           Triggers tab
+ ************************************/
 
 $oP->AddTabContainer('Tabs_0');
 $oP->SetCurrentTabContainer('Tabs_0');
 
 $oP->SetCurrentTab('UI:NotificationsMenu:Triggers');
-$oP->add('<h2>'.Dict::S('UI:NotificationsMenu:AvailableTriggers').'</h2>');
+
 $oFilter = new DBObjectSearch('Trigger');
-$aParams = array();
+$aParams = array('panel_title' => Dict::S('UI:NotificationsMenu:AvailableTriggers'));
 $oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
 $oBlock->Display($oP, 'block_0', $aParams);
 
+/*************************************
+ *           Actions tabs
+ ************************************/
 
-$aActionClasses = array();
-foreach(MetaModel::EnumChildClasses('Action', ENUM_CHILD_CLASSES_EXCLUDETOP) as $sActionClass)
-{
-	if (!MetaModel::IsAbstract($sActionClass))
-	{
-		$aActionClasses[] = $sActionClass;
-	}
-}
+DisplayActionsTab($oP, 'ActionEmail');
+DisplayActionsTab($oP, 'ActionWebhook');
+DisplayActionsTab($oP, 'Action', ['ActionEmail', 'ActionWebhook']);
 
-$oP->SetCurrentTab('UI:NotificationsMenu:Actions');
-
-if (count($aActionClasses) == 1)
-{
-	// Preserve old style
-	$oP->add('<h2>'.Dict::S('UI:NotificationsMenu:AvailableActions').'</h2>');
-}
-
-$iBlock = 0;
-foreach($aActionClasses as $sActionClass)
-{
-	if (count($aActionClasses) > 1)
-	{
-		// New style
-		$oP->add('<h2>'.MetaModel::GetName($sActionClass).'</h2>');
-	}
-	$oFilter = new DBObjectSearch($sActionClass);
-	$oFilter->AddCondition('finalclass', $sActionClass); // derived classes will be further processed
-	$aParams = array();
-	$oBlock = new DisplayBlock($oFilter, 'list', false, $aParams);
-	$oBlock->Display($oP, 'block_action_'.$iBlock, $aParams);
-	$iBlock++;
-}
+/*************************************
+ *           End reset
+ ************************************/
 
 $oP->SetCurrentTab('');
 $oP->SetCurrentTabContainer('');

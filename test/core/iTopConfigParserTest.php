@@ -9,13 +9,38 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 class iTopConfigParserTest extends ItopTestCase
 {
+	private $conf_exists;
+	/** @var false|string backup of the original config file */
+	private $tmpSavePath;
+	private $sConfigPath;
 
 	public function setUp()
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/iTopConfigParser.php';
+
+		clearstatcache();
+		$this->sConfigPath = utils::GetConfigFilePath();
+		// saving the current config so we can restore it at the end !
+		$this->tmpSavePath = tempnam(sys_get_temp_dir(), 'config-itop');
+
+		$this->conf_exists = is_file($this->sConfigPath);
+		if ($this->conf_exists)
+		{
+			copy($this->sConfigPath, $this->tmpSavePath);
+		}
+		clearstatcache();
 	}
 
+	public function tearDown()
+	{
+		parent::tearDown();
+		if ($this->conf_exists) {
+			// restoring config that was in place before the test
+			@chmod($this->sConfigPath, 0770); // RWX for owner and group, nothing for others : else we will have permission denied !
+			rename($this->tmpSavePath, $this->sConfigPath);
+		}
+	}
 
 	/**
 	 * @dataProvider ParserProvider
@@ -132,8 +157,8 @@ class iTopConfigParserTest extends ItopTestCase
 	 */
 	public function testConfigWriteToFile()
 	{
-		$tmpConfigFileBeforePath = tempnam( '/tmp/', 'config-itop');
-		$tmpConfigFileAfterPath = tempnam( '/tmp/', 'config-itop');
+		$tmpConfigFileBeforePath = tempnam(sys_get_temp_dir(), 'config-itop');
+		$tmpConfigFileAfterPath = tempnam(sys_get_temp_dir(), 'config-itop');
 
 		//create new config file
 		$sConfigFile = utils::GetConfig()->GetLoadedFile();
@@ -185,30 +210,13 @@ CONF;
 	public function testConfigWriteToFile_FromScratchInstallation()
 	{
 		$sConfigPath = utils::GetConfigFilePath();
-		$tmpSavePath = tempnam( '/tmp/', 'config-itop');
-
-		$conf_exists = is_file($sConfigPath);
-		if ($conf_exists)
-		{
-			rename($sConfigPath, $tmpSavePath);
-		}
-
 		$oConfig = new Config($sConfigPath, false);
 		try{
+			clearstatcache();
 			$oConfig->WriteToFile();
-			if ($conf_exists)
-			{
-				rename($tmpSavePath, $sConfigPath);
-			}
 		}catch(\Exception $e)
 		{
-			if ($conf_exists)
-			{
-				rename($tmpSavePath, $sConfigPath);
-			}
-
-			$this->assertTrue(false, "failed writetofile with no initial file");
+			$this->assertTrue(false, "failed writetofile with no initial file: " . $e->getMessage());
 		}
-
 	}
 }

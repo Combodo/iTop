@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -63,9 +63,15 @@ class DBObjectSearch extends DBSearch
 	{
 		parent::__construct();
 
-		if (is_null($sClassAlias)) $sClassAlias = $sClass;
-		if(!is_string($sClass)) throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
-		if(!MetaModel::IsValidClass($sClass)) throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
+		if (is_null($sClassAlias)) {
+			$sClassAlias = $sClass;
+		}
+		if (!is_string($sClass)) {
+			throw new Exception('DBObjectSearch::__construct called with a non-string parameter: $sClass = '.print_r($sClass, true));
+		}
+		if (!MetaModel::IsValidClass($sClass)) {
+			throw new Exception('DBObjectSearch::__construct called for an invalid class: "'.$sClass.'"');
+		}
 
 		$this->m_aSelectedClasses = array($sClassAlias => $sClass);
 		$this->m_aClasses = array($sClassAlias => $sClass);
@@ -75,30 +81,43 @@ class DBObjectSearch extends DBSearch
 		$this->m_aReferencedBy = array();
 	}
 
-	public function AllowAllData($bAllowAllData = true) {$this->m_bAllowAllData = $bAllowAllData;}
-	public function IsAllDataAllowed() {return $this->m_bAllowAllData;}
-	protected function IsDataFiltered() {return $this->m_bDataFiltered; }
-	protected function SetDataFiltered() {$this->m_bDataFiltered = true;}
+	public function AllowAllData($bAllowAllData = true) {
+		$this->m_bAllowAllData = $bAllowAllData;
+
+		$this->m_oSearchCondition->Browse(function ($oThisExpression) use ($bAllowAllData) {
+			ExpressionHelper::ExpressionAllowAllDataCallback($oThisExpression, $bAllowAllData);
+		});
+	}
+
+	public function IsAllDataAllowed() {
+		return $this->m_bAllowAllData;
+	}
+
+	protected function IsDataFiltered() {
+		return $this->m_bDataFiltered;
+	}
+
+	protected function SetDataFiltered() {
+		$this->m_bDataFiltered = true;
+	}
 
 	// Create a search definition that leads to 0 result, still a valid search object
-	static public function FromEmptySet($sClass)
-	{
+	public static function FromEmptySet($sClass) {
 		$oResultFilter = new DBObjectSearch($sClass);
 		$oResultFilter->m_oSearchCondition = new FalseExpression;
+
 		return $oResultFilter;
 	}
 
 
-	public function GetJoinedClasses() {return $this->m_aClasses;}
+	public function GetJoinedClasses() {
+		return $this->m_aClasses;
+	}
 
-	public function GetClassName($sAlias)
-	{
-		if (array_key_exists($sAlias, $this->m_aSelectedClasses))
-		{
+	public function GetClassName($sAlias) {
+		if (array_key_exists($sAlias, $this->m_aSelectedClasses)) {
 			return $this->m_aSelectedClasses[$sAlias];
-		}
-		else
-		{
+		} else {
 			throw new CoreException("Invalid class alias '$sAlias'");
 		}
 	}
@@ -358,37 +377,35 @@ class DBObjectSearch extends DBSearch
 		}
 		foreach($this->m_aReferencedBy as $sForeignClass => $aReferences)
 		{
-			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
-			{
-				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters)
-				{
-					foreach ($aFilters as $oForeignFilter)
-					{
+			foreach($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator) {
+				foreach ($aFiltersByOperator as $iOperatorCode => $aFilters) {
+					foreach ($aFilters as $oForeignFilter) {
 						$oForeignFilter->RenameParam($sOldName, $sNewName);
 					}
 				}
 			}
 		}
 	}
-	
-	public function ResetCondition()
-	{
+
+	public function ResetCondition() {
 		$this->m_oSearchCondition = new TrueExpression();
 		// ? is that usefull/enough, do I need to rebuild the list after the subqueries ?
 	}
 
-	public function MergeConditionExpression($oExpression)
-	{
-		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression); 
+	public function MergeConditionExpression($oExpression) {
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogOr($oExpression);
 	}
 
-	public function AddConditionExpression($oExpression)
-	{
-		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression); 
+	public function AddConditionExpression($oExpression) {
+		$this->m_oSearchCondition = $this->m_oSearchCondition->LogAnd($oExpression);
+
+		$bRootSearchAllowAllData = $this->IsAllDataAllowed();
+		$oExpression->Browse(function ($oThisExpression) use ($bRootSearchAllowAllData) {
+			ExpressionHelper::ExpressionAllowAllDataCallback($oThisExpression, $bRootSearchAllowAllData);
+		});
 	}
 
-  	public function AddNameCondition($sName)
-	{
+	public function AddNameCondition($sName) {
 		$oValueExpr = new ScalarExpression($sName);
 		$oNameExpr = new FieldExpression('friendlyname', $this->GetClassAlias());
 		$oNewCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
@@ -443,7 +460,6 @@ class DBObjectSearch extends DBSearch
 		case '<|':
 		case '=|':
 			throw new CoreException('Deprecated operator, please consider using OQL (SQL) expressions like "(TO_DAYS(NOW()) - TO_DAYS(x)) AS AgeDays"', array('operator' => $sOpCode));
-			break;
 
 		case 'IN':
 			if (!is_array($value)) $value = array($value);
@@ -625,17 +641,32 @@ class DBObjectSearch extends DBSearch
 	public function AddCondition_FullText($sNeedle)
 	{
 		// Transform the full text condition into additional condition expression
-		$aFullTextFields = array();
-		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef)
-		{
+		$aAttCodes = [];
+		foreach (MetaModel::ListAttributeDefs($this->GetClass()) as $sAttCode => $oAttDef) {
 			if (!$oAttDef->IsScalar()) continue;
 			if ($oAttDef->IsExternalKey()) continue;
 			if (!$oAttDef->IsSearchable()) continue;
+			$aAttCodes[] = $sAttCode;
+		}
+		$this->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
+	}
+
+	/**
+	 * @param array $aAttCodes array of attCodes to search into
+	 * @param string $sNeedle one word to be searched
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+		$aFullTextFields = [];
+		foreach ($aAttCodes as $sAttCode) {
 			$aFullTextFields[] = new FieldExpression($sAttCode, $this->GetClassAlias());
 		}
+
 		$oTextFields = new CharConcatWSExpression(' ', $aFullTextFields);
 
-		$sQueryParam = 'needle';
+		$sQueryParam = str_replace('.', '', uniqid('needle_', true));
 		$oFlexNeedle = new CharConcatExpression(array(new ScalarExpression('%'), new VariableExpression($sQueryParam), new ScalarExpression('%')));
 
 		$oNewCond = new BinaryExpression($oTextFields, 'LIKE', $oFlexNeedle);
@@ -792,10 +823,11 @@ class DBObjectSearch extends DBSearch
 	 * Helper to
 	 * - convert a translation table (format optimized for the translation in an expression tree) into simple hash
 	 * - compile over an eventually existing map
+	 * - accept multiple translations for the same alias for unions
 	 *
 	 * @param array $aRealiasingMap Map to update
 	 * @param array $aAliasTranslation Translation table resulting from calls to MergeWith_InNamespace
-	 * @return void of <old-alias> => <new-alias>
+	 * @return void of [old-alias][] => new-alias (@since 2.7.2)
 	 */
 	protected function UpdateRealiasingMap(&$aRealiasingMap, $aAliasTranslation)
 	{
@@ -803,17 +835,33 @@ class DBObjectSearch extends DBSearch
 		{
 			foreach ($aAliasTranslation as $sPrevAlias => $aRules)
 			{
-				if (isset($aRules['*']))
+				if (!isset($aRules['*']))
 				{
-					$sNewAlias = $aRules['*'];
-					$sOriginalAlias = array_search($sPrevAlias, $aRealiasingMap);
-					if ($sOriginalAlias !== false)
+					continue;
+				}
+
+				$sNewAlias = $aRules['*'];
+				$bOriginalFound = false;
+				$iIndex = 0;
+				foreach ($aRealiasingMap as $sOriginalAlias => $aAliases)
+				{
+					$iIndex = array_search($sPrevAlias, $aAliases);
+					if ($iIndex !== false)
 					{
-						$aRealiasingMap[$sOriginalAlias] = $sNewAlias;
+						$bOriginalFound = true;
+						break;
 					}
-					else
+
+				}
+				if ($bOriginalFound)
+				{
+					$aRealiasingMap[$sOriginalAlias][$iIndex] = $sNewAlias;
+				}
+				else
+				{
+					if (!isset($aRealiasingMap[$sPrevAlias]) || !in_array($sNewAlias, $aRealiasingMap[$sPrevAlias]))
 					{
-						$aRealiasingMap[$sPrevAlias] = $sNewAlias;
+						$aRealiasingMap[$sPrevAlias][] = $sNewAlias;
 					}
 				}
 			}
@@ -859,10 +907,14 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
-	 * @param $sExtKeyAttCode
+	 * Add a link to another filter, using an extkey already present in current filter
+	 *
+	 * @param DBObjectSearch $oFilter filter to join to (can be modified)
+	 * @param string $sExtKeyAttCode extkey present in current filter, that allows to points to $oFilter
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param array $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed.
+	 *          Doesn't change existing alias, use {@link \DBObjectSearch::RenameAlias()} for that.
+	 *
 	 * @throws CoreException
 	 * @throws CoreWarning
 	 */
@@ -951,7 +1003,7 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
-	 * @param DBObjectSearch $oFilter
+	 * @param DBObjectSearch $oFilter (can be modified)
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
 	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed

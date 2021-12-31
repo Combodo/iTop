@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,7 +19,6 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -46,8 +45,7 @@ function GraphvizEscape($s)
 function GraphvizLifecycle($sClass)
 {
 	$sDotFileContent = "";
-	$sStateAttCode = MetaModel::GetStateAttributeCode($sClass);
-	if (empty($sStateAttCode))
+	if (!MetaModel::HasLifecycle($sClass))
 	{
 		//$oPage->p("no lifecycle for this class");
 	}
@@ -112,7 +110,7 @@ $sDotExecutable = MetaModel::GetConfig()->Get('graphviz_path');
 if (file_exists($sDotExecutable))
 {
 	// create the file with Graphviz
-	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".png";
+	$sImageFilePath = APPROOT."data/lifecycle/".$sClass.".svg";
 	if (!is_dir(APPROOT."data"))
 	{
 		@mkdir(APPROOT."data");
@@ -128,7 +126,7 @@ if (file_exists($sDotExecutable))
 	@fwrite($rFile, $sDotDescription);
 	@fclose($rFile);
 	$aOutput = array();
-	$CommandLine = "\"$sDotExecutable\" -v -Tpng < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
+	$CommandLine = "\"$sDotExecutable\" -v -Tsvg < \"$sDotFilePath\" -o \"$sImageFilePath\" 2>&1";
 	
 	exec($CommandLine, $aOutput, $iRetCode);
 	if ($iRetCode != 0)
@@ -142,15 +140,19 @@ if (file_exists($sDotExecutable))
 	}
 	else
 	{
-		header('Content-type: image/png');
-		echo file_get_contents($sImageFilePath);
+		header('Content-type: image/svg+xml');
+		header('Content-Disposition: inline; filename="'.$sClass.'.svg"');
+		readfile($sImageFilePath);
 	}
 	@unlink($sDotFilePath);
+	// Image file is removed as well as there is no cache system yet
+	@unlink($sImageFilePath);
 }
 else
 {
 	header('Content-type: image/png');
-	echo file_get_contents($sImageFilePath);
+	header('Content-Disposition: inline; filename="'.$sClass.'.png"');
+	readfile($sImageFilePath);
 }
 
 ?>

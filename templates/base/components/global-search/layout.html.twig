@@ -1,0 +1,49 @@
+<div id="{{ oUIBlock.GetId() }}"
+	 {# Note: The "ibo-is-opened" class is put there and not through the JS widget to avoid visual glitches #}
+	 {# Otherwise it would open only when the DOM is ready and the JS widget instantiated #}
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.HasQuery() %}ibo-is-opened{% endif %}"
+     data-role="ibo-global-search">
+	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-global-search--head" data-role="ibo-global-search--head">
+		<a href="#" class="ibo-global-search--icon" data-role="ibo-global-search--icon"
+           aria-label="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}"
+           data-tooltip-content="{{ 'UI:Component:GlobalSearch:Tooltip'|dict_s }}"
+           data-tooltip-placement="bottom-start"
+           data-tooltip-distance-offset="25"
+        >
+			<span class="fas fa-search"></span>
+		</a>
+		<input type="text" name="text" class="ibo-global-search--input" data-role="ibo-global-search--input" placeholder="{{ 'UI:Component:GlobalSearch:Input:Placeholder'|dict_s }}" value="{{ oUIBlock.GetQuery() }}" autocomplete="off">
+		<input type="hidden" name="operation" value="full_text">
+	</form>
+	<div class="ibo-global-search--drawer" data-role="ibo-global-search--drawer">
+		<div class="ibo-global-search--compartment">
+			<div class="ibo-global-search--compartment-title" data-role="ibo-global-search--compartment-title">
+				<span>{{ 'UI:Component:GlobalSearch:Recents:Title'|dict_s }}</span>
+			</div>
+			<div class="ibo-global-search--compartment-content" data-role="ibo-global-search--compartment-content">
+				{% if oUIBlock.GetShowHistory == false %}
+					<div class="ibo-global-search--compartment--placeholder">
+						<div class="ibo-global-search--compartment--placeholder-hint">{{ 'UI:Component:QuickCreate:HistoryDisabled'|dict_s }}</div>
+					</div>
+				{% elseif oUIBlock.GetLastQueries()|length > 0 %}
+					{% for aQuery in oUIBlock.GetLastQueries() %}
+						<a href="{{ aQuery.target_url }}" class="ibo-global-search--compartment-element" data-role="ibo-global-search--compartment-element" data-query-raw="{{ aQuery.query }}" title="{{ aQuery.query }}">
+							{% if aQuery.icon_url is defined %}
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+								<img src="{{ aQuery.icon_url}}" alt="" class="ibo-global-search--compartment-element-image">
+							{% endif %}
+							{{ aQuery.label_html|raw }}
+						</a>
+					{% endfor %}
+				{% else %}
+					<div class="ibo-global-search--compartment--placeholder">
+						<div class="ibo-global-search--compartment--placeholder-image ibo-svg-illustration--container">
+							 {{ source("illustrations/undraw_search.svg") }}
+						</div>
+						<div class="ibo-global-search--compartment--placeholder-hint">{{ 'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder'|dict_s }}</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

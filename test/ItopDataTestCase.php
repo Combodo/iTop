@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2017 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -28,6 +28,7 @@ namespace Combodo\iTop\Test\UnitTest;
 
 use ArchivedObjectException;
 use CMDBSource;
+use CMDBObject;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -47,6 +48,7 @@ use Ticket;
 use URP_UserProfile;
 use VirtualHost;
 use VirtualMachine;
+use XMLDataLoader;
 
 
 /** @see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::CreateObjectWithTagSet() */
@@ -73,8 +75,6 @@ class ItopDataTestCase extends ItopTestCase
 	protected function setUp()
 	{
 		parent::setUp();
-		//require_once(APPROOT.'/application/startup.inc.php');
-
 		require_once(APPROOT.'application/utils.inc.php');
 
 		$sEnv = 'production';
@@ -408,8 +408,12 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
 	{
+		if (empty($sPassword)){
+			$sPassword = $sLogin;
+		}
+
 		$oUserProfile = new URP_UserProfile();
 		$oUserProfile->Set('profileid', $iProfileId);
 		$oUserProfile->Set('reason', 'UNIT Tests');
@@ -417,11 +421,34 @@ class ItopDataTestCase extends ItopTestCase
 		$oUser = $this->createObject('UserLocal', array(
 			'contactid' => 2,
 			'login' => $sLogin,
-			'password' => $sLogin,
+			'password' => $sPassword,
 			'language' => 'EN US',
 			'profile_list' => $oSet,
 		));
 		$this->debug("Created {$oUser->GetName()} ({$oUser->GetKey()})");
+
+		return $oUser;
+	}
+
+	/**
+	 * @param \DBObject $oUser
+	 * @param int $iProfileId
+	 *
+	 * @return \DBObject
+	 * @throws Exception
+	 */
+	protected function AddProfileToUser($oUser, $iProfileId)
+	{
+		$oUserProfile = new URP_UserProfile();
+		$oUserProfile->Set('profileid', $iProfileId);
+		$oUserProfile->Set('reason', 'UNIT Tests');
+		/** @var DBObjectSet $oSet */
+		$oSet = $oUser->Get('profile_list');
+		$oSet->AddObject($oUserProfile);
+		$oUser = $this->updateObject('UserLocal', $oUser->GetKey(), array(
+			'profile_list' => $oSet,
+		));
+		$this->debug("Updated {$oUser->GetName()} ({$oUser->GetKey()})");
 
 		return $oUser;
 	}
@@ -780,5 +807,44 @@ class ItopDataTestCase extends ItopTestCase
 			// Otherwise PHP Unit will consider that no assertion has been made
 			static::assertTrue(true);
 		}
+	}
+
+	/**
+	 * Import a set of XML files describing a consistent set of iTop objects
+	 * @param string[] $aFiles
+	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
+	 *                         before trying to import it (existing objects will be updated)
+	 * @return int Number of objects created
+	 */
+	protected function CreateFromXMLFiles($aFiles, $bSearch = false)
+	{
+		$oLoader = new XMLDataLoader();
+		$oLoader->StartSession(CMDBObject::GetCurrentChange());
+		foreach($aFiles as $sFilePath)
+		{
+			$oLoader->LoadFile($sFilePath, false, $bSearch);
+		}
+		$oLoader->EndSession();
+
+		return $oLoader->GetCountCreated();
+	}
+
+	/**
+	 * Import a consistent set of iTop objects from the specified XML text string 
+	 * @param string $sXmlDataset
+	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
+	 *                         before trying to import it (existing objects will be updated)
+	 * @return int The number of objects created
+	 */
+	protected function CreateFromXMLString($sXmlDataset, $bSearch = false)
+	{
+		$sTmpFileName = tempnam(sys_get_temp_dir(), 'xml');
+		file_put_contents($sTmpFileName, $sXmlDataset);
+
+		$ret = $this->CreateFromXMLFiles([$sTmpFileName], $bSearch);
+
+		unlink($sTmpFileName);
+
+		return $ret;
 	}
 }

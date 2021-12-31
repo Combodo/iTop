@@ -1,0 +1,16 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-wizard-container--padding: 10px $ibo-spacing-500 !default;
+$ibo-wizard-container--background-color: $ibo-color-blue-200 !default;
+$ibo-wizard-container--border-color: $ibo-color-blue-600 !default;
+$ibo-wizard-container--border-width: 3px !default;
+
+.ibo-wizard-container {
+	padding: $ibo-wizard-container--padding;
+	background: $ibo-wizard-container--background-color;
+	border-radius: $ibo-border-radius-300;
+	border-left: $ibo-wizard-container--border-width solid $ibo-wizard-container--border-color;
+}

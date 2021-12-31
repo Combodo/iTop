@@ -1,0 +1,128 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-datamodel-viewer--parent--spacer--padding-y: $ibo-spacing-0 !default;
+$ibo-datamodel-viewer--parent--spacer--padding-x: $ibo-spacing-300 !default;
+
+$ibo-datamodel-viewer--attributes-table--first-column--width: 3px !default;
+
+$ibo-datamodel-viewer--origin-cell--diameter: 8px !default;
+$ibo-datamodel-viewer--origin-cell--border-radius: $ibo-border-radius-full !default;
+
+$ibo-datamodel-viewer--classes-list--height: 100% !default;
+$ibo-datamodel-viewer--classes-list--width: 350px !default;
+$ibo-datamodel-viewer--classes-list--padding-left: $ibo-spacing-600 !default;
+
+$ibo-datamodel-viewer--lifecycle--code--color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--lifecycle--stimuli--color: $ibo-color-blue-900 !default;
+$ibo-datamodel-viewer--lifecycle--attribute-option--color: $ibo-color-pink-900 !default;
+
+$ibo-datamodel-viewer--schema--rectangle--hover--fill: $ibo-color-grey-400 !default;
+$ibo-datamodel-viewer--schema--text--fill: $ibo-color-grey-900 !default;
+$ibo-datamodel-viewer--schema--self-referencing--hover--fill: $ibo-datamodel-viewer--schema--rectangle--hover--fill !default;
+$ibo-datamodel-viewer--schema--tooltip--fill: $ibo-color-white-100 !default;
+$ibo-datamodel-viewer--schema--tooltip--background-color: $ibo-color-grey-900 !default;
+$ibo-datamodel-viewer--schema--tooltip--border-color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--schema--tooltip--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-datamodel-viewer--schema--tooltip--icon--font-size: $ibo-font-size-100 !default;
+$ibo-datamodel-viewer--schema--tooltip--span--margin: 3px !default;
+
+$ibo-datamodel-viewer--schema--tooltip-top--border-color: $ibo-color-grey-700 !default;
+$ibo-datamodel-viewer--schema--tooltip-top--padding: 3px !default;
+
+$ibo-datamodel-viewer--lifecycle-image--margin-bottom: $ibo-spacing-500 !default;
+
+.ibo-datamodel-viewer--details{
+  .ibo-panel--subtitle{
+    @extend %ibo-font-ral-nor-150;
+  }
+}
+
+.ibo-datamodel-viewer--parent--spacer{
+  padding: $ibo-datamodel-viewer--parent--spacer--padding-y $ibo-datamodel-viewer--parent--spacer--padding-x;
+}
+
+#ibo-datamodel-viewer--attributes-table{
+  > tbody tr td:first-child{
+    width: $ibo-datamodel-viewer--attributes-table--first-column--width;
+  }
+}
+
+.ibo-datamodel-viewer--origin-cell{
+    vertical-align: middle;
+  > div {
+    height: $ibo-datamodel-viewer--origin-cell--diameter;
+    width: $ibo-datamodel-viewer--origin-cell--diameter;
+    border-radius: $ibo-datamodel-viewer--origin-cell--border-radius;
+  }
+}
+
+.ibo-datamodel-viewer--classes-list{
+  position: relative;
+  height: $ibo-datamodel-viewer--classes-list--height;
+  width: $ibo-datamodel-viewer--classes-list--width;
+  padding-left: $ibo-datamodel-viewer--classes-list--padding-left;
+  overflow-y: scroll;
+}
+
+.ibo-datamodel-viewer--lifecycle--code{
+  color: $ibo-datamodel-viewer--lifecycle--code--color;
+}
+
+.ibo-datamodel-viewer--lifecycle--stimuli{
+  color: $ibo-datamodel-viewer--lifecycle--stimuli--color;
+}
+
+.ibo-datamodel-viewer--lifecycle--attribute-option{
+  color: $ibo-datamodel-viewer--lifecycle--attribute-option--color;
+}
+
+
+.dataModelSchema g {
+  cursor: pointer;
+}
+
+.dataModelSchema g:hover rect:not(.liseret) {
+  fill: $ibo-datamodel-viewer--schema--rectangle--hover--fill;
+}
+
+.dataModelSchema text {
+  fill: $ibo-datamodel-viewer--schema--text--fill;
+  text-anchor: middle;
+  @extend %ibo-font-ral-nor-100;
+}
+
+#selfreferencing:hover ~ g > .selfattr {
+  fill: $ibo-datamodel-viewer--schema--self-referencing--hover--fill;
+}
+
+.tooltipD3 {
+  position: fixed;
+  text-align: center;
+  background: $ibo-datamodel-viewer--schema--tooltip--fill;
+  border: 1px solid $ibo-datamodel-viewer--schema--tooltip--border-color;
+  border-radius: $ibo-datamodel-viewer--schema--tooltip--border-radius;
+  pointer-events: none;
+  fill: $ibo-datamodel-viewer--schema--tooltip--background-color;
+  @extend %ibo-font-ral-nor-100;
+  text-anchor: middle;
+  i {
+    font-size: $ibo-datamodel-viewer--schema--tooltip--icon--font-size;
+  }
+  span {
+    margin: $ibo-datamodel-viewer--schema--tooltip--span--margin;
+  }
+}
+
+#tooltipD3_top {
+  @extend %ibo-font-ral-bol-100;
+  border-bottom: 1px solid $ibo-datamodel-viewer--schema--tooltip-top--border-color;
+  padding: $ibo-datamodel-viewer--schema--tooltip-top--padding;
+}
+
+.ibo-datamodel-viewer--lifecycle-image{
+  margin-bottom: $ibo-datamodel-viewer--lifecycle-image--margin-bottom;
+}

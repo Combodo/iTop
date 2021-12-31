@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Symfony\Component\DependencyInjection\Container;
 
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');
@@ -29,7 +30,7 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * You may implement such interfaces in a module file (e.g. main.mymodule.php)
  *
  * @api
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     Extensibility
  * @since       2.7.0
@@ -72,15 +73,14 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 	/**
 	 * @inheritDoc
 	 */
-	public abstract function ListSupportedLoginModes();
+	abstract public function ListSupportedLoginModes();
 
 	/**
 	 * @inheritDoc
 	 */
 	public function LoginAction($sLoginState, &$iErrorCode)
 	{
-		switch ($sLoginState)
-		{
+		switch ($sLoginState) {
 			case LoginWebPage::LOGIN_STATE_START:
 				return $this->OnStart($iErrorCode);
 
@@ -431,7 +431,7 @@ interface iApplicationUIExtension
 	 *
 	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
 	 *
-	 * @return string[string]
+	 * @return array
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet);
 }
@@ -778,6 +778,10 @@ abstract class ApplicationPopupMenuItem
 	/** @ignore */
 	protected $sLabel;
 	/** @ignore */
+	protected $sTooltip;	
+	/** @ignore */
+	protected $sIconClass;
+	/** @ignore */
 	protected $aCssClasses;
 
 	/**
@@ -792,6 +796,8 @@ abstract class ApplicationPopupMenuItem
 	{
 		$this->sUID = $sUID;
 		$this->sLabel = $sLabel;
+		$this->sTooltip = '';
+		$this->sIconClass = '';
 		$this->aCssClasses = array();
 	}
 
@@ -846,6 +852,47 @@ abstract class ApplicationPopupMenuItem
 		$this->aCssClasses[] = $sCssClass;
 	}
 
+
+	/**
+	 * @param $sTooltip
+	 * 
+	 * @since 3.0.0
+	 */
+	public function SetTooltip($sTooltip)
+	{
+		$this->sTooltip = $sTooltip;
+	}
+
+	/**
+	 * @return string
+	 * 
+	 * @since 3.0.0
+	 */
+	public function GetTooltip()
+	{
+		return $this->sTooltip;
+	}
+	
+	/**
+	 * @param $sIconClass
+	 * 
+	 * @since 3.0.0
+	 */
+	public function SetIconClass($sIconClass)
+	{
+		$this->sIconClass = $sIconClass;
+	}	
+	
+	/**
+	 * @return string
+	 *
+	 * @since 3.0.0
+	 */
+	public function GetIconClass()
+	{
+		return $this->sIconClass;
+	}
+	
 	/**
 	 * Returns the components to create a popup menu item in HTML
 	 *
@@ -864,6 +911,8 @@ abstract class ApplicationPopupMenuItem
 /**
  * Class for adding an item into a popup menu that browses to the given URL
  *
+ * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
+ *
  * @api
  * @package     Extensibility
  * @since 2.0
@@ -871,7 +920,7 @@ abstract class ApplicationPopupMenuItem
 class URLPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sURL;
+	protected $sUrl;
 	/** @ignore */
 	protected $sTarget;
 
@@ -880,25 +929,45 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param string $sURL If the menu is an hyperlink, provide the absolute hyperlink here
+	 * @param string $sUrl If the menu is an hyperlink, provide the absolute hyperlink here
 	 * @param string $sTarget In case the menu is an hyperlink and a specific target is needed (_blank for example), pass it here
 	 */
-	public function __construct($sUID, $sLabel, $sURL, $sTarget = '_top')
+	public function __construct($sUID, $sLabel, $sUrl, $sTarget = '_top')
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sURL = $sURL;
+		$this->sUrl = $sUrl;
 		$this->sTarget = $sTarget;
 	}
 
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => $this->GetLabel(), 'url' => $this->sURL, 'target' => $this->sTarget, 'css_classes' => $this->aCssClasses);
+		return array('label' => $this->GetLabel(),
+			'url' => $this->GetUrl(),
+			'target' => $this-> GetTarget(),
+			'css_classes' => $this->aCssClasses,
+			'icon_class' => $this->sIconClass,
+			'tooltip' => $this->sTooltip
+		);
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
+	}
+
+	/** @ignore */
+	public function GetTarget()
+	{
+		return $this->sTarget;
 	}
 }
 
 /**
  * Class for adding an item into a popup menu that triggers some Javascript code
+ *
+ * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
  *
  * @api
  * @package     Extensibility
@@ -907,7 +976,9 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 class JSPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sJSCode;
+	protected $sJsCode;
+	/** @ignore */
+	protected $sUrl;
 	/** @ignore */
 	protected $aIncludeJSFiles;
 
@@ -925,7 +996,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function __construct($sUID, $sLabel, $sJSCode, $aIncludeJSFiles = array())
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sJSCode = $sJSCode;
+		$this->sJsCode = $sJSCode;
+		$this->sUrl = '#';
 		$this->aIncludeJSFiles = $aIncludeJSFiles;
 	}
 
@@ -935,9 +1007,11 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 		// Note: the semicolumn is a must here!
 		return array(
 			'label' => $this->GetLabel(),
-			'onclick' => $this->sJSCode.'; return false;',
-			'url' => '#',
-			'css_classes' => $this->aCssClasses,
+			'onclick' => $this->GetJsCode().'; return false;',
+			'url' => $this->GetUrl(),
+			'css_classes' => $this->GetCssClasses(),
+			'icon_class' => $this->sIconClass,
+			'tooltip' => $this->sTooltip
 		);
 	}
 
@@ -945,6 +1019,18 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetLinkedScripts()
 	{
 		return $this->aIncludeJSFiles;
+	}
+	
+	/** @ignore */
+	public function GetJsCode()
+	{
+		return $this->sJsCode;
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
 	}
 }
 
@@ -1017,11 +1103,14 @@ class JSButtonItem extends JSPopupMenuItem
  * @api
  * @package     Extensibility
  * @since 2.0
+ * @deprecated 3.0.0 If you need to include:
+ *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
+ *   * HTML (and optionally JS/CSS), use {@see \iPageUIBlockExtension} to manipulate {@see \Combodo\iTop\Application\UI\Base\UIBlock} instead
  */
 interface iPageUIExtension
 {
 	/**
-	 * Add content to the North pane
+	 * Add content to the header of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -1030,7 +1119,7 @@ interface iPageUIExtension
 	public function GetNorthPaneHtml(iTopWebPage $oPage);
 
 	/**
-	 * Add content to the South pane
+	 * Add content to the footer of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -1049,11 +1138,55 @@ interface iPageUIExtension
 }
 
 /**
+ * Implement this interface to add content to any iTopWebPage
+ *
+ * There are 3 places where content can be added:
+ *
+ * * The north pane: (normaly empty/hidden) at the top of the page, spanning the whole
+ *   width of the page
+ * * The south pane: (normaly empty/hidden) at the bottom of the page, spanning the whole
+ *   width of the page
+ * * The admin banner (two tones gray background) at the left of the global search.
+ *   Limited space, use it for short messages
+ *
+ * Each of the methods of this interface is supposed to return the HTML to be inserted at
+ * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
+ *
+ * @api
+ * @package     Extensibility
+ * @since 3.0.0
+ */
+interface iPageUIBlockExtension
+{
+	/**
+	 * Add content to the "admin banner"
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetBannerBlock();
+
+	/**
+	 * Add content to the header of the page
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetHeaderBlock();
+
+	/**
+	 * Add content to the footer of the page
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetFooterBlock();
+}
+
+/**
  * Extend this class instead of iPageUIExtension if you don't need to overload all methods
  *
  * @api
  * @package     Extensibility
  * @since       2.7.0
+ * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
  */
 abstract class AbstractPageUIExtension implements iPageUIExtension
 {
@@ -1062,6 +1195,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetNorthPaneHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
@@ -1070,6 +1205,8 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetSouthPaneHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
@@ -1078,9 +1215,190 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 	 */
 	public function GetBannerHtml(iTopWebPage $oPage)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
 		return '';
 	}
 
+}
+
+/**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       3.0.0
+ */
+abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHeaderBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetFooterBlock()
+	{
+		return null;
+	}
+}
+
+/**
+ * Implement this interface to add script (JS) files to the backoffice pages
+ *
+ * @see \iTopWebPage::$a_linked_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeLinkedScriptsExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_linked_scripts Each script will be included using this property
+	 * @return array An array of absolute URLs to the files to include
+	 */
+	public function GetLinkedScriptsAbsUrls(): array;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages' head.
+ * Will be executed first, BEFORE the DOM interpretation.
+ *
+ * @see \iTopWebPage::$a_early_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeEarlyScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_early_scripts
+	 * @return string
+	 */
+	public function GetEarlyScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed immediately, without waiting for the DOM to be ready.
+ *
+ * @see \iTopWebPage::$a_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_scripts
+	 * @return string
+	 */
+	public function GetScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed right when the DOM is ready.
+ *
+ * @see \iTopWebPage::$a_init_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeInitScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_init_scripts
+	 * @return string
+	 */
+	public function GetInitScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed slightly AFTER the DOM is ready (just after the init. scripts).
+ *
+ * @see \iTopWebPage::$a_ready_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeReadyScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_ready_scripts
+	 * @return string
+	 */
+	public function GetReadyScript(): string;
+}
+
+/**
+ * Implement this interface to add stylesheets (CSS) to the backoffice pages
+ *
+ * @see \iTopWebPage::$a_linked_stylesheets
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeLinkedStylesheetsExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_linked_stylesheets
+	 * @return array An array of absolute URLs to the files to include
+	 */
+	public function GetLinkedStylesheetsAbsUrls(): array;
+}
+
+/**
+ * Implement this interface to add inline style (CSS) to the backoffice pages' head.
+ *
+ * @see \iTopWebPage::$a_styles
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeStyleExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_styles
+	 * @return string
+	 */
+	public function GetStyle(): string;
+}
+
+/**
+ * Implement this interface to add Dict entries
+ *
+ * @see \iTopWebPage::$a_dict_entries
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries
+	 * @return array
+	 */
+	public function GetDictEntries(): array;
+}
+
+/**
+ * Implement this interface to add Dict entries prefixes
+ *
+ * @see \iTopWebPage::$a_dict_entries_prefixes
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesPrefixesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries_prefixes
+	 * @return array
+	 */
+	public function GetDictEntriesPrefixes(): array;
 }
 
 /**

@@ -179,19 +179,19 @@
 				else
 				{
 					$(this)
-					.parent()
+						.parent()
 						// swap classes for hitarea
 						.find(">.hitarea")
-							.replaceClass( CLASSES.collapsableHitarea, CLASSES.expandableHitarea )
-							.replaceClass( CLASSES.lastCollapsableHitarea, CLASSES.lastExpandableHitarea )
+						.swapClass( CLASSES.collapsableHitarea, CLASSES.expandableHitarea )
+						.swapClass( CLASSES.lastCollapsableHitarea, CLASSES.lastExpandableHitarea )
 						.end()
 						// swap classes for parent li
-						.replaceClass( CLASSES.collapsable, CLASSES.expandable )
-						.replaceClass( CLASSES.lastCollapsable, CLASSES.lastExpandable )
+						.swapClass( CLASSES.collapsable, CLASSES.expandable )
+						.swapClass( CLASSES.lastCollapsable, CLASSES.lastExpandable )
 						// find child lists
 						.find( ">ul" )
-							// toggle them
-							.heightToggleHide( settings.animated, settings.toggle );
+						// toggle them
+						.heightToggle( settings.animated, settings.toggle );
 				}
 
 				if ( settings.unique ) {

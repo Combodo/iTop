@@ -1,21 +1,11 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
@@ -51,7 +41,10 @@ require_once(APPROOT."/application/user.dashboard.class.inc.php");
  * new OQLMenuNode('PersonsMenu', 'SELECT bizPerson', $oContactsMenu->GetIndex(), 0);
  *
  */
- 
+
+/**
+ * Class ApplicationMenu
+ */
 class ApplicationMenu
 {
 	/**
@@ -67,11 +60,18 @@ class ApplicationMenu
 	 */
 	static $aMenusIndex = array();
 	/**
+	 * @var array
+	 */
+	static $aMenusById = [];
+	/**
 	 * @var string
 	 */
 	static $sFavoriteSiloQuery = 'SELECT Organization';
 
-	static public function LoadAdditionalMenus()
+	/**
+	 * @return void
+	 */
+	public static function LoadAdditionalMenus()
 	{
 		if (!self::$bAdditionalMenusLoaded)
 		{
@@ -97,10 +97,10 @@ class ApplicationMenu
 
 	/**
 	 * Set the query used to limit the list of displayed organizations in the drop-down menu
-	 * @param $sOQL string The OQL query returning a list of Organization objects
+	 * @param string $sOQL The OQL query returning a list of Organization objects
 	 * @return void
 	 */
-	static public function SetFavoriteSiloQuery($sOQL)
+	public static function SetFavoriteSiloQuery($sOQL)
 	{
 		self::$sFavoriteSiloQuery = $sOQL;
 	}
@@ -109,7 +109,7 @@ class ApplicationMenu
 	 * Get the query used to limit the list of displayed organizations in the drop-down menu
 	 * @return string The OQL query returning a list of Organization objects
 	 */
-	static public function GetFavoriteSiloQuery()
+	public static function GetFavoriteSiloQuery()
 	{
 		return self::$sFavoriteSiloQuery;
 	}
@@ -117,11 +117,11 @@ class ApplicationMenu
 	/**
 	 * Check whether a menu Id is enabled or not
 	 *
-	 * @param $sMenuId
+	 * @param string $sMenuId
 	 *
 	 * @throws \Exception
 	 */
-	static public function CheckMenuIdEnabled($sMenuId)
+	public static function CheckMenuIdEnabled($sMenuId)
 	{
 		self::LoadAdditionalMenus();
 		$oMenuNode = self::GetMenuNode(self::GetMenuIndexById($sMenuId));
@@ -140,11 +140,11 @@ class ApplicationMenu
 	 * Main function to add a menu entry into the application, can be called during the definition
 	 * of the data model objects
 	 * @param MenuNode $oMenuNode
-	 * @param $iParentIndex
-	 * @param $fRank
+	 * @param int $iParentIndex
+	 * @param float $fRank
 	 * @return int
 	 */
-	static public function InsertMenu(MenuNode $oMenuNode, $iParentIndex, $fRank)
+	public static function InsertMenu(MenuNode $oMenuNode, $iParentIndex, $fRank)
 	{
 		$index = self::GetMenuIndexById($oMenuNode->GetMenuId());
 		if ($index == -1)
@@ -171,6 +171,7 @@ class ApplicationMenu
 			$aBacktrace = debug_backtrace();
 			$sFile = isset($aBacktrace[2]["file"]) ? $aBacktrace[2]["file"] : $aBacktrace[1]["file"];
 			self::$aMenusIndex[$index] = array('node' => $oMenuNode, 'children' => array(), 'parent' => $sParentId, 'rank' => $fRank, 'source_file' => $sFile);
+			self::$aMenusById[$oMenuNode->GetMenuId()] = $index;
 		}
 		else
 		{
@@ -185,30 +186,166 @@ class ApplicationMenu
 
 	/**
 	 * Reflection API - Get menu entries
+	 *
+	 * @return array
 	 */
-	static public function ReflectionMenuNodes()
+	public static function ReflectionMenuNodes()
 	{
 		self::LoadAdditionalMenus();
 		return self::$aMenusIndex;
 	}
 
 	/**
+	 * Get entries count for all the menus
+	 *
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @since 3.0.0
+	 */
+	public static function GetMenusCount($aExtraParams = array())
+	{
+		$aMenuGroups = static::GetMenuGroups($aExtraParams);
+
+		$aMenusCount = [];
+		foreach ($aMenuGroups as $aMenuGroup) {
+			$aSubMenuNodes = $aMenuGroup['aSubMenuNodes'];
+			$aMenusCount = array_merge($aMenusCount, static::GetSubMenusCount($aSubMenuNodes));
+		}
+
+		return $aMenusCount;
+	}
+
+	/**
+	 * Recurse sub menus for counts
+	 *
+	 * @param array $aSubMenuNodes
+	 *
+	 * @return array
+	 * @since 3.0.0
+	 */
+	private static function GetSubMenusCount(array $aSubMenuNodes)
+	{
+		$aSubMenusCount = [];
+		foreach ($aSubMenuNodes as $aSubMenuNode) {
+			if ($aSubMenuNode['bHasCount']) {
+				$oMenuNode = static::GetMenuNode(static::GetMenuIndexById($aSubMenuNode['sId']));
+				$aSubMenusCount[$aSubMenuNode['sId']] = $oMenuNode->GetEntriesCount();
+			}
+			$aSubMenusCount = array_merge($aSubMenusCount, static::GetSubMenusCount($aSubMenuNode['aSubMenuNodes']));
+		}
+		return $aSubMenusCount;
+	}
+
+	/**
+	 * Return an array of menu groups
+	 *
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @since 3.0.0
+	 */
+	public static function GetMenuGroups($aExtraParams = array())
+	{
+		self::LoadAdditionalMenus();
+
+		// Sort the root menu based on the rank
+		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
+
+		$aMenuGroups = [];
+		foreach(static::$aRootMenus as $aMenuGroup)
+		{
+			if(!static::CanDisplayMenu($aMenuGroup))
+			{
+				continue;
+			}
+
+			$sMenuGroupIdx = $aMenuGroup['index'];
+			/** @var \MenuGroup $oMenuNode */
+			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
+
+			$aMenuGroups[] = [
+				'sId' => $oMenuNode->GetMenuID(),
+				'sIconCssClasses' => $oMenuNode->GetDecorationClasses(),
+				'sInitials' => $oMenuNode->GetInitials(),
+				'sTitle' => $oMenuNode->GetTitle(),
+				'aSubMenuNodes' => static::GetSubMenuNodes($sMenuGroupIdx, $aExtraParams),
+			];
+		}
+
+		return $aMenuGroups;
+	}
+
+	/**
+	 * Return an array of sub-menu nodes for $sMenuGroupIdx
+	 *
+	 * @param string $sMenuGroupIdx
+	 * @param array $aExtraParams
+	 *
+	 * @return array
+	 * @throws \DictExceptionMissingString
+	 * @throws \Exception
+	 * @since 3.0.0
+	 */
+	public static function GetSubMenuNodes($sMenuGroupIdx, $aExtraParams = array())
+	{
+		$aSubMenuItems = self::GetChildren($sMenuGroupIdx);
+
+		// Sort the children based on the rank
+		usort($aSubMenuItems, array('ApplicationMenu', 'CompareOnRank'));
+
+		$aSubMenuNodes = [];
+		foreach($aSubMenuItems as $aSubMenuItem)
+		{
+			if(!static::CanDisplayMenu($aSubMenuItem))
+			{
+				continue;
+			}
+
+			$sSubMenuItemIdx = $aSubMenuItem['index'];
+			$oSubMenuNode = static::GetMenuNode($sSubMenuItemIdx);
+
+			if(!$oSubMenuNode->IsEnabled())
+			{
+				continue;
+			}
+
+			$aSubMenuNodes[] = [
+				'sId' => $oSubMenuNode->GetMenuId(),
+				'sTitle' => $oSubMenuNode->GetTitle(),
+				'bHasCount' => $oSubMenuNode->HasCount(),
+				'sUrl' => $oSubMenuNode->GetHyperlink($aExtraParams),
+				'bOpenInNewWindow' => $oSubMenuNode->IsHyperLinkInNewWindow(),
+				'aSubMenuNodes' => static::GetSubMenuNodes($sSubMenuItemIdx, $aExtraParams),
+			];
+		}
+
+		return $aSubMenuNodes;
+	}
+
+	/**
 	 * Entry point to display the whole menu into the web page, used by iTopWebPage
 	 * @param \WebPage $oPage
-	 * @param $aExtraParams
+	 * @param array $aExtraParams
 	 * @throws DictExceptionMissingString
+	 *
+	 * @deprecated Will be removed in 3.0.0, use static::GetMenuGroups() instead
 	 */
-	static public function DisplayMenu($oPage, $aExtraParams)
+	public static function DisplayMenu($oPage, $aExtraParams)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetMenuGroups() instead');
 		self::LoadAdditionalMenus();
 		// Sort the root menu based on the rank
 		usort(self::$aRootMenus, array('ApplicationMenu', 'CompareOnRank'));
 		$iAccordion = 0;
 		$iActiveAccordion = $iAccordion;
 		$iActiveMenu = self::GetMenuIndexById(self::GetActiveNodeId());
-		foreach(self::$aRootMenus as $aMenu)
-		{
-			if (!self::CanDisplayMenu($aMenu)) { continue; }
+		foreach (self::$aRootMenus as $aMenu) {
+			if (!self::CanDisplayMenu($aMenu)) {
+				continue;
+			}
 			$oMenuNode = self::GetMenuNode($aMenu['index']);
 			$oPage->AddToMenu('<h3 id="'.utils::GetSafeId('AccordionMenu_'.$oMenuNode->GetMenuID()).'" class="navigation-menu-group" data-menu-id="'.$oMenuNode->GetMenuId().'">'.$oMenuNode->GetTitle().'</h3>');
 			$oPage->AddToMenu('<div>');
@@ -237,7 +374,7 @@ EOF
 	 * @param array $aMenu menu entry
 	 * @return bool true if at least one menu is enabled
 	 */
-	static private function CanDisplayMenu($aMenu)
+	private static function CanDisplayMenu($aMenu)
 	{
 		$oMenuNode = self::GetMenuNode($aMenu['index']);
 		if ($oMenuNode->IsEnabled())
@@ -269,19 +406,19 @@ EOF
 	 * @param array $aExtraParams
 	 * @param int $iActiveMenu
 	 *
-	 * @return true if the currently selected menu is one of the submenus
+	 * @return bool True if the currently selected menu is one of the submenus
 	 * @throws DictExceptionMissingString
 	 * @throws \Exception
+	 * @deprecated Will be removed in 3.0.0, use static::GetSubMenuNodes() instead
 	 */
-	static protected function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
+	protected static function DisplaySubMenu($oPage, $aMenus, $aExtraParams, $iActiveMenu = -1)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use static::GetSubMenuNodes() instead');
 		// Sort the menu based on the rank
 		$bActive = false;
 		usort($aMenus, array('ApplicationMenu', 'CompareOnRank'));
-		foreach($aMenus as $aMenu)
-		{
-			if (!self::CanDisplayMenu($aMenu))
-			{
+		foreach ($aMenus as $aMenu) {
+			if (!self::CanDisplayMenu($aMenu)) {
 				continue;
 			}
 			$index = $aMenu['index'];
@@ -330,11 +467,11 @@ EOF
 
 	/**
 	 * Helper function to sort the menus based on their rank
-	 * @param $a
-	 * @param $b
+	 * @param array $a
+	 * @param array $b
 	 * @return int
 	 */
-	static public function CompareOnRank($a, $b)
+	public static function CompareOnRank($a, $b)
 	{
 		$result = 1;
 		if ($a['rank'] == $b['rank'])
@@ -353,7 +490,7 @@ EOF
 	 * @param int $index
 	 * @return MenuNode|null
 	 */
-	static public function GetMenuNode($index)
+	public static function GetMenuNode($index)
 	{
 		return isset(self::$aMenusIndex[$index]) ? self::$aMenusIndex[$index]['node'] : null;
 	}
@@ -363,7 +500,7 @@ EOF
 	 * @param int $index
 	 * @return array
 	 */
-	static public function GetChildren($index)
+	public static function GetChildren($index)
 	{
 		return self::$aMenusIndex[$index]['children'];
 	}
@@ -373,26 +510,20 @@ EOF
 	 * @param string $sTitle Title of the menu (as passed when creating the menu)
 	 * @return integer ID of the menu, or -1 if not found
 	 */
-	static public function GetMenuIndexById($sTitle)
+	public static function GetMenuIndexById($sTitle)
 	{
-		$index = -1;
-		/** @var MenuNode[] $aMenu */
-		foreach(self::$aMenusIndex as $aMenu)
-		{
-			if ($aMenu['node']->GetMenuId() == $sTitle)
-			{
-				$index = $aMenu['node']->GetIndex();
-				break;
-			}
+		if (isset(self::$aMenusById[$sTitle])) {
+			return self::$aMenusById[$sTitle];
 		}
-		return $index;
+
+		return -1;
 	}
 	
 	/**
 	 * Retrieves the currently active menu (if any, otherwise the first menu is the default)
 	 * @return string The Id of the currently active menu
 	 */
-	static public function GetActiveNodeId()
+	public static function GetActiveNodeId()
 	{
 		$oAppContext = new ApplicationContext();
 		$sMenuId = $oAppContext->GetCurrentValue('menu', null);		
@@ -406,7 +537,7 @@ EOF
 	/**
 	 * @return null|string
 	 */
-	static public function GetDefaultMenuId()
+	public static function GetDefaultMenuId()
 	{
 		static $sDefaultMenuId = null;
 		if (is_null($sDefaultMenuId))
@@ -426,7 +557,7 @@ EOF
 	 * @param $sMenuId
 	 * @return string
 	 */
-	static public function GetRootMenuId($sMenuId)
+	public static function GetRootMenuId($sMenuId)
 	{
 		$iMenuIndex = self::GetMenuIndexById($sMenuId);
 		if ($iMenuIndex == -1)
@@ -563,7 +694,6 @@ abstract class MenuNode
 
 	/**
 	 * @return string
-	 * @throws DictExceptionMissingString
 	 */
 	public function GetTitle()
 	{
@@ -571,21 +701,55 @@ abstract class MenuNode
 	}
 
 	/**
+	 * Indicates if the page corresponding to this menu node is countable
+	 *
+	 * @return bool true if corresponding page is countable
+	 * @since 3.0.0
+	 */
+	public function HasCount()
+	{
+		return false;
+	}
+
+	protected function GetEntriesCountFromOQL(string $sOQL)
+	{
+		// Count the entries up to 99
+		$oSearch = DBSearch::FromOQL($sOQL);
+		$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
+		DBSearchHelper::AddContextFilter($oSearch);
+
+
+		$oSet = new DBObjectSet($oSearch);
+		$iCount = $oSet->CountWithLimit(99);
+		if ($iCount > 99) {
+			$iCount = "99+";
+		}
+
+		return $iCount;
+	}
+
+	/**
+	 * Get the number of entries of the page corresponding to this menu item.
+	 *
+	 * @return int the number of entries
+	 * @since 3.0.0
+	 */
+	public function GetEntriesCount()
+	{
+		return 0;
+	}
+
+	/**
 	 * @return string
-	 * @throws DictExceptionMissingString
 	 */
 	public function GetLabel()
 	{
 		$sRet = Dict::S("Menu:$this->sMenuId+", "");
-		if ($sRet === '')
-		{
-			if ($this->iParentIndex != -1)
-			{
+		if ($sRet === '') {
+			if ($this->iParentIndex != -1) {
 				$oParentMenu = ApplicationMenu::GetMenuNode($this->iParentIndex);
 				$sRet = $oParentMenu->GetTitle().' / '.$this->GetTitle();
-			}
-			else
-			{
+			} else {
 				$sRet = $this->GetTitle();
 			}
 			//$sRet = $this->GetTitle();
@@ -600,7 +764,10 @@ abstract class MenuNode
 	{
 		return $this->index;
 	}
-	
+
+	/**
+	 * @return void
+	 */
 	public function PopulateChildMenus()
 	{
 		foreach (ApplicationMenu::GetChildren($this->GetIndex()) as $aMenu)
@@ -725,18 +892,64 @@ abstract class MenuNode
  */
 class MenuGroup extends MenuNode
 {
+	/** @var string DEFAULT_DECORATION_CLASSES Set to null by default so it is replaced by initials when none is specified */
+	const DEFAULT_DECORATION_CLASSES = null;
+
+	/** @var string The CSS classes used to display the menu group's icon */
+	protected $sDecorationClasses = self::DEFAULT_DECORATION_CLASSES;
+
 	/**
 	 * Create a top-level menu group and inserts it into the application's main menu
+	 *
 	 * @param string $sMenuId Unique identifier of the menu (used to identify the menu for bookmarking, and for getting the labels from the dictionary)
 	 * @param float $fRank Number used to order the list, the groups are sorted based on this value
+	 * @param string|null $sDecorationClasses CSS classes used to display the menu group's icon
 	 * @param string $sEnableClass Name of class of object
 	 * @param integer $iActionCode Either UR_ACTION_READ, UR_ACTION_MODIFY, UR_ACTION_DELETE, UR_ACTION_BULKREAD, UR_ACTION_BULKMODIFY or UR_ACTION_BULKDELETE
 	 * @param integer $iAllowedResults Expected "rights" for the action: either UR_ALLOWED_YES, UR_ALLOWED_NO, UR_ALLOWED_DEPENDS or a mix of them...
 	 * @param string $sEnableStimulus
 	 */
-	public function __construct($sMenuId, $fRank, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
+	public function __construct($sMenuId, $fRank, $sDecorationClasses = null, $sEnableClass = null, $iActionCode = null, $iAllowedResults = UR_ALLOWED_YES, $sEnableStimulus = null)
 	{
 		parent::__construct($sMenuId, -1 /* no parent, groups are at root level */, $fRank, $sEnableClass, $iActionCode, $iAllowedResults, $sEnableStimulus);
+
+		if(!empty($sDecorationClasses))
+		{
+			$this->sDecorationClasses = $sDecorationClasses;
+		}
+	}
+
+	/**
+	 * Return true if the menu group has some decoration classes
+	 *
+	 * @return bool
+	 * @since 3.0.0
+	 */
+	public function HasDecorationClasses()
+	{
+		return (empty($this->GetDecorationClasses()) === false);
+	}
+
+	/**
+	 * Return the CSS classes used for decorating the menu group (typically the icon in the navigation menu)
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetDecorationClasses()
+	{
+		return $this->sDecorationClasses;
+	}
+
+	/**
+	 * Returns the initials of the menu group, used by the rendering in case there is no decoration classes
+	 *
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetInitials()
+	{
+		return mb_substr($this->GetTitle(), 0, 1);
 	}
 
 	/**
@@ -913,29 +1126,40 @@ class OQLMenuNode extends MenuNode
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-		$sIcon = MetaModel::GetClassIcon($oSearch->GetClass());
 
-		if ($bSearchPane)
-		{
-			$aParams = array_merge(array('open' => $bSearchOpen, 'table_id' => $sUsageId), $aExtraParams);
+		if ($bSearchPane) {
+			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
 		}
-		
-		$oPage->add("<p class=\"page-header\">$sIcon ".utils::HtmlEntities(Dict::S($sTitle))."</p>");
-		
+
+		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
+		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
+		$oPage->AddUiBlock($oTitle);
+
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, $sUsageId);
 
-		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage))
-		{
+		$oPage->add("</div>");
+
+		if ($bEnableBreadcrumb && ($oPage instanceof iTopWebPage)) {
 			// Breadcrumb
 			//$iCount = $oBlock->GetDisplayedCount();
 			$sPageId = "ui-search-".$oSearch->GetClass();
 			$sLabel = MetaModel::GetName($oSearch->GetClass());
-			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', '../images/breadcrumb-search.png');
+			$oPage->SetBreadCrumbEntry($sPageId, $sLabel, $sTitle, '', 'fas fa-list', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 		}
+	}
+
+	public function HasCount()
+	{
+		return true;
+	}
+
+	public function GetEntriesCount()
+	{
+		return $this->GetEntriesCountFromOQL($this->sOQL);
 	}
 }
 
@@ -981,10 +1205,11 @@ class SearchMenuNode extends MenuNode
 	public function RenderContent(WebPage $oPage, $aExtraParams = array())
 	{
 		ApplicationMenu::CheckMenuIdEnabled($this->GetMenuId());
-		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', utils::GetAbsoluteUrlAppRoot().'images/breadcrumb-search.png');
+		$oPage->SetBreadCrumbEntry("menu-".$this->sMenuId, $this->GetTitle(), '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 		$oSearch = new DBObjectSearch($this->sClass);
-		$aParams = array_merge(array('table_id' => 'Menu_'.utils::GetSafeId($this->GetMenuId())), $aExtraParams);
+		$sUsageId =  'Menu_'.utils::GetSafeId($this->GetMenuId());
+		$aParams = array_merge(array('table_id' =>$sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 		$oBlock->Display($oPage, 0);
 	}
@@ -1190,41 +1415,35 @@ class DashboardMenuNode extends MenuNode
 		$oDashboard = $this->GetDashboard();
 		if ($oDashboard != null)
 		{
+			WebResourcesHelper::EnableC3JSToWebPage($oPage);
+
 			$sDivId = utils::Sanitize($this->sMenuId, '', 'element_identifier');
-			$oPage->add('<div class="dashboard_contents" id="'.$sDivId.'">');
+			$oPage->add('<div id="'.$sDivId.'" class="ibo-dashboard" data-role="ibo-dashboard">');
 			$aExtraParams['dashboard_div_id'] = $sDivId;
+			$aExtraParams['from_dashboard_page'] = true;
 			$oDashboard->SetReloadURL($this->GetHyperlink($aExtraParams));
 			$oDashboard->Render($oPage, false, $aExtraParams);
 			$oPage->add('</div>');
 
 			$bEdit = utils::ReadParam('edit', false);
-			if ($bEdit)
-			{
+			if ($bEdit) {
 				$sId = addslashes($this->sMenuId);
 				$oPage->add_ready_script("EditDashboard('$sId');");
-			}
-			else
-			{
+			} else {
 				$oParentMenu = ApplicationMenu::GetMenuNode($this->iParentIndex);
 				$sParentTitle = $oParentMenu->GetTitle();
 				$sThisTitle = $this->GetTitle();
-				if ($sParentTitle != $sThisTitle)
-				{
+				if ($sParentTitle != $sThisTitle) {
 					$sDescription = $sParentTitle.' / '.$sThisTitle;
-				}
-				else
-				{
+				} else {
 					$sDescription = $sThisTitle;
 				}
-				if ($this->sMenuId == ApplicationMenu::GetDefaultMenuId())
-				{
-					$sIcon = '../images/breadcrumb_home.png';
+				if ($this->sMenuId == ApplicationMenu::GetDefaultMenuId()) {
+					$sIcon = 'fas fa-home';
+				} else {
+					$sIcon = 'fas fa-chart-pie';
 				}
-				else
-				{
-					$sIcon = '../images/breadcrumb-dashboard.png';
-				}
-				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon);
+				$oPage->SetBreadCrumbEntry("ui-dashboard-".$this->sMenuId, $this->GetTitle(), $sDescription, '', $sIcon, iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 			}
 		}
 		else
@@ -1393,5 +1612,23 @@ class ShortcutMenuNode extends MenuNode
 	{
 		return $this->oShortcut->Get('name');
 	}
+
+	/**
+	 * Indicates if the page corresponding to this menu node is countable
+	 *
+	 * @return bool true if corresponding page is countable
+	 * @since 3.0.0
+	 */
+	public function HasCount()
+	{
+		return true;
+	}
+
+
+	public function GetEntriesCount()
+	{
+		return $this->GetEntriesCountFromOQL($this->oShortcut->Get('oql'));
+	}
+
 }
 

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Measures operations duration, memory usage, etc. (and some other KPIs)
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,29 +31,38 @@ class ExecutionKPI
 	static protected $m_bBlameCaller = false;
 	static protected $m_sAllowedUser = '*';
 
-	static protected $m_aStats = array(); // Recurrent operations
-	static protected $m_aExecData = array(); // One shot operations
+	static protected $m_aStats = []; // Recurrent operations
+	static protected $m_aExecData = []; // One shot operations
+	/**
+	 * @var array[ExecutionKPI]
+	 */
+	static protected $m_aExecutionStack = []; // embedded execution stats
 
 	protected $m_fStarted = null;
+	protected $m_fChildrenDuration = 0; // Count embedded
 	protected $m_iInitialMemory = null;
 
 	static public function EnableDuration($iLevel)
 	{
-		if ($iLevel > 0)
-		{
+		if ($iLevel > 0) {
 			self::$m_bEnabled_Duration = true;
-			if ($iLevel > 1)
-			{
+			if ($iLevel > 1) {
 				self::$m_bBlameCaller = true;
+			} else {
+				self::$m_bBlameCaller = false;
 			}
+		} else {
+			self::$m_bEnabled_Duration = false;
+			self::$m_bBlameCaller = false;
 		}
 	}
 
 	static public function EnableMemory($iLevel)
 	{
-		if ($iLevel > 0)
-		{
+		if ($iLevel > 0) {
 			self::$m_bEnabled_Memory = true;
+		} else {
+			self::$m_bEnabled_Memory = false;
 		}
 	}
 
@@ -103,16 +112,17 @@ class ExecutionKPI
 
 		$sTableStyle = 'background-color: #ccc; margin: 10px;';
 
-		self::Report("<hr/>");
-		self::Report("<div style=\"background-color: grey; padding: 10px;\">");
-		self::Report("<h3><a name=\"".md5($sExecId)."\">KPIs</a> - ".$_SERVER['REQUEST_URI']." (".$_SERVER['REQUEST_METHOD'].")</h3>");
-		self::Report("<p>".date('Y-m-d H:i:s', $fItopStarted)."</p>");
-		self::Report("<p>log_kpi_user_id: ".UserRights::GetUserId()."</p>");
-		self::Report("<div>");
-		self::Report("<table border=\"1\" style=\"$sTableStyle\">");
-		self::Report("<thead>");
-		self::Report("   <th>Operation</th><th>Begin</th><th>End</th><th>Duration</th><th>Memory start</th><th>Memory end</th><th>Memory peak</th>");
-		self::Report("</thead>");
+		$sHtml = "<hr/>";
+		$sHtml .= "<div style=\"background-color: grey; padding: 10px;\">";
+		$sHtml .= "<h3><a name=\"".md5($sExecId)."\">KPIs</a> - ".$_SERVER['REQUEST_URI']." (".$_SERVER['REQUEST_METHOD'].")</h3>";
+		$oStarted = DateTime::createFromFormat('U.u', $fItopStarted);
+		$sHtml .= "<p>".$oStarted->format('Y-m-d H:i:s.u')."</p>";
+		$sHtml .= "<p>log_kpi_user_id: ".UserRights::GetUserId()."</p>";
+		$sHtml .= "<div>";
+		$sHtml .= "<table border=\"1\" style=\"$sTableStyle\">";
+		$sHtml .= "<thead>";
+		$sHtml .= "   <th>Operation</th><th>Begin</th><th>End</th><th>Duration</th><th>Memory start</th><th>Memory end</th><th>Memory peak</th>";
+		$sHtml .= "</thead>";
 		foreach (self::$m_aExecData as $aOpStats)
 		{
 			$sOperation = $aOpStats['op'];
@@ -134,12 +144,12 @@ class ExecutionKPI
 				}
 			}
 
-			self::Report("<tr>");
-			self::Report("   <td>$sOperation</td><td>$sBegin</td><td>$sEnd</td><td>$sDuration</td><td>$sMemBegin</td><td>$sMemEnd</td><td>$sMemPeak</td>");
-			self::Report("</tr>");
+			$sHtml .= "<tr>";
+			$sHtml .= "   <td>$sOperation</td><td>$sBegin</td><td>$sEnd</td><td>$sDuration</td><td>$sMemBegin</td><td>$sMemEnd</td><td>$sMemPeak</td>";
+			$sHtml .= "</tr>";
 		}
-		self::Report("</table>");
-		self::Report("</div>");
+		$sHtml .= "</table>";
+		$sHtml .= "</div>";
 
 		$aConsolidatedStats = array();
 		foreach (self::$m_aStats as $sOperation => $aOpStats)
@@ -175,11 +185,11 @@ class ExecutionKPI
 			);
 		}
 
-		self::Report("<div>");
-		self::Report("<table border=\"1\" style=\"$sTableStyle\">");
-		self::Report("<thead>");
-		self::Report("   <th>Operation</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th><th>Avg</th>");
-		self::Report("</thead>");
+		$sHtml .= "<div>";
+		$sHtml .= "<table border=\"1\" style=\"$sTableStyle\">";
+		$sHtml .= "<thead>";
+		$sHtml .= "   <th>Operation</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th><th>Avg</th>";
+		$sHtml .= "</thead>";
 		foreach ($aConsolidatedStats as $sOperation => $aOpStats)
 		{
 			$sOperation = '<a href="#'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
@@ -189,22 +199,24 @@ class ExecutionKPI
 			$sMax = '<a href="#'.md5($sExecId.$aOpStats['max_args']).'">'.round($aOpStats['max'], 3).'</a>';
 			$sAvg = round($aOpStats['avg'], 3);
 
-			self::Report("<tr>");
-			self::Report("   <td>$sOperation</td><td>$sCount</td><td>$sDuration</td><td>$sMin</td><td>$sMax</td><td>$sAvg</td>");
-			self::Report("</tr>");
+			$sHtml .= "<tr>";
+			$sHtml .= "   <td>$sOperation</td><td>$sCount</td><td>$sDuration</td><td>$sMin</td><td>$sMax</td><td>$sAvg</td>";
+			$sHtml .= "</tr>";
 		}
-		self::Report("</table>");
-		self::Report("</div>");
+		$sHtml .= "</table>";
+		$sHtml .= "</div>";
 
-		self::Report("</div>");
+		$sHtml .= "</div>";
 
-		self::Report("<p><a href=\"#end-".md5($sExecId)."\">Next page stats</a></p>");
+		$sHtml .= "<p><a href=\"#end-".md5($sExecId)."\">Next page stats</a></p>";
 
 		$fSlowQueries = MetaModel::GetConfig()->Get('log_kpi_slow_queries');
+		self::Report($sHtml);
 
 		// Report operation details
 		foreach (self::$m_aStats as $sOperation => $aOpStats)
 		{
+			$sHtml = '';
 			$bDisplayHeader = true;
 			foreach ($aOpStats as $sArguments => $aEvents)
 			{
@@ -250,31 +262,59 @@ class ExecutionKPI
 					if ($bDisplayHeader)
 					{
 						$sOperationHtml = '<a name="'.md5($sExecId.$sOperation).'">'.$sOperation.'</a>';
-						self::Report("<h4>$sOperationHtml</h4>");
-						self::Report("<table border=\"1\" style=\"$sTableStyle\">");
-						self::Report("<thead>");
-						self::Report("   <th>Operation details (+ blame caller if log_kpi_duration = 2)</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>");
-						self::Report("</thead>");
+						$sHtml .= "<h4>$sOperationHtml</h4>";
+						$sHtml .= "<table border=\"1\" style=\"$sTableStyle\">";
+						$sHtml .= "<thead>";
+						$sHtml .= "   <th>Operation details (+ blame caller if log_kpi_duration = 2)</th><th>Count</th><th>Duration</th><th>Min</th><th>Max</th>";
+						$sHtml .= "</thead>";
 						$bDisplayHeader = false;
 					}
-					self::Report("<tr>");
-					self::Report("   <td>$sHtmlArguments</td><td>$iCountInter</td><td>$sTotalInter</td><td>$sMinInter</td><td>$sMaxInter</td>");
-					self::Report("</tr>");
+					$sHtml .= "<tr>";
+					$sHtml .= "   <td>$sHtmlArguments</td><td>$iCountInter</td><td>$sTotalInter</td><td>$sMinInter</td><td>$sMaxInter</td>";
+					$sHtml .= "</tr>";
 				}
 			}
 			if (!$bDisplayHeader)
 			{
-				self::Report("</table>");
-				self::Report("<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>");
+				$sHtml .= "</table>";
+				$sHtml .= "<p><a href=\"#".md5($sExecId)."\">Back to page stats</a></p>";
 			}
+			self::Report($sHtml);
 		}
-		self::Report('<a name="end-'.md5($sExecId).'">&nbsp;</a>');
+		$sHtml = '<a name="end-'.md5($sExecId).'">&nbsp;</a>';
+		self::Report($sHtml);
 	}
 
 
 	public function __construct()
 	{
 		$this->ResetCounters();
+		self::Push($this);
+	}
+
+	/**
+	 * Stack executions to remove children duration from stats
+	 *
+	 * @param \ExecutionKPI $oExecutionKPI
+	 */
+	private static function Push(ExecutionKPI $oExecutionKPI)
+	{
+		array_push(self::$m_aExecutionStack, $oExecutionKPI);
+	}
+
+	/**
+	 * Pop current child and count its duration in its parent
+	 *
+	 * @param float|int $fChildDuration
+	 */
+	private static function Pop(float $fChildDuration = 0)
+	{
+		array_pop(self::$m_aExecutionStack);
+		// Update the parent's children duration
+		$oPrevExecutionKPI = end(self::$m_aExecutionStack);
+		if ($oPrevExecutionKPI) {
+			$oPrevExecutionKPI->m_fChildrenDuration += $fChildDuration;
+		}
 	}
 
 	// Get the duration since startup, and reset the counter for the next measure
@@ -285,13 +325,12 @@ class ExecutionKPI
 
 		$aNewEntry = null;
 
-		if (self::$m_bEnabled_Duration)
-		{
+		if (self::$m_bEnabled_Duration) {
 			$fStopped = MyHelpers::getmicrotime();
 			$aNewEntry = array(
-				'op' => $sOperationDesc,
+				'op'         => $sOperationDesc,
 				'time_begin' => $this->m_fStarted - $fItopStarted,
-				'time_end' => $fStopped - $fItopStarted,
+				'time_end'   => $fStopped - $fItopStarted,
 			);
 			// Reset for the next operation (if the object is recycled)
 			$this->m_fStarted = $fStopped;
@@ -323,31 +362,30 @@ class ExecutionKPI
 
 	public function ComputeStats($sOperation, $sArguments)
 	{
-		if (self::$m_bEnabled_Duration)
-		{
+		$fDuration = 0;
+		if (self::$m_bEnabled_Duration) {
 			$fStopped = MyHelpers::getmicrotime();
 			$fDuration = $fStopped - $this->m_fStarted;
-			if (self::$m_bBlameCaller)
-			{
+			$fSelfDuration = $fDuration - $this->m_fChildrenDuration;
+			if (self::$m_bBlameCaller) {
 				self::$m_aStats[$sOperation][$sArguments][] = array(
-					'time' => $fDuration,
+					'time'    => $fSelfDuration,
 					'callers' => MyHelpers::get_callstack(1),
 				);
-			}
-			else
-			{
+			} else {
 				self::$m_aStats[$sOperation][$sArguments][] = array(
-					'time' => $fDuration
+					'time' => $fSelfDuration,
 				);
 			}
 		}
+		self::Pop($fDuration);
 	}
 
 	protected function ResetCounters()
 	{
 		if (self::$m_bEnabled_Duration)
 		{
-			$this->m_fStarted = MyHelpers::getmicrotime();
+			$this->m_fStarted = microtime(true);
 		}
 
 		if (self::$m_bEnabled_Memory)

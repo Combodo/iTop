@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -45,7 +45,7 @@ class BulkExportMissingParameterException extends BulkExportException
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -130,7 +130,7 @@ class BulkExportResultGC implements iBackgroundProcess
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -345,10 +345,10 @@ abstract class BulkExport
 			$this->oBulkExportResult->Set('format', $this->sFormatCode);
 			$this->oBulkExportResult->Set('search', $this->oSearch->serialize());
 			$this->oBulkExportResult->Set('chunk_size', $this->iChunkSize);
-            $this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
             $this->oBulkExportResult->Set('localize_output', $this->bLocalizeOutput);
         }
 		$this->oBulkExportResult->Set('status_info', json_encode($this->GetStatusInfo()));
+		$this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
 		utils::PushArchiveMode(false);
 		$ret = $this->oBulkExportResult->DBWrite();
 		utils::PopArchiveMode();
@@ -369,20 +369,37 @@ abstract class BulkExport
 			utils::PopArchiveMode();
 		}
 	}
-	
+
 	public function EnumFormParts()
 	{
 		return array();
 	}
-	
+
+	/**
+	 * @deprecated 3.0.0 use GetFormPart instead
+	 */
 	public function DisplayFormPart(WebPage $oP, $sPartId)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
+		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
 	}
-	
+
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
+	{
+	}
+
 	public function DisplayUsage(Page $oP)
 	{
-		
+
 	}
+
 	public function ReadParameters()
 	{
 		$this->bLocalizeOutput = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
@@ -420,6 +437,11 @@ abstract class BulkExport
 	public function GetStatistics()
 	{
 		
+	}
+
+	public function SetFields($sFields)
+	{
+
 	}
 	
 	public function GetDownloadFileName()

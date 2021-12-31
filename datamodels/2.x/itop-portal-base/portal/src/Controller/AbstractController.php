@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -32,11 +32,39 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 abstract class AbstractController extends Controller
 {
 	/**
+	 * Unlike {@see \Symfony\Bundle\FrameworkBundle\Controller\ControllerTrait::redirectToRoute()}, this method directly calls the route controller without creating a redirection client side
+	 *
+	 * Default route params will be preserved (see N°4356)
+	 *
+	 * @param string $sRouteName
+	 * @param array $aRouteParams
+	 * @param array $aQueryParameters
+	 * @param bool $bPreserveDefaultRouteParams if true will merge in aRouteParams the default parameters defined for the specified route
+	 *
+	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @since 2.7.6 3.0.0 N°4356 method creation
+	 */
+	protected function ForwardToRoute($sRouteName, $aRouteParams, $aQueryParameters, $bPreserveDefaultRouteParams = true)
+	{
+		$oRouteCollection = $this->get('router')->getRouteCollection();
+		$aRouteDefaults = $oRouteCollection->get($sRouteName)->getDefaults();
+
+		if ($bPreserveDefaultRouteParams) {
+			$aRouteParams = array_merge($aRouteDefaults, $aRouteParams);
+		}
+
+		return $this->forward($aRouteDefaults['_controller'], $aRouteParams, $aQueryParameters);
+	}
+
+	/**
 	 * @param string $sRouteName
 	 * @param array  $aRouteParams
 	 * @param array  $aQueryParameters
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
+	 *
+	 * @deprecated 2.7.6 N°4356 use {@see ForwardToRoute} instead !
 	 */
 	protected function ForwardFromRoute($sRouteName, $aRouteParams, $aQueryParameters)
 	{
@@ -51,6 +79,8 @@ abstract class AbstractController extends Controller
 	 * @param string $sRouteName
 	 *
 	 * @return string
+	 *
+	 * @deprecated 2.7.6 N°4356 use {@see ForwardToRoute} instead !
 	 */
 	protected function GetControllerNameFromRoute($sRouteName)
 	{

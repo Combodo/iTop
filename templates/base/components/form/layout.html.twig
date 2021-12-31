@@ -1,0 +1,23 @@
+<form method="post" enctype="multipart/form-data" id="{{ oUIBlock.GetId() }}"
+      class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+      data-role="ibo-form"
+        {% if oUIBlock.GetOnSubmitJsCode() %}
+            onSubmit="{{ oUIBlock.GetOnSubmitJsCode() }}"
+        {% endif %}
+        {% if oUIBlock.GetAction() %}
+            action="{{ oUIBlock.GetAction() }}"
+        {% endif %}
+        {% if oUIBlock.GetDataAttributes() %}
+            {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                data-{{ sName }}="{{ sValue }}"
+            {% endfor %}
+        {% endif %}
+>
+    {% apply spaceless %}
+        {% block iboContentBlockContainer %}
+            {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+                {{ render_block(oSubBlock, {aPage: aPage}) }}
+            {% endfor %}
+        {% endblock %}
+    {% endapply %}
+</form>

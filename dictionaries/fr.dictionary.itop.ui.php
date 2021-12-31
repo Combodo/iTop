@@ -1,22 +1,6 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('FR FR', 'French', 'Français', array(
@@ -71,6 +55,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:Query/Attribute:name+' => 'Identification de la requête',
 	'Class:Query/Attribute:description' => 'Description',
 	'Class:Query/Attribute:description+' => 'Description complète (finalité, utilisations, public)',
+	'Class:Query/Attribute:is_template' => 'Base pour champ OQL',
+	'Class:Query/Attribute:is_template+' => 'Utilisable comme base pour les destinataires des Notifications',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Oui',
+	'Class:Query/Attribute:is_template/Value:no' => 'Non',
 	'Class:QueryOQL/Attribute:fields' => 'Champs',
 	'Class:QueryOQL/Attribute:fields+' => 'Liste CSV des attributs (ou alias.attribut) à exporter',
 	'Class:QueryOQL' => 'Requête OQL',
@@ -122,12 +110,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Le login doit être unique - "%1s" est déjà utilisé.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'L\'utilisateur doit avoir au moins un profil.',
+	'Class:User/Error:ProfileNotAllowed' => 'Le profil "%1$s" ne peux pas être ajouté à son propre utilisateur, il interdit l\'accès à la console',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Impossible de changer l\'état de son propre utilisateur',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Les organisations permises doivent contenir l\'organisation de l\'utilisateur',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Les profils existants ne permettent pas de modifier les utilisateurs',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'L\'utilisateur doit avoir au moins une organisation.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organisation non autorisée.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'L\'utilisateur n\'appartient pas à vos organisations.',
 	'Class:User/Error:PersonIsMandatory' => 'Le Contact est obligatoire.',
 	'Class:UserInternal' => 'Utilisateur interne',
-	'Class:UserInternal+' => 'Utilisateur défini dans iTop',
+	'Class:UserInternal+' => 'Utilisateur défini dans '.ITOP_APPLICATION_SHORT,
 ));
 
 //
@@ -167,6 +159,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserProfile' => 'Utilisateur/Profil',
 	'Class:URP_UserProfile+' => '',
+	'Class:URP_UserProfile/Name' => 'Lien entre %1$s et %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => 'Utilisateur',
 	'Class:URP_UserProfile/Attribute:userid+' => '',
 	'Class:URP_UserProfile/Attribute:userlogin' => 'Login',
@@ -187,6 +180,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:URP_UserOrg' => 'Utilisateur/Organisation',
 	'Class:URP_UserOrg+' => 'Organisations permises pour l\'utilisateur',
+	'Class:URP_UserOrg/Name' => 'Lien entre %1$s et %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => 'Utilisateur',
 	'Class:URP_UserOrg/Attribute:userid+' => '',
 	'Class:URP_UserOrg/Attribute:userlogin' => 'Login',
@@ -330,16 +324,16 @@ Dict::Add('FR FR', 'French', 'Français', array(
 Dict::Add('FR FR', 'French', 'Français', array(
 	'BooleanLabel:yes' => 'oui',
 	'BooleanLabel:no' => 'non',
-	'UI:Login:Title' => 'iTop login',
-	'Menu:WelcomeMenu' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Bienvenue', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'Bienvenue dans iTop', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'Bienvenue dans iTop',
+	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login',
+	'Menu:WelcomeMenu' => 'Bienvenue',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Bienvenue',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTop est un portail opérationnel complet et libre pour gérer votre SI.</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' est un portail opérationnel complet et libre pour gérer votre SI.</p>
 <ul>il contient:
-<li>Une base de gestion des configuration (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
+<li>Une base de gestion des configurations (CMDB - Configuration management database) pour documenter et gérer votre parc informatique.</li>
 <li>Un module de gestion des incidents pour suivre les incidents d\'exploitation et gérer la communication à propos de ces incidents.</li>
 <li>Un module de gestion des changements pour planifier et suivre les modifications de votre SI.</li>
 <li>Une base des erreurs connues, pour accélérer la résolution des incidents.</li>
@@ -348,14 +342,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 </ul>
 <p>Tous ces modules peuvent être installés séparément, à votre rythme.</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTop a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
+	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' a été conçu pour les fournisseurs de service, il permet à vos équipes IT de gérer facilement de multiples clients et organisations.
 <ul>iTop fournit un riche ensemble de processus métier&nbsp;pour:
 <li>Augmenter l\'efficacité de la gestion de votre SI</li> 
 <li>Accroitre la performance de vos équipes d\'exploitation</li> 
 <li>Améliorer la satisfaction client et fournir aux responsables des vues sur la performance interne du SI.</li>
 </ul>
 </p>
-<p>iTop est complètement ouvert pour s\'intéger avec votre environnement informatique.</p>
+<p>iTop est complètement ouvert pour s\'intégrer avec votre environnement informatique.</p>
 <p>
 <ul>Grâce à ce portail opérationnel de nouvelle génération:
 <li>Gérez un environnement informatique de plus en plus complexe.</li>
@@ -363,6 +357,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 <li>Contrôlez l\'actif le plus important de votre SI&nbsp;: la documentation.</li>
 </ul>
 </p>',
+	'UI:WelcomeMenu:Text'=> '<div>Félicitations, vous avez atterri sur '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.' !</div>
+
+<div>Cette version présente un tout nouveau design moderne et accessible pour la console de support.</div>
+
+<div>Nous avons conservé les fonctions de base d\''.ITOP_APPLICATION.' que vous aviez apprécié et les avons modernisées pour vous les faire adorer.
+Nous espérons que vous aimerez cette version autant que nous avons eu du plaisir à l\'imaginer et à la créer.</div>
+
+<div>Configurez vos préférences '.ITOP_APPLICATION.' pour une expérience personnalisée.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requêtes en cours: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mes Appels Support',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidents en cours: %1$d',
@@ -370,17 +372,22 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:WelcomeMenu:MyIncidents' => 'Mes Incidents',
 	'UI:AllOrganizations' => ' Toutes les Organisations ',
 	'UI:YourSearch' => 'Votre recherche',
-	'UI:LoggedAsMessage' => 'Connecté comme: %1$s',
-	'UI:LoggedAsMessage+Admin' => 'Connecté comme: %1$s (Administrateur)',
+	'UI:LoggedAsMessage' => 'Connecté(e) comme: %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Connecté(e) comme: %1$s (%2$s, Administrateur)',
 	'UI:Button:Logoff' => 'Déconnexion',
 	'UI:Button:GlobalSearch' => 'Rechercher',
 	'UI:Button:Search' => 'Rechercher',
+	'UI:Button:Clear' => ' Clear ~~',
+	'UI:Button:SearchInHierarchy' => 'Rechercher dans la hiérarchie',
 	'UI:Button:Query' => ' Lancer la requête ',
 	'UI:Button:Ok' => 'Ok',
 	'UI:Button:Save' => 'Sauver',
+	'UI:Button:SaveAnd' => 'Sauver et %1$s',
 	'UI:Button:Cancel' => 'Annuler',
 	'UI:Button:Close' => 'Fermer',
 	'UI:Button:Apply' => 'Appliquer',
+	'UI:Button:Send' => 'Envoyer',
+	'UI:Button:SendAnd' => 'Envoyer et %1$s',
 	'UI:Button:Back' => ' << Retour ',
 	'UI:Button:Restart' => ' |<< Recommencer ',
 	'UI:Button:Next' => ' Suite >> ',
@@ -408,9 +415,12 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Button:Wait' => 'Patientez pendant la mise à jour des champs',
 	'UI:Treeview:CollapseAll' => 'Tout replier',
 	'UI:Treeview:ExpandAll' => 'Tout déplier',
+	'UI:UserPref:DoNotShowAgain' => 'Ne plus afficher ce message',
+	'UI:InputFile:NoFileSelected' => 'Aucun fichier sélectionné',
+	'UI:InputFile:SelectFile' => 'Sélectionner un fichier',
 
 	'UI:SearchToggle' => 'Recherche',
-	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
+	'UI:ClickToCreateNew' => 'Créer un(e) %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
 	'UI:NoObjectToDisplay' => 'Aucun objet à afficher.',
 	'UI:Error:SaveFailed' => 'L\'objet ne peut pas être sauvé : ',
@@ -422,7 +432,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'la définition du lien est incorrecte: la classe d\'objets à gérer: %1$s n\'est référencée par aucune clef externe de la classe %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'L\'objet: %1$s:%2$d est introuvable.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Erreur: Référence circulaire entre les dépendences entre champs, vérifiez le modèle de données.',
-	'UI:Error:UploadedFileTooBig' => 'Le fichier téléchargé est trop gros. (La taille maximale autorisée est %1$s). Pour modifier cette limite contactez votre administrateur iTop. (Réglages upload_max_filesize et post_max_size dans la configuration PHP sur le serveur)',
+	'UI:Error:UploadedFileTooBig' => 'Le fichier téléchargé est trop gros. (La taille maximale autorisée est %1$s). Pour modifier cette limite contactez votre administrateur '.ITOP_APPLICATION_SHORT.'. (Réglages upload_max_filesize et post_max_size dans la configuration PHP sur le serveur)',
 	'UI:Error:UploadedFileTruncated.' => 'Le fichier téléchargé a été tronqué !',
 	'UI:Error:NoTmpDir' => 'Il n\'y a aucun répertoire temporaire de défini.',
 	'UI:Error:CannotWriteToTmp_Dir' => 'Impossible d\'écrire le fichier temporaire sur disque. upload_tmp_dir = "%1$s".',
@@ -439,7 +449,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:ObjectCannotBeUpdated' => 'Erreur: l\'objet ne peut pas être mis à jour.',
 	'UI:Error:ObjectsAlreadyDeleted' => 'Erreur: les objets ont déjà été supprimés !',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à faire une suppression massive sur les objets de type %1$s',
-	'UI:Error:DeleteNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé supprimer des objets de type %1$s',
+	'UI:Error:DeleteNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à supprimer des objets de type %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à voir des objets de type %1$s',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Vous n\'êtes pas autorisé à faire une modification massive sur les objets de type %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erreur: l\'objet a déjà été dupliqué !',
 	'UI:Error:ObjectAlreadyCreated' => 'Erreur: l\'objet a déjà été créé !',
@@ -448,6 +459,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:InvalidDashboard' => 'Erreur: Le tableau de bord est invalide',
 	'UI:Error:MaintenanceMode' => 'L\'application est en maintenance',
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
+	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
 
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
@@ -475,6 +487,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Loading' => 'Chargement...',
 	'UI:Menu:Actions' => 'Actions',
 	'UI:Menu:OtherActions' => 'Autres Actions',
+	'UI:Menu:Transitions' => 'Transitions~~',
+	'UI:Menu:OtherTransitions' => 'Other Transitions~~',
 	'UI:Menu:New' => 'Créer...',
 	'UI:Menu:Add' => 'Ajouter...',
 	'UI:Menu:Manage' => 'Gérer...',
@@ -504,7 +518,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:SearchValue:CheckAll' => 'Cocher',
 	'UI:SearchValue:UncheckAll' => 'Décocher',
 	'UI:SelectOne' => '-- choisir une valeur --',
-	'UI:Login:Welcome' => 'Bienvenue dans iTop!',
+	'UI:Login:Welcome' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => 'Mot de passe ou identifiant incorrect.',
 	'UI:Login:IdentifyYourself' => 'Merci de vous identifier',
 	'UI:Login:UserNamePrompt' => 'Identifiant',
@@ -517,15 +531,15 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Login:SeparatorOr' => 'Ou',
 
 	'UI:ResetPwd-Error-WrongLogin' => 'le compte \'%1$s\' est inconnu.',
-	'UI:ResetPwd-Error-NotPossible' => 'les comptes "externes" ne permettent pas la saisie d\'un mot de passe dans iTop.',
+	'UI:ResetPwd-Error-NotPossible' => 'les comptes "externes" ne permettent pas la saisie d\'un mot de passe dans '.ITOP_APPLICATION_SHORT.'.',
 	'UI:ResetPwd-Error-FixedPwd' => 'ce mode de saisie du mot de passe n\'est pas autorisé pour ce compte.',
 	'UI:ResetPwd-Error-NoContact' => 'le comte n\'est pas associé à une Personne.',
 	'UI:ResetPwd-Error-NoEmailAtt' => 'il manque un attribut de type "email" sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-Error-NoEmail' => 'il manque une adresse email sur la Personne associée à ce compte. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-Error-Send' => 'erreur technique lors de l\'envoi de l\'email. Veuillez contacter l\'administrateur de l\'application.',
 	'UI:ResetPwd-EmailSent' => 'Veuillez vérifier votre boîte de réception. Ensuite, suivez les instructions données dans l\'email. Si vous ne recevez pas d\'email, merci de vérifier le login saisi',
-	'UI:ResetPwd-EmailSubject' => 'Changer votre mot de passe iTop',
-	'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe iTop sans connaître le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
+	'UI:ResetPwd-EmailSubject' => 'Changer votre mot de passe '.ITOP_APPLICATION_SHORT,
+	'UI:ResetPwd-EmailBody' => '<body><p>Vous avez demandé à changer votre mot de passe '.ITOP_APPLICATION_SHORT.' sans connaître le mot de passe précédent.</p><p>Veuillez suivre le lien suivant (usage unique) afin de pouvoir <a href="%1$s">saisir un nouveau mot de passe</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Nouveau mot de passe',
 	'UI:ResetPwd-Error-InvalidToken' => 'Désolé, le mot de passe a déjà été modifié avec le lien que vous avez suivi, ou bien vous avez reçu plusieurs emails. Dans ce cas, veillez à utiliser le tout dernier lien reçu.',
@@ -533,43 +547,43 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:ResetPwd-Ready' => 'Le mot de passe a bien été changé.',
 	'UI:ResetPwd-Login' => 'Cliquez ici pour vous connecter...',
 
-	'UI:Login:About' => '~~',
-	'UI:Login:ChangeYourPassword' => 'Changer de mot de passe',
-	'UI:Login:OldPasswordPrompt' => 'Ancien mot de passe',
-	'UI:Login:NewPasswordPrompt' => 'Nouveau mot de passe',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Resaisir le nouveau mot de passe',
-	'UI:Login:IncorrectOldPassword' => 'Erreur: l\'ancien mot de passe est incorrect',
-	'UI:LogOffMenu' => 'Déconnexion',
-	'UI:LogOff:ThankYou' => 'Merci d\'avoir utilisé iTop',
-	'UI:LogOff:ClickHereToLoginAgain' => 'Cliquez ici pour vous reconnecter...',
-	'UI:ChangePwdMenu' => 'Changer de mot de passe...',
-	'UI:Login:PasswordChanged' => 'Mot de passe mis à jour !',
-	'UI:AccessRO-All' => 'iTop est en lecture seule',
-	'UI:AccessRO-Users' => 'iTop est en lecture seule pour les utilisateurs finaux',
-	'UI:ApplicationEnvironment' => 'Environnement applicatif: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
-	'UI:Button:Login' => 'Entrer dans iTop',
-	'UI:Login:Error:AccessRestricted' => 'L\'accès à iTop est soumis à autorisation. Merci de contacter votre administrateur iTop.',
-	'UI:Login:Error:AccessAdmin' => 'Accès resreint aux utilisateurs possédant le profil Administrateur.',
-	'UI:Login:Error:WrongOrganizationName' => 'Organisation inconnue',
+	'UI:Login:About'                               => '~~',
+	'UI:Login:ChangeYourPassword'                  => 'Changer de mot de passe',
+	'UI:Login:OldPasswordPrompt'                   => 'Ancien mot de passe',
+	'UI:Login:NewPasswordPrompt'                   => 'Nouveau mot de passe',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Resaisir le nouveau mot de passe',
+	'UI:Login:IncorrectOldPassword'                => 'Erreur: l\'ancien mot de passe est incorrect',
+	'UI:LogOffMenu'                                => 'Déconnexion',
+	'UI:LogOff:ThankYou'                           => 'Merci d\'avoir utilisé '.ITOP_APPLICATION_SHORT,
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Cliquez ici pour vous reconnecter...',
+	'UI:ChangePwdMenu'                             => 'Changer de mot de passe...',
+	'UI:Login:PasswordChanged'                     => 'Mot de passe mis à jour !',
+	'UI:AccessRO-All'                              => ITOP_APPLICATION_SHORT.' est en lecture seule',
+	'UI:AccessRO-Users'                            => ITOP_APPLICATION_SHORT.' est en lecture seule pour les utilisateurs finaux',
+	'UI:ApplicationEnvironment'                    => 'Environnement applicatif: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Les deux saisies du nouveau mot de passe ne sont pas identiques !',
+	'UI:Button:Login'                              => 'Entrer dans '.ITOP_APPLICATION_SHORT,
+	'UI:Login:Error:AccessRestricted'              => 'L\'accès à cette page '.ITOP_APPLICATION_SHORT.' est soumis à autorisation. Merci de contacter votre administrateur '.ITOP_APPLICATION_SHORT.'.',
+	'UI:Login:Error:AccessAdmin'                   => 'Accès restreint aux utilisateurs possédant le profil Administrateur.',
+	'UI:Login:Error:WrongOrganizationName'         => 'Organisation inconnue',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Email partagé par plusieurs contacts',
-	'UI:Login:Error:NoValidProfiles' => 'Pas de profil valide',
-	'UI:CSVImport:MappingSelectOne' => '-- choisir une valeur --',
-	'UI:CSVImport:MappingNotApplicable' => '-- ignorer ce champ --',
-	'UI:CSVImport:NoData' => 'Aucune donnée... merci de fournir des données !',
-	'UI:Title:DataPreview' => 'Aperçu des données',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Erreur: Les données semblent ne contenir qu\'une seule colonne. Avez-vous choisi le bon séparateur ?',
-	'UI:CSVImport:FieldName' => 'Champ n°%1$d',
-	'UI:CSVImport:DataLine1' => 'Données Ligne 1',
-	'UI:CSVImport:DataLine2' => 'Données Ligne  2',
-	'UI:CSVImport:idField' => 'id (Clef primaire)',
-	'UI:Title:BulkImport' => 'iTop - Import massif',
-	'UI:Title:BulkImport+' => 'Assistant d\'import CSV',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation de %1$d éléments de type %2$s',
-	'UI:CSVImport:ClassesSelectOne' => '-- choisir une valeur --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Erreur interne: "%1$s" n\'est pas une code correct car "%2$s" n\'est pas une clef externe de la classe "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objets(s) resteront inchangés.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objets(s) seront modifiés.',
+	'UI:Login:Error:NoValidProfiles'               => 'Pas de profil valide',
+	'UI:CSVImport:MappingSelectOne'                => '-- choisir une valeur --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- ignorer ce champ --',
+	'UI:CSVImport:NoData'                          => 'Aucune donnée... merci de fournir des données !',
+	'UI:Title:DataPreview'                         => 'Aperçu des données',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Erreur: Les données semblent ne contenir qu\'une seule colonne. Avez-vous choisi le bon séparateur ?',
+	'UI:CSVImport:FieldName'                       => 'Champ n°%1$d',
+	'UI:CSVImport:DataLine1'                       => 'Données Ligne 1',
+	'UI:CSVImport:DataLine2'                       => 'Données Ligne  2',
+	'UI:CSVImport:idField'                         => 'id (Clef primaire)',
+	'UI:Title:BulkImport'                          => ITOP_APPLICATION_SHORT.' - Import massif',
+	'UI:Title:BulkImport+'                         => 'Assistant d\'import CSV',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronisation de %1$d éléments de type %2$s',
+	'UI:CSVImport:ClassesSelectOne'                => '-- choisir une valeur --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Erreur interne: "%1$s" n\'est pas une code correct car "%2$s" n\'est pas une clef externe de la classe "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objets(s) resteront inchangés.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objets(s) seront modifiés.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objets(s) seront créés.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objets(s) seront en erreur.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objets(s) n\'ont pas changé.',
@@ -612,7 +626,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVImport:AlertMultipleMapping' => 'Veuillez vous assurer que chaque champ cible est sélectionné une seule fois.',
 	'UI:CSVImport:AlertNoSearchCriteria' => 'Veuillez choisir au moins une clef de recherche.',
 	'UI:CSVImport:Encoding' => 'Encodage des caractères',
-	'UI:UniversalSearchTitle' => 'iTop - Recherche Universelle',
+	'UI:UniversalSearchTitle' => ITOP_APPLICATION_SHORT.' - Recherche Universelle',
 	'UI:UniversalSearch:Error' => 'Erreur : %1$s',
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Sélectionnez le type d\'objets à rechercher : ',
 
@@ -662,22 +676,34 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:CSVExport:LostChars' => 'Problème d\'encodage',
 	'UI:CSVExport:LostChars+' => 'Le fichier téléchargé sera encodé en %1$s. iTop a détecté des caractères incompatible avec ce format. Ces caractères seront soit remplacés par des caractères de substitution (par exemple: \'é\' transformé en \'e\'), soit perdus. Vous pouvez utiliser le copier/coller depuis votre navigateur web, ou bien contacter votre administrateur pour que l\'encodage corresponde mieux à votre besoin (Cf. paramètre \'csv_file_default_charset\').',
 
-	'UI:Audit:Title' => 'iTop - Audit de la CMDB',
+	'UI:Audit:Title' => ITOP_APPLICATION_SHORT.' - Audit de la CMDB',
 	'UI:Audit:InteractiveAudit' => 'Audit Interactif',
 	'UI:Audit:HeaderAuditRule' => 'Règle d\'audit',
 	'UI:Audit:HeaderNbObjects' => 'Nb d\'Objets',
 	'UI:Audit:HeaderNbErrors' => 'Nb d\'Erreurs',
 	'UI:Audit:PercentageOk' => '% Ok',
+	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:Error:ValueNA' => 'n/a~~',
+	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
 	'UI:Audit:ErrorIn_Rule_Reason' => 'Erreur OQL dans la règle %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
 	'UI:Audit:ErrorIn_Category_Reason' => 'Erreur OQL dans la catégorie %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Audit Errors~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
 
-	'UI:RunQuery:Title' => 'iTop - Evaluation de requêtes OQL',
+
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Evaluation de requêtes OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemples de requêtes',
+	'UI:RunQuery:QueryResults' => 'Résultats de la requête',
 	'UI:RunQuery:HeaderPurpose' => 'Objectif',
 	'UI:RunQuery:HeaderPurpose+' => 'But de la requête',
 	'UI:RunQuery:HeaderOQLExpression' => 'Requête OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'La requête en OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Requête à exécuter : ',
+	'UI:RunQuery:QueryArguments' => 'Arguments de la requête',
 	'UI:RunQuery:MoreInfo' => 'Plus d\'information sur la requête : ',
 	'UI:RunQuery:DevelopedQuery' => 'Requête OQL décompilée : ',
 	'UI:RunQuery:SerializedFilter' => 'Version sérialisée : ',
@@ -685,10 +711,11 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'OQL développé pour le compte',
 	'UI:RunQuery:ResultSQLCount' => 'SQL généré pour le compte',
 	'UI:RunQuery:ResultSQL' => 'SQL généré',
-	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête : %1$s',
+	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête',
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
-	'UI:Schema:Title' => 'Modèle de données iTop',
+	'UI:Schema:Title' => 'Modèle de données '.ITOP_APPLICATION_SHORT,
+	'UI:Schema:TitleForClass' => 'Modèle de données de %1$s~~',
 	'UI:Schema:CategoryMenuItem' => 'Catégorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Relations',
 	'UI:Schema:AbstractClass' => 'Classe abstraite : les objets de cette classe ne peuvent pas être instanciés.',
@@ -739,7 +766,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:Links:n-n' => 'Classes liées à %1$s (liens n:n) :',
 	'UI:Schema:Links:All' => 'Graphe de toutes les classes liées',
 	'UI:Schema:NoLifeCyle' => 'Aucun cycle de vie n\'est défini pour cette classe.',
-	'UI:Schema:LifeCycleTransitions' => 'Etats et Transitions',
+	'UI:Schema:LifeCycleTransitions' => 'États et Transitions',
 	'UI:Schema:LifeCyleAttributeOptions' => 'Options des attributs',
 	'UI:Schema:LifeCycleHiddenAttribute' => 'Caché',
 	'UI:Schema:LifeCycleReadOnlyAttribute' => 'Lecture seule',
@@ -755,6 +782,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Schema:Attribute/Filter' => 'Filtre',
 	'UI:Schema:DefaultNullValue' => 'Valeur null par défaut : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Tapez les 3 premiers caractères...',
+	'UI:Edit:SearchQuery' => 'Sélectionner une requête prédéfinie',
 	'UI:Edit:TestQuery' => 'Tester la requête',
 	'UI:Combo:SelectValue' => '--- choisissez une valeur ---',
 	'UI:Label:SelectedObjects' => 'Objets sélectionnés: ',
@@ -803,9 +831,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Vous devez effectuer les opération manuelles listées ci-dessus avant de pourvoir supprimer cet objet.',
 	'UI:Delect:Confirm_Object' => 'Confirmez que vous voulez bien supprimer %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Confirmez que vous voulez bien supprimer les %1$d objets de type %2$s ci-dessous.',
-	'UI:WelcomeToITop' => 'Bienvenue dans iTop',
-	'UI:DetailsPageTitle' => 'iTop - %2$s - Détails de %1$s',
-	'UI:ErrorPageTitle' => 'iTop - Erreur',
+	'UI:WelcomeToITop' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
+	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %2$s - Détails de %1$s',
+	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Erreur',
 	'UI:ObjectDoesNotExist' => 'Désolé cet objet n\'existe pas (ou vous n\'êtes pas autorisé à l\'afficher).',
 	'UI:ObjectArchived' => 'Cet objet a été archivé. Veuillez activer le mode Archive, ou contactez votre administrateur.',
 	'Tag:Archived' => 'Archivé',
@@ -815,7 +843,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Tag:Synchronized' => 'Synchronisé',
 	'ObjectRef:Archived' => 'Archivé',
 	'ObjectRef:Obsolete' => 'Obsolète',
-	'UI:SearchResultsPageTitle' => 'iTop - Résultats de la recherche',
+	'UI:SearchResultsPageTitle' => ITOP_APPLICATION_SHORT.' - Résultats de la recherche',
 	'UI:SearchResultsTitle' => 'Recherche globale',
 	'UI:SearchResultsTitle+' => 'Résultat de recherche globale',
 	'UI:Search:NoSearch' => 'Rien à rechercher',
@@ -825,27 +853,27 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:FullTextSearchTitle_Text' => 'Résultats pour "%1$s" :',
 	'UI:Search:Count_ObjectsOf_Class_Found' => 'Trouvé %1$d objet(s) de type %2$s.',
 	'UI:Search:NoObjectFound' => 'Aucun objet trouvé.',
-	'UI:ModificationPageTitle_Object_Class' => 'iTop - %2$s - Modification de %1$s',
+	'UI:ModificationPageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %2$s - Modification de %1$s',
 	'UI:ModificationTitle_Class_Object' => '%1$s - Modification de <span class="hilite">%2$s</span>',
-	'UI:ClonePageTitle_Object_Class' => 'iTop - %2$s - Duplication de %1$s',
+	'UI:ClonePageTitle_Object_Class' => ITOP_APPLICATION_SHORT.' - %2$s - Duplication de %1$s',
 	'UI:CloneTitle_Class_Object' => ' %1$s - Duplication de <span class="hilite">%2$s</span>',
-	'UI:CreationPageTitle_Class' => 'iTop - Création d\'un objet de type %1$s ',
+	'UI:CreationPageTitle_Class' => ITOP_APPLICATION_SHORT.' - Création d\'un objet de type %1$s ',
 	'UI:CreationTitle_Class' => 'Création d\'un objet de type %1$s',
 	'UI:SelectTheTypeOf_Class_ToCreate' => 'Sélectionnez le type de %1$s à créer :',
 	'UI:Class_Object_NotUpdated' => 'Aucun changement détecté, %2$s (type : %2$s) n\'a <strong>pas</strong> été modifié.',
 	'UI:Class_Object_Updated' => '%1$s (%2$s) - informations mises à jour.',
-	'UI:BulkDeletePageTitle' => 'iTop - Suppression massive',
+	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - Suppression massive',
 	'UI:BulkDeleteTitle' => 'Sélectionnez les objets à supprimer:',
-	'UI:PageTitle:ObjectCreated' => 'iTop objet créé.',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.' objet créé.',
 	'UI:Title:Object_Of_Class_Created' => '%2$s - %1$s créé(e).',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '%1$s pour %2$s de l\'état %3$s vers l\'état %4$s.',
 	'UI:ObjectCouldNotBeWritten' => 'L\'objet ne peut pas être enregistré: %1$s',
-	'UI:PageTitle:FatalError' => 'iTop - Erreur Fatale',
+	'UI:PageTitle:FatalError' => ITOP_APPLICATION_SHORT.' - Erreur Fatale',
 	'UI:SystemIntrusion' => 'Accès non autorisé. Vous êtes en train de d\'effectuer une opération qui ne vous est pas permise.',
 	'UI:FatalErrorMessage' => 'Erreur fatale, iTop ne peut pas continuer.',
 	'UI:Error_Details' => 'Erreur: %1$s.',
 
-	'UI:PageTitle:ProfileProjections' => 'iTop gestion des utilisateurs - projections des profils',
+	'UI:PageTitle:ProfileProjections' => ITOP_APPLICATION_SHORT.' gestion des utilisateurs - projections des profils',
 	'UI:UserManagement:Class' => 'Type',
 	'UI:UserManagement:Class+' => 'Type des objets',
 	'UI:UserManagement:ProjectedObject' => 'Objet',
@@ -879,12 +907,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Aucun cycle de vie n\'est défini pour ce type d\'objets.',
 	'UI:UserManagement:GrantMatrix' => 'Matrice des droits',
-	'UI:UserManagement:LinkBetween_User_And_Profile' => 'Lien entre %1$s et %2$s',
-	'UI:UserManagement:LinkBetween_User_And_Org' => 'Lien entre %1$s et %2$s',
 
-	'Menu:AdminTools' => 'Outils d\'admin', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Outils d\'administration', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Administration',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Outils d\'administration',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'Système',
 
 	'UI:ChangeManagementMenu' => 'Gestion du Changement',
@@ -930,20 +956,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI-ContactsMenu-ContactsByType' => 'Contacts par type',
 	'UI-ContactsMenu-ContactsByStatus' => 'Contacts par état',
 
-	'Menu:CSVImportMenu' => 'Import CSV', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Import ou mise à jour en masse', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'Import CSV',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Import ou mise à jour en masse',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Modèle de Données', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Modèle de Données',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Résumé du Modèle de Données',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Exportation', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Exportation des résultats d\'une requête en HTML, CSV ou XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Export des résultats d\'une requête en HTML, CSV ou XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Configuration des Notifications', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:NotificationsMenu:Title' => 'Configuration des <span class="hilite">Notifications</span>',
+	'Menu:NotificationsMenu' => 'Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Configuration des Notifications',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:NotificationsMenu:Title' => 'Configuration des Notifications',
 	'UI:NotificationsMenu:Help' => 'Aide',
-	'UI:NotificationsMenu:HelpContent' => '<p>Dans iTop les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
+	'UI:NotificationsMenu:HelpContent' => '<p>Dans '.ITOP_APPLICATION_SHORT.' les notifications sont totalement configurables. Elles sont basées sur deux types d\'objets: <i>déclencheurs et actions</i>.</p>
 <p><i><b>Les déclencheurs</b></i> définissent quand une notification sera exécutée. Il y a différents déclencheurs qui font partie du noyau d\'iTop, mais d\'autres peuvent être apportés par des extensions :
 <ol>
 	<li>Certains déclencheurs sont exécutés lorsqu\'un objet de la classe spécifiée est <b>créé</b>, <b>mis à jour</b> ou <b>supprimé</b>.</li>
@@ -952,9 +978,13 @@ Dict::Add('FR FR', 'French', 'Français', array(
 </ol>
 </p>
 <p>
-<i><b>Les actions</b></i> définissent ce qui doit être exécuté. Pour le moment il existe un seul type d\'action: l\'envoi de mail.
-Les actions de type mail définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.)</p>
-<p>Une page spéciale: <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</p>
+<i><b>Les actions</b></i> définissent ce qui doit être exécuté. Pour le moment il existe deux types d\'actions :
+<ol>
+    <li>L\'envoi de mél : Les actions de type mél définissent le modèle du message ainsi que les autres paramètres (destinataires, importance, etc.).<br />
+    Une page spéciale : <a href="../setup/email.test.php" target="_blank">email.test.php</a> permet de tester votre configuration mail PHP.</li>
+    <li>Les webhooks sortants : Les actions de type webhooks permettent l\'intégration avec une application tierce en transmettant des données structurées à une URL définie.</li>
+</ol>
+</p>
 <p>Les actions doivent être associées à des déclencheurs pour pouvoir être exécutées.
 Lors de l\'association à un déclencheur, on attribue à chaque action un numéro d\'ordre, qui définit la séquence des actions à exécuter.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Déclencheurs',
@@ -963,6 +993,9 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:NotificationsMenu:OnStateEnter' => 'Quand un objet entre dans un état donné',
 	'UI:NotificationsMenu:OnStateLeave' => 'Quand un objet quitte un état donné',
 	'UI:NotificationsMenu:Actions' => 'Actions',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Actions de type mél',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Actions de type webhook (intégrations sortantes)',
+	'UI:NotificationsMenu:Actions:Action' => 'Autres types d\'actions',
 	'UI:NotificationsMenu:AvailableActions' => 'Actions existantes',
 
 	'Menu:TagAdminMenu' => 'Étiquettes',
@@ -971,39 +1004,43 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:TagAdminMenu:NoTags' => 'Pas de champ étiquette configuré',
 	'UI:TagSetFieldData:Error' => 'Erreur: %1$s',
 
-	'Menu:AuditCategories' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Catégories d\'audit', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Catégories d\'audit',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Catégories d\'audit',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Catégories d\'audit',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Requêtes OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Exécuter une requête OQL', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Requêtes OQL',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Executer une requête OQL',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Livre des requêtes', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Livre des requêtes', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Livre des requêtes',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Livre des requêtes',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Administration des données', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Administration des données', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Administration des données',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Administration des données',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Recherche Universelle', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Recherche Universelle',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Rechercher n\'importe quel objet...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Gestion des Utilisateurs',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Gestion des Utilisateurs',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu:Title' => 'Profils', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profils',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profils',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu:Title' => 'Profils',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs', // Duplicated into itop-welcome-itil (will be removed from here...)	
+	'Menu:UserAccountsMenu' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu+' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserAccountsMenu:Title' => 'Comptes Utilisateurs',
+	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s version %2$s',
 	'UI:iTopVersion:Long' => '%1$s version %2$s-%3$s du %4$s',
 	'UI:PropertiesTab' => 'Propriétés',
 
-	'UI:OpenDocumentInNewWindow_' => 'Ouvrir ce document dans une autre fenêtre: %1$s',
-	'UI:DownloadDocument_' => 'Télécharger ce document: %1$s',
+	'UI:OpenDocumentInNewWindow_' => 'Ouvrir',
+	'UI:DownloadDocument_' => 'Télécharger',
 	'UI:Document:NoPreview' => 'L\'aperçu n\'est pas disponible pour ce type de documents',
 	'UI:Download-CSV' => 'Télécharger %1$s',
 
@@ -1013,7 +1050,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Deadline_Hours_Minutes' => '%1$dh %2$dmin',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dj %2$dh %3$dmin',
 	'UI:Help' => 'Aide',
-	'UI:PasswordConfirm' => '(Confirmer)',
+	'UI:PasswordConfirm' => 'Confirmer',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => 'Enregistrez l\'objet courant avant de créer de nouveaux éléments de type %1$s.',
 	'UI:DisplayThisMessageAtStartup' => 'Afficher ce message au démarrage',
 	'UI:RelationshipGraph' => 'Vue graphique',
@@ -1048,7 +1085,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:RelationTooltip:Redundancy' => 'Redondance',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Nb éléments impactés: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Seuil critique: %1$d / %2$d',
-	'Portal:Title' => 'Portail utilisateur iTop',
+	'Portal:Title' => 'Portail utilisateur '.ITOP_APPLICATION_SHORT,
 	'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'. Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'. Merci de contacter votre administrateur iTop.',
 	'Portal:Refresh' => 'Rafraîchir',
 	'Portal:Back' => 'Retour',
@@ -1125,10 +1162,10 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ArchiveMode:Banner+' => 'Les objets archivés sont visibles, et aucune modification n\'est possible',
 	'UI:FavoriteOrganizations' => 'Organisations Favorites',
 	'UI:FavoriteOrganizations+' => 'Cochez dans la liste ci-dessous les organisations que vous voulez voir listées dans le menu principal. Ceci n\'est pas un réglage de sécurité. Les objets de toutes les organisations sont toujours visibles en choisissant "Toutes les Organisations" dans le menu.',
-	'UI:FavoriteLanguage' => 'Langue de l\'interface utilisateur',
+	'UI:FavoriteLanguage' => 'Langue préférée',
 	'UI:Favorites:SelectYourLanguage' => 'Choisissez votre langue préférée',
 	'UI:FavoriteOtherSettings' => 'Autres réglages',
-	'UI:Favorites:Default_X_ItemsPerPage' => 'Longueur par défaut des listes:  %1$s éléments par page',
+	'UI:Favorites:Default_X_ItemsPerPage' => 'Longueur par défaut :  %1$s éléments par page',
 	'UI:Favorites:ShowObsoleteData' => 'Voir les données obsolètes',
 	'UI:Favorites:ShowObsoleteData+' => 'Voir les données obsolètes dans les résultats de recherche et dans les listes de choix',
 	'UI:NavigateAwayConfirmationMessage' => 'Toute modification sera perdue.',
@@ -1145,15 +1182,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:PrintResolution:A4Landscape' => 'A4 Paysage',
 	'UI:PrintResolution:LetterPortrait' => 'US Letter Portrait',
 	'UI:PrintResolution:LetterLandscape' => 'US Letter Paysage',
-	'UI:Toggle:StandardDashboard' => 'Standard',
-	'UI:Toggle:CustomDashboard' => 'Modifié',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Basculer sur le tableau de bord standard',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Basculer sur le tableau de bord modifié',
 
 	'UI:ConfigureThisList' => 'Configurer Cette Liste...',
 	'UI:ListConfigurationTitle' => 'Configuration de la liste',
 	'UI:ColumnsAndSortOrder' => 'Colonnes et ordre de tri:',
 	'UI:UseDefaultSettings' => 'Utiliser les réglages par défaut',
 	'UI:UseSpecificSettings' => 'Utiliser les réglages suivants:',
-	'UI:Display_X_ItemsPerPage' => 'Afficher %1$s éléments par page',
+	'UI:Display_X_ItemsPerPage_prefix' => 'Afficher',
+	'UI:Display_X_ItemsPerPage_suffix' => 'éléments par page',
 	'UI:UseSavetheSettings' => 'Enregistrer ces réglages',
 	'UI:OnlyForThisList' => 'Seulement pour cette liste',
 	'UI:ForAllLists' => 'Défaut pour toutes les listes',
@@ -1166,13 +1204,16 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:OQL:UnknownClassAndFix' => 'La classe "%1$s" est inconnue. Essayez plutôt "%2$s".',
 	'UI:OQL:UnknownClassNoFix' => 'La classe "%1$s" est inconnue',
 
-	'UI:Dashboard:Edit' => 'Editer cette page...',
-	'UI:Dashboard:Revert' => 'Revenir à la version d\'origine...',
+	'UI:Dashboard:EditCustom' => 'Éditer la version modifiée...',
+	'UI:Dashboard:CreateCustom' => 'Créer une version modifiée...',
+	'UI:Dashboard:DeleteCustom' => 'Supprimer la version modifiée...',
 	'UI:Dashboard:RevertConfirm' => 'Toutes modifications apportées à la version d\'origine seront perdues. Veuillez confirmer l\'opération.',
 	'UI:ExportDashBoard' => 'Exporter dans un fichier',
 	'UI:ImportDashBoard' => 'Importer depuis un fichier...',
 	'UI:ImportDashboardTitle' => 'Importation depuis un fichier',
 	'UI:ImportDashboardText' => 'Choisissez un fichier de définition de tableau de bord :',
+	'UI:Dashboard:Actions' => 'Actions du tableau de bord',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Ce tableau de bord affiche des informations qui ne reflète pas les modifications en cours.',
 
 
 	'UI:DashletCreation:Title' => 'Créer un Indicateur',
@@ -1180,11 +1221,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:DashletCreation:DashletType' => 'Type d\'Indicateur',
 	'UI:DashletCreation:EditNow' => 'Modifier le tableau de bord',
 
-	'UI:DashboardEdit:Title' => 'Editeur de tableau de bord',
+	'UI:DashboardEdit:Title' => 'Éditeur de tableau de bord',
 	'UI:DashboardEdit:DashboardTitle' => 'Titre',
 	'UI:DashboardEdit:AutoReload' => 'Réactualisation automatique',
 	'UI:DashboardEdit:AutoReloadSec' => 'Réactualisation toutes les (secondes)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Le minimum permis est de %1$d secondes',
+	'UI:DashboardEdit:Revert' => 'Revenir à la valeur précédente',
+	'UI:DashboardEdit:Apply' => 'Appliquer',
 
 	'UI:DashboardEdit:Layout' => 'Mise en page',
 	'UI:DashboardEdit:Properties' => 'Propriétés du tableau de bord',
@@ -1321,13 +1364,13 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'Month-10-Short' => 'Oct',
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Déc',
-	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '1',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Créer un Raccourci...',
 	'UI:ShortcutRenameDlg:Title' => 'Renommer le raccourci',
 	'UI:ShortcutListDlg:Title' => 'Créer un raccourci pour la liste',
 	'UI:ShortcutDelete:Confirm' => 'Veuillez confirmer la suppression du ou des raccourci(s)',
-	'Menu:MyShortcuts' => 'Mes raccourcis', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Mes raccourcis',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Raccourci',
 	'Class:Shortcut+' => '',
 	'Class:Shortcut/Attribute:name' => 'Nom',
@@ -1377,8 +1420,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:AddAnExisting_Class' => 'Ajouter des objets de type %1$s...',
 	'UI:SelectionOf_Class' => 'Sélection d\'objets de type %1$s',
 
-	'UI:AboutBox' => 'A propos d\'iTop...',
-	'UI:About:Title' => 'A propos d\'iTop',
+	'UI:AboutBox' => 'A propos d\''.ITOP_APPLICATION_SHORT.'...',
+	'UI:About:Title' => 'A propos d\''.ITOP_APPLICATION_SHORT,
 	'UI:About:DataModel' => 'Modèle de données',
 	'UI:About:Support' => 'Informations pour le support',
 	'UI:About:Licenses' => 'Licences',
@@ -1403,10 +1446,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'ExcelExport:PreparingExport' => 'Préparation de l\'export...',
 	'ExcelExport:Statistics' => 'Statistiques',
 	'portal:legacy_portal' => 'Portail Utilisateurs',
-	'portal:backoffice' => 'Console iTop',
+	'portal:backoffice' => 'Console '.ITOP_APPLICATION_SHORT,
 
 	'UI:CurrentObjectIsLockedBy_User' => 'L\'objet est verrouillé car il est en train d\'être modifié par %1$s.',
 	'UI:CurrentObjectIsLockedBy_User_Explanation' => 'L\'objet est en train d\'être modifié par %1$s. Vos modifications ne peuvent pas être acceptées car elles risquent d\'être écrasées.',
+	'UI:CurrentObjectIsSoftLockedBy_User' => 'L\'objet est en train d\'être modifié par %1$s. Vous pourrez envoyer vos modifications quand il/elle aura fini.',
 	'UI:CurrentObjectLockExpired' => 'Le verrouillage interdisant les modifications concurrentes a expiré.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'Le verrouillage interdisant les modifications concurrentes a expiré. Vos modifications ne peuvent pas être acceptées car d\'autres utilisateurs peuvent modifier cet objet.',
 	'UI:ConcurrentLockKilled' => 'Le verrouillage en édition de l\'objet courant a été supprimé.',
@@ -1424,14 +1468,15 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:ToggleFullScreen' => 'Agrandir / Minimiser',
 	'UI:Button:ResetImage' => 'Récupérer l\'image initiale',
 	'UI:Button:RemoveImage' => 'Supprimer l\'image',
+	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
 	'UI:UploadNotSupportedInThisMode' => 'La modification d\'images ou de fichiers n\'est pas supportée dans ce mode.',
 
 	'UI:Button:RemoveDocument' => 'Supprimer le document',
 
 	// Search form
 	'UI:Search:Toggle' => 'Réduire / Ouvrir',
-	'UI:Search:AutoSubmit:DisabledHint' => '<i class="fas fa-sync fa-1x"></i> La soumission automatique a été desactivée pour cette classe',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Conformément à vos préférences utilisateur, vous ne voyez pas les données obsolètes',
+	'UI:Search:AutoSubmit:DisabledHint' => 'La soumission automatique a été desactivée pour cette classe',
+	'UI:Search:Obsolescence:DisabledHint' => 'Conformément à vos préférences utilisateur, vous ne voyez pas les données obsolètes',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Ajoutez des critères dans le formulaire de recherche ou cliquez sur le bouton rechercher pour voir les objets.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Ajouter un critère',
 	// - Add new criteria button
@@ -1439,6 +1484,11 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:AddCriteria:List:MostPopular:Title' => 'Populaires',
 	'UI:Search:AddCriteria:List:Others:Title' => 'Autres',
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Aucun.',
+
+	// - Criteria header actions
+	'UI:Search:Criteria:Toggle' => 'Réduire / Ouvrir',
+	'UI:Search:Criteria:Remove' => 'Retirer',
+	'UI:Search:Criteria:Locked' => 'Verrouillé',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1500,12 +1550,12 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Fini par',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Exp. rég.',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Egal',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Supérieur',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Sup. / égal',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Inférieur',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Inf. / égal',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Différent',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Egal',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Supérieur',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Sup. / égal',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Inférieur',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Inf. / égal',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Différent',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Contient',
 
@@ -1535,6 +1585,8 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtré',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtré sur %1$s',
+
+	'UI:StateChanged' => 'Etat modifié',
 ));
 
 //
@@ -1563,6 +1615,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 //
 Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:NoNewMessage' => 'Aucun nouveau message',
+	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Marquer tous les messages comme lus',
 	'UI:Newsroom:ViewAllMessages' => 'Voir tous les messages',
 	'UI:Newsroom:Preferences' => 'Préférences du centre d\'information',
@@ -1572,13 +1625,14 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
 ));
 
+
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Menu:DataSources' => 'Synchronisation',
 	'Menu:DataSources+' => '',
 	'Menu:WelcomeMenu' => 'Bienvenue',
-	'Menu:WelcomeMenu+' => 'Bienvenue dans iTop',
+	'Menu:WelcomeMenu+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
 	'Menu:WelcomeMenuPage' => 'Bienvenue',
-	'Menu:WelcomeMenuPage+' => 'Bienvenue dans iTop',
+	'Menu:WelcomeMenuPage+' => 'Bienvenue dans '.ITOP_APPLICATION_SHORT,
 	'Menu:AdminTools' => 'Administration',
 	'Menu:AdminTools+' => 'Outils d\'administration',
 	'Menu:AdminTools?' => 'Ces outils sont accessibles uniquement aux utilisateurs possédant le profil Administrateur.',

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,11 +15,15 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 /**
  * Special kind of Graph for producing some nice output
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -116,48 +120,41 @@ class DisplayableNode extends GraphNode
 		$Alpha = 1.0;
 		$oPdf->SetFillColor(200, 200, 200);
 		$oPdf->setAlpha(1);
-		
+
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
-		
-		if ($this->GetProperty('source'))
-		{
-			$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
+
+		if ($this->GetProperty('source')) {
+			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(204, 51, 51)));
+			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
+		} else if ($this->GetProperty('sink')) {
+			$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
 			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
 		}
-		else if ($this->GetProperty('sink'))
-		{
-			$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => array(51, 51, 204)));
-			$oPdf->Circle($this->x * $fScale, $this->y * $fScale, 16 * 1.25 * $fScale, 0, 360, 'D');
-		}
-		
-		if (!$this->GetProperty('is_reached'))
-		{
+
+		if (!$this->GetProperty('is_reached')) {
 			$sTempImageName = $this->CreateWhiteIcon($oGraph, $sIconPath);
-			if ($sTempImageName != null)
-			{
-				$oPdf->Image($sTempImageName, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale, 'PNG');
+			if ($sTempImageName != null) {
+				$oPdf->AddImage($sTempImageName, ($this->x - 16) * $fScale, ($this->y - 16) * $fScale, 32 * $fScale, 32 * $fScale, 'PNG');
 			}
 			$Alpha = 0.4;
 			$oPdf->setAlpha($Alpha);
 		}
-		
-		$oPdf->Image($sIconPath, ($this->x - 16)*$fScale, ($this->y - 16)*$fScale, 32*$fScale, 32*$fScale);
-		
+
+		$oPdf->AddImage($sIconPath, ($this->x - 16) * $fScale, ($this->y - 16) * $fScale, 32 * $fScale, 32 * $fScale);
+
 		$aContextRootCauses = $this->GetProperty('context_root_causes');
-		if (!is_null($aContextRootCauses))
-		{
+		if (!is_null($aContextRootCauses)) {
 			$idx = 0;
-			foreach($aContextRootCauses as $key => $aObjects)
-			{
-				$sgn = 2*($idx %2) -1;
-				$coef = floor((1+$idx)/2) * $sgn;
-				$alpha = $coef*pi()/4 - pi()/2;						
-				$x = $this->x * $fScale + cos($alpha) * 16*1.25 * $fScale;
-				$y = $this->y * $fScale + sin($alpha) * 16*1.25 * $fScale;
+			foreach ($aContextRootCauses as $key => $aObjects) {
+				$sgn = 2 * ($idx % 2) - 1;
+				$coef = floor((1 + $idx) / 2) * $sgn;
+				$alpha = $coef * pi() / 4 - pi() / 2;
+				$x = $this->x * $fScale + cos($alpha) * 16 * 1.25 * $fScale;
+				$y = $this->y * $fScale + sin($alpha) * 16 * 1.25 * $fScale;
 				$l = 32 * $fScale / 3;
 				$sIconPath = APPROOT.'env-'.utils::GetCurrentEnvironment().'/'.$aContextDefs[$key]['icon'];
-				$oPdf->Image($sIconPath, $x - $l/2, $y - $l/2, $l, $l);
+				$oPdf->AddImage($sIconPath, $x - $l / 2, $y - $l / 2, $l, $l);
 				$idx++;
 			}
 		}
@@ -410,7 +407,7 @@ class DisplayableNode extends GraphNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, $sNewId);
 						$oNewNode->SetProperty('label', 'x'.$aGroupProps['count']);
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'reached'));
 						$oNewNode->SetProperty('count', $aGroupProps['count']);
@@ -466,7 +463,7 @@ class DisplayableNode extends GraphNode
 				{
 					$aRootCauses[] = $oRootCause->GetHyperlink();
 				}
-				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
+				$sHtml .= '<p><img style="max-height: 24px; vertical-align:bottom;" class="ibo-class-icon ibo-is-small" src="'.utils::GetAbsoluteUrlModulesRoot().$aContext['icon'].'" title="'.htmlentities(Dict::S($aContext['dict'])).'">&nbsp;'.implode(', ', $aRootCauses).'</p>';
 			}
 			$sHtml .= '<hr/>';
 		}
@@ -590,7 +587,7 @@ class DisplayableRedundancyNode extends DisplayableNode
 					{
 						$oNewNode = new DisplayableGroupNode($oGraph, '-'.$this->GetId().'::'.$sClass.'/'.$sStatus);
 						$oNewNode->SetProperty('label', 'x'.count($aGroupProps['nodes']));
-						$oNewNode->SetProperty('icon_url', $aGroupProps['icon_url']);
+						$oNewNode->SetProperty('icon_url', MetaModel::GetClassIcon($sClass, false));
 						$oNewNode->SetProperty('is_reached', ($sStatus == 'is_reached'));
 						$oNewNode->SetProperty('class', $sClass);
 						$oNewNode->SetProperty('count', count($aGroupProps['nodes']));
@@ -768,46 +765,39 @@ class DisplayableGroupNode extends DisplayableNode
 	{
 		$bReached = $this->GetProperty('is_reached');
 		$oPdf->SetFillColor(255, 255, 255);
-		if ($bReached)
-		{
+		if ($bReached) {
 			$aBorderColor = array(100, 100, 100);
-		}
-		else
-		{
+		} else {
 			$aBorderColor = array(200, 200, 200);
 		}
-		$oPdf->SetLineStyle(array('width' => 2*$fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
-		
+		$oPdf->SetLineStyle(array('width' => 2 * $fScale, 'cap' => 'round', 'join' => 'miter', 'dash' => 0, 'color' => $aBorderColor));
+
 		$sIconUrl = $this->GetProperty('icon_url');
 		$sIconPath = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
 		$oPdf->SetAlpha(1);
-		$oPdf->Circle($this->x*$fScale, $this->y*$fScale, $this->GetWidth() / 2 * $fScale, 0, 360, 'DF');
-		
-		if ($bReached)
-		{
+		$oPdf->Circle($this->x * $fScale, $this->y * $fScale, $this->GetWidth() / 2 * $fScale, 0, 360, 'DF');
+
+		if ($bReached) {
 			$oPdf->SetAlpha(1);
-		}
-		else
-		{
+		} else {
 			$oPdf->SetAlpha(0.4);
 		}
-		$oPdf->Image($sIconPath, ($this->x - 17)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->Image($sIconPath, ($this->x + 1)*$fScale, ($this->y - 17)*$fScale, 16*$fScale, 16*$fScale);
-		$oPdf->Image($sIconPath, ($this->x -8)*$fScale, ($this->y +1)*$fScale, 16*$fScale, 16*$fScale);
+		$oPdf->AddImage($sIconPath, ($this->x - 17) * $fScale, ($this->y - 17) * $fScale, 16 * $fScale, 16 * $fScale);
+		$oPdf->AddImage($sIconPath, ($this->x + 1) * $fScale, ($this->y - 17) * $fScale, 16 * $fScale, 16 * $fScale);
+		$oPdf->AddImage($sIconPath, ($this->x - 8) * $fScale, ($this->y + 1) * $fScale, 16 * $fScale, 16 * $fScale);
 		$oPdf->SetFontParams('', 24 * $fScale, '', true);
 		$width = $oPdf->GetStringWidth($this->GetProperty('label'));
 		$oPdf->SetTextColor(0, 0, 0);
-		$oPdf->Text($this->x*$fScale - $width/2, ($this->y + 25)*$fScale, $this->GetProperty('label'));
+		$oPdf->Text($this->x * $fScale - $width / 2, ($this->y + 25) * $fScale, $this->GetProperty('label'));
 	}
 	
 	public function GetTooltip($aContextDefs)
 	{
-		$sHtml = '';
 		$iGroupIdx = $this->GetProperty('group_index');
-		$sHtml .= '<a href="#" onclick="$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
+		$sHtml = '<a href="#" id="a_'.$iGroupIdx.'" onclick="$(this).closest(\'.tippy-box\').parent().hide();$(\'.itop-simple-graph\').simple_graph(\'show_group\', \'relation_group_'.$iGroupIdx.'\');return false;">'.Dict::Format('UI:RelationGroupNumber_N', (1+$iGroupIdx))."</a>";
 		$sHtml .= '<hr/>';
 		$sHtml .= '<table><tbody><tr>';
-		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
+		$sHtml .= '<td style="vertical-align:top;padding-right: 0.5em;"><img class="ibo-class-icon ibo-is-small" src="'.$this->GetProperty('icon_url').'"></td><td style="vertical-align:top">'.MetaModel::GetName($this->GetObjectClass()).'<br/>';
 		$sHtml .= Dict::Format('UI_CountOfObjectsShort', $this->GetObjectCount()).'</td>';
 		$sHtml .= '</tr></tbody></table>';
 		return $sHtml;
@@ -856,72 +846,74 @@ class DisplayableGraph extends SimpleGraph
 			@unlink($sTempFile);
 		}
 	}
-	
+
 	/**
 	 * Build a DisplayableGraph from a RelationGraph
+	 *
 	 * @param RelationGraph $oGraph
 	 * @param number $iGroupingThreshold
 	 * @param string $bDirectionDown
+	 *
 	 * @return DisplayableGraph
 	 */
-	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true)
+	public static function FromRelationGraph(RelationGraph $oGraph, $iGroupingThreshold = 20, $bDirectionDown = true, $bForPdf = false)
 	{
 		$oNewGraph = new DisplayableGraph();
 		$oNewGraph->bDirectionDown = $bDirectionDown;
 		$iPreviousTimeLimit = ini_get('max_execution_time');
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
-		
+
 		$oNodesIter = new RelationTypeIterator($oGraph, 'Node');
-		foreach($oNodesIter as $oNode)
-		{
-			set_time_limit($iLoopTimeLimit);
-			switch(get_class($oNode))
-			{
-				case 'RelationObjectNode':				
-				$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
-				
-				$oObj = $oNode->GetProperty('object');
-				$sClass = get_class($oObj);
-				if ($oNode->GetProperty('source'))
-				{
-					if (!array_key_exists($sClass, $oNewGraph->aSourceObjects))
-					{
-						$oNewGraph->aSourceObjects[$sClass] = array();
+		foreach ($oNodesIter as $oNode) {
+			set_time_limit(intval($iLoopTimeLimit));
+			switch (get_class($oNode)) {
+				case 'RelationObjectNode':
+					$oNewNode = new DisplayableNode($oNewGraph, $oNode->GetId(), 0, 0);
+
+					$oObj = $oNode->GetProperty('object');
+					$sClass = get_class($oObj);
+					if ($oNode->GetProperty('source')) {
+						if (!array_key_exists($sClass, $oNewGraph->aSourceObjects)) {
+							$oNewGraph->aSourceObjects[$sClass] = array();
+						}
+						$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
+						$oNewNode->SetProperty('source', true);
 					}
-					$oNewGraph->aSourceObjects[$sClass][] = $oObj->GetKey();
-					$oNewNode->SetProperty('source', true);
-				}
-				if ($oNode->GetProperty('sink'))
-				{
-					if (!array_key_exists($sClass, $oNewGraph->aSinkObjects))
-					{
-						$oNewGraph->aSinkObjects[$sClass] = array();
+					if ($oNode->GetProperty('sink')) {
+						if (!array_key_exists($sClass, $oNewGraph->aSinkObjects)) {
+							$oNewGraph->aSinkObjects[$sClass] = array();
+						}
+						$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
+						$oNewNode->SetProperty('sink', true);
 					}
-					$oNewGraph->aSinkObjects[$sClass][] = $oObj->GetKey();
-					$oNewNode->SetProperty('sink', true);
-				}
-				$oNewNode->SetProperty('object', $oObj);
-				$oNewNode->SetProperty('icon_url', $oObj->GetIcon(false));
-				$oNewNode->SetProperty('label', $oObj->GetRawName());
-				$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter
-				$oNewNode->SetProperty('is_reached_allowed', $oNode->GetProperty('is_reached_allowed'));
-				$oNewNode->SetProperty('context_root_causes', $oNode->GetProperty('context_root_causes'));
-				break;
-				
+					$oNewNode->SetProperty('object', $oObj);
+					$sIconUrl = $oObj->GetIcon(false);
+					//when icons are displayed in a PDF file, puts the image data in place of the url
+					if ($bForPdf && strpos($sIconUrl, 'display_document') > 0) {
+						$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+						$sIconUrl = '@'.$oObj->Get($sImageAttCode)->GetData();
+					}
+					$oNewNode->SetProperty('icon_url', $sIconUrl);
+					$oNewNode->SetProperty('label', $oObj->GetRawName());
+					$oNewNode->SetProperty('is_reached', $bDirectionDown ? $oNode->GetProperty('is_reached') : true); // When going "up" is_reached does not matter
+					$oNewNode->SetProperty('is_reached_allowed', $oNode->GetProperty('is_reached_allowed'));
+					$oNewNode->SetProperty('context_root_causes', $oNode->GetProperty('context_root_causes'));
+					break;
+
 				default:
-				$oNewNode = new DisplayableRedundancyNode($oNewGraph, $oNode->GetId(), 0, 0);
-				$iNbReached = (is_null($oNode->GetProperty('is_reached_count'))) ? 0 : $oNode->GetProperty('is_reached_count');
-				$oNewNode->SetProperty('label', $iNbReached."/".($oNode->GetProperty('min_up') + $oNode->GetProperty('threshold')));
-				$oNewNode->SetProperty('min_up', $oNode->GetProperty('min_up'));
-				$oNewNode->SetProperty('threshold', $oNode->GetProperty('threshold'));
-				$oNewNode->SetProperty('is_reached_count', $iNbReached);
-				$oNewNode->SetProperty('is_reached', true);
+					$oNewNode = new DisplayableRedundancyNode($oNewGraph, $oNode->GetId(), 0, 0);
+					$iNbReached = (is_null($oNode->GetProperty('is_reached_count'))) ? 0 : $oNode->GetProperty('is_reached_count');
+					$oNewNode->SetProperty('label', $iNbReached."/".($oNode->GetProperty('min_up') + $oNode->GetProperty('threshold')));
+					$oNewNode->SetProperty('min_up', $oNode->GetProperty('min_up'));
+					$oNewNode->SetProperty('threshold', $oNode->GetProperty('threshold'));
+					$oNewNode->SetProperty('is_reached_count', $iNbReached);
+					$oNewNode->SetProperty('is_reached', true);
 			}
 		}
 		$oEdgesIter = new RelationTypeIterator($oGraph, 'Edge');
 		foreach($oEdgesIter as $oEdge)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$oSourceNode = $oNewGraph->GetNode($oEdge->GetSourceNode()->GetId());
 			$oSinkNode = $oNewGraph->GetNode($oEdge->GetSinkNode()->GetId());
 			$oNewEdge = new DisplayableEdge($oNewGraph, $oEdge->GetId(), $oSourceNode, $oSinkNode);
@@ -932,7 +924,7 @@ class DisplayableGraph extends SimpleGraph
 		$aEdgeKeys = array();
 		foreach($oEdgesIter as $oEdge)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
 			$sSinkId = $oEdge->GetSinkNode()->GetId();
 			if ($sSourceId == $sSinkId)
@@ -958,7 +950,7 @@ class DisplayableGraph extends SimpleGraph
 		$oNodesIter = new RelationTypeIterator($oNewGraph, 'Node');
 		foreach($oNodesIter as $oNode)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			if ($bDirectionDown && $oNode->GetProperty('source'))
 			{
 				$oNode->GroupSimilarNeighbours($oNewGraph, $iGroupingThreshold, true, $bDirectionDown);
@@ -973,7 +965,7 @@ class DisplayableGraph extends SimpleGraph
 		$iGroupIdx = 0;
 		foreach($oIterator as $oNode)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			if ($oNode instanceof DisplayableGroupNode)
 			{
 				if ($oNode->GetObjectCount() == 0)
@@ -995,7 +987,7 @@ class DisplayableGraph extends SimpleGraph
 		$aEdgeKeys = array();
 		foreach($oEdgesIter as $oEdge)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$sSourceId =  $oEdge->GetSourceNode()->GetId();
 			$sSinkId = $oEdge->GetSinkNode()->GetId();
 			if ($sSourceId == $sSinkId)
@@ -1017,7 +1009,7 @@ class DisplayableGraph extends SimpleGraph
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 		
 		return $oNewGraph;
 	}
@@ -1182,7 +1174,7 @@ class DisplayableGraph extends SimpleGraph
 	
 		return json_encode($aData);
 	}
-	
+
 	/**
 	 * Sort class "codes" based on their localized name
 	 * @param string $sClass1
@@ -1193,12 +1185,12 @@ class DisplayableGraph extends SimpleGraph
 	{
 		return strcasecmp(MetaModel::GetName($sClass1), MetaModel::GetName($sClass2));
 	}
-	
+
 	/**
 	 * Renders the graph in a PDF document: centered in the current page
 	 * @param PDFPage $oPage The PDFPage representing the PDF document to draw into
 	 * @param string $sComments An optional comment to  display next to the graph (HTML entities will be escaped, \n replaced by <br/>)
-	 * @param string $sContextKey The key to fetch the queries in the configuration. Example: itop-tickets/relation_context/UserRequest/impacts/down 
+	 * @param string $sContextKey The key to fetch the queries in the configuration. Example: itop-tickets/relation_context/UserRequest/impacts/down
 	 * @param float $xMin Left coordinate of the bounding box to display the graph
 	 * @param float $xMax Right coordinate of the bounding box to display the graph
 	 * @param float $yMin Top coordinate of the bounding box to display the graph
@@ -1257,14 +1249,14 @@ class DisplayableGraph extends SimpleGraph
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($oIterator as $sId => $oEdge)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$oEdge->RenderAsPDF($oPdf, $this, $fScale, $aContextDefs);
 		}
 
 		$oIterator = new RelationTypeIterator($this, 'Node');
 		foreach($oIterator as $sId => $oNode)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$oNode->RenderAsPDF($oPdf, $this, $fScale, $aContextDefs);
 		}
 
@@ -1326,20 +1318,18 @@ class DisplayableGraph extends SimpleGraph
 		$yPos = $yMin + $fPadding;
 		$oPdf->SetFillColor(225, 225, 225);
 		$oPdf->Cell($fIconSize + $fPadding + $fMaxWidth, $fIconSize + $fPadding, Dict::S('UI:Relation:Key'), 0 /* border */, 1 /* ln */, 'C', true /* fill */);
-		$yPos += $fIconSize + 2*$fPadding;
-		foreach($aClasses as $sClass => $sLabel)
-		{
+		$yPos += $fIconSize + 2 * $fPadding;
+		foreach ($aClasses as $sClass => $sLabel) {
 			$oPdf->SetX($xMin + $fIconSize + $fPadding);
-			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
-			$oPdf->Image($aIcons[$sClass], $xMin+1, $yPos, $fIconSize, $fIconSize);
-			$yPos += $fIconSize + 2*$fPadding; 
+			$oPdf->Cell(0, $fIconSize + 2 * $fPadding, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->AddImage($aIcons[$sClass], $xMin + 1, $yPos, $fIconSize, $fIconSize);
+			$yPos += $fIconSize + 2 * $fPadding;
 		}
-		foreach($aContexts as $key => $sLabel)
-		{
+		foreach ($aContexts as $key => $sLabel) {
 			$oPdf->SetX($xMin + $fIconSize + $fPadding);
-			$oPdf->Cell(0, $fIconSize + 2*$fPadding, $sLabel, 0 /* border */, 1 /* ln */);
-			$oPdf->Image($aContextIcons[$key], $xMin+1+$fIconSize*0.125, $yPos+$fIconSize*0.125, $fIconSize*0.75, $fIconSize*0.75);
-			$yPos += $fIconSize + 2*$fPadding;
+			$oPdf->Cell(0, $fIconSize + 2 * $fPadding, $sLabel, 0 /* border */, 1 /* ln */);
+			$oPdf->AddImage($aContextIcons[$key], $xMin + 1 + $fIconSize * 0.125, $yPos + $fIconSize * 0.125, $fIconSize * 0.75, $fIconSize * 0.75);
+			$yPos += $fIconSize + 2 * $fPadding;
 		}
 		$oPdf->Rect($xMin, $yMin, $fMaxWidth + $fIconSize + 3*$fPadding, $yMax - $yMin, 'D');
 		
@@ -1450,18 +1440,18 @@ class DisplayableGraph extends SimpleGraph
 		$sSftShort = Dict::S('UI:ElementsDisplayed');
 		$sSearchToggle = Dict::S('UI:Search:Toggle');
 		$oP->add("<div class=\"not-printable\">\n");
-		$oP->add(
+		$oUiSearchBlock = new Panel($sSftShort, [],Panel::ENUM_COLOR_SCHEME_CYAN, 'ds_flash');
+		$oUiSearchBlock->SetCSSClasses(["ibo-search-form-panel", "display_block"]);
+		$oUiSearchBlock->SetIsCollapsible(true);
+		$oUiHtmlBlock = new Combodo\iTop\Application\UI\Base\Component\Html\Html(
 <<<EOF
- <div id="ds_flash" class="search_box">
-	<form id="dh_flash" class="search_form_handler closed">
-	<h2 class="sf_title"><span class="sft_long">$sSftShort</span><span class="sft_short">$sSftShort</span><span class="sft_toggler fas fa-caret-down pull-right" title="$sSearchToggle"></span></h2>
+ <div id="ds_flash" class="search_box ibo-display-graph--search-box">
 	<div id="dh_flash_criterion_outer" class="sf_criterion_area"><div class="sf_criterion_row">
 EOF
 		);
-		
 		$oP->add_ready_script(
 <<<EOF
-	$("#dh_flash > .sf_title").click( function() {
+	$("#dh_flash > .sf_title").on('click', function() {
 		$("#dh_flash").toggleClass('closed');
 	});
     $('#ReloadMovieBtn').button().button('disable');
@@ -1481,14 +1471,20 @@ EOF
 		$idx = 0;
 		foreach($aSortedElements as $sSubClass => $sClassName)
 		{
-			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
+			$oUiHtmlBlock->AddHtml("<div><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">");
+			$oUiMedallionBlock= new MedallionIcon(MetaModel::GetClassIcon($sSubClass, false));
+			$oUiMedallionBlock->SetDescription($sClassName);
+			$oUiHtmlBlock->AddHtml(BlockRenderer::RenderBlockTemplates($oUiMedallionBlock));
+			$oUiHtmlBlock->AddHtml("</label></div>");
 			$idx++;
 		}
-		$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></p>");
-		$oP->add("</div></div></form>");
-		$oP->add("</div>\n");
-	 	$oP->add("</div>\n"); // class="not-printable"
+		$oUiHtmlBlock->AddHtml("</div>");
+		$oUiHtmlBlock->AddHtml("<button type=\"button\" id=\"ReloadMovieBtn\" class=\"ibo-button ibo-is-neutral ibo-is-regular\" onClick=\"DoReload()\">".Dict::S('UI:Button:Refresh')."</button></div></form>");
+		$oUiHtmlBlock->AddHtml("</div>\n");
+		$oUiHtmlBlock->AddHtml("</div>\n"); // class="not-printable"
 
+		$oUiSearchBlock->AddSubBlock($oUiHtmlBlock);
+		$oP->AddUiBlock($oUiSearchBlock);
 		$aAdditionalContexts = array();
 		foreach($aContextDefs as $sKey => $aDefinition)
 		{
@@ -1497,11 +1493,8 @@ EOF
 		
 		$sDirection = utils::ReadParam('d', 'horizontal');
 		$iGroupingThreshold = utils::ReadParam('g', 5);
-	
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
-		$oP->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/jquery.contextMenu.css');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.contextMenu.js');
-		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/simple_graph.js');
+
+		WebResourcesHelper::EnableSimpleGraphInWebPage($oP);
 		try
 		{
 			$this->InitFromGraphviz();

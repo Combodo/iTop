@@ -1,20 +1,7 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 define('ADMIN_PROFILE_NAME', 'Administrator');
@@ -47,7 +34,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile",
+			"category" => "addon/userrights,grant_by_profile,filter",
 			"key_type" => "autoincrement",
 			"name_attcode" => "name",
 			"state_attcode" => "",
@@ -55,7 +42,6 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			"db_table" => "priv_urp_profiles",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -170,11 +156,9 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
-			$this->DoShowGrantSumary($oPage);
-		}
+
+		$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
+		$this->DoShowGrantSumary($oPage);
 	}
 
 	public static function GetReadOnlyAttributes()
@@ -235,15 +219,14 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 	{
 		$aParams = array
 		(
-			"category" => "addon/userrights,grant_by_profile",
+			"category" => "addon/userrights,grant_by_profile,filter",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => array("userlogin", "profile"),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userprofile",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -263,22 +246,54 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
 	}
 
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
-	}
-
 	public function CheckToDelete(&$oDeletionPlan)
 	{
-		if (MetaModel::GetConfig()->Get('demo_mode'))
-		{
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
 			// Users deletion is NOT allowed in demo mode
 			$oDeletionPlan->AddToDelete($this, null);
 			$oDeletionPlan->SetDeletionIssues($this, array('deletion not allowed in demo mode.'), true);
 			$oDeletionPlan->ComputeResults();
+
 			return false;
 		}
+		try {
+			$this->CheckIfProfileIsAllowed(UR_ACTION_DELETE);
+		}
+		catch (SecurityException $e) {
+			// Users deletion is NOT allowed
+			$oDeletionPlan->AddToDelete($this, null);
+			$oDeletionPlan->SetDeletionIssues($this, [$e->getMessage()], true);
+			$oDeletionPlan->ComputeResults();
+
+			return false;
+		}
+
 		return parent::CheckToDelete($oDeletionPlan);
+	}
+
+	public function DoCheckToDelete(&$oDeletionPlan)
+	{
+		if (MetaModel::GetConfig()->Get('demo_mode')) {
+			// Users deletion is NOT allowed in demo mode
+			$oDeletionPlan->AddToDelete($this, null);
+			$oDeletionPlan->SetDeletionIssues($this, array('deletion not allowed in demo mode.'), true);
+			$oDeletionPlan->ComputeResults();
+
+			return false;
+		}
+		try {
+			$this->CheckIfProfileIsAllowed(UR_ACTION_DELETE);
+		}
+		catch (SecurityException $e) {
+			// Users deletion is NOT allowed
+			$oDeletionPlan->AddToDelete($this, null);
+			$oDeletionPlan->SetDeletionIssues($this, [$e->getMessage()], true);
+			$oDeletionPlan->ComputeResults();
+
+			return false;
+		}
+
+		return parent::DoCheckToDelete($oDeletionPlan);
 	}
 
 	protected function OnInsert()
@@ -293,7 +308,6 @@ class URP_UserProfile extends UserRightsBaseClassGUI
 
 	protected function OnDelete()
 	{
-		$this->CheckIfProfileIsAllowed(UR_ACTION_DELETE);
 	}
 
 	/**
@@ -343,13 +357,12 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 		(
 			"category" => "addon/userrights,grant_by_profile",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => array("userlogin", "allowed_org_name"),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userorg",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -368,12 +381,6 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'allowed_org_id')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'allowed_org_id')); // Criteria of the advanced search form
 	}
-
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Org', $this->Get('userlogin'), $this->Get('allowed_org_name'));
-	}
-
 
 	protected function OnInsert()
 	{
@@ -434,7 +441,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// Support drastic data model changes: no organization class (or not writable)!
 		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
 		{
-			$oOrg = new Organization();
+			$oOrg = MetaModel::NewObject('Organization');
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
 			$iOrgId = $oOrg->DBInsertNoReload();
@@ -442,16 +449,12 @@ class UserRightsProfile extends UserRightsAddOnAPI
 			// Support drastic data model changes: no Person class  (or not writable)!
 			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
 			{
-				$oContact = new Person();
+				$oContact = MetaModel::NewObject('Person');
 				$oContact->Set('name', 'My last name');
 				$oContact->Set('first_name', 'My first name');
 				if (MetaModel::IsValidAttCode('Person', 'org_id'))
 				{
 					$oContact->Set('org_id', $iOrgId);
-				}
-				if (MetaModel::IsValidAttCode('Person', 'phone'))
-				{
-					$oContact->Set('phone', '+00 000 000 000');
 				}
 				$oContact->Set('email', 'my.email@foo.org');
 				$iContactId = $oContact->DBInsertNoReload();
@@ -561,7 +564,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * @param $oUser User
-	 * @return array
+	 * @return bool
 	 */
 	public function IsAdministrator($oUser)
 	{
@@ -571,16 +574,22 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * @param $oUser User
-	 * @return array
+	 * @return bool
 	 */
 	public function IsPortalUser($oUser)
 	{
 		// UserRights caches the list for us
 		return UserRights::HasProfile(PORTAL_PROFILE_NAME, $oUser);
 	}
+
 	/**
 	 * @param $oUser User
-	 * @return bool
+	 *
+	 * @return array
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
 	public function ListProfiles($oUser)
 	{
@@ -601,30 +610,115 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	{
 		$this->LoadCache();
 
-		$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, UR_ACTION_READ);
-		if ($aObjectPermissions['permission'] == UR_ALLOWED_NO)
+		// Let us pass an administrator for bypassing the grant matrix check in order to test this method without the need to set up a complex profile
+		// In the nominal case Administrators never end up here (since they completely bypass GetSelectFilter)
+		if (!static::IsAdministrator($oUser) && (MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'bizmodel')))
 		{
-			return false;
+			// N°4354 - Categories 'silo' and 'bizmodel' do check the grant matrix. Whereas 'filter' always allows to read (but the result can be filtered)
+			$aObjectPermissions = $this->GetUserActionGrant($oUser, $sClass, UR_ACTION_READ);
+			if ($aObjectPermissions['permission'] == UR_ALLOWED_NO)
+			{
+				return false;
+			}
 		}
 
-		// Determine how to position the objects of this class
-		//
+		$oFilter = true;
+		$aConditions =  array();
+
+		// Determine if this class is part of a silo and build the filter for it
 		$sAttCode = self::GetOwnerOrganizationAttCode($sClass);
-		if (is_null($sAttCode))
+		if (!is_null($sAttCode))
 		{
-			// No filtering for this object
-			return true;
+			$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
+			if (count($aUserOrgs) > 0)
+			{
+				$oFilter = $this->MakeSelectFilter($sClass, $aUserOrgs, $aSettings, $sAttCode);
+			}
+			// else: No org means 'any org'
 		}
-		// Position the user
-		//
-		$aUserOrgs = $this->GetUserOrgs($oUser, $sClass);
-		if (count($aUserOrgs) == 0)
+		// else: No silo for this class
+
+		// Specific conditions to hide, for non-administrators, the Administrator Users, the Administrator Profile and related links
+		// Note: when logged as an administrator, GetSelectFilter is completely bypassed.
+		if ($this->AdministratorsAreHidden())
 		{
-			// No org means 'any org'
-			return true;
+			if ($sClass == 'URP_Profiles')
+			{
+				$oExpression = new FieldExpression('id', $sClass);
+				$oScalarExpr = new ScalarExpression(1);
+
+				$aConditions[] = new BinaryExpression($oExpression, '!=', $oScalarExpr);
+			}
+			else if (($sClass == 'URP_UserProfile') || ($sClass == 'User') || (is_subclass_of($sClass, 'User')))
+			{
+				$aAdministrators = $this->GetAdministrators();
+				if (count($aAdministrators) > 0)
+				{
+					$sAttCode = ($sClass == 'URP_UserProfile') ? 'userid' : 'id';
+					$oExpression = new FieldExpression($sAttCode, $sClass);
+					$oListExpr = ListExpression::FromScalars($aAdministrators);
+					$aConditions[] = new BinaryExpression($oExpression, 'NOT IN', $oListExpr);
+				}
+			}
 		}
 
-		return $this->MakeSelectFilter($sClass, $aUserOrgs, $aSettings, $sAttCode);
+		// Handling of the added conditions
+		if (count($aConditions) > 0)
+		{
+			if($oFilter === true)
+			{
+				// No 'silo' filter, let's build a clean one
+				$oFilter = new DBObjectSearch($sClass);
+			}
+
+			// Add the conditions to the filter
+			foreach($aConditions as $oCondition)
+			{
+				$oFilter->AddConditionExpression($oCondition);
+			}
+		}
+
+		return $oFilter;
+	}
+
+	/**
+	 * Retrieve (and memoize) the list of administrator accounts.
+	 * Note that there should always be at least one administrator account
+	 * @return number[]
+	 */
+	private function GetAdministrators()
+	{
+		static $aAdministrators = null;
+
+		if ($aAdministrators === null)
+		{
+			// Find all administrators
+			$aAdministrators = array();
+			$oAdministratorsFilter = new DBObjectSearch('User');
+			$oLnkFilter = new DBObjectSearch('URP_UserProfile');
+			$oExpression = new FieldExpression('profileid', 'URP_UserProfile');
+			$oScalarExpr = new ScalarExpression(1);
+			$oCondition = new BinaryExpression($oExpression, '=', $oScalarExpr);
+			$oLnkFilter->AddConditionExpression($oCondition);
+			$oAdministratorsFilter->AddCondition_ReferencedBy($oLnkFilter, 'userid');
+			$oAdministratorsFilter->AllowAllData(true); // Mandatory to prevent infinite recursion !!
+			$oSet = new DBObjectSet($oAdministratorsFilter);
+			$oSet->OptimizeColumnLoad(array('User' => array('login')));
+			while($oUser = $oSet->Fetch())
+			{
+				$aAdministrators[] = $oUser->GetKey();
+			}
+		}
+		return $aAdministrators;
+	}
+
+	/**
+	 * Whether or not to hide the 'Administrator' profile and the administrator accounts
+	 * @return boolean
+	 */
+	private function AdministratorsAreHidden()
+	{
+		return ((bool)MetaModel::GetConfig()->Get('security.hide_administrators'));
 	}
 
 

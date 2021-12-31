@@ -1,0 +1,102 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-vendors-jquery-treeview--treeview--ul--padding: $ibo-spacing-0 !default;
+$ibo-vendors-jquery-treeview--treeview--ul--margin: $ibo-spacing-0 !default;
+
+$ibo-vendors-jquery-treeview--treeview--hitarea--height: 15px !default;
+$ibo-vendors-jquery-treeview--treeview--hitarea--width: 15px !default;
+$ibo-vendors-jquery-treeview--treeview--hitarea--margin-left: -15px !default;
+
+$ibo-vendors-jquery-treeview--treeview--li--margin: $ibo-spacing-0 !default;
+$ibo-vendors-jquery-treeview--treeview--li--padding: 3px $ibo-spacing-0 3px $ibo-spacing-500 !default;
+
+$ibo-vendors-jquery-treeview--treeview--selected: $ibo-color-grey-100 !default;
+
+$ibo-vendors-jquery-treeview--treecontrol--margin-y: 1em !default;
+$ibo-vendors-jquery-treeview--treecontrol--margin-x: $ibo-spacing-0 !default;
+
+$ibo-vendors-jquery-treeview--treecontrol--hover: $ibo-color-primary-600 !default;
+
+$ibo-vendors-jquery-treeview--filetree--li--padding: 3px $ibo-spacing-0 1px $ibo-spacing-500 !default;
+
+$ibo-vendors-jquery-treeview--filetree--folder-file--padding-left: $ibo-spacing-500 !default;
+$ibo-vendors-jquery-treeview--filetree--folder-file--height: 15px !default;
+
+
+
+.treeview, .treeview ul {
+  padding: $ibo-vendors-jquery-treeview--treeview--ul--padding;
+  margin: $ibo-vendors-jquery-treeview--treeview--ul--margin;
+  list-style: none;
+}
+
+.treeview div.hitarea {
+  height: $ibo-vendors-jquery-treeview--treeview--hitarea--height;
+  width: $ibo-vendors-jquery-treeview--treeview--hitarea--width;
+  margin-left: $ibo-vendors-jquery-treeview--treeview--hitarea--margin-left;
+  float: left;
+  cursor: pointer;
+}
+
+.treeview li {
+  margin: $ibo-vendors-jquery-treeview--treeview--li--margin;
+  padding: $ibo-vendors-jquery-treeview--treeview--li--padding;
+}
+
+.treeview a.selected {
+  background-color: $ibo-vendors-jquery-treeview--treeview--selected;
+}
+
+#treecontrol {
+  margin: $ibo-vendors-jquery-treeview--treecontrol--margin-y $ibo-vendors-jquery-treeview--treecontrol--margin-x; 
+}
+
+.treeview .hover { 
+  color: $ibo-vendors-jquery-treeview--treecontrol--hover;
+  cursor: pointer; 
+}
+
+.treeview li {
+  background: url($approot-relative + '/images/tv-item.gif') 0 0 no-repeat; 
+}
+
+.treeview .collapsable { 
+  background-image: url($approot-relative + '/images/tv-collapsable.gif'); 
+}
+
+.treeview .expandable { 
+  background-image: url($approot-relative + '/images/tv-expandable.gif'); 
+}
+
+.treeview .last { 
+  background-image: url($approot-relative + '/images/tv-item-last.gif'); 
+}
+
+.treeview .lastCollapsable { 
+  background-image: url($approot-relative + '/images/tv-collapsable-last.gif'); 
+}
+
+.treeview .lastExpandable { 
+  background-image: url($approot-relative + '/images/tv-expandable-last.gif'); 
+}
+
+.filetree li { 
+  padding: $ibo-vendors-jquery-treeview--filetree--li--padding; 
+}
+
+.filetree span.folder, .filetree span.file { 
+  padding-left: $ibo-vendors-jquery-treeview--filetree--folder-file--padding-left;
+  display: block;
+  height: $ibo-vendors-jquery-treeview--filetree--folder-file--height; 
+}
+
+.filetree span.folder { 
+  background: url($approot-relative + '/images/tv-folder.gif') 0 0 no-repeat;
+}
+
+.filetree span.file { 
+  background: url($approot-relative + '/images/tv-file.gif') 0 0 no-repeat;
+}

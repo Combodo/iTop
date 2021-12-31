@@ -1,0 +1,810 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables (can be overloaded) */
+$ibo-navigation-menu-height: 100vh !default;
+
+$ibo-navigation-menu--body--padding-x: $ibo-spacing-500 !default;
+$ibo-navigation-menu--body--padding-y: $ibo-spacing-500 !default;
+$ibo-navigation-menu--body--width-collapsed: 60px !default;
+$ibo-navigation-menu--body--width-expanded: 310px !default;
+$ibo-navigation-menu--body--background-color: $ibo-color-blue-grey-900 !default;
+$ibo-navigation-menu--body--text-color: $ibo-color-grey-300 !default;
+
+$ibo-navigation-menu--top-part--height: 120px !default;
+$ibo-navigation-menu--top-part--padding-y: $ibo-navigation-menu--body--padding-y !default;
+$ibo-navigation-menu--top-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
+$ibo-navigation-menu--top-part--elements-spacing: 20px !default;
+
+$ibo-navigation-menu--middle-part--padding-top: $ibo-spacing-600 !default;
+$ibo-navigation-menu--middle-part--padding-bottom: $ibo-spacing-500 !default;
+$ibo-navigation-menu--middle-part--padding-x: $ibo-navigation-menu--body--padding-x !default;
+$ibo-navigation-menu--middle-part--elements-spacing: 20px !default;
+$ibo-navigation-menu--middle-part--scrollbar-width: 5px !default;
+$ibo-navigation-menu--middle-part--scrollbar-track-background-color: $ibo-color-transparent !default;
+$ibo-navigation-menu--middle-part--scrollbar-thumb-background-color: $ibo-color-grey-300 !default;
+
+$ibo-navigation-menu--bottom-part--padding-top: 20px !default;
+$ibo-navigation-menu--bottom-part--padding-bottom: $ibo-spacing-500 !default;
+$ibo-navigation-menu--bottom-part--padding-x: $ibo-spacing-0 !default;
+$ibo-navigation-menu--bottom-part--height: 126px !default;
+$ibo-navigation-menu--bottom-part--background-color: $ibo-color-grey-800 !default;
+$ibo-navigation-menu--bottom-part--is-expanded--padding-top: $ibo-spacing-600 !default;
+$ibo-navigation-menu--bottom-part--is-expanded--padding-bottom: $ibo-spacing-400 !default;
+
+$ibo-navigation-menu--visual-hint--size: 16px !default;
+$ibo-navigation-menu--visual-hint--background-color: $ibo-color-red-600 !default;
+$ibo-navigation-menu--visual-hint--border-radius: $ibo-border-radius-full !default;
+
+$ibo-navigation-menu--silo-selection--width: 70% !default;
+$ibo-navigation-menu--silo-selection--margin-left: 15px !default;
+$ibo-navigation-menu--silo-selection--input--action-button--hierarchy--padding-right: -42px !default;
+$ibo-navigation-menu--silo-selection--input--padding-right: 38px !default;
+$ibo-navigation-menu--silo-selection--input-select--action-button--hierarchy--margin-left: -42px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left: 60px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left: -42px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--clear--margin-left: -72px !default;
+$ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--hierarchy--margin-left: -60px !default;
+
+$ibo-navigation-menu--silo-visual-hint--top: 2px !default;
+$ibo-navigation-menu--silo-visual-hint--right: 0 !default;
+$ibo-navigation-menu--silo-visual-hint--size: $ibo-navigation-menu--visual-hint--size !default;
+$ibo-navigation-menu--silo-visual-hint--background-color: $ibo-navigation-menu--visual-hint--background-color !default;
+$ibo-navigation-menu--silo-visual-hint--border: 2px solid $ibo-navigation-menu--body--background-color !default;
+$ibo-navigation-menu--silo-visual-hint--border-radius: $ibo-navigation-menu--visual-hint--border-radius !default;
+
+$ibo-navigation-menu--action--padding-x: $ibo-spacing-300 !default;
+$ibo-navigation-menu--action--padding-y: 10px !default;
+$ibo-navigation-menu--action--border-radius: $ibo-border-radius-500 !default;
+$ibo-navigation-menu--action--border-radius--on-active: $ibo-border-radius-full !default;
+$ibo-navigation-menu--action--border-radius--on-active-expanded: $ibo-border-radius-900 !default;
+$ibo-navigation-menu--action--text-color--on-hover: $ibo-color-white-100 !default;
+$ibo-navigation-menu--action--background-color--on-hover: $ibo-color-blue-grey-700 !default;
+$ibo-navigation-menu--action--background-color--on-active: $ibo-color-grey-100 !default;
+$ibo-navigation-menu--action-icon--width: 28px !default;
+$ibo-navigation-menu--action-icon--text-color--on-hover: $ibo-color-white-100 !default;
+
+$ibo-navigation-menu--square-company-logo--width: 38px !default;
+$ibo-navigation-menu--square-company-logo--height: 38px !default;
+$ibo-navigation-menu--square-company-logo--margin-top: $ibo-spacing-0 !default;
+$ibo-navigation-menu--square-company-logo--margin-x: -5px !default;
+$ibo-navigation-menu--square-company-logo--margin-bottom: $ibo-navigation-menu--body--padding-y * 2 !default;
+
+$ibo-navigation-menu--full-company-logo--width: $ibo-navigation-menu--body--width-expanded !default;
+$ibo-navigation-menu--full-company-logo--height: 70px !default;
+$ibo-navigation-menu--full-company-logo--margin-top: $ibo-spacing-0 !default;
+$ibo-navigation-menu--full-company-logo--margin-right: $ibo-spacing-0 !default;
+$ibo-navigation-menu--full-company-logo--margin-bottom: $ibo-spacing-0 !default;
+$ibo-navigation-menu--full-company-logo--margin-left: -$ibo-navigation-menu--body--padding-y !default;
+$ibo-navigation-menu--full-company-logo--image--margin-x: auto !default;
+$ibo-navigation-menu--full-company-logo--image--margin-y: $ibo-spacing-0 !default;
+
+$ibo-navigation-menu--toggler-icon--height: 20px !default;
+$ibo-navigation-menu--toggler-icon--width: $ibo-navigation-menu--action-icon--width !default;
+$ibo-navigation-menu--toggler-bar--height: 3px !default;
+$ibo-navigation-menu--toggler-bar--width: 100% !default;
+$ibo-navigation-menu--toggler--width: $ibo-navigation-menu--action-icon--width + $ibo-navigation-menu--top-part--padding-x !default;
+
+$ibo-navigation-menu--menu-group--background-color--is-active: $ibo-color-grey-100 !default;
+$ibo-navigation-menu--menu-group--border-radius--is-active: $ibo-border-radius-500 0 0 $ibo-border-radius-500 !default;
+
+$ibo-navigation-menu--menu-group-icon--font-size: $ibo-font-size-350 !default;
+$ibo-navigation-menu--menu-group-icon--text-color--is-active: $ibo-color-primary-500 !default;
+$ibo-navigation-menu--menu-group-title--margin-left: $ibo-navigation-menu--middle-part--padding-x !default;
+$ibo-navigation-menu--menu-group-title--text-color--is-active: $ibo-color-blue-grey-800 !default;
+
+$ibo-navigation-menu--drawer--width: 312px !default;
+$ibo-navigation-menu--drawer--padding-x: 20px !default;
+$ibo-navigation-menu--drawer--padding-y: $ibo-spacing-700 !default;
+$ibo-navigation-menu--drawer--background-color: $ibo-navigation-menu--menu-group--background-color--is-active !default;
+$ibo-navigation-menu--drawer--border-right: 1px solid $ibo-color-grey-300 !default;
+
+/* TODO: Refactor this into the standard field input */
+$ibo-navigation-menu--menu-filter-input--padding-x: 10px !default;
+$ibo-navigation-menu--menu-filter-input--padding-y: $ibo-spacing-300 !default;
+$ibo-navigation-menu--menu-filter-input--width: 100% !default;
+$ibo-navigation-menu--menu-filter-input--placeholder-color: $ibo-color-grey-700 !default;
+$ibo-navigation-menu--menu-filter-input--text-color: $ibo-color-grey-900 !default;
+$ibo-navigation-menu--menu-filter-input--background-color: $ibo-color-white-100 !default;
+$ibo-navigation-menu--menu-filter-input--border: 1px solid $ibo-color-grey-300 !default;
+$ibo-navigation-menu--menu-filter-input--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-navigation-menu--menu-filter--width: $ibo-navigation-menu--drawer--width - $ibo-navigation-menu--drawer--padding-x * 2 !default;
+$ibo-navigation-menu--menu-filter-input--padding-right: 76px !default;
+$ibo-navigation-menu--menu-filter-clear--top: $ibo-navigation-menu--menu-filter-input--padding-y !default;
+$ibo-navigation-menu--menu-filter-clear--right: $ibo-navigation-menu--menu-filter-input--padding-right - 16px !default;
+$ibo-navigation-menu--menu-filter-clear--padding: 3px 3px !default;
+$ibo-navigation-menu--menu-filter-hotkey--top: 6.5px !default;
+$ibo-navigation-menu--menu-filter-hotkey--border: 1px solid $ibo-color-grey-400 !default;
+
+$ibo-navigation-menu--menu-filter-hint--margin-top: $ibo-spacing-500 !default;
+$ibo-navigation-menu--menu-filter-hint--padding-right: $ibo-spacing-400 !default;
+$ibo-navigation-menu--menu-filter-hint--text-color: $ibo-color-grey-700 !default;
+$ibo-navigation-menu--menu-filter-hint-close--top: 1px !default;
+$ibo-navigation-menu--menu-filter-hint-close--right: 2px !default;
+
+
+$ibo-navigation-menu--menu-groups--margin-top: 50px !default;
+
+$ibo-navigation-menu--menu--placeholder--width: 100% !default;
+$ibo-navigation-menu--menu--placeholder--margin-top: $ibo-navigation-menu--menu-groups--margin-top !default;
+$ibo-navigation-menu--menu--placeholder-image--svg--width: 90% !default;
+$ibo-navigation-menu--menu--placeholder-image--svg--height: auto !default;
+$ibo-navigation-menu--menu--placeholder-image--svg--margin: auto !default;
+$ibo-navigation-menu--menu--placeholder-hint--margin-top: $ibo-spacing-300 !default;
+
+$ibo-navigation-menu--menu-nodes--margin-bottom--on-filtered: $ibo-spacing-800 !default;
+
+$ibo-navigation-menu--menu-nodes-title--margin-top: 0 !default;
+$ibo-navigation-menu--menu-nodes-title--margin-bottom: $ibo-spacing-700 !default;
+$ibo-navigation-menu--menu-nodes-title--margin-bottom--on-filtered: $ibo-spacing-300 !default;
+
+$ibo-navigation-menu--menu-node--padding-x: 10px !default;
+$ibo-navigation-menu--menu-node--padding-y: 6px !default;
+$ibo-navigation-menu--menu-node--margin-x: -1 * $ibo-navigation-menu--menu-node--padding-x !default;
+$ibo-navigation-menu--menu-node--margin-y: $ibo-spacing-0 !default;
+$ibo-navigation-menu--menu-node--text-color: $ibo-color-grey-700 !default;
+$ibo-navigation-menu--menu-node--hyperlink-color: inherit !default;
+$ibo-navigation-menu--menu-node--background-color: $ibo-color-grey-200 !default;
+$ibo-navigation-menu--menu-node--border-radius: $ibo-border-radius-500 !default;
+
+$ibo-navigation-menu--menu-node-counter--margin-left: $ibo-spacing-300 !default;
+$ibo-navigation-menu--menu-node-counter--padding-y: $ibo-spacing-100 !default;
+$ibo-navigation-menu--menu-node-counter--padding-x: 6px !default;
+$ibo-navigation-menu--menu-node-counter--width: 34px !default;
+$ibo-navigation-menu--menu-node-counter--background-color: $ibo-navigation-menu--menu-node--background-color !default;
+
+$ibo-navigation-menu--notifications-toggler--font-size: $ibo-font-size-400 !default;
+$ibo-navigation-menu--notifications-toggler--color: $ibo-color-grey-600 !default;
+$ibo-navigation-menu--notifications-toggler--color--is-loaded: $ibo-color-grey-300 !default;
+$ibo-navigation-menu--notifications-toggler--color--on-hover: $ibo-color-white-200 !default;
+
+$ibo-navigation-menu--notifications-toggler--new-messages--top: -2px !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--right: -7px !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--size: $ibo-navigation-menu--visual-hint--size !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--background-color: $ibo-navigation-menu--visual-hint--background-color !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--border: 2px solid $ibo-navigation-menu--bottom-part--background-color !default;
+$ibo-navigation-menu--notifications-toggler--new-messages--border-radius: $ibo-navigation-menu--visual-hint--border-radius !default;
+
+$ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--width: 10px !default;
+$ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--height: 10px !default;
+$ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--top: -2px !default;
+$ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--right: -5px !default;
+
+$ibo-navigation-menu--user--text-color: $ibo-color-white-100 !default;
+$ibo-navigation-menu--user-welcome-message--toggler--padding-left: 6px !default;
+$ibo-navigation-menu--user-picture--border-radius: $ibo-border-radius-full !default;
+$ibo-navigation-menu--user-picture--background-color: $ibo-color-grey-300 !default;
+$ibo-navigation-menu--user-notifications--toggler--icon--padding-left: 5px !default;
+$ibo-navigation-menu--user-organization--text-color: $ibo-color-blue-100 !default;
+
+$ibo-navigation-menu--user-picture--size--is-collapsed: 36px !default;
+$ibo-navigation-menu--user-picture--size--is-expanded: 72px !default;
+$ibo-navigation-menu--user-picture--margin-top--is-expanded: -60px !default;
+$ibo-navigation-menu--user-picture--border--is-expanded: solid 3px $ibo-color-blue-grey-900 !default;
+
+$ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color: $ibo-color-grey-100 !default;
+
+$ibo-navigation-menu--user-info--height--is-expanded: 100% !default;
+
+
+/* CSS variables (can be changed directly from the browser) */
+:root {
+	/* TODO: Introduce variables once SCSS variables are set */
+}
+
+/* IMPORTANT: Rules are made for the collapsed mode by default */
+/* Expanded rules should only be in the dedicated section */
+
+.ibo-navigation-menu{
+	position: relative;
+	height: $ibo-navigation-menu-height;
+
+	&.ibo-is-expanded{
+		.ibo-navigation-menu--square-company-logo{
+			display: none;
+		}
+		.ibo-navigation-menu--full-company-logo{
+			display: flex;
+		}
+		.ibo-navigation-menu--silo-selection{
+			display: inline-block;
+		}
+		.ibo-navigation-menu--silo-visual-hint{
+			display: none;
+		}
+		.ibo-navigation-menu--body{
+			width: $ibo-navigation-menu--body--width-expanded;
+
+			.ibo-navigation-menu--toggler-bar{
+				&:nth-child(1){
+					top: 4px;
+					left: 7px;
+					width: 14px;
+					transform: rotateZ(-45deg);
+				}
+				&:nth-child(2){
+					top: 8px;
+					left: 7px;
+					width: 0;
+					opacity: 0;
+				}
+				&:nth-child(3){
+					top: 12px;
+					left: 7px;
+					width: 14px;
+					transform: rotateZ(45deg);
+				}
+			}
+			.ibo-navigation-menu--menu-group{
+				&:not(.ibo-is-active){
+					&:active{
+						border-radius: $ibo-navigation-menu--action--border-radius--on-active-expanded;
+					}
+				}
+			}
+			.ibo-navigation-menu--bottom-part{
+				padding: $ibo-navigation-menu--bottom-part--is-expanded--padding-top $ibo-navigation-menu--bottom-part--padding-x $ibo-navigation-menu--bottom-part--is-expanded--padding-bottom;
+
+				.ibo-navigation-menu--notifications .ibo-navigation-menu--notifications-toggler{
+					display: none;
+				}
+				.ibo-navigation-menu--user-info{
+					height: $ibo-navigation-menu--user-info--height--is-expanded;
+					.ibo-navigation-menu--user-welcome-message, .ibo-navigation-menu--user-notifications, .ibo-navigation-menu--user-organization{
+						display: block;
+					}
+					.ibo-navigation-menu--user-picture{
+						margin-top: $ibo-navigation-menu--user-picture--margin-top--is-expanded;
+						width: $ibo-navigation-menu--user-picture--size--is-expanded;
+						height: $ibo-navigation-menu--user-picture--size--is-expanded;
+						border: $ibo-navigation-menu--user-picture--border--is-expanded;
+
+						.ibo-navigation-menu--user-picture--image {
+							max-width: $ibo-navigation-menu--user-picture--size--is-expanded;
+							max-height: $ibo-navigation-menu--user-picture--size--is-expanded;
+						}
+					}
+				}
+			}
+		}
+	}
+	&.ibo-is-active{
+		.ibo-navigation-menu--drawer{
+			right: calc(-1 * #{$ibo-navigation-menu--drawer--width});
+		}
+	}
+	&.ibo-is-filtered{
+		.ibo-navigation-menu--menu-filter-clear{
+			display: block;
+		}
+		.ibo-navigation-menu--menu-nodes{
+			margin-bottom: $ibo-navigation-menu--menu-nodes--margin-bottom--on-filtered;
+
+			.ibo-navigation-menu--menu-nodes-title{
+				margin-bottom: $ibo-navigation-menu--menu-nodes-title--margin-bottom--on-filtered;
+			}
+		}
+	}
+}
+
+.ibo-navigation-menu--body,
+.ibo-navigation-menu--drawer{
+	height: $ibo-navigation-menu-height;
+}
+
+/* Body */
+.ibo-navigation-menu--body{
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: stretch;
+
+	height: $ibo-navigation-menu-height;
+	width: $ibo-navigation-menu--body--width-collapsed;
+
+	background-color: $ibo-navigation-menu--body--background-color;
+	transition: width 0.1s ease-in-out;
+}
+/* - Top part */
+.ibo-navigation-menu--top-part{
+	z-index: 2;
+	min-height: $ibo-navigation-menu--top-part--height;
+	padding: $ibo-navigation-menu--top-part--padding-y $ibo-navigation-menu--top-part--padding-x;
+	overflow: hidden;
+}
+/* - Middle part */
+.ibo-navigation-menu--middle-part{
+	z-index: 1;
+	/* Occupy as much space as possible */
+	flex-grow: 1;
+	/* Only the middle part should have a variable size */
+	overflow-y: auto;
+	padding: $ibo-navigation-menu--middle-part--padding-top $ibo-navigation-menu--middle-part--padding-x $ibo-navigation-menu--middle-part--padding-bottom;
+
+	/* Scrollbar for Firefox and future W3C specs. */
+	scrollbar-width: thin;
+	scrollbar-color: $ibo-navigation-menu--middle-part--scrollbar-thumb-background-color $ibo-navigation-menu--middle-part--scrollbar-track-background-color;
+	/* Scrollbar for Chrome/Edge/Safari */
+	&::-webkit-scrollbar {
+		width: $ibo-navigation-menu--middle-part--scrollbar-width;
+	}
+	&::-webkit-scrollbar-track {
+		background-color: $ibo-navigation-menu--middle-part--scrollbar-track-background-color;
+	}
+	&::-webkit-scrollbar-thumb {
+		background-color: $ibo-navigation-menu--middle-part--scrollbar-thumb-background-color;
+	}
+}
+
+/* - Bottom part */
+.ibo-navigation-menu--bottom-part{
+	z-index: 2; /* User picture must be above the middle part when expanded */
+	padding-top: $ibo-navigation-menu--bottom-part--padding-top;
+	padding-bottom: $ibo-navigation-menu--bottom-part--padding-bottom;
+	height: $ibo-navigation-menu--bottom-part--height;
+	background-color: $ibo-navigation-menu--bottom-part--background-color;
+	@extend %ibo-fully-centered-content;
+	justify-content: space-between;
+	flex-direction: column;
+}
+
+.ibo-navigation-menu--toggler,
+.ibo-navigation-menu--menu-group{
+	margin: calc(-1 * #{$ibo-navigation-menu--action--padding-y}) calc(-1 * #{$ibo-navigation-menu--action--padding-x});
+	padding: $ibo-navigation-menu--action--padding-y $ibo-navigation-menu--action--padding-x;
+	border-radius: $ibo-navigation-menu--action--border-radius;
+}
+
+/* Top part */
+/* - Company logo: square */
+.ibo-navigation-menu--square-company-logo{
+	display: flex;
+	width: $ibo-navigation-menu--square-company-logo--width;
+	height: $ibo-navigation-menu--square-company-logo--height;
+	margin: $ibo-navigation-menu--square-company-logo--margin-top $ibo-navigation-menu--square-company-logo--margin-x $ibo-navigation-menu--square-company-logo--margin-bottom;
+	>img {
+		object-fit: contain;
+	}
+}
+/* - Company logo: full */
+.ibo-navigation-menu--full-company-logo{
+	display: none;
+	width: $ibo-navigation-menu--full-company-logo--width;
+	height: $ibo-navigation-menu--full-company-logo--height;
+	margin: $ibo-navigation-menu--full-company-logo--margin-top $ibo-navigation-menu--full-company-logo--margin-right $ibo-navigation-menu--full-company-logo--margin-bottom  $ibo-navigation-menu--full-company-logo--margin-left;
+	>img{
+		object-fit: contain;
+		margin: $ibo-navigation-menu--full-company-logo--image--margin-y $ibo-navigation-menu--full-company-logo--image--margin-x;
+	}
+}
+/* - Toggler */
+.ibo-navigation-menu--toggler{
+	position: relative; /* For the silo visual hint to be placed relatively to it */
+	display: inline-flex;
+	/* Width is define here in addition of the icon so we can fix its width whether the menu is collapsed or expanded */
+	width: $ibo-navigation-menu--toggler--width;
+
+	&:hover,
+	&:active{
+		background-color: $ibo-navigation-menu--action--background-color--on-hover;
+
+		.ibo-navigation-menu--toggler-bar{
+			background-color: $ibo-navigation-menu--action--text-color--on-hover;
+		}
+	}
+}
+.ibo-navigation-menu--toggler-icon{
+	position: relative;
+	display: flex;
+	height: $ibo-navigation-menu--toggler-icon--height;
+	width: $ibo-navigation-menu--toggler-icon--width;
+}
+.ibo-navigation-menu--toggler-bar{
+	position: absolute;
+	display: block;
+	height: $ibo-navigation-menu--toggler-bar--height;
+	width: $ibo-navigation-menu--toggler-bar--width;
+	opacity: 1;
+	transition: all 0.2s linear;
+	background-color: $ibo-navigation-menu--body--text-color;
+
+	&:nth-child(1){
+		top: 0;
+	}
+	&:nth-child(2){
+		top: 8px;
+	}
+	&:nth-child(3){
+		top: 16px;
+	}
+}
+.ibo-navigation-menu--silo-selection {
+	position: absolute;
+	display: none;
+	width: $ibo-navigation-menu--silo-selection--width;
+	margin-left: $ibo-navigation-menu--silo-selection--margin-left;
+	.ibo-input-wrapper
+	{
+		.ibo-input{
+			padding-right: $ibo-navigation-menu--silo-selection--input--padding-right;
+			overflow: hidden;
+		}
+
+		.ibo-input-select-autocomplete{
+			padding-right: $ibo-navigation-menu--silo-selection--input-select-autocomplete--padding-left;
+			~ .ibo-input-select--action-button--search{
+				margin-left: $ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--search--margin-left;
+			}
+			~ .ibo-input-select--action-button--clear{
+				margin-left: $ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--clear--margin-left;
+			}
+			~ .ibo-input-select--action-button--hierarchy{
+				margin-left: $ibo-navigation-menu--silo-selection--input-select-autocomplete--action-button--hierarchy--margin-left;
+			}
+		}
+	}
+}
+.ibo-navigation-menu--silo-visual-hint{
+	position: absolute;
+	top: $ibo-navigation-menu--silo-visual-hint--top;
+	right: $ibo-navigation-menu--silo-visual-hint--right;
+	width: $ibo-navigation-menu--silo-visual-hint--size;
+	height: $ibo-navigation-menu--silo-visual-hint--size;
+	background-color: $ibo-navigation-menu--silo-visual-hint--background-color;
+	border: $ibo-navigation-menu--silo-visual-hint--border;
+	border-radius: $ibo-navigation-menu--silo-visual-hint--border-radius;
+}
+
+
+/* - Menu groups */
+.ibo-navigation-menu--menu-group{
+	display: flex;
+	justify-content: left;
+	align-items: center;
+
+	/* To keep title on the line even when collapsed. Better visual feedback when expanding. */
+	white-space: nowrap;
+	overflow-x: hidden;
+
+	color: $ibo-navigation-menu--body--text-color;
+	@extend %ibo-font-ral-nor-200;
+
+	transition-property: background-color, color, padding, margin, border-radius;
+	transition-duration: 0.1s;
+	transition-timing-function: linear;
+
+	> .ibo-navigation-menu--menu-group-icon,
+	> .ibo-navigation-menu--menu-group-title{
+		display: flex; /* To avoid end space due to display:inline-block */
+	}
+
+	&:not(:last-child){
+		margin-bottom: $ibo-navigation-menu--middle-part--elements-spacing;
+	}
+
+	&:not(.ibo-is-active)
+	{
+		&:hover,
+		&:active{
+			color: $ibo-navigation-menu--action--text-color--on-hover;
+			background-color: $ibo-navigation-menu--action--background-color--on-hover;
+		}
+		&:active{
+			border-radius: $ibo-navigation-menu--action--border-radius--on-active;
+		}
+	}
+	&.ibo-is-active{
+		margin-right: calc(-2 * #{$ibo-navigation-menu--action--padding-x});
+		padding-right: calc(2 - #{$ibo-navigation-menu--action--padding-x});
+		color: $ibo-navigation-menu--menu-group-title--text-color--is-active;
+		background-color: $ibo-navigation-menu--menu-group--background-color--is-active;
+		border-radius: $ibo-navigation-menu--menu-group--border-radius--is-active;
+
+		.ibo-navigation-menu--menu-group-icon{
+			color: $ibo-navigation-menu--menu-group-icon--text-color--is-active;
+		}
+	}
+}
+
+.ibo-navigation-menu--menu-group-icon{
+	width: $ibo-navigation-menu--action-icon--width;
+	min-width: $ibo-navigation-menu--action-icon--width; /* Necessary with flex, otherwise it will shrink */
+	justify-content: center;
+	font-size: $ibo-navigation-menu--menu-group-icon--font-size;
+
+	&::before{
+		width: $ibo-navigation-menu--action-icon--width;
+	}
+}
+.ibo-navigation-menu--menu-group-title{
+	margin-left: $ibo-navigation-menu--menu-group-title--margin-left;
+	justify-content: left;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+
+/* Drawer */
+.ibo-navigation-menu--drawer{
+	position: absolute;
+	z-index: -1;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	display: flex;
+	flex-direction: column;
+	justify-content: flex-start;
+	width: $ibo-navigation-menu--drawer--width;
+	padding: $ibo-navigation-menu--drawer--padding-y $ibo-navigation-menu--drawer--padding-x;
+
+	background-color: $ibo-navigation-menu--drawer--background-color;
+	border-right: $ibo-navigation-menu--drawer--border-right;
+	transition: right 0.2s ease-in-out;
+}
+/* - Menu filter */
+.ibo-navigation-menu--menu-filter {
+	position: relative;
+}
+.ibo-navigation-menu--menu-filter-input{
+	/* TODO: Refactor this into the standard field input */
+	width: $ibo-navigation-menu--menu-filter-input--width;
+	padding: $ibo-navigation-menu--menu-filter-input--padding-y $ibo-navigation-menu--menu-filter-input--padding-x;
+	color: $ibo-navigation-menu--menu-filter-input--text-color;
+	background-color: $ibo-navigation-menu--menu-filter-input--background-color;
+	border: $ibo-navigation-menu--menu-filter-input--border;
+	border-radius: $ibo-navigation-menu--menu-filter-input--border-radius;
+
+	&::placeholder{
+		color: $ibo-navigation-menu--menu-filter-input--placeholder-color;
+	}
+	/* This rule is duplicated otherwise Chrome won't be able to parse it. */
+	&:-ms-input-placeholder,
+	&::-ms-input-placeholder{
+		color: $ibo-navigation-menu--menu-filter-input--placeholder-color;
+	}
+
+	padding-right: $ibo-navigation-menu--menu-filter-input--padding-right; /* Must be at least #nm-filter-hotkey width + some padding */
+}
+.ibo-navigation-menu--menu-filter-clear{
+	display: none;
+	position: absolute;
+	top: $ibo-navigation-menu--menu-filter-clear--top;
+	right: $ibo-navigation-menu--menu-filter-clear--right;
+	padding: $ibo-navigation-menu--menu-filter-clear--padding; /* Used to help the user click on it as the icon itself is small */
+	@extend %ibo-font-ral-bol-50;
+	@extend %ibo-hyperlink-inherited-colors;
+}
+.ibo-navigation-menu--menu-filter-hotkey {
+  position: absolute;
+  top: $ibo-navigation-menu--menu-filter-hotkey--top;
+  right: $ibo-navigation-menu--menu-filter-input--padding-x;
+  border: $ibo-navigation-menu--menu-filter-hotkey--border;
+  border-radius: $ibo-navigation-menu--menu-filter-input--border-radius;
+  color: $ibo-navigation-menu--menu-filter-input--placeholder-color;
+  padding: $ibo-spacing-100 $ibo-spacing-200;
+  @extend %ibo-font-ral-nor-50;
+}
+.ibo-navigation-menu--menu-filter-hint{
+	position: relative;
+	margin-top: $ibo-navigation-menu--menu-filter-hint--margin-top;
+	padding-right: $ibo-navigation-menu--menu-filter-hint--padding-right;
+	color: $ibo-navigation-menu--menu-filter-hint--text-color;
+	@extend %ibo-font-ral-ita-50;
+}
+.ibo-navigation-menu--menu-filter-hint-close{
+	position: absolute;
+	top: $ibo-navigation-menu--menu-filter-hint-close--top;
+	right: $ibo-navigation-menu--menu-filter-hint-close--right;
+	@extend %ibo-hyperlink-inherited-colors;
+}
+
+.ibo-navigation-menu--menu--placeholder{
+	width: $ibo-navigation-menu--menu--placeholder--width;
+	margin-top: $ibo-navigation-menu--menu--placeholder--margin-top;
+}
+
+.ibo-navigation-menu--menu--placeholder-image > svg{
+	display: block;
+	width: $ibo-navigation-menu--menu--placeholder-image--svg--width;
+	height: $ibo-navigation-menu--menu--placeholder-image--svg--height;
+	margin: $ibo-navigation-menu--menu--placeholder-image--svg--margin;
+}
+.ibo-navigation-menu--menu--placeholder-hint{
+	margin-top: $ibo-navigation-menu--menu--placeholder-hint--margin-top;
+	text-align: center;
+	@extend %ibo-font-ral-ita-100;
+}
+
+/* - Menu groups */
+.ibo-navigation-menu--menu-groups{
+	overflow-y: auto;
+	overflow-x: hidden;
+	margin: $ibo-navigation-menu--menu-groups--margin-top calc(-1 * #{$ibo-navigation-menu--drawer--padding-x}) 0 calc(-1 * #{$ibo-navigation-menu--drawer--padding-x});
+	padding-left: $ibo-navigation-menu--drawer--padding-x;
+	padding-right: $ibo-navigation-menu--drawer--padding-x;
+	width: inherit; /* Re-establishing it to fill the full width, still not understood yet */
+}
+/* - Menu nodes */
+.ibo-navigation-menu--menu-nodes{
+	display: none;
+
+	ul{
+		li{
+			> a,
+			> span{
+				margin: $ibo-navigation-menu--menu-node--margin-y $ibo-navigation-menu--menu-node--margin-x;
+				padding: $ibo-navigation-menu--menu-node--padding-y $ibo-navigation-menu--menu-node--padding-x;
+				border-radius: 0;
+				color: $ibo-navigation-menu--menu-node--text-color;
+				@extend %ibo-font-ral-nor-150;
+			}
+			> a{
+				color: $ibo-navigation-menu--menu-node--hyperlink-color;
+
+				&:hover{
+					background-color: $ibo-navigation-menu--menu-node--background-color;
+					border-radius: $ibo-navigation-menu--menu-node--border-radius;
+				}
+			}
+		}
+		ul{
+			padding-left: $ibo-navigation-menu--drawer--padding-x;
+		}
+	}
+
+	&.ibo-is-active{
+		display: block;
+	}
+}
+.ibo-navigation-menu--menu-nodes-title{
+	margin-top: $ibo-navigation-menu--menu-nodes-title--margin-top;
+	margin-bottom: $ibo-navigation-menu--menu-nodes-title--margin-bottom;
+	@extend %ibo-font-ral-nor-350;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+/* - Menu node */
+.ibo-navigation-menu--menu-node-title{
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.ibo-navigation-menu--menu-node-counter {
+	margin-left: $ibo-navigation-menu--menu-node-counter--margin-left;
+	padding: $ibo-navigation-menu--menu-node-counter--padding-y $ibo-navigation-menu--menu-node-counter--padding-x;
+	width: $ibo-navigation-menu--menu-node-counter--width;
+	min-width: $ibo-navigation-menu--menu-node-counter--width;
+	text-align: center;
+	@extend %ibo-font-ral-bol-100;
+
+	background: $ibo-navigation-menu--menu-node-counter--background-color;
+	border-radius: 5px;
+}
+
+/* - Notifications menu */
+.ibo-navigation-menu--notifications{
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+}
+.ibo-navigation-menu--notifications-toggler{
+	position: relative;
+	font-size: $ibo-navigation-menu--notifications-toggler--font-size;
+	color: $ibo-navigation-menu--notifications-toggler--color;
+
+	&:hover,
+	&.ibo-is-loaded:hover{
+		color: $ibo-navigation-menu--notifications-toggler--color--on-hover;
+	}
+	&.ibo-is-loaded{
+		color: $ibo-navigation-menu--notifications-toggler--color--is-loaded;
+
+		&:not(.ibo-is-empty) .ibo-navigation-menu--notifications-toggler--new-messages{
+			display: inline;
+		}
+	}
+
+	.ibo-navigation-menu--notifications-toggler--new-messages{
+		top: $ibo-navigation-menu--notifications-toggler--new-messages--top;
+		right: $ibo-navigation-menu--notifications-toggler--new-messages--right;
+		width: $ibo-navigation-menu--notifications-toggler--new-messages--size;
+		height:  $ibo-navigation-menu--notifications-toggler--new-messages--size;
+	}
+}
+
+.ibo-navigation-menu--user-notifications--toggler{
+	position: relative;
+
+	&.ibo-is-loaded{
+		color: $ibo-navigation-menu--notifications-toggler--color--is-loaded;
+		&:not(.ibo-is-empty) .ibo-navigation-menu--notifications-toggler--new-messages{
+			display: inline;
+		}
+	}
+	.ibo-navigation-menu--notifications-toggler--new-messages {
+		top: $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--top;
+		right: $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--right;
+		width: $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--width;
+		height: $ibo-navigation-menu--user-notifications--notifications-toggler--new-messages--height;
+	}
+}
+
+.ibo-navigation-menu--notifications-toggler--new-messages{
+	position: absolute;
+	display: none;
+	background-color: $ibo-navigation-menu--notifications-toggler--new-messages--background-color;
+	border: $ibo-navigation-menu--notifications-toggler--new-messages--border;
+	border-radius: $ibo-navigation-menu--notifications-toggler--new-messages--border-radius;
+}
+
+.ibo-navigation-menu--user-info{
+	@extend %ibo-fully-centered-content;
+	justify-content: space-between;
+	flex-direction: column;
+	
+	.ibo-navigation-menu--user-picture{
+		@extend %ibo-fully-centered-content;
+		width: $ibo-navigation-menu--user-picture--size--is-collapsed;
+		height: $ibo-navigation-menu--user-picture--size--is-collapsed;
+		overflow: hidden; /* Crop the image, for example when tall but narrow, it would overlap on top and bottom */
+
+		background-color: $ibo-navigation-menu--user-picture--background-color;
+		border-radius: $ibo-navigation-menu--user-picture--border-radius;
+
+		.ibo-navigation-menu--user-picture--image{
+			display: flex;
+			max-width: $ibo-navigation-menu--user-picture--size--is-collapsed;
+			max-height: $ibo-navigation-menu--user-picture--size--is-collapsed;
+		}
+	}
+
+	.ibo-navigation-menu--user-welcome-message,
+	.ibo-navigation-menu--user-organization,
+	.ibo-navigation-menu--user-notifications {
+		display: none;
+		text-align: center;
+		color: $ibo-navigation-menu--user--text-color;
+	}
+
+	.ibo-navigation-menu--user-welcome-message {
+		@extend %ibo-font-ral-nor-250;
+
+		.ibo-navigation-menu--user-welcome-message--text,
+		.ibo-navigation-menu--user-welcome-message--toggler {
+			color: $ibo-navigation-menu--user--text-color;
+		}
+	}
+
+	.ibo-navigation-menu--user-welcome-message--toggler {
+		padding-left: $ibo-navigation-menu--user-welcome-message--toggler--padding-left;
+	}
+
+	.ibo-navigation-menu--user-notifications {
+		@extend %ibo-font-ral-nor-150;
+
+		.ibo-navigation-menu--user-notifications--text {
+			color: $ibo-navigation-menu--user--text-color;
+		}
+
+		.ibo-navigation-menu--user-notifications--toggler--icon {
+			padding-left: $ibo-navigation-menu--user-notifications--toggler--icon--padding-left;
+		}
+	}
+
+	.ibo-navigation-menu--user-organization {
+		@extend %ibo-font-ral-nor-100;
+		color: $ibo-navigation-menu--user-organization--text-color;
+	}
+
+	.ibo-navigation-menu--user-menu-container {
+		position: absolute;
+		bottom: 10px;
+
+		.ibo-popover-menu > .ibo-popover-menu--section:nth-child(odd) {
+			background-color: $ibo-navigation-menu--user-menu--popover-menu--odd-section--background-color;
+		}
+	}
+}
+

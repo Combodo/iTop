@@ -1,0 +1,16 @@
+<div id="{{ oUIBlock.GetId() }}"
+	 class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
+     data-role="ibo-collapsible-section">
+	<div class="ibo-collapsible-section--header" data-role="ibo-collapsible-section--collapse-toggler">
+		<div class="ibo-collapsible-section--action-button ibo-collapsible-section--maximize-button"><i class="fas fa-caret-down"></i></div>
+		<div class="ibo-collapsible-section--action-button ibo-collapsible-section--minimize-button"><i class="fas fa-caret-up"></i></div>
+		<div class="ibo-collapsible-section--title">{{ oUIBlock.GetTitle() }}</div>
+	</div>
+	<div class="ibo-collapsible-section--body" data-role="ibo-collapsible-section--body">
+		{% block iboPanelBody %}
+			{% for oMainBlock in oUIBlock.GetSubBlocks() %}
+				{{ render_block(oMainBlock, {aPage: aPage}) }}
+			{% endfor %}
+		{% endblock %}
+	</div>
+</div>

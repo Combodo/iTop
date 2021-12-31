@@ -1,0 +1,23 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{# Content Block #}
+{% apply spaceless %}
+
+    {# Important: We don't want the UIContentBlock have a div node based on the inherited CSS classes, otherwise the node would always be present, which is not what we want #}
+    {% set bHasDiv = (oUIBlock.GetAdditionalCSSClassesAsString() or  oUIBlock.GetDataAttributes() or oUIBlock.IsHidden() or oUIBlock.HasForcedDiv()) %}
+
+    {% block iboContentBlockContainer %}
+        {% if bHasDiv %}
+            <div id="{{ oUIBlock.GetId() }}"
+            class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+            {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+            > {% endif %}
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %} {{ render_block(oSubBlock, {aPage: aPage}) }} {% endfor %}
+        {% if bHasDiv %} </div> {% endif %}
+
+    {% endblock %}
+{% endapply %}

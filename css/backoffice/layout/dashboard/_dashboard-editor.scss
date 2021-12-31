@@ -1,0 +1,113 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-dashboard-editor--pane--padding: $ibo-spacing-500 30px $ibo-spacing-500 15px !default;
+
+$ibo-dashboard-editor--available-dashlet-icon--height: 34px !default;
+$ibo-dashboard-editor--available-dashlet-icon--width: $ibo-dashboard-editor--available-dashlet-icon--height !default;
+$ibo-dashboard-editor--available-dashlet-icon--margin: $ibo-spacing-100 5px !default;
+
+$ibo-dashboard-editor--properties-title--padding-bottom: 2rem !default;
+
+$ibo-dashboard-editor--layout-list--padding-bottom: $ibo-spacing-400 !default;
+
+$ibo-dashboard-editor--layout-list--button--margin: 0 15px 0 5px !default;
+
+$ibo-dashboard-editor--padding: $ibo-spacing-0 !default;
+
+$ibo-dashboard-editor--dashboard--border-right: solid 1px $ibo-color-grey-200 !default;
+$ibo-dashboard-editor--dashboard--padding: $ibo-spacing-500 15px $ibo-spacing-500 30px !default;
+
+$ibo-dashboard-editor--delete-dashlet-icon--top: 7px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--right: 9px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--padding: $ibo-spacing-100 6px !default;
+$ibo-dashboard-editor--delete-dashlet-icon--z-index: 21 !default;
+
+
+.ibo-dashboard-editor--pane{
+	flex-grow: 1;
+	padding: $ibo-dashboard-editor--pane--padding;
+	overflow: auto;
+}
+
+.ibo-dashboard-editor--available-dashlet-icon{
+	display: inline-block; 
+	height: $ibo-dashboard-editor--available-dashlet-icon--height;
+	width: $ibo-dashboard-editor--available-dashlet-icon--width;
+	margin: $ibo-dashboard-editor--available-dashlet-icon--margin;
+	cursor: grab;
+	&:active{
+		cursor: move;
+	}
+}
+.ibo-dashboard-editor--properties,
+.ibo-dashboard--available-dashlets,
+.ibo-dashlet--properties{
+	display: flex;
+	flex-direction: column;
+	padding-bottom: 20px;
+	table{
+    width: 100%;
+    text-align: left;
+
+    td, th {
+      margin-bottom: 14px;
+
+      .ibo-field {
+        @extend %ibo-font-size-100;
+      }
+    }
+  }
+}
+.ibo-dashboard-editor--properties-title{
+	padding-bottom: $ibo-dashboard-editor--properties-title--padding-bottom;
+	@extend %ibo-font-size-250;
+}
+.ibo-dashboard-editor--properties-subtitle,
+.ibo-dashboard--available-dashlet--title,
+.ibo-dashlet--properties--title{
+	@extend .ibo-fieldset-legend;
+	@extend %ibo-font-size-150;
+}
+
+.ibo-dashboard-editor--layout-list {
+	display: flex;
+	justify-content: center;
+	padding-bottom: $ibo-dashboard-editor--layout-list--padding-bottom;
+	> .ui-button {
+		display: inline-block;
+		height: auto;
+		margin: $ibo-dashboard-editor--layout-list--button--margin;
+	}
+}
+.ibo-dashboard--available-dashlets--list{
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+}
+
+#dashboard_editor{
+	display: flex;
+	flex-direction: row;
+	padding: $ibo-dashboard-editor--padding;
+	> .itop-dashboard{
+		resize: horizontal;
+		overflow: scroll;
+		border-right: $ibo-dashboard-editor--dashboard--border-right;
+		padding: $ibo-dashboard-editor--dashboard--padding;
+	}
+}
+.ibo-dashboard-editor--delete-dashlet-icon{
+	position: absolute;
+	top: $ibo-dashboard-editor--delete-dashlet-icon--top;
+	right: $ibo-dashboard-editor--delete-dashlet-icon--right;
+	padding: $ibo-dashboard-editor--delete-dashlet-icon--padding;
+	z-index: $ibo-dashboard-editor--delete-dashlet-icon--z-index;
+}
+.ibo-dashboard-editor .itop-dashboard{
+  a{
+    cursor: not-allowed;
+  }
+}

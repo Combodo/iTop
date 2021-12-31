@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,7 +19,6 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 require_once(APPROOT.'/application/applicationcontext.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
@@ -48,7 +47,7 @@ $sOQLClause = utils::ReadParam('oql_clause', '', false, 'raw_data');
 $sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 $sOperation = utils::ReadParam('operation', '');
 
-$oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearchMenu'), Dict::S('Menu:UniversalSearchMenu+'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
+$oP->SetBreadCrumbEntry('ui-tool-universalsearch', Dict::S('Menu:UniversalSearchMenu'), Dict::S('Menu:UniversalSearchMenu+'), '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 
 
@@ -117,7 +116,7 @@ if ($oFilter != null)
 	//$iCount = $oBlock->GetDisplayedCount();
 	$sPageId = "ui-search-".$oFilter->GetClass();
 	$sLabel = MetaModel::GetName($oFilter->GetClass());
-	$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', '../images/breadcrumb-search.png');
+	$oP->SetBreadCrumbEntry($sPageId, $sLabel, '', '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 	// Menu node
 	$sFilter = $oFilter->ToOQL();

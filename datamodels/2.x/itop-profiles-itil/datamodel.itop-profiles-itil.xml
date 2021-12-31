@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes/>
   <user_rights>
     <groups>
@@ -143,6 +143,7 @@
           <!-- This class list is also present in AdminTools group -->
           <class id="SynchroDataSource"/>
           <class id="SynchroAttribute"/>
+          <class id="SynchroReplica"/>
         </classes>
       </group>
       <group id="AdminTools">
@@ -167,6 +168,7 @@
           <!-- SynchroData group -->
           <class id="SynchroDataSource"/>
 					<class id="SynchroAttribute"/>
+					<class id="SynchroReplica"/>
         </classes>
       </group>
     </groups>

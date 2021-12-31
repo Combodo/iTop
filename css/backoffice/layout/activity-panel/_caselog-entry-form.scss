@@ -1,0 +1,62 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-caselog-entry-form--width: 100% !default;
+$ibo-caselog-entry-form--padding-bottom: $ibo-spacing-400 !default;
+$ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
+
+$ibo-caselog-entry-form--actions--margin-top: $ibo-spacing-300 !default;
+$ibo-caselog-entry-form--actions--margin-bottom: $ibo-caselog-entry-form--actions--margin-top !default;
+
+$ibo-caselog-entry-form--lock-indicator--margin-top: $ibo-caselog-entry-form--padding-bottom !default;
+$ibo-caselog-entry-form--lock-icon--size: 32px !default;
+$ibo-caselog-entry-form--lock-icon--text-color: $ibo-color-grey-50 !default;
+$ibo-caselog-entry-form--lock-icon--background-color: $ibo-color-grey-800 !default;
+$ibo-caselog-entry-form--lock-icon--border-radius: $ibo-border-radius-full !default;
+$ibo-caselog-entry-form--lock-message--margin-left: 1rem !default;
+
+.ibo-caselog-entry-form {
+  display: block;
+  width: 100%;
+  background-color: $ibo-caselog-entry-form--background-color;
+
+  &.ibo-is-closed {
+    display: none;
+  }
+}
+
+.ibo-caselog-entry-form--actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: $ibo-caselog-entry-form--actions--margin-top;
+  margin-bottom: $ibo-caselog-entry-form--actions--margin-bottom;
+}
+
+.ibo-caselog-entry-form--lock-indicator {
+  margin-top: $ibo-caselog-entry-form--lock-indicator--margin-top;
+  @extend %ibo-vertically-centered-content;
+}
+
+.ibo-caselog-entry-form--lock-icon {
+  width: $ibo-caselog-entry-form--lock-icon--size;
+  min-width: $ibo-caselog-entry-form--lock-icon--size; // To avoid icon being shrinked when message is too large
+  height: $ibo-caselog-entry-form--lock-icon--size;
+  min-height: $ibo-caselog-entry-form--lock-icon--size;
+  color: $ibo-caselog-entry-form--lock-icon--text-color;
+  background-color: $ibo-caselog-entry-form--lock-icon--background-color;
+  border-radius: $ibo-caselog-entry-form--lock-icon--border-radius;
+  @extend %ibo-fully-centered-content;
+}
+
+.ibo-caselog-entry-form--lock-message {
+  margin-left: $ibo-caselog-entry-form--lock-message--margin-left;
+}
+
+.ibo-caselog-entry-form--action-buttons--main-actions {
+  @extend %ibo-vertically-centered-content; /* We don't set this rule to .ibo-caselog-entry-form--action-buttons--extra-actions as well because its content can be anything, so we don't know how it will behave... */
+}
+.ibo-caselog-entry-form--action-buttons--main-actions > .ibo-popover-menu {
+  z-index: 1;
+}

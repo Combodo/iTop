@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -51,7 +51,7 @@ else
  *     * do not provide a type-hint for function parameters defined in the modules
  *     * leave the statements DBObjectSearch::FromOQL in the modules, though DBSearch is more relevant
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *
@@ -63,22 +63,23 @@ else
  
 abstract class DBSearch
 {
-    /** @internal */
+	/** @internal */
 	const JOIN_POINTING_TO = 0;
-    /** @internal */
+	/** @internal */
 	const JOIN_REFERENCED_BY = 1;
 
 	protected $m_bNoContextParameters = false;
+	/** @var array For {@see iQueryModifier} impl */
 	protected $m_aModifierProperties = array();
 	protected $m_bArchiveMode = false;
 	protected $m_bShowObsoleteData = true;
 
-    /**
-     * DBSearch constructor.
-     *
-     * @api
-     * @see DBSearch::FromOQL()
-     */
+	/**
+	 * DBSearch constructor.
+	 *
+	 * @api
+	 * @see DBSearch::FromOQL()
+	 */
 	public function __construct()
 	{
 		$this->Init();
@@ -97,42 +98,40 @@ abstract class DBSearch
 	/**
 	 * Perform a deep clone (as opposed to "clone" which does copy a reference to the underlying objects)
 	 *
-     * @internal
-     *
+	 * @internal
+	 *
 	 * @return \DBSearch
-	 **/	 	
+	 **/
 	public function DeepClone()
 	{
 		return unserialize(serialize($this)); // Beware this serializes/unserializes the search and its parameters as well
 	}
 
-    /**
-     * whether or not some information should be hidden to the current user.
-     *
-     * @api
-     * @see IsAllDataAllowed()
-     *
-     * @return mixed
-     */
-	abstract public function AllowAllData();
+	/**
+	 * @api
+	 * @see IsAllDataAllowed()
+	 *
+	 * @param bool $bAllowAllData whether or not some information should be hidden to the current user.
+	 */
+	abstract public function AllowAllData($bAllowAllData = true);
 
-    /**
-     * Current state of AllowAllData
-     *
-     * @internal
-     * @see AllowAllData()
-     *
-     * @return mixed
-     */
+	/**
+	 * Current state of AllowAllData
+	 *
+	 * @internal
+	 * @see AllowAllData()
+	 *
+	 * @return mixed
+	 */
 	abstract public function IsAllDataAllowed();
 
-    /**
-     * Should the archives be fetched
-     *
-     * @internal
-     *
-     * @param $bEnable
-     */
+	/**
+	 * Should the archives be fetched
+	 *
+	 * @internal
+	 *
+	 * @param $bEnable
+	 */
 	public function SetArchiveMode($bEnable)
 	{
 		$this->m_bArchiveMode = $bEnable;
@@ -282,62 +281,97 @@ abstract class DBSearch
 
 	abstract public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true);
 
-    /**
-     * @internal
-     * @return mixed
-     */
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function IsAny();
 
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function Describe(){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditionRelTo($aRelInfo){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function DescribeConditions(){return 'deprecated - use ToOQL() instead';}
-    /**
-     * @deprecated use ToOQL() instead
-     * @internal
-     * @return string
-     */
-	public function __DescribeHTML(){return 'deprecated - use ToOQL() instead';}
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function Describe()
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
 
-    /**
-     * @internal
-     * @return mixed
-     */
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditionPointTo($sExtKeyAttCode, $aPointingTo)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditionRefBy($sForeignClass, $sForeignExtKeyAttCode)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditionRelTo($aRelInfo)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function DescribeConditions()
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @deprecated use ToOQL() instead
+	 * @return string
+	 */
+	public function __DescribeHTML()
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ToOQL() instead');
+
+		return 'deprecated - use ToOQL() instead';
+	}
+
+	/**
+	 * @internal
+	 * @return mixed
+	 */
 	abstract public function ResetCondition();
 
-    /**
-     * add $oExpression as a OR
-     *
-     * @api
-     * @see DBSearch::AddConditionExpression()
-     *
-     * @param Expression $oExpression
+	/**
+	 * add $oExpression as a OR
+	 *
+	 * @api
+	 * @see DBSearch::AddConditionExpression()
+	 *
+	 * @param Expression $oExpression
      *
      * @return mixed
      */
@@ -404,7 +438,9 @@ abstract class DBSearch
      */
 	abstract public function AddCondition_FullText($sFullText);
 
-	/**
+	abstract public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle);
+
+		/**
      * Perform a join, the remote class being matched by the mean of its primary key
      *
      * The join is performed
@@ -603,11 +639,11 @@ abstract class DBSearch
 			elseif (($iPos = strpos($sParam, '->')) !== false)
 			{
 				$sParamName = substr($sParam, 0, $iPos);
-				if (isset($aContextParams[$sParamName.'->object()']))
+				if (isset($aContextParams[$sParamName.'->object()']) || isset($aContextParams[$sParamName]))
 				{
 					$sAttCode = substr($sParam, $iPos + 2);
 					/** @var \DBObject $oObj */
-					$oObj = $aContextParams[$sParamName.'->object()'];
+					$oObj = isset($aContextParams[$sParamName.'->object()']) ? $aContextParams[$sParamName.'->object()'] : $aContextParams[$sParamName];
 					if ($oObj->IsModified())
 					{
 						if ($sAttCode == 'id')
@@ -631,7 +667,7 @@ abstract class DBSearch
 		}
 
 		$sOql = $this->ToOql($bDevelopParams, $aContextParams);
-		return json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties));
+		return urlencode(json_encode(array($sOql, $aQueryParams, $this->m_aModifierProperties)));
 	}
 
 	/**
@@ -648,7 +684,7 @@ abstract class DBSearch
 	 */
 	static public function unserialize($sValue)
 	{
-		$aData = json_decode($sValue, true);
+		$aData = json_decode(urldecode($sValue), true);
 		if (is_null($aData))
 		{
 			throw new CoreException("Invalid filter parameter");
@@ -1004,10 +1040,8 @@ abstract class DBSearch
 	}
 
 	/**
-     * Generate a SQL query from the current search
-     *
-     * @internal
-     *
+	 * Generate a SQL query from the current search
+	 *
 	 * @param array $aOrderBy Array of '[<classalias>.]attcode' => bAscending
 	 * @param array $aArgs
 	 * @param null $aAttToLoad
@@ -1015,12 +1049,16 @@ abstract class DBSearch
 	 * @param int $iLimitCount
 	 * @param int $iLimitStart
 	 * @param bool $bGetCount
+	 * @param bool $bBeautifulSQL
+	 *
 	 * @return string
-	 * @throws CoreException
-	 * @throws Exception
-	 * @throws MissingQueryArgument
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @internal
+	 *
 	 */
-	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false)
+	public function MakeSelectQuery($aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 0, $iLimitStart = 0, $bGetCount = false, $bBeautifulSQL = true)
 	{
 		// Check the order by specification, and prefix with the class alias
 		// and make sure that the ordering columns are going to be selected
@@ -1085,8 +1123,7 @@ abstract class DBSearch
 		}
 		try
 		{
-			// $bBeautifulSQL = self::$m_bTraceQueries || self::$m_bDebugQuery || self::$m_bIndentQueries;
-			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, true);
+			$sRes = $oSQLQuery->RenderSelect($aOrderSpec, $aScalarArgs, $iLimitCount, $iLimitStart, $bGetCount, $bBeautifulSQL);
 			if ($sClassAlias == '_itop_')
 			{
 				IssueLog::Info('SQL Query (_itop_): '.$sRes);
@@ -1112,6 +1149,8 @@ abstract class DBSearch
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
+	 *
+	 * @since 2.7.0 N°2555
 	 */
 	public function GetFirstResult($bMustHaveOneResultMax = true, $aOrderBy = array(), $aSearchParams = array())
 	{
@@ -1184,6 +1223,30 @@ abstract class DBSearch
 				}
 			}
 		}
+
+		if (is_array($aGroupByExpr))
+		{
+			foreach($aGroupByExpr as $sAlias => $oGroupByExp)
+			{
+				/** @var \Expression $oGroupByExp */
+
+				$aFields = $oGroupByExp->ListRequiredFields();
+				foreach($aFields as $sFieldAlias)
+				{
+					$aMatches = array();
+					if (preg_match('/^([^.]+)\\.([^.]+)$/', $sFieldAlias, $aMatches))
+					{
+						$sFieldClass = $this->GetClassName($aMatches[1]);
+						$oAttDef = MetaModel::GetAttributeDef($sFieldClass, $aMatches[2]);
+						if ( $oAttDef instanceof iAttributeNoGroupBy)
+						{
+							throw new Exception("Grouping on '$sFieldClass' fields is not supported.");
+						}
+					}
+				}
+			}
+		}
+
 		$oSQLQuery = $oSearch->GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr, null, $aSelectExpr);
 		$oSQLQuery->SetSourceOQL($oSearch->ToOQL());
 

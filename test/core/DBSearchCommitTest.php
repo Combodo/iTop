@@ -28,6 +28,7 @@ class DBSearchCommitTest extends ItopDataTestCase
 	const USE_TRANSACTION = false;
 
 	/**
+	 * @group itopFaqLight
 	 * @throws \CoreException
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
@@ -59,6 +60,7 @@ class DBSearchCommitTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MissingQueryArgument

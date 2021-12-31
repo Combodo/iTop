@@ -9,7 +9,7 @@ if (function_exists('ldap_connect'))
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'authent-ldap/2.7.0',
+	'authent-ldap/3.1.0',
 	array(
 		// Identification
 		//
@@ -22,6 +22,7 @@ SetupWebPage::AddModule(
 		),
 		'mandatory' => false,
 		'visible' => true,
+		'installer' => 'AuthentLDAPInstaller',
 
 		// Components
 		//
@@ -58,8 +59,23 @@ SetupWebPage::AddModule(
 			),
 			'start_tls' => false,
 			'debug' => false,
+			'servers' => array(),
 		),
 	)
 );
+
+// Module installation handler
+//
+class AuthentLDAPInstaller extends ModuleInstallerAPI
+{
+	public static function AfterDataLoad(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
+	{
+		// Create missing table entries
+		$sUserLDAPTable = MetaModel::DBGetTable('UserLDAP');
+		$sUserTable = MetaModel::DBGetTable('User');
+		$sSQL = "insert into $sUserLDAPTable (id) select U.id from $sUserTable as U left join $sUserLDAPTable as L on U.id = L.id where U.finalclass='UserLDAP' and isnull(L.id);";
+		CMDBSource::Query($sSQL);
+	}
+}
 
 } // if (function_exists('ldap_connect'))

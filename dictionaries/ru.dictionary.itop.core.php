@@ -20,6 +20,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:AttributeLinkedSet' => 'Массив объектов (1-n)',
 	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
 
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
 	'Core:AttributeDashboard' => 'Дашборд',
 	'Core:AttributeDashboard+' => '',
 
@@ -216,6 +218,14 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:CMDBChange/Attribute:date+' => 'Дата и время изменения',
 	'Class:CMDBChange/Attribute:userinfo' => 'Пользователь',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Кто произвёл изменение',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -285,12 +295,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Change:ObjectCreated' => 'Объект создан.',
 	'Change:ObjectDeleted' => 'Объект удалён.',
 	'Change:ObjectModified' => 'Объект изменён.',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле "%1$s" установлено значение "%2$s" (предыдущее значение "%3$s").',
-	'Change:AttName_SetTo' => 'В поле "%1$s" установлено значение "%2$s".',
-	'Change:Text_AppendedTo_AttName' => 'Новое значение "%1$s" добавлено к полю "%2$s".',
-	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле "%1$s" изменено (предыдущее значение "%2$s").',
-	'Change:AttName_Changed' => 'Поле "%1$s" изменено.',
-	'Change:AttName_EntryAdded' => 'В поле "%1$s" добавлено новое значение.',
+	'Change:TwoAttributesChanged' => 'Изменены %1$s и %2$s',
+	'Change:ThreeAttributesChanged' => 'Изменены %1$s, %2$s и ещё 1',
+	'Change:FourOrMoreAttributesChanged' => 'Изменены %1$s, %2$s и ещё %3$s',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле %1$s установлено значение %2$s (предыдущее значение %3$s).',
+	'Change:AttName_SetTo' => 'В поле %1$s установлено значение %2$s.',
+	'Change:Text_AppendedTo_AttName' => 'Новое значение %1$s добавлено к полю %2$s.',
+	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле %1$s изменено (предыдущее значение %2$s).',
+	'Change:AttName_Changed' => 'Поле %1$s изменено.',
+	'Change:AttName_EntryAdded' => 'В поле %1$s добавлено новое значение.',
+	'Change:State_Changed_NewValue_OldValue' => 'Переход из %2$s в %1$s',
 	'Change:LinkSet:Added' => 'добавлен объект %1$s.',
 	'Change:LinkSet:Removed' => 'удалён объект %1$s.',
 	'Change:LinkSet:Modified' => 'изменён объект %1$s.',
@@ -472,6 +486,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Action/Attribute:trigger_list+' => 'Триггеры, которые запускают данное действие',
 	'Class:Action/Attribute:finalclass' => 'Тип',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -490,12 +505,20 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ActionEmail' => 'Уведомление по email',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Тестовый получатель',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Получатель, если уведомление в статусе "Тест"',
-	'Class:ActionEmail/Attribute:from' => 'От',
-	'Class:ActionEmail/Attribute:from+' => 'Будет отправлено в заголовке email',
-	'Class:ActionEmail/Attribute:reply_to' => 'Ответить на',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Будет отправлено в заголовке email',
+	'Class:ActionEmail/Attribute:from' => 'От~~',
+	'Class:ActionEmail/Attribute:from+' => 'Будет отправлено в заголовке email~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => 'Ответить на~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Будет отправлено в заголовке email~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => 'Кому',
 	'Class:ActionEmail/Attribute:to+' => 'Получатель email',
 	'Class:ActionEmail/Attribute:cc' => 'Копия',
@@ -613,6 +636,17 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TriggerOnObjectUpdate+' => 'Триггер на обновление объекта данного или дочернего класса',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Отслеживаемые поля',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => 'Поля объекта, при обновлении которых сработает триггер',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -1032,6 +1066,18 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AsyncTask/Attribute:event_id+' => '~~',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => 'Status~~',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //
@@ -1069,3 +1115,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:ResourceSystemMenu' => 'Меню Система',
 	'Class:ResourceSystemMenu+' => '',
 ));
+
+
+

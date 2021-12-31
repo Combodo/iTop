@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2017 Combodo SARL
+// Copyright (C) 2015-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  * For clarity purpose, since only the constructor vary between DBObjectSearch and DBUnionSearch, all the API is documented on the common ancestor: DBSearch
  * Please refer to DBSearch's documentation
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  *
  *
@@ -65,9 +65,7 @@ class DBUnionSearch extends DBSearch
 				{
 					$this->aSearches[] = $oSubSearch->DeepClone();
 				}
-			}
-			else
-			{
+			} else {
 				$this->aSearches[] = $oSearch->DeepClone();
 			}
 		}
@@ -75,17 +73,16 @@ class DBUnionSearch extends DBSearch
 		$this->ComputeSelectedClasses();
 	}
 
-	public function AllowAllData()
+	public function AllowAllData($bAllowAllData = true)
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			$oSearch->AllowAllData();
 		}
 	}
+
 	public function IsAllDataAllowed()
 	{
-		foreach ($this->aSearches as $oSearch)
-		{
+		foreach ($this->aSearches as $oSearch) {
 			if ($oSearch->IsAllDataAllowed() === false) return false;
 		}
 		return true;
@@ -376,19 +373,26 @@ class DBUnionSearch extends DBSearch
 		}
 	}
 
-	/**
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+		foreach ($this->aSearches as $oSearch)
+		{
+			$oSearch->AddCondition_FullTextOnAttributes($aAttCodes, $sNeedle);
+		}
+	}
+
+		/**
 	 * @param DBObjectSearch $oFilter
 	 * @param $sExtKeyAttCode
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
-	 * @throws CoreException
-	 * @throws CoreWarning
+	 * @param null $aRealiasingMap array of [old-alias][] => <new-alias>, for each alias that has changed (@since 2.7.2)
 	 */
 	public function AddCondition_PointingTo(DBObjectSearch $oFilter, $sExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_PointingTo($oFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
+			$oConditionFilter = $oFilter->DeepClone();
+			$oSearch->AddCondition_PointingTo($oConditionFilter, $sExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 
@@ -396,13 +400,14 @@ class DBUnionSearch extends DBSearch
 	 * @param DBObjectSearch $oFilter
 	 * @param $sForeignExtKeyAttCode
 	 * @param int $iOperatorCode
-	 * @param null $aRealiasingMap array of <old-alias> => <new-alias>, for each alias that has changed
+	 * @param null $aRealiasingMap array of [old-alias][] => <new-alias>, for each alias that has changed (@since 2.7.2)
 	 */
 	public function AddCondition_ReferencedBy(DBObjectSearch $oFilter, $sForeignExtKeyAttCode, $iOperatorCode = TREE_OPERATOR_EQUALS, &$aRealiasingMap = null)
 	{
 		foreach ($this->aSearches as $oSearch)
 		{
-			$oSearch->AddCondition_ReferencedBy($oFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
+			$oConditionFilter = $oFilter->DeepClone();
+			$oSearch->AddCondition_ReferencedBy($oConditionFilter, $sForeignExtKeyAttCode, $iOperatorCode, $aRealiasingMap);
 		}
 	}
 

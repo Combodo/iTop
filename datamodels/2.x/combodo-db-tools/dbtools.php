@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -17,6 +17,21 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSectionUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Form\FormUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\Separator\ToolbarSeparatorUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+use Combodo\iTop\DBTools\Service\DBAnalyzerUtils;
+
 @include_once('../../approot.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 
@@ -29,259 +44,237 @@ const MAX_RESULTS = 10;
  * @param ApplicationContext $oAppContext
  *
  * @return \iTopWebPage
- * @throws CoreException
- * @throws DictExceptionMissingString
- * @throws MySQLException
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ * @throws \MySQLException
  */
 function DisplayDBInconsistencies(iTopWebPage &$oP, ApplicationContext &$oAppContext)
 {
 	$iShowId = intval(utils::ReadParam('show_id', '0'));
-	$sErrorLabelSelection = utils::ReadParam('error_selection', '');
 	$sClassSelection = utils::ReadParam('class_selection', '');
-	if (!empty($sClassSelection))
-	{
+	$bVerbose = utils::ReadParam('verbose', 0);
+	if (!empty($sClassSelection)) {
 		$aClassSelection = explode(",", $sClassSelection);
-	}
-	else
-	{
+	} else {
 		$aClassSelection = array();
 	}
-	$sClassSelection = utils::ReadParam('class_selection', '');
 
 	$oP->SetCurrentTab('DBTools:Inconsistencies');
 
 	$bRunAnalysis = intval(utils::ReadParam('run_analysis', '0'));
-	if ($bRunAnalysis)
-	{
-		$oDBAnalyzer = new DatabaseAnalyzer();
+	if ($bRunAnalysis) {
+		$oDBAnalyzer = new DatabaseAnalyzer(0);
 		$aResults = $oDBAnalyzer->CheckIntegrity($aClassSelection);
-		if (empty($aResults))
-		{
-			$oP->p('<div class="header_message message_ok">'.Dict::S('DBTools:NoError').'</div>');
+		if (empty($aResults)) {
+			$oAlert = AlertUIBlockFactory::MakeForSuccess(Dict::S('DBTools:NoError'));
+			$oP->AddUiBlock($oAlert);
 		}
 	}
 
-	$oP->add('<div style="padding: 15px; background: #ddd;">');
-	$oP->add("<form>");
-	$oP->add('<table style="border=0;">');
+	$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SelectAnalysisType'));
+	$oP->AddUiBlock($oFieldSet);
+	$oForm = FormUIBlockFactory::MakeStandard();
+	$oFieldSet->AddSubBlock($oForm);
 
-	$oP->add("<tr><td>");
-	$sChecked = ($iShowId == 0) ? 'checked' : '';
-	$oP->add("<label><input type=\"radio\" $sChecked name=\"show_id\" value=\"0\">".Dict::S('DBTools:HideIds').'</label>');
-	$oP->add("</td><td>");
-	$sChecked = ($iShowId == 1) ? 'checked' : '';
-	$oP->add("<label><input type=\"radio\" $sChecked name=\"show_id\" value=\"1\">".Dict::S('DBTools:ShowIds').'</label>');
-	$oP->add("</td><td>");
-	$sChecked = ($iShowId == 3) ? 'checked' : '';
-	$oP->add("<label><input type=\"radio\" $sChecked name=\"show_id\" value=\"3\">".Dict::S('DBTools:ShowReport').'</label>');
-	$oP->add("</td></tr>\n");
+	$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+	$oForm->AddSubBlock($oToolbar);
 
-	$oP->add("</table><br>\n");
+	$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('DBTools:HideIds'), 'show_id');
+	$oToolbar->AddSubBlock($oInput);
+	$oInput->GetInput()->SetType('radio');
+	$oInput->GetInput()->SetValue('0');
+	$oInput->GetInput()->SetIsChecked($iShowId == 0);
+	$oInput->GetInput()->AddCSSClasses(['ibo-input-checkbox', 'ibo-input--label-left']);
 
-	$oP->add("<input type=\"submit\" value=\"".Dict::S('DBTools:Analyze')."\">\n");
-	$oP->add('<input type="hidden" name="class_selection" value="'.$sClassSelection.'"/>');
-	$oP->add('<input type="hidden" name="error_selection" value="'.$sErrorLabelSelection.'"/>');
-	$oP->add('<input type="hidden" name="run_analysis" value="1"/>');
-	$oP->add('<input type="hidden" name="exec_module" value="combodo-db-tools"/>');
-	$oP->add('<input type="hidden" name="exec_page" value="dbtools.php"/>');
-	$oP->add($oAppContext->GetForForm());
-	$oP->add("</form>\n");
-	$oP->add('</div>');
+	$oToolbar->AddSubBlock(ToolbarSeparatorUIBlockFactory::MakeVertical());
+
+	$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('DBTools:ShowIds'), 'show_id');
+	$oToolbar->AddSubBlock($oInput);
+	$oInput->GetInput()->SetType('radio');
+	$oInput->GetInput()->SetValue('1');
+	$oInput->GetInput()->SetIsChecked($iShowId == 1);
+	$oInput->GetInput()->AddCSSClasses(['ibo-input-checkbox', 'ibo-input--label-left']);
+
+	$oToolbar->AddSubBlock(ToolbarSeparatorUIBlockFactory::MakeVertical());
+
+	$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('DBTools:ShowReport'), 'show_id');
+	$oToolbar->AddSubBlock($oInput);
+	$oInput->GetInput()->SetType('radio');
+	$oInput->GetInput()->SetValue('3');
+	$oInput->GetInput()->SetIsChecked($iShowId == 3);
+	$oInput->GetInput()->AddCSSClasses(['ibo-input-checkbox', 'ibo-input--label-left']);
+
+	$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('DBTools:Analyze'), null, null, true);
+	// TODO 3.0 Spacing ?
+	$oButton->AddCSSClasses(['mt-5', 'mb-5']);
+	$oForm->AddSubBlock($oButton);
+
+	$oInput = InputUIBlockFactory::MakeForHidden('class_selection', $sClassSelection);
+	$oForm->AddSubBlock($oInput);
+	$oInput = InputUIBlockFactory::MakeForHidden('run_analysis', 1);
+	$oForm->AddSubBlock($oInput);
+	$oInput = InputUIBlockFactory::MakeForHidden('exec_module', 'combodo-db-tools');
+	$oForm->AddSubBlock($oInput);
+	$oInput = InputUIBlockFactory::MakeForHidden('exec_page', 'dbtools.php');
+	$oForm->AddSubBlock($oInput);
+	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 
 
-	if (!empty($sErrorLabelSelection) || !empty($sClassSelection))
-	{
-		$oP->add("<br>");
-		$oP->add("<form>");
-		$oP->add('<input type="hidden" name="show_id" value="0"/>');
-		$oP->add('<input type="hidden" name="class_selection" value=""/>');
-		$oP->add('<input type="hidden" name="error_selection" value=""/>');
-		$oP->add('<input type="hidden" name="exec_module" value="combodo-db-tools"/>');
-		$oP->add('<input type="hidden" name="exec_page" value="dbtools.php"/>');
-		$oP->add("<input type=\"submit\" value=\"".Dict::S('DBTools:ShowAll')."\">\n");
-		$oP->add("</form>\n");
+	if (!empty($sClassSelection)) {
+		$oForm = FormUIBlockFactory::MakeStandard();
+		$oP->AddUiBlock($oForm);
+		$oInput = InputUIBlockFactory::MakeForHidden('show_id', '0');
+		$oForm->AddSubBlock($oInput);
+		$oInput = InputUIBlockFactory::MakeForHidden('class_selection', '');
+		$oForm->AddSubBlock($oInput);
+		$oInput = InputUIBlockFactory::MakeForHidden('error_selection', '');
+		$oForm->AddSubBlock($oInput);
+		$oInput = InputUIBlockFactory::MakeForHidden('exec_module', 'combodo-db-tools');
+		$oForm->AddSubBlock($oInput);
+		$oInput = InputUIBlockFactory::MakeForHidden('exec_page', 'dbtools.php');
+		$oForm->AddSubBlock($oInput);
+		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('DBTools:ShowAll'), null, null, true);
+		$oForm->AddSubBlock($oButton);
 	}
 
-	if (!empty($aResults))
-	{
-
-		if ($iShowId == 3)
-		{
-			DisplayInconsistenciesReport($aResults);
+	if (!empty($aResults)) {
+		if ($iShowId == 3) {
+			// Report
+			DisplayInconsistenciesReport($aResults, $bVerbose);
 		}
 
-		$oP->p(Dict::S('DBTools:ErrorsFound'));
-
-		$oP->add('<table class="listResults"><tr><th>'.Dict::S('DBTools:Class').'</th><th>'.Dict::S('DBTools:Count').'</th><th>'.Dict::S('DBTools:Error').'</th></tr>');
-		$bTable = true;
-		foreach($aResults as $sClass => $aErrorList)
-		{
-			foreach($aErrorList as $sErrorLabel => $aError)
-			{
-				if (!empty($sErrorLabelSelection) && ($sErrorLabel != $sErrorLabelSelection))
-				{
-					continue;
-				}
-
-				if (!$bTable)
-				{
-					$oP->add('<br>');
-					$oP->add('<table class="listResults"><tr><th></th><th>Class</th><th>Count</th><th>Error</th></tr>');
-					$bTable = true;
-				}
-
-				$oP->add('<tr>');
-
-
-				$oP->add('<td>'.MetaModel::GetName($sClass).' ('.$sClass.')</td>');
-				$iCount = $aError['count'];
-				$oP->add('<td>'.$iCount.'</td>');
-				$oP->add('<td>'.$sErrorLabel.'</td>');
-				$oP->add('</tr>');
-
-				if ($iShowId > 0)
-				{
-					$oP->add('</table>');
-					$bTable = false;
-					$oP->p(Dict::S('DBTools:SQLquery'));
-					$sQuery = $aError['query'];
-					$oP->add('<div style="padding: 15px; background: #f1f1f1;">');
-					$oP->add('<code>'.$sQuery.'</code>');
-					$oP->add('</div>');
-
-					if (isset($aError['fixit']))
-					{
-						$oP->p(Dict::S('DBTools:FixitSQLquery'));
-						$aQueries = $aError['fixit'];
-						$oP->add('<div style="padding: 15px; background: #f1f1f1;">');
-						foreach($aQueries as $sFixQuery)
-						{
-							$oP->add('<pre>'.$sFixQuery.'</pre>');
-						}
-						$oP->add('<br></div>');
-					}
-
-					$oP->p(Dict::S('DBTools:SQLresult'));
-					$sQueryResult = '';
-					$iCount = count($aError['res']);
-					$iMaxCount = MAX_RESULTS;
-					foreach($aError['res'] as $aRes)
-					{
-						$iMaxCount--;
-						if ($iMaxCount < 0)
-						{
-							$sQueryResult .= 'Displayed '.MAX_RESULTS."/$iCount results.<br>";
-							break;
-						}
-						foreach($aRes as $sKey => $sValue)
-						{
-							$sQueryResult .= "'$sKey'='$sValue'&nbsp;";
-						}
-						$sQueryResult .= '<br>';
-					}
-					$oP->add('<div style="padding: 15px; background: #f1f1f1;">');
-					$oP->add('<code>'.$sQueryResult.'</code>');
-					$oP->add('</div>');
-				}
-			}
+		if ($iShowId == 0) {
+			// Error List
+			$oPanel = PanelUIBlockFactory::MakeForWarning(Dict::S('DBTools:ErrorsFound'));
+			$oPanel->AddCSSClass('ibo-datatable-panel');
+			$oP->AddUiBlock($oPanel);
+			$oPanel->AddSubBlock(DisplayErrorList($aResults));
+		} else {
+			// Detail List
+			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:ErrorsFound'));
+			$oP->AddUiBlock($oFieldSet);
+			$oFieldSet->AddSubBlock(DisplayErrorDetails($aResults, $bVerbose));
 		}
-		$oP->add('</table>');
 	}
 	return $oP;
 }
 
 /**
  * @param $aResults
+ * @param bool $bVerbose
  *
  * @return mixed
- * @throws CoreException
- * @throws DictExceptionMissingString
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
  */
-function DisplayInconsistenciesReport($aResults)
+function DisplayInconsistenciesReport($aResults, $bVerbose = false)
 {
-	$sDBToolsFolder = str_replace("\\", '/', APPROOT.'log/');
-	$sReportFile = 'dbtools-report-'.date('Y-m-d-H-i-s');
-	$sCleanupFile = 'dbtools-cleanup-'.date('Y-m-d-H-i-s');
+	$sReportFile = DBAnalyzerUtils::GenerateReport($aResults, $bVerbose);
 
-	$fReport = fopen($sDBToolsFolder.$sReportFile.'.txt', 'w');
-	$fCleanUp = fopen($sDBToolsFolder.$sCleanupFile.'.txt', 'w');
-	fwrite($fReport, 'Database Maintenance tools: '.date('Y-m-d H:i:s')."\r\n");
-	foreach($aResults as $sClass => $aErrorList)
-	{
-		fwrite($fReport, '');
-		foreach($aErrorList as $sErrorLabel => $aError)
-		{
-			fwrite($fReport, "\r\n----------\r\n");
-			fwrite($fReport, 'Class: '.MetaModel::GetName($sClass).' ('.$sClass.")\r\n");
-			$iCount = $aError['count'];
-			fwrite($fReport, 'Count: '.$iCount."\r\n");
-			fwrite($fReport, 'Error: '.$sErrorLabel."\r\n");
-			$sQuery = $aError['query'];
-			fwrite($fReport, 'Query: '.$sQuery."\r\n");
-
-			if (isset($aError['fixit']))
-			{
-				fwrite($fReport, "\r\nFix it (indication):\r\n\r\n");
-				$aFixitQueries = $aError['fixit'];
-				foreach($aFixitQueries as $sFixitQuery)
-				{
-					fwrite($fReport, "$sFixitQuery\r\n");
-				}
-				fwrite($fReport, "\r\n");
-			}
-
-			if (isset($aError['cleanup']))
-			{
-				$aQueries = $aError['cleanup'];
-				foreach($aQueries as $sQuery)
-				{
-					fwrite($fCleanUp, "$sQuery;\r\n");
-				}
-			}
-
-			$sQueryResult = '';
-			$aIdList = array();
-			foreach($aError['res'] as $aRes)
-			{
-				foreach($aRes as $sKey => $sValue)
-				{
-					$sQueryResult .= "'$sKey'='$sValue' ";
-					if ($sKey == 'id')
-					{
-						$aIdList[] = $sValue;
-					}
-				}
-				$sQueryResult .= "\r\n";
-
-			}
-			fwrite($fReport, "Result: \r\n".$sQueryResult);
-			$sIdList = '('.implode(',', $aIdList).')';
-			fwrite($fReport, 'Ids: '.$sIdList."\r\n");
-		}
-	}
-	fclose($fReport);
-	fclose($fCleanUp);
-
+	$sZipReport = "{$sReportFile}.zip";
 	$oArchive = new ZipArchive();
-	$oArchive->open($sDBToolsFolder.$sReportFile.'.zip', ZipArchive::CREATE);
-	$oArchive->addFile($sDBToolsFolder.$sReportFile.'.txt', $sReportFile.'.txt');
-	$oArchive->addFile($sDBToolsFolder.$sCleanupFile.'.txt', $sCleanupFile.'.txt');
+	$oArchive->open($sZipReport, ZipArchive::CREATE);
+	$oArchive->addFile($sReportFile.'.log', basename($sReportFile.'.log'));
 	$oArchive->close();
-	unlink($sDBToolsFolder.$sReportFile.'.txt');
-	unlink($sDBToolsFolder.$sCleanupFile.'.txt');
-	$sReportFile = $sDBToolsFolder.$sReportFile.'.zip';
-
 
 	header('Content-Description: File Transfer');
 	header('Content-Type: multipart/x-zip');
-	header('Content-Disposition: inline; filename="'.basename($sReportFile).'"');
-	header('Expires: 0');
+	header('Content-Disposition: inline; filename="'.basename($sZipReport).'"');
 	header('Cache-Control: must-revalidate');
 	header('Pragma: public');
-	header('Content-Length: '.filesize($sReportFile));
-	readfile($sReportFile);
-	unlink($sReportFile);
+	header('Expires: 0');
+	header('Content-Length: '.filesize($sZipReport));
+	readfile($sZipReport);
+	unlink($sZipReport);
 	exit(0);
+}
+
+/**
+ * @param $aResults
+ *
+ * @return \Combodo\iTop\Application\UI\Base\UIBlock
+ * @throws \CoreException
+ * @throws \DictExceptionMissingString
+ */
+function DisplayErrorList($aResults)
+{
+	$aColumns = [
+		'class' => ['label' => Dict::S('DBTools:Class')],
+		'count' => ['label' => Dict::S('DBTools:Count')],
+		'error' => ['label' => Dict::S('DBTools:Error')],
+	];
+	$aRows = [];
+
+	foreach ($aResults as $sClass => $aErrorList) {
+		foreach ($aErrorList as $sErrorLabel => $aError) {
+			$aRows[] = [
+				'class' => MetaModel::GetName($sClass).' ('.$sClass.')',
+				'count' => $aError['count'],
+				'error' => $sErrorLabel,
+			];
+		}
+	}
+
+	return DataTableUIBlockFactory::MakeForForm('', $aColumns, $aRows);
+}
+
+function DisplayErrorDetails($aResults, $bVerbose)
+{
+	$oBlock = UIContentBlockUIBlockFactory::MakeStandard();
+
+	$oBlock->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('DBTools:Disclaimer')));
+	$oBlock->AddSubBlock(HtmlFactory::MakeParagraph(Dict::S('DBTools:Indication')));
+
+	foreach ($aResults as $sClass => $aErrorList) {
+		foreach ($aErrorList as $sErrorLabel => $aError) {
+			$sErrorTitle = Dict::Format('DBTools:DetailedErrorTitle', MetaModel::GetName($sClass).' ('.$sClass.')', $aError['count'], $sErrorLabel);
+			$oCollapsible = CollapsibleSectionUIBlockFactory::MakeStandard($sErrorTitle);
+			$oBlock->AddSubBlock($oCollapsible);
+
+			$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLquery'));
+			$oCollapsible->AddSubBlock($oFieldSet);
+
+			if (array_key_exists('query', $aError)) {
+				$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($aError['query']);
+				$oFieldSet->AddSubBlock($oCode);
+
+				if (isset($aError['fixit'])) {
+					$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:FixitSQLquery'));
+					$oCollapsible->AddSubBlock($oFieldSet);
+
+					$aQueries = $aError['fixit'];
+					foreach ($aQueries as $sFixQuery) {
+						$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($sFixQuery);
+						$oFieldSet->AddSubBlock($oCode);
+					}
+				}
+			}
+
+			if ($bVerbose) {
+				$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:SQLresult'));
+				$oCollapsible->AddSubBlock($oFieldSet);
+
+				$sQueryResult = '';
+				$iCount = count($aError['res']);
+				$iMaxCount = MAX_RESULTS;
+				foreach ($aError['res'] as $aRes) {
+					$iMaxCount--;
+					if ($iMaxCount < 0) {
+						$sQueryResult .= 'Displayed '.MAX_RESULTS."/$iCount results.<br>";
+						break;
+					}
+					foreach ($aRes as $sKey => $sValue) {
+						$sQueryResult .= "'$sKey'='$sValue'&nbsp;";
+					}
+					$sQueryResult .= '<br>';
+				}
+				$oCode = UIContentBlockUIBlockFactory::MakeForPreformatted($sQueryResult);
+				$oFieldSet->AddSubBlock($oCode);
+			}
+		}
+	}
+
+	return $oBlock;
 }
 
 /**
@@ -309,29 +302,37 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 	// Build HTML
 	$oP->SetCurrentTab('DBTools:LostAttachments');
 
-	$oP->add('<div class="db-tools-tab-content">');
-	$oP->add('<div class="dbt-lostattachments">');
+	$oLostAttachmentsBlock = UIContentBlockUIBlockFactory::MakeStandard(null, ['ibo-dbt-lostattachments']);
+	$oP->AddUiBlock($oLostAttachmentsBlock);
 
-	$oP->add('<div class="header_message message_info">'.Dict::S('DBTools:LostAttachments:Disclaimer').'</div>');
-	$oP->add('<div class="dbt-steps">');
-	$oP->add('<form>');
-	$oP->add('<input type="hidden" name="exec_module" value="combodo-db-tools"/>');
-	$oP->add('<input type="hidden" name="exec_page" value="dbtools.php"/>');
+	$oForm = FormUIBlockFactory::MakeStandard();
+	$oLostAttachmentsBlock->AddSubBlock($oForm);
+
+	$oInput = InputUIBlockFactory::MakeForHidden('exec_module', 'combodo-db-tools');
+	$oForm->AddSubBlock($oInput);
+	$oInput = InputUIBlockFactory::MakeForHidden('exec_page', 'dbtools.php');
+	$oForm->AddSubBlock($oInput);
 
 	// Step 1: Analyze DB
-	$oP->add('<div class="dbt-step"><p class="dbt-step-description"><span class="dbt-step-number">1.</span><span>'.Dict::S('DBTools:LostAttachments:Step:Analyze').'</span></p><button type="submit" name="step_name" value="analyze">'.Dict::S('DBTools:LostAttachments:Button:Analyze') .'</button></div>');
+	if (!$bDoAnalyze) {
+		$oAlert = AlertUIBlockFactory::MakeForInformation(Dict::S('DBTools:LostAttachments:Disclaimer'));
+		$oForm->AddSubBlock($oAlert);
+
+		$oPanel = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:LostAttachments:Step:Analyze'));
+		$oForm->AddSubBlock($oPanel);
+		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('DBTools:LostAttachments:Button:Analyze'), 'step_name', 'analyze', true);
+		// TODO 3.0 Spacing ?
+		$oButton->AddCSSClasses(['mt-5', 'mb-5']);
+		$oPanel->AddSubBlock($oButton);
+	}
 
 	// Step 2: Display results
-	if($bDoAnalyze)
-	{
+	if ($bDoAnalyze) {
 		// Check if we have to restore some items first
-		if($bDoRestore)
-		{
-			foreach($aRecordsToClean as $sRecordToClean)
-			{
+		if ($bDoRestore) {
+			foreach ($aRecordsToClean as $sRecordToClean) {
 				utils::PushArchiveMode(false);  // For iTop < 2.5, the application can be wrongly set to archive mode true when it fails from retrieving an object. See r5340.
-				try
-				{
+				try {
 					// Retrieve attachment
 					$aLocationParts = explode('::', $sRecordToClean);
 					/** @var \DBObject $oOriginObject */
@@ -371,8 +372,7 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 
 					$iRestoredItemsCount++;
 				}
-				catch(Exception $e)
-				{
+				catch (Exception $e) {
 					$aErrorsReport[] = 'Could not restore attachment from '.$sRecordToClean.', cause: '.$e->getMessage();
 				}
 				utils::PopArchiveMode();
@@ -384,23 +384,30 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 		$sSelWrongRecs = 'SELECT id, secret, "InlineImage" AS current_class, id AS current_id, item_class AS target_class, item_id AS target_id, contents_filename AS filename FROM '.$sInlineImageDBTable.' WHERE contents_mimetype NOT LIKE "image/%"';
 		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs);
 
-		$oP->add('<div class="dbt-step">');
-		$oP->add('<p class="dbt-step-description"><span class="dbt-step-number">2.</span><span>'.Dict::S('DBTools:LostAttachments:Step:AnalyzeResults').'</span></p>');
 
-		if(empty($aWrongRecords))
-		{
-			$oP->add('<div class="header_message message_ok">'.Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:None').'</div>');
-		}
-		else
-		{
-			$oP->add('<div class="header_message message_error">'.Dict::Format('DBTools:LostAttachments:Step:AnalyzeResults:Some', count($aWrongRecords)).'</div>');
+		if (empty($aWrongRecords)) {
+			$oAlert = AlertUIBlockFactory::MakeForSuccess(Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:None'));
+			$oForm->AddSubBlock($oAlert);
+		} else {
+			// Errors found
+			$oAlert = AlertUIBlockFactory::MakeForFailure(Dict::Format('DBTools:LostAttachments:Step:AnalyzeResults:Some', count($aWrongRecords)));
+			// TODO 3.0 Spacing ?
+			$oAlert->AddCSSClass('mb-5');
+			$oForm->AddSubBlock($oAlert);
+
+			$oPanel = PanelUIBlockFactory::MakeForWarning(Dict::S('DBTools:LostAttachments:Step:AnalyzeResults'));
+			$oPanel->AddCSSClass('ibo-datatable-panel');
+			$oForm->AddSubBlock($oPanel);
 
 			// Display errors as table
-			$oP->add('<table class="listResults">');
-			$oP->add('<tr><th><input type="checkbox" class="dbt-toggler-cbx" /></th><th>'.Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename').'</th><th>'.Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation').'</th><th>'.Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation').'</th></tr>');
-
-			foreach($aWrongRecords as $iIndex => $aWrongRecord)
-			{
+			$aColumns = [
+				'select' => ['label' => '<input type="checkbox" class="dbt-toggler-cbx" />'],
+				'filename' => ['label' => Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename')],
+				'location' => ['label' => Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation')],
+				'target' => ['label' => Dict::S('DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation')],
+			];
+			$aRows = [];
+			foreach ($aWrongRecords as $iIndex => $aWrongRecord) {
 
 				$sCurrentClass = $aWrongRecord['current_class'];
 				$sCurrentId = $aWrongRecord['current_id'];
@@ -412,76 +419,79 @@ function DisplayLostAttachments(iTopWebPage &$oP, ApplicationContext &$oAppConte
 
 				$sFilename = '<a href="'.utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL.$aWrongRecord['id'].'&s='.$aWrongRecord['secret'].'" target="_blank">'.$aWrongRecord['filename'].'</a>';
 
-				$sRowClass = ($iIndex % 2 === 0) ? 'odd' : 'even'; // (Starts at 0, not 1)
-				$oP->add('<tr class="'.$sRowClass.'"><td><input type="checkbox" class="dbt-cbx" name="dbt-cbx[]" value="'.$sCurrentClass.'::'.$sCurrentId.'" /></td><td>'.$sFilename.'</td><td>'.$sRecordToClean.'</td><td>'.$sTargetLocation.'</td></tr>');
+				$aRows[] = [
+					'select' => '<input type="checkbox" class="dbt-cbx" name="dbt-cbx[]" value="'.$sCurrentClass.'::'.$sCurrentId.'" />',
+					'filename' => $sFilename,
+					'location' => $sRecordToClean,
+					'target' => $sTargetLocation,
+				];
+				// $oP->add('<tr class="'.$sRowClass.'"><td><input type="checkbox" class="dbt-cbx" name="dbt-cbx[]" value="'.$sCurrentClass.'::'.$sCurrentId.'" /></td><td>'.$sFilename.'</td><td>'.$sRecordToClean.'</td><td>'.$sTargetLocation.'</td></tr>');
 			}
 
-			$oP->add('</table>');
-			$oP->add('<div><button type="submit" name="step_name" value="restore" disabled>'.Dict::S('DBTools:LostAttachments:Button:Restore').'</button></div>');
+			$oTable = DataTableUIBlockFactory::MakeForForm('results', $aColumns, $aRows);
+			$oPanel->AddSubBlock($oTable);
+			/** @var \Combodo\iTop\Application\UI\Base\Component\Button\ButtonJS $oButton */
+			$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('DBTools:LostAttachments:Button:Restore'), 'step_name', 'restore', true);
+			// TODO 3.0 Spacing ?
+			$oButton->AddCSSClasses(['mt-5', 'ml-5']);
+			$oButton->SetIsDisabled(true);
+			$oPanel->AddSubBlock($oButton);
+
 
 			// JS to handle checkboxes and button
 			$oP->add_ready_script(
-<<<EOF
+				<<<EOF
 	// Check all / none checkboxes
-	$('.dbt-lostattachments .dbt-toggler-cbx').on('click', function(){
-		$('.dbt-lostattachments .dbt-cbx').prop('checked', $(this).prop('checked'));
+	$('.ibo-dbt-lostattachments .dbt-toggler-cbx').on('click', function(){
+		$('.ibo-dbt-lostattachments .dbt-cbx').prop('checked', $(this).prop('checked'));
 		
 		// Disable restore button if at lest one checkbox clicked
-		var bDisableButton = ($('.dbt-lostattachments .dbt-cbx:checked').length === 0)
-		$('.dbt-lostattachments button[name="step_name"][value="restore"]').prop('disabled', bDisableButton);
+		var bDisableButton = ($('.ibo-dbt-lostattachments .dbt-cbx:checked').length === 0)
+		$('.ibo-dbt-lostattachments button[name="step_name"][value="restore"]').prop('disabled', bDisableButton);
 	});
 
 	// Click on a checkbox
-	$('.dbt-lostattachments .dbt-cbx').on('click', function(){
+	$('.ibo-dbt-lostattachments .dbt-cbx').on('click', function(){
 		// Disable restore button if at lest one checkbox clicked
-		var bDisableButton = ($('.dbt-lostattachments .dbt-cbx:checked').length === 0)
-		$('.dbt-lostattachments button[name="step_name"][value="restore"]').prop('disabled', bDisableButton);
+		var bDisableButton = ($('.ibo-dbt-lostattachments .dbt-cbx:checked').length === 0)
+		$('.ibo-dbt-lostattachments button[name="step_name"][value="restore"]').prop('disabled', bDisableButton);
 		
 		// Uncheck global checkbox
-		if( $('.dbt-lostattachments .dbt-cbx:not(:checked)').length > 0 )
+		if( $('.ibo-dbt-lostattachments .dbt-cbx:not(:checked)').length > 0 )
 		{
-			$('.dbt-lostattachments .dbt-toggler-cbx').prop('checked', false);
+			$('.ibo-dbt-lostattachments .dbt-toggler-cbx').prop('checked', false);
 		}
 	});
 EOF
 			);
 		}
 
-		$oP->add('</div>');
 	}
 
 	// Step 3: Restore results
-	if($bDoRestore)
-	{
-		$oP->add('<div class="dbt-step">');
-		$oP->add('<p class="dbt-step-description"><span class="dbt-step-number">3.</span><span>'.Dict::S('DBTools:LostAttachments:Step:RestoreResults').'</span></p>');
+	if ($bDoRestore) {
+		$oPanel = FieldSetUIBlockFactory::MakeStandard(Dict::S('DBTools:LostAttachments:Step:RestoreResults'));
+		$oForm->AddSubBlock($oPanel);
 
-		$oP->add('<div class="header_message message_info">'.Dict::Format('DBTools:LostAttachments:Step:RestoreResults:Results', $iRestoredItemsCount, $iRecordsToCleanCount).'</div>');
+		$oAlert = AlertUIBlockFactory::MakeForSuccess(Dict::Format('DBTools:LostAttachments:Step:RestoreResults:Results', $iRestoredItemsCount, $iRecordsToCleanCount));
+		$oPanel->AddSubBlock($oAlert);
 
-		if(!empty($aErrorsReport))
-		{
-			foreach($aErrorsReport as $sErrorReport)
-			{
-				$oP->add('<div class="header_message message_error">'.$sErrorReport.'</div>');
+		if (!empty($aErrorsReport)) {
+			foreach ($aErrorsReport as $sErrorReport) {
+
+				$oAlert = AlertUIBlockFactory::MakeForFailure($sErrorReport);
+				$oPanel->AddSubBlock($oAlert);
 			}
 		}
-
-		$oP->add('</div>');
 	}
-
-	$oP->add($oAppContext->GetForForm());
-	$oP->add('</form>');
-	$oP->add('</div>');
-
-	$oP->add('</div>');
-	$oP->add('</div>');
+	$oForm->AddSubBlock($oAppContext->GetForFormBlock());
 
 	// Buttons disabling on click
 	$sConfirmText = Dict::S('DBTools:LostAttachments:Button:Restore:Confirm');
 	$sButtonBusyText = Dict::S('DBTools:LostAttachments:Button:Busy');
 	$oP->add_ready_script(
-<<<EOF
-	$('.dbt-lostattachments button[name="step_name"]').on('click', function(){
+		<<<EOF
+	$('.ibo-dbt-lostattachments button[name="step_name"]').on('click', function(){
 	
 		if($(this).val() === 'restore')
 		{
@@ -490,7 +500,6 @@ EOF
 				return false;
 			}		
 		}
-		//$(this).prop('disabled', true);
 		$(this).text('{$sButtonBusyText}');
 	});
 EOF
@@ -502,15 +511,11 @@ EOF
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
-try
-{
-	if (method_exists('ApplicationMenu', 'CheckMenuIdEnabled'))
-	{
+try {
+	if (method_exists('ApplicationMenu', 'CheckMenuIdEnabled')) {
 		LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 		ApplicationMenu::CheckMenuIdEnabled('DBToolsMenu');
-	}
-	else
-	{
+	} else {
 		LoginWebPage::DoLogin(true); // Check user rights and prompt if needed
 	}
 
@@ -523,13 +528,9 @@ try
 	$oP = new iTopWebPage($sPageTitle);
 	$oP->add_saas('env-'.utils::GetCurrentEnvironment().'/combodo-db-tools/default.scss');
 
-	$oP->add(
-<<<EOF
-<div class="page_header">
-  	<h1>$sPageTitle</h1>
-</div>
-EOF
-	);
+	$oTitle = TitleUIBlockFactory::MakeForPage($sPageTitle);
+	$oP->AddUiBlock($oTitle);
+
 	$oP->AddTabContainer('db-tools');
 	$oP->SetCurrentTabContainer('db-tools');
 
@@ -539,12 +540,10 @@ EOF
 	// Lost attachments
 	$oP = DisplayLostAttachments($oP, $oAppContext);
 }
-catch (Exception $e)
-{
+catch (Exception $e) {
 	$oP->p('<b>'.$e->getMessage().'</b>');
 }
 
-if (isset($oP))
-{
+if (isset($oP)) {
 	$oP->output();
 }

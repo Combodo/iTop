@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -256,7 +256,7 @@ class MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		foreach (array($this->sRootDir, $this->sRootDir.'/dictionary') as $sRootDir)
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
 		{
 			if ($hDir = @opendir($sRootDir))
 			{
@@ -464,25 +464,30 @@ class MFDictModule extends MFModule
 	}
 
 	/**
+	 * Scan for dictionary files recursively in $sDir
+	 *
 	 * @inheritDoc
 	 */
-	public function GetDictionaryFiles()
+	public function GetDictionaryFiles($sDir = null)
 	{
 		$aDictionaries = array();
-		foreach (array($this->sRootDir, $this->sRootDir.'/dictionary') as $sRootDir)
+		$sDictionaryFilePattern = '*dictionary.itop.*.php';
+
+		if($sDir === null)
 		{
-			if ($hDir = @opendir($sRootDir))
+			$sDir = $this->sRootDir;
+		}
+
+		if ($hDir = opendir($sDir))
+		{
+			// Matching files
+			$aDictionaries = glob($sDir.'/'.$sDictionaryFilePattern);
+
+			// Directories to scan
+			foreach(glob($sDir.'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $sSubDir)
 			{
-				while (($sFile = readdir($hDir)) !== false)
-				{
-					$aMatches = array();
-					if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile,
-						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-					{
-						$aDictionaries[] = $sRootDir.'/'.$sFile;
-					}
-				}
-				closedir($hDir);
+				/** @noinspection SlowArrayOperationsInLoopInspection */
+				$aDictionaries = array_merge($aDictionaries, $this->GetDictionaryFiles($sSubDir));
 			}
 		}
 
@@ -498,6 +503,17 @@ class MFDictModule extends MFModule
  */
 class ModelFactory
 {
+	/**
+	 * @var array Values of the _delta flag meaning that a node is "in definition" = currently being added to the delta
+	 * @since 3.0.0
+	 */
+	public const DELTA_FLAG_IN_DEFINITION_VALUES = ['define', 'define_if_not_exists', 'redefine', 'force'];
+	/**
+	 * @var array Values of the _delta flag meaning that a node is "in deletion" = currently being removed from the delta
+	 * @since 3.0.0
+	 */
+	public const DELTA_FLAG_IN_DELETION_VALUES = ['delete', 'delete_if_exists'];
+
 	protected $aRootDirs;
 	protected $oDOMDocument;
 	protected $oRoot;
@@ -677,8 +693,8 @@ class ModelFactory
 			}
 		}
 
-		switch ($sDeltaSpec)
-		{
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		switch ($sDeltaSpec) {
 			case 'if_exists':
 			case 'must_exist':
 			case 'merge':
@@ -687,10 +703,8 @@ class ModelFactory
 				$bIfExists = ($sDeltaSpec == 'if_exists');
 				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
 				$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist, $bIfExists);
-				if ($oTargetNode)
-				{
-					foreach ($oSourceNode->childNodes as $oSourceChild)
-					{
+				if ($oTargetNode) {
+					foreach ($oSourceNode->childNodes as $oSourceChild) {
 						// Continue deeper
 						$this->LoadDelta($oSourceChild, $oTargetNode);
 					}
@@ -939,18 +953,15 @@ class ModelFactory
 					}
 				}
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
 			}
 
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$aLoadedModuleNames = array();
-			foreach (self::$aLoadedModules as $oModule)
-			{
-				$aLoadedModuleNames[] = $oModule->GetName();
+			foreach (self::$aLoadedModules as $oLoadedModule) {
+				$aLoadedModuleNames[] = $oLoadedModule->GetName();
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
 					$aLoadedModuleNames));
@@ -992,6 +1003,8 @@ class ModelFactory
 	 */
 	function HasLoadErrors()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
+
 		return (count(self::$aLoadErrors) > 0);
 	}
 
@@ -1001,6 +1014,8 @@ class ModelFactory
 	 */
 	function GetLoadErrors()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
+
 		return self::$aLoadErrors;
 	}
 
@@ -1193,7 +1208,6 @@ $sHeader
 	</properties>
 	<naming format=""><attributes/></naming>
 	<reconciliation><attributes/></reconciliation>
-	<display_template/>
 	<icon>$sIcon</icon>
 	</properties>
 	<fields/>
@@ -1401,16 +1415,14 @@ EOF
 	{
 		$sAlteration = $oNodeClone->getAttribute('_alteration');
 		$oNodeClone->removeAttribute('_alteration');
-		if ($oNodeClone->hasAttribute('_old_id'))
-		{
+		if ($oNodeClone->hasAttribute('_old_id')) {
 			$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
 			$oNodeClone->removeAttribute('_old_id');
 		}
-		switch ($sAlteration)
-		{
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		switch ($sAlteration) {
 			case '':
-				if ($oNodeClone->hasAttribute('id'))
-				{
+				if ($oNodeClone->hasAttribute('id')) {
 					$oNodeClone->setAttribute('_delta', 'must_exist');
 				}
 				break;
@@ -1833,6 +1845,13 @@ EOF;
 	{
 		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode, $bSafe);
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetRootDirs() {
+		return $this->aRootDirs;
+	}
 }
 
 /**
@@ -2155,14 +2174,13 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
-			if ($oExisting->getAttribute('_alteration') != 'removed')
-			{
+			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
 				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
 					$iLine, $sPath);
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
 		}
 		else
@@ -2202,18 +2220,15 @@ class MFElement extends Combodo\iTop\DesignElement
 				$sPath, $iLine);
 		}
 		$sPrevFlag = $oExisting->getAttribute('_alteration');
-		if ($sPrevFlag == 'removed')
-		{
+		if ($sPrevFlag == 'removed') {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
 			$iLine = $oNode->getLineNo();
 			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
 				MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
 		}
-		$oExisting->ReplaceWith($oNode);
-		if (!$this->IsInDefinition())
-		{
-			if ($sPrevFlag == '')
-			{
+		$oExisting->ReplaceWithSingleNode($oNode);
+		if (!$this->IsInDefinition()) {
+			if ($sPrevFlag == '') {
 				$sPrevFlag = 'replaced';
 			}
 			$oNode->setAttribute('_alteration', $sPrevFlag);
@@ -2246,15 +2261,12 @@ class MFElement extends Combodo\iTop\DesignElement
 			}
 
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
-			if ($sPrevFlag == 'removed')
-			{
+			if ($sPrevFlag == 'removed') {
 				$sFlag = $bForce ? 'forced' : 'replaced';
-			}
-			else
-			{
+			} else {
 				$sFlag = $sPrevFlag; // added, replaced or ''
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 		}
 		else
 		{
@@ -2285,8 +2297,7 @@ class MFElement extends Combodo\iTop\DesignElement
 
 			return $this->parentNode->IsClassNode();
 		}
-		else
-		{
+		else {
 			return false;
 		}
 	}
@@ -2296,13 +2307,11 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param MFElement $oNewNode The replacement
 	 */
-	protected function ReplaceWith($oNewNode)
+	protected function ReplaceWithSingleNode($oNewNode)
 	{
 		// Move the classes from the old node into the new one
-		if ($this->IsClassNode())
-		{
-			foreach ($this->GetNodes('class') as $oChild)
-			{
+		if ($this->IsClassNode()) {
+			foreach ($this->GetNodes('class') as $oChild) {
 				$oNewNode->appendChild($oChild);
 			}
 		}
@@ -2572,6 +2581,10 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	public function GetNodes($sXPath, $oContextNode = null, $bSafe = true)
 	{
 		$oXPath = new DOMXPath($this);
+		// For Designer audit
+		$oXPath->registerNamespace("php", "http://php.net/xpath");
+		$oXPath->registerPhpFunctions();
+
 		if ($bSafe)
 		{
 			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";

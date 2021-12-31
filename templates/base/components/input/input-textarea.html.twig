@@ -1,0 +1,16 @@
+{% block iboInputLabel %}
+{% endblock %}
+{% block iboInput %}
+    <textarea
+            id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}"
+            cols="{{ oUIBlock.GetCols() }}" rows="{{ oUIBlock.GetRows() }}"
+              {% if oUIBlock.GetDataAttributes() %}
+                  {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                      data-{{ sName }}="{{ sValue }}"
+                  {% endfor %}
+              {% endif %}
+            {% if oUIBlock.GetAdditionalCSSClassesAsString() %} class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}"{% endif %}
+            {% if oUIBlock.GetPlaceHolder() %}  placeholder="{{ oUIBlock.GetPlaceHolder() }}" {% endif %}
+            {% if oUIBlock.IsDisabled() %} disabled {% endif %}
+	>{{ oUIBlock.GetValue()|raw }}</textarea>
+{% endblock %}

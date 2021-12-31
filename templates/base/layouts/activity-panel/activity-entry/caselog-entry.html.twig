@@ -1,0 +1,4 @@
+{% extends 'base/layouts/activity-panel/activity-entry/layout.html.twig' %}
+
+{% block iboActivityEntryExtraClasses %}ibo-caselog-entry ibo-caselog-entry--entry-for-caselog-{{ oUIBlock.GetCaseLogRank() }} ibo-is-html-content{% endblock %}
+{% block iboActivityEntryExtraDataAttributes %}data-entry-caselog-attribute-code="{{ oUIBlock.GetAttCode() }}"{% endblock %}

@@ -14,53 +14,68 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class StatusTest extends ItopTestCase {
+class StatusTest extends ItopTestCase
+{
+	public function setUp()
+	{
+		parent::setUp();
+		require_once APPROOT.'core/config.class.inc.php'; // for constants
+	}
 
-    /**
-     * 
-     */
-    public function testStatusWrongUrl() {
-        $sPath = APPROOT . 'status_wrong.php';
+	/**
+	 *
+	 */
+	public function testStatusWrongUrl()
+	{
+		$sPath = APPROOT.'/status_wrong.php';
 
-        exec("php $sPath", $aOutput, $iRet);
+		exec("php $sPath", $aOutput, $iRet);
+		$this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
 
-        $this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet");
-    }
+	}
 
-    /**
-     * 
-     */
-    public function testStatusGood() {
-	    $sPath = APPROOT . 'status.php';
+	/**
+	 *
+	 */
+	public function testStatusGood()
+	{
+		$sPath = APPROOT.'/webservices/status.php';
 
-	    exec("php $sPath", $aOutput, $iRet);
+		exec("php $sPath", $aOutput, $iRet);
+		$this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
+	}
 
-	    $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet");
-    }
+	/**
+	 *
+	 */
+	public function testStatusGoodWithJson()
+	{
+		$sPath = APPROOT.'/webservices/status.php';
 
-    /**
-     * 
-     */
-    public function testStatusGoodWithJson() {
-	    $sPath = APPROOT . 'status.php';
+		exec("php $sPath", $aOutput, $iRet);
+		$sAdditionalInfo = "aOutput:\n".var_export($aOutput, true).'.';
 
-	    exec("php $sPath", $aOutput, $iRet);
+		//Check response
+		$this->assertNotEmpty($aOutput[0], 'Empty response. '.$sAdditionalInfo);
+		$this->assertJson($aOutput[0], 'Not a JSON. '.$sAdditionalInfo);
 
-        //Check response
-        $this->assertNotEmpty($aOutput[0], 'Empty response');
-        $this->assertJson($aOutput[0], 'Not a JSON');
+		$aResponseDecoded = json_decode($aOutput[0], true);
 
-        $aResponseDecoded = json_decode($aOutput[0], true);
-
-        //Check status
-        $this->assertArrayHasKey('status', $aResponseDecoded, 'JSON does not have a status\' field');
-        $this->assertEquals('RUNNING', $aResponseDecoded['status'], 'Status is not \'RUNNING\'');
-        //Check code
-        $this->assertArrayHasKey('code', $aResponseDecoded, 'JSON does not have a code\' field');
-        $this->assertEquals(0, $aResponseDecoded['code'], 'Code is not 0');
-        //Check message
-        $this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field');
-        $this->assertEmpty($aResponseDecoded['message'], 'Message is not empty');
-    }
+		//Check status
+		$this->assertArrayHasKey('status', $aResponseDecoded, 'JSON does not have a status\' field. '.$sAdditionalInfo);
+		$this->assertEquals('RUNNING', $aResponseDecoded['status'], 'Status is not \'RUNNING\'. '.$sAdditionalInfo);
+		//Check code
+		$this->assertArrayHasKey('code', $aResponseDecoded, 'JSON does not have a code\' field. '.$sAdditionalInfo);
+		$this->assertEquals(0, $aResponseDecoded['code'], 'Code is not 0. '.$sAdditionalInfo);
+		//Check message
+		$this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field. '.$sAdditionalInfo);
+		$this->assertEmpty($aResponseDecoded['message'], 'Message is not empty. '.$sAdditionalInfo);
+		//Check product
+		$this->assertArrayHasKey('product', $aResponseDecoded, 'JSON does not have a product\' field. '.$sAdditionalInfo);
+		$this->assertEquals(ITOP_APPLICATION, $aResponseDecoded['product'], 'Bad product (should be: '.ITOP_APPLICATION.') '.$sAdditionalInfo);
+		//Check version
+		$this->assertArrayHasKey('version', $aResponseDecoded, 'JSON does not have a version\' field. '.$sAdditionalInfo);
+		$this->assertEquals(ITOP_VERSION, $aResponseDecoded['version'], 'Bad version (should be: '.ITOP_VERSION.') '.$sAdditionalInfo);
+	}
 
 }

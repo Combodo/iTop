@@ -1,9 +1,11 @@
 <?php
 
+use Combodo\iTop\Application\Helper\Session;
+
 /**
  * Class LoginExternal
  *
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -22,12 +24,12 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		if (!isset($_SESSION['login_mode']))
+		if (!Session::IsSet('login_mode'))
 		{
 			$sAuthUser = $this->GetAuthUser();
 			if ($sAuthUser && (strlen($sAuthUser) > 0))
 			{
-				$_SESSION['login_mode'] = 'external';
+				Session::Set('login_mode', 'external');
 			}
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -35,10 +37,10 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (Session::Get('login_mode') == 'external')
 		{
 			$sAuthUser = $this->GetAuthUser();
-			if (!UserRights::CheckCredentials($sAuthUser, '', $_SESSION['login_mode'], 'external'))
+			if (!UserRights::CheckCredentials($sAuthUser, '', Session::Get('login_mode'), 'external'))
 			{
 				$_SESSION['auth_user'] = $sAuthUser;
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
@@ -50,19 +52,19 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (Session::Get('login_mode') == 'external')
 		{
 			$sAuthUser = $this->GetAuthUser();
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', $_SESSION['login_mode']);
+			LoginWebPage::OnLoginSuccess($sAuthUser, 'external', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (Session::Get('login_mode') == 'external')
 		{
-			$_SESSION['can_logoff'] = false;
+			Session::Set('can_logoff', false);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -70,7 +72,7 @@ class LoginExternal extends AbstractLoginFSMExtension
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'external')
+		if (Session::Get('login_mode') == 'external')
 		{
 			LoginWebPage::HTTP401Error();
 		}

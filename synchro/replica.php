@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -19,12 +19,10 @@
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'/application/startup.inc.php');
-
 require_once(APPROOT.'/application/loginwebpage.class.inc.php');
-LoginWebPage::DoLogin(true); // Check user rights and prompt if needed, admins only here !
+LoginWebPage::DoLogin(); 
 
 $sOperation = utils::ReadParam('operation', 'menu');
 $oAppContext = new ApplicationContext();

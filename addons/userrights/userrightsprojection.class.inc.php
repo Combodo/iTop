@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2020 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -58,7 +58,6 @@ class URP_Profiles extends UserRightsBaseClass
 			"db_table" => "priv_urp_profiles",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -144,11 +143,9 @@ class URP_Profiles extends UserRightsBaseClass
 	function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
-		if (!$bEditMode)
-		{
-			$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
-			$this->DoShowGrantSumary($oPage);		
-		}
+
+		$oPage->SetCurrentTab('UI:UserManagement:GrantMatrix');
+		$this->DoShowGrantSumary($oPage);
 	}
 }
 
@@ -167,7 +164,6 @@ class URP_Dimensions extends UserRightsBaseClass
 			"db_table" => "priv_urp_dimensions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -274,13 +270,12 @@ class URP_UserProfile extends UserRightsBaseClass
 		(
 			"category" => "addon/userrights",
 			"key_type" => "autoincrement",
-			"name_attcode" => "userid",
+			"name_attcode" => array("userlogin", "profile"),
 			"state_attcode" => "",
 			"reconc_keys" => array(),
 			"db_table" => "priv_urp_userprofile",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -299,11 +294,6 @@ class URP_UserProfile extends UserRightsBaseClass
 		MetaModel::Init_SetZListItems('standard_search', array('userid', 'profileid')); // Criteria of the std search form
 		MetaModel::Init_SetZListItems('advanced_search', array('userid', 'profileid')); // Criteria of the advanced search form
 	}
-
-	public function GetName()
-	{
-		return Dict::Format('UI:UserManagement:LinkBetween_User_And_Profile', $this->Get('userlogin'), $this->Get('profile'));
-	}
 }
 
 
@@ -321,7 +311,6 @@ class URP_ProfileProjection extends UserRightsBaseClass
 			"db_table" => "priv_urp_profileprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -402,7 +391,6 @@ class URP_ClassProjection extends UserRightsBaseClass
 			"db_table" => "priv_urp_classprojection",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -474,7 +462,6 @@ class URP_ActionGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_actions",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -511,7 +498,6 @@ class URP_StimulusGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_stimulus",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -548,7 +534,6 @@ class URP_AttributeGrant extends UserRightsBaseClass
 			"db_table" => "priv_urp_grant_attributes",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();

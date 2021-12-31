@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,26 +15,26 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-class CheckResult
-{
+class CheckResult {
 	// Severity levels
 	const ERROR = 0;
 	const WARNING = 1;
 	const INFO = 2;
+	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
 
 	public $iSeverity;
 	public $sLabel;
 	public $sDescription;
 
-	public function __construct($iSeverity, $sLabel, $sDescription = '')
-	{
+	public function __construct($iSeverity, $sLabel, $sDescription = '') {
 		$this->iSeverity = $iSeverity;
 		$this->sLabel = $sLabel;
 		$this->sDescription = $sDescription;
@@ -42,30 +42,31 @@ class CheckResult
 
 	/**
 	 * @return string
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
-	public function __toString()
-	{
+	public function __toString(): string {
 		$sPrintDesc = (empty($this->sDescription)) ? '' : " ({$this->sDescription})";
+
 		return "{$this->sLabel}$sPrintDesc";
 	}
 
 	/**
 	 * @param \CheckResult[] $aResults
+	 * @param string[] $aCheckResultSeverities list of CheckResult object severities to keep
 	 *
-	 * @return \CheckResult[] only elements that are error (iSeverity===ERROR)
+	 * @return \CheckResult[] only elements that have one of the passed severity
 	 *
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
-	public static function KeepOnlyErrors($aResults)
-	{
+	public static function FilterCheckResultArray(array $aResults, array $aCheckResultSeverities): array {
 		return array_filter($aResults,
-			static function ($v)
-				{
-					if ($v->iSeverity === CheckResult::ERROR) {
+			static function ($v) use ($aCheckResultSeverities) {
+				if (in_array($v->iSeverity, $aCheckResultSeverities, true)) {
 					return $v;
-					}
-				},
+				}
+
+				return false;
+			},
 			ARRAY_FILTER_USE_BOTH);
 	}
 
@@ -75,11 +76,10 @@ class CheckResult
 	 * @return string[]
 	 * @uses \CheckResult::__toString
 	 *
-	 * @since 2.8.0 N°2214
+	 * @since 3.0.0 N°2214
 	 */
-	public static function FromObjectsToStrings($aResults)
-	{
-		return array_map(function ($value) {
+	public static function FromObjectsToStrings(array $aResults): array {
+		return array_map(static function ($value) {
 			return $value->__toString();
 		}, $aResults);
 	}
@@ -88,14 +88,14 @@ class CheckResult
 /**
  * All of the functions/utilities needed by both the setup wizard and the installation process
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class SetupUtils
 {
 	// -- Minimum versions (requirements : forbids installation if not met)
 	const PHP_MIN_VERSION = '7.1.3'; // 7 will be supported until the end of 2019 (see http://php.net/supported-versions.php)
-	const MYSQL_MIN_VERSION = '5.6.0'; // 5.6 to have fulltext on InnoDB for Tags fields (N°931)
+	const MYSQL_MIN_VERSION = '5.7.0'; // 5.6 is no longer supported
 	const MYSQL_NOT_VALIDATED_VERSION = ''; // MySQL 8 is now OK (N°2010 in 2.7.0) but has no query cache so mind the perf on large volumes !
 
 	// -- versions that will be the minimum in next iTop major release (warning if not met)
@@ -104,7 +104,7 @@ class SetupUtils
 	// -- First recent version that is not yet validated by Combodo (warning)
 	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
 
-	const MIN_MEMORY_LIMIT = 33554432; // 32 * 1024 * 1024 - we can use expressions in const since PHP 5.6 but we are in the setup !
+	const MIN_MEMORY_LIMIT = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
 
 	/**
@@ -117,48 +117,43 @@ class SetupUtils
 	 * <li>...
 	 * </ul>
 	 *
-	 * @internal SetupPage $oP The page used only for its 'log' method
 	 * @return CheckResult[]
+	 *
+	 * @uses SetupPage $oP The page used only for its 'log' method
+	 * @uses utils::IsModeCLI() to disable following checks :
+	 *         <ul>
+	 *            <li>php.ini option : file_uploads
+	 *            <li>Temp upload dir valid
+	 *            <li>php.ini option : upload_max_filesize
+	 *            <li>php.ini option : max_file_uploads
+	 *            <li>php.ini option : upload_max_filesize, post_max_size
+	 *            <li>php.ini option : session.save_handler
+	 *         </ul>
+	 *
+	 * @since 3.0.0 N°2214 disable some checks when in CLI mode
+	 * @since 3.0.0 N°2214 replace SetupLog::Ok calls by CheckResult::TRACE
 	 */
-	public static function CheckPhpAndExtensions()
-	{
+	public static function CheckPhpAndExtensions() {
 		$aResult = array();
 
 		// For log file(s)
-		if (!is_dir(APPROOT.'log'))
-		{
+		if (!is_dir(APPROOT.'log')) {
 			@mkdir(APPROOT.'log');
 		}
 
 		self::CheckPhpVersion($aResult);
 
 		// Check the common directories
-		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
+		if (utils::IsModeCLI()) {
+			$aWritableDirs = ['log', 'data'];
+		} else {
+			$aWritableDirs = ['log', 'env-production', 'env-production-build', 'conf', 'data'];
+		}
+		$aWritableDirsErrors = self::CheckWritableDirs($aWritableDirs);
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
-		$aMandatoryExtensions = array(
-			'mysqli',
-			'iconv',
-			'simplexml',
-			'soap',
-			'hash',
-			'json',
-			'session',
-			'pcre',
-			'dom',
-			'zlib',
-			'gd', // test image type (always returns false if not installed), image resizing, PDF export
-		);
-		$aOptionalExtensions = array(
-			'mcrypt, sodium or openssl' =>
-				array(
-					'mcrypt' => 'Strong encryption will not be used.',
-					'sodium' => 'Strong encryption will not be used.',
-					'openssl' => 'Strong encryption will not be used.',
-				),
-			'ldap' => 'LDAP authentication will be disabled.',
-			'mbstring' => 'For CryptEngine implementations, trace in Mail to ticket automation', // N°2891
-		);
+		$aMandatoryExtensions = self::GetPHPMandatoryExtensions();
+		$aOptionalExtensions = self::GetPHPOptionalExtensions();
 
 		asort($aMandatoryExtensions); // Sort the list to look clean !
 		ksort($aOptionalExtensions); // Sort the list to look clean !
@@ -241,95 +236,90 @@ class SetupUtils
 		{
 			$sPhpIniFile = php_ini_loaded_file();
 			// Other included/scanned files
-			if ($sFileList = php_ini_scanned_files())
-			{
-				if (strlen($sFileList) > 0)
-				{
+			if ($sFileList = php_ini_scanned_files()) {
+				if (strlen($sFileList) > 0) {
 					$aFiles = explode(',', $sFileList);
 
-					foreach ($aFiles as $sFile)
-					{
+					foreach ($aFiles as $sFile) {
 						$sPhpIniFile .= ', '.trim($sFile);
 					}
 				}
 			}
-			SetupPage::log("Info - php.ini file(s): '$sPhpIniFile'");
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - php.ini file(s): '$sPhpIniFile'");
 		}
 
-		if (!ini_get('file_uploads'))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
+		if (!utils::IsModeCLI() && !ini_get('file_uploads')) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"Files upload is not allowed on this server (file_uploads = ".ini_get('file_uploads').").");
 		}
 
-		$sUploadTmpDir = self::GetUploadTmpDir();
-		if (empty($sUploadTmpDir))
-		{
-			$sUploadTmpDir = '/tmp';
-			$aResult[] = new CheckResult(CheckResult::WARNING, "Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
-		}
-		// check that the upload directory is indeed writable from PHP
-		if (!empty($sUploadTmpDir))
-		{
-			if (!file_exists($sUploadTmpDir))
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
+		if (!utils::IsModeCLI()) {
+			$sUploadTmpDir = self::GetUploadTmpDir();
+			if (empty($sUploadTmpDir)) {
+				$sUploadTmpDir = '/tmp';
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"Temporary directory for files upload is not defined (upload_tmp_dir), assuming that $sUploadTmpDir is used.");
 			}
-			else if (!is_writable($sUploadTmpDir))
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "Temporary directory for files upload ($sUploadTmpDir) is not writable.");
-			}
-			else
-			{
-				SetupPage::log("Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+			// check that the upload directory is indeed writable from PHP
+			if (!empty($sUploadTmpDir)) {
+				if (!file_exists($sUploadTmpDir)) {
+					$aResult[] = new CheckResult(CheckResult::ERROR,
+						"Temporary directory for files upload ($sUploadTmpDir) does not exist or cannot be read by PHP.");
+				}
+				else {
+					if (!is_writable($sUploadTmpDir)) {
+						$aResult[] = new CheckResult(CheckResult::ERROR,
+							"Temporary directory for files upload ($sUploadTmpDir) is not writable.");
+					}
+					else {
+						$aResult[] = new CheckResult(CheckResult::TRACE,
+							"Info - Temporary directory for files upload ($sUploadTmpDir) is writable.");
+					}
+				}
 			}
 		}
 
-
-		if (!ini_get('upload_max_filesize'))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').").");
+		if (!utils::IsModeCLI() && !ini_get('upload_max_filesize')) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"File upload is not allowed on this server (upload_max_filesize = ".ini_get('upload_max_filesize').").");
 		}
 
 		$iMaxFileUploads = ini_get('max_file_uploads');
-		if (!empty($iMaxFileUploads) && ($iMaxFileUploads < 1))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
+		if (!utils::IsModeCLI() && !empty($iMaxFileUploads) && ($iMaxFileUploads < 1)) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"File upload is not allowed on this server (max_file_uploads = ".ini_get('max_file_uploads').").");
 		}
 
-		$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
-		$iMaxPostSize = utils::ConvertToBytes(ini_get('post_max_size'));
+		if (!utils::IsModeCLI()) {
+			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$iMaxPostSize = utils::ConvertToBytes(ini_get('post_max_size'));
 
-		if ($iMaxPostSize <= $iMaxUploadSize)
-		{
-			$aResult[] = new CheckResult(CheckResult::WARNING, "post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
+			if ($iMaxPostSize <= $iMaxUploadSize) {
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"post_max_size (".ini_get('post_max_size').") in php.ini should be strictly greater than upload_max_filesize (".ini_get('upload_max_filesize').") otherwise you cannot upload files of the maximum size.");
+			}
+
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - post_max_size: ".ini_get('post_max_size'));
+			$aResult[] = new CheckResult(CheckResult::TRACE, "Info - max_file_uploads: ".ini_get('max_file_uploads'));
 		}
-
-
-		SetupPage::log("Info - upload_max_filesize: ".ini_get('upload_max_filesize'));
-		SetupPage::log("Info - post_max_size: ".ini_get('post_max_size'));
-		SetupPage::log("Info - max_file_uploads: ".ini_get('max_file_uploads'));
 
 		// Check some more ini settings here, needed for file upload
 		$sMemoryLimit = trim(ini_get('memory_limit'));
-		if (empty($sMemoryLimit))
-		{
+		if (empty($sMemoryLimit)) {
 			// On some PHP installations, memory_limit does not exist as a PHP setting!
 			// (encountered on a 5.2.0 under Windows)
 			// In that case, ini_set will not work, let's keep track of this and proceed anyway
 			$aResult[] = new CheckResult(CheckResult::WARNING, "No memory limit has been defined in this instance of PHP");
-		}
-		else
-		{
+		} else {
 			// Check that the limit will allow us to load the data
 			//
-			$iMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
-			if (!utils::IsMemoryLimitOk($iMemoryLimit, self::MIN_MEMORY_LIMIT))
-			{
-				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($iMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
-			}
-			else
-			{
-				SetupPage::log("Info - memory_limit is $iMemoryLimit, ok.");
+			$iCurrentMemoryLimit = utils::ConvertToBytes($sMemoryLimit);
+			$iMinMemoryLimit = utils::ConvertToBytes(self::MIN_MEMORY_LIMIT);
+			if (!utils::IsMemoryLimitOk($iCurrentMemoryLimit, $iMinMemoryLimit)) {
+				$aResult[] = new CheckResult(CheckResult::ERROR, "memory_limit ($sMemoryLimit) is too small, the minimum value to run the application is ".self::MIN_MEMORY_LIMIT.".");
+			} else {
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - memory_limit is $sMemoryLimit, ok.");
 			}
 		}
 
@@ -347,13 +337,12 @@ class SetupUtils
 			$aOk[] = "Suhosin extension detected (version $sSuhosinVersion).";
 
 			$iGetMaxValueLength = ini_get('suhosin.get.max_value_length');
-			if ($iGetMaxValueLength < self::SUHOSIN_GET_MAX_VALUE_LENGTH)
-			{
-				$aResult[] = new CheckResult(CheckResult::WARNING,  "suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
+			if ($iGetMaxValueLength < self::SUHOSIN_GET_MAX_VALUE_LENGTH) {
+				$aResult[] = new CheckResult(CheckResult::WARNING,
+					"suhosin.get.max_value_length ($iGetMaxValueLength) is too small, the minimum value recommended to run the application is ".self::SUHOSIN_GET_MAX_VALUE_LENGTH.".");
 			}
-			else
-			{
-				SetupPage::log("Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
+			else {
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - suhosin.get.max_value_length = $iGetMaxValueLength, ok.");
 			}
 		}
 
@@ -361,109 +350,109 @@ class SetupUtils
 		{
 			$sPhpIniFile = php_ini_loaded_file();
 			// Other included/scanned files
-			if ($sFileList = php_ini_scanned_files())
-			{
-				if (strlen($sFileList) > 0)
-				{
+			if ($sFileList = php_ini_scanned_files()) {
+				if (strlen($sFileList) > 0) {
 					$aFiles = explode(',', $sFileList);
 
-					foreach ($aFiles as $sFile)
-					{
+					foreach ($aFiles as $sFile) {
 						$sPhpIniFile .= ', '.trim($sFile);
 					}
 				}
 			}
-			$aResult[] = new CheckResult(CheckResult::INFO,  "Loaded php.ini files: $sPhpIniFile");
+			$aResult[] = new CheckResult(CheckResult::INFO, "Loaded php.ini files: $sPhpIniFile");
 		}
 
 		// Check the configuration of the sessions persistence, since this is critical for the authentication
-		if (ini_get('session.save_handler') == 'files')
-		{
-			$sSavePath = ini_get('session.save_path');
-			SetupPage::log("Info - session.save_path is: '$sSavePath'.");
+		if (!utils::IsModeCLI()) {
+			if (ini_get('session.save_handler') == 'files') {
+				$sSavePath = ini_get('session.save_path');
+				$aResult[] = new CheckResult(CheckResult::TRACE, "Info - session.save_path is: '$sSavePath'.");
 
-			// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
-			$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
+				// According to the PHP documentation, the format can be /path/where/to_save_sessions or "N;/path/where/to_save_sessions" or "N;MODE;/path/where/to_save_sessions"
+				$sSavePath = ltrim(rtrim($sSavePath, '"'), '"'); // remove surrounding quotes (if any)
 
-			if (!empty($sSavePath))
-			{
-				if (($iPos = strrpos($sSavePath, ';', 0)) !== false)
-				{
-					// The actual path is after the last semicolon
-					$sSavePath = substr($sSavePath, $iPos+1);
+				if (!empty($sSavePath)) {
+					if (($iPos = strrpos($sSavePath, ';', 0)) !== false) {
+						// The actual path is after the last semicolon
+						$sSavePath = substr($sSavePath, $iPos + 1);
+					}
+					if (!is_writable($sSavePath)) {
+						$aResult[] = new CheckResult(CheckResult::ERROR,
+							"The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+					}
+					else {
+						$aResult[] = new CheckResult(CheckResult::INFO,
+							"The value for session.save_path ($sSavePath) is writable for the web server.");
+					}
 				}
-				if (!is_writable($sSavePath))
-				{
-					$aResult[] = new CheckResult(CheckResult::ERROR, "The value for session.save_path ($sSavePath) is not writable for the web server. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
-				}
-				else
-				{
-					$aResult[] = new CheckResult(CheckResult::INFO, "The value for session.save_path ($sSavePath) is writable for the web server.");
+				else {
+					$aResult[] = new CheckResult(CheckResult::WARNING,
+						"Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
 				}
 			}
-			else
-			{
-				$aResult[] = new CheckResult(CheckResult::WARNING, "Empty path for session.save_path. Make sure that PHP can actually save session variables. (Refer to the PHP documentation: http://php.net/manual/en/session.configuration.php#ini.session.save-path)");
+			else {
+				$aResult[] = new CheckResult(CheckResult::INFO,
+					"session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
 			}
-		}
-		else
-		{
-			$aResult[] = new CheckResult(CheckResult::INFO, "session.save_handler is: '".ini_get('session.save_handler')."' (different from 'files').");
 		}
 
 		return $aResult;
 	}
 
 	/**
+	 * Call the platform checks. If those checks return CheckResult::ERROR, then output and log them, then exit. Otherwise just return.
+	 *
 	 * @param \CLIPage $oCliPage
 	 * @param int $iExitCode
 	 *
-	 * @since 2.8.0 N°2214
+	 * @uses CheckPhpAndExtensions
+	 * @uses \CheckResult::FilterCheckResultArray()
+	 * @uses \CLIPage::output()
+	 * @uses \IssueLog::Error()
+	 * @uses \exit()
+	 *
+	 * @since 3.0.0 N°2214 Add PHP version checks in CLI scripts
 	 */
 	public static function CheckPhpAndExtensionsForCli($oCliPage, $iExitCode = -1)
 	{
 		$aPhpCheckResults = self::CheckPhpAndExtensions();
-		$aPhpCheckErrors = CheckResult::KeepOnlyErrors($aPhpCheckResults);
-		if (empty($aPhpCheckErrors))
-		{
+		$aPhpCheckErrors = CheckResult::FilterCheckResultArray($aPhpCheckResults, [CheckResult::ERROR]);
+		if (empty($aPhpCheckErrors)) {
 			return;
 		}
 
-		$sMessageTitle = 'Error: PHP minimum requirements are not met !';
+		$sMessageTitle = 'Error: Requirements are not met !';
 		$oCliPage->p($sMessageTitle);
 		$aPhpCheckErrorsForPrint = CheckResult::FromObjectsToStrings($aPhpCheckErrors);
-		foreach ($aPhpCheckErrorsForPrint as $sError)
-		{
+		foreach ($aPhpCheckErrorsForPrint as $sError) {
 			$oCliPage->p(' * '.$sError);
 		}
 		$oCliPage->output();
 
 		// some CLI scripts are launched automatically
 		// we need a log so that we don't miss errors after migration !
-		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, 'CLI', $aPhpCheckErrorsForPrint);
+		IssueLog::Error($oCliPage->s_title.' '.$sMessageTitle, LogChannels::CLI, $aPhpCheckErrorsForPrint);
 
 		exit($iExitCode);
 	}
 
 	/**
 	 * @param CheckResult[] $aResult checks log
+	 *
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	private static function CheckPhpVersion(&$aResult)
-	{
-		SetupPage::log('Info - CheckPHPVersion');
+	private static function CheckPhpVersion(array &$aResult) {
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckPHPVersion');
 		$sPhpVersion = phpversion();
 
-		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>='))
-		{
+		if (version_compare($sPhpVersion, self::PHP_MIN_VERSION, '>=')) {
 			$aResult[] = new CheckResult(CheckResult::INFO,
 				"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run ".ITOP_APPLICATION.", which is (".self::PHP_MIN_VERSION.")");
 
 
 			$sPhpNextMinVersion = self::PHP_NEXT_MIN_VERSION; // mandatory before PHP 5.5 (arbitrary expressions), keeping compat because we're in the setup !
-			if (!empty($sPhpNextMinVersion))
-			{
-				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>='))
-				{
+			if (!empty($sPhpNextMinVersion)) {
+				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(CheckResult::INFO,
 						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
@@ -489,30 +478,28 @@ class SetupUtils
 
 	/**
 	 * Check that the selected modules meet their dependencies
+	 *
 	 * @param $sSourceDir
 	 * @param $sExtensionDir
 	 * @param $aSelectedModules
+	 *
 	 * @return array
+	 *
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules)
-	{
+	public static function CheckSelectedModules($sSourceDir, $sExtensionDir, $aSelectedModules) {
 		$aResult = array();
-		SetupPage::log('Info - CheckSelectedModules');
 
 		$aDirsToScan = array(APPROOT.$sSourceDir);
 		$sExtensionsPath = APPROOT.$sExtensionDir;
-		if (is_dir($sExtensionsPath))
-		{
+		if (is_dir($sExtensionsPath)) {
 			// if the extensions dir exists, scan it for additional modules as well
 			$aDirsToScan[] = $sExtensionsPath;
 		}
 		require_once(APPROOT.'setup/modulediscovery.class.inc.php');
-		try
-		{
+		try {
 			ModuleDiscovery::GetAvailableModules($aDirsToScan, true, $aSelectedModules);
-		}
-		catch(Exception $e)
-		{
+		} catch (Exception $e) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, $e->getMessage());
 		}
 		return $aResult;
@@ -520,25 +507,25 @@ class SetupUtils
 
 	/**
 	 * Check that the backup could be executed
+	 *
 	 * @param $sDBBackupPath
 	 * @param $sMySQLBinDir
-	 * @return array An array of CheckResults objects
-	 * @internal param Page $oP The page used only for its 'log' method
+	 *
+	 * @return \CheckResult[] An array of CheckResults objects
+	 *
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null)
-	{
+	public static function CheckBackupPrerequisites($sDBBackupPath, $sMySQLBinDir = null) {
 		$aResult = array();
-		SetupPage::log('Info - CheckBackupPrerequisites');
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckBackupPrerequisites');
 
 		// zip extension
 		//
-		if (!extension_loaded('phar'))
-		{
+		if (!extension_loaded('phar')) {
 			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.phar.php\" target=\"_blank\">zip</a>";
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: phar", $sMissingExtensionLink);
 		}
-		if (!extension_loaded('zlib'))
-		{
+		if (!extension_loaded('zlib')) {
 			$sMissingExtensionLink = "<a href=\"http://www.php.net/manual/en/book.zlib.php\" target=\"_blank\">zip</a>";
 			$aResult[] = new CheckResult(CheckResult::ERROR, "Missing PHP extension: zlib", $sMissingExtensionLink);
 		}
@@ -546,25 +533,21 @@ class SetupUtils
 		// availability of exec()
 		//
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		SetupPage::log('Info - PHP functions disabled: '.implode(', ', $aDisabled));
-		if (in_array('exec', $aDisabled))
-		{
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		if (in_array('exec', $aDisabled)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
 		}
 
 		// availability of mysqldump
-		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig())
-		{
+		if (empty($sMySQLBinDir) && null != MetaModel::GetConfig()) {
 			$sMySQLBinDir = MetaModel::GetConfig()->GetModuleSetting('itop-backup', 'mysql_bindir', '');
 		}
 
-		if (empty($sMySQLBinDir))
-		{
+		if (empty($sMySQLBinDir)) {
 			$sMySQLDump = 'mysqldump';
 		}
-		else
-		{
-			SetupPage::log('Info - Found mysql_bindir: '.$sMySQLBinDir);
+		else {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - Found mysql_bindir: '.$sMySQLBinDir);
 			$sMySQLDump = '"'.$sMySQLBinDir.'/mysqldump"';
 		}
 		$sCommand = "$sMySQLDump -V 2>&1";
@@ -576,27 +559,25 @@ class SetupUtils
 		{
 			$aResult[] = new CheckResult(CheckResult::INFO, "mysqldump is present: Ok.");
 		}
-		elseif ($iRetCode == 1)
-		{
+		elseif ($iRetCode == 1) {
 			// Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be found. Please make sure it is installed and in the path.");
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"mysqldump could not be found. Please make sure it is installed and in the path.");
 		}
-		else
-		{
+		else {
 			// Unfortunately $aOutput is not really usable since we don't know its encoding (character set)
-			$aResult[] = new CheckResult(CheckResult::ERROR, "mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and " . (empty($sMySQLBinDir) ? "in the path" :  "located at : $sMySQLDump"));
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				"mysqldump could not be executed (retcode=$iRetCode): Please make sure it is installed and ".(empty($sMySQLBinDir) ? "in the path" : "located at : $sMySQLDump"));
 		}
-		foreach($aOutput as $sLine)
-		{
-			SetupPage::log('Info - mysqldump -V said: '.$sLine);
+		foreach ($aOutput as $sLine) {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - mysqldump -V said: '.$sLine);
 		}
-		
+
 		// create and test destination location
 		//
 		$sDestDir = dirname($sDBBackupPath);
 		setuputils::builddir($sDestDir);
-		if (!is_dir($sDestDir))
-		{
+		if (!is_dir($sDestDir)) {
 			$aResult[] = new CheckResult(CheckResult::ERROR, "$sDestDir does not exist and could not be created.");
 		}
 
@@ -611,75 +592,114 @@ class SetupUtils
 
 	/**
 	 * Check that graphviz can be launched
-	 * @param $sGraphvizPath
-	 * @return CheckResult The result of the check
-	 * @internal param string $GraphvizPath The path where graphviz' dot program is installed
+	 *
+	 * @param string $sGraphvizPath The path where graphviz' dot program is installed
+	 *
+	 * @return CheckResult[] The result of the check AS CheckResult::INFO or CheckResult::WARNING, plus debug traces as some
+	 *     CheckResult::TRACE
+	 *
+	 * @since 3.0.0 N°2214 replace SetupLog::Log calls by CheckResult::TRACE
 	 */
-	public static function CheckGraphviz($sGraphvizPath)
-	{
-		$oResult = null;
-		SetupPage::log('Info - CheckGraphviz');
+	public static function CheckGraphviz($sGraphvizPath) {
+		$aResult = [];
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - CheckGraphviz');
 
 		// availability of exec()
 		//
 		$aDisabled = explode(', ', ini_get('disable_functions'));
-		SetupPage::log('Info - PHP functions disabled: '.implode(', ', $aDisabled));
-		if (in_array('exec', $aDisabled))
-		{
-			$aResult[] = new CheckResult(CheckResult::ERROR, "The PHP exec() function has been disabled on this server");
+		$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - PHP functions disabled: '.implode(', ', $aDisabled));
+		if (in_array('exec', $aDisabled)) {
+			$aResult[] = new CheckResult(CheckResult::ERROR,
+				self::GetStringForJsonEncode('The PHP exec() function has been disabled on this server', 'Could not find Graphviz\' dot'));
 		}
 
 		// availability of dot / dot.exe
-		if (empty($sGraphvizPath))
-		{
+		if (empty($sGraphvizPath)) {
 			$sGraphvizPath = 'dot';
+		} else {
+			clearstatcache();
+			if (!is_file($sGraphvizPath) || !is_executable($sGraphvizPath)) {
+				//N°3412 avoid shell injection
+				$aResult = [];
+				$aResult[] =  new CheckResult(CheckResult::WARNING,
+					self::GetStringForJsonEncode("$sGraphvizPath could not be executed: Please make sure it is installed and in the path", 'Graphviz could not be executed')
+				);
+				return $aResult;
+			}
+
+			if (!utils::IsWindowsEnvironment()){
+				$sGraphvizPath = escapeshellcmd($sGraphvizPath);
+			}
 		}
+
 		$sCommand = "\"$sGraphvizPath\" -V 2>&1";
 
 		$aOutput = array();
 		$iRetCode = 0;
 		exec($sCommand, $aOutput, $iRetCode);
-		if ($iRetCode == 0)
-		{
-			$oResult = new CheckResult(CheckResult::INFO, "dot is present: ".$aOutput[0]);
-		}
-		elseif ($iRetCode == 1)
-		{
-			$oResult = new CheckResult(CheckResult::WARNING, "dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.");
-		}
-		else
-		{
-			$oResult = new CheckResult(CheckResult::WARNING, "dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path");
-		}
-		foreach($aOutput as $sLine)
-		{
-			SetupPage::log('Info - '.$sGraphvizPath.' -V said: '.$sLine);
+		if ($iRetCode == 0) {
+			$aResult[] = new CheckResult(CheckResult::INFO,
+				self::GetStringForJsonEncode("dot is present: ".$aOutput[0], 'Graphviz\' dot found'));
+		} elseif ($iRetCode == 1) {
+			$aResult[] = new CheckResult(CheckResult::WARNING,
+				self::GetStringForJsonEncode(
+					"dot could not be found: ".implode(' ', $aOutput)." - Please make sure it is installed and in the path.",
+					'Could not find Graphviz\' dot'
+				)
+			);
+		} else {
+			$aResult[] = new CheckResult(CheckResult::WARNING,
+				self::GetStringForJsonEncode(
+					"dot could not be executed (retcode=$iRetCode): Please make sure it is installed and in the path",
+					'Could not find Graphviz\' dot'
+				)
+			);
 		}
 
-		return $oResult;
+		foreach ($aOutput as $sLine) {
+			$aResult[] = new CheckResult(CheckResult::TRACE, 'Info - '.$sGraphvizPath.' -V said: '.$sLine);
+		}
+
+		return $aResult;
+	}
+
+	/**
+	 * This was introduced as on Windows certain messages are not returned correctly :(
+	 *
+	 * @param string $sValue
+	 * @param string $sFallbackValue
+	 *
+	 * @return string
+	 *
+	 * @since 3.0.0
+	 */
+	private static function GetStringForJsonEncode(string $sValue, string $sFallbackValue): string {
+		return (json_encode($sValue) !== false)
+			? $sValue
+			: $sFallbackValue;
 	}
 
 	/**
 	 * Helper function to retrieve the system's temporary directory
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
+	 *
 	 * @return string Path to the system's temp directory
 	 */
-	public static function GetTmpDir()
-	{
+	public static function GetTmpDir() {
 		return realpath(sys_get_temp_dir());
 	}
 
 	/**
 	 * Helper function to retrieve the directory where files are to be uploaded
+	 *
 	 * @return string Path to the temp directory used for uploading files
 	 */
-	public static function GetUploadTmpDir()
-	{
+	public static function GetUploadTmpDir() {
 		$sPath = ini_get('upload_tmp_dir');
-		if (empty($sPath))
-		{
+		if (empty($sPath)) {
 			$sPath = self::GetTmpDir();
 		}
+
 		return $sPath;
 	}
 
@@ -700,37 +720,32 @@ class SetupUtils
 
 	/**
 	 * Helper to recursively cleanup a directory
+	 *
 	 * @param $dir
+	 *
 	 * @throws Exception
 	 */
-	public static function tidydir($dir)
-	{
-		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\'))
-		{
+	public static function tidydir(string $dir): void {
+		if ((strlen(trim($dir)) == 0) || ($dir == '/') || ($dir == '\\')) {
 			throw new Exception("Attempting to delete directory: '$dir'");
 		}
 
 		$aFiles = scandir($dir); // Warning glob('.*') does not seem to return the broken symbolic links, thus leaving a non-empty directory
-		if ($aFiles !== false)
-		{
-			foreach($aFiles as $file)
-			{
-				if (($file != '.') && ($file != '..'))
-				{
-					if(is_dir($dir.'/'.$file))
-					{
+		if ($aFiles !== false) {
+			foreach ($aFiles as $file) {
+				if (($file != '.') && ($file != '..')) {
+					if (is_dir($dir.'/'.$file)) {
 						self::tidydir($dir.'/'.$file);
 						self::rmdir_safe($dir.'/'.$file);
 					}
-					else
-					{
+					else {
 						if (!unlink($dir.'/'.$file))
 						{
-							SetupPage::log("Warning - FAILED to remove file '$dir/$file'");
+							SetupLog::Ok("Warning - FAILED to remove file '$dir/$file'");
 						}
 						else if (file_exists($dir.'/'.$file))
 						{
-							SetupPage::log("Warning - FAILED to remove file '$dir/.$file'");
+							SetupLog::Ok("Warning - FAILED to remove file '$dir/.$file'");
 						}
 					}
 				}
@@ -753,7 +768,9 @@ class SetupUtils
 		{
 			$parent = dirname($dir);
 			self::builddir($parent);
-			mkdir($dir);
+			if (!mkdir($dir) && !is_dir($dir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+			}
 		}
 	}
 
@@ -964,12 +981,16 @@ class SetupUtils
 
 	public static function HumanReadableSize($fBytes)
 	{
-		$aSizes = array('bytes', 'Kb', 'Mb', 'Gb', 'Tb', 'Pb', 'Hb');
+		$aSizes = array('bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'HB');
 		$index = 0;
-		while (($fBytes > 1000) && ($index < count($aSizes)))
-		{
+		while (($fBytes > 1000) && ($index < count($aSizes))) {
 			$index++;
 			$fBytes = $fBytes / 1000;
+		}
+
+		if ($index == 0) {
+			// display int for bytes
+			return sprintf('%d %s', $fBytes, $aSizes[$index]);
 		}
 
 		return sprintf('%.2f %s', $fBytes, $aSizes[$index]);
@@ -991,84 +1012,69 @@ class SetupUtils
 		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
 		$sNewDBName = ''
 	) {
-		$sWikiVersion = '2_7_0';
-		$sMysqlTlsWikiPageUrl = 'https://wiki.openitop.org/doku.php?id='.$sWikiVersion.':install:php_and_mysql_tls';
+		$sWikiVersion = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+		$sMysqlTlsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion.':install:php_and_mysql_tls';
 
-		$oPage->add('<tr><td colspan="2">');
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
 		$oPage->add('<table id="table_db_options">');
 
 		//-- DB connection params
 		$oPage->add('<tbody>');
-		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td>E.g. "localhost", "dbserver.mycompany.com" or "192.142.10.23"</td></tr>');
-		$oPage->add('<tr><td>Login:</td><td><input id="db_user" type="text" name="db_user" value="'.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td rowspan="2" style="vertical-align:top">The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER</td></tr>');
-		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
-		$oPage->add('</tbody>');
+		$oPage->add('<tr><td>Server Name:</td><td><input id="db_server" class="ibo-input" type="text" name="db_server" value="'.htmlentities($sDBServer, ENT_QUOTES, 'UTF-8').'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="E.g. \'localhost\', \'dbserver.mycompany.com\' or \'192.142.10.23\'"></i></td></tr>');
+		$oPage->add('<tr><td>Login:</td><td><input id="db_user" class="ibo-input" type="text" name="db_user" value="'
+			.htmlentities($sDBUser, ENT_QUOTES, 'UTF-8')
+			.'" size="15"/></td><td><i class="fas fa-question-circle setup-input--hint--icon" data-tooltip-content="The account must have the following privileges on the database: SELECT, INSERT, UPDATE, DELETE, DROP, CREATE, ALTER, CREATE VIEW, SHOW VIEW, LOCK TABLE, SUPER, TRIGGER"></i></td></tr>');
+		$oPage->add('<tr><td>Password:</td><td><input id="db_pwd" class="ibo-input" autocomplete="off" type="password" name="db_pwd" value="'.htmlentities($sDBPwd, ENT_QUOTES, 'UTF-8').'" size="15"/></td></tr>');
+		$oPage->add('</tbody></table>');
 
 		//-- TLS params (N°1260)
 		$sTlsEnabledChecked = $bTlsEnabled ? ' checked' : '';
-		$sTlsCaDisabled = $bTlsEnabled ? '' : ' disabled';
-		$oPage->add('<tbody id="tls_options" class="collapsable-options">');
-		$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 6em; font-weight: normal; color: #696969"><img style="vertical-align:bottom" id="db_tls_img">Use TLS encrypted connection</label></th></tr>');
-		$oPage->add('<tr style="display:none"><td colspan="3" class="message message-error">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></td></tr>');
-		$oPage->add('<tr style="display:none"><td colspan="3"><label><input id="db_tls_enabled" type="checkbox"'.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label></td></tr>');
-		$oPage->add('<tr style="display:none"><td>SSL CA:</td>');
-		$oPage->add('<td><input id="db_tls_ca" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
-				ENT_QUOTES, 'UTF-8').'" size="15"'.$sTlsCaDisabled.'></td>');
-		$oPage->add('<td>Path to certificate authority file for SSL</td></tr>');
-		$oPage->add('</tbody>');
+		$sTlsCaDisabled     = $bTlsEnabled ? '' : ' disabled';
+		$oPage->add('<div id="tls_options" class="collapsable-options">');
+		$oPage->add('<span data-role="setup-collapsable-options--toggler"><img id="db_tls_img"><label>Use TLS encrypted connection</label></span>');
+		$oPage->add('<div class="message message-error" style="display:none;">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></div>');
+		$oPage->add('<label style="display:none;"><input id="db_tls_enabled" type="checkbox" '.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label>');
+		$oPage->add('<div class="setup-tls--input--container" style="display:none">SSL CA:');
+		$oPage->add('<input id="db_tls_ca" class="ibo-input" autocomplete="off" type="text" name="db_tls_ca" value="'.htmlentities($sTlsCA,
+				ENT_QUOTES, 'UTF-8').'" size="15"'.$sTlsCaDisabled.'>');
+		$oPage->add('Path to certificate authority file for SSL</div>');
+		$oPage->add('</div>');
 
-		$oPage->add('</table>');
 		$oPage->add('</fieldset>');
-		$oPage->add('</td></tr>');
 
-		$oPage->add('<tr><td colspan="2"><div id="db_info"></div></td></tr>');
+		$oPage->add('<div id="db_info"></div>');
 
-		$oPage->add('<tr><td colspan="2">');
+		$oPage->add('');
 		$oPage->add('<fieldset><legend>Database</legend>');
 		$oPage->add('<table>');
 		if ($bIsItopInstall)
 		{
 			$oPage->add('<tr><td><input type="radio" id="create_db" name="create_db" value="yes"/><label for="create_db">&nbsp;Create a new database:</label></td>');
-			$oPage->add('<td><input id="db_new_name" type="text" name="db_new_name" value="'.htmlentities($sNewDBName, ENT_QUOTES, 'UTF-8').'" size="15" maxlength="32"/><span style="width:20px;" id="v_db_new_name"></span></td></tr>');
+			$oPage->add('<td><input id="db_new_name" class="ibo-input" type="text" name="db_new_name" value="'.htmlentities($sNewDBName, ENT_QUOTES, 'UTF-8').'" size="15" maxlength="32"/><span style="width:20px;" id="v_db_new_name"></span></td></tr>');
 			$oPage->add('<tr><td><input type="radio" id="existing_db" name="create_db" value="no"/><label for="existing_db">&nbsp;Use the existing database:</label></td>');
-			$oPage->add('<td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
-			$oPage->add('</tbody>');
-			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
-			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 0.4em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
-			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
-					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
-			$oPage->add('</tbody>');
+			$oPage->add('<td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
 		}
 		else
 		{
-			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container"><input id="db_name" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
-			$oPage->add('</tbody>');
-			$oPage->add('<tbody id="prefix_option" class="collapsable-options">');
-			$oPage->add('<tr><th colspan="3" style="text-align: left; background-color: transparent"><label style="margin: 0.4em; font-weight: normal; color: #696969"><img style="vertical-align:bottom">Use shared database</label></th></tr>');
-			$oPage->add('<tr style="display:none"><td>Use a prefix for the tables:</td><td><input id="db_prefix" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
-					ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></td></tr>');
-			$oPage->add('</tbody>');
+			$oPage->add('<tr><td>Database Name:</td><td id="db_name_container" class="ibo-input-select-wrapper"><input id="db_name" class="ibo-input ibo-input-select" name="db_name" size="15" maxlen="32" value="'.htmlentities($sDBName, ENT_QUOTES, 'UTF-8').'"/><span style="width:20px;" id="v_db_name"></span></td></tr>');
 		}
 		$oPage->add('</table>');
+		$oPage->add('<div id="prefix_option" class="collapsable-options">');
+		$oPage->add('<span data-role="setup-collapsable-options--toggler"><label style="font-weight: normal;"><img>Use shared database</label></span>');
+		$oPage->add('<div class="setup-prefix-toggler--input--container" style="display:none">Use a prefix for the tables:<input id="db_prefix" class="ibo-input" type="text" name="db_prefix" value="'.htmlentities($sDBPrefix,
+				ENT_QUOTES, 'UTF-8').'" size="15"/><span style="width:20px;" id="v_db_prefix"></span></div>');
+		$oPage->add('</div>');
 		$oPage->add('</fieldset>');
-		$oPage->add('<tr><td colspan="2"><span id="table_info">&nbsp;</span></td></tr>');
-		$oPage->add('</td></tr>');
+		$oPage->add('<span id="table_info"></span>');
 
 		// Sub options toggle (TLS, prefix)
 		$oPage->add_script(<<<'JS'
 function toggleCollapsableOptions($tbody) {
-	$tbody.find("tr").not("tr:first-child").toggle();
+	$tbody.children().not(":first-child").toggle();
 	updateCollapsableImage($tbody);
 }
 function updateCollapsableImage($tbody) {
-	$collapsableImg = $tbody.find("tr:first-child>th>label>img");
-	console.debug("img", $collapsableImg, $tbody);
-	imgPath = "../images/";
-	imgUrl = ($tbody.find("tr:nth-child(2)>td:visible").length > 0) 
-		? "minus.gif"
-		: "plus.gif";
-	$collapsableImg.attr("src", imgPath+imgUrl);
+	$tbody.toggleClass('setup-is-opened');
 }
 JS
 		);
@@ -1078,17 +1084,14 @@ JS
 		}
 		$oPage->add_ready_script(
 			<<<'JS'
-$("tbody.collapsable-options>tr>th>label").click(function() {
-	var $tbody = $(this).closest("tbody");
+$("[data-role=\"setup-collapsable-options--toggler\"").on('click', function() {
+	var $tbody = $(this).closest("div");
 	toggleCollapsableOptions($tbody);
 });
-$("#db_tls_enabled").click(function() {
+$("#db_tls_enabled").on('click', function() {
 	var bTlsEnabled = $("#db_tls_enabled").is(":checked");
 	$("#db_tls_ca").prop("disabled", !bTlsEnabled);
 });
-$("tbody.collapsable-options").each(function() {
-	updateCollapsableImage($(this));
-})
 JS
 		);
 
@@ -1183,13 +1186,13 @@ function ValidateField(sFieldId, bUsed)
 			}
 			else
 			{
-				$("#v_"+sFieldId).html('<img src="../images/validation_error.png" title="Only the characters [A-Za-z0-9_] are allowed"/>');
+				$("#v_"+sFieldId).html('<i class="fas fa-exclamation-triangle setup-invalid-field--icon" title="Only the characters [A-Za-z0-9_] are allowed"></i>');
 				return false;
 			}
 		}
 		else if (bMandatory)
 		{
-			$("#v_"+sFieldId).html('<img src="../images/validation_error.png" title="This field cannot be empty"/>');
+			$("#v_"+sFieldId).html('<i class="fas fa-exclamation-triangle setup-invalid-field--icon" title="This field cannot be empty"></i>');
 			return false;
 		}
 		else
@@ -1252,39 +1255,38 @@ EOF
 			$aResult['checks'][] = new CheckResult(CheckResult::INFO, "Info - User privileges: ".($oDBSource->GetRawPrivileges()));
 
 			$bHasDbVersionRequired = self::CheckDbServerVersion($aResult, $oDBSource);
-			if (!$bHasDbVersionRequired)
-			{
+			if (!$bHasDbVersionRequired) {
 				return $aResult;
 			}
 
 			// Check some server variables
-			$iMaxAllowedPacket = $oDBSource->GetServerVariable('max_allowed_packet');
-			$iMaxUploadSize = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$iMaxAllowedPacket         = $oDBSource->GetServerVariable('max_allowed_packet');
+			$sMaxAllowedPacketFriendly = utils::BytesToFriendlyFormat($iMaxAllowedPacket);
+			$iMaxUploadSize            = utils::ConvertToBytes(ini_get('upload_max_filesize'));
+			$sMaxUploadSizeFriendly    = utils::BytesToFriendlyFormat($iMaxUploadSize);
 			if ($iMaxAllowedPacket >= (500 + $iMaxUploadSize)) // Allow some space for the query + the file to upload
 			{
-				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is big enough compared to upload_max_filesize ($iMaxUploadSize).");
-			}
-			else if($iMaxAllowedPacket < $iMaxUploadSize)
-			{
-				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_allowed_packet ($iMaxAllowedPacket) is not big enough. Please, consider setting it to at least ".(500 + $iMaxUploadSize).".");
+				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
+			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
+				$sWikiVersion                = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+				$sAttachmentsVarsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion
+					.':install:php_and_mysql_configuration#attachments_upload';
+
+				$aResult['checks'][] = new CheckResult(CheckResult::WARNING,
+					"MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is not big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly), whereas it should has a greater value. Consider increasing its value of at least 500KB. See the <a href=\"$sAttachmentsVarsWikiPageUrl\">documentation</a> for details.");
 			}
 
 			$iMaxConnections = $oDBSource->GetServerVariable('max_connections');
-			if ($iMaxConnections < 5)
-			{
+			if ($iMaxConnections < 5) {
 				$aResult['checks'][] = new CheckResult(CheckResult::WARNING, "MySQL server's max_connections ($iMaxConnections) is not enough. Please, consider setting it to at least 5.");
-			}
-			else
-			{
+			} else {
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_connections is set to $iMaxConnections.");
 			}
 
-			try
-			{
+			try {
 				$aResult['databases'] = $oDBSource->ListDB();
 			}
-			catch(Exception $e)
-			{
+			catch (Exception $e) {
 				$aResult['databases'] = null;
 			}
 		}
@@ -1324,17 +1326,16 @@ EOF
 	 *
 	 * @return boolean false if DB doesn't meet the minimum version requirement
 	 */
-	static private function CheckDbServerVersion(&$aResult, $oDBSource)
+	private static function CheckDbServerVersion(&$aResult, $oDBSource)
 	{
-		$sDBVendor= $oDBSource->GetDBVendor();
+		$sDBVendor = $oDBSource->GetDBVendor();
 		$sDBVersion = $oDBSource->GetDBVersion();
 
 		if (
 			!empty(self::MYSQL_NOT_VALIDATED_VERSION)
 			&& ($sDBVendor === CMDBSource::ENUM_DB_VENDOR_MYSQL)
 			&& version_compare($sDBVersion, self::MYSQL_NOT_VALIDATED_VERSION, '>=')
-		)
-		{
+		) {
 			$aResult['checks'][] = new CheckResult(CheckResult::ERROR,
 				"Error: Current MySQL version is $sDBVersion. iTop doesn't yet support MySQL ".self::MYSQL_NOT_VALIDATED_VERSION." and above.");
 
@@ -1384,17 +1385,18 @@ EOF
 	 * @return string
 	 * @throws \MySQLException
 	 */
-	static public function GetMySQLVersion(
+	public static function GetMySQLVersion(
 		$sDBServer, $sDBUser, $sDBPwd, $bTlsEnabled = false, $sTlsCa = null
 	)
 	{
 		$oDBSource = new CMDBSource;
 		$oDBSource->Init($sDBServer, $sDBUser, $sDBPwd, '', $bTlsEnabled, $sTlsCa);
 		$sDBVersion = $oDBSource->GetDBVersion();
+
 		return $sDBVersion;
 	}
 
-	static public function AsyncCheckDB($oPage, $aParameters)
+	public static function AsyncCheckDB($oPage, $aParameters)
 	{
 		$sDBServer = $aParameters['db_server'];
 		$sDBUser = $aParameters['db_user'];
@@ -1402,8 +1404,7 @@ EOF
 		$sDBName = $aParameters['db_name'];
 
 		$bIsWindows = (array_key_exists('WINDIR', $_SERVER) || array_key_exists('windir', $_SERVER));
-		if ($bIsWindows && (preg_match('@([%!"])@',$sDBPwd) > 0))
-		{
+		if ($bIsWindows && (preg_match('@([%!"])@', $sDBPwd) > 0)) {
 			// Unsupported Password, warn the user
 			$oPage->add_ready_script(
 <<<JS
@@ -1448,30 +1449,24 @@ JS
 						}
 					}
 				}
-				if (count($aErrors) > 0)
-				{
-					$sErrorsToDisplay = utils::HtmlEntities(implode('<br/>', $aErrors));
+				if (count($aErrors) > 0) {
+					$sErrorsToDisplay = str_replace('\'', '\\\'', implode('<br/>', $aErrors));
 					$oPage->add_ready_script('$("#wiz_form").data("db_connection", "error");');
 					$oPage->add_ready_script(
-<<<JS
+						<<<JS
 $("#db_info").html('<div class="message message-error"><span class="message-title">Error:</span>$sErrorsToDisplay</div>');
 JS
 					);
-				}
-				else
-				{
-					if (count($aWarnings) > 0)
-					{
-						$sWarningsToDisplay = utils::HtmlEntities(implode('<br/>', $aWarnings));
+				} else {
+					if (count($aWarnings) > 0) {
+						$sWarningsToDisplay = str_replace('\'', '\\\'', implode('<br/>', $aWarnings));
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
 						$oPage->add_ready_script(
 							<<<JS
 $("#db_info").html('<div class="message message-warning"><span class="message-title">Warning:</span>$sWarningsToDisplay</div>');
 JS
 						);
-					}
-					else
-					{
+					} else {
 						$oPage->add_ready_script('$("#wiz_form").data("db_connection", "");');
 						$oPage->add_ready_script(
 							<<<JS
@@ -1492,7 +1487,7 @@ JS
 				}
 				else
 				{
-					$sDBNameInput = '<select id="db_name" name="db_name">';
+					$sDBNameInput = '<select id="db_name" class="ibo-input ibo-input-select" name="db_name">';
 					foreach ($checks['databases'] as $sDatabaseName)
 					{
 						if ($sDatabaseName != 'information_schema')
@@ -1514,26 +1509,24 @@ JS
 
 	/**
 	 * Helper function to get the available languages from the given directory
+	 *
 	 * @param $sDir String Path to the dictionary
+	 *
 	 * @return array of language code => description
 	 */
-	static public function GetAvailableLanguages($sDir)
+	public static function GetAvailableLanguages($sDir)
 	{
-		require_once(APPROOT.'/core/coreexception.class.inc.php');
 		require_once(APPROOT.'/core/dict.class.inc.php');
 
 		$aFiles = scandir($sDir);
-		foreach($aFiles as $sFile)
-		{
-			if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git')
-			{
+		foreach ($aFiles as $sFile) {
+			if ($sFile == '.' || $sFile == '..' || $sFile == '.svn' || $sFile == '.git') {
 				// Skip
 				continue;
 			}
 
 			$sFilePath = $sDir.'/'.$sFile;
-			if (is_file($sFilePath) && preg_match('/^.*dict.*\.php$/i', $sFilePath, $aMatches))
-			{
+			if (is_file($sFilePath) && preg_match('/^.*dict.*\.php$/i', $sFilePath, $aMatches)) {
 				require_once($sFilePath);
 			}
 		}
@@ -1541,17 +1534,17 @@ JS
 		return Dict::GetLanguages();
 	}
 
-	static public function GetLanguageSelect($sSourceDir, $sInputName, $sDefaultLanguageCode)
+	public static function GetLanguageSelect($sSourceDir, $sInputName, $sDefaultLanguageCode)
 	{
-		$sHtml = '<select  id="'.$sInputName.'" name="'.$sInputName.'">';
+		$sHtml = '<div class="ibo-input-select-wrapper"><select  id="'.$sInputName.'" class="ibo-input ibo-input-select" name="'.$sInputName.'">';
 		$sSourceDir = APPROOT.'dictionaries/';
 		$aLanguages = SetupUtils::GetAvailableLanguages($sSourceDir);
-		foreach($aLanguages as $sCode => $aInfo)
-		{
+		foreach ($aLanguages as $sCode => $aInfo) {
 			$sSelected = ($sCode == $sDefaultLanguageCode) ? 'selected ' : '';
-			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES, 'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
+			$sHtml .= '<option value="'.$sCode.'" '.$sSelected.'>'.htmlentities($aInfo['description'], ENT_QUOTES,
+					'UTF-8').' ('.htmlentities($aInfo['localized_description'], ENT_QUOTES, 'UTF-8').')</option>';
 		}
-		$sHtml .= '</select></td></tr>';
+		$sHtml .= '</select></div>';
 
 		return $sHtml;
 	}
@@ -1920,42 +1913,31 @@ JS
 		return false;
 	}
 
-	public static function GetCompatibleDataModelDir($sInstalledVersion)
-	{
-		if (preg_match('/^([0-9]+)\./', $sInstalledVersion, $aMatches))
-		{
-			$sMajorVersion = $aMatches[1];
-			$sDir = APPROOT.'datamodels/'.$sMajorVersion.'.x/';
-			if (is_dir($sDir))
-			{
-				return $sDir;
-			}
-		}
-		return false;
-	}
-
-	static public function GetDataModelVersion($sDatamodelDir)
+	public static function GetDataModelVersion($sDatamodelDir)
 	{
 		$sVersionFile = $sDatamodelDir.'version.xml';
-		if (file_exists($sVersionFile))
-		{
+		if (file_exists($sVersionFile)) {
 			$oParams = new XMLParameters($sVersionFile);
+
 			return $oParams->Get('version');
 		}
+
 		return false;
 	}
 
 	/**
 	 * Returns an array of xml nodes describing the licences.
-	 * @param $sEnv string|null Execution environment. If present loads licenses only for installed modules else loads all licenses available.
+	 *
+	 * @param $sEnv string|null Execution environment. If present loads licenses only for installed modules else loads all licenses
+	 *     available.
+	 *
 	 * @return array Licenses list.
 	 */
-	static public function GetLicenses($sEnv = null)
+	public static function GetLicenses($sEnv = null)
 	{
 		$aLicenses = array();
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
-		if (empty($sEnv))
-		{
+		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
@@ -1969,28 +1951,36 @@ JS
 			$oXml = simplexml_load_file($sFile);
 			if (!empty($oXml->license))
 			{
-				foreach ($oXml->license as $oLicense)
-				{
+				foreach ($oXml->license as $oLicense) {
 					$aLicenses[(string)$oLicense->product] = $oLicense;
 				}
 			}
 		}
+
 		return $aLicenses;
 	}
 
 	/**
 	 * @return string path to the log file where the create and/or alter queries are written
 	 */
-	static public function GetSetupQueriesFilePath()
+	public static function GetSetupQueriesFilePath()
 	{
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
 
-	public static function EnterMaintenanceMode($oConfig)
+	/**
+	 * @param $oConfig
+	 *
+	 * @return bool
+	 * @since 3.0.0 returns true if the app. was already in maintenance mode, false otherwise
+	 */
+	public static function EnterMaintenanceMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
 		self::Log("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
+		return $bPreviousMode;
 	}
 
 	public static function ExitMaintenanceMode($bLog = true)
@@ -2007,11 +1997,14 @@ JS
 		return file_exists(MAINTENANCE_MODE_FILE);
 	}
 
-	public static function EnterReadOnlyMode($oConfig)
+	public static function EnterReadOnlyMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
 		self::Log("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
+
+		return $bPreviousMode;
 	}
 
 	public static function ExitReadOnlyMode($bLog = true)
@@ -2037,8 +2030,7 @@ JS
 		try
 		{
 			// Wait for cron to stop
-			if (is_null($oConfig))
-			{
+			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
 			}
 			// Use mutex to check if cron is running
@@ -2064,8 +2056,7 @@ JS
 					throw new Exception("Cannot enter $sMode mode, consider stopping the cron temporarily");
 				}
 			}
-		} catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			// Ignore errors
 		}
 	}
@@ -2074,19 +2065,19 @@ JS
 	 * Create and store Setup authentication token
 	 *
 	 * @return string token
+	 * @since 2.6.5 2.7.0 N°3952
 	 */
-	public final static function CreateSetupToken()
+	final public static function CreateSetupToken()
 	{
-		if (!is_dir(APPROOT.'data'))
-		{
+		if (!is_dir(APPROOT.'data')) {
 			mkdir(APPROOT.'data');
 		}
-		if (!is_dir(APPROOT.'data/setup'))
-		{
+		if (!is_dir(APPROOT.'data/setup')) {
 			mkdir(APPROOT.'data/setup');
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
+		Session::Set('setup_token', $sUID);
 		return $sUID;
 	}
 
@@ -2096,31 +2087,108 @@ JS
 	 * @param bool $bRemoveToken
 	 *
 	 * @throws \SecurityException
+	 * @since 2.6.5 2.7.0 N°3952
 	 */
-	public final static function CheckSetupToken($bRemoveToken = false)
+	final public static function CheckSetupToken($bRemoveToken = false)
 	{
 		$sAuthent = utils::ReadParam('authent', '', false, 'raw_data');
 		$sTokenFile = APPROOT.'data/setup/authent';
-		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile))
-		{
+		if (!file_exists($sTokenFile) || $sAuthent !== file_get_contents($sTokenFile)) {
 			throw new SecurityException('Setup operations are not allowed outside of the setup');
 		}
-		if ($bRemoveToken)
-		{
+		if ($bRemoveToken) {
 			@unlink($sTokenFile);
 		}
 	}
 
-	private final static function Log($sText)
+	/**
+	 * Check setup transaction and create a new one if necessary
+	 *
+	 * @return bool
+	 * @since 2.6.5 2.7.5 3.0.0 N°3952
+	 */
+	public static function IsSessionSetupTokenValid()
 	{
-		if (class_exists('SetupPage'))
-		{
-			SetupPage::log($sText);
+		if (Session::IsSet('setup_token')) {
+			$sAuth = Session::Get('setup_token');
+			$sTokenFile = APPROOT.'data/setup/authent';
+			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
+				return true;
+			}
 		}
-		else
-		{
+
+		return false;
+	}
+
+	/**
+	 * @since 2.6.5 2.7.5 3.0.0 N°3952
+	 */
+	public static function EraseSetupToken()
+	{
+		$sTokenFile = APPROOT.'data/setup/authent';
+		if (is_file($sTokenFile)) {
+			unlink($sTokenFile);
+		}
+		Session::Unset('setup_token');
+	}
+
+
+	/**
+	 * @param string $sText
+	 *
+	 * @since 2.7.0 N°2240 Maintenance mode
+	 * @since 3.0.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
+	 */
+	private static function Log($sText) {
+		if (class_exists('SetupPage')) {
+			SetupLog::Ok($sText);
+		}
+		else {
 			IssueLog::Info($sText);
 		}
+	}
+
+	/**
+	 * @return string[]
+	 */
+	public static function GetPHPMandatoryExtensions() {
+		return [
+			'mysqli',
+			'iconv',
+			'simplexml',
+			'soap',
+			'hash',
+			'json',
+			'session',
+			'pcre',
+			'dom',
+			'zlib',
+			'zip',
+			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
+			'mbstring', // N°2891, N°2899
+			'gd', // test image type (always returns false if not installed), image resizing, PDF export
+		];
+	}
+
+	/**
+	 * @return array
+	 */
+	public static function GetPHPOptionalExtensions() {
+		$aOptionalExtensions = [
+			'mcrypt, sodium or openssl' => [
+				'mcrypt' => 'Strong encryption will not be used.',
+				'sodium' => 'Strong encryption will not be used.',
+				'openssl' => 'Strong encryption will not be used.',
+			],
+			'ldap' => 'LDAP authentication will be disabled.',
+			'curl' => 'PDF exports won\'t be possible.',
+		];
+
+		if (utils::IsDevelopmentEnvironment()) {
+			$aOptionalExtensions['xdebug'] = 'For debugging';
+		}
+
+		return $aOptionalExtensions;
 	}
 }
 

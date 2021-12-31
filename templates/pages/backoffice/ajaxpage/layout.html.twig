@@ -1,0 +1,124 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+    {% if bEscapeContent %}
+        {{ render_block(oLayout, {aPage: aPage})|escape }}
+    {% else %}
+        {{ render_block(oLayout, {aPage: aPage}) }}
+    {% endif %}
+
+    {% block iboPageJsInlineEarly %}
+        {% for sJsInline in aPage.aJsInlineEarly %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+            {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+	{% block iboPageJsInlineLive %}
+		{% for sJsInline in aPage.aJsInlineLive %}
+			{# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+			<script type="text/javascript">
+				{{ sJsInline|raw }}
+			</script>
+		{% endfor %}
+		{% for sJsInline in aPage.aJsInlineOnInit %}
+			<script type="text/javascript">
+				{{ sJsInline|raw }}
+			</script>
+		{% endfor %}
+	{% endblock %}
+
+    {% set sPromiseId = aPage.sPromiseId %}
+	{% if aPage.aJsFiles is not empty %}
+        {% set sId = oLayout.GetId() | sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) %}
+        {% block iboPageJsFiles %}
+            <script type="text/javascript">
+            window['{{ sPromiseId }}'] = new Promise(function (resolve, reject) {
+                let fInlineOnDomReadyScript{{ sId }} = function () {
+                    {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                    {{ sJsInlineOnDomReady|raw }}
+                    {% endfor %}
+                    resolve();
+                }
+
+                let aFilesToLoad{{ sId }} = [];
+
+                {% for sJsFile in aPage.aJsFiles %}
+                if ($.inArray('{{ sJsFile|raw }}', aListJsFiles) === -1)
+                {
+                    aFilesToLoad{{ sId }}.push('{{ sJsFile|add_itop_version|raw }}');
+                    aListJsFiles.push("{{ sJsFile|raw }}");
+                }
+                {% endfor %}
+
+                let iCurrentIdx{{ sId }} = 0;
+                let iFilesToLoadCount{{ sId }} = aFilesToLoad{{ sId }}.length;
+                if (iFilesToLoadCount{{ sId }} > 0)
+                {
+                    let fLoadScript{{ sId }} = function () {
+                        $.when(
+                                $.ajax({
+                                    url: aFilesToLoad{{ sId }}[iCurrentIdx{{ sId }}],
+                                    dataType: 'script',
+                                    cache: true
+                                })
+                                )
+                                .then(function () {
+                                    iCurrentIdx{{ sId }}++;
+                                    if (iCurrentIdx{{ sId }} !== iFilesToLoadCount{{ sId }})
+                                    {
+                                        fLoadScript{{ sId }}();
+                                    }
+                                    else
+                                    {
+                                        fInlineOnDomReadyScript{{ sId }}();
+                                    }
+                                });
+                    };
+                    fLoadScript{{ sId }}();
+                }
+                else
+                {
+                    fInlineOnDomReadyScript{{ sId }}();
+                }
+            });
+            </script>
+        {% endblock %}
+    {% else %}
+        {% block iboPageJsInlineOnDomReady %}
+            {% for sJsInlineOnDomReady in aPage.aJsInlineOnDomReady %}
+                <script type="text/javascript">
+                window['{{ sPromiseId }}'] = new Promise(function (resolve, reject) {
+                    {{ sJsInlineOnDomReady|raw }}
+                    resolve();
+                });
+                </script>
+            {% endfor %}
+        {% endblock %}
+    {% endif %}
+
+    {% if aDeferredBlocks is not empty %}
+        {% for oBlock in aDeferredBlocks %}
+            {{ render_block(oBlock, {aPage: aPage})|raw }}
+        {% endfor %}
+    {% endif %}
+
+    {% if sDeferredContent %}
+        <script type="text/javascript">
+            $('body').append('{{ sDeferredContent|raw }}');
+        </script>
+    {% endif %}
+
+    {% block iboPageCssFiles %}
+        {% for aCssFileData in aPage.aCssFiles %}
+            <script type="text/javascript">
+                if (!$('link[href="{{ aCssFileData.link }}"]').length) $('<link href="{{ aCssFileData.link }}" rel="stylesheet">').appendTo('head');
+            </script>
+        {% endfor %}
+    {% endblock %}
+
+    {{ aPage.sCapturedOutput|raw }}
+
+{% endapply %}

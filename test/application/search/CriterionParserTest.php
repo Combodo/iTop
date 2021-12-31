@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2018 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -32,6 +32,7 @@ use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

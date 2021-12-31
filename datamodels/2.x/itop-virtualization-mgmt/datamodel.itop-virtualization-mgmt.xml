@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="VirtualDevice" _delta="define">
       <parent>FunctionalCI</parent>
@@ -15,7 +15,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
+        <fields_semantic>
+            <state_attribute>status</state_attribute>
+        </fields_semantic>
         <icon/>
         <reconciliation>
           <attributes>
@@ -32,10 +34,18 @@
       <fields>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="production">production</value>
-            <value id="implementation">implementation</value>
-            <value id="stock">stock</value>
-            <value id="obsolete">obsolete</value>
+            <value id="production">
+              <code>production</code>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+            </value>
+            <value id="stock">
+              <code>stock</code>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>production</default_value>
@@ -141,7 +151,6 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
         <icon/>
         <reconciliation>
           <attributes>
@@ -260,15 +269,16 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
-        <icon>images/hypervisor.png</icon>
+        <style>
+          <icon>../../images/icons/icons8-hypervisor.svg</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
             <attribute id="org_id"/>
             <attribute id="organization_name"/>
-			<attribute id="server_id"/>
-			<attribute id="farm_id"/>
+            <attribute id="server_id"/>
+            <attribute id="farm_id"/>
           </attributes>
         </reconciliation>
         <obsolescence>
@@ -408,8 +418,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
-        <icon>images/cluster.png</icon>
+        <style>
+          <icon>../../images/icons/icons8-farm.svg</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -534,8 +545,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
-        <icon>images/virtualmachine.png</icon>
+        <style>
+          <icon>../../images/icons/icons8-virtual-machine.svg</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -545,7 +557,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-        	<condition><![CDATA[status='obsolete']]></condition>
+          <condition><![CDATA[status='obsolete']]></condition>
         </obsolescence>
       </properties>
       <fields>
@@ -767,8 +779,9 @@
             <attribute id="virtualmachine_name"/>
           </attributes>
         </naming>
-        <display_template/>
-        <icon>images/interface.png</icon>
+        <style>
+          <icon>../../images/icons/icons8-globe-cable.svg</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -777,7 +790,7 @@
           </attributes>
         </reconciliation>
         <obsolescence>
-        	<condition>virtualmachine_id_obsolescence_flag</condition>
+          <condition>virtualmachine_id_obsolescence_flag</condition>
         </obsolescence>
       </properties>
       <fields>
@@ -888,7 +901,7 @@
               <dashlet id="38" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:virtualization</title>
-                <icon>itop-virtualization-mgmt/images/hypervisor-sw.png</icon>
+                  <icon>../images/icons/icons8-old-vmware-logo.svg</icon>
               </dashlet>
               <dashlet id="39" xsi:type="DashletBadge">
                 <rank>1</rank>

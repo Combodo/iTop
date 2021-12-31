@@ -1,0 +1,21 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-border-radius-100: 1px !default;
+$ibo-border-radius-300: 3px !default;
+$ibo-border-radius-400: 4px !default;
+$ibo-border-radius-500: 5px !default;
+$ibo-border-radius-700: 10px !default;
+$ibo-border-radius-900: 16px !default;
+$ibo-border-radius-full: 100% !default;
+
+:root{
+	--ibo-border-radius-100: #{$ibo-border-radius-100};
+	--ibo-border-radius-300: #{$ibo-border-radius-300};
+	--ibo-border-radius-500: #{$ibo-border-radius-500};
+	--ibo-border-radius-700: #{$ibo-border-radius-700};
+	--ibo-border-radius-900: #{$ibo-border-radius-900};
+	--ibo-border-radius-full: #{$ibo-border-radius-full};
+}

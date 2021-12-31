@@ -15,10 +15,14 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use DBObjectSearch;
 use DBSearch;
 use Exception;
+use MetaModel;
 use OqlInterpreter;
+use QueryBuilderContext;
+use SQLObjectQueryBuilder;
 use utils;
 
 /**
+ * @group itopStructure
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -46,7 +50,11 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
+     * @group iTopChangeMgt
+	 * @group itopConfigMgmt
+	 * @group itopRequestMgmt
 	 * @dataProvider NestedQueryProvider
+	 * @depends testOQLSetup
 	 *
 	 * @param $sQuery
 	 *
@@ -74,6 +82,7 @@ class OQLTest extends ItopDataTestCase
 	}
 
     /**
+     * @group itopRequestMgmt
      * @dataProvider GoodQueryProvider
      * @depends testOQLSetup
      *
@@ -199,45 +208,21 @@ class OQLTest extends ItopDataTestCase
     public function BadQueryProvider()
     {
         return array(
-            array('SELECT toto WHERE toto.a = (3++1)', 'OQLParserException'),
-            array('SELECT toto WHHHERE toto.a = "1"', 'OQLParserException'),
-            array('SELECT toto WHERE toto.a == "1"', 'OQLParserException'),
+            array('SELECT toto WHERE toto.a = (3++1)', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHHHERE toto.a = "1"', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHERE toto.a == "1"', 'OQLParserSyntaxErrorException'),
             array('SELECT toto WHERE toto.a % 1', 'Exception'),
-            array('SELECT toto WHERE toto.a like \'arg\'', 'OQLParserException'),
-            array('SELECT toto WHERE toto.a NOT LIKE "That\'s "it""', 'OQLParserException'),
-            array('SELECT toto WHERE toto.a NOT LIKE \'That\'s it\'', 'OQLParserException'),
+            array('SELECT toto WHERE toto.a like \'arg\'', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHERE toto.a NOT LIKE "That\'s "it""', 'OQLParserSyntaxErrorException'),
+            array('SELECT toto WHERE toto.a NOT LIKE \'That\'s it\'', 'OQLParserSyntaxErrorException'),
             array('SELECT toto WHERE toto.a NOT LIKE "blah \\ truc"', 'Exception'),
             array('SELECT toto WHERE toto.a NOT LIKE \'blah \\ truc\'', 'Exception'),
-            array('SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id = B.id WHERE A.col1 BELOW 2 AND B.id = 3', 'OQLParserException'),
+            array('SELECT A JOIN B ON A.myB = B.id JOIN C ON C.parent_id = B.id WHERE A.col1 BELOW 2 AND B.id = 3', 'OQLParserSyntaxErrorException'),
         );
     }
 
     /**
-     * @dataProvider TypeErrorQueryProvider
-     * @depends testOQLSetup
-     *
-     * @param $sQuery
-     *
-     * @expectedException \TypeError
-     *
-     * @throws \OQLException
-     */
-    public function testTypeErrorQueryParser($sQuery)
-    {
-        $this->debug($sQuery);
-        $oOql = new OqlInterpreter($sQuery);
-        $oOql->ParseQuery();
-    }
-
-    public function TypeErrorQueryProvider()
-    {
-        return array(
-            array('SELECT A WHERE A.a MATCHES toto'),
-        );
-    }
-
-
-    /**
+     * @group itopRequestMgmt
      * Needs actual datamodel
      * @depends testOQLSetup
      *
@@ -388,6 +373,9 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
+     * @group iTopChangeMgt
+	 * @group itopConfigMgmt
+	 * @group itopRequestMgmt
 	 * @dataProvider MakeSelectQueryProvider
 	 * @param $sOQL
 	 * @param $sExpectedExceptionClass
@@ -426,4 +414,103 @@ class OQLTest extends ItopDataTestCase
 		);
 	}
 
+
+	/**
+	 * @dataProvider GetOQLClassTreeProvider
+	 * @param $sOQL
+	 * @param $sExpectedOQL
+	 */
+	public function testGetOQLClassTree($sOQL, $sExpectedOQL)
+	{
+		$oFilter = DBSearch::FromOQL($sOQL);
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
+		{
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass))
+			{
+				$sMainClass = $sClass;
+			}
+		}
+		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
+		$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
+		$sResultOQL = $oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild);
+
+		static::assertEquals($sExpectedOQL, $sResultOQL);
+	}
+
+	public function GetOQLClassTreeProvider()
+	{
+		return [
+			'Bug 3660 1' => [
+				"SELECT UserRequest AS U JOIN lnkContactToTicket AS l ON l.ticket_id=U.id JOIN Team AS T ON l.contact_id=T.id",
+				"SELECT `U` FROM `UserRequest` AS `U`
+    INNER JOIN `lnkContactToTicket` AS `l`
+      ON `U`.`id` = `l`.`ticket_id` 
+        INNER JOIN `Team` AS `T`
+          ON `l`.`contact_id` = `T`.`id`",
+			],
+			'Bug 3660 2' => [
+				"SELECT UserRequest AS U JOIN lnkContactToTicket AS l ON l.ticket_id=U.id JOIN Contact AS C ON l.contact_id=C.id",
+				"SELECT `U` FROM `UserRequest` AS `U`
+    INNER JOIN `lnkContactToTicket` AS `l`
+      ON `U`.`id` = `l`.`ticket_id`",
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider MakeSelectQueryForCountProvider
+	 *
+	 * @param $sOQL
+	 * @param $sExpectedSQL
+	 *
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+	public function testMakeSelectQueryForCount($sOQL, $sExpectedSQL)
+	{
+		$oFilter = DBSearch::FromOQL($sOQL);
+		// Avoid adding all the fields for counts or "group by" requests
+		$aCountAttToLoad = array();
+		$sMainClass = null;
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
+			$aCountAttToLoad[$sClassAlias] = array();
+			if (empty($sMainClass)) {
+				$sMainClass = $sClass;
+			}
+		}
+		$sSQL = $oFilter->MakeSelectQuery([], [], $aCountAttToLoad, null, 0, 0, true);
+		static::assertEquals($sExpectedSQL, $sSQL);
+	}
+
+	public function MakeSelectQueryForCountProvider()
+	{
+		return [
+			'Bug 3618' => [
+				"SELECT UserRequest WHERE private_log LIKE '%Auteur : %' UNION SELECT UserRequest",
+				"SELECT COUNT(*) AS COUNT FROM (SELECT
+ 1 
+ FROM (
+SELECT
+ DISTINCT `UserRequest_Ticket`.`id` AS `UserRequestid`
+ FROM 
+   `ticket` AS `UserRequest_Ticket`
+ WHERE ((`UserRequest_Ticket`.`private_log` LIKE '%Auteur : %') AND COALESCE((`UserRequest_Ticket`.`finalclass` IN ('UserRequest')), 1))
+   
+ UNION
+ SELECT
+ DISTINCT `UserRequest`.`id` AS `UserRequestid`
+ FROM 
+   `ticket_request` AS `UserRequest`
+ WHERE 1
+   
+) as __selects__
+) AS _union_alderaan_",
+			],
+		];
+	}
 }

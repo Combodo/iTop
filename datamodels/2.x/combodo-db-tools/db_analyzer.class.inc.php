@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,6 +16,8 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
+
+use Combodo\iTop\Core\MetaModel\HierarchicalKey;
 
 class DatabaseAnalyzer
 {
@@ -40,7 +42,7 @@ class DatabaseAnalyzer
 	{
 		if (!is_null($this->iTimeLimitPerOperation))
 		{
-			set_time_limit($this->iTimeLimitPerOperation);
+			set_time_limit(intval($this->iTimeLimitPerOperation));
 		}
 
 		$aWrongRecords = CMDBSource::QueryToArray($sSelWrongRecs);
@@ -162,6 +164,9 @@ class DatabaseAnalyzer
 				if ($oAttDef->IsExternalKey())
 				{
 					$this->CheckExternalKeys($oAttDef, $sTable, $sKeyField, $sAttCode, $sClass, $aErrorsAndFixes);
+					if ((MetaModel::GetAttributeOrigin($sClass, $sAttCode) == $sClass) && $oAttDef->IsHierarchicalKey()) {
+						$this->CheckHK($sClass, $sAttCode, $aErrorsAndFixes);
+					}
 				}
 				elseif ($oAttDef->IsDirectField() && !($oAttDef instanceof AttributeTagSet))
 				{
@@ -223,13 +228,11 @@ class DatabaseAnalyzer
 				{
 					$oFixSearch->AddCondition($sAttCode, $sValue, '=');
 				}
-				$aFixit[] = $oFixSearch->MakeSelectQuery().';';
+				$aFixit[] = $oFixSearch->MakeSelectQuery([], [], null, null, 0, 0, false, false).';';
 				$aFixit[] = "";
 			}
 			$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixit;
 		}
-
-		return;
 	}
 
 	private function GetUniquenessRuleMessage($sUniquenessRuleId)
@@ -327,13 +330,8 @@ class DatabaseAnalyzer
 	{
 		$sField = MetaModel::DBGetClassField($sClass);
 		$sRootField = MetaModel::DBGetClassField($sRootClass);
-		$sSelWrongRecs = <<<SQL
-	SELECT `$sTable`.`$sKeyField` AS id
-	FROM `$sTable`
-	JOIN `$sRootTable` ON `$sRootTable`.`$sRootKey` = `$sTable`.`$sKeyField`
-	WHERE `$sTable`.`$sField` != `$sRootTable`.`$sRootField`
-SQL;
-		// Copy the finalclass of the root table
+		$sSelWrongRecs = "SELECT `$sTable`.`$sKeyField` AS id FROM `$sTable` JOIN `$sRootTable` ON `$sRootTable`.`$sRootKey` = `$sTable`.`$sKeyField` WHERE `$sTable`.`$sField` != `$sRootTable`.`$sRootField`";
+		// Copy the final class of the root table
 		$sFixItRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKeyField` = `$sRootTable`.`$sRootKey`";
 		$this->ExecQuery($sSelWrongRecs, $sFixItRequest, Dict::Format('DBAnalyzer-Integrity-FinalClass', $sField, $sTable, $sRootTable), $sClass, $aErrorsAndFixes);
 	}
@@ -361,75 +359,79 @@ SQL;
 
 		// Note: a class/table may have an external key on itself
 		$sSelect = "SELECT DISTINCT `$sTable`.`$sKeyField` AS id, `$sTable`.`$sExtKeyField` AS value";
-		$sFilter = "FROM `$sTable` LEFT JOIN `$sRemoteTable` AS `{$sRemoteTable}_1` ON `$sTable`.`$sExtKeyField` = `{$sRemoteTable}_1`.`$sRemoteKey`";
+		$sFrom = "FROM `$sTable`";
+		$sJoin = "LEFT JOIN `$sRemoteTable` AS `{$sRemoteTable}_1` ON `$sTable`.`$sExtKeyField` = `{$sRemoteTable}_1`.`$sRemoteKey`";
 
-		$sFilter = $sFilter." WHERE `{$sRemoteTable}_1`.`$sRemoteKey` IS NULL";
+		$sFilter = "WHERE `{$sRemoteTable}_1`.`$sRemoteKey` IS NULL";
 		// Exclude the records pointing to 0/null from the errors (separate test below)
 		$sFilter .= " AND `$sTable`.`$sExtKeyField` IS NOT NULL";
 		$sFilter .= " AND `$sTable`.`$sExtKeyField` != 0";
 
-		$sSelWrongRecs = "$sSelect $sFilter";
+		$sSelWrongRecs = "$sSelect $sFrom $sJoin $sFilter";
 
 		$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-InvalidExtKey', $sAttCode, $sTable, $sExtKeyField);
 		$this->ExecQuery($sSelWrongRecs, '', $sErrorDesc, $sClass, $aErrorsAndFixes);
+		$aFixIt = [];
 		// Fix it request needs the values of the enum to generate the requests
 		if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['values']))
 		{
-			$aFixIt = array();
-			$aFixIt[] = "-- Remove inconsistant entries:";
-			$iOffset = 0;
-			$iStep = 100;
-			do
-			{
-				$aIds = array_slice(array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']), $iOffset, $iStep);
-				$sIds = implode(', ', $aIds);
-				$sDelete = "DELETE `$sTable` FROM `$sTable` WHERE `$sTable`.`$sExtKeyField` IN ($sIds)";
-				$aFixIt[] = $sDelete;
-				$aErrorsAndFixes[$sClass][$sErrorDesc]['cleanup'][] = $sDelete;
-				$iOffset += $iStep;
-			}
-			while (count($aIds) == $iStep);
-			$aFixIt[] = "";
-			$aFixIt[] = "-- Or fix inconsistant values: Replace XXX with the appropriate value";
-			foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey)
-			{
-				$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sExtKeyField` = XXX WHERE `$sTable`.`$sExtKeyField` = '$sKey'";
-			}
-			$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixIt;
-		}
-
-		if (!$oAttDef->IsNullAllowed())
-		{
-			$sSelect = "SELECT DISTINCT `$sTable`.`$sKeyField` AS id";
-			$sDelete = "DELETE `$sTable`";
-			$sFilter = "FROM `$sTable` WHERE `$sTable`.`$sExtKeyField` IS NULL OR `$sTable`.`$sExtKeyField` = 0";
-			$sSelWrongRecs = "$sSelect $sFilter";
-			$sFixItRequest = "$sDelete $sFilter";
-			$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-MissingExtKey', $sAttCode, $sTable, $sExtKeyField);
-			$this->ExecQuery($sSelWrongRecs, $sFixItRequest, $sErrorDesc, $sClass, $aErrorsAndFixes);
-			if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['count']) && ($aErrorsAndFixes[$sClass][$sErrorDesc]['count'] > 0))
-			{
-				$aFixIt = $aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'];
-				$aFixIt[] = "-- Alternate fix";
-				$aFixIt[] = "-- Replace XXX with the appropriate value";
-				$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sExtKeyField` = XXX WHERE `$sTable`.`$sExtKeyField` IS NULL OR `$sTable`.`$sExtKeyField` = 0";
-				$aAdditionalFixIt = $this->GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField);
+			if ($oAttDef->IsNullAllowed()) {
+				$aFixIt[] = "-- Fix inconsistant values: remove the external key";
+				foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey) {
+					$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sExtKeyField` = 0 WHERE `$sTable`.`$sExtKeyField` = '$sKey'";
+				}
+			} else {
+				$aAdditionalFixIt = $this->GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField, $sFilter, $sJoin);
 				foreach ($aAdditionalFixIt as $sFixIt)
 				{
 					$aFixIt[] = $sFixIt;
 				}
+
+				$aFixIt[] = "-- Alternate fix: remove inconsistant entries:";
+				$sIds = implode(', ', array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']));
+				$aFixIt[] = "DELETE `$sTable` FROM `$sTable` WHERE `$sTable`.`$sExtKeyField` IN ($sIds)";
+
+				$aFixIt[] = "-- Alternate fix: update inconsistant values: Replace XXX with the appropriate value";
+				foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey) {
+					$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sExtKeyField` = XXX WHERE `$sTable`.`$sExtKeyField` = '$sKey'";
+				}
+			}
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixIt;
+		}
+
+		if (!$oAttDef->IsNullAllowed()) {
+			$sSelect = "SELECT DISTINCT `$sTable`.`$sKeyField` AS id";
+			$sDelete = "DELETE `$sTable`";
+			$sFrom = "FROM `$sTable`";
+			$sFilter = "WHERE `$sTable`.`$sExtKeyField` IS NULL OR `$sTable`.`$sExtKeyField` = 0";
+			$sSelWrongRecs = "$sSelect $sFrom $sFilter";
+			$sFixItRequest = "$sDelete $sFrom $sFilter";
+			$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-MissingExtKey', $sAttCode, $sTable, $sExtKeyField);
+			$this->ExecQuery($sSelWrongRecs, '', $sErrorDesc, $sClass, $aErrorsAndFixes);
+			$aFixIt = [];
+			if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['count']) && ($aErrorsAndFixes[$sClass][$sErrorDesc]['count'] > 0))
+			{
+				$aAdditionalFixIt = $this->GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField, $sFilter);
+				foreach ($aAdditionalFixIt as $sFixIt)
+				{
+					$aFixIt[] = $sFixIt;
+				}
+				$aFixIt[] = "-- Alternate fix: remove inconsistant entries:";
+				$aFixIt[] = $sFixItRequest;
+				$aFixIt[] = "-- Alternate fix: replace XXX with the appropriate value";
+				$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sExtKeyField` = XXX WHERE `$sTable`.`$sExtKeyField` IS NULL OR `$sTable`.`$sExtKeyField` = 0";
 				$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixIt;
 			}
 		}
 	}
 
-	private function GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField)
+	private function GetSpecificExternalKeysFixItForNull($sTable, $sExtKeyField, $sFilter, $sJoin = '')
 	{
 		$aFixIt = array();
 		if ($sTable == 'ticket' && $sExtKeyField == 'org_id')
 		{
 			$aFixIt[] = "-- Alternate fix: set the ticket org to the caller org";
-			$aFixIt[] = "UPDATE ticket AS t JOIN contact AS c ON t.caller_id=c.id SET t.org_id=c.org_id WHERE t.org_id IS NULL OR t.org_id = 0";
+			$aFixIt[] = "UPDATE ticket JOIN contact AS c ON ticket.caller_id=c.id $sJoin SET ticket.org_id=c.org_id $sFilter";
 		}
 		return $aFixIt;
 	}
@@ -452,7 +454,8 @@ SQL;
 		$aAllowedValues = MetaModel::GetAllowedValues_att($sClass, $sAttCode);
 		if (!is_null($aAllowedValues) && count($aAllowedValues) > 0)
 		{
-			$sExpectedValues = implode(",", CMDBSource::Quote(array_keys($aAllowedValues), true));
+			$aAllowedValues = array_keys($aAllowedValues);
+			$sExpectedValues = implode(",", CMDBSource::Quote($aAllowedValues, true));
 
 			$aCols = $oAttDef->GetSQLExpressions(); // Workaround a PHP bug: sometimes issuing a Notice if invoking current(somefunc())
 			$sMyAttributeField = current($aCols); // get the first column for the moment
@@ -469,15 +472,18 @@ SQL;
 				if (isset($aErrorsAndFixes[$sClass][$sErrorDesc]['fixit']))
 				{
 					$aFixIt = $aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'];
-					$aFixIt[] = "-- Alternative: Replace 'XXX' with the appropriate value";
+					$aFixIt[] = "-- Alternative: Replace enums with the appropriate value";
 				}
 				else
 				{
-					$aFixIt = array("-- Replace 'XXX' with the appropriate value");
+					$aFixIt = ["-- Replace enums with the appropriate value"];
 				}
 				foreach (array_keys($aErrorsAndFixes[$sClass][$sErrorDesc]['values']) as $sKey)
 				{
-					$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sMyAttributeField` = 'XXX' WHERE `$sTable`.`$sMyAttributeField` = '$sKey'";
+					foreach ($aAllowedValues as $sAllowedValue) {
+						$aFixIt[] = "-- Replace $sKey by $sAllowedValue";
+						$aFixIt[] = "UPDATE `$sTable` SET `$sTable`.`$sMyAttributeField` = '$sAllowedValue' WHERE `$sTable`.`$sMyAttributeField` = '$sKey'";
+					}
 				}
 				$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = $aFixIt;
 			}
@@ -505,5 +511,24 @@ SQL;
 		$this->ExecQuery($sSelWrongRecs, $sFixit, $sErrorDesc, $sClass, $aErrorsAndFixes);
 	}
 
-
+	/**
+	 * Check hierarchical keys
+	 *
+	 * @param $sClass
+	 * @param $sAttCode
+	 * @param $aErrorsAndFixes
+	 *
+	 * @throws \Exception
+	 */
+	private function CheckHK($sClass, $sAttCode, &$aErrorsAndFixes)
+	{
+		try {
+			HierarchicalKey::VerifyIntegrity($sClass, $sAttCode, MetaModel::GetAttributeDef($sClass, $sAttCode));
+		} catch (CoreException $e) {
+			$sErrorDesc = Dict::Format('DBAnalyzer-Integrity-HKInvalid', $sAttCode);
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['count'] = 1;
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['query'] = '-- N/A';
+			$aErrorsAndFixes[$sClass][$sErrorDesc]['fixit'] = ['-- Run script env-'.utils::GetCurrentEnvironment().DIRECTORY_SEPARATOR.'combodo-db-tools'.DIRECTORY_SEPARATOR.'bin'.DIRECTORY_SEPARATOR.'rebuildhk.php' ];
+		}
+	}
 }
