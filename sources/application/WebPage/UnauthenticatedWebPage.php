@@ -22,6 +22,8 @@ use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
 
 $sPortalBaseFolderRelPath = 'env-' . utils::GetCurrentEnvironment() . '/itop-portal-base/portal/';
 $sPortalSourcesFolderRelPath = $sPortalBaseFolderRelPath . 'src/';
@@ -174,6 +176,8 @@ class UnauthenticatedWebPage extends NiceWebPage
 		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$this->FireAfterDisplayEvent();
+		ExecutionKPI::ReportStats();
 	}
 	
 	/**

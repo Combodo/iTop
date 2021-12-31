@@ -14,7 +14,7 @@ use IssueLog;
 
 define('LOG_EVENT_SERVICE_CHANNEL', 'EventService');
 
-class Event
+class EventService
 {
 	private static $aEvents = array();
 	private static $iEventIdCounter = 0;

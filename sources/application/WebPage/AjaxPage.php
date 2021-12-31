@@ -10,6 +10,8 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {
@@ -209,6 +211,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 		// Echo global HTML
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
+		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 

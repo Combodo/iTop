@@ -29,7 +29,7 @@ use BinaryExpression;
 use Combodo\iTop\Portal\Brick\CreateBrick;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
 use Combodo\iTop\Portal\Helper\ContextManipulatorHelper;
-use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventService;
 use Combodo\iTop\Service\EventName;
 use DBObject;
 use DBObjectSearch;

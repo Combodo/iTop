@@ -26,7 +26,7 @@
  */
 
 use Combodo\iTop\Service\EventName;
-use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventService;
 
 
 /**
@@ -220,7 +220,7 @@ class ormDocument
 					'object' => $oObj,
 					'document' => $oDocument,
 					);
-				Event::FireEvent(EventName::DOWNLOAD_DOCUMENT, $sClass, $aEventData);
+				EventService::FireEvent(EventName::DOWNLOAD_DOCUMENT, $sClass, $aEventData);
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());

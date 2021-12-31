@@ -23,6 +23,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
+
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents
  * The page adds the content-type text/XML and the encoding into the headers
@@ -71,6 +74,7 @@ class XMLPage extends WebPage
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
+		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 

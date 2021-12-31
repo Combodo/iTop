@@ -18,6 +18,8 @@
  */
 
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
 
 
 /**
@@ -142,7 +144,6 @@ EOF
 	/**
 	 * Generates the PDF document and returns the PDF content as a string
 	 *
-	 * @return string
 	 * @see WebPage::output()
 	 */
 	public function output()
@@ -158,6 +159,7 @@ EOF
 		}
 		$this->flush();
 		echo $this->oPdf->Output($this->s_title.'.pdf', 'S');
+		$this->FireAfterDisplayEvent();
 	}
 
 	public function get_pdf()

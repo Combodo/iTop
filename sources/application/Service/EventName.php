@@ -35,4 +35,7 @@ class EventName
 	// Application
 	//
 	const LOGIN = 'OnLogin';
+
+	// Web Pages
+	const AFTER_DISPLAY_PAGE = 'AfterDisplayPage';
 }

@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventService;
 use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
@@ -5740,7 +5740,7 @@ abstract class DBObject implements iDisplay
 		{
 			$aEventSources[] = $sClass;
 		}
-		Event::FireEvent($sEvent, $aEventSources, $aEventData);
+		EventService::FireEvent($sEvent, $aEventSources, $aEventData);
 	}
 }
 

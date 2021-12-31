@@ -4,6 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
+
 /**
  * Class JsonPage
  *
@@ -99,6 +102,7 @@ class JsonPage extends WebPage
 
 		echo $sJSON;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
+		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 

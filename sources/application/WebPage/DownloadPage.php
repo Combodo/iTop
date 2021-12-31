@@ -4,6 +4,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
+
 
 /**
  * Class DownloadPage
@@ -52,6 +55,7 @@ class DownloadPage extends AjaxPage
 		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sContent;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sContent) / 1024).' Kb)');
+		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 }

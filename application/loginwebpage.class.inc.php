@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Service\Event;
+use Combodo\iTop\Service\EventService;
 use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Application\Branding;
 use Combodo\iTop\Application\Helper\Session;
@@ -488,13 +488,13 @@ class LoginWebPage extends NiceWebPage
 					{
 						if ($bFireEvent)
 						{
-							Event::FireEvent(EventName::LOGIN, null, array('code' => $iErrorCode, 'state' => $sLoginState));
+							EventService::FireEvent(EventName::LOGIN, null, array('code' => $iErrorCode, 'state' => $sLoginState));
 						}
 						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
 					if ($iResponse == self::LOGIN_FSM_ERROR)
 					{
-						Event::FireEvent(EventName::LOGIN, null, array('code' => $iErrorCode, 'state' => $sLoginState));
+						EventService::FireEvent(EventName::LOGIN, null, array('code' => $iErrorCode, 'state' => $sLoginState));
 						$sLoginState = self::LOGIN_STATE_SET_ERROR; // Next state will be error
 						// An error was detected, skip the other plugins turn
 						break;
@@ -508,7 +508,7 @@ class LoginWebPage extends NiceWebPage
 			}
 			catch (Exception $e)
 			{
-				Event::FireEvent(EventName::LOGIN, null, array('state' => $_SESSION['login_state']));
+				EventService::FireEvent(EventName::LOGIN, null, array('state' => $_SESSION['login_state']));
 				IssueLog::Error($e->getTraceAsString());
 				static::ResetSession();
 				die($e->getMessage());
