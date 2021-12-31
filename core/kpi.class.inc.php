@@ -15,6 +15,9 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventName;
+use Combodo\iTop\Service\EventService;
 
 
 /**
@@ -37,6 +40,8 @@ class ExecutionKPI
 	 * @var array[ExecutionKPI]
 	 */
 	static protected $m_aExecutionStack = []; // embedded execution stats
+	// Event listener
+	static protected $oKPIEventListener;
 
 	protected $m_fStarted = null;
 	protected $m_fChildrenDuration = 0; // Count embedded
@@ -288,6 +293,9 @@ class ExecutionKPI
 
 	public function __construct()
 	{
+		if (is_null(static::$oKPIEventListener)) {
+			static::$oKPIEventListener = new KPIEventListener();
+		}
 		$this->ResetCounters();
 		self::Push($this);
 	}
@@ -450,3 +458,17 @@ class ExecutionKPI
 	}
 }
 
+class KPIEventListener
+{
+	public function __construct()
+	{
+		EventService::Register(EventName::DB_OBJECT_LOADED, [get_class($this), 'OnObjectLoaded']);
+	}
+
+	public static function OnObjectLoaded(EventData $oEventData)
+	{
+		$oObject = $oEventData->GetEventData()['object'];
+		$oKPI = new ExecutionKPI();
+		$oKPI->ComputeStats('Objects Loaded (no duration)', get_class($oObject));
+	}
+}
