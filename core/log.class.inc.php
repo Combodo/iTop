@@ -539,10 +539,11 @@ class FileLog
  */
 class LogChannels
 {
+	const APC = 'apc';
+	const CMDBSOURCE = 'cmdbsource';
 	const DEADLOCK = 'DeadLock';
 	const INLINE_IMAGE = 'InlineImage';
 	const PORTAL = 'portal';
-	const APC = 'apc';
 }
 
 
