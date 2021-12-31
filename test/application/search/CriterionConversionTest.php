@@ -59,7 +59,7 @@ class CriterionConversionTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		require_once(APPROOT."sources/Application/Search/CriterionConversionabstract.class.inc.php");
+		require_once(APPROOT."sources/Application/Search/criterionconversionabstract.class.inc.php");
 	}
 
 	/**

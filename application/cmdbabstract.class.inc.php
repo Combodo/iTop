@@ -62,7 +62,7 @@ require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
 require_once(APPROOT.'sources/Application/Search/searchform.class.inc.php');
 require_once(APPROOT.'sources/Application/Search/criterionparser.class.inc.php');
-require_once(APPROOT.'sources/Application/Search/CriterionConversionabstract.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionconversionabstract.class.inc.php');
 require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontooql.class.inc.php');
 require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontosearchform.class.inc.php');
 
