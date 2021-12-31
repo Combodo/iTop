@@ -29,8 +29,8 @@ class EventName
 	const BEFORE_APPLY_STIMULUS = 'BeforeApplyStimulus';
 	const AFTER_APPLY_STIMULUS = 'AfterApplyStimulus';
 	const ON_CHECK_TO_WRITE = 'OnCheckToWrite';
-	const ON_CHECK_TO_DELETE = 'OnCheckToDelete';
-	const OBJECT_DETAILS = 'ObjectDetails';
+	const ON_CHECK_TO_DELETE     = 'OnCheckToDelete';
+	const DISPLAY_OBJECT_DETAILS = 'DisplayObjectDetails';
 
 	// Application
 	//

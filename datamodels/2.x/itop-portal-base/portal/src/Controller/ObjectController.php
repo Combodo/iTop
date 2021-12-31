@@ -124,7 +124,7 @@ class ObjectController extends BrickController
 
 		$sOperation = $oRequestManipulator->ReadParam('operation', '');
 
-		$oObject->FireEvent(EventName::OBJECT_DETAILS);
+		$oObject->FireEvent(EventName::DISPLAY_OBJECT_DETAILS);
 
 		$aData = array('sMode' => 'view');
 		$aData['form'] = $oObjectFormHandler->HandleForm($oRequest, $aData['sMode'], $sObjectClass, $sObjectId);
