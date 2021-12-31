@@ -1303,7 +1303,7 @@ EOF
 						}
 
 						$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
-						$sEvents .= "\n		Combodo\iTop\Service\Event::Register(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, \"$sListenerId\", null, $sListenerPriority);";
+						$sEvents .= "\n		Combodo\iTop\Service\EventService::Register(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, \"$sListenerId\", null, $sListenerPriority);";
 					}
 				}
 			}
@@ -3621,7 +3621,7 @@ EOF;
 			$sEventSource = $aHook['source'];
 			$sContext = $aHook['context'];
 			$sPriority = $aHook['priority'];
-			$sRegister .= "\nCombodo\iTop\Service\Event::Register(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority);";
+			$sRegister .= "\nCombodo\iTop\Service\EventService::Register(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority);";
 			$sCallbackFct = $aHook['content'];
 			$sMethods .= "\n    {$sCallbackFct}\n\n";
 		}
