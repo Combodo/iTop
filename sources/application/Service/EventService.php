@@ -164,17 +164,13 @@ class EventService
 			$aSrcEvent = array();
 		}
 
-		foreach ($aSrcRegistered as $sSrcRegistered)
-		{
-			foreach ($aSrcEvent as $sSrcEvent)
-			{
-				if ($sSrcRegistered == $sSrcEvent)
-				{
-					// sources matches
-					return true;
-				}
+		foreach ($aSrcEvent as $sSrcEvent) {
+			if (in_array($sSrcEvent, $aSrcRegistered)) {
+				// sources matches
+				return true;
 			}
 		}
+
 		// no match
 		return false;
 	}
