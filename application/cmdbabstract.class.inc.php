@@ -60,11 +60,11 @@ require_once(APPROOT.'application/ui.linksdirectwidget.class.inc.php');
 require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
-require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/searchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionparser.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversionabstract.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontosearchform.class.inc.php');
 
 /**
  * Class cmdbAbstractObject
