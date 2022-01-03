@@ -184,6 +184,15 @@
           </items>
         </list>
       </presentation>
+      <relations>
+        <relation id="impacts">
+          <neighbours>
+            <neighbour id="device_list">
+              <attribute>device_list</attribute>
+            </neighbour>
+          </neighbours>
+        </relation>
+      </relations>
     </class>
     <class id="Enclosure" _delta="define">
       <parent>PhysicalDevice</parent>
