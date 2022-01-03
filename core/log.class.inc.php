@@ -540,9 +540,17 @@ class FileLog
 class LogChannels
 {
 	const APC = 'apc';
+
+	/**
+	 * @var string
+	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
+	 */
 	const CMDBSOURCE = 'cmdbsource';
+
 	const DEADLOCK = 'DeadLock';
+
 	const INLINE_IMAGE = 'InlineImage';
+
 	const PORTAL = 'portal';
 }
 
