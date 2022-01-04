@@ -3,18 +3,13 @@
 namespace Combodo\iTop\Test\UnitTest\ReleaseChecklist;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
-use iTopDesignFormat;
 
 
 /**
- * Class iTopDesignFormatChecklistTest
- * Ticket 3061 - Automatically check the installation.xml consistency
- * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  *
- * @covers iTopDesignFormat
+ * @since 3.0.0 N°3060 / N°3061
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
@@ -85,6 +80,7 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 			{
 				if (is_dir($sPath))
 				{
+					/** @noinspection SlowArrayOperationsInLoopInspection */
 					$aModules = array_merge($aModules, $this->GetFilteredModulesFromDatamodels($sPath));
 				}
 				else if (preg_match("/module\..*\.php/", basename($sPath)))
@@ -124,6 +120,7 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 			{
 				if (is_dir($sPath))
 				{
+					/** @noinspection SlowArrayOperationsInLoopInspection */
 					$aModules = array_merge($aModules, $this->GetAllModules($sPath));
 				}
 				else if (preg_match("/module\..*\.php/", basename($sPath)))
