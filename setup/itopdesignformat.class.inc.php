@@ -17,7 +17,14 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
+
+/**
+ * iTop Datamodel XML format version
+ * And also iTop core version
+ *
+ * To test for iTop core version use this constant instead of {@link ITOP_VERSION} !
+ */
+define('ITOP_DESIGN_LATEST_VERSION', '1.7');
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -26,7 +33,7 @@ define('ITOP_DESIGN_LATEST_VERSION', '1.7'); // iTop >= 2.7.0
  * To test migration methods check {@link \Combodo\iTop\Test\UnitTest\Setup\TestForITopDesignFormatClass}
  *
  * Usage:
- * 
+ *
  * $oDocument = new DOMDocument();
  * $oDocument->load($sXMLFile);
  * $oFormat = new iTopDesignFormat($oDocument);
@@ -60,31 +67,31 @@ class iTopDesignFormat
 			'next' => '1.3',
 			'go_to_next' => 'From12To13',
 		),
-		'1.3' => array(
+		'1.3' => array( // iTop >= 2.2.0
 			'previous' => '1.2',
 			'go_to_previous' => 'From13To12',
 			'next' => '1.4',
 			'go_to_next' => 'From13To14',
 		),
-		'1.4' => array(
+		'1.4' => array( // iTop >= 2.4.0
 			'previous' => '1.3',
 			'go_to_previous' => 'From14To13',
 			'next' => '1.5',
 			'go_to_next' => 'From14To15',
 		),
-		'1.5' => array(
+		'1.5' => array( // iTop >= 2.5.0
 			'previous' => '1.4',
 			'go_to_previous' => 'From15To14',
 			'next' => '1.6',
 			'go_to_next' => 'From15To16',
 		),
-		'1.6' => array(
+		'1.6' => array( // iTop >= 2.6.0
 			'previous' => '1.5',
 			'go_to_previous' => 'From16To15',
 			'next' => '1.7',
 			'go_to_next' => 'From16To17',
 		),
-		'1.7' => array(
+		'1.7' => array( // iTop >= 2.7.0
 			'previous' => '1.6',
 			'go_to_previous' => 'From17To16',
 			'next' => null,
