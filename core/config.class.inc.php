@@ -25,7 +25,7 @@ define('ITOP_APPLICATION_SHORT', 'iTop');
 
 /**
  * Constant containing the application version
- * Warning : this might be different from iTop core version !!
+ * Warning: this might be different from iTop core version!
  *
  * @see     ITOP_DESIGN_LATEST_VERSION for iTop core version
  *
