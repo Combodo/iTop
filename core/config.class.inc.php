@@ -22,7 +22,17 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
-define('ITOP_VERSION', '2.7.0-dev'); // @see utils::GetItopVersionShort() and utils::GetItopVersionWikiSyntax()
+
+/**
+ * Constant containing the package version
+ * Warning : this might be different from iTop core version !!
+ *
+ * @see     ITOP_DESIGN_LATEST_VERSION for iTop core version
+ *
+ * @used-by utils::GetItopPatchVersion
+ */
+define('ITOP_VERSION', '2.7.0-dev');
+
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 define('ITOP_VERSION_FULL', ITOP_VERSION.'-'.ITOP_REVISION);
