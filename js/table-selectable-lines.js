@@ -28,7 +28,7 @@ $(document).ready(function () {
 
 	var FIRST_CELL_WITH_INPUT_SELECTOR = 'td:first-child>'+INPUT_SELECTOR;
 	var LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR = "tbody>tr>"+FIRST_CELL_WITH_INPUT_SELECTOR;
-	var CELLS_WITH_INPUT_SELECTOR = 'td>'+INPUT_SELECTOR;
+	var CELLS_WITH_INPUT_SELECTOR = 'td:not(:first-child)>'+INPUT_SELECTOR;
 	var LINE_WITH_INPUTS_SELECTOR = "tbody>tr>"+CELLS_WITH_INPUT_SELECTOR;
 
 
@@ -132,7 +132,10 @@ $(document).ready(function () {
 				.find('tr')
 				.removeClass(SELECTED_CLASS);
 		}
-
-		$selectedLine.toggleClass(SELECTED_CLASS);
+		if($inputChanged.prop('checked')) {
+			$selectedLine.addClass(SELECTED_CLASS);
+		} else {
+			$selectedLine.removeClass(SELECTED_CLASS);
+		}
 	}
 });
