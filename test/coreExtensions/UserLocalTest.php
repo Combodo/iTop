@@ -9,14 +9,7 @@ namespace coreExtensions;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use UserLocal;
-use UserLocalPasswordPolicyMockNotValid;
-use UserLocalPasswordPolicyMockNotValidBis;
-use UserLocalPasswordPolicyMockValid;
-use UserLocalPasswordPolicyMockValidBis;
-use UserLocalPasswordValidity;
-use UserPasswordPolicyRegex;
 
 /**
  * test class for UserLocal class
@@ -39,10 +32,6 @@ class UserLocalTest extends ItopDataTestCase
 
 	/**
 	 * @dataProvider ProviderValidatePassword
-	 *
-	 * @runTestsInSeparateProcesses
-	 * @preserveGlobalState disabled
-	 * @backupGlobals disabled
 	 */
 	public function testValidatePassword($sPassword, $aValidatorNames, $aConfigValueMap, $bExpectedCheckStatus, $expectedCheckIssues = null, $sUserLanguage = null)
 	{

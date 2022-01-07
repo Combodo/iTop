@@ -7,6 +7,8 @@ use Expression;
 
 /**
  * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  */
 class ExpressionTest extends ItopDataTestCase
 {

@@ -20,9 +20,6 @@
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @covers utils
  */
 class DashboardLayoutTest extends ItopTestCase

@@ -20,9 +20,6 @@
  */
 
 /**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @covers utils
  */
 class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
@@ -247,6 +244,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	}
 
 	/**
+	 * @runInSeparateProcess
 	 * @dataProvider GetAbsoluteUrlAppRootPersistency
 	 */
 	public function testGetAbsoluteUrlAppRootPersistency($bBehindReverseProxy,$bForceTrustProxy1 ,$sExpectedAppRootUrl1,$bForceTrustProxy2 , $sExpectedAppRootUrl2,$bForceTrustProxy3 , $sExpectedAppRootUrl3)

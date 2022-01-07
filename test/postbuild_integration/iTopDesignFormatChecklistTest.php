@@ -10,13 +10,8 @@ use PHPUnit\Exception;
 /**
  * Class iTopDesignFormatChecklistTest
  * Ticket 3053 - Check XML conversion methods
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  *
  * @covers iTopDesignFormat
- *
- * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class TestForITopDesignFormatClass extends ItopTestCase
 {

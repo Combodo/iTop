@@ -12,11 +12,6 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class LogAPITest extends ItopTestCase
 {
 	private $mockFileLog;

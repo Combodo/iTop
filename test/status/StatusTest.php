@@ -9,16 +9,7 @@ namespace Combodo\iTop\Test\UnitTest\Status;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class StatusTest extends ItopTestCase {
-
-    /**
-     * 
-     */
     public function testStatusWrongUrl() {
         $sPath = __DIR__ . '/status_wrong.php';
 
@@ -27,9 +18,6 @@ class StatusTest extends ItopTestCase {
 
     }
 
-    /**
-     * 
-     */
     public function testStatusGood() {
 	    $sPath = __DIR__ . '/status.php';
 
@@ -37,9 +25,6 @@ class StatusTest extends ItopTestCase {
 	    $this->assertEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
     }
 
-    /**
-     * 
-     */
     public function testStatusGoodWithJson() {
 	    $sPath = __DIR__ . '/status.php';
 
@@ -62,5 +47,4 @@ class StatusTest extends ItopTestCase {
         $this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field. ' . $sAdditionnalInfo);
         $this->assertEmpty($aResponseDecoded['message'], 'Message is not empty. ' . $sAdditionnalInfo);
     }
-
 }

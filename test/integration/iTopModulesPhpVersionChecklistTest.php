@@ -20,15 +20,9 @@ use iTopDesignFormat;
 
 
 /**
- *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * @group itop-community
  *
  * @covers iTopDesignFormat
- *
- * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 {

@@ -6,15 +6,8 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DailyRotatingLogFileNameBuilder;
-use WeeklyRotatingLogFileNameBuilder;
-use MonthlyRotatingLogFileNameBuilder;
 use DateTime;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class LogFileNameBuilderTest extends ItopTestCase
 {
 	const TEST_LOGFILE_PREFIX = 'fileNameBuilder.test';

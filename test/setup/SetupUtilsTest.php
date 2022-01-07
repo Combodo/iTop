@@ -10,10 +10,6 @@ use SetupUtils;
 /**
  * Class SetupUtilsTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @covers SetupUtils
  *
  * @since 2.7.4 N°3412

@@ -10,10 +10,6 @@ use iTopDesignFormat;
 /**
  * Class iTopDesignFormatTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @covers iTopDesignFormat
  *
  * @since 2.7.0 N°2586

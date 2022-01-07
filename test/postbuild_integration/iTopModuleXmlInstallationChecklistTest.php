@@ -3,28 +3,17 @@
 namespace Combodo\iTop\Test\UnitTest\ReleaseChecklist;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
 use iTopDesignFormat;
 
 
 /**
  * Class iTopDesignFormatChecklistTest
  * Ticket 3061 - Automatically check the installation.xml consistency
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  *
  * @covers iTopDesignFormat
- *
- * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 {
-	protected function setUp()
-	{
-		parent::setUp();
-	}
-
 	/**
 	 * make sure installation.xml is provided and respects XML format
 	 */

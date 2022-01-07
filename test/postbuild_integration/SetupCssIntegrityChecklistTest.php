@@ -22,31 +22,16 @@
 namespace Combodo\iTop\Test\UnitTest\ReleaseChecklist;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use DOMDocument;
 use iTopDesignFormat;
 
 
 /**
  * Class iTopDesignFormatChecklistTest
  *
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
  * @covers iTopDesignFormat
- *
- * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class SetupCssIntegrityChecklistTest extends ItopTestCase
 {
-
-	protected function setUp()
-	{
-		parent::setUp();
-	}
-
-	/**
-	 */
 	public function testSetupCssIntegrity()
 	{
 		$sSetupCssPath = APPROOT.'css/setup.css';
@@ -55,5 +40,4 @@ class SetupCssIntegrityChecklistTest extends ItopTestCase
 		$this->assertContains('/* integrityCheck: end (do not remove/edit) */', $sSetupCssContent);
 		$this->assertGreaterThan(4000, strlen($sSetupCssContent), "Test if the resulting file $sSetupCssPath is long enough, the value is totally arbitrary (at the time of the writing the file is 5660o  long");
 	}
-
 }

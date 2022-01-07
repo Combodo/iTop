@@ -4,11 +4,6 @@ namespace Combodo\iTop\Test\UnitTest\Core\Sanitizer;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 abstract class AbstractDOMSanitizerTest extends ItopTestCase
 {
 	const INPUT_DIRECTORY = 'input';
