@@ -13,8 +13,6 @@ use MetaModel;
 
 /**
  * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
  * 
  * @group itopRequestMgmt
  * Class TransactionsTest
