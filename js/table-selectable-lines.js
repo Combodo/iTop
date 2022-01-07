@@ -35,7 +35,7 @@ $(document).ready(function () {
 	// Set a click handler on all tables containing inputs
 	// since 3.0.1 N°4619 we are using only one handler for both cases :
 	// - clicking in a cell that is not the first child, and that contains one input:radio or input:checkbox
-	// -
+	// - clicking anywhere in a line
 	$(document).on('click', TABLE_SELECTOR+':has('+LINE_WITH_INPUTS_SELECTOR+')', function (event) {
 		var $eventTarget = $(event.target);
 		if (shouldExitHandler($eventTarget)) {
