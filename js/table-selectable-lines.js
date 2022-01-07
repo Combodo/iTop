@@ -32,7 +32,8 @@ $(document).ready(function () {
 	var LINE_WITH_INPUTS_SELECTOR = "tbody>tr>"+CELLS_WITH_INPUT_SELECTOR;
 
 
-	// Tables with inputs inside cells
+	// Handler that will allow to select a radio or checkbox by clicking anywhere in the cell
+	// since 3.0.1 N°4619 we are stopping propagation to prevent selecting the line in such case
 	$(document).on('click', TABLE_SELECTOR+':has('+LINE_WITH_INPUTS_SELECTOR+')', function (event) {
 		var $eventTarget = $(event.target);
 		if (shouldExitHandler($eventTarget)) {
@@ -41,13 +42,17 @@ $(document).ready(function () {
 
 		var $cellClicked = $eventTarget.closest("td");
 		var $cellClickedInput = $cellClicked.find(INPUT_SELECTOR);
-		if ($cellClickedInput.length === 1) {
+		if (($cellClickedInput.length === 1)
+			&& ($cellClickedInput.is("input:radio") || $cellClickedInput.is("input:checkbox"))
+		) {
 			$cellClickedInput.click();
+			$eventTarget.stopPropagation();
 		}
 	});
 
 
 	// Tables with one input in the first cell to select lines
+	// When clicking anywhere in the line (but on certain specific markup) we will click on the radio/checkbox input in the first cell
 	$(document).on('click', TABLE_SELECTOR+':has('+LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR+')', function (event) {
 		var $eventTarget = $(event.target);
 		if (shouldExitHandler($eventTarget)) {
