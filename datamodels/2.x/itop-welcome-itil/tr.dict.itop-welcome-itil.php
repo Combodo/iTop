@@ -20,8 +20,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:DataSources' => 'Synchronization Data Sources~~',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:DataSources' => 'Senkronizasyon Veri Kaynakları',
+	'Menu:DataSources+' => 'Tüm Senkronizasyon Veri Kaynakları',
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
 	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
@@ -40,8 +40,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
 	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
 	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:QueryMenu' => 'Sorgu deyişleri kitabı',
+	'Menu:QueryMenu+' => 'Sorgu deyişleri kitabı',
 	'Menu:UniversalSearchMenu' => 'Genel sorgu',
 	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
 	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
@@ -52,7 +52,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:MyShortcuts' => 'Kısayollarım',
 	'Menu:UserManagement' => 'User Management~~',
 	'Menu:Queries' => 'Queries~~',
 	'Menu:ConfigurationTools' => 'Configuration~~',

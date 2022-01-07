@@ -97,17 +97,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkErrorToFunctionalCI' => 'Hata / İşlevsel CI bağla',
+	'Class:lnkErrorToFunctionalCI+' => ' Bilinen bir hatayla ilgili alt bilgi',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI Adı',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Hata',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Hata Adı',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Sebep',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 ));
 
@@ -116,17 +116,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToError' => 'Link Documents / Errors~~',
-	'Class:lnkDocumentToError+' => 'A link between a document and a known error~~',
-	'Class:lnkDocumentToError/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToError' => 'Belge / hata bağla',
+	'Class:lnkDocumentToError+' => 'Bir belge ile bilinen bir hata arasındaki bağlantı',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:document_name' => 'Document Name~~',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_id' => 'Error~~',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Hata',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_name' => 'Error name~~',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Hata Adı',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'Bağlantı tipi',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 ));
 
@@ -135,21 +135,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:FAQ' => 'FAQ~~',
-	'Class:FAQ+' => 'Frequently asked questions~~',
-	'Class:FAQ/Attribute:title' => 'Title~~',
+	'Class:FAQ' => 'SSS',
+	'Class:FAQ+' => 'Sıkça Sorulan Sorular',
+	'Class:FAQ/Attribute:title' => 'Başlık',
 	'Class:FAQ/Attribute:title+' => '~~',
-	'Class:FAQ/Attribute:summary' => 'Summary~~',
+	'Class:FAQ/Attribute:summary' => 'Özet',
 	'Class:FAQ/Attribute:summary+' => '~~',
-	'Class:FAQ/Attribute:description' => 'Description~~',
+	'Class:FAQ/Attribute:description' => 'Açıklama',
 	'Class:FAQ/Attribute:description+' => '~~',
-	'Class:FAQ/Attribute:category_id' => 'Category~~',
+	'Class:FAQ/Attribute:category_id' => 'Kategori',
 	'Class:FAQ/Attribute:category_id+' => '~~',
-	'Class:FAQ/Attribute:category_name' => 'Category name~~',
+	'Class:FAQ/Attribute:category_name' => 'Kategori Adı',
 	'Class:FAQ/Attribute:category_name+' => '~~',
-	'Class:FAQ/Attribute:error_code' => 'Error code~~',
+	'Class:FAQ/Attribute:error_code' => 'Hata Kodu',
 	'Class:FAQ/Attribute:error_code+' => '~~',
-	'Class:FAQ/Attribute:key_words' => 'Key words~~',
+	'Class:FAQ/Attribute:key_words' => 'Anahtar Kelimeler',
 	'Class:FAQ/Attribute:key_words+' => '~~',
 	'Class:FAQ/Attribute:domains' => 'Domains~~',
 ));
@@ -159,12 +159,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:FAQCategory' => 'FAQ Category~~',
-	'Class:FAQCategory+' => 'Category for FAQ~~',
-	'Class:FAQCategory/Attribute:name' => 'Name~~',
+	'Class:FAQCategory' => 'SSS Kategori',
+	'Class:FAQCategory+' => 'SSS için kategori',
+	'Class:FAQCategory/Attribute:name' => 'İsim',
 	'Class:FAQCategory/Attribute:name+' => '~~',
-	'Class:FAQCategory/Attribute:faq_list' => 'FAQs~~',
-	'Class:FAQCategory/Attribute:faq_list+' => 'All the frequently asked questions related to this category~~',
+	'Class:FAQCategory/Attribute:faq_list' => 'SSS',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Bu kategoriyle ilgili tüm sık sorulan sorular',
 ));
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:ProblemManagement' => 'Problem Yönetimi',
@@ -176,12 +176,12 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:SearchError+' => 'Bilinen hataları ara',
 	'Menu:Problem:KnownErrors' => 'Tüm bilinen hatalar',
 	'Menu:Problem:KnownErrors+' => 'Tüm bilinen hatalar',
-	'Menu:FAQCategory' => 'FAQ categories~~',
-	'Menu:FAQCategory+' => 'All FAQ categories~~',
-	'Menu:FAQ' => 'FAQs~~',
-	'Menu:FAQ+' => 'All FAQs~~',
+	'Menu:FAQCategory' => 'SSS kategorileri',
+	'Menu:FAQCategory+' => 'Tüm SSS kategorileri',
+	'Menu:FAQ' => 'SSS',
+	'Menu:FAQ+' => 'Tüm SSS',
 
-	'Brick:Portal:FAQ:Menu' => 'FAQ~~',
-	'Brick:Portal:FAQ:Title' => 'Frequently Asked Questions~~',
+	'Brick:Portal:FAQ:Menu' => 'SSS',
+	'Brick:Portal:FAQ:Title' => 'Sıkça Sorulan Sorular',
 	'Brick:Portal:FAQ:Title+' => '<p>In a hurry?</p><p>Check out the list of most common questions and (maybe) find the expected answer right away.</p>~~',
 ));
