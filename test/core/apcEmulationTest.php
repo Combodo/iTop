@@ -27,10 +27,16 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use PHPUnit\Framework\TestCase;
 
 define('UNIT_MAX_CACHE_FILES', 10);
 
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class apcEmulationTest extends ItopTestCase
 {
 

@@ -23,7 +23,13 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ConfigPlaceholdersResolver;
+use PHPUnit\Framework\TestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class ConfigPlaceholdersResolverTest extends ItopTestCase
 {
 	protected function setUp()
@@ -31,7 +37,6 @@ class ConfigPlaceholdersResolverTest extends ItopTestCase
 		parent::setUp();
 		require_once (APPROOT.'core/config.class.inc.php');
 	}
-
 	/**
 	 * @dataProvider providerResolve
 	 */

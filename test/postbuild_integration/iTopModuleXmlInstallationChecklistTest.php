@@ -11,6 +11,8 @@ use iTopDesignFormat;
  * Ticket 3061 - Automatically check the installation.xml consistency
  *
  * @covers iTopDesignFormat
+ *
+ * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 {

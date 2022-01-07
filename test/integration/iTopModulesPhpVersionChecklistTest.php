@@ -23,11 +23,11 @@ use iTopDesignFormat;
  * @group itop-community
  *
  * @covers iTopDesignFormat
+ *
+ * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 {
-
-
 	/**
 	 * Verify if the datamodel.*.xml files refer to the current itop version
 	 * This is an integration test
@@ -86,5 +86,4 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 
 		return $aTestCases;
 	}
-
 }

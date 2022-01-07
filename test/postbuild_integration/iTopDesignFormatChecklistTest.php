@@ -12,6 +12,8 @@ use PHPUnit\Exception;
  * Ticket 3053 - Check XML conversion methods
  *
  * @covers iTopDesignFormat
+ *
+ * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class TestForITopDesignFormatClass extends ItopTestCase
 {

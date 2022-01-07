@@ -13,6 +13,11 @@ use utils;
  * @package Combodo\iTop\Test\UnitTest\Core
  */
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class CMDBSourceTest extends ItopTestCase
 {
 	protected function setUp()
