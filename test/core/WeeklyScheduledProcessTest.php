@@ -5,13 +5,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use DateTime;
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
- * @package Combodo\iTop\Test\UnitTest\Core
- */
 class WeeklyScheduledProcessTest extends ItopTestCase
 {
 	protected function setUp()

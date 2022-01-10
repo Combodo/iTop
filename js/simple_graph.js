@@ -727,18 +727,25 @@ $(function()
 			}
 			if (oData.lists)
 			{
-				this.refresh_lists(oData.lists);
+				if (this.options.excluded_classes.length > 0) {
+					var newList = {};
+					$.each(oData.lists, function (index, listId) {
+						if (me.options.excluded_classes.indexOf(index) < 0) {
+							newList[index] = listId;
+						}
+					});
+					me.refresh_lists(newList);
+				} else {
+					me.refresh_lists(oData.lists);
+				}
 			}
-			if (this.element.is(':visible'))
-			{
-				this._updateBBox();
-				this.auto_scale();
-				this._reset_pan_and_zoom();
-				this.draw();
-			}
-			else
-			{
-				this.bRedrawNeeded = true;
+			if (me.element.is(':visible')) {
+				me._updateBBox();
+				me.auto_scale();
+				me._reset_pan_and_zoom();
+				me.draw();
+			} else {
+				me.bRedrawNeeded = true;
 			}
 		},
 		refresh_groups: function(aGroups)

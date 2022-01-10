@@ -22,7 +22,17 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
+
+/**
+ * Constant containing the application version
+ * Warning: this might be different from iTop core version!
+ *
+ * @see     ITOP_DESIGN_LATEST_VERSION for iTop core version
+ *
+ * @used-by utils::GetItopPatchVersion
+ */
 define('ITOP_VERSION', '3.0.1-dev');
+
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
@@ -849,6 +859,14 @@ class Config
 			'default' => 'graphics',
 			'value' => '',
 			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'impact_analysis_lazy_loading' => [
+			'type'                => 'bool',
+			'description'         => 'In the impact analysis view: display the analysis or filter before display',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'url_validation_pattern' => [

@@ -542,14 +542,25 @@ class FileLog
  */
 class LogChannels
 {
-	public const CLI          = 'CLI';
-	public const CONSOLE      = 'console';
-	public const DEADLOCK     = 'DeadLock';
-	public const INLINE_IMAGE = 'InlineImage';
-	public const PORTAL       = 'portal';
-	public const CMDB_SOURCE  = 'cmdbsource';
-	public const CORE         = 'core';
 	public const APC = 'apc';
+
+	public const CLI          = 'CLI';
+
+	/**
+	 * @var string
+	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
+	 */
+	public const CMDB_SOURCE = 'cmdbsource';
+
+	public const CONSOLE      = 'console';
+
+	public const CORE         = 'core';
+
+	public const DEADLOCK     = 'DeadLock';
+
+	public const INLINE_IMAGE = 'InlineImage';
+
+	public const PORTAL       = 'portal';
 }
 
 

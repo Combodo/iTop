@@ -5,6 +5,11 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use Expression;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class ExpressionTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;

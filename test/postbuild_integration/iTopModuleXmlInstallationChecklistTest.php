@@ -6,20 +6,12 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 
 /**
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- *
- * @since 3.0.0 N°3060 / N°3061
+ * @since 2.7.2 N°3060 / N°3061 Automatically check the installation.xml consistency
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
 class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 {
-	protected function setUp()
-	{
-		parent::setUp();
-	}
-
 	/**
 	 * make sure installation.xml is provided and respects XML format
 	 */
