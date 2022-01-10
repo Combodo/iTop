@@ -549,6 +549,7 @@ class LogChannels
 	/**
 	 * @var string
 	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
+	 * @since 3.0.0 logs info in CMDBSource (see commit a117906f)
 	 */
 	public const CMDB_SOURCE = 'cmdbsource';
 
