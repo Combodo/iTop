@@ -794,10 +794,10 @@ class CMDBSource
 		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions)
 		{
-			IssueLog::Trace("START TRANSACTION was sent to the DB", LogChannels::CMDBSOURCE, ['stacktrace' => $aStackTrace]);
+			IssueLog::Trace("START TRANSACTION was sent to the DB", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 			self::DBQuery('START TRANSACTION');
 		} else {
-			IssueLog::Trace("START TRANSACTION ignored as a transaction is already opened", LogChannels::CMDBSOURCE, ['stacktrace' => $aStackTrace]);
+			IssueLog::Trace("START TRANSACTION ignored as a transaction is already opened", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 		}
 
 		self::AddTransactionLevel();

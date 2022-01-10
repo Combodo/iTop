@@ -545,7 +545,7 @@ class LogChannels
 	 * @var string
 	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
 	 */
-	const CMDBSOURCE = 'cmdbsource';
+	const CMDB_SOURCE = 'cmdbsource';
 
 	const DEADLOCK = 'DeadLock';
 
