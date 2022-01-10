@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Database inconsistencies
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	// Dictionary entries go here
@@ -28,6 +27,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'DBTools:Class' => 'Klasa',
 	'DBTools:Title' => 'Narzędzia do konserwacji bazy danych',
 	'DBTools:ErrorsFound' => 'Znalezione błędy',
+	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
+	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
 	'DBTools:Error' => 'Błąd',
 	'DBTools:Count' => 'Liczba',
 	'DBTools:SQLquery' => 'Zapytanie SQL',
@@ -39,18 +40,21 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'DBTools:ShowReport' => 'Raport',
 	'DBTools:IntegrityCheck' => 'Sprawdzanie integralności',
 	'DBTools:FetchCheck' => 'Sprawdzenie przestrzeni (długie)',
+	'DBTools:SelectAnalysisType' => 'Select analysis type~~',
 
 	'DBTools:Analyze' => 'Analiza',
 	'DBTools:Details' => 'Pokaż szczegóły',
 	'DBTools:ShowAll' => 'Pokaż wszystkie błędy',
 
 	'DBTools:Inconsistencies' => 'Niespójności bazy danych',
+	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
 
 	'DBAnalyzer-Integrity-OrphanRecord' => 'Osierocony rekord w `%1$s`, powinien mieć swój odpowiednik w tabeli `%2$s`',
 	'DBAnalyzer-Integrity-InvalidExtKey' => 'Nieprawidłowy klucz zewnętrzny %1$s (kolumna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-MissingExtKey' => 'Brak klucza zewnętrznego %1$s (kolumna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-InvalidValue' => 'Nieprawidłowa wartość dla %1$s (kolumna: `%2$s.%3$s`)',
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Niektóre konta użytkowników w ogóle nie mają profilu',
+	'DBAnalyzer-Integrity-HKInvalid' => 'Broken hierarchical key `%1$s`~~',
 	'DBAnalyzer-Fetch-Count-Error' => 'Błąd liczby wpisów w `%1$s`, %2$d pobrane wpisy / %3$d obliczone',
 	'DBAnalyzer-Integrity-FinalClass' => 'Pole `%2$s`.`%1$s` musi mieć taką samą wartość jak `%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => 'Pole `%2$s`.`%1$s` musi zawierać prawidłową klasę',
