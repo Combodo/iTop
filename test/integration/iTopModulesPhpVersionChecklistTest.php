@@ -16,13 +16,10 @@
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use iTopDesignFormat;
 
 
 /**
  * @group itop-community
- *
- * @covers iTopDesignFormat
  *
  * @package Combodo\iTop\Test\UnitTest\Setup
  */
