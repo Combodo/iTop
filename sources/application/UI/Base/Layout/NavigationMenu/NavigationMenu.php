@@ -351,6 +351,11 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 				$this->aSiloSelection['html'] .= $oAppContext->GetForForm(); // Pass what remains, if anything...
 				$this->aSiloSelection['html'] .= '</form>';
 
+				$sAddClearButton = "";
+				if ($this->bHasSiloSelected ){
+					$sAddClearButton = "$('#mini_clear_org_id').removeClass('ibo-is-hidden');";
+				}
+
 				$sPageJS = $oPage->GetJS();
 				$sPageReadyJS = $oPage->GetReadyJS();
 				$this->aSiloSelection['js'] =
@@ -359,6 +364,7 @@ $sPageJS
 $sPageReadyJS
 $('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').on('extkeychange', function() { $('[data-role="ibo-navigation-menu--silo-selection--form"]').submit(); } )
 $('[data-role="ibo-navigation-menu--silo-selection--form"] #label_org_id').on('click', function() { if ($('[data-role="ibo-navigation-menu--silo-selection--form"] #org_id').val() == '') { $(this).val(''); } } );
+$sAddClearButton
 JS;
 		}
 	}
