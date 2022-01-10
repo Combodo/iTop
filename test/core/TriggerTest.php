@@ -15,6 +15,8 @@ use TriggerOnObjectCreate;
  * @package Combodo\iTop\Test\UnitTest\Core
  *
  * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  */
 
 class TriggerTest extends ItopDataTestCase

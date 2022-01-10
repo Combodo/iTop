@@ -30,6 +30,10 @@ use utils;
  *
  * @package Combodo\iTop\Test\UnitTest\Synchro
  * @group dataSynchro
+ *
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  */
 class DataSynchroTest extends ItopDataTestCase
 {

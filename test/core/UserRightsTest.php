@@ -40,6 +40,7 @@ use utils;
 /**
  * @group itopRequestMgmt
  * @group userRights
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

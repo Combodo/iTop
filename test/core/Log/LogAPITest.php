@@ -17,6 +17,11 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class LogAPITest extends ItopDataTestCase
 {
 	private $mockFileLog;
