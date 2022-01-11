@@ -27,7 +27,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 
 	/**
 	 * @covers       iTopDesignFormat::Convert
-	 * @dataProvider testMigrationMethodProvider
+	 * @dataProvider MigrationMethodProvider
 	 *
 	 * @param string $sTargetVersion
 	 * @param string $sInputXmlFileName example "1.7_to_1.6.input"
@@ -60,7 +60,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 		return file_get_contents($sCurrentPath.DIRECTORY_SEPARATOR.$sFileName.'.xml');
 	}
 
-	public function testMigrationMethodProvider()
+	public function MigrationMethodProvider()
 	{
 		return array(
 			'1.7 to 1.6' => array('1.6', '1.7_to_1.6.input', '1.7_to_1.6.expected'),
