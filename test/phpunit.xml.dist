@@ -53,6 +53,9 @@
         <testsuite name="Tickets">
             <directory>itop-tickets</directory>
         </testsuite>
+        <testsuite name="Config">
+          <directory>itop-config</directory>
+        </testsuite>
         <testsuite name="Application">
             <directory>application</directory>
         </testsuite>
@@ -63,7 +66,7 @@
             <directory>status</directory>
         </testsuite>
         <testsuite name="Setup">
-            <file>setup/SetupUtilsTest.php</file>
+            <directory>setup</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>integration</directory>
