@@ -470,6 +470,7 @@ EOF;
 	 * @uses \CMDBSource::GetDBVersion() so needs a connection opened !
 	 *
 	 * @since 2.5.0 N°1260
+	 * @since 2.6.2 2.7.0 N°2336 Call DB to get vendor and version (so CMDBSource must be init before calling this method)
 	 * @link https://dev.mysql.com/doc/refman/5.6/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
