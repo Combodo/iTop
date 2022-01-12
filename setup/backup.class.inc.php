@@ -254,7 +254,7 @@ class DBBackup
 		return $aRet;
 	}
 
-	protected static function EscapeShellArg($sValue)
+	public static function EscapeShellArg($sValue)
 	{
 		// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 		//    It suggests to rely on pctnl_* function instead of using escapeshellargs
@@ -461,13 +461,15 @@ EOF;
 
 
 	/**
-	 * @see https://dev.mysql.com/doc/refman/5.6/en/encrypted-connection-options.html
-	 *
 	 * @param Config $oConfig
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
 	 *
-	 * @since 2.5.0
+	 * @uses \CMDBSource::GetDBVendor() so needs a connection opened !
+	 * @uses \CMDBSource::GetDBVersion() so needs a connection opened !
+	 *
+	 * @since 2.5.0 N°1260
+	 * @link https://dev.mysql.com/doc/refman/5.6/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{

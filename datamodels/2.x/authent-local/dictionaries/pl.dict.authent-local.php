@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 // Dictionnay conventions
 // Class:<class_name>
 // Class:<class_name>+
@@ -30,11 +29,9 @@
 // Class:<class_name>/Attribute:<attribute_code>/Value:<value>+
 // Class:<class_name>/Stimulus:<stimulus_code>
 // Class:<class_name>/Stimulus:<stimulus_code>+
-
 //
 // Class: UserLocal
 //
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserLocal' => 'Użytkownik '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Użytkownik uwierzytelniony przez '.ITOP_APPLICATION_SHORT,
@@ -49,10 +46,13 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Wygasło',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Odnowienie hasła',
 	'Class:UserLocal/Attribute:password_renewed_date+' => 'Kiedy ostatnio zmieniano hasło',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Hasło musi mieć co najmniej 8 znaków i zawierać duże, małe litery, cyfry i znaki specjalne.',
 
-	'UserLocal:password:expiration' => 'Poniższe pola wymagają rozszerzenia'
+	'UserLocal:password:expiration' => 'Poniższe pola wymagają rozszerzenia',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

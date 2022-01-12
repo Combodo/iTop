@@ -139,7 +139,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
             {% endif %},
             type: "html",
-            data: "",
+            data: "id",
             render: function (data, type, row) {
                 let oCheckboxElem =
                 {% if oUIBlock.GetOption("select_mode") != "single" %}

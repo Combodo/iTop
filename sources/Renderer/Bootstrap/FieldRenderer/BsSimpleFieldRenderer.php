@@ -578,7 +578,11 @@ HTML
 			$aContactPicturesCache = array();
 			$aPeerColorClassCache = array();
 			// Note: Yes, the config. param. is named after the backoffice element but we hope that we will "soon" have some kind of "light" activity panel in the portal too, so we keep this name.
-			$bHideContactPicture = in_array(PORTAL_ID, utils::GetConfig()->Get('activity_panel.hide_avatars'));
+			$bHideContactPicture = false;
+			if (defined('PORTAL_ID'))
+			{
+				$bHideContactPicture= in_array(PORTAL_ID, utils::GetConfig()->Get('activity_panel.hide_avatars'));
+			}
 			// Current user
 			$iCurrentUserId = UserRights::GetUserId();
 

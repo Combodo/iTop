@@ -3,7 +3,6 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:RequestManagement' => 'Pomoc techniczna',
 	'Menu:RequestManagement+' => 'Pomoc techniczna',
@@ -21,8 +20,8 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Menu:UserRequest:Shortcuts+' => '',
 	'Menu:UserRequest:MyRequests' => 'Zgłoszenia przypisane do mnie',
 	'Menu:UserRequest:MyRequests+' => 'Zgłoszenia przypisane do mnie (jako Agent)',
-	'Menu:UserRequest:MySupportRequests' => "Moje telefony wsparcia",
-	'Menu:UserRequest:MySupportRequests+' => "Moje telefony wsparcia",
+	'Menu:UserRequest:MySupportRequests' => 'Moje telefony wsparcia',
+	'Menu:UserRequest:MySupportRequests+' => 'Moje telefony wsparcia',
 	'Menu:UserRequest:EscalatedRequests' => 'Gorące prośby',
 	'Menu:UserRequest:EscalatedRequests+' => 'Gorące prośby',
 	'Menu:UserRequest:OpenRequests' => 'Wszystkie otwarte zgłoszenia',
@@ -268,7 +267,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Portal:ShowProblem' => 'Problemy',
 	'Portal:ShowFaqs' => 'Pytania FAQ',
 	'Portal:NoOpenProblem' => 'Żaden otwarty problem',
-	'Portal:SelectLanguage' => "Zmień język",
+	'Portal:SelectLanguage' => 'Zmień język',
 	'Portal:LanguageChangedTo_Lang' => 'Język został zmieniony na',
 	'Portal:ChooseYourFavoriteLanguage' => 'Wybierz swój ulubiony język',
 

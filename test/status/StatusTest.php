@@ -9,11 +9,6 @@ namespace Combodo\iTop\Test\UnitTest\Status;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class StatusTest extends ItopTestCase
 {
 	public function setUp()
@@ -22,23 +17,15 @@ class StatusTest extends ItopTestCase
 		require_once APPROOT.'core/config.class.inc.php'; // for constants
 	}
 
-	/**
-	 *
-	 */
-	public function testStatusWrongUrl()
-	{
+    public function testStatusWrongUrl() {
 		$sPath = APPROOT.'/status_wrong.php';
 
-		exec("php $sPath", $aOutput, $iRet);
-		$this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
+        exec("php $sPath", $aOutput, $iRet);
+        $this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
 
-	}
+    }
 
-	/**
-	 *
-	 */
-	public function testStatusGood()
-	{
+    public function testStatusGood() {
 		$sPath = APPROOT.'/webservices/status.php';
 
 		exec("php $sPath", $aOutput, $iRet);

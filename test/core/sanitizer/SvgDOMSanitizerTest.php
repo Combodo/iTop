@@ -8,11 +8,6 @@ use SVGDOMSanitizer;
 require_once __DIR__.'/AbstractDOMSanitizerTest.php';
 
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class SVGDOMSanitizerTest extends AbstractDOMSanitizerTest
 {
 	/**
