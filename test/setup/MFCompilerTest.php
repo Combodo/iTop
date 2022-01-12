@@ -178,6 +178,7 @@ class MFCompilerTest extends ItopTestCase {
 			'stylesheets' => [
 				"fullmoon" => '../css/backoffice/main.scss',
 				"environment-banner" => '../css/backoffice/themes/page-banner.scss',
+				"datamodel-compiled-scss-rules" => 'branding/themes/datamodel-compiled-scss-rules.scss',
 			],
 		];
 
