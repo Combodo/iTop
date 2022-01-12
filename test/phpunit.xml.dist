@@ -19,7 +19,7 @@
 <phpunit bootstrap="unittestautoload.php"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
-         backupGlobals="false"
+         backupGlobals="true"
          backupStaticAttributes="false"
          cacheTokens="false"
          colors="true"
@@ -53,6 +53,9 @@
         <testsuite name="Tickets">
             <directory>itop-tickets</directory>
         </testsuite>
+        <testsuite name="Config">
+          <directory>itop-config</directory>
+        </testsuite>
         <testsuite name="Application">
             <directory>application</directory>
         </testsuite>
@@ -66,7 +69,7 @@
             <directory>synchro</directory>
         </testsuite>
         <testsuite name="Setup">
-            <file>setup/SetupUtilsTest.php</file>
+            <directory>setup</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>integration</directory>

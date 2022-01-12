@@ -56,9 +56,16 @@ define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
 
 /**
+ * Helper class to extend for tests needing access to iTop's metamodel
+ *
+ * **⚠ Warning** Each class extending this one needs to add the following annotations :
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ *
+ * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
+ * iTop datamodel)
  */
 class ItopDataTestCase extends ItopTestCase
 {

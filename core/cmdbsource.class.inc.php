@@ -350,6 +350,12 @@ class CMDBSource
 
 	}
 
+	/**
+	 * @return string
+	 * @throws \MySQLException
+	 *
+	 * @uses \CMDBSource::QueryToCol() so needs a connection opened !
+	 */
 	public static function GetDBVersion()
 	{
 		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
@@ -367,8 +373,10 @@ class CMDBSource
 	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
+	 *
+	 * @uses \CMDBSource::GetServerVariable() so needs a connection opened !
 	 */
-	static public function GetDBVendor()
+	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
 		
