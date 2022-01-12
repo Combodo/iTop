@@ -2178,7 +2178,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
 				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
-				$oExistingLine = $oExisting->getLineNo();
+				$iExistingLine = $oExisting->getLineNo();
 				throw new MFException($sPath.' at line '.$iLine.': could not be added (already exists) in '.$oExistingPath.' at line '.$oExistingLine, MFException::COULD_NOT_BE_ADDED,
 					$iLine, $sPath);
 			}
