@@ -51,6 +51,6 @@ class DBBackupTest extends ItopTestCase
 		$oConfigToTest->Set('db_tls.ca', $sTestCa);
 		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 		$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
-		$this->assertStringEndsWith('--ssl-ca="'.$sTestCa.'"', $sCliArgsCapathCfg);
+		$this->assertStringEndsWith('--ssl-ca='.DBBackup::EscapeShellArg($sTestCa), $sCliArgsCapathCfg);
 	}
 }

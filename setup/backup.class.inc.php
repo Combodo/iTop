@@ -255,7 +255,7 @@ class DBBackup
 		return $aRet;
 	}
 
-	protected static function EscapeShellArg($sValue)
+	public static function EscapeShellArg($sValue)
 	{
 		// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 		//    It suggests to rely on pctnl_* function instead of using escapeshellargs
