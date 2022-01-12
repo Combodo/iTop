@@ -62,8 +62,8 @@
         <!--testsuite name="OQL">
             <directory>OQL</directory>
         </testsuite-->
-        <testsuite name="Source">
-            <directory>source</directory>
+        <testsuite name="Sources">
+            <directory>sources</directory>
         </testsuite>
         <testsuite name="Status">
             <directory>status</directory>
