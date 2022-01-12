@@ -466,6 +466,9 @@ EOF;
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
 	 *
+	 * @uses \CMDBSource::GetDBVendor() so needs a connection opened !
+	 * @uses \CMDBSource::GetDBVersion() so needs a connection opened !
+	 *
 	 * @since 2.5.0 N°1260
 	 * @link https://dev.mysql.com/doc/refman/5.6/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
 	 */

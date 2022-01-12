@@ -2,9 +2,10 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
+use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
-use Config;
 use DBBackup;
+use utils;
 
 /**
  * @runTestsInSeparateProcesses
@@ -21,21 +22,35 @@ class DBBackupTest extends ItopTestCase
 		require_once(APPROOT.'core/cmdbsource.class.inc.php'); // DBBackup dependency
 	}
 
+	/**
+	 * @throws \CoreException
+	 * @throws \ConfigException
+	 * @throws \MySQLException
+	 */
 	public function testGetMysqlCliTlsOptions()
 	{
-		$oConfig = new Config();
-		$oConfig->Set('db_tls.enabled', false);
+		$oConfigToTest = utils::GetConfig();
 
-		$sCliArgsNoTls = DBBackup::GetMysqlCliTlsOptions($oConfig);
+		// No TLS connection = no additional CLI args !
+		$oConfigToTest->Set('db_tls.enabled', false);
+		$sCliArgsNoTls = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
 		$this->assertEmpty($sCliArgsNoTls);
 
-		$oConfig->Set('db_tls.enabled', true);
-		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfig);
-		$this->assertEquals(' --ssl', $sCliArgsMinCfg);
+		// We need a connection to the DB, so let's open it !
+		$oConfigOnDisk = utils::GetConfig();
+		CMDBSource::InitFromConfig($oConfigOnDisk);
 
+		// TLS connection configured = we need one CLI arg
+		$oConfigToTest->Set('db_tls.enabled', true);
+		$sCliArgsMinCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
+		// depending on the MySQL version, we would have `--ssl` or `--ssl-mode=VERIFY_CA`
+		$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
+
+		// TLS connection configured + CA option = we need multiple CLI args
 		$sTestCa = 'my_test_ca';
-		$oConfig->Set('db_tls.ca', $sTestCa);
-		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfig);
-		$this->assertEquals(' --ssl --ssl-ca="'.$sTestCa.'"', $sCliArgsCapathCfg);
+		$oConfigToTest->Set('db_tls.ca', $sTestCa);
+		$sCliArgsCapathCfg = DBBackup::GetMysqlCliTlsOptions($oConfigToTest);
+		$this->assertStringStartsWith(' --ssl', $sCliArgsMinCfg);
+		$this->assertStringEndsWith('--ssl-ca="'.$sTestCa.'"', $sCliArgsCapathCfg);
 	}
 }
