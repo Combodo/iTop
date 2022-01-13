@@ -40,49 +40,49 @@
          timeoutForLargeTests="60"
          verbose="false">
 
-    <testsuites>
-        <testsuite name="Extensions">
-            <directory>../env-production/*/test</directory>
-        </testsuite>
-        <testsuite name="Core">
-            <directory>core</directory>
-        </testsuite>
-        <testsuite name="Webservices">
-          <directory>webservices</directory>
-        </testsuite>
-        <testsuite name="Tickets">
-            <directory>itop-tickets</directory>
-        </testsuite>
-        <testsuite name="Config">
-          <directory>itop-config</directory>
-        </testsuite>
-        <testsuite name="Application">
-            <directory>application</directory>
-        </testsuite>
-        <!--testsuite name="OQL">
-            <directory>OQL</directory>
-        </testsuite-->
-        <testsuite name="Status">
-            <directory>status</directory>
-        </testsuite>
-        <testsuite name="Setup">
-            <directory>setup</directory>
-        </testsuite>
-        <testsuite name="Integration">
-            <directory>integration</directory>
-        </testsuite>
-        <testsuite name="CoreExtensions">
-            <directory>coreExtensions</directory>
-        </testsuite>
-    </testsuites>
+  <testsuites>
+    <testsuite name="Extensions">
+      <directory>../env-production/*/test</directory>
+    </testsuite>
+    <testsuite name="Core">
+      <directory>core</directory>
+    </testsuite>
+    <testsuite name="Webservices">
+      <directory>webservices</directory>
+    </testsuite>
+    <testsuite name="Tickets">
+      <directory>itop-tickets</directory>
+    </testsuite>
+    <testsuite name="Config">
+      <directory>itop-config</directory>
+    </testsuite>
+    <testsuite name="Application">
+      <directory>application</directory>
+    </testsuite>
+    <!--testsuite name="OQL">
+        <directory>OQL</directory>
+    </testsuite-->
+    <testsuite name="Status">
+      <directory>status</directory>
+    </testsuite>
+    <testsuite name="Setup">
+      <directory>setup</directory>
+    </testsuite>
+    <testsuite name="Integration">
+      <directory>integration</directory>
+    </testsuite>
+    <testsuite name="CoreExtensions">
+      <directory>coreExtensions</directory>
+    </testsuite>
+  </testsuites>
 
-    <!-- Code coverage white list -->
-    <filter>
-        <whitelist>
-            <file>../core/apc-emulation.php</file>
-            <file>../core/ormlinkset.class.inc.php</file>
-            <file>../datamodels/2.x/itop-tickets/main.itop-tickets.php</file>
-        </whitelist>
-    </filter>
+  <!-- Code coverage white list -->
+  <filter>
+    <whitelist>
+      <file>../core/apc-emulation.php</file>
+      <file>../core/ormlinkset.class.inc.php</file>
+      <file>../datamodels/2.x/itop-tickets/main.itop-tickets.php</file>
+    </whitelist>
+  </filter>
 
 </phpunit>
