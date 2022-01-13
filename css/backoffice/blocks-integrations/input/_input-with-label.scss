@@ -12,3 +12,15 @@ select + label, label + select, label > select,
 input + label, label + input, label > input {
   margin-left: $ibo-input--spacing-left--with-label;
 }
+
+label.ibo-has-description {
+  &::after {
+    content: $ibo-field--label--description--content;
+    padding-left: $ibo-field--label--description--padding-left;
+    vertical-align: top;
+
+    cursor: pointer;
+    color: $ibo-field--label--description--color;
+    @extend %ibo-font-ral-bol-50;
+  }
+}

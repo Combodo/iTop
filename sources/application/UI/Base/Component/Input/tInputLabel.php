@@ -18,6 +18,8 @@ trait tInputLabel
 	protected $bIsLabelBefore = true;
 	/** @var string|null Label to display with the input (null for no label) */
 	protected $sLabel = null;
+	/**@String $sDescription for tooltip*/
+	protected $sDescription;
 
 	/**
 	 * @return bool
@@ -84,5 +86,28 @@ trait tInputLabel
 	public function HasLabel(): bool
 	{
 		return $this->sLabel != null;
+	}
+	/**
+	 * @return mixed
+	 */
+	public function GetDescription()
+	{
+		return $this->sDescription;
+	}
+
+	/**
+	 * @param mixed $sDescription
+	 */
+	public function SetDescription($sDescription)
+	{
+		$this->sDescription = $sDescription;
+		return $this;
+	}
+	/**
+	 * @return bool
+	 */
+	public function HasDescription(): bool
+	{
+		return $this->sDescription != null;
 	}
 }

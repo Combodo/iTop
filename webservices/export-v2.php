@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
@@ -122,10 +123,11 @@ function Usage(Page $oP)
 
 function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '')
 {
-	$oP->AddSubBlock(TitleUIBlockFactory::MakeForPage(Dict::S('Core:BulkExport:ScopeDefinition')));
+	$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:ScopeDefinition'));
+	$oP->AddSubBlock($oPanel);
 	$oForm = FormUIBlockFactory::MakeStandard('form');
 	$oForm->SetAction($sAction);
-	$oP->AddSubBlock($oForm);
+	$oPanel->AddSubBlock($oForm);
 
 	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
 
@@ -149,26 +151,11 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oSearch->UpdateContextFromUser();
 	$oQueries = new DBObjectSet($oSearch);
 	while ($oQuery = $oQueries->Fetch()) {
-		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($oQuery->GetKey(), htmlentities($oQuery->Get('name'), ENT_QUOTES, 'UTF-8'), false));
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($oQuery->GetKey(), $oQuery->Get('name'), false));
 	}
 	$oFieldPhraseBook->AddSubBlock($oSelect);
 	$oForm->AddSubBlock($oFieldPhraseBook);
 
-	/*oP->add('<table style="width:100%" class="export_parameters">');
-	$sExpressionHint = empty($sExceptionMessage) ? '' : '<tr><td colspan="2">'.htmlentities($sExceptionMessage, ENT_QUOTES, 'UTF-8').'</td></tr>';
-	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label></span></td>');
-	$oP->add('<td><textarea style="width:100%" cols="70" rows="8" name="expression" id="textarea_oql" placeholder="'.Dict::S('Core:BulkExportQueryPlaceholder').'">'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'</textarea></td></tr>');
-	$oP->add($sExpressionHint);
-	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label></span></td>');
-	$oP->add('<td><select name="query" id="select_phrasebook">');
-	$oP->add('<option value="">'.Dict::S('UI:SelectOne').'</option>');
-	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
-	$oSearch->UpdateContextFromUser();
-	$oQueries = new DBObjectSet($oSearch);
-	while ($oQuery = $oQueries->Fetch()) {
-		$oP->add('<option value="'.$oQuery->GetKey().'">'.htmlentities($oQuery->Get('name'), ENT_QUOTES, 'UTF-8').'</option>');
-	}
-	$oP->add('</select></td></tr>');*/
 	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php">'.Dict::S('Core:BulkExportCanRunNonInteractive').'</a>');
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export.php">'.Dict::S('Core:BulkExportLegacyExport').'</a>');
