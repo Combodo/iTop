@@ -63,9 +63,6 @@
     <!-- testsuite name="OQL">
         <directory>OQL</directory>
     </testsuite -->
-    <testsuite name="Setup">
-      <directory>setup</directory>
-    </testsuite>
     <testsuite name="Sources">
       <directory>sources</directory>
     </testsuite>
@@ -77,6 +74,11 @@
     </testsuite>
     <testsuite name="Webservices">
       <directory>webservices</directory>
+    </testsuite>
+
+    <!-- Setup at the end to avoid problems with config file permissions -->
+    <testsuite name="Setup">
+      <directory>setup</directory>
     </testsuite>
 
     <testsuite name="Extensions">
