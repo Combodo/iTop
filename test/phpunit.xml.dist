@@ -59,12 +59,10 @@
     <testsuite name="Itop-Tickets">
       <directory>itop-tickets</directory>
     </testsuite>
-    <!--
-     This is taking too long... we should move this to nightlies ! See N°4655
-    <testsuite name="OQL">
+    <!-- OQL : taking too long (20min+)... we should move this to nightlies ! See N°4655 -->
+    <!-- testsuite name="OQL">
         <directory>OQL</directory>
-    </testsuite>
-    -->
+    </testsuite -->
     <testsuite name="Setup">
       <directory>setup</directory>
     </testsuite>
