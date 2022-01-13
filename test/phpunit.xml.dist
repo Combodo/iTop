@@ -41,41 +41,38 @@
          verbose="false">
 
   <testsuites>
-    <testsuite name="Application">
-      <directory>application</directory>
+    <testsuite name="Extensions">
+      <directory>../env-production/*/test</directory>
     </testsuite>
     <testsuite name="Core">
       <directory>core</directory>
     </testsuite>
-    <testsuite name="CoreExtensions">
-      <directory>coreExtensions</directory>
-    </testsuite>
-    <testsuite name="Integration">
-      <directory>integration</directory>
-    </testsuite>
-    <testsuite name="Config">
-      <directory>itop-config</directory>
+    <testsuite name="Webservices">
+      <directory>webservices</directory>
     </testsuite>
     <testsuite name="Tickets">
       <directory>itop-tickets</directory>
     </testsuite>
-    <!--
-     This is taking too long... we should move this to nightlies ! See N°4655
-    testsuite name="OQL">
+    <testsuite name="Config">
+      <directory>itop-config</directory>
+    </testsuite>
+    <testsuite name="Application">
+      <directory>application</directory>
+    </testsuite>
+    <!--testsuite name="OQL">
         <directory>OQL</directory>
     </testsuite-->
-    <testsuite name="Setup">
-      <directory>setup</directory>
-    </testsuite>
     <testsuite name="Status">
       <directory>status</directory>
     </testsuite>
-    <testsuite name="Webservices">
-      <directory>webservices</directory>
+    <testsuite name="Setup">
+      <directory>setup</directory>
     </testsuite>
-
-    <testsuite name="Extensions">
-      <directory>../env-production/*/test</directory>
+    <testsuite name="Integration">
+      <directory>integration</directory>
+    </testsuite>
+    <testsuite name="CoreExtensions">
+      <directory>coreExtensions</directory>
     </testsuite>
   </testsuites>
 
