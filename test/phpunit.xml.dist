@@ -53,17 +53,18 @@
     <testsuite name="Integration">
       <directory>integration</directory>
     </testsuite>
-    <testsuite name="Config">
+    <testsuite name="Itop-Config">
       <directory>itop-config</directory>
     </testsuite>
-    <testsuite name="Tickets">
+    <testsuite name="Itop-Tickets">
       <directory>itop-tickets</directory>
     </testsuite>
     <!--
      This is taking too long... we should move this to nightlies ! See N°4655
-    testsuite name="OQL">
+    <testsuite name="OQL">
         <directory>OQL</directory>
-    </testsuite-->
+    </testsuite>
+    -->
     <testsuite name="Setup">
       <directory>setup</directory>
     </testsuite>
