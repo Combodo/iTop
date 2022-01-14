@@ -260,8 +260,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
-		//fix
-		theMap["sFilter"] = $('#datatable_ResultsToAdd_'+me.id+' [name=filter]').val();
+		theMap["sFilter"] = $("#datatable_ResultsToAdd_"+me.id+" [name='filter']").val();
 		theMap["class"] = me.sTargetClass;
 		theMap['operation'] = 'GetFullListForeignKeysFromSelection';
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');
