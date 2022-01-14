@@ -135,6 +135,7 @@ class ObjectResult
  */
 class RestResultWithObjects extends RestResult
 {
+	/** @var DBObject[] */
 	public $objects;
 
 	public function __construct()
@@ -191,6 +192,7 @@ class RestResultWithObjects extends RestResult
 
 class RestResultWithRelations extends RestResultWithObjects
 {
+	/** @var array */
 	public $relations;
 	
 	public function __construct()
