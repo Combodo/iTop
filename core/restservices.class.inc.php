@@ -135,7 +135,14 @@ class ObjectResult
  */
 class RestResultWithObjects extends RestResult
 {
+	/** @var DBObject[] */
 	public $objects;
+
+	public function __construct()
+	{
+		parent::__construct();
+		$this->objects = array();
+	}
 
 	/**
 	 * Report the given object
@@ -185,6 +192,7 @@ class RestResultWithObjects extends RestResult
 
 class RestResultWithRelations extends RestResultWithObjects
 {
+	/** @var array */
 	public $relations;
 	
 	public function __construct()
