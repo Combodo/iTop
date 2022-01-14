@@ -452,6 +452,7 @@ EOF
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
 	$oExporter = null;
+	$oQuery = null;
 
 	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive()) {
 		ReportErrorAndExit("The user account is not authorized to access the archives");
@@ -514,6 +515,11 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	{
 		$oSearch = null;
 		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
+	}
+
+	// update last export information if check parameters ok
+	if($oQuery != null){
+		$oQuery->UpdateLastExportInformation();
 	}
 
 	$oExporter->SetFormat($sFormat);

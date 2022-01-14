@@ -3453,6 +3453,54 @@ abstract class DBObject implements iDisplay
 		return $this->m_iKey;
 	}
 
+
+	/**
+	 * Increment attribute with specified value.
+	 * This function is only applicable with AttributeInteger.
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode attribute code
+	 * @param int $iValue value to increment (default value 1)
+	 *
+	 * @return int incremented value
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public function DBIncrement(string $sAttCode, int $iValue = 1)
+	{
+		// retrieve instance class
+		$sClass = get_class($this);
+
+		// dirty object not allowed
+		if($this->m_bDirty){
+			throw new CoreException("Invalid DBIncrement usage, dirty objects are not allowed. Call DBUpdate before calling DBIncrement.");
+		}
+
+		// ensure attribute type is AttributeInteger
+		$oAttr = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		if(!$oAttr instanceof AttributeInteger){
+			throw new CoreException(sprintf("Invalid DBIncrement usage, attribute type of {$sAttCode} is %s. Only AttributeInteger are compatibles with DBIncrement.", get_class($oAttr)));
+		}
+
+		// prepare SQL statement
+		$sTable = MetaModel::DBGetTable($sClass, $sAttCode);
+		$sPKField = '`'.MetaModel::DBGetKey($sClass).'`';
+		$sKey = CMDBSource::Quote($this->m_iKey);
+		$sUpdateSQL = "UPDATE `{$sTable}` SET `{$sAttCode}` = `{$sAttCode}`+{$iValue} WHERE {$sPKField} = {$sKey}";
+
+		// execute SQL query
+		CMDBSource::Query($sUpdateSQL);
+
+		// reload instance with new value
+		$this->Reload();
+
+		return $this->Get($sAttCode);
+	}
+
 	/**
 	 * @internal
 	 * Save updated fields previous values for {@see DBObject::DBUpdate()} callbacks

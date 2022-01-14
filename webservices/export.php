@@ -184,6 +184,11 @@ if (!empty($sExpression))
 			}
 		}
 
+		// update last export information if check parameters ok
+		if($oQuery != null){
+			$oQuery->UpdateLastExportInformation();
+		}
+
 		if ($oFilter)
 		{
 			$oSet = new CMDBObjectSet($oFilter, array(), $aArgs);
