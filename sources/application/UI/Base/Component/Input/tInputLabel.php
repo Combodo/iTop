@@ -18,7 +18,9 @@ trait tInputLabel
 	protected $bIsLabelBefore = true;
 	/** @var string|null Label to display with the input (null for no label) */
 	protected $sLabel = null;
-	/**@String $sDescription for tooltip*/
+	/**@var string $sDescription for tooltip
+	*  @since 3.0.1
+	 */
 	protected $sDescription;
 
 	/**
