@@ -180,7 +180,7 @@ JSON;
 		$this->assertContains($sExpectedJsonOuput, $this->DeleteTicketFromApi($iId));
 
 		$sExpectedJsonOuput=<<<JSON
-{"objects":null,"code":0,"message":"Found: 0"}
+{"objects":[],"code":0,"message":"Found: 0"}
 JSON;
 		$this->assertEquals($sExpectedJsonOuput, $this->GetTicketViaRest($iId));
 	}
