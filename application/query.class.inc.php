@@ -18,8 +18,7 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Field\Field;
-use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 
@@ -51,6 +50,7 @@ abstract class Query extends cmdbAbstractObject
 			"is_null_allowed" => false,
 			"depends_on" => array(),
 		)));
+
 		MetaModel::Init_AddAttribute(new AttributeText("description", array(
 			"allowed_values" => null,
 			"sql" => "description",
@@ -68,6 +68,41 @@ abstract class Query extends cmdbAbstractObject
 			'display_style' => 'radio_horizontal',
 		)));
 
+		MetaModel::Init_AddAttribute(new AttributeInteger("export_count", array(
+			"allowed_values" => null,
+			"sql" => "export_count",
+			"default_value" => 0,
+			"is_null_allowed" => false,
+			"depends_on" => array(),
+		)));
+
+		MetaModel::Init_AddAttribute(new AttributeDateTime("export_last_date", array(
+			"allowed_values" => null,
+			"sql" => "export_last_date",
+			"default_value" => null,
+			"is_null_allowed" => true,
+			"depends_on" => array(),
+		)));
+
+		MetaModel::Init_AddAttribute(new AttributeExternalKey("export_last_user_id",
+			array(
+				"targetclass"=>'User',
+				"allowed_values"=>null,
+				"sql"=>'user_id',
+				"is_null_allowed"=>true,
+				"depends_on"=>array(),
+				"display_style"=>'select',
+				"always_load_in_tables"=>false,
+				"on_target_delete"=>DEL_SILENT
+			)));
+
+		MetaModel::Init_AddAttribute(new AttributeExternalField("export_last_user_contact",
+			array(
+				"allowed_values"=>null,
+				"extkey_attcode"=> "export_last_user_id",
+				"target_attcode"=>"contactid"
+			)));
+
 		// Display lists
 		MetaModel::Init_SetZListItems('details',
 			array('name', 'is_template', 'description')); // Attributes to be displayed for the complete details
@@ -77,6 +112,51 @@ abstract class Query extends cmdbAbstractObject
 		MetaModel::Init_SetZListItems('default_search',
 			array('name', 'description', 'is_template')); // Criteria of the default search form
 		// MetaModel::Init_SetZListItems('advanced_search', array('name')); // Criteria of the advanced search form
+	}
+
+
+	/** @inheritdoc */
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		// read only attribute
+		if (in_array($sAttCode, ['export_count', 'export_last_date', 'export_last_user_id'])){
+			return(OPT_ATT_READONLY);
+		}
+
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+
+
+	/**
+	 * Return export url.
+	 *
+	 * @param array|null $aValues optional values for the query
+	 *
+	 * @return string|null
+	 */
+	public abstract function GetExportUrl(array $aValues = null) : ?string;
+
+	/**
+	 * Update last export information.
+	 *
+	 * @todo validation with Pierre
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @since 3.1.0
+	 */
+	public function UpdateLastExportInformation() : void
+	{
+		// last export information
+		$this->Set('export_last_date', date(AttributeDateTime::GetSQLFormat()));
+		$this->Set('export_last_user_id', UserRights::GetUserObject());
+		$this->DBUpdate();
+
+		// increment usage counter
+		$this->DBIncrement('export_count');
 	}
 }
 
@@ -116,17 +196,55 @@ class QueryOQL extends Query
 
 		// Display lists
 		MetaModel::Init_SetZListItems('details',
-			array('name', 'is_template', 'description', 'oql', 'fields')); // Attributes to be displayed for the complete details
+			array(
+				'col:col1' => array('fieldset:Query:baseinfo' => array('name', 'is_template', 'description', 'oql', 'fields')),
+				'col:col2' => array('fieldset:Query:exportInfo' => array('export_count', 'export_last_date', 'export_last_user_id', 'export_last_user_contact'))
+			)
+		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('description')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search',
 			array('name', 'description', 'is_template', 'fields', 'oql')); // Criteria of the std search form
 	}
 
+	/** @inheritdoc */
+	public function GetExportUrl(array $aValues = null) : ?string
+	{
+		try{
+			// retrieve attributes
+			$sFields = trim($this->Get('fields'));
+			$sOql = $this->Get('oql');
+
+			// construct base url depending on version
+			$bExportV1Recommended = ($sFields == '');
+			if ($bExportV1Recommended) {
+				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export.php?format=spreadsheet&login_mode=basic&query='.$this->GetKey();
+			}
+			else{
+				$sUrl = utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php?format=spreadsheet&login_mode=basic&date_format='.urlencode((string)AttributeDateTime::GetFormat()).'&query='.$this->GetKey();
+			}
+
+			// search object from OQL
+			$oSearch = DBObjectSearch::FromOQL($sOql);
+
+			// inject parameters
+			$aParameters = $oSearch->GetQueryParams();
+			foreach ($aParameters as $sParam => $val) {
+				($aValues === null || $aValues[$sParam] === null) ? $paramValue = $sParam : $paramValue = $aValues[$sParam];
+				$sUrl .= '&arg_' . $sParam . '=' . $paramValue;
+			}
+
+			return $sUrl;
+		}
+		catch(Exception $e){
+			return null;
+		}
+	}
+
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
 		$aFieldsMap = parent::DisplayBareProperties($oPage, $bEditMode, $sPrefix, $aExtraParams);
-		$oPage->add_script("$('[name=\"attr_oql\"]').addClass('ibo-queryoql'); $('[data-attribute-code=\"oql\"]').addClass('ibo-queryoql');");
+		$oPage->add_script("$('[name=\"attr_oql\"]').addClass('ibo-query-oql ibo-is-code'); $('[data-attribute-code=\"oql\"]').addClass('ibo-query-oql ibo-is-code');");
 
 		if (!$bEditMode) {
 			$sFields = trim($this->Get('fields'));
@@ -152,9 +270,11 @@ class QueryOQL extends Query
 					$sUrl .= '&arg_'.$sParam.'=["'.$sParam.'"]';
 				}
 
+				// add text area inside field set
+				$oFieldSet = FieldSetUIBlockFactory::MakeStandard(Dict::S('UI:Query:UrlForExcel'));
 				$oTextArea = new TextArea("", $sUrl, null, 80, 3);
-				$oFieldUrl = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:Query:UrlForExcel'), $oTextArea, Field::ENUM_FIELD_LAYOUT_LARGE);
-				$oPage->AddSubBlock($oFieldUrl);
+				$oFieldSet->AddSubBlock($oTextArea);
+				$oPage->AddSubBlock($oFieldSet);
 
 				if (count($aParameters) == 0) {
 					$oBlock = new DisplayBlock($oSearch, 'list');
@@ -177,6 +297,7 @@ class QueryOQL extends Query
 		}
 		return $aFieldsMap;
 	}
+
 
 // Rolled back until 'fields' can be properly managed by AttributeQueryAttCodeSet
 //

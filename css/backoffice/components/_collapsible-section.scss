@@ -1,23 +1,9 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
-$ibo-collapsible-section--margin-top: 3rem !default;
 $ibo-collapsible-section--title--color: $ibo-panel--title--color !default;
 $ibo-collapsible-section--body--background-color: $ibo-panel--body--background-color !default;
 $ibo-collapsible-section--highlight--height: 8px !default;
@@ -26,18 +12,15 @@ $ibo-collapsible-section--maximize-minimize-button--color: $ibo-panel--collapsib
 $ibo-collapsible-section--maximize-minimize-button--right: $ibo-panel--collapsible-toggler--margin-right !default;
 
 
-$ibo-collapsible-section--body--padding-bottom: 16px !default;
+$ibo-collapsible-section--body--padding-bottom: $ibo-spacing-500 !default;
 $ibo-collapsible-section--body--padding-top: $ibo-collapsible-section--body--padding-bottom + $ibo-collapsible-section--highlight--height !default;
-$ibo-collapsible-section--body--padding-x: 16px !default;
+$ibo-collapsible-section--body--padding-x: $ibo-spacing-500 !default;
 $ibo-collapsible-section--body--border-radius: $ibo-panel--body--border-radius !default;
 $ibo-collapsible-section--body--border-size: 1px !default;
 $ibo-collapsible-section--body--border-color: $ibo-panel--base-border-color !default;
 
 
 /* Rules */
-.ibo-collapsible-section {
-	margin: $ibo-collapsible-section--margin-top auto;
-}
 
 .ibo-collapsible-section--header {
 	display: flex;
@@ -77,6 +60,7 @@ $ibo-collapsible-section--body--border-color: $ibo-panel--base-border-color !def
 		}
 
 		.ibo-collapsible-section--action-button {
+      align-self: center;
 			&.ibo-collapsible-section--maximize-button, &.ibo-collapsible-section--minimize-button {
         color: $ibo-collapsible-section--maximize-minimize-button--color;
 				margin-right: $ibo-collapsible-section--maximize-minimize-button--right;

@@ -17,14 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Display DataTable
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'UI:Datatables:Language:Processing' => 'Please wait...~~',
-	'UI:Datatables:Language:LengthMenu' => '_MENU_ per page~~',
-	'UI:Datatables:Language:ZeroRecords' => 'No result~~',
-	'UI:Datatables:Language:Info' => '_TOTAL_ item(s)~~',
-	'UI:Datatables:Language:InfoEmpty' => 'No information~~',
-	'UI:Datatables:Language:EmptyTable' => 'No data available in this table~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'UI:Datatables:Language:Processing'        => 'Please wait...~~',
+	'UI:Datatables:Language:LengthMenu'        => '_MENU_ per page~~',
+	'UI:Datatables:Language:ZeroRecords'       => 'No result~~',
+	'UI:Datatables:Language:Info'              => '_TOTAL_ item(s)~~',
+	'UI:Datatables:Language:InfoEmpty'         => 'No information~~',
+	'UI:Datatables:Language:EmptyTable'        => 'No data available in this table~~',
+	'UI:Datatables:Language:Error'             => 'An error occured while running the query~~',
 	'UI:Datatables:Language:DisplayLength:All' => 'All~~',
-	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort~~',
-	'UI:Datatables:Language:Sort:Descending' => 'enable for a descending sort~~',
+	'UI:Datatables:Language:Sort:Ascending'    => 'enable for an ascending sort~~',
+	'UI:Datatables:Language:Sort:Descending'   => 'enable for a descending sort~~',
 ));

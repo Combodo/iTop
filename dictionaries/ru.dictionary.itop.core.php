@@ -295,16 +295,16 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Change:ObjectCreated' => 'Объект создан.',
 	'Change:ObjectDeleted' => 'Объект удалён.',
 	'Change:ObjectModified' => 'Объект изменён.',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
-	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле "%1$s" установлено значение "%2$s" (предыдущее значение "%3$s").',
-	'Change:AttName_SetTo' => 'В поле "%1$s" установлено значение "%2$s".',
-	'Change:Text_AppendedTo_AttName' => 'Новое значение "%1$s" добавлено к полю "%2$s".',
-	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле "%1$s" изменено (предыдущее значение "%2$s").',
-	'Change:AttName_Changed' => 'Поле "%1$s" изменено.',
-	'Change:AttName_EntryAdded' => 'В поле "%1$s" добавлено новое значение.',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
+	'Change:TwoAttributesChanged' => 'Изменены %1$s и %2$s',
+	'Change:ThreeAttributesChanged' => 'Изменены %1$s, %2$s и ещё 1',
+	'Change:FourOrMoreAttributesChanged' => 'Изменены %1$s, %2$s и ещё %3$s',
+	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => 'В поле %1$s установлено значение %2$s (предыдущее значение %3$s).',
+	'Change:AttName_SetTo' => 'В поле %1$s установлено значение %2$s.',
+	'Change:Text_AppendedTo_AttName' => 'Новое значение %1$s добавлено к полю %2$s.',
+	'Change:AttName_Changed_PreviousValue_OldValue' => 'Поле %1$s изменено (предыдущее значение %2$s).',
+	'Change:AttName_Changed' => 'Поле %1$s изменено.',
+	'Change:AttName_EntryAdded' => 'В поле %1$s добавлено новое значение.',
+	'Change:State_Changed_NewValue_OldValue' => 'Переход из %2$s в %1$s',
 	'Change:LinkSet:Added' => 'добавлен объект %1$s.',
 	'Change:LinkSet:Removed' => 'удалён объект %1$s.',
 	'Change:LinkSet:Modified' => 'изменён объект %1$s.',
@@ -486,6 +486,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:Action/Attribute:trigger_list+' => 'Триггеры, которые запускают данное действие',
 	'Class:Action/Attribute:finalclass' => 'Тип',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -644,6 +645,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -1073,6 +1076,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

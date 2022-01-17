@@ -1,4 +1,5 @@
 $.widget( "itop.regulartabs", $.ui.tabs, {
+	widgetEventPrefix: 'tabs',
 	js_selectors:
 		{
 			tab_container_list: '[data-role="ibo-tab-container--tab-container-list"]'

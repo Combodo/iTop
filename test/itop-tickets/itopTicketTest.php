@@ -34,6 +34,7 @@ use Exception;
  * @group itopVirtualizationMgmt
  * @group itopConfigMgmt
  * @group itopTickets
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -111,8 +112,6 @@ class ItopTicketTest extends ItopDataTestCase
      */
     public function testUpdateImpactedItems_Basic2()
     {
-	    self::markTestSkipped('Throws a undefined offset PHP notice in core\dbobject.class.php:2151, to be fixed in N°4047');
-
 	    $oTicket = $this->CreateTicket(1);
 	    $oServer1 = $this->CreateServer(1);
 	    $oHypervisor1 = $this->CreateHypervisor(1, $oServer1);

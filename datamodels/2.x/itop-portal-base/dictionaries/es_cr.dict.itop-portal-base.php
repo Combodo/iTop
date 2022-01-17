@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (C) 2013-2021 Combodo SARL
+ * Spanish Localized data
+ *
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
  *
  * This file is part of iTop.
  *
@@ -17,7 +21,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Portal
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Page:DefaultTitle' => '%1$s - Portal de Usuario',
 	'Page:PleaseWait' => 'Por favor espere...',
 	'Page:Home' => 'Inicio',
@@ -33,7 +37,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:Button:Delete' => 'Borrar',
 	'Portal:EnvironmentBanner:Title' => 'Se encuentra en modo <strong>%1$s</strong>',
 	'Portal:EnvironmentBanner:GoToProduction' => 'Regresar a modo PRODUCTION',
-	'Error:HTTP:400' => 'Bad request~~',
+	'Error:HTTP:400' => 'Solicitud Incorrecta',
 	'Error:HTTP:401' => 'Autenticación',
 	'Error:HTTP:404' => 'Página no encontrada',
 	'Error:HTTP:500' => '¡Vaya! Ha ocurrido un error.',
@@ -59,20 +63,20 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Portal:Attachments:DropZone:Message' => 'Agrega tus archivos para agregarlos como documentos adjuntos',
 	'Portal:File:None' => 'No hay archivo',
 	'Portal:File:DisplayInfo' => '<a href="%2$s" class="file_download_link">%1$s</a>',
-	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Download</a>',
+	'Portal:File:DisplayInfo+' => '%1$s (%2$s) <a href="%3$s" class="file_open_link" target="_blank">Abierto</a> / <a href="%4$s" class="file_download_link">Descarga</a>',
 	'Portal:Calendar-FirstDayOfWeek' => 'es', //work with moment.js locales
 ));
 
 // Object form
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
-	'Portal:Form:Close:Warning' => 'Do you want to leave this form ? Data entered may be lost~~',
+	'Portal:Form:Close:Warning' => '¿Desea abandorar esta forma? Datos modificados se perderan',
 	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
 	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
 ));
 
 // UserProfile brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:UserProfile:Name' => 'Perfil del usuario',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Mi perfil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Cerrar Sesión',
@@ -86,12 +90,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 // AggregatePageBrick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:AggregatePage:DefaultTitle' => 'Tablero de Control',
 ));
 
 // BrowseBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Browse:Name' => 'Buscar en todos los elementos',
 	'Brick:Portal:Browse:Mode:List' => 'Lista',
 	'Brick:Portal:Browse:Mode:Tree' => 'Árbol',
@@ -107,7 +111,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 // ManageBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Manage:Name' => 'Administrar elementos',
 	'Brick:Portal:Manage:Table:NoData' => 'Sin elementos',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Acciones',
@@ -125,29 +129,29 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 // ObjectBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Object:Name' => 'Objecto',
 	'Brick:Portal:Object:Form:Create:Title' => 'Nuevo %1$s',
 	'Brick:Portal:Object:Form:Edit:Title' => 'Actualizando %2$s (%1$s)',
 	'Brick:Portal:Object:Form:View:Title' => '%1$s : %2$s',
 	'Brick:Portal:Object:Form:Stimulus:Title' => 'Por favor, proporcione la siguiente información:',
 	'Brick:Portal:Object:Form:Message:Saved' => 'Guardado',
-	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado~~',
+	'Brick:Portal:Object:Form:Message:ObjectSaved' => '%1$s guardado',
 	'Brick:Portal:Object:Search:Regular:Title' => 'Selección %1$s (%2$s)',
 	'Brick:Portal:Object:Search:Hierarchy:Title' => 'Selección %1$s (%2$s)',
-	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s~~',
-	'Brick:Portal:Object:Copy:Tooltip' => 'Copy object link~~',
-	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copied~~'
+	'Brick:Portal:Object:Copy:TextToCopy' => '%1$s: %2$s',
+	'Brick:Portal:Object:Copy:Tooltip' => 'Copiar liga al objeto',
+	'Brick:Portal:Object:Copy:CopiedTooltip' => 'Copiado'
 ));
 
 // CreateBrick brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Create:Name' => 'Creación rápida',
 	'Brick:Portal:Create:ChooseType' => 'Por favor, seleccione un tipo',
 ));
 
 // Filter brick
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Brick:Portal:Filter:Name' => 'Prefiltre un bloquek',
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'Ej.:. Conectar a WiFi',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Buscar',

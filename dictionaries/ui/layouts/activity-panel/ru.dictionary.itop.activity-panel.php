@@ -18,40 +18,41 @@
  */
 // Activity panel
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
-	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
+	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Расширить',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Уменьшить',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Закрыть',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Загрузить предыдущие записи',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Загрузить все записи',
 
 	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity~~',
-	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all messages~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all messages~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Активность',
+	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Черновик',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Журналы',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Показать / скрыть изменения журналов',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Статус',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Показать / скрыть изменение статуса',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Изменения',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Показать / скрыть изменения полей',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Показать детализацию изменений',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Скрыть детализацию изменений',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Количество авторов выбранных категорий изменений',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Количество записей в выбранных журналах',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry~~',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Создать новую запись в журнале',
 
 	// Case log entry
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save~~',
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.~~',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Одновременное обновление журналов',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Нажав кнопку "Отправить", вы добавите записи во все редактируемые журнал одновременно.',
 
 	// Notification entry
-	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Click to open the notifications tab and get more information~~',
+	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Открыть дополнительную информацию по уведомлению',
 
 	// Placeholder
-	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
+	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Здесь пока пусто...',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel~~',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel~~',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Активность',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Открыть панель активности',
 ));

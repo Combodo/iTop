@@ -4,8 +4,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('RU RU', 'Russian', 'Русский', [
-	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Edit displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Delete displayed object~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Create a new object (with same class as displayed object)~~',
-	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Save displayed object~~',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:EditObject' => 'Редактировать просматриваемый объект',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:DeleteObject' => 'Удалить просматриваемый объект',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:NewObject' => 'Создать новый объект (того же класса, что и просматриваемый объект)',
+	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Сохранить просматриваемый объект',
 ]);

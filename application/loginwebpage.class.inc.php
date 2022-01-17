@@ -24,6 +24,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\Branding;
+use Combodo\iTop\Application\Helper\Session;
+
 /**
  * Web page used for displaying the login form
  */
@@ -139,16 +142,9 @@ class LoginWebPage extends NiceWebPage
 
 	public function DisplayLoginHeader($bMainAppLogo = false)
 	{
-		$sLogo = 'itop-logo-external.png';
-		$sBrandingLogo = 'login-logo.png';
-
 		$sVersionShort = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
 		$sIconUrl = Utils::GetConfig()->Get('app_icon_url');
-		$sDisplayIcon = utils::GetAbsoluteUrlAppRoot().'images/'.$sLogo.'?t='.utils::GetCacheBusterTimestamp();
-		if (file_exists(MODULESROOT.'branding/'.$sBrandingLogo))
-		{
-			$sDisplayIcon = utils::GetAbsoluteUrlModulesRoot().'branding/'.$sBrandingLogo.'?t='.utils::GetCacheBusterTimestamp();
-		}
+		$sDisplayIcon = Branding::GetLoginLogoAbsoluteUrl();
 		$this->add("<div id=\"login-logo\"><a href=\"".htmlentities($sIconUrl, ENT_QUOTES,
 				self::PAGES_CHARSET)."\"><img title=\"$sVersionShort\" src=\"$sDisplayIcon\"></a></div>\n");
 	}
@@ -392,11 +388,11 @@ class LoginWebPage extends NiceWebPage
 	public static function ResetSession()
 	{
 		// Unset all of the session variables.
-		unset($_SESSION['auth_user']);
-		unset($_SESSION['login_state']);
-		unset($_SESSION['can_logoff']);
-		unset($_SESSION['archive_mode']);
-		unset($_SESSION['impersonate_user']);
+		Session::Unset('auth_user');
+		Session::Unset('login_state');
+		Session::Unset('can_logoff');
+		Session::Unset('archive_mode');
+		Session::Unset('impersonate_user');
 		UserRights::_ResetSessionCache();
 		// If it's desired to kill the session, also delete the session cookie.
 		// Note: This will destroy the session, and not just the session data!
@@ -442,11 +438,11 @@ class LoginWebPage extends NiceWebPage
 		}
 		$bLoginDebug = MetaModel::GetConfig()->Get('login_debug');
 
-		if (!isset($_SESSION['login_state']) || ($_SESSION['login_state'] == self::LOGIN_STATE_ERROR))
+		if (Session::Get('login_state') == self::LOGIN_STATE_ERROR)
 		{
-			$_SESSION['login_state'] = self::LOGIN_STATE_START;
+			Session::Set('login_state', self::LOGIN_STATE_START);
 		}
-		$sLoginState = $_SESSION['login_state'];
+		$sLoginState = Session::Get('login_state');
 
 		$sSessionLog = '';
 		if ($bLoginDebug)
@@ -500,7 +496,7 @@ class LoginWebPage extends NiceWebPage
 
 				// Every plugin has nothing else to do in this state, go forward
 				$sLoginState = self::AdvanceLoginFSMState($sLoginState);
-				$_SESSION['login_state'] = $sLoginState;
+				Session::Set('login_state', $sLoginState);
 			}
 			catch (Exception $e)
 			{
@@ -526,7 +522,7 @@ class LoginWebPage extends NiceWebPage
 
 		if ($bFilterWithMode)
 		{
-			$sCurrentLoginMode = isset($_SESSION['login_mode']) ? $_SESSION['login_mode'] : '';
+			$sCurrentLoginMode = Session::Get('login_mode', '');
 		}
 		else
 		{
@@ -665,8 +661,8 @@ class LoginWebPage extends NiceWebPage
 			$oLog->DBInsertNoReload();
 		}
 
-		$_SESSION['auth_user'] = $sAuthUser;
-		$_SESSION['login_mode'] = $sLoginMode;
+		Session::Set('auth_user', $sAuthUser);
+		Session::Set('login_mode', $sLoginMode);
 		UserRights::_InitSessionCache();
 	}
 
@@ -681,10 +677,10 @@ class LoginWebPage extends NiceWebPage
 	 */
 	public static function CheckLoggedUser(&$iErrorCode)
 	{
-		if (isset($_SESSION['auth_user']))
+		if (Session::IsSet('auth_user'))
 		{
 			// Already authenticated
-			$bRet = UserRights::Login($_SESSION['auth_user']); // Login & set the user's language
+			$bRet = UserRights::Login(Session::Get('auth_user')); // Login & set the user's language
 			if ($bRet)
 			{
 				$iErrorCode = self::EXIT_CODE_OK;
@@ -712,11 +708,11 @@ class LoginWebPage extends NiceWebPage
 
 	public static function SetLoginModeAndReload($sNewLoginMode)
 	{
-		if (isset($_SESSION['login_mode']) && ($_SESSION['login_mode'] == $sNewLoginMode))
+		if (Session::Get('login_mode') == $sNewLoginMode)
 		{
 			return;
 		}
-		$_SESSION['login_mode'] = $sNewLoginMode;
+		Session::Set('login_mode', $sNewLoginMode);
 		self::HTTPReload();
 	}
 
@@ -829,9 +825,9 @@ class LoginWebPage extends NiceWebPage
 		{
 			CMDBObject::SetTrackOrigin('custom-extension');
 			$sInfo = 'External User provisioning';
-			if (isset($_SESSION['login_mode']))
+			if (Session::IsSet('login_mode'))
 			{
-				$sInfo .= " ({$_SESSION['login_mode']})";
+				$sInfo .= " (".Session::Get('login_mode').")";
 			}
 			CMDBObject::SetTrackInfo($sInfo);
 
@@ -883,9 +879,9 @@ class LoginWebPage extends NiceWebPage
 		{
 			CMDBObject::SetTrackOrigin('custom-extension');
 			$sInfo = 'External User provisioning';
-			if (isset($_SESSION['login_mode']))
+			if (Session::IsSet('login_mode'))
 			{
-				$sInfo .= " ({$_SESSION['login_mode']})";
+				$sInfo .= " (".Session::Get('login_mode').")";
 			}
 			CMDBObject::SetTrackInfo($sInfo);
 
@@ -924,9 +920,9 @@ class LoginWebPage extends NiceWebPage
 
 			// Now synchronize the profiles
 			$sOrigin = 'External User provisioning';
-			if (isset($_SESSION['login_mode']))
+			if (Session::IsSet('login_mode'))
 			{
-				$sOrigin .= " ({$_SESSION['login_mode']})";
+				$sOrigin .= " (".Session::Get('login_mode').")";
 			}
 			$aExistingProfiles = self::SynchronizeProfiles($oUser, $aProfiles, $sOrigin);
 			if ($oUser->IsModified())
@@ -1011,7 +1007,6 @@ class LoginWebPage extends NiceWebPage
 		$sMessage = self::HandleOperations($operation); // May exit directly
 	
 		$iRet = self::Login($iOnExit);
-	
 		if ($iRet == self::EXIT_CODE_OK)
 		{
 			if ($bMustBeAdmin && !UserRights::IsAdministrator())
@@ -1091,11 +1086,11 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if ($operation == 'change_pwd')
 		{
-			if (isset($_SESSION['auth_user']))
+			if (Session::IsSet('auth_user'))
 			{
-				$sAuthUser = $_SESSION['auth_user'];
-				$sIssue = $_SESSION['pwd_issue'] ?? null;
-				unset($_SESSION['pwd_issue']);
+				$sAuthUser = Session::Get('auth_user');
+				$sIssue = Session::Get('pwd_issue');
+				Session::Unset('pwd_issue');
 				$bFailedLogin = ($sIssue != null); // Force the "failed login" flag to display the "issue" message
 
 				UserRights::Login($sAuthUser); // Set the user's language
@@ -1107,7 +1102,7 @@ class LoginWebPage extends NiceWebPage
 		}
 		else if ($operation == 'check_pwd_policy')
 		{
-			$sAuthUser = $_SESSION['auth_user'];
+			$sAuthUser = Session::Get('auth_user');
 			UserRights::Login($sAuthUser); // Set the user's language
 
 			$aPwdMap = array();
@@ -1125,9 +1120,9 @@ class LoginWebPage extends NiceWebPage
 		}
 		if ($operation == 'do_change_pwd')
 		{
-			if (isset($_SESSION['auth_user']))
+			if (Session::IsSet('auth_user'))
 			{
-				$sAuthUser = $_SESSION['auth_user'];
+				$sAuthUser = Session::Get('auth_user');
 				UserRights::Login($sAuthUser); // Set the user's language
 				$sOldPwd = utils::ReadPostedParam('old_pwd', '', 'raw_data');
 				$sNewPwd = utils::ReadPostedParam('new_pwd', '', 'raw_data');

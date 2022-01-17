@@ -19,7 +19,7 @@
 <phpunit bootstrap="unittestautoload.php"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.3/phpunit.xsd"
-         backupGlobals="false"
+         backupGlobals="true"
          backupStaticAttributes="false"
          cacheTokens="false"
          colors="true"
@@ -29,7 +29,7 @@
          forceCoversAnnotation="false"
          mapTestClassNameToCoveredClassName="false"
          printerClass="\PHPUnit\TextUI\ResultPrinter"
-         processIsolation="true"
+         processIsolation="false"
          stopOnError="false"
          stopOnFailure="false"
          stopOnIncomplete="false"
@@ -53,12 +53,18 @@
         <testsuite name="Tickets">
             <directory>itop-tickets</directory>
         </testsuite>
+        <testsuite name="Config">
+          <directory>itop-config</directory>
+        </testsuite>
         <testsuite name="Application">
             <directory>application</directory>
         </testsuite>
         <!--testsuite name="OQL">
             <directory>OQL</directory>
         </testsuite-->
+        <testsuite name="Sources">
+            <directory>sources</directory>
+        </testsuite>
         <testsuite name="Status">
             <directory>status</directory>
         </testsuite>
@@ -66,7 +72,7 @@
             <directory>synchro</directory>
         </testsuite>
         <testsuite name="Setup">
-            <file>setup/SetupUtilsTest.php</file>
+            <directory>setup</directory>
         </testsuite>
         <testsuite name="Integration">
             <directory>integration</directory>

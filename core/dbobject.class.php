@@ -948,10 +948,9 @@ abstract class DBObject implements iDisplay
      */
 	protected function ComputeHighlightCode()
 	{
-		// First if the state defines a HiglightCode, apply it
-		$sState = $this->GetState();
-		if ($sState != '')
+		if (MetaModel::HasLifecycle(get_class($this)))
 		{
+			$sState = $this->GetState();
 			$sCode = MetaModel::GetHighlightCode(get_class($this), $sState);
 			$this->SetHighlightCode($sCode);
 		}
@@ -1471,24 +1470,78 @@ abstract class DBObject implements iDisplay
      */
 	public function GetIcon($bImgTag = true)
 	{
+		$sClass = get_class($this);
+		
+		if($this->HasHighlightIcon()) {
+			$sIconUrl = MetaModel::GetHighlightScale($sClass)[$this->ComputeHighlightCode()]['icon'];
+			if($bImgTag) {
+				return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
+			}
+			else {
+				return $sIconUrl;
+			}
+		}
+
+		// Get object instance own image if it exists
+		$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+		$sIconUrl = $this->HasInstanceIcon() ? $this->Get($sImageAttCode)->GetDisplayURL($sClass, $this->GetKey(), $sImageAttCode) : '';
+		if (strlen($sIconUrl) > 0) {
+			if($bImgTag) {
+				return "<img src=\"$sIconUrl\"/>";
+			}
+			else {
+				return $sIconUrl;
+			}
+		}
+		return MetaModel::GetClassIcon(get_class($this), $bImgTag);
+	}
+
+	/**
+	 * @return bool True if the object has an image attribute as semantic attribute and its value is not empty
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	public function HasInstanceIcon(): bool
+	{
+		$bHasInstanceIcon = false;
+		$sClass = get_class($this);
+		
+		if (!$this->IsNew() && MetaModel::HasImageAttributeCode($sClass)) {
+			$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
+			if (!empty($sImageAttCode)) {
+				/** @var \ormDocument $oImage */
+				$oImage = $this->Get($sImageAttCode);
+				$bHasInstanceIcon = !$oImage->IsEmpty();
+			}
+		}
+		
+		return $bHasInstanceIcon;
+	}
+
+	/**
+	 * @return bool True if the class has an highlight icon declared for the current object state
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @since 3.0.0
+	 */
+	public function HasHighlightIcon(): bool
+	{
+		$bHasHighlightIcon = false;
+
 		$sCode = $this->ComputeHighlightCode();
+		$sClass = get_class($this);
+
 		if($sCode != '')
 		{
-			$aHighlightScale = MetaModel::GetHighlightScale(get_class($this));
+			$aHighlightScale = MetaModel::GetHighlightScale($sClass);
 			if (array_key_exists($sCode, $aHighlightScale))
 			{
-				$sIconUrl = $aHighlightScale[$sCode]['icon'];
-				if($bImgTag)
-				{
-					return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
-				}
-				else
-				{
-					return $sIconUrl;
-				}
+				$bHasHighlightIcon = true;
 			}
-		}		
-		return MetaModel::GetClassIcon(get_class($this), $bImgTag);
+		}
+		
+		return $bHasHighlightIcon;
 	}
 
 	/**
@@ -1530,6 +1583,7 @@ abstract class DBObject implements iDisplay
 	 * @return string
 	 * @throws \CoreException
 	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
 	public function GetName($sType = FriendlyNameType::SHORT)
@@ -1548,6 +1602,7 @@ abstract class DBObject implements iDisplay
 	 * @return string
 	 * @throws \CoreException
 	 * @since 3.0.0 N°4106 This method is now internal. It will be set final in 3.1.0 (N°4107)
+	 * @since 3.0.0 N°580 New $sType parameter
 	 *
 	 */
 	public function GetRawName($sType = FriendlyNameType::SHORT)
@@ -2141,28 +2196,23 @@ abstract class DBObject implements iDisplay
 		}
 
 		if ($oAttDef->DuplicatesAllowed()) {
-			return true;
+			return;
 		}
 
+		// To control duplicates go through all the entries and check if the remote has been seen
 		/** @var \ormLinkSet $value */
-		$aModifiedLnk = $value->ListModifiedLinks();
 		$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
-		$aExistingRemotesId = $value->GetColumnAsArray($sExtKeyToRemote, true);
-		$aExistingRemotesFriendlyName = $value->GetColumnAsArray($sExtKeyToRemote.'_friendlyname', true);
+		$aCurrentRemoteIds = [];
 		$aDuplicatesFields = [];
-		foreach ($aModifiedLnk as $oModifiedLnk) {
-			$iModifiedLnkId = $oModifiedLnk->GetKey();
-			$iModifiedLnkRemoteId = $oModifiedLnk->Get($sExtKeyToRemote);
-			$aExistingRemotesIdToCheck = array_filter($aExistingRemotesId, function ($iLnkKey) use ($iModifiedLnkId) {
-				return ($iLnkKey != $iModifiedLnkId);
-			}, ARRAY_FILTER_USE_KEY);
-
-			if (!in_array($iModifiedLnkRemoteId, $aExistingRemotesIdToCheck, true)) {
-				continue;
+		$value->rewind();
+		while ($oCurrentLnk = $value->current()) {
+			$iExtKeyToRemote = $oCurrentLnk->Get($sExtKeyToRemote);
+			if (isset($aCurrentRemoteIds[$iExtKeyToRemote])) {
+				$aDuplicatesFields[] = $oCurrentLnk->Get($sExtKeyToRemote.'_friendlyname');
+			} else {
+				$aCurrentRemoteIds[$iExtKeyToRemote] = true;
 			}
-
-			$iLnkId = $oModifiedLnk->GetKey();
-			$aDuplicatesFields[] = $aExistingRemotesFriendlyName[$iLnkId];
+			$value->next();
 		}
 
 		if (!empty($aDuplicatesFields)) {
@@ -3170,17 +3220,19 @@ abstract class DBObject implements iDisplay
 				foreach ($aMentionedIds as $sMentionedId) {
 					/** @var \DBObject $oMentionedObject */
 					$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
-					// Important: Here the "$this->object()$" placeholder is actually the mentioned object and not the current object. The current object can be used through the $source->object()$ placeholder.
-					// This is due to the current implementation of triggers, the events will only be visible on the object the trigger's OQL is based on... 😕
-					$aTriggerArgs = $this->ToArgs('source') + array('this->object()' => $oMentionedObject);
+					$aTriggerArgs = $this->ToArgs('this') + array('mentioned->object()' => $oMentionedObject);
 
-					$aParams = array('class_list' => MetaModel::EnumParentClasses($sMentionedClass, ENUM_PARENT_CLASSES_ALL));
-					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"),
-						array(), $aParams);
+					$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+					$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
 					while ($oTrigger = $oSet->Fetch())
 					{
 						/** @var \TriggerOnObjectMention $oTrigger */
 						try {
+							// Ensure to handle only mentioned object in the trigger's scope
+							if ($oTrigger->IsMentionedObjectInScope($oMentionedObject) === false) {
+								continue;
+							}
+
 							$oTrigger->DoActivate($aTriggerArgs);
 						}
 						catch (Exception $e) {
@@ -3399,6 +3451,54 @@ abstract class DBObject implements iDisplay
 		}
 
 		return $this->m_iKey;
+	}
+
+
+	/**
+	 * Increment attribute with specified value.
+	 * This function is only applicable with AttributeInteger.
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode attribute code
+	 * @param int $iValue value to increment (default value 1)
+	 *
+	 * @return int incremented value
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public function DBIncrement(string $sAttCode, int $iValue = 1)
+	{
+		// retrieve instance class
+		$sClass = get_class($this);
+
+		// dirty object not allowed
+		if($this->m_bDirty){
+			throw new CoreException("Invalid DBIncrement usage, dirty objects are not allowed. Call DBUpdate before calling DBIncrement.");
+		}
+
+		// ensure attribute type is AttributeInteger
+		$oAttr = MetaModel::GetAttributeDef($sClass, $sAttCode);
+		if(!$oAttr instanceof AttributeInteger){
+			throw new CoreException(sprintf("Invalid DBIncrement usage, attribute type of {$sAttCode} is %s. Only AttributeInteger are compatibles with DBIncrement.", get_class($oAttr)));
+		}
+
+		// prepare SQL statement
+		$sTable = MetaModel::DBGetTable($sClass, $sAttCode);
+		$sPKField = '`'.MetaModel::DBGetKey($sClass).'`';
+		$sKey = CMDBSource::Quote($this->m_iKey);
+		$sUpdateSQL = "UPDATE `{$sTable}` SET `{$sAttCode}` = `{$sAttCode}`+{$iValue} WHERE {$sPKField} = {$sKey}";
+
+		// execute SQL query
+		CMDBSource::Query($sUpdateSQL);
+
+		// reload instance with new value
+		$this->Reload();
+
+		return $this->Get($sAttCode);
 	}
 
 	/**
@@ -4010,6 +4110,58 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * Helper to set a date computed from another date with extra logic
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode attribute code of a date or date-time which will be set
+	 * @param string $sModifier string specifying how to modify the date time
+	 * @param string $sAttCodeSource attribute code of a date or date-time used as source
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @since 3.0.0
+	 */
+	public function SetComputedDate($sAttCode, $sModifier = '', $sAttCodeSource = '')
+	{
+		$oDate = new DateTime(); // Use now if no Source provided
+		if ($sAttCodeSource != "") {
+			$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCodeSource);
+			$oSourceValue = $this->Get($sAttCodeSource);
+			if (!$oAttDef->IsNull($oSourceValue)) {
+				// Use the existing value as the Source date
+				$oDate = new DateTime($oSourceValue);
+			}
+		}
+		$oDate->modify($sModifier);
+		$this->Set($sAttCode, $oDate->format('Y-m-d H:i:s'));
+	}
+
+	/**
+	 * Helper to set a date computed from another date with extra logic
+	 * Call SetComputedDate() only of the internal representation of the attribute is null.
+	 *
+	 * @api
+	 * @see SetComputedDate()
+	 *
+	 * @param string $sAttCode attribute code which will be set
+	 * @param string $sModifier string specifying how to modify the date time
+	 * @param string $sAttCodeSource attribute code used as source
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @since 3.0.0
+	 */
+	public function SetComputedDateIfNull($sAttCode, $sModifier = '', $sAttCodeSource = '')
+	{
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+		$oCurrentValue = $this->Get($sAttCode);
+		if ($oAttDef->IsNull($oCurrentValue)) {
+			$this->SetComputedDate($sAttCode, $sModifier, $sAttCodeSource);
+		}
+	}
+
+	/**
 	 * Helper to set a value only if it is currently undefined
 	 *
 	 * Call SetCurrentDate() only of the internal representation of the attribute is null.
@@ -4027,40 +4179,35 @@ abstract class DBObject implements iDisplay
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 		$oCurrentValue = $this->Get($sAttCode);
-		if ($oAttDef->IsNull($oCurrentValue))
-		{
+		if ($oAttDef->IsNull($oCurrentValue)) {
 			$this->SetCurrentDate($sAttCode);
 		}
 	}
 
-    /**
-     * Helper to set the current logged in user for the given attribute
-     * Suitable for use as a lifecycle action
-     *
-     * @api
-     *
-     * @param string $sAttCode
-     *
-     * @return bool
-     *
-     * @throws CoreException
-     * @throws CoreUnexpectedValue
-     */
+
+	/**
+	 * Helper to set the current logged in user for the given attribute
+	 * Suitable for use as a lifecycle action
+	 *
+	 * @api
+	 *
+	 * @param string $sAttCode
+	 *
+	 * @return bool
+	 *
+	 * @throws CoreException
+	 * @throws CoreUnexpectedValue
+	 */
 	public function SetCurrentUser($sAttCode)
 	{
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-		if ($oAttDef instanceof AttributeString)
-		{
+		if ($oAttDef instanceof AttributeString) {
 			// Note: the user friendly name is the contact friendly name if a contact is attached to the logged in user
 			$this->Set($sAttCode, UserRights::GetUserFriendlyName());
-		}
-		else
-		{
-			if ($oAttDef->IsExternalKey())
-			{
+		} else {
+			if ($oAttDef->IsExternalKey()) {
 				/** @var \AttributeExternalKey $oAttDef */
-				if ($oAttDef->GetTargetClass() != 'User')
-				{
+				if ($oAttDef->GetTargetClass() != 'User') {
 					throw new Exception("SetCurrentUser: the attribute $sAttCode must be an external key to 'User', found '".$oAttDef->GetTargetClass()."'");
 				}
 			}
@@ -4579,8 +4726,9 @@ abstract class DBObject implements iDisplay
 	public function GetRelatedObjectsUp($sRelCode, $iMaxDepth = 99, $bEnableRedundancy = true)
 	{
 		$oGraph = new RelationGraph();
-		$oGraph->AddSourceObject($this);
+		$oGraph->AddSinkObject($this);
 		$oGraph->ComputeRelatedObjectsUp($sRelCode, $iMaxDepth, $bEnableRedundancy);
+
 		return $oGraph;
 	}
 

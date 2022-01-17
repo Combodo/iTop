@@ -1,23 +1,10 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
-$ibo-pill--margin: 4px 8px !default;
+$ibo-pill--margin-y: $ibo-spacing-200 !default;
 $ibo-pill--padding: 6px 10px !default;
 $ibo-pill--max-width: 240px !default;
 $ibo-pill--border-radius: $ibo-border-radius-300 !default;
@@ -91,9 +78,21 @@ $ibo-pill-states-colors: (
 
 /* Rules */
 .ibo-pill {
+  /* --ibo-main-color-xxx is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
+  --ibo-main-color--100: map-get(map-get($ibo-pill-states-colors, 'neutral'), 'primary-color');
+  --ibo-main-color--900: map-get(map-get($ibo-pill-states-colors, 'neutral'), 'secondary-color');
+
   @extend %ibo-fully-centered-content;
   max-width: $ibo-pill--max-width;
-  margin: $ibo-pill--margin;
+  margin-top: $ibo-pill--margin-y;
+  margin-bottom: $ibo-pill--margin-y;
   padding: $ibo-pill--padding;
   border-radius: $ibo-pill--border-radius;
+
+  color: var(--ibo-main-color--900);
+  background-color: var(--ibo-main-color--100);
+
+  &:hover, &:active {
+    color: inherit; /* Force color to stay as defined in pill instead of being overloaded by anchor's rules */
+  }
 }

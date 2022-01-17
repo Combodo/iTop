@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer\Console\FieldRenderer;
 use AttributeDate;
 use AttributeDateTime;
 use AttributeDuration;
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 use Combodo\iTop\Application\UI\Base\Component\Field\FieldUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
@@ -74,7 +75,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					}
 					else
 					{
-						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-wrapper", "ibo-input-datetime-wrapper"]);
+						$oField = UIContentBlockUIBlockFactory::MakeStandard("",["field_input_zone", "field_input_datetime", "ibo-input-field-wrapper", "ibo-input-datetime-wrapper"]);
 						$oValue->AddSubBlock($oField);
 						$oField->AddSubBlock(new Html('<input class="date-pick ibo-input ibo-input-date" type="text" placeholder="'.htmlentities($sPlaceHolder, ENT_QUOTES, 'UTF-8').'" id="'.$this->oField->GetGlobalId().'" value="'.htmlentities($this->oField->GetCurrentValue(), ENT_QUOTES, 'UTF-8').'" autocomplete="off"/>'));
 						$oField->AddSubBlock(new Html('<span class="form_validation"></span>'));
@@ -90,7 +91,7 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\StringField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",[""]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["ibo-input-field-wrapper"]);
 
 					if ($this->oField->GetReadOnly())
 					{
@@ -106,11 +107,12 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\TextAreaField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content", "ibo-input-field-wrapper"]);
 
 					$bRichEditor = ($this->oField->GetFormat() === TextAreaField::ENUM_FORMAT_HTML);
 
 					$oText = new TextArea("",$this->oField->GetCurrentValue(),$this->oField->GetGlobalId(),40,8);
+					$oText->AddCSSClass('ibo-input-field-wrapper ibo-input');
 					$oValue->AddSubBlock($oText);
 					if ($this->oField->GetReadOnly())
 					{
@@ -121,10 +123,15 @@ class ConsoleSimpleFieldRenderer extends FieldRenderer
 						// Some additional stuff if we are displaying it with a rich editor
 						if ($bRichEditor)
 						{
+							$oText->AddCSSClass('ibo-input-richtext-placeholder');
 							$aConfig = utils::GetCkeditorPref();
 							$aConfig['extraPlugins'] = 'codesnippet';
 							$sJsConfig = json_encode($aConfig);
-							
+
+							foreach (WebResourcesHelper::GetJSFilesRelPathsForCKEditor() as $sJSFile) {
+								$oOutput->AddJsFile($sJSFile);
+							}
+
 							$oOutput->AddJs(
 <<<EOF
 								$('#{$this->oField->GetGlobalId()}').addClass('htmlEditor');
@@ -142,7 +149,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\SelectField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content","ibo-input-field-wrapper"]);
 					if ($this->oField->GetReadOnly())
 					{
 						$aChoices = $this->oField->GetChoices();
@@ -153,6 +160,7 @@ EOF
 					else
 					{
 						$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+						$oSelect->AddCSSClass('ibo-input-field-wrapper');
 						if ($this->oField->GetMultipleValuesEnabled()) {
 							$oSelect->SetIsMultiple(true);
 						}
@@ -193,7 +201,7 @@ EOF
 							} else {
 								$sSelected = ($value == $sChoice) ? 'checked' : '';
 							}
-							$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_".$sId, $sChoice, "{$sId}_{$idx}", "radio");;
+							$oRadio = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_".$sId, $sChoice, "{$sId}_{$idx}", "radio");
 							$oRadio->GetInput()->SetIsChecked($sSelected);
 							$oRadio->SetBeforeInput(false);
 							$oRadio->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -201,6 +209,13 @@ EOF
 							if ($bVertical) {
 								$oValue->AddSubBlock(new Html("<br>"));
 							}
+							$oOutput->AddJs(
+								<<<EOF
+	                    $("#{$sId}_{$idx}").off("change").on("change", function(){
+	                        $('#{$sId}').val(this.value).trigger('change');
+	                    });
+EOF
+							);
 							$idx++;
 						}
 						$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden("",$value,$sId));
@@ -210,7 +225,7 @@ EOF
 					break;
 
 				case 'Combodo\\iTop\\Form\\Field\\DurationField':
-					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content"]);
+					$oValue = UIContentBlockUIBlockFactory::MakeStandard("",["form-field-content","ibo-input-field-wrapper"]);
 					$value = $this->oField->GetCurrentValue();
 					if ($this->oField->GetReadOnly())
 					{
@@ -221,10 +236,10 @@ EOF
 						$sId = $this->oField->GetGlobalId();
 
 						$aVal = AttributeDuration::SplitDuration($value);
-						$sDays = "<input type=\"text\" size=\"3\" name=\"{$sId}[d]\" value=\"{$aVal['days']}\" id=\"{$sId}_d\"/>";
-						$sHours = "<input type=\"text\" size=\"2\" name=\"{$sId}[h]\" value=\"{$aVal['hours']}\" id=\"{$sId}_h\"/>";
-						$sMinutes = "<input type=\"text\" size=\"2\" name=\"{$sId}[m]\" value=\"{$aVal['minutes']}\" id=\"{$sId}_m\"/>";
-						$sSeconds = "<input type=\"text\" size=\"2\" name=\"{$sId}[s]\" value=\"{$aVal['seconds']}\" id=\"{$sId}_s\"/>";
+						$sDays = "<input type=\"text\" size=\"3\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[d]\" value=\"{$aVal['days']}\" id=\"{$sId}_d\"/>";
+						$sHours = "<input type=\"text\" size=\"2\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[h]\" value=\"{$aVal['hours']}\" id=\"{$sId}_h\"/>";
+						$sMinutes = "<input type=\"text\" size=\"2\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[m]\" value=\"{$aVal['minutes']}\" id=\"{$sId}_m\"/>";
+						$sSeconds = "<input type=\"text\" size=\"2\" class=\"ibo-input ibo-input-vanilla\" name=\"{$sId}[s]\" value=\"{$aVal['seconds']}\" id=\"{$sId}_s\"/>";
 						$oTime = UIContentBlockUIBlockFactory::MakeStandard("",["pt-2"]);
 						$oTime->AddSubBlock(new Html(Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds)));
 						$oValue->AddSubBlock($oTime);
@@ -268,13 +283,15 @@ EOF
 			$(oInput).datepicker({
 								"showOn":"button",
 								"buttonText":"<i class=\"fas fa-calendar-alt\"><\/i>",
-								"format": $sJSDateFormat,
+								"dateFormat": $sJSDateFormat,
 								"constrainInput":false,
 								"changeMonth":true,
 								"changeYear":true,
 								"dayNamesMin":$sJSDaysMin,
 								"monthNamesShort": $sJSMonthsShort,
-								"firstDay":$iFirstDayOfWeek}).next("img").wrap("<span>");
+								"firstDay":$iFirstDayOfWeek,
+								"onSelect":function(a,b){ $("#{$this->oField->GetGlobalId()}").trigger("change");},
+								}).next("img").wrap("<span>");
 
 EOF
 					);
@@ -285,36 +302,40 @@ EOF
 <<<EOF
 			var oInput = "#{$this->oField->GetGlobalId()}";
 			$(oInput).addClass('is-widget-ready');
-			$('<div class="ibo-input-datetime--action-button"><i class="fas fa-calendar-alt"></i></i>')
-						.insertAfter($(oInput))
-						.on('click', function(){
-							$(oInput)
-								.datetimepicker({
-								showOn: 'button',
-								buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
-								dateFormat: $sJSDateFormat,
-								constrainInput: false,
-								changeMonth: true,
-								changeYear: true,
-								dayNamesMin: $sJSDaysMin,
-								monthNamesShort: $sJSMonthsShort,
-								firstDay: $iFirstDayOfWeek,
-								// time picker options	
-								timeFormat: $sJSTimeFormat,
-								controlType: 'select',
-								closeText: $sJSOk
-						})
-						.datetimepicker('show')
-						.datetimepicker('option', 'onClose', function(dateText,inst){
-							$(oInput).datetimepicker('destroy');
-						})
-						.on('click keypress', function(){
-							$(oInput).datetimepicker('hide');
-						});
-				});
+			
+				$(oInput).datetimepicker({
+							showOn: 'button',
+							buttonText: "<i class=\"fas fa-calendar-alt\"><\/i>",
+							dateFormat: $sJSDateFormat,
+							constrainInput: false,
+							changeMonth: true,
+							changeYear: true,
+							dayNamesMin: $sJSDaysMin,
+							monthNamesShort: $sJSMonthsShort,
+							firstDay: $iFirstDayOfWeek,
+							// time picker options	
+							timeFormat: $sJSTimeFormat,
+							controlType: 'select',
+							closeText: $sJSOk
+					});
 EOF
 					);
 				}
+
+				$oOutput->AddJs(
+					<<<EOF
+                    $("#{$this->oField->GetGlobalId()}").off("change keyup").on("change keyup", function(){
+                    	var me = this;
+
+                        $(this).closest(".field_set").trigger("field_change", {
+                            id: $(me).attr("id"),
+                            name: $(me).closest(".form_field").attr("data-field-id"),
+                            value: $(me).val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+                    });
+EOF
+				);
 				break;				
 			break;
 			
@@ -337,6 +358,23 @@ EOF
 				break;
 
 			case 'Combodo\\iTop\\Form\\Field\\SelectField':
+				$oOutput->AddJs(
+					<<<EOF
+ $("#{$this->oField->GetGlobalId()}").selectize({
+    sortField: 'text',
+    onChange: function(value){
+    			 var me = this.\$input;
+                me.closest(".field_set").trigger("field_change", {
+                    id: me.attr("id"),
+                    name: me.closest(".form_field").attr("data-field-id"),
+                    value: me.val()
+                })
+                .closest('.form_handler').trigger('value_change');
+    }
+});
+EOF
+				);
+				break;
 			case 'Combodo\\iTop\\Form\\Field\\RadioField':
 			case 'Combodo\\iTop\\Form\\Field\\DurationField':
 				$oOutput->AddJs(
@@ -375,21 +413,14 @@ EOF
 		if (oResult.is_valid)
 		{
 			oValidationElement.html('');
+			 $(me.element).find('.ibo-input-field-wrapper').removeClass("is-error");
 		}
 		else
 		{
-			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-			oValidationElement.tooltip({
-				items: 'span',
-				classes: {
-			        'ui-tooltip': 'form_field_error'
-			    },
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
+			oValidationElement.html(sExplain);
+			oValidationElement.addClass('ibo-field-validation');
+			 $(me.element).find('.ibo-input-field-wrapper').addClass("is-error");
 		}
 	}
 }

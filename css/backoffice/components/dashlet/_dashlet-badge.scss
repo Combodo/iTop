@@ -1,11 +1,11 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
-$ibo-dashlet-badge--padding-x: 16px !default;
-$ibo-dashlet-badge--padding-y: 16px !default;
+$ibo-dashlet-badge--padding-x: $ibo-spacing-500 !default;
+$ibo-dashlet-badge--padding-y: $ibo-spacing-500 !default;
 $ibo-dashlet-badge--min-width: 200px !default;
 $ibo-dashlet-badge--max-width: 350px !default;
 $ibo-dashlet-badge--background-color: $ibo-color-white-100 !default;
@@ -13,12 +13,12 @@ $ibo-dashlet-badge--border: 1px solid $ibo-color-grey-400 !default;
 $ibo-dashlet-badge--border-radius: $ibo-border-radius-500 !default;
 
 $ibo-dashlet-badge--action-list--text-color: inherit !default;
-$ibo-dashlet-badge--action-list-count--margin-right: 8px !default;
+$ibo-dashlet-badge--action-list-count--margin-right: $ibo-spacing-300 !default;
 
-$ibo-dashlet-badge--icon-container--margin-right: 16px !default;
+$ibo-dashlet-badge--icon-container--margin-right: $ibo-spacing-500 !default;
 $ibo-dashlet-badge--icon--size: 48px !default;
 
-$ibo-dashlet-badge--action-icon--margin-right: 6px !default;
+$ibo-dashlet-badge--action-icon--margin-right: $ibo-spacing-300 !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root {

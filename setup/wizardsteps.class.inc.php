@@ -304,7 +304,7 @@ HTML
 		}
 		$sChecked = ($bCanBackup && $bDBBackup) ? ' checked ' : '';
 		$sDisabled = $bCanBackup ? '' : ' disabled ';
-        $oPage->add('<input id="db_backup" type="checkbox" name="db_backup" '.$sChecked.$sDisabled.' value="1"/><label for="db_backup">Backup the '.ITOP_APPLICATION.' database before upgrading</label>');
+		$oPage->add('<input id="db_backup" type="checkbox" name="db_backup" '.$sChecked.$sDisabled.' value="1"/><label for="db_backup">Backup the '.ITOP_APPLICATION.' database before upgrading</label>');
 		$oPage->add('<div class="setup-backup--input--container">Save the backup to:<input id="db_backup_path" class="ibo-input" type="text" name="db_backup_path" 
 '.$sDisabled.'value="'
 			.htmlentities($sDBBackupPath, ENT_QUOTES, 'UTF-8').'"/></div>');
@@ -704,7 +704,7 @@ class WizStepLicense extends WizardStep
 		$oPage->add_style(
 <<<CSS
 fieldset ul {
-	max-height: 30em;
+	max-height: min(30em, 40vh); /* Allow usage of the UI up to 150% zoom */
 	overflow: auto;
 }
 CSS
@@ -715,12 +715,12 @@ CSS
 		$oPage->add_style('.toggle { cursor:pointer; text-decoration:underline; color:#1C94C4; }');
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>Components of '.ITOP_APPLICATION.'</legend>');
-		$oPage->add('<ul>');
+		$oPage->add('<ul id="ibo-setup-licenses--components-list">');
         $index = 0;
         foreach ($aLicenses as $oLicense)
 		{
 			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<span class="toggle" id="toggle_'.$index.'">Details</span>)');
-			$oPage->add('<div id="license_'.$index.'" class="license_text" style="display:none;overflow:auto;max-height:10em;font-size:12px;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;"><pre>'.$oLicense->text.'</pre></div>');
+			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:12px;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;"><pre>'.$oLicense->text.'</pre></div>');
 			$oPage->add_ready_script('$(".license_text a").attr("target", "_blank").addClass("no-arrow");');
 			$oPage->add_ready_script('$("#toggle_'.$index.'").on("click", function() { $("#license_'.$index.'").toggle(); } );');
 			$index++;
@@ -2096,12 +2096,12 @@ EOF
 
 	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false)
 	{
-		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
+		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
 		$sSourceLabel = isset($aChoice['source_label']) ? $aChoice['source_label'] : '';
 		$sId = htmlentities($aChoice['extension_code'], ENT_QUOTES, 'UTF-8');
-		$oPage->add('<label for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
+		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
 		$sDescription = isset($aChoice['description']) ? htmlentities($aChoice['description'], ENT_QUOTES, 'UTF-8') : '';
-		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
+		$oPage->add('<div class="setup--wizard-choice--description description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options']))
 		{
 			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled);
@@ -2523,7 +2523,9 @@ class WizStepDone extends WizardStep
 		{
 			if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
 			{
-				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sRootUrl.$aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$sUrl = $aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$sManualStepUrl = utils::IsURL($sUrl) ? $sUrl : $sRootUrl.$sUrl;
+				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sManualStepUrl;
 			}
 		}
 		$oPage->add('<div class="ibo-is-html-content">');
@@ -2531,8 +2533,7 @@ class WizStepDone extends WizardStep
 		{
 			$oPage->add("<h2>Manual operations required</h2>");
 			$oPage->p("In order to complete the installation, the following manual operations are required:");
-			foreach($aManualSteps as $sModuleLabel => $sUrl)
-			{
+			foreach($aManualSteps as $sModuleLabel => $sUrl) {
 				$oPage->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
 			}
 			$oPage->add("<h2>Congratulations for installing ".ITOP_APPLICATION."</h2>");
@@ -2543,11 +2544,13 @@ class WizStepDone extends WizardStep
 			$oPage->ok("The installation completed successfully.");
 		}
 
+		$bHasBackup = false;
 		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false) && $this->oWizard->GetParameter('authent', false))
 		{
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			if (file_exists($sBackupDestination.'.tar.gz'))
 			{
+				$bHasBackup = true;
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
 				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot(true).'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent','').'" target="_blank"><img src="../images/icons/icons8-archive-folder.svg" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
@@ -2591,10 +2594,10 @@ class WizStepDone extends WizardStep
 			");
 		}
 
-		$sForm = '<form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
+		$sForm = '<div class="ibo-setup--wizard--buttons-container" style="text-align:center"><form method="post" class="ibo-setup--enter-itop" action="'.$this->oWizard->GetParameter('application_url').'pages/UI.php">';
 		$sForm .= '<input type="hidden" name="auth_user" value="'.htmlentities($this->oWizard->GetParameter('admin_user'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
-		$sForm .= "<p style=\"text-align:center;width:100%\"><button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></p>";
+		$sForm .= "<button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></div>";
 		$sForm .= '</form>';
 		$sPHPVersion = phpversion();
 		$sMySQLVersion = SetupUtils::GetMySQLVersion(
@@ -2670,11 +2673,14 @@ class WizStepDone extends WizardStep
 
 		$oPage->add('<img style="visibility: hidden;border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
-		$oPage->add_ready_script("$('#wiz_form').after('$sForm');");
+		$oPage->add_ready_script("$('#wiz_form').append('$sForm');");
 		// avoid leaving in a dirty state
 		SetupUtils::ExitMaintenanceMode(false);
 		SetupUtils::ExitReadOnlyMode(false);
-		SetupUtils::EraseSetupToken();
+
+		if (false === $bHasBackup) {
+			SetupUtils::EraseSetupToken();
+		}
 	}
 
 	public function CanMoveForward()
@@ -2697,6 +2703,7 @@ class WizStepDone extends WizardStep
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
+		SetupUtils::EraseSetupToken();
 		// For security reasons: add the extension now so that this action can be used to read *only* .tar.gz files from the disk...
 		$sBackupFile = $aParameters['backup'].'.tar.gz';
 		if (file_exists($sBackupFile))

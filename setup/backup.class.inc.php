@@ -172,9 +172,9 @@ class DBBackup
 	 */
 	public function CreateCompressedBackup($sTargetFile, $sSourceConfigFile = null)
 	{
+		//safe zone for db backup => cron is stopped/ itop in readonly
 		$bIsCmdbSourceInitialized = CMDBSource::GetMysqli() instanceof mysqli;
-		if (!$bIsCmdbSourceInitialized)
-		{
+		if (!$bIsCmdbSourceInitialized) {
 			$sErrorMsg = 'Cannot backup : CMDBSource not initialized !';
 			$this->LogError($sErrorMsg);
 			throw new CoreException($sErrorMsg);
@@ -190,8 +190,7 @@ class DBBackup
 		$sFilesList = var_export($aFiles, true);
 		$this->LogInfo("backup: adding to archive files '$sFilesList'");
 		$bArchiveCreationResult = $oArchive->createModify($aFiles, '', $sTmpFolder);
-		if (!$bArchiveCreationResult)
-		{
+		if (!$bArchiveCreationResult) {
 			$sErrorMsg = 'Cannot backup : unable to create archive';
 			$this->LogError($sErrorMsg);
 			throw new BackupException($sErrorMsg);
@@ -255,7 +254,7 @@ class DBBackup
 		return $aRet;
 	}
 
-	protected static function EscapeShellArg($sValue)
+	public static function EscapeShellArg($sValue)
 	{
 		// Note: See comment from the 23-Apr-2004 03:30 in the PHP documentation
 		//    It suggests to rely on pctnl_* function instead of using escapeshellargs
@@ -462,13 +461,15 @@ EOF;
 
 
 	/**
-	 * @see https://dev.mysql.com/doc/refman/5.6/en/encrypted-connection-options.html
-	 *
 	 * @param Config $oConfig
 	 *
 	 * @return string TLS arguments for CLI programs such as mysqldump. Empty string if the config does not use TLS.
 	 *
-	 * @since 2.5.0
+	 * @uses \CMDBSource::GetDBVendor() so needs a connection opened !
+	 * @uses \CMDBSource::GetDBVersion() so needs a connection opened !
+	 *
+	 * @since 2.5.0 N°1260
+	 * @link https://dev.mysql.com/doc/refman/5.6/en/connection-options.html#encrypted-connection-options "Command Options for Encrypted Connections"
 	 */
 	public static function GetMysqlCliTlsOptions($oConfig)
 	{

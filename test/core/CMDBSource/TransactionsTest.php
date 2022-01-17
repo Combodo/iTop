@@ -7,11 +7,15 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use CMDBSource;
+use Combodo\iTop\Core\DbConnectionWrapper;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Exception;
 use MetaModel;
 
 /**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
  *
  * @group itopRequestMgmt
  * Class TransactionsTest
@@ -48,7 +52,7 @@ class TransactionsTest extends ItopTestCase
 				}
 			));
 
-		$this->InvokeNonPublicStaticMethod('CMDBSource', 'SetMySQLiForQuery', [$oMockMysqli]);
+		DbConnectionWrapper::SetDbConnectionMockForQuery($oMockMysqli);
 	}
 
 	/**
@@ -93,7 +97,7 @@ class TransactionsTest extends ItopTestCase
 		}
 
 		// Verify if the ticket is considered as saved in the database
-		$this->assertEquals($bIsInDB, !$oTicket->IsNew());
+		$this->assertEquals($bIsInDB, !$oTicket->IsNew(), " The ticket should be persisted in the DB");
 
 		if (!$oTicket->IsNew()) {
 			$this->oMySQLiMock->SetShowRequest(false);

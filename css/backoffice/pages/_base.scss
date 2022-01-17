@@ -1,19 +1,6 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables (can be overloaded) */
@@ -22,8 +9,8 @@ $ibo-body-background-color: $ibo-color-white-200 !default;
 
 $ibo-page-container--elements-padding-x: 36px !default;
 
-$ibo-main-content--padding-top: 16px !default;
-$ibo-main-content--padding-bottom: 16px !default;
+$ibo-main-content--padding-top: $ibo-spacing-500 !default;
+$ibo-main-content--padding-bottom: $ibo-spacing-500 !default;
 
 /* CSS variables (can be changed directly from the browser) */
 :root{
@@ -83,8 +70,9 @@ body{
     height: 100%;
   }
 }
-#ibo-main-content{
-	padding-top: $ibo-main-content--padding-top;
-	padding-bottom: $ibo-main-content--padding-bottom;
+
+#ibo-main-content {
+  padding-top: $ibo-main-content--padding-top;
+  padding-bottom: $ibo-main-content--padding-bottom;
   overflow: auto; /* For scroll to happen in the main content instead of the center content */
 }

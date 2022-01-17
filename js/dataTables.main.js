@@ -10,7 +10,7 @@ function checkAllDataTable(tableId, value, listId) {
 	if (value) {
 		selectionMode = 'negative';
 	}
-	window['oSelectedItems'+listId] = [];
+	window['oSelectedItems'+CombodoSanitizer.Sanitize(listId, '', CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME)] = [];
 	// Mark all the displayed items as check or unchecked depending on the value
 	tableSelector.find(':checkbox[name^=selectObj]:not([disabled])').each(function () {
 		let currentCheckbox = $(this);
@@ -40,7 +40,7 @@ function updateDataTableSelection(listId, tableId) {
 	let selectionMode = $('#'+listId+' [name=selectionMode]').val();
 
 	selectionContainer.html('');
-	let currentSelection = window['oSelectedItems'+listId];
+	let currentSelection = window['oSelectedItems'+CombodoSanitizer.Sanitize(listId, '', CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME)];
 	for (let i in currentSelection) {
 		let value = currentSelection[i];
 		selectionContainer.append('<input type="hidden" name="storedSelection[]" value="'+value+'">');
@@ -49,8 +49,10 @@ function updateDataTableSelection(listId, tableId) {
 	if (selectionMode === 'negative') {
 		let total = $('#'+tableId).DataTable().page.info()["recordsTotal"];
 		selectionCount.val(total-currentSelection.length);
+		$('#'+tableId).closest('.ibo-panel').find('.ibo-datatable--selected-count').html(total-currentSelection.length);
 	} else {
 		selectionCount.val(currentSelection.length);
+		$('#'+tableId).closest('.ibo-panel').find('.ibo-datatable--selected-count').html(currentSelection.length);
 	}
 
 	selectionCount.trigger('change');

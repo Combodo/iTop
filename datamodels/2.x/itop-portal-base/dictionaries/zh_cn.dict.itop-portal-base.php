@@ -87,7 +87,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // AggregatePageBrick
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Dashboard',
+	'Brick:Portal:AggregatePage:DefaultTitle' => '仪表盘',
 ));
 
 // BrowseBrick brick

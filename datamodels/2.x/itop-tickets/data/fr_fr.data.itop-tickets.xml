@@ -4,7 +4,7 @@
     <name>L'agent du ticket</name>
     <description>Utilisable dans les notifications, pour informer l'agent en charge du ticket.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id=:this-&gt;agent_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id=:this->agent_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -13,7 +13,7 @@
     <description>Utilisable dans les notifications, pour informer l'agent en charge du ticket, sauf si c'est l'agent lui-même qui déclenche la notification
     </description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id=:this-&gt;agent_id AND id != :current_contact_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id=:this->agent_id AND id != :current_contact_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -21,9 +21,9 @@
     <name>Le demandeur et les contacts liés au Ticket</name>
     <description>Utilisable dans les notifications, pour informer le demandeur ainsi que tout les contacts liés au ticket</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this-&gt;id
-      UNION SELECT Person WHERE id=:this-&gt;caller_id
-    </oql>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this->id
+      UNION SELECT Person WHERE id=:this->caller_id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -31,7 +31,7 @@
     <name>Le demandeur du Ticket</name>
     <description>Utilisable dans les notifications, pour informer le demandeur du ticket</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id=:this-&gt;caller_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id=:this->caller_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -39,7 +39,7 @@
     <name>Les contacts liés au Ticket</name>
     <description>Utilisable dans les notifications, pour informer tout les contacts liés au ticket</description>
     <is_template>yes</is_template>
-    <oql>SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this-&gt;id</oql>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToTicket AS L ON L.contact_id=C.id WHERE L.ticket_id=:this->id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -47,7 +47,7 @@
     <name>Le manager du demandeur</name>
     <description>Utilisable dans les notifications, pour informer le manager du demandeur d'un Ticket</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person AS manager JOIN Person AS employee ON employee.manager_id = manager.id WHERE employee.id=:this-&gt;caller_id</oql>
+    <oql><![CDATA[SELECT Person AS manager JOIN Person AS employee ON employee.manager_id = manager.id WHERE employee.id=:this->caller_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -57,7 +57,7 @@
       Utilisée seule, cette requête retourne la personne liée à l'utilisateur iTop qui l'execute.
     </description>
     <is_template>yes</is_template>
-    <oql>SELECT Person WHERE id = :current_contact_id</oql>
+    <oql><![CDATA[SELECT Person WHERE id = :current_contact_id]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -65,9 +65,9 @@
     <name>Les membres de l'équipe en charge du Ticket</name>
     <description>Utilisable dans les notifications, pour informer les membres de l'équipe en charge du ticket.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
-      WHERE L.team_id = :this-&gt;team_id
-    </oql>
+    <oql><![CDATA[SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
+      WHERE L.team_id = :this->team_id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -77,9 +77,9 @@
       L'agent lui-même est exclus de cette liste.
     </description>
     <is_template>yes</is_template>
-    <oql>SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
-      WHERE L.team_id = :this-&gt;team_id AND P.id != :this-&gt;agent_id
-    </oql>
+    <oql><![CDATA[SELECT Person AS P JOIN lnkPersonToTeam AS L ON L.person_id=P.id
+      WHERE L.team_id = :this->team_id AND P.id != :this->agent_id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>
@@ -87,7 +87,37 @@
     <name>L'équipe du Ticket</name>
     <description>Utilisable dans les notifications, pour informer l'équipe en charge du ticket, via son email générique.</description>
     <is_template>yes</is_template>
-    <oql>SELECT Team WHERE id = :this-&gt;team_id</oql>
+    <oql><![CDATA[SELECT Team WHERE id = :this->team_id]]></oql>
+    <fields>id,email</fields>
+    <finalclass>QueryOQL</finalclass>
+  </QueryOQL>
+  <QueryOQL alias="QueryOQL" id="11">
+    <name>Les contacts d'un CI fonctionnel</name>
+    <description>Utilisable dans les notifications, pour informer les contacts liés au CI fonctionnel courant.</description>
+    <is_template>yes</is_template>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToFunctionalCI AS L ON L.contact_id=C.id
+      WHERE L.functionalci_id = :this->id
+    ]]></oql>
+    <fields>id,email</fields>
+    <finalclass>QueryOQL</finalclass>
+  </QueryOQL>
+  <QueryOQL alias="QueryOQL" id="12">
+    <name>Les contacts d'un Service</name>
+    <description>Utilisable dans les notifications, pour informer les contacts liés au Service courant.</description>
+    <is_template>yes</is_template>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToService AS L ON L.contact_id=C.id
+      WHERE L.service_id = :this->id
+    ]]></oql>
+    <fields>id,email</fields>
+    <finalclass>QueryOQL</finalclass>
+  </QueryOQL>
+  <QueryOQL alias="QueryOQL" id="13">
+    <name>Les contacts d'un Contrat</name>
+    <description>Utilisable dans les notifications, pour informer les contacts liés au Contrat courant.</description>
+    <is_template>yes</is_template>
+    <oql><![CDATA[SELECT Contact AS C JOIN lnkContactToContract AS L ON L.contact_id=C.id
+      WHERE L.contract_id = :this->id
+    ]]></oql>
     <fields>id,email</fields>
     <finalclass>QueryOQL</finalclass>
   </QueryOQL>

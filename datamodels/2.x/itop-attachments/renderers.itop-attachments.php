@@ -28,6 +28,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\FileSelect\FileSelectUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Renderer\BlockRenderer;
 
 define('ATTACHMENT_DOWNLOAD_URL', 'pages/ajax.document.php?operation=download_document&class=Attachment&field=contents&id=');
@@ -366,7 +367,7 @@ JS
 			"btn_remove_".$iAttId);
 		$oButton->AddCSSClass('btn_hidden')
 			->SetOnClickJsCode("RemoveAttachment(".$iAttId.");")
-			->SetColor(Button::ENUM_COLOR_DESTRUCTIVE);
+			->SetColor(Button::ENUM_COLOR_SCHEME_DESTRUCTIVE);
 		
 		return $oButton;
 	}
@@ -448,10 +449,13 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		if ($bWithDeleteButton) {
 			$aAttribs['delete'] = array('label' => '', 'description' => '');
 		}
-
+		$oPanel = PanelUIBlockFactory::MakeNeutral('');
+		$oPanel->AddCSSClass('ibo-datatable-panel');
 		$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
 		$oAttachmentTableBlock->AddCSSClass('ibo-attachment--datatable');
-		$this->oPage->AddUiBlock($oAttachmentTableBlock);
+		$oPanel->AddSubBlock($oAttachmentTableBlock);
+
+		$this->oPage->AddUiBlock($oPanel);
 
 		$sTableId = $oAttachmentTableBlock->GetId();
 
@@ -552,7 +556,7 @@ JS
 			'filename' => '<a href="'.$sDocDownloadUrl.'" target="_blank" class="$sIconClass">'.$sFileName.'</a>'.$sAttachmentMeta,
 			'formatted-size' => $sFileFormattedSize,
 			'upload-date' => $sAttachmentDateFormatted,
-			'uploader' => $sAttachmentUploader,
+			'uploader' => $sAttachmentUploaderForHtml,
 			'type' => $sFileType,
 			'js' => '',
 		);

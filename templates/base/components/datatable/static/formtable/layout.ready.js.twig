@@ -9,7 +9,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollCollapse: true,
     paging: false,
     filter: false,
-    autoWidth: false,
     search: false,
     dom: "t",
     "order": [],
@@ -63,11 +62,6 @@ if ($("#{{ oUIBlock.GetId() }}").height() > 0)
     }
 }
 {% endif %}
-
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
-{
-    oTable{{ sListIDForVarSuffix }}.columns.adjust().draw();
-}
 
 if (window.ResizeObserver)
 {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="Rack" _delta="define">
       <parent>PhysicalDevice</parent>
@@ -200,7 +200,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/enclosure.png</icon>
+          <icon>../../images/icons/icons8-enclosure-for-servers.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -559,7 +559,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>../../images/icons/icons8-power-plant.svg</icon>
+          <icon>../../images/icons/icons8-electricity.svg</icon>
         </style>
         <reconciliation>
           <attributes>
@@ -720,7 +720,7 @@
           </attributes>
         </naming>
         <style>
-          <icon>images/pdu.png</icon>
+          <icon>../../images/icons/icons8-plug-socket.svg</icon>
         </style>
         <reconciliation>
           <attributes>

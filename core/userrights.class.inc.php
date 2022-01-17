@@ -1,4 +1,7 @@
 <?php
+
+use Combodo\iTop\Application\Helper\Session;
+
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
 define('UR_ALLOWED_DEPENDS', 2);
@@ -318,7 +321,14 @@ abstract class User extends cmdbAbstractObject
 		{
 			if (MetaModel::IsValidAttCode(get_class($this), 'contactid') && ($this->Get('contactid') != 0))
 			{
-				$this->oContactObject = MetaModel::GetObject('Contact', $this->Get('contactid'));
+				$this->oContactObject = null;
+				// The User Contact is generally a Person, so try it first
+				if (MetaModel::IsValidClass('Person')) {
+					$this->oContactObject = MetaModel::GetObject('Person', $this->Get('contactid'), false);
+				}
+				if (is_null($this->oContactObject)) {
+					$this->oContactObject = MetaModel::GetObject('Contact', $this->Get('contactid'));
+				}
 			}
 		}
 		return $this->oContactObject;
@@ -381,9 +391,9 @@ abstract class User extends cmdbAbstractObject
 				if (!in_array(ADMIN_PROFILE_NAME, $aProfiles)) {
 					// Check if the user is yet allowed to modify Users
 					if (method_exists($oAddon, 'ResetCache')) {
-						$aCurrentProfiles = $_SESSION['profile_list'] ?? null;
+						$aCurrentProfiles = Session::Get('profile_list');
 						// Set the current profiles into a session variable (not yet in the database)
-						$_SESSION['profile_list'] = $aProfiles;
+						Session::Set('profile_list', $aProfiles);
 
 						$oAddon->ResetCache();
 						if (!$oAddon->IsActionAllowed($this, 'User', UR_ACTION_MODIFY, null)) {
@@ -392,9 +402,9 @@ abstract class User extends cmdbAbstractObject
 						$oAddon->ResetCache();
 
 						if (is_null($aCurrentProfiles)) {
-							unset($_SESSION['profile_list']);
+							Session::IsSet('profile_list');
 						} else {
-							$_SESSION['profile_list'] = $aCurrentProfiles;
+							Session::Set('profile_list', $aCurrentProfiles);
 						}
 					}
 				}
@@ -628,7 +638,7 @@ abstract class UserInternal extends User
 	{
 		$aParams = array
 		(
-			"category" => "core,grant_by_profile",
+			"category" => "core,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
@@ -840,10 +850,10 @@ class UserRights
 		}
 		self::$m_oUser = $oUser;
 
-		if (isset($_SESSION['impersonate_user']))
+		if (Session::IsSet('impersonate_user'))
 		{
 			self::$m_oRealUser = self::$m_oUser;
-			self::$m_oUser = self::FindUser($_SESSION['impersonate_user']);
+			self::$m_oUser = self::FindUser(Session::Get('impersonate_user'));
 		}
 
 		Dict::SetUserLanguage(self::GetUserLanguage());
@@ -947,15 +957,15 @@ class UserRights
 		{
 			$bRet = false;
 		}
-		elseif (isset($_SESSION['archive_allowed']))
+		elseif (Session::IsSet('archive_allowed'))
 		{
-			$bRet = $_SESSION['archive_allowed'];
+			$bRet = Session::Get('archive_allowed');
 		}
 		else
 		{
 			// As of now, anybody can switch to the archive mode as soon as there is an archivable class
 			$bRet = (count(MetaModel::EnumArchivableClasses()) > 0);
-			$_SESSION['archive_allowed'] = $bRet;
+			Session::Set('archive_allowed', $bRet);
 		}
 		return $bRet;
 	}
@@ -1041,7 +1051,7 @@ class UserRights
 				// Do impersonate!
 				self::$m_oUser = $oUser;
 				Dict::SetUserLanguage(self::GetUserLanguage());
-				$_SESSION['impersonate_user'] = $sLogin;
+				Session::Set('impersonate_user', $sLogin);
 				self::_ResetSessionCache();
 			}
 		}
@@ -1057,7 +1067,7 @@ class UserRights
 		{
 			self::$m_oUser = self::$m_oRealUser;
 			Dict::SetUserLanguage(self::GetUserLanguage());
-			unset($_SESSION['impersonate_user']);
+			Session::Unset('impersonate_user');
 			self::_ResetSessionCache();
 		}
 	}
@@ -1193,17 +1203,26 @@ class UserRights
 		// Then check if the user has a contact attached and if it has an picture defined
 		$sContactId = UserRights::GetContactId($sLogin);
 		if (!empty($sContactId)) {
-			$oContact = MetaModel::GetObject('Contact', $sContactId, false, true);
+			$oContact = null;
+			// Picture if generally for Person, so try it first
+			if (MetaModel::IsValidClass('Person')) {
+				$oContact = MetaModel::GetObject('Person', $sContactId, false, true);
+			}
+			if (is_null($oContact)) {
+				$oContact = MetaModel::GetObject('Contact', $sContactId, false, true);
+			}
 			$sContactClass = get_class($oContact);
 
 			// Check that Contact object still exists and that Contact class has a picture attribute
-			if (!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE)) {
+			// - Try to get the semantic image attribute, or try to fallback on the default one if none defined
+			$sContactPictureAttCode = MetaModel::HasImageAttributeCode($sContactClass) ? MetaModel::GetImageAttributeCode($sContactClass) : static::DEFAULT_CONTACT_PICTURE_ATTCODE;
+			if (!is_null($oContact) && MetaModel::IsValidAttCode($sContactClass, $sContactPictureAttCode)) {
 				/** @var \ormDocument $oPicture */
-				$oPicture = $oContact->Get(static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+				$oPicture = $oContact->Get($sContactPictureAttCode);
 				if ($oPicture->IsEmpty()) {
 					if ($bAllowDefaultPicture === true) {
 						/** @var \AttributeImage $oAttDef */
-						$oAttDef = MetaModel::GetAttributeDef($sContactClass, static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+						$oAttDef = MetaModel::GetAttributeDef($sContactClass, $sContactPictureAttCode);
 						$sPictureUrl = $oAttDef->Get('default_image');
 					} else {
 						$sPictureUrl = null;
@@ -1211,9 +1230,9 @@ class UserRights
 				} else {
 					if (ContextTag::Check(ContextTag::TAG_PORTAL)) {
 						$sSignature = $oPicture->GetSignature();
-						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
+						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.$sContactPictureAttCode.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
 					} else {
-						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), static::DEFAULT_CONTACT_PICTURE_ATTCODE);
+						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), $sContactPictureAttCode);
 					}
 				}
 			}
@@ -1419,6 +1438,21 @@ class UserRights
 	}
 
 	/**
+	 * @return int|string ID of the connected user : if impersonate then use {@see m_oRealUser}, else {@see m_oUser}. If no user set then return ''
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
+	 */
+	public static function GetConnectedUserId() {
+		if (false === is_null(static::$m_oRealUser)) {
+			return static::$m_oRealUser->GetKey();
+		}
+		if (false === is_null(static::$m_oUser)) {
+			return static::$m_oUser->GetKey();
+		}
+
+		return '';
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function GetRealUserId()
@@ -1473,7 +1507,7 @@ class UserRights
 		try
 		{
 			// Check Bug 1436 for details
-			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo'))
+			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'filter'))
 			{
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 			}
@@ -1755,9 +1789,9 @@ class UserRights
 		elseif ((self::$m_oUser !== null) && ($oUser->GetKey() == self::$m_oUser->GetKey()))
 		{
 			// Data about the current user can be found into the session data
-			if (array_key_exists('profile_list', $_SESSION))
+			if (Session::IsSet('profile_list'))
 			{
-				$aProfiles = $_SESSION['profile_list'];
+				$aProfiles = Session::Get('profile_list');
 			}
 		}
 
@@ -1792,11 +1826,6 @@ class UserRights
 			self::$m_aAdmins = array();
 			self::$m_aPortalUsers = array();
 		}
-		if (!isset($_SESSION) && !utils::IsModeCLI())
-		{
-			session_name('itop-'.md5(APPROOT));
-			session_start();
-		}
 		self::_ResetSessionCache();
 		if (self::$m_oAddOn)
 		{
@@ -1830,7 +1859,7 @@ class UserRights
 			{
 				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
 			}
-			
+
 			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
 			{
 				switch($sAuthentication)
@@ -1838,7 +1867,7 @@ class UserRights
 					case 'external':
 					$sBaseClass = 'UserExternal';
 					break;
-					
+
 					case 'internal':
 					$sBaseClass = 'UserInternal';
 					break;
@@ -1848,6 +1877,7 @@ class UserRights
 					assert(false); // should never happen
 				}
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+				$oSearch->AllowAllData();
 				if (!$bAllowDisabledUsers)
 				{
 					$oSearch->AddCondition('status', 'enabled');
@@ -1881,10 +1911,7 @@ class UserRights
 	public static function _InitSessionCache()
 	{
 		// Cache data about the current user into the session
-		if (isset($_SESSION))
-		{
-			$_SESSION['profile_list'] = self::ListProfiles();
-		}
+		Session::Set('profile_list', self::ListProfiles());
 
 		$oConfig = MetaModel::GetConfig();
 		$bSessionIdRegeneration = $oConfig->Get('regenerate_session_id_enabled');
@@ -1906,14 +1933,8 @@ class UserRights
 
 	public static function _ResetSessionCache()
 	{
-		if (isset($_SESSION['profile_list']))
-		{
-			unset($_SESSION['profile_list']);
-		}
-		if (isset($_SESSION['archive_allowed']))
-		{
-			unset($_SESSION['archive_allowed']);
-		}
+		Session::Unset('profile_list');
+		Session::Unset('archive_allowed');
 	}
 	
 	/**

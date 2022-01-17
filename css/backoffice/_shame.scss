@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -42,4 +42,24 @@
 // N°2847 - Recolor svg illustrations with iTop's primary color
 .ibo-svg-illustration--container > svg *[fill="#6c63ff"]{
 	fill: $ibo-svg-illustration--fill;
+}
+
+// N°4481 - Restore HTML tables style identical between edition and visualization
+// This is a hack to compensate missing variables in the bulma lib, PR has been made here: https://github.com/jgthms/bulma/pull/3455
+// The following can't be reset to it's original value (from the browser stylesheet), so we have to hardcode it even though it might change in future browser versions...
+.ibo-is-html-content table {
+  &:not(:last-child) {
+    margin-bottom: 0;
+  }
+
+  tbody {
+    tr {
+      &:last-child {
+        td,
+        th {
+          border-bottom-width: 1px;
+        }
+      }
+    }
+  }
 }

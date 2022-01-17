@@ -8,7 +8,7 @@
 //
 var numberCachePages = 5;
 
-$.fn.dataTable.pipeline = function (opts) {
+$.fn.dataTable.pipeline = function (opts, initJson) {
 	// Configuration options
 	var conf = $.extend({
 		pages: numberCachePages,     // number of pages to cache
@@ -26,33 +26,12 @@ $.fn.dataTable.pipeline = function (opts) {
 	var draw_number = 1;
 
 	return function (request, drawCallback, settings) {
-		let message = settings["oLanguage"]["processing"];
-		if (this.find('tbody').find('td').length == 0) {
-			this.find('tbody').append('<tr class="ibo-dataTables--processing"><td>&#160;</td></tr>');
-			this.find('tbody').block({
+		if (request.draw != 1) {
+			let message = '<i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i>';
+			this.closest('.dataTables_wrapper').block({
 				message: message,
 				css: {
 					border: '0px '
-				}
-			});
-			this.find('thead').block({
-				message: '',
-				css: {
-					border: '0px '
-				}
-			});
-		} else {
-			this.find('tbody').block({
-				message: '',
-				css: {
-					border: '0px '
-				}
-			});
-			this.find('thead').block({
-				message: message,
-				css: {
-					border: '0px ',
-					top: '20px',
 				}
 			});
 		}
@@ -67,16 +46,12 @@ $.fn.dataTable.pipeline = function (opts) {
 		}
 		var requestEnd = requestStart+requestLength;
 
-		//Manage case requestLength=-1 => all the row are display 
-		if (requestLength == -1) {
-			requestLength = cacheLastJson.recordsTotal;
-			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
-				//new server request is mandatory
-				ajax = true;
-			}
-		}
-
-		if (settings.clearCache) {
+		if (request.draw == 1 && initJson != null) {
+			//do nothing
+			cacheLastJson = $.extend(true, {}, initJson);
+			cacheLower = 0;
+			cacheUpper = initJson.data.length;
+		} else if (settings.clearCache) {
 			// API requested that the cache be cleared
 			ajax = true;
 			settings.clearCache = false;
@@ -93,15 +68,24 @@ $.fn.dataTable.pipeline = function (opts) {
 			ajax = true;
 		}
 
+		//Manage case requestLength=-1 => all the row are display 
+		if (requestLength == -1) {
+			requestLength = cacheLastJson.recordsTotal;
+			if (cacheLower != 0 || cacheLastJson.recordsTotal > cacheUpper) {
+				//new server request is mandatory
+				ajax = true;
+			}
+		}
+		
 		// Store the request for checking next time around
-		cacheLastRequest = $.extend( true, {}, request );
+		cacheLastRequest = $.extend(true, {}, request);
 
-		if ( ajax ) {
+		if (ajax) {
 			// Need data from the server
-			if ( requestStart < cacheLower ) {
-				requestStart = requestStart - (requestLength*(conf.pages-1));
+			if (requestStart < cacheLower) {
+				requestStart = requestStart-(requestLength * (conf.pages-1));
 
-				if ( requestStart < 0 ) {
+				if (requestStart < 0) {
 					requestStart = 0;
 				}
 			}

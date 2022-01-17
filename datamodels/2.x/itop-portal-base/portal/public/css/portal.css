@@ -1172,6 +1172,7 @@ table .group-actions {
   position: relative;
   display: inline-block;
   margin-left: 60px;
+  max-width: calc(100% - 60px);
   background-color: #585653;
   color: #FFFFFF;
 }
@@ -1224,6 +1225,11 @@ table .group-actions {
 }
 .caselog-thread--block-entry-content > p:last-of-type {
   margin-bottom: 0px;
+  /* Force user-generated tables to fit within the container as they often have an hard-coded width */
+}
+.caselog-thread--block-entry-content table {
+  width: unset !important;
+  max-width: max-content;
 }
 .caselog-thread--block-entry-date {
   margin-top: 5px;

@@ -229,14 +229,14 @@ class DesignerForm
 				$aRow = $oField->Render($oP, $sFormId, 'property');
 				if ($oField->IsVisible()) {
 					$sFieldId = $this->GetFieldId($oField->GetCode());
-					$sValidation = $this->GetValidationArea($sFieldId, '<span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply ibo-button ibo-is-alternative" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td>'
+					$sValidation = $this->GetValidationArea($sFieldId, '<div class="ibo-button ibo-is-alternative ibo-is-success" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></div>');
+					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span><div class="ibo-button ibo-is-alternative ibo-is-neutral" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-undo"></i></div></span></td>'
 						.$this->EndRow();
 
 					if (is_null($aRow['label'])) {
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value ibo-field--value" colspan="2">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value" colspan="2">'.$aRow['value'];
 					} else {
-						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label ibo-field--label">'.$aRow['label'].'</td><td class="prop_value ibo-field--value">'.$aRow['value'];
+						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
 					}
 					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField)) {
 						$sReturn .= $sValidationFields;
@@ -354,7 +354,7 @@ EOF
 <<<EOF
 $('#$sDialogId').dialog({
 		height: 'auto',
-		maxHeight: $(window).height() - 8,
+		maxHeight: $(window).height() * 0.9,
 		width: $iDialogWidth,
 		modal: true,
 		autoOpen: $sAutoOpen,
@@ -710,7 +710,10 @@ class DesignerFormField
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
-		$this->aCSSClasses = array('ibo-input');
+		$this->aCSSClasses = [];
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input';
+		}
 		$this->bDisplayed = true;
 		$this->aWidgetExtraParams = array();
 	}
@@ -1065,7 +1068,10 @@ class DesignerLongTextField extends DesignerTextField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
-		$this->aCSSClasses[] = 'ibo-input-text';
+
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-text';
+		}
 	}
 
 	/**
@@ -1199,7 +1205,10 @@ class DesignerComboField extends DesignerFormField
 		$this->bMultipleSelection = false;
 		$this->bOtherChoices = false;
 		$this->sNullLabel = Dict::S('UI:SelectOne');
-		$this->aCSSClasses[] = 'ibo-input-select';
+
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-select';
+		}
 
 		$this->bAutoApply = true;
 		$this->bSorted = true; // Sorted by default
@@ -1217,9 +1226,14 @@ class DesignerComboField extends DesignerFormField
 			return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_RAW;
 		}
 	}
-	
-	public function SetAllowedValues($aAllowedValues)
+
+	public function SetAllowedValues(?array $aAllowedValues)
 	{
+		// Make sure to have an actual array for values
+		if (is_null($aAllowedValues)) {
+			$aAllowedValues = [];
+		}
+
 		$this->aAllowedValues = $aAllowedValues;
 	}
 	
@@ -1296,11 +1310,11 @@ class DesignerComboField extends DesignerFormField
 		{
 			if ($this->bMultipleSelection)
 			{
-				$sHtml = "<select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
+				$sHtml = "<span><select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{
-				$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\">";
+				$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\">";
 				if ($this->sNullLabel != '')
 				{
 					$sHtml .= "<option value=\"\">".$this->sNullLabel."</option>";
@@ -1320,7 +1334,7 @@ class DesignerComboField extends DesignerFormField
 				$sHtmlValue = str_replace(' ', '&nbsp;', htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8'));
 				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
 			}
-			$sHtml .= "</select>";
+			$sHtml .= "</select></span>";
 			if ($this->bOtherChoices)
 			{
 				$sHtml .= '<br/><input type="checkbox" id="other_chk_'.$sId.'"><label for="other_chk_'.$sId.'">&nbsp;Other:</label>&nbsp;<input type="text" id="other_'.$sId.'" name="other_'.$sName.'" size="30"/>'; 
@@ -1351,7 +1365,9 @@ class DesignerBooleanField extends DesignerFormField
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->bAutoApply = true;
-		$this->aCSSClasses[] = 'ibo-input-checkbox';
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-checkbox';
+		}
 	}
 
 	/**
@@ -1498,7 +1514,8 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
 		if (!$this->IsReadOnly()) {
 			$sDefaultValue = ($this->defaultValue !== '') ? $this->defaultValue : $this->aAllowedValues[$idx]['value'];
-			$sValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/>";
+			$sCSSClasses = ContextTag::Check(ContextTag::TAG_CONSOLE) ? 'class="ibo-input-select-wrapper"' : '';
+			$sValue = "<span $sCSSClasses><input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/></span>";
 			$oP->add_ready_script(
 				<<<EOF
 	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
@@ -1676,7 +1693,9 @@ class DesignerFormSelectorField extends DesignerFormField
 		$this->defaultRealValue = $defaultValue;
 		$this->aSubForms = array();
 		$this->bSorted = true;
-		$this->aCSSClasses[] = 'ibo-input-select';
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-select';
+		}
 	}
 
 	/**
@@ -1753,18 +1772,18 @@ class DesignerFormSelectorField extends DesignerFormField
 			}
 			$sHtml = "<span $sCSSClasses>".$sDisplayValue.$sHiddenValue."</span>";
 		} else {
-			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 			foreach ($this->aSubForms as $iKey => $aFormData) {
 				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
 				$sValue = htmlentities($aFormData['value'], ENT_QUOTES, 'UTF-8');
 				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
 				$sHtml .= "<option data-value=\"$sValue\" value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
 			}
-			$sHtml .= "</select>";
+			$sHtml .= "</select></span>";
 		}
 
 		if ($sRenderMode == 'property') {
-			$sHtml .= '</td><td class="prop_icon prop_apply ibo-prop--apply ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></span></td><td  class="prop_icon prop_cancel ibo-prop--cancel ibo-button ibo-is-alternative"><span data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></span></td></tr>';
+			$sHtml .= '</td><td class="prop_icon prop_apply ibo-prop--apply"><span><button class="ibo-button ibo-is-alternative ibo-is-success" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></button></span></td><td class="prop_icon prop_cancel ibo-prop--cancel"><span><button class="ibo-button ibo-is-alternative ibo-is-neutral" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></button></span></td></tr>';
 		}
 		foreach ($this->aSubForms as $sKey => $aFormData) {
 			$sId = $this->oForm->GetFieldId($this->sCode);

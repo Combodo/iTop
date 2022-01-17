@@ -517,6 +517,13 @@ body {
   font-size: $ibo-font-size-150;
 }
 
+#ibo-setup-licenses--components-list {
+  background-color: $ibo-color-white-200;
+  padding: 12px;
+  box-shadow: inset 0px 2px 4px 1px rgb(0, 0, 0, 0.15);
+  @extend %ibo-border-radius-300;
+}
+
 
 .setup-prefix-toggler--input--container, .setup-tls--input--container, .setup-disk-location--input--container, .setup-backup--input--container {
   display: flex;
@@ -554,9 +561,6 @@ body {
 }
 .setup-accept-licenses{
   margin-top: 18px;
-  input{
-    margin-right: 8px;
-  }
 }
 .module-selection-banner{
   display: flex;
@@ -587,6 +591,9 @@ body {
   margin-right: 5px;
   color: $ibo-color-blue-700;
   font-size: $ibo-font-size-200;
+}
+.setup--wizard-choice--label + .setup--wizard-choice--more-info {
+  margin-left: 0.5rem;
 }
 /* integrityCheck: end (do not remove/edit) */
 

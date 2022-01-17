@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\WebResourcesHelper;
 
 /**
  * Class UIHTMLEditorWidget
@@ -64,7 +65,7 @@ class UIHTMLEditorWidget
 		$sHelpText = $this->m_sHelpText;
 		$sValidationField = $this->m_sValidationField;
 
-		$sHtmlValue = "<div class=\"field_input_zone field_input_html\"><textarea class=\"htmlEditor\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" rows=\"10\" cols=\"10\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
+		$sHtmlValue = "<div class=\"field_input_zone field_input_html ibo-input-wrapper\"><textarea class=\"htmlEditor ibo-input-richtext-placeholder\" title=\"$sHelpText\" name=\"attr_{$this->m_sFieldPrefix}{$sCode}\" id=\"$iId\">$sValue</textarea></div>$sValidationField";
 
 		// Replace the text area with CKEditor
 		// To change the default settings of the editor,
@@ -83,6 +84,7 @@ class UIHTMLEditorWidget
 		}
 		$sConfigJS = json_encode($aConfig);
 
+		WebResourcesHelper::EnableCKEditorToWebPage($oPage);
 		$oPage->add_ready_script("$('#$iId').ckeditor(function() { /* callback code */ }, $sConfigJS);"); // Transform $iId into a CKEdit
 
 		// Please read...

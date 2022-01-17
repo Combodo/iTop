@@ -51,6 +51,30 @@ function DBPasswordInNewConfigIsOk($sSafeContent)
 	return true;
 }
 
+function CheckAsyncTasksRetryConfig(Config $oTempConfig, iTopWebPage $oP)
+{
+    $iWarnings = 0;
+    foreach(get_declared_classes() as $sPHPClass)
+    {
+        $oRefClass = new ReflectionClass($sPHPClass);
+        if ($oRefClass->isSubclassOf('AsyncTask') && !$oRefClass->isAbstract())
+        {
+            $aMessages = AsyncTask::CheckRetryConfig($oTempConfig, $oRefClass->getName());
+
+            if (count($aMessages) !== 0)
+            {
+                foreach($aMessages as $sMessage)
+                {
+                    $oAlert = AlertUIBlockFactory::MakeForWarning('', $sMessage);
+                    $oP->AddUiBlock($oAlert);
+                    $iWarnings ++;
+                }
+            }
+        }
+    }
+    return $iWarnings;
+}
+
 /////////////////////////////////////////////////////////////////////
 // Main program
 //
@@ -142,6 +166,10 @@ try {
 								$iEditorTopMargin += 5;
 							}
 							$oP->AddUiBlock($oAlert);
+
+							$iWarnings = CheckAsyncTasksRetryConfig($oTempConfig, $oP);
+							$iEditorTopMargin += 5*$iWarnings;
+
 							$sOriginalConfig = str_replace("\r\n", "\n", file_get_contents($sConfigFile));
 						} catch (Exception $e) {
 							$oAlert = AlertUIBlockFactory::MakeForDanger('', $e->getMessage());

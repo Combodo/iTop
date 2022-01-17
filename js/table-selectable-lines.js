@@ -32,7 +32,10 @@ $(document).ready(function () {
 	var LINE_WITH_INPUTS_SELECTOR = "tbody>tr>"+CELLS_WITH_INPUT_SELECTOR;
 
 
-	// Tables with inputs inside cells
+	// Set a click handler on all tables containing inputs
+	// since 3.0.1 N°4619 we are using only one handler for both cases :
+	// - clicking in a cell that is not the first child, and that contains one input:radio or input:checkbox
+	// - clicking anywhere in a line
 	$(document).on('click', TABLE_SELECTOR+':has('+LINE_WITH_INPUTS_SELECTOR+')', function (event) {
 		var $eventTarget = $(event.target);
 		if (shouldExitHandler($eventTarget)) {
@@ -41,17 +44,14 @@ $(document).ready(function () {
 
 		var $cellClicked = $eventTarget.closest("td");
 		var $cellClickedInput = $cellClicked.find(INPUT_SELECTOR);
-		if ($cellClickedInput.length === 1) {
+		if (($cellClickedInput.length === 1)
+			&& ($cellClickedInput.is("input:radio") || $cellClickedInput.is("input:checkbox"))
+		) {
 			$cellClickedInput.click();
-		}
-	});
 
-
-	// Tables with one input in the first cell to select lines
-	$(document).on('click', TABLE_SELECTOR+':has('+LINE_WITH_INPUT_IN_FIRST_CELL_SELECTOR+')', function (event) {
-		var $eventTarget = $(event.target);
-		if (shouldExitHandler($eventTarget)) {
-			return;
+			if ($cellClicked.not(":first-child")) {
+				return;
+			}
 		}
 
 		var $lineClicked = $eventTarget.closest("tr");
@@ -122,17 +122,17 @@ $(document).ready(function () {
 
 
 	function updateLines($inputChanged) {
-		var $selectedLine = $inputChanged.closest("tr");
-
-		// didn't find a proper event fired when radio is deselected... so doing this !
-		if ($inputChanged.is('input:radio'))
-		{
-			$selectedLine
-				.closest('table')
-				.find('tr')
-				.removeClass(SELECTED_CLASS);
+		var $selectedCell = $inputChanged.closest("td");
+		if (false === $selectedCell.is("tr>td:first-child")) {
+			return;
 		}
 
-		$selectedLine.toggleClass(SELECTED_CLASS);
+		var $selectedLine = $inputChanged.closest("tr");
+
+		if($inputChanged.prop('checked')) {
+			$selectedLine.addClass(SELECTED_CLASS);
+		} else {
+			$selectedLine.removeClass(SELECTED_CLASS);
+		}
 	}
 });

@@ -132,7 +132,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
 	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
 	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
-	$oTextArea->AddCSSClass("ibo-queryoql");
+	$oTextArea->AddCSSClasses(["ibo-input-text", "ibo-query-oql", "ibo-is-code"]);
 	$oFieldQuery->AddSubBlock($oTextArea);
 	$oForm->AddSubBlock($oFieldQuery);
 	if (!empty($sExceptionMessage)) {
@@ -452,6 +452,7 @@ EOF
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
 	$oExporter = null;
+	$oQuery = null;
 
 	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive()) {
 		ReportErrorAndExit("The user account is not authorized to access the archives");
@@ -503,17 +504,22 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	catch(MissingQueryArgument $e)
 	{
 		$oSearch = null;
-		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndUsage("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(OQLException $e)
 	{
 		$oSearch = null;
-		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndExit("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(Exception $e)
 	{
 		$oSearch = null;
-		ReportErrorAndExit($e->getMessage());
+		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
+	}
+
+	// update last export information if check parameters ok
+	if($oQuery != null){
+		$oQuery->UpdateLastExportInformation();
 	}
 
 	$oExporter->SetFormat($sFormat);
@@ -569,7 +575,7 @@ if (utils::IsModeCLI()) {
 		utils::UseParamFile();
 	}
 	catch (Exception $e) {
-		echo "Error: ".$e->GetMessage()."<br/>\n";
+		echo "Error: ".utils::HtmlEntities($e->getMessage())."<br/>\n";
 		exit(EXIT_CODE_FATAL);
 	}
 
@@ -660,15 +666,15 @@ if (utils::IsModeCLI()) {
 	}
 	catch(MissingQueryArgument $e)
 	{
-		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(OQLException $e)
 	{
-		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(Exception $e)
 	{
-		ReportErrorAndExit($e->getMessage());
+		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
 	}
 
 	exit;
@@ -725,14 +731,14 @@ try
 }
 catch (BulkExportMissingParameterException $e) {
 	$oP = new AjaxPage('iTop Export');
-	$oP->add($e->getMessage());
+	$oP->add(utils::HtmlEntities($e->getMessage()));
 	Usage($oP);
 	$oP->output();
 }
 catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
 	$oP->add_xframe_options();
-	$oP->add('Error: '.$e->getMessage());
-	IssueLog::Error($e->getMessage()."\n".$e->getTraceAsString());
+	$oP->add('Error: '.utils::HtmlEntities($e->getMessage()));
+	IssueLog::Error(utils::HtmlEntities($e->getMessage())."\n".$e->getTraceAsString());
 	$oP->output();
 }

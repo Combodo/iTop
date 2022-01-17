@@ -1,0 +1,16 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-alert--spacing-top--with-same-block: $ibo-spacing-200 !default;
+$ibo-alert--spacing-top--with-other-blocks: $ibo-spacing-500 !default;
+
+/* Spacing between alert blocks */
+.ibo-alert + .ibo-alert {
+	margin-top: $ibo-alert--spacing-top--with-same-block;
+}
+/* Spacing between an alert block and something else */
+.ibo-alert +  .ibo-block:not(.ibo-alert) {
+	margin-top: $ibo-alert--spacing-top--with-other-blocks;
+}

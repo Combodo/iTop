@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="Organization">
       <fields>
@@ -1610,7 +1610,7 @@ public function PrefillSearchForm(&$aContextParam)
 			}
 			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
 			$oResultSql = new DBObjectSet($oQuery);
-			$oResultSql->OptimizeColumnLoad(['ccs' => ['ccs.customercontract_name','ccs.service_name']]);
+			$oResultSql->OptimizeColumnLoad(['ccs' => ['customercontract_name','service_name']]);
 			if ($aCurrentRow = $oResultSql->Fetch())
 			{
 				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));

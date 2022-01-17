@@ -110,6 +110,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Bejelentkezési névnek egyedinek kell lennie - "%1s" már létezik.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Legalább egy profilt a felhasználóhoz kell rendelni.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'At least one organization must be assigned to this user.~~',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organization not allowed.~~',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'The user account does not belong to your allowed organizations.~~',
@@ -321,10 +325,10 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'BooleanLabel:yes' => 'Igen',
 	'BooleanLabel:no' => 'Nem',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
-	'Menu:WelcomeMenu' => 'Üdvözlöm', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Üdvözlöm', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Üdvözlöm',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Üdvözlöm',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Üdvözli az '.ITOP_APPLICATION_SHORT,
 
 	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' egy teljeskörű, OpenSource, IT üzemeltetés támogató portál.</p>
@@ -367,7 +371,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Button:GlobalSearch' => 'Keresés',
 	'UI:Button:Search' => ' Keresés',
 	'UI:Button:Clear' => ' Clear ~~',
-	'UI:Button:SearchInHierarchy' => ' Search in hierachy ~~',
+	'UI:Button:SearchInHierarchy' => 'Search in hierarchy~~',
 	'UI:Button:Query' => ' Lekérdezés',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => 'Save~~',
@@ -536,43 +540,43 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:ResetPwd-Ready' => 'The password has been changed.~~',
 	'UI:ResetPwd-Login' => 'Click here to login...~~',
 
-	'UI:Login:About' => '~~',
-	'UI:Login:ChangeYourPassword' => 'Jelszó változtatás',
-	'UI:Login:OldPasswordPrompt' => 'Jelenlegi jelszó',
-	'UI:Login:NewPasswordPrompt' => 'Új jelszó',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Új jelszó ismét',
-	'UI:Login:IncorrectOldPassword' => 'Hiba: a jelenlegi jelszó hibás',
-	'UI:LogOffMenu' => 'Kilépés',
+	'UI:Login:About'                               => '~~',
+	'UI:Login:ChangeYourPassword'                  => 'Jelszó változtatás',
+	'UI:Login:OldPasswordPrompt'                   => 'Jelenlegi jelszó',
+	'UI:Login:NewPasswordPrompt'                   => 'Új jelszó',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Új jelszó ismét',
+	'UI:Login:IncorrectOldPassword'                => 'Hiba: a jelenlegi jelszó hibás',
+	'UI:LogOffMenu'                                => 'Kilépés',
 	'UI:LogOff:ThankYou' => 'Köszönjük, hogy az '.ITOP_APPLICATION_SHORT.'-ot használja!',
-	'UI:LogOff:ClickHereToLoginAgain' => 'Ismételt bejelentkezéshez kattintson ide',
-	'UI:ChangePwdMenu' => 'Jelszó módosítás...',
-	'UI:Login:PasswordChanged' => 'Jelszó sikeresen beállítva!',
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Ismételt bejelentkezéshez kattintson ide',
+	'UI:ChangePwdMenu'                             => 'Jelszó módosítás...',
+	'UI:Login:PasswordChanged'                     => 'Jelszó sikeresen beállítva!',
 	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' csak olvasás módban',
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' csak olvasás módban a végfelhasználók számára',
-	'UI:ApplicationEnvironment' => 'Application environment: %1$s~~',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Az új jelszó és ismételten beírt érték nem egyezik!',
+	'UI:ApplicationEnvironment'                    => 'Application environment: %1$s~~',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Az új jelszó és ismételten beírt érték nem egyezik!',
 	'UI:Button:Login' => 'Belépés az '.ITOP_APPLICATION_SHORT.' alkalmazásba',
 	'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.' hozzáférés korlátozva. Kérem forduljon az '.ITOP_APPLICATION_SHORT.' adminisztrátorhoz!',
 	'UI:Login:Error:AccessAdmin' => 'Adminisztrátori hozzáférés korlátozott. Kérem forduljon az '.ITOP_APPLICATION_SHORT.' adminisztrátorhoz!',
-	'UI:Login:Error:WrongOrganizationName' => 'Unknown organization~~',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
-	'UI:Login:Error:NoValidProfiles' => 'No valid profile provided~~',
-	'UI:CSVImport:MappingSelectOne' => '-- válasszon ki egyet --',
-	'UI:CSVImport:MappingNotApplicable' => '-- mező figyelmen kívül hagyása --',
-	'UI:CSVImport:NoData' => 'Üres mező..., kérem agyjon meg adatot!',
-	'UI:Title:DataPreview' => 'Adatok előnézete',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Hiba: Az import fájl egyetlen oszlopot tartalmaz. A megfelelő elválasztó karaktert adta meg?',
-	'UI:CSVImport:FieldName' => 'Mező %1$d',
-	'UI:CSVImport:DataLine1' => 'Adatsor 1',
-	'UI:CSVImport:DataLine2' => 'Adatsor 2',
-	'UI:CSVImport:idField' => 'id (elsődeges kulcs)',
+	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
+	'UI:CSVImport:MappingSelectOne'                => '-- válasszon ki egyet --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- mező figyelmen kívül hagyása --',
+	'UI:CSVImport:NoData'                          => 'Üres mező..., kérem agyjon meg adatot!',
+	'UI:Title:DataPreview'                         => 'Adatok előnézete',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Hiba: Az import fájl egyetlen oszlopot tartalmaz. A megfelelő elválasztó karaktert adta meg?',
+	'UI:CSVImport:FieldName'                       => 'Mező %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Adatsor 1',
+	'UI:CSVImport:DataLine2'                       => 'Adatsor 2',
+	'UI:CSVImport:idField'                         => 'id (elsődeges kulcs)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - tömeges betöltés',
-	'UI:Title:BulkImport+' => '',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => '%2$s osztály %1$d objektumának szinkronizációja',
-	'UI:CSVImport:ClassesSelectOne' => '-- válasszon ki egyet --',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Belső hiba: "%1$s" nem megfelelő kód, mert "%2$s" nem külső kulcsa a "%3$s" osztálynak',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d objektumok változatlanok maradnak.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d objektumok fognak megváltozni.',
+	'UI:Title:BulkImport+'                         => '',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => '%2$s osztály %1$d objektumának szinkronizációja',
+	'UI:CSVImport:ClassesSelectOne'                => '-- válasszon ki egyet --',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Belső hiba: "%1$s" nem megfelelő kód, mert "%2$s" nem külső kulcsa a "%3$s" osztálynak',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d objektumok változatlanok maradnak.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d objektumok fognak megváltozni.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d objektumok hozzáadásra kerülnek.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d objektumok hibásak lesznek.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d objektumok változatlanak maradtak',
@@ -692,6 +696,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL kifejezés',
 	'UI:RunQuery:HeaderOQLExpression+' => '',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Értékelendő kifejezés: ',
+	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
 	'UI:RunQuery:MoreInfo' => 'Több információ a lekérdezésről: ',
 	'UI:RunQuery:DevelopedQuery' => 'Újraírt lekérdező értékelés: ',
 	'UI:RunQuery:SerializedFilter' => 'Szerializált szűrő: ',
@@ -703,6 +708,7 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries~~',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objektum séma',
+	'UI:Schema:TitleForClass' => '%1$s séma~~',
 	'UI:Schema:CategoryMenuItem' => '<b>%1$s</b> kategória',
 	'UI:Schema:Relationships' => 'Kapcsolatok',
 	'UI:Schema:AbstractClass' => 'Absztrakt osztály: nem példányosítható belőle objektum.',
@@ -895,9 +901,9 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => '',
 	'UI:UserManagement:GrantMatrix' => 'Jogosutlsági mátrix',
 
-	'Menu:AdminTools' => 'Adminisztrációs eszközök', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Eszközök csak az adminisztrátori profilhoz rendlet felhasználók számára elérhetők.', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Adminisztrációs eszközök',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Eszközök csak az adminisztrátori profilhoz rendlet felhasználók számára elérhetők.',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System~~',
 
 	'UI:ChangeManagementMenu' => 'Változás menedzsment',
@@ -943,17 +949,17 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'UI-ContactsMenu-ContactsByType' => 'Kapcsolattartók típus szerint',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kapcsolattartók státusz szerint',
 
-	'Menu:CSVImportMenu' => 'CSV import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Adatmodell', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Adatmodell',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Értesítések', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Értesítések',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Értesítések beállítása',
 	'UI:NotificationsMenu:Help' => 'Segítség',
 	'UI:NotificationsMenu:HelpContent' => '<p>Az '.ITOP_APPLICATION_SHORT.' alkalmazásban az értesítések teljesen testreszabhatók. Értesítések az objektumok két csoportjára épülnek: <i>kiváltó okok és akciók</i>.</p>
@@ -965,9 +971,13 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 </ol>
 </p>
 <p>
-<i><b>Akciók</b></i> határozzák meg mit kell végrehjatani a kiváltó ok bekövetkezésekor. Jelenleg egyetlen akció fajta van: e-mail küldés.Természetesen az egyedi akciókbna meg lehet határozni a levél alapját képző sablont és az abba beépülő speciális paramétereket, pl.: címzett, fontossás, stb.
+<i><b>Akciók</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Speciális oldal: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>Speciális oldal: <a href="../setup/email.test.php" target="_blank">email.test.php</a> oldalon keresztül a PHP mail konfiguráció tesztelhető.</p>
 <p>Akció végrehjatásához azt kiváltó okhoz kell rendelni.
 Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az akciók végrehatási sorrendjét.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Kiváltó okok',
@@ -976,6 +986,9 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:NotificationsMenu:OnStateEnter' => 'Objketum állapotba való belépése',
 	'UI:NotificationsMenu:OnStateLeave' => 'Objektum állotból való kilépése',
 	'UI:NotificationsMenu:Actions' => 'Akciók',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Lehetséges akciók',
 
 	'Menu:TagAdminMenu' => 'Tags configuration~~',
@@ -984,27 +997,27 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:TagAdminMenu:NoTags' => 'No Tag field configured~~',
 	'UI:TagSetFieldData:Error' => 'Error: %1$s~~',
 
-	'Menu:AuditCategories' => 'Audit kategóriák', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Audit kategóriák', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Audit kategóriák',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Audit kategóriák',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Lekérdezés futtatás',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => 'Query phrasebook~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Query phrasebook~~',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => 'Query phrasebook~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Adat adminisztráció', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Adat adminisztráció',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Univerzális keresés', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Univerzális keresés',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Felhasználó menedzsment', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Felhasználó menedzsment',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profilok', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profilok',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profilok',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1030,7 +1043,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Deadline_Hours_Minutes' => '%1$dóra %2$dperc',
 	'UI:Deadline_Days_Hours_Minutes' => '%1$nap %2$dóra %3$dperc',
 	'UI:Help' => 'Segítség',
-	'UI:PasswordConfirm' => '(Jóváhagyás)',
+	'UI:PasswordConfirm' => 'Jóváhagyás',
 	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '%1$s objektumok hozzáadása előtt mentse ezt az  objektumot',
 	'UI:DisplayThisMessageAtStartup' => 'Az üzenet megjelenítése indításkor',
 	'UI:RelationshipGraph' => 'Grafikus nézet',
@@ -1206,6 +1219,8 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:DashboardEdit:AutoReload' => 'Automatic refresh~~',
 	'UI:DashboardEdit:AutoReloadSec' => 'Automatic refresh interval (seconds)~~',
 	'UI:DashboardEdit:AutoReloadSec+' => 'The minimum allowed is %1$d seconds~~',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Layout~~',
 	'UI:DashboardEdit:Properties' => 'Dashboard Properties~~',
@@ -1342,13 +1357,13 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'Month-10-Short' => 'Oct~~',
 	'Month-11-Short' => 'Nov~~',
 	'Month-12-Short' => 'Dec~~',
-	'Calendar-FirstDayOfWeek' => '0~~', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '0~~',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Create a Shortcut...~~',
 	'UI:ShortcutRenameDlg:Title' => 'Rename the shortcut~~',
 	'UI:ShortcutListDlg:Title' => 'Create a shortcut for the list~~',
 	'UI:ShortcutDelete:Confirm' => 'Please confirm that wou wish to delete the shortcut(s).~~',
-	'Menu:MyShortcuts' => 'My Shortcuts~~', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'My Shortcuts~~',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Shortcut~~',
 	'Class:Shortcut+' => '~~',
 	'Class:Shortcut/Attribute:name' => 'Name~~',
@@ -1454,7 +1469,7 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	// Search form
 	'UI:Search:Toggle' => 'Minimize / Expand~~',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Auto submit has been disabled for this class~~',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Based on your preferences, obsolete data are hidden~~',
+	'UI:Search:Obsolescence:DisabledHint' => 'Based on your preferences, obsolete data are hidden~~',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Add some criterion on the search box or click the search button to view the objects.~~',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Add new criteria~~',
 	// - Add new criteria button
@@ -1528,12 +1543,12 @@ Akció kiváltó okhoz rendelésekor kap egy sorszámot , amely meghatározza az
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Ends with~~',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Regular exp.~~',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Equals~~',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Greater~~',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Greater / equals~~',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Less~~',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Less / equals~~',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Different~~',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
 

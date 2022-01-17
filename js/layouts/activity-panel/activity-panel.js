@@ -178,11 +178,11 @@ $(function()
 				});
 				// - Click on open all case log messages
 				this.element.find(this.js_selectors.caselog_tab_open_all).on('click', function () {
-					me._onCaseLogOpenAllClick($(this));
+					me._onOpenAllEntriesClick();
 				});
 				// - Click on close all case log messages
 				this.element.find(this.js_selectors.caselog_tab_close_all).on('click', function () {
-					me._onCaseLogCloseAllClick($(this));
+					me._onCloseAllEntriesClick();
 				});
 
 				// Entry form
@@ -214,7 +214,7 @@ $(function()
 				// Entries
 				// - Click on a closed case log message
 				this.element.on('click', this.js_selectors.entry+'.'+this.css_classes.is_closed+' '+this.js_selectors.entry_main_information, function (oEvent) {
-					me._onCaseLogClosedMessageClick($(this).closest(me.js_selectors.entry));
+					me._onClosedEntryClick($(this).closest(me.js_selectors.entry));
 				});
 				// - Click on an edits entry's long description toggler
 				this.element.on('click', this.js_selectors.edits_entry_long_description_toggler, function (oEvent) {
@@ -336,15 +336,13 @@ $(function()
 				this._UpdateFiltersCheckboxesFromOptions();
 				this._ApplyEntriesFilters();
 			},
-			_onCaseLogOpenAllClick: function(oIconElem)
+			_onOpenAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._OpenAllMessages(sCaseLogAttCode);
+				this._OpenAllEntries();
 			},
-			_onCaseLogCloseAllClick: function(oIconElem)
+			_onCloseAllEntriesClick: function()
 			{
-				const sCaseLogAttCode = oIconElem.closest(this.js_selectors.tab_toggler).attr('data-caselog-attribute-code');
-				this._CloseAllMessages(sCaseLogAttCode);
+				this._CloseAllEntries();
 			},
 			/**
 			 * @param oEvent {Object}
@@ -457,24 +455,24 @@ $(function()
 					return;
 				}
 
+				let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 				// If several entry forms filled, show a confirmation message
 				if ((true === this.options.show_multiple_entries_submit_confirmation) && (Object.keys(this._GetEntriesFromAllForms()).length > 1)) {
-					this._ShowEntriesSubmitConfirmation();
+					this._ShowEntriesSubmitConfirmation(sStimulusCode);
 				}
 				// Else push data directly to the server
 				else {
-					let sStimulusCode = (undefined !== oData.stimulus_code) ? oData.stimulus_code : null
 					this._SendEntriesToServer(sStimulusCode);
 				}
 			},
-			_onCaseLogClosedMessageClick: function (oEntryElem) {
-				this._OpenMessage(oEntryElem);
+			_onClosedEntryClick: function (oEntryElem) {
+				this._OpenEntry(oEntryElem);
 			},
 			_onEntryLongDescriptionTogglerClick: function (oEvent, oEntryElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
 
-				oEntryElem.toggleClass(this.css_classes.is_opened);
+				oEntryElem.toggleClass(this.css_classes.is_closed);
 			},
 			/**
 			 * Callback for mouse clicks that should interact with the activity panel (eg. Clic outside a dropdown should close it, ...)
@@ -788,6 +786,22 @@ $(function()
 				return oEntries;
 			},
 			/**
+			 * @returns {Object} The case logs having a new entry and their values, format is {<ATT_CODE_1>: <HTML_VALUE_1>, <ATT_CODE_2>: <HTML_VALUE_2>}
+			 * @private
+			 */
+			_GetExtraInputsFromAllForms: function () {
+				const me = this;
+
+				let oExtraInputs = {};
+				this.element.find(this.js_selectors.caselog_entry_form).each(function () {
+					const oEntryFormElem = $(this);
+					oExtraInputs = $.extend(oExtraInputs, oEntryFormElem.triggerHandler('get_extra_inputs.caselog_entry_form.itop'));
+				});
+
+				return oExtraInputs;
+			},
+
+			/**
 			 * @return {boolean} True if at least 1 of the entry form is draft (has some text in it)
 			 * @private
 			 */
@@ -806,6 +820,7 @@ $(function()
 					minWidth: 400,
 					modal: true,
 					position: {my: "center center", at: "center center", of: this.js_selectors.tabs_toolbars},
+					close: function () { me._HideEntriesSubmitConfirmation(); },
 					buttons: [
 						{
 							text: Dict.S('UI:Button:Cancel'),
@@ -822,8 +837,11 @@ $(function()
 								if (bDoNotShowAgain) {
 									me._SaveSubmitConfirmationPref();
 								}
+
+								// Needs to be retrieved before hiding the dialog as it will wipe out the value in the process
+								const sStimulusCode = $(this).attr('data-stimulus-code');
 								me._HideEntriesSubmitConfirmation();
-								me._SendEntriesToServer();
+								me._SendEntriesToServer(sStimulusCode);
 							}
 						},
 					],
@@ -831,11 +849,14 @@ $(function()
 			},
 			/**
 			 * Show the confirmation dialog when multiple case log entries have been editied
+			 * @param sStimulusCode {string|null} Code of the stimulus to apply if confirmation is given
 			 * @private
 			 */
-			_ShowEntriesSubmitConfirmation: function()
+			_ShowEntriesSubmitConfirmation: function(sStimulusCode = null)
 			{
-				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('open');
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog)
+					.dialog('open')
+					.attr('data-stimulus-code', sStimulusCode);
 			},
 			/**
 			 * Hide the confirmation dialog for multiple edited case log entries
@@ -843,7 +864,9 @@ $(function()
 			 */
 			_HideEntriesSubmitConfirmation: function()
 			{
-				$(this.js_selectors.caselog_entry_forms_confirmation_dialog).dialog('close');
+				$(this.js_selectors.caselog_entry_forms_confirmation_dialog)
+					.dialog('close')
+					.attr('data-stimulus-code', '');
 			},
 			/**
 			 * Save that the user don't want the confirmation dialog to be shown in the future
@@ -856,13 +879,14 @@ $(function()
 			},
 			/**
 			 * Send the edited case logs entries to the server
-			 * @param sStimulusCode {string} Stimulus code to apply after the entries are saved
+			 * @param sStimulusCode {string|null} Stimulus code to apply after the entries are saved
 			 * @return {void}
 			 * @private
 			 */
 			_SendEntriesToServer: function (sStimulusCode = null) {
 				const me = this;
 				const oEntries = this._GetEntriesFromAllForms();
+				const oExtraInputs = this._GetExtraInputsFromAllForms();
 
 				// Proceed only if entries to send
 				if (Object.keys(oEntries).length === 0) {
@@ -870,13 +894,13 @@ $(function()
 				}
 
 				// Prepare parameters
-				let oParams = {
+				let oParams = $.extend(oExtraInputs, {
 					operation: 'activity_panel_add_caselog_entries',
 					object_class: this._GetHostObjectClass(),
 					object_id: this._GetHostObjectID(),
 					transaction_id: this.options.transaction_id,
 					entries: oEntries,
-				};
+				});
 
 				// Freeze case logs
 				this._FreezeCaseLogsEntryForms();
@@ -904,10 +928,15 @@ $(function()
 						}
 						me._ApplyEntriesFilters();
 
+						// Try to fix inline images width
+						CombodoInlineImage.FixImagesWidth();
+
 						// For now, we don't hide the forms as the user may want to add something else
 						me.element.find(me.js_selectors.caselog_entry_form).trigger('clear_entry.caselog_entry_form.itop');
 
 						// Redirect to stimulus
+						// - Convert undefined, null and empty string to null
+						sStimulusCode = ((sStimulusCode ?? '') === '') ? null : sStimulusCode;
 						if (null !== sStimulusCode) {
 							window.location.href = GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=stimulus&class='+me._GetHostObjectClass()+'&id='+me._GetHostObjectID()+'&stimulus='+sStimulusCode;
 						}
@@ -1098,20 +1127,23 @@ $(function()
 			},
 
 			// - Helpers on messages
-			_OpenMessage: function (oEntryElem) {
+			_OpenEntry: function (oEntryElem) {
 				oEntryElem.removeClass(this.css_classes.is_closed);
 			},
-			_OpenAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('open', sCaseLogAttCode);
+			_OpenAllEntries: function () {
+				this._SwitchAllEntries('open');
 			},
-			_CloseAllMessages: function (sCaseLogAttCode = null) {
-				this._SwitchAllMessages('close', sCaseLogAttCode);
+			_CloseAllEntries: function () {
+				this._SwitchAllEntries('close');
 			},
-			_SwitchAllMessages: function (sMode, sCaseLogAttCode = null) {
-				const sExtraSelector = (sCaseLogAttCode === null) ? '' : '[data-entry-caselog-attribute-code="'+sCaseLogAttCode+'"]';
+			/**
+			 *
+			 * @param sMode {string} Which way to switch the entries, can be either "open" or "close".
+			 * @private
+			 */
+			_SwitchAllEntries: function (sMode) {
 				const sCallback = (sMode === 'open') ? 'removeClass' : 'addClass';
-
-				this.element.find(this.js_selectors.entry+sExtraSelector)[sCallback](this.css_classes.is_closed);
+				this.element.find(this.js_selectors.entry)[sCallback](this.css_classes.is_closed);
 			},
 			/**
 			 * Update the messages and users counters in the tabs toolbar

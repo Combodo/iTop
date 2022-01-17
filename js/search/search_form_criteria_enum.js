@@ -225,7 +225,7 @@ $(function()
 			for (var i in aSortedValues)
 			{
 				var sValCode = aSortedValues[i][0];
-				var sValLabel = aSortedValues[i][1];
+				var sValLabel = $('<div/>').html(aSortedValues[i][1]).text();
 				//_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 				var oValueElem = this._makeListItemElement(sValLabel, sValCode, false, false, aSortedValues[i][2], aSortedValues[i][3]);
 				oValueElem.appendTo(oDynamicListElem);
@@ -691,7 +691,7 @@ $(function()
 				for(var skey in oResponse)
 				{
 					var sValue = oResponse[skey].value;
-				    var sLabel = oResponse[skey].label;
+				    var sLabel =  $('<div/>').html(oResponse[skey].label).text();
 					// Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
 					var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
 					var bInitChecked = bSelected;
@@ -922,7 +922,7 @@ $(function()
 		// - Make a jQuery element for a list item
 		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 		{
-			var sEscapedLabel = sLabel; // Note: We don't escape this anymore as there is an issue with AttributeExternalKey being already escaped. This will be put back in iTop 2.7 with the AttributeDefinition::GetAllowedValues() refactoring. $('<div />').text(sLabel).html();
+			var sEscapedLabel = $('<div />').text(sLabel).html();
 			if (bObsolete == 1)	{
 				sEscapedLabel = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+sEscapedLabel;
 			}

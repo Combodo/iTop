@@ -72,6 +72,7 @@ function DisplayPreferences($oP)
 	$oUICancelButton = ButtonUIBlockFactory::MakeForCancel();
 	$oUIToolbar->AddSubBlock($oUICancelButton);
 	$oUICancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+
 	// - Submit button
 	$oUISubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_user_interface', true);
 	$oUIToolbar->AddSubBlock($oUISubmitButton);
@@ -151,12 +152,12 @@ JS
 
 	$sIdFavoriteOrganizations = 1;
 	$oFavoriteOrganizationsForm->AddSubBlock($oBlock->GetDisplay($oP, $sIdFavoriteOrganizations, [
-		'menu' => false,
-		'selection_mode' => true,
-		'selection_type' => 'multiple',
-		'table_id' => 'user_prefs',
+		'menu'                => false,
+		'selection_mode'      => true,
+		'selection_type'      => 'multiple',
+		'table_id'            => 'user_prefs',
 		'surround_with_panel' => false,
-		'selected_rows' => $aFavoriteOrgs
+		'selected_rows'       => $aFavoriteOrgs,
 	]));
 	$oFavoriteOrganizationsForm->AddSubBlock($oAppContext->GetForFormBlock());
 
@@ -199,13 +200,14 @@ JS
 
 	$oBlock = new DisplayBlock($oShortcutsFilter, 'list', false);
 	$oShortcutsBlock->AddSubBlock($oBlock->GetDisplay($oP, $oShortcutsBlock->sIdShortcuts, [
-		'view_link' => false,
-		'menu' => false,
-		'toolkit_menu' => false,
-		'selection_mode' => true,
-		'selection_type' => 'multiple',
-		'table_id' => 'user_prefs_shortcuts',
+		'view_link'           => false,
+		'menu'                => false,
+		'toolkit_menu'        => false,
+		'selection_mode'      => true,
+		'selection_type'      => 'multiple',
+		'table_id'            => 'user_prefs_shortcuts',
 		'surround_with_panel' => false,
+		'id_for_select'       => 'Shortcut/_key_',
 	]));
 
 	$oSet = new DBObjectSet($oShortcutsFilter);
@@ -222,7 +224,7 @@ JS
 		$oShortcutsToolBar->AddSubBlock($oShortcutsDeleteButton);
 	}
 	$oContentLayout->AddMainBlock($oShortcutsBlock);
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// Newsroom
@@ -238,7 +240,7 @@ JS
 			$iCountProviders++;
 		}
 	}
-	
+
 	$bNewsroomEnabled = (MetaModel::GetConfig()->Get('newsroom_enabled') !== false);
 	if ($bNewsroomEnabled && ($iCountProviders > 0))
 	{
@@ -247,13 +249,13 @@ JS
 		$sNewsroomHtml = '';
 		$sNewsroomHtml .= '<form method="post">';
 		$iNewsroomDisplaySize = (int)appUserPreferences::GetPref('newsroom_display_size', 7);
-		
+
 		if ($iNewsroomDisplaySize < 1) $iNewsroomDisplaySize = 1;
 		if ($iNewsroomDisplaySize > 20) $iNewsroomDisplaySize = 20;
 		$sInput = '<input min="1" max="20" id="newsroom_display_size" type="number" size="2" name="newsroom_display_size" value="'.$iNewsroomDisplaySize.'">';
 		$sIcon = '<i id="newsroom_menu_icon" class="top-right-icon icon-additional-arrow fas fa-bell" style="top: 0;"></i>';
 		$sNewsroomHtml .= Dict::Format('UI:Newsroom:DisplayAtMost_X_Messages', $sInput, $sIcon);
-		
+
 		/**
 		 * @var iNewsroomProvider[] $aProviders
 		 */
@@ -310,7 +312,7 @@ JS
 		$oNewsroomBlock->AddSubBlock($oNewsroomEndHtmlBlock);
 		$oContentLayout->AddMainBlock($oNewsroomBlock);
 	}
-	
+
 	//////////////////////////////////////////////////////////////////////////
 	//
 	// User defined keyboard shortcut
@@ -353,14 +355,14 @@ var fCallback = function(sVal){
 oPanel.addClass('ibo-is-focus').val('$sKeyboardShortcutsInputHint')
 recordSequence$sKeyboardShortcutBlockId(fCallback);
 JS
-			);
-			
-			$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S($aKeyboardShortcut['label']), $sKeyboardShortcutId, $aKeyboardShortcut['key'], $sKeyboardShortcutId, 'text');
-			$oInput->GetInput()->AddCSSClasses(['ibo-keyboard-shortcut--input']);
-			$oKeyboardShortcutForm->AddSubBlock(new Html('<div class="ibo-keyboard-shortcut--shortcut">'));
-			$oKeyboardShortcutForm->AddSubBlock($oInput);
-			$oKeyboardShortcutForm->AddSubBlock($oButton);
-			$oKeyboardShortcutForm->AddSubBlock(new Html('</div>'));
+		);
+
+		$oInput = InputUIBlockFactory::MakeForInputWithLabel(Dict::S($aKeyboardShortcut['label']), $sKeyboardShortcutId, $aKeyboardShortcut['key'], $sKeyboardShortcutId, 'text');
+		$oInput->GetInput()->AddCSSClasses(['ibo-keyboard-shortcut--input']);
+		$oKeyboardShortcutForm->AddSubBlock(new Html('<div class="ibo-keyboard-shortcut--shortcut">'));
+		$oKeyboardShortcutForm->AddSubBlock($oInput);
+		$oKeyboardShortcutForm->AddSubBlock($oButton);
+		$oKeyboardShortcutForm->AddSubBlock(new Html('</div>'));
 	}
 
 	// Prepare buttons
@@ -371,10 +373,16 @@ JS
 	$oKeyboardShortcutCancelButton = ButtonUIBlockFactory::MakeForCancel();
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutCancelButton);
 	$oKeyboardShortcutCancelButton->SetOnClickJsCode("window.location.href = '$sURL'");
+
+	// - Reset button
+	$oKeyboardShortcutResetButton = ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'), 'operation', 'reset_keyboard_shortcuts', true);
+	$oKeyboardShortcutResetButton->SetTooltip(Dict::S('UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip'));
+	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutResetButton);
 	// - Submit button
 	$oKeyboardShortcutSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Apply'), 'operation', 'apply_keyboard_shortcuts', true);
 	$oKeyboardShortcutToolbar->AddSubBlock($oKeyboardShortcutSubmitButton);
-	
+
+
 	$oContentLayout->AddMainBlock($oKeyboardShortcutBlock);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -438,7 +446,7 @@ HTML
 	$oUserPicturePlaceHolderHtmlBlock = new Html($sUserPicturePlaceHolderHtml);
 	$oUserPicturePlaceHolderBlock->AddSubBlock($oUserPicturePlaceHolderHtmlBlock);
 	$oContentLayout->AddMainBlock($oUserPicturePlaceHolderBlock);
-	
+
 	/** @var iPreferencesExtension $oLoginExtensionInstance */
 	foreach (MetaModel::EnumPlugins('iPreferencesExtension') as $oPreferencesExtensionInstance)
 	{
@@ -702,6 +710,7 @@ try {
 					$aSelectOrgs = utils::ReadMultipleSelection($oFilter);
 					appUserPreferences::SetPref('favorite_orgs', $aSelectOrgs);
 				}
+				$oPage->ResetNavigationMenuLayout();
 				DisplayPreferences($oPage);
 				break;
 
@@ -771,6 +780,11 @@ try {
 					}
 				}
 				appUserPreferences::SetPref('keyboard_shortcuts', $aShortcutPrefs);
+
+				DisplayPreferences($oPage);
+				break;
+			case 'reset_keyboard_shortcuts':
+				appUserPreferences::UnsetPref('keyboard_shortcuts');
 
 				DisplayPreferences($oPage);
 				break;

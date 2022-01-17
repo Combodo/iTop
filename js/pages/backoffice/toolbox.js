@@ -24,6 +24,16 @@ function ShowAboutBox()
 	});
 	return false;
 }
+function ShowDebug()
+{
+	if ($('#ibo-raw-output').html() !== '')
+	{
+		$('#ibo-raw-output')
+			// Note: We remove the CSS class before opening the dialog, otherwise the dialog will not be positioned correctly due to its content being still hidden
+			.removeClass('ibo-is-hidden')
+			.dialog( {autoOpen: true, modal: true, width: '80%', maxHeight: window.innerHeight * 0.8});
+	}
+}
 function ArchiveMode(bEnable)
 {
 	var sPrevUrl = StripArchiveArgument(window.location.search);
@@ -40,6 +50,31 @@ function StripArchiveArgument(sUrl)
 {
 	var res = sUrl.replace(/&with-archive=[01]/g, '');
 	return res;
+}
+function goBack()
+{
+	window.history.back();
+}
+function BackToDetails(sClass, id, sDefaultUrl, sOwnershipToken)
+{
+	window.bInCancel = true;
+	if (id > 0)
+	{
+		sToken = '';
+		if (sOwnershipToken != undefined)
+		{
+			sToken = '&token='+sOwnershipToken;
+		}
+		window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=release_lock_and_details&class='+sClass+'&id='+id+sToken);
+	}
+	else
+	{
+		window.location.href = sDefaultUrl; // Already contains the context...
+	}
+}
+function BackToList(sClass)
+{
+	window.location.href = AddAppContext(GetAbsoluteUrlAppRoot()+'pages/UI.php?operation=search_oql&oql_class='+sClass+'&oql_clause=WHERE id=0');
 }
 
 /**
@@ -106,29 +141,30 @@ const CombodoBackofficeToolbox = {
 		const sComplementarySelector = bForce ? '' : ':not(.hljs)';
 
 		// AttributeHTML and HTML AttributeText
-		oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"]').find('.HTML pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
-			hljs.highlightBlock(oElem);
-		});
-		// CaseLogs
-		oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector+' > code').parent().each(function (iIdx, oElem) {
-			hljs.highlightBlock(oElem);
-		});
-	}
-};
-
-// For disabling the CKEditor at init time when the corresponding textarea is disabled !
-CKEDITOR.plugins.add( 'disabler',
-	{
-		init : function( editor )
-		{
-			editor.on( 'instanceReady', function(e)
-			{
-				e.removeListener();
-				$('#'+ editor.name).trigger('update');
-			});
+		let oCodeElements = oContainerElem.find('[data-attribute-type="AttributeHTML"], [data-attribute-type="AttributeText"], [data-attribute-type="AttributeTemplateHTML"]').find('.HTML pre'+sComplementarySelector+' > code');
+		if (oCodeElements.length > 0) {
+			if (typeof hljs === 'undefined') {
+				CombodoJSConsole.Error('Cannot format code snippets in HTML fields as the highlight.js lib is not loaded');
+			} else {
+				oCodeElements.parent().each(function (iIdx, oElem) {
+					hljs.highlightBlock(oElem);
+				});
+			}
 		}
 
-	});
+		// CaseLogs
+		oCodeElements = oContainerElem.find('[data-role="ibo-activity-entry--main-information-content"] pre'+sComplementarySelector+' > code');
+		if (oCodeElements.length > 0) {
+			if (typeof hljs === 'undefined') {
+				CombodoJSConsole.Error('Cannot format code snippets in log entries as the highlight.js lib is not loaded');
+			} else {
+				oCodeElements.parent().each(function (iIdx, oElem) {
+					hljs.highlightBlock(oElem);
+				});
+			}
+		}
+	}
+};
 
 // Processing on each pages of the backoffice
 $(document).ready(function(){

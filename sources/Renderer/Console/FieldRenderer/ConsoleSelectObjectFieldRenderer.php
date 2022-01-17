@@ -49,7 +49,6 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 		$oOutput = parent::Render();
 
 		$oBlock = FieldUIBlockFactory::MakeStandard($this->oField->GetLabel());
-		$oBlock->SetValueId($this->oField->GetGlobalId());
 		$oBlock->AddDataAttribute("input-id", $this->oField->GetGlobalId());
 
 		$sEditType = 'none';
@@ -138,9 +137,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 				$sId = $this->oField->GetGlobalId();
 
 				$oValue = UIContentBlockUIBlockFactory::MakeStandard();
-				$oBlock->SetValue($oValue);
 
-				$oOutput->AddHtml('<div>');
 				while ($oObject = $oSet->Fetch())
 				{
 					$iObject = $oObject->GetKey();
@@ -156,6 +153,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 						$sSelected = ($value == $iObject) ? 'checked' : '';
 					}
 					$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
+					$oRadioCustom->AddCSSClass('ibo-input-field-wrapper');
 					$oRadioCustom->GetInput()->SetIsChecked($sSelected);
 					$oRadioCustom->SetBeforeInput(false);
 					$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -174,26 +172,10 @@ EOF
 					$idx++;
 				}
 				$oValue->AddSubBlock(InputUIBlockFactory::MakeForHidden($sId,$value,$sId));
-			}
-			else
-			{
-				// Drop-down select
-				//
-				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
-				$sEditType = 'select';
-				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
-				$oBlock->AddSubBlock($oSelect);
-				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
-				while ($oObject = $oSet->Fetch())
-				{
-					$iObject = $oObject->GetKey();
-					$sLabel = $oObject->Get('friendlyname');
-					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
-					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject,$sLabel, ($this->oField->GetCurrentValue() == $iObject)));
-				}
-			}
-			$oOutput->AddJs(
-				<<<EOF
+				$oBlock->AddSubBlock($oValue);
+				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+				$oOutput->AddJs(
+					<<<EOF
 	                    $("#{$this->oField->GetGlobalId()}").off("change").on("change", function(){
                     	var me = this;
 
@@ -205,7 +187,47 @@ EOF
                         .closest('.form_handler').trigger('value_change');
                     });
 EOF
-			);
+				);
+			}
+			else
+			{
+				// Drop-down select
+				//
+				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
+				$sEditType = 'select';
+				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
+				$oSelect->AddCSSClass('ibo-input-select-placeholder');
+				$oBlock->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard(null,['ibo-input-field-wrapper'])->AddSubBlock($oSelect));
+				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
+				while ($oObject = $oSet->Fetch())
+				{
+					$iObject = $oObject->GetKey();
+					$sLabel = $oObject->Get('friendlyname');
+					// Note : The test is a double equal on purpose as the type of the value received from the XHR is not always the same as the type of the allowed values. (eg : string vs int)
+					$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption($iObject,$sLabel, ($this->oField->GetCurrentValue() == $iObject)));
+				}
+				$oBlock->AddSubBlock(new Html('<span class="form_validation"></span>'));
+				$oOutput->AddJs(
+					<<<JS
+ $("#{$this->oField->GetGlobalId()}").selectize({
+    sortField: 'text',
+    onChange: function(value){
+    			  var me = this.\$input;
+    			  me.trigger("field_change", {
+                            id: me.attr("id"),
+                            name: me.closest(".form_field").attr("data-field-id"),
+                            value: me.val()
+                        })
+                        .closest('.form_handler').trigger('value_change');
+    },
+	inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
+});
+ $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
+JS
+				);
+			}
+
+
 		}
 		$oOutput->AddHtml((BlockRenderer::RenderBlockTemplates($oBlock)));
 		// JS Form field widget construct
@@ -232,21 +254,15 @@ EOF
 		if (oResult.is_valid)
 		{
 			oValidationElement.html('');
+			 $(me.element).find('.ibo-input-field-wrapper').removeClass("is-error");
 		}
 		else
 		{
 			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
-			oValidationElement.tooltip({
-				items: 'span',
-				classes: {
-			        "ui-tooltip": "form_field_error"
-			    },
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
+			oValidationElement.html(sExplain);
+			oValidationElement.addClass(' ibo-field-validation');
+			 $(me.element).find('.ibo-input-field-wrapper').addClass("is-error");
 		}
 	}
 }
@@ -262,19 +278,14 @@ EOF
 		{
 			case 'autocomplete':
 			case 'radio':
+			case 'select':
 				$oOutput->AddJs(
 					<<<EOF
 	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('#{$this->oField->GetGlobalId()}').val();});
 EOF
 				);
 				break;
-			case 'select':
-				$oOutput->AddJs(
-					<<<EOF
-	                    $("[data-field-id='{$this->oField->GetId()}'][data-form-path='{$this->oField->GetFormPath()}']").form_field('option', 'get_current_value_callback', function(me){ return $(me.element).find('select').val();});
-EOF
-				);
-				break;
+
 
 			case 'none':
 			default:

@@ -26,7 +26,6 @@ require_once APPROOT.'core/computing.inc.php';
 require_once APPROOT.'core/relationgraph.class.inc.php';
 require_once APPROOT.'core/apc-compat.php';
 require_once APPROOT.'core/expressioncache.class.inc.php';
-require_once APPROOT.'sources/Core/MetaModel/FriendlyNameType.php';
 
 
 /**
@@ -446,10 +445,10 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
-	 * @param bool $bImgTag
-	 * @param string $sMoreStyles
+	 * @param bool $bImgTag Whether to surround the icon URL with an HTML IMG tag or not
+	 * @param string $sMoreStyles Additional inline CSS style to add to the IMG tag. Only used if $bImgTag is set to true
 	 *
-	 * @return string
+	 * @return string Absolute URL the class icon
 	 * @throws \CoreException
 	 */
 	final public static function GetClassIcon($sClass, $bImgTag = true, $sMoreStyles = '')
@@ -460,7 +459,7 @@ abstract class MetaModel
 		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
 			/** @var ormStyle $oStyle */
 			$oStyle = self::$m_aClassParams[$sClass]['style'];
-			$sIcon = $oStyle->GetIcon();
+			$sIcon = $oStyle->GetIconAsAbsUrl();
 		}
 		if (strlen($sIcon) == 0) {
 			$sParentClass = self::GetParentPersistentClass($sClass);
@@ -495,7 +494,7 @@ abstract class MetaModel
 			$oStyle = new ormStyle("ibo-class-style--$sClass", "ibo-class-style-alt--$sClass");
 		}
 
-		if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIcon()) > 0)) {
+		if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIconAsRelPath()) > 0)) {
 			// all the parameters are set, no need to search in the parent classes
 			return $oStyle;
 		}
@@ -513,10 +512,10 @@ abstract class MetaModel
 					$oStyle->SetComplementaryColor($oParentStyle->GetComplementaryColor());
 					$oStyle->SetAltStyleClass($oParentStyle->GetAltStyleClass());
 				}
-				if (strlen($oStyle->GetIcon()) == 0) {
-					$oStyle->SetIcon($oParentStyle->GetIcon());
+				if (strlen($oStyle->GetIconAsRelPath()) == 0) {
+					$oStyle->SetIcon($oParentStyle->GetIconAsRelPath());
 				}
-				if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIcon()) > 0)) {
+				if ((strlen($oStyle->GetMainColor()) > 0) && (strlen($oStyle->GetComplementaryColor()) > 0) && (strlen($oStyle->GetIconAsRelPath()) > 0)) {
 					// all the parameters are set, no need to search in the parent classes
 					return $oStyle;
 				}
@@ -524,7 +523,7 @@ abstract class MetaModel
 			$sParentClass = self::GetParentPersistentClass($sParentClass);
 		}
 
-		if ((strlen($oStyle->GetMainColor()) == 0) && (strlen($oStyle->GetComplementaryColor()) == 0) && (strlen($oStyle->GetIcon()) == 0)) {
+		if ((strlen($oStyle->GetMainColor()) == 0) && (strlen($oStyle->GetComplementaryColor()) == 0) && (strlen($oStyle->GetIconAsRelPath()) == 0)) {
 			return null;
 		}
 
@@ -755,10 +754,13 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetNameSpec($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -826,6 +828,7 @@ abstract class MetaModel
 	 *
 	 * @param string $sClass
 	 * @param bool $bWithAttributeDefinition
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array of attribute codes used by friendlyname
 	 * @throws \CoreException
@@ -898,10 +901,13 @@ abstract class MetaModel
 	 * Get the friendly name expression for a given class
 	 *
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return Expression
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetNameExpression($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -937,10 +943,13 @@ abstract class MetaModel
 
 	/**
 	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return string The friendly name IIF it is equivalent to a single attribute
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetFriendlyNameAttributeCode($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -960,9 +969,12 @@ abstract class MetaModel
 	/**
 	 * Returns the list of attributes composing the friendlyname
 	 *
-	 * @param $sClass
+	 * @param string $sClass
+	 * @param string $sType {@see \Combodo\iTop\Core\MetaModel\FriendlyNameType}
 	 *
 	 * @return array
+	 *
+	 * @since 3.0.0 N°580 New $sType parameter
 	 */
 	final public static function GetFriendlyNameAttributeCodeList($sClass, $sType = FriendlyNameType::SHORT)
 	{
@@ -2989,7 +3001,32 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPageUIBlockExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
+		$aInterfaces = [
+			'iApplicationUIExtension',
+			'iPreferencesExtension',
+			'iApplicationObjectExtension',
+			'iLoginFSMExtension',
+			'iLoginUIExtension',
+			'iLogoutExtension',
+			'iQueryModifier',
+			'iOnClassInitialization',
+			'iPopupMenuExtension',
+			'iPageUIExtension',
+			'iPageUIBlockExtension',
+			'iBackofficeLinkedScriptsExtension',
+			'iBackofficeEarlyScriptExtension',
+			'iBackofficeScriptExtension',
+			'iBackofficeInitScriptExtension',
+			'iBackofficeReadyScriptExtension',
+			'iBackofficeLinkedStylesheetsExtension',
+			'iBackofficeStyleExtension',
+			'iBackofficeDictEntriesExtension',
+			'iBackofficeDictEntriesPrefixesExtension',
+			'iPortalUIExtension',
+			'ModuleHandlerApiInterface',
+			'iNewsroomProvider',
+			'iModuleExtension',
+		];
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClassNames[$sInterface] = array();
@@ -3071,8 +3108,7 @@ abstract class MetaModel
 							// Set attribute code
 							self::$m_aClassParams[$sPHPClass]['state_attcode'] = self::$m_aClassParams[$sParent]['state_attcode'];
 
-							// Set states
-							self::$m_aStates[$sPHPClass] = self::$m_aStates[$sParent];
+							// Note: Don't set self::$m_aStates[$sPHPClass], it has already been done by self::Init_DefineState()
 						}
 						// - Image attribute
 						$bParentHasImageAttribute = (isset(self::$m_aClassParams[$sParent]['image_attcode']) && !empty(self::$m_aClassParams[$sParent]['image_attcode']));
@@ -4120,19 +4156,26 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param int $iOption one of ENUM_CHILD_CLASSES_EXCLUDETOP, ENUM_CHILD_CLASSES_ALL
+	 * @param bool $bRootFirst Only when $iOption NOT set to ENUM_CHILD_CLASSES_EXCLUDETOP. If true, the $sClass will be the first element of the returned array, otherwise it will be the last (legacy behavior)
 	 *
 	 * @return array
 	 * @throws \CoreException
+	 * @since 3.0.0 Added $bRootFirst param.
 	 */
-	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
+	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP, $bRootFirst = false)
 	{
 		self::_check_subclass($sClass);
 
 		$aRes = self::$m_aChildClasses[$sClass];
 		if ($iOption != ENUM_CHILD_CLASSES_EXCLUDETOP)
 		{
-			// Add it to the list
-			$aRes[] = $sClass;
+			if ($bRootFirst) {
+				// Root class on top
+				array_unshift($aRes, $sClass);
+			} else {
+				// Root class at the end, legacy behavior
+				$aRes[] = $sClass;
+			}
 		}
 
 		return $aRes;
@@ -4519,15 +4562,15 @@ abstract class MetaModel
 	/**
 	 * Check (and updates if needed) the hierarchical keys
 	 *
-	 * @param boolean $bDiagnosticsOnly If true only a diagnostic pass will be run, returning true or false
-	 * @param boolean $bVerbose Displays some information about what is done/what needs to be done
-	 * @param boolean $bForceComputation If true, the _left and _right parameters will be recomputed even if some
+	 * @param bool $bDiagnosticsOnly If true only a diagnostic pass will be run, returning true or false
+	 * @param bool $bVerbose Displays some information about what is done/what needs to be done
+	 * @param bool $bForceComputation If true, the _left and _right parameters will be recomputed even if some
 	 *     values already exist in the DB
 	 *
+	 * @return bool
 	 * @throws \CoreException
-	 * @throws \Exception
 	 */
-	public static function CheckHKeys($bDiagnosticsOnly = false, $bVerbose = false, $bForceComputation = false)
+	public static function CheckHKeys(bool $bDiagnosticsOnly = false, bool $bVerbose = false, bool $bForceComputation = false)
 	{
 		$bChangeNeeded = false;
 		foreach(self::GetClasses() as $sClass)
@@ -5952,7 +5995,8 @@ abstract class MetaModel
 
 
 	/**
-	 * @deprecated 2.7.0 N°2369 will be removed in 2.8
+	 * @deprecated 2.7.0 N°2369 Method will not be removed any time soon as we still need to drop view if the instance is migrating from an iTop 2.x to an iTop 3.0 or newer, even if they skip iTop 3.0.
+	 * @since 3.0.0 Does not recreate SQL views, only drops them. Method has not been renamed to avoid regressions
 	 *
 	 * @return array
 	 * @throws \CoreException
@@ -5966,7 +6010,7 @@ abstract class MetaModel
 
 		// Reporting views (must be created after any other table)
 		//
-		foreach(self::GetClasses('bizmodel') as $sClass)
+		foreach(self::GetClasses() as $sClass)
 		{
 			$sView = self::DBGetView($sClass);
 			if (CMDBSource::IsTable($sView))
@@ -6512,6 +6556,7 @@ abstract class MetaModel
 	 */
 	public static function LoadConfig($oConfiguration, $bAllowCache = false)
 	{
+		$oKPI = new ExecutionKPI();
 		self::$m_oConfig = $oConfiguration;
 
 		// N°2478 utils has his own private attribute
@@ -6532,6 +6577,7 @@ abstract class MetaModel
 			ToolsLog::Enable(APPROOT.'log/tools.log');
 			DeadLockLog::Enable();
 			DeprecatedCallsLog::Enable();
+			ExceptionLog::Enable();
 		}
 		else
 		{
@@ -6588,6 +6634,7 @@ abstract class MetaModel
 
 		$sSource = self::$m_oConfig->Get('db_name');
 		$sTablePrefix = self::$m_oConfig->Get('db_subname');
+		$oKPI->ComputeAndReport('Load config');
 
 		if (self::$m_bUseAPCCache)
 		{
@@ -7219,21 +7266,6 @@ abstract class MetaModel
 	}
 
 	/**
-	 * @deprecated 2.7.0 N°1627, use ItopCounter::incRootClass($sClass) instead
-	 *
-	 * @param string $sClass
-	 *
-	 * @return int
-	 * @throws \CoreException
-	 */
-	public static function GetNextKey($sClass)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use ItopCounter::incRootClass($sClass) instead');
-
-		return ItopCounter::IncClass($sClass);
-	}
-
-	/**
 	 * Deletion of records, bypassing {@link DBObject::DBDelete} !!!
 	 * It is NOT recommended to use this shortcut
 	 * In particular, it will not work
@@ -7457,9 +7489,11 @@ abstract class MetaModel
 	 * @param string $sInput
 	 * @param array $aParams
 	 *
-	 * @return mixed
+	 * @return string
+	 *
+	 * @throws \Exception
 	 */
-	static public function ApplyParams($sInput, $aParams)
+	public static function ApplyParams($sInput, $aParams)
 	{
 		$aParams = static::AddMagicPlaceholders($aParams);
 
@@ -7469,7 +7503,7 @@ abstract class MetaModel
 
 		$aSearches = array();
 		$aReplacements = array();
-		foreach($aParams as $sSearch => $replace)
+		foreach ($aParams as $sSearch => $replace)
 		{
 			// Some environment parameters are objects, we just need scalars
 			if (is_object($replace))
@@ -7718,14 +7752,18 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
-	 * @param string $sValue
+	 * @param string|null $sValue Code of the state value, can be null if allowed by the attribute definition
 	 *
 	 * @return \ormStyle|null
 	 * @throws \Exception
 	 * @throws \CoreException
 	 */
-	public static function GetEnumStyle(string $sClass, string $sAttCode, string $sValue = ''): ?ormStyle
+	public static function GetEnumStyle(string $sClass, string $sAttCode, ?string $sValue = ''): ?ormStyle
 	{
+		if (strlen($sAttCode) === 0) {
+			return null;
+		}
+
 		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
 		if (!$oAttDef instanceof AttributeEnum) {
 			throw new CoreException("MetaModel::GetEnumStyle() Attribute $sAttCode of class $sClass is not an AttributeEnum\n");

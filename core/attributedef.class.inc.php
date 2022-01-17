@@ -1793,7 +1793,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TEXT';
+		$aColumns[$this->GetCode()] = 'TEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -4159,6 +4159,7 @@ class AttributeText extends AttributeString
 		{
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
+			$sValue = nl2br($sValue);
 
 			return "<div $sStyle>$sValue</div>";
 		}
@@ -5994,7 +5995,7 @@ class AttributeDateTime extends AttributeDBField
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'VARCHAR(19)';
+		$aColumns[$this->GetCode()] = 'VARCHAR(19)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -6482,7 +6483,7 @@ class AttributeDate extends AttributeDateTime
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'VARCHAR(10)';
+		$aColumns[$this->GetCode()] = 'VARCHAR(10)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -8130,6 +8131,25 @@ class AttributeImage extends AttributeBlob
 	}
 
 	/**
+	 * {@inheritDoc}
+	 * @see AttributeBlob::MakeRealValue()
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
+
+		if (($oDoc instanceof ormDocument)
+			&& (false === $oDoc->IsEmpty())
+			&& ($oDoc->GetMimeType() === 'image/svg+xml')) {
+			$sCleanSvg = HTMLSanitizer::Sanitize($oDoc->GetData(), 'svg_sanitizer');
+			$oDoc = new ormDocument($sCleanSvg, $oDoc->GetMimeType(), $oDoc->GetFileName());
+		}
+
+		// The validation of the MIME Type is done by CheckFormat below
+		return $oDoc;
+	}
+
+	/**
 	 * Check that the supplied ormDocument actually contains an image
 	 * {@inheritDoc}
 	 *
@@ -8159,24 +8179,27 @@ class AttributeImage extends AttributeBlob
 		$sRet = '';
 		$bIsCustomImage = false;
 
-		$iMaxWidthPx = $this->Get('display_max_width').'px';
-		$iMaxHeightPx = $this->Get('display_max_height').'px';
+		$iMaxWidth = $this->Get('display_max_width');
+		$sMaxWidthPx = $iMaxWidth.'px';
+		$iMaxHeight = $this->Get('display_max_height');
+		$sMaxHeightPx = $iMaxHeight.'px';
 
 		$sDefaultImageUrl = $this->Get('default_image');
 		if ($sDefaultImageUrl !== null) {
-			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $sMaxWidthPx, $sMaxHeightPx);
 		}
 
 		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
 		if ($sCustomImageUrl !== null) {
 			$bIsCustomImage = true;
-			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $sMaxWidthPx, $sMaxHeightPx);
 		}
 
 		$sCssClasses = 'ibo-input-image--image-view attribute-image';
 		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
 
-		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';">'.$sRet.'</div>';
+		// Important: If you change this, mind updating edit_image.js as well
+		return '<div class="'.$sCssClasses.'" style="max-width: '.$sMaxWidthPx.'; max-height: '.$sMaxHeightPx.'; aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
 	}
 
 	/**
@@ -10283,7 +10306,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 			} else {
 				$sTooltipContent = <<<HTML
 <h4>$sLabel</h4>
-<br>
 <div>$sDescription</div>
 HTML;
 				$sTooltipHtmlEnabled = 'true';
@@ -10830,7 +10852,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 							}
 						}
 
-						$sLabelForHtmlAttribute = MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)";
+						$sLabelForHtmlAttribute = utils::HtmlEntities(MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)");
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
@@ -11023,7 +11045,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				$aLocalizedValues = array();
 				foreach ($value as $sAttCode) {
 					if (isset($aAllowedAttributes[$sAttCode])) {
-						$sLabelForHtmlAttribute = $aAllowedAttributes[$sAttCode];
+						$sLabelForHtmlAttribute = utils::HtmlEntities($aAllowedAttributes[$sAttCode]);
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					}
 				}
@@ -11572,20 +11594,20 @@ class AttributeTagSet extends AttributeSet
 					$sTooltipContent = $sTagLabel;
 					$sTooltipHtmlEnabled = 'false';
 				} else {
+					$sTagLabelEscaped = utils::EscapeHtml($sTagLabel);
 					$sTooltipContent = <<<HTML
-<h4>$sTagLabel</h4>
-<br>
+<h4>$sTagLabelEscaped</h4>
 <div>$sTagDescription</div>
 HTML;
 					$sTooltipHtmlEnabled = 'true';
 				}
-				$sTooltipContent = utils::EscapeHtml($sTooltipContent);
+				$sTooltipContent = utils::HtmlEntities($sTooltipContent);
 
 				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sLabelForHtml.'" data-description="'.$sDescriptionForHtml.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabelForHtml.'</a>';
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-set-item">'.utils::EscapeHtml($oTag).'</span>';
 			}
 		}
 		$sHtml .= '</span>';
@@ -12545,10 +12567,12 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
 	{
-		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),
-			true);
-
-		return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),	true);
+		if ($aRawData != null) {
+			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+		} else{
+			return null;
+		}
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObject)

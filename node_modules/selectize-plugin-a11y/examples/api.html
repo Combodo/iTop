@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Accessibile Selectize</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/css/selectize.min.css">
+</head>
+<body>
+    <h1>Selectize-plugin-a11y.js</h1>
+    <p>Make Selectize.js accessibile</p>
+
+    <select name="" id="">
+        <option value="">Choose your country</option>
+        <option value="it">Italy</option>
+        <option value="fr">France</option>
+        <option value="gb">United Kingdom</option>
+        <option value="script">&lt;script&gt;alert('hi')&lt;/script&gt;</option>
+    </select>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.4/js/standalone/selectize.min.js"></script>
+    <script src="../selectize-plugin-a11y.js"></script>
+    <script>
+        $('select').selectize({
+            plugins: ['selectize-plugin-a11y'],
+            render: {
+                option: function($item, escape) {
+                    // Every option must have a unique id
+                    return `<div class="option" role="option" id="${escape($item.text).replace(' ', '')}">${escape($item.text)}</div>`
+                }
+            }
+        });
+    </script>
+</body>
+</html>

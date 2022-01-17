@@ -1,19 +1,6 @@
-/*!
- * Copyright (C) 2013-2021 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 /* SCSS variables */
@@ -22,8 +9,8 @@ $ibo-activity-panel--width: 480px !default;
 $ibo-activity-panel--is-expanded--width: 60vw !default;
 $ibo-activity-panel--is-closed--width: 32px !default;
 $ibo-activity-panel--height: 100% !default;
-$ibo-activity-panel--padding-x: 16px !default;
-$ibo-activity-panel--padding-y: 0 !default;
+$ibo-activity-panel--padding-x: $ibo-spacing-500 !default;
+$ibo-activity-panel--padding-y: $ibo-spacing-0 !default;
 
 /* - Header */
 $ibo-activity-panel--header--background-color: $ibo-color-grey-100 !default;
@@ -42,14 +29,14 @@ $ibo-activity-panel--tab-toggler--caselog-highlight-colors: $ibo-caselog-highlig
 $ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200 !default;
 
 /* - Tab title */
-$ibo-activity-panel--tab-title--padding-x: 16px !default;
-$ibo-activity-panel--tab-title--padding-y: 8px !default;
+$ibo-activity-panel--tab-title--padding-x: $ibo-spacing-500 !default;
+$ibo-activity-panel--tab-title--padding-y: $ibo-spacing-300 !default;
 $ibo-activity-panel--tab-title--on-hover--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
 $ibo-activity-panel--tab-title--is-active--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
 
 $ibo-activity-panel--tab-title-decoration--width: 12px !default;
 $ibo-activity-panel--tab-title-decoration--height: $ibo-activity-panel--tab-title-decoration--width !default;
-$ibo-activity-panel--tab-title-decoration--margin-right: 8px !default;
+$ibo-activity-panel--tab-title-decoration--margin-right: $ibo-spacing-300 !default;
 $ibo-activity-panel--tab-title-decoration--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-activity-panel--tab-title-draft-indicator--margin-x: $ibo-activity-panel--tab-title-decoration--margin-right !default;
@@ -61,51 +48,54 @@ $ibo-activity-panel--tab-toolbar--padding-x: 10px !default;
 $ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
 
-$ibo-activity-panel--tab-toolbar-actions--margin-y: 4px !default;
-$ibo-activity-panel--tab-toolbar-actions--margin-x: 0 !default;
+$ibo-activity-panel--tab-toolbar-actions--margin-y: $ibo-spacing-200 !default;
+$ibo-activity-panel--tab-toolbar-actions--margin-x: $ibo-spacing-0 !default;
 $ibo-activity-panel--tab-toolbar-actions--height: 32px !default;
-$ibo-activity-panel--tab-toolbar-right-actions--elements-spacing: 16px !default;
+$ibo-activity-panel--tab-toolbar-right-actions--elements-spacing: $ibo-spacing-500 !default;
 
 $ibo-activity-panel--tab-toolbar-action--elements-separator-content: "-" !default;
-$ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x: 8px !default;
-$ibo-activity-panel--tab-toolbar-info-icon--margin-left: 8px !default;
+$ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x: $ibo-spacing-300 !default;
+$ibo-activity-panel--tab-toolbar-info-icon--margin-left: $ibo-spacing-300 !default;
 $ibo-activity-panel--tab-toolbar-filter--sibling-spacing: 18px !default;
-$ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: 8px !default;
+$ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: $ibo-spacing-300 !default;
 
 $ibo-activity-panel--filter-options-toggler--padding-left: 0.5rem !default;
-$ibo-activity-panel--filter-options--padding-x: 12px !default;
-$ibo-activity-panel--filter-options--padding-y: 8px !default;
+$ibo-activity-panel--filter-options--padding-x: $ibo-spacing-400 !default;
+$ibo-activity-panel--filter-options--padding-y: $ibo-spacing-300 !default;
 $ibo-activity-panel--filter-options--top: 24px !default;
 $ibo-activity-panel--filter-options--left: -1 * $ibo-activity-panel--filter-options--padding-x !default;
 $ibo-activity-panel--filter-options--max-width: 200px !default;
 $ibo-activity-panel--filter-options--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
 $ibo-activity-panel--filter-options--border-radius: $ibo-border-radius-300 !default;
-$ibo-activity-panel--filter-option--sibling-spacing: 8px !default;
+$ibo-activity-panel--filter-option--sibling-spacing: $ibo-spacing-300 !default;
 $ibo-activity-panel--filter-option-input--margin-right: 0.5rem !default;
 
 /* - Body */
 $ibo-activity-panel--body--padding-y: $ibo-activity-panel--padding-x !default;
 $ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
 
-$ibo-activity-panel--body--placeholder--margin-top: 16px !default;
+$ibo-activity-panel--body--placeholder--margin-top: $ibo-spacing-500 !default;
 $ibo-activity-panel--body--placeholder-image--width: 250px !default;
-$ibo-activity-panel--body--placeholder-hint--margin-top: 16px !default;
+$ibo-activity-panel--body--placeholder-hint--margin-top: $ibo-spacing-500 !default;
 $ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default;
 
 $ibo-activity-panel--add-caselog-entry-button--right: 12px !default;
 $ibo-activity-panel--add-caselog-entry-button--top: 76px + $ibo-activity-panel--add-caselog-entry-button--right !default;
 $ibo-activity-panel--add-caselog-entry-button--diameter: 36px !default;
 $ibo-activity-panel--add-caselog-entry-button--background-color: $ibo-color-primary-600 !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color--on-hover: $ibo-color-primary-500 !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color--is-active: $ibo-color-primary-700 !default;
 $ibo-activity-panel--add-caselog-entry-button--color: $ibo-color-white-100 !default;
 $ibo-activity-panel--add-caselog-entry-button--border-radius: $ibo-border-radius-full !default;
 $ibo-activity-panel--add-caselog-entry-button--box-shadow: $ibo-elevation-100 !default;
+$ibo-activity-panel--add-caselog-entry-button--hover--box-shadow: $ibo-elevation-200 !default;
 
 $ibo-activity-panel--add-caselog-entry-button--icon--height: 100% !default;
 $ibo-activity-panel--add-caselog-entry-button--icon--width: $ibo-activity-panel--add-caselog-entry-button--icon--height !default;
-$ibo-activity-panel--add-caselog-entry-button--icon--font-size: 16px !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--font-size: $ibo-font-size-200 !default;
 $ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
 
-$ibo-activity-panel--entry-forms-confirmation-explanation--spacing: 16px !default;
+$ibo-activity-panel--entry-forms-confirmation-explanation--spacing: $ibo-spacing-500 !default;
 $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem !default;
 
 $ibo-activity-panel--closed-cover--background-color: $ibo-activity-panel--header--background-color !default;
@@ -155,7 +145,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	background-color: $ibo-activity-panel--header--background-color;
 
 	/* Remove hyperlinks default color */
-	a{
+	> .ibo-activity-panel--tabs-togglers a{
 		color: $ibo-activity-panel--tab-toolbar--text-color;
 	}
 }
@@ -300,6 +290,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 }
 .ibo-activity-panel--filter-options-toggler{
   padding-left: $ibo-activity-panel--filter-options-toggler--padding-left;
+  color: $ibo-activity-panel--tab-toolbar-action--color;
 
   &.ibo-is-closed{
     transform: rotateX(180deg);
@@ -379,6 +370,7 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 
 	border-radius: $ibo-activity-panel--add-caselog-entry-button--border-radius;
 	box-shadow: $ibo-activity-panel--add-caselog-entry-button--box-shadow;
+
 	> i{
 		text-align: center;
 		height: $ibo-activity-panel--add-caselog-entry-button--icon--height;
@@ -388,7 +380,13 @@ $ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
 	}
 	&:hover {
 		color: $ibo-activity-panel--add-caselog-entry-button--color;
-	}
+    background-color: $ibo-activity-panel--add-caselog-entry-button--background-color--on-hover;
+    box-shadow: $ibo-activity-panel--add-caselog-entry-button--hover--box-shadow;
+  }
+  &:active {
+    color: $ibo-activity-panel--add-caselog-entry-button--color;
+    background-color: $ibo-activity-panel--add-caselog-entry-button--background-color--is-active;
+  }
 	&.ibo-is-hidden{
 		display: none;
 	}

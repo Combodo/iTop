@@ -70,9 +70,7 @@ $(function()
 	            
 	            // While our tab widget is loading, protect tab toggler from being triggered
 	            this.element.find(this.js_selectors.tab_toggler).on('click', function(e){
-	            	console.log('cc');
 		            if(me.element.attr('data-status') === 'loading') {
-			            console.log('non');
 			            e.preventDefault();
 			            e.stopImmediatePropagation();
 		            }
@@ -100,6 +98,17 @@ $(function()
 			        this.element.scrollabletabs(oParams);
 		        } else {
 			        this.element.regulartabs(oParams);
+		        }
+	        },
+	        /**
+	         * Return tabs widget instance
+	         * @public
+	         */
+	        GetTabsWidget: function () {
+		        if (this.element.hasClass(this.css_classes.is_scrollable)) {
+			        return this.element.scrollabletabs('instance');
+		        } else {
+			        return this.element.regulartabs('instance');
 		        }
 	        },
             // events bound via _bind are removed automatically

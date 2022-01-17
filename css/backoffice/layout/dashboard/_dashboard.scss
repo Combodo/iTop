@@ -1,4 +1,4 @@
-/*!
+/*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
@@ -121,17 +121,17 @@ $ibo-dashboard--top-bar-padding-bottom: 20px !default;
 .ibo-dashboard--slider:before {
   position: absolute;
   right: 5px;
-  bottom: 2px;
+  bottom: 3px;
   color: $ibo-color-secondary-800;
   content: "\f007";
   font-family: "Font Awesome 5 Free", serif;
-  font-size: $ibo-font-size-100;
+  font-size: $ibo-font-size-50;
   font-weight: 900;
 }
 
 .ibo-dashboard--slider:after {
   position: absolute;
-  left: 5px;
+  left: 6px;
   bottom: 1px;
   color: $ibo-color-primary-600;
   content: "\f1ad";

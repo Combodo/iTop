@@ -1,5 +1,10 @@
-$ibo-prop--apply--padding-left: 12px !default;
-$ibo-prop--cancel--padding-left: 7px !default;
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-prop--apply--padding-left: $ibo-spacing-400 !default;
+$ibo-prop--cancel--padding-left: $ibo-spacing-300 !default;
 
 $ibo-prop--apply-cancel--span--height: 28px !default;
 $ibo-prop--apply-cancel--span--width: 32px !default;
@@ -13,9 +18,6 @@ $ibo-prop--apply--error--color: $ibo-color-grey-800 !default;
 .ibo-prop--apply{
   width: $ibo-prop--apply--width;
 	padding-left: $ibo-prop--apply--padding-left;
-	> span{
-		@extend .ibo-is-green;
-	}
   &.ui-state-error{
     &:after {
       color: $ibo-prop--apply--error--color;
@@ -31,9 +33,6 @@ $ibo-prop--apply--error--color: $ibo-color-grey-800 !default;
 .ibo-prop--cancel{
   width: $ibo-prop--cancel--width;
   padding-left: $ibo-prop--cancel--padding-left;
-	> span{
-		@extend .ibo-is-red;
-	}
 }
 .ibo-prop--apply, .ibo-prop--cancel{
   height: $ibo-prop--apply-cancel--height;
@@ -42,5 +41,12 @@ $ibo-prop--apply--error--color: $ibo-color-grey-800 !default;
 		height: $ibo-prop--apply-cancel--span--height;
 		width: $ibo-prop--apply-cancel--span--width;
 		text-align: center;
+    > div{
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
 	}
 }

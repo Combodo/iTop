@@ -543,7 +543,7 @@ EOF
 
 		if ($bFromDasboardPage) {
 			$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
-			$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\">{$sTitleForHTML}</div>";
+			$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\" title=\"{$sTitleForHTML}\">{$sTitleForHTML}</div>";
 			if ($oPage instanceof iTopWebPage) {
 				$oTopBar = $oPage->GetTopBarLayout();
 				$oToolbar = ToolbarUIBlockFactory::MakeStandard();
@@ -552,7 +552,7 @@ EOF
 				$oToolbar->AddHtml($sHtml);
 			} else {
 				$oPage->add_script(<<<JS
-$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML");
+$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML").attr("title",  $('<div>').html("$sTitleForHTML").text());
 JS
 				);
 			}
@@ -860,28 +860,29 @@ class RuntimeDashboard extends Dashboard
 	{
 		$bCustomized = false;
 
-		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashBoardId, false))
-		{
+		$sDashboardFileSanitized = utils::RealPath($sDashboardFile, APPROOT);
+		if (false === $sDashboardFileSanitized) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashBoardId, false)) {
 			// Search for an eventual user defined dashboard
 			$oUDSearch = new DBObjectSearch('UserDashboard');
 			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 			$oUDSearch->AddCondition('menu_code', $sDashBoardId, '=');
 			$oUDSet = new DBObjectSet($oUDSearch);
-			if ($oUDSet->Count() > 0)
-			{
+			if ($oUDSet->Count() > 0) {
 				// Assuming there is at most one couple {user, menu}!
 				$oUserDashboard = $oUDSet->Fetch();
 				$sDashboardDefinition = $oUserDashboard->Get('contents');
 				$bCustomized = true;
-			}
-			else
-			{
-				$sDashboardDefinition = @file_get_contents($sDashboardFile);
+			} else {
+				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 			}
 		}
 		else
 		{
-			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 		}
 
 		if ($sDashboardDefinition !== false)
@@ -889,7 +890,7 @@ class RuntimeDashboard extends Dashboard
 			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
-			$oDashboard->SetDefinitionFile($sDashboardFile);
+			$oDashboard->SetDefinitionFile($sDashboardFileSanitized);
 		} else {
 			$oDashboard = null;
 		}
@@ -1065,11 +1066,11 @@ EOF
 					 dashboard.html(data);
 					 dashboard.unblock();
 					 if ($('#ibo-dashboard-selector$sDivId input').prop("checked")) {
-					 	$('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToStandard');
+					 	$('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToStandard');
 					 } else {
-					    $('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToCustom');
+					    $('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToCustom');
 					 }
-					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent());
+					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent(), true);
 					}
 				 );
 			}

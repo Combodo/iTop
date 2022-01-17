@@ -78,6 +78,7 @@ sFilesArchiveStep = "FilesArchive";
 var aStepsAjaxOperation = ["EnterMaintenance", sBackupStep, sFilesArchiveStep, "CopyFiles", "CheckCompile", "Compile", "UpdateDatabase", "ExitMaintenance", null];
 
 var iNextStep = 0;
+var oInstallationProgress = $('#installation_progress')
 function ExecNextStep() {
     if (iNextStep < aStepsAjaxOperation.length)
     {
@@ -113,11 +114,12 @@ function ExecNextStep() {
     {
         $.ajax(oGetCurrentVersion);
         $("#setup_continue").prop("disabled", false);
-        $('#installation_progress').hide(300);
+        oInstallationProgress.hide(300);
         $('#new_version').removeClass("ibo-is-hidden");
         $('#current_version').addClass("ibo-is-hidden");
     }
 }
 
+oInstallationProgress.show();
 ExecNextStep();
 

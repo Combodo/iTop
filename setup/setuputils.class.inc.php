@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * The standardized result of any pass/fail check performed by the setup
@@ -767,7 +768,9 @@ class SetupUtils
 		{
 			$parent = dirname($dir);
 			self::builddir($parent);
-			mkdir($dir);
+			if (!mkdir($dir) && !is_dir($dir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+			}
 		}
 	}
 
@@ -1965,11 +1968,19 @@ JS
 		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
 	}
 
-	public static function EnterMaintenanceMode($oConfig)
+	/**
+	 * @param $oConfig
+	 *
+	 * @return bool
+	 * @since 3.0.0 returns true if the app. was already in maintenance mode, false otherwise
+	 */
+	public static function EnterMaintenanceMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
 		self::Log("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
+		return $bPreviousMode;
 	}
 
 	public static function ExitMaintenanceMode($bLog = true)
@@ -1986,11 +1997,14 @@ JS
 		return file_exists(MAINTENANCE_MODE_FILE);
 	}
 
-	public static function EnterReadOnlyMode($oConfig)
+	public static function EnterReadOnlyMode($oConfig): bool
 	{
+		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
 		self::Log("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
+
+		return $bPreviousMode;
 	}
 
 	public static function ExitReadOnlyMode($bLog = true)
@@ -2016,8 +2030,7 @@ JS
 		try
 		{
 			// Wait for cron to stop
-			if (is_null($oConfig))
-			{
+			if (is_null($oConfig) || ContextTag::Check(ContextTag::TAG_CRON)) {
 				return;
 			}
 			// Use mutex to check if cron is running
@@ -2064,7 +2077,7 @@ JS
 		}
 		$sUID = hash('sha256', rand());
 		file_put_contents(APPROOT.'data/setup/authent', $sUID);
-		$_SESSION['setup_token'] = $sUID;
+		Session::Set('setup_token', $sUID);
 		return $sUID;
 	}
 
@@ -2096,8 +2109,8 @@ JS
 	 */
 	public static function IsSessionSetupTokenValid()
 	{
-		if (isset($_SESSION['setup_token'])) {
-			$sAuth = $_SESSION['setup_token'];
+		if (Session::IsSet('setup_token')) {
+			$sAuth = Session::Get('setup_token');
 			$sTokenFile = APPROOT.'data/setup/authent';
 			if (file_exists($sTokenFile) && $sAuth === file_get_contents($sTokenFile)) {
 				return true;
@@ -2116,7 +2129,7 @@ JS
 		if (is_file($sTokenFile)) {
 			unlink($sTokenFile);
 		}
-		unset($_SESSION['setup_token']);
+		Session::Unset('setup_token');
 	}
 
 
@@ -2151,7 +2164,7 @@ JS
 			'dom',
 			'zlib',
 			'zip',
-			'fileinfo', // N°3123
+			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
 			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];

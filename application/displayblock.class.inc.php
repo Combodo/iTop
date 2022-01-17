@@ -174,6 +174,8 @@ class DisplayBlock
 				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
 				'localize_values',
 				/** param for export.php */
+				'refresh_action',
+				/**to add refresh button in datatable*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -268,8 +270,12 @@ class DisplayBlock
 			'surround_with_panel',
 			/** string title of panel block */
 			'panel_title',
+			/** string true if panel title should be displayed as html */
+			'panel_title_is_html',
 			/** string class for panel block style */
 			'panel_class',
+			/** string class for panel block style */
+			'panel_icon',
 		];
 
 		if (isset($aAllowedParams[$sStyle])) {
@@ -465,10 +471,8 @@ class DisplayBlock
 				$oHtml->AddSubBlock($this->GetRenderContent($oPage, $aExtraParams, $sId));
 			} catch (Exception $e) {
 				if (UserRights::IsAdministrator()) {
-					$sExceptionContent = <<<HTML
-Exception thrown:<br>
-<code>{$e->getMessage()}</code>
-HTML;
+					$sExceptionContent = 'Exception thrown:<br><code>'.utils::Sanitize($e->getMessage(), '', utils::ENUM_SANITIZATION_FILTER_STRING).'</code>';
+
 					$oExceptionAlert = AlertUIBlockFactory::MakeForFailure('Cannot display results', $sExceptionContent);
 					$oHtml->AddSubBlock($oExceptionAlert);
 				}
@@ -1010,9 +1014,10 @@ JS
 				$aCountsQueryResults[$aCountGroupBySingleResult[0]] = $aCountGroupBySingleResult[1];
 			}
 
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+			$aValues = $oAttDef->GetAllowedValues();
 			foreach ($aStates as $sStateValue) {
-				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
-				$aStateLabels[$sStateValue] = $oAttDef->GetAsPlainText($sStateValue);
+				$aStateLabels[$sStateValue] = $aValues[$sStateValue] ?? '';
 				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 					? $aCountsQueryResults[$sStateValue]
 					: 0;
@@ -1040,8 +1045,7 @@ JS
 			$sCountLabel = $aCount['label'];
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
 				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span>")
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">$sStateLabel</span>");
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}
@@ -1196,6 +1200,9 @@ JS
 				$sTitle = Dict::Format($sFormat, $iTotalCount);
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
 				$oBlock->AddSubTitleBlock(new Html($sTitle));
+				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+					$oBlock->SetIcon($aExtraParams["panel_icon"]);
+				}
 				$oDataTable = DataTableUIBlockFactory::MakeForStaticData("", $aAttribs, $aData, null, $aExtraParams, $this->m_oFilter->ToOQL(), $aOption);
 				$oBlock->AddSubBlock($oDataTable);
 			} else {
@@ -1212,6 +1219,9 @@ JS
 			}
 			if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 				$oBlock = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+				if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+					$oBlock->SetIcon($aExtraParams["panel_icon"]);
+				}
 				$oBlock->AddSubBlock(new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>'));
 			} else {
 				$oBlock = new Html('<p>'.Dict::Format($sFormat, $iCount).'</p>');
@@ -1347,6 +1357,9 @@ JS
 
 				if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 					$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+					if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+						$oPanel->SetIcon($aExtraParams["panel_icon"]);
+					}
 					$oPanel->AddSubBlock($oBlock);
 
 					return $oPanel;
@@ -1544,6 +1557,9 @@ JS
 
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oPanel->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oPanel->AddSubBlock($oBlock);
 
 			return $oPanel;
@@ -1632,6 +1648,9 @@ JS
 		}
 		if (isset($aExtraParams["surround_with_panel"]) && $aExtraParams["surround_with_panel"]) {
 			$oPanel = PanelUIBlockFactory::MakeForClass($aExtraParams["panel_class"], $aExtraParams["panel_title"]);
+			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
+				$oPanel->SetIcon($aExtraParams["panel_icon"]);
+			}
 			$oPanel->AddSubBlock($oBlock);
 
 			return $oPanel;
@@ -1867,7 +1886,7 @@ class MenuBlock extends DisplayBlock
 
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
-		$sRefreshAction = $aExtraParams['sRefreshAction'] ?? '';
+		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -2203,8 +2222,14 @@ class MenuBlock extends DisplayBlock
 		}
 		if ($oPopupMenuItemsBlock->HasSubBlocks()) {
 			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
+		} else {
+			foreach ($oPopupMenuItemsBlock->GetJsFilesRelPaths() as $sJsPath) {
+				$oRenderBlock->AddJsFileRelPath($sJsPath);
+			}
+			foreach ($oPopupMenuItemsBlock->GetCssFilesRelPaths() as $sCssPath) {
+				$oRenderBlock->AddCssFileRelPath($sCssPath);
+			}
 		}
-
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
 		$aFavoriteTransitionActions = [];
@@ -2305,13 +2330,25 @@ class MenuBlock extends DisplayBlock
 						$sIconClass = 'fas fa-share-alt';
 						$sLabel = '';
 						break;
+
+					default:
+						if (isset($aAction['icon_class']) && (strlen($aAction['icon_class']) > 0)) {
+							$sIconClass = $aAction['icon_class'];
+							$sLabel = '';
+						}
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, utils::Sanitize($sActionId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
+				// ResourceId should not be sanitized
+				$oActionButton->AddDataAttribute('resource-id', $sActionId);
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
-					$oActionButton->SetTooltip(Dict::S($sActionId));
+					if (empty($aAction['tooltip'])) {
+						$oActionButton->SetTooltip(Dict::S($sActionId));
+					} else {
+						$oActionButton->SetTooltip($aAction['tooltip']);
+					}
 				}
 				$oActionsToolbar->AddSubBlock($oActionButton);
 			}
@@ -2319,7 +2356,7 @@ class MenuBlock extends DisplayBlock
 			// - Refresh
 			if ($sRefreshAction != '') {
 				$oActionButton = ButtonUIBlockFactory::MakeAlternativeNeutral('', 'UI:Button:Refresh');
-				$oActionButton->SetIconClass('fas fa-sync')
+				$oActionButton->SetIconClass('fas fa-sync-alt')
 					->SetOnClickJsCode($sRefreshAction)
 					->SetTooltip(Dict::S('UI:Button:Refresh'))
 					->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);

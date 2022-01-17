@@ -11,9 +11,11 @@ use ApplicationContext;
 use ApplicationMenu;
 use AttributeLinkedSet;
 use AttributeOneWayPassword;
+use AttributeTagSet;
 use BinaryExpression;
 use BulkExport;
 use BulkExportException;
+use cmdbAbstractObject;
 use CMDBObjectSet;
 use CMDBSource;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
@@ -27,9 +29,14 @@ use ExecutionKPI;
 use Expression;
 use FieldExpression;
 use FunctionExpression;
+use iTopExtension;
+use iTopExtensionsMap;
 use JsonPage;
 use MetaModel;
+use ormSet;
+use RunTimeEnvironment;
 use ScalarExpression;
+use SetupUtils;
 use UILinksWidget;
 use utils;
 use WizardHelper;
@@ -37,13 +44,91 @@ use WizardHelper;
 class AjaxRenderController
 {
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param \DBObjectSet $oSet
+	 * @param $aResult
+	 * @param array $aClassAliases
+	 * @param array $aColumnsLoad
+	 * @param string $sIdName
+	 * @param array $aExtraParams
+	 * @param int $iDrawNumber
 	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 */
+	public static function GetDataForTable(DBObjectSet $oSet, array $aClassAliases, array $aColumnsLoad, string $sIdName = "", array $aExtraParams = [], int $iDrawNumber = 1)
+	{
+		if (isset($aExtraParams['show_obsolete_data'])) {
+			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
+		} else {
+			$bShowObsoleteData = utils::ShowObsoleteData();
+		}
+		$oSet->SetShowObsoleteData($bShowObsoleteData);
+		$aResult["draw"] = $iDrawNumber;
+		$aResult["recordsTotal"] = $oSet->Count();
+		$aResult["recordsFiltered"] = $aResult["recordsTotal"] ;
+		$aResult["data"] = [];
+		while ($aObject = $oSet->FetchAssoc()) {
+			$aObj = [];
+			foreach ($aClassAliases as $sAlias => $sClass) {
+				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
+					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
+					$aObj[$sAlias."/_key_/raw"] = $aObject[$sAlias]->GetKey();
+					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
+					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
+						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
+						$bExcludeRawValue = false;
+						// Only retrieve raw (stored) value for simple fields
+						foreach (cmdbAbstractObject::GetAttDefClassesToExcludeFromMarkupMetadataRawValue() as $sAttDefClassToExclude)
+						{
+							$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+							if (is_a($oAttDef, $sAttDefClassToExclude, true))
+							{
+								$bExcludeRawValue = true;
+								break;
+							}
+						}
+
+						if (!$bExcludeRawValue) {
+							$oRawValue = $aObject[$sAlias]->Get($sAttCode);
+							if(($oRawValue instanceof AttributeTagSet) || ($oRawValue instanceof ormSet)){
+								$aObj[$sAlias."/".$sAttCode."/raw"] = implode(", ", $oRawValue->GetValues());
+							} else {
+								$aObj[$sAlias."/".$sAttCode."/raw"] = $oRawValue;
+							}
+						}
+					}
+					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
+					if (!empty($sObjHighlightClass)) {
+						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
+					}
+				}
+			}
+			if (!empty($aObj)) {
+				if ($sIdName != "") {
+					if (isset($aObj[$sIdName])) {
+						$aObj["id"] = $aObj[$sIdName];
+					} else {
+						throw new Exception(Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $oSet->GetFilter()->ToOQL()));
+					}
+				}
+				array_push($aResult["data"], $aObj);
+			}
+		}
+
+		return $aResult;
+	}
+
+	/**
+	 * @param \AjaxPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
 	 */
-	public function ExportBuild(AjaxPage $oPage, bool $bTokenOnly)
+	public static function ExportBuild(AjaxPage $oPage, $bTokenOnly)
 	{
 		register_shutdown_function(function () {
 			$aErr = error_get_last();
@@ -220,16 +305,16 @@ class AjaxRenderController
 		} else {
 			$oFilter = DBSearch::unserialize($sFilter);
 		}
-		$iStart = utils::ReadParam('start', 0);
-		$iEnd = utils::ReadParam('end', 1);
-		$iDrawNumber = utils::ReadParam('draw', 1);
+		$iStart = utils::ReadParam('start', 0, false, 'integer');
+		$iEnd = utils::ReadParam('end', 1, false, 'integer');
+		$iDrawNumber = utils::ReadParam('draw', 1, false, 'integer');
 
 		$aSort = utils::ReadParam('order', [], false, 'array');
 		$bForceSort = false;
 		if (count($aSort) > 0) {
 			$iSortCol = $aSort[0]["column"];
 			$sSortOrder = $aSort[0]["dir"];
-		} else{
+		} else {
 			$bForceSort = true;
 			$iSortCol = 0;
 			$sSortOrder = "asc";
@@ -389,46 +474,7 @@ class AjaxRenderController
 		$oSet = new DBObjectSet($oFilter, $aOrderBy, $aQueryParams, null, $iEnd - $iStart, $iStart);
 		$oSet->OptimizeColumnLoad($aColumnsLoad);
 
-		if (isset($aExtraParams['show_obsolete_data'])) {
-			$bShowObsoleteData = $aExtraParams['show_obsolete_data'];
-		} else {
-			$bShowObsoleteData = utils::ShowObsoleteData();
-		}
-		$oSet->SetShowObsoleteData($bShowObsoleteData);
-		$oKPI = new ExecutionKPI();
-		$aResult["draw"] = $iDrawNumber;
-		$aResult["recordsTotal"] = $oSet->Count();
-		$aResult["recordsFiltered"] = $oSet->Count();
-		$aResult["data"] = [];
-		while ($aObject = $oSet->FetchAssoc()) {
-			$aObj = [];
-			foreach ($aClassAliases as $sAlias => $sClass) {
-				if (isset($aObject[$sAlias]) && !is_null($aObject[$sAlias])) {
-					$aObj[$sAlias."/_key_"] = $aObject[$sAlias]->GetKey();
-					$aObj[$sAlias."/hyperlink"] = $aObject[$sAlias]->GetHyperlink();
-					foreach ($aColumnsLoad[$sAlias] as $sAttCode) {
-						$aObj[$sAlias."/".$sAttCode] = $aObject[$sAlias]->GetAsHTML($sAttCode);
-					}
-					$sObjHighlightClass = $aObject[$sAlias]->GetHilightClass();
-					if (!empty($sObjHighlightClass)) {
-						$aObj['@class'] = 'ibo-is-'.$sObjHighlightClass;
-					}
-				}
-			}
-			if (isset($aObj)) {
-				if ($sIdName != "") {
-					if (isset($aObj[$sIdName])) {
-						$aObj["id"] = $aObj[$sIdName];
-					} else {
-						throw new Exception(Dict::Format('UI:Error:AnErrorOccuredWhileRunningTheQuery_Message', $oSet->GetFilter()->ToOQL()));
-					}
-				}
-				array_push($aResult["data"], $aObj);
-			}
-		}
-		$oKPI->ComputeAndReport('Data fetch and format');
-
-		return $aResult;
+		return self::GetDataForTable($oSet, $aClassAliases, $aColumnsLoad, $sIdName, $aExtraParams, $iDrawNumber);
 	}
 
 	/**
@@ -704,4 +750,252 @@ class AjaxRenderController
 		$oWidget->DoAddIndirectLinks($oPage, $iMaxAddedId, $oFullSetFilter, $oObj);
 		$oKPI->ComputeAndReport('Data write');
 	}
+
+	/**
+	 * @param \AjaxPage $oPage
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
+	 * @throws \OQLException
+	 */
+	public static function DisplayAboutBox(AjaxPage $oPage): void
+	{
+		$oPage->SetContentType('text/html');
+
+		if (\UserRights::IsAdministrator()) {
+			self::DisplayAdminAboutBox($oPage);
+
+			return;
+		}
+		self::DisplayUserAboutBox($oPage);
+	}
+
+	private static function DisplayUserAboutBox(AjaxPage $oPage): void
+	{
+		$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
+		$oPage->add_ready_script(
+			<<<EOF
+$('#about_box').dialog({
+	width: 500,
+	modal: true,
+	title: '$sDialogTitle',
+	close: function() { $(this).remove(); }
+});
+EOF
+		);
+		$sVersionString = Dict::Format('UI:iTopVersion:Short', ITOP_APPLICATION, ITOP_VERSION);
+		$oPage->add("<div id=\"about_box\">");
+		$oPage->add('<div style="text-align: center;">');
+		$oPage->add('<a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a>');
+		$oPage->add('<div>'.$sVersionString.'</div>');
+		$oPage->add("</div>");
+		$oPage->add("</div>");
+	}
+
+	private static function DisplayAdminAboutBox(AjaxPage $oPage): void
+	{
+		$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
+		$oPage->add_ready_script(
+			<<<EOF
+$('#about_box').dialog({
+	width: 700,
+	modal: true,
+	title: '$sDialogTitle',
+	close: function() { $(this).remove(); }
+});
+$("#collapse_support_details").on('click', function() {
+	$("#support_details").slideToggle('normal');
+	$("#collapse_support_details").toggleClass('open');
+});
+$('#support_details').toggle();
+EOF
+		);
+		$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
+		$sMySQLVersion = CMDBSource::GetDBVersion();
+		$sPHPVersion = phpversion();
+		$sOSVersion = PHP_OS;
+		$sWebServerVersion = $_SERVER["SERVER_SOFTWARE"];
+		$sModules = implode(', ', get_loaded_extensions());
+
+		// Get the datamodel directory
+		$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE name="datamodel"');
+		$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
+		$oLastInstall = $oSet->Fetch();
+		$sLastInstallDate = $oLastInstall->Get('installed');
+		$sDataModelVersion = $oLastInstall->Get('version');
+		$aDataModelInfo = json_decode($oLastInstall->Get('comment'), true);
+		$sDataModelSourceDir = $aDataModelInfo['source_dir'];
+
+		require_once(APPROOT.'setup/runtimeenv.class.inc.php');
+		$sCurrEnv = utils::GetCurrentEnvironment();
+		$oRuntimeEnv = new RunTimeEnvironment($sCurrEnv);
+		$aSearchDirs = array(APPROOT.$sDataModelSourceDir);
+		if (file_exists(APPROOT.'extensions')) {
+			$aSearchDirs[] = APPROOT.'extensions';
+		}
+		$sExtraDir = APPROOT.'data/'.$sCurrEnv.'-modules/';
+		if (file_exists($sExtraDir)) {
+			$aSearchDirs[] = $sExtraDir;
+		}
+		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
+
+		require_once(APPROOT.'setup/setuputils.class.inc.php');
+		$aLicenses = SetupUtils::GetLicenses($sCurrEnv);
+
+		$aItopSettings = array('cron_max_execution_time', 'timezone');
+		$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
+		$aMySQLSettings = array('max_allowed_packet', 'key_buffer_size', 'query_cache_size');
+		$aMySQLStatuses = array('Key_read_requests', 'Key_reads');
+
+		if (extension_loaded('suhosin')) {
+			$aPHPSettings[] = 'suhosin.post.max_vars';
+			$aPHPSettings[] = 'suhosin.get.max_value_length';
+		}
+
+		$aMySQLVars = array();
+		foreach (CMDBSource::QueryToArray('SHOW VARIABLES') as $aRow) {
+			$aMySQLVars[$aRow['Variable_name']] = $aRow['Value'];
+		}
+
+		$aMySQLStats = array();
+		foreach (CMDBSource::QueryToArray('SHOW GLOBAL STATUS') as $aRow) {
+			$aMySQLStats[$aRow['Variable_name']] = $aRow['Value'];
+		}
+
+		// Display
+		//
+		$oPage->add("<div id=\"about_box\">");
+		$oPage->add('<div style="margin-left: 120px;">');
+		$oPage->add('<table>');
+		$oPage->add('<tr>');
+		$oPage->add('<td><a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'" style="float: right;"/></a></td>');
+		$oPage->add('<td style="padding-left: 20px;">');
+		$oPage->add($sVersionString.'<br/>');
+		$oPage->add(Dict::S('UI:About:DataModel').': '.$sDataModelVersion.'<br/>');
+		$oPage->add('MySQL: '.$sMySQLVersion.'<br/>');
+		$oPage->add('PHP: '.$sPHPVersion.'<br/>');
+		$oPage->add('</td>');
+		$oPage->add('</tr>');
+		$oPage->add('</table>');
+		$oPage->add("</div>");
+
+		$oPage->add("<div>");
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
+		$oPage->add('<ul style="margin: 0; font-size: smaller; max-height: 15em; overflow: auto;">');
+		$index = 0;
+		foreach ($aLicenses as $oLicense) {
+			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
+			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
+			$oPage->add_ready_script(<<<JS
+$("#toggle_$index").on('click', function() { 
+	$(this).toggleClass('open');
+	$("#license_$index").slideToggle("normal"); 
+});
+JS
+			);
+			$index++;
+		}
+		$oPage->add('</ul>');
+		$oPage->add('</fieldset>');
+		$oPage->add("</div>");
+
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('UI:About:InstallationOptions').'</legend>');
+		$oPage->add("<div style=\"max-height: 150px; overflow: auto; font-size: smaller;\">");
+		$oPage->add('<ul style="margin: 0;">');
+
+		require_once(APPROOT.'setup/extensionsmap.class.inc.php');
+		$oExtensionsMap = new iTopExtensionsMap();
+		$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
+		$aChoices = $oExtensionsMap->GetChoices();
+		foreach ($aChoices as $oExtension) {
+			$sDecorationClass = '';
+			switch ($oExtension->sSource) {
+				case iTopExtension::SOURCE_REMOTE:
+					$sSource = Dict::S('UI:About:RemoteExtensionSource');
+					$sDecorationClass = 'fc fc-chameleon-icon';
+					break;
+
+				case iTopExtension::SOURCE_MANUAL:
+					$sSource = Dict::S('UI:About:ManualExtensionSource');
+					$sDecorationClass = 'fas fa-folder';
+					break;
+
+				default:
+					$sSource = '';
+			}
+			$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.'<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sSource.'"></i></li>');
+		}
+		$oPage->add('</ul>');
+		$oPage->add("</div>");
+		$oPage->add('</fieldset>');
+
+
+		// MUST NOT be localized, as the information given here will be sent to the support
+		$oPage->add("<a id=\"collapse_support_details\" class=\"CollapsibleLabel\" href=\"#\">".Dict::S('UI:About:Support')."</a></br>\n");
+		$oPage->add("<div id=\"support_details\">");
+		$oPage->add('<textarea readonly style="width: 660px; height: 150px; font-size: smaller;">');
+		$oPage->add("===== begin =====\n");
+		$oPage->add('iTopVersion: '.ITOP_VERSION."\n");
+		$oPage->add('iTopBuild: '.ITOP_REVISION."\n");
+		$oPage->add('iTopBuildDate: '.ITOP_BUILD_DATE."\n");
+		$oPage->add('DataModelVersion: '.$sDataModelVersion."\n");
+		$oPage->add('MySQLVersion: '.$sMySQLVersion."\n");
+		$oPage->add('PHPVersion: '.$sPHPVersion."\n");
+		$oPage->add('OSVersion: '.$sOSVersion."\n");
+		$oPage->add('WebServerVersion: '.$sWebServerVersion."\n");
+		$oPage->add('PHPModules: '.$sModules."\n");
+		foreach ($aItopSettings as $siTopVar) {
+			$oPage->add('ItopSetting/'.$siTopVar.': '.MetaModel::GetConfig()->Get($siTopVar)."\n");
+		}
+		foreach ($aPHPSettings as $sPHPVar) {
+			$oPage->add('PHPSetting/'.$sPHPVar.': '.ini_get($sPHPVar)."\n");
+		}
+		foreach ($aMySQLSettings as $sMySQLVar) {
+			$oPage->add('MySQLSetting/'.$sMySQLVar.': '.$aMySQLVars[$sMySQLVar]."\n");
+		}
+		foreach ($aMySQLStatuses as $sMySQLStatus) {
+			$oPage->add('MySQLStatus/'.$sMySQLStatus.': '.$aMySQLStats[$sMySQLStatus]."\n");
+		}
+
+		$oPage->add('InstallDate: '.$sLastInstallDate."\n");
+		$oPage->add('InstallPath: '.APPROOT."\n");
+		$oPage->add("---- Installation choices ----\n");
+		foreach ($aChoices as $oExtension) {
+			switch ($oExtension->sSource) {
+				case iTopExtension::SOURCE_REMOTE:
+					$sSource = ' ('.Dict::S('UI:About:RemoteExtensionSource').')';
+					break;
+
+				case iTopExtension::SOURCE_MANUAL:
+					$sSource = ' ('.Dict::S('UI:About:ManualExtensionSource').')';
+					break;
+
+				default:
+					$sSource = '';
+			}
+			$oPage->add('InstalledExtension/'.$oExtension->sCode.'/'.$oExtension->sVersion.$sSource."\n");
+		}
+		$oPage->add("---- Actual modules installed ----\n");
+		foreach ($aAvailableModules as $sModuleId => $aModuleData) {
+			if ($sModuleId == '_Root_') {
+				continue;
+			}
+			if ($aModuleData['version_db'] == '') {
+				continue;
+			}
+			$oPage->add('InstalledModule/'.$sModuleId.': '.$aModuleData['version_db']."\n");
+		}
+
+		$oPage->add('===== end =====');
+		$oPage->add('</textarea>');
+		$oPage->add("</div>");
+
+		$oPage->add("</div>");
+	}
+
+
 }

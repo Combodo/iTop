@@ -424,9 +424,9 @@ EOF
 					}
 				} else {
 					$oPage = new AjaxPage("");
-					$oButtonXls = ButtonUIBlockFactory::MakeIconLink('ibo-import-csv--download-file fas fa-file-csv', $sClassDisplayName.'.csv', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName);
+					$oButtonXls = ButtonUIBlockFactory::MakeIconLink('ibo-csv-import--download-file fas fa-file-csv', $sClassDisplayName.'.csv', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&class_name='.$sClassName);
 					$oPage->AddSubBlock($oButtonXls);
-					$oButtonCsv = ButtonUIBlockFactory::MakeIconLink('ibo-import-csv--download-file fas fa-file-excel', $sClassDisplayName.'.xlsx', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName);
+					$oButtonCsv = ButtonUIBlockFactory::MakeIconLink('ibo-csv-import--download-file fas fa-file-excel', $sClassDisplayName.'.xlsx', utils::GetAbsoluteUrlAppRoot().'pages/ajax.csvimport.php?operation=get_csv_template&disposition=attachment&format=xlsx&class_name='.$sClassName);
 					$oPage->AddSubBlock($oButtonCsv);
 					$oTextArea = new TextArea("", $sResult, "", 100, 5);
 					$oPage->AddSubBlock($oTextArea);

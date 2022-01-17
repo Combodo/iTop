@@ -14,11 +14,7 @@ use MetaModel;
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */class UniquenessConstraintTest extends ItopTestCase
+class UniquenessConstraintTest extends ItopTestCase
 {
 	protected function setUp()
 	{

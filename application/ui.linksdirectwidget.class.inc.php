@@ -197,7 +197,6 @@ class UILinksWidgetDirect
 
 		if ($sRealClass != '')
 		{
-			$oPage->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($sRealClass))."</h1>\n");
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
 			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
@@ -473,6 +472,33 @@ HTML
 			$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 		}
 		return $oPage->GetTableRow($aRow, $aAttribs);		
+	}
+
+	/**
+	 * @param WebPage $oPage
+	 * @param $sRealClass
+	 * @param $aValues
+	 * @param int $iTempId
+	 *
+	 * @return array
+	 */
+	public function GetFormRow($oPage, $sRealClass, $aValues, $iTempId)
+	{
+		if ($sRealClass == '')
+		{
+			$sRealClass = $this->sLinkedClass;
+		}
+		$oLinkObj = new $sRealClass();
+		$oLinkObj->UpdateObjectFromPostedForm($this->sInputid);
+
+		$aAttribs = $this->GetTableConfig();
+		$aRow = array();
+		$aRow[] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.($iTempId).'"/>';
+		foreach($this->aZlist as $sLinkedAttCode)
+		{
+			$aRow[] = $oLinkObj->GetAsHTML($sLinkedAttCode);
+		}
+		return $aRow;
 	}
 	
 	/**

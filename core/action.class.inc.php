@@ -51,6 +51,7 @@ abstract class Action extends cmdbAbstractObject
 			"db_table" => "priv_action",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
+			'style' =>  new ormStyle(null, null, null, null, null, '../images/icons/icons8-in-transit.svg'),
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -115,6 +116,39 @@ abstract class Action extends cmdbAbstractObject
 
 			default:
 				return false;
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	public function AfterInsert()
+	{
+		parent::AfterInsert();
+		$this->DoCheckIfHasTrigger();
+	}
+
+	/**
+	 * @inheritDoc
+	 * @since 3.0.0
+	 */
+	public function AfterUpdate()
+	{
+		parent::AfterUpdate();
+		$this->DoCheckIfHasTrigger();
+	}
+
+	/**
+	 * Check if the Action has at least 1 trigger linked. Otherwise, it adds a warning.
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function DoCheckIfHasTrigger()
+	{
+		$oTriggersSet = $this->Get('trigger_list');
+		if ($oTriggersSet->Count() === 0) {
+			$this->m_aCheckWarnings[] = Dict::S('Action:WarningNoTriggerLinked');
 		}
 	}
 }
@@ -366,8 +400,7 @@ class ActionEmail extends ActionNotification
 		{
 			$this->m_iRecipients = 0;
 			$this->m_aMailErrors = array();
-			$bRes = false; // until we do succeed in sending the email
-	
+
 			// Determine recipients
 			//
 			$sTo = $this->FindRecipients('to', $aContextArgs);
@@ -381,29 +414,42 @@ class ActionEmail extends ActionNotification
 
 			$sSubject = MetaModel::ApplyParams($this->Get('subject'), $aContextArgs);
 			$sBody = MetaModel::ApplyParams($this->Get('body'), $aContextArgs);
-			
+
 			$oObj = $aContextArgs['this->object()'];
-			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/), MetaModel::GetEnvironmentId());
+			$sMessageId = sprintf('iTop_%s_%d_%f@%s.openitop.org', get_class($oObj), $oObj->GetKey(), microtime(true /* get as float*/),
+				MetaModel::GetEnvironmentId());
 			$sReference = '<'.$sMessageId.'>';
 		}
-		catch(Exception $e)
-		{
-  			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-  			throw $e;
-  		}
-		ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
-		
-		if (!is_null($oLog))
-		{
+		catch (Exception $e) {
+			/** @noinspection PhpUnhandledExceptionInspection */
+			throw $e;
+		}
+		finally {
+			ApplicationContext::SetUrlMakerClass($sPreviousUrlMaker);
+		}
+
+		if (!is_null($oLog)) {
 			// Note: we have to secure this because those values are calculated
 			// inside the try statement, and we would like to keep track of as
 			// many data as we could while some variables may still be undefined
-			if (isset($sTo))       $oLog->Set('to', $sTo);
-			if (isset($sCC))       $oLog->Set('cc', $sCC);
-			if (isset($sBCC))      $oLog->Set('bcc', $sBCC);
-			if (isset($sFrom))     $oLog->Set('from', empty($sFromLabel) ? $sFrom : "$sFromLabel <$sFrom>");
-			if (isset($sSubject))  $oLog->Set('subject', $sSubject);
-			if (isset($sBody))     $oLog->Set('body', $sBody);
+			if (isset($sTo)) {
+				$oLog->Set('to', $sTo);
+			}
+			if (isset($sCC)) {
+				$oLog->Set('cc', $sCC);
+			}
+			if (isset($sBCC)) {
+				$oLog->Set('bcc', $sBCC);
+			}
+			if (isset($sFrom)) {
+				$oLog->Set('from', $sFrom);
+			}
+			if (isset($sSubject)) {
+				$oLog->Set('subject', $sSubject);
+			}
+			if (isset($sBody)) {
+				$oLog->Set('body', $sBody);
+			}
 		}
 		$sStyles = file_get_contents(APPROOT.'css/email.css');
 		$sStyles .= MetaModel::GetConfig()->Get('email_css');

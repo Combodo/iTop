@@ -32,7 +32,7 @@
 //
 // Class: Organization
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Organization' => 'Organización',
 	'Class:Organization+' => 'Organización',
 	'Class:Organization/Attribute:name' => 'Nombre',
@@ -55,17 +55,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Organization/Attribute:deliverymodel_name+' => 'Nombre del Modelo de Entrega',
 	'Class:Organization/Attribute:parent_id_friendlyname' => 'Organización Padre',
 	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organización Padre',
-	'Class:Organization/Attribute:overview' => 'Overview~~',
-	'Organization:Overview:FunctionalCIs' => 'Configuration items of this organization~~',
-	'Organization:Overview:FunctionalCIs:subtitle' => 'by type~~',
-	'Organization:Overview:Users' => ITOP_APPLICATION_SHORT.' Users within this organization~~',
+	'Class:Organization/Attribute:overview' => 'Resumen',
+	'Organization:Overview:FunctionalCIs' => 'Elementos de configuración en esta Organización',
+	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
+	'Organization:Overview:Users' => 'Usuarios de iTop en la Organización',
 ));
 
 //
 // Class: Location
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Location' => 'Localidad',
 	'Class:Location+' => 'Cualquier Tipo de Localidad: Región, País, Ciudad, Sitio, Edificio, Piso, Cuarto, Rack,...',
 	'Class:Location/Attribute:name' => 'Nombre',
@@ -97,8 +96,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: Contact
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Contact' => 'Contacto',
 	'Class:Contact+' => 'Contacto',
 	'Class:Contact/Attribute:name' => 'Nombre',
@@ -134,8 +132,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: Person
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Person' => 'Persona',
 	'Class:Person+' => 'Persona',
 	'Class:Person/Attribute:name' => 'Apellidos',
@@ -162,17 +159,16 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => 'Nombre del Jefe',
 	'Class:Person/Attribute:picture' => 'Fotografía',
 	'Class:Person/Attribute:picture+' => 'Fotografía',
-	'Class:Person/UniquenessRule:employee_number+' => 'The employee number must be unique in the organization~~',
-	'Class:Person/UniquenessRule:employee_number' => 'there is already a person in \'$this->org_name$\' organization with the same employee number~~',
-	'Class:Person/UniquenessRule:name+' => 'The employee name should be unique inside its organization~~',
-	'Class:Person/UniquenessRule:name' => 'There is already a person in \'$this->org_name$\' organization with the same name~~',
+	'Class:Person/UniquenessRule:employee_number+' => 'El número de empleado debe ser único en la Organización',
+	'Class:Person/UniquenessRule:employee_number' => 'Ya existe una persona en la organiación \'$this->org_name$\', con el mismo número de empleado',
+	'Class:Person/UniquenessRule:name+' => 'El nombre del empleado debe ser único dentro de su Organización',
+	'Class:Person/UniquenessRule:name' => 'Ya existe una persona en la organiación \'$this->org_name$\', con el mismo nombre',
 ));
 
 //
 // Class: Team
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Team' => 'Grupo de Trabajo',
 	'Class:Team+' => 'Grupo de Trabajo',
 	'Class:Team/Attribute:persons_list' => 'Miembros',
@@ -184,8 +180,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: Document
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Document' => 'Documento',
 	'Class:Document+' => 'Documento',
 	'Class:Document/Attribute:name' => 'Nombre',
@@ -219,10 +214,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: DocumentFile
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentFile' => 'Documento de Archivo',
-	'Class:DocumentFile+' => '~~',
+	'Class:DocumentFile+' => '',
 	'Class:DocumentFile/Attribute:file' => 'Archivo',
 	'Class:DocumentFile/Attribute:file+' => 'Archivo',
 ));
@@ -230,8 +224,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: DocumentNote
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentNote' => 'Nota',
 	'Class:DocumentNote+' => 'Nota',
 	'Class:DocumentNote/Attribute:text' => 'Texto',
@@ -241,8 +234,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 //
 // Class: DocumentWeb
 //
-
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentWeb' => 'Documento Web',
 	'Class:DocumentWeb+' => 'Documento disponible en otro servidor Web',
 	'Class:DocumentWeb/Attribute:url' => 'URL',
@@ -253,7 +245,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: Typology
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Typology' => 'Tipología',
 	'Class:Typology+' => 'Tipología',
 	'Class:Typology/Attribute:name' => 'Nombre',
@@ -266,7 +258,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: DocumentType
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DocumentType' => 'Tipo de Documento',
 	'Class:DocumentType+' => 'Tipo de Documento',
 ));
@@ -275,7 +267,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: ContactType
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ContactType' => 'Tipo de Contacto',
 	'Class:ContactType+' => 'Tipo de Contacto',
 ));
@@ -284,7 +276,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkPersonToTeam
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkPersonToTeam' => 'Relación Persona y Grupo',
 	'Class:lnkPersonToTeam+' => 'Relación Persona y Grupo',
 	'Class:lnkPersonToTeam/Attribute:team_id' => 'Grupo',
@@ -305,7 +297,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Application Menu
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:DataAdministration' => 'Administración de Datos',
 	'Menu:DataAdministration+' => 'Administración de Datos',
 	'Menu:Catalogs' => 'Catálogos',
@@ -347,7 +339,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 
 // Add translation for Fieldsets
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Person:info' => 'Información General',
 	'UserLocal:info' => 'Información General',
 	'Person:personal_info' => 'Información Personal',
@@ -355,7 +347,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 // Themes
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'theme:fullmoon' => 'Full moon~~',
 	'theme:test-red' => 'Test instance (Red)~~',
 ));
