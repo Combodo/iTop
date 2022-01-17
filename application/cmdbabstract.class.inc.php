@@ -4231,13 +4231,20 @@ HTML;
 				if (!is_null($oImage->GetData()))
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
-					$oImage = utils::ResizeImageToFit(
-						$oImage,
-						$aSize[0],
-						$aSize[1],
-						$oAttDef->Get('storage_max_width'),
-						$oAttDef->Get('storage_max_height')
-					);
+					if (is_array($aSize) && $aSize[0] > 0 && $aSize[1] > 0)
+					{
+						$oImage = utils::ResizeImageToFit(
+							$oImage,
+							$aSize[0],
+							$aSize[1],
+							$oAttDef->Get('storage_max_width'),
+							$oAttDef->Get('storage_max_height')
+						);
+					}
+					else
+					{
+						IssueLog::Warning($sClass . ':' . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType() . ', filename: ' . $oImage->GetFileName());
+					}
 				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if (is_array($aOtherData))

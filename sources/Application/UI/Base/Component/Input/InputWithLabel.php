@@ -25,6 +25,11 @@ class InputWithLabel extends UIBlock
 	protected $oInput;
 	/** @var bool Label before input ? */
 	protected $bBeforeInput;
+	/**
+	 * @var string $sDescription for tooltip
+	 * @since 3.0.1
+	 */
+	protected $sDescription;
 
 	/**
 	 * @param string $sLabel
@@ -102,4 +107,32 @@ class InputWithLabel extends UIBlock
 		$this->sLabel = $sLabel;
 		return $this;
 	}
+
+	/**
+	 * @since 3.0.1
+	 * @return mixed
+	 */
+	public function GetDescription()
+	{
+		return $this->sDescription;
+	}
+
+	/**
+	 * @since 3.0.1
+	 * @param mixed $sDescription
+	 */
+	public function SetDescription($sDescription)
+	{
+		$this->sDescription = $sDescription;
+		return $this;
+	}
+	/**
+	 * @since 3.0.1
+	 * @return bool
+	 */
+	public function HasDescription(): bool
+	{
+		return strlen($this->sDescription) > 0;
+	}
+
 }

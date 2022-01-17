@@ -1328,6 +1328,7 @@ EOF
 
 		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
 		$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:CustomDateTimeFormat', $sFormatInput), "date_time_format", "custom", "radio_date_time_custom", "radio");
+		$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 		$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 		$oRadioCustom->SetBeforeInput(false);
 		$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -1424,11 +1425,9 @@ EOF
 	}
 EOF
 	);
-		$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 		$oPage->add_ready_script(
 <<<EOF
 DoPreview();
-$('#custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#custom_date_time_format').on('click', function() { $('#radio_date_time_custom').prop('checked', true); });
 EOF
 		);
