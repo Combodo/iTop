@@ -1566,29 +1566,31 @@ JS;
 	 */
 	protected function output_dict_entries($bReturnOutput = false)
 	{
-		/** @var \iBackofficeDictEntriesExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeDictEntriesExtension') as $oExtensionInstance) {
-			foreach ($oExtensionInstance->GetDictEntries() as $sDictEntry) {
-				$this->add_dict_entry($sDictEntry);
-			}
-		}
-		/** @var \iBackofficeDictEntriesPrefixesExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iBackofficeDictEntriesPrefixesExtension') as $oExtensionInstance) {
-			foreach ($oExtensionInstance->GetDictEntriesPrefixes() as $sDictEntryPrefix) {
-				$this->add_dict_entries($sDictEntryPrefix);
-			}
-		}
-		if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0)) {
-			if (class_exists('Dict')) {
-				// The dictionary may not be available for example during the setup...
-				// Create a specific dictionary file and load it as a JS script
-				$sSignature = $this->get_dict_signature();
-				$sJSFileName = utils::GetCachePath().$sSignature.'.js';
-				if (!file_exists($sJSFileName) && is_writable(utils::GetCachePath())) {
-					file_put_contents($sJSFileName, $this->get_dict_file_content());
+		if ($this->sContentType != 'text/plain' && $this->sContentType != 'application/json') {
+			/** @var \iBackofficeDictEntriesExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iBackofficeDictEntriesExtension') as $oExtensionInstance) {
+				foreach ($oExtensionInstance->GetDictEntries() as $sDictEntry) {
+					$this->add_dict_entry($sDictEntry);
 				}
-				// Load the dictionary as the first javascript file, so that other JS file benefit from the translations
-				array_unshift($this->a_linked_scripts, utils::GetAbsoluteUrlAppRoot().'pages/ajax.document.php?operation=dict&s='.$sSignature);
+			}
+			/** @var \iBackofficeDictEntriesPrefixesExtension $oExtensionInstance */
+			foreach (MetaModel::EnumPlugins('iBackofficeDictEntriesPrefixesExtension') as $oExtensionInstance) {
+				foreach ($oExtensionInstance->GetDictEntriesPrefixes() as $sDictEntryPrefix) {
+					$this->add_dict_entries($sDictEntryPrefix);
+				}
+			}
+			if ((count($this->a_dict_entries) > 0) || (count($this->a_dict_entries_prefixes) > 0)) {
+				if (class_exists('Dict')) {
+					// The dictionary may not be available for example during the setup...
+					// Create a specific dictionary file and load it as a JS script
+					$sSignature = $this->get_dict_signature();
+					$sJSFileName = utils::GetCachePath().$sSignature.'.js';
+					if (!file_exists($sJSFileName) && is_writable(utils::GetCachePath())) {
+						file_put_contents($sJSFileName, $this->get_dict_file_content());
+					}
+					// Load the dictionary as the first javascript file, so that other JS file benefit from the translations
+					array_unshift($this->a_linked_scripts, utils::GetAbsoluteUrlAppRoot().'pages/ajax.document.php?operation=dict&s='.$sSignature);
+				}
 			}
 		}
 	}
