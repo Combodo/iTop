@@ -25,7 +25,8 @@ class InputWithLabel extends UIBlock
 	protected $oInput;
 	/** @var bool Label before input ? */
 	protected $bBeforeInput;
-	/**@var string $sDescription for tooltip
+	/**
+	 * @var string $sDescription for tooltip
 	 * @since 3.0.1
 	 */
 	protected $sDescription;
@@ -131,7 +132,7 @@ class InputWithLabel extends UIBlock
 	 */
 	public function HasDescription(): bool
 	{
-		return $this->sDescription != null;
+		return strlen($this->sDescription) > 0;
 	}
 
 }
