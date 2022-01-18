@@ -853,7 +853,7 @@ JS
 	{
 		$oField = new FieldExpression($sFilterCode,  $oFilter->GetClassAlias());
 		$sListExpr = '('.implode(', ', CMDBSource::Quote($condition)).')';
-		$sOQLCondition = $oField->Render()." IN $sListExpr";
+		$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 		$oNewCondition = Expression::FromOQL($sOQLCondition);
 		return $oNewCondition;		
 	}
