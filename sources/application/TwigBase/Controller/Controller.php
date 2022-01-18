@@ -567,6 +567,18 @@ abstract class Controller
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
 		}
+
+		if ($this->IsOperationBreadCrumbEnabled()) {
+			$aBreadCrumbEntry = $this->GetOperationBreadCrumbEntry();
+			if ((false === empty($aBreadCrumbEntry)) && (is_array($aBreadCrumbEntry)) && (count($aBreadCrumbEntry) >= 3)) {
+				list($sId, $sTitle, $sDescription) = $aBreadCrumbEntry;
+				$sUrl = (count($aBreadCrumbEntry) >= 4) ? $aBreadCrumbEntry[3] : '';
+				$sIcon = (count($aBreadCrumbEntry) >= 5) ? $aBreadCrumbEntry[4] : '';
+				$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl, $sIcon);
+			}
+		} else {
+			$this->m_oPage->DisableBreadCrumb();
+		}
 	}
 
 	/**
@@ -577,6 +589,28 @@ abstract class Controller
 	public function GetOperationTitle()
 	{
 		return Dict::S($this->m_sModule.'/Operation:'.$this->m_sOperation.'/Title');
+	}
+
+	/**
+	 * @return bool true to display the breadcrumb, false to hide it
+	 * @since 2.7.7 3.0.1 3.1.1 method creation
+	 * @see Controller::GetOperationBreadCrumbEntry to set breadcrumb content (by default will be title)
+	 */
+	public function IsOperationBreadCrumbEnabled() {
+		return true;
+	}
+
+	/**
+	 * @see Controller::IsOperationBreadCrumbEnabled()
+	 * @return string[] empty array, or one containing 3 to 5 items containing :
+	 *   0. id
+	 *   1. title
+	 *   2. description
+	 *   3. url
+	 *   4. icon
+	 */
+	public function GetOperationBreadCrumbEntry() {
+		return [];
 	}
 
 	/**
