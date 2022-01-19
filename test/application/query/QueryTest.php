@@ -19,7 +19,12 @@
  *
  */
 
+namespace Combodo\iTop\Test\UnitTest\Application\Search;
+
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use MetaModel;
+use Query;
+use QueryOQL;
 
 /**
  * This test creates call export on requests and check request usage counter.

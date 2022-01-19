@@ -115,12 +115,16 @@ abstract class Query extends cmdbAbstractObject
 	}
 
 
-	/** @inheritdoc */
+	/**
+	 * @inheritdoc
+	 *
+	 * @since 3.1.0
+	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		// read only attribute
 		if (in_array($sAttCode, ['export_count', 'export_last_date', 'export_last_user_id'])){
-			return(OPT_ATT_READONLY);
+			return OPT_ATT_READONLY;
 		}
 
 		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
@@ -133,13 +137,12 @@ abstract class Query extends cmdbAbstractObject
 	 * @param array|null $aValues optional values for the query
 	 *
 	 * @return string|null
+	 * @since 3.1.0
 	 */
 	public abstract function GetExportUrl(array $aValues = null) : ?string;
 
 	/**
 	 * Update last export information.
-	 *
-	 * @todo validation with Pierre
 	 *
 	 * @return void
 	 * @throws \ArchivedObjectException
@@ -230,7 +233,7 @@ class QueryOQL extends Query
 			// inject parameters
 			$aParameters = $oSearch->GetQueryParams();
 			foreach ($aParameters as $sParam => $val) {
-				($aValues === null || $aValues[$sParam] === null) ? $paramValue = $sParam : $paramValue = $aValues[$sParam];
+				$paramValue = ($aValues === null || $aValues[$sParam] === null) ? $sParam : $aValues[$sParam];
 				$sUrl .= '&arg_' . $sParam . '=' . $paramValue;
 			}
 
