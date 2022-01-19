@@ -571,9 +571,7 @@ abstract class Controller
 		if ($this->IsOperationBreadCrumbEnabled()) {
 			$aBreadCrumbEntry = $this->GetOperationBreadCrumbEntry();
 			if ((false === empty($aBreadCrumbEntry)) && (is_array($aBreadCrumbEntry)) && (count($aBreadCrumbEntry) >= 3)) {
-				list($sId, $sTitle, $sDescription) = $aBreadCrumbEntry;
-				$sUrl = (count($aBreadCrumbEntry) >= 4) ? $aBreadCrumbEntry[3] : '';
-				$sIcon = (count($aBreadCrumbEntry) >= 5) ? $aBreadCrumbEntry[4] : '';
+				@list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $aBreadCrumbEntry;
 				$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl, $sIcon);
 			}
 		} else {
