@@ -1878,8 +1878,8 @@ JS
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
 		if (empty($sEnv))
 		{
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/{*,*/*}/license.*.xml', GLOB_BRACE));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
 		}
 		else
