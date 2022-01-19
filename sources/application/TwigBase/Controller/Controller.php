@@ -572,13 +572,7 @@ abstract class Controller
 			$aBreadCrumbEntry = $this->GetOperationBreadCrumbEntry();
 			if ((false === empty($aBreadCrumbEntry)) && (is_array($aBreadCrumbEntry)) && (count($aBreadCrumbEntry) >= 3)) {
 				@list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $aBreadCrumbEntry;
-				if (false === isset($sUrl)) {
-					$sUrl = '';
-				}
-				if (false === isset($sIcon)) {
-					$sIcon = '';
-				}
-				$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl, $sIcon);
+				$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl ?: '', $sIcon ?: '');
 			}
 		} else {
 			$this->m_oPage->DisableBreadCrumb();
