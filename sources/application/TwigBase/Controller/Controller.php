@@ -51,7 +51,7 @@ abstract class Controller
 	private $m_sOperation;
 	/** @var string */
 	private $m_sModule;
-	/** @var iTopWebPage|\ajax_page */
+	/** @var iTopWebPage|\AjaxPage */
 	private $m_oPage;
 	/** @var bool */
 	private $m_bCheckDemoMode = false;
@@ -332,7 +332,7 @@ abstract class Controller
 	}
 
 	/**
-	 * Display an AJAX page (ajax_page)
+	 * Display an AJAX page (AjaxPage)
 	 *
 	 * @api
 	 *
@@ -347,7 +347,7 @@ abstract class Controller
 	}
 
 	/**
-	 * Display an AJAX page (ajax_page)
+	 * Display an AJAX page (AjaxPage)
 	 *
 	 * @api
 	 *

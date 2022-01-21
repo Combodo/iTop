@@ -19,17 +19,16 @@
 
 require_once('../../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 /**
- * @param \ajax_page $oPage
+ * @param \AjaxPage $oPage
  * @param int $iTransactionId
  *
  * @throws \ArchivedObjectException
  * @throws \CoreException
  * @throws \OQLException
  */
-function RenderAttachments(ajax_page $oPage, $iTransactionId)
+function RenderAttachments(AjaxPage $oPage, $iTransactionId)
 {
 	$sClass = utils::ReadParam('objclass', '', false, 'class');
 	$sId = utils::ReadParam('objkey', '');
@@ -59,7 +58,7 @@ try
 	require_once APPROOT.'/application/loginwebpage.class.inc.php';
 	LoginWebPage::DoLoginEx(null /* any portal */, false);
 
-	$oPage = new ajax_page("");
+	$oPage = new AjaxPage("");
 
 	$sOperation = utils::ReadParam('operation', '');
 
