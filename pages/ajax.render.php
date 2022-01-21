@@ -1281,31 +1281,6 @@ JS
 			AjaxRenderController::DisplayAboutBox($oPage);
 			break;
 
-		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
-		case 'history':
-			$oPage->SetContentType('text/html');
-			$id = (int)utils::ReadParam('id', 0);
-			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oObj = MetaModel::GetObject($sClass, $id);
-			$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
-			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
-			// widgets: ['myZebra', 'truncatedList']} );");
-			break;
-
-		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
-		case 'history_from_filter':
-			$oPage->SetContentType('text/html');
-			$oHistoryFilter = DBSearch::unserialize($sFilter);
-			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-			$oBlock->SetLimit($iCount, $iStart);
-			$oBlock->Display($oPage, 'history');
-			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
-			// widgets: ['myZebra', 'truncatedList']} );");
-			break;
-
 		case 'full_text_search':
 			$aFullTextNeedles = utils::ReadParam('needles', array(), false, 'raw_data');
 			$sFullText = trim(implode(' ', $aFullTextNeedles));
