@@ -236,21 +236,6 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 		{
 			$('#v_'+sFieldId).html(sExplain);
 		}
-		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
-		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
-		{
-			// Visual feedback
-
-			$('#v_'+sFieldId).tooltip({
-				items: 'span',
-				classes: {
-					"ui-tooltip": "form_field_error"
-				},
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
-		}
 	}
 }
 

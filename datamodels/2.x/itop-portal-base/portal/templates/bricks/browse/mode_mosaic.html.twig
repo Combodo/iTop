@@ -217,7 +217,8 @@
 				// Building tooltip for the node
 				if( (item.tooltip !== undefined) && ($(item.tooltip).text() !== '') )
 				{
-					aElem.attr('title', item.tooltip).attr('data-toggle', 'tooltip').tooltip({html: true, trigger: 'hover', placement: 'top'});
+                    aElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
+                    CombodoTooltip.InitTooltipFromMarkup(aElem);
 				}
 				
 				// Building actions for that node

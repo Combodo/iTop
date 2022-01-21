@@ -159,11 +159,6 @@
 				<script type="text/javascript" src="{{ js_file|add_itop_version }}"></script>
 			{% endfor %}
         {% endif %}
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$('.tile.tile_badge[data-toggle="tooltip"]').tooltip({'html': true});
-			});
-		</script>
 	{% endblock %}
 </head>
 <body class="{% block pPageBodyClass %}{% endblock %}" data-gui-type="portal">
