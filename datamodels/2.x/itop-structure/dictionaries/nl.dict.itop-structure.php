@@ -361,6 +361,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Themes
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => 'Test instance (Red)',
 ));
+
+

@@ -37,3 +37,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserExternal' => 'Externe gebruiker',
 	'Class:UserExternal+' => 'Gebruiker aangemeld via externe authenticatie',
 ));
+
+

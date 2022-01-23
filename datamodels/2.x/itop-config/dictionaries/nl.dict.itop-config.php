@@ -37,3 +37,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'config-current-line' => 'Huidige regel: %1$s',
 	'config-saved-warning-db-password' => 'Wijzigingen zijn opgeslagen, maar de backup zal niet werken doordat het databasewachtwoord karakters bevat die niet ondersteund zijn.',
 ));
+
+

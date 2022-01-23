@@ -19,5 +19,6 @@
 
 // Global search
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Previous pages~~',
+	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Vorige pagina\'s',
 ));
+

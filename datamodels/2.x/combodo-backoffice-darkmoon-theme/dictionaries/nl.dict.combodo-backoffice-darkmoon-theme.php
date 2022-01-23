@@ -22,5 +22,6 @@
  */
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => 'Dark moon',
 ));
+

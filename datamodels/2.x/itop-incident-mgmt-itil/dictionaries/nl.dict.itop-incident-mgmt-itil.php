@@ -223,3 +223,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Incident/Method:ResolveChildTickets+' => 'Pas de oplossing ook toe op subverzoeken (ev_autoresolve) en neem deze kenmerken over: service, team, agent, oplossing',
 	'Tickets:Related:OpenIncidents' => 'Open incidenten',
 ));
+
+

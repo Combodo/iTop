@@ -40,12 +40,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:NoAttachment' => 'Geen bijlage. ',
 	'Attachments:PreviewNotAvailable' => 'Er is geen voorbeeld beschikbaar voor dit type bijlage.',
 	'Attachments:Error:FileTooLarge' => 'Het bestand is te groot om geüpload te worden: %1$s',
-	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
-Either you have pushed an empty file,
-or ask your iTop administrator if the iTop server disk is full.~~',
+	'Attachments:Error:UploadedFileEmpty' => 'Het bestand is leeg en kan niet worden toegevoegd.
+Mogelijk heb je een leeg bestand geüpload,
+of vraag de iTop administrator om na te kijken of de schijf van de iTop server vol zit',
 	'Attachments:Render:Icons' => 'Toon als pictogram',
 	'Attachments:Render:Table' => 'Toon als lijst',
-	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
+	'UI:Attachments:DropYourFileHint' => 'Sleep bestanden in dit gebied',
 ));
 
 //
@@ -90,3 +90,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Attachment/Attribute:contact_id' => 'ID Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
 ));
+
+

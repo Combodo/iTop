@@ -68,10 +68,10 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 // Object form
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Sluit dit item.',
 	'Portal:Form:Close:Warning' => 'Ben je zeker dat je dit venster wil sluiten? Ingevoerde gegevens kunnen verloren gaan.',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Error:ObjectCannotBeCreated' => 'Fout: object kan niet worden aangemaakt. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Fout: object kan niet worden aangepast. Kijk verwante objecten en bijlagen na vooraleer dit formulier opnieuw te versturen.',
 ));
 
 // UserProfile brick
@@ -155,3 +155,5 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));
+
+

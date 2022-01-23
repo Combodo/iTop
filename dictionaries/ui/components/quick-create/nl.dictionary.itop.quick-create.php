@@ -25,3 +25,4 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Component:QuickCreate:HistoryDisabled' => 'Geschiedenis staat uit',
 	'UI:Component:QuickCreate:KeyboardShortcut:OpenDrawer' => 'Open snel object aanmaken',
 ));
+

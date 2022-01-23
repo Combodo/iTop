@@ -76,8 +76,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'iTopUpdate:UI:CanCoreUpdate:Failed' => 'Controle van het bestandssysteem is mislukt',
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Updaten van toepassing is mogelijk',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Updaten van de toepassing is niet mogelijk: %1$s',
-	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'You must use the <a href="%1$s">setup</a> to update the application.<br />Some modified files were detected, a partial update cannot be executed.~~',
+	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Waarschuwing: update van de toepassing kan mislukken: %1$s',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Je moet de <a href="%1$s">setup</a> uitvoeren om de toepassing te updaten.<br />Er zijn gewijzigde bestanden gedetecteerd, er kan geen gedeeltelijke update worden uitgevoerd.',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Klaar om verder te gaan',
@@ -117,5 +117,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
     'Class:ModuleInstallation/Attribute:version' => 'Versie',
     'Class:ModuleInstallation/Attribute:comment' => 'Opmerkingen',
 ));
+
+
 
 
