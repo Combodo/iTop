@@ -605,6 +605,13 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		),
+		/**
+		 * The timezone is automatically set using this parameter in \utils::InitTimeZone
+		 * This method is called almost everywhere, cause it's called in \MetaModel::LoadConfig and exec.php... but you might
+		 * need to get it yourself !
+		 *
+		 * @used-by utils::InitTimeZone()
+		 */
 		'timezone' => array(
 			'type' => 'string',
 			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
