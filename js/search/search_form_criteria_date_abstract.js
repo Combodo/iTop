@@ -388,6 +388,7 @@ $(function()
 					{
 						oInputElem[oInputParam.x_picker]('setDate', sDate);
 					}
+					$('#ui-datepicker-div').hide();
 				}
 			}
 		},
