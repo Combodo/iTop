@@ -3,9 +3,9 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-fieldset--spacing-left--with-multicolumn: $ibo-spacing-800 !default;
+$ibo-fieldset--spacing-top--with-multicolumn: $ibo-spacing-800 !default;
 
 
 .ibo-multi-column + .ibo-fieldset {
-  margin-top: $ibo-fieldset--spacing-left--with-multicolumn;
+  margin-top: $ibo-fieldset--spacing-top--with-multicolumn;
 }
