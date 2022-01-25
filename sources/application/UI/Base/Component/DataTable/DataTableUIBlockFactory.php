@@ -157,11 +157,11 @@ class DataTableUIBlockFactory extends AbstractUIBlockFactory
 			}
 			if ($oDataTable->GetOption("select_mode") == 'multiple')
 			{
-				$sSubTitle =Dict::Format('UI:Pagination:HeaderSelection', $iCount, '<span class="ibo-datatable--selected-count">0</span>');
+				$sSubTitle =Dict::Format('UI:Pagination:HeaderSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>', '<span class="ibo-datatable--selected-count">0</span>');
 			}
 			else
 			{
-				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection', $iCount);
+				$sSubTitle = Dict::Format('UI:Pagination:HeaderNoSelection',  '<span class="ibo-datatable--result-count">'.$iCount.'</span>');
 			}
 			$oContainer->AddSubTitleBlock(new Html($sSubTitle));
 			if(isset($aExtraParams["panel_icon"]) && strlen($aExtraParams["panel_icon"]) > 0){
