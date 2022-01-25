@@ -122,6 +122,7 @@ $ibo-fieldsorter--selected--background-color: $ibo-color-blue-200 !default;
   }
 }
 
-.ibo-datatable--selected-count{
+.ibo-datatable--selected-count, .ibo-datatable--result-count{
   padding-right: 0.2em;
+  padding-left: 0.1em;
 }
