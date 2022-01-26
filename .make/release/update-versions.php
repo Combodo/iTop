@@ -27,6 +27,7 @@ $aFilesUpdaters = array(
 	new iTopVersionFileUpdater(),
 	new CssVariablesFileUpdater(),
 	new DatamodelsModulesFiles(),
+	new ConstantFileUpdater('ITOP_CORE_VERSION', 'core/config.class.inc.php'),
 );
 
 if (count($argv) === 1)
