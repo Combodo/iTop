@@ -1057,23 +1057,13 @@ class iTopDesignFormat
 				$oPreviousVersionsNode = $this->GetOrCreateNode('previous_versions', 'previous_versions', $oMetaNode);
 				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version[@id='$this->sKeepVersion']", 'previous_version', $oPreviousVersionsNode);
 				$oPreviousVersionNode->setAttribute('id', $this->sKeepVersion);
-				$oPreviousVersionNode->setAttribute('_delta', 'define_if_not_exists');
+				//$oPreviousVersionNode->setAttribute('_delta', 'define_if_not_exists');
 				$oTrashedNodeList = $this->GetOrCreateNode('trashed_nodes', 'trashed_nodes', $oPreviousVersionNode);
 
-				$iMaxIndex = 0;
-				$oTrashedNodes = $oXPath->query('trashed_node', $oTrashedNodeList);
-				foreach ($oTrashedNodes as $oTrashedNode) {
-					if ($oTrashedNode->nodeType == XML_ELEMENT_NODE) {
-						$iId = $oTrashedNode->getAttribute('id');
-						if ($iId > $iMaxIndex) {
-							$iMaxIndex = $iId;
-						}
-					}
-				}
-				$iNextId = $iMaxIndex + 1;
+				$iNextId = str_replace('.', '', uniqid('', true));
 				$oTrashedNode = $this->GetOrCreateNode("trashed_node[@id='$iNextId']", 'trashed_node', $oTrashedNodeList);
 				$oTrashedNode->setAttribute('id', $iNextId);
-
+				$oTrashedNode->setAttribute('_delta', 'define');
 				$oXPathNode = $this->GetOrCreateNode('parent_xpath', 'parent_xpath', $oTrashedNode);
 				$oParentNode = $oNode->parentNode;
 				if ($oParentNode instanceof DOMElement) {
