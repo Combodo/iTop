@@ -139,7 +139,7 @@ abstract class Query extends cmdbAbstractObject
 	 * @return string|null
 	 * @since 3.1.0
 	 */
-	public abstract function GetExportUrl(array $aValues = null) : ?string;
+	abstract public function GetExportUrl(array $aValues = null) : ?string;
 
 	/**
 	 * Update last export information.

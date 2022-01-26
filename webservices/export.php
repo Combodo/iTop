@@ -87,6 +87,8 @@ $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_dat
 $sFields = trim(utils::ReadParam('fields', '', true, 'raw_data')); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 $bFieldsAdvanced = utils::ReadParam('fields_advanced', 0);
 
+$oQuery = null;
+
 if (strlen($sExpression) == 0)
 {
 	$sQueryId = trim(utils::ReadParam('query', '', true /* Allow CLI */, 'raw_data'));
