@@ -59,9 +59,9 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	public function ConvertProvider()
 	{
 		return array(
-			'1.6 to 1.7 acl' => array('1.7', '1.6_to_1.7_acl'),
-			'1.7 to 1.6 acl' => array('1.6', '1.7_to_1.6_acl'),
 			'1.7 to 1.6' => array('1.6', '1.7_to_1.6'),
+			'1.6 to 1.7 2' => array('1.7', '1.6_to_1.7_2'),
+			'1.7 to 1.6 2' => array('1.6', '1.7_to_1.6_2'),
 			'1.7 to 3.0' => array('3.0', '1.7_to_3.0'),
 			'3.0 to 1.7' => array('1.7', '3.0_to_1.7'),
 			'3.0 to 1.7 no previous' => array('1.7', '3.0_to_1.7_no_previous'),
