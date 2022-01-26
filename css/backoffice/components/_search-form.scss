@@ -345,6 +345,7 @@ $ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search
         /* Form group (operators) is displayed only when the criteria is toggled to opened state */
         display: none;
         max-width: 450px;
+        width: max-content;
         max-height: 520px;
         overflow-x: auto;
         overflow-y: hidden;
