@@ -481,7 +481,6 @@ return array(
     'HTMLDOMSanitizer' => $baseDir . '/core/htmlsanitizer.class.inc.php',
     'HTMLNullSanitizer' => $baseDir . '/core/htmlsanitizer.class.inc.php',
     'HTMLSanitizer' => $baseDir . '/core/htmlsanitizer.class.inc.php',
-    'HistoryBlock' => $baseDir . '/application/displayblock.class.inc.php',
     'Html2Text\\Html2Text' => $baseDir . '/application/Html2Text.php',
     'Html2Text\\Html2TextException' => $baseDir . '/application/Html2TextException.php',
     'ITopArchiveTar' => $baseDir . '/core/tar-itop.class.inc.php',

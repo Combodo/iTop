@@ -711,7 +711,6 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'HTMLDOMSanitizer' => __DIR__ . '/../..' . '/core/htmlsanitizer.class.inc.php',
         'HTMLNullSanitizer' => __DIR__ . '/../..' . '/core/htmlsanitizer.class.inc.php',
         'HTMLSanitizer' => __DIR__ . '/../..' . '/core/htmlsanitizer.class.inc.php',
-        'HistoryBlock' => __DIR__ . '/../..' . '/application/displayblock.class.inc.php',
         'Html2Text\\Html2Text' => __DIR__ . '/../..' . '/application/Html2Text.php',
         'Html2Text\\Html2TextException' => __DIR__ . '/../..' . '/application/Html2TextException.php',
         'ITopArchiveTar' => __DIR__ . '/../..' . '/core/tar-itop.class.inc.php',

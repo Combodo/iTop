@@ -509,32 +509,6 @@ HTML
 	}
 
 	/**
-	 * Display history tab of an object
-	 *
-	 * @deprecated 3.0.0 will be removed in 3.1, see N°3824
-	 *
-	 * @param bool $bEditMode
-	 * @param int $iLimitCount
-	 * @param int $iLimitStart
-	 *
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \CoreException
-	 *
-	 */
-	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		// history block (with as a tab)
-		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
-		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
-		$oHistoryFilter->AddCondition('objclass', get_class($this), '=');
-		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-		$oBlock->SetLimit($iLimitCount, $iLimitStart);
-		$oBlock->Display($oPage, 'history');
-	}
-
-	/**
 	 * Display properties tab of an object
 	 *
 	 * @param \WebPage $oPage
@@ -1179,8 +1153,6 @@ HTML
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 		$this->DisplayBareRelations($oPage, $bEditMode);
-		// TODO 3.0.0: What to do with this?
-		//$this->DisplayBareHistory($oPage, $bEditMode);
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
