@@ -707,7 +707,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contatto a cui notificare',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contatto a cui notificare in caso di errore ',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icona del collegamento ipertestuale',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Una (piccola) immagine del collegamento ipertestuale che rappresenta l\'applicazione con cui è sincronizzato QiTop',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Una (piccola) immagine del collegamento ipertestuale che rappresenta l\'applicazione con cui è sincronizzato '.ITOP_APPLICATION_SHORT,
 	'Class:SynchroDataSource/Attribute:url_application' => 'Collegamento ipertestuale all\'applicazione',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Collegamento ipertestuale all\'oggetto ITOP nell\'applicazione esterna con la quale QiTop è sincronizzato (se applicabile). Possibili segnaposto: $this->attribute$ e $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Policy di riconciliazione',

@@ -60,7 +60,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:GetMoreExtensions' => '从 iTop Hub 获取扩展...',
 
 	'iTopHub:LandingWelcome' => '恭喜! 下列来自 iTop Hub 的扩展已被下载并安装到本机.',
-	'iTopHub:GoBackToITopBtn' => '返回iTop',
+	'iTopHub:GoBackToITopBtn' => '返回'.ITOP_APPLICATION_SHORT,
 	'iTopHub:Uncompressing' => '扩展解压中...',
 	'iTopHub:InstallationWelcome' => '安装来自 iTop Hub 的扩展',
 	'iTopHub:DBBackupLabel' => '本机备份',
