@@ -1057,7 +1057,7 @@ class iTopDesignFormat
 				$oPreviousVersionsNode = $this->GetOrCreateNode('previous_versions', 'previous_versions', $oMetaNode);
 				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version[@id='$this->sKeepVersion']", 'previous_version', $oPreviousVersionsNode);
 				$oPreviousVersionNode->setAttribute('id', $this->sKeepVersion);
-				$oPreviousVersionNode->setAttribute('_delta', 'define');
+				$oPreviousVersionNode->setAttribute('_delta', 'define_if_not_exists');
 				$oTrashedNodeList = $this->GetOrCreateNode('trashed_nodes', 'trashed_nodes', $oPreviousVersionNode);
 
 				$iMaxIndex = 0;
