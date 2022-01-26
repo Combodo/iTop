@@ -1128,7 +1128,7 @@ class OQLMenuNode extends MenuNode
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
 		$sClass= 	$oSearch->GetClass();
-		$sIcon = MetaModel::GetClassIcon($sClass, false,);
+		$sIcon = MetaModel::GetClassIcon($sClass, false);
 		if ($bSearchPane) {
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
