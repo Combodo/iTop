@@ -416,6 +416,10 @@ class DBObjectSearch extends DBSearch
 	 * @param string $sFilterCode
 	 * @param mixed $value
 	 * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ...
+	 *   If no operator is specified then :
+	 *     * for id field we will use "="
+	 *     * for other fields we will call the corresponding {@link AttributeDefinition::GetSmartConditionExpression} method impl
+	 *       to generate the expression
 	 * @param bool $bParseSearchString
 	 *
 	 * @throws \CoreException
