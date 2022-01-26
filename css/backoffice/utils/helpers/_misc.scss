@@ -134,6 +134,9 @@ body.ibo-has-fullscreen-descendant {
   @extend %ibo-font-code-150;
 }
 
+.ibo-add-margin-top-250{
+  margin-top:  $ibo-spacing-400;
+}
 /*
  * A single class to handle WYSIWYG generated content, where only HTML tags are available
  * See https://bulma.io/documentation/elements/content/
