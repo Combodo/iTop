@@ -1590,6 +1590,7 @@ EOF
 			break;
 
 		case 'xlsx_export_dialog':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$oPage->SetContentType('text/html');
 			$oPage->add(
@@ -1658,6 +1659,7 @@ EOF
 			break;
 
 		case 'xlsx_start':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$bAdvanced = (utils::ReadParam('advanced', 'false') == 'true');
 			$oSearch = DBObjectSearch::unserialize($sFilter);
@@ -1670,6 +1672,7 @@ EOF
 			break;
 
 		case 'xlsx_run':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sMemoryLimit = MetaModel::GetConfig()->Get('xlsx_exporter_memory_limit');
 			if (utils::SetMinMemoryLimit($sMemoryLimit) === false) {
 				IssueLog::Warning("XSLX export : cannot set memory_limit to {$sMemoryLimit}");
@@ -1687,6 +1690,7 @@ EOF
 			break;
 
 		case 'xlsx_download':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$oPage = new DownloadPage('');
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -1697,6 +1701,7 @@ EOF
 			break;
 
 		case 'xlsx_abort':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			// Stop & cleanup an export...
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			ExcelExporter::CleanupFromToken($sToken);
