@@ -42,6 +42,7 @@ define('ITOP_VERSION', '3.0.1-dev');
  */
 define('ITOP_CORE_VERSION', '3.0.1');
 
+define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
 define('ITOP_VERSION_FULL', ITOP_VERSION.'-'.ITOP_REVISION);
