@@ -107,7 +107,7 @@ function FatalErrorCatcher($sOutput)
 		}
 		$sOutput = "$errors\n";
 		// Logging to a file does not work if the whole memory is exhausted...		
-		//SetupPage::log_error("Fatal error - in $__FILE__ , $errors");
+		// SetupLog::Error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
 }
