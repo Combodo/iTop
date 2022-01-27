@@ -1149,7 +1149,12 @@ class DeprecatedCallsLog extends LogAPI
 	 */
 	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
 	{
-		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
 			return;
 		}
 
@@ -1208,7 +1213,7 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+		static::Warning($sMessage, self::ENUM_CHANNEL_P&HP_METHOD);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void
