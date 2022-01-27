@@ -292,7 +292,7 @@ if (!empty($sExpression))
 				break;
 				
 				case 'xlsx':
-				$oP = new ajax_page('');
+				$oP = new AjaxPage('');
 				$oExporter = new ExcelExporter();
 				$oExporter->SetObjectList($oFilter);
 				

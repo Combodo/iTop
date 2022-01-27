@@ -296,7 +296,7 @@ class UILinksWidgetDirect
 		}
 		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
 		$aArgs = $oHiddenFilter->GetInternalParams();
-		$sHiddenCriteria = $oHiddenCriteria->Render($aArgs);
+		$sHiddenCriteria = $oHiddenCriteria->RenderExpression(false, $aArgs);
 
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();

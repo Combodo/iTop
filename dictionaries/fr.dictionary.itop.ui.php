@@ -1092,7 +1092,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => 'Nb éléments impactés: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Seuil critique: %1$d / %2$d',
 	'Portal:Title' => 'Portail utilisateur '.ITOP_APPLICATION_SHORT,
-	'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'. Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'. Merci de contacter votre administrateur iTop.',
+	'Portal:NoRequestMgmt' => 'Chèr(e) %1$s, vous avez été redirigé(e) vers cette page car votre compte utilisateur est configuré avec le profil \'Utilisateur du Portail\'. Malheureusement, iTop n\'a pas été installé avec le module de \'Gestion des Demandes\'. Merci de contacter votre administrateur '.ITOP_APPLICATION_SHORT.'.',
 	'Portal:Refresh' => 'Rafraîchir',
 	'Portal:Back' => 'Retour',
 	'Portal:WelcomeUserOrg' => 'Bienvenue %1$s (%2$s)',

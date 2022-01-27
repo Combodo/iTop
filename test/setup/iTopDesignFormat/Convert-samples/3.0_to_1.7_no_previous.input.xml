@@ -133,45 +133,4 @@
     <main_logo _delta="define">images/itop-logo.png</main_logo>
     <main_logo_compact _delta="define">images/itop-logo-square.png</main_logo_compact>
   </branding>
-  <meta>
-    <previous_versions>
-      <previous_version id="1.7" _delta="define">
-        <trashed_nodes>
-          <trashed_node id="1">
-            <parent_xpath>/itop_design/branding/themes</parent_xpath>
-            <node_tree>
-              <theme id="light-grey">
-                <variables/>
-                <imports>
-                  <import id="css-variables">../css/css-variables.scss</import>
-                </imports>
-                <stylesheets>
-                  <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-                  <stylesheet id="main">../css/light-grey.scss</stylesheet>
-                </stylesheets>
-              </theme>
-            </node_tree>
-          </trashed_node>
-          <trashed_node id="2">
-            <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/imports</parent_xpath>
-            <node_tree>
-              <import id="css-variables">../css/css-variables.scss</import>
-            </node_tree>
-          </trashed_node>
-          <trashed_node id="3">
-            <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/stylesheets</parent_xpath>
-            <node_tree>
-              <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-            </node_tree>
-          </trashed_node>
-          <trashed_node id="4">
-            <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/stylesheets</parent_xpath>
-            <node_tree>
-              <stylesheet id="main">../css/main.scss</stylesheet>
-            </node_tree>
-          </trashed_node>
-        </trashed_nodes>
-      </previous_version>
-    </previous_versions>
-  </meta>
 </itop_design>

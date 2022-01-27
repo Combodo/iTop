@@ -841,10 +841,6 @@ HTML;
 		foreach (MetaModel::EnumPlugins('iBackofficeStyleExtension') as $oExtensionInstance) {
 			$this->add_style($oExtensionInstance->GetStyle());
 		}
-		// - Generate necessary dict. files
-		if ($this->bAddJSDict) {
-			$this->output_dict_entries();
-		}
 
 		// TODO 3.0.0 not displayed ?
 		$this->GetContentLayout()->SetExtraHtmlContent(utils::FilterXSS($this->s_content));
@@ -909,8 +905,12 @@ HTML;
 
 		// Components
 		// Note: For now all components are either included in the layouts above or put in page through the AddUiBlock() API, so there is no need to do anything more.
-
 		$this->InitializeKeyboardShortcuts();
+
+		// - Generate necessary dict. files
+		if ($this->bAddJSDict) {
+			$this->output_dict_entries();
+		}
 
 		// Variable content of the page
 		$aData['aPage'] = array_merge(

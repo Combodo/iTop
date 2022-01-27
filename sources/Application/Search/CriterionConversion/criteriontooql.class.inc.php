@@ -413,7 +413,7 @@ class CriterionToOQL extends CriterionConversionAbstract
 				$oCriteria = $oSearch->GetCriteria();
 				$aArgs = MetaModel::PrepareQueryArguments(array(), $oSearch->GetInternalParams(), $oSearch->GetExpectedArguments() );
 				$oSearch->ResetCondition();
-				$sCondition = $oCriteria->Render($aArgs);
+				$sCondition = $oCriteria->RenderExpression(false, $aArgs);
 			}
 		} catch (Exception $e)
 		{

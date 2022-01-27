@@ -3,8 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-fieldset--spacing-left--with-fieldset: $ibo-spacing-800 !default;
+$ibo-fieldset--spacing-top--with-fieldset: $ibo-spacing-800 !default;
 
 .ibo-fieldset + .ibo-fieldset:not(.ibo-column) {
-    margin-top: $ibo-fieldset--spacing-left--with-fieldset;
+    margin-top: $ibo-fieldset--spacing-top--with-fieldset;
 }

@@ -209,7 +209,7 @@ $(function()
 			div.textContent = sText;
 			var sDescription = div.innerHTML; // Escape HTML entities for XSS prevention
 
-			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content">' + oConverter.makeHtml(sDescription) + '</div>';
+			var sRichDescription = '<div class="ibo-navigation-menu--notifications--item--content ibo-is-html-content">' + oConverter.makeHtml(sDescription) + '</div>';
 
 			var sBottomText = '<span class="ibo-navigation-menu--notifications--item--bottom-text">' + sImage + '<span>' + this.options.providers[sProvider].label + '</span> <span> ' + moment(sStartDate).fromNow() + '</span></span>';
 

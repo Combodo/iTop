@@ -547,22 +547,20 @@ function ValidateWithPattern(sFieldId, bMandatory, sPattern, sFormId, aForbidden
 		}
 		if (sMessage)
 		{
-			$('#'+sFieldId).attr('title', sMessage).tooltip();
-			if ($('#'+sFieldId).is(":focus"))
-			{
-				$('#'+sFieldId).tooltip('open');
-			}
+			$('#'+sFieldId).attr('data-tooltip-content', sMessage);
+			CombodoTooltip.InitTooltipFromMarkup($('#'+sFieldId), true);
+			$('#'+sFieldId)[0]._tippy.show();
 		}
 	}
 	else
 	{
 		$('#v_'+sFieldId).parent('.ibo-prop--apply').removeClass('ui-state-error');
-		if ($('#'+sFieldId).data('uiTooltip'))
-		{
-			$('#'+sFieldId).tooltip('close');
+		if ($('#'+sFieldId)[0]._tippy ) {
+			$('#'+sFieldId)[0]._tippy.destroy();
+			$('#'+sFieldId).removeAttr('data-tooltip-instantiated');
+			$('#'+sFieldId).removeAttr('data-tooltip-content');
 		}
-		$('#'+sFieldId).removeAttr('title');
-		// Remove the element from the array 
+		// Remove the element from the array
 		iFieldIdPos = jQuery.inArray(sFieldId, oFormValidation[sFormId]);
 		if (iFieldIdPos > -1)
 		{

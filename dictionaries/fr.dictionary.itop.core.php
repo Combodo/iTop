@@ -1087,8 +1087,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Dernière tentative',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Format incorrect pour la configuration de "async_taks_retries[%1$s]". La bonne syntaxe est un tableau avec comme clés: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Format incorrect pour la configuration de "async_taks_retries[%1$s]": clé "%2$s" invalide. Les clés attendues sont: %3$s',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]". La bonne syntaxe est un tableau avec comme clés: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]": clé "%2$s" invalide. Les clés attendues sont: %3$s',
 ));
 
 //

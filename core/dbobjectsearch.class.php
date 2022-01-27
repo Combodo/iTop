@@ -416,6 +416,10 @@ class DBObjectSearch extends DBSearch
 	 * @param string $sFilterCode
 	 * @param mixed $value
 	 * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ...
+	 *   If no operator is specified then :
+	 *     * for id field we will use "="
+	 *     * for other fields we will call the corresponding {@link AttributeDefinition::GetSmartConditionExpression} method impl
+	 *       to generate the expression
 	 * @param bool $bParseSearchString
 	 *
 	 * @throws \CoreException
@@ -465,14 +469,14 @@ class DBObjectSearch extends DBSearch
 			if (!is_array($value)) $value = array($value);
 			if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
-			$sOQLCondition = $oField->Render()." IN $sListExpr";
+			$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 			break;
 
 		case 'NOTIN':
 			if (!is_array($value)) $value = array($value);
             if (count($value) === 0) throw new Exception('AddCondition '.$sOpCode.': Value cannot be an empty array.');
 			$sListExpr = '('.implode(', ', CMDBSource::Quote($value)).')';
-			$sOQLCondition = $oField->Render()." NOT IN $sListExpr";
+			$sOQLCondition = $oField->RenderExpression()." NOT IN $sListExpr";
 			break;
 
 		case 'Contains':
@@ -1368,7 +1372,7 @@ class DBObjectSearch extends DBSearch
 	public function GetQueryParams($bExcludeMagicParams = true)
 	{
 		$aParams = array();
-		$this->m_oSearchCondition->Render($aParams, true);
+		$this->m_oSearchCondition->RenderExpression(false, $aParams, true);
 
 		if ($bExcludeMagicParams)
 		{
@@ -1457,7 +1461,7 @@ class DBObjectSearch extends DBSearch
 
 		$sRes .= ' ' . $this->GetFirstJoinedClass() . ' AS `' . $this->GetFirstJoinedClassAlias() . '`';
 		$sRes .= $this->ToOQL_Joins();
-		$sRes .= " WHERE ".$this->m_oSearchCondition->Render($aParams, $bRetrofitParams);
+		$sRes .= " WHERE ".$this->m_oSearchCondition->RenderExpression(false, $aParams, $bRetrofitParams);
 
 		if ($bWithAllowAllFlag && $this->m_bAllowAllData)
 		{

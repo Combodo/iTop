@@ -439,7 +439,7 @@ function LaunchBackupNow()
 			if (data.search(/error|exceptio|notice|warning/i) != -1)
 			{
 				$('#backup_errors').html(data);
-				$('#backup_errors').show();
+				$('#backup_errors').removeClass('ibo-is-hidden');
 			}
 			else
 			{

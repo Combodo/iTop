@@ -583,7 +583,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' sadece son kullanıcılar için okunurdur',
 	'UI:ApplicationEnvironment' => 'Uygulama Ortamı: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch' => 'Yeni şifre eşlenmedi !',
-	'UI:Button:Login' => 'iTop\'a Giriş',
+	'UI:Button:Login' => ITOP_APPLICATION_SHORT.'\'a Giriş',
 	'UI:Login:Error:AccessRestricted' => ITOP_APPLICATION_SHORT.' erişim sınırlandırıldı. Sistem yöneticisi ile irtibata geçiniz',
 	'UI:Login:Error:AccessAdmin'                   => 'Erişim sistem yönetci hesaplaları ile mümkün. Sistem yöneticisi ile irtibata geçiniz.',
 	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',

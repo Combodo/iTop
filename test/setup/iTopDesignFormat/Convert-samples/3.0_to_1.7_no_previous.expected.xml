@@ -9,22 +9,9 @@
         </variables>
         <imports>
           <import id="scss-variables">../css/scss-variables.scss</import>
-          <import id="css-variables">../css/css-variables.scss</import>
         </imports>
         <stylesheets>
           <stylesheet id="custom">../css/custom.scss</stylesheet>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/main.scss</stylesheet>
-        </stylesheets>
-      </theme>
-      <theme id="light-grey">
-        <variables/>
-        <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
-        </imports>
-        <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
         </stylesheets>
       </theme>
     </themes>

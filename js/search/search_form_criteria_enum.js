@@ -745,7 +745,7 @@ $(function()
 			{
 				var sErrorMessage = Dict.Format('Error:XHR:Fail', '');
 
-				this._setACHint('=/');
+				this._setACHint(sErrorMessage);
 				this.handler.triggerHandler('itop.search.criteria.error_occured', sErrorMessage);
 			}
 		},

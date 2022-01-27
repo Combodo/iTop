@@ -1077,7 +1077,7 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 			{
 				$oField = new FieldExpression('objclass',  $oSearch->GetClassAlias());
 				$sListExpr = '('.implode(', ', CMDBSource::Quote($aLinkClasses)).')';
-				$sOQLCondition = $oField->Render()." IN $sListExpr";
+				$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				$oSearch->AddConditionExpression($oNewCondition);
 			}

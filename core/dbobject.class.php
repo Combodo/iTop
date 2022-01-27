@@ -5426,7 +5426,7 @@ abstract class DBObject implements iDisplay
 						}
 						$oLnk->Set($sRoleAttCode, $sRoleValue);
 					}
-					$oLinkSet->AddObject($oLnk);
+					$oLinkSet->AddItem($oLnk);
 					$this->Set($sTargetListAttCode, $oLinkSet);
 				}
 				break;
