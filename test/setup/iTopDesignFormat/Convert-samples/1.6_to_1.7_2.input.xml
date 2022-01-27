@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
-  <branding _revision_id="180" _delta="define">
-    <main_logo _revision_id="53">
+  <branding _revision_id="180">
+    <main_logo _revision_id="53" _delta="define">
       <fileref ref="smile_portal_logo_7417a491754f12f744ac6311525e4db3" _revision_id="116"/>
     </main_logo>
-    <login_logo _revision_id="53">
+    <login_logo _revision_id="53" _delta="define">
       <fileref ref="smile_portal_logo_7417a491754f12f744ac6311525e4db3" _revision_id="116"/>
     </login_logo>
-    <portal_logo _revision_id="53">
+    <portal_logo _revision_id="53" _delta="define">
       <fileref ref="smile_portal_logo_7417a491754f12f744ac6311525e4db3" _revision_id="116"/>
     </portal_logo>
   </branding>

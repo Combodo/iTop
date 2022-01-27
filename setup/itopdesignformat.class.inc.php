@@ -288,8 +288,6 @@ class iTopDesignFormat
 		return $this->bStatus;
 	}
 
-
-
 	/**
 	 * Does the conversion, eventually in a recursive manner
 	 * 	 
@@ -976,6 +974,7 @@ class iTopDesignFormat
 	 * @param string $sNodeMetaVersion
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	private function RestorePreviousNodes($sNodeMetaVersion)
 	{
@@ -993,6 +992,15 @@ class iTopDesignFormat
 						while ($oNode) {
 							$oNextNode = $oNode->nextSibling;
 							if ($oNode->nodeType == XML_ELEMENT_NODE) {
+								// Check for collision
+								$sId = $oNode->getAttribute('id');
+								$sNodeXPath = ($sId != '') ? $oNode->nodeName.'[@id="'.$sId.'"]' : $oNode->nodeName;
+								$sNodeXPath = $sXPath.'/'.$sNodeXPath;
+								$oTarget = $oXPath->query($sNodeXPath)->item(0);
+								if ($oTarget) {
+									// Do not continue migration
+									throw new Exception("Trying to restore an existing node $sNodeXPath from version $sNodeMetaVersion");
+								}
 								// Restore the modification flags
 								$oModifiedNodeList = $oXPath->query('descendant-or-self::*[@_disabled_delta or @_disabled_rename_from]', $oNode);
 								foreach ($oModifiedNodeList as $oModifiedNode) {
