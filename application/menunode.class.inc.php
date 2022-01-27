@@ -1133,16 +1133,14 @@ class OQLMenuNode extends MenuNode
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
-			$aExtraParams['panel_class'] =$sClass;
-			$aExtraParams['panel_title'] = $sTitle;
-			$aExtraParams['panel_icon'] = $sIcon;
 			$oPage->add("<div class='sf_results_area ibo-add-margin-top-250' data-target='search_results'>");
 		}
 		else {
-			$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($sTitle, $sIcon);
-			$oPage->AddUiBlock($oTitle);
 			$oPage->add("<div class='sf_results_area' data-target='search_results'>");
 		}
+		$aExtraParams['panel_class'] =$sClass;
+		$aExtraParams['panel_title'] = $sTitle;
+		$aExtraParams['panel_icon'] = $sIcon;
 
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);
