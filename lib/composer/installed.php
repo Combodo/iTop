@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'fe3512cb5f5d01fa590447c2f6fa15416802b748',
+        'reference' => 'b7f99d139c034935611802a6b2cf795e503427a2',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'fe3512cb5f5d01fa590447c2f6fa15416802b748',
+            'reference' => 'b7f99d139c034935611802a6b2cf795e503427a2',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -383,12 +383,12 @@
             'dev_requirement' => false,
         ),
         'symfony/twig-bundle' => array(
-            'pretty_version' => 'v3.4.36',
-            'version' => '3.4.36.0',
+            'pretty_version' => 'v3.4.47',
+            'version' => '3.4.47.0',
             'type' => 'symfony-bundle',
             'install_path' => __DIR__ . '/../symfony/twig-bundle',
             'aliases' => array(),
-            'reference' => 'd39ed8f5df62aeeeb27a6f3bf7f58a6c02a58ea9',
+            'reference' => '977b3096e2df96bc8a8d2329e83466cfc30c373d',
             'dev_requirement' => false,
         ),
         'symfony/var-dumper' => array(
