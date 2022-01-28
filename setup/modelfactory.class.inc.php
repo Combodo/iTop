@@ -2161,7 +2161,7 @@ class MFElement extends Combodo\iTop\DesignElement
 EOF;
 				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->MFReplaceWith($oNode);
 			$sFlag = 'replaced';
 		}
 		else
@@ -2208,7 +2208,7 @@ EOF;
 			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
 				MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
 		}
-		$oExisting->ReplaceWith($oNode);
+		$oExisting->MFReplaceWith($oNode);
 		if (!$this->IsInDefinition())
 		{
 			if ($sPrevFlag == '')
@@ -2253,7 +2253,7 @@ EOF;
 			{
 				$sFlag = $sPrevFlag; // added, replaced or ''
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->MFReplaceWith($oNode);
 		}
 		else
 		{
@@ -2294,8 +2294,11 @@ EOF;
 	 * Replaces a node by another one, making sure that recursive nodes are preserved
 	 *
 	 * @param MFElement $oNewNode The replacement
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `MFReplaceWith`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * throws fatal error in PHP 8.0)
 	 */
-	protected function ReplaceWith($oNewNode)
+	protected function MFReplaceWith($oNewNode)
 	{
 		// Move the classes from the old node into the new one
 		if ($this->IsClassNode())
