@@ -589,10 +589,10 @@ abstract class MetaModel
 	 * @param string $sRuleId
 	 *
 	 * @throws \CoreException
-	 * @since 2.6.1 N°1918 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
+	 * @since 2.6.1 N°1968 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
 	 *         definition of the rule in the hierarchy
 	 */
-	final private static function SetUniquenessRuleRootClass($sRootClass, $sRuleId)
+	private static function SetUniquenessRuleRootClass($sRootClass, $sRuleId)
 	{
 		foreach (self::EnumChildClasses($sRootClass, ENUM_CHILD_CLASSES_ALL) as $sClass)
 		{
