@@ -71,7 +71,11 @@ class UIExtKeyWidget
 	protected $bSearchMode;
 
 	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
-	static public function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs, $bSearchMode = false)
+
+	/**
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Add default value for $aArgs for PHP 8.0 compat
+	 */
+	public static function DisplayFromAttCode($oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '', $aArgs = [], $bSearchMode = false)
 	{
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sTargetClass = $oAttDef->GetTargetClass();
@@ -426,8 +430,10 @@ EOF
      *
      * @throws CoreException
      * @throws OQLException
+     *
+     * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility (a null default value is awkward ?!??)
      */
-	public function AutoComplete(WebPage $oP, $sFilter, $oObj = null, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null)
+	public function AutoComplete(WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null)
 	{
 		if (is_null($sFilter))
 		{
