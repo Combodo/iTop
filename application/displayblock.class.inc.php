@@ -1418,8 +1418,24 @@ class HistoryBlock extends DisplayBlock
 		$this->iLimitStart = $iStart;
 		$this->iLimitCount = $iCount;
 	}
-	
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 * @param string $sId
+	 *
+	 * @return string
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aExtraParams for PHP 8.0 compatibility (var is unused, and all calls were already made using a default value)
+	 */
+	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
 	{
 		$sHtml = '';
 		$bTruncated = false;
@@ -1558,9 +1574,15 @@ class MenuBlock extends DisplayBlock
 	 * @throws \Exception
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aExtraParams for PHP 8.0 compatibility (added a test at function start to handle wrong values)
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams = array(), $sId)
+	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
 	{
+		if (empty($aExtraParams)) {
+			$aExtraParams = [];
+		}
+
 		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
 		{
 			$this->m_sStyle = 'list';
