@@ -2067,7 +2067,7 @@ JS
 		unset($_SESSION['setup_token']);
 	}
 
-	private final static function Log($sText)
+	private static function Log($sText)
 	{
 		if (class_exists('SetupPage'))
 		{
