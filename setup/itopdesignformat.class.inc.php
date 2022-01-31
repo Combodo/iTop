@@ -979,7 +979,8 @@ class iTopDesignFormat
 	private function RestorePreviousNodes($sNodeMetaVersion)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
-		$oTrashedNodes = $oXPath->query("/itop_design/meta/previous_versions/previous_version[@id='$sNodeMetaVersion']/trashed_nodes/trashed_node");
+		$sVersion = str_replace('.', '_', $sNodeMetaVersion);
+		$oTrashedNodes = $oXPath->query("/itop_design/meta/previous_versions/previous_version_$sVersion/trashed_nodes/trashed_node");
 		foreach ($oTrashedNodes as $oTrashedNode) {
 			if ($oTrashedNode->nodeType == XML_ELEMENT_NODE) {
 				$oXPathNode = $oXPath->query('parent_xpath', $oTrashedNode)->item(0);
@@ -1022,7 +1023,7 @@ class iTopDesignFormat
 			}
 		}
 		// Clean up the mess
-		$this->RemoveNodeFromXPath("/itop_design/meta/previous_versions/previous_version[@id='$sNodeMetaVersion']", false);
+		$this->RemoveNodeFromXPath("/itop_design/meta/previous_versions/previous_version_$sVersion", false);
 		$this->RemoveEmptyNodeFromXPath("/itop_design/meta/previous_versions");
 		$this->RemoveEmptyNodeFromXPath("/itop_design/meta");
 	}
@@ -1063,9 +1064,8 @@ class iTopDesignFormat
 				$oItopDesignNode = $this->GetOrCreateNode('/itop_design', 'itop_design', null);
 				$oMetaNode = $this->GetOrCreateNode('meta', 'meta', $oItopDesignNode);
 				$oPreviousVersionsNode = $this->GetOrCreateNode('previous_versions', 'previous_versions', $oMetaNode);
-				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version[@id='$this->sKeepVersion']", 'previous_version', $oPreviousVersionsNode);
-				$oPreviousVersionNode->setAttribute('id', $this->sKeepVersion);
-				//$oPreviousVersionNode->setAttribute('_delta', 'define_if_not_exists');
+				$sVersion = str_replace('.', '_', $this->sKeepVersion);
+				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version_$sVersion", "previous_version_$sVersion", $oPreviousVersionsNode);
 				$oTrashedNodeList = $this->GetOrCreateNode('trashed_nodes', 'trashed_nodes', $oPreviousVersionNode);
 
 				$iNextId = str_replace('.', '', uniqid('', true));
