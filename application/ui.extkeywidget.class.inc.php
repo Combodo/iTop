@@ -431,7 +431,7 @@ EOF
      * @throws CoreException
      * @throws OQLException
      *
-     * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility (a null default value is awkward ?!??)
+     * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility
      */
 	public function AutoComplete(WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null)
 	{

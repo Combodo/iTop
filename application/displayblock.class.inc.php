@@ -324,8 +324,10 @@ class DisplayBlock
 	 * @throws DictExceptionMissingString
 	 * @throws MySQLException
 	 * @throws Exception
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 add type hinting to $aExtraParams
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, $sId)
 	{
 		$sHtml = '';
 		// Add the extra params into the filter if they make sense for such a filter
@@ -1433,9 +1435,10 @@ class HistoryBlock extends DisplayBlock
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 *
-	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aExtraParams for PHP 8.0 compatibility (var is unused, and all calls were already made using a default value)
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aExtraParams and add type hinting for PHP 8.0 compatibility
+	 *      (var is unused, and all calls were already made using a default value)
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, $sId)
 	{
 		$sHtml = '';
 		$bTruncated = false;
@@ -1575,14 +1578,10 @@ class MenuBlock extends DisplayBlock
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 *
-	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aExtraParams for PHP 8.0 compatibility (added a test at function start to handle wrong values)
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value and add type hinting on $aExtraParams for PHP 8.0 compatibility
 	 */
-	public function GetRenderContent(WebPage $oPage, $aExtraParams, $sId)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, $sId)
 	{
-		if (empty($aExtraParams)) {
-			$aExtraParams = [];
-		}
-
 		if ($this->m_sStyle == 'popup') // popup is a synonym of 'list' for backward compatibility
 		{
 			$this->m_sStyle = 'list';
