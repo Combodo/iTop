@@ -85,7 +85,7 @@
   </branding>
   <meta>
     <previous_versions>
-      <previous_version id="1.7" _delta="define">
+      <previous_version_1_7>
         <trashed_nodes>
           <trashed_node id="XXX">
             <parent_xpath>/itop_design/branding/themes</parent_xpath>
@@ -121,7 +121,7 @@
             </node_tree>
           </trashed_node>
         </trashed_nodes>
-      </previous_version>
+      </previous_version_1_7>
     </previous_versions>
   </meta>
 </itop_design>
