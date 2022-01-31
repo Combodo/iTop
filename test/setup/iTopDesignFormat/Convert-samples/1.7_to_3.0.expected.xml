@@ -12,6 +12,8 @@
         </imports>
         <stylesheets>
           <stylesheet id="custom">../css/custom.scss</stylesheet>
+          <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
         </stylesheets>
       </theme>
     </themes>
