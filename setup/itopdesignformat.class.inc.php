@@ -853,7 +853,22 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
-		
+
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
+		// Add new stylesheets
+		$oStyleSheetsNode = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets')->item(0);
+		if ($oStyleSheetsNode) {
+			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
+			$oStyleSheetNode->setAttribute('id', 'environment-banner');
+			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/themes/page-banner.scss'));
+			$oStyleSheetsNode->appendChild($oStyleSheetNode);
+
+			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
+			$oStyleSheetNode->setAttribute('id', 'fullmoon');
+			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/main.scss'));
+			$oStyleSheetsNode->appendChild($oStyleSheetNode);
+		}
+
 		// Add new attribute to theme import nodes
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
 		foreach ($oNodeList as $oNode) {
@@ -947,6 +962,9 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
 		}
+
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="fullmoon"]');
 
 		// Add new attribute to theme import nodes
 		
