@@ -11,7 +11,7 @@ define('APPCONF', APPROOT.'conf/');
  * When releasing, both constants should be updated : see `.make/release/update-versions.php` for that !
  *
  * @since 2.7.7 3.0.1 3.1.0 N°4714 constant creation
- * @used-by utils::GetItopVersionWikiSyntax()
+ * @used-by utils::GetCoreVersionWikiSyntax()
  * @used-by iTopModulesPhpVersionIntegrationTest
  */
 define('ITOP_CORE_VERSION', '2.7.7');

@@ -2246,11 +2246,11 @@ class utils
 	}
 
 	/**
-	 * @return string eg : '2_7_0' iTop core version is '2.7.1-dev'
+	 * @return string eg : '2_7_0' if iTop core version is '2.7.5-2'
 	 * @throws \ApplicationException if constant value is invalid
 	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetItopVersionWikiSyntax()
+	public static function GetCoreVersionWikiSyntax()
 	{
 		$aExplodedVersion = explode('.', ITOP_CORE_VERSION);
 

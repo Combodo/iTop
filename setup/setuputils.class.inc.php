@@ -918,7 +918,7 @@ class SetupUtils
 		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
 		$sNewDBName = ''
 	) {
-		$sWikiVersion = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+		$sWikiVersion = utils::GetCoreVersionWikiSyntax(); //eg : '2_7_0';
 		$sMysqlTlsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion.':install:php_and_mysql_tls';
 
 		$oPage->add('<tr><td colspan="2">');
@@ -1194,7 +1194,7 @@ EOF
 			{
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
 			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
-				$sWikiVersion                = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
+				$sWikiVersion                = utils::GetCoreVersionWikiSyntax(); //eg : '2_7_0';
 				$sAttachmentsVarsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion
 					.':install:php_and_mysql_configuration#attachments_upload';
 
