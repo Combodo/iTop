@@ -59,6 +59,10 @@ abstract class Controller
 	private $m_aLinkedStylesheets;
 	private $m_aSaas;
 	private $m_aAjaxTabs;
+	/** @var boolean false to disable breadcrumb */
+	private $m_bIsBreadCrumbEnabled = true;
+	/** @var array contains same parameters as {@see iTopWebPage::SetBreadCrumbEntry()} */
+	private $m_aBreadCrumbEntry = [];
 
 
 	/**
@@ -516,6 +520,23 @@ abstract class Controller
 	}
 
 	/**
+	 * @param bool $bIsBreadCrumbEnabled true to display the breadcrumb, false to hide it
+	 * @since 2.7.7 3.0.1 3.1.1 method creation
+	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
+	 */
+	public function SetIsOperationBreadCrumbEnabled($bIsBreadCrumbEnabled) {
+		$this->m_bIsBreadCrumbEnabled = $bIsBreadCrumbEnabled;
+	}
+
+	/**
+	 * @since 2.7.7 3.0.1 3.1.1 method creation
+	 * @see iTopWebPage::SetBreadCrumbEntry()
+	 */
+	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
+		$this->m_aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
+	}
+
+	/**
 	 * @param $aParams
 	 * @param $sName
 	 * @param $sTemplateFileExtension
@@ -557,6 +578,16 @@ abstract class Controller
 			case 'html':
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle());
 				$this->m_oPage->add_xframe_options();
+
+				if ($this->m_bIsBreadCrumbEnabled) {
+					if (count($this->m_aBreadCrumbEntry) > 0) {
+						@list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $this->m_aBreadCrumbEntry;
+						$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl ?: '', $sIcon ?: '');
+					}
+				} else {
+					$this->m_oPage->DisableBreadCrumb();
+				}
+
 				break;
 
 			case 'ajax':
@@ -566,16 +597,6 @@ abstract class Controller
 			case 'setup':
 				$this->m_oPage = new SetupPage($this->GetOperationTitle());
 				break;
-		}
-
-		if ($this->IsOperationBreadCrumbEnabled()) {
-			$aBreadCrumbEntry = $this->GetOperationBreadCrumbEntry();
-			if ((false === empty($aBreadCrumbEntry)) && (is_array($aBreadCrumbEntry)) && (count($aBreadCrumbEntry) >= 3)) {
-				@list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $aBreadCrumbEntry;
-				$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl ?: '', $sIcon ?: '');
-			}
-		} else {
-			$this->m_oPage->DisableBreadCrumb();
 		}
 	}
 
@@ -587,28 +608,6 @@ abstract class Controller
 	public function GetOperationTitle()
 	{
 		return Dict::S($this->m_sModule.'/Operation:'.$this->m_sOperation.'/Title');
-	}
-
-	/**
-	 * @return bool true to display the breadcrumb, false to hide it
-	 * @since 2.7.7 3.0.1 3.1.1 method creation
-	 * @see Controller::GetOperationBreadCrumbEntry to set breadcrumb content (by default will be title)
-	 */
-	public function IsOperationBreadCrumbEnabled() {
-		return true;
-	}
-
-	/**
-	 * @see Controller::IsOperationBreadCrumbEnabled()
-	 * @return string[] empty array, or one containing 3 to 5 items containing :
-	 *   0. id
-	 *   1. title
-	 *   2. description
-	 *   3. url
-	 *   4. icon
-	 */
-	public function GetOperationBreadCrumbEntry() {
-		return [];
 	}
 
 	/**
