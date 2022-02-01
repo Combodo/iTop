@@ -2246,7 +2246,7 @@ class utils
 	}
 
 	/**
-	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 * @return string eg : '2_7_0' iTop core version is '2.7.1-dev'
 	 */
 	public static function GetItopVersionWikiSyntax()
 	{
@@ -2255,7 +2255,7 @@ class utils
 	}
 
 	/**
-	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
+	 * @return string eg 2.7 if iTop core version is '2.7.0-dev'
 	 * @throws \Exception
 	 */
 	public static function GetItopMinorVersion()
@@ -2272,11 +2272,12 @@ class utils
 	}
 
 	/**
-	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
+	 * @return string eg '2.7.0' if iTop core version is '2.7.0-dev'
+	 * @uses ITOP_CORE_VERSION
 	 */
 	public static function GetItopPatchVersion()
 	{
-		$aExplodedVersion = explode('-', ITOP_VERSION);
+		$aExplodedVersion = explode('-', ITOP_CORE_VERSION);
 		return $aExplodedVersion[0];
 	}
 
