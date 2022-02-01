@@ -520,12 +520,11 @@ abstract class Controller
 	}
 
 	/**
-	 * @param bool $bIsBreadCrumbEnabled true to display the breadcrumb, false to hide it
 	 * @since 2.7.7 3.0.1 3.1.1 method creation
 	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
 	 */
-	public function SetIsOperationBreadCrumbEnabled($bIsBreadCrumbEnabled) {
-		$this->m_bIsBreadCrumbEnabled = $bIsBreadCrumbEnabled;
+	public function DisableBreadCrumb() {
+		$this->m_bIsBreadCrumbEnabled = false;
 	}
 
 	/**
