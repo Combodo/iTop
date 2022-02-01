@@ -35,6 +35,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 	 * @group skipPostBuild
 	 *
 	 * @dataProvider iTopModulesPhpVersionProvider
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°4714 uses new {@link ITOP_CORE_VERSION} constant
 	 */
 	public function testiTopModulesPhpVersion($sExpectedVersion, $sPhpFile)
 	{
@@ -51,9 +53,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 			$matches
 		);
 
-		$this->assertRegExp("#$sExpectedVersion#", $matches[1],
-			" $sPhpFile:2 file refer does not refer to current itop version ($sModuleName/$matches[1] does not match regexp $sModuleName/$sExpectedVersion)");
-
+		$this->assertSame($sExpectedVersion, $matches[1],
+			'Module desc file does not contain the same version as the core: '.$sPhpFile);
 	}
 
 	public function iTopModulesPhpVersionProvider()
@@ -74,7 +75,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sExpectedVersion = \utils::GetItopMinorVersion().'\.\d+'; // ie: 2.7\.\d+   (and yes, the 1st dot should be escaped, but, hey, it is good enough as it, ans less complex to read)
+		$sExpectedVersion = ITOP_CORE_VERSION;
 
 		$aTestCases = array();
 		foreach ($aPhpFiles as $sPhpFile) {

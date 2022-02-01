@@ -2247,38 +2247,18 @@ class utils
 
 	/**
 	 * @return string eg : '2_7_0' iTop core version is '2.7.1-dev'
+	 * @throws \ApplicationException if constant value is invalid
+	 * @uses ITOP_CORE_VERSION
 	 */
 	public static function GetItopVersionWikiSyntax()
 	{
-		$sMinorVersion = self::GetItopMinorVersion();
-		return str_replace('.', '_', $sMinorVersion).'_0';
-	}
+		$aExplodedVersion = explode('.', ITOP_CORE_VERSION);
 
-	/**
-	 * @return string eg 2.7 if iTop core version is '2.7.0-dev'
-	 * @throws \Exception
-	 */
-	public static function GetItopMinorVersion()
-	{
-		$sPatchVersion = self::GetItopPatchVersion();
-		$aExplodedVersion = explode('.', $sPatchVersion);
-
-		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1]))
-		{
-			throw new Exception('iTop version is wrongfully configured!');
+		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1])) {
+			throw new ApplicationException('iTop version is wrongfully configured!');
 		}
 
-		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
-	}
-
-	/**
-	 * @return string eg '2.7.0' if iTop core version is '2.7.0-dev'
-	 * @uses ITOP_CORE_VERSION
-	 */
-	public static function GetItopPatchVersion()
-	{
-		$aExplodedVersion = explode('-', ITOP_CORE_VERSION);
-		return $aExplodedVersion[0];
+		return "{$aExplodedVersion[0]}_{$aExplodedVersion[1]}_0";
 	}
 
 	/**
