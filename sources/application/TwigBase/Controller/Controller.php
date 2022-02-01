@@ -581,8 +581,8 @@ abstract class Controller
 
 				if ($this->m_bIsBreadCrumbEnabled) {
 					if (count($this->m_aBreadCrumbEntry) > 0) {
-						@list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $this->m_aBreadCrumbEntry;
-						$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl ?: '', $sIcon ?: '');
+						list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $this->m_aBreadCrumbEntry;
+						$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl, $sIcon);
 					}
 				} else {
 					$this->m_oPage->DisableBreadCrumb();
