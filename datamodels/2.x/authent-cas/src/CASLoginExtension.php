@@ -47,30 +47,27 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if (Session::Get('login_mode') == 'cas')
+		static::InitCASClient();
+		if (phpCAS::isAuthenticated())
 		{
-			static::InitCASClient();
-			if (phpCAS::isAuthenticated())
+			Session::Set('login_mode', 'cas');
+			Session::Set('auth_user', phpCAS::getUser());
+			Session::Unset('login_will_redirect');
+		}
+		else
+		{
+			if (!Session::IsSet('login_will_redirect'))
 			{
-				Session::Set('login_mode', 'cas');
-				Session::Set('auth_user', phpCAS::getUser());
-				Session::Unset('login_will_redirect');
+				Session::Set('login_will_redirect', true);
 			}
 			else
 			{
-				if (!Session::IsSet('login_will_redirect'))
-				{
-					Session::Set('login_will_redirect', true);
-				}
-				else
-				{
-					Session::Unset('login_will_redirect');
-					$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
-					return LoginWebPage::LOGIN_FSM_ERROR;
-				}
-				Session::Set('login_mode', 'cas');
-				phpCAS::forceAuthentication(); // Redirect to CAS and exit
+				Session::Unset('login_will_redirect');
+				$iErrorCode = LoginWebPage::EXIT_CODE_MISSINGLOGIN;
+				return LoginWebPage::LOGIN_FSM_ERROR;
 			}
+			Session::Set('login_mode', 'cas');
+			phpCAS::forceAuthentication(); // Redirect to CAS and exit
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
