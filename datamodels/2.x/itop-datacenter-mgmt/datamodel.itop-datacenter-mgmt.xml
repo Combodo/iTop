@@ -187,8 +187,11 @@
       <relations>
         <relation id="impacts">
           <neighbours>
-            <neighbour id="device_list">
+            <neighbour id="datacenterdevice">
               <attribute>device_list</attribute>
+            </neighbour>
+            <neighbour id="enclosure">
+              <attribute>enclosure_list</attribute>
             </neighbour>
           </neighbours>
         </relation>
