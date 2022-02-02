@@ -294,8 +294,6 @@ class iTopDesignFormat
 		return $this->bStatus;
 	}
 
-
-
 	/**
 	 * Does the conversion, eventually in a recursive manner
 	 * 	 
@@ -861,7 +859,22 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
-		
+
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
+		// Add new stylesheets
+		$oStyleSheetsNode = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets')->item(0);
+		if ($oStyleSheetsNode) {
+			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
+			$oStyleSheetNode->setAttribute('id', 'environment-banner');
+			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/themes/page-banner.scss'));
+			$oStyleSheetsNode->appendChild($oStyleSheetNode);
+
+			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
+			$oStyleSheetNode->setAttribute('id', 'fullmoon');
+			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/main.scss'));
+			$oStyleSheetsNode->appendChild($oStyleSheetNode);
+		}
+
 		// Add new attribute to theme import nodes
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
 		foreach ($oNodeList as $oNode) {
@@ -956,6 +969,9 @@ class iTopDesignFormat
 			$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
 		}
 
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="fullmoon"]');
+
 		// Add new attribute to theme import nodes
 		
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
@@ -1000,11 +1016,13 @@ class iTopDesignFormat
 	 * @param string $sNodeMetaVersion
 	 *
 	 * @return void
+	 * @throws \Exception
 	 */
 	private function RestorePreviousNodes($sNodeMetaVersion)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
-		$oTrashedNodes = $oXPath->query("/itop_design/meta/previous_versions/previous_version[@id='$sNodeMetaVersion']/trashed_nodes/trashed_node");
+		$sVersion = str_replace('.', '_', $sNodeMetaVersion);
+		$oTrashedNodes = $oXPath->query("/itop_design/meta/previous_versions/previous_version_$sVersion/trashed_nodes/trashed_node");
 		foreach ($oTrashedNodes as $oTrashedNode) {
 			if ($oTrashedNode->nodeType == XML_ELEMENT_NODE) {
 				$oXPathNode = $oXPath->query('parent_xpath', $oTrashedNode)->item(0);
@@ -1017,6 +1035,15 @@ class iTopDesignFormat
 						while ($oNode) {
 							$oNextNode = $oNode->nextSibling;
 							if ($oNode->nodeType == XML_ELEMENT_NODE) {
+								// Check for collision
+								$sId = $oNode->getAttribute('id');
+								$sNodeXPath = ($sId != '') ? $oNode->nodeName.'[@id="'.$sId.'"]' : $oNode->nodeName;
+								$sNodeXPath = $sXPath.'/'.$sNodeXPath;
+								$oTarget = $oXPath->query($sNodeXPath)->item(0);
+								if ($oTarget) {
+									// Do not continue migration
+									throw new Exception("Trying to restore an existing node $sNodeXPath from version $sNodeMetaVersion");
+								}
 								// Restore the modification flags
 								$oModifiedNodeList = $oXPath->query('descendant-or-self::*[@_disabled_delta or @_disabled_rename_from]', $oNode);
 								foreach ($oModifiedNodeList as $oModifiedNode) {
@@ -1038,7 +1065,7 @@ class iTopDesignFormat
 			}
 		}
 		// Clean up the mess
-		$this->RemoveNodeFromXPath("/itop_design/meta/previous_versions/previous_version[@id='$sNodeMetaVersion']", false);
+		$this->RemoveNodeFromXPath("/itop_design/meta/previous_versions/previous_version_$sVersion", false);
 		$this->RemoveEmptyNodeFromXPath("/itop_design/meta/previous_versions");
 		$this->RemoveEmptyNodeFromXPath("/itop_design/meta");
 	}
@@ -1079,9 +1106,8 @@ class iTopDesignFormat
 				$oItopDesignNode = $this->GetOrCreateNode('/itop_design', 'itop_design', null);
 				$oMetaNode = $this->GetOrCreateNode('meta', 'meta', $oItopDesignNode);
 				$oPreviousVersionsNode = $this->GetOrCreateNode('previous_versions', 'previous_versions', $oMetaNode);
-				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version[@id='$this->sKeepVersion']", 'previous_version', $oPreviousVersionsNode);
-				$oPreviousVersionNode->setAttribute('id', $this->sKeepVersion);
-				//$oPreviousVersionNode->setAttribute('_delta', 'define_if_not_exists');
+				$sVersion = str_replace('.', '_', $this->sKeepVersion);
+				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version_$sVersion", "previous_version_$sVersion", $oPreviousVersionsNode);
 				$oTrashedNodeList = $this->GetOrCreateNode('trashed_nodes', 'trashed_nodes', $oPreviousVersionNode);
 
 				$iNextId = str_replace('.', '', uniqid('', true));

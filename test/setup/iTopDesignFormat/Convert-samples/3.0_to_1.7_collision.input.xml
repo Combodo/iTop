@@ -12,40 +12,55 @@
         </imports>
         <stylesheets>
           <stylesheet id="custom">../css/custom.scss</stylesheet>
-          <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
-          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
         </stylesheets>
+      </theme>
+      <theme id="light-grey" _delta="define">
+        <totally_new_format>
+          bla bla bla
+        </totally_new_format>
       </theme>
     </themes>
   </branding>
   <classes>
-    <class id="ClassWithNewValueInFieldWhichHasNoXsiTypeDueToMustExistFlag" _delta="must_exist">
-      <fields>
-        <field id="status" _delta="must_exist">
-          <values>
-            <value id="test" _delta="define">
-              <code>test</code>
-            </value>
-          </values>
-        </field>
-      </fields>
-    </class>
-    <class id="ClassWithLifecycle">
+    <class id="ClassWithStateButNoLifecycle">
       <properties>
-        <fields_semantic>
-          <state_attribute>foo</state_attribute>
-        </fields_semantic>
         <style>
           <icon>images/class-with-lifecycle.png</icon>
         </style>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="ClassWithStateAndLifecycle">
+      <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
+        <fields_semantic>
+          <state_attribute>foo</state_attribute>
+        </fields_semantic>
       </properties>
       <lifecycle/>
     </class>
-    <class id="ClassWithLifecycleNoProperties">
-      <lifecycle/>
+    <class id="ClassWithStateAndImage">
       <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
         <fields_semantic>
           <state_attribute>foo</state_attribute>
+          <image_attribute>bar</image_attribute>
+        </fields_semantic>
+      </properties>
+    </class>
+    <class id="ClassWithImageOnly">
+      <properties>
+        <style>
+          <icon>images/class-with-lifecycle.png</icon>
+        </style>
+        <fields_semantic>
+          <image_attribute>bar</image_attribute>
         </fields_semantic>
       </properties>
     </class>
@@ -55,6 +70,8 @@
           <icon revisionid="2" _delta="redefine">
             <fileref ref="company_0faae3b9d86b7c382b2e4cdae570bc3c" revisionid="62"/>
           </icon>
+          <main_color>#4E79A5</main_color>
+          <complementary_color>white</complementary_color>
         </style>
       </properties>
       <fields>
@@ -63,56 +80,69 @@
           <values>
             <value id="new">
               <code>new</code>
+              <style>
+                <main_color>#2C5382</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
-            <value id="assigned">
-              <code>assigned</code>
+            <value id="waiting_for_approval">
+              <code>waiting_for_approval</code>
             </value>
           </values>
-          <sql>status</sql>
-          <default_value>new</default_value>
-          <is_null_allowed>false</is_null_allowed>
+          <default_style>
+            <main_color>#2B6CB0</main_color>
+            <complementary_color>#FFFFFF</complementary_color>
+            <decoration_classes/>
+          </default_style>
         </field>
         <field id="operational_status" xsi:type="AttributeMetaEnum">
           <values>
             <value id="ongoing">
               <code>ongoing</code>
+              <style>
+                <main_color>#2C5382</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
             </value>
             <value id="resolved">
               <code>resolved</code>
             </value>
-            <value id="closed">
-              <code>closed</code>
-            </value>
           </values>
-          <sql>operational_status</sql>
-          <default_value>ongoing</default_value>
-          <mappings>
-            <mapping id="Ticket">
-              <attcode>status</attcode>
-              <metavalues>
-                <metavalue id="resolved">
-                  <values>
-                    <value id="resolved"/>
-                  </values>
-                </metavalue>
-                <metavalue id="closed">
-                  <values>
-                    <value id="closed"/>
-                    <value id="rejected"/>
-                  </values>
-                </metavalue>
-              </metavalues>
-            </mapping>
-          </mappings>
+          <default_style>
+            <main_color>#2B6CB0</main_color>
+            <complementary_color>#FFFFFF</complementary_color>
+            <decoration_classes/>
+          </default_style>
         </field>
       </fields>
     </class>
   </classes>
+  <menus>
+    <menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>WelcomeMenu</parent>
+      <url>$$http://fr.wikipedia.org/</url>
+      <in_new_window>true</in_new_window>
+    </menu>
+    <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
+      <rank>30</rank>
+      <enable_stimulus/>
+      <style>
+        <decoration_classes>fas fa-comment-alt</decoration_classes>
+      </style>
+    </menu>
+  </menus>
+  <branding>
+    <main_logo _delta="define">images/itop-logo.png</main_logo>
+    <main_logo_compact _delta="define">images/itop-logo-square.png</main_logo_compact>
+  </branding>
   <meta>
     <previous_versions>
       <previous_version_1_7>
         <trashed_nodes>
-          <trashed_node id="XXX" _delta="define">
+          <trashed_node id="1">
             <parent_xpath>/itop_design/branding/themes</parent_xpath>
             <node_tree>
               <theme id="light-grey">
@@ -127,19 +157,19 @@
               </theme>
             </node_tree>
           </trashed_node>
-          <trashed_node id="XXX" _delta="define">
+          <trashed_node id="2">
             <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/imports</parent_xpath>
             <node_tree>
               <import id="css-variables">../css/css-variables.scss</import>
             </node_tree>
           </trashed_node>
-          <trashed_node id="XXX" _delta="define">
+          <trashed_node id="3">
             <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/stylesheets</parent_xpath>
             <node_tree>
               <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
             </node_tree>
           </trashed_node>
-          <trashed_node id="XXX" _delta="define">
+          <trashed_node id="4">
             <parent_xpath>/itop_design/branding/themes/theme[@id="test-red"]/stylesheets</parent_xpath>
             <node_tree>
               <stylesheet id="main">../css/main.scss</stylesheet>

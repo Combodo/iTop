@@ -16,7 +16,7 @@
   </constants>
   <meta>
     <previous_versions>
-      <previous_version id="1.6">
+      <previous_version_1_6>
         <trashed_nodes>
           <trashed_node id="XXX" _delta="define">
             <parent_xpath>/itop_design/constants</parent_xpath>
@@ -31,7 +31,7 @@
             </node_tree>
           </trashed_node>
         </trashed_nodes>
-      </previous_version>
+      </previous_version_1_6>
     </previous_versions>
   </meta>
 </itop_design>

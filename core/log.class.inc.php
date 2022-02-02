@@ -1218,7 +1218,7 @@ class DeprecatedCallsLog extends LogAPI
 			$sMessage .= ' : '.$sAdditionalMessage;
 		}
 
-		static::Warning($sMessage, self::ENUM_CHANNEL_P&HP_METHOD);
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
 	}
 
 	/**

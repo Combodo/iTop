@@ -161,7 +161,7 @@ body.ibo-has-fullscreen-descendant {
 
   /* Preserve original text color in code blocks, except for the Highlight.js blocks which have their own colors */
   & > code,
-  :not(pre.hljs) code {
+  code:not(.hljs)  {
     color: inherit;
   }
 }
