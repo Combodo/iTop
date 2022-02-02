@@ -1338,7 +1338,7 @@ EOF
 		{
 			return null;
 		}
-		$oClassNode = self::$aLoadedClasses[$sClassName];
+		$oClassNode = $this->GetClass($sClassName);
 		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
