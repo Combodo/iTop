@@ -174,7 +174,7 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		}
 	}
 
-	private function DoUserProvisioning($sLogin)
+	private static function DoUserProvisioning($sLogin)
 	{
 		$bCASUserSynchro = Config::Get('cas_user_synchro');
 		if (!$bCASUserSynchro)
