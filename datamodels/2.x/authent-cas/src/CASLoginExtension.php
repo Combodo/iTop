@@ -160,6 +160,8 @@ class CASLoginExtension extends AbstractLoginFSMExtension implements iLogoutExte
 		$iCASPort = Config::Get('cas_port');
 		$sCASContext = Config::Get('cas_context');
 		phpCAS::client($sCASVersion, $sCASHost, $iCASPort, $sCASContext, false /* session already started */);
+        // Avoid automatic redirect from phpCAS, let iTop do his thing
+        phpCAS::setNoClearTicketsFromUrl();
 		$sCASCACertPath = Config::Get('cas_server_ca_cert_path');
 		if (empty($sCASCACertPath))
 		{
