@@ -479,6 +479,22 @@ $ibo-button-colors: (
   &.ibo-action-button {
     float: right;
   }
+
+  .ibo-button--loading-icon {
+    display: none;
+  }
+  
+  &.ibo-is-loading {
+    .ibo-button--icon{
+      display: none;
+    }
+    .ibo-button--loading-icon {
+      display: inline-block;
+       &+ .ibo-button--label{
+        margin-left: $ibo-button--label--margin-left;
+      }
+    }
+  }
 }
 
 .ibo-button--label {
