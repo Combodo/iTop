@@ -35,6 +35,12 @@ class UpdateController extends Controller
 		$oSet = new DBObjectSet($oFilter, ['installed' => false]); // Most recent first
 		$aParams['oSet'] = $oSet;
 
+		$sSetupToken = SetupUtils::CreateSetupToken();
+		$sAppRoot = utils::GetAbsoluteUrlAppRoot(true);
+		$sLaunchSetupUrl = $sAppRoot.'setup/confperm.php';
+		$sLaunchSetupUrl = utils::AddParameterToUrl($sLaunchSetupUrl, 'authent', $sSetupToken);
+		$aParams['sLaunchSetupUrl'] = $sLaunchSetupUrl;
+
 		$this->DisplayPage($aParams);
 	}
 

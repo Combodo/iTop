@@ -101,3 +101,7 @@ $("#check-update").on("click", function(e) {
     e.stopPropagation();
     return false;
 });
+
+$("#launch-setup-form").on("submit", function () {
+    return window.confirm("{{ 'iTopUpdate:UI:SetupLaunchConfirm'|dict_s }}");
+});
