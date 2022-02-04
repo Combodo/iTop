@@ -253,7 +253,15 @@ class NavigationMenu extends UIBlock implements iKeyboardShortcut
 	 */
 	public function GetSubBlocks(): array
 	{
-		return [$this->oUserMenu->GetId() => $this->oUserMenu, $this->GetNewsroomMenu()->GetId() => $this->GetNewsroomMenu()];
+		$aSubBlocks = [
+			$this->oUserMenu->GetId() => $this->oUserMenu,
+		];
+
+		if ($this->IsNewsroomEnabled()) {
+			$aSubBlocks[$this->GetNewsroomMenu()->GetId()] = $this->GetNewsroomMenu();
+		}
+
+		return $aSubBlocks;
 	}
 
 	/**
