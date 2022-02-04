@@ -5,7 +5,6 @@
  */
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
@@ -198,16 +197,6 @@ try {
 			//--- Submit button
 			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('config-apply'), null, Dict::S('config-apply'), true, 'submit_button');
 			$oForm->AddSubBlock($oSubmitButton);
-
-			//--- Chg perm & setup button
-			$sSetupToken = SetupUtils::CreateSetupToken();
-			$sAppRoot = utils::GetAbsoluteUrlAppRoot(true);
-			$sChgpermEndpointUrl = $sAppRoot.'setup/confperm.php';
-			$sChgpermEndpointUrl = utils::AddParameterToUrl($sChgpermEndpointUrl, 'authent', $sSetupToken);
-			$oChgpermAndSetupButton = ButtonUIBlockFactory::MakeDestructiveIconLink('fas fa-cog', Dict::S('config-cghperm-setup'), $sChgpermEndpointUrl);
-			$oChgpermAndSetupButton->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR);
-			$oChgpermAndSetupButton->SetLabel(Dict::S('config-cghperm-setup'));
-			$oForm->AddSubBlock($oChgpermAndSetupButton);
 
 			//--- Config editor
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('prev_config', $sOriginalConfigEscaped, 'prev_config'));
