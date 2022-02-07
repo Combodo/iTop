@@ -40,12 +40,12 @@ class EventService
 		$aEventCallbacks = isset(self::$aEvents[$sEvent]) ? self::$aEvents[$sEvent] : array();
 		$sId = 'event_'.self::$iEventIdCounter++;
 		$aEventCallbacks[] = array(
-			'id' => $sId,
+			'id'       => $sId,
 			'callback' => $callback,
-			'source' => $sEventSource,
-			'name' => $sName,
-			'data' => $aCallbackData,
-			'context' => $context,
+			'source'   => $sEventSource,
+			'name'     => $sName,
+			'data'     => $aCallbackData,
+			'context'  => $context,
 			'priority' => $fPriority,
 		);
 		usort($aEventCallbacks, function ($a, $b) {
@@ -54,17 +54,18 @@ class EventService
 			if ($fPriorityA == $fPriorityB) {
 				return 0;
 			}
+
 			return ($fPriorityA < $fPriorityB) ? -1 : 1;
 		});
 		self::$aEvents[$sEvent] = $aEventCallbacks;
 
 		$iTotalRegistrations = 0;
-		foreach (self::$aEvents as $aEvent)
-		{
+		foreach (self::$aEvents as $aEvent) {
 			$iTotalRegistrations += count($aEvent);
 		}
 		$sEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
 		IssueLog::Trace("Registering event '$sEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)", LOG_EVENT_SERVICE_CHANNEL);
+
 		return $sId;
 	}
 
@@ -83,39 +84,31 @@ class EventService
 		$sSource = isset($aEventData['debug_info']) ? " {$aEventData['debug_info']}" : '';
 		$sEventName = "$sEvent:".self::GetSourcesAsString($eventSource);
 		IssueLog::Trace("Fire event '$sEventName'$sSource", LOG_EVENT_SERVICE_CHANNEL);
-		if (!isset(self::$aEvents[$sEvent]))
-		{
+		if (!isset(self::$aEvents[$sEvent])) {
 			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
 			$oKPI->ComputeStats('FireEvent', $sEvent);
+
 			return;
 		}
 
-		foreach (self::$aEvents[$sEvent] as $aEventCallback)
-		{
-			if (!self::MatchEventSource($aEventCallback['source'], $eventSource))
-			{
+		foreach (self::$aEvents[$sEvent] as $aEventCallback) {
+			if (!self::MatchEventSource($aEventCallback['source'], $eventSource)) {
 				continue;
 			}
-			if (!self::MatchContext($aEventCallback['context']))
-			{
+			if (!self::MatchContext($aEventCallback['context'])) {
 				continue;
 			}
 			$sName = $aEventCallback['name'];
 			IssueLog::Debug("Fire event '$sEventName'$sSource calling '{$sName}'", LOG_EVENT_SERVICE_CHANNEL);
-			try
-			{
-				if (is_callable($aEventCallback['callback']))
-				{
+			try {
+				if (is_callable($aEventCallback['callback'])) {
 					call_user_func($aEventCallback['callback'], new EventData($sEvent, $eventSource, $aEventData, $aEventCallback['data']));
-				}
-				else
-				{
+				} else {
 					IssueLog::Debug("Callback '{$sName}' not a callable anymore, unregister", LOG_EVENT_SERVICE_CHANNEL);
 					self::UnRegisterCallback($aEventCallback['id']);
 				}
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				IssueLog::Error("Event '$sEventName' for '{$sName}' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
 				throw $e;
 			}
@@ -125,39 +118,27 @@ class EventService
 
 	private static function MatchEventSource($srcRegistered, $srcEvent)
 	{
-		if (empty($srcRegistered))
-		{
+		if (empty($srcRegistered)) {
 			// no filtering
 			return true;
 		}
-		if (empty($srcEvent))
-		{
+		if (empty($srcEvent)) {
 			// no match (the registered source is not empty)
 			return false;
 		}
-		if (is_string($srcRegistered))
-		{
+		if (is_string($srcRegistered)) {
 			$aSrcRegistered = array($srcRegistered);
-		}
-		elseif (is_array($srcRegistered))
-		{
+		} elseif (is_array($srcRegistered)) {
 			$aSrcRegistered = $srcRegistered;
-		}
-		else
-		{
+		} else {
 			$aSrcRegistered = array();
 		}
 
-		if (is_string($srcEvent))
-		{
+		if (is_string($srcEvent)) {
 			$aSrcEvent = array($srcEvent);
-		}
-		elseif (is_array($srcEvent))
-		{
+		} elseif (is_array($srcEvent)) {
 			$aSrcEvent = $srcEvent;
-		}
-		else
-		{
+		} else {
 			$aSrcEvent = array();
 		}
 
@@ -174,46 +155,37 @@ class EventService
 
 	private static function MatchContext($registeredContext)
 	{
-		if (empty($registeredContext))
-		{
+		if (empty($registeredContext)) {
 			return true;
 		}
-		if (is_string($registeredContext))
-		{
+		if (is_string($registeredContext)) {
 			$aContexts = array($registeredContext);
-		}
-		elseif (is_array($registeredContext))
-		{
+		} elseif (is_array($registeredContext)) {
 			$aContexts = $registeredContext;
-		}
-		else
-		{
+		} else {
 			return false;
 		}
-		foreach ($aContexts as $sContext)
-		{
-			if (ContextTag::Check($sContext))
-			{
+		foreach ($aContexts as $sContext) {
+			if (ContextTag::Check($sContext)) {
 				return true;
 			}
 		}
+
 		return false;
 	}
 
 	private static function GetSourcesAsString($srcRegistered)
 	{
-		if (empty($srcRegistered))
-		{
+		if (empty($srcRegistered)) {
 			return '';
 		}
-		if (is_string($srcRegistered))
-		{
+		if (is_string($srcRegistered)) {
 			return $srcRegistered;
 		}
-		if (is_array($srcRegistered))
-		{
+		if (is_array($srcRegistered)) {
 			$sStr = implode(',', $srcRegistered);
 		}
+
 		return '';
 	}
 
@@ -225,18 +197,18 @@ class EventService
 	public static function UnRegisterCallback($sId)
 	{
 		$bRemoved = self::Browse(function ($sEvent, $idx, $aEventCallback) use ($sId) {
-			if ($aEventCallback['id'] == $sId)
-			{
+			if ($aEventCallback['id'] == $sId) {
 				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
 				IssueLog::Trace("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+
 				return false;
 			}
+
 			return true;
 		});
 
-		if (!$bRemoved)
-		{
+		if (!$bRemoved) {
 			IssueLog::Trace("No registration found for callback '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
 		}
 	}
@@ -248,9 +220,9 @@ class EventService
 	 */
 	public static function UnRegisterEvent($sEvent)
 	{
-		if (!isset(self::$aEvents[$sEvent]))
-		{
+		if (!isset(self::$aEvents[$sEvent])) {
 			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+
 			return;
 		}
 
@@ -276,16 +248,14 @@ class EventService
 	 */
 	private static function Browse(closure $callback)
 	{
-		foreach (self::$aEvents as $sEvent => $aCallbackList)
-		{
-			foreach ($aCallbackList as $idx => $aEventCallback)
-			{
-				if (call_user_func($callback, $sEvent, $idx, $aEventCallback) === false)
-				{
+		foreach (self::$aEvents as $sEvent => $aCallbackList) {
+			foreach ($aCallbackList as $idx => $aEventCallback) {
+				if (call_user_func($callback, $sEvent, $idx, $aEventCallback) === false) {
 					return true;
 				}
 			}
 		}
+
 		return false;
 	}
 }

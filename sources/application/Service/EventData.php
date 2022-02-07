@@ -46,15 +46,14 @@ class EventData
 
 	public function Get($sParam)
 	{
-		if (is_array($this->mEventData) && isset($this->mEventData[$sParam]))
-		{
+		if (is_array($this->mEventData) && isset($this->mEventData[$sParam])) {
 			return $this->mEventData[$sParam];
 		}
 
-		if (is_array($this->mCallbackData) && isset($this->mCallbackData[$sParam]))
-		{
+		if (is_array($this->mCallbackData) && isset($this->mCallbackData[$sParam])) {
 			return $this->mCallbackData[$sParam];
 		}
+
 		return null;
 	}
 
