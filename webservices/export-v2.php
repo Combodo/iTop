@@ -121,26 +121,28 @@ function Usage(Page $oP)
 	//}
 }
 
-function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '')
+function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '', $oForm = null)
 {
 	$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:ScopeDefinition'));
-	$oP->AddSubBlock($oPanel);
-	$oForm = FormUIBlockFactory::MakeStandard('form');
-	$oForm->SetAction($sAction);
-	$oPanel->AddSubBlock($oForm);
+	if ($oForm == null) {
+		$oForm = FormUIBlockFactory::MakeStandard('export-form');
+		$oForm->SetAction($sAction);
+		$oP->AddSubBlock($oForm);
+	}
+	$oForm->AddSubBlock($oPanel);
 
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
+	$oPanel->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
 
 	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
 	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
 	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
 	$oTextArea->AddCSSClasses(["ibo-input-text", "ibo-query-oql", "ibo-is-code"]);
 	$oFieldQuery->AddSubBlock($oTextArea);
-	$oForm->AddSubBlock($oFieldQuery);
+	$oPanel->AddSubBlock($oFieldQuery);
 	if (!empty($sExceptionMessage)) {
 		$oAlert = AlertUIBlockFactory::MakeForFailure($sExceptionMessage);
 		$oAlert->SetIsCollapsible(false);
-		$oForm->AddSubBlock($oAlert);
+		$oPanel->AddSubBlock($oAlert);
 	}
 
 	$oFieldPhraseBook = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label>');
@@ -154,9 +156,9 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($oQuery->GetKey(), $oQuery->Get('name'), false));
 	}
 	$oFieldPhraseBook->AddSubBlock($oSelect);
-	$oForm->AddSubBlock($oFieldPhraseBook);
+	$oPanel->AddSubBlock($oFieldPhraseBook);
 
-	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
+	$oPanel->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php">'.Dict::S('Core:BulkExportCanRunNonInteractive').'</a>');
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export.php">'.Dict::S('Core:BulkExportLegacyExport').'</a>');
 	$sJSEmptyOQL = json_encode(Dict::S('Core:BulkExportMessageEmptyOQL'));
@@ -259,7 +261,7 @@ EOF
 	}
 
 	if (!$bExpressionIsValid) {
-		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError);
+		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError,$oForm);
 
 		return;
 	}
