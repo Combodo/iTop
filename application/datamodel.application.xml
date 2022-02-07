@@ -472,8 +472,8 @@
         </methods>
       </class>
     </classes>
-    <events _delta="define_if_not_exists">
-      <event id="AfterDisplayPage">
+    <events>
+      <event id="AfterDisplayPage" _delta="define">
         <description>The current page is completely displayed</description>
         <available_filters>Class hierarchy of the displayed page</available_filters>
         <arguments>
@@ -487,7 +487,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="OnLogin">
+      <event id="OnLogin" _delta="define">
         <description>Inform the listeners about the connection states</description>
         <available_filters/>
         <arguments>

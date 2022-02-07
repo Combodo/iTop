@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
+  <meta>
+    <events>
+      <event id="DisplayObjectDetails" _delta="define">
+        <description>An object details is about to be displayed to a user</description>
+        <available_filters>Class hierarchy of the displayed object</available_filters>
+        <arguments>
+          <argument id="object">
+            <description>The object displayed</description>
+            <type>DBObject</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+    </events>
+  </meta>
+</itop_design>

@@ -269,22 +269,8 @@
         </fields>
       </class>
     </classes>
-    <events _delta="define_if_not_exists">
-      <event id="DisplayObjectDetails">
-        <description>An object details is about to be displayed to a user</description>
-        <available_filters>Class hierarchy of the displayed object</available_filters>
-        <arguments>
-          <argument id="object">
-            <description>The object displayed</description>
-            <type>DBObject</type>
-          </argument>
-          <argument id="debug_info">
-            <description>Debug string</description>
-            <type>string</type>
-          </argument>
-        </arguments>
-      </event>
-      <event id="BeforeInsert">
+    <events>
+      <event id="BeforeInsert" _delta="define">
         <description>An object is about to be inserted in the database</description>
         <replaces>DBObject::OnInsert</replaces>
         <arguments>
@@ -298,7 +284,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="DBObjectKeyReady">
+      <event id="DBObjectKeyReady" _delta="define">
         <description>A key (id) has been generated for an object inserted into the database (use GetKey() to read the new key)</description>
         <replaces>DBObject::OnObjectKeyReady</replaces>
         <arguments>
@@ -312,7 +298,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="AfterInsert">
+      <event id="AfterInsert" _delta="define">
         <description>An object has been inserted into the database</description>
         <replaces>DBObject::AfterInsert</replaces>
         <arguments>
@@ -326,7 +312,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="BeforeUpdate">
+      <event id="BeforeUpdate" _delta="define">
         <description>An object is about to be updated in the database</description>
         <replaces>DBObject::OnUpdate</replaces>
         <arguments>
@@ -340,7 +326,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="AfterUpdate">
+      <event id="AfterUpdate" _delta="define">
         <description>An object has been updated into the database</description>
         <replaces>DBObject::AfterUpdate</replaces>
         <arguments>
@@ -354,7 +340,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="BeforeDelete">
+      <event id="BeforeDelete" _delta="define">
         <description>An object is about to be deleted in the database</description>
         <replaces>DBObject::OnDelete</replaces>
         <arguments>
@@ -368,7 +354,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="AfterDelete">
+      <event id="AfterDelete" _delta="define">
         <description>An object has been deleted into the database</description>
         <replaces>DBObject::AfterDelete</replaces>
         <arguments>
@@ -382,7 +368,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="BeforeApplyStimulus">
+      <event id="BeforeApplyStimulus" _delta="define">
         <description>A stimulus is about to be applied to an object</description>
         <arguments>
           <argument id="object">
@@ -395,7 +381,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="AfterApplyStimulus">
+      <event id="AfterApplyStimulus" _delta="define">
         <description>A stimulus has been applied to an object</description>
         <arguments>
           <argument id="object">
@@ -408,7 +394,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="DBObjectLoaded">
+      <event id="DBObjectLoaded" _delta="define">
         <description>An object has been loaded from the database</description>
         <arguments>
           <argument id="object">
@@ -421,7 +407,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="DBObjectNew">
+      <event id="DBObjectNew" _delta="define">
         <description>An object has been created in memory</description>
         <arguments>
           <argument id="object">
@@ -434,7 +420,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="DBObjectReload">
+      <event id="DBObjectReload" _delta="define">
         <description>An object has been re-loaded from the database</description>
         <arguments>
           <argument id="object">
@@ -447,7 +433,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="OnCheckToWrite">
+      <event id="OnCheckToWrite" _delta="define">
         <description>Check an object before it is written into the database</description>
         <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
         <arguments>
@@ -465,7 +451,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="DoCheckToDelete">
+      <event id="DoCheckToDelete" _delta="define">
         <description>Check an object before it is deleted from the database</description>
         <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
         <arguments>
@@ -483,7 +469,7 @@
           </argument>
         </arguments>
       </event>
-      <event id="DownloadDocument">
+      <event id="DownloadDocument" _delta="define">
         <description>A document has been downloaded from the GUI</description>
         <arguments>
           <argument id="object">
