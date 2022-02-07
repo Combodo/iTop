@@ -269,7 +269,7 @@
         </fields>
       </class>
     </classes>
-    <events _delta="define">
+    <events _delta="define_if_not_exists">
       <event id="DisplayObjectDetails">
         <description>An object details is about to be displayed to a user</description>
         <available_filters>Class hierarchy of the displayed object</available_filters>

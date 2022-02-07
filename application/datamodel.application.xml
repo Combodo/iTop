@@ -472,5 +472,35 @@
         </methods>
       </class>
     </classes>
+    <events _delta="define_if_not_exists">
+      <event id="AfterDisplayPage">
+        <description>The current page is completely displayed</description>
+        <available_filters>Class hierarchy of the displayed page</available_filters>
+        <arguments>
+          <argument id="object">
+            <description>The page displayed</description>
+            <type>Page</type>
+          </argument>
+          <argument id="debug_info">
+            <description>Debug string</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+      <event id="OnLogin">
+        <description>Inform the listeners about the connection states</description>
+        <available_filters/>
+        <arguments>
+          <argument id="code">
+            <description>The login step result code (LoginWebPage::EXIT_CODE_...) </description>
+            <type>integer</type>
+          </argument>
+          <argument id="state">
+            <description>Current login state (except LoginWebPage::LOGIN_STATE_CONNECTED)</description>
+            <type>string</type>
+          </argument>
+        </arguments>
+      </event>
+    </events>
   </meta>
 </itop_design>
