@@ -3564,10 +3564,10 @@ EOF;
 					}
 
 					$aContexts = array();
-					$oContexts = $oListener->GetOptionalElement('Contexts');
+					$oContexts = $oListener->GetOptionalElement('contexts');
 					if ($oContexts)
 					{
-						foreach ($oContexts->getElementsByTagName('Context') as $oContext)
+						foreach ($oContexts->getElementsByTagName('context') as $oContext)
 						{
 							$aContexts[] = $oContext->GetText();
 						}
