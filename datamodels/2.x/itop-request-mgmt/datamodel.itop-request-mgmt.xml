@@ -1231,24 +1231,18 @@
                     </state>
                 </states>
             </lifecycle>
-            <hooks>
-              <hook id="BeforeInsert">
-                <listeners>
-                  <listener id="OnBeforeInsertEvent">
-                    <callback>OnBeforeInsertEvent</callback>
-                    <priority>0</priority>
-                  </listener>
-                </listeners>
-              </hook>
-              <hook id="BeforeUpdate">
-                <listeners>
-                  <listener id="OnBeforeUpdateEvent">
-                    <callback>OnBeforeUpdateEvent</callback>
-                    <priority>0</priority>
-                  </listener>
-                </listeners>
-              </hook>
-            </hooks>
+            <hook_listeners>
+              <listener id="OnBeforeInsertEvent">
+                <event>BeforeInsert</event>
+                <callback>OnBeforeInsertEvent</callback>
+                <priority>0</priority>
+              </listener>
+              <listener id="OnBeforeUpdateEvent">
+                <event>BeforeUpdate</event>
+                <callback>OnBeforeUpdateEvent</callback>
+                <priority>0</priority>
+              </listener>
+            </hook_listeners>
             <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>

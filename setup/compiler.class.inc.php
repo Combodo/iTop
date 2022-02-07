@@ -1252,6 +1252,7 @@ EOF
 			foreach($oIndexes->getElementsByTagName('index') as $oIndex)
 			{
 				$sIndexId = $oIndex->getAttribute('id');
+				/** @var DesignElement $oAttributes */
 				$oAttributes = $oIndex->GetUniqueElement('attributes');
 				foreach ($oAttributes->getElementsByTagName('attribute') as $oAttribute) {
 					$aIndexes[$sIndexId][] = $oAttribute->getAttribute('id');
@@ -1262,50 +1263,35 @@ EOF
 
 		$sEvents = '';
 		$sMethods = '';
-		$oHooks = $oClass->GetOptionalElement('hooks');
-		if ($oHooks)
-		{
-			foreach($oHooks->getElementsByTagName('hook') as $oHook)
-			{
-				/** @var \DOMElement $oHook */
-				$sEventName = $oHook->getAttribute('id');
-				$oListeners = $oHook->GetOptionalElement('listeners');
-				if ($oListeners)
-				{
-					foreach ($oListeners->getElementsByTagName('listener') as $oListener)
-					{
-						/** @var \DOMElement $oListener */
-						$sListenerId = $oListener->getAttribute('id');
-						$oCallback = $oListener->GetUniqueElement('callback', false);
-						if (is_object($oCallback))
-						{
-							$sCallback = $oCallback->GetText();
-						}
-						else
-						{
-							$oExecute = $oListener->GetUniqueElement('execute', true);
-							$sExecute = trim($oExecute->GetText());
-							$sCallback = "EventHook_{$sEventName}_{$sListenerId}";
-							$sCallbackFct = preg_replace('@^function\s*\(@', "public function {$sCallback}(", $sExecute);
-							if ($sExecute == $sCallbackFct)
-							{
-								throw new DOMFormatException("Malformed tag <execute> in class: {$sClass} hook: {$sEventName} listener: {$sListenerId}");
-							}
-							$sMethods .= "\n    {$sCallbackFct}\n\n";
-						}
-						if (strpos($sCallback, '::') === false)
-						{
-							$sEventListener = '[$this, \''.$sCallback.'\']';
-						}
-						else
-						{
-							$sEventListener = "'{$sCallback}'";
-						}
-
-						$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
-						$sEvents .= "\n		Combodo\iTop\Service\EventService::Register(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, \"$sListenerId\", null, $sListenerPriority);";
+		$oHooks = $oClass->GetOptionalElement('hook_listeners');
+		if ($oHooks) {
+			foreach ($oHooks->getElementsByTagName('listener') as $oListener) {
+				/** @var DesignElement $oListener */
+				$oEventNode = $oListener->GetUniqueElement('event');
+				/** @var DesignElement $oEventNode $oEventNode */
+				$sEventName = $oEventNode->GetText();
+				$sListenerId = $oListener->getAttribute('id');
+				$oCallback = $oListener->GetUniqueElement('callback', false);
+				if (is_object($oCallback)) {
+					$sCallback = $oCallback->GetText();
+				} else {
+					$oExecute = $oListener->GetUniqueElement('execute', true);
+					$sExecute = trim($oExecute->GetText());
+					$sCallback = "EventHook_{$sEventName}_$sListenerId";
+					$sCallbackFct = preg_replace('@^function\s*\(@', "public function $sCallback(", $sExecute);
+					if ($sExecute == $sCallbackFct) {
+						throw new DOMFormatException("Malformed tag <execute> in class: $sClass hook: $sEventName listener: $sListenerId");
 					}
+					$sMethods .= "\n    $sCallbackFct\n\n";
 				}
+				if (strpos($sCallback, '::') === false) {
+					$sEventListener = '[$this, \''.$sCallback.'\']';
+				} else {
+					$sEventListener = "'$sCallback'";
+				}
+
+				$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
+				$sEvents .= "\n		Combodo\iTop\Service\EventService::Register(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, \"$sListenerId\", null, $sListenerPriority);";
 			}
 		}
 
@@ -1315,7 +1301,7 @@ EOF
 	protected function RegisterEvents()
 	{
 		parent::RegisterEvents();
-{$sEvents}
+$sEvents
 	}
 
 EOF;
