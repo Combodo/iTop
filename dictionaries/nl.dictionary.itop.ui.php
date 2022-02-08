@@ -121,7 +121,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login moet uniek zijn - "%1s" is al in gebruik',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Minstens één profiel moet toegewezen zijn aan deze gebruiker',
-	'Class:User/Error:ProfileNotAllowed' => 'Profiel "%1$s" kan niet toegevoegd worden omdat het het toegang tot de backoffice zou ontzeggen.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profiel "%1$s" kan niet toegevoegd worden omdat het de toegang tot de backoffice zou ontzeggen.',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Je kan de status voor je eigen gebruikersaccount niet wijzigen.',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'De toegestande organisaties moeten minstens de organisatie bevatten waartoe de gebruikersaccount behoort.',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'De huidige lijst van profielen heeft niet voldoende toegangsrechten (gebruikersaccount zijn niet meer wijzigbaar).',
@@ -370,12 +370,12 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 </p>',
 	'UI:WelcomeMenu:Text'=>  '<div>Proficiat, je werkt nu met '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
-<div>Deze versie heeft een volledig nieuw, modern en toegankelijk back office design.</div>
+<div>Deze versie heeft een volledig nieuw, modern en toegankelijk uiterlijk.</div>
 
 <div>De belangrijkste en meest vertrouwde '.ITOP_APPLICATION.' functies hebben we behouden en een modern jasje gegeven.
 We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben genoten om het te ontwerpen.</div>
 
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
+<div>Wijzig je '.ITOP_APPLICATION.'-voorkeuren voor een gepersonaliseerde ervaring.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mijn aanvragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidenten: %1$d',
@@ -423,7 +423,7 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:Button:Insert' => 'Invoegen',
 	'UI:Button:More' => 'Meer',
 	'UI:Button:Less' => 'Minder',
-	'UI:Button:Wait' => 'Even geduld terwijl de velden aangepast worden',
+	'UI:Button:Wait' => 'Even geduld terwijl de velden vernieuwd worden',
 	'UI:Treeview:CollapseAll' => 'Alles inklappen',
 	'UI:Treeview:ExpandAll' => 'Alles uitklappen',
 	'UI:UserPref:DoNotShowAgain' => 'Niet meer opnieuw tonen',
@@ -703,18 +703,18 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:Audit:Dashboard:ObjectsAudited' => 'Gecontroleerde objecten',
 	'UI:Audit:Dashboard:ObjectsInError' => 'Foutieve objecten',
 	'UI:Audit:Dashboard:ObjectsValidated' => 'Gevalideerde objecten',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s fouten van de  %2$s - %3$s%%',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s fouten van de %2$s - %3$s%%',
 
 
 	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - Evaluatie van OQL-query',
 	'UI:RunQuery:QueryExamples' => 'Voorbeelden van query\'s',
-	'UI:RunQuery:QueryResults' => 'Resultaten query',
+	'UI:RunQuery:QueryResults' => 'Query-resultaten',
 	'UI:RunQuery:HeaderPurpose' => 'Doel',
 	'UI:RunQuery:HeaderPurpose+' => 'Uitleg over de query',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-expressie',
 	'UI:RunQuery:HeaderOQLExpression+' => 'De query in OQL syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressie om te evalueren: ',
-	'UI:RunQuery:QueryArguments' => 'Argumenten query',
+	'UI:RunQuery:QueryArguments' => 'Query-argumenten',
 	'UI:RunQuery:MoreInfo' => 'Meer informatie over de query: ',
 	'UI:RunQuery:DevelopedQuery' => 'Herschreven query-expressie: ',
 	'UI:RunQuery:SerializedFilter' => 'Geserialiseerde filter: ',
@@ -793,7 +793,7 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 	'UI:Schema:Attribute/Filter' => 'Filter',
 	'UI:Schema:DefaultNullValue' => 'Standaardwaarde null : "%1$s"',
 	'UI:LinksWidget:Autocomplete+' => 'Typ de eerste 3 karakters...',
-	'UI:Edit:SearchQuery' => 'Kies een voorgedefinieerde query',
+	'UI:Edit:SearchQuery' => 'Kies een vooraf gedefinieerde query',
 	'UI:Edit:TestQuery' => 'Test query',
 	'UI:Combo:SelectValue' => '--- selecteer een waarde ---',
 	'UI:Label:SelectedObjects' => 'Geselecteerde objecten: ',
@@ -992,11 +992,11 @@ We hopen dat je even hard van deze versie geniet als dat we zelf ervan hebben ge
 </ol>
 </p>
 <p>
-<i><b>Acties</b></i> definieer de acties die uitgevoerd moeten worden als de trigger geactiveerd wordt. Er zijn 2 soorten standaardacties:
+<i><b>Acties</b></i> definieer de acties die uitgevoerd moeten worden als de triggers geactiveerd worden. Er zijn 2 soorten standaardacties:
 <ol>
-	<li>Stuur een e-mail: bij deze acties definieer je een sjabloon voor de berichttekst en ook parameters zoals ontvanger(s), prioriteit, enz.<br />
+	<li>Stuur een e-mail: Bij deze acties definieer je een sjabloon voor het bericht en ook parameters zoals ontvanger(s), prioriteit, enz.<br />
 	Een <a href="../setup/email.test.php" target="_blank">speciale testpagina (email.test.php)</a> is beschikbaar voor het testen en oplossen van eventuele problemen met jouw PHP e-mailconfiguratie.</li>
-	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerde iTop-data door te sturen naar een URL.</li>
+	<li>Webhooks: Staat toe om te integreren met toepassingen van derde partijen, door gestructureerd data te sturen naar een URL.</li>
 </ol>
 </p>
 <p>Acties moeten gekoppeld zijn aan triggers.

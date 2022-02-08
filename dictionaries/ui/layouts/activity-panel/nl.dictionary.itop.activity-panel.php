@@ -47,7 +47,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Door op deze knop te drukken, wordt alle invoer in elke log tegelijk opgeslagen.',
 
 	// Notification entry
-	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Klik om de tab met notificaties te openen en meer info te zien',
+	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Klik om het tabblad Notificaties te openen en meer info te zien',
 
 	// Placeholder
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Nog geen activiteit.',
