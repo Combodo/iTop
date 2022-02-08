@@ -11,4 +11,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'CAS:Login:SignIn' => 'Inloggen met CAS',
 	'CAS:Login:SignInTooltip' => 'Klik hier om aan te melden via de CAS-server',
 ));
-

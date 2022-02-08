@@ -90,4 +90,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Attachment/Attribute:contact_id' => 'ID Contact',
 	'Class:Attachment/Attribute:contact_id+' => '',
 ));
-

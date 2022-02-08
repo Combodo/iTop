@@ -1585,4 +1585,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Software+' => 'Softwarecatalogus',
 ));
 ?>
-

@@ -155,4 +155,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Filter:SearchInput:Placeholder' => 'bv. wifi-verbinding',
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));
-

@@ -1686,4 +1686,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
  'UI:Dashboard:Edit' => 'Bewerk deze pagina...',
  'UI:Dashboard:Revert' => 'Herstel de originele versie...',
 ));
-

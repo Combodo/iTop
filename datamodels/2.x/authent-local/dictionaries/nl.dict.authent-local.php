@@ -48,4 +48,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UserLocal:password:expiration' => 'De velden hieronder vereisen een extensie.',
 	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Je kan geen eenmalig wachtwoord instellen voor je eigen gebruiker.',
 ));
-

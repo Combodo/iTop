@@ -94,4 +94,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:LostAttachments:StoredAsInlineImage' => 'Opgeslagen als afbeelding in tekst',
 	'DBTools:LostAttachments:History' => 'Bijlage "%1$s" werd hersteld met de databasetools'
 ));
-

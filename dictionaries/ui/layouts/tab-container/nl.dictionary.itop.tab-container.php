@@ -8,4 +8,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UIBlock:Error:AddBlockNotTabForbidden' => 'Kan blok %1$s niet toevoegen aan %2$s (enkel tabbladen zijn toegelaten)',
 	'UIBlock:TabContainer:RemoteTabLoad' => 'Klik om dit tabblad in te laden',
 ]);
-

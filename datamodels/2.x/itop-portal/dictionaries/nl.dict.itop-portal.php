@@ -39,4 +39,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:OngoingRequests:Tab:Resolved' => 'Opgelost',
 	'Brick:Portal:ClosedRequests:Title' => 'Gesloten verzoeken',
 ));
-
