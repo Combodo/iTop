@@ -365,4 +365,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'theme:test-red' => 'Test instance (Red)',
 ));
 
-

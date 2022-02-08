@@ -98,4 +98,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:FunctionalCI/Attribute:tickets_list+' => 'Alle tickets voor dit configuratie-item',
 ));
 
-

@@ -9,4 +9,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UIBlock:TabContainer:RemoteTabLoad' => 'Klik om dit tabblad in te laden',
 ]);
 
-

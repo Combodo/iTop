@@ -56,4 +56,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activiteitenpaneel',
 	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Klik om het activiteitenpaneel te openen',
 ));
-

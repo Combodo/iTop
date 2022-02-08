@@ -96,4 +96,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:FAQ:Title+' => '<p>Gehaast?</p><p>Bekijk deze lijst van veelgestelde vragen. Misschien staat er al een antwoord tussen.</p>',
 ));
 
-

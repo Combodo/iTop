@@ -32,4 +32,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:KeyboardShortcut:FocusFilter' => 'Filter menu\'s',
 
 ));
-

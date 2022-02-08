@@ -21,4 +21,3 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label' => 'Vorige pagina\'s',
 ));
-

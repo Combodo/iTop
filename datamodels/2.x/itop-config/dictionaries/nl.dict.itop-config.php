@@ -38,4 +38,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'config-saved-warning-db-password' => 'Wijzigingen zijn opgeslagen, maar de backup zal niet werken doordat het databasewachtwoord karakters bevat die niet ondersteund zijn.',
 ));
 
-

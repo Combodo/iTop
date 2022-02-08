@@ -25,4 +25,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Component:GlobalSearch:HistoryDisabled' => 'Zoekgeschiedenis staat uit',
 	'UI:Component:GlobalSearch:KeyboardShortcut:OpenDrawer' => 'Open globale zoekopdracht',
 ));
-

@@ -95,4 +95,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'DBTools:LostAttachments:History' => 'Bijlage "%1$s" werd hersteld met de databasetools'
 ));
 
-

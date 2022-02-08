@@ -23,4 +23,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 
 - Het R&amp;D team',
 ));
-

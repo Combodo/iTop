@@ -146,4 +146,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:Problem:KnownErrors+' => 'Alle gekende fouten',
 ));
 
-

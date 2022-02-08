@@ -62,4 +62,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-success-restore' => 'Herstel is succesvol voltooid.',
 ));
 
-

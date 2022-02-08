@@ -47,4 +47,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:ChooseAPlaceholder+'                               => 'Kies een standaard afbeelding die getoond wordt als het contact gelinkt aan jouw gebruiker geen eigen afbeelding heeft.',
 ));
 
-

@@ -259,4 +259,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:Document/Attribute:services_list' => 'Services',
 	'Class:Document/Attribute:services_list+' => 'Alle services gerelateerd aan dit document.',
 ));
-

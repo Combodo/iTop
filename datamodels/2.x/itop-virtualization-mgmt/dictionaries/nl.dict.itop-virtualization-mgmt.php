@@ -25,4 +25,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	// Dictionary entries go here
 ));
 
-

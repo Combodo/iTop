@@ -20,4 +20,3 @@
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Component:Field:BulkModify:UnknownValues:Tooltip' => 'Onbekende waardes',
 ));
-

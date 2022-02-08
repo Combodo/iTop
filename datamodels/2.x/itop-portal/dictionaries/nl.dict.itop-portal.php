@@ -40,4 +40,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:ClosedRequests:Title' => 'Gesloten verzoeken',
 ));
 
-

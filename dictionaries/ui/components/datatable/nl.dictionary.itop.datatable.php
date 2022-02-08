@@ -29,4 +29,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Datatables:Language:Sort:Ascending'    => 'Oplopend sorteren',
 	'UI:Datatables:Language:Sort:Descending'   => 'Aflopend sorteren',
 ));
-

@@ -156,4 +156,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Brick:Portal:Filter:SearchInput:Submit' => 'Zoek',
 ));
 
-

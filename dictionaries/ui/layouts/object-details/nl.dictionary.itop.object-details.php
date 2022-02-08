@@ -10,4 +10,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', [
 	'UI:Layout:ObjectDetails:KeyboardShortcut:SaveObject' => 'Bewaar huidig object',
 ]);
 
-

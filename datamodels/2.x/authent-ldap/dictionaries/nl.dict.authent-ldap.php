@@ -39,4 +39,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:UserLDAP+' => 'Gebruiker die aanmeldt via LDAP',
 ));
 
-
