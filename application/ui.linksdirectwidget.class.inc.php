@@ -75,9 +75,15 @@ class UILinksWidgetDirect
 	 * @param array $aArgs
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (handling wrong values at method start)
 	 */
-	public function Display(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj)
+	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
+		if (empty($aArgs)) {
+			$aArgs = [];
+		}
+
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		switch($oLinksetDef->GetEditMode())
 		{
@@ -127,8 +133,10 @@ class UILinksWidgetDirect
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
 	 * @param bool $bDisplayMenu
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, always called with default value)
 	 */
-	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $bDisplayMenu)
+	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $bDisplayMenu)
 	{
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$sTargetClass = $oLinksetDef->GetLinkedClass();
@@ -228,8 +236,10 @@ class UILinksWidgetDirect
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
 	 * @param array $aButtons
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, caller already handles it)
 	 */
-	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
+	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
 	{
 		$aAttribs = $this->GetTableConfig();
 		$oValue->Rewind();

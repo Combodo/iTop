@@ -75,6 +75,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	 *
 	 * @group skipPostBuild
 	 * @uses utils::GetItopMinorVersion()
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°4714 uses new {@link ITOP_CORE_VERSION} constant
 	 */
 	public function testITopModulesPhpVersion(): void {
 		if (is_dir(APPROOT.'datamodels/2.x')) {
@@ -89,8 +91,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		$sPath = $DatamodelsPath.'/*/module.*.php';
 		$aPhpFiles = glob($sPath);
 
-		$sMinorVersion = \utils::GetItopMinorVersion();
-		$sExpectedVersion = '/^'.str_replace('.', '\.', $sMinorVersion).'\.\d+$/';
+		$sExpectedVersion = ITOP_CORE_VERSION;
 
 		$aModuleWithError = [];
 		foreach ($aPhpFiles as $sPhpFile) {

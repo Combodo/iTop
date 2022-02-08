@@ -2311,6 +2311,9 @@ EOF;
 	 * Replaces a node by another one, making sure that recursive nodes are preserved
 	 *
 	 * @param MFElement $oNewNode The replacement
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `MFReplaceWith`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * throws fatal error in PHP 8.0)
 	 */
 	protected function ReplaceWithSingleNode($oNewNode)
 	{
