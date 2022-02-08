@@ -34,7 +34,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title'                => 'Sneltoetsen',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint'           => 'Typ een sneltoets',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip'       => 'Neem een sneltoets op',
-	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'         => 'Standaard',
+	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset'         => 'Reset',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Reset:Tooltip' => 'Terugzetten naar de standaard sneltoetsen',
 	'UI:Preferences:Tabs:Title'                                        => 'Tabs',
 	'UI:Preferences:Tabs:Layout:Label'                                 => 'Layout',
@@ -44,7 +44,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Preferences:Tabs:Scrollable:Classic'                           => 'Klassiek',
 	'UI:Preferences:Tabs:Scrollable:Scrollable'                        => 'Scrollbaar',
 	'UI:Preferences:ChooseAPlaceholder'                                => 'Gebruikersafbeelding placeholder',
-	'UI:Preferences:ChooseAPlaceholder+'                               => 'Kies een placeholder afbeelding die getoond wordt als het contact gelinkt aan jouw gebruiker geen eigen afbeelding heeft.',
+	'UI:Preferences:ChooseAPlaceholder+'                               => 'Kies een standaard afbeelding die getoond wordt als het contact gelinkt aan jouw gebruiker geen eigen afbeelding heeft.',
 ));
 
 

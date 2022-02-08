@@ -237,7 +237,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:CMDBChange/Attribute:date+' => 'De datum en tijd waarop de aanpassingen zijn waargenomen ',
 	'Class:CMDBChange/Attribute:userinfo' => 'Info',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Info over wie/wat (bv. welke service) de aanpassing heeft doorgevoerd',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Interactie door gebruiker in de GUI',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Gebruikersinteractie in de GUI',
 	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script',
 	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in de GUI',
 	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Verwerking e-mail',
@@ -662,8 +662,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 //
 
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (bij vermelden object)',
-	'Class:TriggerOnObjectMention+' => 'Trigger bij vermelden object (@xxx) van een object van de opgegeven klasse (of subklasse ervan) in een log',
+	'Class:TriggerOnObjectMention' => 'Trigger (bij vermelden van object)',
+	'Class:TriggerOnObjectMention+' => 'Trigger bij vermelden (@xxx) van een object van de opgegeven klasse (of subklasse ervan) in een log',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filter',
 	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Beperk de lijst van vermelde objecten die de trigger zullen activeren. Indien leeg, zullen alle objecten (van eender welke klasse) de trigger activeren.',
 ));
@@ -1095,7 +1095,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Laatste poging',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ongeldig formmaat bij de configuratie van "async_tasks_retries[%1$s]". Er wordt een Array verwacht met de volgende sleutels: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]". Er wordt een Array verwacht met de volgende sleutels: %2$s',
     'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]": onverwachte sleutel "%2$s". Enkel deze sleutels worden verwacht: %3$s',
 ));
 

@@ -22,7 +22,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduceer',
 	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Sluit',
 	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Laad meer items',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Laad alle vorige iteems',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Laad alle vorige items',
 
 	// Tabs
 	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activiteiten',

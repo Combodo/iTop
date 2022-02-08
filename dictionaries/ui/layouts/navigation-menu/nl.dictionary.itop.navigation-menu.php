@@ -19,7 +19,7 @@
 // Navigation menu
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Layout:NavigationMenu:CompanyLogo:AltText' => 'Bedrijfslogo',
-	'UI:Layout:NavigationMenu:Silo:Label' => 'Select de organisatie waarop gefilterd moet worden',
+	'UI:Layout:NavigationMenu:Silo:Label' => 'Selecteer de organisatie waarop gefilterd moet worden',
 	'UI:Layout:NavigationMenu:Toggler:Tooltip' => 'Vergroot / Verberg',
 	'UI:Layout:NavigationMenu:Toggler:TooltipWithSiloLabel' => 'Vergroot / Verberg (Gefilterd op %1$s)',
 	'UI:Layout:NavigationMenu:MenuFilter:Input:Placeholder' => 'Filter...',

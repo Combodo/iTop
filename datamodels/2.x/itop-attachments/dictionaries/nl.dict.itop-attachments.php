@@ -42,7 +42,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Attachments:Error:FileTooLarge' => 'Het bestand is te groot om geüpload te worden: %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'Het bestand is leeg en kan niet worden toegevoegd.
 Mogelijk heb je een leeg bestand geüpload,
-of vraag de iTop administrator om na te kijken of de schijf van de iTop server vol zit',
+of vraag de iTop administrator om de opslag van de iTop server na te kijken',
 	'Attachments:Render:Icons' => 'Toon als pictogram',
 	'Attachments:Render:Table' => 'Toon als lijst',
 	'UI:Attachments:DropYourFileHint' => 'Sleep bestanden in dit gebied',
