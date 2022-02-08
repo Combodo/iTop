@@ -35,7 +35,7 @@ $(function()
 			{
 				// In case there is an hidden input having the same id (somewhere else in the page), the change event does not occur unless the input loses the focus
 				// To reduce the impact, let's handle keyup as well
-				$('#'+this.options.field_id, this.element).on('change.itop-property-field keyup.itop-property-field', function() { me._on_change(); });
+				$('#'+this.options.field_id, this.element).on('change.itop-property-field keyup.itop-property-field input.itop-property-field', function() { me._on_change(); });
 				this.value = this._get_field_value();
 			}
 			this.element.find(".prop_apply").on('click.itop-property-field', function() { me._do_apply(); });

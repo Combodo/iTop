@@ -1236,7 +1236,7 @@ class DBObjectSearch extends DBSearch
 				elseif (MetaModel::IsParentClass($oRightFilter->GetFirstJoinedClass(), $oLeftFilter->GetClass()))
 				{
 					// Specialize $oRightFilter
-					$oRightFilter->ChangeClass($oLeftFilter->GetClass());
+					$oRightFilter->ChangeClass($oLeftFilter->GetFirstJoinedClass());
 				}
 				else
 				{

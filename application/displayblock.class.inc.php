@@ -539,8 +539,10 @@ class DisplayBlock
 	 * @throws DictExceptionMissingString
 	 * @throws MySQLException
 	 * @throws Exception
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 add type hinting to $aExtraParams
 	 */
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, string $sId)
 	{
 		$sHtml = '';
 		$oBlock = null;
@@ -1732,11 +1734,10 @@ class MenuBlock extends DisplayBlock
 	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \ReflectionException
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value and add type hinting on $aExtraParams for PHP 8.0 compatibility
 	 */
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, string $sId)
 	{
 		$oRenderBlock = new UIContentBlock();
 

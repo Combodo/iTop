@@ -26,7 +26,7 @@ require_once (__DIR__.DIRECTORY_SEPARATOR.'update.classes.inc.php');
 $aFilesUpdaters = array(
 	new iTopVersionFileUpdater(),
 	new DatamodelsModulesFiles(),
-	new ConstantFileUpdater('ITOP_CORE_VERSION', 'core/config.class.inc.php'),
+	new ConstantFileUpdater('ITOP_CORE_VERSION', 'approot.inc.php'),
 );
 
 if (count($argv) === 1)

@@ -2367,17 +2367,17 @@
         },
         {
             "name": "symfony/twig-bundle",
-            "version": "v3.4.36",
-            "version_normalized": "3.4.36.0",
+            "version": "v3.4.47",
+            "version_normalized": "3.4.47.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/twig-bundle.git",
-                "reference": "d39ed8f5df62aeeeb27a6f3bf7f58a6c02a58ea9"
+                "reference": "977b3096e2df96bc8a8d2329e83466cfc30c373d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/twig-bundle/zipball/d39ed8f5df62aeeeb27a6f3bf7f58a6c02a58ea9",
-                "reference": "d39ed8f5df62aeeeb27a6f3bf7f58a6c02a58ea9",
+                "url": "https://api.github.com/repos/symfony/twig-bundle/zipball/977b3096e2df96bc8a8d2329e83466cfc30c373d",
+                "reference": "977b3096e2df96bc8a8d2329e83466cfc30c373d",
                 "shasum": ""
             },
             "require": {
@@ -2409,13 +2409,8 @@
                 "symfony/web-link": "~3.3|~4.0",
                 "symfony/yaml": "~2.8|~3.0|~4.0"
             },
-            "time": "2019-10-01T15:13:36+00:00",
+            "time": "2020-10-24T10:57:07+00:00",
             "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.4-dev"
-                }
-            },
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
@@ -2441,6 +2436,23 @@
             ],
             "description": "Symfony TwigBundle",
             "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/twig-bundle/tree/v3.4.47"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
             "install-path": "../symfony/twig-bundle"
         },
         {

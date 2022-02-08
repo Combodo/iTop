@@ -2394,43 +2394,19 @@ class utils
 	}
 
 	/**
-	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 * @return string eg : '2_7_0' if iTop core version is '2.7.5-2'
+	 * @throws \ApplicationException if constant value is invalid
+	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetItopVersionWikiSyntax() {
-		$sMinorVersion = self::GetItopMinorVersion();
+	public static function GetCoreVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
+	{
+		$aExplodedVersion = explode('.', $sItopVersion);
 
-		return str_replace('.', '_', $sMinorVersion).'_0';
-	}
-
-	/**
-	 * @param string $sPatchVersion if non provided, will call GetItopPatchVersion
-	 *
-	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
-	 * @throws \Exception
-	 */
-	public static function GetItopMinorVersion($sPatchVersion = null) {
-		if (is_null($sPatchVersion)) {
-			$sPatchVersion = self::GetItopPatchVersion();
-		}
-		$aExplodedVersion = explode('.', $sPatchVersion);
-
-		if (count($aExplodedVersion) < 2) {
-			throw new Exception('iTop version is wrongfully configured!');
-		}
-		if (($aExplodedVersion[0] == '') || ($aExplodedVersion[1] == '')) {
-			throw new Exception('iTop version is wrongfully configured!');
+		if ((false === isset($aExplodedVersion[0])) || (false === isset($aExplodedVersion[1]))) {
+			throw new ApplicationException('iTop version is wrongfully configured!');
 		}
 
-		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
-	}
-
-	/**
-	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
-	 */
-	public static function GetItopPatchVersion() {
-		$aExplodedVersion = explode('-', ITOP_VERSION);
-
-		return $aExplodedVersion[0];
+		return "{$aExplodedVersion[0]}_{$aExplodedVersion[1]}_0";
 	}
 
 	/**
