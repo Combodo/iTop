@@ -391,7 +391,7 @@ JS
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oActionMenuBlock = $oBlock->GetRenderContent($oPage);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage, [], uniqid('', true));
 			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
