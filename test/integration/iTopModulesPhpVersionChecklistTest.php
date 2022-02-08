@@ -25,30 +25,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	/**
-	 * We had a problem when version was switched from 2.8.0 to 3.0.0, so this test aims to detect such problems
-	 *
-	 * @param string $sVersion
-	 * @param string $sExpectedMinVersion if null the test will expects an exception to occur
-	 *
-	 * @throws \Exception
-	 * @since 3.0.0
-	 * @dataProvider GetItopMinorVersionProvider
-	 */
-	public function testGetItopMinorVersion($sVersion, $sExpectedMinVersion) {
-		if (is_null($sExpectedMinVersion)) {
-			$this->expectException(\Exception::class);
-		}
-		$sActualMinVersion = \utils::GetItopMinorVersion($sVersion);
-		if (!is_null($sExpectedMinVersion)) {
-			$this->assertEquals($sExpectedMinVersion, $sActualMinVersion);
-		}
-	}
-
-	public function GetItopMinorVersionProvider() {
-		return [['2.8.0', '2.8'], ['3.0.0', '3.0'], ['3.', null], ['3', null]];
-	}
-
-	/**
 	 * @param string $sPhpFile iTop module file
 	 *
 	 * @return string module version
@@ -97,9 +73,8 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 		foreach ($aPhpFiles as $sPhpFile) {
 			$sActualVersion = $this->GetItopModuleVersion($sPhpFile);
 
-			if (!preg_match($sExpectedVersion, $sActualVersion)) {
-				$aModuleWithError[$sPhpFile] = $sActualVersion;
-			}
+			$this->assertSame($sExpectedVersion, $sActualVersion,
+				'Module desc file does not contain the same version as the core: '.$sPhpFile);
 		}
 
 		self::assertEquals([], $aModuleWithError, 'Some modules have wrong versions ! They should match '.$sExpectedVersion);
