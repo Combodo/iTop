@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Application\TwigBase\Twig;
 
 
+use AttributeDate;
 use AttributeDateTime;
 use AttributeText;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
@@ -55,6 +56,10 @@ class Extension
 						if (preg_match('@^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$@', trim($sDate)))
 						{
 							return AttributeDateTime::GetFormat()->Format($sDate);
+						}
+						if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate)))
+						{
+							return AttributeDate::GetFormat()->Format($sDate);
 						}
 					}
 					catch (Exception $e)

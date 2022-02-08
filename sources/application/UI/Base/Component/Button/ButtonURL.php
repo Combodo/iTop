@@ -31,6 +31,7 @@ class ButtonURL extends Button
 {
 	// Overloaded constants
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/button/buttonurl';
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	// Specific constants
 	/** @var string ENUM_TARGET_BLANK */

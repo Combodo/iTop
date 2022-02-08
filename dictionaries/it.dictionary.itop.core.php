@@ -707,7 +707,7 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => 'Contatto a cui notificare',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contatto a cui notificare in caso di errore ',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icona del collegamento ipertestuale',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Una (piccola) immagine del collegamento ipertestuale che rappresenta l\'applicazione con cui è sincronizzato QiTop',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Una (piccola) immagine del collegamento ipertestuale che rappresenta l\'applicazione con cui è sincronizzato '.ITOP_APPLICATION_SHORT,
 	'Class:SynchroDataSource/Attribute:url_application' => 'Collegamento ipertestuale all\'applicazione',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Collegamento ipertestuale all\'oggetto ITOP nell\'applicazione esterna con la quale QiTop è sincronizzato (se applicabile). Possibili segnaposto: $this->attribute$ e $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Policy di riconciliazione',
@@ -1089,8 +1089,8 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

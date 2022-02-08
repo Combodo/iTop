@@ -326,12 +326,12 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'BooleanLabel:no' => 'いいえ',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' login~~',
 	'Menu:WelcomeMenu' => 'ようこそ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage' => 'ようこそ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage+' => 'ようこそ、iTopへ',// Duplicated into itop-welcome-itil (will be removed from here...)
-	'UI:WelcomeMenu:Title' => 'ようこそ、iTopへ',
+	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'UI:WelcomeMenu:Title' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>iTopは、オープンソースの、完結したIT運用ポータルです。</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'は、オープンソースの、完結したIT運用ポータルです。</p>
 <ul>以下を含みます。
 <li>ITインベントリを文書化し、管理するための完全なCMDB(構成管理データベース)。</li>
 <li>IT環境で発生する出来事を追跡、共有するためのインシデント管理モジュール。</li>
@@ -342,7 +342,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 </ul>
 <p>すべてのモジュールはお互いに独立しており、別個にセットアップが可能です。</p>',
 
-	'UI:WelcomeMenu:RightBlock' => '<p>iTopはサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
+	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.'はサービスプロバイダ志向であり、ITエンジニアが複数の顧客や組織を簡単に管理できるようになります。
 <ul>iTopは、機能豊富な下記のビジネスプロセスのセットを提供します。
 <li>IT管理の実効性の強化。</li>
 <li>IT運用効率化の推進。</li>
@@ -511,7 +511,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:SearchValue:CheckAll' => 'Check All~~',
 	'UI:SearchValue:UncheckAll' => 'Uncheck All~~',
 	'UI:SelectOne' => '-- 選んでください --',
-	'UI:Login:Welcome' => 'iTopへようこそ',
+	'UI:Login:Welcome' => ITOP_APPLICATION_SHORT.'へようこそ',
 	'UI:Login:IncorrectLoginPassword' => 'ログイン/パスワードが正しくありません。再度入力ください。',
 	'UI:Login:IdentifyYourself' => '続けて作業を行う前に認証を受けてください。',
 	'UI:Login:UserNamePrompt' => 'ユーザー名',
@@ -547,17 +547,17 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Login:RetypeNewPasswordPrompt'             => '新しいパスワードを再度入力してください。',
 	'UI:Login:IncorrectOldPassword'                => 'エラー：既存パスワードが正しくありません。',
 	'UI:LogOffMenu'                                => 'ログオフ',
-	'UI:LogOff:ThankYou'                           => 'iTopをご利用いただき、ありがとうございます。',
+	'UI:LogOff:ThankYou'                           => ITOP_APPLICATION_SHORT.'をご利用いただき、ありがとうございます。',
 	'UI:LogOff:ClickHereToLoginAgain'              => '再度ログインするにはここをクリックしてください...',
 	'UI:ChangePwdMenu'                             => 'パスワードを変更する...',
 	'UI:Login:PasswordChanged'                     => 'パスワードは変更されました。',
-	'UI:AccessRO-All'                              => 'iTopは参照専用です。',
-	'UI:AccessRO-Users'                            => 'エンドユーザの方はiTopは参照専用です。',
+	'UI:AccessRO-All'                              => ITOP_APPLICATION_SHORT.'は参照専用です。',
+	'UI:AccessRO-Users'                            => 'エンドユーザの方は'.ITOP_APPLICATION_SHORT.'は参照専用です。',
 	'UI:ApplicationEnvironment'                    => 'アプリケーション環境: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch'               => '2度入力された新しいパスワードが一致しません!',
-	'UI:Button:Login'                              => 'iTopへ入る',
-	'UI:Login:Error:AccessRestricted'              => 'iTopへのアクセスは制限されています。iTop管理者に問い合わせしてください。',
-	'UI:Login:Error:AccessAdmin'                   => '管理者権限をもつユーザにアクセスが制限されています。iTop管理者に問い合わせしてください。',
+	'UI:Button:Login'                              => ITOP_APPLICATION_SHORT.'へ入る',
+	'UI:Login:Error:AccessRestricted'              => ITOP_APPLICATION_SHORT.'へのアクセスは制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
+	'UI:Login:Error:AccessAdmin'                   => '管理者権限をもつユーザにアクセスが制限されています。'.ITOP_APPLICATION_SHORT.'管理者に問い合わせしてください。',
 	'UI:Login:Error:WrongOrganizationName'         => 'Unknown organization~~',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Multiple contacts have the same e-mail~~',
 	'UI:Login:Error:NoValidProfiles'               => 'No valid profile provided~~',
@@ -706,7 +706,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'An error occured while running the query~~',
 	'UI:Query:UrlForExcel' => 'MS-Excel Webクエリに使用するURL',
-	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of iTop. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
+	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested herebelow points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.~~',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' オブジェクトスキーマ',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => 'カテゴリ <b>%1$s</b>',
@@ -824,7 +824,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'このオブジェクトの削除を要求する前に、上記にリストされている手動操作を実行してください。',
 	'UI:Delect:Confirm_Object' => '%1$sを削除しようとしています。確認ください。',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '以下の%2$sクラスの%1$dオブジェクトを削除しようとしています。確認ください。',
-	'UI:WelcomeToITop' => 'iTopへようこそ',
+	'UI:WelcomeToITop' => ITOP_APPLICATION_SHORT.'へようこそ',
 	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$sの詳細',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - エラー',
 	'UI:ObjectDoesNotExist' => '申し訳ございません。このオブジェクトは既に存在しません。(あるいは参照する権限がありません。)',
@@ -857,7 +857,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Class_Object_Updated' => '%1$s (%2$s) は更新されました。',
 	'UI:BulkDeletePageTitle' => ITOP_APPLICATION_SHORT.' - バルク削除',
 	'UI:BulkDeleteTitle' => '削除するオブジェクトを選択してください。',
-	'UI:PageTitle:ObjectCreated' => 'iTopオブジェクトが作成されました。',
+	'UI:PageTitle:ObjectCreated' => ITOP_APPLICATION_SHORT.'オブジェクトが作成されました。',
 	'UI:Title:Object_Of_Class_Created' => '%1$s - %2$s が作成されました。',
 	'UI:Apply_Stimulus_On_Object_In_State_ToTarget_State' => '状態%3$sにあるオブジェクト：%2$sに、ターゲット状態:%4$sで、%1$sを適用します。',
 	'UI:ObjectCouldNotBeWritten' => 'そのオブジェクトへは書き込みできません: %1$s',
@@ -1078,7 +1078,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:RelationTooltip:Redundancy' => 'Redundancy~~',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# of impacted items: %1$d / %2$d~~',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Critical threshold: %1$d / %2$d~~',
-	'Portal:Title' => 'iTopユーザポータル',
+	'Portal:Title' => ITOP_APPLICATION_SHORT.'ユーザポータル',
 	'Portal:NoRequestMgmt' => '%1$s さん, このページにリダイレクトされました。あなたのプロファイルは、「ポータルユーザ」として登録されています。残念ながら、iTop は、「要求管理」としてインストールされていません。管理者に問い合わせてください。',
 	'Portal:Refresh' => 'リフレッシュ',
 	'Portal:Back' => '戻る',
@@ -1413,7 +1413,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:AddAnExisting_Class' => 'Add objects of type %1$s...~~',
 	'UI:SelectionOf_Class' => 'Selection of objects of type %1$s~~',
 
-	'UI:AboutBox' => 'About iTop...~~',
+	'UI:AboutBox' => 'About '.ITOP_APPLICATION_SHORT.'...~~',
 	'UI:About:Title' => 'About '.ITOP_APPLICATION_SHORT.'~~',
 	'UI:About:DataModel' => 'Data model~~',
 	'UI:About:Support' => 'Support information~~',
@@ -1623,9 +1623,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:DataSources' => '同期データソース',
 	'Menu:DataSources+' => '全ての同期データソース',
 	'Menu:WelcomeMenu' => 'ようこそ',
-	'Menu:WelcomeMenu+' => 'ようこそ、iTopへ',
+	'Menu:WelcomeMenu+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 	'Menu:WelcomeMenuPage' => 'ようこそ',
-	'Menu:WelcomeMenuPage+' => 'ようこそ、iTopへ',
+	'Menu:WelcomeMenuPage+' => 'ようこそ、'.ITOP_APPLICATION_SHORT.'へ',
 	'Menu:AdminTools' => '管理ツール',
 	'Menu:AdminTools+' => '管理ツール',
 	'Menu:AdminTools?' => 'このツールは管理者プロフィールを持つユーザのみアクセスが可能です。',

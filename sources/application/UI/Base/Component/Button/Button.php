@@ -35,7 +35,11 @@ class Button extends UIBlock
 	public const BLOCK_CODE = 'ibo-button';
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/button/layout';
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = 'base/components/button/layout';
-
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/components/button.js',
+	];
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
+	
 	// Specific constants
 	/** @var string ENUM_ACTION_TYPE_REGULAR */
 	public const ENUM_ACTION_TYPE_REGULAR = 'regular';

@@ -2591,6 +2591,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'iApplicationUIExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iAttributeNoGroupBy' => __DIR__ . '/../..' . '/core/attributedef.class.inc.php',
         'iBackgroundProcess' => __DIR__ . '/../..' . '/core/backgroundprocess.inc.php',
+        'iBackofficeDictEntriesExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
+        'iBackofficeDictEntriesPrefixesExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iBackofficeEarlyScriptExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iBackofficeInitScriptExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',
         'iBackofficeLinkedScriptsExtension' => __DIR__ . '/../..' . '/application/applicationextension.inc.php',

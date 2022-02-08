@@ -17,6 +17,16 @@
           <stylesheet id="custom">../css/custom.scss</stylesheet>
         </stylesheets>
       </theme>
+      <theme id="light-grey">
+        <variables/>
+        <imports>
+          <import id="css-variables">../css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
+          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+        </stylesheets>
+      </theme>
     </themes>
   </branding>
   <classes>

@@ -19,10 +19,10 @@ trait tInputLabel
 	/** @var string|null Label to display with the input (null for no label) */
 	protected $sLabel = null;
 	/**
-	 * @var string $sDescription for tooltip
+	 * @var string|null $sDescription for tooltip
 	 * @since 3.0.1
 	 */
-	protected $sDescription;
+	protected $sDescription = null;
 
 	/**
 	 * @return bool
@@ -88,29 +88,35 @@ trait tInputLabel
 	 */
 	public function HasLabel(): bool
 	{
-		return $this->sLabel != null;
+		return strlen($this->sLabel) > 0;
 	}
+
 	/**
-	 * @return mixed
+	 * @return string|null
+	 * @since 3.0.1
 	 */
-	public function GetDescription()
+	public function GetDescription(): ?string
 	{
 		return $this->sDescription;
 	}
 
 	/**
-	 * @param mixed $sDescription
+	 * @param string|null $sDescription
+	 * @return $this
+	 * @since 3.0.1
 	 */
-	public function SetDescription($sDescription)
+	public function SetDescription(?string $sDescription)
 	{
 		$this->sDescription = $sDescription;
 		return $this;
 	}
+
 	/**
 	 * @return bool
+	 * @since 3.0.1
 	 */
 	public function HasDescription(): bool
 	{
-		return $this->sDescription != null;
+		return strlen($this->sDescription) > 0;
 	}
 }

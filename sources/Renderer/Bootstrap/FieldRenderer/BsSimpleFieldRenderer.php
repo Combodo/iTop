@@ -592,26 +592,32 @@ HTML
 
 				$sEntryUserLogin = $aEntries[$i]['user_login'];
 				$iEntryUserId = $aEntries[$i]['user_id'];
-
-				// Retrieve (and cache) profile picture if available (standard datamodel)
-				// Note: Here the cache is more about nor retrieving the User object several times rather than computing the picture URL
-				if (!array_key_exists($iEntryUserId, $aContactPicturesCache)) {
-					// First, check if we should display the picture
-					if ($bHideContactPicture === true) {
-						$sEntryContactPictureAbsoluteUrl = null;
+				// - Friendlyname
+				if (false === empty($iEntryUserId)) {
+					$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
+					if(!is_null($oEntryUser)) {
+						$sEntryUserLogin = UserRights::GetUserFriendlyName($oEntryUser->Get('login'));
 					}
-					// Otherwise try to retrieve one for the current contact
-					else {
-						$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
-						if(is_null($oEntryUser)) {
+
+					// Retrieve (and cache) profile picture if available (standard datamodel)
+					// Note: Here the cache is more about nor retrieving the User object several times rather than computing the picture URL
+					if (!array_key_exists($iEntryUserId, $aContactPicturesCache)) {
+						// First, check if we should display the picture
+						if ($bHideContactPicture === true) {
 							$sEntryContactPictureAbsoluteUrl = null;
 						}
+						// Otherwise try to retrieve one for the current contact
 						else {
-							$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
+							if(is_null($oEntryUser)) {
+								$sEntryContactPictureAbsoluteUrl = null;
+							}
+							else {
+								$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
+							}
 						}
-					}
 
-					$aContactPicturesCache[$iEntryUserId] = $sEntryContactPictureAbsoluteUrl;
+						$aContactPicturesCache[$iEntryUserId] = $sEntryContactPictureAbsoluteUrl;
+					}
 				}
 
 				// Open user block if previous user was different or if previous date was different

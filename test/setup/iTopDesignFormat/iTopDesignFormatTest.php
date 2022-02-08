@@ -35,11 +35,10 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	 *
 	 * @throws \Exception
 	 */
-	public function testConvert($sTargetVersion, $sXmlFileName)
+	public function testConvert($sTargetVersion, $sXmlFileName, $iExpectedErrors = 0, $sFirstErrorMessage = '')
 	{
 		$sSamplesRelDirPath = 'Convert-samples/';
 		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
-		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
 
 		$oInputDocument = new DOMDocument();
 		libxml_clear_errors();
@@ -47,18 +46,84 @@ class TestForITopDesignFormatClass extends ItopTestCase
 		$oInputDocument->loadXML($sInputXml);
 		$oInputDocument->formatOutput = true;
 		$oDesignFormat = new iTopDesignFormat($oInputDocument);
-		$oDesignFormat->Convert($sTargetVersion);
-		$sConvertedXml = $oInputDocument->saveXML();
+		$bResult = $oDesignFormat->Convert($sTargetVersion);
+		$aErrors = $oDesignFormat->GetErrors();
+		$this->assertCount($iExpectedErrors, $aErrors);
+		if ($iExpectedErrors > 0) {
+			$this->assertFalse($bResult);
+			$this->assertEquals($sFirstErrorMessage, $aErrors[0]);
+		}
 
+		$sConvertedXml = $oInputDocument->saveXML();
+		// Erase dynamic values
+		$sConvertedXml = preg_replace('@<trashed_node id="\w+"@', '<trashed_node id="XXX"', $sConvertedXml);
+		$sExpectedXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.expected');
 		$this->assertEquals($sExpectedXml, $sConvertedXml);
 	}
 
 	public function ConvertProvider()
 	{
+		return [
+			'1.7 to 1.6' => ['1.6', '1.7_to_1.6'],
+			'1.6 to 1.7 2' => ['1.7', '1.6_to_1.7_2'],
+			'1.7 to 1.6 2' => ['1.6', '1.7_to_1.6_2'],
+			'1.7 to 3.0' => ['3.0', '1.7_to_3.0'],
+			'3.0 to 1.7' => ['1.7', '3.0_to_1.7'],
+			'3.0 to 1.7 no previous' => ['1.7', '3.0_to_1.7_no_previous'],
+			'3.0 to 1.7 collision' => ['1.7', '3.0_to_1.7_collision', 1, 'Trying to restore an existing node /itop_design/branding/themes/theme[@id="light-grey"] from version 1.7'],
+		];
+	}
+
+	/**
+	 * @covers       iTopDesignFormat::Convert
+	 * @dataProvider ConvertBackAndForthProvider
+	 *
+	 * @param string $sTargetVersion
+	 * @param string $sXmlFileName Example "1.7_to_1.6". Corresponding files should exist with the ".input" and ".Expected" suffix
+	 *
+	 * @throws \Exception
+	 */
+	public function testConvertBackAndForth($sTargetVersion, $sXmlFileName)
+	{
+		$sSamplesRelDirPath = 'Convert-samples/';
+		$sInputXml = $this->GetFileContent($sSamplesRelDirPath.$sXmlFileName.'.input');
+
+		$oInputDocument = new DOMDocument();
+		libxml_clear_errors();
+		$oInputDocument->preserveWhiteSpace = false;
+		$oInputDocument->loadXML($sInputXml);
+
+		$oXPath = new DOMXPath($oInputDocument);
+		$oItopDesignNode = $oXPath->query('/itop_design')->item(0);
+		if (!$oItopDesignNode) {
+			$this->fail('Bad XML format');
+		}
+		$sSourceVersion = $oItopDesignNode->getAttribute('version');
+
+		$oInputDocument->formatOutput = true;
+		$oDesignFormat = new iTopDesignFormat($oInputDocument);
+		$oDesignFormat->Convert($sTargetVersion);
+		$sConvertedXml = $oInputDocument->saveXML();
+
+		// Convert back
+		$oInputDocument = new DOMDocument();
+		libxml_clear_errors();
+		$oInputDocument->preserveWhiteSpace = false;
+		$oInputDocument->loadXML($sConvertedXml);
+		$oInputDocument->formatOutput = true;
+		$oDesignFormat = new iTopDesignFormat($oInputDocument);
+		$oDesignFormat->Convert($sSourceVersion);
+		$sConvertedXml = $oInputDocument->saveXML();
+
+		$this->assertEquals($sInputXml, $sConvertedXml);
+	}
+
+	public function ConvertBackAndForthProvider()
+	{
 		return array(
-			'1.7 to 1.6' => array('1.6', '1.7_to_1.6'),
-			'1.7 to 3.0' => array('3.0', '1.7_to_3.0'),
-			'3.0 to 1.7' => array('1.7', '3.0_to_1.7'),
+			'1.6 to 1.7' => array('1.7', '1.6_to_1.7_2'),
+			'1.6 to 3.0' => array('3.0', '1.6_to_1.7_2'),
+			'1.7 to 3.0' => array('3.0', '1.7'),
 		);
 	}
 

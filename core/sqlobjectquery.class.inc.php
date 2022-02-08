@@ -494,7 +494,17 @@ class SQLObjectQuery extends SQLQuery
 		}
 	}
 
-	private function PrepareSingleTable(SQLObjectQuery $oRootQuery, &$aFrom, $sCallerAlias = '', $aJoinData)
+	/**
+	 * @param \SQLObjectQuery $oRootQuery
+	 * @param $aFrom
+	 * @param $sCallerAlias
+	 * @param $aJoinData
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $sCallerAlias for PHP 8.0 compat (Private method with only 2 calls in the class, both providing the optional parameter)
+	 */
+	private function PrepareSingleTable(SQLObjectQuery $oRootQuery, &$aFrom, $sCallerAlias, $aJoinData)
 	{
 		$aTranslationTable[$this->m_sTable]['*'] = $this->m_sTableAlias;
 		$sJoinCond = '';
@@ -613,6 +623,7 @@ class SQLObjectQuery extends SQLQuery
 		$aTempFrom = array(); // temporary subset of 'from' specs, to be grouped in the final query
 		foreach ($this->m_aJoinSelects as $aJoinData)
 		{
+			/** @var \SQLObjectQuery $oRightSelect */
 			$oRightSelect = $aJoinData["select"];
 
 			$oRightSelect->PrepareSingleTable($oRootQuery, $aTempFrom, $this->m_sTableAlias, $aJoinData);

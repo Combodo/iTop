@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop;
 
+use AttributeDate;
 use AttributeDateTime;
 use Dict;
 use Exception;
@@ -54,6 +55,10 @@ class TwigExtension
 						if (preg_match('@^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$@', trim($sDate)))
 						{
 							return AttributeDateTime::GetFormat()->Format($sDate);
+						}
+						if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate)))
+						{
+							return AttributeDate::GetFormat()->Format($sDate);
 						}
 					}
 					catch (Exception $e)
