@@ -27,7 +27,7 @@ if (file_exists(dirname(__FILE__).'/'.$sConfigFile))
 		{
 			echo <<<HTML
 <p><b>Security Warning</b>: the configuration file '$sConfigFile' should be read-only !</p>
-<p>Please contact the administrator to modify the access rights to this file !</p>
+<p>Please contact the administrator to modify the access rights to this file!</p>
 <p><a href="$sStartPage">Continue</a></p>
 HTML;
 		}
