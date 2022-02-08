@@ -15,8 +15,10 @@
 
 namespace Combodo\iTop\Test\UnitTest\Integration;
 
+use ApplicationException;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use iTopDesignFormat;
+use utils;
 
 
 /**
@@ -86,5 +88,31 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase
 		}
 
 		return $aTestCases;
+	}
+
+	/**
+	 * @dataProvider ItopWikiVersionProvider
+	 * @since 2.7.7 3.0.1 3.1.1 N°4714 new ITOP_CORE_VERSION constant
+	 */
+	public function testItopWikiVersion($sItopVersion, $sExpectedWikiVersion) {
+		try {
+			$sActualWikiVersion = utils::GetCoreVersionWikiSyntax($sItopVersion);
+		}
+		catch (ApplicationException $e) {
+			self::fail('Cannot get wiki version : '.$e->getMessage());
+		}
+		self::assertSame($sExpectedWikiVersion, $sActualWikiVersion, 'Computed wiki version is wrong !');
+	}
+
+	public function ItopWikiVersionProvider()
+	{
+		return [
+			['2.7.0', '2_7_0'],
+			['2.7.7', '2_7_0'],
+			['3.0.0', '3_0_0'],
+			['3.0.1', '3_0_0'],
+			['3.1.0', '3_1_0'],
+			['3.1.1', '3_1_0'],
+		];
 	}
 }

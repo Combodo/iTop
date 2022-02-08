@@ -2250,11 +2250,11 @@ class utils
 	 * @throws \ApplicationException if constant value is invalid
 	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetCoreVersionWikiSyntax()
+	public static function GetCoreVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
 	{
-		$aExplodedVersion = explode('.', ITOP_CORE_VERSION);
+		$aExplodedVersion = explode('.', $sItopVersion);
 
-		if (empty($aExplodedVersion[0]) || empty($aExplodedVersion[1])) {
+		if ((false === isset($aExplodedVersion[0])) || (false === isset($aExplodedVersion[1]))) {
 			throw new ApplicationException('iTop version is wrongfully configured!');
 		}
 
