@@ -520,7 +520,7 @@ abstract class Controller
 	}
 
 	/**
-	 * @since 2.7.7 3.0.1 3.1.0 method creation
+	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
 	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
 	 */
 	public function DisableBreadCrumb() {
@@ -528,7 +528,7 @@ abstract class Controller
 	}
 
 	/**
-	 * @since 2.7.7 3.0.1 3.1.0 method creation
+	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
 	 * @see iTopWebPage::SetBreadCrumbEntry()
 	 */
 	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
