@@ -20,7 +20,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  *
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2022)
  */
 // Database inconsistencies
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(

@@ -22,7 +22,7 @@
  * http://www.linprofs.com
  *
  * @author Hipska (2018, 2019)
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2019 - 2020)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2019 - 2022)
  * 
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @licence	http://opensource.org/licenses/AGPL-3.0

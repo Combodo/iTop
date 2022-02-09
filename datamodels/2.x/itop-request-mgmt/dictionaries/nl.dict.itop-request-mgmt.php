@@ -9,7 +9,7 @@
  * Linux & Open Source Professionals
  * http://www.linprofs.com
  *
- * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2020)
+ * @author Jeffrey Bostoen - <jbostoen.itop@outlook.com> (2018 - 2022)
  */
 Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Menu:RequestManagement' => 'Helpdesk',
