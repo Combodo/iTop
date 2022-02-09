@@ -33,7 +33,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeLinkedSet' => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Qualquer tipo de objetos da mesma classe ou subclasses',
 
-	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicatas no campo \'%1$s\' : %2$s',
 
 	'Core:AttributeDashboard' => 'Painel de controle',
 	'Core:AttributeDashboard+' => '',
@@ -41,7 +41,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributePhoneNumber' => 'Número de telefone',
 	'Core:AttributePhoneNumber+' => '',
 
-	'Core:AttributeObsolescenceDate' => 'Obsolescência data',
+	'Core:AttributeObsolescenceDate' => 'Data de obsolescência ',
 	'Core:AttributeObsolescenceDate+' => '',
 
 	'Core:AttributeTagSet' => 'Lista de etiquetas',
@@ -81,7 +81,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeArchiveDate/Label' => 'Data de arquivamento',
 	'Core:AttributeArchiveDate/Label+' => '',
 
-	'Core:AttributeObsolescenceFlag' => 'Obsolescence flag~~',
+	'Core:AttributeObsolescenceFlag' => 'Flag de obsolescência',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sim',
 	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto é excluído da análise de impacto e oculto dos resultados de pesquisa',
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Não',
@@ -228,17 +228,17 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChange' => 'Mudanças',
 	'Class:CMDBChange+' => 'Rastreamento de mudanças',
 	'Class:CMDBChange/Attribute:date' => 'Data',
-	'Class:CMDBChange/Attribute:date+' => 'Data e hora em que as mudanças foram registrados',
+	'Class:CMDBChange/Attribute:date+' => 'Data e hora em que as mudanças foram registradas',
 	'Class:CMDBChange/Attribute:userinfo' => 'Mais Informações',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Informações solicitantes definidos',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Interação do usuário na GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'Script de importação CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'Importação CSV na GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Processamento de email',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Origem de dados Synchro',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Por uma extensão',
 ));
 
 //
@@ -254,10 +254,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp/Attribute:date+' => 'Data e hora da mudança',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Usuário',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Quem fez essa mudança',
-	'Class:CMDBChangeOp/Attribute:objclass' => 'Classe objeto',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'Classe objeto',
-	'Class:CMDBChangeOp/Attribute:objkey' => 'ID objeto',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID objeto',
+	'Class:CMDBChangeOp/Attribute:objclass' => 'Classe do objeto',
+	'Class:CMDBChangeOp/Attribute:objclass+' => 'Classe do objeto',
+	'Class:CMDBChangeOp/Attribute:objkey' => 'ID do objeto',
+	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID do objeto',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'tipo',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -308,16 +308,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Change:ObjectCreated' => 'Objeto criado',
 	'Change:ObjectDeleted' => 'Objeto excluído',
 	'Change:ObjectModified' => 'Objeto modificado',
-	'Change:TwoAttributesChanged' => 'Edited %1$s and %2$s~~',
-	'Change:ThreeAttributesChanged' => 'Edited %1$s, %2$s and 1 other~~',
-	'Change:FourOrMoreAttributesChanged' => 'Edited %1$s, %2$s and %3$s others~~',
+	'Change:TwoAttributesChanged' => 'Editado %1$s e %2$s',
+	'Change:ThreeAttributesChanged' => 'Editado %1$s, %2$s e 1 outro',
+	'Change:FourOrMoreAttributesChanged' => 'Editado %1$s, %2$s e %3$s outros',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s configurado para %2$s (valor anterior: %3$s)',
 	'Change:AttName_SetTo' => '%1$s configurado para %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s anexado ao %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s modificado, valor anterior: %2$s',
 	'Change:AttName_Changed' => '%1$s modificado',
 	'Change:AttName_EntryAdded' => '%1$s modificado, nova entrada adicionada: %2$s',
-	'Change:State_Changed_NewValue_OldValue' => 'Changed from %2$s to %1$s~~',
+	'Change:State_Changed_NewValue_OldValue' => 'Modificado de %2$s para %1$s',
 	'Change:LinkSet:Added' => 'adicionado %1$s',
 	'Change:LinkSet:Removed' => 'excluído %1$s',
 	'Change:LinkSet:Modified' => 'modificado %1$s',
@@ -328,7 +328,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CMDBChangeOpSetAttributeBlob' => 'data mudança',
+	'Class:CMDBChangeOpSetAttributeBlob' => 'data da mudança',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'controle de alterações de dados',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Valor anterior',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'conteúdo anterior do atributo',
@@ -350,14 +350,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:Event' => 'Evento registros',
+	'Class:Event' => 'Registro de evento',
 	'Class:Event+' => 'Um evento interno do aplicativo',
 	'Class:Event/Attribute:message' => 'Mensagens',
 	'Class:Event/Attribute:message+' => 'pequena descrição deste evento',
 	'Class:Event/Attribute:date' => 'Data',
 	'Class:Event/Attribute:date+' => 'data e hora em que as mudanças foram registradas',
 	'Class:Event/Attribute:userinfo' => 'Informações usuário',
-	'Class:Event/Attribute:userinfo+' => 'identificação do usuário que estava fazendo a ação que desencadeou este evento',
+	'Class:Event/Attribute:userinfo+' => 'identificação do usuário que estava executando a ação que desencadeou este evento',
 	'Class:Event/Attribute:finalclass' => 'Tipo',
 	'Class:Event/Attribute:finalclass+' => '',
 ));
@@ -367,14 +367,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:EventNotification' => 'Evento notificação',
+	'Class:EventNotification' => 'Notificação de evento',
 	'Class:EventNotification+' => 'Rastreamento de uma notificação que foi enviada',
 	'Class:EventNotification/Attribute:trigger_id' => 'Gatilho',
-	'Class:EventNotification/Attribute:trigger_id+' => 'conta usuário',
+	'Class:EventNotification/Attribute:trigger_id+' => 'conta de usuário',
 	'Class:EventNotification/Attribute:action_id' => 'usuário',
-	'Class:EventNotification/Attribute:action_id+' => 'conta usuário',
-	'Class:EventNotification/Attribute:object_id' => 'Id objeto',
-	'Class:EventNotification/Attribute:object_id+' => 'Id objeto (classe definida pelo gatilho?)',
+	'Class:EventNotification/Attribute:action_id+' => 'conta de usuário',
+	'Class:EventNotification/Attribute:object_id' => 'ID do objeto',
+	'Class:EventNotification/Attribute:object_id+' => 'ID do objeto (classe definida pelo gatilho?)',
 ));
 
 //
@@ -405,21 +405,21 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:EventIssue' => 'Evento entrega',
+	'Class:EventIssue' => 'Evento de entrega',
 	'Class:EventIssue+' => 'Rastreamento de entrega (aviso, erro, etc.)',
 	'Class:EventIssue/Attribute:issue' => 'Entrega',
 	'Class:EventIssue/Attribute:issue+' => 'O que aconteceu',
 	'Class:EventIssue/Attribute:impact' => 'Impacto',
 	'Class:EventIssue/Attribute:impact+' => 'Quais são as consequências',
 	'Class:EventIssue/Attribute:page' => 'Página',
-	'Class:EventIssue/Attribute:page+' => 'HTTP ponto de entrada',
-	'Class:EventIssue/Attribute:arguments_post' => 'Argumentos postados',
+	'Class:EventIssue/Attribute:page+' => 'Ponto de entrada HTTP',
+	'Class:EventIssue/Attribute:arguments_post' => 'Argumentos POST',
 	'Class:EventIssue/Attribute:arguments_post+' => 'Argumentos HTTP POST',
 	'Class:EventIssue/Attribute:arguments_get' => 'Argumentos URL',
 	'Class:EventIssue/Attribute:arguments_get+' => 'Argumentos HTTP GET',
 	'Class:EventIssue/Attribute:callstack' => 'Quantidade solicitações',
 	'Class:EventIssue/Attribute:callstack+' => 'Quantidade de solicitações',
-	'Class:EventIssue/Attribute:data' => 'Dado',
+	'Class:EventIssue/Attribute:data' => 'Dados',
 	'Class:EventIssue/Attribute:data+' => 'Mais informações',
 ));
 
@@ -433,29 +433,29 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventWebService/Attribute:verb' => 'Verbo',
 	'Class:EventWebService/Attribute:verb+' => 'Nome da operação',
 	'Class:EventWebService/Attribute:result' => 'Resultado',
-	'Class:EventWebService/Attribute:result+' => 'Sucesso/fracasso geral',
-	'Class:EventWebService/Attribute:log_info' => 'Log informação',
-	'Class:EventWebService/Attribute:log_info+' => 'Resultado log informação',
+	'Class:EventWebService/Attribute:result+' => 'Sucesso/erro geral',
+	'Class:EventWebService/Attribute:log_info' => 'Log de informação',
+	'Class:EventWebService/Attribute:log_info+' => 'Resultado log de informação',
 	'Class:EventWebService/Attribute:log_warning' => 'Log de alerta',
 	'Class:EventWebService/Attribute:log_warning+' => 'Resultado log de alerta',
 	'Class:EventWebService/Attribute:log_error' => 'Log de erro',
 	'Class:EventWebService/Attribute:log_error+' => 'Resultado log de erro',
-	'Class:EventWebService/Attribute:data' => 'Dado',
-	'Class:EventWebService/Attribute:data+' => 'Resultado dado',
+	'Class:EventWebService/Attribute:data' => 'Dados',
+	'Class:EventWebService/Attribute:data+' => 'Mais informações',
 ));
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventRestService' => 'Chamada REST/JSON',
 	'Class:EventRestService+' => 'Rastreio de uma chamada de serviço REST/JSON',
-	'Class:EventRestService/Attribute:operation' => 'Operation',
-	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'',
+	'Class:EventRestService/Attribute:operation' => 'Operação',
+	'Class:EventRestService/Attribute:operation+' => 'Argumento \'operation\'',
 	'Class:EventRestService/Attribute:version' => 'Versão',
-	'Class:EventRestService/Attribute:version+' => 'Argument \'version\'',
+	'Class:EventRestService/Attribute:version+' => 'Argumento \'version\'',
 	'Class:EventRestService/Attribute:json_input' => 'Input',
 	'Class:EventRestService/Attribute:json_input+' => 'Argumento \'json_data\'',
-	'Class:EventRestService/Attribute:code' => 'Code',
+	'Class:EventRestService/Attribute:code' => 'Código',
 	'Class:EventRestService/Attribute:code+' => 'Código de resultado',
-	'Class:EventRestService/Attribute:json_output' => 'Response',
+	'Class:EventRestService/Attribute:json_output' => 'Resposta',
 	'Class:EventRestService/Attribute:json_output+' => 'Resposta HTTP (json)',
 	'Class:EventRestService/Attribute:provider' => 'Provedor',
 	'Class:EventRestService/Attribute:provider+' => 'Classe PHP implementando a operação esperada',
@@ -470,10 +470,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventLoginUsage+' => 'Conexão com a aplicação',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
 	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
-	'Class:EventLoginUsage/Attribute:contact_name' => 'Nome usuário',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Nome usuário',
-	'Class:EventLoginUsage/Attribute:contact_email' => 'Email usuário',
-	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço email deste usuário',
+	'Class:EventLoginUsage/Attribute:contact_name' => 'Nome de usuário',
+	'Class:EventLoginUsage/Attribute:contact_name+' => 'Nome de usuário',
+	'Class:EventLoginUsage/Attribute:contact_email' => 'Email de usuário',
+	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço de email deste usuário',
 ));
 
 //
@@ -496,10 +496,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Action/Attribute:status/Value:disabled' => 'Inativo',
 	'Class:Action/Attribute:status/Value:disabled+' => 'Inativo',
 	'Class:Action/Attribute:trigger_list' => 'Gatilhos relacionados',
-	'Class:Action/Attribute:trigger_list+' => 'Gatilhos ligados a esta ação',
+	'Class:Action/Attribute:trigger_list+' => 'Gatilhos relacionados a esta ação',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
 	'Class:Action/Attribute:finalclass+' => '',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:WarningNoTriggerLinked' => 'Aviso, nenhum gatilho está vinculado à ação. Não será ativo até que tenha pelo menos 1.',
 ));
 
 //
@@ -516,40 +516,40 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ActionEmail' => 'Notificação email',
+	'Class:ActionEmail' => 'Notificação via email',
 	'Class:ActionEmail+' => '',
-	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
-	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
-	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
-	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
+	'Class:ActionEmail/Attribute:status+' => 'Esse status especifica quem será notificado: apenas o destinatário do Teste, todos (Para, CC e CCO) ou ninguém',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Apenas o destinatário do teste é notificado',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'Todos os endereços de e-mails dos campos Para, CC e CCO são notificados',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'A notificação de e-mail não será enviada',
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testar destinatário',
-	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatário em caso o estado está definido como "Teste"',
-	'Class:ActionEmail/Attribute:from' => 'De~~',
-	'Class:ActionEmail/Attribute:from+' => 'Será enviado para o cabeçalho de email~~',
-	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
-	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
-	'Class:ActionEmail/Attribute:reply_to' => 'Responder para~~',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviado para o cabeçalho de email~~',
-	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:test_recipient+' => 'Destinatário caso o estado está definido como "Teste"',
+	'Class:ActionEmail/Attribute:from' => 'De',
+	'Class:ActionEmail/Attribute:from+' => 'Será enviado para o cabeçalho de email',
+	'Class:ActionEmail/Attribute:from_label' => 'De (campo)',
+	'Class:ActionEmail/Attribute:from_label+' => 'O nome de exibição do remetente enviado no cabeçalho do email',
+	'Class:ActionEmail/Attribute:reply_to' => 'Responder para',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Será enviado no cabeçalho do email',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Responder para (campo)',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Responder para exibe o nome de exibição enviado no cabeçalho do email',
 	'Class:ActionEmail/Attribute:to' => 'Para',
 	'Class:ActionEmail/Attribute:to+' => 'Destinatário para o email',
 	'Class:ActionEmail/Attribute:cc' => 'CC',
 	'Class:ActionEmail/Attribute:cc+' => 'CC',
 	'Class:ActionEmail/Attribute:bcc' => 'CCO',
 	'Class:ActionEmail/Attribute:bcc+' => 'CCO',
-	'Class:ActionEmail/Attribute:subject' => 'assunto',
+	'Class:ActionEmail/Attribute:subject' => 'Assunto',
 	'Class:ActionEmail/Attribute:subject+' => 'Título do email',
-	'Class:ActionEmail/Attribute:body' => 'corpo',
+	'Class:ActionEmail/Attribute:body' => 'Corpo',
 	'Class:ActionEmail/Attribute:body+' => 'Conteúdo do email',
-	'Class:ActionEmail/Attribute:importance' => 'importância',
-	'Class:ActionEmail/Attribute:importance+' => 'Flag importância',
-	'Class:ActionEmail/Attribute:importance/Value:low' => 'baixo',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'baixo',
+	'Class:ActionEmail/Attribute:importance' => 'Prioridade',
+	'Class:ActionEmail/Attribute:importance+' => 'Flag de prioridade',
+	'Class:ActionEmail/Attribute:importance/Value:low' => 'baixa',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => 'baixa',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:high' => 'alto',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'alto',
+	'Class:ActionEmail/Attribute:importance/Value:high' => 'alta',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => 'alta',
 ));
 
 //
@@ -579,7 +579,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Classe alvo',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limita a lista de objetos (da classe de destino) que irá ativar o gatilho',
 	'TriggerOnObject:WrongFilterQuery' => 'Consulta de filtro incorreta: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'A consulta de filtro deve retornar objetos da classe \\"%1$s\\"',
 ));
@@ -645,8 +645,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnObjectUpdate' => 'Trigger (na atualização do objeto)',
-	'Class:TriggerOnObjectUpdate+' => 'Trigger na atualização de objeto de [uma classe filho] da classe dada',
+	'Class:TriggerOnObjectUpdate' => 'Gatilho (na atualização do objeto)',
+	'Class:TriggerOnObjectUpdate+' => 'Gatilho na atualização de objeto de [uma classe filho] da classe dada',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Campos de destino',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
@@ -656,10 +656,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
-	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention' => 'Gatilho (Na menção do objeto)',
+	'Class:TriggerOnObjectMention+' => 'Gatilho em menção (@xxx) de um objeto de [uma classe herdada de] uma determinada classe em um atributo de log',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filtro de menções',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limita a lista de objetos mencionados que ativarão o gatilho. Se vazio, qualquer objeto mencionado (de qualquer classe) irá ativá-lo.',
 ));
 
 //
@@ -708,9 +708,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contato para notificar em caso de erro',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'Icones hiperlink',
 	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hiperlink de uma pequena imagem representando o aplicativo com o qual o iTop é sincronizado',
-	'Class:SynchroDataSource/Attribute:url_application' => 'Hiperlink aplicativo',
+	'Class:SynchroDataSource/Attribute:url_application' => 'Hiperlink de aplicativo',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hiperlink para o objeto na aplicação externa com a qual o iTop é sincronizado (se aplicável). As substituições possíveis: $this->attribute$ e $replica->primary_key$',
-	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política reconciliação',
+	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política de reconciliação',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervalo da carga plena',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A recarga completa de todos os dados devem ocorrer pelo menos tão frequentemente como especificado aqui',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Ação sobre zero',
@@ -931,10 +931,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:ColumnsOrder' => 'Ordem das colunas',
 	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Colunas disponíveis de %1$s',
 	'Core:BulkExport:NoFieldSelected' => 'Selecione pelo menos uma coluna para ser exportada',
-	'Core:BulkExport:CheckAll' => 'Check All~~',
-	'Core:BulkExport:UncheckAll' => 'Desmarque tudo',
+	'Core:BulkExport:CheckAll' => 'Marcar todos',
+	'Core:BulkExport:UncheckAll' => 'Desmarcar todos',
 	'Core:BulkExport:ExportCancelledByUser' => 'Exportação cancelada pelo usuário',
-	'Core:BulkExport:CSVOptions' => 'CSV Options',
+	'Core:BulkExport:CSVOptions' => 'Opções de CSV',
 	'Core:BulkExport:CSVLocalization' => 'Localização',
 	'Core:BulkExport:PDFOptions' => 'Opções de PDF',
 	'Core:BulkExport:PDFPageFormat' => 'Formato da página',
@@ -943,8 +943,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:PageSize-A3' => 'A3',
 	'Core:BulkExport:PageSize-Letter' => 'Carta',
 	'Core:BulkExport:PDFPageOrientation' => 'Orientação de Página:',
-	'Core:BulkExport:PageOrientation-L' => 'Landscape~~',
-	'Core:BulkExport:PageOrientation-P' => 'Portrait~~',
+	'Core:BulkExport:PageOrientation-L' => 'Paisagem',
+	'Core:BulkExport:PageOrientation-P' => 'Retrato',
 	'Core:BulkExport:XMLFormat' => 'Arquivo XML (*.xml)',
 	'Core:BulkExport:XMLOptions' => 'Opções XML',
 	'Core:BulkExport:SpreadsheetFormat' => 'Formato HTML de planilha (*.html)',
@@ -953,8 +953,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos vinculados',
 	'Core:BulkExport:OptionFormattedText' => 'Preservar formatação de texto',
 	'Core:BulkExport:ScopeDefinition' => 'Definição dos objetos a exportar',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:~~',
-	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:~~',
+	'Core:BulkExportLabelOQLExpression' => 'Consulta OQL:',
+	'Core:BulkExportLabelPhrasebookEntry' => 'Entrada do livro de comandos de consulta:',
 	'Core:BulkExportMessageEmptyOQL' => 'Por favor insira uma consulta OQL válida.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Por favor, selecione uma entrada de livro de frases válida.',
 	'Core:BulkExportQueryPlaceholder' => 'Digite uma consulta OQL aqui ...',
@@ -999,7 +999,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TagSetFieldData/Attribute:label+' => 'Rótulo exibido',
 	'Class:TagSetFieldData/Attribute:description' => 'Descrição',
 	'Class:TagSetFieldData/Attribute:description+' => 'Descrição',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe de tag',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de objeto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de campo',
 
@@ -1077,20 +1077,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => 'Evento',
 	'Class:AsyncTask/Attribute:event_id+' => '',
-	'Class:AsyncTask/Attribute:finalclass' => 'Aula final',
+	'Class:AsyncTask/Attribute:finalclass' => 'Classe final',
 	'Class:AsyncTask/Attribute:finalclass+' => '',
-	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
-	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
-	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
-	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
-	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+	'Class:AsyncTask/Attribute:status' => 'Status',
+	'Class:AsyncTask/Attribute:status+' => '',
+	'Class:AsyncTask/Attribute:remaining_retries' => 'Tentativas restantes',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Último código de erro',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
+	'Class:AsyncTask/Attribute:last_error' => 'Último erro',
+	'Class:AsyncTask/Attribute:last_error+' => '',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Última tentativa',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]". Esperando um array com as seguintes chaves: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Formato inválido para a configuração de "async_task_retries[%1$s]": chave inesperada "%2$s". Esperando somente as seguintes chaves: %3$s',
 ));
 
 //
@@ -1125,8 +1125,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
+	'Class:ResourceSystemMenu' => 'Menu de recursos do sistema',
+	'Class:ResourceSystemMenu+' => '',
 ));
 
 
