@@ -15,7 +15,7 @@
 // Class: AuditCategory
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:AuditCategory' => 'Categoria Auditoria',
+	'Class:AuditCategory' => 'Categoria de Auditoria',
 	'Class:AuditCategory+' => 'Uma seção dentro da auditoria',
 	'Class:AuditCategory/Attribute:name' => 'Nome',
 	'Class:AuditCategory/Attribute:name+' => 'Nome curto para esta categoria',
@@ -23,8 +23,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AuditCategory/Attribute:description+' => 'Longa descrição para esta categoria de auditoria',
 	'Class:AuditCategory/Attribute:definition_set' => 'Definir Regra',
 	'Class:AuditCategory/Attribute:definition_set+' => 'Expressão OQL que define o conjunto de objetos para auditoria',
-	'Class:AuditCategory/Attribute:rules_list' => 'Regras Auditoria',
-	'Class:AuditCategory/Attribute:rules_list+' => 'Regra auditoria para essa categoria',
+	'Class:AuditCategory/Attribute:rules_list' => 'Regras de Auditoria',
+	'Class:AuditCategory/Attribute:rules_list+' => 'Regra de auditoria para essa categoria',
 ));
 
 //
@@ -66,10 +66,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Query/Attribute:name+' => 'Identificar a consulta',
 	'Class:Query/Attribute:description' => 'Descrição',
 	'Class:Query/Attribute:description+' => 'Descrição longa para a consulta (finalidade, uso, etc)',
-	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
-	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
-	'Class:Query/Attribute:is_template/Value:yes' => 'Yes~~',
-	'Class:Query/Attribute:is_template/Value:no' => 'No~~',
+	'Class:Query/Attribute:is_template' => 'Template para campos OQL~~',
+	'Class:Query/Attribute:is_template+' => 'Utilizável como origem para o Destinatário OQL em Notificações~~',
+	'Class:Query/Attribute:is_template/Value:yes' => 'Sim~~',
+	'Class:Query/Attribute:is_template/Value:no' => 'Não~~',
 	'Class:QueryOQL/Attribute:fields' => 'Campos',
 	'Class:QueryOQL/Attribute:fields+' => 'Vírgula separando a lista de atributos (ou alias.attribute) para exportar.',
 	'Class:QueryOQL' => 'Consulta OQL',
@@ -95,7 +95,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:contactid' => 'Contato (pessoa)',
 	'Class:User/Attribute:contactid+' => 'Dados pessoais a partir dos dados do negócio',
 	'Class:User/Attribute:org_id' => 'Organização',
-	'Class:User/Attribute:org_id+' => 'Organization of the associated person~~',
+	'Class:User/Attribute:org_id+' => 'Organização da pessoa associada~~',
 	'Class:User/Attribute:last_name' => 'Último nome',
 	'Class:User/Attribute:last_name+' => 'Nome do contato correspondente',
 	'Class:User/Attribute:first_name' => 'Primeiro nome',
@@ -105,11 +105,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:User/Attribute:login' => 'Login',
 	'Class:User/Attribute:login+' => 'String de identificação do usuário',
 	'Class:User/Attribute:language' => 'Linguagem',
-	'Class:User/Attribute:language+' => 'Linguagem usuário',
-	'Class:User/Attribute:language/Value:EN US' => 'English',
-	'Class:User/Attribute:language/Value:EN US+' => 'English (U.S.)',
-	'Class:User/Attribute:language/Value:FR FR' => 'French',
-	'Class:User/Attribute:language/Value:FR FR+' => 'French (France)',
+	'Class:User/Attribute:language+' => 'Linguagem do usuário',
+	'Class:User/Attribute:language/Value:EN US' => 'Inglês',
+	'Class:User/Attribute:language/Value:EN US+' => 'Inglês (E.U.A.)',
+	'Class:User/Attribute:language/Value:FR FR' => 'Francês',
+	'Class:User/Attribute:language/Value:FR FR+' => 'Francês (França)',
 	'Class:User/Attribute:profile_list' => 'Perfil',
 	'Class:User/Attribute:profile_list+' => 'Regras, permissões de direito para essa pessoa',
 	'Class:User/Attribute:allowed_org_list' => 'Organizações permitidas',
@@ -121,10 +121,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login é único - "%1s" já está ativo',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Pelo menos um perfil deve ser atribuído a esse usuário.',
-	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
-	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
-	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:ProfileNotAllowed' => 'Perfil "%1$s" não pode ser adicionado, ele negará o acesso ao backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Alterar o status não é permitido para o seu próprio Usuário~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'As organizações permitidas devem conter Usuários da organização~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'A lista atual de perfis não fornece direitos de acesso suficientes (Os usuários não são mais modificáveis)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Pelo menos uma organização deve ser atribuída a este usuário.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Organização não permitida.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'A conta de usuário não pertence às suas organizações permitidas.',
@@ -158,9 +158,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:URP_Dimensions/Attribute:name' => 'Nome',
 	'Class:URP_Dimensions/Attribute:name+' => '',
 	'Class:URP_Dimensions/Attribute:description' => 'Descrição',
-	'Class:URP_Dimensions/Attribute:description+' => 'uma linha descrição',
+	'Class:URP_Dimensions/Attribute:description+' => 'uma linha de descrição',
 	'Class:URP_Dimensions/Attribute:type' => 'Tipo',
-	'Class:URP_Dimensions/Attribute:type+' => 'nome classe ou tipo dado (unidade projeção)',
+	'Class:URP_Dimensions/Attribute:type+' => 'nome da classe ou tipo de dado (unidade projeção)',
 ));
 
 //
@@ -416,12 +416,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Insert' => 'Inserir',
 	'UI:Button:More' => 'Mais',
 	'UI:Button:Less' => 'Menos',
-	'UI:Button:Wait' => 'Please wait while updating fields~~',
-	'UI:Treeview:CollapseAll' => 'Collapse All~~',
-	'UI:Treeview:ExpandAll' => 'Expand All~~',
-	'UI:UserPref:DoNotShowAgain' => 'Do not show again~~',
-	'UI:InputFile:NoFileSelected' => 'No File Selected~~',
-	'UI:InputFile:SelectFile' => 'Select a file~~',
+	'UI:Button:Wait' => 'Por favor, aguarde enquanto atualiza os campos~~',
+	'UI:Treeview:CollapseAll' => 'Recolher todos~~',
+	'UI:Treeview:ExpandAll' => 'Expandir todos~~',
+	'UI:UserPref:DoNotShowAgain' => 'Não exibir novamente~~',
+	'UI:InputFile:NoFileSelected' => 'Nenhum arquivo selecionado~~',
+	'UI:InputFile:SelectFile' => 'Selecione um arquivo~~',
 
 	'UI:SearchToggle' => 'Pesquisar',
 	'UI:ClickToCreateNew' => 'Criar um(a) %1$s',
@@ -447,23 +447,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:2ParametersMissing' => 'Erro: os seguintes parâmetros devem ser especificados para esta operação: %1$s e %2$s.',
 	'UI:Error:3ParametersMissing' => 'Erro: os seguintes parâmetros devem ser especificados para esta operação: %1$s, %2$s e %3$s.',
 	'UI:Error:4ParametersMissing' => 'Erro: os seguintes parâmetros devem ser especificados para esta operação: %1$s, %2$s, %3$s e %4$s.',
-	'UI:Error:IncorrectOQLQuery_Message' => 'Erro: incorreta consulta OQL: %1$s',
+	'UI:Error:IncorrectOQLQuery_Message' => 'Erro: consulta OQL incorreta: %1$s',
 	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => 'Ocorreu um erro ao executar a consulta: %1$s',
 	'UI:Error:ObjectAlreadyUpdated' => 'Erro: o objeto já foi atualizado.',
-	'UI:Error:ObjectCannotBeUpdated' => 'Erro: objecto não pode ser atualizado.',
+	'UI:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado.',
 	'UI:Error:ObjectsAlreadyDeleted' => 'Erro: objetos já foram apagados',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Você não tem permissão de executar exclusão em massa dos objetos da classe %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Você não tem permissão para excluir objeto(s) da classe %1$s',
-	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
+	'UI:Error:ReadNotAllowedOn_Class' => 'Você não tem permissão para ler objeto(s) da classe %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Você não tem permissão de executar atualização em massa dos objetos da classe %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Erro: o objeto já foi clonado.',
 	'UI:Error:ObjectAlreadyCreated' => 'Erro: o objeto já foi criado.',
-	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erro: invalid stimulus "%1$s" on object %2$s in state "%3$s".',
+	'UI:Error:Invalid_Stimulus_On_Object_In_State' => 'Erro: stimulus inválido "%1$s" no objeto %2$s com estado "%3$s".',
 	'UI:Error:InvalidDashboardFile' => 'Erro: arquivo de painel inválido',
 	'UI:Error:InvalidDashboard' => 'Erro: painel inválido',
 	'UI:Error:MaintenanceMode' => 'A aplicação está em manutenção',
 	'UI:Error:MaintenanceTitle' => 'Manutenção',
-	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
+	'UI:Error:InvalidToken' => 'Erro: A operação solicitada já foi executada (token CSRF não encontrado)~~',
 
 	'UI:GroupBy:Count' => 'Número',
 	'UI:GroupBy:Count+' => 'Número de elementos',
@@ -540,8 +540,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ResetPwd-Error-NoContact' => 'a conta não está associada a uma pessoa.',
 	'UI:ResetPwd-Error-NoEmailAtt' => 'a conta não está associada a uma pessoa que contenha um endereço de e-mail. Por favor, contate o administrador.',
 	'UI:ResetPwd-Error-NoEmail' => 'faltando um endereço de e-mail. Por favor, contate o administrador.',
-	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
-	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
+	'UI:ResetPwd-Error-Send' => 'problema técnico de transporte de e-mail. Por favor, contate o administrador.',
+	'UI:ResetPwd-EmailSent' => 'Verifique sua caixa de e-mail e siga as instruções. Se você não receber nenhum e-mail, verifique o login que você digitou.~~',
 	'UI:ResetPwd-EmailSubject' => 'Alterar a senha',
 	'UI:ResetPwd-EmailBody' => '<body><p>Você solicitou a alteração da senha do '.ITOP_APPLICATION_SHORT.'.</p><p>Por favor, siga este link (passo simples) para <a href="%1$s">digitar a nova senha</a></p>.',
 
@@ -676,9 +676,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% of the loaded objects will be modified.',
 
 	'UI:CSVExport:AdvancedMode' => 'Modo avançado',
-	'UI:CSVExport:AdvancedMode+' => 'In advanced mode, several columns are added to the export: the id of the object, the id of external keys and their reconciliation attributes.',
-	'UI:CSVExport:LostChars' => 'Encoding issue',
-	'UI:CSVExport:LostChars+' => 'The downloaded file will be encoded into %1$s. iTop has detected some characters that are not compatible with this format. Those characters will either be replaced by a substitute (e.g. accentuated chars losing the accent), or they will be discarded. You can copy/paste the data from your web browser. Alternatively, you can contact your administrator to change the encoding (See parameter \'csv_file_default_charset\').',
+	'UI:CSVExport:AdvancedMode+' => 'No modo avançado, várias colunas são adicionadas à exportação: o ID do objeto, o ID das chaves externas e seus atributos de reconciliação.',
+	'UI:CSVExport:LostChars' => 'Problema de codificação',
+	'UI:CSVExport:LostChars+' => 'O arquivo baixado será codificado em %1$s. O iTop detectou alguns caracteres que não são compatíveis com este formato. Esses caracteres serão substituídos por um substituto (por exemplo, caracteres acentuados perdendo o acento) ou serão descartados. Você pode copiar/colar os dados do seu navegador da web. Como alternativa, você pode entrar em contato com seu administrador para alterar a codificação (consulte o parâmetro \'csv_file_default_charset\').',
 
 	'UI:Audit:Title' => 'CMDB Auditoria',
 	'UI:Audit:InteractiveAudit' => 'Auditoria Interativa',
@@ -686,35 +686,35 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Audit:HeaderNbObjects' => '# Objetos',
 	'UI:Audit:HeaderNbErrors' => '# Erros',
 	'UI:Audit:PercentageOk' => '% Ok',
-	'UI:Audit:OqlError' => 'OQL Error~~',
+	'UI:Audit:OqlError' => 'Erro OQL~~',
 	'UI:Audit:Error:ValueNA' => 'n/a~~',
-	'UI:Audit:ErrorIn_Rule' => 'Error in Rule~~',
-	'UI:Audit:ErrorIn_Rule_Reason' => 'OQL erro na regra %1$s: %2$s.',
-	'UI:Audit:ErrorIn_Category' => 'Error in Category~~',
-	'UI:Audit:ErrorIn_Category_Reason' => 'OQL erro na categoria %1$s: %2$s.',
-	'UI:Audit:AuditErrors' => 'Audit Errors~~',
-	'UI:Audit:Dashboard:ObjectsAudited' => 'Objects audited~~',
-	'UI:Audit:Dashboard:ObjectsInError' => 'Objects in errors~~',
-	'UI:Audit:Dashboard:ObjectsValidated' => 'Objects validated~~',
-	'UI:Audit:AuditCategory:Subtitle' => '%1$s errors ouf of %2$s - %3$s%%~~',
+	'UI:Audit:ErrorIn_Rule' => 'Erro na Regra~~',
+	'UI:Audit:ErrorIn_Rule_Reason' => 'Erro OQL na regra %1$s: %2$s.',
+	'UI:Audit:ErrorIn_Category' => 'Erro na Categoria~~',
+	'UI:Audit:ErrorIn_Category_Reason' => 'Erro OQL na categoria %1$s: %2$s.',
+	'UI:Audit:AuditErrors' => 'Erros de Auditoria~~',
+	'UI:Audit:Dashboard:ObjectsAudited' => 'Objetos auditados~~',
+	'UI:Audit:Dashboard:ObjectsInError' => 'Objetos com erros~~',
+	'UI:Audit:Dashboard:ObjectsValidated' => 'Objetos validados~~',
+	'UI:Audit:AuditCategory:Subtitle' => '%1$s erros de %2$s - %3$s%%~~',
 
 
 	'UI:RunQuery:Title' => 'Avaliar consultas OQL',
 	'UI:RunQuery:QueryExamples' => 'Exemplos de consultas',
-	'UI:RunQuery:QueryResults' => 'Query Results~~',
+	'UI:RunQuery:QueryResults' => 'Resultados da Consulta~~',
 	'UI:RunQuery:HeaderPurpose' => 'Propósito',
 	'UI:RunQuery:HeaderPurpose+' => 'Explicação sobre a consulta',
 	'UI:RunQuery:HeaderOQLExpression' => 'A consulta na sintaxe OQL',
 	'UI:RunQuery:HeaderOQLExpression+' => 'A consulta na sintaxe OQL',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Expressão para avaliar: ',
-	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
+	'UI:RunQuery:QueryArguments' => 'Argumentos da Consulta~~',
 	'UI:RunQuery:MoreInfo' => 'Mais informações sobre a consulta: ',
 	'UI:RunQuery:DevelopedQuery' => 'Redevelopped query expression: ',
 	'UI:RunQuery:SerializedFilter' => 'Filtro serializado: ',
 	'UI:RunQuery:DevelopedOQL' => 'Developed OQL~~',
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
-	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
-	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
+	'UI:RunQuery:ResultSQLCount' => 'SQL Resultante para contagem~~',
+	'UI:RunQuery:ResultSQL' => 'SQL Resultante~~',
 	'UI:RunQuery:Error' => 'Ocorreu um erro ao executar a consulta',
 	'UI:Query:UrlForExcel' => 'URL a ser usada para consultas web MS-Excel',
 	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do '.ITOP_APPLICATION_SHORT.'. Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>.',
@@ -738,9 +738,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Schema:Label+' => 'Rótulo do atributo',
 	'UI:Schema:Type' => 'Tipo',
 
-	'UI:Schema:Type+' => 'Tipo dado do atributo',
+	'UI:Schema:Type+' => 'Tipo de dado do atributo',
 	'UI:Schema:Origin' => 'Origem',
-	'UI:Schema:Origin+' => 'The base class in which this attribute is defined',
+	'UI:Schema:Origin+' => 'A classe base na qual este atributo é definido',
 	'UI:Schema:Description' => 'Descrição',
 	'UI:Schema:Description+' => 'Descrição do atributo',
 	'UI:Schema:AllowedValues' => 'Permitido valores',
@@ -974,33 +974,33 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:NotificationsMenu:Title' => 'Configuração de Notificações',
 	'UI:NotificationsMenu:Help' => 'Ajuda',
 	'UI:NotificationsMenu:HelpContent' => '<p>As Notificações são totalmente personalizáveis​​. Elas são baseadas em dois conjuntos de objetos: <i>Gatilhos e Ações</i>.</p>
-<p><i><b>Gatilhos</b></i> define when a notification will be executed. There are different triggers as part of iTop core, but others can be brought by extensions:
+<p><i><b>Gatilhos</b></i> definir quando uma notificação será executada. Existem diferentes gatilhos como parte do núcleo do iTop, mas outros podem ser trazidos por extensões:
 <ol>
-	<li>Some triggers are executed when an object of the specified class is <b>created</b>, <b>updated</b> or <b>deleted</b>.</li>
-	<li>Some triggers are executed when an object of a given class <b>enter</b> or <b>leave</b> a specified </b>state</b>.</li>
-	<li>Some triggers are executed when a <b>threshold on TTO or TTR</b> has been <b>reached</b>.</li>
+	<li>Alguns gatilhos são executados quando um objeto da classe especificada é <b>criado</b>, <b>atualizado</b> ou <b>excluído</b>.</li>
+	<li>Alguns gatilhos são executados quando um objeto de uma determinada classe <b>entra</b> ou <b>deixa</b> de um </b>estado</b> específico.</li>
+	<li>Alguns gatilhos são executados quando um <b>limite em TTO ou TTR</b> foi <b>alcançado</b>.</li>
 </ol>
 </p>
 <p>
-<i><b>Ações</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<i><b>Ações</b></i> definem as ações a serem executadas quando os gatilhos forem executados. Por enquanto, existem apenas dois tipos de ações:
 <ol>
-	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
-	A special page: <a href="../setup/email.test.php" target="_blank">email.test.php</a> is available for testing and troubleshooting your PHP mail configuration.</li>
-	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+	<li>Envio de uma mensagem de e-mail: Tais ações também definem o modelo a ser usado para enviar o e-mail, bem como os demais parâmetros da mensagem, como destinatários, importância, etc.<br />
+	Uma página especial: <a href="../setup/email.test.php" target="_blank">email.test.php</a> está disponível para testar e solucionar problemas de configuração de e-mail PHP.</li>
+	<li>Webhooks de saída: permite a integração com um aplicativo de terceiros enviando dados estruturados para um URL definido.</li>
 </ol>
 </p>
-<p>To be executed, actions must be associated to triggers.
-When associated with a trigger, each action is given an "order" number, specifying in which order the actions are to be executed.</p>~~',
+<p>Para serem executadas, as ações devem estar associadas a gatilhos.
+Quando associado a um gatilho, cada ação recebe um número de "ordem", especificando em qual ordem as ações devem ser executadas.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Gatilhos',
-	'UI:NotificationsMenu:AvailableTriggers' => 'Available triggers',
-	'UI:NotificationsMenu:OnCreate' => 'When an object is created',
-	'UI:NotificationsMenu:OnStateEnter' => 'When an object enters a given state',
-	'UI:NotificationsMenu:OnStateLeave' => 'When an object leaves a given state',
+	'UI:NotificationsMenu:AvailableTriggers' => 'Gatilhos disponíveis',
+	'UI:NotificationsMenu:OnCreate' => 'Quando um objeto é criado',
+	'UI:NotificationsMenu:OnStateEnter' => 'Quando um objeto entra em um determinado estado',
+	'UI:NotificationsMenu:OnStateLeave' => 'Quando um objeto deixa um determinado estado',
 	'UI:NotificationsMenu:Actions' => 'Ações',
-	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
-	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
-	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
-	'UI:NotificationsMenu:AvailableActions' => 'Available actions',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Ações de e-mail~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Ações do Webhook (integrações de saída)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Outras ações~~',
+	'UI:NotificationsMenu:AvailableActions' => 'Ações disponíveis',
 
 	'Menu:TagAdminMenu' => 'Configuração de tags',
 	'Menu:TagAdminMenu+' => 'Gerenciamento de valores de tags',
@@ -1040,7 +1040,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'UI:iTopVersion:Short' => '%1$s versão %2$s',
-	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s construído %4$s',
+	'UI:iTopVersion:Long' => '%1$s versão %2$s-%3$s compilação %4$s',
 	'UI:PropertiesTab' => 'Propriedades',
 
 	'UI:OpenDocumentInNewWindow_' => 'Abrir~~',
@@ -1084,8 +1084,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PageFormat_A4' => 'A4',
 	'UI:PageFormat_Letter' => 'Carta',
 	'UI:Relation:PDFExportPageOrientation' => 'Orientação da página',
-	'UI:PageOrientation_Portrait' => 'Portrait~~',
-	'UI:PageOrientation_Landscape' => 'Landscape~~',
+	'UI:PageOrientation_Portrait' => 'Retrato~~',
+	'UI:PageOrientation_Landscape' => 'Paisagem~~',
 	'UI:RelationTooltip:Redundancy' => 'Redundância',
 	'UI:RelationTooltip:ImpactedItems_N_of_M' => '# de itens impactados: %1$d / %2$d',
 	'UI:RelationTooltip:CriticalThreshold_N_of_M' => 'Limite crítico: %1$d / %2$d',
@@ -1186,8 +1186,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:PrintResolution:A4Landscape' => 'Paisagem A4',
 	'UI:PrintResolution:LetterPortrait' => 'Carta Retrato',
 	'UI:PrintResolution:LetterLandscape' => 'Carta Retrato',
-	'UI:Toggle:SwitchToStandardDashboard' => 'Switch to standard dashboard~~',
-	'UI:Toggle:SwitchToCustomDashboard' => 'Switch to custom dashboard~~',
+	'UI:Toggle:SwitchToStandardDashboard' => 'Alternar para o painel padrão~~',
+	'UI:Toggle:SwitchToCustomDashboard' => 'Alternar para o painel personalizado~~',
 
 	'UI:ConfigureThisList' => 'Configurar esta lista...',
 	'UI:ListConfigurationTitle' => 'Listar configuração',
@@ -1208,16 +1208,16 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:OQL:UnknownClassAndFix' => 'Classe desconhecida "%1$s". Você pode tentar "%2$s" em vez.',
 	'UI:OQL:UnknownClassNoFix' => 'Classe desconhecida "%1$s"',
 
-	'UI:Dashboard:EditCustom' => 'Edit custom version...~~',
-	'UI:Dashboard:CreateCustom' => 'Create a custom version...~~',
-	'UI:Dashboard:DeleteCustom' => 'Delete custom version...~~',
+	'UI:Dashboard:EditCustom' => 'Editar versão personalizada...~~',
+	'UI:Dashboard:CreateCustom' => 'Criar uma versão personalizada...~~',
+	'UI:Dashboard:DeleteCustom' => 'Excluir versão personalizada...~~',
 	'UI:Dashboard:RevertConfirm' => 'Cada alterações feitas na versão original será perdido. Por favor, confirme que você quer fazer isso.',
 	'UI:ExportDashBoard' => 'Exportar para um arquivo',
 	'UI:ImportDashBoard' => 'Importar pelo arquivo...',
 	'UI:ImportDashboardTitle' => 'Importar por um arquivo',
 	'UI:ImportDashboardText' => 'Selecione um arquivo do painel para importar:',
-	'UI:Dashboard:Actions' => 'Dashboard actions~~',
-	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'This dashboard displays information that does not include the on-going changes.~~',
+	'UI:Dashboard:Actions' => 'Ações de painel~~',
+	'UI:Dashboard:NotUpToDateUntilContainerSaved' => 'Este painel exibe informações que não incluem as alterações em andamento.~~',
 
 
 	'UI:DashletCreation:Title' => 'Criar um novo Painel',
@@ -1230,8 +1230,8 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:DashboardEdit:AutoReload' => 'Atualizar automaticamente',
 	'UI:DashboardEdit:AutoReloadSec' => 'Intervalo atualização automática (segundos)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'O mínimo permitido é %1$d segundos',
-	'UI:DashboardEdit:Revert' => 'Revert~~',
-	'UI:DashboardEdit:Apply' => 'Apply~~',
+	'UI:DashboardEdit:Revert' => 'Reverter~~',
+	'UI:DashboardEdit:Apply' => 'Aplicar~~',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Propriedades',
@@ -1472,10 +1472,10 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:ToggleFullScreen' => 'Alternancia Maximizar / Minimizar',
 	'UI:Button:ResetImage' => 'Recupere a imagem anterior',
 	'UI:Button:RemoveImage' => 'Remover a imagem',
-	'UI:Button:UploadImage' => 'Upload an image from the disk~~',
+	'UI:Button:UploadImage' => 'Carregar uma imagem do disco~~',
 	'UI:UploadNotSupportedInThisMode' => 'A modificação de imagens ou arquivos não é suportada neste modo.',
 
-	'UI:Button:RemoveDocument' => 'Remove the document~~',
+	'UI:Button:RemoveDocument' => 'Remover o documento~~',
 
 	// Search form
 	'UI:Search:Toggle' => 'Minimizar / Expandir',
@@ -1490,9 +1490,9 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Nenhum ainda.',
 
 	// - Criteria header actions
-	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
-	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Locked' => 'Locked~~',
+	'UI:Search:Criteria:Toggle' => 'Minimizar / Expandir~~',
+	'UI:Search:Criteria:Remove' => 'Remover~~',
+	'UI:Search:Criteria:Locked' => 'Bloqueado~~',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1561,7 +1561,7 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Menor / igual a',// > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => 'Diferente',// => '≠',
 	//   - Tag Set Widget
-	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Matches~~',
+	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Correspondências~~',
 
 	// - Other translations
 	'UI:Search:Value:Filter:Placeholder' => 'Filtrar...',
@@ -1587,18 +1587,18 @@ When associated with a trigger, each action is given an "order" number, specifyi
 	'UI:Search:Criteria:DateTime:PlaceholderUntilTime' => 'Qualquer data',
 	'UI:Search:Criteria:HierarchicalKey:ChildrenIncluded:Hint' => 'Os filhos dos objetos selecionados serão incluídos.',
 
-	'UI:Search:Criteria:Raw:Filtered' => 'Filtered',
+	'UI:Search:Criteria:Raw:Filtered' => 'Filtrado',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtrado em %1$s',
 
-	'UI:StateChanged' => 'State changed~~',
+	'UI:StateChanged' => 'Estado alterado~~',
 ));
 
 //
 // Expression to Natural language
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Expression:Operator:AND' => ' AND ',
-	'Expression:Operator:OR' => ' OR ',
+	'Expression:Operator:AND' => ' E ',
+	'Expression:Operator:OR' => ' OU ',
 	'Expression:Operator:=' => ': ',
 
 	'Expression:Unit:Short:DAY' => 'd',
@@ -1619,7 +1619,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Newsroom:NoNewMessage' => 'Nenhuma mensagem nova',
-	'UI:Newsroom:XNewMessage' => '%1$s new message(s)~~',
+	'UI:Newsroom:XNewMessage' => '%1$s nova(s) mensagem(ns)~~',
 	'UI:Newsroom:MarkAllAsRead' => 'Marcar todas as mensagens como lidas',
 	'UI:Newsroom:ViewAllMessages' => 'Ver todas as mensagens',
 	'UI:Newsroom:Preferences' => 'Preferências de sala de notícias',
