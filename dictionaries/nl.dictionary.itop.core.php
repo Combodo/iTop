@@ -1095,8 +1095,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Laatste poging',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]". Er wordt een Array verwacht met de volgende sleutels: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]": onverwachte sleutel "%2$s". Enkel deze sleutels worden verwacht: %3$s',
+  'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]". Er wordt een Array verwacht met de volgende sleutels: %2$s',
+  'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ongeldig formaat bij de configuratie van "async_tasks_retries[%1$s]": onverwachte sleutel "%2$s". Enkel deze sleutels worden verwacht: %3$s',
 ));
 
 //

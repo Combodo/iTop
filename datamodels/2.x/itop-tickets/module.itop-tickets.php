@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/3.0.0',
+	'itop-tickets/3.0.1',
 	array(
 		// Identification
 		//
@@ -33,7 +33,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().':admin:cron',
+		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetCoreVersionWikiSyntax().':admin:cron',
 		'doc.more_information' => '',
 
 		// Default settings

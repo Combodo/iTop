@@ -448,20 +448,21 @@ abstract class Controller
 	/**
 	 * Generate a page, zip it and propose the zipped file for download
 	 *
-	 * @param array $aParams Params used by the twig template
-	 * @param null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
-	 *
-	 * @throws \Exception
 	 * @api
 	 *
+	 * @param array $aParams Params used by the twig template
+	 * @param string|null $sTemplateName Name of the twig template, ie MyTemplate for MyTemplate.html.twig
+	 * @param string $sReportFileName Root name of the report file
+	 *
+	 * @throws \Exception
 	 */
-	public function DownloadZippedPage($aParams = array(), $sTemplateName = null)
+	public function DownloadZippedPage($aParams = array(), $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
 	{
 		if (empty($sTemplateName)) {
 			$sTemplateName = $this->m_sOperation;
 		}
 		$sReportFolder = str_replace("\\", '/', APPROOT.'log/');
-		$sReportFile = 'itop-system-information-report-'.date('Y-m-d-H-i-s');
+		$sReportFile = $sReportFileName.'-'.date('Y-m-d-H-i-s');
 		$sHTMLReport = $sReportFolder.$sReportFile.'.html';
 		$sZIPReportFile = $sReportFile;
 

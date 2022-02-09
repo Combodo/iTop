@@ -1089,8 +1089,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

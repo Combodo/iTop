@@ -2361,6 +2361,8 @@ return array(
     'iApplicationUIExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iAttributeNoGroupBy' => $baseDir . '/core/attributedef.class.inc.php',
     'iBackgroundProcess' => $baseDir . '/core/backgroundprocess.inc.php',
+    'iBackofficeDictEntriesExtension' => $baseDir . '/application/applicationextension.inc.php',
+    'iBackofficeDictEntriesPrefixesExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iBackofficeEarlyScriptExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iBackofficeInitScriptExtension' => $baseDir . '/application/applicationextension.inc.php',
     'iBackofficeLinkedScriptsExtension' => $baseDir . '/application/applicationextension.inc.php',

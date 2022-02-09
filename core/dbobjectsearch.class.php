@@ -416,6 +416,10 @@ class DBObjectSearch extends DBSearch
 	 * @param string $sFilterCode
 	 * @param mixed $value
 	 * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ...
+	 *   If no operator is specified then :
+	 *     * for id field we will use "="
+	 *     * for other fields we will call the corresponding {@link AttributeDefinition::GetSmartConditionExpression} method impl
+	 *       to generate the expression
 	 * @param bool $bParseSearchString
 	 *
 	 * @throws \CoreException
@@ -1232,7 +1236,7 @@ class DBObjectSearch extends DBSearch
 				elseif (MetaModel::IsParentClass($oRightFilter->GetFirstJoinedClass(), $oLeftFilter->GetClass()))
 				{
 					// Specialize $oRightFilter
-					$oRightFilter->ChangeClass($oLeftFilter->GetClass());
+					$oRightFilter->ChangeClass($oLeftFilter->GetFirstJoinedClass());
 				}
 				else
 				{

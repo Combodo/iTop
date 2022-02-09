@@ -37,6 +37,8 @@ $ibo-input--margin-x: $ibo-spacing-200 !default;
   border: 1px solid $ibo-input--border-color;
   border-radius: $ibo-input--border-radius;
 
+  @extend %ibo-font-ral-nor-150;
+  
 	&:focus{
 		border: 1px solid $ibo-input--focus--border-color;
 	}

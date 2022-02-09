@@ -17,6 +17,8 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\DesignDocument;
+
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -109,7 +111,9 @@ class iTopDesignFormat
 	 */
 	protected $aLog;
 	protected $bStatus;
-	
+	protected $bKeepObsoleteNodes;
+	protected $sKeepVersion;
+
 	/**
 	 * Creation from a loaded DOMDocument
 	 * @param DOMDocument $oDocument The document to transform
@@ -211,6 +215,20 @@ class iTopDesignFormat
 	}	 	
 
 	/**
+	 * Compute a real xpath from iTop one
+	 *
+	 * @param \Combodo\iTop\DesignElement $oNode
+	 *
+	 * @return string
+	 */
+	public static function GetNodeXPath($oNode)
+	{
+		$sITopXPath = DesignDocument::GetItopNodePath($oNode);
+
+		return preg_replace(["@\[@", "@]@"], ["[@id=\"", "\"]"], $sITopXPath);
+	}
+
+	/**
 	 * Test the conversion without altering the DOM
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
@@ -227,19 +245,21 @@ class iTopDesignFormat
 	}
 
 	/**
-	 * Make adjustements to the DOM to migrate it to the specified version (default is latest)
+	 * Make adjustments to the DOM to migrate it to the specified version (default is latest)
 	 * For now only the conversion from version 1.0 to 1.1 is supported.
 	 * 	 
 	 * @param string $sTargetVersion The desired version (or the latest possible version if not specified)
-	 * @param object $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
+	 * @param \ModelFactory|null $oFactory Full data model (not yet used, aimed at allowing conversion that could not be performed without knowing the
 	 *     whole data model)
+	 * @param bool $bKeepObsoleteNodes
 	 *
 	 * @return bool True on success, False if errors have been encountered (still the DOM may be altered!)
 	 */
-	public function Convert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null)
+	public function Convert($sTargetVersion = ITOP_DESIGN_LATEST_VERSION, $oFactory = null, $bKeepObsoleteNodes = true)
 	{
 		$this->aLog = array();
 		$this->bStatus = true;
+		$this->bKeepObsoleteNodes = $bKeepObsoleteNodes;
 
 		$oXPath = new DOMXPath($this->oDocument);
 		// Retrieve the version number
@@ -267,8 +287,6 @@ class iTopDesignFormat
 		}
 		return $this->bStatus;
 	}
-
-
 
 	/**
 	 * Does the conversion, eventually in a recursive manner
@@ -304,6 +322,7 @@ class iTopDesignFormat
 			$sIntermediate = self::$aVersions[$sFrom]['next'];
 			$sTransform = self::$aVersions[$sFrom]['go_to_next'];
 			$this->LogInfo("Upgrading from $sFrom to $sIntermediate ($sTransform)");
+			$this->sKeepVersion = $sFrom;
 		}
 		else
 		{
@@ -311,12 +330,16 @@ class iTopDesignFormat
 			$sIntermediate = self::$aVersions[$sFrom]['previous'];
 			$sTransform = self::$aVersions[$sFrom]['go_to_previous'];
 			$this->LogInfo("Downgrading from $sFrom to $sIntermediate ($sTransform)");
+			$this->sKeepVersion = null;
 		}
 		// Transform to the intermediate format
 		$aCallSpec = array($this, $sTransform);
 		try
 		{
 			call_user_func($aCallSpec, $oFactory);
+			if ($iFrom > $iTo && $this->bKeepObsoleteNodes) {
+				$this->RestorePreviousNodes($sIntermediate);
+			}
 
 			// Recurse
 			$this->DoConvert($sIntermediate, $sTo, $oFactory);
@@ -325,7 +348,6 @@ class iTopDesignFormat
 		{
 			$this->LogError($e->getMessage());
 		}
-		return;
 	}
 
 	/**
@@ -831,7 +853,22 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
-		
+
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
+		// Add new stylesheets
+		$oStyleSheetsNode = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets')->item(0);
+		if ($oStyleSheetsNode) {
+			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
+			$oStyleSheetNode->setAttribute('id', 'environment-banner');
+			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/themes/page-banner.scss'));
+			$oStyleSheetsNode->appendChild($oStyleSheetNode);
+
+			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
+			$oStyleSheetNode->setAttribute('id', 'fullmoon');
+			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/main.scss'));
+			$oStyleSheetsNode->appendChild($oStyleSheetNode);
+		}
+
 		// Add new attribute to theme import nodes
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
 		foreach ($oNodeList as $oNode) {
@@ -926,6 +963,9 @@ class iTopDesignFormat
 			$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
 		}
 
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="fullmoon"]');
+
 		// Add new attribute to theme import nodes
 		
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
@@ -947,13 +987,89 @@ class iTopDesignFormat
 			}
 		}
 	}
+
+	/**
+	 * @param string $sNodeMetaVersion
+	 *
+	 * @return void
+	 * @throws \Exception
+	 */
+	private function RestorePreviousNodes($sNodeMetaVersion)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		$sVersion = str_replace('.', '_', $sNodeMetaVersion);
+		$oTrashedNodes = $oXPath->query("/itop_design/meta/previous_versions/previous_version_$sVersion/trashed_nodes/trashed_node");
+		foreach ($oTrashedNodes as $oTrashedNode) {
+			if ($oTrashedNode->nodeType == XML_ELEMENT_NODE) {
+				$oXPathNode = $oXPath->query('parent_xpath', $oTrashedNode)->item(0);
+				$oNodeTreeNode = $oXPath->query('node_tree', $oTrashedNode)->item(0);
+				if (!is_null($oXPathNode) && !is_null($oNodeTreeNode)) {
+					$sXPath = $this->GetText($oXPathNode, '');
+					$oParentNode = $oXPath->query($sXPath)->item(0);
+					if ($oParentNode) {
+						$oNode = $oNodeTreeNode->firstChild;
+						while ($oNode) {
+							$oNextNode = $oNode->nextSibling;
+							if ($oNode->nodeType == XML_ELEMENT_NODE) {
+								// Check for collision
+								$sId = $oNode->getAttribute('id');
+								$sNodeXPath = ($sId != '') ? $oNode->nodeName.'[@id="'.$sId.'"]' : $oNode->nodeName;
+								$sNodeXPath = $sXPath.'/'.$sNodeXPath;
+								$oTarget = $oXPath->query($sNodeXPath)->item(0);
+								if ($oTarget) {
+									// Do not continue migration
+									throw new Exception("Trying to restore an existing node $sNodeXPath from version $sNodeMetaVersion");
+								}
+								// Restore the modification flags
+								$oModifiedNodeList = $oXPath->query('descendant-or-self::*[@_disabled_delta or @_disabled_rename_from]', $oNode);
+								foreach ($oModifiedNodeList as $oModifiedNode) {
+									foreach (['_delta', '_rename_from'] as $sModificationFlag) {
+										$sCurrentFlag = $oNode->getAttribute('_disabled'.$sModificationFlag);
+										if (!empty($sCurrentFlag)) {
+											$oModifiedNode->setAttribute($sModificationFlag, $sCurrentFlag);
+											$oModifiedNode->removeAttribute('_disabled'.$sModificationFlag);
+										}
+									}
+								}
+								// Move the node back in place
+								$oParentNode->appendChild($oNode);
+							}
+							$oNode = $oNextNode;
+						}
+					}
+				}
+			}
+		}
+		// Clean up the mess
+		$this->RemoveNodeFromXPath("/itop_design/meta/previous_versions/previous_version_$sVersion", false);
+		$this->RemoveEmptyNodeFromXPath("/itop_design/meta/previous_versions");
+		$this->RemoveEmptyNodeFromXPath("/itop_design/meta");
+	}
+
+	private function RemoveEmptyNodeFromXPath($sXPath, $bStoreThisNodeInMetaVersion = false)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		$oNodeToRemove = $oXPath->query($sXPath)->item(0);
+		if (is_null($oNodeToRemove)) {
+			return;
+		}
+		$oNode = $oNodeToRemove->firstChild;
+		while ($oNode) {
+			if ($oNode->nodeType == XML_ELEMENT_NODE) {
+				return;
+			}
+			$oNode = $oNode->nextSibling;
+		}
+		$this->RemoveNodeFromXPath($sXPath, $bStoreThisNodeInMetaVersion);
+	}
 	
 	/**
 	 * @param string $sPath
+	 * @param bool $bStoreThisNodeInMetaVersion
 	 *
 	 * @return void
 	 */
-	private function RemoveNodeFromXPath($sPath)
+	private function RemoveNodeFromXPath($sPath, $bStoreThisNodeInMetaVersion = true)
 	{
 		$oXPath = new DOMXPath($this->oDocument);
 
@@ -961,8 +1077,55 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode)
 		{
 			$this->LogWarning('Node '.self::GetItopNodePath($oNode).' is irrelevant in this version, it will be removed.');
-			$this->DeleteNode($oNode);
+			if ($bStoreThisNodeInMetaVersion && $this->bKeepObsoleteNodes && $this->sKeepVersion) {
+				// Move the node to <Meta> to keep it safe for backward migration
+				$oItopDesignNode = $this->GetOrCreateNode('/itop_design', 'itop_design', null);
+				$oMetaNode = $this->GetOrCreateNode('meta', 'meta', $oItopDesignNode);
+				$oPreviousVersionsNode = $this->GetOrCreateNode('previous_versions', 'previous_versions', $oMetaNode);
+				$sVersion = str_replace('.', '_', $this->sKeepVersion);
+				$oPreviousVersionNode = $this->GetOrCreateNode("previous_version_$sVersion", "previous_version_$sVersion", $oPreviousVersionsNode);
+				$oTrashedNodeList = $this->GetOrCreateNode('trashed_nodes', 'trashed_nodes', $oPreviousVersionNode);
+
+				$iNextId = str_replace('.', '', uniqid('', true));
+				$oTrashedNode = $this->GetOrCreateNode("trashed_node[@id='$iNextId']", 'trashed_node', $oTrashedNodeList);
+				$oTrashedNode->setAttribute('id', $iNextId);
+				$oTrashedNode->setAttribute('_delta', 'define');
+				$oXPathNode = $this->GetOrCreateNode('parent_xpath', 'parent_xpath', $oTrashedNode);
+				$oParentNode = $oNode->parentNode;
+				if ($oParentNode instanceof DOMElement) {
+					$sParentXPath = static::GetNodeXPath($oParentNode);
+					$oXPathNode->appendChild(new DOMText($sParentXPath));
+				}
+				$oNodeTreeNode = $this->GetOrCreateNode('node_tree', 'node_tree', $oTrashedNode);
+
+				// Store the modification flags
+				$oModifiedNodeList = $oXPath->query('descendant-or-self::*[@_delta or @_rename_from]', $oNode);
+				foreach ($oModifiedNodeList as $oModifiedNode) {
+					foreach (['_delta', '_rename_from'] as $sModificationFlag) {
+						$sCurrentFlag = $oNode->getAttribute($sModificationFlag);
+						if (!empty($sCurrentFlag)) {
+							$oModifiedNode->setAttribute('_disabled'.$sModificationFlag, $sCurrentFlag);
+							$oModifiedNode->removeAttribute($sModificationFlag);
+						}
+					}
+				}
+
+				$oNodeTreeNode->appendChild($oNode);
+			} else {
+				$this->DeleteNode($oNode);
+			}
 		}
+	}
+
+	private function GetOrCreateNode($sXPath, $sName, $oRootNode)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		$oNode = $oXPath->query($sXPath, $oRootNode)->item(0);
+		if (is_null($oNode)) {
+			$oNode = $oRootNode->ownerDocument->createElement($sName);
+			$oRootNode->appendChild($oNode);
+		}
+		return $oNode;
 	}
 
 	/**
@@ -1151,4 +1314,31 @@ class iTopDesignFormat
 
 		return null;
 	}
+
+	/**
+	 * Returns the TEXT of the current node (possibly from several child nodes)
+	 * @param null $sDefault
+	 * @return null|string
+	 */
+	protected function GetText($oNode, $sDefault = null)
+	{
+		$sText = null;
+		foreach($oNode->childNodes as $oChildNode)
+		{
+			if ($oChildNode instanceof \DOMText)
+			{
+				if (is_null($sText)) $sText = '';
+				$sText .= $oChildNode->wholeText;
+			}
+		}
+		if (is_null($sText))
+		{
+			return $sDefault;
+		}
+		else
+		{
+			return $sText;
+		}
+	}
+
 }

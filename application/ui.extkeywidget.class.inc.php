@@ -61,6 +61,8 @@ class UIExtKeyWidget
 	protected $sAttCode;
 	protected $bSearchMode;
 
+	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sAttCode
@@ -80,18 +82,13 @@ class UIExtKeyWidget
 	 * @throws \Exception
 	 *
 	 * @since 3.0.0 N°3750 new $sInputType parameter
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Add default value for $aArgs for PHP 8.0 compat
 	 */
 	public static function DisplayFromAttCode(
 		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '',
 		$aArgs = [], $bSearchMode = false, &$sInputType = ''
 	)
 	{
-		// we will only use key & name, so let's reduce fields loaded !
-		$aAttToLoad = [
-			$sClass => [], // nothing, id and friendlyname are automatically added by the API
-		];
-		$oAllowedValues->OptimizeColumnLoad($aAttToLoad);
-
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
@@ -776,9 +773,11 @@ JS
      *
      * @throws CoreException
      * @throws OQLException
+     *
+     * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility
      */
 	public function AutoComplete(
-		WebPage $oP, $sFilter, $oObj = null, $sContains = '', $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
+		WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
 	)
 	{
 		if (is_null($sFilter)) {

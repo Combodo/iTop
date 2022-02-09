@@ -206,7 +206,7 @@ abstract class AbstractAttachmentsRenderer
 	function RefreshAttachmentsDisplay(dataUpload)
 	{
 		var sContentNode = '#AttachmentsListContainer',
-			aAttachmentsDeletedHiddenInputs = $('table.attachmentsList>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
+			aAttachmentsDeletedHiddenInputs = $('#AttachmentsListContainer table>tbody>tr[id^="display_attachment_"]>td input[name="removed_attachments[]"]'),
 			aAttachmentsDeletedIds = aAttachmentsDeletedHiddenInputs.map(function() { return $(this).val() }).toArray();
 		$(sContentNode).block();
 		$.post(GetAbsoluteUrlModulesRoot()+'itop-attachments/ajax.itop-attachment.php',
@@ -416,7 +416,6 @@ class TableDetailsAttachmentsRenderer extends AbstractAttachmentsRenderer
 		$sFileDate = Dict::S('Attachments:File:Date');
 		$sFileUploader = Dict::S('Attachments:File:Uploader');
 		$sFileType = Dict::S('Attachments:File:MimeType');
-		$sDeleteColumn = '';
 
 		if ($bWithDeleteButton)
 		{
@@ -488,17 +487,9 @@ JS
 	{
 		$iAttachmentId = $oAttachment->GetKey();
 
-		$sLineClass = '';
-		if ($bIsEven)
-		{
-			$sLineClass = 'class="even"';
-		}
-
-		$sLineStyle = '';
 		$bIsDeletedAttachment = false;
 		if (in_array($iAttachmentId, $aAttachmentsDeleted, true))
 		{
-			$sLineStyle = 'style="display: none;"';
 			$bIsDeletedAttachment = true;
 		}
 
@@ -513,7 +504,6 @@ JS
 		$sFileFormattedSize = $oDoc->GetFormattedSize();
 		$bIsTempAttachment = ($oAttachment->Get('item_id') === 0);
 		$sAttachmentDateFormatted = '';
-		$iAttachmentDateRaw = '';
 		if (!$bIsTempAttachment)
 		{
 			$sAttachmentDate = $oAttachment->Get('creation_date');
@@ -523,7 +513,6 @@ JS
 			}
 			$oAttachmentDate = DateTime::createFromFormat(AttributeDateTime::GetInternalFormat(), $sAttachmentDate);
 			$sAttachmentDateFormatted = AttributeDateTime::GetFormat()->Format($oAttachmentDate);
-			$iAttachmentDateRaw = AttributeDateTime::GetAsUnixSeconds($sAttachmentDate);
 		}
 
 		$sAttachmentUploader = $oAttachment->Get('contact_id_friendlyname');
@@ -560,7 +549,11 @@ JS
 			'type' => $sFileType,
 			'js' => '',
 		);
-		
+
+		if ($bIsDeletedAttachment) {
+			$aAttachmentLine['@class'] = 'ibo-is-hidden';
+		}
+
 		if ($bWithDeleteButton)
 		{
 			$sDeleteButton = $this->GetDeleteAttachmentButton($iAttachmentId);

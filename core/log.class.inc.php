@@ -1149,7 +1149,12 @@ class DeprecatedCallsLog extends LogAPI
 	 */
 	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
 	{
-		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
 			return;
 		}
 
