@@ -41,7 +41,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributePhoneNumber' => 'Número de telefone',
 	'Core:AttributePhoneNumber+' => '',
 
-	'Core:AttributeObsolescenceDate' => 'Data de obsolescência ',
+	'Core:AttributeObsolescenceDate' => 'Data de obsolescência',
 	'Core:AttributeObsolescenceDate+' => '',
 
 	'Core:AttributeTagSet' => 'Lista de etiquetas',
