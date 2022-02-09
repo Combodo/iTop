@@ -381,7 +381,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Button:Logoff' => 'Sair',
 	'UI:Button:GlobalSearch' => 'Pesquisar',
 	'UI:Button:Search' => ' Pesquisar ',
-	'UI:Button:Clear' => ' Limpar ',
+	'UI:Button:Clear' => ' Limpar',
 	'UI:Button:SearchInHierarchy' => 'Pesquisar na hierarquia',
 	'UI:Button:Query' => ' Consultar ',
 	'UI:Button:Ok' => 'Ok',
