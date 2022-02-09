@@ -455,6 +455,8 @@ abstract class Controller
 	 * @param string $sReportFileName Root name of the report file
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 3.0.1 3.1.0 Add $sReportFileName parameter
 	 */
 	public function DownloadZippedPage($aParams = array(), $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
 	{
