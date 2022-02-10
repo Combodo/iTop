@@ -54,10 +54,16 @@ class iTopComposerTest extends ItopTestCase
 
 		$this->assertTrue(is_array($aDirs));
 
+		$aDeniedDirWrongFormat = [];
 		foreach ($aDirs as $sDir)
 		{
-			$this->assertRegExp('#[tT]ests?/?$#', $sDir);
+			if (false === iTopComposer::IsTestDir($sDir)) {
+				$aDeniedDirWrongFormat[] = $sDir;
+			}
 		}
+
+		$this->assertEmpty($aDeniedDirWrongFormat,
+			'There are elements in \Combodo\iTop\Composer\iTopComposer::ListDeniedTestDir that are not test dirs :'.var_export($aDeniedDirWrongFormat, true));
 	}
 
 	public function testListAllowedTestDir()
@@ -100,9 +106,11 @@ class iTopComposerTest extends ItopTestCase
 		$aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
 		$aExtra = array_diff($aAllowedAndDeniedDirs, $aExistingDirs);
 
-		$this->assertEmpty($aMissing, "The iTop instance running this test has matching directories That must be either in the allowed or in the denied list:".var_export($aMissing, true));
-
+		$this->assertEmpty(
+			$aMissing,
+			'Test dirs exists in /lib !'."\n"
+				.'  They must be declared either in the allowed or denied list in '.iTopComposer::class." (see N°2651).\n"
+				.'  List of dirs:'."\n".var_export($aMissing, true)
+		);
 	}
-
-
 }

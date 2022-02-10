@@ -27,6 +27,8 @@ use RecursiveIteratorIterator;
 
 class iTopComposer
 {
+	const TEST_DIR_REGEXP = '/^[tT]ests?$/';
+
 	/**
 	 * @return array List of all subdirs of /lib that are {@see IsTestDir}.
 	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
@@ -60,9 +62,9 @@ class iTopComposer
 		return $aAllTestDirs;
 	}
 	
-	private function IsTestDir($sDirName)
+	public static function IsTestDir($sDirName)
 	{
-		return preg_match('/^[tT]ests?$/', $sDirName);
+		return preg_match(self::TEST_DIR_REGEXP, $sDirName);
 	}
 
 	/**
