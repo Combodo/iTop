@@ -545,7 +545,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionEmail/Attribute:importance' => 'Prioridade',
 	'Class:ActionEmail/Attribute:importance+' => 'Flag de prioridade',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'baixa',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'baixa',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'alta',
