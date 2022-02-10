@@ -471,7 +471,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventLoginUsage/Attribute:user_id' => 'Login',
 	'Class:EventLoginUsage/Attribute:user_id+' => 'Login',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Nome de usuário',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Nome de usuário',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Email de usuário',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço de email deste usuário',
 ));
