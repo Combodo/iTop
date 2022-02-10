@@ -82,21 +82,22 @@ class iTopComposer
 	{
 		$APPROOT_WITH_SLASHES = $this->GetApprootWithSlashes();
 		return array(
+			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
+
 			$APPROOT_WITH_SLASHES.'lib/nikic/php-parser/test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests/Test',
-			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Test',
-			$APPROOT_WITH_SLASHES.'lib/psr/log/Psr/Log/Test',
-			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Test',
-			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test',
+
 			$APPROOT_WITH_SLASHES.'lib/pear/console_getopt/tests',
 			$APPROOT_WITH_SLASHES.'lib/pear/pear_exception/tests',
+
+			$APPROOT_WITH_SLASHES.'lib/psr/log/Psr/Log/Test',
+
 			$APPROOT_WITH_SLASHES.'lib/symfony/cache/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/cache/Tests/DoctrineProviderTest.php',
 			$APPROOT_WITH_SLASHES.'lib/symfony/class-loader/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/config/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/console/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/css-selector/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Resources/ext/tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/dependency-injection/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/dotenv/Tests',
@@ -106,15 +107,20 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-foundation/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-kernel/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/routing/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/stopwatch/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bridge/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bundle/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/var-dumper/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/web-profiler-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/yaml/Tests',
-			$APPROOT_WITH_SLASHES.'lib/symfony/debug/Resources/ext/tests',
-			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
+
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/src/Test',
+			$APPROOT_WITH_SLASHES.'lib/twig/twig/lib/Twig/Test',
 			$APPROOT_WITH_SLASHES.'lib/twig/twig/doc/tests',
 		);
 	}
