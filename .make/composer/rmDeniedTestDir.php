@@ -36,18 +36,24 @@ clearstatcache();
 $oiTopComposer = new iTopComposer();
 $aDeniedButStillPresent = $oiTopComposer->ListDeniedButStillPresent();
 
+echo "\n";
 foreach ($aDeniedButStillPresent as $sDir)
 {
-	if (! preg_match('#[tT]ests?/?$#', $sDir))
+	if (false === iTopComposer::IsTestDir($sDir))
 	{
-		echo "\nfound INVALID denied test dir: '$sDir'\n";
+		echo "ERROR found INVALID denied test dir: '$sDir'\n";
 		throw new \Exception("$sDir must end with /Test/ or /test/");
+	}
+
+	if (false === file_exists($sDir)) {
+		echo "INFO $sDir is in denied list, but not existing on disk => skipping !\n";
+		continue;
 	}
 
 	try
 	{
 		SetupUtils::rrmdir($sDir);
-		echo "Remove denied test dir: '$sDir'\n";
+		echo "OK Remove denied test dir: '$sDir'\n";
 	}
 	catch (\Exception $e)
 	{
