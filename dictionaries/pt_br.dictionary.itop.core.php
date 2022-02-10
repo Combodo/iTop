@@ -549,7 +549,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
 	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'alta',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'alta',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
