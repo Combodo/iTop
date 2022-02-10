@@ -257,7 +257,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Classe do objeto',
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'Classe do objeto',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID do objeto',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'ID do objeto',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'tipo',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
