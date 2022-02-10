@@ -541,7 +541,7 @@ EOF
 				{
 					continue;
 				}
-				$oPage->AddAjaxTab($oAttDef->GetLabel(), utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(), true, 'Class:'.$sClass.'/Attribute:'.$sAttCode);
+				$oPage->AddAjaxTab( 'Class:'.$sClass.'/Attribute:'.$sAttCode, utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode(), true, $oAttDef->GetLabel());
 				continue;
 			}
 
