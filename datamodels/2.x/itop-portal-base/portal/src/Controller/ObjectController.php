@@ -389,14 +389,18 @@ class ObjectController extends BrickController
 		}
 
 		// Checking security layers
+		if (!$oSecurityHelper->IsActionAllowed(UR_ACTION_MODIFY, $sObjectClass, $sObjectId))
+		{
+			IssueLog::Warning(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' not allowed to modify '.$sObjectClass.'::'.$sObjectId.' object.');
+			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
+		}
 		if (!$oSecurityHelper->IsStimulusAllowed($sStimulusCode, $sObjectClass))
 		{
 			throw new HttpException(Response::HTTP_NOT_FOUND, Dict::S('UI:ObjectDoesNotExist'));
 		}
 
 		// Retrieving object
-		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */,
-			$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
+		$oObject = MetaModel::GetObject($sObjectClass, $sObjectId, false /* MustBeFound */, 	$oScopeValidator->IsAllDataAllowedForScope(UserRights::ListProfiles(), $sObjectClass));
 		if ($oObject === null)
 		{
 			// We should never be there as the secuirty helper makes sure that the object exists, but just in case.
