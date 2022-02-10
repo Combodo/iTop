@@ -27,7 +27,10 @@ use RecursiveIteratorIterator;
 
 class iTopComposer
 {
-
+	/**
+	 * @return array List of all subdirs of /lib that are {@see IsTestDir}.
+	 *              Warning : each path contains slashes (meaning on Windows you'll get eg `C:/Dev/wamp64/www/itop-27/lib/goaop/framework/tests`)
+	 */
 	public function ListAllTestDir()
 	{
 		$aAllTestDirs = array();
@@ -49,7 +52,9 @@ class iTopComposer
 				continue;
 			}
 
-			$aAllTestDirs[] = $file->getRealpath();
+			$sTestPathDir = $file->getRealpath();
+			$sTestPathDir = str_replace('\\', '/', $sTestPathDir);
+			$aAllTestDirs[] = $sTestPathDir;
 		}
 
 		return $aAllTestDirs;
@@ -86,6 +91,7 @@ class iTopComposer
 
 			$APPROOT_WITH_SLASHES.'lib/nikic/php-parser/test',
 
+			$APPROOT_WITH_SLASHES.'lib/pear/archive_tar/tests',
 			$APPROOT_WITH_SLASHES.'lib/pear/console_getopt/tests',
 			$APPROOT_WITH_SLASHES.'lib/pear/pear_exception/tests',
 
