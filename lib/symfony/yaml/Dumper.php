@@ -50,7 +50,7 @@ class Dumper
      */
     public function setIndentation($num)
     {
-        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 3.1 and will be removed in 4.0. Pass the indentation to the constructor instead.', E_USER_DEPRECATED);
+        @trigger_error('The '.__METHOD__.' method is deprecated since Symfony 3.1 and will be removed in 4.0. Pass the indentation to the constructor instead.', \E_USER_DEPRECATED);
 
         $this->indentation = (int) $num;
     }
@@ -68,7 +68,7 @@ class Dumper
     public function dump($input, $inline = 0, $indent = 0, $flags = 0)
     {
         if (\is_bool($flags)) {
-            @trigger_error('Passing a boolean flag to toggle exception handling is deprecated since Symfony 3.1 and will be removed in 4.0. Use the Yaml::DUMP_EXCEPTION_ON_INVALID_TYPE flag instead.', E_USER_DEPRECATED);
+            @trigger_error('Passing a boolean flag to toggle exception handling is deprecated since Symfony 3.1 and will be removed in 4.0. Use the Yaml::DUMP_EXCEPTION_ON_INVALID_TYPE flag instead.', \E_USER_DEPRECATED);
 
             if ($flags) {
                 $flags = Yaml::DUMP_EXCEPTION_ON_INVALID_TYPE;
@@ -78,7 +78,7 @@ class Dumper
         }
 
         if (\func_num_args() >= 5) {
-            @trigger_error('Passing a boolean flag to toggle object support is deprecated since Symfony 3.1 and will be removed in 4.0. Use the Yaml::DUMP_OBJECT flag instead.', E_USER_DEPRECATED);
+            @trigger_error('Passing a boolean flag to toggle object support is deprecated since Symfony 3.1 and will be removed in 4.0. Use the Yaml::DUMP_OBJECT flag instead.', \E_USER_DEPRECATED);
 
             if (func_get_arg(4)) {
                 $flags |= Yaml::DUMP_OBJECT;
@@ -99,13 +99,13 @@ class Dumper
             $dumpAsMap = Inline::isHash($input);
 
             foreach ($input as $key => $value) {
-                if ($inline >= 1 && Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK & $flags && \is_string($value) && false !== strpos($value, "\n") && false === strpos($value, "\r\n")) {
+                if ($inline >= 1 && Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK & $flags && \is_string($value) && false !== strpos($value, "\n") && false === strpos($value, "\r")) {
                     // If the first line starts with a space character, the spec requires a blockIndicationIndicator
                     // http://www.yaml.org/spec/1.2/spec.html#id2793979
                     $blockIndentationIndicator = (' ' === substr($value, 0, 1)) ? (string) $this->indentation : '';
                     $output .= sprintf("%s%s%s |%s\n", $prefix, $dumpAsMap ? Inline::dump($key, $flags).':' : '-', '', $blockIndentationIndicator);
 
-                    foreach (preg_split('/\n|\r\n/', $value) as $row) {
+                    foreach (explode("\n", $value) as $row) {
                         $output .= sprintf("%s%s%s\n", $prefix, str_repeat(' ', $this->indentation), $row);
                     }
 
@@ -114,6 +114,19 @@ class Dumper
 
                 if ($value instanceof TaggedValue) {
                     $output .= sprintf('%s%s !%s', $prefix, $dumpAsMap ? Inline::dump($key, $flags).':' : '-', $value->getTag());
+
+                    if ($inline >= 1 && Yaml::DUMP_MULTI_LINE_LITERAL_BLOCK & $flags && \is_string($value->getValue()) && false !== strpos($value->getValue(), "\n") && false === strpos($value->getValue(), "\r\n")) {
+                        // If the first line starts with a space character, the spec requires a blockIndicationIndicator
+                        // http://www.yaml.org/spec/1.2/spec.html#id2793979
+                        $blockIndentationIndicator = (' ' === substr($value->getValue(), 0, 1)) ? (string) $this->indentation : '';
+                        $output .= sprintf(" |%s\n", $blockIndentationIndicator);
+
+                        foreach (explode("\n", $value->getValue()) as $row) {
+                            $output .= sprintf("%s%s%s\n", $prefix, str_repeat(' ', $this->indentation), $row);
+                        }
+
+                        continue;
+                    }
 
                     if ($inline - 1 <= 0 || null === $value->getValue() || is_scalar($value->getValue())) {
                         $output .= ' '.$this->dump($value->getValue(), $inline - 1, 0, $flags)."\n";
