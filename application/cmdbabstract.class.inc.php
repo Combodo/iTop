@@ -1558,7 +1558,8 @@ HTML
 	 *
 	 * @throws \Exception
 	 *  only used in old and deprecated export.php
-	 * @deprecated since 2.7.7 3.0.1
+	 *
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
@@ -1579,8 +1580,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
-	 *  only used in old and deprecated export.php
-	 * @deprecated since 2.7.7 3.0.1
+	 * 
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{

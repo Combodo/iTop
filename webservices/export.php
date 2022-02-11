@@ -17,6 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+/**
+ * ⚠ Warning, this page is only kept for legacy usages : **it is not maintained anymore**
+ *
+ * Instead, you should use `export-v2.php`
+ *
+ * @link https://www.itophub.io/wiki/page?id=latest:advancedtopics:exportdata_v1 script documentation
+ */
+
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
