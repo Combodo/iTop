@@ -1911,7 +1911,7 @@ JS
 	public static function EnterMaintenanceMode($oConfig)
 	{
 		@touch(MAINTENANCE_MODE_FILE);
-		self::Log("----> Entering maintenance mode");
+		SetupLog::Info("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
 	}
 
@@ -1920,7 +1920,7 @@ JS
 		@unlink(MAINTENANCE_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting maintenance mode");
+			SetupLog::Info("<---- Exiting maintenance mode");
 		}
 	}
 
@@ -1932,7 +1932,7 @@ JS
 	public static function EnterReadOnlyMode($oConfig)
 	{
 		@touch(READONLY_MODE_FILE);
-		self::Log("----> Entering read only mode");
+		SetupLog::Info("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
 	}
 
@@ -1941,7 +1941,7 @@ JS
 		@unlink(READONLY_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting read only mode");
+			SetupLog::Info("<---- Exiting read only mode");
 		}
 	}
 
@@ -1978,7 +1978,7 @@ JS
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
-				self::Log("Waiting for cron to stop ($iCount)");
+				SetupLog::Info("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(1);
 				if (time() > $iTimeLimit)
@@ -2065,18 +2065,6 @@ JS
 			unlink($sTokenFile);
 		}
 		unset($_SESSION['setup_token']);
-	}
-
-	private static function Log($sText)
-	{
-		if (class_exists('SetupPage'))
-		{
-			SetupPage::log($sText);
-		}
-		else
-		{
-			IssueLog::Info($sText);
-		}
 	}
 }
 
