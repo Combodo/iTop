@@ -415,7 +415,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
 	{
 		if (empty($sPassword)){
 			$sPassword = $sLogin;
@@ -426,7 +426,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
 		$oUser = $this->createObject('UserLocal', array(
-			'contactid' => 2,
+			'contactid' => $iContactid,
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',
