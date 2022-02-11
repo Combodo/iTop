@@ -27,7 +27,7 @@ use RecursiveIteratorIterator;
 
 class iTopComposer
 {
-	const TEST_DIR_REGEXP = '/^[tT]ests?$/';
+	const TEST_DIR_REGEXP = '/^tests?$/i';
 
 	/**
 	 * @return array List of all subdirs of /lib that are {@see IsTestDir}.
@@ -61,10 +61,17 @@ class iTopComposer
 
 		return $aAllTestDirs;
 	}
-	
+
+	/**
+	 * @param $sDirName
+	 *
+	 * @return false|int as {@see \preg_match()}
+	 * @uses self::TEST_DIR_REGEXP
+	 * @uses \preg_match()
+	 */
 	public static function IsTestDir($sDirName)
 	{
-		return preg_match(self::TEST_DIR_REGEXP, $sDirName);
+		return preg_match(static::TEST_DIR_REGEXP, $sDirName);
 	}
 
 	/**
