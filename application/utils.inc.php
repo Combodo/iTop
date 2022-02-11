@@ -2250,7 +2250,7 @@ class utils
 	 * @throws \ApplicationException if constant value is invalid
 	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetCoreVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
+	public static function GetItopVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
 	{
 		$aExplodedVersion = explode('.', $sItopVersion);
 
