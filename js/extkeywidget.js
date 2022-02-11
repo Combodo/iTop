@@ -899,6 +899,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 
 					$('#label_'+me.id).val(txt);
 					$('#label_'+me.id).removeClass('ac_dlg_loading');
+					$('#label_'+me.id).data('selected_value',txt);
 
 					var prevValue = $('#'+me.id).val();
 					$('#'+me.id).val(iObjectId);
