@@ -31,17 +31,17 @@
 // Class: lnkFunctionalCIToTicket
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToTicket' => 'Link CI / Solicitação',
+	'Class:lnkFunctionalCIToTicket' => 'Link IC / Solicitação',
 	'Class:lnkFunctionalCIToTicket+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id' => 'Solicitação',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título do bilhete',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título do ticket',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'CIs',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome CI',
+	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name' => 'Nome do IC',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_name+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact' => 'Impacto',
 	'Class:lnkFunctionalCIToTicket/Attribute:impact+' => '',
@@ -56,15 +56,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link CI / Contrato provedor(a)',
+	'Class:lnkFunctionalCIToProviderContract' => 'Link IC / Contrato de provedor(a)',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato provedor(a)',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato de provedor(a)',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nome contrato provedor(a)',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nome do contrato de provedor(a)',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'CIs',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Nome CI',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name' => 'Nome do IC',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_name+' => '',
 ));
 
@@ -73,15 +73,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToService' => 'Link CI / Serviço',
+	'Class:lnkFunctionalCIToService' => 'Link IC / Serviço',
 	'Class:lnkFunctionalCIToService+' => '',
 	'Class:lnkFunctionalCIToService/Attribute:service_id' => 'Serviço',
 	'Class:lnkFunctionalCIToService/Attribute:service_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Nome serviço',
+	'Class:lnkFunctionalCIToService/Attribute:service_name' => 'Nome do serviço',
 	'Class:lnkFunctionalCIToService/Attribute:service_name+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'CIs',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_id+' => '',
-	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Nome CI',
+	'Class:lnkFunctionalCIToService/Attribute:functionalci_name' => 'Nome do IC',
 	'Class:lnkFunctionalCIToService/Attribute:functionalci_name+' => '',
 ));
 
@@ -90,7 +90,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrato provedor(a)',
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrato de provedor(a)',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Todos os contratos para esse item de configuração',
 	'Class:FunctionalCI/Attribute:services_list' => 'Serviços',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Todos os serviços impactados por esse item de configuração',

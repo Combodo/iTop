@@ -26,20 +26,20 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserLocal/Attribute:password+' => '',
 
 	'Class:UserLocal/Attribute:expiration' => 'Expiração de senha',
-	'Class:UserLocal/Attribute:expiration+' => 'Status de expiraçãoo de senha (requer uma extensão para fazer efeito)',
+	'Class:UserLocal/Attribute:expiration+' => 'Status de expiração de senha (requer uma extensão para fazer efeito)',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Pode expirar',
 	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Nunca expira',
 	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expirada',
 	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
-	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
-	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Senha não pode ser alterada pelo usuário.',
 	'Class:UserLocal/Attribute:password_renewed_date' => 'Renovação de senha',
-	'Class:UserLocal/Attribute:password_renewed_date+' => 'Quando a senha foi trocada antiormente',
+	'Class:UserLocal/Attribute:password_renewed_date+' => 'Quando a senha foi trocada anteriormente',
 
 	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'A senha deve ter no mínimo 8 caracteres e incluir letras maiúsculas, minúsculas, números e símbolos.',
 
 	'UserLocal:password:expiration' => 'O campo abaixo requer uma extensão',
-	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Definir a expiração da senha para "One-time password" não é permitido para o seu próprio Usuário',
 ));

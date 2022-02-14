@@ -18,41 +18,41 @@
  */
 // Activity panel
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expand~~',
-	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Reduce~~',
-	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Close~~',
-	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Load more entries~~',
-	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Load all previous entries~~',
+	'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip' => 'Expandir',
+	'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip' => 'Recolher',
+	'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip' => 'Fechar',
+	'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip' => 'Carregar mais entradas',
+	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Carregar todas as entradas anteriores',
 
 	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Activity~~',
-	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Draft entry~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Show / hide logs entries on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Choose which logs to display on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'State changes~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Show / hide state changes on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edits~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Show / hide fields edits on this tab~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Open all entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Close all entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Number of persons interacting in the visible entries~~',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Number of messages in the visible log(s)~~',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Atividade',
+	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Entrada de rascunho',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Exibir / ocultar entradas de logs nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Escolha quais logs a serem exibidos nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Alterações de status',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Exibir / ocultar alterações de status nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edições',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Exibir / ocultar edições de campos nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Abrir todas as entradas',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fechar todas as entradas',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Número de pessoas interagindo nas entradas visíveis',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de mensagens no(s) log(s) visíveis',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compose a new log entry~~',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compor uma nova entrada de log',
 
 	// Case log entry
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Multiple logs save~~',
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'By pressing the "save" button, you will submit entries for all the edited logs at once.~~',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Salvar múltiplos logs',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Ao pressionar o botão de "salvar", você enviará entradas para todos os logs editados de uma só vez.',
 
 	// Notification entry
-	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Click to open the notifications tab and get more information~~',
+	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Clique para abrir a guia de notificações e obter mais informações',
 
 	// Placeholder
-	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'It\'s calm up here, no activity yet~~',
+	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Está calmo aqui, nenhuma atividade ainda',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Activity panel~~',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Click to open the activity panel~~',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Painel de atividades',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Clique para abrir o painel de atividades',
 ));

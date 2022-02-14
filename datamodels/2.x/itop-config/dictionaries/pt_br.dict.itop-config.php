@@ -22,17 +22,17 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
-	'Menu:ConfigEditor' => 'Configuração',
+	'Menu:ConfigEditor' => 'Configurações',
 	'config-edit-title' => 'Editor do arquivo de configuração',
 	'config-edit-intro' => 'Tenha cuidado ao editar o arquivo de configuração.',
 	'config-apply' => 'Aplicar',
 	'config-apply-title' => 'Aplicar (Ctrl+S)',
-	'config-cancel' => 'Resetar',
+	'config-cancel' => 'Descartar alterações',
 	'config-saved' => 'Gravado com sucesso.',
-	'config-confirm-cancel' => 'Suas mudanças serão perdidas.',
-	'config-no-change' => 'Sem alteração: o arquivo ficou sem alteração.',
+	'config-confirm-cancel' => 'Suas alterações serão perdidas.',
+	'config-no-change' => 'Sem alteração: nenhuma alteração realizada no arquivo.',
 	'config-reverted' => 'A configuração foi restaurada.',
 	'config-parse-error' => 'Linha %2$d: %1$s.<br/>O arquivo não foi atualizado.',
 	'config-current-line' => 'Editando linha: %1$s',
-	'config-saved-warning-db-password' => 'Salvado com sucesso, mas o backup não vai funcionar devido aos caracteres não suportados na senha da base de dados.',
+	'config-saved-warning-db-password' => 'Salvo com sucesso, mas o backup não vai funcionar devido aos caracteres não suportados na senha do banco de dados.',
 ));

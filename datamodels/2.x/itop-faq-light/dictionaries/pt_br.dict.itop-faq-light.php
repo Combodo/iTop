@@ -48,7 +48,7 @@
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => 'Perguntas mais frequentes',
+	'Class:FAQ+' => 'Perguntas frequentes',
 	'Class:FAQ/Attribute:title' => 'Título',
 	'Class:FAQ/Attribute:title+' => '',
 	'Class:FAQ/Attribute:summary' => 'Índice',
@@ -57,9 +57,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQ/Attribute:description+' => '',
 	'Class:FAQ/Attribute:category_id' => 'Categoria',
 	'Class:FAQ/Attribute:category_id+' => '',
-	'Class:FAQ/Attribute:category_name' => 'Nome categoria',
+	'Class:FAQ/Attribute:category_name' => 'Nome da categoria',
 	'Class:FAQ/Attribute:category_name+' => '',
-	'Class:FAQ/Attribute:error_code' => 'Código erro',
+	'Class:FAQ/Attribute:error_code' => 'Código do erro',
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => 'Palavras-chaves',
 	'Class:FAQ/Attribute:key_words+' => '',
@@ -71,21 +71,21 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:FAQCategory' => 'Categoria FAQ',
-	'Class:FAQCategory+' => 'Categoria por FAQ',
+	'Class:FAQCategory' => 'Categorias de FAQ',
+	'Class:FAQCategory+' => 'Categorias de FAQ',
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas mais frequentes vinculadas a essa categoria',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes vinculadas a essa categoria',
 ));
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:ProblemManagement' => 'Gerencimento Problemas',
-	'Menu:ProblemManagement+' => 'Gerencimento Problemas',
-	'Menu:Problem:Shortcuts' => 'Atalho',
+	'Menu:ProblemManagement' => 'Gerencimento de Problemas',
+	'Menu:ProblemManagement+' => 'Gerencimento de Problemas',
+	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:FAQCategory' => 'Categorias FAQ',
-	'Menu:FAQCategory+' => 'Todas categorias FAQ',
+	'Menu:FAQCategory+' => 'Todas as categorias de FAQ',
 	'Menu:FAQ' => 'FAQs',
-	'Menu:FAQ+' => 'Todas FAQs',
+	'Menu:FAQ+' => 'Todos os FAQs',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Perguntes frequentes (FAQ)',
 	'Brick:Portal:FAQ:Title+' => '<p>Com pressa?</p><p>Confira a lista de perguntas mais comuns e (talvez) encontre a resposta esperada imediatamente.</p>',

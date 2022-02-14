@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', [
-	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Other tabs~~',
-	'UIBlock:Error:AddBlockNotTabForbidden' => 'Cannot add block %1$s to %2$s (only Tab blocks are allowed)~~',
-	'UIBlock:TabContainer:RemoteTabLoad' => 'Click to load this tab~~',
+	'UI:Layout:TabContainer:ExtraTabsListToggler:Label' => 'Outras guias',
+	'UIBlock:Error:AddBlockNotTabForbidden' => 'Não é possível adicionar o bloco %1$s a %2$s (apenas blocos de Guia são permitidos)',
+	'UIBlock:TabContainer:RemoteTabLoad' => 'Clique para carregar esta guia',
 ]);

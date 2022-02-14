@@ -30,18 +30,18 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachments:History_File_Removed' => 'Anexo %1$s excluído.',
 	'Attachments:AddAttachment' => 'Adicionar anexo: ',
 	'Attachments:UploadNotAllowedOnThisSystem' => 'Arquivo carregado NÃO PERMITIDO pelo sistema.',
-	'Attachment:Max_Go' => '(Tamanho máximo arquivo: %1$s Gb)',
-	'Attachment:Max_Mo' => '(Tamanho máximo arquivo: %1$s Mb)',
-	'Attachment:Max_Ko' => '(Tamanho máximo arquivo: %1$s Kb)',
+	'Attachment:Max_Go' => '(Tamanho máximo de arquivo: %1$s Gb)',
+	'Attachment:Max_Mo' => '(Tamanho máximo de arquivo: %1$s Mb)',
+	'Attachment:Max_Ko' => '(Tamanho máximo de arquivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'Nenhum anexo. ',
 	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo.',
 	'Attachments:Error:FileTooLarge' => 'Arquivo muito grande para ser anexado. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'O arquivo recebido está vazio e não pode ser anexado.
 Ou você anexou um arquivo vazio,
 ou entre em contato com o seu administrador do iTOP pois o servidor pode estar sem espaço de armazenamento.',
-	'Attachments:Render:Icons' => 'Mostrar como ícones',
-	'Attachments:Render:Table' => 'Mostrar como lista',
-	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
+	'Attachments:Render:Icons' => 'Exibir como ícones',
+	'Attachments:Render:Table' => 'Exibir como lista',
+	'UI:Attachments:DropYourFileHint' => 'Solte arquivos em qualquer lugar nesta área',
 ));
 
 //

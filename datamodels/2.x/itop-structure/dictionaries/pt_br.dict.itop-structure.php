@@ -37,27 +37,27 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Organization/Attribute:name' => 'Nome',
 	'Class:Organization/Attribute:name+' => 'Nome comum',
 	'Class:Organization/Attribute:code' => 'Código',
-	'Class:Organization/Attribute:code+' => 'Código organização (Siret, DUNS,...)',
-	'Class:Organization/Attribute:status' => 'Estado',
+	'Class:Organization/Attribute:code+' => 'Código da organização (CNPJ, Siret, DUNS, ...)',
+	'Class:Organization/Attribute:status' => 'Status',
 	'Class:Organization/Attribute:status+' => '',
 	'Class:Organization/Attribute:status/Value:active' => 'Ativo',
 	'Class:Organization/Attribute:status/Value:active+' => 'Ativo',
 	'Class:Organization/Attribute:status/Value:inactive' => 'Inativo',
 	'Class:Organization/Attribute:status/Value:inactive+' => 'Inativo',
-	'Class:Organization/Attribute:parent_id' => 'Principal',
-	'Class:Organization/Attribute:parent_id+' => 'Organização principal',
-	'Class:Organization/Attribute:parent_name' => 'Nome principal',
-	'Class:Organization/Attribute:parent_name+' => 'Nome da organização principal',
-	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo entrega',
+	'Class:Organization/Attribute:parent_id' => 'Pai',
+	'Class:Organization/Attribute:parent_id+' => 'Organização pai',
+	'Class:Organization/Attribute:parent_name' => 'Organização pai',
+	'Class:Organization/Attribute:parent_name+' => 'Nome da organização pai',
+	'Class:Organization/Attribute:deliverymodel_id' => 'Modelo de entrega',
 	'Class:Organization/Attribute:deliverymodel_id+' => '',
-	'Class:Organization/Attribute:deliverymodel_name' => 'Nome modelo entrega',
+	'Class:Organization/Attribute:deliverymodel_name' => 'Nome do modelo de entrega',
 	'Class:Organization/Attribute:deliverymodel_name+' => '',
-	'Class:Organization/Attribute:parent_id_friendlyname' => 'Principal',
-	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organização principal',
+	'Class:Organization/Attribute:parent_id_friendlyname' => 'Pai',
+	'Class:Organization/Attribute:parent_id_friendlyname+' => 'Organização pai',
 	'Class:Organization/Attribute:overview' => 'Visão geral',
-	'Organization:Overview:FunctionalCIs' => 'Itens de configuração desta organização',
+	'Organization:Overview:FunctionalCIs' => 'Itens de configuração vinculados a essa organização',
 	'Organization:Overview:FunctionalCIs:subtitle' => 'por tipo',
-	'Organization:Overview:Users' => 'Usuários '.ITOP_APPLICATION_SHORT.' dentro desta organização',
+	'Organization:Overview:Users' => 'Usuários '.ITOP_APPLICATION_SHORT.' vinculados a essa organização',
 ));
 
 //
@@ -69,7 +69,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Location+' => 'Qualquer tipo de localização: Região, País, Cidade, Lugar, Edifício, Andar, Sala, Rack,...',
 	'Class:Location/Attribute:name' => 'Nome',
 	'Class:Location/Attribute:name+' => '',
-	'Class:Location/Attribute:status' => 'Estado',
+	'Class:Location/Attribute:status' => 'Status',
 	'Class:Location/Attribute:status+' => '',
 	'Class:Location/Attribute:status/Value:active' => 'Ativo',
 	'Class:Location/Attribute:status/Value:active+' => 'Ativo',
@@ -77,7 +77,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Location/Attribute:status/Value:inactive+' => 'Inativo',
 	'Class:Location/Attribute:org_id' => 'Organização',
 	'Class:Location/Attribute:org_id+' => '',
-	'Class:Location/Attribute:org_name' => 'Nome organização',
+	'Class:Location/Attribute:org_name' => 'Nome da organização',
 	'Class:Location/Attribute:org_name+' => '',
 	'Class:Location/Attribute:address' => 'Endereço',
 	'Class:Location/Attribute:address+' => 'Endereço',
@@ -88,9 +88,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Location/Attribute:country' => 'País',
 	'Class:Location/Attribute:country+' => '',
 	'Class:Location/Attribute:physicaldevice_list' => 'Dispositivos',
-	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os dispositivos desta localidade',
+	'Class:Location/Attribute:physicaldevice_list+' => 'Todos os dispositivos vinculados a essa localidade',
 	'Class:Location/Attribute:person_list' => 'Contatos',
-	'Class:Location/Attribute:person_list+' => 'Todos os contatos desta localidade',
+	'Class:Location/Attribute:person_list+' => 'Todos os contatos vinculados a essa localidade',
 ));
 
 //
@@ -102,7 +102,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Contact+' => '',
 	'Class:Contact/Attribute:name' => 'Nome',
 	'Class:Contact/Attribute:name+' => '',
-	'Class:Contact/Attribute:status' => 'Estado',
+	'Class:Contact/Attribute:status' => 'Status',
 	'Class:Contact/Attribute:status+' => '',
 	'Class:Contact/Attribute:status/Value:active' => 'Ativo',
 	'Class:Contact/Attribute:status/Value:active+' => 'Ativo',
@@ -112,7 +112,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Contact/Attribute:org_id+' => '',
 	'Class:Contact/Attribute:org_name' => 'Nome organização',
 	'Class:Contact/Attribute:org_name+' => '',
-	'Class:Contact/Attribute:email' => 'Email',
+	'Class:Contact/Attribute:email' => 'E-mail',
 	'Class:Contact/Attribute:email+' => '',
 	'Class:Contact/Attribute:phone' => 'Telefone',
 	'Class:Contact/Attribute:phone+' => '',
@@ -125,7 +125,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Contact/Attribute:function' => 'Função',
 	'Class:Contact/Attribute:function+' => '',
 	'Class:Contact/Attribute:cis_list' => 'CIs',
-	'Class:Contact/Attribute:cis_list+' => 'Todos os itens de configuração vinculado a esse contato',
+	'Class:Contact/Attribute:cis_list+' => 'Todos os itens de configuração vinculados a esse contato',
 	'Class:Contact/Attribute:finalclass' => 'Tipo contato',
 	'Class:Contact/Attribute:finalclass+' => '',
 ));
@@ -147,11 +147,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:mobile_phone+' => '',
 	'Class:Person/Attribute:location_id' => 'Localidade',
 	'Class:Person/Attribute:location_id+' => '',
-	'Class:Person/Attribute:location_name' => 'Nome localidade',
+	'Class:Person/Attribute:location_name' => 'Nome da localidade',
 	'Class:Person/Attribute:location_name+' => '',
 	'Class:Person/Attribute:manager_id' => 'Gerente',
 	'Class:Person/Attribute:manager_id+' => '',
-	'Class:Person/Attribute:manager_name' => 'Nome gerente',
+	'Class:Person/Attribute:manager_name' => 'Nome do gerente',
 	'Class:Person/Attribute:manager_name+' => '',
 	'Class:Person/Attribute:team_list' => 'Equipes',
 	'Class:Person/Attribute:team_list+' => 'Todas as equipes que essa pessoa pertence',
@@ -161,9 +161,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Foto',
 	'Class:Person/Attribute:picture+' => '',
-	'Class:Person/UniquenessRule:employee_number+' => 'O número de funcionário deve ser único na organização',
-	'Class:Person/UniquenessRule:employee_number' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo número de funcionário',
-	'Class:Person/UniquenessRule:name+' => 'O nome do funcionário deve ser único dentro de sua organização',
+	'Class:Person/UniquenessRule:employee_number+' => 'O número do colaborador deve ser único na organização',
+	'Class:Person/UniquenessRule:employee_number' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo número de colaborador',
+	'Class:Person/UniquenessRule:name+' => 'O nome do colaborador deve ser único dentro de sua organização',
 	'Class:Person/UniquenessRule:name' => 'Já existe uma pessoa na organização \'$this->org_name$\' com o mesmo nome',
 ));
 
@@ -175,9 +175,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Team' => 'Equipe',
 	'Class:Team+' => '',
 	'Class:Team/Attribute:persons_list' => 'Membros',
-	'Class:Team/Attribute:persons_list+' => 'Todas as pessoas que pertencem a esta equipe',
+	'Class:Team/Attribute:persons_list+' => 'Todas as pessoas que pertencem a essa equipe',
 	'Class:Team/Attribute:tickets_list' => 'Solicitações',
-	'Class:Team/Attribute:tickets_list+' => 'Todas as solicitações atribuídas a esta equipe',
+	'Class:Team/Attribute:tickets_list+' => 'Todas as solicitações atribuídas a essa equipe',
 ));
 
 //
@@ -201,7 +201,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:version+' => '',
 	'Class:Document/Attribute:description' => 'Descrição',
 	'Class:Document/Attribute:description+' => '',
-	'Class:Document/Attribute:status' => 'Estado',
+	'Class:Document/Attribute:status' => 'Status',
 	'Class:Document/Attribute:status+' => '',
 	'Class:Document/Attribute:status/Value:draft' => 'Rascunho',
 	'Class:Document/Attribute:status/Value:draft+' => '',
@@ -266,7 +266,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:DocumentType' => 'Tipo documento',
+	'Class:DocumentType' => 'Tipo de documento',
 	'Class:DocumentType+' => '',
 ));
 
@@ -275,7 +275,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ContactType' => 'Tipo contato',
+	'Class:ContactType' => 'Tipo de contato',
 	'Class:ContactType+' => '',
 ));
 
@@ -305,18 +305,18 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Menu:DataAdministration' => 'Administração Dados',
-	'Menu:DataAdministration+' => 'Administração Dados',
+	'Menu:DataAdministration' => 'Administração de Dados',
+	'Menu:DataAdministration+' => 'Administração de Dados',
 	'Menu:Catalogs' => 'Catálogos',
-	'Menu:Catalogs+' => 'Tipos dados',
+	'Menu:Catalogs+' => 'Tipos de dados',
 	'Menu:Audit' => 'Auditoria',
 	'Menu:Audit+' => 'Auditoria',
 	'Menu:CSVImport' => 'Importar CSV',
 	'Menu:CSVImport+' => 'Criação ou atualização em massa',
 	'Menu:Organization' => 'Organizações',
-	'Menu:Organization+' => 'Todas organizações',
-	'Menu:ConfigManagement' => 'Gerenciamento Configurações',
-	'Menu:ConfigManagement+' => 'Gerenciamento Configurações',
+	'Menu:Organization+' => 'Todas as organizações',
+	'Menu:ConfigManagement' => 'Gerenciamento Configuração',
+	'Menu:ConfigManagement+' => 'Gerenciamento de Configuração',
 	'Menu:ConfigManagementCI' => 'Itens de configuração',
 	'Menu:ConfigManagementCI+' => 'Itens de configuração',
 	'Menu:ConfigManagementOverview' => 'Visão geral',
@@ -325,36 +325,36 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:Contact+' => 'Contatos',
 	'Menu:Contact:Count' => '%1$d contatos',
 	'Menu:Person' => 'Pessoas',
-	'Menu:Person+' => 'Todas pessoas',
+	'Menu:Person+' => 'Todas as pessoas',
 	'Menu:Team' => 'Equipes',
-	'Menu:Team+' => 'Todas equipes',
+	'Menu:Team+' => 'Todas as equipes',
 	'Menu:Document' => 'Documentos',
-	'Menu:Document+' => 'Todos documentos',
+	'Menu:Document+' => 'Todos os documentos',
 	'Menu:Location' => 'Localidades',
-	'Menu:Location+' => 'Todas localidades',
+	'Menu:Location+' => 'Todas as localidades',
 	'Menu:NewContact' => 'Novo contato',
 	'Menu:NewContact+' => 'Novo contato',
 	'Menu:SearchContacts' => 'Pesquisar por contatos',
 	'Menu:SearchContacts+' => 'Pesquisar por contatos',
 	'Menu:ConfigManagement:Shortcuts' => 'Atalhos',
-	'Menu:ConfigManagement:AllContacts' => 'Todos contatos: %1$d',
-	'Menu:Typology' => 'Configuração tipologia',
-	'Menu:Typology+' => 'Configuração tipologia',
+	'Menu:ConfigManagement:AllContacts' => 'Todos os contatos: %1$d',
+	'Menu:Typology' => 'Configuração de Tipologia',
+	'Menu:Typology+' => 'Configuração de Tipologia',
 	'UI_WelcomeMenu_AllConfigItems' => 'Índice',
-	'Menu:ConfigManagement:Typology' => 'Configuração tipologia',
+	'Menu:ConfigManagement:Typology' => 'Configuração de Tipologia',
 ));
 
 // Add translation for Fieldsets
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Person:info' => 'Informações gerais',
-	'UserLocal:info' => 'General information~~',
-	'Person:personal_info' => 'Informação pessoal',
-	'Person:notifiy' => 'Notificação',
+	'UserLocal:info' => 'Informações gerais',
+	'Person:personal_info' => 'Informações pessoais',
+	'Person:notifiy' => 'Notificações',
 ));
 
 // Themes
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'theme:fullmoon' => 'Full moon~~',
-	'theme:test-red' => 'Test instance (Red)~~',
+	'theme:fullmoon' => 'Full moon',
+	'theme:test-red' => 'Test instance (Red)',
 ));
