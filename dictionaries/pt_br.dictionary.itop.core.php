@@ -41,7 +41,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributePhoneNumber' => 'Número de telefone',
 	'Core:AttributePhoneNumber+' => '',
 
-	'Core:AttributeObsolescenceDate' => 'Data de obsolescência ',
+	'Core:AttributeObsolescenceDate' => 'Data de obsolescência',
 	'Core:AttributeObsolescenceDate+' => '',
 
 	'Core:AttributeTagSet' => 'Lista de tags',
@@ -259,6 +259,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp/Attribute:objkey' => 'ID do objeto',
 	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Tipo',
+	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Quem fez essa alteração',
+	'Class:CMDBChangeOp/Attribute:objclass' => 'Classe do objeto',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
+	'Class:CMDBChangeOp/Attribute:objkey' => 'ID do objeto',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
+	'Class:CMDBChangeOp/Attribute:finalclass' => 'Tipo',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
 
@@ -473,7 +479,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Nome de usuário',
 	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'E-mail do usuário',
-	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço de e-mail deste usuário',
+	'Class:EventLoginUsage/Attribute:contact_email+' => 'Endereço de e-mail desse usuário',
 ));
 
 //
