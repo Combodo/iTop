@@ -44,7 +44,7 @@ class TemplateNameParser extends BaseTemplateNameParser
         }
 
         // normalize name
-        $name = str_replace(':/', ':', preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name)));
+        $name = preg_replace('#/{2,}#', '/', str_replace('\\', '/', $name));
 
         if (false !== strpos($name, '..')) {
             throw new \RuntimeException(sprintf('Template name "%s" contains invalid characters.', $name));
@@ -72,7 +72,7 @@ class TemplateNameParser extends BaseTemplateNameParser
         $isAbsolute = (bool) preg_match('#^(?:/|[a-zA-Z]:)#', $file);
 
         if ($isAbsolute) {
-            @trigger_error('Absolute template path support is deprecated since Symfony 3.1 and will be removed in 4.0.', E_USER_DEPRECATED);
+            @trigger_error('Absolute template path support is deprecated since Symfony 3.1 and will be removed in 4.0.', \E_USER_DEPRECATED);
         }
 
         return $isAbsolute;

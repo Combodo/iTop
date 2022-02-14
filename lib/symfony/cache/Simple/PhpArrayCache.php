@@ -36,7 +36,7 @@ class PhpArrayCache implements CacheInterface, PruneableInterface, ResettableInt
     {
         $this->file = $file;
         $this->pool = $fallbackPool;
-        $this->zendDetectUnicode = filter_var(ini_get('zend.detect_unicode'), FILTER_VALIDATE_BOOLEAN);
+        $this->zendDetectUnicode = filter_var(ini_get('zend.detect_unicode'), \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -44,14 +44,14 @@ class PhpArrayCache implements CacheInterface, PruneableInterface, ResettableInt
      * stores arrays in its latest versions. This factory method decorates the given
      * fallback pool with this adapter only if the current PHP version is supported.
      *
-     * @param string $file The PHP file were values are cached
+     * @param string         $file         The PHP file were values are cached
+     * @param CacheInterface $fallbackPool A pool to fallback on when an item is not hit
      *
      * @return CacheInterface
      */
     public static function create($file, CacheInterface $fallbackPool)
     {
-        // Shared memory is available in PHP 7.0+ with OPCache enabled and in HHVM
-        if ((\PHP_VERSION_ID >= 70000 && filter_var(ini_get('opcache.enable'), FILTER_VALIDATE_BOOLEAN)) || \defined('HHVM_VERSION')) {
+        if (\PHP_VERSION_ID >= 70000) {
             return new static($file, $fallbackPool);
         }
 
@@ -100,7 +100,7 @@ class PhpArrayCache implements CacheInterface, PruneableInterface, ResettableInt
         if ($keys instanceof \Traversable) {
             $keys = iterator_to_array($keys, false);
         } elseif (!\is_array($keys)) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given.', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
         }
         foreach ($keys as $key) {
             if (!\is_string($key)) {
@@ -150,7 +150,7 @@ class PhpArrayCache implements CacheInterface, PruneableInterface, ResettableInt
     public function deleteMultiple($keys)
     {
         if (!\is_array($keys) && !$keys instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
+            throw new InvalidArgumentException(sprintf('Cache keys must be array or Traversable, "%s" given.', \is_object($keys) ? \get_class($keys) : \gettype($keys)));
         }
 
         $deleted = true;
@@ -199,7 +199,7 @@ class PhpArrayCache implements CacheInterface, PruneableInterface, ResettableInt
     public function setMultiple($values, $ttl = null)
     {
         if (!\is_array($values) && !$values instanceof \Traversable) {
-            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given', \is_object($values) ? \get_class($values) : \gettype($values)));
+            throw new InvalidArgumentException(sprintf('Cache values must be array or Traversable, "%s" given.', \is_object($values) ? \get_class($values) : \gettype($values)));
         }
 
         $saved = true;

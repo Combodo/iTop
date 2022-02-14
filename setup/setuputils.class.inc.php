@@ -1012,7 +1012,7 @@ class SetupUtils
 		$oPage, $bIsItopInstall, $sDBServer, $sDBUser, $sDBPwd, $sDBName, $sDBPrefix, $bTlsEnabled, $sTlsCA,
 		$sNewDBName = ''
 	) {
-		$sWikiVersion = utils::GetCoreVersionWikiSyntax(); //eg : '2_7_0';
+		$sWikiVersion = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
 		$sMysqlTlsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion.':install:php_and_mysql_tls';
 
 		$oPage->add('<fieldset><legend>Database Server Connection</legend>');
@@ -1268,7 +1268,7 @@ EOF
 			{
 				$aResult['checks'][] = new CheckResult(CheckResult::INFO, "MySQL server's max_allowed_packet ($sMaxAllowedPacketFriendly) is big enough compared to upload_max_filesize ($sMaxUploadSizeFriendly).");
 			} else if ($iMaxAllowedPacket < $iMaxUploadSize) {
-				$sWikiVersion                = utils::GetCoreVersionWikiSyntax(); //eg : '2_7_0';
+				$sWikiVersion                = utils::GetItopVersionWikiSyntax(); //eg : '2_7_0';
 				$sAttachmentsVarsWikiPageUrl = 'https://www.itophub.io/wiki/page?id='.$sWikiVersion
 					.':install:php_and_mysql_configuration#attachments_upload';
 
@@ -1939,8 +1939,8 @@ JS
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
 		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
 		}
 		else
 		{
@@ -1978,7 +1978,7 @@ JS
 	{
 		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
-		self::Log("----> Entering maintenance mode");
+		SetupLog::Info("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
 		return $bPreviousMode;
 	}
@@ -1988,7 +1988,7 @@ JS
 		@unlink(MAINTENANCE_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting maintenance mode");
+			SetupLog::Info("<---- Exiting maintenance mode");
 		}
 	}
 
@@ -2001,7 +2001,7 @@ JS
 	{
 		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
-		self::Log("----> Entering read only mode");
+		SetupLog::Info("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
 
 		return $bPreviousMode;
@@ -2012,7 +2012,7 @@ JS
 		@unlink(READONLY_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting read only mode");
+			SetupLog::Info("<---- Exiting read only mode");
 		}
 	}
 
@@ -2048,7 +2048,7 @@ JS
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
-				self::Log("Waiting for cron to stop ($iCount)");
+				SetupLog::Info("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(1);
 				if (time() > $iTimeLimit)
@@ -2130,22 +2130,6 @@ JS
 			unlink($sTokenFile);
 		}
 		Session::Unset('setup_token');
-	}
-
-
-	/**
-	 * @param string $sText
-	 *
-	 * @since 2.7.0 N°2240 Maintenance mode
-	 * @since 3.0.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
-	 */
-	private static function Log($sText) {
-		if (class_exists('SetupPage')) {
-			SetupLog::Ok($sText);
-		}
-		else {
-			IssueLog::Info($sText);
-		}
 	}
 
 	/**

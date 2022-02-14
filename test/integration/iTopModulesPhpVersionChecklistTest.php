@@ -88,7 +88,7 @@ class iTopModulesPhpVersionIntegrationTest extends ItopTestCase {
 	 */
 	public function testItopWikiVersion($sItopVersion, $sExpectedWikiVersion) {
 		try {
-			$sActualWikiVersion = utils::GetCoreVersionWikiSyntax($sItopVersion);
+			$sActualWikiVersion = utils::GetItopVersionWikiSyntax($sItopVersion);
 		}
 		catch (ApplicationException $e) {
 			self::fail('Cannot get wiki version : '.$e->getMessage());

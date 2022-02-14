@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
 {
     public static $files = array (
-        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         '5255c38a0faeba867671b61dfda6d864' => __DIR__ . '/..' . '/paragonie/random_compat/lib/random.php',
         '023d27dca8066ef29e6739335ea73bad' => __DIR__ . '/..' . '/symfony/polyfill-php70/bootstrap.php',
         '32dcc8afd4335739640db7d200c1971d' => __DIR__ . '/..' . '/symfony/polyfill-apcu/bootstrap.php',
@@ -1278,6 +1278,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\PropertyInfoPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/PropertyInfoPass.php',
         'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\RoutingResolverPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/RoutingResolverPass.php',
         'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\SerializerPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/SerializerPass.php',
+        'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\SessionPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/SessionPass.php',
         'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\TemplatingPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/TemplatingPass.php',
         'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\TranslationDumperPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/TranslationDumperPass.php',
         'Symfony\\Bundle\\FrameworkBundle\\DependencyInjection\\Compiler\\TranslationExtractorPass' => __DIR__ . '/..' . '/symfony/framework-bundle/DependencyInjection/Compiler/TranslationExtractorPass.php',
@@ -1316,6 +1317,9 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateNameParser' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TemplateNameParser.php',
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateReference' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TemplateReference.php',
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TimedPhpEngine' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TimedPhpEngine.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\ForwardCompatTestTrait' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/ForwardCompatTestTrait.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\KernelTestCase' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/KernelTestCase.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/WebTestCase.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\PhpExtractor' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/PhpExtractor.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\PhpStringTokenParser' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/PhpStringTokenParser.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\TranslationLoader' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/TranslationLoader.php',
@@ -1868,6 +1872,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Component\\HttpFoundation\\Session\\SessionBagInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Session/SessionBagInterface.php',
         'Symfony\\Component\\HttpFoundation\\Session\\SessionBagProxy' => __DIR__ . '/..' . '/symfony/http-foundation/Session/SessionBagProxy.php',
         'Symfony\\Component\\HttpFoundation\\Session\\SessionInterface' => __DIR__ . '/..' . '/symfony/http-foundation/Session/SessionInterface.php',
+        'Symfony\\Component\\HttpFoundation\\Session\\SessionUtils' => __DIR__ . '/..' . '/symfony/http-foundation/Session/SessionUtils.php',
         'Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\AbstractSessionHandler' => __DIR__ . '/..' . '/symfony/http-foundation/Session/Storage/Handler/AbstractSessionHandler.php',
         'Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MemcacheSessionHandler' => __DIR__ . '/..' . '/symfony/http-foundation/Session/Storage/Handler/MemcacheSessionHandler.php',
         'Symfony\\Component\\HttpFoundation\\Session\\Storage\\Handler\\MemcachedSessionHandler' => __DIR__ . '/..' . '/symfony/http-foundation/Session/Storage/Handler/MemcachedSessionHandler.php',
@@ -2119,6 +2124,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Component\\VarDumper\\Dumper\\DataDumperInterface' => __DIR__ . '/..' . '/symfony/var-dumper/Dumper/DataDumperInterface.php',
         'Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper' => __DIR__ . '/..' . '/symfony/var-dumper/Dumper/HtmlDumper.php',
         'Symfony\\Component\\VarDumper\\Exception\\ThrowingCasterException' => __DIR__ . '/..' . '/symfony/var-dumper/Exception/ThrowingCasterException.php',
+        'Symfony\\Component\\VarDumper\\Test\\VarDumperTestTrait' => __DIR__ . '/..' . '/symfony/var-dumper/Test/VarDumperTestTrait.php',
         'Symfony\\Component\\VarDumper\\VarDumper' => __DIR__ . '/..' . '/symfony/var-dumper/VarDumper.php',
         'Symfony\\Component\\Yaml\\Command\\LintCommand' => __DIR__ . '/..' . '/symfony/yaml/Command/LintCommand.php',
         'Symfony\\Component\\Yaml\\Dumper' => __DIR__ . '/..' . '/symfony/yaml/Dumper.php',
