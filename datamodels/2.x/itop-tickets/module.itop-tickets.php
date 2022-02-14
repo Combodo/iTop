@@ -33,7 +33,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetCoreVersionWikiSyntax().':admin:cron',
+		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().':admin:cron',
 		'doc.more_information' => '',
 
 		// Default settings
