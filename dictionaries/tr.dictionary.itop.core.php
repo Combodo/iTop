@@ -44,26 +44,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
 	'Core:AttributeDashboard' => 'Dashboard~~',
-	'Core:AttributeDashboard+' => '~~',
+	'Core:AttributeDashboard+' => '',
 
 	'Core:AttributePhoneNumber' => 'Phone number~~',
-	'Core:AttributePhoneNumber+' => '~~',
+	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
-	'Core:AttributeObsolescenceDate+' => '~~',
+	'Core:AttributeObsolescenceDate+' => '',
 
 	'Core:AttributeTagSet' => 'List of tags~~',
-	'Core:AttributeTagSet+' => '~~',
+	'Core:AttributeTagSet+' => '',
 	'Core:AttributeSet:placeholder' => 'click to add~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromClass' => '%1$s (%2$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromOneChildClass' => '%1$s (%2$s from %3$s)~~',
 	'Core:AttributeClassAttCodeSet:ItemLabel:AttributeFromSeveralChildClasses' => '%1$s (%2$s from child classes)~~',
 
 	'Core:AttributeCaseLog' => 'Log~~',
-	'Core:AttributeCaseLog+' => '~~',
+	'Core:AttributeCaseLog+' => '',
 
 	'Core:AttributeMetaEnum' => 'Computed enum~~',
-	'Core:AttributeMetaEnum+' => '~~',
+	'Core:AttributeMetaEnum+' => '',
 
 	'Core:AttributeLinkedSetIndirect' => 'Nesnelerin dizisi (n-n)',
 	'Core:AttributeLinkedSetIndirect+' => 'Aynı sınıftan her türlü nesne [Altsınıf]',
@@ -75,7 +75,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeDecimal+' => 'Ondalık değer (negatif olabilir)',
 
 	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Evet',
 	'Core:AttributeBoolean/Value:no' => 'Hayır',
@@ -102,7 +102,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeString+' => 'Alfanümerik dize',
 
 	'Core:AttributeClass' => 'Sınıf',
-	'Core:AttributeClass+' => 'Sınıf',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'Kullanıcı dili',
 	'Core:AttributeApplicationLanguage+' => 'Dil ve Ülke (TR Türkiye)',
@@ -125,10 +125,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:AttributeHTML+' => 'HTML dizesi',
 
 	'Core:AttributeEmailAddress' => 'E-posta Adresi',
-	'Core:AttributeEmailAddress+' => 'E-posta Adresi',
+	'Core:AttributeEmailAddress+' => '',
 
 	'Core:AttributeIPAddress' => 'IP adresi',
-	'Core:AttributeIPAddress+' => 'IP adresi',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Nesne sorgusu Dili ifadesi',
@@ -212,7 +212,7 @@ Operators:<br/>
 	'Core:FriendlyName-Description' => 'Yaygın Adı',
 
 	'Core:AttributeTag' => 'Tags~~',
-	'Core:AttributeTag+' => 'Tags~~',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST~~',
 	'Core:Context=Synchro' => 'Synchro~~',
@@ -255,17 +255,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:CMDBChangeOp' => 'Değişiklik işlemi',
-	'Class:CMDBChangeOp+' => 'Değişiklik izleme',
+	'Class:CMDBChangeOp+' => '',
 	'Class:CMDBChangeOp/Attribute:change' => 'değişiklik',
-	'Class:CMDBChangeOp/Attribute:change+' => 'değişiklik',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'tarih',
 	'Class:CMDBChangeOp/Attribute:date+' => 'değişikliğin yapıldığı zaman',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'kullanıcı',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'değişikliğ yapan',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'nesne sınıfı',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'nesne sınıfı',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'nesne no',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'nesne  no',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'tip',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -307,9 +307,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:CMDBChangeOpSetAttributeScalar' => 'özellik değişimi',
 	'Class:CMDBChangeOpSetAttributeScalar+' => 'Nesne özellik değişimi izleme',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => 'Önceki değer',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => 'önceki değer',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => 'Yeni değer',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => 'yeni değer',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '',
 ));
 // Used by CMDBChangeOp... & derived classes
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
@@ -339,7 +339,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => 'tarih değişimi',
 	'Class:CMDBChangeOpSetAttributeBlob+' => 'tarih değişim izleme',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Önceki veri',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'önceki değer',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '',
 ));
 
 //
@@ -393,19 +393,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventNotificationEmail' => 'E-posta gönderim işlemi',
 	'Class:EventNotificationEmail+' => 'Gönderilen E-posta tarihçesi',
 	'Class:EventNotificationEmail/Attribute:to' => 'Kime',
-	'Class:EventNotificationEmail/Attribute:to+' => 'Kime',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopya',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'Kopya',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'Gizli Kopya',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'Gizli Kopya',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'Kimden',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Mesajı gönderen',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Konu',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Konu',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Mesaj',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Mesaj',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Eklentiler',
-	'Class:EventNotificationEmail/Attribute:attachments+' => '~~',
+	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
 
 //
@@ -426,7 +426,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventIssue/Attribute:arguments_get' => 'URL POST değişken değerleri',
 	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET değişken değerleri',
 	'Class:EventIssue/Attribute:callstack' => 'Çağrım sırası',
-	'Class:EventIssue/Attribute:callstack+' => 'Çağrım sırası',
+	'Class:EventIssue/Attribute:callstack+' => '',
 	'Class:EventIssue/Attribute:data' => 'Veri',
 	'Class:EventIssue/Attribute:data+' => 'Diğer bilgiler',
 ));
@@ -477,9 +477,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:EventLoginUsage' => 'Giriş Kullanımı',
 	'Class:EventLoginUsage+' => 'Uygulamaya bağlantı',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Giriş',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Giriş',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Kullanıcı adı',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Kullanıcı adı',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Kullanıcı e-postası',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Kullanıcının e-posta adresi',
 ));
@@ -498,11 +498,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Action/Attribute:status' => 'Durum',
 	'Class:Action/Attribute:status+' => 'Kullanımda mı?',
 	'Class:Action/Attribute:status/Value:test' => 'Test aşamasında',
-	'Class:Action/Attribute:status/Value:test+' => 'Test aşamasında',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'Kullanımda',
-	'Class:Action/Attribute:status/Value:enabled+' => 'Kullanımda',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Etkin değil',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Etkin değil',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'İlgili tetikleyiciler',
 	'Class:Action/Attribute:trigger_list+' => 'İşleme bağlı tetikleyici',
 	'Class:Action/Attribute:finalclass' => 'Tip',
@@ -543,21 +543,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ActionEmail/Attribute:to' => 'Kime',
 	'Class:ActionEmail/Attribute:to+' => 'E-posta alıcısı',
 	'Class:ActionEmail/Attribute:cc' => 'Kopya',
-	'Class:ActionEmail/Attribute:cc+' => 'Kopya',
+	'Class:ActionEmail/Attribute:cc+' => '',
 	'Class:ActionEmail/Attribute:bcc' => 'Gizli kopya',
 	'Class:ActionEmail/Attribute:bcc+' => 'Gizli alıcı',
 	'Class:ActionEmail/Attribute:subject' => 'Konu',
 	'Class:ActionEmail/Attribute:subject+' => 'E-posta konusu',
 	'Class:ActionEmail/Attribute:body' => 'E-posta içeriği',
-	'Class:ActionEmail/Attribute:body+' => 'E-posta içeriği',
+	'Class:ActionEmail/Attribute:body+' => '',
 	'Class:ActionEmail/Attribute:importance' => 'önem derecesi',
-	'Class:ActionEmail/Attribute:importance+' => 'önem derecesi',
+	'Class:ActionEmail/Attribute:importance+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'düşük',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'düşük',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'yüksek',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'yüksek',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -570,7 +570,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Trigger/Attribute:description' => 'Tanımlama',
 	'Class:Trigger/Attribute:description+' => 'tek satır tanımlama',
 	'Class:Trigger/Attribute:action_list' => 'Tetiklenen işlemler',
-	'Class:Trigger/Attribute:action_list+' => 'Tetiklenen işlemler',
+	'Class:Trigger/Attribute:action_list+' => '',
 	'Class:Trigger/Attribute:finalclass' => 'Tip',
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Context~~',
@@ -587,7 +587,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Hedef sınıf',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtre',
-	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'Class:TriggerOnObject/Attribute:filter+' => '',
 	'TriggerOnObject:WrongFilterQuery' => 'Yanlış filtre sorgusu: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Filtre sorgusu, \\"%1$s\\"  \'sınıfının nesnelerini dönmelidir.',
 ));
@@ -656,7 +656,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TriggerOnObjectUpdate' => 'Trigger (on object update)~~',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
 	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
 ));
 
 //
@@ -678,9 +678,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TriggerOnThresholdReached' => 'Tetikle (eşik üzerinde)',
 	'Class:TriggerOnThresholdReached+' => 'Dur-izle eşiğinde tetikle',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'İzlemeyi bırak',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '~~',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Eşik',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '~~',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
 //
@@ -707,7 +707,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SynchroDataSource/Attribute:name' => 'İsim',
-	'Class:SynchroDataSource/Attribute:name+' => 'İsim',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Açıklama',
 	'Class:SynchroDataSource/Attribute:status' => 'Durum',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Hedef sınıf',
@@ -999,14 +999,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:TagSetFieldData' => '%2$s for class %1$s~~',
-	'Class:TagSetFieldData+' => '~~',
+	'Class:TagSetFieldData+' => '',
 
 	'Class:TagSetFieldData/Attribute:code' => 'Code~~',
 	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
 	'Class:TagSetFieldData/Attribute:label' => 'Label~~',
 	'Class:TagSetFieldData/Attribute:label+' => 'Displayed label~~',
 	'Class:TagSetFieldData/Attribute:description' => 'Description~~',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description~~',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
@@ -1028,17 +1028,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:DBProperty' => 'DB property~~',
-	'Class:DBProperty+' => '~~',
+	'Class:DBProperty+' => '',
 	'Class:DBProperty/Attribute:name' => 'Name~~',
-	'Class:DBProperty/Attribute:name+' => '~~',
+	'Class:DBProperty/Attribute:name+' => '',
 	'Class:DBProperty/Attribute:description' => 'Description~~',
-	'Class:DBProperty/Attribute:description+' => '~~',
+	'Class:DBProperty/Attribute:description+' => '',
 	'Class:DBProperty/Attribute:value' => 'Value~~',
-	'Class:DBProperty/Attribute:value+' => '~~',
+	'Class:DBProperty/Attribute:value+' => '',
 	'Class:DBProperty/Attribute:change_date' => 'Change date~~',
-	'Class:DBProperty/Attribute:change_date+' => '~~',
+	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Change comment~~',
-	'Class:DBProperty/Attribute:change_comment+' => '~~',
+	'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
@@ -1046,29 +1046,29 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:BackgroundTask' => 'Background task~~',
-	'Class:BackgroundTask+' => '~~',
+	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Class name~~',
-	'Class:BackgroundTask/Attribute:class_name+' => '~~',
+	'Class:BackgroundTask/Attribute:class_name+' => '',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'First run date~~',
-	'Class:BackgroundTask/Attribute:first_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:first_run_date+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_date' => 'Latest run date~~',
-	'Class:BackgroundTask/Attribute:latest_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_date+' => '',
 	'Class:BackgroundTask/Attribute:next_run_date' => 'Next run date~~',
-	'Class:BackgroundTask/Attribute:next_run_date+' => '~~',
+	'Class:BackgroundTask/Attribute:next_run_date+' => '',
 	'Class:BackgroundTask/Attribute:total_exec_count' => 'Total exec. count~~',
-	'Class:BackgroundTask/Attribute:total_exec_count+' => '~~',
+	'Class:BackgroundTask/Attribute:total_exec_count+' => '',
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Latest run duration~~',
-	'Class:BackgroundTask/Attribute:latest_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:latest_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Min. run duration~~',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Max. run duration~~',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Average run duration~~',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => '~~',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:running' => 'Running~~',
-	'Class:BackgroundTask/Attribute:running+' => '~~',
+	'Class:BackgroundTask/Attribute:running+' => '',
 	'Class:BackgroundTask/Attribute:status' => 'Status~~',
-	'Class:BackgroundTask/Attribute:status+' => '~~',
+	'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
@@ -1076,27 +1076,27 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AsyncTask' => 'Async. task~~',
-	'Class:AsyncTask+' => '~~',
+	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Created~~',
-	'Class:AsyncTask/Attribute:created+' => '~~',
+	'Class:AsyncTask/Attribute:created+' => '',
 	'Class:AsyncTask/Attribute:started' => 'Started~~',
-	'Class:AsyncTask/Attribute:started+' => '~~',
+	'Class:AsyncTask/Attribute:started+' => '',
 	'Class:AsyncTask/Attribute:planned' => 'Planned~~',
-	'Class:AsyncTask/Attribute:planned+' => '~~',
+	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => 'Event~~',
-	'Class:AsyncTask/Attribute:event_id+' => '~~',
+	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
-	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:finalclass+' => '',
 	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:status+' => '',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
 	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
     'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
     'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
@@ -1107,7 +1107,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:AbstractResource' => 'Abstract Resource~~',
-	'Class:AbstractResource+' => '~~',
+	'Class:AbstractResource+' => '',
 ));
 
 //
@@ -1116,7 +1116,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResourceAdminMenu' => 'Resource Admin Menu~~',
-	'Class:ResourceAdminMenu+' => '~~',
+	'Class:ResourceAdminMenu+' => '',
 ));
 
 //
@@ -1125,7 +1125,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
-	'Class:ResourceRunQueriesMenu+' => '~~',
+	'Class:ResourceRunQueriesMenu+' => '',
 ));
 
 //
@@ -1134,7 +1134,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
-	'Class:ResourceSystemMenu+' => '~~',
+	'Class:ResourceSystemMenu+' => '',
 ));
 
 

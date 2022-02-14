@@ -68,7 +68,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeDecimal+' => 'Valor decimal (puede ser negativo)',
 
 	'Core:AttributeBoolean' => 'Booleano',
-	'Core:AttributeBoolean+' => 'Booleano',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => 'Nulo',
 	'Core:AttributeBoolean/Value:yes' => 'Si',
 	'Core:AttributeBoolean/Value:no' => 'No',
@@ -95,7 +95,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeString+' => 'Cadena de caracteres alfanumerico',
 
 	'Core:AttributeClass' => 'Clase',
-	'Core:AttributeClass+' => 'Clase',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'Lenguaje del usuario',
 	'Core:AttributeApplicationLanguage+' => 'Lenguaje y país (EN US)',
@@ -121,7 +121,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:AttributeEmailAddress+' => 'Correo Electrónico',
 
 	'Core:AttributeIPAddress' => 'Dirección IP',
-	'Core:AttributeIPAddress+' => 'Dirección IP',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Language expresion',
@@ -227,7 +227,7 @@ Operadores:<br/>
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChange' => 'Cambio',
-	'Class:CMDBChange+' => 'Cambios',
+	'Class:CMDBChange+' => '',
 	'Class:CMDBChange/Attribute:date' => 'Fecha',
 	'Class:CMDBChange/Attribute:date+' => 'Fecha y Hora en que los Cambios fueron Registrados',
 	'Class:CMDBChange/Attribute:userinfo' => 'Información Adicional',
@@ -248,19 +248,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOp' => 'Operación de Cambios',
-	'Class:CMDBChangeOp+' => 'Operación de Cambios',
+	'Class:CMDBChangeOp+' => '',
 	'Class:CMDBChangeOp/Attribute:change' => 'Cambio',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Cambio',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Fecha',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Fecha y Hora del Cambio',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Usuario',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Quién hizo este Cambio',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Clase de Objeto',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'Clase de Objeto',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'Id de Objeto',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'Id de Objeto',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Clase',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Clase',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
 
 //
@@ -269,7 +269,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpCreate' => 'Creación de Objeto',
-	'Class:CMDBChangeOpCreate+' => 'Creación de Objeto',
+	'Class:CMDBChangeOpCreate+' => '',
 ));
 
 //
@@ -278,7 +278,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpDelete' => 'Borrado de Objeto',
-	'Class:CMDBChangeOpDelete+' => 'Borrado de Objeto',
+	'Class:CMDBChangeOpDelete+' => '',
 ));
 
 //
@@ -287,7 +287,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttribute' => 'Cambio en Objeto',
-	'Class:CMDBChangeOpSetAttribute+' => 'Cambio en Objeto',
+	'Class:CMDBChangeOpSetAttribute+' => '',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode' => 'Atributo',
 	'Class:CMDBChangeOpSetAttribute/Attribute:attcode+' => 'Código de la propiedad modificada',
 ));
@@ -330,7 +330,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => 'Cambio de Datos',
-	'Class:CMDBChangeOpSetAttributeBlob+' => 'Cambio de Datos',
+	'Class:CMDBChangeOpSetAttributeBlob+' => '',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => 'Valor Anterior',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => 'Valor Anterior del Atributo',
 ));
@@ -341,7 +341,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:CMDBChangeOpSetAttributeText' => 'Cambio de Texto',
-	'Class:CMDBChangeOpSetAttributeText+' => 'Cambio de Texto',
+	'Class:CMDBChangeOpSetAttributeText+' => '',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => 'Valor Anterior',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => 'Valor Anterior del Atributo',
 ));
@@ -360,7 +360,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Event/Attribute:userinfo' => 'Información de Usuario',
 	'Class:Event/Attribute:userinfo+' => 'Indentificación de la actividad que realizaba el usuario durante la cual se disparó este evento',
 	'Class:Event/Attribute:finalclass' => 'Clase',
-	'Class:Event/Attribute:finalclass+' => 'Clase',
+	'Class:Event/Attribute:finalclass+' => '',
 ));
 
 //
@@ -369,9 +369,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventNotification' => 'Notificación de Evento',
-	'Class:EventNotification+' => 'Notificación de Evento',
+	'Class:EventNotification+' => '',
 	'Class:EventNotification/Attribute:trigger_id' => 'Disparador',
-	'Class:EventNotification/Attribute:trigger_id+' => 'Disparador',
+	'Class:EventNotification/Attribute:trigger_id+' => '',
 	'Class:EventNotification/Attribute:action_id' => 'Usuario',
 	'Class:EventNotification/Attribute:action_id+' => 'Cuenta de usuario',
 	'Class:EventNotification/Attribute:object_id' => 'Id de Objeto',
@@ -384,7 +384,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventNotificationEmail' => 'Correo Electrónico de Notificación de Evento',
-	'Class:EventNotificationEmail+' => 'Correo Electrónico de Notificación de Evento',
+	'Class:EventNotificationEmail+' => '',
 	'Class:EventNotificationEmail/Attribute:to' => 'Para',
 	'Class:EventNotificationEmail/Attribute:to+' => 'Destinatario',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
@@ -394,11 +394,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventNotificationEmail/Attribute:from' => 'De',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Remitente del mensaje',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Asunto',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Asunto',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Cuerpo del mensaje',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Cuerpo del mensaje',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anexos',
-	'Class:EventNotificationEmail/Attribute:attachments+' => 'Anexos',
+	'Class:EventNotificationEmail/Attribute:attachments+' => '',
 ));
 
 //
@@ -468,11 +468,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:EventLoginUsage' => 'Uso de la Cuenta',
-	'Class:EventLoginUsage+' => 'Uso de la Cuenta',
+	'Class:EventLoginUsage+' => '',
 	'Class:EventLoginUsage/Attribute:user_id' => 'Usuario',
-	'Class:EventLoginUsage/Attribute:user_id+' => 'Usuario',
+	'Class:EventLoginUsage/Attribute:user_id+' => '',
 	'Class:EventLoginUsage/Attribute:contact_name' => 'Nombre',
-	'Class:EventLoginUsage/Attribute:contact_name+' => 'Nombre',
+	'Class:EventLoginUsage/Attribute:contact_name+' => '',
 	'Class:EventLoginUsage/Attribute:contact_email' => 'Correo Electrónico',
 	'Class:EventLoginUsage/Attribute:contact_email+' => 'Correo Electrónico del usuario',
 ));
@@ -487,19 +487,19 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Action/Attribute:name' => 'Nombre',
 	'Class:Action/Attribute:name+' => 'Nombre de la Acción',
 	'Class:Action/Attribute:description' => 'Descripción',
-	'Class:Action/Attribute:description+' => 'Descripción',
+	'Class:Action/Attribute:description+' => '',
 	'Class:Action/Attribute:status' => 'Estatus',
-	'Class:Action/Attribute:status+' => 'Estatus',
+	'Class:Action/Attribute:status+' => '',
 	'Class:Action/Attribute:status/Value:test' => 'En Pruebas',
-	'Class:Action/Attribute:status/Value:test+' => 'En Pruebas',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'Activo',
-	'Class:Action/Attribute:status/Value:enabled+' => 'Activo',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inactivo',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Inactivo',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Disparadores Relacionados',
 	'Class:Action/Attribute:trigger_list+' => 'Disparadores Asociados a esta Acción',
 	'Class:Action/Attribute:finalclass' => 'Clase',
-	'Class:Action/Attribute:finalclass+' => 'Clase',
+	'Class:Action/Attribute:finalclass+' => '',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
@@ -518,7 +518,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ActionEmail' => 'Notificación por Correo Electrónico',
-	'Class:ActionEmail+' => 'Notificación por Correo Electrónico',
+	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
 	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
@@ -546,11 +546,11 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:ActionEmail/Attribute:importance' => 'Importancia',
 	'Class:ActionEmail/Attribute:importance+' => 'Bandera de importancia',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'Baja',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'baja',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'Normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'Normal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'Alta',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'Alta',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -559,13 +559,13 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:Trigger' => 'Disparador',
-	'Class:Trigger+' => 'Disparador',
+	'Class:Trigger+' => '',
 	'Class:Trigger/Attribute:description' => 'Descripción',
-	'Class:Trigger/Attribute:description+' => 'Descripción',
+	'Class:Trigger/Attribute:description+' => '',
 	'Class:Trigger/Attribute:action_list' => 'Acciones',
 	'Class:Trigger/Attribute:action_list+' => 'Acciones realizadas cuando se activó el disparador',
 	'Class:Trigger/Attribute:finalclass' => 'Clase',
-	'Class:Trigger/Attribute:finalclass+' => 'Clase',
+	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Contexto',
 	'Class:Trigger/Attribute:context+' => 'Contexto para permitir el inicio del disparador',
 ));
@@ -578,7 +578,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnObject' => 'Disparador (Depende de la clase)',
 	'Class:TriggerOnObject+' => 'Disparador en una clase de objeto dada',
 	'Class:TriggerOnObject/Attribute:target_class' => 'Clase destino',
-	'Class:TriggerOnObject/Attribute:target_class+' => 'Clase destino',
+	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filtro',
 	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Filtro de consulta incorrecto: %1$s',
@@ -602,7 +602,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnStateChange' => 'Disparador (en cambio de estado)',
 	'Class:TriggerOnStateChange+' => 'Disparador en cambio de estado de objeto',
 	'Class:TriggerOnStateChange/Attribute:state' => 'Estado',
-	'Class:TriggerOnStateChange/Attribute:state+' => 'Estado',
+	'Class:TriggerOnStateChange/Attribute:state+' => '',
 ));
 
 //
@@ -671,9 +671,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:TriggerOnThresholdReached' => 'Disparador (en umbral)',
 	'Class:TriggerOnThresholdReached+' => 'Disparador en umbral Stop-Watch alcanzado',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => 'Detener watch',
-	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => 'Detener watch',
+	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => 'Umbral',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => 'Umbral',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
 //
@@ -682,15 +682,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkTriggerAction' => 'Relación Acción y Disparador',
-	'Class:lnkTriggerAction+' => 'Relación Acción y Disparador',
+	'Class:lnkTriggerAction+' => '',
 	'Class:lnkTriggerAction/Attribute:action_id' => 'Acción',
 	'Class:lnkTriggerAction/Attribute:action_id+' => 'Acción a ser realizada',
 	'Class:lnkTriggerAction/Attribute:action_name' => 'Acción',
-	'Class:lnkTriggerAction/Attribute:action_name+' => 'Acción',
+	'Class:lnkTriggerAction/Attribute:action_name+' => '',
 	'Class:lnkTriggerAction/Attribute:trigger_id' => 'Disparador',
-	'Class:lnkTriggerAction/Attribute:trigger_id+' => 'Disparador',
+	'Class:lnkTriggerAction/Attribute:trigger_id+' => '',
 	'Class:lnkTriggerAction/Attribute:trigger_name' => 'Disparador',
-	'Class:lnkTriggerAction/Attribute:trigger_name+' => 'Disparador',
+	'Class:lnkTriggerAction/Attribute:trigger_name+' => '',
 	'Class:lnkTriggerAction/Attribute:order' => 'Orden',
 	'Class:lnkTriggerAction/Attribute:order+' => 'Orden de realización de acciones',
 ));
@@ -756,7 +756,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:Synchro:SynchroEndedOn_Date' => 'La última Sincronización terminó en %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'La Sincronización iniciada en %1$s está todavía en ejecución.',
 	'Menu:DataSources' => 'Fuentes de Datos Sincronizables', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataSources+' => 'Fuentes de Datos Sincronizables', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataSources+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
 	'Core:Synchro:label_repl_ignored' => 'Ignorados (%1$s)',
 	'Core:Synchro:label_repl_disappeared' => 'Desaparecieron (%1$s)',
 	'Core:Synchro:label_repl_existing' => 'Existen (%1$s)',
@@ -791,9 +791,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Core:SynchroAtt:update' => '¿Actualizar?',
 	'Core:SynchroAtt:update+' => 'Usado para Actualizar el Objeto',
 	'Core:SynchroAtt:update_policy' => 'Política de Actualización',
-	'Core:SynchroAtt:update_policy+' => 'Política de Actualización',
+	'Core:SynchroAtt:update_policy+' => '',
 	'Core:SynchroAtt:reconciliation_attcode' => 'Llave de Reconciliación',
-	'Core:SynchroAtt:reconciliation_attcode+' => 'Llave de Reconciliación',
+	'Core:SynchroAtt:reconciliation_attcode+' => '',
 	'Core:SyncDataExchangeComment' => '(Datos Sincronizados)',
 	'Core:Synchro:ListOfDataSources' => 'Lista de Fuentes de Datos:',
 	'Core:Synchro:LastSynchro' => 'Última Sincronización:',
@@ -1023,15 +1023,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:DBProperty' => 'Propiedad BD',
 	'Class:DBProperty+' => 'Propiedad de Base de Datos',
 	'Class:DBProperty/Attribute:name' => 'Nombre',
-	'Class:DBProperty/Attribute:name+' => 'Nombre',
+	'Class:DBProperty/Attribute:name+' => '',
 	'Class:DBProperty/Attribute:description' => 'Descripción',
-	'Class:DBProperty/Attribute:description+' => 'Descripción',
+	'Class:DBProperty/Attribute:description+' => '',
 	'Class:DBProperty/Attribute:value' => 'Valor',
-	'Class:DBProperty/Attribute:value+' => 'Valor',
+	'Class:DBProperty/Attribute:value+' => '',
 	'Class:DBProperty/Attribute:change_date' => 'Fecha de Cambio',
-	'Class:DBProperty/Attribute:change_date+' => 'Fecha de Cambio',
+	'Class:DBProperty/Attribute:change_date+' => '',
 	'Class:DBProperty/Attribute:change_comment' => 'Comentario Cambio',
-	'Class:DBProperty/Attribute:change_comment+' => 'Comentario del Cambio',
+	'Class:DBProperty/Attribute:change_comment+' => '',
 ));
 
 //
@@ -1039,7 +1039,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:BackgroundTask' => 'Tarea en Segundo Plano',
-	'Class:BackgroundTask+' => 'Tarea en Segundo Plano',
+	'Class:BackgroundTask+' => '',
 	'Class:BackgroundTask/Attribute:class_name' => 'Nombre de Clase',
 	'Class:BackgroundTask/Attribute:class_name+' => 'Nombre corto para esta clase',
 	'Class:BackgroundTask/Attribute:first_run_date' => 'Primera Ejecución',
@@ -1053,15 +1053,15 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:BackgroundTask/Attribute:latest_run_duration' => 'Duración Última Ejecución',
 	'Class:BackgroundTask/Attribute:latest_run_duration+' => 'Duración de la Última Ejecución',
 	'Class:BackgroundTask/Attribute:min_run_duration' => 'Mínima Duración de Ejecución',
-	'Class:BackgroundTask/Attribute:min_run_duration+' => 'Mínima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:min_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:max_run_duration' => 'Máxima Duración de Ejecución',
-	'Class:BackgroundTask/Attribute:max_run_duration+' => 'Máxima Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:max_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:average_run_duration' => 'Promedio Duración de Ejecución',
-	'Class:BackgroundTask/Attribute:average_run_duration+' => 'Promedio Duración de Ejecución',
+	'Class:BackgroundTask/Attribute:average_run_duration+' => '',
 	'Class:BackgroundTask/Attribute:running' => 'En Ejecución',
 	'Class:BackgroundTask/Attribute:running+' => 'Indicador de proceso en Ejecución',
 	'Class:BackgroundTask/Attribute:status' => 'Estatus',
-	'Class:BackgroundTask/Attribute:status+' => 'Estatus',
+	'Class:BackgroundTask/Attribute:status+' => '',
 ));
 
 //
@@ -1069,27 +1069,27 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 //
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:AsyncTask' => 'Tarea Asíncrona',
-	'Class:AsyncTask+' => 'Tarea Asíncrona',
+	'Class:AsyncTask+' => '',
 	'Class:AsyncTask/Attribute:created' => 'Creado',
-	'Class:AsyncTask/Attribute:created+' => 'Creado',
+	'Class:AsyncTask/Attribute:created+' => '',
 	'Class:AsyncTask/Attribute:started' => 'Iniciado',
-	'Class:AsyncTask/Attribute:started+' => 'Iniciado',
+	'Class:AsyncTask/Attribute:started+' => '',
 	'Class:AsyncTask/Attribute:planned' => 'Planeado',
-	'Class:AsyncTask/Attribute:planned+' => 'Planeado',
+	'Class:AsyncTask/Attribute:planned+' => '',
 	'Class:AsyncTask/Attribute:event_id' => 'Evento',
-	'Class:AsyncTask/Attribute:event_id+' => 'Evento',
+	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Clase',
-	'Class:AsyncTask/Attribute:finalclass+' => 'Clase',
+	'Class:AsyncTask/Attribute:finalclass+' => '',
 	'Class:AsyncTask/Attribute:status' => 'Status~~',
-	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:status+' => '',
 	'Class:AsyncTask/Attribute:remaining_retries' => 'Remaining retries~~',
-	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '',
 	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
-	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '',
 	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
-	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
-	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '',
     'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
     'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
