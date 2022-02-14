@@ -39,7 +39,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:ShowIds' => 'Visualização detalhada',
 	'DBTools:ShowReport' => 'Relatório',
 	'DBTools:IntegrityCheck' => 'Verificação de integridade',
-	'DBTools:FetchCheck' => 'Verificação de Busca (longo)',
+	'DBTools:FetchCheck' => 'Verificação de consulta (longa)',
 	'DBTools:SelectAnalysisType' => 'Selecione o tipo de análise',
 
 	'DBTools:Analyze' => 'Analisar',
