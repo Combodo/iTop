@@ -19,8 +19,8 @@
 ;
 // Apply a listener to <body> element so we don't havec to create one for every button on the page
 $('body').on('enter_loading_state.button.itop', '[data-role="ibo-button"]', function(){
-		$(this).addClass('ibo-is-loading').prop('disabled', true);
-	})
-	.on('leave_loading_state.button.itop', '[data-role="ibo-button"]', function(){
+	$(this).addClass('ibo-is-loading').prop('disabled', true);
+})
+.on('leave_loading_state.button.itop', '[data-role="ibo-button"]', function(){
 	$(this).removeClass('ibo-is-loading').prop('disabled', false);
 });

@@ -391,7 +391,8 @@ JS
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oActionMenuBlock = $oBlock->GetRenderContent($oPage, [], uniqid('', true));
+			$sActionMenuId = utils::Sanitize(uniqid('', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage, [], $sActionMenuId);
 			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
@@ -1711,6 +1712,9 @@ HTML
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
+	 *  only used in old and deprecated export.php
+	 *
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
@@ -1731,6 +1735,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
+	 * 
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{

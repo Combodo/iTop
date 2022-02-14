@@ -74,6 +74,10 @@ abstract class Controller
 	private $m_aBlockParams;
 	/** @var string */
 	private $m_sAccessTokenConfigParamId = null;
+	/** @var boolean false to disable breadcrumb */
+	private $m_bIsBreadCrumbEnabled = true;
+	/** @var array contains same parameters as {@see iTopWebPage::SetBreadCrumbEntry()} */
+	private $m_aBreadCrumbEntry = [];
 
 	/**
 	 * Controller constructor.
@@ -455,6 +459,8 @@ abstract class Controller
 	 * @param string $sReportFileName Root name of the report file
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 3.0.1 3.1.0 Add $sReportFileName parameter
 	 */
 	public function DownloadZippedPage($aParams = array(), $sTemplateName = null, $sReportFileName = 'itop-system-information-report')
 	{
@@ -597,6 +603,22 @@ abstract class Controller
 	}
 
 	/**
+	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
+	 * @see Controller::SetBreadCrumbEntry() to set breadcrumb content (by default will be title)
+	 */
+	public function DisableBreadCrumb() {
+		$this->m_bIsBreadCrumbEnabled = false;
+	}
+
+	/**
+	 * @since 2.7.7 3.0.1 3.1.0 N°4760 method creation
+	 * @see iTopWebPage::SetBreadCrumbEntry()
+	 */
+	public function SetBreadCrumbEntry($sId, $sLabel, $sDescription, $sUrl = '', $sIcon = '') {
+		$this->m_aBreadCrumbEntry = [$sId, $sLabel, $sDescription, $sUrl, $sIcon];
+	}
+
+	/**
 	 * @param $aParams
 	 * @param $sName
 	 * @param $sTemplateFileExtension
@@ -636,6 +658,16 @@ abstract class Controller
 			case self::ENUM_PAGE_TYPE_HTML:
 				$this->m_oPage = new iTopWebPage($this->GetOperationTitle(), false);
 				$this->m_oPage->add_xframe_options();
+
+				if ($this->m_bIsBreadCrumbEnabled) {
+					if (count($this->m_aBreadCrumbEntry) > 0) {
+						list($sId, $sTitle, $sDescription, $sUrl, $sIcon) = $this->m_aBreadCrumbEntry;
+						$this->m_oPage->SetBreadCrumbEntry($sId, $sTitle, $sDescription, $sUrl, $sIcon);
+					}
+				} else {
+					$this->m_oPage->DisableBreadCrumb();
+				}
+
 				break;
 
 			case self::ENUM_PAGE_TYPE_BASIC_HTML:
