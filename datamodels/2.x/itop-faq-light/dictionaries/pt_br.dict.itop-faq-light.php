@@ -76,7 +76,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes vinculadas a essa categoria',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes associadas à esta categoria.',
 ));
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerencimento de Problemas',
@@ -87,6 +87,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Todos os FAQs',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
-	'Brick:Portal:FAQ:Title' => 'Perguntes frequentes (FAQ)',
+	'Brick:Portal:FAQ:Title' => 'Perguntas frequentes (FAQ)',
 	'Brick:Portal:FAQ:Title+' => '<p>Com pressa?</p><p>Confira a lista de perguntas mais comuns e (talvez) encontre a resposta esperada imediatamente.</p>',
 ));

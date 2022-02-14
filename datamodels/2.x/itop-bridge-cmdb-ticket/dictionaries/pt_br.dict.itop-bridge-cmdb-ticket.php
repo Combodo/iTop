@@ -37,7 +37,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_id+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref' => 'Ref',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_ref+' => '',
-	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título do ticket',
+	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title' => 'Título da solicitação',
 	'Class:lnkFunctionalCIToTicket/Attribute:ticket_title+' => '',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkFunctionalCIToTicket/Attribute:functionalci_id+' => '',

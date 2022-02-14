@@ -66,8 +66,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeDecimal' => 'Decimal',
 	'Core:AttributeDecimal+' => 'Valor decimal (não pode ser negativo)',
 
-	'Core:AttributeBoolean' => 'Boolean',
-	'Core:AttributeBoolean+' => 'Boolean',
+	'Core:AttributeBoolean' => 'Booleano',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Sim',
 	'Core:AttributeBoolean/Value:no' => 'Não',
@@ -83,23 +83,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 	'Core:AttributeObsolescenceFlag' => 'Flag de obsolescência',
 	'Core:AttributeObsolescenceFlag/Value:yes' => 'Sim',
-	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto é excluído da análise de impacto e oculto dos resultados de pesquisa',
+	'Core:AttributeObsolescenceFlag/Value:yes+' => 'Este objeto será excluído da análise de impacto e ocultado dos resultados de pesquisa',
 	'Core:AttributeObsolescenceFlag/Value:no' => 'Não',
 	'Core:AttributeObsolescenceFlag/Label' => 'Obsoleto',
 	'Core:AttributeObsolescenceFlag/Label+' => 'Computado dinamicamente em outros atributos',
-	'Core:AttributeObsolescenceDate/Label' => 'Obsolescência data',
+	'Core:AttributeObsolescenceDate/Label' => 'Data de obsolescência',
 	'Core:AttributeObsolescenceDate/Label+' => 'Data aproximada em que o objeto foi considerado obsoleto',
 
 	'Core:AttributeString' => 'String',
 	'Core:AttributeString+' => 'Sequência alfanumérica',
 
 	'Core:AttributeClass' => 'Classe',
-	'Core:AttributeClass+' => 'Classe',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'Idioma do usuário',
 	'Core:AttributeApplicationLanguage+' => 'Idioma e país (EN US)',
 
-	'Core:AttributeFinalClass' => 'Classe (auto)',
+	'Core:AttributeFinalClass' => 'Classe (automática)',
 	'Core:AttributeFinalClass+' => 'Classe real do objeto (criada automaticamente pelo sistema)',
 
 	'Core:AttributePassword' => 'Senha',
@@ -117,10 +117,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:AttributeHTML+' => 'String HTML',
 
 	'Core:AttributeEmailAddress' => 'Endereço de e-mail',
-	'Core:AttributeEmailAddress+' => 'Endereço de e-mail',
+	'Core:AttributeEmailAddress+' => '',
 
 	'Core:AttributeIPAddress' => 'Endereço IP',
-	'Core:AttributeIPAddress+' => 'Endereço IP',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Expressão Object Query Language',
@@ -204,7 +204,7 @@ Operadores:<br/>
 	'Core:FriendlyName-Description' => 'Nome amigável',
 
 	'Core:AttributeTag' => 'Tags',
-	'Core:AttributeTag+' => 'Tags',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -249,7 +249,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:CMDBChangeOp' => 'Operações de alteração',
 	'Class:CMDBChangeOp+' => 'Operações de controle de alterações',
 	'Class:CMDBChangeOp/Attribute:change' => 'Alteração',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Alteração',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Data',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Data e hora da alteração',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Usuário',
@@ -314,9 +314,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Change:ObjectCreated' => 'Objeto criado',
 	'Change:ObjectDeleted' => 'Objeto excluído',
 	'Change:ObjectModified' => 'Objeto modificado',
-	'Change:TwoAttributesChanged' => 'Editado %1$s e %2$s',
-	'Change:ThreeAttributesChanged' => 'Editado %1$s, %2$s e 1 outro',
-	'Change:FourOrMoreAttributesChanged' => 'Editado %1$s, %2$s e %3$s outros',
+	'Change:TwoAttributesChanged' => 'Modificado %1$s e %2$s',
+	'Change:ThreeAttributesChanged' => 'Modificado %1$s, %2$s e 1 outro',
+	'Change:FourOrMoreAttributesChanged' => 'Modificado %1$s, %2$s e %3$s outros',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s configurado para %2$s (valor anterior: %3$s)',
 	'Change:AttName_SetTo' => '%1$s configurado para %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s anexado ao %2$s',
@@ -391,15 +391,15 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:EventNotificationEmail' => 'Evento de envio de e-mail',
 	'Class:EventNotificationEmail+' => 'Rastreamento de um e-mail que foi enviado',
 	'Class:EventNotificationEmail/Attribute:to' => 'Para',
-	'Class:EventNotificationEmail/Attribute:to+' => 'Para',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'CC',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'CC',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'CCO',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'CCO',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'De',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Remetente da mensagem',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Assunto',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Assunto',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Corpo',
 	'Class:EventNotificationEmail/Attribute:body+' => 'Conteúdo do e-mail',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anexos',
@@ -496,16 +496,16 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'Ativo ou ?',
 	'Class:Action/Attribute:status/Value:test' => 'Em homologação',
-	'Class:Action/Attribute:status/Value:test+' => 'Em homologação',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'Ativo',
-	'Class:Action/Attribute:status/Value:enabled+' => 'Ativo',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inativo',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Inativo',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Gatilhos relacionados',
-	'Class:Action/Attribute:trigger_list+' => 'Gatilhos vinculados a esta ação',
+	'Class:Action/Attribute:trigger_list+' => 'Gatilhos associadas à esta ação.',
 	'Class:Action/Attribute:finalclass' => 'Tipo',
 	'Class:Action/Attribute:finalclass+' => '',
-	'Action:WarningNoTriggerLinked' => 'Aviso, nenhum gatilho está vinculado à ação. Não será ativo até que tenha pelo menos 1.',
+	'Action:WarningNoTriggerLinked' => 'Aviso, nenhum gatilho está associado à ação. Não será ativo até que tenha pelo menos 1.',
 ));
 
 //
@@ -541,9 +541,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:ActionEmail/Attribute:to' => 'Para',
 	'Class:ActionEmail/Attribute:to+' => 'Destinatário para o e-mail',
 	'Class:ActionEmail/Attribute:cc' => 'CC',
-	'Class:ActionEmail/Attribute:cc+' => 'CC',
+	'Class:ActionEmail/Attribute:cc+' => '',
 	'Class:ActionEmail/Attribute:bcc' => 'CCO',
-	'Class:ActionEmail/Attribute:bcc+' => 'CCO',
+	'Class:ActionEmail/Attribute:bcc+' => '',
 	'Class:ActionEmail/Attribute:subject' => 'Assunto',
 	'Class:ActionEmail/Attribute:subject+' => 'Título do e-mail',
 	'Class:ActionEmail/Attribute:body' => 'Corpo',
@@ -642,8 +642,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:TriggerOnObjectDelete' => 'Trigger (na exclusão de objetos)',
-	'Class:TriggerOnObjectDelete+' => 'Trigger na exclusão de objeto de [uma classe filho] da classe dada',
+	'Class:TriggerOnObjectDelete' => 'Gatilho (na exclusão de objetos)',
+	'Class:TriggerOnObjectDelete+' => 'Gatilho na exclusão de objeto de [uma classe filho] da classe dada',
 ));
 
 //
@@ -705,7 +705,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Nome',
-	'Class:SynchroDataSource/Attribute:name+' => 'Nome',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Descrição',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Classe alvo',
@@ -717,7 +717,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SynchroDataSource/Attribute:url_application' => 'Hiperlink de aplicativo',
 	'Class:SynchroDataSource/Attribute:url_application+' => 'Hiperlink para o objeto na aplicação externa com a qual o iTop é sincronizado (se aplicável). As substituições possíveis: $this->attribute$ e $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Política de reconciliação',
-	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervalo da obsolescência programada',
+	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervalo de obsolescência programada',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Um objeto é considerado obsoleto se não aparecer nos dados além desse tempo',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Ação sobre zero',
 	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Medidas tomadas quando a busca retorna nenhum objeto',
@@ -956,7 +956,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:BulkExport:SpreadsheetFormat' => 'Formato HTML de planilha (*.html)',
 	'Core:BulkExport:SpreadsheetOptions' => 'Opções de planilha',
 	'Core:BulkExport:OptionNoLocalize' => 'Código de exportação em vez de Label',
-	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos vinculados',
+	'Core:BulkExport:OptionLinkSets' => 'Incluir objetos associados',
 	'Core:BulkExport:OptionFormattedText' => 'Preservar formatação de texto',
 	'Core:BulkExport:ScopeDefinition' => 'Definição dos objetos a exportar',
 	'Core:BulkExportLabelOQLExpression' => 'Consulta OQL:',
@@ -1004,7 +1004,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Rótulo',
 	'Class:TagSetFieldData/Attribute:label+' => 'Rótulo exibido',
 	'Class:TagSetFieldData/Attribute:description' => 'Descrição',
-	'Class:TagSetFieldData/Attribute:description+' => 'Descrição',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Classe de tag',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Classe de objeto',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Código de campo',

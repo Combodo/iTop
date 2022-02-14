@@ -36,8 +36,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Exibir / ocultar edições de campos nesta guia',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Abrir todas as entradas',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fechar todas as entradas',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Número de pessoas interagindo nas entradas visíveis',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de mensagens no(s) log(s) visíveis',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Número de pessoas que contribuíram para as entradas exibidas',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de entradas no(s) log(s) exibidos',
 
 	// Compose button
 	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compor uma nova entrada de log',

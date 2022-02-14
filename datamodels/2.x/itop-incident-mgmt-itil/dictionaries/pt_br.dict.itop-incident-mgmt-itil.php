@@ -196,7 +196,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Attribute:related_request_list' => 'Solicitações filhas',
 	'Class:Incident/Attribute:related_request_list+' => '',
 	'Class:Incident/Attribute:child_incidents_list' => 'Incidentes filhos',
-	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os subincidentes vinculados a esse incidente',
+	'Class:Incident/Attribute:child_incidents_list+' => 'Todos os subincidentes associados a este incidente.',
 	'Class:Incident/Attribute:public_log' => 'Log público',
 	'Class:Incident/Attribute:public_log+' => '',
 	'Class:Incident/Attribute:user_satisfaction' => 'Satisfação do usuário',
@@ -234,6 +234,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => 'Não é possível atribuir o incidente principal ao próprio incidente',
 
 	'Class:Incident/Method:ResolveChildTickets' => 'ResolveChildTickets (resolver solicitações filhas)',
-	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a resolução ao ticket filho (ev_autoresolve) e alinhe as seguintes características: service, team, agent, resolution info',
+	'Class:Incident/Method:ResolveChildTickets+' => 'Conecte a resolução a solicitação filha (ev_autoresolve) e alinhe as seguintes características: serviço, equipe, agente, informação da solução',
 	'Tickets:Related:OpenIncidents' => 'Incidentes abertos',
 ));

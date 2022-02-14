@@ -30,7 +30,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Preferences:RichText:ToolbarState:Collapsed'                   => 'Recolhida',
 	'UI:Preferences:ActivityPanel:Title'                               => 'Painel de atividade',
 	'UI:Preferences:ActivityPanel:EntryFormOpened'                     => 'Formulário de edição aberto por padrão',
-	'UI:Preferences:ActivityPanel:EntryFormOpened+'                    => 'Se o formulário de edição será aberto ao exibir um objeto. Se desmarcado, você ainda poderá abri-lo clicando no botão Modificar',
+	'UI:Preferences:ActivityPanel:EntryFormOpened+'                    => 'Se o formulário de edição será aberto ao exibir um objeto. Se desmarcado, você ainda poderá abri-lo clicando no botão Modificar.',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title'                => 'Atalhos de teclado de aplicativo',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint'           => 'Pressione um atalho de teclado',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip'       => 'Grave um atalho de teclado',
@@ -43,6 +43,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Preferences:Tabs:Scrollable:Label'                             => 'Navegação',
 	'UI:Preferences:Tabs:Scrollable:Classic'                           => 'Clássica',
 	'UI:Preferences:Tabs:Scrollable:Scrollable'                        => 'Rolável',
-	'UI:Preferences:ChooseAPlaceholder'                                => 'Imagem de placeholder do usuário.',
-	'UI:Preferences:ChooseAPlaceholder+'                               => 'Escolha uma imagem de placeholder que será exibida se o contato vinculado ao seu usuário não possuir uma',
+	'UI:Preferences:ChooseAPlaceholder'                                => 'Avatar padrão do usuário',
+	'UI:Preferences:ChooseAPlaceholder+'                               => 'Escolha uma imagem padrão que será exibida caso o contato associado ao usuário não possuir nenhuma.',
 ));

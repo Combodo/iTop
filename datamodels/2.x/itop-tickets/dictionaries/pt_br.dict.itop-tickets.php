@@ -40,7 +40,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Ticket/Attribute:ref+' => '',
 	'Class:Ticket/Attribute:org_id' => 'Organização',
 	'Class:Ticket/Attribute:org_id+' => '',
-	'Class:Ticket/Attribute:org_name' => 'Nome organização',
+	'Class:Ticket/Attribute:org_name' => 'Nome da organização',
 	'Class:Ticket/Attribute:org_name+' => '',
 	'Class:Ticket/Attribute:caller_id' => 'Solicitante',
 	'Class:Ticket/Attribute:caller_id+' => '',
@@ -69,7 +69,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Ticket/Attribute:private_log' => 'Log privado',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => 'Contatos',
-	'Class:Ticket/Attribute:contacts_list+' => 'Todos os contatos vinculados a essa solicitação',
+	'Class:Ticket/Attribute:contacts_list+' => 'Todos os contatos associadas à esta solicitação',
 	'Class:Ticket/Attribute:functionalcis_list' => 'ICs',
 	'Class:Ticket/Attribute:functionalcis_list+' => 'Todos os itens de configuração afetados por essa solicitação',
 	'Class:Ticket/Attribute:workorders_list' => 'Ordens de serviço',
@@ -250,7 +250,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos vinculados com esse documento',
+	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos associados a este documento.',
 	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Todos os serviços vinculados a esse documento',
+	'Class:Document/Attribute:services_list+' => 'Todos os serviços associados a este documento.',
 ));

@@ -200,7 +200,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref incidente pai',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Subsolicitação',
-	'Class:UserRequest/Attribute:related_request_list+' => 'Todas as solicitações vinculadas a essa solicitação pai',
+	'Class:UserRequest/Attribute:related_request_list+' => 'Todas as solicitações associadas à esta solicitação pai.',
 	'Class:UserRequest/Attribute:public_log' => 'Log público',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => 'Satisfação do usuário',
@@ -251,5 +251,5 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Organization:Overview:UserRequests' => 'Solicitações de usuários desta organização',
 	'Organization:Overview:MyUserRequests' => 'Minhas solicitações de usuário para esta organização',
-	'Organization:Overview:Tickets' => 'Tickets para esta organização',
+	'Organization:Overview:Tickets' => 'Solicitações desta organização',
 ));

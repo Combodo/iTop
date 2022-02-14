@@ -55,13 +55,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:org_id+' => '',
 	'Class:KnownError/Attribute:cust_name' => 'Nome do cliente',
 	'Class:KnownError/Attribute:cust_name+' => '',
-	'Class:KnownError/Attribute:problem_id' => 'Problema vinculado',
+	'Class:KnownError/Attribute:problem_id' => 'Problema relacionado',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Ref problema vinculado',
+	'Class:KnownError/Attribute:problem_ref' => 'Ref problema relacionado',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Sintoma do erro',
 	'Class:KnownError/Attribute:symptom+' => '',
-	'Class:KnownError/Attribute:root_cause' => 'Causa de Origem',
+	'Class:KnownError/Attribute:root_cause' => 'Causa',
 	'Class:KnownError/Attribute:root_cause+' => '',
 	'Class:KnownError/Attribute:workaround' => 'Solução de contorno',
 	'Class:KnownError/Attribute:workaround+' => '',
@@ -86,9 +86,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:version' => 'Versão',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'ICs',
-	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração que estão vinculados a esse erro conhecido',
+	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração que estão associados a este erro conhecido.',
 	'Class:KnownError/Attribute:document_list' => 'Documentos',
-	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos vinculados a esse erro conhecido',
+	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido.',
 ));
 
 //
@@ -97,7 +97,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra-estrutura vinculada com esse erro conhecido',
+	'Class:lnkErrorToFunctionalCI+' => 'Infra-estrutura associada a este erro conhecido.',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',

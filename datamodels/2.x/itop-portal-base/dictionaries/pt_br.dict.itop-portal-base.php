@@ -67,8 +67,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Fechar esta solicitação',
 	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos.',
-	'Portal:Error:ObjectCannotBeCreated' => 'Erro: objeto não pode ser criado. Verifique os objetos e anexos vinculados antes de enviar novamente este formulário.',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado. Verifique os objetos e anexos vinculados antes de enviar novamente este formulário.',
+	'Portal:Error:ObjectCannotBeCreated' => 'Erro: objeto não pode ser criado. Verifique os objetos e anexos associados antes de enviar novamente este formulário.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado. Verifique os objetos e anexos associados antes de enviar novamente este formulário.',
 ));
 
 // UserProfile brick
