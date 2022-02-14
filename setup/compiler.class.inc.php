@@ -3127,7 +3127,7 @@ EOF;
 
 			if ($bHasCompiled) {
 				if (utils::GetConfig()->Get('theme.enable_precompilation')){
-					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
+					/*if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))  //N°4438 - Disable (temporary) copy of precompiled stylesheets after setup
 					{ //help developers to detect & push theme precompilation changes
 						$sInitialPrecompiledFilePath = null;
 						$aRootDirs = $this->oFactory->GetRootDirs();
@@ -3145,7 +3145,7 @@ EOF;
 							SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sInitialPrecompiledFilePath for next setup.");
 							copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
 						}
-					}
+					}*/
 
 					SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
 					copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
