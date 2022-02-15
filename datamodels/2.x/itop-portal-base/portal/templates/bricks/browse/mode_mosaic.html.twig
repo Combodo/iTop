@@ -215,7 +215,7 @@
 				itemElem.append(aElem);
 				
 				// Building tooltip for the node
-				if( (item.tooltip !== undefined) && ($(item.tooltip).text() !== '') )
+				if( (item.tooltip !== undefined) && ($('<div>'+item.tooltip+'</div>').text() !== '') )
 				{
                     aElem.attr('data-tooltip-content', item.tooltip).attr('data-tooltip-html-enabled', true);
                     CombodoTooltip.InitTooltipFromMarkup(aElem);
