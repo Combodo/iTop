@@ -629,7 +629,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:CSVImport:SelectClass' => 'Selecione a classe para importar:',
 	'UI:CSVImport:AdvancedMode' => 'Modo avançado',
 	'UI:CSVImport:AdvancedMode+' => 'No modo avançado o "ID" (chave primária) dos objetos pode ser usado para atualizar e renomear objetos. No entanto, a coluna "ID" (se houver) só pode ser usado como um critério de pesquisa e não pode ser combinado com qualquer outro critério de busca',
-	'UI:CSVImport:SelectAClassFirst' => 'Para configurar o mapeamento, primeiro selecione uma classe',
+	'UI:CSVImport:SelectAClassFirst' => 'Para configurar o mapeamento, selecione uma classe primeiro',
 	'UI:CSVImport:HeaderFields' => 'Campos',
 	'UI:CSVImport:HeaderMappings' => 'Mapeamentos',
 	'UI:CSVImport:HeaderSearch' => 'Pesquisar?',
