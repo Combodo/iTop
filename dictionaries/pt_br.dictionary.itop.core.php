@@ -516,8 +516,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ActionEmail' => 'Notificação via e-mail',
-	'Class:ActionEmail+' => '',
+	'Class:ActionEmail' => 'Notificação via E-mail',
+	'Class:ActionEmail+' => 'Lista de Notificações via E-mail',
 	'Class:ActionEmail/Attribute:status+' => 'Esse status especifica quem será notificado: apenas o destinatário do Teste, todos (Para, CC e CCO) ou ninguém',
 	'Class:ActionEmail/Attribute:status/Value:test' => 'Apenas o destinatário de teste é notificado',
 	'Class:ActionEmail/Attribute:status/Value:enabled' => 'Todos os endereços de e-mails dos campos Para, CC e CCO são notificados',
@@ -562,11 +562,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Trigger/Attribute:description' => 'Descrição',
 	'Class:Trigger/Attribute:description+' => 'Uma descrição curta',
 	'Class:Trigger/Attribute:action_list' => 'Ações desencadeadas',
-	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é ativado',
+	'Class:Trigger/Attribute:action_list+' => 'Ações executadas quando o gatilho é acionado',
 	'Class:Trigger/Attribute:finalclass' => 'Tipo',
 	'Class:Trigger/Attribute:finalclass+' => '',
 	'Class:Trigger/Attribute:context' => 'Contexto',
-	'Class:Trigger/Attribute:context+' => 'Contexto para permitir o gatilho ser ativado',
+	'Class:Trigger/Attribute:context+' => 'Contexto para permitir o acionamento do gatilho',
 ));
 
 //
