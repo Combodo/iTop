@@ -48,7 +48,7 @@
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQ' => 'FAQ',
-	'Class:FAQ+' => 'Perguntas frequentes',
+	'Class:FAQ+' => 'Perguntas frequentes (FAQ)',
 	'Class:FAQ/Attribute:title' => 'Título',
 	'Class:FAQ/Attribute:title+' => '',
 	'Class:FAQ/Attribute:summary' => 'Índice',
@@ -72,7 +72,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQCategory' => 'Categorias de FAQ',
-	'Class:FAQCategory+' => 'Categorias de FAQ',
+	'Class:FAQCategory+' => '',
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
@@ -80,12 +80,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 ));
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerencimento de Problemas',
-	'Menu:ProblemManagement+' => 'Gerencimento de Problemas',
+	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:FAQCategory' => 'Categorias de FAQ',
-	'Menu:FAQCategory+' => 'Todas as categorias de FAQ',
-	'Menu:FAQ' => 'FAQs',
-	'Menu:FAQ+' => 'Todos os FAQs',
+	'Menu:FAQCategory+' => '',
+	'Menu:FAQ' => 'FAQ',
+	'Menu:FAQ+' => '',
 	'Brick:Portal:FAQ:Menu' => 'FAQ',
 	'Brick:Portal:FAQ:Title' => 'Perguntas frequentes (FAQ)',
 	'Brick:Portal:FAQ:Title+' => '<p>Com pressa?</p><p>Confira a lista de perguntas mais comuns e (talvez) encontre a resposta esperada imediatamente.</p>',

@@ -47,7 +47,7 @@
 // Class: KnownError
 //
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:KnownError' => 'Erro conhecido',
+	'Class:KnownError' => 'Erro Conhecido',
 	'Class:KnownError+' => 'Erro documentado de um problema conhecido',
 	'Class:KnownError/Attribute:name' => 'Nome',
 	'Class:KnownError/Attribute:name+' => '',
@@ -57,7 +57,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Problema relacionado',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Ref Problema relacionado',
+	'Class:KnownError/Attribute:problem_ref' => 'Ref. Problema relacionado',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Sintoma do erro',
 	'Class:KnownError/Attribute:symptom+' => '',
@@ -67,7 +67,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:workaround+' => '',
 	'Class:KnownError/Attribute:solution' => 'Solução',
 	'Class:KnownError/Attribute:solution+' => '',
-	'Class:KnownError/Attribute:error_code' => 'Código de erro',
+	'Class:KnownError/Attribute:error_code' => 'Código do erro',
 	'Class:KnownError/Attribute:error_code+' => '',
 	'Class:KnownError/Attribute:domain' => 'Domínio',
 	'Class:KnownError/Attribute:domain+' => '',
@@ -86,7 +86,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:version' => 'Versão',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'ICs',
-	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração que estão associados a este erro conhecido',
+	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração associados a este erro conhecido',
 	'Class:KnownError/Attribute:document_list' => 'Documentos',
 	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido',
 ));

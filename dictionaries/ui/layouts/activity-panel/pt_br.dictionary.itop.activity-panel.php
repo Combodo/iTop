@@ -25,26 +25,26 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip' => 'Carregar todas as entradas anteriores',
 
 	// Tabs
-	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Atividade',
+	'UI:Layout:ActivityPanel:Tab:Activity:Title' => 'Atividades',
 	'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip' => 'Entrada de rascunho',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Title' => 'Logs',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Exibir / ocultar entradas de logs nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip' => 'Exibir / Ocultar entradas de logs nesta guia',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Menu:Hint' => 'Escolha quais logs a serem exibidos nesta guia',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title' => 'Alterações de status',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Exibir / ocultar alterações de status nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip' => 'Exibir / Ocultar alterações de status nesta guia',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title' => 'Edições',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Exibir / ocultar edições de campos nesta guia',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip' => 'Exibir / Ocultar edições de campos nesta guia',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Abrir todas as entradas',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Fechar todas as entradas',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Recolher todas as entradas',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Número de pessoas que contribuíram para as entradas exibidas',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de entradas no(s) log(s) exibidos',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de entradas no log exibido',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Compor uma nova entrada de log',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Criar uma nova entrada de log',
 
 	// Case log entry
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Salvar múltiplos logs',
-	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Ao pressionar o botão de "salvar", você enviará entradas para todos os logs editados de uma só vez.',
+	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation' => 'Ao clicar no botão de "salvar", você enviará entradas para todos os logs alterados de uma só vez.',
 
 	// Notification entry
 	'UI:Layout:ActivityPanel:NotificationEntry:MessageLink:Tooltip' => 'Clique para abrir a guia de notificações e obter mais informações',
@@ -53,6 +53,6 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint' => 'Está calmo aqui, nenhuma atividade ainda',
 
 	// Closed cover
-	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Painel de atividades',
-	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Clique para abrir o painel de atividades',
+	'UI:Layout:ActivityPanel:ClosedCover:Title' => 'Painel de Atividades',
+	'UI:Layout:ActivityPanel:ClosedCover:Tooltip' => 'Clique para abrir o Painel de Atividades',
 ));
