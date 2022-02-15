@@ -922,9 +922,10 @@ $(function()
 							return false;
 						}
 
-						// Update the feed
+						// Update the feed and tab toggler message counter
 						for (let sCaseLogAttCode in oData.data.entries) {
 							me._AddEntry(oData.data.entries[sCaseLogAttCode], 'start');
+							me._IncreaseTabTogglerMessagesCounter(sCaseLogAttCode);
 						}
 						me._ApplyEntriesFilters();
 
@@ -946,7 +947,30 @@ $(function()
 						me._UnfreezeCaseLogsEntryForms();
 					});
 			},
-
+			/**
+			 * Increase a tab toggler number of messages indicator given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {void}
+			 * @private
+			 */
+			_IncreaseTabTogglerMessagesCounter: function(sCaseLogAttCode){
+				let oTabTogglerCounter = this._GetTabTogglerFromCaseLogAttCode(sCaseLogAttCode).find('[data-role="ibo-activity-panel--tab-title-messages-count"]');
+				let iNewCounterValue = parseInt(oTabTogglerCounter.attr('data-messages-count')) + 1;
+				
+				oTabTogglerCounter.attr('data-messages-count', iNewCounterValue).text(iNewCounterValue);
+			},
+			/**
+			 * Return tab toggler given a caselog attribute code
+			 *
+			 * @param sCaseLogAttCode {string} A caselog attribute code
+			 * @return {Object}
+			 * @private
+			 */
+			_GetTabTogglerFromCaseLogAttCode: function(sCaseLogAttCode)
+			{
+				return this.element.find(this.js_selectors.tab_toggler+'[data-tab-type="caselog"][data-caselog-attribute-code="'+sCaseLogAttCode+'"]')
+			},
 			// - Helpers on object lock
 			/**
 			 * Initialize the lock watcher on a regular basis
