@@ -21,17 +21,17 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'iTopUpdate:UI:PageTitle' => 'Atualização da Aplicação',
-    'itop-core-update:UI:SelectUpdateFile' => 'Atualização da Aplicação',
-    'itop-core-update:UI:ConfirmUpdate' => 'Atualização da Aplicação',
-    'itop-core-update:UI:UpdateCoreFiles' => 'Atualização da Aplicação',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'A aplicação encontrasse em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
-	'itop-core-update:UI:UpdateDone' => 'Atualização da Aplicação',
+	'iTopUpdate:UI:PageTitle' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+    'itop-core-update:UI:SelectUpdateFile' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+    'itop-core-update:UI:ConfirmUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+    'itop-core-update:UI:UpdateCoreFiles' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'iTopUpdate:UI:MaintenanceModeActive' => 'O '.ITOP_APPLICATION_SHORT.' encontra-se em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
+	'itop-core-update:UI:UpdateDone' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 
-	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização da Aplicação',
-	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização da Aplicação',
+	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'itop-core-update/Operation:ConfirmUpdate/Title' => 'Confirmar Atualização do '.ITOP_APPLICATION_SHORT,
 	'itop-core-update/Operation:UpdateCoreFiles/Title' => 'Aplicação em Atualização',
-	'itop-core-update/Operation:UpdateDone/Title' => 'Atualização da Aplicação Finalizada',
+	'itop-core-update/Operation:UpdateDone/Title' => 'Atualização do '.ITOP_APPLICATION_SHORT.' finalizada',
 
 	'iTopUpdate:UI:SelectUpdateFile' => 'Escolha o arquivo de atualização para enviar',
 	'iTopUpdate:UI:CheckUpdate' => 'Verificando arquivo de atualização',
@@ -106,8 +106,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:RestoreArchive' => 'Você pode restaurar sua aplicação com o arquivo \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Você pode restaurar seu banco de dados com \'%1$s\'',
 	'iTopUpdate:UI:UpdateDone' => 'Atualizado com sucesso',
-	'Menu:iTopUpdate' => 'Atualização da Aplicação',
-	'Menu:iTopUpdate+' => 'Atualização da Aplicação',
+	'Menu:iTopUpdate' => 'Atualização do '.ITOP_APPLICATION_SHORT,
+	'Menu:iTopUpdate+' => 'Atualização do '.ITOP_APPLICATION_SHORT,
 
     // Missing itop entries
     'Class:ModuleInstallation/Attribute:installed' => 'Instalado em',

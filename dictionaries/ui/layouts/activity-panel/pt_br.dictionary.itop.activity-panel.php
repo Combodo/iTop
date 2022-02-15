@@ -37,10 +37,10 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:OpenAll:Tooltip' => 'Abrir todas as entradas',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Action:CloseAll:Tooltip' => 'Recolher todas as entradas',
 	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:AuthorsCount:Tooltip' => 'Número de pessoas que contribuíram para as entradas exibidas',
-	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de entradas no log exibido',
+	'UI:Layout:ActivityPanel:Tab:Toolbar:Info:MessagesCount:Tooltip' => 'Número de entradas no(s) log(s) exibido(s)',
 
 	// Compose button
-	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Criar uma nova entrada de log',
+	'UI:Layout:ActivityPanel:ComposeButton:Tooltip' => 'Adicionar uma nova entrada no log',
 
 	// Case log entry
 	'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title' => 'Salvar múltiplos logs',

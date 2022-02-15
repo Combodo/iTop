@@ -33,7 +33,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Attachment:Max_Go' => '(Tamanho máximo de arquivo: %1$s Gb)',
 	'Attachment:Max_Mo' => '(Tamanho máximo de arquivo: %1$s Mb)',
 	'Attachment:Max_Ko' => '(Tamanho máximo de arquivo: %1$s Kb)',
-	'Attachments:NoAttachment' => 'Nenhum anexo ',
+	'Attachments:NoAttachment' => 'Nenhum anexo',
 	'Attachments:PreviewNotAvailable' => 'A pré-visualização não está disponível para este tipo de anexo',
 	'Attachments:Error:FileTooLarge' => 'Arquivo muito grande para ser anexado. %1$s',
 	'Attachments:Error:UploadedFileEmpty' => 'O arquivo recebido está vazio e não pode ser anexado

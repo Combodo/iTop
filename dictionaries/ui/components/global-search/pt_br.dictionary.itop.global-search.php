@@ -18,7 +18,7 @@
  */
 // Global search
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'UI:Component:GlobalSearch:Tooltip' => 'Pesquisar em todo o aplicativo',
+	'UI:Component:GlobalSearch:Tooltip' => 'Pesquisar em todo o '.ITOP_APPLICATION_SHORT,
 	'UI:Component:GlobalSearch:Input:Placeholder' => 'Pesquisar...',
 	'UI:Component:GlobalSearch:Recents:Title' => 'Recentes',
 	'UI:Component:GlobalSearch:LastQueries:NoQuery:Placeholder' => 'Você ainda não realizou nenhuma pesquisa',

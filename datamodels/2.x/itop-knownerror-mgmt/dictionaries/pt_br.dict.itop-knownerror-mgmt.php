@@ -97,7 +97,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra-estrutura associada a este erro conhecido',
+	'Class:lnkErrorToFunctionalCI+' => 'Infraestrutura associada a este erro conhecido',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
@@ -131,12 +131,12 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerenciamento de Problemas',
-	'Menu:ProblemManagement+' => 'Gerenciamento de Problemas',
+	'Menu:ProblemManagement+' => '',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:NewError' => 'Novo erro conhecido',
-	'Menu:NewError+' => 'Novo erro conhecido',
+	'Menu:NewError+' => '',
 	'Menu:SearchError' => 'Pesquisar por erros conhecidos',
-	'Menu:SearchError+' => 'Pesquisar por erros conhecidos',
+	'Menu:SearchError+' => '',
 	'Menu:Problem:KnownErrors' => 'Erros Conhecidos',
-	'Menu:Problem:KnownErrors+' => 'Erros Conhecidos',
+	'Menu:Problem:KnownErrors+' => 'Erro documentado de um problema conhecido',
 ));

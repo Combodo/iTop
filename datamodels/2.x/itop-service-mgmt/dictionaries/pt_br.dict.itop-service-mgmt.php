@@ -39,23 +39,23 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI-ServiceManagementMenu-ContractsByStatus' => 'Contratos por status',
 	'UI-ServiceManagementMenu-ContractsEndingIn30Days' => 'Contratos finalizando em menos de 30 dias',
 	'Menu:ProviderContract' => 'Contratos de Provedores',
-	'Menu:ProviderContract+' => '',
+	'Menu:ProviderContract+' => 'Lista de Contratos de Provedores',
 	'Menu:CustomerContract' => 'Contratos de Clientes',
-	'Menu:CustomerContract+' => '',
-	'Menu:ServiceSubcategory' => 'Subcategorias de serviços',
-	'Menu:ServiceSubcategory+' => '',
+	'Menu:CustomerContract+' => 'Lista de Contratos de Clientes',
+	'Menu:ServiceSubcategory' => 'Subcategorias de Serviços',
+	'Menu:ServiceSubcategory+' => 'Lista de Subcategorias de Serviços',
 	'Menu:Service' => 'Serviços',
-	'Menu:Service+' => '',
+	'Menu:Service+' => 'Lista de Serviços',
 	'Menu:ServiceElement' => 'Elementos de Serviços',
-	'Menu:ServiceElement+' => '',
+	'Menu:ServiceElement+' => 'Lista de Elementos de Serviços',
 	'Menu:SLA' => 'SLAs',
 	'Menu:SLA+' => 'Lista de Acordos de Nível de Serviço (ANS)',
 	'Menu:SLT' => 'SLTs',
 	'Menu:SLT+' => 'Lista de Níveis Mínimos de Serviço (NMS)',
 	'Menu:DeliveryModel' => 'Modelos de Entrega',
-	'Menu:DeliveryModel+' => '',
+	'Menu:DeliveryModel+' => 'Lista de Modelos de Entrega',
 	'Menu:ServiceFamily' => 'Família de Serviços',
-	'Menu:ServiceFamily+' => '',
+	'Menu:ServiceFamily+' => 'Lista de Família de Serviços',
 	'Menu:Procedure' => 'Catálogo de Procedimentos',
 	'Menu:Procedure+' => '',
 ));
@@ -139,7 +139,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:CustomerContract' => 'Contrato de cliente',
+	'Class:CustomerContract' => 'Contrato de Cliente',
 	'Class:CustomerContract+' => '',
 	'Class:CustomerContract/Attribute:services_list' => 'Serviços',
 	'Class:CustomerContract/Attribute:services_list+' => 'Todos os serviços contratados para o presente contrato',
@@ -203,7 +203,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:ServiceFamily' => 'Família de serviços',
+	'Class:ServiceFamily' => 'Família de Serviços',
 	'Class:ServiceFamily+' => '',
 	'Class:ServiceFamily/Attribute:name' => 'Nome',
 	'Class:ServiceFamily/Attribute:name+' => '',
@@ -249,7 +249,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Service/Attribute:customercontracts_list' => 'Contratos de clientes',
 	'Class:Service/Attribute:customercontracts_list+' => 'Todos os contratos de clientes que contrataram esse serviço',
 	'Class:Service/Attribute:providercontracts_list' => 'Contratos de provedores',
-	'Class:Service/Attribute:providercontracts_list+' => 'Todos os contratos de provedores para suporte para esse serviço',
+	'Class:Service/Attribute:providercontracts_list+' => 'Todos os contratos de provedores para suportar esse serviço',
 	'Class:Service/Attribute:functionalcis_list' => 'Dependências de ICs',
 	'Class:Service/Attribute:functionalcis_list+' => 'Todos os itens de configuração que são utilizados para a prestação deste serviço',
 	'Class:Service/Attribute:servicesubcategories_list' => 'Subcategorias de serviço',
@@ -454,7 +454,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:DeliveryModel' => 'Modelo de entrega',
+	'Class:DeliveryModel' => 'Modelo de Entrega',
 	'Class:DeliveryModel+' => '',
 	'Class:DeliveryModel/Attribute:name' => 'Nome',
 	'Class:DeliveryModel/Attribute:name+' => '',
@@ -485,8 +485,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkDeliveryModelToContact/Attribute:contact_id+' => '',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name' => 'Nome do contato',
 	'Class:lnkDeliveryModelToContact/Attribute:contact_name+' => '',
-	'Class:lnkDeliveryModelToContact/Attribute:role_id' => 'Regra',
+	'Class:lnkDeliveryModelToContact/Attribute:role_id' => 'Função',
 	'Class:lnkDeliveryModelToContact/Attribute:role_id+' => '',
-	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nome da regra',
+	'Class:lnkDeliveryModelToContact/Attribute:role_name' => 'Nome da função',
 	'Class:lnkDeliveryModelToContact/Attribute:role_name+' => '',
 ));
