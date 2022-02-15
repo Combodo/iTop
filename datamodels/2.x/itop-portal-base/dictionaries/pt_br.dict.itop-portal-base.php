@@ -18,7 +18,7 @@
  */
 // Portal
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Page:DefaultTitle' => 'Portal do usuário '.ITOP_APPLICATION_SHORT,
+	'Page:DefaultTitle' => 'Portal do Usuário do '.ITOP_APPLICATION_SHORT,
 	'Page:PleaseWait' => 'Aguarde...',
 	'Page:Home' => 'Página inicial',
 	'Page:GoPortalHome' => 'Página inicial',
@@ -37,9 +37,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Error:HTTP:401' => 'Autenticação',
 	'Error:HTTP:404' => 'Está página não existe',
 	'Error:HTTP:500' => 'Oops! Ocorreu um erro, informe a T.I.',
-	'Error:HTTP:GetHelp' => 'Por favor, entre em contato com a T.I para verificar este problema.',
+	'Error:HTTP:GetHelp' => 'Por favor, entre em contato com a T.I. para verificar este problema.',
 	'Error:XHR:Fail' => 'Não foi possível carregar dados, entre em contato com o T.I.',
-	'Portal:ErrorUserLoggedOut' => 'Você está desconectado e precisa fazer o login novamente para continuar.',
+	'Portal:ErrorUserLoggedOut' => 'Você foi desconectado e precisa fazer o login novamente para continuar.',
 	'Portal:Datatables:Language:Processing' => 'Aguarde...',
 	'Portal:Datatables:Language:Search' => 'Filtro:',
 	'Portal:Datatables:Language:LengthMenu' => 'Exibir _MENU_ itens por página',
@@ -66,9 +66,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Object form
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Fechar esta solicitação',
-	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos.',
-	'Portal:Error:ObjectCannotBeCreated' => 'Erro: objeto não pode ser criado. Verifique os objetos e anexos associados antes de enviar novamente este formulário.',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado. Verifique os objetos e anexos associados antes de enviar novamente este formulário.',
+	'Portal:Form:Close:Warning' => 'Você deseja abandonar esta página? Os dados digitados podem ser perdidos',
+	'Portal:Error:ObjectCannotBeCreated' => 'Erro: objeto não pode ser criado. Verifique os objetos e anexos associados antes de enviar novamente este formulário',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Erro: objeto não pode ser atualizado. Verifique os objetos e anexos associados antes de enviar novamente este formulário',
 ));
 
 // UserProfile brick
@@ -77,8 +77,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:UserProfile:Navigation:Dropdown:MyProfil' => 'Meu Perfil',
 	'Brick:Portal:UserProfile:Navigation:Dropdown:Logout' => 'Sair',
 	'Brick:Portal:UserProfile:Password:Title' => 'Senha',
-	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Escolha a senha',
-	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Confirme a senha',
+	'Brick:Portal:UserProfile:Password:ChoosePassword' => 'Nova senha',
+	'Brick:Portal:UserProfile:Password:ConfirmPassword' => 'Repetir nova senha',
 	'Brick:Portal:UserProfile:Password:CantChangeContactAdministrator' => 'Para alterar sua senha, entre em contato com a T.I.',
 	'Brick:Portal:UserProfile:Password:CantChangeForUnknownReason' => 'Não foi possível alterar sua senha, entre em contato com a T.I.',
 	'Brick:Portal:UserProfile:PersonalInformations:Title' => 'Informações pessoais',
@@ -87,7 +87,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 // AggregatePageBrick
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Brick:Portal:AggregatePage:DefaultTitle' => 'Painel de controle',
+	'Brick:Portal:AggregatePage:DefaultTitle' => 'Painel do '.ITOP_APPLICATION_SHORT,
 ));
 
 // BrowseBrick brick
@@ -109,7 +109,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // ManageBrick brick
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:Name' => 'Gerenciar itens',
-	'Brick:Portal:Manage:Table:NoData' => 'Sem dados.',
+	'Brick:Portal:Manage:Table:NoData' => 'Sem dados',
 	'Brick:Portal:Manage:Table:ItemActions' => 'Ações',
 	'Brick:Portal:Manage:DisplayMode:list' => 'List',
 	'Brick:Portal:Manage:DisplayMode:pie-chart' => 'Gráfico de Pizza',
@@ -120,8 +120,8 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Brick:Portal:Manage:fct:count' => 'Total',
 	'Brick:Portal:Manage:fct:sum' => 'Soma',
 	'Brick:Portal:Manage:fct:avg' => 'Média',
-	'Brick:Portal:Manage:fct:min' => 'Min',
-	'Brick:Portal:Manage:fct:max' => 'Máx',
+	'Brick:Portal:Manage:fct:min' => 'Min.',
+	'Brick:Portal:Manage:fct:max' => 'Máx.',
 ));
 
 // ObjectBrick brick

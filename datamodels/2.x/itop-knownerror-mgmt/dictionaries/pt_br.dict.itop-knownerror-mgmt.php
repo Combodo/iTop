@@ -57,7 +57,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:cust_name+' => '',
 	'Class:KnownError/Attribute:problem_id' => 'Problema relacionado',
 	'Class:KnownError/Attribute:problem_id+' => '',
-	'Class:KnownError/Attribute:problem_ref' => 'Ref problema relacionado',
+	'Class:KnownError/Attribute:problem_ref' => 'Ref Problema relacionado',
 	'Class:KnownError/Attribute:problem_ref+' => '',
 	'Class:KnownError/Attribute:symptom' => 'Sintoma do erro',
 	'Class:KnownError/Attribute:symptom+' => '',
@@ -72,13 +72,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:domain' => 'Domínio',
 	'Class:KnownError/Attribute:domain+' => '',
 	'Class:KnownError/Attribute:domain/Value:Application' => 'Aplicação',
-	'Class:KnownError/Attribute:domain/Value:Application+' => 'Aplicação',
+	'Class:KnownError/Attribute:domain/Value:Application+' => '',
 	'Class:KnownError/Attribute:domain/Value:Desktop' => 'Desktop',
-	'Class:KnownError/Attribute:domain/Value:Desktop+' => 'Desktop',
+	'Class:KnownError/Attribute:domain/Value:Desktop+' => '',
 	'Class:KnownError/Attribute:domain/Value:Network' => 'Rede',
-	'Class:KnownError/Attribute:domain/Value:Network+' => 'Rede',
+	'Class:KnownError/Attribute:domain/Value:Network+' => '',
 	'Class:KnownError/Attribute:domain/Value:Server' => 'Servidor',
-	'Class:KnownError/Attribute:domain/Value:Server+' => 'Servidor',
+	'Class:KnownError/Attribute:domain/Value:Server+' => '',
 	'Class:KnownError/Attribute:vendor' => 'Fabricante',
 	'Class:KnownError/Attribute:vendor+' => '',
 	'Class:KnownError/Attribute:model' => 'Modelo',
@@ -86,9 +86,9 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:KnownError/Attribute:version' => 'Versão',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => 'ICs',
-	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração que estão associados a este erro conhecido.',
+	'Class:KnownError/Attribute:ci_list+' => 'Todos os itens de configuração que estão associados a este erro conhecido',
 	'Class:KnownError/Attribute:document_list' => 'Documentos',
-	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido.',
+	'Class:KnownError/Attribute:document_list+' => 'Todos os documentos associados a este erro conhecido',
 ));
 
 //
@@ -97,7 +97,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkErrorToFunctionalCI' => 'Link Erro Conhecido / IC',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra-estrutura associada a este erro conhecido.',
+	'Class:lnkErrorToFunctionalCI+' => 'Infra-estrutura associada a este erro conhecido',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'Nome do IC',
@@ -106,7 +106,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Nome do erro',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Motivo',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Motivo do link',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
 ));
 

@@ -70,25 +70,25 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 // Lost attachments
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'DBTools:LostAttachments' => 'Anexos perdidos',
-	'DBTools:LostAttachments:Disclaimer' => 'Aqui você procurará no seu banco de dados por anexos perdidos. Isto NÃO é uma ferramenta de recuperação de dados, pois não busca dados apagados.',
+	'DBTools:LostAttachments:Disclaimer' => 'Aqui você procurará no seu banco de dados por anexos perdidos. Isto NÃO é uma ferramenta de recuperação de dados, pois não busca dados apagados',
 
 	'DBTools:LostAttachments:Button:Analyze' => 'Analisar',
 	'DBTools:LostAttachments:Button:Restore' => 'Recuperar',
 	'DBTools:LostAttachments:Button:Restore:Confirm' => 'Esta ação não pode ser desfeita, você confirma que quer recuperar os arquivos selecionados?',
 	'DBTools:LostAttachments:Button:Busy' => 'Aguarde...',
 
-	'DBTools:LostAttachments:Step:Analyze' => 'Primeiro, procure anexos perdidos pela análise do banco de dados.',
+	'DBTools:LostAttachments:Step:Analyze' => 'Primeiro, vamos procurar por anexos perdidos através da análise do banco de dados',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Resultados da análise:',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Ótimo! Tudo parece estar nos seus devidos lugares.',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Alguns anexos (%1$d) parecem estar perdidos. Verifique a lista abaixo e escolha os que você deseja mover.',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => 'Resultado da análise:',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => 'Ótimo! Tudo parece estar nos seus devidos lugares (Nenhum anexo perdido foi encontrado)',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => 'Alguns anexos (%1$d) parecem estar perdidos. Verifique a lista abaixo e escolha os que você deseja mover',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => 'Nome do arquivo',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => 'Local atual',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => 'Mover para',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultados:',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d anexos recuperados.',
+	'DBTools:LostAttachments:Step:RestoreResults' => 'Resultado da restauração:',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d anexo(s) recuperado(s)',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Armazenar como imagem embutida.',
+	'DBTools:LostAttachments:StoredAsInlineImage' => 'Armazenar como imagem embutida',
 	'DBTools:LostAttachments:History' => 'Anexo "%1$s" recuperado com as Ferramentas de Banco de Dados'
 ));

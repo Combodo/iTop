@@ -183,11 +183,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentUser'                => 'SetCurrentUser',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser+'               => 'Defina um campo com o usuário atualmente logado',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1'        => 'Campo alvo',
-	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+'       => 'O campo a definir, no objeto atual. Se o campo for uma string, o nome amigável será usado, caso contrário, o identificador será usado. Esse nome amigável é o nome da pessoa, se houver alguma anexada ao usuário, caso contrário, é o login.',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+'       => 'O campo a definir, no objeto atual. Se o campo for uma string, o nome amigável do usuário será usado, caso contrário, o identificador será usado. Esse nome amigável é o nome da pessoa, se houver algum nome amigável atribuído ao usuário, caso contrário, será usado o login',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson'              => 'SetCurrentPerson',
-	'Class:cmdbAbstractObject/Method:SetCurrentPerson+'             => 'Defina um campo com a pessoa atualmente logada (a \\"pessoa\\" anexada ao \\"usuário\\").',
+	'Class:cmdbAbstractObject/Method:SetCurrentPerson+'             => 'Defina um campo com a pessoa atualmente logada (a \\"pessoa\\" anexada ao \\"usuário\\")',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1'      => 'Campo alvo',
-	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+'     => 'O campo a definir, no objeto atual. Se o campo for uma string, o nome amigável será usado, caso contrário, o identificador será usado. ',
+	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+'     => 'O campo a definir, no objeto atual. Se o campo for uma string, o nome amigável será usado, caso contrário, o identificador será usado',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime'                => 'SetElapsedTime',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime+'               => 'Defina um campo com o tempo (segundos) decorrido desde a data especificada por outro campo',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime/Param:1'        => 'Campo alvo',
@@ -250,7 +250,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:Document/Attribute:contracts_list' => 'Contratos',
-	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos associados a este documento.',
+	'Class:Document/Attribute:contracts_list+' => 'Todos os contratos associados a este documento',
 	'Class:Document/Attribute:services_list' => 'Services',
-	'Class:Document/Attribute:services_list+' => 'Todos os serviços associados a este documento.',
+	'Class:Document/Attribute:services_list+' => 'Todos os serviços associados a este documento',
 ));

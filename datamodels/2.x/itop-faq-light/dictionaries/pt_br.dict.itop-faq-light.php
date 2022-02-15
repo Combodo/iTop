@@ -76,13 +76,13 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:FAQCategory/Attribute:name' => 'Nome',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQs',
-	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes associadas à esta categoria.',
+	'Class:FAQCategory/Attribute:faq_list+' => 'Todas as perguntas frequentes associadas à esta categoria',
 ));
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerencimento de Problemas',
 	'Menu:ProblemManagement+' => 'Gerencimento de Problemas',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
-	'Menu:FAQCategory' => 'Categorias FAQ',
+	'Menu:FAQCategory' => 'Categorias de FAQ',
 	'Menu:FAQCategory+' => 'Todas as categorias de FAQ',
 	'Menu:FAQ' => 'FAQs',
 	'Menu:FAQ+' => 'Todos os FAQs',

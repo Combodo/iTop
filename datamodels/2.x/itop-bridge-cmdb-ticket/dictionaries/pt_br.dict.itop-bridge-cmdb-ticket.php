@@ -56,11 +56,11 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:lnkFunctionalCIToProviderContract' => 'Link IC / Contrato de provedor(a)',
+	'Class:lnkFunctionalCIToProviderContract' => 'Link IC / Contrato de provedor',
 	'Class:lnkFunctionalCIToProviderContract+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato de provedor(a)',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id' => 'Contrato de provedor',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_id+' => '',
-	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nome do contrato de provedor(a)',
+	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name' => 'Nome do contrato de provedor',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:providercontract_name+' => '',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id' => 'ICs',
 	'Class:lnkFunctionalCIToProviderContract/Attribute:functionalci_id+' => '',
@@ -90,7 +90,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 //
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
-	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrato de provedor(a)',
+	'Class:FunctionalCI/Attribute:providercontracts_list' => 'Contrato de provedor',
 	'Class:FunctionalCI/Attribute:providercontracts_list+' => 'Todos os contratos para esse item de configuração',
 	'Class:FunctionalCI/Attribute:services_list' => 'Serviços',
 	'Class:FunctionalCI/Attribute:services_list+' => 'Todos os serviços impactados por esse item de configuração',
