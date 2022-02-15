@@ -132,6 +132,7 @@ $(function()
 					this._InitializeLockWatcher();
 				}
 
+				this._InitializeCurrentTab();
 				this._ApplyEntriesFilters();
 				this._UpdateMessagesCounters();
 				this._UpdateFiltersCheckboxesFromOptions();
@@ -279,6 +280,8 @@ $(function()
 			_onTabTitleClick: function (oEvent, oTabTitleElem) {
 				// Avoid anchor glitch
 				oEvent.preventDefault();
+				let oState = {};
+				const sId = this.element.attr('id');
 
 				const oTabTogglerElem = oTabTitleElem.closest(this.js_selectors.tab_toggler);
 				const sTabType = oTabTogglerElem.attr('data-tab-type');
@@ -293,12 +296,17 @@ $(function()
 				{
 					const sCaselogAttCode = oTabTogglerElem.attr('data-caselog-attribute-code');
 					this._ShowCaseLogTab(sCaselogAttCode);
+					oState[sId] = "caselog-"+sCaselogAttCode;
 				}
 				else
 				{
 					this.element.find(this.js_selectors.tab_toolbar + '[data-tab-type="activity"]').addClass(this.css_classes.is_active);
 					this._ShowActivityTab();
+					oState[sId] = "activity";
 				}
+
+				// Add current activity tab to url hash
+				$.bbq.pushState(oState);
 			},
 			/**
 			 * @param oInputElem {Object} jQuery object representing the filter's input
@@ -589,6 +597,22 @@ $(function()
 				}
 
 				return oTabData;
+			},
+			/**
+			 * Set a tab active if it's specified in the url
+			 * @returns {void}
+			 * @private
+			 */
+			_InitializeCurrentTab : function(){
+				const sTabId = $.bbq.getState(this.element.attr('id'), true);
+				if(sTabId !== undefined){
+					if(sTabId.startsWith("caselog-")){
+						this._GetTabTogglerFromCaseLogAttCode(sTabId.replace("caselog-", "")).find(this.js_selectors.tab_title).trigger('click')
+					}
+					else if(sTabId === "activity"){
+						this.element.find(this.js_selectors.tab_toggler + '[data-tab-type="activity"]').find(this.js_selectors.tab_title).trigger('click')
+					}
+				}
 			},
 			/**
 			 * @returns {Object} Active tab toolbar jQuery element
