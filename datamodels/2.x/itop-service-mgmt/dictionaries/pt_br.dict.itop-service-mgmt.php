@@ -340,7 +340,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:SLA/Attribute:slts_list+' => 'Todos os Níveis Mínimos de Serviço (SLTs) para esse Acordo de Nível de Serviço (SLA)',
 	'Class:SLA/Attribute:customercontracts_list' => 'Contratos de clientes',
 	'Class:SLA/Attribute:customercontracts_list+' => 'Todos os contratos de clientes utilizando esse Acordo de Nível de Serviço (SLA)',
-	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Não foi possível salvar o vínculo entre o Contrato do Cliente "%1$s" e Serviço "%2$s": SLA já existe.',
+	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Não foi possível salvar o vínculo entre o Contrato do Cliente "%1$s" e Serviço "%2$s": SLA já existe',
 ));
 
 //

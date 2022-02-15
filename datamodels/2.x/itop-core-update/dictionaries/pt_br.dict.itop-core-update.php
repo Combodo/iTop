@@ -25,7 +25,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
     'itop-core-update:UI:SelectUpdateFile' => 'Atualização da Aplicação',
     'itop-core-update:UI:ConfirmUpdate' => 'Atualização da Aplicação',
     'itop-core-update:UI:UpdateCoreFiles' => 'Atualização da Aplicação',
-	'iTopUpdate:UI:MaintenanceModeActive' => 'A aplicação encontrasse em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal.',
+	'iTopUpdate:UI:MaintenanceModeActive' => 'A aplicação encontrasse em manutenção, nenhum usuário pode acessar a aplicação. Você precisa rodar o Setup ou restaurar os arquivos da aplicação para voltar ao modo normal',
 	'itop-core-update:UI:UpdateDone' => 'Atualização da Aplicação',
 
 	'itop-core-update/Operation:SelectUpdateFile/Title' => 'Atualização da Aplicação',
@@ -50,7 +50,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'iTopUpdate:UI:DoFilesArchive' => 'Arquivar arquivos da aplicação',
 	'iTopUpdate:UI:UploadArchive' => 'Escolha um pacote para enviar',
 	'iTopUpdate:UI:ServerFile' => 'Caminho para o pacote já no servidor',
-	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Durante a atualização, a aplicação ficará em modo leitura.',
+	'iTopUpdate:UI:WarningReadOnlyDuringUpdate' => 'Durante a atualização, a aplicação ficará em modo leitura',
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Atualizar',
@@ -75,7 +75,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Aplicação pode ser atualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Aplicação não pode ser atualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Atenção: a atualização da aplicação pode falhar: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.<br />Alguns arquivos modificados foram detectados, uma atualização parcial não pode ser executada.',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Você deve usar o <a href="%1$s">Setup</a> para atualizar a aplicação.<br />Alguns arquivos modificados foram detectados, uma atualização parcial não pode ser executada',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Pronto para começar',
@@ -101,7 +101,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
     'iTopUpdate:Error:NoFile' => 'Nenhum arquivo fornecido',
 	'iTopUpdate:Error:InvalidToken' => 'Token inválido',
 	'iTopUpdate:Error:UpdateFailed' => 'Atualização falhou',
-	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'O tamanho máximo de envio de arquivos parece muito pequeno para a atualização. Favor alterar as configurações do PHP.',
+	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'O tamanho máximo de envio de arquivos parece muito pequeno para a atualização. Favor alterar as configurações do PHP',
 
 	'iTopUpdate:UI:RestoreArchive' => 'Você pode restaurar sua aplicação com o arquivo \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Você pode restaurar seu banco de dados com \'%1$s\'',
