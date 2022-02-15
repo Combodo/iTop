@@ -902,7 +902,7 @@ Esperamos que você goste desta versão tanto quanto gostamos de imaginá-la e c
 	'UI:UserManagement:Action:BulkRead+' => 'Exibir objetos ou exportar em massa',
 	'UI:UserManagement:Action:BulkModify' => 'Edição em massa',
 	'UI:UserManagement:Action:BulkModify+' => 'Criar/editar em massa (importar CSV)',
-	'UI:UserManagement:Action:BulkDelete' => 'Excluir em massa',
+	'UI:UserManagement:Action:BulkDelete' => 'Exclusão em massa',
 	'UI:UserManagement:Action:BulkDelete+' => 'Excluir objeto(s) em massa',
 	'UI:UserManagement:Action:Stimuli' => 'Estímulo',
 	'UI:UserManagement:Action:Stimuli+' => 'Ações permitidas (composta)',
