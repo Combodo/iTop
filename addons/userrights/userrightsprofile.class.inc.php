@@ -738,10 +738,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// load and cache permissions for the current user on the given class
 		//
 		$iUser = $oUser->GetKey();
-		if (isset($this->m_aObjectActionGrants[$iUser])
-			&& isset($this->m_aObjectActionGrants[$iUser][$sClass])
-			&& isset($this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode])){
-			$aTest = @$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode];
+		if (isset($this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode])){
+			$aTest = $this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode];
 			if (is_array($aTest)) return $aTest;
 		}
 
