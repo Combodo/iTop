@@ -347,21 +347,27 @@ try
 		case 'details': // Details of an object
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$id = utils::ReadParam('id', '');
-			if ( empty($sClass) || empty($id))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+
+			if (empty($sClass)) {
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
-			if (is_numeric($id))
-			{
+			if (($id === '') || (false === is_numeric($id))) {
+				$sAttCode = utils::ReadParam('attcode', '');
+				$sAttValue = utils::ReadParam('attvalue', '');
+
+				if (empty($sAttCode) || empty($sAttValue)) {
+					throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'attcode', 'attvalue'));
+				}
+
+				$oObj = MetaModel::GetObjectByColumn($sClass, $sAttCode, $sAttValue, true);
+			} else if (is_numeric($id)) {
 				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			}
-			else
-			{
+			} else {
 				$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
 			}
-			if (is_null($oObj))
-			{
+
+			if (is_null($oObj)) {
 				// Check anyhow if there is a message for this object (like you've just created it)
 				$sMessageKey = $sClass.'::'.$id;
 				DisplayMessages($sMessageKey, $oP);
@@ -369,8 +375,7 @@ try
 
 				// Attempt to load the object in archive mode
 				utils::PushArchiveMode(true);
-				if (is_numeric($id))
-				{
+				if (is_numeric($id)) {
 					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
 				}
 				else
