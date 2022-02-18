@@ -39,10 +39,11 @@ class UpdateController extends Controller
 		$bSetupLaunchButtonEnabled = $oConfig->Get('setup_launch_button.enabled');
 		$aParams['bSetupLaunchButtonEnabled'] = $bSetupLaunchButtonEnabled;
 		if ($bSetupLaunchButtonEnabled) {
-			$sSetupToken = SetupUtils::CreateSetupToken();
-			$sAppRoot = utils::GetAbsoluteUrlAppRoot(true);
-			$sLaunchSetupUrl = $sAppRoot.'setup/confperm.php';
-			$sLaunchSetupUrl = utils::AddParameterToUrl($sLaunchSetupUrl, 'authent', $sSetupToken);
+			$sLaunchSetupUrl = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php',
+				[
+					'operation'      => 'LaunchSetup',
+					'transaction_id' => $sTransactionId,
+				]);;
 			$aParams['sLaunchSetupUrl'] = $sLaunchSetupUrl;
 		}
 
