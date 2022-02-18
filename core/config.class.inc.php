@@ -1552,6 +1552,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'setup_launch_button.enabled' => [
+			'type' => 'bool',
+			'description' => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 	];
 
 	public function IsProperty($sPropCode)
