@@ -416,7 +416,11 @@ class DBUnionSearch extends DBSearch
 		$aSearches = array();
 		foreach ($this->aSearches as $oSearch)
 		{
-			$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+			if (!$oSearch->IsAllDataAllowed()) {
+				$aSearches[] = $oSearch->Filter($sClassAlias, $oFilter);
+			} else {
+				$aSearches[] = $oSearch;
+			}
 		}
 		return new DBUnionSearch($aSearches);
 	}
