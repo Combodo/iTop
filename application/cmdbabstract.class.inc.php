@@ -624,11 +624,17 @@ HTML
 			if ($oAttDef instanceof AttributeDashboard) {
 				if (!$this->IsNew()) {
 					$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
-					$oPage->AddAjaxTab($oAttDef->GetLabel(),
-						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
+					$oPage->AddAjaxTab(
+						'Class:'.$sClass.'/Attribute:'.$sAttCode,
+						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='
+							.get_class($this)
+							.'&id='.$this->GetKey()
+							.'&attcode='.$oAttDef->GetCode()
+							.$sHostContainerInEditionUrlParam,
 						true,
 						'Class:'.$sClass.'/Attribute:'.$sAttCode,
-						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
+						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD
+					);
 					// Add graphs dependencies
 					WebResourcesHelper::EnableC3JSToWebPage($oPage);
 				}

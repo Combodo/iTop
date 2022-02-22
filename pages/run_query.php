@@ -317,10 +317,16 @@ EOF
 					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
 					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
 
-					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
+					$sEscapedExpression = json_encode(utils::EscapeHtml($sFixedExpression));
 					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
-					$oUseSuggestedQueryButton->SetOnClickJsCode("let \$oQueryTextarea = $('textarea[name=expression]');\$oQueryTextarea.val('$sEscapedExpression').focus();\$oQueryTextarea.closest('form').submit();");
-					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
+					$oUseSuggestedQueryButton->SetOnClickJsCode(
+<<<JS
+let \$oQueryTextarea = $('textarea[name=expression]');
+\$oQueryTextarea.val($sEscapedExpression).focus();
+\$oQueryTextarea.closest('form').submit();
+JS
+					);
+						$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
 					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 				}

@@ -483,6 +483,7 @@ class LoginWebPage extends NiceWebPage
 					$iResponse = $oLoginFSMExtensionInstance->LoginAction($sLoginState, $iErrorCode);
 					if ($iResponse == self::LOGIN_FSM_RETURN)
 					{
+						Session::WriteClose();
 						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
 					if ($iResponse == self::LOGIN_FSM_ERROR)

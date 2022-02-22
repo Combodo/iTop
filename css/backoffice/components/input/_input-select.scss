@@ -102,6 +102,13 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
   > input {
     background-color: unset;
     border: unset;
+    &:focus{
+      outline: none !important; /* Overwrite browsers default focus outline */
+    }
+  }
+  
+  &.input-active{
+    border: 1px solid $ibo-input--focus--border-color;
   }
 }
 .ibo-input-select-wrapper{
