@@ -558,12 +558,13 @@ class ActionEmail extends ActionNotification
 	{
 		$sObjClass = get_class($oObject);
 		$sObjId = $oObject->GetKey();
+		$sAppName = utils::Sanitize(ITOP_APPLICATION_SHORT, '', utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME);
 
 		switch ($sHeaderName) {
 			case static::ENUM_HEADER_NAME_MESSAGE_ID:
 			case static::ENUM_HEADER_NAME_REFERENCES:
 				// Prefix
-				$sPrefix = sprintf('iTop_%s_%d', $sObjClass, $sObjId);
+				$sPrefix = sprintf('%s_%s_%d', $sAppName, $sObjClass, $sObjId);
 				if ($sHeaderName === static::ENUM_HEADER_NAME_MESSAGE_ID) {
 					$sPrefix .= sprintf('_%f', microtime(true /* get as float*/));
 				}
