@@ -579,8 +579,8 @@ class ActionEmail extends ActionNotification
 			default:
 				$sErrorMessage = sprinf('%s: Could not generate identifier for header "%s", only %s are supported', static::class, $sHeaderName, implode(' / ', [static::ENUM_HEADER_NAME_MESSAGE_ID, static::ENUM_HEADER_NAME_REFERENCES]));
 				IssueLog::Error($sErrorMessage, LogChannels::ACTION, [
-					'Object' => $sObjClass.'::'.$sObjId.' ('.$oObject->Get('friendlyname').')',
-					'Action' => get_class($this).'::'.$this->GetKey().' ('.$this->Get('friendlyname').')',
+					'Object' => $sObjClass.'::'.$sObjId.' ('.$oObject->GetRawName().')',
+					'Action' => get_class($this).'::'.$this->GetKey().' ('.$this->GetRawName().')',
 				]);
 				throw new Exception($sErrorMessage);
 		}
