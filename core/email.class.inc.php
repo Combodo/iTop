@@ -325,20 +325,33 @@ class EMail
 		// Note: Swift will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
-		
+
 		$oMsgId = $this->m_oMessage->getHeaders()->get('Message-ID');
 		$oMsgId->SetId($sId);
 	}
-	
+
 	public function SetReferences($sReferences)
 	{
 		$this->AddToHeader('References', $sReferences);
 	}
 
+	/**
+	 * Set the "In-Reply-To" header to allow emails to group as a conversation in modern mail clients (GMail, Outlook 2016+, ...)
+	 *
+	 * @link https://en.wikipedia.org/wiki/Email#Header_fields
+	 *
+	 * @param string $sMessageId
+	 *
+	 * @since 3.0.1 N°4849
+	 */
+	public function SetInReplyTo(string $sMessageId)
+	{
+		$this->AddToHeader('In-Reply-To', $sMessageId);
+	}
+
 	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
 	{
-		if (($sMimeType === 'text/html') && ($sCustomStyles !== null))
-		{
+		if (($sMimeType === 'text/html') && ($sCustomStyles !== null)) {
 			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
 			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
 			$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
