@@ -346,13 +346,19 @@ try
 		
 		case 'details': // Details of an object
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
 
 			if (empty($sClass)) {
 				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
-			if (($id === '') || (false === is_numeric($id))) {
+			$id = utils::ReadParam('id', null);
+			if (false === is_null($id)) {
+				if (is_numeric($id)) {
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				} else {
+					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
+				}
+			} else {
 				$sAttCode = utils::ReadParam('attcode', '');
 				$sAttValue = utils::ReadParam('attvalue', '');
 
@@ -361,10 +367,6 @@ try
 				}
 
 				$oObj = MetaModel::GetObjectByColumn($sClass, $sAttCode, $sAttValue, true);
-			} else if (is_numeric($id)) {
-				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
-			} else {
-				$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
 			}
 
 			if (is_null($oObj)) {
