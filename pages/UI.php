@@ -357,7 +357,7 @@ try
 				$sAttValue = utils::ReadParam('attvalue', '');
 
 				if (empty($sAttCode) || empty($sAttValue)) {
-					throw new ApplicationException(Dict::Format('UI:Error:3ParametersMissing', 'class', 'attcode', 'attvalue'));
+					throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'attcode', 'attvalue'));
 				}
 
 				$oObj = MetaModel::GetObjectByColumn($sClass, $sAttCode, $sAttValue, true);
