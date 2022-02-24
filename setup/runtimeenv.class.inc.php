@@ -748,16 +748,17 @@ class RunTimeEnvironment
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
 		foreach($aSelectedModuleCodes as $sModuleId)
 		{
+			if (!array_key_exists($sModuleId, $aAvailableModules)) {
+				continue;
+			}
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
 			$sVersion = $aModuleData['version_code'];
 			$aComments = array();
 			$aComments[] = $sShortComment;
-			if ($aModuleData['mandatory'])
-			{
+			if ($aModuleData['mandatory']) {
 				$aComments[] = 'Mandatory';
-			}
-			else
+			} else
 			{
 				$aComments[] = 'Optional';
 			}
