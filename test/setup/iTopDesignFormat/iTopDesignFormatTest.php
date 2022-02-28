@@ -64,6 +64,7 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	public function ConvertProvider()
 	{
 		return [
+			'Bug_4569'   => ['1.7', 'Bug_4569'],
 			'1.7 to 1.6' => ['1.6', '1.7_to_1.6'],
 			'1.6 to 1.7 2' => ['1.7', '1.6_to_1.7_2'],
 			'1.7 to 1.6 2' => ['1.6', '1.7_to_1.6_2'],
@@ -120,11 +121,11 @@ class TestForITopDesignFormatClass extends ItopTestCase
 
 	public function ConvertBackAndForthProvider()
 	{
-		return array(
-			'1.6 to 1.7' => array('1.7', '1.6_to_1.7_2'),
-			'1.6 to 3.0' => array('3.0', '1.6_to_1.7_2'),
-			'1.7 to 3.0' => array('3.0', '1.7'),
-		);
+		return [
+			'1.6 to 1.7' => ['1.7', '1.6_to_1.7_2'],
+			'1.6 to 3.0' => ['3.0', '1.6_to_1.7_2'],
+			'1.7 to 3.0' => ['3.0', '1.7'],
+		];
 	}
 
 	/**

@@ -1005,7 +1005,7 @@ class iTopDesignFormat
 				$oNodeTreeNode = $oXPath->query('node_tree', $oTrashedNode)->item(0);
 				if (!is_null($oXPathNode) && !is_null($oNodeTreeNode)) {
 					$sXPath = $this->GetText($oXPathNode, '');
-					$oParentNode = $oXPath->query($sXPath)->item(0);
+					$oParentNode = $this->GetOrBuildParentNode($sXPath);
 					if ($oParentNode) {
 						$oNode = $oNodeTreeNode->firstChild;
 						while ($oNode) {
@@ -1044,6 +1044,35 @@ class iTopDesignFormat
 		$this->RemoveNodeFromXPath("/itop_design/meta/previous_versions/previous_version_$sVersion", false);
 		$this->RemoveEmptyNodeFromXPath("/itop_design/meta/previous_versions");
 		$this->RemoveEmptyNodeFromXPath("/itop_design/meta");
+	}
+
+	private function GetOrBuildParentNode($sXPath)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+		$oParentNode = $oXPath->query($sXPath)->item(0);
+		if ($oParentNode) {
+			return $oParentNode;
+		}
+
+		// Try to build the parent node
+		$iLastSlashPos = strrpos($sXPath, '/');
+		$sParentXPath = substr($sXPath, 0, $iLastSlashPos);
+		$oParentNode = $this->GetOrBuildParentNode($sParentXPath);
+		if (!$oParentNode) {
+			return null;
+		}
+
+		$sNodeXPath = substr($sXPath, $iLastSlashPos + 1);
+		if (preg_match("/(?<tag>\w+)(\[@id=\"(?<id>\w+)\")?/", $sNodeXPath, $aMatches)) {
+			$oNode = $this->oDocument->createElement($aMatches['tag']);
+			if (isset($aMatches['id'])) {
+				$oNode->setAttribute('id', $aMatches['id']);
+			}
+			$oParentNode->appendChild($oNode);
+			return $oNode;
+		}
+
+		return null;
 	}
 
 	private function RemoveEmptyNodeFromXPath($sXPath, $bStoreThisNodeInMetaVersion = false)
