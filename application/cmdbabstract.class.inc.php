@@ -658,7 +658,7 @@ HTML
 							.'&attcode='.$oAttDef->GetCode()
 							.$sHostContainerInEditionUrlParam,
 						true,
-						'Class:'.$sClass.'/Attribute:'.$sAttCode,
+						$oAttDef->GetLabel(),
 						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD
 					);
 					// Add graphs dependencies
