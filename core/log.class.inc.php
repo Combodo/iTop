@@ -548,7 +548,7 @@ class LogChannels
 	 * @var string
 	 * @since 3.0.1 N°4849
 	 */
-	public const ACTION = 'action';
+	public const NOTIFICATIONS = 'action';
 
 	public const CLI = 'CLI';
 
