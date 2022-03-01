@@ -17,10 +17,16 @@
  */
 
 // Helpers
-function ShowAboutBox()
+function ShowAboutBox(sTitle)
 {
+	var loadingDialog = $('<div style="padding-top:40px; padding-left:40px;"><i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i></div>');
+	loadingDialog.dialog( {title:sTitle,autoOpen: true, modal: true});
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
+
 		$('body').append(data);
+	}).always(function() {
+		loadingDialog.empty();
+		loadingDialog.remove();
 	});
 	return false;
 }
