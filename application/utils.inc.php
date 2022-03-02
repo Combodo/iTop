@@ -2127,6 +2127,12 @@ class utils
 	 *     or an empty string if no such module is found (or not called within a module file)
 	 *
 	 * @uses \debug_backtrace()
+	 *
+	 * @since 3.0.0 Before writing model.*.php file, compiler will now always delete it.
+	 *      If you have symlinks enabled, base dir will be original module dir, but since this behavior change this won't be true anymore for model.*.php
+	 *      In consequence the backtrace analysis won't be possible for this file
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	public static function GetCurrentModuleDir($iCallDepth)
 	{
