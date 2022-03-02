@@ -362,7 +362,7 @@ try
 				$sAttCode = utils::ReadParam('attcode', '');
 				$sAttValue = utils::ReadParam('attvalue', '');
 
-				if (empty($sAttCode) || empty($sAttValue)) {
+				if ((strlen($sAttCode) === 0) || (strlen($sAttValue) === 0)) {
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
 				}
 
