@@ -667,8 +667,6 @@ class iTopDesignFormat
 	 */
 	protected function From16To15($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
 		// Remove AttributeTagSet nodes
 		//
 		$sPath = "/itop_design/classes/class/fields/field[@xsi:type='AttributeTagSet']";
@@ -805,15 +803,7 @@ class iTopDesignFormat
 			$oNode->appendChild($oCodeNode);
 		}
 
-		// N°3516 Remove legacy backoffice theme
-		// Remove completely light-grey theme
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="light-grey"]');
-		
 		// Update test-red theme
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/imports/import[@id="css-variables"]');
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="jqueryui"]');
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="main"]');
-
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
@@ -827,21 +817,6 @@ class iTopDesignFormat
 		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
-		}
-
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
-		// Add new stylesheets
-		$oStyleSheetsNode = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets')->item(0);
-		if ($oStyleSheetsNode) {
-			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
-			$oStyleSheetNode->setAttribute('id', 'environment-banner');
-			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/themes/page-banner.scss'));
-			$oStyleSheetsNode->appendChild($oStyleSheetNode);
-
-			$oStyleSheetNode = $oStyleSheetsNode->ownerDocument->createElement("stylesheet");
-			$oStyleSheetNode->setAttribute('id', 'fullmoon');
-			$oStyleSheetNode->appendChild(new DOMText('../css/backoffice/main.scss'));
-			$oStyleSheetsNode->appendChild($oStyleSheetNode);
 		}
 
 		// Add new attribute to theme import nodes
@@ -923,23 +898,26 @@ class iTopDesignFormat
 		// N°3516 Bring back legacy themes
 		// Update test-red theme
 
-		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--background-color"]');
-		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'backoffice-environment-banner-background-color');
+		if (!$oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]')->item(0)) {
+			$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--background-color"]');
+			foreach ($oNodeList as $oNode) {
+				$oNode->setAttribute('id', 'backoffice-environment-banner-background-color');
+			}
 		}
 
-		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-color"]');
-		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'backoffice-environment-banner-text-color');
+		if (!$oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]')->item(0)) {
+			$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-color"]');
+			foreach ($oNodeList as $oNode) {
+				$oNode->setAttribute('id', 'backoffice-environment-banner-text-color');
+			}
 		}
 
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-content"]');
-		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
+		if (!$oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]')->item(0)) {
+			$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-content"]');
+			foreach ($oNodeList as $oNode) {
+				$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
+			}
 		}
-
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="environment-banner"]');
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="fullmoon"]');
 
 		// Add new attribute to theme import nodes
 		
