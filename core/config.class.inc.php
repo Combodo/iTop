@@ -1555,7 +1555,7 @@ class Config
 		'setup.launch_button.enabled' => [
 			'type'                => 'bool',
 			'description'         => 'If true displays in the Application Upgrade screen a button allowing to launch the setup in a single click (no more manual config file permission change needed)',
-			'default'             => false,
+			'default'             => null,
 			'value'               => false,
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,

@@ -36,9 +36,16 @@ class UpdateController extends Controller
 		$aParams['oSet'] = $oSet;
 
 		$oConfig = utils::GetConfig();
-		$bSetupLaunchButtonEnabled = $oConfig->Get('setup.launch_button.enabled');
-		$aParams['bSetupLaunchButtonEnabled'] = $bSetupLaunchButtonEnabled;
-		if ($bSetupLaunchButtonEnabled) {
+		$bConfigParamSetupLaunchButtonEnabled = $oConfig->Get('setup.launch_button.enabled');
+		if (is_null($bConfigParamSetupLaunchButtonEnabled)) {
+			$bIsSetupLaunchButtonEnabled = utils::IsDevelopmentEnvironment();
+		} else if (false === $bConfigParamSetupLaunchButtonEnabled) {
+			$bIsSetupLaunchButtonEnabled = false;
+		} else {
+			$bIsSetupLaunchButtonEnabled = $bConfigParamSetupLaunchButtonEnabled || utils::IsDevelopmentEnvironment();
+		}
+		$aParams['bIsSetupLaunchButtonEnabled'] = $bIsSetupLaunchButtonEnabled;
+		if ($bIsSetupLaunchButtonEnabled) {
 			$sLaunchSetupUrl = utils::GetAbsoluteUrlModulePage('itop-core-update', 'ajax.php',
 				[
 					'operation'      => 'LaunchSetup',
