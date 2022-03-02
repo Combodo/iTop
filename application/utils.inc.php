@@ -1960,11 +1960,15 @@ class utils
 	}
 	
 	/**
-	 * Returns the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
-	 * this function is made
-	 * or an empty string if no such module is found (or not called within a module file)
-	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
-	 * @return string
+	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
+	 *
+	 * @param int $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 *
+	 * @return string the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
+	 *     this function is made
+	 *     or an empty string if no such module is found (or not called within a module file)
+	 *
+	 * @uses \debug_backtrace()
 	 */
 	public static function GetCurrentModuleDir($iCallDepth)
 	{
@@ -1989,9 +1993,14 @@ class utils
 	}
 
 	/**
+	 * **Warning** : as this method uses {@see GetCurrentModuleDir} it produces hazardous results.
+	 * You should better uses directly {@see GetAbsoluteUrlModulesRoot} and add the module dir name yourself ! See N°4573
+	 *
 	 * @return string the base URL for all files in the current module from which this method is called
 	 * or an empty string if no such module is found (or not called within a module file)
 	 * @throws \Exception
+	 *
+	 * @uses GetCurrentModuleDir
 	 */
 	public static function GetCurrentModuleUrl()
 	{
