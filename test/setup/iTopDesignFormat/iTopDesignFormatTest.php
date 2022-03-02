@@ -70,8 +70,6 @@ class TestForITopDesignFormatClass extends ItopTestCase
 			'1.7 to 1.6 2' => ['1.6', '1.7_to_1.6_2'],
 			'1.7 to 3.0' => ['3.0', '1.7_to_3.0'],
 			'3.0 to 1.7' => ['1.7', '3.0_to_1.7'],
-			'3.0 to 1.7 no previous' => ['1.7', '3.0_to_1.7_no_previous'],
-			'3.0 to 1.7 collision' => ['1.7', '3.0_to_1.7_collision', 1, 'Trying to restore an existing node /itop_design/branding/themes/theme[@id="light-grey"] from version 1.7'],
 		];
 	}
 
@@ -122,8 +120,6 @@ class TestForITopDesignFormatClass extends ItopTestCase
 	public function ConvertBackAndForthProvider()
 	{
 		return [
-			'1.6 to 1.7' => ['1.7', '1.6_to_1.7_2'],
-			'1.6 to 3.0' => ['3.0', '1.6_to_1.7_2'],
 			'1.7 to 3.0' => ['3.0', '1.7'],
 		];
 	}

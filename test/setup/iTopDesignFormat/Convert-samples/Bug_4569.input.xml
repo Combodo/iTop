@@ -24,33 +24,6 @@
       </fields>
     </class>
   </classes>
-  <meta>
-    <previous_versions>
-      <previous_version_1_7>
-        <trashed_nodes>
-          <trashed_node id="621c7aee3641d015166131" _delta="define">
-            <parent_xpath>/itop_design/branding/themes</parent_xpath>
-            <node_tree>
-              <theme id="light-grey" _disabled_delta="must_exist">
-                <variables _delta="redefine">
-                  <variable id="brand-primary">#8a765c</variable>
-                  <variable id="frame-background-color">lighten($brand-primary,50%)</variable>
-                  <variable id="main-header-background">$frame-background-color</variable>
-                  <variable id="complement-color">#996633</variable>
-                  <variable id="hyperlink-color">darken($complement-color,15%)</variable>
-                  <variable id="breadcrumb-text-highlight-color">darken($complement-color,15%)</variable>
-                  <variable id="search-criteria-more-less-details-color">darken($complement-color,15%)</variable>
-                  <variable id="complement-light">lighten(#dac292,15%)</variable>
-                  <variable id="hover-background-color">$complement-light</variable>
-                  <variable id="icons-filter">hue-rotate(42deg)</variable>
-                </variables>
-              </theme>
-            </node_tree>
-          </trashed_node>
-        </trashed_nodes>
-      </previous_version_1_7>
-    </previous_versions>
-  </meta>
   <files>
     <file id="vincent5_7a5f8e53c83cd6dabbded618c3d012d9" xsi:type="File" _delta="define_if_not_exists">
       <name>Vincent5.png</name>
@@ -64,5 +37,21 @@
     <main_logo _delta="define">
       <fileref ref="vincent5_7a5f8e53c83cd6dabbded618c3d012d9"/>
     </main_logo>
+    <themes>
+      <theme id="light-grey" _delta="must_exist">
+        <variables _delta="redefine">
+          <variable id="brand-primary">#8a765c</variable>
+          <variable id="frame-background-color">lighten($brand-primary,50%)</variable>
+          <variable id="main-header-background">$frame-background-color</variable>
+          <variable id="complement-color">#996633</variable>
+          <variable id="hyperlink-color">darken($complement-color,15%)</variable>
+          <variable id="breadcrumb-text-highlight-color">darken($complement-color,15%)</variable>
+          <variable id="search-criteria-more-less-details-color">darken($complement-color,15%)</variable>
+          <variable id="complement-light">lighten(#dac292,15%)</variable>
+          <variable id="hover-background-color">$complement-light</variable>
+          <variable id="icons-filter">hue-rotate(42deg)</variable>
+        </variables>
+      </theme>
+    </themes>
   </branding>
 </itop_design>
