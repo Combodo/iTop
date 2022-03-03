@@ -40,30 +40,36 @@ class iTopModuleXmlInstallationChecklistTest extends ItopTestCase
 	public function testAllModuleAreIncludedInInstallationXml()
 	{
 		$sInstallationXmlPath = APPROOT.'datamodels/2.x/installation.xml';
-		if (!is_file($sInstallationXmlPath))
-		{
+		if (!is_file($sInstallationXmlPath)) {
 			$sInstallationXmlPath = APPROOT.'datamodels/1.x/installation.xml';
 		}
 		$this->assertTrue(is_file($sInstallationXmlPath), "$sInstallationXmlPath does not exist");
 
 		$sInstallationXmlContent = file_get_contents($sInstallationXmlPath);
 		preg_match_all("|<module>(.*)</module>|", $sInstallationXmlContent, $aMatches);
-		$aDeclaredModules =  [] ;
-		if (!empty($aMatches))
-		{
-			foreach ($aMatches[1] as $sModule)
-			{
-				if (!array_key_exists($sModule, $aDeclaredModules))
-				{
+		$aDeclaredModules = [];
+		if (!empty($aMatches)) {
+			foreach ($aMatches[1] as $sModule) {
+				if (!array_key_exists($sModule, $aDeclaredModules)) {
 					$aDeclaredModules[$sModule] = $sModule;
 				}
 			}
 		}
 
-		$this->assertArraySubset($this->GetFilteredModulesFromDatamodels(APPROOT.'/datamodels'), $aDeclaredModules, false, "$sInstallationXmlPath does not refer to all provided modules. Refered modules:\n " . var_export($aDeclaredModules, true));
+		$this->assertArraySubset(
+			$this->GetFilteredModulesFromDatamodels(APPROOT.'/datamodels'),
+			$aDeclaredModules,
+			false,
+			"{$sInstallationXmlPath} does not list all modules in /datamodels ! List of modules in installation.xml:\n ".var_export($aDeclaredModules, true)
+		);
 
 		$aModulesFromDatamodels = $this->GetAllModules(APPROOT.'/datamodels');
-		$this->assertArraySubset($aDeclaredModules, $aModulesFromDatamodels, false, "Not all modules are contained in $sInstallationXmlPath. Refered modules:\n " . var_export($aModulesFromDatamodels, true));
+		$this->assertArraySubset(
+			$aDeclaredModules,
+			$aModulesFromDatamodels,
+			false,
+			"Not all modules are contained in {$sInstallationXmlPath}. List of modules in /datamodels:\n ".var_export($aModulesFromDatamodels, true)
+		);
 	}
 
 	public function GetFilteredModulesFromDatamodels($sFolder)
