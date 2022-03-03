@@ -772,13 +772,51 @@ class AjaxRenderController
 		self::DisplayUserAboutBox($oPage);
 	}
 
+	/**
+	 * display list of licenses in "About iTop" popup
+	 * @param \AjaxPage $oPage
+	 *
+	 * @throws \Exception
+	 */
+	private static function DisplayAboutLicenses( AjaxPage $oPage): void
+	{
+		$sCurrEnv = utils::GetCurrentEnvironment();
+		require_once(APPROOT.'setup/setuputils.class.inc.php');
+		$aLicenses = SetupUtils::GetLicenses($sCurrEnv);
+		$oPage->add("<div>");
+		$oPage->add('<fieldset>');
+		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
+		$oPage->add('<ul style="margin: 0; font-size: smaller; max-height: 15em; overflow: auto;">');
+		$index = 0;
+		foreach ($aLicenses as $oLicense) {
+			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
+			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
+			$oPage->add_ready_script(<<<JS
+$("#toggle_$index").on('click', function() { 
+	$(this).toggleClass('open');
+	$("#license_$index").slideToggle("normal"); 
+});
+JS
+			);
+			$index++;
+		}
+		$oPage->add('</ul>');
+		$oPage->add('</fieldset>');
+		$oPage->add("</div>");
+	}
+	/**
+	 * Display about iTop for all user non admin
+	 * @param \AjaxPage $oPage
+	 *
+	 * @throws \Exception
+	 */
 	private static function DisplayUserAboutBox(AjaxPage $oPage): void
 	{
 		$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
 		$oPage->add_ready_script(
 			<<<EOF
 $('#about_box').dialog({
-	width: 500,
+	width: 700,
 	modal: true,
 	title: '$sDialogTitle',
 	close: function() { $(this).remove(); }
@@ -791,9 +829,16 @@ EOF
 		$oPage->add('<a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
+		self::DisplayAboutLicenses( $oPage);
 		$oPage->add("</div>");
 	}
 
+	/**
+	 * Display about iTop for admin user
+	 * @param \AjaxPage $oPage
+	 *
+	 * @throws \Exception
+	 */
 	private static function DisplayAdminAboutBox(AjaxPage $oPage): void
 	{
 		$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
@@ -841,8 +886,7 @@ EOF
 		}
 		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
 
-		require_once(APPROOT.'setup/setuputils.class.inc.php');
-		$aLicenses = SetupUtils::GetLicenses($sCurrEnv);
+
 
 		$aItopSettings = array('cron_max_execution_time', 'timezone');
 		$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
@@ -881,26 +925,7 @@ EOF
 		$oPage->add('</table>');
 		$oPage->add("</div>");
 
-		$oPage->add("<div>");
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
-		$oPage->add('<ul style="margin: 0; font-size: smaller; max-height: 15em; overflow: auto;">');
-		$index = 0;
-		foreach ($aLicenses as $oLicense) {
-			$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
-			$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
-			$oPage->add_ready_script(<<<JS
-$("#toggle_$index").on('click', function() { 
-	$(this).toggleClass('open');
-	$("#license_$index").slideToggle("normal"); 
-});
-JS
-			);
-			$index++;
-		}
-		$oPage->add('</ul>');
-		$oPage->add('</fieldset>');
-		$oPage->add("</div>");
+		self::DisplayAboutLicenses($oPage);
 
 		$oPage->add('<fieldset>');
 		$oPage->add('<legend>'.Dict::S('UI:About:InstallationOptions').'</legend>');
