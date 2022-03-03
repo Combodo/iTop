@@ -75,7 +75,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => '应用无法升级',
 	'iTopUpdate:UI:CanCoreUpdate:No' => '应用无法升级: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => '警告: 应用升级可能失败: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '您必须使用 <a href="%1$s">安装向导</a> 来升级应用.<br />已检测到部分文件被修改, 无法执行部分升级.',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => '准备开始',

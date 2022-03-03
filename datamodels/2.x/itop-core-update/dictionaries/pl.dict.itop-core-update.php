@@ -75,7 +75,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'Aplikacja może być zaktualizowana',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Nie można zaktualizować aplikacji: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Ostrzeżenie: aktualizacja aplikacji może się nie powieść: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => 'Aby zaktualizować aplikację, musisz skorzystać ze strony <a href="%1$s">setup</a>.<br />Wykryto niektóre zmodyfikowane pliki, częściowej aktualizacji nie można przeprowadzić.',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Gotowy do startu',
