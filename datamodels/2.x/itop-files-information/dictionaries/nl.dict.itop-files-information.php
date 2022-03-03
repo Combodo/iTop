@@ -27,6 +27,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'FilesInformation:Error:MissingFile' => 'Ontbrekend bestand: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Corrupt bestand: %1$s',
 	'FilesInformation:Error:CantWriteToFile' => 'Kan niet schrijven naar bestand %1$s',
+	'FilesInformation:Error:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 ));
 
 

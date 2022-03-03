@@ -25,6 +25,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'FilesInformation:Error:MissingFile' => 'Ficher manquant : %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Le fichier %1$s est corrompu',
 	'FilesInformation:Error:CantWriteToFile' => 'Impossible de modifier le fichier %1$s',
+	'FilesInformation:Error:CannotUpdateNewModules' => '<b>De nouveaux modules ont été détectés</b>, une mise à jour partielle ne peut pas être effectuée.<br />Suivez la <a href="%2$s"> procedure</a> pour mettre à jour manuellement votre iTop. Vous devez utiliser la page <a href="%1$s">d\'installation</a> pour mettre à jour l\'application.',
+
 ));
 
 

@@ -13,6 +13,8 @@ use DOMDocument;
 use DOMElement;
 use DOMNode;
 use DOMXPath;
+use MetaModel;
+use utils;
 
 class FilesIntegrity
 {
@@ -82,7 +84,7 @@ class FilesIntegrity
 	 *
 	 * @throws \Combodo\iTop\FilesInformation\Service\FileIntegrityException
 	 */
-	public static function CheckInstallationIntegrity($sRootPath = APPROOT)
+	public static function CheckInstallationIntegrity($sRootPath = APPROOT, $bCheckNewModule = false)
 	{
 		$aFilesInfo = FilesIntegrity::GetInstalledFiles($sRootPath.'manifest.xml');
 
@@ -92,6 +94,7 @@ class FilesIntegrity
 		}
 
 		@clearstatcache();
+		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
 		foreach ($aFilesInfo as $aFileInfo)
 		{
 			$sFile = $sRootPath.$aFileInfo['path'];
@@ -104,6 +107,15 @@ class FilesIntegrity
 				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5']))
 				{
 					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
+				}
+			}
+			if($bCheckNewModule && strpos($aFileInfo['path'],$sSourceDir) === 0){
+				$aFilePath = explode('/',$aFileInfo['path']);
+				$sFolderPath = $aFilePath[0].'/'.$aFilePath[1].'/'.$aFilePath[2];
+				if (is_dir(APPROOT.'/'.$sFolderPath) && !is_file($sRootPath.$sFolderPath)){
+					$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
+					$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
+					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CannotUpdateNewModules', $sLink, $sLinkManualUpdate));
 				}
 			}
 			// Packed with missing files...

@@ -25,6 +25,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'FilesInformation:Error:MissingFile' => '文件丢失: %1$s~~',
 	'FilesInformation:Error:CorruptedFile' => '文件 %1$s 已损坏',
 	'FilesInformation:Error:CantWriteToFile' => '文件 %1$s 无法写入',
+	'FilesInformation:Error:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 ));
 
 
