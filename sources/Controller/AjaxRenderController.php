@@ -869,7 +869,6 @@ EOF
 		$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
 		$oLastInstall = $oSet->Fetch();
 		$sLastInstallDate = $oLastInstall->Get('installed');
-		$sDataModelVersion = $oLastInstall->Get('version');
 		$aDataModelInfo = json_decode($oLastInstall->Get('comment'), true);
 		$sDataModelSourceDir = $aDataModelInfo['source_dir'];
 
@@ -917,7 +916,6 @@ EOF
 		$oPage->add('<td><a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'" style="float: right;"/></a></td>');
 		$oPage->add('<td style="padding-left: 20px;">');
 		$oPage->add($sVersionString.'<br/>');
-		//$oPage->add(Dict::S('UI:About:DataModel').': '.$sDataModelVersion.'<br/>');
 		$oPage->add('MySQL: '.$sMySQLVersion.'<br/>');
 		$oPage->add('PHP: '.$sPHPVersion.'<br/>');
 		$oPage->add('</td>');
@@ -967,7 +965,6 @@ EOF
 		$oPage->add('iTopVersion: '.ITOP_VERSION."\n");
 		$oPage->add('iTopBuild: '.ITOP_REVISION."\n");
 		$oPage->add('iTopBuildDate: '.ITOP_BUILD_DATE."\n");
-		$oPage->add('DataModelVersion: '.$sDataModelVersion."\n");
 		$oPage->add('MySQLVersion: '.$sMySQLVersion."\n");
 		$oPage->add('PHPVersion: '.$sPHPVersion."\n");
 		$oPage->add('OSVersion: '.$sOSVersion."\n");
