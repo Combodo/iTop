@@ -1392,7 +1392,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'iTop Hub~~',
+	'UI:About:RemoteExtensionSource' => 'Data~~',
 
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',

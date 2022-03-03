@@ -1391,7 +1391,7 @@ Lors de l\'association à un déclencheur, on attribue à chaque action un numé
 	'UI:About:InstallationOptions' => 'Options d\'installation',
 	'UI:About:ManualExtensionSource' => 'Extension',
 	'UI:About:Extension_Version' => 'Version: %1$s',
-	'UI:About:RemoteExtensionSource' => 'iTop Hub',
+	'UI:About:RemoteExtensionSource' => 'Data',
 
 	'UI:DisconnectedDlgMessage' => 'Vous êtes déconnecté(e). Vous devez vous identifier pour pouvoir continuer à utiliser l\'application.',
 	'UI:DisconnectedDlgTitle' => 'Attention !',
