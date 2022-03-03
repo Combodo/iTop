@@ -873,7 +873,7 @@ EOF
 		$oPage->add('<td><a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'" style="float: right;"/></a></td>');
 		$oPage->add('<td style="padding-left: 20px;">');
 		$oPage->add($sVersionString.'<br/>');
-		$oPage->add(Dict::S('UI:About:DataModel').': '.$sDataModelVersion.'<br/>');
+		//$oPage->add(Dict::S('UI:About:DataModel').': '.$sDataModelVersion.'<br/>');
 		$oPage->add('MySQL: '.$sMySQLVersion.'<br/>');
 		$oPage->add('PHP: '.$sPHPVersion.'<br/>');
 		$oPage->add('</td>');

@@ -25,8 +25,10 @@ Selectize.define('custom_itop', function(aOptions) {
 					if (this.$control_input.val() === '' && !this.$activeItems.length) {
 						iIndex = this.caretPos-1;
 						if (iIndex >= 0 && iIndex < this.items.length) {
+							let sPreviousValue = this.options[this.items[iIndex]].search_label;
 							this.clear(true);
 							e.preventDefault();
+							this.setTextboxValue(sPreviousValue.slice(0, -1));
 							return;
 						}
 					}

@@ -64,6 +64,8 @@ $ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-60
       color: inherit;
       border-color: $ibo-color-white-100;
       padding-left: $ibo-input-select--padding-x;
+
+      @extend %ibo-font-ral-nor-150;
     }
 
     > [data-value] {

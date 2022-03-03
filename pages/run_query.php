@@ -66,7 +66,7 @@ function ShowExamples($oP, $sExpression)
 			$sDisable = '';
 			if ($sOql == $sExpression) {
 				// this one is currently being tested, highlight it
-				$sHighlight = "background-color:yellow;";
+				$sHighlight = "ibo-run-query--highlight";
 				$sDisable = 'disabled';
 				// and remember we are testing a query of the list
 				$bUsingExample = true;
@@ -79,8 +79,8 @@ function ShowExamples($oP, $sExpression)
 			$oFormButton->AddSubBlock(new Html($sContext));
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
-				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
+				'desc' => "<div class=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
+				'oql' => "<div class=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
 				'go' => BlockRenderer::RenderBlockTemplates($oFormButton),
 			);
 		}
@@ -313,7 +313,7 @@ EOF
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
-					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
+					$sFixedExpressionHtml = $sBefore.'<span class="ibo-run-query--highlight">'.$sSuggestedWord.'</span>'.$sAfter;
 					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
 					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
 

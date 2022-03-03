@@ -1060,7 +1060,8 @@ EOF
 			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");
 			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
-			$oPage = new DownloadPage('');
+			$oPage = new AjaxPage('');
+			$oPage->SetOutputDataOnly(true);
 			$oPage->add($sFinalDashletId);
 			break;
 

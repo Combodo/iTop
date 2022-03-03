@@ -21,7 +21,8 @@
 						<module>combodo-db-tools</module>
 						<module>itop-core-update</module>
 						<module>itop-hub-connector</module>
-						<module>combodo-backoffice-darkmoon-theme</module>
+            <module>combodo-backoffice-darkmoon-theme</module>
+            <module>itop-themes-compat</module>
 					</modules>
 					<mandatory>true</mandatory>
 				</choice>

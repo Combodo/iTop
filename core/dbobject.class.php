@@ -2934,6 +2934,54 @@ abstract class DBObject implements iDisplay
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
+		
+		// - TriggerOnObjectMention
+		//   1 - Check if any caselog updated
+		$aChanges = $this->m_aOrigValues;
+		$aUpdatedLogAttCodes = array();
+		foreach($aChanges as $sAttCode => $value)
+		{
+			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
+			if($oAttDef instanceof AttributeCaseLog && $value->GetModifiedEntry() !== '')
+			{
+				$aUpdatedLogAttCodes[] = $sAttCode;
+			}
+		}
+		//   2 - Find mentioned objects
+		$aMentionedObjects = array();
+		foreach ($aUpdatedLogAttCodes as $sAttCode) {
+			/** @var \ormCaseLog $oUpdatedCaseLog */
+			$oUpdatedCaseLog = $this->Get($sAttCode);
+			$aMentionedObjects = array_merge_recursive($aMentionedObjects, utils::GetMentionedObjectsFromText($oUpdatedCaseLog->GetModifiedEntry()));
+		}
+		//   3 - Trigger for those objects
+		// TODO: This should be refactored and moved into the caselogs loop, otherwise, we won't be able to know which case log triggered the action.
+		foreach ($aMentionedObjects as $sMentionedClass => $aMentionedIds) {
+			foreach ($aMentionedIds as $sMentionedId) {
+				/** @var \DBObject $oMentionedObject */
+				$oMentionedObject = MetaModel::GetObject($sMentionedClass, $sMentionedId);
+				$aTriggerArgs = $this->ToArgs('this') + array('mentioned->object()' => $oMentionedObject);
+
+				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
+				while ($oTrigger = $oSet->Fetch())
+				{
+					/** @var \TriggerOnObjectMention $oTrigger */
+					try {
+						// Ensure to handle only mentioned object in the trigger's scope
+						if ($oTrigger->IsMentionedObjectInScope($oMentionedObject) === false) {
+							continue;
+						}
+
+						$oTrigger->DoActivate($aTriggerArgs);
+					}
+					catch (Exception $e) {
+						utils::EnrichRaisedException($oTrigger, $e);
+					}
+				}
+			}
+		}
+
 
 		return $this->m_iKey;
 	}
