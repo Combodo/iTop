@@ -1200,7 +1200,7 @@ class Config
 		],
 		'compatibility.include_deprecated_js_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated JS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1216,7 +1216,7 @@ class Config
 		],
 		'compatibility.include_deprecated_css_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated CSS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
