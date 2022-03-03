@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-themes-compat/3.0.1',
+	'itop-themes-compat/3.1.0',
 	array(
 		// Identification
 		//
@@ -15,7 +15,7 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-structure/3.0.1',
+			'itop-structure/3.1.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
