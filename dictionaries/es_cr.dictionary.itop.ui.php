@@ -369,7 +369,14 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 <li>Administrar el bien más importante de su infraestructura de TI: La Documentación.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Requerimientos Abiertos: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mis Requerimientos',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes Abiertos: %1$d',

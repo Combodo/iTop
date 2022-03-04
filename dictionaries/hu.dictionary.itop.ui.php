@@ -357,7 +357,14 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 <li>hatékonyan tudja kezelni az egyik legfontosabb IT eszközt, a dokumentációt.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Összes nyitott kérés: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Saját kérések',
 	'UI:WelcomeMenu:OpenIncidents' => 'Nyitott incidensek: %1$d',

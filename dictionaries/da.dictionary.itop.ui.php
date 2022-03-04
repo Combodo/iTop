@@ -357,7 +357,14 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 <li>Manage the most important asset of your IT: Documentation.</li>
 </ul>
 </p>~~',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Åbne anmodninger: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mine brugerhenvendelser',
 	'UI:WelcomeMenu:OpenIncidents' => 'Åbne Incidents: %1$d',
