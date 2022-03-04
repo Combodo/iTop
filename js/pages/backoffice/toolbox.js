@@ -19,10 +19,11 @@
 // Helpers
 function ShowAboutBox(sTitle)
 {
-	var loadingDialog = $('<div style="padding-top:40px; padding-left:40px;"><i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i></div>');
-	loadingDialog.dialog( {title:sTitle,autoOpen: true, modal: true});
+	var loadingDialog = $('<div id="block-about-iTop"></div>');
+	loadingDialog.dialog( {title:sTitle,autoOpen: true, modal: true, width: 700, height:350});
+	$('#block-about-iTop').block();
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
-
+		$('#block-about-iTop').unblock();
 		$('body').append(data);
 	}).always(function() {
 		loadingDialog.empty();
