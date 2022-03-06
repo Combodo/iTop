@@ -555,6 +555,40 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	}
 
 	/**
+	 * @dataProvider FormatInitialsForMedallionProvider
+	 * @covers utils::FormatInitialsForMedallion
+	 *
+	 * @param string $sInput
+	 * @param string $sExpected
+	 */
+	public function testFormatInitialsForMedallion(string $sInput, string $sExpected)
+	{
+		$sTested = utils::FormatInitialsForMedallion($sInput);
+		$this->assertEquals($sExpected, $sTested);
+	}
+
+	/**
+	 * @since 3.0.1
+	 */
+	public function FormatInitialsForMedallionProvider()
+	{
+		return [
+			'All letters kept (2)' => [
+				'AB',
+				'AB',
+			],
+			'All letters kept (3)' => [
+				'ABC',
+				'ABC',
+			],
+			'Only 3 first letters kept (4)' => [
+				'ABCD',
+				'ABC',
+			],
+		];
+	}
+
+	/**
 	 * @param string $sExpressionToConvert
 	 * @param int $iExpectedConvertedValue
 	 *

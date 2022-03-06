@@ -251,7 +251,7 @@ class UIExtKeyWidget
 						$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
 						$aOption['initials'] = '';
 					} else {
-						$aOption['initials'] = utils::ToAcronym($oObj->Get('friendlyname'));
+						$aOption['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObj->Get('friendlyname')));
 					}
 				}
 				array_push($aOptions, $aOption);
@@ -829,7 +829,7 @@ JS
 					}
 
 					if (array_key_exists('initials', $aValue)) {
-						$aElt['initials'] = $aValue['initials'];
+						$aElt['initials'] = utils::FormatInitialsForMedallion($aValue['initials']);
 						if (array_key_exists('picture_url', $aValue)) {
 							$aElt['picture_url'] = $aValue['picture_url'];
 						}

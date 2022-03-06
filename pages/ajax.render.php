@@ -2539,7 +2539,7 @@ EOF
 						} else {
 							// If no image found, fallback on initials
 							$aMatch['picture_style'] = '';
-							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
+							$aMatch['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObject->Get('friendlyname')));
 						}
 					}
 

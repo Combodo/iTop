@@ -10,7 +10,7 @@
 			{% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}
 				<img class="ibo-activity-entry--author-picture" src="{{ oUIBlock.GetAuthorPictureAbsUrl() }}" alt="{{ oUIBlock.GetAuthorInitials() }}">
 			{% else %}
-				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials() }}</div>
+				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials()|slice(0, 3) }}</div>
 			{% endif %}
 		{% endblock %}
 	</div>
