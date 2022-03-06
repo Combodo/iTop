@@ -773,12 +773,12 @@ class AjaxRenderController
 	}
 
 	/**
-	 * display list of licenses in "About iTop" popup
+	 * Display list of licenses in "About iTop" popup
 	 * @param \AjaxPage $oPage
 	 *
 	 * @throws \Exception
 	 */
-	private static function DisplayAboutLicenses( AjaxPage $oPage): void
+	private static function DisplayAboutLicenses(AjaxPage $oPage): void
 	{
 		$sCurrEnv = utils::GetCurrentEnvironment();
 		require_once(APPROOT.'setup/setuputils.class.inc.php');
@@ -804,6 +804,7 @@ JS
 		$oPage->add('</fieldset>');
 		$oPage->add("</div>");
 	}
+
 	/**
 	 * Display about iTop for all user non admin
 	 * @param \AjaxPage $oPage
@@ -829,7 +830,7 @@ EOF
 		$oPage->add('<a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'"/></a>');
 		$oPage->add('<div>'.$sVersionString.'</div>');
 		$oPage->add("</div>");
-		self::DisplayAboutLicenses( $oPage);
+		self::DisplayAboutLicenses($oPage);
 		$oPage->add("</div>");
 	}
 
@@ -884,8 +885,6 @@ EOF
 			$aSearchDirs[] = $sExtraDir;
 		}
 		$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
-
-
 
 		$aItopSettings = array('cron_max_execution_time', 'timezone');
 		$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
