@@ -434,7 +434,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function testToAcronym(string $sInput, string $sExceptedAcronym)
 	{
 		$sTestedAcronym = utils::ToAcronym($sInput);
-		$this->assertEquals($sTestedAcronym, $sExceptedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
+		$this->assertEquals($sExceptedAcronym, $sTestedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
 	}
 
 	/**
@@ -478,6 +478,10 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			'Several words, mixed case letters, two last hyphened' => [
 				'Jada Pinkett-smith',
 				'JP',
+			],
+			'Several words, cyrillic alphabet' => [
+				'Денис Александра',
+				'ДА',
 			],
 		];
 	}
