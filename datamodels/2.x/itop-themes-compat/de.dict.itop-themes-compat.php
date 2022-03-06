@@ -7,5 +7,5 @@
  */
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => 'Light Grey (veraltet)',
 ));

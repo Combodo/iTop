@@ -498,7 +498,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Action/Attribute:trigger_list+' => 'Trigger, die mit dieser Aktion verknüpft sind',
 	'Class:Action/Attribute:finalclass' => 'Typ',
 	'Class:Action/Attribute:finalclass+' => '',
-	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
+	'Action:WarningNoTriggerLinked' => 'Warnung, es ist kein Trigger mit dieser Aktion verknüpft. Die Aktion ist nicht aktiv solange nicht mindestens 1 Trigger verknüpft ist.',
 ));
 
 //
@@ -578,7 +578,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Einschränkung der Objekte (der Zielklasse) welche den Trigger aktivieren.',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
 ));
@@ -657,8 +657,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObjectMention' => 'Trigger (bei Objekterwähnung)',
 	'Class:TriggerOnObjectMention+' => 'Trigger bei Objekterwähnung (@xxx) einer Objekt mit [eine Kinderklasse von] eine gegebene Klasse in ein Log-Attribut',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
-	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Filter für Objekterwähnung',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Einschränkung der Objekte welche diesen Trigger aktivieren. Wenn leer, wird er von jedem Objekt (beliebige Klasse) aktiviert.',
 ));
 
 //
@@ -1088,8 +1088,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Letzter Versuch',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Ungültiges Format der Konfiguration für "async_task_retries[%1$s]". Erwartet wird ein Array mit den Schlüsseln: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Ungültiges Format der Konfiguration für "async_task_retries[%1$s]": unerwarteter Schlüssel "%2$s". Erwartet werden nur die Schlüssel: %3$s',
 ));
 
 //

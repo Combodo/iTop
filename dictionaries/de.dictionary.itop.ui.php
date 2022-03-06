@@ -110,10 +110,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
-	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
-	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
-	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
-	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
+	'Class:User/Error:ProfileNotAllowed' => 'Profil "%1$s" kann nicht hinzugefügt werde, es verhindert den Zugriff auf das Backoffice.',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Statusänderungen sind für den eigenen Benutzer nicht erlaubt.',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Die Organisation des Benutzers muss in den erlaubten Organisationen enthalten sein.',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'Die aktuelle Liste an Profilen vergibt unzureichende Berechtigungen (Benutzer können nicht mehr geändert werden)',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Mindestens eine Organisation muss diesem Benutzer zugewiesen sein.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Diese Organisation ist nicht erlaubt.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Das Benutzerkonto gehört nicht zu den für Sie freigegebenen Organisationen',
@@ -715,7 +715,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Query:UrlForExcel' => 'URL für MS Excel Web Queries',
 	'UI:Query:UrlV1' => 'Die Liste der Felder wurde nicht spezifiziert. Die Seite <em>export-V2.php</em> kann ohne diese Angabe nicht verarbeitet werden. Deswegen, zeigt die nachstehende URL zu der Legacy-Page: <em>export.php</em>. Diese Legacy-Version des Exports hat folgende Limitierungen: Die Liste exportierter Felder kann, abhängig vom Output-Format und vom Datenmodell von '.ITOP_APPLICATION_SHORT.', variieren. Möchten Sie garantieren, dass die Liste aller exportierten Spalten stabil bleibt, müssen Sie einen Wert für das Attribut Feld angeben und die Seite <em>export-V2.php</em> nutzen.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' Objekte-Schema',
-	'UI:Schema:TitleForClass' => '%1$s Schema~~',
+	'UI:Schema:TitleForClass' => '%1$s Schema',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Wechselseite Beziehungen',
 	'UI:Schema:AbstractClass' => 'Abstrakte Klasse: ein Objekt dieser Klasse kann nicht instanziiert werden.',
@@ -977,24 +977,24 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	<li>Einige Trigger werden ausgeführt, wenn ein <b>Schwellenwert</b> auf <b>TTO</b> oder <b>TTR</b> <b>erreicht</b> ist.</li>
 </ol>
 </p><p>
-<i><b>Aktionen</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<i><b>Aktionen</b></i> definieren, welche beim auslösen eines Triggers ausgeführt werden. Aktuell gibt es nur zwei Arten von Aktionen:
 <ol>
-	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	<li>Senden einer E-Mail: Solche Aktionen definieren die verwendete Vorlage sowie andere Parameter der Nachricht wie Empfänger, Wichtigkeit, usw.<br />
 	Eine spezielle Seite: <a href="../setup/email.test.php" target="_blank">email.test.php</a> steht zum Testen und zur Fehlerbehebung Ihrer PHP-Mailkonfiguration bereit.</li>
-	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+	<li>Ausgehende webhooks: Erlaubt die Integration mit einer externen Anwendung indem strukturierte Daten an eine definierte URL gesendet werden.</li>
 </ol>
 </p>
 <p>Um Aktionen auszuführen, müssen diese mit Trigger verknüpft sein.
-Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>~~',
+Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>',
 	'UI:NotificationsMenu:Triggers' => 'Trigger',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Verfügbare Trigger',
 	'UI:NotificationsMenu:OnCreate' => 'Wenn ein Objekt erstellt wird',
 	'UI:NotificationsMenu:OnStateEnter' => 'Wenn ein Objekt einen gegebenen Status erlangt',
 	'UI:NotificationsMenu:OnStateLeave' => 'Wenn ein Objekt einen gegebenen Status verlässt',
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
-	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
-	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
-	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'E-Mail Aktionen',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook Aktionen (ausgehende Integrationen)',
+	'UI:NotificationsMenu:Actions:Action' => 'Andere Aktionen',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
 
 	'Menu:TagAdminMenu' => 'Tag-Konfiguration',
@@ -1225,8 +1225,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashboardEdit:AutoReload' => 'Automatischer Reload',
 	'UI:DashboardEdit:AutoReloadSec' => 'Intervall für automatischen Reload (Sekunden)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Der Mindestwert beträgt %1$d Sekunden',
-	'UI:DashboardEdit:Revert' => 'Revert~~',
-	'UI:DashboardEdit:Apply' => 'Apply~~',
+	'UI:DashboardEdit:Revert' => 'Zurücksetzen',
+	'UI:DashboardEdit:Apply' => 'Anwenden',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard-Einstellungen',
