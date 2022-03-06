@@ -2507,8 +2507,6 @@ EOF
 				$sSearchMainClassName = $oSearch->GetClass();
 				$sSearchMainClassAlias = $oSearch->GetClassAlias();
 
-				$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sSearchMainClassName);
-
 				// Add condition to filter on the friendlyname
 				$oSearch->AddConditionExpression(
 					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
@@ -2521,7 +2519,7 @@ EOF
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 				while ($oObject = $oSet->Fetch()) {
-					// Note $oObject finalclass might be different than $sMentionedClass
+					// Note: $oObject finalclass might be different than $sMentionedClass
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
 					$aMatch = [
@@ -2530,7 +2528,8 @@ EOF
 						'friendlyname' => $oObject->Get('friendlyname'),
 					];
 
-					// Try to retrieve image for contact
+					// Try to retrieve image for object (Don't do it outside of the loop as $oObject can be from different classes)
+					$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sObjectClass);
 					if (!empty($sObjectImageAttCode)) {
 						/** @var \ormDocument $oImage */
 						$oImage = $oObject->Get($sObjectImageAttCode);
