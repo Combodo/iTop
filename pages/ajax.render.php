@@ -2515,7 +2515,7 @@ EOF
 				);
 
 				$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
-				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
+				$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => [$sObjectImageAttCode]]);
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
