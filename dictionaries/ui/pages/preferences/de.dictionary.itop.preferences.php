@@ -30,7 +30,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Preferences:RichText:ToolbarState:Collapsed'                   => 'Eingeklappt',
 	'UI:Preferences:ActivityPanel:Title'                               => 'Aktives Panel',
 	'UI:Preferences:ActivityPanel:EntryFormOpened'                     => 'Formular standardmäßig geöffnet',
-	'UI:Preferences:ActivityPanel:EntryFormOpened+'                    => 'Ob ein Formular, wenn ein Objekt angezeigt wird, standardmäßig geöffnet ist. Wenn dieser Haken nicht gesetzt ist, können Sie das Formmular mit einem Klick auf den Compose-Button trotzdem jederzeit öffnen.',
+	'UI:Preferences:ActivityPanel:EntryFormOpened+'                    => 'Ob ein Formular, wenn ein Objekt angezeigt wird, standardmäßig geöffnet ist. Wenn dieser Haken nicht gesetzt ist, können Sie das Formular mit einem Klick auf den Compose-Button trotzdem jederzeit öffnen.',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Title'                => 'Keyboard-Shortcuts dieser Applikation',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Input:Hint'           => 'Geben Sie einen Keyboard-Shortcut ein',
 	'UI:Preferences:PersonalizeKeyboardShortcuts:Button:Tooltip'       => 'Nehmen Sie einen Keyboard-Shortcut auf',

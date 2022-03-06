@@ -77,7 +77,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeArchiveFlag/Value:no' => 'Nein',
 	'Core:AttributeArchiveFlag/Label' => 'Archiviert',
 	'Core:AttributeArchiveFlag/Label+' => '',
-	'Core:AttributeArchiveDate/Label' => 'Archivierungs Datum',
+	'Core:AttributeArchiveDate/Label' => 'Archivierungsdatum',
 	'Core:AttributeArchiveDate/Label+' => '',
 
 	'Core:AttributeObsolescenceFlag' => 'Obsoleszenz-Flag',
@@ -107,7 +107,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeEncryptedString' => 'Verschlüsselter String',
 	'Core:AttributeEncryptedString+' => 'mit einem lokalen Schüssel verschlüsselter String',
 	'Core:AttributeEncryptUnknownLibrary' => 'Angegebene Library zur Verschlüsslung (%1$s) ist unbekannt',
-	'Core:AttributeEncryptFailedToDecrypt' => '** Entschlüsslungsfehler **',
+	'Core:AttributeEncryptFailedToDecrypt' => '** Entschlüsselungsfehler **',
 
 	'Core:AttributeText' => 'Text',
 	'Core:AttributeText+' => 'Mehrzeiliger String',
@@ -122,7 +122,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeIPAddress+' => 'IP-Adresse',
 
 	'Core:AttributeOQL' => 'OQL',
-	'Core:AttributeOQL+' => 'Object-Query-Langage-Ausdruck',
+	'Core:AttributeOQL+' => 'Object-Query-Language-Ausdruck',
 
 	'Core:AttributeEnum' => 'Enum',
 	'Core:AttributeEnum+' => 'Liste vordefinierter alphanumerischer Strings',
@@ -175,7 +175,7 @@ Operatoren:<br/>
 	'Core:AttributeExternalKey' => 'Externer Schlüssel',
 	'Core:AttributeExternalKey+' => 'Externer (oder fremder) Schlüssel',
 
-	'Core:AttributeHierarchicalKey' => 'Hierarischer Key',
+	'Core:AttributeHierarchicalKey' => 'Hierarchischer Key',
 	'Core:AttributeHierarchicalKey+' => 'Externer Key oder Foreign Key zum Parent',
 
 	'Core:AttributeExternalField' => 'Externes Feld',
@@ -204,7 +204,7 @@ Operatoren:<br/>
 
 	'Core:AttributeTag' => 'Tags',
 	'Core:AttributeTag+' => '',
-	
+
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
 	'Core:Context=Setup' => 'Setup',
@@ -524,7 +524,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testempfänger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Empfänger im Fall eines "Test"-Status',
 	'Class:ActionEmail/Attribute:from' => 'Von (E-Mail)',
-	'Class:ActionEmail/Attribute:from+' => 'Absenderad­res­se wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:from+' => 'Absenderad­resse wird im Email-Header mitgesendet',
 	'Class:ActionEmail/Attribute:from_label' => 'Von (Label)',
 	'Class:ActionEmail/Attribute:from_label+' => 'Absendername wird im Email-Header mitgesendet',
 	'Class:ActionEmail/Attribute:reply_to' => 'Antworten an (E-Mail)',
@@ -713,11 +713,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Intervall zwischen zwei vollständigen Reloads',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'Ein vollständiger Reload des gesamten Datenbestands muss mindestens in diesem Intervall erfolgen',
 	'Class:SynchroDataSource/Attribute:action_on_zero' => 'Verhalten bei keinen Treffern',
-	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Verhalten, wenn die Suche keine Objekte zurückgibt',
+	'Class:SynchroDataSource/Attribute:action_on_zero+' => 'Verhalten, wenn die Suche keine Objekte zurück gibt',
 	'Class:SynchroDataSource/Attribute:action_on_one' => 'Verhalten bei einem Treffer',
-	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Verhalten, wenn die Suche genau ein Objekt zurückgibt',
+	'Class:SynchroDataSource/Attribute:action_on_one+' => 'Verhalten, wenn die Suche genau ein Objekt zurück gibt',
 	'Class:SynchroDataSource/Attribute:action_on_multiple' => 'Verhalten bei vielen Treffern',
-	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Verhalten, wenn die Suche mehr als ein Objekt zurückgibt',
+	'Class:SynchroDataSource/Attribute:action_on_multiple+' => 'Verhalten, wenn die Suche mehr als ein Objekt zurück gibt',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => 'Zugelassene Benutzer',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => 'Benutzer, die synchronisierte Objekte löschen dürfen',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Niemand',
@@ -749,7 +749,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:SynchroUpdate:Yes' => 'Ja',
 	'Core:SynchroUpdate:No' => 'Nein',
 	'Core:Synchro:LastestStatus' => 'Neuester Status',
-	'Core:Synchro:History' => 'Synchronisations-Verlauf',
+	'Core:Synchro:History' => 'Synchronisationsverlauf',
 	'Core:Synchro:NeverRun' => 'Synchronisation noch nicht erfolgt. Kein Protokoll verfügbar.',
 	'Core:Synchro:SynchroEndedOn_Date' => 'Die letzte Synchronisation endete um %1$s.',
 	'Core:Synchro:SynchroRunningStartedOn_Date' => 'Die Synchronisation, die um %1$s gestartet wurde, läuft noch ...',
@@ -773,13 +773,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:SynchroLogTitle' => '%1$s - %2$s',
 	'Core:Synchro:Nb_Replica' => 'Replica verarbeitet: %1$s',
 	'Core:Synchro:Nb_Class:Objects' => '%1$s: %2$s',
-	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Mindestens ein Abgleichsschlüssel muss angegeben werden, oder das Abgleichsvorgehen muß den primären Schlüssel verwenden.',
+	'Class:SynchroDataSource/Error:AtLeastOneReconciliationKeyMustBeSpecified' => 'Mindestens ein Abgleichsschlüssel muss angegeben werden, oder das Abgleichsvorgehen muss den primären Schlüssel verwenden.',
 	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'Der Zeitraum bis zur endgültigen Löschung muss angegeben werden, da die Objekte nach einer Kennzeichnung als obsolet gelöscht werden.',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete Objekte werden aktualisiert, aber es wurde keine Aktualisierung angegeben.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'Tabelle %1$s existiert bereits in der Datenbank. Bitte benutzen Sie einen anderen Namen für die Datenbanktabelle aus dieser Datenquelle.',
 	'Core:SynchroReplica:PublicData' => 'Öffentliche Daten',
 	'Core:SynchroReplica:PrivateDetails' => 'Private Hinweise',
-	'Core:SynchroReplica:BackToDataSource' => 'Zurück zur Synchronisations-Datenquelle: %1$s',
+	'Core:SynchroReplica:BackToDataSource' => 'Zurück zur Synchronisationsdatenquelle: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'Liste der Replica',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primärschlüssel)',
 	'Core:SynchroAtt:attcode' => 'Attribut',
@@ -832,7 +832,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:create' => 'Erzeugen',
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:error' => 'Fehler',
 	'Class:SynchroDataSource/Attribute:action_on_multiple/Value:take_first' => 'Ersten Treffer benutzen',
-	'Class:SynchroDataSource/Attribute:delete_policy' => 'Löschungs-Policy',
+	'Class:SynchroDataSource/Attribute:delete_policy' => 'Löschrichtlinie',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:delete' => 'Löschen',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:ignore' => 'Ignorieren',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update' => 'Update',
@@ -915,7 +915,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => 'Fehlender Parameter "%1$s"',
-	'Core:BulkExport:InvalidParameter_Query' => 'ungültiger Wert für den Paramter "query". Es gibt keinen Eintrag in der Query-Bibliothek, der zu der id "%1$s" korrespondiert.',
+	'Core:BulkExport:InvalidParameter_Query' => 'ungültiger Wert für den Parameter "query". Es gibt keinen Eintrag in der Query-Bibliothek, der zu der id "%1$s" korrespondiert.',
 	'Core:BulkExport:ExportFormatPrompt' => 'Exportformat:',
 	'Core:BulkExportOf_Class' => '%1$s-Export',
 	'Core:BulkExport:ClickHereToDownload_FileName' => 'Klicken Sie hier um %1$s herunterzuladen',
@@ -926,7 +926,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:BulkExport:XLSXFormat' => 'Excel 2007 oder neuer (*.xlsx)',
 	'Core:BulkExport:PDFFormat' => 'PDF-Dokument (*.pdf)',
 	'Core:BulkExport:DragAndDropHelp' => 'Nutzen Sie Drag and Drop für die Spaltenüberschriften um die Spalten zu sortieren. Vorschau %1$s Zeilen. Gesamtzeilenzahl für den Export: %2$s.',
-	'Core:BulkExport:EmptyPreview' => 'Wählen Sie die Spalten für den Export aus der obenstehenden Liste',
+	'Core:BulkExport:EmptyPreview' => 'Wählen Sie die Spalten für den Export aus der oben stehenden Liste',
 	'Core:BulkExport:ColumnsOrder' => 'Spaltenreihenfolge',
 	'Core:BulkExport:AvailableColumnsFrom_Class' => 'Verfügbare Spalten für %1$s',
 	'Core:BulkExport:NoFieldSelected' => 'Wählen Sie mindestens eine Spalte für den Export aus',
@@ -934,10 +934,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:BulkExport:UncheckAll' => 'Auswahl aufheben',
 	'Core:BulkExport:ExportCancelledByUser' => 'Export durch den Benutzer abgebrochen',
 	'Core:BulkExport:CSVOptions' => 'CSV-Optionen',
-	'Core:BulkExport:CSVLocalization' => 'Lokaliserung',
+	'Core:BulkExport:CSVLocalization' => 'Lokalisierung',
 	'Core:BulkExport:PDFOptions' => 'PDF-Optionen',
 	'Core:BulkExport:PDFPageFormat' => 'Seitenformat',
-	'Core:BulkExport:PDFPageSize' => 'Seitengrösse:',
+	'Core:BulkExport:PDFPageSize' => 'Seitengröße:',
 	'Core:BulkExport:PageSize-A4' => 'A4',
 	'Core:BulkExport:PageSize-A3' => 'A3',
 	'Core:BulkExport:PageSize-Letter' => 'Letter',
@@ -1127,6 +1127,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ResourceSystemMenu' => 'Ressource "System Menü"',
 	'Class:ResourceSystemMenu+' => '',
 ));
-
-
-

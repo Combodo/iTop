@@ -31,7 +31,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Menu:UserRequest:OpenRequests+' => '',
 	'UI:WelcomeMenu:MyAssignedCalls' => 'Mir zugewiesene Benutzeranfragen',
 	'UI-RequestManagementOverview-RequestByType-last-14-days' => 'Benutzeranfragen der letzten 14 Tage nach Typ',
-	'UI-RequestManagementOverview-Last-14-days' => 'Anzahl Benutzeranfragen der letzen 14 Tage',
+	'UI-RequestManagementOverview-Last-14-days' => 'Anzahl Benutzeranfragen der letzten 14 Tage',
 	'UI-RequestManagementOverview-OpenRequestByStatus' => 'Offene Benutzeranfragen nach Status',
 	'UI-RequestManagementOverview-OpenRequestByAgent' => 'Offene Benutzeranfragen nach Bearbeiter',
 	'UI-RequestManagementOverview-OpenRequestByType' => 'Offene Benutzeranfragen nach Typ',

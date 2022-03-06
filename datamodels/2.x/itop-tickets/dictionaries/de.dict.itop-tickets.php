@@ -20,7 +20,7 @@
 
 * @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Ticket' => 'Ticket',
@@ -170,11 +170,11 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1'  => 'Target Field~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentDateIfNull/Param:1+' => 'The field to set, in the current object~~',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser'                => 'SetCurrentUser',
-	'Class:cmdbAbstractObject/Method:SetCurrentUser+'               => 'Ein Attribut (Feld) mit dem dezeit eingeloggten User schreiben',
+	'Class:cmdbAbstractObject/Method:SetCurrentUser+'               => 'Ein Attribut (Feld) mit dem derzeit eingeloggten User schreiben',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1'        => 'Zielfeld',
 	'Class:cmdbAbstractObject/Method:SetCurrentUser/Param:1+'       => 'Das Feld, das im aktuellen Objekt geschrieben werden soll. Falls das Feld vom Typ String ist, wird der FriendlyName des Users verwendet, ansonsten der Identifikator. Der FriendlyName ist der Name, der mit dem User-Account verknüpften Person (falls vorhanden), ansonsten der Accountname (Login).',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson'              => 'SetCurrentPerson',
-	'Class:cmdbAbstractObject/Method:SetCurrentPerson+'             => 'Schreibe ein Attribut (Feld) mit der gerade eingeloggten Person (die \\"Person\\", die mit dem geade eingeloggten User verknüpft ist)',
+	'Class:cmdbAbstractObject/Method:SetCurrentPerson+'             => 'Schreibe ein Attribut (Feld) mit der gerade eingeloggten Person (die \\"Person\\", die mit dem gerade eingeloggten User verknüpft ist)',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1'      => 'Zielfeld',
 	'Class:cmdbAbstractObject/Method:SetCurrentPerson/Param:1+'     => 'Das Feld, das im aktuellen Objekt geschrieben werden soll. Falls das Feld vom Typ String ist, wird der FriendlyName des Users verwendet, ansonsten der Identifikator.',
 	'Class:cmdbAbstractObject/Method:SetElapsedTime'                => 'SetElapsedTime',

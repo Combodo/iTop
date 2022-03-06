@@ -24,7 +24,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'DBTools:Class' => 'Klasse',
 	'DBTools:Title' => 'Datenbankpflege-Tools',
 	'DBTools:ErrorsFound' => 'Fehler gefunden',
-	'DBTools:Indication' => 'Wichtig: Nach dem Fixen der Errors in der Datenbank müssen Sie die Analyse erneut laufen lassen, weil durch die Fixes eventuell weitere Inkonsistenzen enstanden sind',
+	'DBTools:Indication' => 'Wichtig: Nach dem Fixen der Errors in der Datenbank müssen Sie die Analyse erneut laufen lassen, weil durch die Fixes eventuell weitere Inkonsistenzen entstanden sind',
 	'DBTools:Disclaimer' => 'DISCLAIMER: FERTIGEN SIE EIN BACKUP IHRER DATENBANK AN, BEVOR SIE DIE FIXES ANWENDEN!',
 	'DBTools:Error' => 'Fehler',
 	'DBTools:Count' => 'Anzahl',
