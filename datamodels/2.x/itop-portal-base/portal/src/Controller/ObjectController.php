@@ -66,7 +66,7 @@ class ObjectController extends BrickController
 	const DEFAULT_LIST_LENGTH = 10;
 
 	/**
-	 * Displays an cmdbAbstractObject if the connected user is allowed to.
+	 * Displays an cmdbAbstractObject (from its ID) if the connected user is allowed to.
 	 *
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param string $sObjectClass (Class must be an instance of cmdbAbstractObject)
