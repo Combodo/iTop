@@ -76,6 +76,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Application cannot be updated: %1$s~~',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Warning: application update can fail: %1$s~~',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start~~',

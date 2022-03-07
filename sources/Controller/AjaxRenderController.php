@@ -777,6 +777,7 @@ class AjaxRenderController
 	 * @param \AjaxPage $oPage
 	 *
 	 * @throws \Exception
+	 * @since 3.0.1
 	 */
 	private static function DisplayAboutLicenses(AjaxPage $oPage): void
 	{
