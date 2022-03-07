@@ -113,6 +113,8 @@ class ObjectController extends BrickController
 	}
 
 	/**
+	 * Displays an cmdbAbstractObject (if the connected user is allowed to) from a specific attribute. If several or none objects are found with the attribute value, an exception is thrown.
+	 * 
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
 	 * @param string $sObjectClass (Class must be an instance of cmdbAbstractObject)
 	 * @param string $sObjectAttCode
