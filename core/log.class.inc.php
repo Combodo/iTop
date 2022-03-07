@@ -455,6 +455,7 @@ class LogFileNameBuilderFactory
 class FileLog
 {
 	protected $oFileNameBuilder;
+	protected $bHasSQLite;
 
 	/**
 	 * FileLog constructor.
@@ -466,7 +467,23 @@ class FileLog
 	 */
 	public function __construct($sFileName = '')
 	{
-		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);
+		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
+
+		$this->bHasSQLite = class_exists('SQLite3');
+		if ($this->bHasSQLite) {
+			if (empty($sLogFilePath)) {
+				return;
+			}
+			$bCreate = false;
+			$sDBFilePath = "$sLogFilePath.db";
+			if (!is_file($sDBFilePath)) {
+				$bCreate = true;
+			}
+			$this->DB = new SQLite3($sDBFilePath);
+			if ($bCreate) {
+				$this->DB->exec('CREATE TABLE log (id INTEGER PRIMARY KEY AUTOINCREMENT, date TEXT, level TEXT, user TEXT, content LONGTEXT, context LONGTEXT, channel TEXT)');
+			}
+		}
 	}
 
 	public function Error($sText, $sChannel = '', $aContext = array())
@@ -502,6 +519,17 @@ class FileLog
 
 	protected function Write($sText, $sLevel = '', $sChannel = '', $aContext = array())
 	{
+		if ($this->bHasSQLite) {
+			$stmt = $this->DB->prepare('INSERT INTO log (date, level, user, content, context, channel) VALUES (:date, :level, :user, :content, :context, :channel)');
+			$stmt->bindValue(':date', date('Y-m-d H:i:s'));
+			$stmt->bindValue(':level', $sLevel);
+			$stmt->bindValue(':user', LogAPI::GetUserInfo());
+			$stmt->bindValue(':content', $sText);
+			$stmt->bindValue(':context', empty($aContext) ? '' : var_export($aContext, true));
+			$stmt->bindValue(':channel', $sChannel);
+			$stmt->execute();
+		}
+
 		$sTextPrefix = empty($sLevel) ? '' : (str_pad($sLevel, 7));
 		$sTextPrefix .= ' | ';
 		$sTextPrefix .= str_pad(LogAPI::GetUserInfo(), 5)." | ";
