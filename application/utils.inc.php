@@ -2654,11 +2654,10 @@ HTML;
 				$aDefaultConf['mentions'][] = [
 					'feed' => $sMentionEndpoint,
 					'marker' => $sMentionMarker,
-					'minChars' => $iMinChars = MetaModel::GetConfig()->Get('min_autocomplete_chars'),
+					'minChars' => MetaModel::GetConfig()->Get('min_autocomplete_chars'),
 					'itemTemplate' => $sMentionItemTemplate,
 					'outputTemplate' => $sMentionOutputTemplate,
 					'throttle' => 500,
-					'pattern' => "\\{$sMentionMarker}[_a-zA-Z0-9À-žЀ-Ӿ]{{$iMinChars},}$"
 				];
 			}
 		}
