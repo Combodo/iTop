@@ -467,8 +467,8 @@ class FileLog
 	 */
 	public function __construct($sFileName = '')
 	{
-		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
-
+		$this->oFileNameBuilder = LogFileNameBuilderFactory::GetInstance($sFileName);
+		$sLogFilePath = $this->oFileNameBuilder->GetLogFilePath();
 		$this->bHasSQLite = class_exists('SQLite3');
 		if ($this->bHasSQLite) {
 			if (empty($sLogFilePath)) {
