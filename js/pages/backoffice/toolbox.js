@@ -19,10 +19,11 @@
 // Helpers
 function ShowAboutBox(sTitle)
 {
-	var loadingDialog = $('<div style="padding-top:40px; padding-left:40px;"><i class="fa fa-sync-alt fa-spin fa-x fa-fw"></i></div>');
-	loadingDialog.dialog( {title:sTitle,autoOpen: true, modal: true});
+	var loadingDialog = $('<div id="ibo-about-box--loader"></div>');
+	loadingDialog.dialog( {title:sTitle,autoOpen: true, modal: true, width: 700, height:350});
+	$('#ibo-about-box--loader').block();
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'about_box'}, function(data){
-
+		$('#ibo-about-box--loader').unblock();
 		$('body').append(data);
 	}).always(function() {
 		loadingDialog.empty();

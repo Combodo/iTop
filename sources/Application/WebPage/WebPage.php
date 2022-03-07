@@ -88,7 +88,7 @@ class WebPage implements Page
 	 */
 	protected const COMPATIBILITY_MOVED_LINKED_SCRIPTS_REL_PATH = [];
 	/**
-	 * @var array Script linked to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_js_files" conf. param.}
+	 * @var array Script linked to the page through URIs, which were deprecated (in iTop previous version) but can be added back if necessary {@see "compatibility.include_deprecated_js_files" conf. param.}
 	 * @since 3.0.0
 	 */
 	protected const COMPATIBILITY_DEPRECATED_LINKED_SCRIPTS_REL_PATH = [];
@@ -98,7 +98,7 @@ class WebPage implements Page
 	 */
 	protected const COMPATIBILITY_MOVED_LINKED_STYLESHEETS_REL_PATH = [];
 	/**
-	 * @var array Stylesheets linked to the page through URIs, which were deprecated but can be added back if necessary {@see "compatibility.include_deprecated_css_files" conf. param.}
+	 * @var array Stylesheets linked to the page through URIs, which were deprecated (in iTop previous version) but can be added back if necessary {@see "compatibility.include_deprecated_css_files" conf. param.}
 	 * @since 3.0.0
 	 */
 	protected const COMPATIBILITY_DEPRECATED_LINKED_STYLESHEETS_REL_PATH = [];

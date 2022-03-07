@@ -358,7 +358,14 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 <li>Manažovať najdôležitejšie aktíva Vášho IT: Dokumentáciu.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Otvoriť žiadosť: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Moje žiadosti',
 	'UI:WelcomeMenu:OpenIncidents' => 'Otvoriť incidenty: %1$d',
@@ -1424,7 +1431,7 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 	'UI:About:InstallationOptions' => 'Installation options~~',
 	'UI:About:ManualExtensionSource' => 'Extension~~',
 	'UI:About:Extension_Version' => 'Version: %1$s~~',
-	'UI:About:RemoteExtensionSource' => 'iTop Hub~~',
+	'UI:About:RemoteExtensionSource' => 'Data~~',
 
 	'UI:DisconnectedDlgMessage' => 'You are disconnected. You must identify yourself to continue using the application.~~',
 	'UI:DisconnectedDlgTitle' => 'Warning!~~',

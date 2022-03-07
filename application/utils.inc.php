@@ -3041,6 +3041,20 @@ HTML;
 	}
 
 	/**
+	 * Note: This method is not ideal, but other solutions seemed even less ideal:
+	 *   * Add a "$sMaxLength" param. to utils::ToAcronym(): Does not work for every use cases (see corresponding ticket) as in some parts utils::ToAcronym isn't necessarly meant to be used in a medallion.
+	 *
+	 * @param string $sInitials
+	 *
+	 * @return string Truncates $sInitials so it can fit in medallions
+	 * @since 3.0.1 N°4913
+	 */
+	public static function FormatInitialsForMedallion(string $sInitials): string
+	{
+		return mb_substr($sInitials, 0, 3);
+	}
+
+	/**
 	 * @param $sUrl
 	 * @param string $sParamName
 	 * @param string $sParamValue

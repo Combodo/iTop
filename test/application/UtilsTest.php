@@ -434,7 +434,7 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 	public function testToAcronym(string $sInput, string $sExceptedAcronym)
 	{
 		$sTestedAcronym = utils::ToAcronym($sInput);
-		$this->assertEquals($sTestedAcronym, $sExceptedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
+		$this->assertEquals($sExceptedAcronym, $sTestedAcronym, "Acronym for '$sInput' doesn't match. Got '$sTestedAcronym', expected '$sExceptedAcronym'.");
 	}
 
 	/**
@@ -478,6 +478,10 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			'Several words, mixed case letters, two last hyphened' => [
 				'Jada Pinkett-smith',
 				'JP',
+			],
+			'Several words, cyrillic alphabet' => [
+				'Денис Александра',
+				'ДА',
 			],
 		];
 	}
@@ -546,6 +550,40 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 					'UserRequest' => ['12345'],
 					'Person' => ['3'],
 				],
+			],
+		];
+	}
+
+	/**
+	 * @dataProvider FormatInitialsForMedallionProvider
+	 * @covers utils::FormatInitialsForMedallion
+	 *
+	 * @param string $sInput
+	 * @param string $sExpected
+	 */
+	public function testFormatInitialsForMedallion(string $sInput, string $sExpected)
+	{
+		$sTested = utils::FormatInitialsForMedallion($sInput);
+		$this->assertEquals($sExpected, $sTested);
+	}
+
+	/**
+	 * @since 3.0.1
+	 */
+	public function FormatInitialsForMedallionProvider()
+	{
+		return [
+			'All letters kept (2)' => [
+				'AB',
+				'AB',
+			],
+			'All letters kept (3)' => [
+				'ABC',
+				'ABC',
+			],
+			'Only 3 first letters kept (4)' => [
+				'ABCD',
+				'ABC',
 			],
 		];
 	}

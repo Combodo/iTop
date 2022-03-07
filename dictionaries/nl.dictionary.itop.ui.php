@@ -368,7 +368,14 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 <li>Het beheren van het belangrijkste middel: documentatie.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Open aanvragen: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Mijn aanvragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Open incidenten: %1$d',
@@ -551,22 +558,22 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:ResetPwd-Ready' => 'Het wachtwoord is veranderd',
 	'UI:ResetPwd-Login' => 'Klik hier om in te loggen',
 
-	'UI:Login:About'                               => 'ITOP_APPLICATION',
+	'UI:Login:About'                               => ITOP_APPLICATION,
 	'UI:Login:ChangeYourPassword'                  => 'Verander jouw wachtwoord',
 	'UI:Login:OldPasswordPrompt'                   => 'Oud wachtwoord',
 	'UI:Login:NewPasswordPrompt'                   => 'Nieuw wachtwoord',
 	'UI:Login:RetypeNewPasswordPrompt'             => 'Herhaal nieuwe wachtwoord',
 	'UI:Login:IncorrectOldPassword'                => 'Fout: het oude wachtwoord is incorrect',
 	'UI:LogOffMenu'                                => 'Log uit',
-	'UI:LogOff:ThankYou'                           => 'Bedankt voor het gebruiken van ITOP_APPLICATION',
+	'UI:LogOff:ThankYou'                           => 'Bedankt voor het gebruiken van '.ITOP_APPLICATION,
 	'UI:LogOff:ClickHereToLoginAgain'              => 'Klik hier om in te loggen',
 	'UI:ChangePwdMenu'                             => 'Verander wachtwoord',
 	'UI:Login:PasswordChanged'                     => 'Wachtwoord met succes aangepast',
-	'UI:AccessRO-All'                              => 'ITOP_APPLICATION is alleen-lezen',
-	'UI:AccessRO-Users'                            => 'ITOP_APPLICATION is alleen-lezen voor eindgebruikers',
+	'UI:AccessRO-All'                              => ITOP_APPLICATION.' is alleen-lezen',
+	'UI:AccessRO-Users'                            => ITOP_APPLICATION.' is alleen-lezen voor eindgebruikers',
 	'UI:ApplicationEnvironment'                    => 'Omgeving van de applicatie: %1$s',
 	'UI:Login:RetypePwdDoesNotMatch'               => 'Het nieuwe wachtwoord en de herhaling van het nieuwe wachtwoord komen niet overeen',
-	'UI:Button:Login'                              => 'Ga naar ITOP_APPLICATION',
+	'UI:Button:Login'                              => 'Ga naar '.ITOP_APPLICATION,
 	'UI:Login:Error:AccessRestricted'              => 'Geen toegang tot '.ITOP_APPLICATION_SHORT.'. Neem contact op met een '.ITOP_APPLICATION_SHORT.'-beheerder.',
 	'UI:Login:Error:AccessAdmin'                   => 'Alleen toegankelijk voor mensen met beheerdersrechten. Neem contact op met een '.ITOP_APPLICATION_SHORT.'-beheerder',
 	'UI:Login:Error:WrongOrganizationName'         => 'Onbekende organisatie',
@@ -835,7 +842,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Delete:PleaseDoTheManualOperations' => 'Verricht eerst de handmatige handelingen die hierboven staan voordat je dit object verwijdert',
 	'UI:Delect:Confirm_Object' => 'Bevestig dat je  %1$s wil verwijderen.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => 'Bevestig dat je de volgende %1$d objecten van klasse %2$s wilt verwijderen.',
-	'UI:WelcomeToITop' => 'Welkom in ITOP_APPLICATION',
+	'UI:WelcomeToITop' => 'Welkom in '.ITOP_APPLICATION,
 	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s details',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - Fout',
 	'UI:ObjectDoesNotExist' => 'Sorry, dit object bestaat niet (of je bent niet gemachtigd het te bekijken).',
