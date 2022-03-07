@@ -128,7 +128,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserRequest/Attribute:origin/Value:portal+' => '',
 	'Class:UserRequest/Attribute:approver_id' => 'Genehmiger',
 	'Class:UserRequest/Attribute:approver_id+' => '',
-	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-Email',
+	'Class:UserRequest/Attribute:approver_email' => 'Genehmiger-E-Mail',
 	'Class:UserRequest/Attribute:approver_email+' => '',
 	'Class:UserRequest/Attribute:service_id' => 'Service',
 	'Class:UserRequest/Attribute:service_id+' => '',

@@ -115,8 +115,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML-String',
 
-	'Core:AttributeEmailAddress' => 'Email-Adresse',
-	'Core:AttributeEmailAddress+' => 'Email-Adresse',
+	'Core:AttributeEmailAddress' => 'E-Mail-Adresse',
+	'Core:AttributeEmailAddress+' => 'E-Mail-Adresse',
 
 	'Core:AttributeIPAddress' => 'IP-Adresse',
 	'Core:AttributeIPAddress+' => 'IP-Adresse',
@@ -381,8 +381,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:EventNotificationEmail' => 'Email Emission Event',
-	'Class:EventNotificationEmail+' => 'Verfolgung einer Email, die gesendet wurde',
+	'Class:EventNotificationEmail' => 'E-Mail Emission Event',
+	'Class:EventNotificationEmail+' => 'Verfolgung einer E-Mail, die gesendet wurde',
 	'Class:EventNotificationEmail/Attribute:to' => 'An',
 	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopie an',
@@ -515,7 +515,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:ActionEmail' => 'Email-Benachrichtigung',
+	'Class:ActionEmail' => 'E-Mail-Benachrichtigung',
 	'Class:ActionEmail+' => '',
 	'Class:ActionEmail/Attribute:status+' => 'Dieser Zustand entscheidet, wer benachrichtigt werden soll: nur der Testempfänger, alle (To, cc und Bcc) oder niemand',
 	'Class:ActionEmail/Attribute:status/Value:test+' => 'Nur der Testempfänger wird benachrichtigt',
@@ -524,13 +524,13 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail/Attribute:test_recipient' => 'Testempfänger',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Empfänger im Fall eines "Test"-Status',
 	'Class:ActionEmail/Attribute:from' => 'Von (E-Mail)',
-	'Class:ActionEmail/Attribute:from+' => 'Absenderad­resse wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:from+' => 'Absenderad­resse wird im E-Mail-Header mitgesendet',
 	'Class:ActionEmail/Attribute:from_label' => 'Von (Label)',
-	'Class:ActionEmail/Attribute:from_label+' => 'Absendername wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:from_label+' => 'Absendername wird im E-Mail-Header mitgesendet',
 	'Class:ActionEmail/Attribute:reply_to' => 'Antworten an (E-Mail)',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Wird im E-Mail-Header mitgesendet',
 	'Class:ActionEmail/Attribute:reply_to_label' => 'Antworten an (Label)',
-	'Class:ActionEmail/Attribute:reply_to_label+' => 'Wird im Email-Header mitgesendet',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Wird im E-Mail-Header mitgesendet',
 	'Class:ActionEmail/Attribute:to' => 'An',
 	'Class:ActionEmail/Attribute:to+' => 'Empfänger der Nachricht',
 	'Class:ActionEmail/Attribute:cc' => 'Kopie an',
@@ -538,7 +538,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail/Attribute:bcc' => 'Blindkopie (BCC)',
 	'Class:ActionEmail/Attribute:bcc+' => '',
 	'Class:ActionEmail/Attribute:subject' => 'Betreff',
-	'Class:ActionEmail/Attribute:subject+' => 'Betreff der Email',
+	'Class:ActionEmail/Attribute:subject+' => 'Betreff der E-Mail',
 	'Class:ActionEmail/Attribute:body' => 'Inhalt der Nachricht',
 	'Class:ActionEmail/Attribute:body+' => '',
 	'Class:ActionEmail/Attribute:importance' => 'Priorität',
@@ -807,7 +807,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:SyncSplitModeCLIOnly' => 'Die Synchronisation kann nur in Chunks ausgeführt werden, wenn sie im CLI-Moduls verwendet wird.',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s Replicas, %2$s Fehler, %3$s Warnung(en).',
 	'Core:SynchroReplica:TargetObject' => 'Synchronisiertes Objekt: %1$s',
-	'Class:AsyncSendEmail' => 'Email (asynchron)',
+	'Class:AsyncSendEmail' => 'E-Mail (asynchron)',
 	'Class:AsyncSendEmail/Attribute:to' => 'An',
 	'Class:AsyncSendEmail/Attribute:subject' => 'Betreff',
 	'Class:AsyncSendEmail/Attribute:body' => 'Body',

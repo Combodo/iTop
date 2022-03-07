@@ -118,7 +118,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Contact/Attribute:org_id+' => '',
 	'Class:Contact/Attribute:org_name' => 'Organisation',
 	'Class:Contact/Attribute:org_name+' => '',
-	'Class:Contact/Attribute:email' => 'Email',
+	'Class:Contact/Attribute:email' => 'E-Mail',
 	'Class:Contact/Attribute:email+' => '',
 	'Class:Contact/Attribute:phone' => 'Telefonnummer',
 	'Class:Contact/Attribute:phone+' => '',
