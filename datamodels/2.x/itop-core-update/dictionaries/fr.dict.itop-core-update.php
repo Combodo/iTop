@@ -76,6 +76,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'L\'application ne peut pas être mise à jour : %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Attention : la mise à jour de l\'application peut échouer : %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Des fichiers modifiés ont été détectés</b>, une mise à jour partielle ne peut pas être effectuée.<br />Suivez la <a href="%2$s"> procedure</a> pour mettre à jour manuellement votre iTop. Vous devez utiliser la page <a href="%1$s">d\'installation</a> pour mettre à jour l\'application.',
+	'iTopUpdate:UI:CheckInProgress'=>'Veuillez patienter pendant la vérification des fichiers',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Prêt pour l\\installation',
