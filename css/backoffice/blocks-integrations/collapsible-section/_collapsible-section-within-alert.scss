@@ -4,9 +4,9 @@
  */
 
 /* SCSS variables */
-$ibo-caselog-entry-in-collapsible-section--body--background-color: transparentize($ibo-color-grey-100,0.5) !default;
-$ibo-caselog-entry-in-collapsible-section--body--padding: $ibo-spacing-300 !default;
-$ibo-caselog-entry-in-collapsible-section--body--color: $ibo-color-grey-900 !default;
+$ibo-alert-in-collapsible-section--body--background-color: transparentize($ibo-color-grey-100,0.5) !default;
+$ibo-alert-in-collapsible-section--body--padding: $ibo-spacing-300 !default;
+$ibo-alert-in-collapsible-section--body--color: $ibo-color-grey-900 !default;
 
 /* - caselog display in ormcaselog */
 .ibo-alert--body {
@@ -20,9 +20,9 @@ $ibo-caselog-entry-in-collapsible-section--body--color: $ibo-color-grey-900 !def
 
     .ibo-collapsible-section--body {
       @extend %ibo-font-size-100;
-      color: $ibo-caselog-entry-in-collapsible-section--body--color;
-      padding: $ibo-caselog-entry-in-collapsible-section--body--padding;
-      background-color: $ibo-caselog-entry-in-collapsible-section--body--background-color;
+      color: $ibo-alert-in-collapsible-section--body--color;
+      padding: $ibo-alert-in-collapsible-section--body--padding;
+      background-color: $ibo-alert-in-collapsible-section--body--background-color;
     }
   }
 }
