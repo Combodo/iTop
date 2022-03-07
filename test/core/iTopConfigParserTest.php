@@ -17,6 +17,7 @@ class iTopConfigParserTest extends ItopTestCase
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/iTopConfigParser.php';
+		require_once APPROOT.'/setup/runtimeenv.class.inc.php';
 
 		clearstatcache();
 		$this->sConfigPath = utils::GetConfigFilePath();
@@ -201,14 +202,10 @@ CONF;
 	 */
 	public function testConfigWriteToFile_FromScratchInstallation()
 	{
-		$sConfigPath = utils::GetConfigFilePath();
-		$oConfig = new Config($sConfigPath, false);
-		try{
-			clearstatcache();
-			$oConfig->WriteToFile();
-		}catch(\Exception $e)
-		{
-			$this->assertTrue(false, "failed writetofile with no initial file: " . $e->getMessage());
-		}
+		$oConfig = new Config();
+		clearstatcache();
+		$oTestEnv = new RunTimeEnvironment('test-phpunit');
+		$oTestEnv->WriteConfigFileSafe($oConfig);
+		$this->assertTrue(true, "Config file was written");
 	}
 }
