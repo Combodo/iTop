@@ -146,8 +146,6 @@ class iTopConfigParserTest extends ItopTestCase
 	}
 
 	/**
-	 * @doesNotPerformAssertions
-	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */
@@ -198,8 +196,6 @@ CONF;
 	}
 
 	/**
-	 * @doesNotPerformAssertions
-	 *
 	 * @throws \ConfigException
 	 * @throws \CoreException
 	 */

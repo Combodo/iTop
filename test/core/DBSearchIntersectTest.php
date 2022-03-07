@@ -336,7 +336,6 @@ class DBSearchIntersectTest extends ItopTestCase
 
 	/**
 	 * @dataProvider IntersectOptimizationProvider
-	 * @doesNotPerformAssertions
 	 *
 	 * @param string $sOQL
 	 * @param string $sResult
