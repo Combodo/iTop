@@ -114,7 +114,7 @@ class FilesIntegrity
 			if($bCheckNewModule && strpos($aFileInfo['path'],$sSourceDir) === 0){
 				$aFilePath = explode('/',$aFileInfo['path']);
 				$sFolderPath = $aFilePath[0].'/'.$aFilePath[1].'/'.$aFilePath[2];
-				if (is_dir(APPROOT.'/'.$sFolderPath) && !is_file($sRootPath.$sFolderPath)){
+				if ( !(is_dir(APPROOT.'/'.$sFolderPath)) &&  !(is_file(APPROOT.'/'.$sFolderPath)) ){
 					$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
 					$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
 					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CannotUpdateNewModules', $sLink, $sLinkManualUpdate));
