@@ -16,6 +16,7 @@ Install Python from https://www.python.org/downloads/windows/
 pip install -U sphinx
 pip install sphinx-rtd-theme
 pip install recommonmark
+pip install sphinx-multiversion
 ```
 
 #### doc generation
@@ -33,6 +34,7 @@ Under `.doc/UI`, run
 sudo apt-get install python3-sphinx
 pip install sphinx-rtd-theme
 pip install recommonmark
+pip install sphinx-multiversion
 ```
 
 #### doc generation

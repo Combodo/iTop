@@ -5,7 +5,7 @@ pushd %~dp0
 REM Command file for Sphinx documentation
 
 if "%SPHINXBUILD%" == "" (
-	set SPHINXBUILD=sphinx-build
+	set SPHINXBUILD=sphinx-multiversion
 )
 set SOURCEDIR=source
 set BUILDDIR=build
@@ -25,7 +25,7 @@ if errorlevel 9009 (
 	exit /b 1
 )
 
-%SPHINXBUILD% -M %1 %SOURCEDIR% %BUILDDIR% %SPHINXOPTS% %O%
+%SPHINXBUILD% %SOURCEDIR% %BUILDDIR%/%1 %SPHINXOPTS% %O%
 goto end
 
 :help

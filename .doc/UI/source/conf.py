@@ -22,7 +22,7 @@ copyright = '2022, Combodo'
 author = 'Combodo'
 
 # The full version, including alpha/beta/rc tags
-release = '3.1.0'
+release = 'iTop 3.1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,7 +30,7 @@ release = '3.1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autosectionlabel','recommonmark']
+extensions = ['sphinx.ext.autosectionlabel', 'recommonmark', 'sphinx_multiversion']
 
 autosectionlabel_prefix_document = True
 
