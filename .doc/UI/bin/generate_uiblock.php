@@ -381,7 +381,7 @@ function GetMethodComment(ReflectionMethod $oMethod, string $sParamName)
 ///
 
 if (!utils::IsModeCLI()) {
-	\Combodo\iTop\FullTextSearch\log("Only CLI mode is allowed");
+	echo "Only CLI mode is allowed\n";
 
 	return;
 }
