@@ -2849,9 +2849,8 @@ class AttributeDecimal extends AttributeDBField
 	}
 
 	/**
-	 * @param $value
-	 *
-	 * @return bool|int
+	 * @inheritDoc
+	 * @since 3.2.0
 	 */
 	public function CheckFormat($value)
 	{
