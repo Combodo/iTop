@@ -5,7 +5,7 @@
 
 /* SCSS variables */
 $ibo-caselog-entry--highlight-colors: $ibo-caselog-highlight-colors !default;
-$ibo-caselog-entry--main-information--padding-y: 12px !default;
+$ibo-caselog-entry--main-information--padding-y: $ibo-spacing-400 !default;
 $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 
 /* Main information */
@@ -17,6 +17,9 @@ $ibo-caselog-entry--main-information--decoration--width: 3px !default;
 	.ibo-activity-entry--main-information-icon{
 		display: none;
 	}
+  .ibo-activity-entry--main-information-content{
+    @extend .ibo-vendors-ckeditor--display-content;
+  }
 
 	/* Highlight color */
 	.ibo-activity-entry--main-information::before{

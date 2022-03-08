@@ -3,7 +3,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-toolbar--button-margin-top: 16px !default;
+$ibo-toolbar--button-margin-top: $ibo-spacing-500 !default;
 
 .ibo-toolbar {
   display: flex;

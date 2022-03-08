@@ -4,10 +4,12 @@
  */
 
 $ibo-title--text-color: $ibo-color-grey-900 !default;
-$ibo-title--padding-y: 12px !default;
-$ibo-title--padding-x: 0 !default;
+$ibo-title--padding-y: $ibo-spacing-400 !default;
+$ibo-title--padding-x: $ibo-spacing-0 !default;
 
 $ibo-title--icon--size: 90px !default;
+$ibo-title--icon--size-2: 80px !default;
+$ibo-title--icon--size-3: 70px !default;
 
 $ibo-title--icon-background--size--must-contain: contain !default;
 $ibo-title--icon-background--size--must-cover: cover !default;
@@ -28,6 +30,18 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
   min-width: $ibo-title--icon--size;
   min-height: $ibo-title--icon--size;
   overflow: hidden;
+}
+.ibo-title--icon > .ibo-title--icon-level-2{
+  width: $ibo-title--icon--size-2;
+  height: $ibo-title--icon--size-2;
+  min-width: $ibo-title--icon--size-2;
+  min-height: $ibo-title--icon--size-2;
+}
+.ibo-title--icon > .ibo-title--icon-level-3{
+  width: $ibo-title--icon--size-3;
+  height: $ibo-title--icon--size-3;
+  min-width: $ibo-title--icon--size-3;
+  min-height: $ibo-title--icon--size-3;
 }
 
 .ibo-title--icon-background {
@@ -55,7 +69,7 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 }
 
 .ibo-title--text {
-  @extend %ibo-font-ral-sembol-300;
+  @extend %ibo-font-ral-med-300;
 }
 
 .ibo-title--subtitle {
@@ -83,7 +97,7 @@ $ibo-title--icon-background--size--must-zoomout: 66.67% !default;
 	padding-bottom:1em;
 }
 .ibo-title-separator{
-	border-radius: 5px 5px 0px 0px;
+	border-radius: 5px 5px $ibo-spacing-0 $ibo-spacing-0;
 	border-color:$ibo-color-blue-600;
 	color:$ibo-color-blue-600;
 	background-color:$ibo-color-blue-600;

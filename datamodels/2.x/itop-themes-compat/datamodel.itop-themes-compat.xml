@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design version="3.1">
+  <branding>
+    <themes>
+      <theme id="light-grey" _delta="define">
+        <variables>
+        </variables>
+        <imports>
+          <import id="css-variables">itop-themes-compat/assets/css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui">itop-themes-compat/assets/css/compat.scss</stylesheet>
+          <stylesheet id="main">itop-themes-compat/assets/css/compat.scss</stylesheet>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
+        </stylesheets>
+      </theme>
+      <theme id="test-red" _delta="must_exist">
+        <variables>
+          <variable id="backoffice-environment-banner-background-color" _delta="define">#C53030</variable>
+          <variable id="backoffice-environment-banner-text-color" _delta="define">#F7FAFC</variable>
+          <variable id="backoffice-environment-banner-text-content" _delta="define">"THIS IS A TEST INSTANCE"</variable>
+        </variables>
+        <imports>
+          <import id="css-variables" _delta="define">itop-themes-compat/assets/css/css-variables.scss</import>
+        </imports>
+        <stylesheets>
+          <stylesheet id="jqueryui" _delta="define">itop-themes-compat/assets/css/compat.scss</stylesheet>
+          <stylesheet id="main" _delta="define">itop-themes-compat/assets/css/compat.scss</stylesheet>
+        </stylesheets>
+      </theme>
+    </themes>
+  </branding>
+</itop_design>

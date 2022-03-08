@@ -655,7 +655,7 @@ abstract class MetaModel
 	 * @param string $sRuleId
 	 *
 	 * @throws \CoreException
-	 * @since 2.6.1 N°1918 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
+	 * @since 2.6.1 N°1968 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
 	 *         definition of the rule in the hierarchy
 	 */
 	private static function SetUniquenessRuleRootClass($sRootClass, $sRuleId)
@@ -3001,7 +3001,32 @@ abstract class MetaModel
 
 		// Build the list of available extensions
 		//
-		$aInterfaces = array('iApplicationUIExtension', 'iPreferencesExtension', 'iApplicationObjectExtension', 'iLoginFSMExtension', 'iLoginUIExtension', 'iLogoutExtension', 'iQueryModifier', 'iOnClassInitialization', 'iPopupMenuExtension', 'iPageUIExtension', 'iPageUIBlockExtension', 'iPortalUIExtension', 'ModuleHandlerApiInterface', 'iNewsroomProvider', 'iModuleExtension');
+		$aInterfaces = [
+			'iApplicationUIExtension',
+			'iPreferencesExtension',
+			'iApplicationObjectExtension',
+			'iLoginFSMExtension',
+			'iLoginUIExtension',
+			'iLogoutExtension',
+			'iQueryModifier',
+			'iOnClassInitialization',
+			'iPopupMenuExtension',
+			'iPageUIExtension',
+			'iPageUIBlockExtension',
+			'iBackofficeLinkedScriptsExtension',
+			'iBackofficeEarlyScriptExtension',
+			'iBackofficeScriptExtension',
+			'iBackofficeInitScriptExtension',
+			'iBackofficeReadyScriptExtension',
+			'iBackofficeLinkedStylesheetsExtension',
+			'iBackofficeStyleExtension',
+			'iBackofficeDictEntriesExtension',
+			'iBackofficeDictEntriesPrefixesExtension',
+			'iPortalUIExtension',
+			'ModuleHandlerApiInterface',
+			'iNewsroomProvider',
+			'iModuleExtension',
+		];
 		foreach($aInterfaces as $sInterface)
 		{
 			self::$m_aExtensionClassNames[$sInterface] = array();
@@ -4131,19 +4156,26 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param int $iOption one of ENUM_CHILD_CLASSES_EXCLUDETOP, ENUM_CHILD_CLASSES_ALL
+	 * @param bool $bRootFirst Only when $iOption NOT set to ENUM_CHILD_CLASSES_EXCLUDETOP. If true, the $sClass will be the first element of the returned array, otherwise it will be the last (legacy behavior)
 	 *
 	 * @return array
 	 * @throws \CoreException
+	 * @since 3.0.0 Added $bRootFirst param.
 	 */
-	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP)
+	public static function EnumChildClasses($sClass, $iOption = ENUM_CHILD_CLASSES_EXCLUDETOP, $bRootFirst = false)
 	{
 		self::_check_subclass($sClass);
 
 		$aRes = self::$m_aChildClasses[$sClass];
 		if ($iOption != ENUM_CHILD_CLASSES_EXCLUDETOP)
 		{
-			// Add it to the list
-			$aRes[] = $sClass;
+			if ($bRootFirst) {
+				// Root class on top
+				array_unshift($aRes, $sClass);
+			} else {
+				// Root class at the end, legacy behavior
+				$aRes[] = $sClass;
+			}
 		}
 
 		return $aRes;
@@ -5963,7 +5995,8 @@ abstract class MetaModel
 
 
 	/**
-	 * @deprecated 2.7.0 N°2369 will be removed in 2.8
+	 * @deprecated 2.7.0 N°2369 Method will not be removed any time soon as we still need to drop view if the instance is migrating from an iTop 2.x to an iTop 3.0 or newer, even if they skip iTop 3.0.
+	 * @since 3.0.0 Does not recreate SQL views, only drops them. Method has not been renamed to avoid regressions
 	 *
 	 * @return array
 	 * @throws \CoreException
@@ -5977,7 +6010,7 @@ abstract class MetaModel
 
 		// Reporting views (must be created after any other table)
 		//
-		foreach(self::GetClasses('bizmodel') as $sClass)
+		foreach(self::GetClasses() as $sClass)
 		{
 			$sView = self::DBGetView($sClass);
 			if (CMDBSource::IsTable($sView))
@@ -7456,9 +7489,11 @@ abstract class MetaModel
 	 * @param string $sInput
 	 * @param array $aParams
 	 *
-	 * @return mixed
+	 * @return string
+	 *
+	 * @throws \Exception
 	 */
-	static public function ApplyParams($sInput, $aParams)
+	public static function ApplyParams($sInput, $aParams)
 	{
 		$aParams = static::AddMagicPlaceholders($aParams);
 
@@ -7468,7 +7503,7 @@ abstract class MetaModel
 
 		$aSearches = array();
 		$aReplacements = array();
-		foreach($aParams as $sSearch => $replace)
+		foreach ($aParams as $sSearch => $replace)
 		{
 			// Some environment parameters are objects, we just need scalars
 			if (is_object($replace))

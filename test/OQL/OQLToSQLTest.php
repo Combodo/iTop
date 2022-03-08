@@ -16,6 +16,7 @@ use utils;
  * @group itopRequestMgmt
  * @group itopVirtualizationMgmt
  * @group itopServiceMgmt
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -63,15 +64,6 @@ class OQLToSQLTest extends ItopDataTestCase
 	 */
 	public function testOQLLegacySetup()
 	{
-		utils::GetConfig()->Set('use_legacy_dbsearch', true, 'Test');
-		utils::GetConfig()->Set('apc_cache.enabled', false, 'Test');
-		utils::GetConfig()->Set('expression_cache_enabled', false, 'Test');
-		utils::GetConfig()->Set('query_cache_enabled', false, 'Test');
-		$sConfigFile = utils::GetConfig()->GetLoadedFile();
-		@chmod($sConfigFile, 0770);
-		utils::GetConfig()->WriteToFile();
-		@chmod($sConfigFile, 0444); // Read-only
-
 		SetupUtils::rrmdir($sResultFile = APPROOT.'log/test');
 	}
 
@@ -94,14 +86,18 @@ class OQLToSQLTest extends ItopDataTestCase
 	 */
 	public function testOQLLegacySelect($sOQL, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 20, $iLimitStart = 0)
 	{
+		utils::GetConfig()->Set('use_legacy_dbsearch', true, 'Test');
+		utils::GetConfig()->Set('apc_cache.enabled', false, 'Test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'Test');
+		utils::GetConfig()->Set('query_cache_enabled', false, 'Test');
+
 		$this->assertTrue(utils::GetConfig()->Get('use_legacy_dbsearch'));
 		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('expression_cache_enabled'));
 
 		$aPrevious = $this->GetPreviousTestResult($this->GetId());
-		if (is_null($aPrevious))
-		{
+		if (is_null($aPrevious)) {
 			$aResult = $this->OQLSelectRunner($sOQL, $aOrderBy, $aArgs, $aAttToLoad, $aExtendedDataSpec, $iLimitCount, $iLimitStart);
 			// no test yet, just save
 			$this->SaveTestResult($this->GetId(), $aResult);
@@ -118,15 +114,6 @@ class OQLToSQLTest extends ItopDataTestCase
 	 */
 	public function testOQLSetup()
 	{
-		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
-		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
-		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
-		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
-		$sConfigFile = utils::GetConfig()->GetLoadedFile();
-		@chmod($sConfigFile, 0770);
-		utils::GetConfig()->WriteToFile();
-		@chmod($sConfigFile, 0444); // Read-only
-
 		$aCSVHeader = array(
 			'test', 'OQL','count',
 			'Legacy Count Joins', 'Count Joins',
@@ -157,6 +144,11 @@ class OQLToSQLTest extends ItopDataTestCase
 	 */
 	public function testOQLSelect($sOQL, $aOrderBy = array(), $aArgs = array(), $aAttToLoad = null, $aExtendedDataSpec = null, $iLimitCount = 20, $iLimitStart = 0)
 	{
+		utils::GetConfig()->Set('use_legacy_dbsearch', false, 'test');
+		utils::GetConfig()->Set('apc_cache.enabled', false, 'test');
+		utils::GetConfig()->Set('query_cache_enabled', false, 'test');
+		utils::GetConfig()->Set('expression_cache_enabled', false, 'test');
+
 		$this->assertFalse(utils::GetConfig()->Get('use_legacy_dbsearch'));
 		$this->assertFalse(utils::GetConfig()->Get('apc_cache.enabled'));
 		$this->assertFalse(utils::GetConfig()->Get('query_cache_enabled'));

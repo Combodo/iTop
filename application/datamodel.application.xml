@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
   <classes>
     <class id="AbstractResource" _delta="define">
       <parent>cmdbAbstractObject</parent>
@@ -258,6 +258,66 @@
               </argument>
             </arguments>
           </method>
+          <method id="SetComputedDate">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>false</mandatory>
+              </argument>
+              <argument id="3">
+                <type>attcode</type>
+                <mandatory>false</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
+          <method id="SetComputedDateIfNull">
+            <arguments>
+              <argument id="1">
+                <type>attcode</type>
+                <mandatory>true</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+              <argument id="2">
+                <type>string</type>
+                <mandatory>false</mandatory>
+              </argument>
+              <argument id="3">
+                <type>attcode</type>
+                <mandatory>false</mandatory>
+                <type_restrictions>
+                  <operation>allow</operation>
+                  <types>
+                    <type id="AttributeDate"/>
+                    <type id="AttributeDateTime"/>
+                  </types>
+                </type_restrictions>
+              </argument>
+            </arguments>
+          </method>
           <method id="SetCurrentDate">
             <arguments>
               <argument id="1">
@@ -405,30 +465,6 @@
             <arguments>
               <argument id="1">
                 <type>string</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="PrefillCreationForm">
-            <arguments>
-              <argument id="1">
-                <type>reference</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="PrefillTransitionForm">
-            <arguments>
-              <argument id="1">
-                <type>reference</type>
-                <mandatory>true</mandatory>
-              </argument>
-            </arguments>
-          </method>
-          <method id="PrefillSearchForm">
-            <arguments>
-              <argument id="1">
-                <type>reference</type>
                 <mandatory>true</mandatory>
               </argument>
             </arguments>

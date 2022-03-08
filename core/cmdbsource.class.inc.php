@@ -350,6 +350,12 @@ class CMDBSource
 
 	}
 
+	/**
+	 * @return string
+	 * @throws \MySQLException
+	 *
+	 * @uses \CMDBSource::QueryToCol() so needs a connection opened !
+	 */
 	public static function GetDBVersion()
 	{
 		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
@@ -367,8 +373,10 @@ class CMDBSource
 	/**
 	 * Get the DB vendor between MySQL and its main forks
 	 * @return string
+	 *
+	 * @uses \CMDBSource::GetServerVariable() so needs a connection opened !
 	 */
-	static public function GetDBVendor()
+	public static function GetDBVendor()
 	{
 		$sDBVendor = static::ENUM_DB_VENDOR_MYSQL;
 		
@@ -672,13 +680,13 @@ class CMDBSource
 	private static function StartTransaction()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+
 		$bHasExistingTransactions = self::IsInsideTransaction();
 		if (!$bHasExistingTransactions) {
-			IssueLog::Trace("START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
+			IssueLog::Trace("START TRANSACTION was sent to the DB", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 			self::DBQuery('START TRANSACTION');
 		} else {
-			IssueLog::Trace("Ignore nested (".self::$m_iTransactionLevel.") START TRANSACTION $sCaller", LogChannels::CMDB_SOURCE);
+			IssueLog::Trace("START TRANSACTION ignored as a transaction is already opened", LogChannels::CMDB_SOURCE, ['stacktrace' => $aStackTrace]);
 		}
 
 		self::AddTransactionLevel();

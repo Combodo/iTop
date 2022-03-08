@@ -4159,6 +4159,7 @@ class AttributeText extends AttributeString
 		{
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
+			$sValue = nl2br($sValue);
 
 			return "<div $sStyle>$sValue</div>";
 		}
@@ -5716,7 +5717,7 @@ class AttributeMetaEnum extends AttributeEnum
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
-			$aLocalizedValues[$sKey] = Str::pure2html($this->GetValueLabel($sKey));
+			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
 		return $aLocalizedValues;
@@ -8127,6 +8128,25 @@ class AttributeImage extends AttributeBlob
 	public function GetEditClass()
 	{
 		return "Image";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see AttributeBlob::MakeRealValue()
+	 */
+	public function MakeRealValue($proposedValue, $oHostObj)
+	{
+		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
+
+		if (($oDoc instanceof ormDocument)
+			&& (false === $oDoc->IsEmpty())
+			&& ($oDoc->GetMimeType() === 'image/svg+xml')) {
+			$sCleanSvg = HTMLSanitizer::Sanitize($oDoc->GetData(), 'svg_sanitizer');
+			$oDoc = new ormDocument($sCleanSvg, $oDoc->GetMimeType(), $oDoc->GetFileName());
+		}
+
+		// The validation of the MIME Type is done by CheckFormat below
+		return $oDoc;
 	}
 
 	/**
@@ -10832,7 +10852,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 							}
 						}
 
-						$sLabelForHtmlAttribute = MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)";
+						$sLabelForHtmlAttribute = utils::HtmlEntities(MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)");
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
@@ -11025,7 +11045,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 				$aLocalizedValues = array();
 				foreach ($value as $sAttCode) {
 					if (isset($aAllowedAttributes[$sAttCode])) {
-						$sLabelForHtmlAttribute = $aAllowedAttributes[$sAttCode];
+						$sLabelForHtmlAttribute = utils::HtmlEntities($aAllowedAttributes[$sAttCode]);
 						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					}
 				}
@@ -11574,19 +11594,20 @@ class AttributeTagSet extends AttributeSet
 					$sTooltipContent = $sTagLabel;
 					$sTooltipHtmlEnabled = 'false';
 				} else {
+					$sTagLabelEscaped = utils::EscapeHtml($sTagLabel);
 					$sTooltipContent = <<<HTML
-<h4>$sTagLabel</h4>
+<h4>$sTagLabelEscaped</h4>
 <div>$sTagDescription</div>
 HTML;
 					$sTooltipHtmlEnabled = 'true';
 				}
-				$sTooltipContent = utils::EscapeHtml($sTooltipContent);
+				$sTooltipContent = utils::HtmlEntities($sTooltipContent);
 
 				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sLabelForHtml.'" data-description="'.$sDescriptionForHtml.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabelForHtml.'</a>';
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-set-item">'.utils::EscapeHtml($oTag).'</span>';
 			}
 		}
 		$sHtml .= '</span>';

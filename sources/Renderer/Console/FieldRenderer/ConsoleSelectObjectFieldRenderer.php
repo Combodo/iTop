@@ -153,6 +153,7 @@ class ConsoleSelectObjectFieldRenderer extends FieldRenderer
 						$sSelected = ($value == $iObject) ? 'checked' : '';
 					}
 					$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel($sLabel, "radio_$sId", $iObject, "{$sId}_{$iObject}", "radio");
+					$oRadioCustom->AddCSSClass('ibo-input-field-wrapper');
 					$oRadioCustom->GetInput()->SetIsChecked($sSelected);
 					$oRadioCustom->SetBeforeInput(false);
 					$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -195,7 +196,8 @@ EOF
 				$oBlock->AddDataAttribute("input-type","Combodo\\iTop\\Form\\Field\\SelectObjectField\\Select");
 				$sEditType = 'select';
 				$oSelect = SelectUIBlockFactory::MakeForSelect("",$this->oField->GetGlobalId());
-				$oBlock->AddSubBlock($oSelect);
+				$oSelect->AddCSSClass('ibo-input-select-placeholder');
+				$oBlock->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard(null,['ibo-input-field-wrapper'])->AddSubBlock($oSelect));
 				$oSelect->AddOption(SelectOptionUIBlockFactory::MakeForSelectOption('',Dict::S('UI:SelectOne'), false ));
 				while ($oObject = $oSet->Fetch())
 				{
@@ -217,8 +219,10 @@ EOF
                             value: me.val()
                         })
                         .closest('.form_handler').trigger('value_change');
-    }
+    },
+	inputClass: 'ibo-input-vanilla ibo-input ibo-input-selectize',	
 });
+ $("#{$this->oField->GetGlobalId()}").closest('div').addClass('ibo-input-select-wrapper--with-buttons');
 JS
 				);
 			}
@@ -250,13 +254,15 @@ JS
 		if (oResult.is_valid)
 		{
 			oValidationElement.html('');
+			 $(me.element).find('.ibo-input-field-wrapper').removeClass("is-error");
 		}
 		else
 		{
 			//TODO: escape html entities
 			var sExplain = oResult.error_messages.join(', ');
-			oValidationElement.html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip-content="'+sExplain+'"/>');
-			CombodoTooltip.InitTooltipFromMarkup(oValidationElement, true);
+			oValidationElement.html(sExplain);
+			oValidationElement.addClass(' ibo-field-validation');
+			 $(me.element).find('.ibo-input-field-wrapper').addClass("is-error");
 		}
 	}
 }

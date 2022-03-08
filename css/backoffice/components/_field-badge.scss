@@ -3,8 +3,8 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-field-badge--margin: 0 !default;
-$ibo-field-badge--padding: 4px 10px !default;
+$ibo-field-badge--margin: $ibo-spacing-0 !default;
+$ibo-field-badge--padding: $ibo-spacing-200 10px !default;
 $ibo-field-badge--border-radius: $ibo-border-radius-300 !default;
 
 $ibo-field-badge--label--spacing-x: 0.5rem !default;

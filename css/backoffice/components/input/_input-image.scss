@@ -3,6 +3,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+$ibo-input-image--image-view--min-height: 96px !default;
 $ibo-input-image--image-view--background-color: $ibo-color-grey-200 !default;
 $ibo-input-image--image-view--border-radius: $ibo-border-radius-500 !default;
 
@@ -18,6 +19,7 @@ $ibo-input-image--edit-buttons--elements-spacing: $ibo-input-image--edit-buttons
 .ibo-input-image--image-view {
   position: relative;
   overflow: hidden;
+  min-height: $ibo-input-image--image-view--min-height;
   background-color: $ibo-input-image--image-view--background-color;
   border-radius: $ibo-input-image--image-view--border-radius;
   @extend %ibo-fully-centered-content;

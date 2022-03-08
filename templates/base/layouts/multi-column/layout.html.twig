@@ -1,6 +1,6 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-<div class="ibo-multi-column" data-role="ibo-multi-column">
+<div class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-multi-column">
     {% for oSubBlock in oUIBlock.GetSubBlocks() %}
         {{ render_block(oSubBlock, {aPage: aPage}) }}
     {% endfor %}

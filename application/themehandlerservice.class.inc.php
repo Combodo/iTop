@@ -29,7 +29,7 @@ class ThemeHandlerService
 	{
 	}
 
-	public function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null){
-		return ThemeHandler::CompileTheme($sThemeId, $bSetup, $sSetupCompilationTimestamp="", $aThemeParameters, $aImportsPaths, $sWorkingPath);
+	public function CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp = "", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null){
+		return ThemeHandler::CompileTheme($sThemeId, $bSetup, $sSetupCompilationTimestamp, $aThemeParameters, $aImportsPaths, $sWorkingPath);
 	}
 }

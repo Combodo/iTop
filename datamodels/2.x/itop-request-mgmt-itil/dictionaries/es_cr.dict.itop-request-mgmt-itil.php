@@ -2,11 +2,9 @@
 /*
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
+ * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-/*
- * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com>
- */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:RequestManagement' => 'Administración de Requerimientos',
 	'Menu:RequestManagement+' => 'Administración de Requerimientos',
 	'Menu:RequestManagementProvider' => 'Proveedor de Mesa de Ayuda',
@@ -53,7 +51,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: UserRequest
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserRequest' => 'Requerimiento',
 	'Class:UserRequest+' => 'Requerimiento',
 	'Class:UserRequest/Attribute:status' => 'Estatus',
@@ -200,8 +198,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:UserRequest/Attribute:parent_change_id+' => 'Cambio Padre',
 	'Class:UserRequest/Attribute:parent_change_ref' => 'Ref. Cambio',
 	'Class:UserRequest/Attribute:parent_change_ref+' => 'Ref. Cambio',
-	'Class:UserRequest/Attribute:parent_incident_ref' => 'Parent incident ref~~',
-	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
+	'Class:UserRequest/Attribute:parent_incident_ref' => 'Ref. Inciente Padre',
+	'Class:UserRequest/Attribute:parent_incident_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:related_request_list+' => 'Requerimientos Hijo',
 	'Class:UserRequest/Attribute:public_log' => 'Bitácora Pública',
@@ -251,8 +249,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Organization:Overview:UserRequests' => 'User Requests from this organization~~',
-	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => 'Tickets for this organization~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Organization:Overview:UserRequests' => 'Requerimientos para esta Organización',
+	'Organization:Overview:MyUserRequests' => 'Mis Requerimientos para esta Organización',
+	'Organization:Overview:Tickets' => 'Tickets para esta Organización',
 ));

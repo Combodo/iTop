@@ -584,20 +584,10 @@ function ExportInitButton(sSelector) {
 }
 
 /**
- * @deprecated 3.0.0 will be removed in 3.1, see N°3824
- */
-function DisplayHistory(sSelector, sFilter, iCount, iStart) {
-	$(sSelector).block();
-	var oParams = {operation: 'history_from_filter', filter: sFilter, start: iStart, count: iCount};
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
-			$(sSelector).html(data).unblock();
-		}
-	);
-}
-
-/**
+ * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
+ *
  * @param sValue value to escape
- * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contrains html entities we want to keep)
+ * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
  * @returns {string} escaped value, ready to insert in the DOM without XSS risk
  *
  * @since 2.6.5, 2.7.2, 3.0.0 N°3332
@@ -664,7 +654,7 @@ Dict.Format = function () {
 	var args = Array.from(arguments);
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
-}
+};
 
 // TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
 /**
@@ -847,6 +837,12 @@ const CombodoTooltip = {
 			oOptions['appendTo'] = mAppendTo;
 		}
 
+		// Max. width overload
+		const sMaxWidth = oElem.attr('data-tooltip-max-width');
+		if ((sMaxWidth !== undefined) && (sMaxWidth !== '')) {
+			oOptions['maxWidth'] = sMaxWidth;
+		}
+
 		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
 		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
 
@@ -865,6 +861,8 @@ const CombodoTooltip = {
 			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
 			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
 		];
+
+		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
 
 		tippy(oElem[0], oOptions);
 
@@ -973,5 +971,127 @@ const CombodoJSConsole = {
 	 */
 	Error: function(sMessage) {
 		this._Trace(sMessage, 'error');
+	}
+}
+
+/**
+ * Helper to Sanitize string
+ *
+ * Note: Same as in php (see \utils::Sanitize)
+ *
+ * @api
+ * @since 2.6.5 2.7.6 3.0.0 N°4367
+ */
+const CombodoSanitizer = {
+	ENUM_SANITIZATION_FILTER_INTEGER: 'integer',
+	ENUM_SANITIZATION_FILTER_STRING: 'string',
+	ENUM_SANITIZATION_FILTER_CONTEXT_PARAM: 'context_param',
+	ENUM_SANITIZATION_FILTER_PARAMETER: 'parameter',
+	ENUM_SANITIZATION_FILTER_FIELD_NAME: 'field_name',
+	ENUM_SANITIZATION_FILTER_TRANSACTION_ID: 'transaction_id',
+	ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER: 'element_identifier',
+	ENUM_SANITIZATION_FILTER_VARIABLE_NAME: 'variable_name',
+
+	/**
+	 * @param {String} sValue The string to sanitize
+	 * @param {String} sDefaultValue The string to return if sValue not match (used for some filters)
+	 * @param {String} sSanitizationFilter one of the ENUM_SANITIZATION_FILTERs
+	 */
+	Sanitize: function (sValue, sDefaultValue, sSanitizationFilter) {
+		switch (sSanitizationFilter) {
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_INTEGER:
+				return this._CleanString(sValue, sDefaultValue, /[^0-9-+]*/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_STRING:
+				return $("<div>").text(sValue).text();
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
+				return this._ReplaceString(sValue, sDefaultValue, /^([\. A-Za-z0-9_=-]*)$/g, '');
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_PARAMETER:
+				return this._ReplaceString(sValue, sDefaultValue, /^([ A-Za-z0-9_=-]*)$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_FIELD_NAME:
+				return this._ReplaceString(sValue, sDefaultValue, /^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+				return this._ReplaceString(sValue, sDefaultValue, /^[ A-Za-z0-9_=%:+-]*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_-]/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_]/g);
+
+		}
+		return sDefaultValue;
+	},
+	_CleanString: function (sValue, sDefaultValue, sRegExp) {
+		return sValue.replace(sRegExp, '');
+	},
+
+	_ReplaceString: function (sValue, sDefaultValue, sRegExp) {
+		if (sRegExp.test(sValue)) {
+			return sValue;
+		} else {
+			return sDefaultValue;
+		}
+	},
+
+	/**
+	 * @param sValue value to escape
+	 * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+	 *
+	 * @returns {string} escaped value, ready to insert in the DOM without XSS risk
+	 *
+	 * @since 2.6.5, 2.7.2, 3.0.0 N°3332
+	 * @since 3.0.0 N°4367 deprecate EncodeHtml and copy the method here (CombodoSanitizer.EscapeHtml)
+	 *
+	 * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+	 * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
+	 *        example the text() JQuery way) isn't safe
+	 */
+	EscapeHtml: function (sValue, bReplaceAmp) {
+		if (bReplaceAmp) {
+			return $('<div/>').text(sValue).html();
+		}
+
+		let sEncodedValue = (sValue+'')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;')
+			.replace(/\//g, '&#x2F;');
+
+		return sEncodedValue;
+	}
+};
+
+/**
+ * Helper for InlineImages
+ * @since 3.0.0
+ */
+const CombodoInlineImage = {
+	/**
+	 * Max width to apply on inline images
+	 */
+	max_width: 600,
+	/**
+	 * @param sMaxWidth {string} {@see CombodoInlineImage.max_width}
+	 */
+	SetMaxWidth: function (sMaxWidth) {
+		this.max_width = sMaxWidth;
+	},
+	/**
+	 * Apply the {@see CombodoInlineImage.max_width} to all inline images
+	 */
+	FixImagesWidth: function () {
+		$('img[data-img-id]').each(function() {
+			if ($(this).width() > CombodoInlineImage.max_width)
+			{
+				$(this).css({'max-width': CombodoInlineImage.max_width+'px', width: '', height: '', 'max-height': ''});
+			}
+			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
+		}).magnificPopup({type: 'image', closeOnContentClick: true });
 	}
 }

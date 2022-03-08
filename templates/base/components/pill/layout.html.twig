@@ -3,7 +3,7 @@
 {% set sTagName = oUIBlock.HasUrl() ? 'a' : 'span' %}
 <{{ sTagName }} id="{{ oUIBlock.GetId() }}"
     {% if oUIBlock.HasUrl() %}href="{{ oUIBlock.GetUrl()|raw }}"{% endif %}
-    class="ibo-pill {{ oUIBlock.GetCSSColorClass() }}"
+    class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {{ oUIBlock.GetCSSColorClass() }}"
     data-role="ibo-pill"
     {% if oUIBlock.HasTooltip() %}data-tooltip-content="{{ oUIBlock.GetTooltip() }}" data-tooltip-show-delay="500"{% endif %}>
     {% for oSubBlock in oUIBlock.GetSubBlocks() %}

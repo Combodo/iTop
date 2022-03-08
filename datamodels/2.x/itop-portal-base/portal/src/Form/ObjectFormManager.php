@@ -22,7 +22,7 @@ namespace Combodo\iTop\Portal\Form;
 
 use AttachmentPlugIn;
 use AttributeDateTime;
-use AttributeTagSet;
+use AttributeSet;
 use CMDBChangeOpAttachmentAdded;
 use CMDBChangeOpAttachmentRemoved;
 use Combodo\iTop\Form\Field\Field;
@@ -42,7 +42,6 @@ use Exception;
 use InlineImage;
 use IssueLog;
 use MetaModel;
-use ormTagSet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -80,37 +79,63 @@ class ObjectFormManager extends FormManager
 	protected $aCallbackUrls = array();
 	/**
 	 * List of hidden fields, used for form update (eg. remove them from the form regarding they dependencies)
+	 *
 	 * @var array $aHiddenFieldsId
 	 * @since 2.7.5
 	 */
 	protected $aHiddenFieldsId = array();
 
 	/**
-	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
-	 * - formobject_class : The class of the object that is being edited/viewed
-	 * - formmode : view|edit|create
-	 * - values for parent
+	 * @param string|array $formManagerData value of the formmanager_data portal parameter, either JSON or object
+	 *
+	 * @return array formmanager_data as a PHP array
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 */
+	protected static function DecodeFormManagerData($formManagerData)
+	{
+		if (is_array($formManagerData)) {
+			return $formManagerData;
+		}
+
+		return json_decode($formManagerData, true);
+	}
+
+	/**
+	 * @param string $sJson JSON data that must contain at least :
+	 *       - formobject_class : The class of the object that is being edited/viewed
+	 *       - formmode : view|edit|create
+	 *       - values for parent
+	 * @param bool $bTrustContent if false then won't allow modified TWIG content
+	 *
+	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
 	 *
 	 * @inheritDoc
 	 * @throws \Exception
+	 * @throws \SecurityException if twig content is present and $bTrustContent is false
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
 	 */
-	static function FromJSON($sJson)
+	public static function FromJSON($sJson, $bTrustContent = false)
 	{
-		if (is_array($sJson))
-		{
-			$aJson = $sJson;
-		}
-		else
-		{
-			$aJson = json_decode($sJson, true);
+		$aJson = static::DecodeFormManagerData($sJson);
+
+		$oConfig = utils::GetConfig();
+		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
+		if ($bIsContentCheckEnabled && (false === $bTrustContent)) {
+			/** @noinspection NestedPositiveIfStatementsInspection */
+			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
+				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
+				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
+				throw new \SecurityException('Twig content not allowed in this context!');
+			}
 		}
 
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
 
 		// Retrieving object to edit
-		if (!isset($aJson['formobject_class']))
-		{
+		if (!isset($aJson['formobject_class'])) {
 			throw new Exception('Object class must be defined in order to generate the form');
 		}
 		$sObjectClass = $aJson['formobject_class'];
@@ -151,12 +176,42 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Retrieving callback urls
-		if (!isset($aJson['formcallbacks']))
-		{
+		if (!isset($aJson['formcallbacks'])) {
 			// TODO
 		}
 
 		return $oFormManager;
+	}
+
+	/**
+	 * @param string $sPostedFormManagerData received data from the browser
+	 * @param array $aOriginalFormProperties data generated server side
+	 *
+	 * @return bool true if the data are identical
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 check formmanager_data
+	 */
+	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
+	{
+		$aPostedFormManagerData = static::DecodeFormManagerData($sPostedFormManagerData);
+		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
+
+		if ($sPostedFormLayoutType === 'xhtml') {
+			return true;
+		}
+
+		// we need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
+		$oHtmlDocument = new \DOMDocument();
+
+		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
+		$oHtmlDocument->loadXML('<root>'.$sPostedFormLayoutContent.'</root>');
+		$sPostedFormLayoutRendered = $oHtmlDocument->saveHTML();
+
+		$sOriginalFormLayoutContent = (isset($aOriginalFormProperties['layout']['content'])) ? $aOriginalFormProperties['layout']['content'] : '';
+		$oHtmlDocument->loadXML('<root>'.$sOriginalFormLayoutContent.'</root>');
+		$sOriginalFormLayoutContentRendered = $oHtmlDocument->saveHTML();
+
+		return ($sPostedFormLayoutRendered === $sOriginalFormLayoutContentRendered);
 	}
 
 	/**
@@ -1299,25 +1354,19 @@ class ObjectFormManager extends FormManager
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
-						}
-						elseif ($oAttDef instanceof AttributeTagSet)
-						{
-							/** @var \ormTagSet $oTagSet */
-							$oTagSet = $this->oObject->Get($sAttCode);
-							if (is_null($oTagSet))
-							{
-								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
+						} elseif ($oAttDef instanceof AttributeSet) {
+							/** @var \ormSet $oTagSet */
+							$oOrmSet = $this->oObject->Get($sAttCode);
+							if (is_null($oOrmSet)) {
+								$oOrmSet = new \ormSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
 							}
-							$oTagSet->ApplyDelta(json_decode($value, true));
-							$this->oObject->Set($sAttCode, $oTagSet);
-						}
-						elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+							$oOrmSet->ApplyDelta(json_decode($value, true));
+							$this->oObject->Set($sAttCode, $oOrmSet);
+						} elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 						{
-							if ($value != null)
-							{
+							if ($value != null) {
 								$value = $oAttDef->GetFormat()->Parse($value);
-								if (is_object($value))
-								{
+								if (is_object($value)) {
 									$value = $value->format($oAttDef->GetInternalFormat());
 								}
 							}

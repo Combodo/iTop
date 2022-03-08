@@ -37,6 +37,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'bkp-status-backups-manual' => 'Резервное копирование вручную',
 	'bkp-status-backups-none' => 'Резервных копий ещё нет',
 	'bkp-next-backup' => 'Следующее резервное копирование будет выполняться в <b>%1$s</b> (%2$s) в %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Запустить сейчас!',
 	'bkp-button-restore-now' => 'Восстановить!',
 	'bkp-confirm-backup' => 'Пожалуйста, подтвердите, что вы хотите выполнить резервное копирование прямо сейчас.',

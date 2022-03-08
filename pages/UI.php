@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -18,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -253,23 +255,25 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	$oP->AddUiBlock($oForm);
 }
 
+/**
+ * @param $oP
+ * @param $aResults
+ * @param $sRelation
+ * @param $sDirection
+ * @param $oObj
+ * for operation :  'swf_navigator'
+ *
+ * @throws \DictExceptionMissingString
+ */
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
 	$oP->SetCurrentTab('UI:RelationshipList');
-	$oP->add("<div id=\"impacted_objects\">");
-	$sOldRelation = $sRelation;
-	if (($sRelation == 'impacts') && ($sDirection == 'up'))
-	{
-		$sOldRelation = 'depends on';
-	}
-	$oP->add("<div id=\"impacted_objects_lists\">");
-	$oP->add("<div id=\"impacted_objects_lists_placeholder\"></div>");
-	/*
-	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
-	 */
-
-	$oP->add("</div>");
-	$oP->add("</div>");
+	$oImpactedObject = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects", ['ibo-is-visible']);
+	$oP->AddSubBlock($oImpactedObject);
+	$oImpactedObject->AddSubBlock(AlertUIBlockFactory::MakeForWarning(Dict::S("Relation:impacts/FilteredData"), '', "alert_filtered_list")->SetIsHidden(true));
+	$oImpactedObjectList = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists", ['ibo-is-visible']);
+	$oImpactedObject->AddSubBlock($oImpactedObjectList);
+	$oImpactedObjectList->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists_placeholder", ['ibo-is-visible']));
 }
 
 function DisplayNavigatorGroupTab($oP)
@@ -414,7 +418,7 @@ try
 
 					$sClassLabel = MetaModel::GetName($sClass);
 					$oP->set_title(Dict::Format('UI:DetailsPageTitle', $oObj->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
-					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_OBJECT_MODE_PRINT : cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+					$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, $oP->IsPrintableVersion() ? cmdbAbstractObject::ENUM_DISPLAY_MODE_PRINT : cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 					$oObj->DisplayDetails($oP);
 				}
 			}
@@ -435,7 +439,7 @@ try
 			iTopOwnershipLock::ReleaseLock($sClass, $id, $sToken);
 		}
 
-		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW));
+		$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_VIEW));
 		cmdbAbstractObject::ReloadAndDisplay($oP, $oObj, array('operation' => 'details'));
 		break;
 	
@@ -668,7 +672,7 @@ EOF
 				if (UserRights::IsActionAllowed($sClass, UR_ACTION_MODIFY, $oSet) == UR_ALLOWED_NO) {
 					throw new SecurityException('User not allowed to modify this object', array('class' => $sClass, 'id' => $id));
 				}
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_OBJECT_MODE_EDIT));
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObj, cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT));
 				// Note: code duplicated to the case 'apply_modify' when a data integrity issue has been found
 				$oObj->DisplayModifyForm($oP, array('wizard_container' => 1)); // wizard_container: Display the title above the form
 			}
@@ -760,7 +764,7 @@ EOF
 				$sHeaderTitle = Dict::Format('UI:CreationTitle_Class', $sClassLabel);
 				// Note: some code has been duplicated to the case 'apply_new' when a data integrity issue has been found
 				$oP->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel));
-				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_OBJECT_MODE_CREATE));
+				$oP->SetContentLayout(PageContentFactory::MakeForObjectDetails($oObjToClone, cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE));
 				cmdbAbstractObject::DisplayCreationForm($oP, $sRealClass, $oObjToClone, array(), array('wizard_container' => 1, 'keep_source_object' => true)); // wizard_container: Display the title above the form
 			} else {
 				// Select the derived class to create
@@ -1775,6 +1779,7 @@ EOF
 			$oP->SetCurrentTabContainer('Navigator');
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$sLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
 			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
 			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
@@ -1789,26 +1794,26 @@ EOF
 					}
 				}
 			}
-		
-		// Display the tabs
-		if ($sFirstTab == 'list')
-		{
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorGroupTab($oP);
-		}
-		else
-		{
-			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			DisplayNavigatorGroupTab($oP);
-		}
 
-		$oP->SetCurrentTab('');
-		break;
-		
+			// Display the tabs
+			if ($sFirstTab == 'list')
+			{
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				DisplayNavigatorGroupTab($oP);
+			}
+			else
+			{
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				DisplayNavigatorGroupTab($oP);
+			}
+
+			$oP->SetCurrentTab('');
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'kill_lock':

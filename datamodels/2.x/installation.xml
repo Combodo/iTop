@@ -21,6 +21,8 @@
 						<module>combodo-db-tools</module>
 						<module>itop-core-update</module>
 						<module>itop-hub-connector</module>
+            <module>combodo-backoffice-darkmoon-theme</module>
+            <module>itop-themes-compat</module>
 					</modules>
 					<mandatory>true</mandatory>
 				</choice>
@@ -195,14 +197,15 @@
       <banner>/images/icons/icons8-important-book.svg</banner>
 			<options type="array">
 				<choice>
-					<extension_code>itop-kown-error-mgmt</extension_code>
-					<title>Known Errors Management and FAQ</title>
-					<description>Select this option to track "Known Errors" and FAQs in iTop.</description>
-					<modules type="array">
-						<module>itop-faq-light</module>
-						<module>itop-knownerror-mgmt</module>
-					</modules>
-				</choice>
+          <!-- Extension code has a typo but fixing it would remove that setup option for all existing iTop -->
+          <extension_code>itop-kown-error-mgmt</extension_code>
+          <title>Known Errors Management and FAQ</title>
+          <description>Select this option to track "Known Errors" and FAQs in iTop.</description>
+          <modules type="array">
+            <module>itop-faq-light</module>
+            <module>itop-knownerror-mgmt</module>
+          </modules>
+        </choice>
 				<choice>
 					<extension_code>itop-problem-mgmt</extension_code>
 					<title>Problem Management</title>

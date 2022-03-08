@@ -4,10 +4,10 @@
  */
 
 $ibo-caselog-entry-form--width: 100% !default;
-$ibo-caselog-entry-form--padding-bottom: 12px !default;
+$ibo-caselog-entry-form--padding-bottom: $ibo-spacing-400 !default;
 $ibo-caselog-entry-form--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
 
-$ibo-caselog-entry-form--actions--margin-top: 8px !default;
+$ibo-caselog-entry-form--actions--margin-top: $ibo-spacing-300 !default;
 $ibo-caselog-entry-form--actions--margin-bottom: $ibo-caselog-entry-form--actions--margin-top !default;
 
 $ibo-caselog-entry-form--lock-indicator--margin-top: $ibo-caselog-entry-form--padding-bottom !default;

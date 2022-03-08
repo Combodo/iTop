@@ -17,6 +17,15 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+
+/**
+ * ⚠ Warning, this page is only kept for legacy usages : **it is not maintained anymore**
+ *
+ * Instead, you should use `export-v2.php`
+ *
+ * @link https://www.itophub.io/wiki/page?id=latest:advancedtopics:exportdata_v1 script documentation
+ */
+
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -86,6 +95,8 @@ $sFileName = utils::ReadParam('filename', '', true, 'string');
 $sExpression = utils::ReadParam('expression', '', true /* Allow CLI */, 'raw_data');
 $sFields = trim(utils::ReadParam('fields', '', true, 'raw_data')); // CSV field list (allows to specify link set attributes, still not taken into account for XML export)
 $bFieldsAdvanced = utils::ReadParam('fields_advanced', 0);
+
+$oQuery = null;
 
 if (strlen($sExpression) == 0)
 {
@@ -182,6 +193,11 @@ if (!empty($sExpression))
 			{
 				throw new Exception("The current user does not have permission for exporting data of class $sClass");
 			}
+		}
+
+		// update last export information if check parameters ok
+		if($oQuery != null){
+			$oQuery->UpdateLastExportInformation();
 		}
 
 		if ($oFilter)
@@ -285,7 +301,7 @@ if (!empty($sExpression))
 				break;
 				
 				case 'xlsx':
-				$oP = new ajax_page('');
+				$oP = new AjaxPage('');
 				$oExporter = new ExcelExporter();
 				$oExporter->SetObjectList($oFilter);
 				

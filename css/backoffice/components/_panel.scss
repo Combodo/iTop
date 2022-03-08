@@ -39,32 +39,29 @@ $ibo-panel-colors: (
 ) !default;
 
 /* - Specific variables for the block */
-$ibo-panel--spacing-top: 24px !default;
-
 $ibo-panel--highlight--width: 100% !default;
 $ibo-panel--highlight--height: 8px !default;
-$ibo-panel--highlight--background-color: 8px !default;
 $ibo-panel--highlight--border-radius: $ibo-border-radius-400 $ibo-border-radius-400 0 0 !default;
 $ibo-panel--highlight--padding-bottom: $ibo-panel--highlight--height !default;
 
 $ibo-panel--body--z-index: 1 !default;
 $ibo-panel--body--background-color: $ibo-color-white-100 !default;
-$ibo-panel--body--padding-bottom: 24px !default;
+$ibo-panel--body--padding-bottom: $ibo-spacing-600 !default;
 $ibo-panel--body--padding-top: $ibo-panel--body--padding-bottom + $ibo-panel--highlight--height !default;
-$ibo-panel--body--padding-x: 16px !default;
+$ibo-panel--body--padding-x: $ibo-spacing-500 !default;
 $ibo-panel--body--border-radius: $ibo-border-radius-500 !default;
 $ibo-panel--body--border: $ibo-panel--base-border !default;
 
 $ibo-panel--header--z-index: $ibo-panel--body--z-index + 1 !default; /* Should always be above the body */
-$ibo-panel--header--margin-bottom: 4px !default;
+$ibo-panel--header--margin-bottom: $ibo-spacing-200 !default;
 $ibo-panel--header--background-color--is-sticking: $ibo-color-grey-100 !default;
 $ibo-panel--header--border--is-sticking: $ibo-panel--base-border !default;
-$ibo-panel--header--padding-y--is-sticking: 4px !default;
+$ibo-panel--header--padding-y--is-sticking: $ibo-spacing-200 !default;
 
 $ibo-panel--icon--size: 48px !default;
-$ibo-panel--icon--spacing: 16px !default;
+$ibo-panel--icon--spacing: $ibo-spacing-500 !default;
 $ibo-panel--icon--size-as-medallion: 72px !default;
-$ibo-panel--icon--spacing--as-medallion: 16px !default;
+$ibo-panel--icon--spacing--as-medallion: $ibo-spacing-500 !default;
 $ibo-panel--icon--bottom--as-medallion: -24px !default;
 $ibo-panel--icon--background-color--as-medallion: $ibo-color-grey-100 !default;
 $ibo-panel--icon--border--as-medallion: 2px solid $ibo-color-blue-grey-300 !default;
@@ -84,14 +81,12 @@ $ibo-panel--title--color: $ibo-color-grey-900 !default;
 $ibo-panel--subtitle--font-size--is-sticking: $ibo-font-size-100 !default;
 $ibo-panel--subtitle--color: $ibo-color-grey-800 !default;
 
-$ibo-panel--collapsible-toggler--margin-right: 8px !default;
+$ibo-panel--collapsible-toggler--margin-right: $ibo-spacing-300 !default;
 $ibo-panel--collapsible-toggler--font-size: $ibo-font-size-250 !default;
 $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
 /* Rules */
-.ibo-panel + .ibo-panel {
-  margin-top: $ibo-panel--spacing-top;
-}
+
 
 .ibo-panel {
   --ibo-main-color: map-get($ibo-panel-colors, 'neutral'); /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */

@@ -9,7 +9,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
     scrollCollapse: true,
     paging: false,
     filter: false,
-    autoWidth: false,
     search: false,
     dom: "t",
     "order": [],
@@ -24,7 +23,11 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {orderable: false, targets: 0}
     ],
     {% endif %}
-    drawCallback: function () {
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
         // Hiding pagination if only one page
         if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
         {
@@ -63,11 +66,6 @@ if ($("#{{ oUIBlock.GetId() }}").height() > 0)
     }
 }
 {% endif %}
-
-if ($('#{{ oUIBlock.GetId() }}').find('thead').is(':visible'))
-{
-    oTable{{ sListIDForVarSuffix }}.columns.adjust().draw();
-}
 
 if (window.ResizeObserver)
 {

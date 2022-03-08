@@ -5,10 +5,10 @@
 
 /* SCSS variables */
 /* - Entry group */
-$ibo-activity-panel--entry-group--margin-bottom: 24px !default;
+$ibo-activity-panel--entry-group--margin-bottom: $ibo-spacing-600 !default;
 
 /* - Entry */
-$ibo-activity-entry--medallion--margin-with-information: 8px !default;
+$ibo-activity-entry--medallion--margin-with-information: $ibo-spacing-300 !default;
 $ibo-activity-entry--medallion--margin-bottom: 18px !default;
 $ibo-activity-entry--medallion--diameter: 32px !default;
 $ibo-activity-entry--medallion--border-radius: $ibo-border-radius-full !default;
@@ -20,8 +20,8 @@ $ibo-activity-entry--medallion--has-no-image--border: 1px solid $ibo-color-grey-
 
 $ibo-activity-entry--information--margin-to-other-side: $ibo-activity-entry--medallion--diameter + $ibo-activity-entry--medallion--margin-with-information !default;
 
-$ibo-activity-entry--main-information--padding-x: 16px !default;
-$ibo-activity-entry--main-information--padding-y: 12px !default;
+$ibo-activity-entry--main-information--padding-x: $ibo-spacing-500 !default;
+$ibo-activity-entry--main-information--padding-y: $ibo-spacing-400 !default;
 $ibo-activity-entry--main-information--text-color: $ibo-color-grey-800 !default;
 $ibo-activity-entry--main-information--background-color: $ibo-color-grey-200 !default;
 $ibo-activity-entry--main-information--border-radius: $ibo-border-radius-500 !default;
@@ -37,9 +37,9 @@ $ibo-activity-entry--main-information--is-closed--placeholder-top: 30px !default
 $ibo-activity-entry--main-information--is-closed--placeholder-padding-left: $ibo-activity-entry--main-information--padding-x !default;
 
 $ibo-activity-entry--main-information-icon--text-color: $ibo-color-grey-700 !default;
-$ibo-activity-entry--main-information-icon--font-size: 16px !default;
+$ibo-activity-entry--main-information-icon--font-size: $ibo-font-size-200 !default;
 
-$ibo-activity-entry--sub-information--margin-top: 4px !default;
+$ibo-activity-entry--sub-information--margin-top: $ibo-spacing-200 !default;
 $ibo-activity-entry--sub-information--margin-bottom: $ibo-activity-entry--sub-information--margin-top !default;
 $ibo-activity-entry--sub-information--text-color: $ibo-color-grey-700 !default;
 
@@ -81,7 +81,7 @@ $ibo-activity-panel--load-all-entries--is-hover--margin-left: ($ibo-activity-pan
 	/* Current or not user specificities */
 	&.ibo-is-current-user{
 		flex-direction: row-reverse;
-    min-width: max-content;
+    min-width: min-content;
 
 		.ibo-activity-entry--medallion{
 			margin-right: initial;

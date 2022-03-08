@@ -12,20 +12,20 @@
     "ext-soap": "*",
     "combodo/tcpdf": "6.3.5",
     "nikic/php-parser": "^4.12.0",
-    "pear/archive_tar": "1.4.13",
+    "pear/archive_tar": "1.4.14",
     "pelago/emogrifier": "3.1.0",
     "scssphp/scssphp": "1.0.6",
     "swiftmailer/swiftmailer": "5.4.12",
-    "symfony/console": "3.4.*",
-    "symfony/dotenv": "3.4.*",
-    "symfony/framework-bundle": "3.4.*",
+    "symfony/console": "~3.4.47",
+    "symfony/dotenv": "~3.4.47",
+    "symfony/framework-bundle": "~3.4.47",
     "symfony/polyfill-php70": "1.*",
-    "symfony/twig-bundle": "3.4.*",
-    "symfony/yaml": "3.4.*"
+    "symfony/twig-bundle": "~3.4.47",
+    "symfony/yaml": "~3.4.47"
   },
   "require-dev": {
-    "symfony/stopwatch": "3.4.*",
-    "symfony/web-profiler-bundle": "3.4.*"
+    "symfony/stopwatch": "~3.4.47",
+    "symfony/web-profiler-bundle": "~3.4.47"
   },
   "suggest": {
     "ext-libsodium": "Required to use the AttributeEncryptedString.",

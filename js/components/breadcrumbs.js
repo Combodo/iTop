@@ -103,9 +103,7 @@ $(function()
                         if (oEntry['icon_type'] === 'css_classes')
                         {
 	                        sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><span class="'+oEntry['icon']+'"/></span></span>';
-                        }
-                        else if (oEntry['icon'].length > 0)
-                        {
+                        } else if (oEntry['icon'].length > 0) {
 	                        // Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/
 	                        sIconSpec = '<span class="ibo-breadcrumbs--item-icon"><img src="'+oEntry['icon']+'" alt=""/></span>';
                         }
@@ -115,10 +113,10 @@ $(function()
 						if (sTitle.length === 0) {
 							sTitle = sLabel;
 						}
-						sTitle = EncodeHtml(sTitle, false);
-						sLabel = EncodeHtml(sLabel, false);
+						sTitle = CombodoSanitizer.EscapeHtml(sTitle, false);
+						sLabel = CombodoSanitizer.EscapeHtml(sLabel, false);
 
-						if ((this.options.new_entry !== null) && (iEntry === aBreadCrumb.length - 1)) {
+						if ((this.options.new_entry !== null) && (iEntry === aBreadCrumb.length-1)) {
 							// Last entry is the current page
 							sBreadcrumbsItemHtml += '<span class="ibo-is-current" data-role="" data-breadcrumb-entry-number="'+iEntry+'" title="'+sTitle+'">'+sIconSpec+'<span class="ibo-breadcrumbs--item-label">'+sLabel+'</span></span>';
 						} else {
@@ -151,7 +149,9 @@ $(function()
 			this.element.find(this.js_selectors.previous_items_list_toggler).off('click');
 
 			// Remove observers
-			this.items_observer.disconnect();
+			if (this.items_observer !== null) {
+				this.items_observer.disconnect();
+			}
 
 			// Clear any existing entries in the markup
 			this.element.find(this.js_selectors.item).remove();

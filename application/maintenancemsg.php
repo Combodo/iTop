@@ -77,17 +77,28 @@ function _MaintenanceHtmlMessage($sMessage)
  */
 function _MaintenanceJsonMessage($sTitle, $sMessage)
 {
-	@include_once(APPROOT."/application/ajaxwebpage.class.inc.php");
-	if (class_exists('ajax_page'))
+	if (class_exists('JsonPage'))
 	{
-		$oP = new ajax_page($sTitle);
+		$oP = new JsonPage($sTitle);
 		$oP->add_header('Access-Control-Allow-Origin: *');
-		$oP->SetContentType('application/json');
-		$oP->add('{"code":100, "message":"'.$sMessage.'"}');
+
+		$aMessage = [
+			'code' => 100,
+			'message' =>$sMessage
+		];
+
+		$oP->AddData($aMessage);
 		$oP->Output();
-	}
-	else
-	{
-		_MaintenanceTextMessage($sMessage);
+	} else {
+		@include_once(APPROOT."/application/ajaxwebpage.class.inc.php");
+		if (class_exists('ajax_page')) {
+			$oP = new ajax_page($sTitle);
+			$oP->add_header('Access-Control-Allow-Origin: *');
+			$oP->SetContentType('application/json');
+			$oP->add('{"code":100, "message":"'.$sMessage.'"}');
+			$oP->Output();
+		} else {
+			_MaintenanceTextMessage($sMessage);
+		}
 	}
 }

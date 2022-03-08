@@ -6,12 +6,15 @@
 /* SCSS variables */
 $ibo-quick-create--head--background-color: $ibo-color-white-100 !default;
 
-$ibo-quick-create--icon-padding-x: 16px !default;
-$ibo-quick-create--icon-padding-y: 0 !default;
+$ibo-quick-create--icon-padding-x: $ibo-spacing-500 !default;
+$ibo-quick-create--icon-padding-y: $ibo-spacing-0 !default;
+$ibo-quick-create--icon--color: $ibo-color-primary-600 !default;
+$ibo-quick-create--icon--color--on-hover: $ibo-color-primary-700 !default;
+$ibo-quick-create--icon--color--on-active: $ibo-color-primary-800 !default;
 
 $ibo-quick-create--input--padding: 0 default;
-$ibo-quick-create--input--padding-x--is-opened: 8px !default;
-$ibo-quick-create--input--padding-y--is-opened: 8px !default;
+$ibo-quick-create--input--padding-x--is-opened: $ibo-spacing-300 !default;
+$ibo-quick-create--input--padding-y--is-opened: $ibo-spacing-300 !default;
 $ibo-quick-create--input--width: 0 !default;
 $ibo-quick-create--input--width--is-opened: 245px !default;
 $ibo-quick-create--input--text-color: $ibo-color-grey-800 !default;
@@ -23,37 +26,37 @@ $ibo-quick-create--input-options--border-radius: 0 !default;
 
 $ibo-quick-create--drawer--max-height: 300px !default;
 $ibo-quick-create--drawer--padding-x: $ibo-quick-create--icon-padding-x !default;
-$ibo-quick-create--drawer--padding-y: 16px !default;
-$ibo-quick-create--drawer--top: -1 * ($ibo-quick-create--drawer--max-height) !default;
+$ibo-quick-create--drawer--padding-y: $ibo-spacing-500 !default;
+$ibo-quick-create--drawer--top: -1 * ($ibo-quick-create--drawer--max-height) - 10 !default; /* 10px of margin to avoid to be slightly visible when closed and has a lot of history */
 $ibo-quick-create--drawer--top--is-opened: 100% !default;
 $ibo-quick-create--drawer--background-color: $ibo-color-white-100 !default;
 
-$ibo-quick-create--compartment-title--margin-top: 8px !default;
+$ibo-quick-create--compartment-title--margin-top: $ibo-spacing-300 !default;
 $ibo-quick-create--compartment-title--margin-bottom: $ibo-quick-create--compartment-title--margin-top !default;
-$ibo-quick-create--compartment-title--padding-left: 32px !default;
-$ibo-quick-create--compartment-title--text-color: $ibo-color-grey-600 !default;
-$ibo-quick-create--compartment-title--line-spacing: 8px !default;
+$ibo-quick-create--compartment-title--padding-left: $ibo-spacing-700 !default;
+$ibo-quick-create--compartment-title--text-color: $ibo-color-grey-800 !default;
+$ibo-quick-create--compartment-title--line-spacing: $ibo-spacing-300 !default;
 
 $ibo-quick-create--compartment-content--text-color: $ibo-color-grey-900 !default;
 
-$ibo-quick-create--compartment-element--padding-x: 8px !default;
-$ibo-quick-create--compartment-element--padding-y: 4px !default;
+$ibo-quick-create--compartment-element--padding-x: $ibo-spacing-300 !default;
+$ibo-quick-create--compartment-element--padding-y: $ibo-spacing-200 !default;
 $ibo-quick-create--compartment-element--margin-x: -1 * $ibo-quick-create--compartment-element--padding-x !default;
 $ibo-quick-create--compartment-element--background-color--is-active: $ibo-color-grey-200 !default;
 $ibo-quick-create--compartment-element--border-radius--is-active: $ibo-border-radius-300 !default;
 
-$ibo-quick-create--compartment-element-image--margin-right: 8px !default;
+$ibo-quick-create--compartment-element-image--margin-right: $ibo-spacing-300 !default;
 $ibo-quick-create--compartment-element-image--width: 20px !default;
 
 $ibo-quick-create--compartment-results--container--width: 100% !important !default;
 
-$ibo-quick-create--compartment--placeholder-image--margin-top: 24px !default;
-$ibo-quick-create--compartment--placeholder-image--margin-bottom: 16px !default;
+$ibo-quick-create--compartment--placeholder-image--margin-top: $ibo-spacing-600 !default;
+$ibo-quick-create--compartment--placeholder-image--margin-bottom: $ibo-spacing-500 !default;
 $ibo-quick-create--compartment--placeholder-image--margin-x: auto !default;
 $ibo-quick-create--compartment--placeholder-image--width: 66% !default;
 
-$ibo-quick-create--compartment--placeholder-hint--padding-x: 8px !default;
-$ibo-quick-create--compartment--placeholder-hint--padding-y: 0 !default;
+$ibo-quick-create--compartment--placeholder-hint--padding-x: $ibo-spacing-300 !default;
+$ibo-quick-create--compartment--placeholder-hint--padding-y: $ibo-spacing-0 !default;
 $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-700 !default;
 
 /* Animations*/
@@ -91,9 +94,17 @@ $ibo-quick-create--compartment--placeholder-hint--text-color: $ibo-color-grey-70
 	background-color: $ibo-quick-create--head--background-color;
 }
 .ibo-quick-create--icon{
+  color: $ibo-quick-create--icon--color;
 	align-self: center;
 	padding: $ibo-quick-create--icon-padding-y $ibo-quick-create--icon-padding-x;
 	@extend %ibo-font-ral-nor-400;
+  
+  &:hover{
+    color: $ibo-quick-create--icon--color--on-hover;
+  }
+  &:active{
+    color: $ibo-quick-create--icon--color--on-active;
+  }
 }
 .ibo-quick-create--input{
 	width: $ibo-quick-create--input--width;

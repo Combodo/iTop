@@ -484,9 +484,9 @@ $(function()
 				this.indicator.html('<img src="../images/indicator.gif">');
 
 				$.post(this.options.submit_to, oParams, function(data){
-					me.datatable.find('tbody').append(data);
+					// From data variable we get data entry and insert the first (and only) one
+					me.datatable.DataTable().row.add(data.data[0]).draw();
 					$('#datatable_'+me.id+' .dataTables_empty').hide();
-				//$('#linkedset_'+me.id+' .listResults tbody').append(data);
 
 					me._updateTable();
 					me.indicator.html('');

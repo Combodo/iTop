@@ -1,8 +1,7 @@
 {% set aParams = oUIBlock.GetParams() %}
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-field ibo-field-{{ oUIBlock.GetLayout() }}
-        {% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}
-        {% if oUIBlock.GetAdditionalCSSClassesAsString() %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-field-{{ oUIBlock.GetLayout() }}
+        {% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
      data-role="ibo-field"
      data-attribute-code="{{ oUIBlock.GetAttCode() }}"
      data-attribute-type="{{ oUIBlock.GetAttType() }}"
@@ -16,7 +15,7 @@
      data-attribute-flag-must-change="{{ oUIBlock.IsMustChange()|var_export }}"
      data-attribute-flag-must-prompt="{{ oUIBlock.IsMustPrompt()|var_export }}"
      data-attribute-flag-slave="{{ oUIBlock.IsSlave()|var_export }}"
-     data-value-raw="{{ aParams.value_raw }}"
+     data-value-raw="{{ oUIBlock.GetValueRaw() }}"
         {% if oUIBlock.GetDataAttributes() %}
             {% for sName, sValue in oUIBlock.GetDataAttributes() %}
                 data-{{ sName }}="{{ sValue }}"

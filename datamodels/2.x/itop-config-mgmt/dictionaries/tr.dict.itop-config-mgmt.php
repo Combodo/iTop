@@ -81,15 +81,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkContactToFunctionalCI' => 'Link Contact / FunctionalCI~~',
+	'Class:lnkContactToFunctionalCI' => 'Kişi / İşlevsel CI bağla',
 	'Class:lnkContactToFunctionalCI+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id' => 'İşlevsel CI',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name' => 'İşlevsel CI Adı',
 	'Class:lnkContactToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Contact~~',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_id' => 'Kişi',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_id+' => '~~',
-	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Contact name~~',
+	'Class:lnkContactToFunctionalCI/Attribute:contact_name' => 'Kişi Adı',
 	'Class:lnkContactToFunctionalCI/Attribute:contact_name+' => '~~',
 ));
 
@@ -102,33 +102,33 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:FunctionalCI+' => '',
 	'Class:FunctionalCI/Attribute:name' => 'Adı',
 	'Class:FunctionalCI/Attribute:name+' => '',
-	'Class:FunctionalCI/Attribute:description' => 'Description~~',
+	'Class:FunctionalCI/Attribute:description' => 'Açıklama',
 	'Class:FunctionalCI/Attribute:description+' => '~~',
 	'Class:FunctionalCI/Attribute:org_id' => 'Sahip kurum',
 	'Class:FunctionalCI/Attribute:org_id+' => '',
-	'Class:FunctionalCI/Attribute:organization_name' => 'Organization name~~',
-	'Class:FunctionalCI/Attribute:organization_name+' => 'Common name~~',
-	'Class:FunctionalCI/Attribute:business_criticity' => 'Business criticity~~',
+	'Class:FunctionalCI/Attribute:organization_name' => 'Organizasyon Adı',
+	'Class:FunctionalCI/Attribute:organization_name+' => 'Ortak Adı',
+	'Class:FunctionalCI/Attribute:business_criticity' => 'İşin önemi',
 	'Class:FunctionalCI/Attribute:business_criticity+' => '~~',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'high~~',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'high~~',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'low~~',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => 'low~~',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'medium~~',
-	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'medium~~',
-	'Class:FunctionalCI/Attribute:move2production' => 'Move to production date~~',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high' => 'yüksek',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:high+' => 'yüksek',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low' => 'düşük',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:low+' => 'düşük',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium' => 'orta',
+	'Class:FunctionalCI/Attribute:business_criticity/Value:medium+' => 'orta',
+	'Class:FunctionalCI/Attribute:move2production' => 'Üretim tarihine geç',
 	'Class:FunctionalCI/Attribute:move2production+' => '~~',
-	'Class:FunctionalCI/Attribute:contacts_list' => 'Contacts~~',
-	'Class:FunctionalCI/Attribute:contacts_list+' => 'All the contacts for this configuration item~~',
-	'Class:FunctionalCI/Attribute:documents_list' => 'Documents~~',
-	'Class:FunctionalCI/Attribute:documents_list+' => 'All the documents linked to this configuration item~~',
-	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Application solutions~~',
-	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'All the application solutions depending on this configuration item~~',
-	'Class:FunctionalCI/Attribute:softwares_list' => 'Softwares~~',
-	'Class:FunctionalCI/Attribute:softwares_list+' => 'All the softwares installed on this configuration item~~',
+	'Class:FunctionalCI/Attribute:contacts_list' => 'Kişiler',
+	'Class:FunctionalCI/Attribute:contacts_list+' => 'Bu yapılandırma öğesi için tüm kişiler',
+	'Class:FunctionalCI/Attribute:documents_list' => 'Belgeler',
+	'Class:FunctionalCI/Attribute:documents_list+' => 'Bu yapılandırma öğesine bağlı tüm belgeler',
+	'Class:FunctionalCI/Attribute:applicationsolution_list' => 'Uygulama sistemleri',
+	'Class:FunctionalCI/Attribute:applicationsolution_list+' => 'Bu yapılandırma öğesine bağlı olan tüm uygulama sistemleri',
+	'Class:FunctionalCI/Attribute:softwares_list' => 'Yazılımlar',
+	'Class:FunctionalCI/Attribute:softwares_list+' => 'Bu yapılandırma öğesinde yüklü tüm yazılımlar',
 	'Class:FunctionalCI/Attribute:finalclass' => 'Tip',
 	'Class:FunctionalCI/Attribute:finalclass+' => '',
-	'Class:FunctionalCI/Tab:OpenedTickets' => 'Active Tickets~~',
+	'Class:FunctionalCI/Tab:OpenedTickets' => 'Aktif Çağrı Kayıtları',
 ));
 
 //
@@ -136,37 +136,37 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:PhysicalDevice' => 'Physical Device~~',
+	'Class:PhysicalDevice' => 'Fiziksel cihaz',
 	'Class:PhysicalDevice+' => '~~',
-	'Class:PhysicalDevice/Attribute:serialnumber' => 'Serial number~~',
+	'Class:PhysicalDevice/Attribute:serialnumber' => 'Seri numarası',
 	'Class:PhysicalDevice/Attribute:serialnumber+' => '~~',
-	'Class:PhysicalDevice/Attribute:location_id' => 'Location~~',
+	'Class:PhysicalDevice/Attribute:location_id' => 'Konum',
 	'Class:PhysicalDevice/Attribute:location_id+' => '~~',
-	'Class:PhysicalDevice/Attribute:location_name' => 'Location name~~',
+	'Class:PhysicalDevice/Attribute:location_name' => 'Konum adı',
 	'Class:PhysicalDevice/Attribute:location_name+' => '~~',
-	'Class:PhysicalDevice/Attribute:status' => 'Status~~',
+	'Class:PhysicalDevice/Attribute:status' => 'Durum',
 	'Class:PhysicalDevice/Attribute:status+' => '~~',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'implementation~~',
-	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'implementation~~',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'obsolete~~',
-	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
-	'Class:PhysicalDevice/Attribute:status/Value:production' => 'production~~',
-	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'production~~',
-	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'stock~~',
-	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'stock~~',
-	'Class:PhysicalDevice/Attribute:brand_id' => 'Brand~~',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation' => 'uygulama',
+	'Class:PhysicalDevice/Attribute:status/Value:implementation+' => 'uygulama',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete' => 'kullanım dışı',
+	'Class:PhysicalDevice/Attribute:status/Value:obsolete+' => 'kullanım dışı',
+	'Class:PhysicalDevice/Attribute:status/Value:production' => 'kullanımda',
+	'Class:PhysicalDevice/Attribute:status/Value:production+' => 'kullanımda',
+	'Class:PhysicalDevice/Attribute:status/Value:stock' => 'stok',
+	'Class:PhysicalDevice/Attribute:status/Value:stock+' => 'stok',
+	'Class:PhysicalDevice/Attribute:brand_id' => 'Marka',
 	'Class:PhysicalDevice/Attribute:brand_id+' => '~~',
-	'Class:PhysicalDevice/Attribute:brand_name' => 'Brand name~~',
+	'Class:PhysicalDevice/Attribute:brand_name' => 'Marka Adı',
 	'Class:PhysicalDevice/Attribute:brand_name+' => '~~',
-	'Class:PhysicalDevice/Attribute:model_id' => 'Model~~',
+	'Class:PhysicalDevice/Attribute:model_id' => 'Model',
 	'Class:PhysicalDevice/Attribute:model_id+' => '~~',
-	'Class:PhysicalDevice/Attribute:model_name' => 'Model name~~',
+	'Class:PhysicalDevice/Attribute:model_name' => 'Model Adı',
 	'Class:PhysicalDevice/Attribute:model_name+' => '~~',
-	'Class:PhysicalDevice/Attribute:asset_number' => 'Asset number~~',
+	'Class:PhysicalDevice/Attribute:asset_number' => 'Demirbaş numarası',
 	'Class:PhysicalDevice/Attribute:asset_number+' => '~~',
-	'Class:PhysicalDevice/Attribute:purchase_date' => 'Purchase date~~',
+	'Class:PhysicalDevice/Attribute:purchase_date' => 'Satın alma tarihi',
 	'Class:PhysicalDevice/Attribute:purchase_date+' => '~~',
-	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'End of warranty~~',
+	'Class:PhysicalDevice/Attribute:end_of_warranty' => 'Garantinin sonu',
 	'Class:PhysicalDevice/Attribute:end_of_warranty+' => '~~',
 ));
 
@@ -175,14 +175,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Rack' => 'Rack~~',
+	'Class:Rack' => 'Raf',
 	'Class:Rack+' => '~~',
-	'Class:Rack/Attribute:nb_u' => 'Rack units~~',
+	'Class:Rack/Attribute:nb_u' => 'Raf birimleri',
 	'Class:Rack/Attribute:nb_u+' => '~~',
-	'Class:Rack/Attribute:device_list' => 'Devices~~',
-	'Class:Rack/Attribute:device_list+' => 'All the physical devices racked into this rack~~',
-	'Class:Rack/Attribute:enclosure_list' => 'Enclosures~~',
-	'Class:Rack/Attribute:enclosure_list+' => 'All the enclosures in this rack~~',
+	'Class:Rack/Attribute:device_list' => 'Cihazlar',
+	'Class:Rack/Attribute:device_list+' => 'Bu rafa yerleştirilmiş tüm fiziksel cihazlar',
+	'Class:Rack/Attribute:enclosure_list' => 'Muhafazalar',
+	'Class:Rack/Attribute:enclosure_list+' => 'Bu raftaki tüm muhafazalar',
 ));
 
 //
@@ -190,9 +190,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:TelephonyCI' => 'Telephony CI~~',
+	'Class:TelephonyCI' => 'Telefon CI',
 	'Class:TelephonyCI+' => '~~',
-	'Class:TelephonyCI/Attribute:phonenumber' => 'Phone number~~',
+	'Class:TelephonyCI/Attribute:phonenumber' => 'Telefon numarası',
 	'Class:TelephonyCI/Attribute:phonenumber+' => '~~',
 ));
 
@@ -201,7 +201,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Phone' => 'Phone~~',
+	'Class:Phone' => 'Telefon',
 	'Class:Phone+' => '~~',
 ));
 
@@ -223,7 +223,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:IPPhone' => 'IP Phone~~',
+	'Class:IPPhone' => 'IP telefonu',
 	'Class:IPPhone+' => '~~',
 ));
 
@@ -232,7 +232,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Tablet' => 'Tablet~~',
+	'Class:Tablet' => 'Tablet',
 	'Class:Tablet+' => '~~',
 ));
 
@@ -243,10 +243,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ConnectableCI' => 'Bağlanabilir KK',
 	'Class:ConnectableCI+' => 'Fiziksel KK',
-	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Network devices~~',
-	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'All network devices connected to this device~~',
-	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Network interfaces~~',
-	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'All the physical network interfaces~~',
+	'Class:ConnectableCI/Attribute:networkdevice_list' => 'Ağ Aygıtları',
+	'Class:ConnectableCI/Attribute:networkdevice_list+' => 'Bu cihaza bağlı tüm ağ cihazları',
+	'Class:ConnectableCI/Attribute:physicalinterface_list' => 'Ağ arayüzleri',
+	'Class:ConnectableCI/Attribute:physicalinterface_list+' => 'Tüm fiziksel ağ arayüzleri',
 ));
 
 //
@@ -254,37 +254,37 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:DatacenterDevice' => 'Datacenter Device~~',
+	'Class:DatacenterDevice' => 'Veri merkezi cihazı',
 	'Class:DatacenterDevice+' => '~~',
-	'Class:DatacenterDevice/Attribute:rack_id' => 'Rack~~',
+	'Class:DatacenterDevice/Attribute:rack_id' => 'Raf',
 	'Class:DatacenterDevice/Attribute:rack_id+' => '~~',
-	'Class:DatacenterDevice/Attribute:rack_name' => 'Rack name~~',
+	'Class:DatacenterDevice/Attribute:rack_name' => 'Raf Adı',
 	'Class:DatacenterDevice/Attribute:rack_name+' => '~~',
-	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Enclosure~~',
+	'Class:DatacenterDevice/Attribute:enclosure_id' => 'Muhafaza',
 	'Class:DatacenterDevice/Attribute:enclosure_id+' => '~~',
-	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Enclosure name~~',
+	'Class:DatacenterDevice/Attribute:enclosure_name' => 'Muhafaza adı',
 	'Class:DatacenterDevice/Attribute:enclosure_name+' => '~~',
-	'Class:DatacenterDevice/Attribute:nb_u' => 'Rack units~~',
+	'Class:DatacenterDevice/Attribute:nb_u' => 'Raf birimleri',
 	'Class:DatacenterDevice/Attribute:nb_u+' => '~~',
-	'Class:DatacenterDevice/Attribute:managementip' => 'Management ip~~',
+	'Class:DatacenterDevice/Attribute:managementip' => 'Yönetim IP',
 	'Class:DatacenterDevice/Attribute:managementip+' => '~~',
-	'Class:DatacenterDevice/Attribute:powerA_id' => 'PowerA source~~',
+	'Class:DatacenterDevice/Attribute:powerA_id' => 'A Güç kaynağı',
 	'Class:DatacenterDevice/Attribute:powerA_id+' => '~~',
-	'Class:DatacenterDevice/Attribute:powerA_name' => 'PowerA source name~~',
+	'Class:DatacenterDevice/Attribute:powerA_name' => 'A Güç kaynağı adı',
 	'Class:DatacenterDevice/Attribute:powerA_name+' => '~~',
-	'Class:DatacenterDevice/Attribute:powerB_id' => 'PowerB source~~',
+	'Class:DatacenterDevice/Attribute:powerB_id' => 'B Güç kaynağı',
 	'Class:DatacenterDevice/Attribute:powerB_id+' => '~~',
-	'Class:DatacenterDevice/Attribute:powerB_name' => 'PowerB source name~~',
+	'Class:DatacenterDevice/Attribute:powerB_name' => 'B Güç  Kaynağı adı',
 	'Class:DatacenterDevice/Attribute:powerB_name+' => '~~',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC ports~~',
-	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'All the fiber channel interfaces for this device~~',
-	'Class:DatacenterDevice/Attribute:san_list' => 'SANs~~',
-	'Class:DatacenterDevice/Attribute:san_list+' => 'All the SAN switches connected to this device~~',
-	'Class:DatacenterDevice/Attribute:redundancy' => 'Redundancy~~',
-	'Class:DatacenterDevice/Attribute:redundancy/count' => 'The device is up if at least one power connection (A or B) is up~~',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list' => 'FC Portları',
+	'Class:DatacenterDevice/Attribute:fiberinterfacelist_list+' => 'Bu cihaz için tüm fiber kanal arayüzleri',
+	'Class:DatacenterDevice/Attribute:san_list' => 'SAN\'lar',
+	'Class:DatacenterDevice/Attribute:san_list+' => 'Bu cihaza bağlı tüm SAN anahtarları',
+	'Class:DatacenterDevice/Attribute:redundancy' => 'Yedeklilik',
+	'Class:DatacenterDevice/Attribute:redundancy/count' => 'En az bir güç bağlantısı (A veya B) ayakta ise, cihaz ayaktadır',
 	// Unused yet
-	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'The device is up if all its power connections are up~~',
-	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'The device is up if at least %1$s %% of its power connections are up~~',
+	'Class:DatacenterDevice/Attribute:redundancy/disabled' => 'Tüm güç bağlantıları ayakta ise, cihaz ayaktadır',
+	'Class:DatacenterDevice/Attribute:redundancy/percent' => 'En az %1$s %% güç bağlantısı ayakta ise cihaz ayaktadır',
 ));
 
 //
@@ -294,15 +294,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:NetworkDevice' => 'Ağ Cihazı',
 	'Class:NetworkDevice+' => '',
-	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Network type~~',
+	'Class:NetworkDevice/Attribute:networkdevicetype_id' => 'Ağ tipi',
 	'Class:NetworkDevice/Attribute:networkdevicetype_id+' => '~~',
-	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Network type name~~',
+	'Class:NetworkDevice/Attribute:networkdevicetype_name' => 'Ağ tipi adı',
 	'Class:NetworkDevice/Attribute:networkdevicetype_name+' => '~~',
-	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Devices~~',
-	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'All the devices connected to this network device~~',
-	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS version~~',
+	'Class:NetworkDevice/Attribute:connectablecis_list' => 'Cihazlar',
+	'Class:NetworkDevice/Attribute:connectablecis_list+' => 'Bu ağ cihazına bağlı tüm cihazlar',
+	'Class:NetworkDevice/Attribute:iosversion_id' => 'IOS sürümü',
 	'Class:NetworkDevice/Attribute:iosversion_id+' => '~~',
-	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS version name~~',
+	'Class:NetworkDevice/Attribute:iosversion_name' => 'IOS Sürüm Adı',
 	'Class:NetworkDevice/Attribute:iosversion_name+' => '~~',
 	'Class:NetworkDevice/Attribute:ram' => 'RAM',
 	'Class:NetworkDevice/Attribute:ram+' => '',
@@ -315,24 +315,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Server' => 'Sunucu',
 	'Class:Server+' => '',
-	'Class:Server/Attribute:osfamily_id' => 'OS family~~',
+	'Class:Server/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:Server/Attribute:osfamily_id+' => '~~',
-	'Class:Server/Attribute:osfamily_name' => 'OS family name~~',
+	'Class:Server/Attribute:osfamily_name' => 'OS Aile Adı',
 	'Class:Server/Attribute:osfamily_name+' => '~~',
-	'Class:Server/Attribute:osversion_id' => 'OS version~~',
+	'Class:Server/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:Server/Attribute:osversion_id+' => '~~',
-	'Class:Server/Attribute:osversion_name' => 'OS version name~~',
+	'Class:Server/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:Server/Attribute:osversion_name+' => '~~',
-	'Class:Server/Attribute:oslicence_id' => 'OS licence~~',
+	'Class:Server/Attribute:oslicence_id' => 'OS Lisansı',
 	'Class:Server/Attribute:oslicence_id+' => '~~',
-	'Class:Server/Attribute:oslicence_name' => 'OS licence name~~',
+	'Class:Server/Attribute:oslicence_name' => 'OS Lisans Adı',
 	'Class:Server/Attribute:oslicence_name+' => '~~',
 	'Class:Server/Attribute:cpu' => 'CPU',
 	'Class:Server/Attribute:cpu+' => '',
 	'Class:Server/Attribute:ram' => 'RAM',
 	'Class:Server/Attribute:ram+' => '',
-	'Class:Server/Attribute:logicalvolumes_list' => 'Logical volumes~~',
-	'Class:Server/Attribute:logicalvolumes_list+' => 'All the logical volumes connected to this server~~',
+	'Class:Server/Attribute:logicalvolumes_list' => 'Mantıksal depolama alanları',
+	'Class:Server/Attribute:logicalvolumes_list+' => 'Bu sunucuya bağlı tüm mantıksal depolama alanları',
 ));
 
 //
@@ -340,10 +340,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:StorageSystem' => 'Storage System~~',
+	'Class:StorageSystem' => 'Depolama sistemi',
 	'Class:StorageSystem+' => '~~',
-	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Logical volumes~~',
-	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'All the logical volumes in this storage system~~',
+	'Class:StorageSystem/Attribute:logicalvolume_list' => 'Mantıksal depolama alanları',
+	'Class:StorageSystem/Attribute:logicalvolume_list+' => 'Bu depolama sistemindeki tüm mantıksal depolama alanları',
 ));
 
 //
@@ -351,10 +351,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:SANSwitch' => 'SAN Switch~~',
+	'Class:SANSwitch' => 'SAN Anahtarı',
 	'Class:SANSwitch+' => '~~',
-	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Devices~~',
-	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'All the devices connected to this SAN switch~~',
+	'Class:SANSwitch/Attribute:datacenterdevice_list' => 'Cihazlar',
+	'Class:SANSwitch/Attribute:datacenterdevice_list+' => 'Bu SAN anahtarına bağlı tüm cihazlar',
 ));
 
 //
@@ -362,10 +362,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:TapeLibrary' => 'Tape Library~~',
+	'Class:TapeLibrary' => 'Teyp Kütüphanesi',
 	'Class:TapeLibrary+' => '~~',
-	'Class:TapeLibrary/Attribute:tapes_list' => 'Tapes~~',
-	'Class:TapeLibrary/Attribute:tapes_list+' => 'All the tapes in the tape library~~',
+	'Class:TapeLibrary/Attribute:tapes_list' => 'Teypler',
+	'Class:TapeLibrary/Attribute:tapes_list+' => 'Teyp kitaplığındaki tüm teypler',
 ));
 
 //
@@ -373,10 +373,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:NAS' => 'NAS~~',
+	'Class:NAS' => 'NAS',
 	'Class:NAS+' => '~~',
-	'Class:NAS/Attribute:nasfilesystem_list' => 'Filesystems~~',
-	'Class:NAS/Attribute:nasfilesystem_list+' => 'All the file systems in this NAS~~',
+	'Class:NAS/Attribute:nasfilesystem_list' => 'Dosya sistemleri',
+	'Class:NAS/Attribute:nasfilesystem_list+' => 'Bu NAS\'daki tüm dosya sistemleri',
 ));
 
 //
@@ -386,24 +386,24 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:PC' => 'PC',
 	'Class:PC+' => '',
-	'Class:PC/Attribute:osfamily_id' => 'OS family~~',
+	'Class:PC/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:PC/Attribute:osfamily_id+' => '~~',
-	'Class:PC/Attribute:osfamily_name' => 'OS family name~~',
+	'Class:PC/Attribute:osfamily_name' => 'OS Aile Adı',
 	'Class:PC/Attribute:osfamily_name+' => '~~',
-	'Class:PC/Attribute:osversion_id' => 'OS version~~',
+	'Class:PC/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:PC/Attribute:osversion_id+' => '~~',
-	'Class:PC/Attribute:osversion_name' => 'OS version name~~',
+	'Class:PC/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:PC/Attribute:osversion_name+' => '~~',
 	'Class:PC/Attribute:cpu' => 'CPU',
 	'Class:PC/Attribute:cpu+' => '',
 	'Class:PC/Attribute:ram' => 'RAM',
 	'Class:PC/Attribute:ram+' => '',
-	'Class:PC/Attribute:type' => 'Type~~',
+	'Class:PC/Attribute:type' => 'Tip',
 	'Class:PC/Attribute:type+' => '~~',
-	'Class:PC/Attribute:type/Value:desktop' => 'desktop~~',
-	'Class:PC/Attribute:type/Value:desktop+' => 'desktop~~',
-	'Class:PC/Attribute:type/Value:laptop' => 'laptop~~',
-	'Class:PC/Attribute:type/Value:laptop+' => 'laptop~~',
+	'Class:PC/Attribute:type/Value:desktop' => 'masaüstü',
+	'Class:PC/Attribute:type/Value:desktop+' => 'masaüstü',
+	'Class:PC/Attribute:type/Value:laptop' => 'dizüstü',
+	'Class:PC/Attribute:type/Value:laptop+' => 'dizüstü',
 ));
 
 //
@@ -420,7 +420,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:PowerConnection' => 'Power Connection~~',
+	'Class:PowerConnection' => 'Güç Bağlantısı',
 	'Class:PowerConnection+' => '~~',
 ));
 
@@ -429,10 +429,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:PowerSource' => 'Power Source~~',
+	'Class:PowerSource' => 'Güç Kaynağı',
 	'Class:PowerSource+' => '~~',
-	'Class:PowerSource/Attribute:pdus_list' => 'PDUs~~',
-	'Class:PowerSource/Attribute:pdus_list+' => 'All the PDUs using this power source~~',
+	'Class:PowerSource/Attribute:pdus_list' => 'PDU\'lar',
+	'Class:PowerSource/Attribute:pdus_list+' => 'Bu güç kaynağını kullanan tüm PDU\'lar',
 ));
 
 //
@@ -440,15 +440,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:PDU' => 'PDU~~',
+	'Class:PDU' => 'PDU',
 	'Class:PDU+' => '~~',
-	'Class:PDU/Attribute:rack_id' => 'Rack~~',
+	'Class:PDU/Attribute:rack_id' => 'Raf',
 	'Class:PDU/Attribute:rack_id+' => '~~',
-	'Class:PDU/Attribute:rack_name' => 'Rack name~~',
+	'Class:PDU/Attribute:rack_name' => 'Raf Adı',
 	'Class:PDU/Attribute:rack_name+' => '~~',
-	'Class:PDU/Attribute:powerstart_id' => 'Power start~~',
+	'Class:PDU/Attribute:powerstart_id' => 'Güç başlatıcı',
 	'Class:PDU/Attribute:powerstart_id+' => '~~',
-	'Class:PDU/Attribute:powerstart_name' => 'Power start name~~',
+	'Class:PDU/Attribute:powerstart_name' => 'Güç başlatıcı adı',
 	'Class:PDU/Attribute:powerstart_name+' => '~~',
 ));
 
@@ -457,7 +457,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Peripheral' => 'Peripheral~~',
+	'Class:Peripheral' => 'Çevresel Birim',
 	'Class:Peripheral+' => '~~',
 ));
 
@@ -466,16 +466,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Enclosure' => 'Enclosure~~',
+	'Class:Enclosure' => 'Muhafaza',
 	'Class:Enclosure+' => '~~',
-	'Class:Enclosure/Attribute:rack_id' => 'Rack~~',
+	'Class:Enclosure/Attribute:rack_id' => 'Raf',
 	'Class:Enclosure/Attribute:rack_id+' => '~~',
-	'Class:Enclosure/Attribute:rack_name' => 'Rack name~~',
+	'Class:Enclosure/Attribute:rack_name' => 'Raf Adı',
 	'Class:Enclosure/Attribute:rack_name+' => '~~',
-	'Class:Enclosure/Attribute:nb_u' => 'Rack units~~',
+	'Class:Enclosure/Attribute:nb_u' => 'Raf birimleri',
 	'Class:Enclosure/Attribute:nb_u+' => '~~',
-	'Class:Enclosure/Attribute:device_list' => 'Devices~~',
-	'Class:Enclosure/Attribute:device_list+' => 'All the devices in this enclosure~~',
+	'Class:Enclosure/Attribute:device_list' => 'Cihazlar',
+	'Class:Enclosure/Attribute:device_list+' => 'Bu muhafazadaki tüm cihazlar',
 ));
 
 //
@@ -485,20 +485,20 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ApplicationSolution' => 'Uygulama çözümleri',
 	'Class:ApplicationSolution+' => '',
-	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs~~',
-	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'All the configuration items that compose this application solution~~',
-	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'Business processes~~',
-	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'All the business processes depending on this application solution~~',
-	'Class:ApplicationSolution/Attribute:status' => 'Status~~',
+	'Class:ApplicationSolution/Attribute:functionalcis_list' => 'CIs',
+	'Class:ApplicationSolution/Attribute:functionalcis_list+' => 'Bu uygulama sistemü oluşturan tüm yapılandırma öğeleri',
+	'Class:ApplicationSolution/Attribute:businessprocess_list' => 'İş Süreçleri',
+	'Class:ApplicationSolution/Attribute:businessprocess_list+' => 'Bu uygulama sistemüne bağlı tüm iş süreçleri',
+	'Class:ApplicationSolution/Attribute:status' => 'Durum',
 	'Class:ApplicationSolution/Attribute:status+' => '~~',
-	'Class:ApplicationSolution/Attribute:status/Value:active' => 'active~~',
-	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'active~~',
-	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'inactive~~',
-	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'inactive~~',
-	'Class:ApplicationSolution/Attribute:redundancy' => 'Impact analysis: configuration of the redundancy~~',
-	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'The solution is up if all CIs are up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/count' => 'The solution is up if at least %1$s CI(s) is(are) up~~',
-	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'The solution is up if at least %1$s %% of the CIs are up~~',
+	'Class:ApplicationSolution/Attribute:status/Value:active' => 'Aktif',
+	'Class:ApplicationSolution/Attribute:status/Value:active+' => 'Aktif',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive' => 'Aktif değil',
+	'Class:ApplicationSolution/Attribute:status/Value:inactive+' => 'Aktif değil',
+	'Class:ApplicationSolution/Attribute:redundancy' => 'Etki Analizi: Yedekliliğin Yapılandırılması',
+	'Class:ApplicationSolution/Attribute:redundancy/disabled' => 'Tüm CI\'ler hazır ise sistem hazırdır',
+	'Class:ApplicationSolution/Attribute:redundancy/count' => 'CI\'lerin en az %1$s \'i hazır ise sistem hazırdır',
+	'Class:ApplicationSolution/Attribute:redundancy/percent' => 'CI\'lerin en az %1$s %% \'i hazır ise sistem hazırdır.',
 ));
 
 //
@@ -508,14 +508,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:BusinessProcess' => 'İş süreci',
 	'Class:BusinessProcess+' => '',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Application solutions~~',
-	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'All the application solutions that impact this business process~~',
-	'Class:BusinessProcess/Attribute:status' => 'Status~~',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list' => 'Uygulama sistemleri',
+	'Class:BusinessProcess/Attribute:applicationsolutions_list+' => 'Bu iş sürecini etkileyen tüm uygulama çözümleri',
+	'Class:BusinessProcess/Attribute:status' => 'Durum',
 	'Class:BusinessProcess/Attribute:status+' => '~~',
-	'Class:BusinessProcess/Attribute:status/Value:active' => 'active~~',
-	'Class:BusinessProcess/Attribute:status/Value:active+' => 'active~~',
-	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'inactive~~',
-	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'inactive~~',
+	'Class:BusinessProcess/Attribute:status/Value:active' => 'Aktif',
+	'Class:BusinessProcess/Attribute:status/Value:active+' => 'Aktif',
+	'Class:BusinessProcess/Attribute:status/Value:inactive' => 'Aktif değil',
+	'Class:BusinessProcess/Attribute:status/Value:inactive+' => 'Aktif değil',
 ));
 
 //
@@ -525,26 +525,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:SoftwareInstance' => 'Yazılım Kurulumu',
 	'Class:SoftwareInstance+' => '',
-	'Class:SoftwareInstance/Attribute:system_id' => 'System~~',
+	'Class:SoftwareInstance/Attribute:system_id' => 'Sistem',
 	'Class:SoftwareInstance/Attribute:system_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:system_name' => 'System name~~',
+	'Class:SoftwareInstance/Attribute:system_name' => 'Sistem Adı',
 	'Class:SoftwareInstance/Attribute:system_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_id' => 'Software~~',
+	'Class:SoftwareInstance/Attribute:software_id' => 'Yazılım',
 	'Class:SoftwareInstance/Attribute:software_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:software_name' => 'Yazılım',
+	'Class:SoftwareInstance/Attribute:software_name' => 'Yazılım Adı',
 	'Class:SoftwareInstance/Attribute:software_name+' => '',
-	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Software licence~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_id' => 'Yazılım Lisansı',
 	'Class:SoftwareInstance/Attribute:softwarelicence_id+' => '~~',
-	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Software licence name~~',
+	'Class:SoftwareInstance/Attribute:softwarelicence_name' => 'Yazılım Lisans Adı',
 	'Class:SoftwareInstance/Attribute:softwarelicence_name+' => '~~',
-	'Class:SoftwareInstance/Attribute:path' => 'Path~~',
+	'Class:SoftwareInstance/Attribute:path' => 'Yol',
 	'Class:SoftwareInstance/Attribute:path+' => '~~',
-	'Class:SoftwareInstance/Attribute:status' => 'Status~~',
+	'Class:SoftwareInstance/Attribute:status' => 'Durum',
 	'Class:SoftwareInstance/Attribute:status+' => '~~',
-	'Class:SoftwareInstance/Attribute:status/Value:active' => 'active~~',
-	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'active~~',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'inactive~~',
-	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'inactive~~',
+	'Class:SoftwareInstance/Attribute:status/Value:active' => 'Aktif',
+	'Class:SoftwareInstance/Attribute:status/Value:active+' => 'Aktif',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive' => 'Aktif değil',
+	'Class:SoftwareInstance/Attribute:status/Value:inactive+' => 'Aktif değil',
 ));
 
 //
@@ -552,10 +552,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Middleware' => 'Middleware~~',
+	'Class:Middleware' => 'Ara katman yazılımı',
 	'Class:Middleware+' => '~~',
-	'Class:Middleware/Attribute:middlewareinstance_list' => 'Middleware instances~~',
-	'Class:Middleware/Attribute:middlewareinstance_list+' => 'All the middleware instances provided by this middleware~~',
+	'Class:Middleware/Attribute:middlewareinstance_list' => 'Ara katman yazılımı olayları',
+	'Class:Middleware/Attribute:middlewareinstance_list+' => 'Bu ara katman yazılımı tarafından sağlanan tüm ara katman yazılımı olayları',
 ));
 
 //
@@ -565,8 +565,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:DBServer' => 'Veritabanı',
 	'Class:DBServer+' => 'Veritabanı yazılımı',
-	'Class:DBServer/Attribute:dbschema_list' => 'DB schemas~~',
-	'Class:DBServer/Attribute:dbschema_list+' => 'All the database schemas for this DB server~~',
+	'Class:DBServer/Attribute:dbschema_list' => 'Veritabanı şemaları',
+	'Class:DBServer/Attribute:dbschema_list+' => 'Bu veritabanı sunucusu için tüm veritabanı şemaları',
 ));
 
 //
@@ -574,10 +574,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:WebServer' => 'Web server~~',
+	'Class:WebServer' => 'Web Sunucusu',
 	'Class:WebServer+' => '~~',
-	'Class:WebServer/Attribute:webapp_list' => 'Web applications~~',
-	'Class:WebServer/Attribute:webapp_list+' => 'All the web applications available on this web server~~',
+	'Class:WebServer/Attribute:webapp_list' => 'Web Uygulamaları',
+	'Class:WebServer/Attribute:webapp_list+' => 'Bu web sunucusunda mevcut tüm web uygulamaları',
 ));
 
 //
@@ -585,7 +585,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:PCSoftware' => 'PC Software~~',
+	'Class:PCSoftware' => 'PC yazılımı',
 	'Class:PCSoftware+' => '~~',
 ));
 
@@ -594,7 +594,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:OtherSoftware' => 'Other Software~~',
+	'Class:OtherSoftware' => 'Diğer yazılım',
 	'Class:OtherSoftware+' => '~~',
 ));
 
@@ -603,11 +603,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:MiddlewareInstance' => 'Middleware Instance~~',
+	'Class:MiddlewareInstance' => 'Ara katman yazılımı olayı',
 	'Class:MiddlewareInstance+' => '~~',
-	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Middleware~~',
+	'Class:MiddlewareInstance/Attribute:middleware_id' => 'Ara katman yazılımı',
 	'Class:MiddlewareInstance/Attribute:middleware_id+' => '~~',
-	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Middleware name~~',
+	'Class:MiddlewareInstance/Attribute:middleware_name' => 'Ara katman yazılımı adı',
 	'Class:MiddlewareInstance/Attribute:middleware_name+' => '~~',
 ));
 
@@ -616,11 +616,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:DatabaseSchema' => 'Database Schema~~',
+	'Class:DatabaseSchema' => 'Veritabanı Şeması',
 	'Class:DatabaseSchema+' => '~~',
-	'Class:DatabaseSchema/Attribute:dbserver_id' => 'DB server~~',
+	'Class:DatabaseSchema/Attribute:dbserver_id' => 'Veritabanı Sunucusu',
 	'Class:DatabaseSchema/Attribute:dbserver_id+' => '~~',
-	'Class:DatabaseSchema/Attribute:dbserver_name' => 'DB server name~~',
+	'Class:DatabaseSchema/Attribute:dbserver_name' => 'Veritabanı sunucu adı',
 	'Class:DatabaseSchema/Attribute:dbserver_name+' => '~~',
 ));
 
@@ -629,13 +629,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:WebApplication' => 'Web Application~~',
+	'Class:WebApplication' => 'Web Uygulaması',
 	'Class:WebApplication+' => '~~',
-	'Class:WebApplication/Attribute:webserver_id' => 'Web server~~',
+	'Class:WebApplication/Attribute:webserver_id' => 'Web Sunucusu',
 	'Class:WebApplication/Attribute:webserver_id+' => '~~',
-	'Class:WebApplication/Attribute:webserver_name' => 'Web server name~~',
+	'Class:WebApplication/Attribute:webserver_name' => 'Web Sunucusu Adı',
 	'Class:WebApplication/Attribute:webserver_name+' => '~~',
-	'Class:WebApplication/Attribute:url' => 'URL~~',
+	'Class:WebApplication/Attribute:url' => 'URL',
 	'Class:WebApplication/Attribute:url+' => '~~',
 ));
 
@@ -645,20 +645,20 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:VirtualDevice' => 'Virtual Device~~',
+	'Class:VirtualDevice' => 'Sanal cihaz',
 	'Class:VirtualDevice+' => '~~',
-	'Class:VirtualDevice/Attribute:status' => 'Status~~',
+	'Class:VirtualDevice/Attribute:status' => 'Durum',
 	'Class:VirtualDevice/Attribute:status+' => '~~',
-	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'implementation~~',
-	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'implementation~~',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'obsolete~~',
-	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'obsolete~~',
-	'Class:VirtualDevice/Attribute:status/Value:production' => 'production~~',
-	'Class:VirtualDevice/Attribute:status/Value:production+' => 'production~~',
-	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stock~~',
-	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stock~~',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Logical volumes~~',
-	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'All the logical volumes used by this device~~',
+	'Class:VirtualDevice/Attribute:status/Value:implementation' => 'Uygulama',
+	'Class:VirtualDevice/Attribute:status/Value:implementation+' => 'Uygulama',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete' => 'kullanım dışı',
+	'Class:VirtualDevice/Attribute:status/Value:obsolete+' => 'kullanım dışı',
+	'Class:VirtualDevice/Attribute:status/Value:production' => 'kullanımda',
+	'Class:VirtualDevice/Attribute:status/Value:production+' => 'kullanımda',
+	'Class:VirtualDevice/Attribute:status/Value:stock' => 'stok',
+	'Class:VirtualDevice/Attribute:status/Value:stock+' => 'stok',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list' => 'Mantıksal depolama alanları',
+	'Class:VirtualDevice/Attribute:logicalvolumes_list+' => 'Bu cihaz tarafından kullanılan tüm mantıksal depolama alanları',
 ));
 
 //
@@ -666,10 +666,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:VirtualHost' => 'Virtual Host~~',
+	'Class:VirtualHost' => 'Sanal Ana Makine',
 	'Class:VirtualHost+' => '~~',
-	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Virtual machines~~',
-	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'All the virtual machines hosted by this host~~',
+	'Class:VirtualHost/Attribute:virtualmachine_list' => 'Sanal Makineler',
+	'Class:VirtualHost/Attribute:virtualmachine_list+' => 'Bu ana makine üzerinde çalışan tüm sanal makineler',
 ));
 
 //
@@ -677,15 +677,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Hypervisor' => 'Hypervisor~~',
+	'Class:Hypervisor' => 'Hipervizör',
 	'Class:Hypervisor+' => '~~',
-	'Class:Hypervisor/Attribute:farm_id' => 'Farm~~',
+	'Class:Hypervisor/Attribute:farm_id' => 'Çiftlik',
 	'Class:Hypervisor/Attribute:farm_id+' => '~~',
-	'Class:Hypervisor/Attribute:farm_name' => 'Farm name~~',
+	'Class:Hypervisor/Attribute:farm_name' => 'Çiftlik Adı',
 	'Class:Hypervisor/Attribute:farm_name+' => '~~',
-	'Class:Hypervisor/Attribute:server_id' => 'Server~~',
+	'Class:Hypervisor/Attribute:server_id' => 'Sunucu',
 	'Class:Hypervisor/Attribute:server_id+' => '~~',
-	'Class:Hypervisor/Attribute:server_name' => 'Server name~~',
+	'Class:Hypervisor/Attribute:server_name' => 'Sunucu adı',
 	'Class:Hypervisor/Attribute:server_name+' => '~~',
 ));
 
@@ -694,14 +694,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Farm' => 'Farm~~',
+	'Class:Farm' => 'Çiftlik',
 	'Class:Farm+' => '~~',
-	'Class:Farm/Attribute:hypervisor_list' => 'Hypervisors~~',
-	'Class:Farm/Attribute:hypervisor_list+' => 'All the hypervisors that compose this farm~~',
-	'Class:Farm/Attribute:redundancy' => 'High availability~~',
-	'Class:Farm/Attribute:redundancy/disabled' => 'The farm is up if all the hypervisors are up~~',
-	'Class:Farm/Attribute:redundancy/count' => 'The farm is up if at least %1$s hypervisor(s) is(are) up~~',
-	'Class:Farm/Attribute:redundancy/percent' => 'The farm is up if at least %1$s %% of the hypervisors are up~~',
+	'Class:Farm/Attribute:hypervisor_list' => 'Hipervizörler',
+	'Class:Farm/Attribute:hypervisor_list+' => 'Bu çiftliği oluşturan tüm hipervizörler',
+	'Class:Farm/Attribute:redundancy' => 'Yüksek Kullanılabilirlik',
+	'Class:Farm/Attribute:redundancy/disabled' => 'Tüm hipervizörler ayakta ise çiftlik ayaktadır',
+	'Class:Farm/Attribute:redundancy/count' => 'Hipervizörlerin en az %1$s  \'i ayakta ise çiftlik ayaktadır',
+	'Class:Farm/Attribute:redundancy/percent' => 'Hipervizörlerin en az %1$s %% \'i ayakta ise çiftlik ayaktadır.',
 ));
 
 //
@@ -709,32 +709,32 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:VirtualMachine' => 'Virtual Machine~~',
+	'Class:VirtualMachine' => 'Sanal makine',
 	'Class:VirtualMachine+' => '~~',
-	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Virtual host~~',
+	'Class:VirtualMachine/Attribute:virtualhost_id' => 'Sanal Ana Makine',
 	'Class:VirtualMachine/Attribute:virtualhost_id+' => '~~',
-	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Virtual host name~~',
+	'Class:VirtualMachine/Attribute:virtualhost_name' => 'Sanal Ana Makine Adı',
 	'Class:VirtualMachine/Attribute:virtualhost_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS family~~',
+	'Class:VirtualMachine/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:VirtualMachine/Attribute:osfamily_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS family name~~',
+	'Class:VirtualMachine/Attribute:osfamily_name' => 'OS Aile Adı',
 	'Class:VirtualMachine/Attribute:osfamily_name+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_id' => 'OS version~~',
+	'Class:VirtualMachine/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:VirtualMachine/Attribute:osversion_id+' => '~~',
-	'Class:VirtualMachine/Attribute:osversion_name' => 'OS version name~~',
+	'Class:VirtualMachine/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:VirtualMachine/Attribute:osversion_name+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS licence~~',
+	'Class:VirtualMachine/Attribute:oslicence_id' => 'OS Lisansı',
 	'Class:VirtualMachine/Attribute:oslicence_id+' => '~~',
-	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS licence name~~',
+	'Class:VirtualMachine/Attribute:oslicence_name' => 'OS Lisans Adı',
 	'Class:VirtualMachine/Attribute:oslicence_name+' => '~~',
-	'Class:VirtualMachine/Attribute:cpu' => 'CPU~~',
+	'Class:VirtualMachine/Attribute:cpu' => 'CPU',
 	'Class:VirtualMachine/Attribute:cpu+' => '~~',
-	'Class:VirtualMachine/Attribute:ram' => 'RAM~~',
+	'Class:VirtualMachine/Attribute:ram' => 'RAM',
 	'Class:VirtualMachine/Attribute:ram+' => '~~',
-	'Class:VirtualMachine/Attribute:managementip' => 'IP~~',
+	'Class:VirtualMachine/Attribute:managementip' => 'IP',
 	'Class:VirtualMachine/Attribute:managementip+' => '~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Network Interfaces~~',
-	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'All the logical network interfaces~~',
+	'Class:VirtualMachine/Attribute:logicalinterface_list' => 'Ağ arayüzleri',
+	'Class:VirtualMachine/Attribute:logicalinterface_list+' => 'Tüm mantıksal ağ arayüzleri',
 ));
 
 //
@@ -742,26 +742,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:LogicalVolume' => 'Logical Volume~~',
+	'Class:LogicalVolume' => 'Mantıksal Depolama Alanları',
 	'Class:LogicalVolume+' => '~~',
-	'Class:LogicalVolume/Attribute:name' => 'Name~~',
+	'Class:LogicalVolume/Attribute:name' => 'İsim',
 	'Class:LogicalVolume/Attribute:name+' => '~~',
-	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID~~',
+	'Class:LogicalVolume/Attribute:lun_id' => 'LUN ID',
 	'Class:LogicalVolume/Attribute:lun_id+' => '~~',
-	'Class:LogicalVolume/Attribute:description' => 'Description~~',
+	'Class:LogicalVolume/Attribute:description' => 'Açıklama',
 	'Class:LogicalVolume/Attribute:description+' => '~~',
-	'Class:LogicalVolume/Attribute:raid_level' => 'Raid level~~',
+	'Class:LogicalVolume/Attribute:raid_level' => 'RAID Seviyesi',
 	'Class:LogicalVolume/Attribute:raid_level+' => '~~',
-	'Class:LogicalVolume/Attribute:size' => 'Size~~',
+	'Class:LogicalVolume/Attribute:size' => 'Boyutu',
 	'Class:LogicalVolume/Attribute:size+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Storage system~~',
+	'Class:LogicalVolume/Attribute:storagesystem_id' => 'Depolama sistemi',
 	'Class:LogicalVolume/Attribute:storagesystem_id+' => '~~',
-	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Storage system name~~',
+	'Class:LogicalVolume/Attribute:storagesystem_name' => 'Depolama Sistemi Adı',
 	'Class:LogicalVolume/Attribute:storagesystem_name+' => '~~',
-	'Class:LogicalVolume/Attribute:servers_list' => 'Servers~~',
-	'Class:LogicalVolume/Attribute:servers_list+' => 'All the servers using this volume~~',
-	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Virtual devices~~',
-	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'All the virtual devices using this volume~~',
+	'Class:LogicalVolume/Attribute:servers_list' => 'Sunucular',
+	'Class:LogicalVolume/Attribute:servers_list+' => 'Bu depolama alanını kullanan tüm sunucular',
+	'Class:LogicalVolume/Attribute:virtualdevices_list' => 'Sanal Cihazlar',
+	'Class:LogicalVolume/Attribute:virtualdevices_list+' => 'Bu depolama alanını kullanan tüm sanal cihazlar',
 ));
 
 //
@@ -769,17 +769,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkServerToVolume' => 'Link Server / Volume~~',
+	'Class:lnkServerToVolume' => 'Bağlantılı sunucu / Depolama alanı',
 	'Class:lnkServerToVolume+' => '~~',
-	'Class:lnkServerToVolume/Attribute:volume_id' => 'Volume~~',
+	'Class:lnkServerToVolume/Attribute:volume_id' => 'Depolama alanı',
 	'Class:lnkServerToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:volume_name' => 'Volume name~~',
+	'Class:lnkServerToVolume/Attribute:volume_name' => 'Depolama alanı adı',
 	'Class:lnkServerToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_id' => 'Server~~',
+	'Class:lnkServerToVolume/Attribute:server_id' => 'Sunucu',
 	'Class:lnkServerToVolume/Attribute:server_id+' => '~~',
-	'Class:lnkServerToVolume/Attribute:server_name' => 'Server name~~',
+	'Class:lnkServerToVolume/Attribute:server_name' => 'Sunucu adı',
 	'Class:lnkServerToVolume/Attribute:server_name+' => '~~',
-	'Class:lnkServerToVolume/Attribute:size_used' => 'Size used~~',
+	'Class:lnkServerToVolume/Attribute:size_used' => 'Kullanılan boyut',
 	'Class:lnkServerToVolume/Attribute:size_used+' => '~~',
 ));
 
@@ -788,17 +788,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkVirtualDeviceToVolume' => 'Link Virtual Device / Volume~~',
+	'Class:lnkVirtualDeviceToVolume' => 'Sanal cihaz / Depolama alanı bağla',
 	'Class:lnkVirtualDeviceToVolume+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Volume~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id' => 'Depolama alanı',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Volume name~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name' => 'Depolama alanı adı',
 	'Class:lnkVirtualDeviceToVolume/Attribute:volume_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Virtual device~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id' => 'Depolama alanı adı',
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_id+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Virtual device name~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name' => 'Sanal Cihaz Adı',
 	'Class:lnkVirtualDeviceToVolume/Attribute:virtualdevice_name+' => '~~',
-	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Size used~~',
+	'Class:lnkVirtualDeviceToVolume/Attribute:size_used' => 'Kullanılan boyut',
 	'Class:lnkVirtualDeviceToVolume/Attribute:size_used+' => '~~',
 ));
 
@@ -807,19 +807,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkSanToDatacenterDevice' => 'Link SAN / Datacenter Device~~',
+	'Class:lnkSanToDatacenterDevice' => 'SAN/ Veri merkezi cihazı bağla',
 	'Class:lnkSanToDatacenterDevice+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN switch~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_id' => 'SAN Anahtarı',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN switch name~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_name' => 'SAN Anahtarı Adı',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Device~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id' => 'Cihaz',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_id+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Device name~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name' => 'Cihaz adı',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_name+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN fc~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:san_port' => 'SAN FC',
 	'Class:lnkSanToDatacenterDevice/Attribute:san_port+' => '~~',
-	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Device fc~~',
+	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port' => 'Cihaz FC',
 	'Class:lnkSanToDatacenterDevice/Attribute:datacenterdevice_port+' => '~~',
 ));
 
@@ -828,17 +828,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Tape' => 'Tape~~',
+	'Class:Tape' => 'Teyp',
 	'Class:Tape+' => '~~',
-	'Class:Tape/Attribute:name' => 'Name~~',
+	'Class:Tape/Attribute:name' => 'İsim',
 	'Class:Tape/Attribute:name+' => '~~',
-	'Class:Tape/Attribute:description' => 'Description~~',
+	'Class:Tape/Attribute:description' => 'Açıklama',
 	'Class:Tape/Attribute:description+' => '~~',
-	'Class:Tape/Attribute:size' => 'Size~~',
+	'Class:Tape/Attribute:size' => 'Boyutu',
 	'Class:Tape/Attribute:size+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_id' => 'Tape library~~',
+	'Class:Tape/Attribute:tapelibrary_id' => 'Teyp Kütüphanesi',
 	'Class:Tape/Attribute:tapelibrary_id+' => '~~',
-	'Class:Tape/Attribute:tapelibrary_name' => 'Tape library name~~',
+	'Class:Tape/Attribute:tapelibrary_name' => 'Teyp Kütüphanesi Adı',
 	'Class:Tape/Attribute:tapelibrary_name+' => '~~',
 ));
 
@@ -847,19 +847,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:NASFileSystem' => 'NAS File System~~',
+	'Class:NASFileSystem' => 'NAS dosya sistemi',
 	'Class:NASFileSystem+' => '~~',
-	'Class:NASFileSystem/Attribute:name' => 'Name~~',
+	'Class:NASFileSystem/Attribute:name' => 'İsim',
 	'Class:NASFileSystem/Attribute:name+' => '~~',
-	'Class:NASFileSystem/Attribute:description' => 'Description~~',
+	'Class:NASFileSystem/Attribute:description' => 'Açıklama',
 	'Class:NASFileSystem/Attribute:description+' => '~~',
-	'Class:NASFileSystem/Attribute:raid_level' => 'Raid level~~',
+	'Class:NASFileSystem/Attribute:raid_level' => 'RAID Seviyesi',
 	'Class:NASFileSystem/Attribute:raid_level+' => '~~',
-	'Class:NASFileSystem/Attribute:size' => 'Size~~',
+	'Class:NASFileSystem/Attribute:size' => 'Boyutu',
 	'Class:NASFileSystem/Attribute:size+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_id' => 'NAS~~',
+	'Class:NASFileSystem/Attribute:nas_id' => 'NAS',
 	'Class:NASFileSystem/Attribute:nas_id+' => '~~',
-	'Class:NASFileSystem/Attribute:nas_name' => 'NAS name~~',
+	'Class:NASFileSystem/Attribute:nas_name' => 'NAS Adı',
 	'Class:NASFileSystem/Attribute:nas_name+' => '~~',
 ));
 
@@ -872,30 +872,30 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Software+' => '',
 	'Class:Software/Attribute:name' => 'Adı',
 	'Class:Software/Attribute:name+' => '',
-	'Class:Software/Attribute:vendor' => 'vendor~~',
+	'Class:Software/Attribute:vendor' => 'satıcı',
 	'Class:Software/Attribute:vendor+' => '~~',
-	'Class:Software/Attribute:version' => 'Version~~',
+	'Class:Software/Attribute:version' => 'Sürüm',
 	'Class:Software/Attribute:version+' => '~~',
-	'Class:Software/Attribute:documents_list' => 'Documents~~',
-	'Class:Software/Attribute:documents_list+' => 'All the documents linked to this software~~',
-	'Class:Software/Attribute:type' => 'Type~~',
+	'Class:Software/Attribute:documents_list' => 'Belgeler',
+	'Class:Software/Attribute:documents_list+' => 'Bu yazılımla bağlantılı tüm belgeler',
+	'Class:Software/Attribute:type' => 'Tip',
 	'Class:Software/Attribute:type+' => '~~',
-	'Class:Software/Attribute:type/Value:DBServer' => 'DB Server~~',
-	'Class:Software/Attribute:type/Value:DBServer+' => 'DB Server~~',
-	'Class:Software/Attribute:type/Value:Middleware' => 'Middleware~~',
-	'Class:Software/Attribute:type/Value:Middleware+' => 'Middleware~~',
-	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Other Software~~',
-	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Other Software~~',
-	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC Software~~',
-	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC Software~~',
-	'Class:Software/Attribute:type/Value:WebServer' => 'Web Server~~',
-	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Server~~',
-	'Class:Software/Attribute:softwareinstance_list' => 'Software Instances~~',
-	'Class:Software/Attribute:softwareinstance_list+' => 'All the software instances for this software~~',
-	'Class:Software/Attribute:softwarepatch_list' => 'Software Patches~~',
-	'Class:Software/Attribute:softwarepatch_list+' => 'All the patchs for this software~~',
-	'Class:Software/Attribute:softwarelicence_list' => 'Software Licences~~',
-	'Class:Software/Attribute:softwarelicence_list+' => 'All the licences for this software~~',
+	'Class:Software/Attribute:type/Value:DBServer' => 'Veritabanı Sunucusu',
+	'Class:Software/Attribute:type/Value:DBServer+' => 'Veritabanı Sunucusu',
+	'Class:Software/Attribute:type/Value:Middleware' => 'Ara katman yazılımı',
+	'Class:Software/Attribute:type/Value:Middleware+' => 'Ara katman yazılımı',
+	'Class:Software/Attribute:type/Value:OtherSoftware' => 'Diğer yazılım',
+	'Class:Software/Attribute:type/Value:OtherSoftware+' => 'Diğer yazılım',
+	'Class:Software/Attribute:type/Value:PCSoftware' => 'PC yazılımı',
+	'Class:Software/Attribute:type/Value:PCSoftware+' => 'PC yazılımı',
+	'Class:Software/Attribute:type/Value:WebServer' => 'Web Sunucusu',
+	'Class:Software/Attribute:type/Value:WebServer+' => 'Web Sunucusu',
+	'Class:Software/Attribute:softwareinstance_list' => 'Yazılım olayları',
+	'Class:Software/Attribute:softwareinstance_list+' => 'Bu yazılım için tüm yazılım olayları',
+	'Class:Software/Attribute:softwarepatch_list' => 'Yazılım yamaları',
+	'Class:Software/Attribute:softwarepatch_list+' => 'Bu yazılım için tüm yamalar',
+	'Class:Software/Attribute:softwarelicence_list' => 'Yazılım Lisansları',
+	'Class:Software/Attribute:softwarelicence_list+' => 'Bu yazılımın tüm lisansları',
 ));
 
 //
@@ -907,11 +907,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Patch+' => '',
 	'Class:Patch/Attribute:name' => 'Adı',
 	'Class:Patch/Attribute:name+' => '',
-	'Class:Patch/Attribute:documents_list' => 'Documents~~',
-	'Class:Patch/Attribute:documents_list+' => 'All the documents linked to this patch~~',
+	'Class:Patch/Attribute:documents_list' => 'Belgeler',
+	'Class:Patch/Attribute:documents_list+' => 'Bu yama ile bağlantılı tüm belgeler',
 	'Class:Patch/Attribute:description' => 'Tanımlama',
 	'Class:Patch/Attribute:description+' => '',
-	'Class:Patch/Attribute:finalclass' => 'Type~~',
+	'Class:Patch/Attribute:finalclass' => 'Tip',
 	'Class:Patch/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -920,13 +920,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:OSPatch' => 'OS Patch~~',
+	'Class:OSPatch' => 'İşletim sistemi yaması',
 	'Class:OSPatch+' => '~~',
-	'Class:OSPatch/Attribute:functionalcis_list' => 'Devices~~',
-	'Class:OSPatch/Attribute:functionalcis_list+' => 'All the systems where this patch is installed~~',
-	'Class:OSPatch/Attribute:osversion_id' => 'OS version~~',
+	'Class:OSPatch/Attribute:functionalcis_list' => 'Cihazlar',
+	'Class:OSPatch/Attribute:functionalcis_list+' => 'Bu yamanın kurulduğu tüm sistemler',
+	'Class:OSPatch/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:OSPatch/Attribute:osversion_id+' => '~~',
-	'Class:OSPatch/Attribute:osversion_name' => 'OS version name~~',
+	'Class:OSPatch/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:OSPatch/Attribute:osversion_name+' => '~~',
 ));
 
@@ -935,14 +935,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:SoftwarePatch' => 'Software Patch~~',
+	'Class:SoftwarePatch' => 'Yazılım yaması',
 	'Class:SoftwarePatch+' => '~~',
-	'Class:SoftwarePatch/Attribute:software_id' => 'Software~~',
+	'Class:SoftwarePatch/Attribute:software_id' => 'Yazılım',
 	'Class:SoftwarePatch/Attribute:software_id+' => '~~',
-	'Class:SoftwarePatch/Attribute:software_name' => 'Software name~~',
+	'Class:SoftwarePatch/Attribute:software_name' => 'Yazılım adı',
 	'Class:SoftwarePatch/Attribute:software_name+' => '~~',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Software instances~~',
-	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'All the systems where this software patch is installed~~',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list' => 'Yazılım olayları',
+	'Class:SoftwarePatch/Attribute:softwareinstances_list+' => 'Bu yazılım yamasının kurulduğu tüm sistemler',
 ));
 
 //
@@ -954,29 +954,29 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Licence+' => '',
 	'Class:Licence/Attribute:name' => 'Adı',
 	'Class:Licence/Attribute:name+' => '',
-	'Class:Licence/Attribute:documents_list' => 'Documents~~',
-	'Class:Licence/Attribute:documents_list+' => 'All the documents linked to this licence~~',
+	'Class:Licence/Attribute:documents_list' => 'Belgeler',
+	'Class:Licence/Attribute:documents_list+' => 'Bu lisansla bağlantılı tüm belgeler',
 	'Class:Licence/Attribute:org_id' => 'Sahibi',
 	'Class:Licence/Attribute:org_id+' => '',
-	'Class:Licence/Attribute:organization_name' => 'Organization name~~',
-	'Class:Licence/Attribute:organization_name+' => 'Common name~~',
+	'Class:Licence/Attribute:organization_name' => 'Organizasyon Adı',
+	'Class:Licence/Attribute:organization_name+' => 'Ortak Adı',
 	'Class:Licence/Attribute:usage_limit' => 'Kullanım limit',
 	'Class:Licence/Attribute:usage_limit+' => '',
-	'Class:Licence/Attribute:description' => 'Description~~',
+	'Class:Licence/Attribute:description' => 'Açıklama',
 	'Class:Licence/Attribute:description+' => '~~',
-	'Class:Licence/Attribute:start_date' => 'Start date~~',
+	'Class:Licence/Attribute:start_date' => 'Başlangıç tarihi',
 	'Class:Licence/Attribute:start_date+' => '~~',
-	'Class:Licence/Attribute:end_date' => 'End date~~',
+	'Class:Licence/Attribute:end_date' => 'Son Tarihi',
 	'Class:Licence/Attribute:end_date+' => '~~',
 	'Class:Licence/Attribute:licence_key' => 'Lisans',
 	'Class:Licence/Attribute:licence_key+' => '',
-	'Class:Licence/Attribute:perpetual' => 'Perpetual~~',
+	'Class:Licence/Attribute:perpetual' => 'Sürekli',
 	'Class:Licence/Attribute:perpetual+' => '~~',
-	'Class:Licence/Attribute:perpetual/Value:no' => 'no~~',
-	'Class:Licence/Attribute:perpetual/Value:no+' => 'no~~',
-	'Class:Licence/Attribute:perpetual/Value:yes' => 'yes~~',
-	'Class:Licence/Attribute:perpetual/Value:yes+' => 'yes~~',
-	'Class:Licence/Attribute:finalclass' => 'Type~~',
+	'Class:Licence/Attribute:perpetual/Value:no' => 'hayır',
+	'Class:Licence/Attribute:perpetual/Value:no+' => 'hayır',
+	'Class:Licence/Attribute:perpetual/Value:yes' => 'evet',
+	'Class:Licence/Attribute:perpetual/Value:yes+' => 'evet',
+	'Class:Licence/Attribute:finalclass' => 'Tip',
 	'Class:Licence/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -985,16 +985,16 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:OSLicence' => 'OS Licence~~',
+	'Class:OSLicence' => 'OS Lisansı',
 	'Class:OSLicence+' => '~~',
-	'Class:OSLicence/Attribute:osversion_id' => 'OS version~~',
+	'Class:OSLicence/Attribute:osversion_id' => 'OS Sürümü',
 	'Class:OSLicence/Attribute:osversion_id+' => '~~',
-	'Class:OSLicence/Attribute:osversion_name' => 'OS version name~~',
+	'Class:OSLicence/Attribute:osversion_name' => 'OS Sürüm Adı',
 	'Class:OSLicence/Attribute:osversion_name+' => '~~',
-	'Class:OSLicence/Attribute:virtualmachines_list' => 'Virtual machines~~',
-	'Class:OSLicence/Attribute:virtualmachines_list+' => 'All the virtual machines where this licence is used~~',
-	'Class:OSLicence/Attribute:servers_list' => 'servers~~',
-	'Class:OSLicence/Attribute:servers_list+' => 'All the servers where this licence is used~~',
+	'Class:OSLicence/Attribute:virtualmachines_list' => 'Sanal Makineler',
+	'Class:OSLicence/Attribute:virtualmachines_list+' => 'Bu lisansın kullanıldığı tüm sanal makineler',
+	'Class:OSLicence/Attribute:servers_list' => 'Sunucular',
+	'Class:OSLicence/Attribute:servers_list+' => 'Bu lisansın kullanıldığı tüm sunucular',
 ));
 
 //
@@ -1002,14 +1002,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:SoftwareLicence' => 'Software Licence~~',
+	'Class:SoftwareLicence' => 'Yazılım Lisansı',
 	'Class:SoftwareLicence+' => '~~',
-	'Class:SoftwareLicence/Attribute:software_id' => 'Software~~',
+	'Class:SoftwareLicence/Attribute:software_id' => 'Yazılım',
 	'Class:SoftwareLicence/Attribute:software_id+' => '~~',
-	'Class:SoftwareLicence/Attribute:software_name' => 'Software name~~',
+	'Class:SoftwareLicence/Attribute:software_name' => 'Yazılım adı',
 	'Class:SoftwareLicence/Attribute:software_name+' => '~~',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Software instances~~',
-	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'All the systems where this licence is used~~',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list' => 'Yazılım olayları',
+	'Class:SoftwareLicence/Attribute:softwareinstance_list+' => 'Bu lisansın kullanıldığı tüm sistemler',
 ));
 
 //
@@ -1017,15 +1017,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToLicence' => 'Link Document / Licence~~',
+	'Class:lnkDocumentToLicence' => 'Belge / lisans bağla',
 	'Class:lnkDocumentToLicence+' => '~~',
-	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Licence~~',
+	'Class:lnkDocumentToLicence/Attribute:licence_id' => 'Lisans',
 	'Class:lnkDocumentToLicence/Attribute:licence_id+' => '~~',
-	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Licence name~~',
+	'Class:lnkDocumentToLicence/Attribute:licence_name' => 'Lisans adı',
 	'Class:lnkDocumentToLicence/Attribute:licence_name+' => '~~',
-	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToLicence/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToLicence/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToLicence/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToLicence/Attribute:document_name+' => '~~',
 ));
 
@@ -1034,11 +1034,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:OSVersion' => 'OS Version~~',
+	'Class:OSVersion' => 'OS Sürümü',
 	'Class:OSVersion+' => '~~',
-	'Class:OSVersion/Attribute:osfamily_id' => 'OS family~~',
+	'Class:OSVersion/Attribute:osfamily_id' => 'OS ailesi',
 	'Class:OSVersion/Attribute:osfamily_id+' => '~~',
-	'Class:OSVersion/Attribute:osfamily_name' => 'OS family name~~',
+	'Class:OSVersion/Attribute:osfamily_name' => 'OS Aile Adı',
 	'Class:OSVersion/Attribute:osfamily_name+' => '~~',
 ));
 
@@ -1047,7 +1047,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:OSFamily' => 'OS Family~~',
+	'Class:OSFamily' => 'OS ailesi',
 	'Class:OSFamily+' => '~~',
 ));
 
@@ -1056,10 +1056,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Brand' => 'Brand~~',
+	'Class:Brand' => 'Marka',
 	'Class:Brand+' => '~~',
-	'Class:Brand/Attribute:physicaldevices_list' => 'Physical devices~~',
-	'Class:Brand/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this brand~~',
+	'Class:Brand/Attribute:physicaldevices_list' => 'Fiziksel cihazlar',
+	'Class:Brand/Attribute:physicaldevices_list+' => 'Bu markaya karşılık gelen tüm fiziksel cihazlar',
 	'Class:Brand/UniquenessRule:name+' => 'The name must be unique~~',
 	'Class:Brand/UniquenessRule:name' => 'This brand already exists~~',
 ));
@@ -1069,52 +1069,52 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:Model' => 'Model~~',
+	'Class:Model' => 'Model',
 	'Class:Model+' => '~~',
-	'Class:Model/Attribute:brand_id' => 'Brand~~',
+	'Class:Model/Attribute:brand_id' => 'Marka',
 	'Class:Model/Attribute:brand_id+' => '~~',
-	'Class:Model/Attribute:brand_name' => 'Brand name~~',
+	'Class:Model/Attribute:brand_name' => 'Marka Adı',
 	'Class:Model/Attribute:brand_name+' => '~~',
-	'Class:Model/Attribute:type' => 'Device type~~',
+	'Class:Model/Attribute:type' => 'Cihaz tipi',
 	'Class:Model/Attribute:type+' => '~~',
-	'Class:Model/Attribute:type/Value:PowerSource' => 'Power Source~~',
-	'Class:Model/Attribute:type/Value:PowerSource+' => 'Power Source~~',
-	'Class:Model/Attribute:type/Value:DiskArray' => 'Disk Array~~',
-	'Class:Model/Attribute:type/Value:DiskArray+' => 'Disk Array~~',
-	'Class:Model/Attribute:type/Value:Enclosure' => 'Enclosure~~',
-	'Class:Model/Attribute:type/Value:Enclosure+' => 'Enclosure~~',
-	'Class:Model/Attribute:type/Value:IPPhone' => 'IP Phone~~',
-	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP Phone~~',
-	'Class:Model/Attribute:type/Value:MobilePhone' => 'Mobile Phone~~',
-	'Class:Model/Attribute:type/Value:MobilePhone+' => 'Mobile Phone~~',
-	'Class:Model/Attribute:type/Value:NAS' => 'NAS~~',
-	'Class:Model/Attribute:type/Value:NAS+' => 'NAS~~',
-	'Class:Model/Attribute:type/Value:NetworkDevice' => 'Network Device~~',
-	'Class:Model/Attribute:type/Value:NetworkDevice+' => 'Network Device~~',
-	'Class:Model/Attribute:type/Value:PC' => 'PC~~',
-	'Class:Model/Attribute:type/Value:PC+' => 'PC~~',
-	'Class:Model/Attribute:type/Value:PDU' => 'PDU~~',
-	'Class:Model/Attribute:type/Value:PDU+' => 'PDU~~',
-	'Class:Model/Attribute:type/Value:Peripheral' => 'Peripheral~~',
-	'Class:Model/Attribute:type/Value:Peripheral+' => 'Peripheral~~',
-	'Class:Model/Attribute:type/Value:Printer' => 'Printer~~',
-	'Class:Model/Attribute:type/Value:Printer+' => 'Printer~~',
-	'Class:Model/Attribute:type/Value:Rack' => 'Rack~~',
-	'Class:Model/Attribute:type/Value:Rack+' => 'Rack~~',
-	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN switch~~',
-	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN switch~~',
-	'Class:Model/Attribute:type/Value:Server' => 'Server~~',
-	'Class:Model/Attribute:type/Value:Server+' => 'Server~~',
-	'Class:Model/Attribute:type/Value:StorageSystem' => 'Storage System~~',
-	'Class:Model/Attribute:type/Value:StorageSystem+' => 'Storage System~~',
-	'Class:Model/Attribute:type/Value:Tablet' => 'Tablet~~',
-	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet~~',
-	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Tape Library~~',
-	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Tape Library~~',
-	'Class:Model/Attribute:type/Value:Phone' => 'Telephone~~',
-	'Class:Model/Attribute:type/Value:Phone+' => 'Telephone~~',
-	'Class:Model/Attribute:physicaldevices_list' => 'Physical devices~~',
-	'Class:Model/Attribute:physicaldevices_list+' => 'All the physical devices corresponding to this model~~',
+	'Class:Model/Attribute:type/Value:PowerSource' => 'Güç Kaynağı',
+	'Class:Model/Attribute:type/Value:PowerSource+' => 'Güç Kaynağı',
+	'Class:Model/Attribute:type/Value:DiskArray' => 'Disk dizisi',
+	'Class:Model/Attribute:type/Value:DiskArray+' => 'Disk dizisi',
+	'Class:Model/Attribute:type/Value:Enclosure' => 'Muhafaza',
+	'Class:Model/Attribute:type/Value:Enclosure+' => 'Muhafaza',
+	'Class:Model/Attribute:type/Value:IPPhone' => 'IP telefonu',
+	'Class:Model/Attribute:type/Value:IPPhone+' => 'IP telefonu',
+	'Class:Model/Attribute:type/Value:MobilePhone' => 'Cep telefonu',
+	'Class:Model/Attribute:type/Value:MobilePhone+' => 'Cep telefonu',
+	'Class:Model/Attribute:type/Value:NAS' => 'NAS',
+	'Class:Model/Attribute:type/Value:NAS+' => 'NAS',
+	'Class:Model/Attribute:type/Value:NetworkDevice' => 'Ağ cihazı',
+	'Class:Model/Attribute:type/Value:NetworkDevice+' => 'Ağ cihazı',
+	'Class:Model/Attribute:type/Value:PC' => 'PC',
+	'Class:Model/Attribute:type/Value:PC+' => 'PC',
+	'Class:Model/Attribute:type/Value:PDU' => 'PDU',
+	'Class:Model/Attribute:type/Value:PDU+' => 'PDU',
+	'Class:Model/Attribute:type/Value:Peripheral' => 'Çevresel cihaz',
+	'Class:Model/Attribute:type/Value:Peripheral+' => 'Çevresel cihaz',
+	'Class:Model/Attribute:type/Value:Printer' => 'Yazıcı',
+	'Class:Model/Attribute:type/Value:Printer+' => 'Yazıcı',
+	'Class:Model/Attribute:type/Value:Rack' => 'Raf',
+	'Class:Model/Attribute:type/Value:Rack+' => 'Raf',
+	'Class:Model/Attribute:type/Value:SANSwitch' => 'SAN Anahtarı',
+	'Class:Model/Attribute:type/Value:SANSwitch+' => 'SAN Anahtarı',
+	'Class:Model/Attribute:type/Value:Server' => 'Sunucu',
+	'Class:Model/Attribute:type/Value:Server+' => 'Sunucu',
+	'Class:Model/Attribute:type/Value:StorageSystem' => 'Depolama sistemi',
+	'Class:Model/Attribute:type/Value:StorageSystem+' => 'Depolama sistemi',
+	'Class:Model/Attribute:type/Value:Tablet' => 'Tablet',
+	'Class:Model/Attribute:type/Value:Tablet+' => 'Tablet',
+	'Class:Model/Attribute:type/Value:TapeLibrary' => 'Teyp Kütüphanesi',
+	'Class:Model/Attribute:type/Value:TapeLibrary+' => 'Teyp Kütüphanesi',
+	'Class:Model/Attribute:type/Value:Phone' => 'Telefon',
+	'Class:Model/Attribute:type/Value:Phone+' => 'Telefon',
+	'Class:Model/Attribute:physicaldevices_list' => 'Fiziksel cihazlar',
+	'Class:Model/Attribute:physicaldevices_list+' => 'Bu modele karşılık gelen tüm fiziksel cihazlar',
 	'Class:Model/UniquenessRule:name_brand+' => 'Name must be unique in the brand~~',
 	'Class:Model/UniquenessRule:name_brand' => 'this model already exists for this brand~~',
 ));
@@ -1124,10 +1124,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:NetworkDeviceType' => 'Network Device Type~~',
+	'Class:NetworkDeviceType' => 'Ağ Cihazı Tipi',
 	'Class:NetworkDeviceType+' => '~~',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Network devices~~',
-	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'All the network devices corresponding to this type~~',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list' => 'Ağ Aygıtları',
+	'Class:NetworkDeviceType/Attribute:networkdevicesdevices_list+' => 'Bu türde karşılık gelen tüm ağ aygıtları',
 ));
 
 //
@@ -1135,11 +1135,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:IOSVersion' => 'IOS Version~~',
+	'Class:IOSVersion' => 'IOS sürümü',
 	'Class:IOSVersion+' => '~~',
-	'Class:IOSVersion/Attribute:brand_id' => 'Brand~~',
+	'Class:IOSVersion/Attribute:brand_id' => 'Marka',
 	'Class:IOSVersion/Attribute:brand_id+' => '~~',
-	'Class:IOSVersion/Attribute:brand_name' => 'Brand name~~',
+	'Class:IOSVersion/Attribute:brand_name' => 'Marka Adı',
 	'Class:IOSVersion/Attribute:brand_name+' => '~~',
 ));
 
@@ -1148,15 +1148,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToPatch' => 'Link Document / Patch~~',
+	'Class:lnkDocumentToPatch' => 'Bağlantılı belge / yama',
 	'Class:lnkDocumentToPatch+' => '~~',
-	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Patch~~',
+	'Class:lnkDocumentToPatch/Attribute:patch_id' => 'Yama',
 	'Class:lnkDocumentToPatch/Attribute:patch_id+' => '~~',
-	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Patch name~~',
+	'Class:lnkDocumentToPatch/Attribute:patch_name' => 'Yama adı',
 	'Class:lnkDocumentToPatch/Attribute:patch_name+' => '~~',
-	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToPatch/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToPatch/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToPatch/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToPatch/Attribute:document_name+' => '~~',
 ));
 
@@ -1165,15 +1165,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Link Software Instance / Software Patch~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch' => 'Yazılımı olayı / Yazılım yaması bağla',
 	'Class:lnkSoftwareInstanceToSoftwarePatch+' => '~~',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Software patch~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id' => 'Yazılım yaması',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_id+' => '~~',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Software patch name~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name' => 'Yazılım yama adı',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwarepatch_name+' => '~~',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Software instance~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id' => 'Yazılım olayı',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_id+' => '~~',
-	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Software instance name~~',
+	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name' => 'Yazılım olayı adı',
 	'Class:lnkSoftwareInstanceToSoftwarePatch/Attribute:softwareinstance_name+' => '~~',
 ));
 
@@ -1182,15 +1182,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkFunctionalCIToOSPatch' => 'Link FunctionalCI / OS patch~~',
+	'Class:lnkFunctionalCIToOSPatch' => 'İşlevsel CI / OS Yaması bağla',
 	'Class:lnkFunctionalCIToOSPatch+' => '~~',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'OS patch~~',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id' => 'İşletim sistemi yaması',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_id+' => '~~',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'OS patch name~~',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name' => 'İşletim sistemi yama adı',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:ospatch_name+' => '~~',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id' => 'İşlevsel CI',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_id+' => '~~',
-	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name' => 'İşlevsel CI Adı',
 	'Class:lnkFunctionalCIToOSPatch/Attribute:functionalci_name+' => '~~',
 ));
 
@@ -1199,15 +1199,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToSoftware' => 'Link Document / Software~~',
+	'Class:lnkDocumentToSoftware' => 'Belge / yazılım bağla',
 	'Class:lnkDocumentToSoftware+' => '~~',
-	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Software~~',
+	'Class:lnkDocumentToSoftware/Attribute:software_id' => 'Yazılım',
 	'Class:lnkDocumentToSoftware/Attribute:software_id+' => '~~',
-	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Software name~~',
+	'Class:lnkDocumentToSoftware/Attribute:software_name' => 'Yazılım adı',
 	'Class:lnkDocumentToSoftware/Attribute:software_name+' => '~~',
-	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToSoftware/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToSoftware/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToSoftware/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToSoftware/Attribute:document_name+' => '~~',
 ));
 
@@ -1220,17 +1220,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Subnet+' => '',
 	'Class:Subnet/Attribute:description' => 'Tanımlama',
 	'Class:Subnet/Attribute:description+' => '',
-	'Class:Subnet/Attribute:subnet_name' => 'Subnet name~~',
+	'Class:Subnet/Attribute:subnet_name' => 'Alt ağ adı',
 	'Class:Subnet/Attribute:subnet_name+' => '~~',
 	'Class:Subnet/Attribute:org_id' => 'Kurum',
 	'Class:Subnet/Attribute:org_id+' => '',
-	'Class:Subnet/Attribute:org_name' => 'Name~~',
-	'Class:Subnet/Attribute:org_name+' => 'Common name~~',
+	'Class:Subnet/Attribute:org_name' => 'İsim',
+	'Class:Subnet/Attribute:org_name+' => 'Ortak Adı',
 	'Class:Subnet/Attribute:ip' => 'IP',
 	'Class:Subnet/Attribute:ip+' => '',
 	'Class:Subnet/Attribute:ip_mask' => 'IP Mask',
 	'Class:Subnet/Attribute:ip_mask+' => '',
-	'Class:Subnet/Attribute:vlans_list' => 'VLANs~~',
+	'Class:Subnet/Attribute:vlans_list' => 'VLAN \'lar',
 	'Class:Subnet/Attribute:vlans_list+' => '~~',
 ));
 
@@ -1239,19 +1239,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:VLAN' => 'VLAN~~',
+	'Class:VLAN' => 'Vlan',
 	'Class:VLAN+' => '~~',
-	'Class:VLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
+	'Class:VLAN/Attribute:vlan_tag' => 'Vlan etiketi',
 	'Class:VLAN/Attribute:vlan_tag+' => '~~',
-	'Class:VLAN/Attribute:description' => 'Description~~',
+	'Class:VLAN/Attribute:description' => 'Açıklama',
 	'Class:VLAN/Attribute:description+' => '~~',
-	'Class:VLAN/Attribute:org_id' => 'Organization~~',
+	'Class:VLAN/Attribute:org_id' => 'Organizasyon',
 	'Class:VLAN/Attribute:org_id+' => '~~',
-	'Class:VLAN/Attribute:org_name' => 'Organization name~~',
-	'Class:VLAN/Attribute:org_name+' => 'Common name~~',
-	'Class:VLAN/Attribute:subnets_list' => 'Subnets~~',
+	'Class:VLAN/Attribute:org_name' => 'Organizasyon Adı',
+	'Class:VLAN/Attribute:org_name+' => 'Ortak Adı',
+	'Class:VLAN/Attribute:subnets_list' => 'Alt Ağları',
 	'Class:VLAN/Attribute:subnets_list+' => '~~',
-	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Physical network interfaces~~',
+	'Class:VLAN/Attribute:physicalinterfaces_list' => 'Fiziksel Ağ Arayüzleri',
 	'Class:VLAN/Attribute:physicalinterfaces_list+' => '~~',
 ));
 
@@ -1260,17 +1260,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkSubnetToVLAN' => 'Link Subnet / VLAN~~',
+	'Class:lnkSubnetToVLAN' => 'Alt Ağ / VLAN  bağla',
 	'Class:lnkSubnetToVLAN+' => '~~',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Subnet~~',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_id' => 'Alt Ağ',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_id+' => '~~',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Subnet IP~~',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_ip' => 'Alt Ağ IP \'si',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_ip+' => '~~',
-	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Subnet name~~',
+	'Class:lnkSubnetToVLAN/Attribute:subnet_name' => 'Alt ağ adı',
 	'Class:lnkSubnetToVLAN/Attribute:subnet_name+' => '~~',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN~~',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_id' => 'VLAN',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_id+' => '~~',
-	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
+	'Class:lnkSubnetToVLAN/Attribute:vlan_tag' => 'VLAN Etiketi',
 	'Class:lnkSubnetToVLAN/Attribute:vlan_tag+' => '~~',
 ));
 
@@ -1281,9 +1281,9 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:NetworkInterface' => 'Network arayüzü',
 	'Class:NetworkInterface+' => '',
-	'Class:NetworkInterface/Attribute:name' => 'Name~~',
+	'Class:NetworkInterface/Attribute:name' => 'İsim',
 	'Class:NetworkInterface/Attribute:name+' => '~~',
-	'Class:NetworkInterface/Attribute:finalclass' => 'Type~~',
+	'Class:NetworkInterface/Attribute:finalclass' => 'Tip',
 	'Class:NetworkInterface/Attribute:finalclass+' => 'Name of the final class~~',
 ));
 
@@ -1292,21 +1292,21 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:IPInterface' => 'IP Interface~~',
+	'Class:IPInterface' => 'IP arayüzü',
 	'Class:IPInterface+' => '~~',
-	'Class:IPInterface/Attribute:ipaddress' => 'IP address~~',
+	'Class:IPInterface/Attribute:ipaddress' => 'IP adresi',
 	'Class:IPInterface/Attribute:ipaddress+' => '~~',
 
 
-	'Class:IPInterface/Attribute:macaddress' => 'MAC address~~',
+	'Class:IPInterface/Attribute:macaddress' => 'MAC adresi',
 	'Class:IPInterface/Attribute:macaddress+' => '~~',
-	'Class:IPInterface/Attribute:comment' => 'Comment~~',
+	'Class:IPInterface/Attribute:comment' => 'Yorum',
 	'Class:IPInterface/Attribute:coment+' => '~~',
-	'Class:IPInterface/Attribute:ipgateway' => 'IP gateway~~',
+	'Class:IPInterface/Attribute:ipgateway' => 'IP Ağ Geçidi',
 	'Class:IPInterface/Attribute:ipgateway+' => '~~',
-	'Class:IPInterface/Attribute:ipmask' => 'IP mask~~',
+	'Class:IPInterface/Attribute:ipmask' => 'IP maskesi',
 	'Class:IPInterface/Attribute:ipmask+' => '~~',
-	'Class:IPInterface/Attribute:speed' => 'Speed~~',
+	'Class:IPInterface/Attribute:speed' => 'Hız',
 	'Class:IPInterface/Attribute:speed+' => '~~',
 ));
 
@@ -1315,13 +1315,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:PhysicalInterface' => 'Physical Interface~~',
+	'Class:PhysicalInterface' => 'Fiziksel arayüz',
 	'Class:PhysicalInterface+' => '~~',
-	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Device~~',
+	'Class:PhysicalInterface/Attribute:connectableci_id' => 'Cihaz',
 	'Class:PhysicalInterface/Attribute:connectableci_id+' => '~~',
-	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Device name~~',
+	'Class:PhysicalInterface/Attribute:connectableci_name' => 'Cihaz adı',
 	'Class:PhysicalInterface/Attribute:connectableci_name+' => '~~',
-	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLANs~~',
+	'Class:PhysicalInterface/Attribute:vlans_list' => 'VLAN\'lar',
 	'Class:PhysicalInterface/Attribute:vlans_list+' => '~~',
 ));
 
@@ -1330,19 +1330,19 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkPhysicalInterfaceToVLAN' => 'Link PhysicalInterface / VLAN~~',
+	'Class:lnkPhysicalInterfaceToVLAN' => 'Fiziksel Arabirim / VLAN bağla',
 	'Class:lnkPhysicalInterfaceToVLAN+' => '~~',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Physical Interface~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id' => 'Fiziksel arabirim',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_id+' => '~~',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Physical Interface Name~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name' => 'Fiziksel Arabirim Adı',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_name+' => '~~',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Device~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id' => 'Cihaz',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_id+' => '~~',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Device name~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name' => 'Cihaz adı',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:physicalinterface_device_name+' => '~~',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id' => 'VLAN',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_id+' => '~~',
-	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN Tag~~',
+	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag' => 'VLAN etiketi',
 	'Class:lnkPhysicalInterfaceToVLAN/Attribute:vlan_tag+' => '~~',
 ));
 
@@ -1352,11 +1352,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:LogicalInterface' => 'Logical Interface~~',
+	'Class:LogicalInterface' => 'Mantıksal arabirim',
 	'Class:LogicalInterface+' => '~~',
-	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Virtual machine~~',
+	'Class:LogicalInterface/Attribute:virtualmachine_id' => 'Sanal makine',
 	'Class:LogicalInterface/Attribute:virtualmachine_id+' => '~~',
-	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Virtual machine name~~',
+	'Class:LogicalInterface/Attribute:virtualmachine_name' => 'Sanal Makine Adı',
 	'Class:LogicalInterface/Attribute:virtualmachine_name+' => '~~',
 ));
 
@@ -1365,17 +1365,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:FiberChannelInterface' => 'Fiber Channel Interface~~',
+	'Class:FiberChannelInterface' => 'Fiber Kanal Arabirimi',
 	'Class:FiberChannelInterface+' => '~~',
-	'Class:FiberChannelInterface/Attribute:speed' => 'Speed~~',
+	'Class:FiberChannelInterface/Attribute:speed' => 'Hız',
 	'Class:FiberChannelInterface/Attribute:speed+' => '~~',
-	'Class:FiberChannelInterface/Attribute:topology' => 'Topology~~',
+	'Class:FiberChannelInterface/Attribute:topology' => 'Topoloji',
 	'Class:FiberChannelInterface/Attribute:topology+' => '~~',
-	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN~~',
+	'Class:FiberChannelInterface/Attribute:wwn' => 'WWN',
 	'Class:FiberChannelInterface/Attribute:wwn+' => '~~',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Device~~',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_id' => 'Cihaz',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_id+' => '~~',
-	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Device name~~',
+	'Class:FiberChannelInterface/Attribute:datacenterdevice_name' => 'Cihaz adı',
 	'Class:FiberChannelInterface/Attribute:datacenterdevice_name+' => '~~',
 ));
 
@@ -1384,26 +1384,26 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkConnectableCIToNetworkDevice' => 'Link ConnectableCI / NetworkDevice~~',
+	'Class:lnkConnectableCIToNetworkDevice' => 'İlişkilendirilebilir CI / Ağ cihazı bağla',
 	'Class:lnkConnectableCIToNetworkDevice+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Network device~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id' => 'Ağ cihazı',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_id+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Network device name~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name' => 'Ağ Aygıtı Adı',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:networkdevice_name+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Connected device~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id' => 'Bağlı cihaz',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_id+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Connected device name~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name' => 'Bağlı cihaz adı',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connectableci_name+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Network port~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port' => 'Ağ portu',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:network_port+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Device port~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port' => 'Cihaz portu',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:device_port+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Connection type~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type' => 'Bağlantı tipi',
 	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type+' => '~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'down link~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'down link~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'up link~~',
-	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'up link~~',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink' => 'aşağı bağlantı',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:downlink+' => 'aşağı bağlantı',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink' => 'yukarı bağlantı',
+	'Class:lnkConnectableCIToNetworkDevice/Attribute:connection_type/Value:uplink+' => 'yukarı bağlantı',
 ));
 
 //
@@ -1411,15 +1411,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkApplicationSolutionToFunctionalCI' => 'Link ApplicationSolution / FunctionalCI~~',
+	'Class:lnkApplicationSolutionToFunctionalCI' => 'Uygulama Çözümü / İşlevsel CI bağla',
 	'Class:lnkApplicationSolutionToFunctionalCI+' => '~~',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Application solution~~',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id' => 'Uygulama çözümü',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_id+' => '~~',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Application solution name~~',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name' => 'Uygulama çözümü Adı',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:applicationsolution_name+' => '~~',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id' => 'İşlevsel CI',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name' => 'İşlevsel CI Adı',
 	'Class:lnkApplicationSolutionToFunctionalCI/Attribute:functionalci_name+' => '~~',
 ));
 
@@ -1428,15 +1428,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkApplicationSolutionToBusinessProcess' => 'Link ApplicationSolution / BusinessProcess~~',
+	'Class:lnkApplicationSolutionToBusinessProcess' => 'Uygulama Çözümü / İş Süreci bağla',
 	'Class:lnkApplicationSolutionToBusinessProcess+' => '~~',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'Business process~~',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id' => 'İş süreci',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_id+' => '~~',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'Business process name~~',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name' => 'İş Süreci Adı',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:businessprocess_name+' => '~~',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Application solution~~',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id' => 'Uygulama çözümü',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_id+' => '~~',
-	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Application solution name~~',
+	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name' => 'Uygulama Çözümü Adı',
 	'Class:lnkApplicationSolutionToBusinessProcess/Attribute:applicationsolution_name+' => '~~',
 ));
 
@@ -1472,7 +1472,7 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:Group/Attribute:parent_name+' => '',
 	'Class:Group/Attribute:ci_list' => 'Bağlantılı Konfigürasyon Kalemleri (KK)',
 	'Class:Group/Attribute:ci_list+' => '',
-	'Class:Group/Attribute:parent_id_friendlyname' => 'Parent Group~~',
+	'Class:Group/Attribute:parent_id_friendlyname' => 'Ana Grup',
 	'Class:Group/Attribute:parent_id_friendlyname+' => '~~',
 ));
 
@@ -1498,11 +1498,11 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 // Add translation for Fieldsets
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Server:baseinfo' => 'General information~~',
-	'Server:Date' => 'Dates~~',
-	'Server:moreinfo' => 'More information~~',
-	'Server:otherinfo' => 'Other information~~',
-	'Server:power' => 'Power supply~~',
+	'Server:baseinfo' => 'Genel Bilgi',
+	'Server:Date' => 'Tarihler',
+	'Server:moreinfo' => 'Daha fazla bilgi',
+	'Server:otherinfo' => 'Diğer bilgiler',
+	'Server:power' => 'Güç kaynağı',
 	'Class:Subnet/Tab:IPUsage' => 'IP Kullanımı',
 	'Class:Subnet/Tab:IPUsage-explain' => '<em>%1$s</em> - <em>%2$s</em> aralığındaki IPye sahip arayüzler',
 	'Class:Subnet/Tab:FreeIPs' => 'Boş IPler',
@@ -1517,15 +1517,15 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToFunctionalCI' => 'Link Document / FunctionalCI~~',
+	'Class:lnkDocumentToFunctionalCI' => 'Belge / İşlevsel CI bağla',
 	'Class:lnkDocumentToFunctionalCI+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'Functionalci~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id' => 'İşlevsel CI',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'Functionalci name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name' => 'İşlevsel CI Adı',
 	'Class:lnkDocumentToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Document name~~',
+	'Class:lnkDocumentToFunctionalCI/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToFunctionalCI/Attribute:document_name+' => '~~',
 ));
 
@@ -1568,15 +1568,14 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:SearchCIs+' => 'KK ara',
 	'Menu:ConfigManagement:Devices' => 'Cihazlar',
 	'Menu:ConfigManagement:AllDevices' => 'Altyapı',
-	'Menu:ConfigManagement:virtualization' => 'Virtualization~~',
-	'Menu:ConfigManagement:EndUsers' => 'End user devices~~',
+	'Menu:ConfigManagement:virtualization' => 'Sanallaştırma',
+	'Menu:ConfigManagement:EndUsers' => 'Son Kullanıcı Aygıtları',
 	'Menu:ConfigManagement:SWAndApps' => 'Yazılım ve uygulamalar',
 	'Menu:ConfigManagement:Misc' => 'Diğer',
 	'Menu:Group' => 'KK Grupları',
 	'Menu:Group+' => 'KK Grupları',
-	'Menu:OSVersion' => 'OS versions~~',
+	'Menu:OSVersion' => 'OS sürümleri',
 	'Menu:OSVersion+' => '~~',
-	'Menu:Software' => 'Software catalog~~',
-	'Menu:Software+' => 'Software catalog~~',
+	'Menu:Software' => 'Yazılım Kataloğu',
+	'Menu:Software+' => 'Yazılım Kataloğu',
 ));
-?>

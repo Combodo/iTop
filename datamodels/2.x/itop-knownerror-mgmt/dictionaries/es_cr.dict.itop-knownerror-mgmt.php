@@ -15,8 +15,8 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -47,7 +47,7 @@
 //
 // Class: KnownError
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:KnownError' => 'Error Conocido',
 	'Class:KnownError+' => 'Documentación para un error conocido',
 	'Class:KnownError/Attribute:name' => 'Nombre',
@@ -96,7 +96,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkErrorToFunctionalCI
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkErrorToFunctionalCI' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI+' => 'Relación Error Conocido y EC Funcional',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'EC',
@@ -115,7 +115,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 // Class: lnkDocumentToError
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:lnkDocumentToError' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError+' => 'Relación Documento y Error Conocido',
 	'Class:lnkDocumentToError/Attribute:document_id' => 'Documento',
@@ -130,7 +130,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Class:lnkDocumentToError/Attribute:link_type+' => 'Tipo',
 ));
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Menu:ProblemManagement' => 'Gestión de problemas',
 	'Menu:ProblemManagement+' => 'Gestión de problemas',
 	'Menu:Problem:Shortcuts' => 'Acceso Rápido',

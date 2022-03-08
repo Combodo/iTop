@@ -27,8 +27,6 @@ use Combodo\iTop\Application\Helper\Session;
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
-
 class privUITransaction
 {
 	/**
@@ -100,10 +98,12 @@ class privUITransaction
 }
 
 /**
- * The original (and by default) mechanism for storing transaction information
- * as an array in the _SESSION variable
- * @see \Combodo\iTop\Application\Helper\Session
+ * The original mechanism for storing transaction information as an array in the $_SESSION variable
  *
+ * Warning, since 2.6.0 the session is regenerated on each login (see PR #20) !
+ * Also, we saw some problems when using memcached as the PHP session implementation (see N°1835)
+ *
+ * @see \Combodo\iTop\Application\Helper\Session
  */
 class privUITransactionSession
 {
@@ -196,9 +196,35 @@ class privUITransactionSession
  */
 class privUITransactionFile
 {
+	/** @var int Value to use when no user logged */
+	const UNAUTHENTICATED_USER_ID = -666;
+
 	/**
+	 * @return int current user id, or {@see self::UNAUTHENTICATED_USER_ID} if no user logged
+	 *
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
+	 */
+	private static function GetCurrentUserId()
+	{
+		$iCurrentUserId = UserRights::GetConnectedUserId();
+		if ('' === $iCurrentUserId) {
+			$iCurrentUserId = static::UNAUTHENTICATED_USER_ID;
+		}
+
+		return $iCurrentUserId;
+	}
+
+	/**
+	 * Create a new transaction id, store it in the session and return its id
+	 *
+	 * @param void
+	 *
 	 * @return int The new transaction identifier
+	 *
+	 * @throws \SecurityException
 	 * @throws \Exception
+	 *
+	 * @since 2.6.5 2.7.6 3.0.0 security hardening + throws SecurityException if no user logged
 	 */
 	public static function GetNewTransactionId()
 	{
@@ -215,24 +241,36 @@ class privUITransactionFile
 				throw new Exception('Failed to create the directory "'.APPROOT.'data/transactions". Ajust the rights on the parent directory or let an administrator create the transactions directory and give the web sever enough rights to write into it.');
 			}
 		}
+
 		if (!is_writable(APPROOT.'data/transactions'))
 		{
 			throw new Exception('The directory "'.APPROOT.'data/transactions" must be writable to the application.');
 		}
-		self::CleanupOldTransactions();
-		$id = basename(tempnam(APPROOT.'data/transactions', static::GetUserPrefix()));
-		self::Info('GetNewTransactionId: Created transaction: '.$id);
 
-		return (string)$id;
+		$iCurrentUserId = static::GetCurrentUserId();
+
+		self::CleanupOldTransactions();
+
+		$sTransactionIdFullPath = tempnam(APPROOT.'data/transactions', static::GetUserPrefix());
+		file_put_contents($sTransactionIdFullPath, $iCurrentUserId, LOCK_EX);
+
+		$sTransactionIdFileName = basename($sTransactionIdFullPath);
+		self::Info('GetNewTransactionId: Created transaction: '.$sTransactionIdFileName);
+
+		return $sTransactionIdFileName;
 	}
 
 	/**
 	 * Check whether a transaction is valid or not and (optionally) remove the valid transaction from
 	 * the session so that another call to IsTransactionValid for the same transaction id
 	 * will return false
+	 *
 	 * @param int $id Identifier of the transaction, as returned by GetNewTransactionId
 	 * @param bool $bRemoveTransaction True if the transaction must be removed
+	 *
 	 * @return bool True if the transaction is valid, false otherwise
+	 *
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 security hardening
 	 */
 	public static function IsTransactionValid($id, $bRemoveTransaction = true)
 	{
@@ -246,53 +284,53 @@ class privUITransactionFile
 
 		clearstatcache(true, $sFilepath);
 		$bResult = file_exists($sFilepath);
-		if ($bResult)
+
+		if (false === $bResult) {
+			self::Info("IsTransactionValid: Transaction '$id' not found. Pending transactions:\n".implode("\n", self::GetPendingTransactions()));
+			return false;
+		}
+
+		$iCurrentUserId = static::GetCurrentUserId();
+		$sTransactionIdUserId = file_get_contents($sFilepath);
+		if ($iCurrentUserId != $sTransactionIdUserId) {
+			self::Info("IsTransactionValid: Transaction '$id' not existing for current user. Pending transactions:\n".implode("\n", self::GetPendingTransactions()));
+			return false;
+		}
+
+		if ($bRemoveTransaction)
 		{
-			if ($bRemoveTransaction)
+			$bResult = @unlink($sFilepath);
+			if (!$bResult)
 			{
-				$bResult = @unlink($sFilepath);
-				if (!$bResult)
-				{
-					self::Error('IsTransactionValid: FAILED to remove transaction '.$id);
-				}
-				else
-				{
-					self::Info('IsTransactionValid: OK. Removed transaction: '.$id);
-				}
+				self::Error('IsTransactionValid: FAILED to remove transaction '.$id);
+			}
+			else
+			{
+				self::Info('IsTransactionValid: OK. Removed transaction: '.$id);
 			}
 		}
-		else
-		{
-			self::Info("IsTransactionValid: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
-		}
+
 		return $bResult;
 	}
 
 	/**
 	 * Removes the transaction specified by its id
 	 * @param int $id The Identifier (as returned by GetNewTransactionId) of the transaction to be removed.
-	 * @return void
+	 * @return bool true if the token can be removed
+	 *
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 security hardening
 	 */
 	public static function RemoveTransaction($id)
 	{
-		$bSuccess = true;
-		$sFilepath = APPROOT.'data/transactions/'.$id;
-		clearstatcache(true, $sFilepath);
-		if(!file_exists($sFilepath))
-		{
-			$bSuccess = false;
-			self::Error("RemoveTransaction: Transaction '$id' not found. Pending transactions for this user:\n".implode("\n", self::GetPendingTransactions()));
+		/** @noinspection PhpRedundantOptionalArgumentInspection */
+		$bResult = static::IsTransactionValid($id, true);
+		if (false === $bResult) {
+			self::Error("RemoveTransaction: Transaction '$id' is invalid. Pending transactions:\n"
+				.implode("\n", self::GetPendingTransactions()));
+			return false;
 		}
-		$bSuccess = @unlink($sFilepath);
-		if (!$bSuccess)
-		{
-			self::Error('RemoveTransaction: FAILED to remove transaction '.$id);
-		}
-		else
-		{
-			self::Info('RemoveTransaction: OK '.$id);
-		}
-		return $bSuccess;
+
+		return true;
 	}
 
 	/**
@@ -365,22 +403,35 @@ class privUITransactionFile
 	{
 		self::Write('Error | '.$sText);
 	}
-	
+
+	protected static function IsLogEnabled() {
+		$oConfig = MetaModel::GetConfig();
+		if (is_null($oConfig)) {
+			return false;
+		}
+
+		$bLogTransactions = $oConfig->Get('log_transactions');
+		if (true === $bLogTransactions) {
+			return true;
+		}
+
+		return false;
+	}
+
 	protected static function Write($sText)
 	{
-		$bLogEnabled = MetaModel::GetConfig()->Get('log_transactions');
-		if ($bLogEnabled)
-		{
+		if (false === static::IsLogEnabled()) {
+			return;
+		}
+
 		$hLogFile = @fopen(APPROOT.'log/transactions.log', 'a');
-		if ($hLogFile !== false)
-		{
+		if ($hLogFile !== false) {
 			flock($hLogFile, LOCK_EX);
 			$sDate = date('Y-m-d H:i:s');
 			fwrite($hLogFile, "$sDate | $sText\n");
 			fflush($hLogFile);
 			flock($hLogFile, LOCK_UN);
 			fclose($hLogFile);
-			}
 		}
 	}
 }

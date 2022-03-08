@@ -1,5 +1,5 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-activity-panel {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
      data-role="ibo-activity-panel"
      data-object-class="{{ oUIBlock.GetObjectClass() }}"
      data-object-id="{{ oUIBlock.GetObjectId() }}"
@@ -17,6 +17,7 @@
                     <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
                         <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
                         <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+                        <span class="ibo-activity-panel--tab-title-messages-count" data-role="ibo-activity-panel--tab-title-messages-count" data-messages-count="{{ aCaseLogData.total_messages_count }}">{{ aCaseLogData.total_messages_count }}</span>
                         <span class="ibo-activity-panel--tab-title-draft-indicator"
                               data-role="ibo-activity-panel--tab-title-draft-indicator"
                               data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip'|dict_s }}">

@@ -14,10 +14,10 @@ $ibo-object-details--icon--size--is-sticking: $ibo-panel--icon--size-as-medallio
 $ibo-object-details--icon--spacing--as-medallion--is-sticking: $ibo-object-details--icon--spacing--as-medallion !default;
 
 $ibo-object-details--status-dot--size: 10px !default;
-$ibo-object-details--status-dot--spacing: 8px !default;
+$ibo-object-details--status-dot--spacing: $ibo-spacing-300 !default;
 $ibo-object-details--status-dot--border-radius: $ibo-border-radius-full !default;
 
-$ibo-object-details--tag--sibling-spacing: 12px !default;
+$ibo-object-details--tag--sibling-spacing: $ibo-spacing-400 !default;
 $ibo-object-details--tag--color: $ibo-panel--subtitle--color !default;
 
 $ibo-object-details--tag-icon--margin-right: 6px !default;
@@ -25,8 +25,10 @@ $ibo-object-details--tag-icon--color: $ibo-color-grey-700 !default;
 
 $ibo-object-details--tag--separator--background-color: $ibo-color-grey-800 !default;
 $ibo-object-details--tag--separator--diameter: 5px !default;
-$ibo-object-details--tag--separator--margin-right: 12px !default;
+$ibo-object-details--tag--separator--margin-right: $ibo-spacing-400 !default;
 $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !default;
+
+$ibo-object-details--header-right--padding-right--is-sticking: $ibo-spacing-300 !default;
 
 /* Parent block overloads (!= than blocks integrations) */
 .ibo-object-details {
@@ -49,6 +51,13 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
           padding-left: $ibo-object-details--icon--spacing--as-medallion;
         }
       }
+    }
+  }
+
+  // Note: Direct child selector is mandatory, otherwise a panel within a panel will have be impacted (eg. n:n relations tabs)
+  > .ibo-panel--header {
+    .ibo-panel--subtitle {
+      @extend %ibo-text-truncated-with-ellipsis;
     }
   }
 }
@@ -137,6 +146,9 @@ $ibo-object-details--tag--separator--border-radius: $ibo-border-radius-full !def
         &.ibo-is-sticking {
           .ibo-panel--header-left {
             padding-left: $ibo-object-details--icon--size--is-sticking;
+          }
+          .ibo-panel--header-right {
+            padding-right: $ibo-object-details--header-right--padding-right--is-sticking;
           }
 
           .ibo-panel--titles {

@@ -704,7 +704,7 @@ class WizStepLicense extends WizardStep
 		$oPage->add_style(
 <<<CSS
 fieldset ul {
-	max-height: 30em;
+	max-height: min(30em, 40vh); /* Allow usage of the UI up to 150% zoom */
 	overflow: auto;
 }
 CSS
@@ -2096,12 +2096,12 @@ EOF
 
 	protected function DisplayChoice($oPage, $aChoice, $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled = false)
 	{
-		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
+		$sMoreInfo = (isset($aChoice['more_info']) && ($aChoice['more_info'] != '')) ? '<a class="setup--wizard-choice--more-info" target="_blank" href="'.$aChoice['more_info'].'">More information</a>' : '';
 		$sSourceLabel = isset($aChoice['source_label']) ? $aChoice['source_label'] : '';
 		$sId = htmlentities($aChoice['extension_code'], ENT_QUOTES, 'UTF-8');
-		$oPage->add('<label for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
+		$oPage->add('<label class="setup--wizard-choice--label" for="'.$sId.'">'.$sSourceLabel.'<b>'.htmlentities($aChoice['title'], ENT_QUOTES, 'UTF-8').'</b>'.'</label> '.$sMoreInfo);
 		$sDescription = isset($aChoice['description']) ? htmlentities($aChoice['description'], ENT_QUOTES, 'UTF-8') : '';
-		$oPage->add('<div class="description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
+		$oPage->add('<div class="setup--wizard-choice--description description">'.$sDescription.'<span id="sub_choices'.$sId.'">');
 		if (isset($aChoice['sub_options']))
 		{
 			$this->DisplayOptions($oPage, $aChoice['sub_options'], $aSelectedComponents, $aDefaults, $sChoiceId, $bDisabled);
@@ -2523,7 +2523,9 @@ class WizStepDone extends WizardStep
 		{
 			if (!empty($aAvailableModules[$sModuleId]['doc.manual_setup']))
 			{
-				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sRootUrl.$aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$sUrl = $aAvailableModules[$sModuleId]['doc.manual_setup'];
+				$sManualStepUrl = utils::IsURL($sUrl) ? $sUrl : $sRootUrl.$sUrl;
+				$aManualSteps[$aAvailableModules[$sModuleId]['label']] = $sManualStepUrl;
 			}
 		}
 		$oPage->add('<div class="ibo-is-html-content">');
@@ -2531,8 +2533,7 @@ class WizStepDone extends WizardStep
 		{
 			$oPage->add("<h2>Manual operations required</h2>");
 			$oPage->p("In order to complete the installation, the following manual operations are required:");
-			foreach($aManualSteps as $sModuleLabel => $sUrl)
-			{
+			foreach($aManualSteps as $sModuleLabel => $sUrl) {
 				$oPage->p("<a href=\"$sUrl\" target=\"_blank\">Manual instructions for $sModuleLabel</a>");
 			}
 			$oPage->add("<h2>Congratulations for installing ".ITOP_APPLICATION."</h2>");
@@ -2543,11 +2544,13 @@ class WizStepDone extends WizardStep
 			$oPage->ok("The installation completed successfully.");
 		}
 
+		$bHasBackup = false;
 		if (($this->oWizard->GetParameter('mode', '') == 'upgrade') && $this->oWizard->GetParameter('db_backup', false) && $this->oWizard->GetParameter('authent', false))
 		{
 			$sBackupDestination = $this->oWizard->GetParameter('db_backup_path', '');
 			if (file_exists($sBackupDestination.'.tar.gz'))
 			{
+				$bHasBackup = true;
 				// To mitigate security risks: pass only the filename without the extension, the download will add the extension itself
 				$oPage->p('Your backup is ready');
 				$oPage->p('<a style="background:transparent;" href="'.utils::GetAbsoluteUrlAppRoot(true).'setup/ajax.dataloader.php?operation=async_action&step_class=WizStepDone&params[backup]='.urlencode($sBackupDestination).'&authent='.$this->oWizard->GetParameter('authent','').'" target="_blank"><img src="../images/icons/icons8-archive-folder.svg" style="border:0;vertical-align:middle;">&nbsp;Download '.basename($sBackupDestination).'</a>');
@@ -2674,7 +2677,10 @@ class WizStepDone extends WizardStep
 		// avoid leaving in a dirty state
 		SetupUtils::ExitMaintenanceMode(false);
 		SetupUtils::ExitReadOnlyMode(false);
-		SetupUtils::EraseSetupToken();
+
+		if (false === $bHasBackup) {
+			SetupUtils::EraseSetupToken();
+		}
 	}
 
 	public function CanMoveForward()
@@ -2697,6 +2703,7 @@ class WizStepDone extends WizardStep
 
 	public function AsyncAction(WebPage $oPage, $sCode, $aParameters)
 	{
+		SetupUtils::EraseSetupToken();
 		// For security reasons: add the extension now so that this action can be used to read *only* .tar.gz files from the disk...
 		$sBackupFile = $aParameters['backup'].'.tar.gz';
 		if (file_exists($sBackupFile))

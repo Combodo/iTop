@@ -2,7 +2,7 @@
 {% endblock %}
 {% block iboInput %}
     <input type="{{ oUIBlock.GetType() }}" id="{{ oUIBlock.GetId() }}" name="{{ oUIBlock.GetName() }}" value="{{ oUIBlock.GetValue()|raw }}"
-           class="ibo-input {% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}{% if oUIBlock.GetAdditionalCSSClassesAsString() %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% endif %}"
+           class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
            data-role="ibo-input"
             {% if oUIBlock.IsChecked() %} checked="checked"{% endif %}
             {% if oUIBlock.IsDisabled() %} disabled{% endif %}

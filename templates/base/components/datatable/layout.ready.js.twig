@@ -82,7 +82,11 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
             }
         }
     },
-    drawCallback: function () {
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
         if ($(this).closest('.ibo-panel--body').find('[name=selectionMode]').val() === "negative")
         {
             $(this).closest('.dataTables_wrapper').find('.checkAll')[0].checked = true;
@@ -106,7 +110,11 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         });
     },
     {% else %}
-    drawCallback: function () {
+    drawCallback: function (settings) {
+        if(settings.json)
+        {
+            $(this).closest('.ibo-panel').find('.ibo-datatable--result-count').html(settings.json.recordsTotal);
+        }
         $(this).closest('.dataTables_wrapper').unblock();
         // Hiding pagination if only one page
         if ($(this).closest('.dataTables_wrapper').find('.dataTables_paginate:last .paginate_button:not(.previous):not(.next)').length < 2)
@@ -139,7 +147,7 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 '<span class="row_input"><input type="checkbox" style="display: none;" onclick="checkAllDataTable(\'{{ oUIBlock.GetId() }}\',this.checked,\'{{ oUIBlock.GetOption("sListId") }}\');" class="checkAll" id="field_{{ oUIBlock.GetId() }}_check_all" name="field_{{ oUIBlock.GetId() }}_check_all" title="{{ 'UI:SearchValue:CheckAll'|dict_s }} / {{ 'UI:SearchValue:UncheckAll'|dict_s }}"/></span>'
             {% endif %},
             type: "html",
-            data: "",
+            data: "id",
             render: function (data, type, row) {
                 let oCheckboxElem =
                 {% if oUIBlock.GetOption("select_mode") != "single" %}
@@ -172,6 +180,17 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
                 attribute_label: "{{ aColumn["attribute_label"] }}"
             },
             data: "{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}",
+            createdCell: function (td, cellData, rowData, row, col) {
+                $(td).attr('data-object-class', '{{ aColumn["object_class"] }}');
+                $(td).attr('data-attribute-label', '{{ aColumn["attribute_label"] }}');
+                {% if aColumn["attribute_code"] != "_key_" %}
+                $(td).attr('data-attribute-code', '{{ aColumn["attribute_code"] }}');
+                $(td).attr('data-attribute-type', '{{ aColumn["attribute_type"] }}');
+                {% endif %}
+                if (rowData["{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}/raw"]) {
+                    $(td).attr('data-value-raw', rowData["{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}/raw"]);
+                }
+            },
             render: {
                 display: function (data, type, row) {  {{ aColumn["render"]|raw }}},
                 _: "{{ aColumn["class_alias"] }}/{{ aColumn["attribute_code"] }}"
@@ -194,7 +213,6 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         }
     },
     initComplete: function () {
-        this.api().columns.adjust().draw();
         if (this.api().page.info().pages < 2)
         {
             this.closest('.dataTables_wrapper').find('.dataTables_length').hide();

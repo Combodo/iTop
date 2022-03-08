@@ -38,7 +38,9 @@ class AjaxController extends Controller
 			else
 			{
 				$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
-				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink);
+				$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
+				$aParams['sMessage']  = Dict::Format('iTopUpdate:UI:CannotUpdateUseSetup', $sLink, $sLinkManualUpdate);
+				$aParams['sMessageDetails']  = $sMessage;
 			}
 		} catch (FileNotExistException $e)
 		{

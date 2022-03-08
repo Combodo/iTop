@@ -404,7 +404,7 @@ EOF
 				if ($sDisposition == 'attachment') {
 					switch ($sFormat) {
 						case 'xlsx':
-							$oPage = new AjaxPage("");
+							$oPage = new DownloadPage("");
 							$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
 							$oPage->SetContentDisposition('attachment', $sClassDisplayName.'.xlsx');
 							require_once(APPROOT.'/application/excelexporter.class.inc.php');

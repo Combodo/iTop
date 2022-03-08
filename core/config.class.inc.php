@@ -22,7 +22,15 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
-define('ITOP_VERSION', '3.0.0-dev');
+
+/**
+ * Constant containing the application version
+ * Warning: this might be different from iTop core version!
+ *
+ * @see ITOP_CORE_VERSION to get iTop core version
+ */
+define('ITOP_VERSION', '3.1.0-dev');
+
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
@@ -107,7 +115,7 @@ class Config
 	protected $m_aSettings = [
 		'log_level_min' => [
 			'type' => 'array',
-			'description' => 'Optional min log level per channel',
+			'description' => 'Optional min log level, per channel.',
 			'default' => '',
 			'value' => '',
 			'source_of_value' => '',
@@ -115,9 +123,9 @@ class Config
 		],
 		'log_level_min.write_in_db' => [
 			'type' => 'array',
-			'description' => 'Additional configuration that enable "in DB" logs for Exception on compatible code.',
-			'default' => [ 'Exception' => 'Error', ],
-			'value' => [ 'Exception' => 'Error', ],
+			'description' => 'Optional min log level IN DB, per channel.',
+			'default' => '',
+			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
@@ -608,6 +616,13 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		/**
+		 * The timezone is automatically set using this parameter in \utils::InitTimeZone
+		 * This method is called almost everywhere, cause it's called in \MetaModel::LoadConfig and exec.php... but you might
+		 * need to get it yourself !
+		 *
+		 * @used-by utils::InitTimeZone()
+		 */
 		'timezone' => [
 			'type' => 'string',
 			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
@@ -851,13 +866,23 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'impact_analysis_lazy_loading' => [
+			'type'                => 'bool',
+			'description'         => 'In the impact analysis view: display the analysis or filter before display',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'url_validation_pattern' => [
 			'type' => 'string',
 			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
-			'default' => '(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
-			//            SHEME.......... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH........................ GET............................................ ANCHOR............................
+			'default' => /** @lang RegExp */
+			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
+			// SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
 			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
-			// Origin of this regexp: http://www.php.net/manual/fr/function.preg-match.php#93824
+			// RegExp source: http://www.php.net/manual/fr/function.preg-match.php#93824
+			// Update with N°4515
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
@@ -1125,6 +1150,14 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
+		'svg_sanitizer' => [
+			'type' => 'string',
+			'description' => 'The class to use for SVG sanitization : allow to provide a custom made sanitizer',
+			'default' => 'SVGDOMSanitizer',
+			'value' => '',
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'inline_image_max_display_width' => [
 			'type'                => 'integer',
 			'description'         => 'The maximum width (in pixels) when displaying images inside an HTML formatted attribute. Images will be displayed using this this maximum width.',
@@ -1167,7 +1200,7 @@ class Config
 		],
 		'compatibility.include_deprecated_js_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated JS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1183,7 +1216,7 @@ class Config
 		],
 		'compatibility.include_deprecated_css_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated CSS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1335,9 +1368,9 @@ class Config
 		],
 		'mentions.allowed_classes' => [
 			'type' => 'array',
-			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete, value can be either a DM class or a valid OQL (eg. "@" => "Person", "?" => "SELECT FAQ WHERE status = \'published\'")',
+			'description' => 'Classes which can be mentioned through the autocomplete in the caselogs. Key of the array must be a single character that will trigger the autocomplete, value must be a DM class (eg. "@" => "Person", "?" => "FAQ")',
 			'default' => [
-				'@' => 'SELECT Person WHERE status = \'active\'',
+				'@' => 'Person',
 			],
 			'value' => false,
 			'source_of_value' => '',
@@ -1471,6 +1504,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'security.hide_administrators' => [
+			'type' => 'bool',
+			'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'behind_reverse_proxy' => [
 			'type' => 'bool',
 			'description' => 'If true, then proxies custom header (X-Forwarded-*) are taken into account. Use only if the webserver is not publicly accessible (reachable only by the reverse proxy)',
@@ -1503,14 +1544,6 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-	'security.hide_administrators' => [
-		'type' => 'bool',
-		'description' => 'If true, non-administrator users will not be able to see the administrator accounts, the Administrator profile and the links between the administrator accounts and their profiles.',
-		'default' => false,
-		'value' => false,
-		'source_of_value' => '',
-		'show_in_conf_sample' => false,
-	],
 	];
 
 	public function IsProperty($sPropCode)
@@ -1590,6 +1623,16 @@ class Config
 	public function Get($sPropCode)
 	{
 		return $this->m_aSettings[$sPropCode]['value'];
+	}
+
+	/**
+	 * @return mixed
+	 *
+	 * @since 3.0.1 N°4515
+	 */
+	public function GetDefault(string $sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['default'];
 	}
 
 	/**

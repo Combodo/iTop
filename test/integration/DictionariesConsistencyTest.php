@@ -34,7 +34,10 @@ class DictionariesConsistencyTest extends ItopTestCase
 			'da' => array('DA DA', 'Danish', 'Dansk'),
 			'de' => array('DE DE', 'German', 'Deutsch'),
 			'en' => array('EN US', 'English', 'English'),
-			'es_cr' => array('ES CR', 'Spanish', 'Español, Castellaño'),
+			'es_cr' => array('ES CR', 'Spanish', array(
+				'Español, Castellaño', // old value
+				'Español, Castellano', // new value since N°3635
+			)),
 			'fr' => array('FR FR', 'French', 'Français'),
 			'hu' => array('HU HU', 'Hungarian', 'Magyar'),
 			'it' => array('IT IT', 'Italian', 'Italiano'),
@@ -57,7 +60,7 @@ class DictionariesConsistencyTest extends ItopTestCase
 			static::fail("Unknown prefix '$sLangPrefix' for dictionary file '$sDictFile'");
 		}
 
-		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $sExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
+		[$sExpectedLanguageCode, $sExpectedEnglishLanguageDesc, $aExpectedLocalizedLanguageDesc] = $aPrefixToLanguageData[$sLangPrefix];
 
 		$sDictPHP = file_get_contents($sDictFile);
 		$iCount = preg_match_all("@Dict::Add\('(.*)'\s*,\s*'(.*)'\s*,\s*'(.*)'@", $sDictPHP, $aMatches);
@@ -76,8 +79,12 @@ class DictionariesConsistencyTest extends ItopTestCase
 			static::assertSame($sExpectedEnglishLanguageDesc, $sEnglishLanguageDesc,
 				"Unexpected language description (english) for Dict::Add in dictionary $sDictFile");
 		}
-		foreach ($aMatches[3] as $sLocalizedLanguageDesc) {
-			static::assertSame($sExpectedLocalizedLanguageDesc, $sLocalizedLanguageDesc,
+		foreach ($aMatches[3] as $sLocalizedLanguageDesc)
+		{
+			if (false === is_array($aExpectedLocalizedLanguageDesc)) {
+				$aExpectedLocalizedLanguageDesc = array($aExpectedLocalizedLanguageDesc);
+			}
+			static::assertContains($sLocalizedLanguageDesc,$aExpectedLocalizedLanguageDesc,
 				"Unexpected language description for Dict::Add in dictionary $sDictFile");
 		}
 	}

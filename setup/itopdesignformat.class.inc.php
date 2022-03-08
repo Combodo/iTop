@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-define('ITOP_DESIGN_LATEST_VERSION', '3.0');
 
 /**
  * Utility to upgrade the format of a given XML datamodel to the latest version
@@ -26,7 +25,7 @@ define('ITOP_DESIGN_LATEST_VERSION', '3.0');
  * To test migration methods check {@link \Combodo\iTop\Test\UnitTest\Setup\TestForITopDesignFormatClass}
  *
  * Usage:
- * 
+ *
  * $oDocument = new DOMDocument();
  * $oDocument->load($sXMLFile);
  * $oFormat = new iTopDesignFormat($oDocument);
@@ -60,31 +59,31 @@ class iTopDesignFormat
 			'next' => '1.3',
 			'go_to_next' => 'From12To13',
 		),
-		'1.3' => array(
+		'1.3' => array( // iTop >= 2.2.0
 			'previous' => '1.2',
 			'go_to_previous' => 'From13To12',
 			'next' => '1.4',
 			'go_to_next' => 'From13To14',
 		),
-		'1.4' => array(
+		'1.4' => array( // iTop >= 2.4.0
 			'previous' => '1.3',
 			'go_to_previous' => 'From14To13',
 			'next' => '1.5',
 			'go_to_next' => 'From14To15',
 		),
-		'1.5' => array(
+		'1.5' => array( // iTop >= 2.5.0
 			'previous' => '1.4',
 			'go_to_previous' => 'From15To14',
 			'next' => '1.6',
 			'go_to_next' => 'From15To16',
 		),
-		'1.6' => array(
+		'1.6' => array( // iTop >= 2.6.0
 			'previous' => '1.5',
 			'go_to_previous' => 'From16To15',
 			'next' => '1.7',
 			'go_to_next' => 'From16To17',
 		),
-		'1.7' => array(
+		'1.7' => array( // iTop >= 2.7.0
 			'previous' => '1.6',
 			'go_to_previous' => 'From17To16',
 			'next' => '3.0',
@@ -93,6 +92,12 @@ class iTopDesignFormat
 		'3.0' => array(
 			'previous' => '1.7',
 			'go_to_previous' => 'From30To17',
+			'next' => '3.1',
+			'go_to_next' => 'From30To31',
+		),
+		'3.1' => array(
+			'previous' => '3.0',
+			'go_to_previous' => 'From31To30',
 			'next' => null,
 			'go_to_next' => null,
 		),
@@ -110,7 +115,7 @@ class iTopDesignFormat
 	 */
 	protected $aLog;
 	protected $bStatus;
-	
+
 	/**
 	 * Creation from a loaded DOMDocument
 	 * @param DOMDocument $oDocument The document to transform
@@ -269,8 +274,6 @@ class iTopDesignFormat
 		return $this->bStatus;
 	}
 
-
-
 	/**
 	 * Does the conversion, eventually in a recursive manner
 	 * 	 
@@ -326,7 +329,6 @@ class iTopDesignFormat
 		{
 			$this->LogError($e->getMessage());
 		}
-		return;
 	}
 
 	/**
@@ -671,8 +673,6 @@ class iTopDesignFormat
 	 */
 	protected function From16To15($oFactory)
 	{
-		$oXPath = new DOMXPath($this->oDocument);
-
 		// Remove AttributeTagSet nodes
 		//
 		$sPath = "/itop_design/classes/class/fields/field[@xsi:type='AttributeTagSet']";
@@ -809,15 +809,7 @@ class iTopDesignFormat
 			$oNode->appendChild($oCodeNode);
 		}
 
-		// N°3516 Remove legacy backoffice theme
-		// Remove completely light-grey theme
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="light-grey"]');
-		
 		// Update test-red theme
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/imports/import[@id="css-variables"]');
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="jqueryui"]');
-		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="main"]');
-
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]');
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--background-color');
@@ -832,7 +824,7 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			$oNode->setAttribute('id', 'ibo-page-banner--text-content');
 		}
-		
+
 		// Add new attribute to theme import nodes
 		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme/imports/import');
 		foreach ($oNodeList as $oNode) {
@@ -912,19 +904,25 @@ class iTopDesignFormat
 		// N°3516 Bring back legacy themes
 		// Update test-red theme
 
-		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--background-color"]');
-		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'backoffice-environment-banner-background-color');
+		if (!$oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]')->item(0)) {
+			$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--background-color"]');
+			foreach ($oNodeList as $oNode) {
+				$oNode->setAttribute('id', 'backoffice-environment-banner-background-color');
+			}
 		}
 
-		$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-color"]');
-		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'backoffice-environment-banner-text-color');
+		if (!$oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]')->item(0)) {
+			$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-color"]');
+			foreach ($oNodeList as $oNode) {
+				$oNode->setAttribute('id', 'backoffice-environment-banner-text-color');
+			}
 		}
 
-		$oNodeList = $oXPath->query( '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-content"]');
-		foreach ($oNodeList as $oNode) {
-			$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
+		if (!$oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]')->item(0)) {
+			$oNodeList = $oXPath->query('/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner--text-content"]');
+			foreach ($oNodeList as $oNode) {
+				$oNode->setAttribute('id', 'backoffice-environment-banner-text-content');
+			}
 		}
 
 		// Add new attribute to theme import nodes
@@ -948,7 +946,25 @@ class iTopDesignFormat
 			}
 		}
 	}
-	
+	/**
+	 * Upgrade the format from version 3.0 to 3.1
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From30To31($oFactory)
+	{
+		//nothing
+	}
+	/**
+	 * Downgrade the format from version 3.1 to 3.0
+	 * @param \ModelFactory $oFactory
+	 * @return void (Errors are logged)
+	 */
+	protected function From31To30($oFactory)
+	{
+		//nothing
+	}
+
 	/**
 	 * @param string $sPath
 	 *
@@ -962,9 +978,9 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode)
 		{
 			$this->LogWarning('Node '.self::GetItopNodePath($oNode).' is irrelevant in this version, it will be removed.');
-			$this->DeleteNode($oNode);
+				$this->DeleteNode($oNode);
+			}
 		}
-	}
 
 	/**
 	 * Clean a collection node by removing the _delta="define" on it and moving it to the item nodes.

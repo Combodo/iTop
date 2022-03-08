@@ -23,8 +23,8 @@ require_once(APPROOT.'/application/startup.inc.php');
 
 
 $sFullUrl = utils::GetAbsoluteUrlAppRoot().'pages/UI.php';
-$sICOFullUrl = utils::GetAbsoluteUrlAppRoot().'/images/iTop-icon.ico';
-$sPNGFullUrl = utils::GetAbsoluteUrlAppRoot().'images/iTop-icon.png';
+$sICOFullUrl = utils::GetAbsoluteUrlAppRoot().'/images/favicon.ico';
+$sPNGFullUrl = utils::GetAbsoluteUrlAppRoot().'images/itop-logo-square-64.png';
 header('Content-type: text/xml');
 ?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/" xmlns:moz="http://www.mozilla.org/2006/browser/search/">

@@ -1,4 +1,4 @@
-<nav id="{{ oUIBlock.GetId() }}" class="ibo-navigation-menu {% if oUIBlock.IsExpanded() == true %}ibo-is-expanded{% endif %}" data-role="ibo-navigation-menu">
+<nav id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() == true %}ibo-is-expanded{% endif %}" data-role="ibo-navigation-menu">
 	<div class="ibo-navigation-menu--body">
 		<div class="ibo-navigation-menu--top-part">
 			<a class="ibo-navigation-menu--square-company-logo" data-role="ibo-navigation-menu--square-company-logo" title="{{ oUIBlock.GetAppRevisionNumber() }}" href="{{ oUIBlock.GetAppIconLink() }}">
@@ -45,7 +45,7 @@
 			{% endif %}
             <div class="ibo-navigation-menu--user-info">
                 <div class="ibo-navigation-menu--user-picture">
-                    <a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+                    <a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
                         <img class="ibo-navigation-menu--user-picture--image"
                              data-role="ibo-navigation-menu--user-picture--image"
                              src="{{ oUIBlock.GetUserData().sPictureUrl }}"
@@ -57,7 +57,7 @@
 					</a>
 				</div>
 				<div class="ibo-navigation-menu--user-welcome-message">
-					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#">
+					<a data-role="ibo-navigation-menu--user-menu--toggler" href="#" aria-label="{{ 'UI:Layout:NavigationMenu:UserMenu:Toggler:Label'|dict_s }}">
 						<div class="ibo-navigation-menu--user-welcome-message--text">
 							<a class="ibo-navigation-menu--user-welcome-message--toggler" data-role="ibo-navigation-menu--user-menu--toggler" href="#">
 								{{ oUIBlock.GetUserData().sWelcomeMessage }}

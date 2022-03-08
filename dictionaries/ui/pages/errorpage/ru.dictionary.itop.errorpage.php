@@ -18,8 +18,8 @@
  */
 // Navigation menu
 Dict::Add('RU RU', 'Russian', 'Русский', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+	'UI:ErrorPage:UnstableVersion' => 'Вы используете нестабильную версию, которая может содержать ошибки. Если вы считаете, что ошибка возникла из-за этого, отправьте нам свой отзыв.',
+	'UI:ErrorPage:KittyDisclaimer' => 'Ни один котёнок не пострадал во время создания этого GIF и этого релиза.
 
-- The R&amp;D Team~~',
+- The R&amp;D Team',
 ));

@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	// Dictionary entries go here
 	'Menu:iTopHub' => 'iTop Hub',
@@ -56,6 +55,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'iTopHub:ExtensionCategory:Remote' => 'Rozszerzenia wdrożone z iTop Hub',
 	'iTopHub:ExtensionCategory:Remote+' => 'Następujące rozszerzenia zostały wdrożone z iTop Hub:',
 	'iTopHub:NoExtensionInThisCategory' => 'W tej kategorii nie ma rozszerzenia.<br/><br/>Przeglądaj iTop Hub, aby znaleźć rozszerzenia, które pomogą Ci dostosować i dostosować '.ITOP_APPLICATION_SHORT.' do Twoich procesów.',
+	'iTopHub:NoExtensionInThisCategory+' => '~~',
 	'iTopHub:ExtensionNotInstalled' => 'Nie zainstalowane',
 	'iTopHub:GetMoreExtensions' => 'Pobierz rozszerzenia z iTop Hub...',
 

@@ -61,6 +61,8 @@ class UIExtKeyWidget
 	protected $sAttCode;
 	protected $bSearchMode;
 
+	//public function __construct($sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sNameSuffix = '', $sFieldPrefix = '', $sFormPrefix = '')
+
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sAttCode
@@ -80,18 +82,13 @@ class UIExtKeyWidget
 	 * @throws \Exception
 	 *
 	 * @since 3.0.0 N°3750 new $sInputType parameter
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Add default value for $aArgs for PHP 8.0 compat
 	 */
 	public static function DisplayFromAttCode(
 		$oPage, $sAttCode, $sClass, $sTitle, $oAllowedValues, $value, $iInputId, $bMandatory, $sFieldName = '', $sFormPrefix = '',
 		$aArgs = [], $bSearchMode = false, &$sInputType = ''
 	)
 	{
-		// we will only use key & name, so let's reduce fields loaded !
-		$aAttToLoad = [
-			$sClass => [], // nothing, id and friendlyname are automatically added by the API
-		];
-		$oAllowedValues->OptimizeColumnLoad($aAttToLoad);
-
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		$sTargetClass = $oAttDef->GetTargetClass();
 		$iMaxComboLength = $oAttDef->GetMaximumComboLength();
@@ -196,7 +193,7 @@ class UIExtKeyWidget
 
 		$bIsAutocomplete = $oAllowedValues->CountExceeds($iMaxComboLength);
 		$sWrapperCssClass = $bIsAutocomplete ? 'ibo-input-select-autocomplete-wrapper' : 'ibo-input-select-wrapper';
-		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\">";
+		$sHTMLValue = "<div class=\"field_input_zone field_input_extkey ibo-input-wrapper ibo-input-select-wrapper--with-buttons $sWrapperCssClass\" data-attcode=\"".$this->sAttCode."\"  data-validation=\"untouched\"  data-accessibility-selectize-label=\"$sTitle\">";
 		
 		// We just need to compare the number of entries with MaxComboLength, so no need to get the real count.
 		if (!$bIsAutocomplete) {
@@ -226,7 +223,8 @@ class UIExtKeyWidget
 			while ($oObj = $oAllowedValues->Fetch()) {
 				$aOption = [];
 				$aOption['value'] = $oObj->GetKey();
-				$aOption['label'] = $oObj->GetName();//.'<span class=\"object-ref-icon fas fa-eye-slash object-obsolete fa-1x fa-fw\"></span>';
+				$aOption['label'] = $oObj->GetName();
+				$aOption['search_label'] = utils::HtmlEntityDecode($oObj->GetName());
 
 				if (($oAllowedValues->Count() == 1) && ($bMandatory == 'true')) {
 					// When there is only once choice, select it by default
@@ -253,14 +251,14 @@ class UIExtKeyWidget
 						$aOption['picture_url'] = $oImage->GetDisplayURL($sClassAllowed, $oObj->GetKey(), $sObjectImageAttCode);
 						$aOption['initials'] = '';
 					} else {
-						$aOption['initials'] = utils::ToAcronym($oObj->Get('friendlyname'));
+						$aOption['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObj->Get('friendlyname')));
 					}
 				}
 				array_push($aOptions, $aOption);
 			}
 			$sInputType = CmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
-			$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
-			$sJsonOptions = str_replace('\\', '\\\\', json_encode($aOptions));
+			$sHTMLValue .= "<select class=\"ibo-input-select-placeholder\" title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\"  tabindex=\"0\"></select>";
+			$sJsonOptions = str_replace("'", "\'", str_replace('\\', '\\\\', json_encode($aOptions)));
 			$oPage->add_ready_script(
 				<<<EOF
 		oACWidget_{$this->iId} = new ExtKeyWidget('{$this->iId}', '{$this->sTargetClass}', '$sFilter', '$sTitle', true, $sWizHelper, '{$this->sAttCode}', $sJSSearchMode, $sJSDoSearch);
@@ -537,7 +535,7 @@ JS
 							$sHTMLValue .= "<option value=\"\">$sDisplayValue</option>\n";
 						}
 					} else {
-						$sHTMLValue .= "<select title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
+						$sHTMLValue .= "<select class=\"ibo-input-select-placeholder\" title=\"$sHelpText\" name=\"{$sAttrFieldPrefix}{$sFieldName}\" id=\"$this->iId\">\n";
 						$sHTMLValue .= "<option value=\"\">".Dict::S('UI:SelectOne')."</option>\n";
 					}
 
@@ -703,14 +701,14 @@ JS
 HTML
 		);
 
-		$sDialogTitle = addslashes($sTitle);
+		$sDialogTitleSanitized = addslashes(utils::HtmlToText($sTitle));
 		$oPage->add_ready_script(<<<JS
 		$('#ac_dlg_{$this->iId}').dialog({ 
 				width: $(window).width()*0.8, 
 				height: $(window).height()*0.8, 
 				autoOpen: false, 
 				modal: true, 
-				title: '$sDialogTitle', 
+				title: '$sDialogTitleSanitized', 
 				resizeStop: oACWidget_{$this->iId}.UpdateSizes, 
 				close: oACWidget_{$this->iId}.OnClose,
 				buttons: [
@@ -775,9 +773,11 @@ JS
      *
      * @throws CoreException
      * @throws OQLException
+     *
+     * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $oObj for PHP 8.0 compatibility
      */
 	public function AutoComplete(
-		WebPage $oP, $sFilter, $oObj = null, $sContains = '', $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
+		WebPage $oP, $sFilter, $oObj, $sContains, $sOutputFormat = self::ENUM_OUTPUT_FORMAT_CSV, $sOperation = null
 	)
 	{
 		if (is_null($sFilter)) {
@@ -823,13 +823,13 @@ JS
 
 				$aJsonMap = array();
 				foreach ($aValues as $sKey => $aValue) {
-					$aElt = ['value' => $sKey, 'label' => utils::HtmlEntities($aValue['label']), 'obsolescence_flag' => $aValue['obsolescence_flag']];
+					$aElt = ['value' => $sKey, 'label' => utils::EscapeHtml($aValue['label']), 'obsolescence_flag' => $aValue['obsolescence_flag']];
 					if ($aValue['additional_field'] != '') {
-						$aElt['additional_field'] = utils::HtmlEntities($aValue['additional_field']);
+						$aElt['additional_field'] = utils::EscapeHtml($aValue['additional_field']);
 					}
 
 					if (array_key_exists('initials', $aValue)) {
-						$aElt['initials'] = $aValue['initials'];
+						$aElt['initials'] = utils::FormatInitialsForMedallion($aValue['initials']);
 						if (array_key_exists('picture_url', $aValue)) {
 							$aElt['picture_url'] = $aValue['picture_url'];
 						}
@@ -912,8 +912,8 @@ JS
 		$oClassForm = FormUIBlockFactory::MakeStandard();
 		$oBlock->AddSubBlock($oClassForm);
 		$oClassForm->AddSubBlock(cmdbAbstractObject::DisplayBlockSelectClassToCreate( $sClassLabel, $this->sTargetClass,   $aPossibleClasses));
-
-        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitle'});\n");
+		$sDialogTitleEscaped = addslashes($sDialogTitle);
+        $oPage->add_ready_script("$('#ac_create_$this->iId').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true, title: '$sDialogTitleEscaped'});\n");
         $oPage->add_ready_script("$('#ac_create_{$this->iId} form').removeAttr('onsubmit');");
         $oPage->add_ready_script("$('#ac_create_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoSelectObjectClass);");
 	}
@@ -1007,16 +1007,46 @@ JS
 
 		if ($bHasChildLeafs)
 		{
-			$oPage->add('<div class="treecontrol" id="treecontrolid"><a href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a> | <a href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></div>');
+			$oPage->add('<span class="treecontrol ibo-button-group" id="treecontrolid"><a class="ibo-button ibo-is-regular ibo-is-neutral" href="?#">'.Dict::S("UI:Treeview:CollapseAll").'</a><a class="ibo-button ibo-is-regular ibo-is-neutral" href="?#">'.Dict::S("UI:Treeview:ExpandAll").'</a></span>');
 		}
-
-		$oPage->add("<input type=\"button\" class=\"ibo-button ibo-is-regular ibo-is-neutral\" id=\"btn_cancel_{$this->iId}\" value=\"".Dict::S('UI:Button:Cancel')."\" onClick=\"$('#dlg_tree_{$this->iId}').dialog('close');\">&nbsp;&nbsp;");
-		$oPage->add("<input type=\"button\" class=\"ibo-button ibo-is-regular ibo-is-primary\" id=\"btn_ok_{$this->iId}\" value=\"".Dict::S('UI:Button:Ok')."\"  onClick=\"oACWidget_{$this->iId}.DoHKOk();\">");
-
+		
 		$oPage->add('</div></div>');
-
+		
+		$sOkButtonLabel = Dict::S('UI:Button:Ok');
+		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		$oPage->add_ready_script("\$('#tree_$this->iId ul').treeview({ control: '#treecontrolid',	persist: 'false'});\n");
-		$oPage->add_ready_script("\$('#dlg_tree_$this->iId').dialog({ width: 'auto', height: 'auto', autoOpen: true, modal: true, title: '$sDialogTitle', resizeStop: oACWidget_{$this->iId}.OnHKResize, close: oACWidget_{$this->iId}.OnHKClose });\n");
+		$oPage->add_ready_script(<<<JS
+$('#dlg_tree_$this->iId').dialog({
+	width: 'auto',
+	height: 'auto',
+	autoOpen: true,
+	modal: true,
+	title: '$sDialogTitle',
+    open: function() {
+        $(this).css("max-height", parseInt($(window).height()*0.7)+'px');        
+    },
+	buttons: [
+		{ 
+			text: "$sCancelButtonLabel", 
+			click: function() { $(this).dialog( "close" ); } 
+		},
+		{ 
+			text: "$sOkButtonLabel",
+		   	class: "ibo-is-primary",
+			click: function() {
+				oACWidget_{$this->iId}.DoHKOk();
+			},
+		},
+		],
+
+	resizeStop: oACWidget_{$this->iId}.OnHKResize,
+	close: oACWidget_{$this->iId}.OnHKClose 
+});
+
+$('#dlg_tree_$this->iId + .ui-dialog-buttonpane .ui-dialog-buttonset').prepend($('#treecontrolid'));
+
+JS
+		);
 	}
 
 	/**

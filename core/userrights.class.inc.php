@@ -1438,6 +1438,21 @@ class UserRights
 	}
 
 	/**
+	 * @return int|string ID of the connected user : if impersonate then use {@see m_oRealUser}, else {@see m_oUser}. If no user set then return ''
+	 * @since 2.6.5 2.7.6 3.0.0 N°4289 method creation
+	 */
+	public static function GetConnectedUserId() {
+		if (false === is_null(static::$m_oRealUser)) {
+			return static::$m_oRealUser->GetKey();
+		}
+		if (false === is_null(static::$m_oUser)) {
+			return static::$m_oUser->GetKey();
+		}
+
+		return '';
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function GetRealUserId()
@@ -1492,7 +1507,7 @@ class UserRights
 		try
 		{
 			// Check Bug 1436 for details
-			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo'))
+			if (MetaModel::HasCategory($sClass, 'bizmodel') || MetaModel::HasCategory($sClass, 'silo') || MetaModel::HasCategory($sClass, 'filter'))
 			{
 				return self::$m_oAddOn->GetSelectFilter(self::$m_oUser, $sClass, $aSettings);
 			}
@@ -1844,15 +1859,15 @@ class UserRights
 			{
 				self::$m_aCacheUsers = array('internal' => array(), 'external' => array());
 			}
-			
-			if (!array_key_exists($sLogin, self::$m_aCacheUsers[$sAuthentication]))
+
+			if (!isset(self::$m_aCacheUsers[$sAuthentication][$sLogin]))
 			{
 				switch($sAuthentication)
 				{
 					case 'external':
 					$sBaseClass = 'UserExternal';
 					break;
-					
+
 					case 'internal':
 					$sBaseClass = 'UserInternal';
 					break;
@@ -1862,6 +1877,7 @@ class UserRights
 					assert(false); // should never happen
 				}
 				$oSearch = DBObjectSearch::FromOQL("SELECT $sBaseClass WHERE login = :login");
+				$oSearch->AllowAllData();
 				if (!$bAllowDisabledUsers)
 				{
 					$oSearch->AddCondition('status', 'enabled');

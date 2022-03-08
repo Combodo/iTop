@@ -16,7 +16,7 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 /**
- * Localized data
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
@@ -34,24 +34,27 @@
 //
 // Class: UserLocal
 //
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Class:UserLocal' => 'Usuario de '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal+' => 'Usuario Autenticado vía '.ITOP_APPLICATION_SHORT,
 	'Class:UserLocal/Attribute:password' => 'Contraseña',
 	'Class:UserLocal/Attribute:password+' => 'Contraseña',
 
-	'Class:UserLocal/Attribute:expiration' => 'Password expiration~~',
-	'Class:UserLocal/Attribute:expiration+' => 'Password expiration status (requires an extension to have an effect)~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Can expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Never expire~~',
-	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expired~~',
-	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '~~',
-	'Class:UserLocal/Attribute:password_renewed_date' => 'Password renewal~~',
-	'Class:UserLocal/Attribute:password_renewed_date+' => 'When the password was last changed~~',
+	'Class:UserLocal/Attribute:expiration' => 'Expiración de contraseña',
+	'Class:UserLocal/Attribute:expiration+' => 'Estatus de expiración de contraseña (requiere de una extensión para que tenga efecto)',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire' => 'Puede expirar',
+	'Class:UserLocal/Attribute:expiration/Value:can_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire' => 'Nunca expirar',
+	'Class:UserLocal/Attribute:expiration/Value:never_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire' => 'Expirado',
+	'Class:UserLocal/Attribute:expiration/Value:force_expire+' => '',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire' => 'One-time Password~~',
+	'Class:UserLocal/Attribute:expiration/Value:otp_expire+' => 'Password cannot be changed by the user.~~',
+	'Class:UserLocal/Attribute:password_renewed_date' => 'Renovación de contraseña',
+	'Class:UserLocal/Attribute:password_renewed_date+' => 'Cuando fue el último cambio de contraseña',
 
-	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'Password must be at least 8 characters and include uppercase, lowercase, numeric and special characters.~~',
+	'Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed' => 'La contraseña debe ser de al menos 8 caracteres e incluír mayúsculas, minúsculas, números y caracteres especiales.',
 
-	'UserLocal:password:expiration' => 'The fields below require an extension~~'
+	'UserLocal:password:expiration' => 'El siguiente campo requiere una extensión',
+	'Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed' => 'Setting password expiration to "One-time password" is not allowed for your own User~~',
 ));

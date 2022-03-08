@@ -497,6 +497,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:Action/Attribute:trigger_list+' => 'このアクションにリンクされたトリガー',
 	'Class:Action/Attribute:finalclass' => 'タイプ',
 	'Class:Action/Attribute:finalclass+' => 'タイプ',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -576,7 +577,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'ターゲットクラス',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter~~',
-	'Class:TriggerOnObject/Attribute:filter+' => '~~',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s~~',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class \\"%1$s\\"~~',
 ));
@@ -655,6 +656,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
 	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -702,9 +705,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '通知する連絡先',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'エラーが発生した場合に通知する連絡先。',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'アイコンのハイパーリンク',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'iTopが同期されたアプリケーションを示すハイパーリンク（小さな）イメージ',
+	'Class:SynchroDataSource/Attribute:url_icon+' => ITOP_APPLICATION_SHORT.'が同期されたアプリケーションを示すハイパーリンク（小さな）イメージ',
 	'Class:SynchroDataSource/Attribute:url_application' => 'アプリケーションのハイパーリンク',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'iTopが同期化された外部アプリケーションのiTopオブジェクトへのハイパーリンク（該当する場合）。可能なプレースホルダ: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => ITOP_APPLICATION_SHORT.'が同期化された外部アプリケーションの'.ITOP_APPLICATION_SHORT.'オブジェクトへのハイパーリンク（該当する場合）。可能なプレースホルダ: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => '調整ポリシー',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => '全データロードの間隔',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '全データの完全な再ロードを最低ここに指定されている間隔で行う必要があります。',
@@ -1084,6 +1087,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

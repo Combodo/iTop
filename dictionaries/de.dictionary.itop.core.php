@@ -93,7 +93,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Core:AttributeString+' => 'Alphanumerischer String',
 
 	'Core:AttributeClass' => 'Class',
-	'Core:AttributeClass+' => 'Class',
+	'Core:AttributeClass+' => '',
 
 	'Core:AttributeApplicationLanguage' => 'Benutzersprache',
 	'Core:AttributeApplicationLanguage+' => 'Sprache und Land (DE DE)',
@@ -188,7 +188,7 @@ Operatoren:<br/>
 	'Core:AttributeBlob+' => 'Beliebiger binärer Inhalt (Dokument)',
 
 	'Core:AttributeOneWayPassword' => 'gehashtes Passwort',
-	'Core:AttributeOneWayPassword+' => 'gehashtes Passwort',
+	'Core:AttributeOneWayPassword+' => '',
 
 	'Core:AttributeTable' => 'Tabelle',
 	'Core:AttributeTable+' => 'Indiziertes Array mit zwei Dimensionen',
@@ -203,7 +203,7 @@ Operatoren:<br/>
 	'Core:FriendlyName-Description' => 'Friendly name',
 
 	'Core:AttributeTag' => 'Tags',
-	'Core:AttributeTag+' => 'Tags',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -230,14 +230,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChange/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChange/Attribute:userinfo' => 'Sonstige Informationen',
 	'Class:CMDBChange/Attribute:userinfo+' => 'Aufruferdefinierte Informationen',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
-	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
-	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'Benutzerinteraktion via GUI',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV Import Skript',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV Import via GUI',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'E-Mailverarbeitung',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchronisationsdatenquelle',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON Webservices',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP Webservices',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'Durch eine Extension',
 ));
 
 //
@@ -248,15 +248,15 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:CMDBChangeOp' => 'Change-Operation',
 	'Class:CMDBChangeOp+' => 'Protokoll der Change-Operation',
 	'Class:CMDBChangeOp/Attribute:change' => 'Change',
-	'Class:CMDBChangeOp/Attribute:change+' => 'Change',
+	'Class:CMDBChangeOp/Attribute:change+' => '',
 	'Class:CMDBChangeOp/Attribute:date' => 'Datum',
 	'Class:CMDBChangeOp/Attribute:date+' => 'Datum und Uhrzeit der Änderungen',
 	'Class:CMDBChangeOp/Attribute:userinfo' => 'Benutzer',
 	'Class:CMDBChangeOp/Attribute:userinfo+' => 'Wer führte diese Änderung durch?',
 	'Class:CMDBChangeOp/Attribute:objclass' => 'Objektklasse',
-	'Class:CMDBChangeOp/Attribute:objclass+' => 'Objektklasse',
+	'Class:CMDBChangeOp/Attribute:objclass+' => '',
 	'Class:CMDBChangeOp/Attribute:objkey' => 'Objekt-ID',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'Objekt-ID',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'Typ',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => '',
 ));
@@ -384,17 +384,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:EventNotificationEmail' => 'Email Emission Event',
 	'Class:EventNotificationEmail+' => 'Verfolgung einer Email, die gesendet wurde',
 	'Class:EventNotificationEmail/Attribute:to' => 'An',
-	'Class:EventNotificationEmail/Attribute:to+' => 'An',
+	'Class:EventNotificationEmail/Attribute:to+' => '',
 	'Class:EventNotificationEmail/Attribute:cc' => 'Kopie an',
-	'Class:EventNotificationEmail/Attribute:cc+' => 'Kopie an',
+	'Class:EventNotificationEmail/Attribute:cc+' => '',
 	'Class:EventNotificationEmail/Attribute:bcc' => 'Blindkopie (BCC)',
-	'Class:EventNotificationEmail/Attribute:bcc+' => 'Blindkopie (BCC)',
+	'Class:EventNotificationEmail/Attribute:bcc+' => '',
 	'Class:EventNotificationEmail/Attribute:from' => 'Von',
 	'Class:EventNotificationEmail/Attribute:from+' => 'Absender der Nachricht',
 	'Class:EventNotificationEmail/Attribute:subject' => 'Betreff',
-	'Class:EventNotificationEmail/Attribute:subject+' => 'Betreff',
+	'Class:EventNotificationEmail/Attribute:subject+' => '',
 	'Class:EventNotificationEmail/Attribute:body' => 'Inhalt der Nachricht',
-	'Class:EventNotificationEmail/Attribute:body+' => 'Inhalt der Nachricht',
+	'Class:EventNotificationEmail/Attribute:body+' => '',
 	'Class:EventNotificationEmail/Attribute:attachments' => 'Anhänge',
 	'Class:EventNotificationEmail/Attribute:attachments+' => 'Anhänge in der Nachricht',
 ));
@@ -489,15 +489,16 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Action/Attribute:status' => 'Status',
 	'Class:Action/Attribute:status+' => 'Im Einsatz oder?',
 	'Class:Action/Attribute:status/Value:test' => 'Wird getestet',
-	'Class:Action/Attribute:status/Value:test+' => 'Wird getestet',
+	'Class:Action/Attribute:status/Value:test+' => '',
 	'Class:Action/Attribute:status/Value:enabled' => 'Im Einsatz',
-	'Class:Action/Attribute:status/Value:enabled+' => 'Im Einsatz',
+	'Class:Action/Attribute:status/Value:enabled+' => '',
 	'Class:Action/Attribute:status/Value:disabled' => 'Inaktiv',
-	'Class:Action/Attribute:status/Value:disabled+' => 'Inaktiv',
+	'Class:Action/Attribute:status/Value:disabled+' => '',
 	'Class:Action/Attribute:trigger_list' => 'Zugehörige Trigger',
 	'Class:Action/Attribute:trigger_list+' => 'Trigger, die mit dieser Aktion verknüpft sind',
 	'Class:Action/Attribute:finalclass' => 'Typ',
 	'Class:Action/Attribute:finalclass+' => '',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -533,21 +534,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:ActionEmail/Attribute:to' => 'An',
 	'Class:ActionEmail/Attribute:to+' => 'Empfänger der Nachricht',
 	'Class:ActionEmail/Attribute:cc' => 'Kopie an',
-	'Class:ActionEmail/Attribute:cc+' => 'Kopie an',
+	'Class:ActionEmail/Attribute:cc+' => '',
 	'Class:ActionEmail/Attribute:bcc' => 'Blindkopie (BCC)',
-	'Class:ActionEmail/Attribute:bcc+' => 'Blindkopie (BCC)',
+	'Class:ActionEmail/Attribute:bcc+' => '',
 	'Class:ActionEmail/Attribute:subject' => 'Betreff',
 	'Class:ActionEmail/Attribute:subject+' => 'Betreff der Email',
 	'Class:ActionEmail/Attribute:body' => 'Inhalt der Nachricht',
-	'Class:ActionEmail/Attribute:body+' => 'Inhalt der Nachricht',
+	'Class:ActionEmail/Attribute:body+' => '',
 	'Class:ActionEmail/Attribute:importance' => 'Priorität',
 	'Class:ActionEmail/Attribute:importance+' => 'Prioritätseinstufung',
 	'Class:ActionEmail/Attribute:importance/Value:low' => 'niedrig',
-	'Class:ActionEmail/Attribute:importance/Value:low+' => 'niedrig',
+	'Class:ActionEmail/Attribute:importance/Value:low+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:normal' => 'normal',
-	'Class:ActionEmail/Attribute:importance/Value:normal+' => 'normal',
+	'Class:ActionEmail/Attribute:importance/Value:normal+' => '',
 	'Class:ActionEmail/Attribute:importance/Value:high' => 'hoch',
-	'Class:ActionEmail/Attribute:importance/Value:high+' => 'hoch',
+	'Class:ActionEmail/Attribute:importance/Value:high+' => '',
 ));
 
 //
@@ -577,7 +578,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObject/Attribute:target_class' => 'Zielklasse',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => 'Filter',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Fehlerhafter Filter-Query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'Der Filter muss Objekte vom Typ \\"%1$s\\" zurückgeben.',
 ));
@@ -656,6 +657,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TriggerOnObjectMention' => 'Trigger (bei Objekterwähnung)',
 	'Class:TriggerOnObjectMention+' => 'Trigger bei Objekterwähnung (@xxx) einer Objekt mit [eine Kinderklasse von] eine gegebene Klasse in ein Log-Attribut',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -695,7 +698,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:SynchroDataSource/Attribute:name' => 'Name',
-	'Class:SynchroDataSource/Attribute:name+' => 'Name',
+	'Class:SynchroDataSource/Attribute:name+' => '',
 	'Class:SynchroDataSource/Attribute:description' => 'Beschreibung',
 	'Class:SynchroDataSource/Attribute:status' => 'Status',
 	'Class:SynchroDataSource/Attribute:scope_class' => 'Ziel-Klasse',
@@ -994,7 +997,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
 	'Class:TagSetFieldData/Attribute:label+' => 'Anzeigelabel',
 	'Class:TagSetFieldData/Attribute:description' => 'Beschreibung',
-	'Class:TagSetFieldData/Attribute:description+' => 'Beschreibung',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag-Klasse',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Objekt-Klasse',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Attributscode',
@@ -1085,6 +1088,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Letzter Versuch',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

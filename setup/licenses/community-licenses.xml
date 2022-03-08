@@ -1673,10 +1673,10 @@ to represent the company, product, or service to which they refer.**
 ]]></text>
   </license>
   <license>
-    <product scope="datamodels">apereo/phpcas</product>
-    <author>Joachim Fritschi - Adam Franco</author>
-    <license_type>Apache-2.0</license_type>
-    <text><![CDATA[
+          <product scope="datamodels">apereo/phpcas</product>
+          <author>Joachim Fritschi - Adam Franco</author>
+          <license_type>Apache-2.0</license_type>
+          <text><![CDATA[
                                    Apache License
                            Version 2.0, January 2004
                         http://www.apache.org/licenses/
@@ -1879,7 +1879,7 @@ to represent the company, product, or service to which they refer.**
    See the License for the specific language governing permissions and
    limitations under the License.
   ]]></text>
-  </license>
+      </license>
   <license>
     <product scope="js">C3 js</product>
     <author>Masayuki Tanaka</author>
@@ -2662,11 +2662,11 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ]]></text>
   </license>
   <license>
-    <product scope="lib">combodo/tcpdf</product>
-    <author>Nicola Asuni - Combodo</author>
-    <license_type>LGPL-3.0-only</license_type>
-    <text><![CDATA[
-**********************************************************************
+          <product scope="lib">combodo/tcpdf</product>
+          <author>Nicola Asuni - Combodo</author>
+          <license_type>LGPL-3.0-only</license_type>
+          <text><![CDATA[
+  **********************************************************************
 * TCPDF LICENSE
 **********************************************************************
 
@@ -2674,8 +2674,9 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   under the terms of the GNU Lesser General Public License as
   published by the Free Software Foundation, either version 3 of the
   License, or (at your option) any later version.
-
+  
   2002-2019 Nicola Asuni - Tecnick.com LTD
+
 **********************************************************************
 **********************************************************************
 
@@ -3525,51 +3526,49 @@ Public License instead of this License.  But first, please read
 
 **********************************************************************
 **********************************************************************
-]]></text>
-  </license>
+  ]]></text>
+      </license>
   <license>
-    <product scope="lib">nikic/php-parser</product>
-    <author>Nikita Popov</author>
-    <license_type>BSD-3-Clause</license_type>
-    <text><![CDATA[
-  Copyright (c) 2011-2018 by Nikita Popov.
+          <product scope="lib">nikic/php-parser</product>
+          <author>Nikita Popov</author>
+          <license_type>BSD-3-Clause</license_type>
+          <text><![CDATA[
+  BSD 3-Clause License
 
-Some rights reserved.
+Copyright (c) 2011, Nikita Popov
+All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are
-met:
+modification, are permitted provided that the following conditions are met:
 
-    * Redistributions of source code must retain the above copyright
-      notice, this list of conditions and the following disclaimer.
+1. Redistributions of source code must retain the above copyright notice, this
+   list of conditions and the following disclaimer.
 
-    * Redistributions in binary form must reproduce the above
-      copyright notice, this list of conditions and the following
-      disclaimer in the documentation and/or other materials provided
-      with the distribution.
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
 
-    * The names of the contributors may not be used to endorse or
-      promote products derived from this software without specific
-      prior written permission.
+3. Neither the name of the copyright holder nor the names of its
+   contributors may be used to endorse or promote products derived from
+   this software without specific prior written permission.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">paragonie/random_compat</product>
-    <author>Paragon Initiative Enterprises</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">paragonie/random_compat</product>
+          <author>Paragon Initiative Enterprises</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   The MIT License (MIT)
 
 Copyright (c) 2015 Paragon Initiative Enterprises
@@ -3592,20 +3591,20 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">pear/archive_tar</product>
-    <author>Vincent Blavet - Greg Beaver - Michiel Rook</author>
-    <license_type>BSD-3-Clause</license_type>
-    <text><![CDATA[
+          <product scope="lib">pear/archive_tar</product>
+          <author>Vincent Blavet - Greg Beaver - Michiel Rook</author>
+          <license_type>BSD-3-Clause</license_type>
+          <text><![CDATA[
   
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">pear/console_getopt</product>
-    <author>Andrei Zmievski - Stig Bakken - Greg Beaver</author>
-    <license_type>BSD-2-Clause</license_type>
-    <text><![CDATA[
+          <product scope="lib">pear/console_getopt</product>
+          <author>Andrei Zmievski - Stig Bakken - Greg Beaver</author>
+          <license_type>BSD-2-Clause</license_type>
+          <text><![CDATA[
   Copyright (c) 2001-2015, The PEAR developers
 All rights reserved.
 
@@ -3632,20 +3631,20 @@ THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">pear/pear-core-minimal</product>
-    <author>Christian Weiske</author>
-    <license_type>BSD-3-Clause</license_type>
-    <text><![CDATA[
+          <product scope="lib">pear/pear-core-minimal</product>
+          <author>Christian Weiske</author>
+          <license_type>BSD-3-Clause</license_type>
+          <text><![CDATA[
   
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">pear/pear_exception</product>
-    <author>Helgi Thormar - Greg Beaver</author>
-    <license_type>BSD-2-Clause</license_type>
-    <text><![CDATA[
+          <product scope="lib">pear/pear_exception</product>
+          <author>Helgi Thormar - Greg Beaver</author>
+          <license_type>BSD-2-Clause</license_type>
+          <text><![CDATA[
   Copyright (c) 1997-2009,
  Stig Bakken <ssb@php.net>,
  Gregory Beaver <cellog@php.net>,
@@ -3674,12 +3673,12 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">pelago/emogrifier</product>
-    <author>Oliver Klee - Zoli Szab&#xF3; - John Reeve - Jake Hotson - Cameron Brooks - Jaime Prado</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">pelago/emogrifier</product>
+          <author>Oliver Klee - Zoli Szab&#xF3; - John Reeve - Jake Hotson - Cameron Brooks - Jaime Prado</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   MIT License
 
 Copyright (c) 2008-2018 Pelago
@@ -3702,12 +3701,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">psr/cache</product>
-    <author>PHP-FIG</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">psr/cache</product>
+          <author>PHP-FIG</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015 PHP Framework Interoperability Group
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3728,12 +3727,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">psr/container</product>
-    <author>PHP-FIG</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">psr/container</product>
+          <author>PHP-FIG</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   The MIT License (MIT)
 
 Copyright (c) 2013-2016 container-interop
@@ -3756,12 +3755,12 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">psr/log</product>
-    <author>PHP-FIG</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">psr/log</product>
+          <author>PHP-FIG</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2012 PHP Framework Interoperability Group
 
 Permission is hereby granted, free of charge, to any person obtaining a copy 
@@ -3782,12 +3781,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">psr/simple-cache</product>
-    <author>PHP-FIG</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">psr/simple-cache</product>
+          <author>PHP-FIG</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   # The MIT License (MIT)
 
 Copyright (c) 2016 PHP Framework Interoperability Group
@@ -3810,12 +3809,12 @@ Copyright (c) 2016 PHP Framework Interoperability Group
 > OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 > THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">scssphp/scssphp</product>
-    <author>Anthon Pang - C&#xE9;dric Morin</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">scssphp/scssphp</product>
+          <author>Anthon Pang - C&#xE9;dric Morin</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015 Leaf Corcoran, http://scssphp.github.io/scssphp
  
 Permission is hereby granted, free of charge, to any person obtaining
@@ -3837,12 +3836,12 @@ LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
 OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">swiftmailer/swiftmailer</product>
-    <author>Chris Corbyn - Fabien Potencier</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">swiftmailer/swiftmailer</product>
+          <author>Chris Corbyn - Fabien Potencier</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2013-2016 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3863,13 +3862,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/cache</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2016-2019 Fabien Potencier
+          <product scope="lib">symfony/cache</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2016-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3889,13 +3888,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/class-loader</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/class-loader</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3915,13 +3914,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/config</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/config</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3941,13 +3940,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/console</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/console</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3967,13 +3966,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/css-selector</product>
-    <author>Fabien Potencier - Jean-Fran&#xE7;ois Simon - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/css-selector</product>
+          <author>Fabien Potencier - Jean-Fran&#xE7;ois Simon - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -3993,13 +3992,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/debug</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/debug</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4019,13 +4018,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/dependency-injection</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/dependency-injection</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4045,13 +4044,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/dotenv</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2016-2019 Fabien Potencier
+          <product scope="lib">symfony/dotenv</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2016-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4071,13 +4070,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/event-dispatcher</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/event-dispatcher</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4097,13 +4096,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/filesystem</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/filesystem</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4123,13 +4122,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/finder</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/finder</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4149,13 +4148,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/framework-bundle</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/framework-bundle</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4175,13 +4174,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/http-foundation</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/http-foundation</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4201,13 +4200,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/http-kernel</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/http-kernel</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4227,12 +4226,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/polyfill-apcu</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">symfony/polyfill-apcu</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4253,12 +4252,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/polyfill-ctype</product>
-    <author>Gert de Pagter - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">symfony/polyfill-ctype</product>
+          <author>Gert de Pagter - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2018-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4279,12 +4278,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/polyfill-mbstring</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">symfony/polyfill-mbstring</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4305,12 +4304,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/polyfill-php56</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">symfony/polyfill-php56</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4331,12 +4330,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/polyfill-php70</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">symfony/polyfill-php70</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4357,12 +4356,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/polyfill-util</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
+          <product scope="lib">symfony/polyfill-util</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
   Copyright (c) 2015-2019 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4383,13 +4382,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/routing</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/routing</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4409,13 +4408,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/stopwatch</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/stopwatch</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4435,13 +4434,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/twig-bridge</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/twig-bridge</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4461,13 +4460,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/twig-bundle</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/twig-bundle</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4487,13 +4486,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/var-dumper</product>
-    <author>Nicolas Grekas - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2014-2019 Fabien Potencier
+          <product scope="lib">symfony/var-dumper</product>
+          <author>Nicolas Grekas - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2014-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4513,13 +4512,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/web-profiler-bundle</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/web-profiler-bundle</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4539,13 +4538,13 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">symfony/yaml</product>
-    <author>Fabien Potencier - Symfony Community</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[
-  Copyright (c) 2004-2019 Fabien Potencier
+          <product scope="lib">symfony/yaml</product>
+          <author>Fabien Potencier - Symfony Community</author>
+          <license_type>MIT</license_type>
+          <text><![CDATA[
+  Copyright (c) 2004-2020 Fabien Potencier
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -4565,12 +4564,12 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
   ]]></text>
-  </license>
+      </license>
   <license>
-    <product scope="lib">twig/twig</product>
-    <author>Fabien Potencier - Twig Team - Armin Ronacher</author>
-    <license_type>BSD-3-Clause</license_type>
-    <text><![CDATA[
+          <product scope="lib">twig/twig</product>
+          <author>Fabien Potencier - Twig Team - Armin Ronacher</author>
+          <license_type>BSD-3-Clause</license_type>
+          <text><![CDATA[
   Copyright (c) 2009-2019 by the Twig Team.
 
 Some rights reserved.
@@ -4602,6 +4601,43 @@ DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
 THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  ]]></text>
+      </license>
+  <license>
+    <product scope="media">Freepik images</product>
+    <author>Freepik</author>
+    <license_type>Proprietary licensed</license_type>
+    <text><![CDATA[
+  The Company authorizes the User to download and use the Flaticon Content under the terms of this Section (see Section 7 in relation to the Sponsored Content). The Company and its licensors reserve all rights over the Flaticon Content not expressly granted in this license to the User.
+
+The Company authorizes the User in a non-transferable, limited, non-exclusive, manner and on a worldwide basis for the duration of the relevant rights; to download, use and modify the Flaticon Content, in a device the User owns or controls and only for the purposes and uses allowed in these Terms.
+
+The User may use the content in the Flaticon Content provided that it:
+
+Does not involve collective use;
+The content in the Flaticon Content is not used in a manner that suggests an association or endorsement by the Company or the Website;
+The content in the Flaticon Content or any derivative work is not used or included (in whole or in part) in a database, archive or in any other media/stock product, collection, set of clips, or library, for distribution or resale or used in any other way that could prevent or limit future visits or downloads from the Website;
+Does not resell, assign, transfer or sublicense the content in the Flaticon Content or any derived work from a content in the Flaticon Content;
+Does not use the content in the Flaticon Content in printed or electronic items (e.g. t-shirts, cups, postcards, birthday or greeting cards, invitations, calendars, web models or electronic devices, apps, videogames, advertising spots, audiovisual animations) aimed to be resold, in which the content in the Flaticon Content is the main element (because of size, relevance or any other cause, in case of doubt about whether the content is main element, it shall be deemed that the content is main element);
+Does not use the content in the Flaticon Content (totally or partially) in any trademark, logo or part of the same, which may be used by any other means to guarantee or to imply a guaranty of any product and/or service, unless the content in the Flaticon Content used in such cases is modified in such a way as to be a new and different content not confusingly similar with the original content in the Flaticon Content or implies a use of the content in the Flaticon Content as a template or test, and not as a final item or material;
+Does not make any use of the content in the Flaticon Content which might be considered defamatory, libellous, obscene, immoral or illegal, including, without limitation, using it in a way that places any person appearing in the content in the Flaticon Content in a negative light or depicts them in a way that they may find offensive such as the use in pornography, advertisements for escort or similar services, political endorsements, birth control products; and
+Does not make any use of the content in the Flaticon Content to slander, libel or to vilify a person, race, sex, culture, religion, country, region, town, village or any other place.
+When any content of the Flaticon Content is marked or identified as for editorial use, or when within the same there are logos, recognizable products, public buildings, public events or images taken in places where recognizable persons appear on the background, the User shall only be entitled to use it for such editorial use. In such cases, the User undertakes not to use that content in any manner that entails advertising, marketing or commercialization of any product or service. The User shall be directly liable and the Company shall not assume any liability as a result of the use for commercial purposes by the User of any content belonging to the Flaticon Content, which according to this paragraph should be for editorial use only.
+
+The authorization to use the content in the Flaticon Content shall be free provided that any use of the content in the Flaticon Content by the User is credited to the Company/Website as stated by the Company from time to time. In order to benefit from the Service or to use the content in the Flaticon Content without acknowledging the Company/Website, the User must purchase a subscription (hereinafter, the "Subscription") in the Website and download the content in the Flaticon Content during the term of any such Subscription. Conditions in Section 9 shall apply to the purchase of the Subscription.
+
+It is forbidden for a User to authorize any third parties to use the Flaticon Content (or any modification of any content in the Flaticon Content). As an exception to the prohibition, the User may allow third parties to use the content in the Flaticon Content, when each and every of the following conditions are met:
+
+The third party has professionally instructed the User to produce goods or provide services to it/him/her and the User uses a limited number of items within the content in the Flaticon Content to produce such goods or provide such services to the instructing third party;
+The authorization granted by the User to the third party is in writing and complies with every restriction of the User’s authorization to use the relevant content in the Flaticon Content and includes, without limitation, a restriction for the third party to distribute, resell or license the relevant content in the Flaticon Content (i.e. the third party is the final user of the relevant content in the Flaticon Content);
+None of the contents in the Flaticon Content which are subject to the authorization are used as the main element (because of size, relevance or any other cause; in case of doubt about whether the content is the main element, it shall be deemed as the main element) in printed or electronic items (e.g. t-shirts, cups, postcards, birthday or greeting cards, invitations, calendars, web models or electronic devices, apps, videogames, advertising spots, audiovisual animations) aimed to be resold by the third party;
+The production of goods or provision of services by the User to the third party is not done by automatic means, it is tailor made for the third party (and therefore its use is not authorized by the User to any other third party) and requires a specific substantial human intervention from the User in relation to each third party, and;
+The User -and not the third party- chooses the specific items within the content of the Flaticon Content to be used in the production of goods or provision of services for the third party.
+When all of the above conditions are met, the User shall be entitled to authorize a third party to use the relevant content in the Flaticon Content. This exception refers only to the prohibition for the User to authorize third parties to use the content in the Flaticon Content without affecting or limiting in any way the remaining conditions of the User’s right to use the Flaticon Content. Whether the above conditions regarding the exception to the prohibition for Users to authorize third parties to use the content in the Flaticon Content are met shall be interpreted restrictively so that, in case of doubt, it shall be deemed that the conditions are not met.
+
+The User does not acquire any right as a result of the use of the content in the Flaticon Content. In particular, the User is not authorized to distribute, resell or rent any content in the Flaticon Content (or any modification of any content in the Flaticon Content).
+
+The User rights under this Section will end automatically without any notice if the User breaches any of the Terms. In case of termination of the rights hereunder, the User shall cease using content in the Flaticon Content and will destroy every copy, whether total or partial, thereof.
   ]]></text>
   </license>
   <license>
@@ -4679,71 +4715,16 @@ Are registered trademarks of their respected owners. Are included on a promotion
   ]]></text>
   </license>
   <license>
-    <product scope="media">Freepik images</product>
-    <author>Freepik</author>
-    <license_type>Proprietary licensed</license_type>
-    <text><![CDATA[
-  The Company authorizes the User to download and use the Flaticon Content under the terms of this Section (see Section 7 in relation to the Sponsored Content). The Company and its licensors reserve all rights over the Flaticon Content not expressly granted in this license to the User.
-
-The Company authorizes the User in a non-transferable, limited, non-exclusive, manner and on a worldwide basis for the duration of the relevant rights; to download, use and modify the Flaticon Content, in a device the User owns or controls and only for the purposes and uses allowed in these Terms.
-
-The User may use the content in the Flaticon Content provided that it:
-
-Does not involve collective use;
-The content in the Flaticon Content is not used in a manner that suggests an association or endorsement by the Company or the Website;
-The content in the Flaticon Content or any derivative work is not used or included (in whole or in part) in a database, archive or in any other media/stock product, collection, set of clips, or library, for distribution or resale or used in any other way that could prevent or limit future visits or downloads from the Website;
-Does not resell, assign, transfer or sublicense the content in the Flaticon Content or any derived work from a content in the Flaticon Content;
-Does not use the content in the Flaticon Content in printed or electronic items (e.g. t-shirts, cups, postcards, birthday or greeting cards, invitations, calendars, web models or electronic devices, apps, videogames, advertising spots, audiovisual animations) aimed to be resold, in which the content in the Flaticon Content is the main element (because of size, relevance or any other cause, in case of doubt about whether the content is main element, it shall be deemed that the content is main element);
-Does not use the content in the Flaticon Content (totally or partially) in any trademark, logo or part of the same, which may be used by any other means to guarantee or to imply a guaranty of any product and/or service, unless the content in the Flaticon Content used in such cases is modified in such a way as to be a new and different content not confusingly similar with the original content in the Flaticon Content or implies a use of the content in the Flaticon Content as a template or test, and not as a final item or material;
-Does not make any use of the content in the Flaticon Content which might be considered defamatory, libellous, obscene, immoral or illegal, including, without limitation, using it in a way that places any person appearing in the content in the Flaticon Content in a negative light or depicts them in a way that they may find offensive such as the use in pornography, advertisements for escort or similar services, political endorsements, birth control products; and
-Does not make any use of the content in the Flaticon Content to slander, libel or to vilify a person, race, sex, culture, religion, country, region, town, village or any other place.
-When any content of the Flaticon Content is marked or identified as for editorial use, or when within the same there are logos, recognizable products, public buildings, public events or images taken in places where recognizable persons appear on the background, the User shall only be entitled to use it for such editorial use. In such cases, the User undertakes not to use that content in any manner that entails advertising, marketing or commercialization of any product or service. The User shall be directly liable and the Company shall not assume any liability as a result of the use for commercial purposes by the User of any content belonging to the Flaticon Content, which according to this paragraph should be for editorial use only.
-
-The authorization to use the content in the Flaticon Content shall be free provided that any use of the content in the Flaticon Content by the User is credited to the Company/Website as stated by the Company from time to time. In order to benefit from the Service or to use the content in the Flaticon Content without acknowledging the Company/Website, the User must purchase a subscription (hereinafter, the "Subscription") in the Website and download the content in the Flaticon Content during the term of any such Subscription. Conditions in Section 9 shall apply to the purchase of the Subscription.
-
-It is forbidden for a User to authorize any third parties to use the Flaticon Content (or any modification of any content in the Flaticon Content). As an exception to the prohibition, the User may allow third parties to use the content in the Flaticon Content, when each and every of the following conditions are met:
-
-The third party has professionally instructed the User to produce goods or provide services to it/him/her and the User uses a limited number of items within the content in the Flaticon Content to produce such goods or provide such services to the instructing third party;
-The authorization granted by the User to the third party is in writing and complies with every restriction of the User’s authorization to use the relevant content in the Flaticon Content and includes, without limitation, a restriction for the third party to distribute, resell or license the relevant content in the Flaticon Content (i.e. the third party is the final user of the relevant content in the Flaticon Content);
-None of the contents in the Flaticon Content which are subject to the authorization are used as the main element (because of size, relevance or any other cause; in case of doubt about whether the content is the main element, it shall be deemed as the main element) in printed or electronic items (e.g. t-shirts, cups, postcards, birthday or greeting cards, invitations, calendars, web models or electronic devices, apps, videogames, advertising spots, audiovisual animations) aimed to be resold by the third party;
-The production of goods or provision of services by the User to the third party is not done by automatic means, it is tailor made for the third party (and therefore its use is not authorized by the User to any other third party) and requires a specific substantial human intervention from the User in relation to each third party, and;
-The User -and not the third party- chooses the specific items within the content of the Flaticon Content to be used in the production of goods or provision of services for the third party.
-When all of the above conditions are met, the User shall be entitled to authorize a third party to use the relevant content in the Flaticon Content. This exception refers only to the prohibition for the User to authorize third parties to use the content in the Flaticon Content without affecting or limiting in any way the remaining conditions of the User’s right to use the Flaticon Content. Whether the above conditions regarding the exception to the prohibition for Users to authorize third parties to use the content in the Flaticon Content are met shall be interpreted restrictively so that, in case of doubt, it shall be deemed that the conditions are not met.
-
-The User does not acquire any right as a result of the use of the content in the Flaticon Content. In particular, the User is not authorized to distribute, resell or rent any content in the Flaticon Content (or any modification of any content in the Flaticon Content).
-
-The User rights under this Section will end automatically without any notice if the User breaches any of the Terms. In case of termination of the rights hereunder, the User shall cease using content in the Flaticon Content and will destroy every copy, whether total or partial, thereof.
-  ]]></text>
-  </license>
-  <license>
-    <product scope="npm">popperjs/core</product>
-    <author>Federico Zivolo</author>
-    <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/@popperjs/core/LICENSE.md]]></text>
-  </license>
-  <license>
     <product scope="npm">bulma-scss</product>
     <author>Jim Campbell</author>
     <license_type>MIT</license_type>
     <text><![CDATA[/node_modules/bulma-scss/LICENSE]]></text>
   </license>
   <license>
-    <product scope="npm">raleway-webfont</product>
-    <author>Pablo Impallari</author>
-    <license_type>MIT AND OFL-1.1</license_type>
-    <text><![CDATA[/node_modules/raleway-webfont/LICENSE]]></text>
-  </license>
-  <license>
-    <product scope="npm">scrollmagic</product>
-    <author>Jan Paepke</author>
-    <license_type>MIT OR GPL-3.0+</license_type>
-    <text><![CDATA[/node_modules/scrollmagic/LICENSE.md]]></text>
-  </license>
-  <license>
-    <product scope="npm">tippy.js</product>
-    <author>atomiks</author>
+    <product scope="npm">datatables.net</product>
+    <author>SpryMedia Ltd</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/tippy.js/LICENSE]]></text>
+    <text><![CDATA[/node_modules/datatables.net/License.txt]]></text>
   </license>
   <license>
     <product scope="npm">datatables.net-fixedheader</product>
@@ -4770,9 +4751,27 @@ The User rights under this Section will end automatically without any notice if 
     <text><![CDATA[/node_modules/datatables.net-select/License.txt]]></text>
   </license>
   <license>
-    <product scope="npm">datatables.net</product>
-    <author>SpryMedia Ltd</author>
+    <product scope="npm">popperjs/core</product>
+    <author>Federico Zivolo</author>
     <license_type>MIT</license_type>
-    <text><![CDATA[/node_modules/datatables.net/License.txt]]></text>
+    <text><![CDATA[/node_modules/@popperjs/core/LICENSE.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">raleway-webfont</product>
+    <author>Pablo Impallari</author>
+    <license_type>MIT AND OFL-1.1</license_type>
+    <text><![CDATA[/node_modules/raleway-webfont/LICENSE]]></text>
+  </license>
+  <license>
+    <product scope="npm">scrollmagic</product>
+    <author>Jan Paepke</author>
+    <license_type>MIT OR GPL-3.0+</license_type>
+    <text><![CDATA[/node_modules/scrollmagic/LICENSE.md]]></text>
+  </license>
+  <license>
+    <product scope="npm">tippy.js</product>
+    <author>atomiks</author>
+    <license_type>MIT</license_type>
+    <text><![CDATA[/node_modules/tippy.js/LICENSE]]></text>
   </license>
 </licenses>

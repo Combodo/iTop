@@ -69,8 +69,9 @@ class ThemeHandlerTest extends ItopTestCase
 		$aErrors = [];
 		$aDataModelFiles=glob(APPROOT . utils::GetConfig()->Get('source_dir'). "/**/datamodel*.xml");
 		$aImportsPaths = [
-			APPROOT.'datamodels',
-			$this->sTmpDir, // For DM rules
+			APPROOT.'datamodels',       // Simulate env-xxx when looking for files outside env-xxx
+			APPROOT.'datamodels/2.x',   // Simulate env-xxx when looking for files within env-xxx
+			$this->sTmpDir,             // For DM rules
 		];
 
 		// First we have to compile the styles defined in the DM in order to feed it to the themes

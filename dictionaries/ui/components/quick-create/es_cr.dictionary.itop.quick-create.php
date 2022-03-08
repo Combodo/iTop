@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Quick create
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Component:QuickCreate:Tooltip' => 'Quickly create any type of object~~',
 	'UI:Component:QuickCreate:Input:Placeholder' => 'Select object type...~~',
 	'UI:Component:QuickCreate:Recents:Title' => 'Recents~~',

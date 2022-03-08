@@ -3,11 +3,11 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-$ibo-fieldset--sibling-spacing: 48px !default;
+$ibo-fieldset--sibling-spacing: $ibo-spacing-800 !default;
 
 $ibo-fieldset--legend--width: 100% !default;
-$ibo-fieldset--legend--margin-bottom: 16px !default;
-$ibo-fieldset--legend--padding-bottom: 4px !default;
+$ibo-fieldset--legend--margin-bottom: $ibo-spacing-500 !default;
+$ibo-fieldset--legend--padding-bottom: $ibo-spacing-200 !default;
 $ibo-fieldset--legend--border-bottom-size: 2px !default;
 $ibo-fieldset--legend--border-bottom-color: $ibo-color-grey-500 !default;
 $ibo-fieldset--legend--border-bottom-style: solid !default;
@@ -16,6 +16,10 @@ $ibo-fieldset--legend--border-bottom-style: solid !default;
   & ~ .ibo-fieldset:not(.ibo-column) {
     margin-top: $ibo-fieldset--sibling-spacing;
   }
+}
+
+.ibo-column > .ibo-fieldset {
+//  display: contents;
 }
 
 .ibo-multi-column ~ .ibo-fieldset {

@@ -178,6 +178,7 @@ class MFCompilerTest extends ItopTestCase {
 			'stylesheets' => [
 				"fullmoon" => '../css/backoffice/main.scss',
 				"environment-banner" => '../css/backoffice/themes/page-banner.scss',
+				"datamodel-compiled-scss-rules" => 'branding/themes/datamodel-compiled-scss-rules.scss',
 			],
 		];
 
@@ -189,6 +190,6 @@ class MFCompilerTest extends ItopTestCase {
 
 		//CompileTheme($sThemeId, $bSetup = false, $sSetupCompilationTimestamp="", $aThemeParameters = null, $aImportsPaths = null, $sWorkingPath = null)
 		MFCompiler::SetThemeHandlerService($oThemeHandlerService);
-		$this->oMFCompiler->CompileThemes($oBrandingNode, $this->sTmpDir);
+		$this->InvokeNonPublicMethod(MFCompiler::class, 'CompileThemes', $this->oMFCompiler, [$oBrandingNode, $this->sTmpDir]);
 	}
 }

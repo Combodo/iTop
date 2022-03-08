@@ -768,7 +768,9 @@ class SetupUtils
 		{
 			$parent = dirname($dir);
 			self::builddir($parent);
-			mkdir($dir);
+			if (!mkdir($dir) && !is_dir($dir)) {
+				throw new \RuntimeException(sprintf('Directory "%s" was not created', $dir));
+			}
 		}
 	}
 
@@ -1937,8 +1939,8 @@ JS
 		$aLicenceFiles = glob(APPROOT.'setup/licenses/*.xml');
 		if (empty($sEnv)) {
 			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'datamodels/*/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/*/license.*.xml'));
-			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/*/license.*.xml'));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'extensions/{*,*/*}/license.*.xml', GLOB_BRACE));
+			$aLicenceFiles = array_merge($aLicenceFiles, glob(APPROOT.'data/*-modules/{*,*/*}/license.*.xml', GLOB_BRACE));
 		}
 		else
 		{
@@ -1976,7 +1978,7 @@ JS
 	{
 		$bPreviousMode = self::IsInMaintenanceMode();
 		@touch(MAINTENANCE_MODE_FILE);
-		self::Log("----> Entering maintenance mode");
+		SetupLog::Info("----> Entering maintenance mode");
 		self::WaitCronTermination($oConfig, "maintenance");
 		return $bPreviousMode;
 	}
@@ -1986,7 +1988,7 @@ JS
 		@unlink(MAINTENANCE_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting maintenance mode");
+			SetupLog::Info("<---- Exiting maintenance mode");
 		}
 	}
 
@@ -1999,7 +2001,7 @@ JS
 	{
 		$bPreviousMode = self::IsInReadOnlyMode();
 		@touch(READONLY_MODE_FILE);
-		self::Log("----> Entering read only mode");
+		SetupLog::Info("----> Entering read only mode");
 		self::WaitCronTermination($oConfig, "read only");
 
 		return $bPreviousMode;
@@ -2010,7 +2012,7 @@ JS
 		@unlink(READONLY_MODE_FILE);
 		if ($bLog)
 		{
-			self::Log("<---- Exiting read only mode");
+			SetupLog::Info("<---- Exiting read only mode");
 		}
 	}
 
@@ -2046,7 +2048,7 @@ JS
 			$iTimeLimit = $iStarted + $iMaxDuration;
 			while ($oMutex->IsLocked())
 			{
-				self::Log("Waiting for cron to stop ($iCount)");
+				SetupLog::Info("Waiting for cron to stop ($iCount)");
 				$iCount++;
 				sleep(1);
 				if (time() > $iTimeLimit)
@@ -2130,22 +2132,6 @@ JS
 		Session::Unset('setup_token');
 	}
 
-
-	/**
-	 * @param string $sText
-	 *
-	 * @since 2.7.0 N°2240 Maintenance mode
-	 * @since 3.0.0 N°2522 uses SetupLog instead of SetupPage (but still uses SetupPage for setup/console detection)
-	 */
-	private static function Log($sText) {
-		if (class_exists('SetupPage')) {
-			SetupLog::Ok($sText);
-		}
-		else {
-			IssueLog::Info($sText);
-		}
-	}
-
 	/**
 	 * @return string[]
 	 */
@@ -2162,7 +2148,7 @@ JS
 			'dom',
 			'zlib',
 			'zip',
-			'fileinfo', // N°3123
+			'fileinfo', // N°3123 if disabled, will throw "wrong format" when uploading AttributeImage
 			'mbstring', // N°2891, N°2899
 			'gd', // test image type (always returns false if not installed), image resizing, PDF export
 		];

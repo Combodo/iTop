@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
@@ -1126,16 +1127,20 @@ class OQLMenuNode extends MenuNode
 	{
 		$sUsageId = utils::GetSafeId($sUsageId);
 		$oSearch = DBObjectSearch::FromOQL($sOql);
-
+		$sClass= 	$oSearch->GetClass();
+		$sIcon = MetaModel::GetClassIcon($sClass, false);
 		if ($bSearchPane) {
 			$aParams = array_merge(['open' => $bSearchOpen, 'table_id' => $sUsageId, 'submit_on_load' => false], $aExtraParams);
 			$oBlock = new DisplayBlock($oSearch, 'search', false /* Asynchronous */, $aParams);
 			$oBlock->Display($oPage, 0);
+			$oPage->add("<div class='sf_results_area ibo-add-margin-top-250' data-target='search_results'>");
 		}
-
-		$oPage->add("<div class='sf_results_area' data-target='search_results'>");
-		$oTitle = TitleUIBlockFactory::MakeForPage($sTitle);
-		$oPage->AddUiBlock($oTitle);
+		else {
+			$oPage->add("<div class='sf_results_area' data-target='search_results'>");
+		}
+		$aExtraParams['panel_class'] =$sClass;
+		$aExtraParams['panel_title'] = $sTitle;
+		$aExtraParams['panel_icon'] = $sIcon;
 
 		$aParams = array_merge(array('table_id' => $sUsageId), $aExtraParams);
 		$oBlock = new DisplayBlock($oSearch, 'list', false /* Asynchronous */, $aParams);

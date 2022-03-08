@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 // Navigation menu
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'UI:Preferences:Title'                                             => 'Preferences~~',
 	'UI:Preferences:UserInterface:Title'                               => 'User interface~~',
 	'UI:Preferences:General:Title'                                     => 'General~~',

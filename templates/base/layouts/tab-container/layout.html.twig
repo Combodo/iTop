@@ -1,6 +1,6 @@
 {# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
 {# @license     http://opensource.org/licenses/AGPL-3.0 #}
-<div id="{{ oUIBlock.GetId() }}" class="ibo-tab-container ibo-is-{{ oUIBlock.GetLayout() }}{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}"
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-{{ oUIBlock.GetLayout() }}{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}"
      data-role="ibo-tab-container" data-status="loading">
     {% block iboTabContainer %}
         <ul class="ibo-tab-container--tabs-list" data-role="ibo-tab-container--tabs-list">
@@ -65,7 +65,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-
+                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{" data-role="ibo-tab-container--tab-container-list">
                 {% for oTab in oUIBlock.GetSubBlocks() %}
                     <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
                          class="ibo-tab-container--tab-container">
@@ -79,6 +79,7 @@
                         {% endif %}
                     </div>
                 {% endfor %}
+                </div>
             {% endif %}
         {% endblock %}
 

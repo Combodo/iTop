@@ -9,7 +9,7 @@ $ibo-data-synchro-source--replicas-table--cell--padding: 10px !default;
 $ibo-data-synchro-source--replicas-table--cell--min-width: 200px !default;
 $ibo-data-synchro-source--replicas-table--cell--arrow--min-width: 100px !default;
 
-$ibo-data-synchro-source--replicas-status--warning--margin: 0 5px 0 8px !default;
+$ibo-data-synchro-source--replicas-status--warning--margin: $ibo-spacing-0 5px $ibo-spacing-0 $ibo-spacing-300 !default;
 
 $ibo-data-synchro-source--replicas-status--color: (
         'grey': (

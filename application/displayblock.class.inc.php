@@ -174,6 +174,8 @@ class DisplayBlock
 				/** string Max. height of the list, if not specified will occupy all the available height no matter the pagination */
 				'localize_values',
 				/** param for export.php */
+				'refresh_action',
+				/**to add refresh button in datatable*/
 			], DataTableUIBlockFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',
@@ -469,10 +471,8 @@ class DisplayBlock
 				$oHtml->AddSubBlock($this->GetRenderContent($oPage, $aExtraParams, $sId));
 			} catch (Exception $e) {
 				if (UserRights::IsAdministrator()) {
-					$sExceptionContent = <<<HTML
-Exception thrown:<br>
-<code>{$e->getMessage()}</code>
-HTML;
+					$sExceptionContent = 'Exception thrown:<br><code>'.utils::Sanitize($e->getMessage(), '', utils::ENUM_SANITIZATION_FILTER_STRING).'</code>';
+
 					$oExceptionAlert = AlertUIBlockFactory::MakeForFailure('Cannot display results', $sExceptionContent);
 					$oHtml->AddSubBlock($oExceptionAlert);
 				}
@@ -539,8 +539,10 @@ HTML;
 	 * @throws DictExceptionMissingString
 	 * @throws MySQLException
 	 * @throws Exception
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 add type hinting to $aExtraParams
 	 */
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, string $sId)
 	{
 		$sHtml = '';
 		$oBlock = null;
@@ -853,7 +855,7 @@ JS
 	{
 		$oField = new FieldExpression($sFilterCode,  $oFilter->GetClassAlias());
 		$sListExpr = '('.implode(', ', CMDBSource::Quote($condition)).')';
-		$sOQLCondition = $oField->Render()." IN $sListExpr";
+		$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 		$oNewCondition = Expression::FromOQL($sOQLCondition);
 		return $oNewCondition;		
 	}
@@ -1017,7 +1019,7 @@ JS
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
 			$aValues = $oAttDef->GetAllowedValues();
 			foreach ($aStates as $sStateValue) {
-				$aStateLabels[$sStateValue] = $aValues[$sStateValue];
+				$aStateLabels[$sStateValue] = $aValues[$sStateValue] ?? '';
 				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 					? $aCountsQueryResults[$sStateValue]
 					: 0;
@@ -1045,7 +1047,7 @@ JS
 			$sCountLabel = $aCount['label'];
 			$oPill = PillFactory::MakeForState($sClass, $sStateValue)
 				->SetTooltip($sStateLabel)
-				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">$sStateLabel</span>");
+				->AddHtml("<span class=\"ibo-dashlet-header-dynamic--count\">$sCountLabel</span><span class=\"ibo-dashlet-header-dynamic--label ibo-text-truncated-with-ellipsis\">".utils::HtmlEntities($sStateLabel)."</span>");
 			if ($sHyperlink != '-') {
 				$oPill->SetUrl($sHyperlink);
 			}
@@ -1699,145 +1701,6 @@ JS
 }
 
 /**
- * Helper class to manage 'blocks' of HTML pieces that are parts of a page and contain some list of cmdb objects
- *
- * Each block is actually rendered as a <div></div> tag that can be rendered synchronously
- * or as a piece of Javascript/JQuery/Ajax that will get its content from another page (ajax.render.php).
- * The list of cmdbObjects to be displayed into the block is defined by a filter
- * Right now the type of display is either: list, count or details
- * - list produces a table listing the objects
- * - count produces a paragraphs with a sentence saying 'cont' objects found
- * - details display (as  table) the details of each object found (best if only one)
- *
- * @deprecated 3.0.0 will be removed in 3.1, see N°3824
- */
-class HistoryBlock extends DisplayBlock
-{
-	protected $iLimitCount;
-	protected $iLimitStart;
-	
-	public function __construct(DBSearch $oFilter, $sStyle = 'list', $bAsynchronous = false, $aParams = array(), $oSet = null)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		parent::__construct($oFilter, $sStyle, $bAsynchronous, $aParams, $oSet);
-		$this->iLimitStart = 0;
-		$this->iLimitCount = 0;
-	}
-
-	public function SetLimit($iCount, $iStart = 0)
-	{
-		$this->iLimitStart = $iStart;
-		$this->iLimitCount = $iCount;
-	}
-
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
-	{
-		$sHtml = '';
-		$bTruncated = false;
-		$oSet = new CMDBObjectSet($this->m_oFilter, array('date' => false));
-		if (!$oPage->IsPrintableVersion()) {
-			if (($this->iLimitStart > 0) || ($this->iLimitCount > 0)) {
-				$oSet->SetLimit($this->iLimitCount, $this->iLimitStart);
-				if (($this->iLimitCount - $this->iLimitStart) < $oSet->Count()) {
-					$bTruncated = true;
-				}
-			}
-		}
-		$sHtml .= "<!-- filter: ".($this->m_oFilter->ToOQL())."-->\n";
-		switch ($this->m_sStyle) {
-			case 'toggle':
-				// First the latest change that the user is allowed to see
-				do {
-					$oLatestChangeOp = $oSet->Fetch();
-				} while (is_object($oLatestChangeOp) && ($oLatestChangeOp->GetDescription() == ''));
-
-				if (is_object($oLatestChangeOp)) {
-					// There is one change in the list... only when the object has been created !
-					$sDate = $oLatestChangeOp->GetAsHTML('date');
-					$oChange = MetaModel::GetObject('CMDBChange', $oLatestChangeOp->Get('change'));
-					$sUserInfo = $oChange->GetAsHTML('userinfo');
-					$sHtml .= $oPage->GetStartCollapsibleSection(Dict::Format('UI:History:LastModified_On_By', $sDate, $sUserInfo));
-					$sHtml .= $this->GetHistoryTable($oPage, $oSet);
-					$sHtml .= $oPage->GetEndCollapsibleSection();
-				}
-				break;
-
-			case 'table':
-			default:
-			if ($bTruncated)
-			{
-				$sFilter = htmlentities($this->m_oFilter->serialize(), ENT_QUOTES, 'UTF-8');
-				$sHtml .= '<div id="history_container"><p>';
-				$sHtml .= Dict::Format('UI:TruncatedResults', $this->iLimitCount, $oSet->Count());
-				$sHtml .= ' ';
-				$sHtml .= '<a href="#" onclick="DisplayHistory(\'#history_container\', \''.$sFilter.'\', 0, 0); return false;">'.Dict::S('UI:DisplayAll').'</a>';
-				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
-				$sHtml .= '</p></div>';
-				$oPage->add_ready_script("$('#{$sId} table.listResults tr:last td').addClass('truncated');");
-			}
-			else
-			{
-				$sHtml .= $this->GetHistoryTable($oPage, $oSet);
-			}
-			$oPage->add_ready_script(InlineImage::FixImagesWidth());
-		
-			$oPage->add_ready_script("$('.case-log-history-entry-toggle').on('click', function () { $(this).closest('.case-log-history-entry').toggleClass('expanded');});");
-			$oPage->add_ready_script(
-<<<EOF
-$('.history_entry').each(function() {
-	var jMe = $(this);
-	var oContent = $(this).find('.history_html_content');
-	if (jMe.height() < oContent.height())
-	{
-			jMe.prepend('<span class="history_truncated_toggler"></span>');
-			jMe.find('.history_truncated_toggler').on('click', function() {
-				jMe.toggleClass('history_entry_truncated');
-			});
-	}
-});
-EOF
-			);
-		}
-		return new Html($sHtml);
-	}
-	
-	protected function GetHistoryTable(WebPage $oPage, DBObjectSet $oSet)
-	{
-		$sHtml = '';
-		// First the latest change that the user is allowed to see
-		$oSet->Rewind(); // Reset the pointer to the beginning of the set
-		$aChanges = array();
-		while($oChangeOp = $oSet->Fetch())
-		{
-			$sChangeDescription = $oChangeOp->GetDescription();
-			if ($sChangeDescription != '')
-			{
-				// The change is visible for the current user
-				$changeId = $oChangeOp->Get('change');
-				$aChanges[$changeId]['date'] = $oChangeOp->Get('date');
-				$aChanges[$changeId]['userinfo'] = $oChangeOp->Get('userinfo');
-				if (!isset($aChanges[$changeId]['log']))
-				{
-					$aChanges[$changeId]['log'] = array();
-				}
-				$aChanges[$changeId]['log'][] = $sChangeDescription;
-			}
-		}
-		$aAttribs = array('date' => array('label' => Dict::S('UI:History:Date'), 'description' => Dict::S('UI:History:Date+')),
-						  'userinfo' => array('label' => Dict::S('UI:History:User'), 'description' => Dict::S('UI:History:User+')),
-						  'log' => array('label' => Dict::S('UI:History:Changes') , 'description' => Dict::S('UI:History:Changes+')),
-						 );
-		$aValues = array();
-		foreach($aChanges as $aChange)
-		{
-			$aValues[] = array('date' => AttributeDateTime::GetFormat()->Format($aChange['date']), 'userinfo' => htmlentities($aChange['userinfo'], ENT_QUOTES, 'UTF-8'), 'log' => "<ul><li>".implode('</li><li>', $aChange['log'])."</li></ul>");
-		}
-		$sHtml .= $oPage->GetTable($aAttribs, $aValues);
-		return $sHtml;
-	}
-}
-
-/**
  * Displays the 'Actions' menu for a given (list of) object(s)
  * The 'style' of the list (see constructor of DisplayBlock) can be either 'list' or 'details'
  * For backward compatibility 'popup' is equivalent to 'list'...
@@ -1871,11 +1734,10 @@ class MenuBlock extends DisplayBlock
 	 * @throws \DictExceptionMissingString
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @throws \OQLException
-	 * @throws \ReflectionException
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value and add type hinting on $aExtraParams for PHP 8.0 compatibility
 	 */
-	public function GetRenderContent(WebPage $oPage, array $aExtraParams = [], string $sId = null)
+	public function GetRenderContent(WebPage $oPage, array $aExtraParams, string $sId)
 	{
 		$oRenderBlock = new UIContentBlock();
 
@@ -1886,7 +1748,7 @@ class MenuBlock extends DisplayBlock
 
 		$sClass = $this->m_oFilter->GetClass();
 		$oSet = new CMDBObjectSet($this->m_oFilter);
-		$sRefreshAction = $aExtraParams['sRefreshAction'] ?? '';
+		$sRefreshAction = $aExtraParams['refresh_action'] ?? '';
 
 		/** @var array $aRegularActions Any action other than a transition */
 		$aRegularActions = [];
@@ -2222,8 +2084,14 @@ class MenuBlock extends DisplayBlock
 		}
 		if ($oPopupMenuItemsBlock->HasSubBlocks()) {
 			$oRenderBlock->AddSubBlock($oPopupMenuItemsBlock);
+		} else {
+			foreach ($oPopupMenuItemsBlock->GetJsFilesRelPaths() as $sJsPath) {
+				$oRenderBlock->AddJsFileRelPath($sJsPath);
+			}
+			foreach ($oPopupMenuItemsBlock->GetCssFilesRelPaths() as $sCssPath) {
+				$oRenderBlock->AddCssFileRelPath($sCssPath);
+			}
 		}
-
 		// Extract favorite actions from their menus
 		$aFavoriteRegularActions = [];
 		$aFavoriteTransitionActions = [];
@@ -2333,7 +2201,9 @@ class MenuBlock extends DisplayBlock
 				}
 
 				$sTarget = isset($aAction['target']) ? $aAction['target'] : '';
-				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, $sActionId);
+				$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral($sUrl, $sLabel, $sIconClass, $sTarget, utils::Sanitize($sActionId, '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER));
+				// ResourceId should not be sanitized
+				$oActionButton->AddDataAttribute('resource-id', $sActionId);
 				$oActionButton->AddCSSClasses(['ibo-action-button', 'ibo-regular-action-button']);
 				if (empty($sLabel)) {
 					if (empty($aAction['tooltip'])) {

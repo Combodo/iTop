@@ -233,8 +233,7 @@ try {
 	{
 		$sClassName = utils::ReadParam('class_name', '', false, 'class');
 		// Class access right check for the import
-		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO)
-		{
+		if (UserRights::IsActionAllowed($sClassName, UR_ACTION_MODIFY) == UR_ALLOWED_NO) {
 			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
 		}
 
@@ -245,8 +244,7 @@ try {
 		$sTextQualifier = utils::ReadParam('text_qualifier', '"', false, 'raw_data');
 		$bHeaderLine = (utils::ReadParam('header_line', '0') == 1);
 		$iSkippedLines = 0;
-		if (utils::ReadParam('box_skiplines', '0') == 1)
-		{
+		if (utils::ReadParam('box_skiplines', '0') == 1) {
 			$iSkippedLines = utils::ReadParam('nb_skipped_lines', '0');
 		}
 		$aFieldsMapping = utils::ReadParam('field', array(), false, 'raw_data');
@@ -640,12 +638,12 @@ try {
 		if ($bShouldConfirm) {
 			$sYesButton = Dict::S('UI:Button:Ok');
 			$sNoButton = Dict::S('UI:Button:Cancel');
-			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->AddCSSClass('ibo-hidden');
+			$oDlg = UIContentBlockUIBlockFactory::MakeStandard("dlg_confirmation")->SetHasForcedDiv(true);
 			$oPage->AddSubBlock($oDlg);
 			$oDlg->AddSubBlock(new Html($sMessage));
 			$oDlg->AddSubBlock(new Html(htmlentities(Dict::S('UI:CSVImportConfirmMessage'), ENT_QUOTES, 'UTF-8')));
 
-			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->AddCSSClass('ibo-hidden');
+			$oDlgConfirm = UIContentBlockUIBlockFactory::MakeStandard("confirmation_chart")->SetHasForcedDiv(true);
 			$oDlg->AddSubBlock($oDlgConfirm);
 
 			$sDlgTitle = Dict::S('UI:CSVImportConfirmTitle');
@@ -660,10 +658,17 @@ try {
 			autoOpen: false, 
 			title:'$sDlgTitle',
 			buttons:
-			{
-				'$sYesButton': RunImport,
-				'$sNoButton': CancelImport 
-			} 
+			[
+				{ 
+					text: "$sNoButton",
+					click: CancelImport,
+				},
+				{ 
+					text: "$sYesButton",
+				    class: "ibo-is-primary",
+					click: RunImport,
+				},
+			]
 		});
 EOF
 			);
@@ -1150,7 +1155,7 @@ EOF
 				$sCSVData = $oDocument->GetData();
 			}
 			break;
-			
+
 			default:
 			$sCSVData = utils::ReadPostedParam('csvdata', '', 'raw_data');
 		}
@@ -1323,6 +1328,7 @@ EOF
 
 		$sFormatInput = '<input type="text" size="15" name="custom_date_time_format" id="excel_custom_date_time_format" title="" value="'.htmlentities($sCustomDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
 		$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('UI:CSVImport:CustomDateTimeFormat', $sFormatInput), "date_time_format", "custom", "radio_date_time_custom", "radio");
+		$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
 		$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
 		$oRadioCustom->SetBeforeInput(false);
 		$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
@@ -1419,11 +1425,9 @@ EOF
 	}
 EOF
 	);
-		$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
 		$oPage->add_ready_script(
 <<<EOF
 DoPreview();
-$('#custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
 $('#custom_date_time_format').on('click', function() { $('#radio_date_time_custom').prop('checked', true); });
 EOF
 		);
@@ -1515,8 +1519,9 @@ EOF
 		$oTabPaste->AddSubBlock($oFormPaste);
 
 
-		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
+		$sCSVData = utils::ReadParam('csvdata', '', false, utils::ENUM_SANITIZATION_FILTER_STRING);
 		$oTextarea = new TextArea('csvdata', $sCSVData, '', 120, 30);
+		$oTextarea->AddCSSClasses(['ibo-input-text', 'ibo-is-code']);
 		$oFieldPaste = FieldUIBlockFactory::MakeFromObject(Dict::S('UI:CSVImport:PasteData'), $oTextarea);
 		$oFormPaste->AddSubBlock($oFieldPaste);
 

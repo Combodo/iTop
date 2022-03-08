@@ -13,6 +13,7 @@ use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
@@ -120,25 +121,28 @@ function Usage(Page $oP)
 	//}
 }
 
-function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '')
+function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExceptionMessage = '', $oForm = null)
 {
-	$oP->AddSubBlock(TitleUIBlockFactory::MakeForPage(Dict::S('Core:BulkExport:ScopeDefinition')));
-	$oForm = FormUIBlockFactory::MakeStandard('form');
-	$oForm->SetAction($sAction);
-	$oP->AddSubBlock($oForm);
+	$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:ScopeDefinition'));
+	if ($oForm == null) {
+		$oForm = FormUIBlockFactory::MakeStandard('export-form');
+		$oForm->SetAction($sAction);
+		$oP->AddSubBlock($oForm);
+	}
+	$oForm->AddSubBlock($oPanel);
 
-	$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
+	$oPanel->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
 
 	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
 	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
 	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
-	$oTextArea->AddCSSClass("ibo-queryoql");
+	$oTextArea->AddCSSClasses(["ibo-input-text", "ibo-query-oql", "ibo-is-code"]);
 	$oFieldQuery->AddSubBlock($oTextArea);
-	$oForm->AddSubBlock($oFieldQuery);
+	$oPanel->AddSubBlock($oFieldQuery);
 	if (!empty($sExceptionMessage)) {
 		$oAlert = AlertUIBlockFactory::MakeForFailure($sExceptionMessage);
 		$oAlert->SetIsCollapsible(false);
-		$oForm->AddSubBlock($oAlert);
+		$oPanel->AddSubBlock($oAlert);
 	}
 
 	$oFieldPhraseBook = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label>');
@@ -149,27 +153,12 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oSearch->UpdateContextFromUser();
 	$oQueries = new DBObjectSet($oSearch);
 	while ($oQuery = $oQueries->Fetch()) {
-		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($oQuery->GetKey(), htmlentities($oQuery->Get('name'), ENT_QUOTES, 'UTF-8'), false));
+		$oSelect->AddSubBlock(SelectOptionUIBlockFactory::MakeForSelectOption($oQuery->GetKey(), $oQuery->Get('name'), false));
 	}
 	$oFieldPhraseBook->AddSubBlock($oSelect);
-	$oForm->AddSubBlock($oFieldPhraseBook);
+	$oPanel->AddSubBlock($oFieldPhraseBook);
 
-	/*oP->add('<table style="width:100%" class="export_parameters">');
-	$sExpressionHint = empty($sExceptionMessage) ? '' : '<tr><td colspan="2">'.htmlentities($sExceptionMessage, ENT_QUOTES, 'UTF-8').'</td></tr>';
-	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label></span></td>');
-	$oP->add('<td><textarea style="width:100%" cols="70" rows="8" name="expression" id="textarea_oql" placeholder="'.Dict::S('Core:BulkExportQueryPlaceholder').'">'.htmlentities($sExpression, ENT_QUOTES, 'UTF-8').'</textarea></td></tr>');
-	$oP->add($sExpressionHint);
-	$oP->add('<tr><td class="column-label"><span style="white-space: nowrap;"><input type="radio" name="query_mode" value="phrasebook" id="radio_phrasebook"><label for="radio_phrasebook">'.Dict::S('Core:BulkExportLabelPhrasebookEntry').'</label></span></td>');
-	$oP->add('<td><select name="query" id="select_phrasebook">');
-	$oP->add('<option value="">'.Dict::S('UI:SelectOne').'</option>');
-	$oSearch = DBObjectSearch::FromOQL('SELECT QueryOQL');
-	$oSearch->UpdateContextFromUser();
-	$oQueries = new DBObjectSet($oSearch);
-	while ($oQuery = $oQueries->Fetch()) {
-		$oP->add('<option value="'.$oQuery->GetKey().'">'.htmlentities($oQuery->Get('name'), ENT_QUOTES, 'UTF-8').'</option>');
-	}
-	$oP->add('</select></td></tr>');*/
-	$oForm->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
+	$oPanel->AddSubBlock(ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Next'), "", "", true, "next-btn"));
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export-v2.php">'.Dict::S('Core:BulkExportCanRunNonInteractive').'</a>');
 	$oP->p('<a target="_blank" href="'.utils::GetAbsoluteUrlAppRoot().'webservices/export.php">'.Dict::S('Core:BulkExportLegacyExport').'</a>');
 	$sJSEmptyOQL = json_encode(Dict::S('Core:BulkExportMessageEmptyOQL'));
@@ -272,7 +261,7 @@ EOF
 	}
 
 	if (!$bExpressionIsValid) {
-		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError);
+		DisplayExpressionForm($oP, $sAction, $sExpression, $sExpressionError,$oForm);
 
 		return;
 	}
@@ -452,6 +441,7 @@ EOF
 function CheckParameters($sExpression, $sQueryId, $sFormat)
 {
 	$oExporter = null;
+	$oQuery = null;
 
 	if (utils::IsArchiveMode() && !UserRights::CanBrowseArchive()) {
 		ReportErrorAndExit("The user account is not authorized to access the archives");
@@ -503,17 +493,22 @@ function CheckParameters($sExpression, $sQueryId, $sFormat)
 	catch(MissingQueryArgument $e)
 	{
 		$oSearch = null;
-		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndUsage("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(OQLException $e)
 	{
 		$oSearch = null;
-		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndExit("Invalid OQL query: '".utils::HtmlEntities($sExpression)."'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(Exception $e)
 	{
 		$oSearch = null;
-		ReportErrorAndExit($e->getMessage());
+		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
+	}
+
+	// update last export information if check parameters ok
+	if($oQuery != null){
+		$oQuery->UpdateLastExportInformation();
 	}
 
 	$oExporter->SetFormat($sFormat);
@@ -569,7 +564,7 @@ if (utils::IsModeCLI()) {
 		utils::UseParamFile();
 	}
 	catch (Exception $e) {
-		echo "Error: ".$e->GetMessage()."<br/>\n";
+		echo "Error: ".utils::HtmlEntities($e->getMessage())."<br/>\n";
 		exit(EXIT_CODE_FATAL);
 	}
 
@@ -660,15 +655,15 @@ if (utils::IsModeCLI()) {
 	}
 	catch(MissingQueryArgument $e)
 	{
-		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndUsage("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(OQLException $e)
 	{
-		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".$e->getMessage());
+		ReportErrorAndExit("Invalid OQL query: '$sExpression'.\n".utils::HtmlEntities($e->getMessage()));
 	}
 	catch(Exception $e)
 	{
-		ReportErrorAndExit($e->getMessage());
+		ReportErrorAndExit(utils::HtmlEntities($e->getMessage()));
 	}
 
 	exit;
@@ -725,14 +720,14 @@ try
 }
 catch (BulkExportMissingParameterException $e) {
 	$oP = new AjaxPage('iTop Export');
-	$oP->add($e->getMessage());
+	$oP->add(utils::HtmlEntities($e->getMessage()));
 	Usage($oP);
 	$oP->output();
 }
 catch (Exception $e) {
 	$oP = new WebPage('iTop Export');
 	$oP->add_xframe_options();
-	$oP->add('Error: '.$e->getMessage());
-	IssueLog::Error($e->getMessage()."\n".$e->getTraceAsString());
+	$oP->add('Error: '.utils::HtmlEntities($e->getMessage()));
+	IssueLog::Error(utils::HtmlEntities($e->getMessage())."\n".$e->getTraceAsString());
 	$oP->output();
 }

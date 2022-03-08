@@ -77,9 +77,11 @@ try
 
 	switch ($operation) {
 		case 'search_and_refresh':
-			$oPage->SetContentType('application/json');
+			$oPage = new JsonPage();
+			// Feeds dataTables directly
+			$oPage->SetOutputDataOnly(true);
 			$aResult = AjaxRenderController::SearchAndRefresh($sFilter);
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'search':
@@ -222,7 +224,7 @@ try
 		
 		// ui.linksdirectwidget
 		case 'getLinksetRow':
-			$oPage->SetContentType('text/html');
+			$oPage = new JsonPage();
 			$sClass = utils::ReadParam('class', '', false, 'class');
 			$sRealClass = utils::ReadParam('real_class', '', false, 'class');
 			$sAttCode = utils::ReadParam('att_code', '');
@@ -231,7 +233,7 @@ try
 			$aValues = utils::ReadParam('values', array(), false, 'raw_data');
 			$oPage->SetContentType('text/html');
 			$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iInputId);
-			$oPage->add($oWidget->GetRow($oPage, $sRealClass, $aValues, -$iTempId));
+			$oPage->AddData($oWidget->GetFormRow($oPage, $sRealClass, $aValues, -$iTempId));
 			break;
 
 		// ui.linksdirectwidget
@@ -867,6 +869,8 @@ try
 			$sAttCode = utils::ReadParam('attcode', '');
 			/** @var \cmdbAbstractObject $oObj */
 			$oObj = MetaModel::GetObject($sClass, $id);
+			// - Add graphs dependencies
+			WebResourcesHelper::EnableC3JSToWebPage($oPage);
 			$oObj->DisplayDashboard($oPage, $sAttCode);
 			break;
 
@@ -961,7 +965,7 @@ try
 			break;
 
 		case 'save_dashboard':
-			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
+			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
@@ -972,23 +976,26 @@ try
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
 			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
+
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->Save();
-			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'raw_data'));
-			$sDivId = utils::Sanitize($sDashboardId, '', 'element_identifier');
+
+			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
+			$sDashboardDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
+
 			// trigger a reload of the current page since the dashboard just changed
 			$oPage->add_script(
-<<<EOF
-			$('.ibo-dashboard#$sDivId').block();
+				<<<JS
+			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			   { operation: 'reload_dashboard', dashboard_id: '$sDashboardId', file: '$sDashboardFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
 			   function(data){
-				 $('.ibo-dashboard#$sDivId').html(data);
-				 $('.ibo-dashboard#$sDivId').unblock();
+				 $('.ibo-dashboard#{$sDashboardDivId}').html(data);
+				 $('.ibo-dashboard#{$sDashboardDivId}').unblock();
 				}
 			 );
-EOF
+JS
 			);
 			break;
 
@@ -1035,7 +1042,7 @@ EOF
 			$sId = utils::ReadParam('id', '', false, 'context_param');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
-			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
+			$sDashboardFile = utils::ReadParam('file', '', false, 'string');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
 			if (!is_null($oDashboard)) {
@@ -1053,7 +1060,8 @@ EOF
 			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");
 			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
-			$oPage = new ajax_page('');
+			$oPage = new AjaxPage('');
+			$oPage->SetOutputDataOnly(true);
 			$oPage->add($sFinalDashletId);
 			break;
 
@@ -1271,243 +1279,7 @@ JS
 			break;
 
 		case 'about_box':
-			$oPage->SetContentType('text/html');
-
-			$sDialogTitle = addslashes(Dict::S('UI:About:Title'));
-			$oPage->add_ready_script(
-				<<<EOF
-$('#about_box').dialog({
-	width: 700,
-	modal: true,
-	title: '$sDialogTitle',
-	close: function() { $(this).remove(); }
-});
-$("#collapse_support_details").on('click', function() {
-	$("#support_details").slideToggle('normal');
-	$("#collapse_support_details").toggleClass('open');
-});
-$('#support_details').toggle();
-EOF
-			);
-			$sVersionString = Dict::Format('UI:iTopVersion:Long', ITOP_APPLICATION, ITOP_VERSION, ITOP_REVISION, ITOP_BUILD_DATE);
-			$sMySQLVersion = CMDBSource::GetDBVersion();
-			$sPHPVersion = phpversion();
-			$sOSVersion = PHP_OS;
-			$sWebServerVersion = $_SERVER["SERVER_SOFTWARE"];
-			$sModules = implode(', ', get_loaded_extensions());
-
-			// Get the datamodel directory
-			$oFilter = DBObjectSearch::FromOQL('SELECT ModuleInstallation WHERE name="datamodel"');
-			$oSet = new DBObjectSet($oFilter, array('installed' => false)); // Most recent first
-			$oLastInstall = $oSet->Fetch();
-			$sLastInstallDate = $oLastInstall->Get('installed');
-			$sDataModelVersion = $oLastInstall->Get('version');
-			$aDataModelInfo = json_decode($oLastInstall->Get('comment'), true);
-			$sDataModelSourceDir = $aDataModelInfo['source_dir'];
-
-			require_once(APPROOT.'setup/runtimeenv.class.inc.php');
-			$sCurrEnv = utils::GetCurrentEnvironment();
-			$oRuntimeEnv = new RunTimeEnvironment($sCurrEnv);
-			$aSearchDirs = array(APPROOT.$sDataModelSourceDir);
-			if (file_exists(APPROOT.'extensions'))
-			{
-				$aSearchDirs[] = APPROOT.'extensions';
-			}
-			$sExtraDir = APPROOT.'data/'.$sCurrEnv.'-modules/';
-			if (file_exists($sExtraDir))
-			{
-				$aSearchDirs[] = $sExtraDir;
-			}
-			$aAvailableModules = $oRuntimeEnv->AnalyzeInstallation(MetaModel::GetConfig(), $aSearchDirs);
-
-			require_once(APPROOT.'setup/setuputils.class.inc.php');
-			$aLicenses = SetupUtils::GetLicenses($sCurrEnv);
-
-			$aItopSettings = array('cron_max_execution_time', 'timezone');
-			$aPHPSettings = array('memory_limit', 'max_execution_time', 'upload_max_filesize', 'post_max_size');
-			$aMySQLSettings = array('max_allowed_packet', 'key_buffer_size', 'query_cache_size');
-			$aMySQLStatuses = array('Key_read_requests', 'Key_reads');
-
-			if (extension_loaded('suhosin'))
-			{
-				$aPHPSettings[] = 'suhosin.post.max_vars';
-				$aPHPSettings[] = 'suhosin.get.max_value_length';
-			}
-
-			$aMySQLVars = array();
-			foreach(CMDBSource::QueryToArray('SHOW VARIABLES') as $aRow)
-			{
-				$aMySQLVars[$aRow['Variable_name']] = $aRow['Value'];
-			}
-
-			$aMySQLStats = array();
-			foreach(CMDBSource::QueryToArray('SHOW GLOBAL STATUS') as $aRow)
-			{
-				$aMySQLStats[$aRow['Variable_name']] = $aRow['Value'];
-			}
-
-			// Display
-			//
-			$oPage->add("<div id=\"about_box\">");
-			$oPage->add('<div style="margin-left: 120px;">');
-			$oPage->add('<table>');
-			$oPage->add('<tr>');
-			$oPage->add('<td><a href="http://www.combodo.com" title="www.combodo.com" target="_blank" style="background: none;"><img src="../images/logo-combodo.png?t='.utils::GetCacheBusterTimestamp().'" style="float: right;"/></a></td>');
-			$oPage->add('<td style="padding-left: 20px;">');
-			$oPage->add($sVersionString.'<br/>');
-			$oPage->add(Dict::S('UI:About:DataModel').': '.$sDataModelVersion.'<br/>');
-			$oPage->add('MySQL: '.$sMySQLVersion.'<br/>');
-			$oPage->add('PHP: '.$sPHPVersion.'<br/>');
-			$oPage->add('</td>');
-			$oPage->add('</tr>');
-			$oPage->add('</table>');
-			$oPage->add("</div>");
-
-			$oPage->add("<div>");
-			$oPage->add('<fieldset>');
-			$oPage->add('<legend>'.Dict::S('UI:About:Licenses').'</legend>');
-			$oPage->add('<ul style="margin: 0; font-size: smaller; max-height: 15em; overflow: auto;">');
-			$index = 0;
-			foreach($aLicenses as $oLicense)
-			{
-				$oPage->add('<li><b>'.$oLicense->product.'</b>, &copy; '.$oLicense->author.' is licensed under the <b>'.$oLicense->license_type.' license</b>. (<a id="toggle_'.$index.'" class="CollapsibleLabel" style="cursor:pointer;">Details</a>)');
-				$oPage->add('<div id="license_'.$index.'" class="license_text ibo-is-html-content" style="display:none;overflow:auto;max-height:10em;font-size:small;border:1px #696969 solid;margin-bottom:1em; margin-top:0.5em;padding:0.5em;">'.$oLicense->text.'</div>');
-				$oPage->add_ready_script(<<<JS
-$("#toggle_$index").on('click', function() { 
-	$(this).toggleClass('open');
-	$("#license_$index").slideToggle("normal"); 
-});
-JS
-				);
-				$index++;
-			}
-			$oPage->add('</ul>');
-			$oPage->add('</fieldset>');
-			$oPage->add("</div>");
-
-			$oPage->add('<fieldset>');
-			$oPage->add('<legend>'.Dict::S('UI:About:InstallationOptions').'</legend>');
-			$oPage->add("<div style=\"max-height: 150px; overflow: auto; font-size: smaller;\">");
-			$oPage->add('<ul style="margin: 0;">');
-
-			require_once(APPROOT.'setup/extensionsmap.class.inc.php');
-			$oExtensionsMap = new iTopExtensionsMap();
-			$oExtensionsMap->LoadChoicesFromDatabase(MetaModel::GetConfig());
-			$aChoices = $oExtensionsMap->GetChoices();
-			foreach($aChoices as $oExtension)
-			{
-				$sDecorationClass = '';
-				switch ($oExtension->sSource)
-				{
-					case iTopExtension::SOURCE_REMOTE:
-						$sSource = Dict::S('UI:About:RemoteExtensionSource');
-						$sDecorationClass = 'fc fc-chameleon-icon';
-						break;
-
-					case iTopExtension::SOURCE_MANUAL:
-						$sSource = Dict::S('UI:About:ManualExtensionSource');
-						$sDecorationClass = 'fas fa-folder';
-						break;
-
-					default:
-						$sSource = '';
-				}
-				$oPage->add('<li title="'.Dict::Format('UI:About:Extension_Version', $oExtension->sInstalledVersion).'">'.$oExtension->sLabel.'<i class="setup-extension--icon '.$sDecorationClass.'" data-tooltip-content="'.$sSource.'"></i></li>');
-			}
-			$oPage->add('</ul>');
-			$oPage->add("</div>");
-			$oPage->add('</fieldset>');
-
-
-			// MUST NOT be localized, as the information given here will be sent to the support
-			$oPage->add("<a id=\"collapse_support_details\" class=\"CollapsibleLabel\" href=\"#\">".Dict::S('UI:About:Support')."</a></br>\n");
-			$oPage->add("<div id=\"support_details\">");
-			$oPage->add('<textarea readonly style="width: 660px; height: 150px; font-size: smaller;">');
-			$oPage->add("===== begin =====\n");
-			$oPage->add('iTopVersion: '.ITOP_VERSION."\n");
-			$oPage->add('iTopBuild: '.ITOP_REVISION."\n");
-			$oPage->add('iTopBuildDate: '.ITOP_BUILD_DATE."\n");
-			$oPage->add('DataModelVersion: '.$sDataModelVersion."\n");
-			$oPage->add('MySQLVersion: '.$sMySQLVersion."\n");
-			$oPage->add('PHPVersion: '.$sPHPVersion."\n");
-			$oPage->add('OSVersion: '.$sOSVersion."\n");
-			$oPage->add('WebServerVersion: '.$sWebServerVersion."\n");
-			$oPage->add('PHPModules: '.$sModules."\n");
-			foreach($aItopSettings as $siTopVar)
-			{
-				$oPage->add('ItopSetting/'.$siTopVar.': '.MetaModel::GetConfig()->Get($siTopVar)."\n");
-			}
-			foreach($aPHPSettings as $sPHPVar)
-			{
-				$oPage->add('PHPSetting/'.$sPHPVar.': '.ini_get($sPHPVar)."\n");
-			}
-			foreach($aMySQLSettings as $sMySQLVar)
-			{
-				$oPage->add('MySQLSetting/'.$sMySQLVar.': '.$aMySQLVars[$sMySQLVar]."\n");
-			}
-			foreach($aMySQLStatuses as $sMySQLStatus)
-			{
-				$oPage->add('MySQLStatus/'.$sMySQLStatus.': '.$aMySQLStats[$sMySQLStatus]."\n");
-			}
-
-			$oPage->add('InstallDate: '.$sLastInstallDate."\n");
-			$oPage->add('InstallPath: '.APPROOT."\n");
-			$oPage->add("---- Installation choices ----\n");
-			foreach($aChoices as $oExtension)
-			{
-				switch ($oExtension->sSource)
-				{
-					case iTopExtension::SOURCE_REMOTE:
-						$sSource = ' ('.Dict::S('UI:About:RemoteExtensionSource').')';
-						break;
-
-					case iTopExtension::SOURCE_MANUAL:
-						$sSource = ' ('.Dict::S('UI:About:ManualExtensionSource').')';
-						break;
-
-					default:
-						$sSource = '';
-				}
-				$oPage->add('InstalledExtension/'.$oExtension->sCode.'/'.$oExtension->sVersion.$sSource."\n");
-			}
-			$oPage->add("---- Actual modules installed ----\n");
-			foreach($aAvailableModules as $sModuleId => $aModuleData)
-			{
-				if ($sModuleId == '_Root_') continue;
-				if ($aModuleData['version_db'] == '') continue;
-				$oPage->add('InstalledModule/'.$sModuleId.': '.$aModuleData['version_db']."\n");
-			}
-
-			$oPage->add('===== end =====');
-			$oPage->add('</textarea>');
-			$oPage->add("</div>");
-
-			$oPage->add("</div>");
-			break;
-
-		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
-		case 'history':
-			$oPage->SetContentType('text/html');
-			$id = (int)utils::ReadParam('id', 0);
-			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oObj = MetaModel::GetObject($sClass, $id);
-			$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
-			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
-			// widgets: ['myZebra', 'truncatedList']} );");
-			break;
-
-		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
-		case 'history_from_filter':
-			$oPage->SetContentType('text/html');
-			$oHistoryFilter = DBSearch::unserialize($sFilter);
-			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-			$oBlock->SetLimit($iCount, $iStart);
-			$oBlock->Display($oPage, 'history');
-			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
-			// widgets: ['myZebra', 'truncatedList']} );");
+			AjaxRenderController::DisplayAboutBox($oPage);
 			break;
 
 		case 'full_text_search':
@@ -1819,6 +1591,7 @@ EOF
 			break;
 
 		case 'xlsx_export_dialog':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$oPage->SetContentType('text/html');
 			$oPage->add(
@@ -1887,6 +1660,7 @@ EOF
 			break;
 
 		case 'xlsx_start':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$bAdvanced = (utils::ReadParam('advanced', 'false') == 'true');
 			$oSearch = DBObjectSearch::unserialize($sFilter);
@@ -1899,6 +1673,7 @@ EOF
 			break;
 
 		case 'xlsx_run':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sMemoryLimit = MetaModel::GetConfig()->Get('xlsx_exporter_memory_limit');
 			if (utils::SetMinMemoryLimit($sMemoryLimit) === false) {
 				IssueLog::Warning("XSLX export : cannot set memory_limit to {$sMemoryLimit}");
@@ -1916,6 +1691,7 @@ EOF
 			break;
 
 		case 'xlsx_download':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$oPage = new DownloadPage('');
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -1926,6 +1702,7 @@ EOF
 			break;
 
 		case 'xlsx_abort':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			// Stop & cleanup an export...
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			ExcelExporter::CleanupFromToken($sToken);
@@ -2042,9 +1819,11 @@ EOF
 					set_time_limit($iLoopTimeLimit * count($aObjects));
 					$oSet = CMDBObjectSet::FromArray($sListClass, $aObjects);
 					$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
-					$sIconUrl = MetaModel::GetClassIcon($sListClass, false);
+					/* cf N°3928 - Polishing: Impact analysis - remove icons in pdf list
+					 $sIconUrl = MetaModel::GetClassIcon($sListClass, false);
 					$sIconUrl = str_replace(utils::GetAbsoluteUrlModulesRoot(), APPROOT.'env-'.utils::GetCurrentEnvironment().'/', $sIconUrl);
-					$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));
+					$oTitle = new Html("<img src=\"$sIconUrl\" style=\"vertical-align:middle;width: 24px; height: 24px;\"/> ".Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));*/
+					$oTitle = new Html(Dict::Format('UI:Search:Count_ObjectsOf_Class_Found', $oSet->Count(), Metamodel::GetName($sListClass)));
 					$oPage->AddSubBlock(TitleUIBlockFactory::MakeStandard($oTitle, 2));
 					$oPage->AddSubBlock(cmdbAbstractObject::GetDataTableFromDBObjectSet($oSet, array('table_id' => $sSourceClass.'_'.$sRelation.'_'.$sDirection.'_'.$sListClass)));
 				}
@@ -2176,7 +1955,7 @@ EOF
 				$oSearch = new DBObjectSearch($sListClass);
 				$oSearch->AddCondition('id', $aDefinition['keys'], 'IN');
 				$oSearch->SetShowObsoleteData(utils::ShowObsoleteData());
-				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx))));
+				$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::Format('UI:RelationGroupNumber_N', (1 + $idx)),1,"relation_group_$idx"));
 				$oBlock = new DisplayBlock($oSearch, 'list');
 				$oBlock->Display($oPage, 'group_'.$iBlock++, array('surround_with_panel' => true,
 				                                                    'panel_class' => $sListClass,
@@ -2457,6 +2236,7 @@ EOF
 			$oPage->add(json_encode($aResult));
 			break;
 
+		/** @noinspection PhpMissingBreakStatementInspection cke_upload_and_browse and cke_browse are chained */
 		case 'cke_upload_and_browse':
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sObjClass = utils::ReadParam('obj_class', '', false, 'class');
@@ -2513,10 +2293,31 @@ EOF
 			$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.magnific-popup.min.js');
 			$sImgUrl = utils::GetAbsoluteUrlAppRoot().INLINEIMAGE_DOWNLOAD_URL;
 
+			/** @noinspection SuspiciousAssignmentsInspection cke_upload_and_browse and cke_browse are chained */
 			$sTempId = utils::ReadParam('temp_id', '', false, 'transaction_id');
 			$sClass = utils::ReadParam('obj_class', '', false, 'class');
 			$iObjectId = utils::ReadParam('obj_key', 0, false, 'integer');
 			$sCKEditorFuncNum = utils::ReadParam('CKEditorFuncNum', '');
+
+			if (empty($sTempId)) {
+				throw new SecurityException('Cannot access endpoint with empty temp_id parameter');
+			}
+			if (false === privUITransaction::IsTransactionValid($sTempId, false)) {
+				throw new SecurityException('Access rejected');
+			}
+			if (false === MetaModel::IsValidClass($sClass)) {
+				throw new CoreUnexpectedValue('Invalid object');
+			}
+			if ($iObjectId > 0) {
+				// searching for object in the DB with a count query
+				// using DBSearch so that user rights are applied !
+				$oSearch = new DBObjectSearch($sClass);
+				$oSearch->AddCondition(MetaModel::DBGetKey($sClass), $iObjectId, '=');
+				$oSet = new CMDBObjectSet($oSearch);
+				if (false === $oSet->CountExceeds(0)) {
+					throw new SecurityException(Dict::S('UI:ObjectDoesNotExist'));
+				}
+			}
 
 			$sPostUrl = utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?CKEditorFuncNum='.$sCKEditorFuncNum;
 
@@ -2621,8 +2422,10 @@ EOF
 		// TODO 3.0.0: Move this to new ajax render controller?
 		case 'cke_mentions':
 			$oPage->SetContentType('application/json');
-			$sMarker = utils::ReadParam('marker', '', false, 'raw_data');
-			$sNeedle = utils::ReadParam('needle', '', false, 'raw_data');
+			$sMarker = utils::ReadParam('marker', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			$sNeedle = utils::ReadParam('needle', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
+			$sHostClass = utils::ReadParam('host_class', '', false, utils::ENUM_SANITIZATION_FILTER_CLASS);
+			$iHostId = (int) utils::ReadParam('host_id', 0, false, utils::ENUM_SANITIZATION_FILTER_INTEGER);
 
 			// Check parameters
 			if($sMarker === '') {
@@ -2636,12 +2439,50 @@ EOF
 
 			$aMatches = array();
 			if ($sNeedle !== '') {
-				// Retrieve scope from marker
-				$sScope = $aMentionsAllowedClasses[$sMarker];
-				if (MetaModel::IsValidClass($sScope)) {
-					$sScope = "SELECT $sScope";
+				// Retrieve mentioned class from marker
+				$sMentionedClass = $aMentionsAllowedClasses[$sMarker];
+				if (MetaModel::IsValidClass($sMentionedClass) === false) {
+					throw new Exception('Invalid class "'.$sMentionedClass.'" for marker "'.$sMarker.'"');
 				}
-				$oSearch = DBSearch::FromOQL($sScope);
+
+				// Base search used when no trigger configured
+				$oSearch = DBSearch::FromOQL("SELECT $sMentionedClass");
+				$aSearchParams = ['needle' => "%$sNeedle%"];
+
+				// Retrieve restricting scopes from triggers if any
+				if ((strlen($sHostClass) > 0) && ($iHostId > 0)) {
+					$oHostObj = MetaModel::GetObject($sHostClass, $iHostId);
+					$aSearchParams['this'] = $oHostObj;
+
+					$aTriggerMentionedSearches = [];
+
+					$aTriggerSetParams = array('class_list' => MetaModel::EnumParentClasses($sHostClass, ENUM_PARENT_CLASSES_ALL));
+					$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectMention AS t WHERE t.target_class IN (:class_list)"), array(), $aTriggerSetParams);
+					/** @var \TriggerOnObjectMention $oTrigger */
+					while ($oTrigger = $oTriggerSet->Fetch()) {
+						$sTriggerMentionedOQL = $oTrigger->Get('mentioned_filter');
+
+						// No filter on mentioned objects, don't restrict the scope at all, it can be any object of $sMentionedClass
+						if (strlen($sTriggerMentionedOQL) === 0) {
+							$aTriggerMentionedSearches = [$oSearch];
+							break;
+						}
+
+						$oTriggerMentionedSearch = DBSearch::FromOQL($sTriggerMentionedOQL);
+						$sTriggerMentionedClass = $oTriggerMentionedSearch->GetClass();
+
+						// Filter is not about the mentioned class, don't mind it
+						if (is_a($sMentionedClass, $sTriggerMentionedClass, true) === false) {
+							continue;
+						}
+
+						$aTriggerMentionedSearches[] = $oTriggerMentionedSearch;
+					}
+
+					if (count($aTriggerMentionedSearches) > 0) {
+						$oSearch = new DBUnionSearch($aTriggerMentionedSearches);
+					}
+				}
 
 				$sSearchMainClassName = $oSearch->GetClass();
 				$sSearchMainClassAlias = $oSearch->GetClassAlias();
@@ -2653,14 +2494,14 @@ EOF
 					new BinaryExpression(new FieldExpression('friendlyname', $sSearchMainClassAlias), 'LIKE', new VariableExpression('needle'))
 				);
 
-				$oSet = new DBObjectSet($oSearch, array(), array('needle' => "%$sNeedle%"));
-				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
+				$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
+				$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => [$sObjectImageAttCode]]);
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
 
 				while ($oObject = $oSet->Fetch()) {
-					// Note $oObject finalclass might be different than $sTargetClass
+					// Note $oObject finalclass might be different than $sMentionedClass
 					$sObjectClass = get_class($oObject);
 					$iObjectId = $oObject->GetKey();
 					$aMatch = [
@@ -2679,7 +2520,7 @@ EOF
 						} else {
 							// If no image found, fallback on initials
 							$aMatch['picture_style'] = '';
-							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
+							$aMatch['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObject->Get('friendlyname')));
 						}
 					}
 

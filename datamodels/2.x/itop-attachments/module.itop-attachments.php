@@ -19,7 +19,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-attachments/3.0.0',
+	'itop-attachments/3.1.0',
 	array(
 		// Identification
 		//
@@ -178,6 +178,12 @@ SQL;
 			SetupLog::Info("Initializing attachment/item_org_id - zero to the container");
 			$oSearch = DBObjectSearch::FromOQL("SELECT Attachment WHERE item_org_id = 0");
 			$oSet = new DBObjectSet($oSearch);
+			$oSet->OptimizeColumnLoad([
+				'Attachment' => [
+					'item_class',
+					'item_id',
+				]
+			]);
 			$iUpdated = 0;
 			while ($oAttachment = $oSet->Fetch())
 			{

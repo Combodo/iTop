@@ -10,6 +10,7 @@ use Combodo\iTop\Application\Search\SearchForm;
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\ButtonGroup\ButtonGroupUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
@@ -27,6 +28,8 @@ use Combodo\iTop\Application\UI\Base\Component\Input\Select\SelectOptionUIBlockF
 use Combodo\iTop\Application\UI\Base\Component\Input\SelectUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\MedallionIcon\MedallionIcon;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\JsPopoverMenuItem;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\ActivityPanel;
@@ -57,27 +60,53 @@ require_once(APPROOT.'application/ui.linksdirectwidget.class.inc.php');
 require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
-require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/searchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionparser.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionconversionabstract.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontosearchform.class.inc.php');
 
 /**
  * Class cmdbAbstractObject
  */
 abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 {
-	/** @var string ENUM_OBJECT_MODE_VIEW */
-	public const ENUM_OBJECT_MODE_VIEW = 'view';
-	/** @var string ENUM_OBJECT_MODE_EDIT */
-	public const ENUM_OBJECT_MODE_EDIT = 'edit';
-	/** @var string ENUM_OBJECT_MODE_CREATE */
-	public const ENUM_OBJECT_MODE_CREATE = 'create';
-	/** @var string ENUM_OBJECT_MODE_STIMULUS */
-	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
-	/** @var string ENUM_OBJECT_MODE_PRINT */
-	public const ENUM_OBJECT_MODE_PRINT = 'print';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_VIEW = 'view';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_EDIT = 'edit';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_CREATE = 'create';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_STIMULUS = 'stimulus';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_PRINT = 'print';
+	/**
+	 * @var string
+	 * @see static::$sDisplayMode
+	 * @since 3.0.0
+	 */
+	public const ENUM_DISPLAY_MODE_BULK_EDIT = self::ENUM_DISPLAY_MODE_EDIT;
 
 	// N°3750 rendering used
 	/** @var string */
@@ -112,10 +141,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_INPUT_TYPE_LINKEDSET = 'linkedset';
 
 	/**
-	 * @var string DEFAULT_OBJECT_MODE
+	 * @var string DEFAULT_DISPLAY_MODE
+	 * @see static::$sDisplayMode
 	 * @since 3.0.0
 	 */
-	public const DEFAULT_OBJECT_MODE = self::ENUM_OBJECT_MODE_VIEW;
+	public const DEFAULT_DISPLAY_MODE = self::ENUM_DISPLAY_MODE_VIEW;
 
 	/**
 	 * @var string Prefix for tags in the subtitle, allows to identify them more easily
@@ -126,6 +156,11 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	protected $m_iFormId; // The ID of the form used to edit the object (when in edition mode !)
 	protected static $iGlobalFormId = 1;
+	/**
+	 * @var string Mode in which the object is displayed {@see static::ENUM_DISPLAY_MODE_VIEW}, ...)
+	 * @since 3.0.0
+	 */
+	protected $sDisplayMode;
 	protected $aFieldsMap;
 
 	/**
@@ -152,26 +187,53 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public function __construct($aRow = null, $sClassAlias = '', $aAttToLoad = null, $aExtendedDataSpec = null)
 	{
 		parent::__construct($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
+		$this->sDisplayMode = static::DEFAULT_DISPLAY_MODE;
 		$this->bAllowWrite = false;
 		$this->bAllowDelete = false;
 	}
 
 	/**
-	 * Return the allowed object modes
+	 * Return the allowed display modes
 	 *
-	 * @see static::ENUM_OBJECT_MODE_XXX
+	 * @see static::ENUM_DISPLAY_MODE_XXX
 	 *
 	 * @return string[]
 	 * @since 3.0.0
 	 */
-	public static function EnumObjectModes(): array
+	public static function EnumDisplayModes(): array
 	{
 		return [
-			static::ENUM_OBJECT_MODE_VIEW,
-			static::ENUM_OBJECT_MODE_EDIT,
-			static::ENUM_OBJECT_MODE_CREATE,
-			static::ENUM_OBJECT_MODE_STIMULUS,
+			static::ENUM_DISPLAY_MODE_VIEW,
+			static::ENUM_DISPLAY_MODE_EDIT,
+			static::ENUM_DISPLAY_MODE_CREATE,
+			static::ENUM_DISPLAY_MODE_STIMULUS,
+			static::ENUM_DISPLAY_MODE_PRINT,
+			static::ENUM_DISPLAY_MODE_BULK_EDIT,
 		];
+	}
+
+	/**
+	 * @see static::$sDisplayMode
+	 * @return string
+	 * @since 3.0.0
+	 */
+	public function GetDisplayMode(): string
+	{
+		return $this->sDisplayMode;
+	}
+
+	/**
+	 * @param string $sMode
+	 *
+	 * @see static::$sDisplayMode
+	 * @return $this
+	 * @since 3.0.0
+	 */
+	public function SetDisplayMode(string $sMode)
+	{
+		$this->sDisplayMode = $sMode;
+
+		return $this;
 	}
 
 	/**
@@ -189,7 +251,7 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param \DBObject $oObj
+	 * @param \cmdbAbstractObject $oObj
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
@@ -223,6 +285,7 @@ JS
 		);
 
 		$oObj->Reload();
+		$oObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_VIEW);
 		$oObj->DisplayDetails($oPage, false);
 	}
 
@@ -282,8 +345,7 @@ JS
 	 * To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
 	 *
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
-	 * @param string $sMode Mode in which the object is displayed (see static::ENUM_OBJECT_MODE_XXX)
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
@@ -293,10 +355,10 @@ JS
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @todo 3.0.0: This has to be discussed within the R&D when I come back in 10 days
 	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
-	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
 		$aHeaderBlocks = [
 			'subtitle' => [],
@@ -324,12 +386,13 @@ JS
 			$oPage->AddSessionMessages($sMessageKey, $aRanks, $aMessages);
 		}
 
-		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW)) {
+		if (!$oPage->IsPrintableVersion() && ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_VIEW)) {
 			// action menu
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oActionMenuBlock = $oBlock->GetRenderContent($oPage);
+			$sActionMenuId = utils::Sanitize(uniqid('', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage, [], $sActionMenuId);
 			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
@@ -447,41 +510,17 @@ HTML
 	}
 
 	/**
-	 * Display history tab of an object
-	 *
-	 * @deprecated 3.0.0 will be removed in 3.1, see N°3824
-	 *
-	 * @param bool $bEditMode
-	 * @param int $iLimitCount
-	 * @param int $iLimitStart
-	 *
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \CoreException
-	 *
-	 */
-	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		// history block (with as a tab)
-		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
-		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
-		$oHistoryFilter->AddCondition('objclass', get_class($this), '=');
-		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-		$oBlock->SetLimit($iLimitCount, $iLimitStart);
-		$oBlock->Display($oPage, 'history');
-	}
-
-	/**
 	 * Display properties tab of an object
 	 *
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
 	 *
 	 * @return array
 	 * @throws \CoreException
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
 	public function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
@@ -554,7 +593,7 @@ HTML
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -564,6 +603,8 @@ HTML
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 * @throws \Exception
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
 	public function DisplayBareRelations(WebPage $oPage, $bEditMode = false)
 	{
@@ -583,11 +624,19 @@ HTML
 			if ($oAttDef instanceof AttributeDashboard) {
 				if (!$this->IsNew()) {
 					$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
-					$oPage->AddAjaxTab($oAttDef->GetLabel(),
-						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
-						true,
+					$oPage->AddAjaxTab(
 						'Class:'.$sClass.'/Attribute:'.$sAttCode,
-						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
+						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='
+							.get_class($this)
+							.'&id='.$this->GetKey()
+							.'&attcode='.$oAttDef->GetCode()
+							.$sHostContainerInEditionUrlParam,
+						true,
+						$oAttDef->GetLabel(),
+						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD
+					);
+					// Add graphs dependencies
+					WebResourcesHelper::EnableC3JSToWebPage($oPage);
 				}
 				continue;
 			}
@@ -783,33 +832,35 @@ HTML
 
 		$oPage->SetCurrentTab('');
 
-		// Look for any trigger that considers this object as "In Scope"
-		// If any trigger has been found then display a tab with notifications
-		//
-		$aTriggers = $this->GetRelatedTriggersIDs();
-		if (count($aTriggers) > 0) {
-			$iId = $this->GetKey();
-			$aParams = array('triggers' => $aTriggers, 'id' => $iId);
-			$aNotifSearches = array();
-			$iNotifsCount = 0;
-			$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification', ENUM_CHILD_CLASSES_EXCLUDETOP);
-			foreach ($aNotificationClasses as $sNotifClass) {
-				$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
-				$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
-				$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
-				$iNotifsCount += $oNotifSet->Count();
-			}
-			// Display notifications regarding the object: on block per subclass to have the interesting columns
-			$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
-			$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
+		if (!$this->IsNew()) {
+			// Look for any trigger that considers this object as "In Scope"
+			// If any trigger has been found then display a tab with notifications
+			//
+			$aTriggers = $this->GetRelatedTriggersIDs();
+			if (count($aTriggers) > 0) {
+				$iId = $this->GetKey();
+				$aParams = array('triggers' => $aTriggers, 'id' => $iId);
+				$aNotifSearches = array();
+				$iNotifsCount = 0;
+				$aNotificationClasses = MetaModel::EnumChildClasses('EventNotification');
+				foreach ($aNotificationClasses as $sNotifClass) {
+					$aNotifSearches[$sNotifClass] = DBObjectSearch::FromOQL("SELECT $sNotifClass AS Ev JOIN Trigger AS T ON Ev.trigger_id = T.id WHERE T.id IN (:triggers) AND Ev.object_id = :id");
+					$aNotifSearches[$sNotifClass]->SetInternalParams($aParams);
+					$oNotifSet = new DBObjectSet($aNotifSearches[$sNotifClass], array());
+					$iNotifsCount += $oNotifSet->Count();
+				}
+				// Display notifications regarding the object: on block per subclass to have the interesting columns
+				$sCount = ($iNotifsCount > 0) ? ' ('.$iNotifsCount.')' : '';
+				$oPage->SetCurrentTab('UI:NotificationsTab', Dict::S('UI:NotificationsTab').$sCount);
 
-			foreach($aNotificationClasses as $sNotifClass) {
-				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sNotifClass, false));
-				$oClassIcon->SetDescription(MetaModel::GetName($sNotifClass))->AddCSSClass('ibo-block-list--medallion');
-				$oPage->AddUiBlock($oClassIcon);
+				foreach ($aNotificationClasses as $sNotifClass) {
+					$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sNotifClass, false));
+					$oClassIcon->SetDescription(MetaModel::GetName($sNotifClass))->AddCSSClass('ibo-block-list--medallion');
+					$oPage->AddUiBlock($oClassIcon);
 
-				$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
-				$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
+					$oBlock = new DisplayBlock($aNotifSearches[$sNotifClass], 'list', false);
+					$oBlock->Display($oPage, 'notifications_'.$sNotifClass, array('menu' => false));
+				}
 			}
 		}
 	}
@@ -823,11 +874,17 @@ HTML
 	 */
 	public function GetRelatedTriggersIDs(): array
 	{
-		$oTriggerSet = new CMDBObjectSet(new DBObjectSearch('Trigger'));
 		$aTriggers = [];
-		while ($oTrigger = $oTriggerSet->Fetch()) {
-			if ($oTrigger->IsInScope($this)) {
-				$aTriggers[] = $oTrigger->GetKey();
+		// Request only "leaf" classes to avoid reloads
+		$aTriggerClasses = MetaModel::EnumChildClasses('Trigger');
+		foreach ($aTriggerClasses as $sTriggerClass) {
+			if (MetaModel::IsLeafClass($sTriggerClass)) {
+				$oTriggerSet = new CMDBObjectSet(new DBObjectSearch($sTriggerClass));
+				while ($oTrigger = $oTriggerSet->Fetch()) {
+					if ($oTrigger->IsInScope($this)) {
+						$aTriggers[] = $oTrigger->GetKey();
+					}
+				}
 			}
 		}
 
@@ -836,7 +893,7 @@ HTML
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 * @param string $sPrefix
 	 * @param array $aExtraParams
 	 *
@@ -848,6 +905,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 * @throws \Exception
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
 	public function GetBareProperties(WebPage $oPage, $bEditMode, $sPrefix, $aExtraParams = array())
 	{
@@ -859,6 +918,7 @@ HTML
 		$aFieldsComments = (isset($aExtraParams['fieldsComments'])) ? $aExtraParams['fieldsComments'] : array();
 		$aExtraFlags = (isset($aExtraParams['fieldsFlags'])) ? $aExtraParams['fieldsFlags'] : array();
 
+		$bHasFieldsWithRichTextEditor = false;
 		foreach ($aDetailsStruct as $sTab => $aCols) {
 			ksort($aCols);
 			$oPage->SetCurrentTab($sTab);
@@ -881,6 +941,10 @@ HTML
 						// Skip case logs as they will be handled by the activity panel
 						if ($oAttDef instanceof AttributeCaseLog) {
 							continue;
+						}
+
+						if (($oAttDef instanceof AttributeText) && ($oAttDef->GetFormat() === 'html')) {
+							$bHasFieldsWithRichTextEditor = true;
 						}
 
 						$sAttDefClass = get_class($oAttDef);
@@ -946,7 +1010,7 @@ HTML
 										// Attribute description
 										$sDescription = $oAttDef->GetDescription();
 										$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+										$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'" data-tooltip-max-width="600px"';
 
 										$val = array(
 											'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -963,7 +1027,7 @@ HTML
 									// Attribute description
 									$sDescription = $oAttDef->GetDescription();
 									$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
+									$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.' "data-tooltip-max-width="600px"';
 
 									$val = array(
 										'label' => '<span '.$sDescriptionHTMLTag.' >'.$oAttDef->GetLabel().'</span>',
@@ -1023,14 +1087,18 @@ HTML
 			}
 		}
 
+		// Fields with CKEditor need to have the highlight.js lib loaded even if they are in read-only, as it is needed to format code snippets
+		if ($bHasFieldsWithRichTextEditor) {
+			WebResourcesHelper::EnableCKEditorToWebPage($oPage);
+		}
+
 		return $aFieldsMap;
 	}
 
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in ths method, $sMode is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
-	 * @param string $sMode Mode in which the object will be displayed (see static::ENUM_OBJECT_MODE_XXX)
+	 * @param bool $bEditMode Note that this parameter is no longer used in this method, {@see static::$sDisplayMode} is used instead, but we cannot remove it as it part of the base interface (iDisplay)...
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -1041,8 +1109,10 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
+	 *
+	 * @since 3.0.0 $bEditMode is deprecated and no longer used
 	 */
-	public function DisplayDetails(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
 	{
 		// N°3786: As this can now be call recursively from the self::ReloadAndDisplay(), we need to make sure we don't fall into an infinite loop
 		static $bBlockReentrance = false;
@@ -1050,7 +1120,7 @@ HTML
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 
-		if ($sMode === static::ENUM_OBJECT_MODE_VIEW) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_VIEW) {
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
 			if ($LockEnabled) {
@@ -1068,14 +1138,14 @@ HTML
 		}
 
 		// Object's details
-		$oObjectDetails = ObjectFactory::MakeDetails($this);
+		$oObjectDetails = ObjectFactory::MakeDetails($this, $this->GetDisplayMode());
 		if ($oPage->IsPrintableVersion()) {
 			$oObjectDetails->SetIsHeaderVisibleOnScroll(false);
 		}
 
 		// Note: DisplayBareHeader is called before adding $oObjectDetails to the page, so it can inject HTML before it through $oPage.
 		/** @var \iTopWebPage $oPage */
-		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode, $sMode);
+		$aHeadersBlocks = $this->DisplayBareHeader($oPage, $bEditMode);
 		if (false === empty($aHeadersBlocks['subtitle'])) {
 			$oObjectDetails->AddSubTitleBlocks($aHeadersBlocks['subtitle']);
 		}
@@ -1090,8 +1160,6 @@ HTML
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 		$this->DisplayBareRelations($oPage, $bEditMode);
-		// TODO 3.0.0: What to do with this?
-		//$this->DisplayBareHistory($oPage, $bEditMode);
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
@@ -1190,6 +1258,25 @@ HTML
 		return "";
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 * @param \DBObjectSet $oSet
+	 * @param array $aExtraParams
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\UIContentBlock|string
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DictExceptionMissingString
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \ReflectionException
+	 *
+	 * @since 3.0.0
+	 */
 	public static function GetDisplaySetBlock(WebPage $oPage, DBObjectSet $oSet, $aExtraParams = array())
 	{
 		if ($oPage->IsPrintableVersion() || $oPage->is_pdf()) {
@@ -1631,6 +1718,9 @@ HTML
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
+	 *  only used in old and deprecated export.php
+	 *
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
@@ -1651,6 +1741,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
+	 * 
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
@@ -2067,7 +2159,7 @@ HTML;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password\"><input title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
 							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
@@ -2096,7 +2188,11 @@ HTML;
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
+					$aTextareaCssClasses = [];
+
 					if ($oAttDef->GetEditClass() == 'OQLExpression') {
+						$aTextareaCssClasses[] = 'ibo-query-oql';
+						$aTextareaCssClasses[] = 'ibo-is-code';
 						// N°3227 button to open predefined queries dialog
 						$sPredefinedBtnId = 'predef_btn_'.$sFieldPrefix.$sAttCode.$sNameSuffix;
 						$sSearchQueryLbl = Dict::S('UI:Edit:SearchQuery');
@@ -2166,14 +2262,16 @@ JS
 					} else {
 						$sAdditionalStuff = '';
 					}
+
 					// Ok, the text area is drawn here
+					$sTextareCssClassesAsString = implode(' ', $aTextareaCssClasses);
 					$sHTMLValue = <<<HTML
 {$sAdditionalStuff}
 <div class="field_input_zone field_input_text ibo-input-wrapper ibo-input-text-wrapper" data-validation="untouched">
 	<div class="f_i_text_header">
 		<span class="fullscreen_button" title="{$sFullscreenLabelForHtml}"></span>
 	</div>
-	<textarea class="ibo-input ibo-input-text" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
+	<textarea class="ibo-input ibo-input-text {$sTextareCssClassesAsString}" title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" rows="8" cols="40" id="{$iId}" {$sStyle} >{$sEditValueForHtml}</textarea>
 </div>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
@@ -2195,8 +2293,7 @@ EOF
 					);
 				break;
 
-				// TODO 3.0.0: Isn't this part obsolete now that we have the activity panel or should we keep it for devs using it in custom extensions or maybe *transition forms* as a caselog can be MUST_PROMPT?
-				// used for bulk modify in 3.0
+				// In 3.0 not used for activity panel but kept  for bulk modify and bulk-event extension
 				case 'CaseLog':
 					$sInputType = self::ENUM_INPUT_TYPE_HTML_EDITOR;
 					$aStyles = array();
@@ -2213,16 +2310,15 @@ EOF
 						$sStyle = 'style="'.implode('; ', $aStyles).'"';
 					}
 
-					$sHeader = '<div class="caselog_input_header"></div>'; // will be hidden in CSS (via :empty) if it remains empty
+					$sHeader = '<div class="ibo-caselog-entry-form--actions"><div class="""ibo-caselog-entry-form--actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions"></div></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
-					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */,
-						array('AttributeText', 'RenderWikiHtml')) : '';
+					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */,  array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
-					$sHTMLValue = "<div class=\"field_input_zone field_input_caselog caselog\" $sStyle>$sHeader<textarea class=\"htmlEditor\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue,
-							ENT_QUOTES,
-							'UTF-8')."</textarea>$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
+					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
+					$sHTMLValue .=	"<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue,ENT_QUOTES,'UTF-8')."</textarea>";
+					$sHTMLValue .=	"$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
 					$sNullValue = $oAttDef->GetNullValue();
@@ -2317,7 +2413,6 @@ EOF
 		<span class="fas fa-trash"></span>
 	</button>
 </div>
-<br/>
 <input title="{$sHelpText}" name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}[fcontents]" type="file" id="file_{$iId}" onChange="UpdateFileName('{$iId}', this.value)"/>
 {$sValidationSpan}{$sReloadSpan}
 HTML;
@@ -2665,10 +2760,11 @@ JS
 		$sOwnershipToken = null;
 		$iKey = $this->GetKey();
 		$sClass = get_class($this);
-		$sMode = ($iKey > 0) ? static::ENUM_OBJECT_MODE_EDIT : static::ENUM_OBJECT_MODE_CREATE;
 
+		$this->SetDisplayMode(($iKey > 0) ? static::ENUM_DISPLAY_MODE_EDIT : static::ENUM_DISPLAY_MODE_CREATE);
+		$sDisplayMode = $this->GetDisplayMode();
 
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT)
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT)
 		{
 			// The concurrent access lock makes sense only for already existing objects
 			$LockEnabled = MetaModel::GetConfig()->Get('concurrent_lock_enabled');
@@ -2718,7 +2814,7 @@ JS
 		if (isset($aExtraParams['custom_button'])) {
 			$sApplyButton = $aExtraParams['custom_button'];
 		} else {
-			if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sApplyButton = Dict::S('UI:Button:Apply');
 			} else {
 				$sApplyButton = Dict::S('UI:Button:Create');
@@ -2728,7 +2824,7 @@ JS
 		if (isset($aExtraParams['custom_operation'])) {
 			$sOperation = $aExtraParams['custom_operation'];
 		} else {
-			if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+			if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 				$sOperation = 'apply_modify';
 			} else {
 				$sOperation = 'apply_new';
@@ -2743,7 +2839,7 @@ JS
 			->SetOnSubmitJsCode("return OnSubmit('form_{$this->m_iFormId}');");
 		$oContentBlock->AddSubBlock($oForm);
 
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 			// The object already exists in the database, it's a modification
 			$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('id', $iKey, "{$sPrefix}_id"));
 		}
@@ -2758,7 +2854,7 @@ JS
 		// TODO 3.0.0: Is this (the if condition, not the code inside) still necessary?
 		if (isset($aExtraParams['wizard_container']) && $aExtraParams['wizard_container']) {
 			$sClassLabel = MetaModel::GetName($sClass);
-			if ($sMode == static::ENUM_OBJECT_MODE_CREATE) {
+			if ($this->GetDisplayMode() == static::ENUM_DISPLAY_MODE_CREATE) {
 				$oPage->set_title(Dict::Format('UI:CreationPageTitle_Class', $sClassLabel)); // Set title will take care of the encoding
 			} else {
 				$oPage->set_title(Dict::Format('UI:ModificationPageTitle_Object_Class', $this->GetRawName(), $sClassLabel)); // Set title will take care of the encoding
@@ -2776,23 +2872,40 @@ JS
 
 		$aTransitions = $this->EnumTransitions();
 		if (!isset($aExtraParams['custom_operation']) && count($aTransitions)) {
-			// transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
+			// Transitions are displayed only for the standard new/modify actions, not for modify_all or any other case...
 			$oSetToCheckRights = DBObjectSet::FromObject($this);
+
+			$oTransitionPopoverMenu = new PopoverMenu();
+			$sTPMSectionId = 'transitions';
+			$oTransitionPopoverMenu->AddSection($sTPMSectionId);
 			$aStimuli = Metamodel::EnumStimuli($sClass);
 			foreach ($aTransitions as $sStimulusCode => $aTransitionDef) {
 				$iActionAllowed = (get_class($aStimuli[$sStimulusCode]) == 'StimulusUserAction') ? UserRights::IsStimulusAllowed($sClass,
 					$sStimulusCode, $oSetToCheckRights) : UR_ALLOWED_NO;
 				switch ($iActionAllowed) {
 					case UR_ALLOWED_YES:
+						// Button to be displayed on its own on large screens
 						$oButton = ButtonUIBlockFactory::MakeForPrimaryAction($aStimuli[$sStimulusCode]->GetLabel(), 'next_action', $sStimulusCode, true);
 						$oButton->AddCSSClass('action');
 						$oButton->SetColor(Button::ENUM_COLOR_SCHEME_NEUTRAL);
 						$oToolbarButtons->AddSubBlock($oButton);
+
+						// Button to be displayed in a grouped button on smaller screens
+						$oTPMPopupMenuItem = new JSPopupMenuItem('next_action--'.$oButton->GetId(), $oButton->GetLabel(), "$(`#{$oButton->GetId()}`).trigger(`click`);");
+						$oTransitionPopoverMenu->AddItem($sTPMSectionId, new JsPopoverMenuItem($oTPMPopupMenuItem));
 						break;
 
 					default:
 						// Do nothing
 				}
+			}
+
+			// If there are some allowed transitions, build the grouped button
+			if ($oTransitionPopoverMenu->HasItems()) {
+				$oApplyForButtonGroup = ButtonUIBlockFactory::MakeForPrimaryAction($oApplyButton->GetLabel(), null, null, true);
+				$oApplyAndTransitionsButtonGroup = ButtonGroupUIBlockFactory::MakeButtonWithOptionsMenu($oApplyForButtonGroup, $oTransitionPopoverMenu)
+					->SetIsHidden(true);
+				$oToolbarButtons->AddSubBlock($oApplyAndTransitionsButtonGroup);
 			}
 		}
 
@@ -2851,7 +2964,7 @@ EOF
 			$oObjectDetails->SetIcon($sClassIcon);
 			$oToolbarButtons->AddCSSClass('ibo-toolbar--button');
 		} else {
-			$oObjectDetails = ObjectFactory::MakeDetails($this, $sMode);
+			$oObjectDetails = ObjectFactory::MakeDetails($this, $this->GetDisplayMode());
 			$oToolbarButtons->AddCSSClass('ibo-toolbar-top');
 			$oObjectDetails->AddToolbarBlock($oToolbarButtons);
 		}
@@ -2882,7 +2995,7 @@ EOF
 		if (!is_array($aFieldsMap)) {
 			$aFieldsMap = array();
 		}
-		if ($sMode === static::ENUM_OBJECT_MODE_EDIT) {
+		if ($this->GetDisplayMode() === static::ENUM_DISPLAY_MODE_EDIT) {
 			$aFieldsMap['id'] = $sPrefix.'_id';
 		}
 		// Now display the relations, one tab per relation
@@ -3073,6 +3186,7 @@ EOF
 		} else {
 			$oObj = clone $oSourceObject;
 		}
+		$oObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_CREATE);
 
 		// Pre-fill the object with default values, when there is only on possible choice
 		// AND the field is mandatory (otherwise there is always the possiblity to let it empty)
@@ -3128,10 +3242,10 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param string   $sStimulus
-	 * @param null     $aPrefillFormParam
-	 * @param bool     $bDisplayBareProperties Whether to display the object details or not
+	 * @param \WebPage      $oPage
+	 * @param string        $sStimulus
+	 * @param array|null    $aPrefillFormParam
+	 * @param bool          $bDisplayBareProperties Whether to display the object details or not
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -3145,9 +3259,11 @@ EOF
 	 */
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
+		$this->SetDisplayMode(static::ENUM_DISPLAY_MODE_STIMULUS);
+
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
-		$sMode = static::ENUM_OBJECT_MODE_STIMULUS;
+		$sDisplayMode = $this->GetDisplayMode();
 		$iTransactionId = utils::GetNewTransactionId();
 
 		$aTransitions = $this->EnumTransitions();
@@ -3303,7 +3419,7 @@ EOF
 			$oPage->set_title($sActionLabel);
 			$oPage->add(<<<HTML
 	<!-- Beginning of object-transition -->
-	<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
+	<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sDisplayMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
 HTML
 			);
 
@@ -3329,8 +3445,10 @@ HTML
 				$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
 			}
 
-			// Note: Remove the table if we want fields to occupy the whole width of the container
-			$sHtml = '<table><tr><td>';
+			// Note: Remove the table if we want fields to occupy the whole width of the container, BUT with today's layout, fields' label will occupy way too much space. This should be part of the field layout rework.
+			// Note 2: The hardcoded width allows the fields to be a bit wider (useful for long values) while still working on different screen sizes
+			// Note 3: The inline style is not ideal but we are still wondring how transition form should be displayed
+			$sHtml = '<table style="width: min(100%, 35rem); margin-bottom: 12px;"><tr><td>';
 			$sHtml .= $oPage->GetDetails($aDetails);
 			$sHtml .= '</td></tr></table>';
 
@@ -3338,8 +3456,10 @@ HTML
 			$sHtml .= $oAppContext->GetForForm();
 			$oForm->AddHtml($sHtml);
 
-			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
-			$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
+			$oCancelButton = ButtonUIBlockFactory::MakeForCancel(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel')
+				// Action type is changed on purpose so the button is more visible in the form.
+				->SetActionType(Button::ENUM_ACTION_TYPE_REGULAR)
+				->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
 			$oForm->AddSubBlock($oCancelButton);
 
 			$oSubmitButton = ButtonUIBlockFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
@@ -3489,7 +3609,7 @@ EOF
 			// - Attribute description
 			$sDescription = $oAttDef->GetDescription();
 			$sDescriptionForHTMLAttributes = utils::HtmlEntities($sDescription);
-			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
+			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes) || $sDescription === $oAttDef->GetLabel()) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'" data-tooltip-max-width="600px"';
 
 			// - Fullscreen toggler for large fields
 			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
@@ -3516,7 +3636,7 @@ HTML;
 					$sDownloadUrl = $oDocument->GetDownloadURL(get_class($this), $this->GetKey(), $sAttCode);
 
 					$sDisplayValue = <<<HTML
-{$sFieldAsHtml}<br>
+{$sFieldAsHtml}
 <a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
 HTML;
 				} else {
@@ -4095,13 +4215,20 @@ HTML;
 				if (!is_null($oImage->GetData()))
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
-					$oImage = utils::ResizeImageToFit(
-						$oImage,
-						$aSize[0],
-						$aSize[1],
-						$oAttDef->Get('storage_max_width'),
-						$oAttDef->Get('storage_max_height')
-					);
+					if (is_array($aSize) && $aSize[0] > 0 && $aSize[1] > 0)
+					{
+						$oImage = utils::ResizeImageToFit(
+							$oImage,
+							$aSize[0],
+							$aSize[1],
+							$oAttDef->Get('storage_max_width'),
+							$oAttDef->Get('storage_max_height')
+						);
+					}
+					else
+					{
+						IssueLog::Warning($sClass . ':' . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType() . ', filename: ' . $oImage->GetFileName());
+					}
 				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if (is_array($aOtherData))
@@ -4857,6 +4984,7 @@ HTML
 			// Now create an object that has values for the homogeneous values only
 			/** @var \cmdbAbstractObject $oDummyObj */
 			$oDummyObj = new $sClass(); // @@ What if the class is abstract ?
+			$oDummyObj->SetDisplayMode(static::ENUM_DISPLAY_MODE_BULK_EDIT);
 			$aComments = array();
 			function MyComparison($a, $b) // Sort descending
 			{
@@ -5168,7 +5296,7 @@ EOF
 		if ($bPreview) {
 			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetName());
+				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Name', $oObj->GetRawName());
 			} else {
 				$sTitle = Dict::Format('UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class', count($aObjects),
 					MetaModel::GetName($sClass));
@@ -5369,7 +5497,7 @@ EOF
 			//
 			if (count($aObjects) == 1) {
 				$oObj = $aObjects[0];
-				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetName());
+				$sTitle = Dict::Format('UI:Title:DeletionOf_Object', $oObj->GetRawName());
 			} else {
 				$sTitle = Dict::Format('UI:Title:BulkDeletionOf_Count_ObjectsOf_Class', count($aObjects), MetaModel::GetName($sClass));
 			}
@@ -5528,7 +5656,7 @@ EOF
 						oOwnershipLockModal.text(data.popup_message);
 						oOwnershipLockModal.dialog('open');
 					}
-					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('.ibo-object-details .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 				else if ((data.operation == 'lost') || (data.operation == 'expired'))
@@ -5539,7 +5667,7 @@ EOF
 						oOwnershipLockModal.text(data.popup_message);
 						oOwnershipLockModal.dialog('open');
 					}
-					$('.object-details form .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
+					$('.ibo-object-details .ibo-toolbar .ibo-button:not([name="cancel"])').prop('disabled', true);
 					clearInterval(hOwnershipLockHandlerInterval);
 				}
 			}, 'json');

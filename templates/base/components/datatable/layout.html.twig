@@ -12,7 +12,7 @@
     {% endif %}
 {% endif %}
 
-<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlockCode() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-datatable">
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}" data-role="ibo-datatable">
     <thead>
     {% if oUIBlock.GetOption("select_mode") is not empty %}
         <th></th>

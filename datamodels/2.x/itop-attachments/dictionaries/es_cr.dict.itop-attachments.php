@@ -15,14 +15,14 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-/**
- * Localized data
+ /**
+ * Spanish Localized data
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @traductor   Miguel Turrubiates <miguel_tf@yahoo.com> 
  */
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	'Attachments:TabTitle_Count' => 'Anexos (%1$d)',
 	'Attachments:EmptyTabTitle' => 'Anexos',
 	'Attachments:FieldsetTitle' => 'Anexos',
@@ -36,12 +36,12 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'Attachment:Max_Ko' => '(Tamaño Máximo de Archivo: %1$s Kb)',
 	'Attachments:NoAttachment' => 'No hay Anexo. ',
 	'Attachments:PreviewNotAvailable' => 'Vista preliminar no disponible para este tipo de Anexo.',
-	'Attachments:Error:FileTooLarge' => 'File is too large to be uploaded. %1$s~~',
-	'Attachments:Error:UploadedFileEmpty' => 'The received file is empty and cannot be attached.
-Either you have pushed an empty file,
-or ask your iTop administrator if the iTop server disk is full.~~',
-	'Attachments:Render:Icons' => 'Display as icons~~',
-	'Attachments:Render:Table' => 'Display as list~~',
+	'Attachments:Error:FileTooLarge' => 'El archivo es demasiado grande para ser cargado. %1$s',
+	'Attachments:Error:UploadedFileEmpty' => 'El archivo recibido está vacío y no puede ser anexado.
+Puede ser que haya enviado un archivo vació,
+o pregunte al administador de iTop si el servidor que ha quedado sin espacio en disco.',
+	'Attachments:Render:Icons' => 'Desplegar como icono',
+	'Attachments:Render:Table' => 'Desplegar como lista',
 	'UI:Attachments:DropYourFileHint' => 'Drop files anywhere in this area~~',
 ));
 
@@ -49,41 +49,41 @@ or ask your iTop administrator if the iTop server disk is full.~~',
 // Class: Attachment
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:Attachment' => 'Attachment~~',
-	'Class:Attachment+' => '~~',
-	'Class:Attachment/Attribute:expire' => 'Expire~~',
-	'Class:Attachment/Attribute:expire+' => '~~',
-	'Class:Attachment/Attribute:temp_id' => 'Temporary id~~',
-	'Class:Attachment/Attribute:temp_id+' => '~~',
-	'Class:Attachment/Attribute:item_class' => 'Item class~~',
-	'Class:Attachment/Attribute:item_class+' => '~~',
-	'Class:Attachment/Attribute:item_id' => 'Item~~',
-	'Class:Attachment/Attribute:item_id+' => '~~',
-	'Class:Attachment/Attribute:item_org_id' => 'Item organization~~',
-	'Class:Attachment/Attribute:item_org_id+' => '~~',
-	'Class:Attachment/Attribute:contents' => 'Contents~~',
-	'Class:Attachment/Attribute:contents+' => '~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Attachment' => 'Anexo',
+	'Class:Attachment+' => 'Anexo',
+	'Class:Attachment/Attribute:expire' => 'Expira',
+	'Class:Attachment/Attribute:expire+' => '',
+	'Class:Attachment/Attribute:temp_id' => 'Id Temporal',
+	'Class:Attachment/Attribute:temp_id+' => '',
+	'Class:Attachment/Attribute:item_class' => 'Clase de Elemento',
+	'Class:Attachment/Attribute:item_class+' => '',
+	'Class:Attachment/Attribute:item_id' => 'Elemento',
+	'Class:Attachment/Attribute:item_id+' => '',
+	'Class:Attachment/Attribute:item_org_id' => 'Organización de Elemento',
+	'Class:Attachment/Attribute:item_org_id+' => '',
+	'Class:Attachment/Attribute:contents' => 'Contenido',
+	'Class:Attachment/Attribute:contents+' => '',
 ));
 
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Attachments:File:Thumbnail' => 'Icon~~',
-	'Attachments:File:Name' => 'File name~~',
-	'Attachments:File:Date' => 'Upload date~~',
-	'Attachments:File:Uploader' => 'Uploaded by~~',
-	'Attachments:File:Size' => 'Size~~',
-	'Attachments:File:MimeType' => 'Type~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Attachments:File:Thumbnail' => 'Ícono',
+	'Attachments:File:Name' => 'Nombre de Archivo',
+	'Attachments:File:Date' => 'Fecha de Carga',
+	'Attachments:File:Uploader' => 'Cargado por',
+	'Attachments:File:Size' => 'Tamaño',
+	'Attachments:File:MimeType' => 'Tipo',
 ));
 //
 // Class: Attachment
 //
 
-Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
-	'Class:Attachment/Attribute:creation_date' => 'Creation date~~',
-	'Class:Attachment/Attribute:creation_date+' => '~~',
-	'Class:Attachment/Attribute:user_id' => 'User id~~',
-	'Class:Attachment/Attribute:user_id+' => '~~',
-	'Class:Attachment/Attribute:contact_id' => 'Contact id~~',
-	'Class:Attachment/Attribute:contact_id+' => '~~',
+Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
+	'Class:Attachment/Attribute:creation_date' => 'Fecha de Creación',
+	'Class:Attachment/Attribute:creation_date+' => '',
+	'Class:Attachment/Attribute:user_id' => 'Id del Usuario',
+	'Class:Attachment/Attribute:user_id+' => '',
+	'Class:Attachment/Attribute:contact_id' => 'Id del Contacto',
+	'Class:Attachment/Attribute:contact_id+' => '',
 ));

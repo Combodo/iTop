@@ -110,6 +110,10 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 
 	'Class:User/Error:LoginMustBeUnique' => 'Login-Namen müssen unterschiedlich sein - "%1s" benutzt diesen Login-Name bereits.',
 	'Class:User/Error:AtLeastOneProfileIsNeeded' => 'Mindestens ein Profil muss diesem Benutzer zugewiesen sein.',
+	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
+	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
+	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
+	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
 	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => 'Mindestens eine Organisation muss diesem Benutzer zugewiesen sein.',
 	'Class:User/Error:OrganizationNotAllowed' => 'Diese Organisation ist nicht erlaubt.',
 	'Class:User/Error:UserOrganizationNotAllowed' => 'Das Benutzerkonto gehört nicht zu den für Sie freigegebenen Organisationen',
@@ -321,9 +325,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'BooleanLabel:yes' => 'Ja',
 	'BooleanLabel:no' => 'Nein',
 	'UI:Login:Title' => ITOP_APPLICATION_SHORT.' Login',
-	'Menu:WelcomeMenu' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenu' => 'Willkommen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenu+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:WelcomeMenuPage' => 'Willkommen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:WelcomeMenuPage' => 'Willkommen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:WelcomeMenuPage+' => 'Willkommen bei '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => 'Willkommen bei '.ITOP_APPLICATION_SHORT,
 
@@ -353,7 +357,14 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 <li>und ein besseres Verwalten des wichtigsten Bestandteiles Ihrer IT: der Dokumentation.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> 'Willkommen bei '.ITOP_APPLICATION_SHORT,
+	'UI:WelcomeMenu:Text'=>  '<div>Willkommen bei '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Offene Requests: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'An mich gestellte Benutzeranfragen',
 	'UI:WelcomeMenu:OpenIncidents' => 'Offene Incidents: %1$d',
@@ -361,8 +372,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:WelcomeMenu:MyIncidents' => 'An mich zugewiesene Incidents',
 	'UI:AllOrganizations' => ' Alle Organisationen ',
 	'UI:YourSearch' => 'Ihre Suche',
-	'UI:LoggedAsMessage' => 'Angemeldet als %1$s (%2$s)~~',
-	'UI:LoggedAsMessage+Admin' => 'Angemeldet als %1$s (%2$s, Administrator)~~',
+	'UI:LoggedAsMessage' => 'Angemeldet als %1$s (%2$s)',
+	'UI:LoggedAsMessage+Admin' => 'Angemeldet als %1$s (%2$s, Administrator)',
 	'UI:Button:Logoff' => 'Abmelden',
 	'UI:Button:GlobalSearch' => 'Suche',
 	'UI:Button:Search' => 'Suche ',
@@ -536,43 +547,43 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:ResetPwd-Ready' => 'Das Passwort wurde geändert. ',
 	'UI:ResetPwd-Login' => 'Klicken Sie hier um sich einzuloggen...',
 
-	'UI:Login:About' => 'Über',
-	'UI:Login:ChangeYourPassword' => 'Ändern Sie Ihr Passwort',
-	'UI:Login:OldPasswordPrompt' => 'Altes Passwort',
-	'UI:Login:NewPasswordPrompt' => 'Neues Passwort',
-	'UI:Login:RetypeNewPasswordPrompt' => 'Wiederholen Sie Ihr neues Passwort',
-	'UI:Login:IncorrectOldPassword' => 'Fehler: das alte Passwort ist ungültig',
-	'UI:LogOffMenu' => 'Abmelden',
+	'UI:Login:About'                               => 'Über',
+	'UI:Login:ChangeYourPassword'                  => 'Ändern Sie Ihr Passwort',
+	'UI:Login:OldPasswordPrompt'                   => 'Altes Passwort',
+	'UI:Login:NewPasswordPrompt'                   => 'Neues Passwort',
+	'UI:Login:RetypeNewPasswordPrompt'             => 'Wiederholen Sie Ihr neues Passwort',
+	'UI:Login:IncorrectOldPassword'                => 'Fehler: das alte Passwort ist ungültig',
+	'UI:LogOffMenu'                                => 'Abmelden',
 	'UI:LogOff:ThankYou' => 'Vielen Dank dafür, dass Sie '.ITOP_APPLICATION_SHORT.' benutzen!',
-	'UI:LogOff:ClickHereToLoginAgain' => 'Klicken Sie hier, um sich wieder anzumelden...',
-	'UI:ChangePwdMenu' => 'Passwort ändern...',
-	'UI:Login:PasswordChanged' => 'Passwort erfolgreich gesetzt!',
+	'UI:LogOff:ClickHereToLoginAgain'              => 'Klicken Sie hier, um sich wieder anzumelden...',
+	'UI:ChangePwdMenu'                             => 'Passwort ändern...',
+	'UI:Login:PasswordChanged'                     => 'Passwort erfolgreich gesetzt!',
 	'UI:AccessRO-All' => ITOP_APPLICATION_SHORT.' ist nur lesbar',
 	'UI:AccessRO-Users' => ITOP_APPLICATION_SHORT.' ist nur lesbar für Endnutzer',
-	'UI:ApplicationEnvironment' => 'Applikationsumgebung: %1$s',
-	'UI:Login:RetypePwdDoesNotMatch' => 'Neues Passwort und das wiederholte Passwort stimmen nicht überein!',
+	'UI:ApplicationEnvironment'                    => 'Applikationsumgebung: %1$s',
+	'UI:Login:RetypePwdDoesNotMatch'               => 'Neues Passwort und das wiederholte Passwort stimmen nicht überein!',
 	'UI:Button:Login' => 'in '.ITOP_APPLICATION_SHORT.' anmelden',
 	'UI:Login:Error:AccessRestricted' => 'Der '.ITOP_APPLICATION_SHORT.'-Zugang ist gesperrt. Bitte kontaktieren Sie Ihren '.ITOP_APPLICATION_SHORT.'-Administrator.',
 	'UI:Login:Error:AccessAdmin' => 'Zugang nur für Personen mit Administratorrechten. Bitte kontaktieren Sie Ihren '.ITOP_APPLICATION_SHORT.'-Administrator.',
-	'UI:Login:Error:WrongOrganizationName' => 'Unbekannte Organisation',
+	'UI:Login:Error:WrongOrganizationName'         => 'Unbekannte Organisation',
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => 'Mehrere Kontakte mit gleicher EMail-Adresse',
-	'UI:Login:Error:NoValidProfiles' => 'Kein gültiges Profil ausgewählt',
-	'UI:CSVImport:MappingSelectOne' => 'Bitte wählen',
-	'UI:CSVImport:MappingNotApplicable' => '-- Dieses Feld ignorieren --',
-	'UI:CSVImport:NoData' => 'Keine Daten eingegeben ... bitte geben Sie Daten ein!',
-	'UI:Title:DataPreview' => 'Datenvorschau',
-	'UI:CSVImport:ErrorOnlyOneColumn' => 'Fehler: die Daten behinhalten nur eine Spalte. Haben Sie das dazugehörige Trennzeichen ausgewählt?',
-	'UI:CSVImport:FieldName' => 'Feld %1$d',
-	'UI:CSVImport:DataLine1' => 'Daten-Zeile 1',
-	'UI:CSVImport:DataLine2' => 'Daten-Zeile 2',
-	'UI:CSVImport:idField' => 'ID (Primärer Schlüssel)',
+	'UI:Login:Error:NoValidProfiles'               => 'Kein gültiges Profil ausgewählt',
+	'UI:CSVImport:MappingSelectOne'                => 'Bitte wählen',
+	'UI:CSVImport:MappingNotApplicable'            => '-- Dieses Feld ignorieren --',
+	'UI:CSVImport:NoData'                          => 'Keine Daten eingegeben ... bitte geben Sie Daten ein!',
+	'UI:Title:DataPreview'                         => 'Datenvorschau',
+	'UI:CSVImport:ErrorOnlyOneColumn'              => 'Fehler: die Daten behinhalten nur eine Spalte. Haben Sie das dazugehörige Trennzeichen ausgewählt?',
+	'UI:CSVImport:FieldName'                       => 'Feld %1$d',
+	'UI:CSVImport:DataLine1'                       => 'Daten-Zeile 1',
+	'UI:CSVImport:DataLine2'                       => 'Daten-Zeile 2',
+	'UI:CSVImport:idField'                         => 'ID (Primärer Schlüssel)',
 	'UI:Title:BulkImport' => ITOP_APPLICATION_SHORT.' - Massenimport',
-	'UI:Title:BulkImport+' => 'CSV-Import-Assistent',
-	'UI:Title:BulkSynchro_nbItem_ofClass_class' => 'Synchronisation von %1$d Objekten der Klasse %2$s',
-	'UI:CSVImport:ClassesSelectOne' => 'Bitte wählen',
-	'UI:CSVImport:ErrorExtendedAttCode' => 'Interner Fehler: "%1$s" ist ungültiger Code. Begründung "%2$s" ist NICHT ein externer Schlüssel der Klasse "%3$s"',
-	'UI:CSVImport:ObjectsWillStayUnchanged' => '%1$d Objekte bleiben unverändert.',
-	'UI:CSVImport:ObjectsWillBeModified' => '%1$d Objekte werden verändert.',
+	'UI:Title:BulkImport+'                         => 'CSV-Import-Assistent',
+	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => 'Synchronisation von %1$d Objekten der Klasse %2$s',
+	'UI:CSVImport:ClassesSelectOne'                => 'Bitte wählen',
+	'UI:CSVImport:ErrorExtendedAttCode'            => 'Interner Fehler: "%1$s" ist ungültiger Code. Begründung "%2$s" ist NICHT ein externer Schlüssel der Klasse "%3$s"',
+	'UI:CSVImport:ObjectsWillStayUnchanged'        => '%1$d Objekte bleiben unverändert.',
+	'UI:CSVImport:ObjectsWillBeModified'           => '%1$d Objekte werden verändert.',
 	'UI:CSVImport:ObjectsWillBeAdded' => '%1$d Objekte werden hinzugefügt.',
 	'UI:CSVImport:ObjectsWillHaveErrors' => '%1$d Objekte werden fehlerhaft sein.',
 	'UI:CSVImport:ObjectsRemainedUnchanged' => '%1$d Objekte blieben unverändert.',
@@ -692,7 +703,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL-Ausdruck',
 	'UI:RunQuery:HeaderOQLExpression+' => 'Die Abfrage in OQL-Syntax',
 	'UI:RunQuery:ExpressionToEvaluate' => 'Auszuwertender Ausdruck: ',
-	'UI:RunQuery:QueryArguments' => 'Query Arguments~~',
+	'UI:RunQuery:QueryArguments' => 'Query-Argumente',
 	'UI:RunQuery:MoreInfo' => 'Mehr Informationen zur Abfrage: ',
 	'UI:RunQuery:DevelopedQuery' => 'Überarbeiteter Abfrageausdruck: ',
 	'UI:RunQuery:SerializedFilter' => 'Serieller Filter: ',
@@ -704,6 +715,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Query:UrlForExcel' => 'URL für MS Excel Web Queries',
 	'UI:Query:UrlV1' => 'Die Liste der Felder wurde nicht spezifiziert. Die Seite <em>export-V2.php</em> kann ohne diese Angabe nicht verarbeitet werden. Deswegen, zeigt die nachstehende URL zu der Legacy-Page: <em>export.php</em>. Diese Legacy-Version des Exports hat folgende Limitierungen: Die Liste exportierter Felder kann, abhängig vom Output-Format und vom Datenmodell von '.ITOP_APPLICATION_SHORT.', variieren. Möchten Sie garantieren, dass die Liste aller exportierten Spalten stabil bleibt, müssen Sie einen Wert für das Attribut Feld angeben und die Seite <em>export-V2.php</em> nutzen.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' Objekte-Schema',
+	'UI:Schema:TitleForClass' => '%1$s Schema~~',
 	'UI:Schema:CategoryMenuItem' => 'Kategorie <b>%1$s</b>',
 	'UI:Schema:Relationships' => 'Wechselseite Beziehungen',
 	'UI:Schema:AbstractClass' => 'Abstrakte Klasse: ein Objekt dieser Klasse kann nicht instanziiert werden.',
@@ -896,9 +908,9 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:UserManagement:NoLifeCycleApplicable+' => 'Kein Lebenszyklus wurde für diese Klasse definiert.',
 	'UI:UserManagement:GrantMatrix' => 'Zugriffsmatrix',
 
-	'Menu:AdminTools' => 'Admin-Tools', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools+' => 'Administrationswerkzeuge', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools' => 'Admin-Tools',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools+' => 'Administrationswerkzeuge',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AdminTools?' => 'Werkzeuge, die nur für Benutzer mit Adminstratorprofil zugänglich sind',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:SystemTools' => 'System',
 
 	'UI:ChangeManagementMenu' => 'Change Management',
@@ -944,17 +956,17 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI-ContactsMenu-ContactsByType' => 'Kontakte nach Typ',
 	'UI-ContactsMenu-ContactsByStatus' => 'Kontakte nach Status',
 
-	'Menu:CSVImportMenu' => 'CSV-Import', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:CSVImportMenu+' => 'Massenerstellung oder -aktualisierung', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV-Import',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu+' => 'Massenerstellung oder -aktualisierung',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataModelMenu' => 'Datenmodell', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataModelMenu+' => 'Übersicht des Datenmodells', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu' => 'Datenmodell',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataModelMenu+' => 'Übersicht des Datenmodells',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ExportMenu' => 'Export', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ExportMenu+' => 'Export einer beliebigen Abfrage in HTML, CSV oder XML', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu' => 'Export',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ExportMenu+' => 'Export einer beliebigen Abfrage in HTML, CSV oder XML',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:NotificationsMenu' => 'Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu' => 'Benachrichtigungen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:NotificationsMenu+' => 'Einstellungen der Benachrichtigungen',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:NotificationsMenu:Title' => 'Einstellungen der Benachrichtigungen',
 	'UI:NotificationsMenu:Help' => 'Hilfe',
 	'UI:NotificationsMenu:HelpContent' => '<p>In '.ITOP_APPLICATION_SHORT.' sind Benachrichtigungen vollständig anpassbar. Sie basieren auf zwei Gruppen an Objekten: <i>Trigger und Aktionen</i>.</p>
@@ -964,19 +976,25 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	<li>Einige Trigger werden ausgeführt, wenn ein Objekt einer bestimmten Klasse einen bestimmten <b>Zustand</b> <b>erreicht</b> oder <b>verlässt</b>.</li>
 	<li>Einige Trigger werden ausgeführt, wenn ein <b>Schwellenwert</b> auf <b>TTO</b> oder <b>TTR</b> <b>erreicht</b> ist.</li>
 </ol>
+</p><p>
+<i><b>Aktionen</b></i> define the actions to be performed when the triggers execute. For now there are only two kind of actions:
+<ol>
+	<li>Sending an email message: Such actions also define the template to be used for sending the email as well as the other parameters of the message like the recipients, importance, etc.<br />
+	Eine spezielle Seite: <a href="../setup/email.test.php" target="_blank">email.test.php</a> steht zum Testen und zur Fehlerbehebung Ihrer PHP-Mailkonfiguration bereit.</li>
+	<li>Outgoing webhooks: Allow integration with a third-party application by sending structured data to a defined URL.</li>
+</ol>
 </p>
-<p>
-<i><b>Aktionen</b></i> definieren Aktionen, die ausgeführt werden sollen, wenn ein Trigger ausgeführt wird. Derzeit steht nur eine Art an Aktion zur Verfügung: Das Senden einer Email-Nachricht.
-Derartige Aktionen definieren auch das Template, welches für das Versenden der Email, aber auch für anderen Parameter der Nachricht wie Empfänger, Priorität usw. zuständig ist.</p>
-<p>Eine spezielle Seite: <a href="../setup/email.test.php" target="_blank">email.test.php</a> steht zum Testen und zur Fehlerbehebung Ihrer PHP-Mailkonfiguration bereit.</p>
 <p>Um Aktionen auszuführen, müssen diese mit Trigger verknüpft sein.
-Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>',
+Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnummer, die die Reihenfolge der auszuführenden Aktionen festlegt.</p>~~',
 	'UI:NotificationsMenu:Triggers' => 'Trigger',
 	'UI:NotificationsMenu:AvailableTriggers' => 'Verfügbare Trigger',
 	'UI:NotificationsMenu:OnCreate' => 'Wenn ein Objekt erstellt wird',
 	'UI:NotificationsMenu:OnStateEnter' => 'Wenn ein Objekt einen gegebenen Status erlangt',
 	'UI:NotificationsMenu:OnStateLeave' => 'Wenn ein Objekt einen gegebenen Status verlässt',
 	'UI:NotificationsMenu:Actions' => 'Aktionen',
+	'UI:NotificationsMenu:Actions:ActionEmail' => 'Email actions~~',
+	'UI:NotificationsMenu:Actions:ActionWebhook' => 'Webhook actions (outgoing integrations)~~',
+	'UI:NotificationsMenu:Actions:Action' => 'Other actions~~',
 	'UI:NotificationsMenu:AvailableActions' => 'Verfügbare Aktionen',
 
 	'Menu:TagAdminMenu' => 'Tag-Konfiguration',
@@ -985,27 +1003,27 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:TagAdminMenu:NoTags' => 'Kein tag konfiguriert',
 	'UI:TagSetFieldData:Error' => 'Fehler: %1$s',
 
-	'Menu:AuditCategories' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:AuditCategories+' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:Notifications:Title' => 'Audit-Kategorien', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories' => 'Audit-Kategorien',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:AuditCategories+' => 'Audit-Kategorien',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:Notifications:Title' => 'Audit-Kategorien',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:RunQueriesMenu' => 'Abfrage ausführen', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu' => 'Abfrage ausführen',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:RunQueriesMenu+' => 'Eine beliebige Abfrage ausführen',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:QueryMenu' => 'Query-Bibliothek', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:QueryMenu+' => '', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu' => 'Query-Bibliothek',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:QueryMenu+' => '',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:DataAdministration' => 'Data Management', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:DataAdministration+' => 'Data Management', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration' => 'Data Management',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:DataAdministration+' => 'Data Management',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UniversalSearchMenu' => 'Universelle Suche', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu' => 'Universelle Suche',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UniversalSearchMenu+' => 'Suchen Sie nach beliebigen Inhalt...',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:UserManagementMenu' => 'Benutzerverwaltung', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:UserManagementMenu+' => 'Benutzerverwaltung', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu' => 'Benutzerverwaltung',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:UserManagementMenu+' => 'Benutzerverwaltung',// Duplicated into itop-welcome-itil (will be removed from here...)
 
-	'Menu:ProfilesMenu' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
-	'Menu:ProfilesMenu+' => 'Profile', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu' => 'Profile',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:ProfilesMenu+' => 'Profile',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:ProfilesMenu:Title' => 'Profile',
 	// Duplicated into itop-welcome-itil (will be removed from here...)
 
@@ -1207,6 +1225,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:DashboardEdit:AutoReload' => 'Automatischer Reload',
 	'UI:DashboardEdit:AutoReloadSec' => 'Intervall für automatischen Reload (Sekunden)',
 	'UI:DashboardEdit:AutoReloadSec+' => 'Der Mindestwert beträgt %1$d Sekunden',
+	'UI:DashboardEdit:Revert' => 'Revert~~',
+	'UI:DashboardEdit:Apply' => 'Apply~~',
 
 	'UI:DashboardEdit:Layout' => 'Layout',
 	'UI:DashboardEdit:Properties' => 'Dashboard-Einstellungen',
@@ -1343,13 +1363,13 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'Month-10-Short' => 'Okt',
 	'Month-11-Short' => 'Nov',
 	'Month-12-Short' => 'Dez',
-	'Calendar-FirstDayOfWeek' => '1', // 0 = Sunday, 1 = Monday, etc...
+	'Calendar-FirstDayOfWeek' => '1',// 0 = Sunday, 1 = Monday, etc...
 
 	'UI:Menu:ShortcutList' => 'Shortcut anlegen',
 	'UI:ShortcutRenameDlg:Title' => 'Shortcut umbenennen',
 	'UI:ShortcutListDlg:Title' => 'Shortcut für die Liste anlegen',
 	'UI:ShortcutDelete:Confirm' => 'Bitte bestätigen Sie, dass Sie den/die Shortcut(s) löschen möchten. ',
-	'Menu:MyShortcuts' => 'Meine Shortcuts', // Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:MyShortcuts' => 'Meine Shortcuts',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => 'Shortcut',
 	'Class:Shortcut+' => 'Schnellzugriff auf Objekte',
 	'Class:Shortcut/Attribute:name' => 'Name',
@@ -1455,7 +1475,7 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	// Search form
 	'UI:Search:Toggle' => 'Ein-/Ausklappen',
 	'UI:Search:AutoSubmit:DisabledHint' => 'Automatische Eingabe für diese Klasse deaktiviert',
-	'UI:Search:Obsolescence:DisabledHint' => '<span class="fas fa-eye-slash fa-1x"></span> Obsolete Daten werden wegen ihrer Einstellung nicht angezeigt',
+	'UI:Search:Obsolescence:DisabledHint' => 'Obsolete Daten werden wegen ihrer Einstellung nicht angezeigt',
 	'UI:Search:NoAutoSubmit:ExplainText' => 'Fügen Sie ein Kriterium in das Suchfeld ein oder klicken Sie auf die Suchschaltfläche, um die Objekte anzuzeigen.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => 'Kriterium hinzufügen',
 	// - Add new criteria button
@@ -1465,9 +1485,9 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => 'Noch keine',
 
 	// - Criteria header actions
-	'UI:Search:Criteria:Toggle' => 'Minimize / Expand~~',
-	'UI:Search:Criteria:Remove' => 'Remove~~',
-	'UI:Search:Criteria:Locked' => 'Locked~~',
+	'UI:Search:Criteria:Toggle' => 'Minimieren / Expandieren',
+	'UI:Search:Criteria:Remove' => 'Entfernen',
+	'UI:Search:Criteria:Locked' => 'Gesperrt',
 
 	// - Criteria titles
 	//   - Default widget
@@ -1529,12 +1549,12 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 	'UI:Search:Criteria:Operator:String:EndsWith' => 'Endet mit',
 	'UI:Search:Criteria:Operator:String:RegExp' => 'Reg. Ausdruck',
 	//   - Numeric widget
-	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Ist gleich',  // => '=',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Ist größer',  // => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Ist größer / gleich',  // > '>=',
-	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Ist kleiner',  // => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Ist kleiner / gleich',  // > '<=',
-	'UI:Search:Criteria:Operator:Numeric:Different' => 'Ist ungleich',  // => '≠',
+	'UI:Search:Criteria:Operator:Numeric:Equals' => 'Ist gleich',// => '=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => 'Ist größer',// => '>',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => 'Ist größer / gleich',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:LessThan' => 'Ist kleiner',// => '<',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => 'Ist kleiner / gleich',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:Different' => 'Ist ungleich',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => 'Entspricht',
 

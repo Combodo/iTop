@@ -256,15 +256,21 @@ div.explain-printable button{
 	display: none;
 }
 
+.printable-content #ibo-page-container, .printable-content #ibo-center-container {
+	height: 100%;
+	overflow: auto;
+}
+.printable-content #ibo-center-container > *{
+	height: auto;
+}
 .printable-content .ibo-activity-panel{
 	width: 100%;
-	padding: 24px 24px 16px 16px;
+	padding: 24px 8px;
 	background-color: white;
 }
 
 .printable-content #ibo-side-content {
-	margin-left: 16px;
-	margin-right: 16px;
+	margin: 0;
 	background-color: var(--ibo-body-background-color);
 }
 

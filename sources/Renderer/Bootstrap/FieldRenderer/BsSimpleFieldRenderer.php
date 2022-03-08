@@ -578,7 +578,11 @@ HTML
 			$aContactPicturesCache = array();
 			$aPeerColorClassCache = array();
 			// Note: Yes, the config. param. is named after the backoffice element but we hope that we will "soon" have some kind of "light" activity panel in the portal too, so we keep this name.
-			$bHideContactPicture = in_array(PORTAL_ID, utils::GetConfig()->Get('activity_panel.hide_avatars'));
+			$bHideContactPicture = false;
+			if (defined('PORTAL_ID'))
+			{
+				$bHideContactPicture= in_array(PORTAL_ID, utils::GetConfig()->Get('activity_panel.hide_avatars'));
+			}
 			// Current user
 			$iCurrentUserId = UserRights::GetUserId();
 
@@ -588,26 +592,32 @@ HTML
 
 				$sEntryUserLogin = $aEntries[$i]['user_login'];
 				$iEntryUserId = $aEntries[$i]['user_id'];
-
-				// Retrieve (and cache) profile picture if available (standard datamodel)
-				// Note: Here the cache is more about nor retrieving the User object several times rather than computing the picture URL
-				if (!array_key_exists($iEntryUserId, $aContactPicturesCache)) {
-					// First, check if we should display the picture
-					if ($bHideContactPicture === true) {
-						$sEntryContactPictureAbsoluteUrl = null;
+				// - Friendlyname
+				if (false === empty($iEntryUserId)) {
+					$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
+					if(!is_null($oEntryUser)) {
+						$sEntryUserLogin = UserRights::GetUserFriendlyName($oEntryUser->Get('login'));
 					}
-					// Otherwise try to retrieve one for the current contact
-					else {
-						$oEntryUser = MetaModel::GetObject('User', $iEntryUserId, false /* Necessary in case user has been deleted */, true);
-						if(is_null($oEntryUser)) {
+
+					// Retrieve (and cache) profile picture if available (standard datamodel)
+					// Note: Here the cache is more about nor retrieving the User object several times rather than computing the picture URL
+					if (!array_key_exists($iEntryUserId, $aContactPicturesCache)) {
+						// First, check if we should display the picture
+						if ($bHideContactPicture === true) {
 							$sEntryContactPictureAbsoluteUrl = null;
 						}
+						// Otherwise try to retrieve one for the current contact
 						else {
-							$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
+							if(is_null($oEntryUser)) {
+								$sEntryContactPictureAbsoluteUrl = null;
+							}
+							else {
+								$sEntryContactPictureAbsoluteUrl = UserRights::GetUserPictureAbsUrl($oEntryUser->Get('login'), false);
+							}
 						}
-					}
 
-					$aContactPicturesCache[$iEntryUserId] = $sEntryContactPictureAbsoluteUrl;
+						$aContactPicturesCache[$iEntryUserId] = $sEntryContactPictureAbsoluteUrl;
+					}
 				}
 
 				// Open user block if previous user was different or if previous date was different
@@ -638,7 +648,7 @@ HTML
 					// Open medallion from profile picture or first name letter
 					$bEntryHasMedallionPicture = (empty($aContactPicturesCache[$iEntryUserId]) === false);
 					$sEntryMedallionStyle = $bEntryHasMedallionPicture ? ' background-image: url(\''.$aContactPicturesCache[$iEntryUserId].'\');' : '';
-					$sEntryMedallionContent = $bEntryHasMedallionPicture ? '' : UserRights::GetUserInitials($sEntryUserLogin);
+					$sEntryMedallionContent = $bEntryHasMedallionPicture ? '' : utils::FormatInitialsForMedallion(UserRights::GetUserInitials($sEntryUserLogin));
 					// - Entry tooltip
 					$sEntryMedallionTooltip = utils::HtmlEntities($sEntryUserLogin);
 					$sEntryMedallionTooltipPlacement = ($iEntryUserId === $iCurrentUserId) ? 'left' : 'right';

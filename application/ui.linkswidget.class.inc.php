@@ -375,6 +375,7 @@ JS
 
 		$oValue->Rewind();
 		$aForm = array();
+		$iMaxAddedId = 0;
 		$iAddedId = -1; // Unique id for new links
 		while ($oCurrentLink = $oValue->Fetch())
 		{
@@ -395,8 +396,12 @@ JS
 			} else {
 				$key = $oCurrentLink->GetKey();
 			}
+
+			$iMaxAddedId = max($iMaxAddedId, $key);
 			$aForm[$key] = $this->GetFormRow($oPage, $oLinkedObj, $oCurrentLink, $aArgs, $oCurrentObj, $key, $bReadOnly);
 		}
+		$oBlock->iMaxAddedId = (int) $iMaxAddedId;
+
 		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
 		$oDataTable->SetOptions(['select_mode' => 'custom']);
 		$oBlock->AddSubBlock($oDataTable);

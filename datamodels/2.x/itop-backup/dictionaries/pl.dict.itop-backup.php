@@ -20,7 +20,6 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
-
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 
 	'bkp-backup-running' => 'Kopia zapasowa jest uruchomiona. Proszę czekać...',
@@ -50,6 +49,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'bkp-status-backups-manual' => 'Ręczne kopie zapasowe',
 	'bkp-status-backups-none' => 'Nie ma jeszcze kopii zapasowej',
 	'bkp-next-backup' => 'Następna kopia zapasowa zostanie utworzona <b>%1$s</b> (%2$s) w %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Utwórz kopię teraz!',
 	'bkp-button-restore-now' => 'Przywróć!',
 	'bkp-confirm-backup' => 'Potwierdź, że chcesz teraz wykonać kopię zapasową.',

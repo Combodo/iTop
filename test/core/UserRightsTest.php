@@ -30,6 +30,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreCannotSaveObjectException;
 use CoreException;
 use DBObject;
+use DBObjectSearch;
 use DBObjectSet;
 use DeleteException;
 use URP_UserProfile;
@@ -39,6 +40,7 @@ use utils;
 /**
  * @group itopRequestMgmt
  * @group userRights
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -460,4 +462,68 @@ class UserRightsTest extends ItopDataTestCase
 		$_SESSION = [];
 	}
 
+	/**
+	 *@dataProvider NonAdminCanListOwnProfilesProvider
+	 */
+	public function testNonAdminCanListOwnProfiles($bHideAdministrators)
+	{
+		$oUser = $this->AddUser('test1', 2); // portal user
+		$_SESSION = [];
+		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
+		UserRights::Login('test1');
+
+		// List the link between the User and the Profiles
+		$oSearch = new DBObjectSearch('URP_UserProfile');
+		$oSearch->AddCondition('userid', $oUser->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals(1, $oSet->Count());
+
+		// Get the Profiles as well
+		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUser->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals(1, $oSet->Count());
+
+		// logout
+		$_SESSION = [];
+	}
+	
+	public function NonAdminCanListOwnProfilesProvider(): array
+	{
+		return [
+			'with Admins visible'=> [false],
+			'with Admins hidden' => [true],
+		];
+	}
+	/**
+	 *@dataProvider NonAdminCannotListAdminProfilesProvider 
+	 */
+	public function testNonAdminCannotListAdminProfiles($bHideAdministrators, $iExpectedCount)
+	{
+		utils::GetConfig()->Set('security.hide_administrators', $bHideAdministrators);
+
+		$this->AddUser('test1', 2); // portal user
+		$oUserAdmin = $this->AddUser('admin1', 1);
+		$_SESSION = [];
+		UserRights::Login('test1');
+
+		$oSearch = new DBObjectSearch('URP_UserProfile');
+		$oSearch->AddCondition('userid', $oUserAdmin->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals($iExpectedCount, $oSet->Count());
+		// Get the Profiles as well
+		$oSearch = DBObjectSearch::FromOQL('SELECT URP_Profiles JOIN URP_UserProfile ON URP_UserProfile.profileid = URP_Profiles.id WHERE URP_UserProfile.userid='.$oUserAdmin->GetKey());
+		$oSet = new DBObjectSet($oSearch);
+		$this->assertEquals($iExpectedCount, $oSet->Count());
+
+		// logout
+		$_SESSION = [];
+	}
+	
+	public function NonAdminCannotListAdminProfilesProvider(): array
+	{
+		return [
+			'with Admins visible'=> [false, 1],
+			'with Admins hidden' => [true, 0],
+		];
+	}
 }

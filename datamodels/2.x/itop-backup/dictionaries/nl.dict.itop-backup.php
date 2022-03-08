@@ -52,6 +52,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'bkp-status-backups-manual' => 'Manuele backups',
 	'bkp-status-backups-none' => 'Nog geen backups beschikbaar',
 	'bkp-next-backup' => 'De volgende backup wordt gemaakt op <b>%1$s</b> (%2$s) om %3$s',
+	'bkp-next-backup-unknown' => 'The next backup is <b>not scheduled</b> yet.~~',
 	'bkp-button-backup-now' => 'Maak nu een backup',
 	'bkp-button-restore-now' => 'Herstel',
 	'bkp-confirm-backup' => 'Bevestig dat de backup nu gemaakt mag worden.',

@@ -28,6 +28,7 @@ namespace Combodo\iTop\Test\UnitTest;
 
 use ArchivedObjectException;
 use CMDBSource;
+use CMDBObject;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -47,6 +48,7 @@ use Ticket;
 use URP_UserProfile;
 use VirtualHost;
 use VirtualMachine;
+use XMLDataLoader;
 
 
 /** @see \Combodo\iTop\Test\UnitTest\ItopDataTestCase::CreateObjectWithTagSet() */
@@ -54,9 +56,16 @@ define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
 
 /**
+ * Helper class to extend for tests needing access to iTop's metamodel
+ *
+ * **⚠ Warning** Each class extending this one needs to add the following annotations :
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ *
+ * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
+ * iTop datamodel)
  */
 class ItopDataTestCase extends ItopTestCase
 {
@@ -406,7 +415,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
 	{
 		if (empty($sPassword)){
 			$sPassword = $sLogin;
@@ -417,7 +426,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
 		$oUser = $this->createObject('UserLocal', array(
-			'contactid' => 2,
+			'contactid' => $iContactid,
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',
@@ -805,5 +814,44 @@ class ItopDataTestCase extends ItopTestCase
 			// Otherwise PHP Unit will consider that no assertion has been made
 			static::assertTrue(true);
 		}
+	}
+
+	/**
+	 * Import a set of XML files describing a consistent set of iTop objects
+	 * @param string[] $aFiles
+	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
+	 *                         before trying to import it (existing objects will be updated)
+	 * @return int Number of objects created
+	 */
+	protected function CreateFromXMLFiles($aFiles, $bSearch = false)
+	{
+		$oLoader = new XMLDataLoader();
+		$oLoader->StartSession(CMDBObject::GetCurrentChange());
+		foreach($aFiles as $sFilePath)
+		{
+			$oLoader->LoadFile($sFilePath, false, $bSearch);
+		}
+		$oLoader->EndSession();
+
+		return $oLoader->GetCountCreated();
+	}
+
+	/**
+	 * Import a consistent set of iTop objects from the specified XML text string 
+	 * @param string $sXmlDataset
+	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
+	 *                         before trying to import it (existing objects will be updated)
+	 * @return int The number of objects created
+	 */
+	protected function CreateFromXMLString($sXmlDataset, $bSearch = false)
+	{
+		$sTmpFileName = tempnam(sys_get_temp_dir(), 'xml');
+		file_put_contents($sTmpFileName, $sXmlDataset);
+
+		$ret = $this->CreateFromXMLFiles([$sTmpFileName], $bSearch);
+
+		unlink($sTmpFileName);
+
+		return $ret;
 	}
 }

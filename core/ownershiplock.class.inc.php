@@ -31,13 +31,13 @@ class iTopOwnershipToken extends DBObject
 	{
 		$aParams = array
 		(
-			'category' => 'application',
-			'key_type' => 'autoincrement',
-			'name_attcode' => array('obj_class', 'obj_key'),
-			'state_attcode' => '',
-			'reconc_keys' => array(''),
-			'db_table' => 'priv_ownership_token',
-			'db_key_field' => 'id',
+			'category'            => '',
+			'key_type'            => 'autoincrement',
+			'name_attcode'        => array('obj_class', 'obj_key'),
+			'state_attcode'       => '',
+			'reconc_keys'         => array(''),
+			'db_table'            => 'priv_ownership_token',
+			'db_key_field'        => 'id',
 			'db_finalclass_field' => '',
 		);
 		MetaModel::Init_Params($aParams);

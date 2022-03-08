@@ -362,13 +362,8 @@ class InlineImage extends DBObject
 		{
 			$sJS =
 <<<JS
-$('img[data-img-id]').each(function() {
-	if ($(this).width() > {$iMaxWidth})
-	{
-		$(this).css({'max-width': '{$iMaxWidth}px', width: '', height: '', 'max-height': ''});
-	}
-	$(this).addClass('inline-image').attr('href', $(this).attr('src'));
-}).magnificPopup({type: 'image', closeOnContentClick: true });
+CombodoInlineImage.SetMaxWidth('{$iMaxWidth}');
+CombodoInlineImage.FixImagesWidth();
 JS
 			;
 		}
@@ -548,8 +543,6 @@ JS
 		// Hook the file upload of all CKEditor instances
 		$('.htmlEditor').each(function() {
 			var oEditor = $(this).ckeditorGet();
-			oEditor.config.extraPlugins = 'font,uploadimage';
-			oEditor.config.uploadUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php';
 			oEditor.config.filebrowserBrowseUrl = '$sAbsoluteUrlAppRoot'+'pages/ajax.render.php?operation=cke_browse&temp_id=$sTempId&obj_class=$sObjClass&obj_key=$iObjKey';
 			oEditor.on( 'fileUploadResponse', function( evt ) {
 				var fileLoader = evt.data.fileLoader;

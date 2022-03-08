@@ -719,70 +719,68 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
                             {
                                 unset($this->aRemoved[$sLinkKey]);
                             }
-                            $bIsDuplicate = true;
-                            break;
+	                        $bIsDuplicate = true;
+	                        break;
                         }
                     }
-                    if ($bIsDuplicate)
-                    {
-                        continue;
-                    }
+					if ($bIsDuplicate) {
+						continue;
+					}
 				}
 
-			}
-			else
-			{
-				if (!array_key_exists($oLink->GetKey(), $aExistingLinks))
-				{
+			} else {
+				if (!array_key_exists($oLink->GetKey(), $aExistingLinks)) {
 					$oLink->DBClone();
 				}
 			}
 			$oLink->DBWrite();
+
+			$this->aPreserved[$oLink->GetKey()] = $oLink;
+			$this->aOriginalObjects[$oLink->GetKey()] = $oLink;
 		}
-		foreach ($this->aRemoved as $iLinkId)
-		{
-			if (array_key_exists($iLinkId, $aExistingLinks))
-			{
+		$this->aAdded = [];
+
+		foreach ($this->aRemoved as $iLinkId) {
+			if (array_key_exists($iLinkId, $aExistingLinks)) {
 				$oLink = $aExistingLinks[$iLinkId];
-				if ($oAttDef->IsIndirect())
-				{
+				if ($oAttDef->IsIndirect()) {
 					$oLink->DBDelete();
-				}
-				else
-				{
+				} else {
 					$oExtKeyToRemote = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToMe);
-					if ($oExtKeyToRemote->IsNullAllowed())
-					{
-						if ($oLink->Get($sExtKeyToMe) == $oHostObject->GetKey())
-						{
+					if ($oExtKeyToRemote->IsNullAllowed()) {
+						if ($oLink->Get($sExtKeyToMe) == $oHostObject->GetKey()) {
 							// Detach the link object from this
 							$oLink->Set($sExtKeyToMe, 0);
 							$oLink->DBUpdate();
 						}
-					}
-					else
-					{
+					} else {
 						$oLink->DBDelete();
 					}
 				}
+				unset($this->aPreserved[$oLink->GetKey()], $this->aOriginalObjects[$oLink->GetKey()]);
 			}
 		}
+		$this->aRemoved = [];
+
 		// Note: process modifications at the end: if a link to remove has also been listed as modified, then it will be gracefully ignored
-		foreach ($this->aModified as $iLinkId => $oLink)
-		{
-			if (array_key_exists($oLink->GetKey(), $aExistingLinks))
-			{
+		foreach ($this->aModified as $iLinkId => $oLink) {
+			if (array_key_exists($oLink->GetKey(), $aExistingLinks)) {
 				$oLink->DBUpdate();
-			}
-			else
-			{
+			} else {
 				$oLink->DBClone();
 			}
+			$this->aPreserved[$oLink->GetKey()] = $oLink;
+			$this->aOriginalObjects[$oLink->GetKey()] = $oLink;
 		}
+		$this->aModified = [];
 
 		// End of the critical section
 		//
 		$oMtx->Unlock();
+
+		// we updated the instance (original/preserved/added/modified/removed arrays) all along the way
+		$this->bHasDelta = false;
+		$this->oOriginalSet->GetFilter()->SetInternalParams(['id', $oHostObject->GetKey()]);
 	}
 
 	/**

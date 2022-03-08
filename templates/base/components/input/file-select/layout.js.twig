@@ -3,6 +3,7 @@
 {% if oUIBlock.GetShowFilename() %}
     $('#{{ oUIBlock.GetId() }}').bind('change', function() {
         var fileName = $(this).val().replace(/^.*[\\\/]/, '');
+        fileName = $('<div/>').text(fileName).html();
         $('#{{ oUIBlock.GetId() }}-file-name').html(fileName);
     });
 {%  endif %}

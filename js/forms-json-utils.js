@@ -112,13 +112,14 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 	if (!window.bInSubmit)
 	{
 		// If it's not a submit, then it's a "cancel" (Pressing the Cancel button, closing the window, using the back button...)
-		// IMPORTANT: the ajax request MUST BE synchronous to be executed in this context
-		$.ajax({
-			url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			async: false,
-			method: 'POST',
-			data: {operation: 'on_form_cancel', transaction_id: sTransactionId, obj_class: sObjClass, obj_key: iObjKey, token: sToken }
-		});
+		var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+		var oFormData = new FormData();
+		oFormData.append('operation', 'on_form_cancel');
+		oFormData.append('transaction_id', sTransactionId);
+		oFormData.append('obj_class', sObjClass);
+		oFormData.append('obj_key', iObjKey);
+		oFormData.append('token', sToken);
+		navigator.sendBeacon(sUrl, oFormData);
 	}
 }
 
@@ -234,21 +235,6 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 		if ($('#v_'+sFieldId).text() == '')
 		{
 			$('#v_'+sFieldId).html(sExplain);
-		}
-		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
-		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
-		{
-			// Visual feedback
-
-			$('#v_'+sFieldId).tooltip({
-				items: 'span',
-				classes: {
-					"ui-tooltip": "form_field_error"
-				},
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
 		}
 	}
 }

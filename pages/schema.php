@@ -120,7 +120,7 @@ function DisplayLifecycle($oPage, $sClass)
 	{
 		$aStates = MetaModel::EnumStates($sClass);
 		$aStimuli = MetaModel::EnumStimuli($sClass);
-		$oPage->add("<img id=\"img-lifecycle\" attr=\"$sClass lifecycle graph\" src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
+		$oPage->add("<img id=\"img-lifecycle\" class=\"ibo-datamodel-viewer--lifecycle-image\" attr=\"$sClass lifecycle graph\" src=\"".utils::GetAbsoluteUrlAppRoot()."pages/graphviz.php?class=$sClass\">\n");
 		$oPage->add_ready_script(
 			<<<EOF
 			$("#img-lifecycle").attr('href',$("#img-lifecycle").attr('src'));
@@ -146,7 +146,7 @@ JS
 		);
 		$oPage->AddUiBlock($oOpenAllButton);
 		$oPage->AddUiBlock($oCloseAllButton);
-		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCycleTransitions')."</h3>\n");
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Schema:LifeCycleTransitions'), 3));
 		$oPage->add("<ul id=\"LifeCycleList\" >\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
@@ -193,7 +193,7 @@ JS
 			$oPage->add("</ul></li>\n");
 		}
 		$oPage->add("</ul>\n");
-		$oPage->add("<h3>".Dict::S('UI:Schema:LifeCyleAttributeOptions')."</h3>\n");
+		$oPage->AddUiBlock(TitleUIBlockFactory::MakeNeutral(Dict::S('UI:Schema:LifeCyleAttributeOptions'), 3));
 		$oPage->add("<ul id=\"LifeCycleAttrOptList\">\n");
 		foreach ($aStates as $sStateCode => $aStateDef)
 		{
@@ -270,7 +270,8 @@ function DisplayTriggers($oPage, $sClass)
  */
 function DisplayClassesList($oPage, $oLayout, $sContext)
 {
-
+	$sSelectedClass = utils::ReadParam('class', '', false, 'class');
+	
 	$oLayout->AddSideHtml("<label for='search-model'>".Dict::S('UI:Schema:ClassFilter')."</label><br>");
 	
 	$oListSearch = new Select("ibo-datamodel-viewer--class-search");
@@ -296,7 +297,7 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 		}
 		$sLabelClassName = MetaModel::GetName($sClassName);
 
-		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", false);
+		$oOptionSearch = SelectOptionUIBlockFactory::MakeForSelectOption($sClassName, "$sLabelClassName ($sClassName)", $sClassName === $sSelectedClass);
 		$oListSearch->AddOption($oOptionSearch);
 		//Fetch classes names for autocomplete purpose
 		// - Encode as JSON to escape quotes and other characters
@@ -308,14 +309,42 @@ function DisplayClassesList($oPage, $oLayout, $sContext)
 	$oLayout->AddSideBlock($oListSearch);
 	$oPage->add_ready_script(
 		<<<JS
+let DatamodelViewerFilterList = function(sFilter){
+	if(sFilter !== ""){
+		var search_result = [];
+			$('#ibo-datamodel-viewer--classes-list--list').find("li").each(function(){
+			if( ! ~$(this).children("a").text().toLowerCase().indexOf(sFilter.toLowerCase())){
+				$(this).hide();
+			}
+			else{
+				search_result.push($(this));
+			}
+		});
+		search_result.forEach(function(e){
+			e.show();
+			e.find('ul > li').show();
+			e.parents().show();
+		});
+	}
+	else{
+		$('#ibo-datamodel-viewer--classes-list--list').find("li").each(function(){
+			$(this).show();
+		});
+	}
+};
+
 $('#ibo-datamodel-viewer--class-search').selectize({
     sortField: 'text',
     onChange: function(value){
     			    var preUrl = "?operation=details_class&class=";
 			var sufUrl = "&c[menu]=DataModelMenu";
 			window.location = preUrl + value + sufUrl;
-    }
+    },
+    onType: DatamodelViewerFilterList,
+    maxOptions: 7,
 });
+
+DatamodelViewerFilterList('$sSelectedClass');
 JS
 	);
 
@@ -811,7 +840,27 @@ field.filter(function(d) {
 	.attr("height", 36)
     .attr("xlink:href", function(d, i) { return d.icon })
 	.attr("transform", "translate(-12, -24)");
-			
+
+// When the schema is visible for the first time, initialize SVG viewbox based on content height/width
+
+let oSvgElement = document.getElementsByClassName("dataModelSchema")[0];
+if(window.IntersectionObserver) {
+    const oDatamodelSchemaIntersectObs = new IntersectionObserver(function(aEntries, oDatamodelSchemaIntersectObs){
+        aEntries.forEach(oEntry => {
+            let bIsVisible = oEntry.isIntersecting;
+            if(bIsVisible) {
+				let oSvgBB = oSvgElement.getBBox();
+				let aSvgViewbox = [oSvgBB.x, oSvgBB.y , oSvgBB.width, oSvgBB.height];
+				oSvgElement.setAttribute("viewBox", aSvgViewbox.join(" "));
+				oDatamodelSchemaIntersectObs.unobserve(oSvgElement);
+            }
+        });
+    }, {
+        root: $('#dataModelGraph')[0],
+        threshold: [1] // Must be completely visible
+    });
+    oDatamodelSchemaIntersectObs.observe(oSvgElement);
+}
 JS
 		);
 	}
@@ -966,9 +1015,12 @@ function DisplayClassDetails($oPage, $sClass, $sContext)
 		'moreinfo' => array('label' => Dict::S('UI:Schema:MoreInfo'), 'description' => Dict::S('UI:Schema:MoreInfo+')),
 		'origin' => array('label' => Dict::S('UI:Schema:Origin'), 'description' => Dict::S('UI:Schema:Origin+')),
 	);
-	
+	$oTablePanel = PanelUIBlockFactory::MakeForClass($sClass, '');
+	$oTablePanel->AddCSSClass('ibo-datatable-panel');
+
 	$oAttributesTable = DataTableUIBlockFactory::MakeForStaticData('', $aConfig, $aDetails, 'ibo-datamodel-viewer--attributes-table', [], "", array('pageLength' => -1));
-	$oPage->AddUiBlock($oAttributesTable);
+	$oTablePanel->AddSubBlock($oAttributesTable);
+	$oPage->AddUiBlock($oTablePanel);
 	$sOrigins = json_encode(array_keys($aOrigins));
 
 	//color calculation in order to keep 1 color for 1 extended class. Colors are interpolated and will be used for
@@ -1054,6 +1106,7 @@ switch ($operation)
 		//if we want to see class details & class is given then display it, otherwise act default (just show the class list)
 		if ($sClass != '')
 		{
+			$oPage->set_title(Dict::Format('UI:Schema:TitleForClass', $sClass));
 			DisplayClassDetails($oPage, $sClass, $sContext);
 			break;
 		}

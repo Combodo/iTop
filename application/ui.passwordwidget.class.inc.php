@@ -59,7 +59,7 @@ class UIPasswordWidget
 		$sConfirmPasswordValue = $aPasswordValues ? $aPasswordValues['confirm'] : '*****';
 		$sChangedValue = (($sPasswordValue != '*****') || ($sConfirmPasswordValue != '*****')) ? 1 : 0;
 		$sHtmlValue = '';
-		$sHtmlValue .= '<div class="field_input_zone field_input_onewaypassword ibo-input-wrapper">';
+		$sHtmlValue .= '<div class="field_input_zone field_input_onewaypassword ibo-input-wrapper ibo-input-one-way-password-wrapper">';
 		$sHtmlValue .= '<input class="ibo-input" type="password" maxlength="255" name="attr_'.$sCode.'[value]" id="'.$this->iId.'" value="'.htmlentities($sPasswordValue, ENT_QUOTES, 'UTF-8').'"/>';
 		$sHtmlValue .= '<div class="ibo-input-wrapper ibo-input-wrapper--with-buttons"><input class="ibo-input" type="password" maxlength="255" id="'.$this->iId.'_confirm" value="'.htmlentities($sConfirmPasswordValue, ENT_QUOTES, 'UTF-8').'" name="attr_'.$sCode.'[confirm]"/>';
 		$sHtmlValue .= '<div class="ibo-input-select--action-buttons"><div class="ibo-input-select--action-button ibo-input-select--action-button--create" data-tooltip-content="'.Dict::S('UI:PasswordConfirm').'"><i class="fas fa-question-circle"></i></div></div></div>';

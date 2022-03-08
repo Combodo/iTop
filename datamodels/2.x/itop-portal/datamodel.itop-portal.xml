@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.0">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
 	<portals>
 		<portal id="itop-portal" _delta="define"><!-- ID must match module_design[id] -->
 			<url>pages/exec.php?exec_module=itop-portal-base&amp;exec_page=index.php&amp;portal_id=itop-portal</url><!-- portal_id must match module_design[id] -->
@@ -152,6 +152,7 @@
   <module_parameters>
     <parameters id="itop-portal" _delta="define">
       <lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
+      <enable_formmanager_content_check type="boolean">true</enable_formmanager_content_check>
     </parameters>
   </module_parameters>
 </itop_design>
