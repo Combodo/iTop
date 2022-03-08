@@ -163,7 +163,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:Person/Attribute:team_list+' => '',
 	'Class:Person/Attribute:tickets_list' => 'Tickets',
 	'Class:Person/Attribute:tickets_list+' => '',
-	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager Friendly Name',
+	'Class:Person/Attribute:manager_id_friendlyname' => 'Manager-Name (lesbar)',
 	'Class:Person/Attribute:manager_id_friendlyname+' => '',
 	'Class:Person/Attribute:picture' => 'Bild',
 	'Class:Person/Attribute:picture+' => '',
@@ -272,7 +272,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 //
 
 Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Class:DocumentType' => 'Dokumentyp',
+	'Class:DocumentType' => 'Dokumenttyp',
 	'Class:DocumentType+' => '',
 ));
 
