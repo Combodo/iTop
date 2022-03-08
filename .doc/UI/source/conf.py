@@ -18,11 +18,11 @@
 # -- Project information -----------------------------------------------------
 
 project = 'iTop UI'
-copyright = '2021, Combodo'
+copyright = '2022, Combodo'
 author = 'Combodo'
 
 # The full version, including alpha/beta/rc tags
-release = '3.0.0'
+release = '3.1.0'
 
 
 # -- General configuration ---------------------------------------------------
@@ -78,3 +78,5 @@ html_css_files = [
 ]
 
 master_doc = 'index'
+
+html_copy_source = False

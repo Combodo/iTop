@@ -70,7 +70,7 @@ ToolbarSpacer common parameters
 +-----------------------------+--------+------------------------------------------------------------+
 | DataAttributes              | array  | Array of data attributes in the format ['name' => 'value'] |
 +-----------------------------+--------+------------------------------------------------------------+
-| IsHidden                    | bool   | Indicates if the block is hidden by default                |
+| IsHidden                    | bool   |                                                            |
 +-----------------------------+--------+------------------------------------------------------------+
 
 ----
