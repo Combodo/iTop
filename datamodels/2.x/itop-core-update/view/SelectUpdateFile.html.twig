@@ -11,6 +11,9 @@
             <div>
                 <span id="can-core-update">{{ 'iTopUpdate:UI:CanCoreUpdate:Loading'|dict_s }}  <i class="ajax-spin fas fa-spinner fa-spin" aria-hidden="true"></i></span>
             </div>
+            <div id="header-requirements-details" style="display: none;">
+                <div id="can-core-update-details" style="background-color: white; padding: 8px; border-radius: 5px; margin-top: 8px;"></div>
+            </div>
         </div>
 
         <table style="vertical-align:top" class="one-col-details" data-mode="view">
@@ -74,7 +77,8 @@
                     </div>
                 </div>
 
-                <div class="field_container field_large">
+                <div id="check-in-progress" class="header_message message_info">{{ 'iTopUpdate:UI:CheckInProgress'|dict_s }}</div>
+                <div id="file-container" class="field_container field_large" style="display: none;">
                     <div class="field_data">
                         <div class="upload_container">
                             <input type="file" id="file" name="file"/>
