@@ -1054,6 +1054,11 @@ JS
 			$oBlock->AddSubBlock($oPill);
 		}
 		$aExtraParams['query_params'] = $this->m_oFilter->GetInternalParams();
+		if(isset($aExtraParams['query_params']['this->object()'])){
+			$aExtraParams['query_params']['this->class'] = get_class($aExtraParams['query_params']['this->object()']);
+			$aExtraParams['query_params']['this->id'] = 	$aExtraParams['query_params']['this->object()']->GetKey();
+			unset($aExtraParams['query_params']['this->object()']);
+		}
 		$aRefreshParams = ['filter' => $this->m_oFilter->ToOQL(), "extra_params" => json_encode($aExtraParams)];
 		$oBlock->SetJSRefresh(
 			"$('#".$oBlock->GetId()."').block();
