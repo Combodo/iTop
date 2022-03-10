@@ -30,7 +30,7 @@ release = 'iTop 3.1.0'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autosectionlabel', 'recommonmark', 'sphinx_multiversion']
+extensions = ['sphinx.ext.autosectionlabel', 'myst_parser', 'sphinx_multiversion']
 
 autosectionlabel_prefix_document = True
 

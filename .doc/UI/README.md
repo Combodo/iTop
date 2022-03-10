@@ -15,7 +15,7 @@ Under `.doc/UI`, run
 ```
 pip install -U sphinx
 pip install sphinx-rtd-theme
-pip install recommonmark
+pip install myst-parser
 pip install sphinx-multiversion
 ```
 
@@ -28,9 +28,17 @@ Under `.doc/UI`, run
 ```
 sudo apt-get install python3-sphinx
 pip install sphinx-rtd-theme
-pip install recommonmark
+pip install myst-parser
 pip install sphinx-multiversion
 ```
+
+## Documentations
+
+  * sphinx https://www.sphinx-doc.org/en/master/
+  * sphinx-multiversion https://holzhaus.github.io/sphinx-multiversion/master/index.html
+  * Read the Docs https://docs.readthedocs.io/en/stable/intro/getting-started-with-sphinx.html
+  * RST https://www.sphinx-doc.org/en/master/usage/restructuredtext/basics.html
+  * MyST https://myst-parser.readthedocs.io/en/latest/
 
 ## Generating the documentation
 
