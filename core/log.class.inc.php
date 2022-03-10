@@ -544,7 +544,13 @@ class LogChannels
 {
 	public const APC = 'apc';
 
-	public const CLI          = 'CLI';
+	/**
+	 * @var string
+	 * @since 3.0.1 N°4849
+	 */
+	public const NOTIFICATIONS = 'notifications';
+
+	public const CLI = 'CLI';
 
 	/**
 	 * @var string
