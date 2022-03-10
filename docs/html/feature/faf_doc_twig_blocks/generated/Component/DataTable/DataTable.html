@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DataTable &mdash; iTop UI iTop 3.1.0 documentation</title>
+      <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/css/ui-doc.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+        <script src="../../../_static/jquery.js"></script>
+        <script src="../../../_static/underscore.js"></script>
+        <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="Field" href="../Field/Field.html" />
+    <link rel="prev" title="CollapsibleSection" href="../CollapsibleSection/CollapsibleSection.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../../../index.html" class="icon icon-home"> iTop UI
+            <img src="../../../_static/itop-logo.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Twig Base:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBase/TwigBase.html">Twig Base Presentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../TwigBaseTuto/TwigBaseTuto.html">Twig Base Tutorial</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Tags reference:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="../Component.html">UI Components</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../Alert/Alert.html">Alert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Button/Button.html">Button</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../ButtonGroup/ButtonGroup.html">ButtonGroup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../CollapsibleSection/CollapsibleSection.html">CollapsibleSection</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">DataTable</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#output">Output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#twig-tag">Twig Tag</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-forresult">DataTable ForResult</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-forobject">DataTable ForObject</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-forrendering">DataTable ForRendering</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-forrenderingobject">DataTable ForRenderingObject</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-forstaticdata">DataTable ForStaticData</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-forform">DataTable ForForm</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#datatable-common-parameters">DataTable common parameters</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../Field/Field.html">Field</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../FieldBadge/FieldBadge.html">FieldBadge</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../FieldSet/FieldSet.html">FieldSet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Form/Form.html">Form</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/FileSelect/FileSelect.html">FileSelect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/Input.html">Input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/Select/Select.html">Select</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Input/Select/SelectOption.html">SelectOption</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Panel/Panel.html">Panel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Spinner/Spinner.html">Spinner</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Title/Title.html">Title</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Toolbar/Toolbar.html">Toolbar</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../Toolbar/ToolbarSpacer/ToolbarSpacer.html">ToolbarSpacer</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../Layout/Layout.html">UI Layouts</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">iTop UI</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home"></a> &raquo;</li>
+          <li><a href="../Component.html">UI Components</a> &raquo;</li>
+      <li>DataTable</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+
+
+           <div itemprop="articleBody">
+             
+  <section id="datatable">
+<span id="id1"></span><h1>DataTable<a class="headerlink" href="#datatable" title="Permalink to this headline"></a></h1>
+<p>Class DataTable</p>
+<hr class="docutils" />
+<section id="output">
+<h2>Output<a class="headerlink" href="#output" title="Permalink to this headline"></a></h2>
+<p>Dynamic DataTable</p>
+<img alt="../../../_images/Datatable.png" src="../../../_images/Datatable.png" />
+<p>Static DataTable</p>
+<img alt="../../../_images/DatatableStatic.png" src="../../../_images/DatatableStatic.png" />
+</section>
+<hr class="docutils" />
+<section id="twig-tag">
+<h2>Twig Tag<a class="headerlink" href="#twig-tag" title="Permalink to this headline"></a></h2>
+<dl class="field-list simple">
+<dt class="field-odd">Tag</dt>
+<dd class="field-odd"><p><strong>UIDataTable</strong></p>
+</dd>
+<dt class="field-even">Syntax</dt>
+<dd class="field-even"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">T</span><span class="nv">ype</span> <span class="o">{</span><span class="p">P</span><span class="nv">arameters</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Type</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 66%" />
+<col style="width: 34%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#datatableforresult"><span class="std std-ref">ForResult</span></a></p></td>
+<td><p>&#64;param WebPage $oPage</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#datatableforobject"><span class="std std-ref">ForObject</span></a></p></td>
+<td><p>&#64;param WebPage $oPage</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#datatableforrendering"><span class="std std-ref">ForRendering</span></a></p></td>
+<td><p>Make a basis Panel component</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#datatableforrenderingobject"><span class="std std-ref">ForRenderingObject</span></a></p></td>
+<td><p>&#64;param string $sListId</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#datatableforstaticdata"><span class="std std-ref">ForStaticData</span></a></p></td>
+<td><p>&#64;param string $sTitle</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#datatableforform"><span class="std std-ref">ForForm</span></a></p></td>
+<td><p>&#64;param string $sRef</p></td>
+</tr>
+</tbody>
+</table>
+<section id="datatable-forresult">
+<span id="datatableforresult"></span><h3>DataTable ForResult<a class="headerlink" href="#datatable-forresult" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">F</span><span class="nv">orResult</span> <span class="o">{</span><span class="nv">oPage</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">sListId</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">oSet</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">aExtraParams</span><span class="o">:</span><span class="nv">value</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 26%" />
+<col style="width: 22%" />
+<col style="width: 20%" />
+<col style="width: 4%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>oPage</p></td>
+<td><p>WebPage</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sListId</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>oSet</p></td>
+<td><p>DBObjectSet</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aExtraParams</p></td>
+<td></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datatable-forobject">
+<span id="datatableforobject"></span><h3>DataTable ForObject<a class="headerlink" href="#datatable-forobject" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">F</span><span class="nv">orObject</span> <span class="o">{</span><span class="nv">oPage</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">sListId</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">oSet</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">aExtraParams</span><span class="o">:</span><span class="nv">value</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 26%" />
+<col style="width: 22%" />
+<col style="width: 20%" />
+<col style="width: 4%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>oPage</p></td>
+<td><p>WebPage</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sListId</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>oSet</p></td>
+<td><p>DBObjectSet</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aExtraParams</p></td>
+<td></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datatable-forrendering">
+<span id="datatableforrendering"></span><h3>DataTable ForRendering<a class="headerlink" href="#datatable-forrendering" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">F</span><span class="nv">orRendering</span> <span class="o">{</span><span class="nv">sListId</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">oSet</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">aExtraParams</span><span class="o">:</span><span class="nv">value</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 26%" />
+<col style="width: 22%" />
+<col style="width: 20%" />
+<col style="width: 4%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sListId</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>oSet</p></td>
+<td><p>DBObjectSet</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aExtraParams</p></td>
+<td></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datatable-forrenderingobject">
+<span id="datatableforrenderingobject"></span><h3>DataTable ForRenderingObject<a class="headerlink" href="#datatable-forrenderingobject" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">F</span><span class="nv">orRenderingObject</span> <span class="o">{</span><span class="nv">sListId</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">oSet</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">aExtraParams</span><span class="o">:</span><span class="nv">value</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 28%" />
+<col style="width: 26%" />
+<col style="width: 22%" />
+<col style="width: 20%" />
+<col style="width: 4%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sListId</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>oSet</p></td>
+<td><p>DBObjectSet</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aExtraParams</p></td>
+<td></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datatable-forstaticdata">
+<span id="datatableforstaticdata"></span><h3>DataTable ForStaticData<a class="headerlink" href="#datatable-forstaticdata" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">F</span><span class="nv">orStaticData</span> <span class="o">{</span><span class="nv">sTitle</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">aColumns</span><span class="o">:{</span><span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">},</span> <span class="nv">aData</span><span class="o">:{</span><span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">},</span> <span class="nv">sId</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">aExtraParams</span><span class="o">:{</span><span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">},</span> <span class="nv">sFilter</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">aOptions</span><span class="o">:{</span><span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">}}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 31%" />
+<col style="width: 18%" />
+<col style="width: 24%" />
+<col style="width: 22%" />
+<col style="width: 4%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sTitle</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aColumns</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aData</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sId</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>NULL</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aExtraParams</p></td>
+<td><p>array</p></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sFilter</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>‘’</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aOptions</p></td>
+<td><p>array</p></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datatable-forform">
+<span id="datatableforform"></span><h3>DataTable ForForm<a class="headerlink" href="#datatable-forform" title="Permalink to this headline"></a></h3>
+<dl class="field-list simple">
+<dt class="field-odd">syntax</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<div class="highlight-twig notranslate"><div class="highlight"><pre><span></span><span class="cp">{%</span> <span class="k">UIDataTable</span> <span class="p">F</span><span class="nv">orForm</span> <span class="o">{</span><span class="nv">sRef</span><span class="s1">:&#39;value&#39;</span><span class="o">,</span> <span class="nv">aColumns</span><span class="o">:{</span><span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">},</span> <span class="nv">aData</span><span class="o">:{</span><span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">,</span> <span class="nv">name</span><span class="o">:</span><span class="nv">value</span><span class="o">},</span> <span class="nv">sFilter</span><span class="s1">:&#39;value&#39;</span><span class="o">}</span> <span class="cp">%}</span><span class="x"></span>
+<span class="x">    Content Goes Here</span>
+<span class="cp">{%</span> <span class="k">EndUIDataTable</span> <span class="cp">%}</span><span class="x"></span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">parameters</dt>
+<dd class="field-odd"><p></p></dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 24%" />
+<col style="width: 20%" />
+<col style="width: 27%" />
+<col style="width: 24%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>sRef</p></td>
+<td><p>string</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>aColumns</p></td>
+<td><p>array</p></td>
+<td><p>mandatory</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>aData</p></td>
+<td><p>array</p></td>
+<td><p>optional</p></td>
+<td><p>array ()</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>sFilter</p></td>
+<td><p>string</p></td>
+<td><p>optional</p></td>
+<td><p>‘’</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="datatable-common-parameters">
+<h3>DataTable common parameters<a class="headerlink" href="#datatable-common-parameters" title="Permalink to this headline"></a></h3>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 29%" />
+<col style="width: 10%" />
+<col style="width: 61%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td><p>AddCSSClass</p></td>
+<td><p>string</p></td>
+<td><p>CSS class to add to the generated html block</p></td>
+</tr>
+<tr class="row-even"><td><p>AddCSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>AddCssFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddDeferredBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddHtml</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddJsFileRelPath</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddMultipleCssFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AddMultipleJsFilesRelPaths</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AddSubBlock</p></td>
+<td><p>iUIBlock</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AjaxData</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>AjaxUrl</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>CSSClasses</p></td>
+<td><p>array</p></td>
+<td><p>like &lt;code&gt;[‘ibo-is-hidden’, ‘ibo-alert–body’]&lt;/code&gt;</p></td>
+</tr>
+<tr class="row-odd"><td><p>DataAttributes</p></td>
+<td><p>array</p></td>
+<td><p>Array of data attributes in the format [‘name’ =&gt; ‘value’]</p></td>
+</tr>
+<tr class="row-even"><td><p>DeferredBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>DisplayColumns</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>HasForcedDiv</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>InitDisplayData</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>IsHidden</p></td>
+<td><p>bool</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>JSRefresh</p></td>
+<td><p>string</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>Options</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>ResultColumns</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>SubBlocks</p></td>
+<td><p>array</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr class="docutils" />
+<p>The columns (<em>aColumns</em>) have the following format:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="s1">&#39;nameField1&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="nx">labelField1</span><span class="p">,</span> <span class="s1">&#39;description&#39;</span> <span class="o">=&gt;</span> <span class="nx">descriptionField1</span><span class="p">],</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+<p>The data (<em>aData</em>) format has to be:</p>
+<div class="highlight-php notranslate"><div class="highlight"><pre><span></span><span class="p">[</span>
+    <span class="p">[</span><span class="s1">&#39;nameField1&#39;</span> <span class="o">=&gt;</span> <span class="nx">valueField1</span><span class="p">,</span> <span class="s1">&#39;nameField2&#39;</span> <span class="o">=&gt;</span> <span class="nx">valueField2</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span>
+    <span class="o">...</span>
+<span class="p">]</span>
+</pre></div>
+</div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
+<p>No examples provided yet</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../CollapsibleSection/CollapsibleSection.html" class="btn btn-neutral float-left" title="CollapsibleSection" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../Field/Field.html" class="btn btn-neutral float-right" title="Field" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Combodo.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+<!--
+  ~ @copyright   Copyright (C) 2010-2022 Combodo SARL
+  ~ @license     http://opensource.org/licenses/AGPL-3.0
+  -->
+
+<div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    <span class="fa fa-book"> Other Versions</span>
+    v: feature/faf_doc_twig_blocks
+    <span class="fa fa-caret-down"></span>
+  </span>
+	<div class="rst-other-versions">
+		<dl>
+			<dt>Branches</dt>
+			<dd><a href="DataTable.html">feature/faf_doc_twig_blocks</a></dd>
+		</dl>
+	</div>
+</div><script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
