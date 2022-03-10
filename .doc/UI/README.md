@@ -6,6 +6,12 @@ This documentation explains how to use UI blocks (new in 3.0) in twig based exte
 
 ## Generating the documentation
 
+Generating the documentation source from the actual code:
+
+```
+php bin/generate_uiblock.php
+```
+
 ### Windows users
 
 #### setup

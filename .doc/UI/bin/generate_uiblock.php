@@ -536,7 +536,11 @@ EOF
 
 // Rebuild doc
 $sRootDir = dirname(__DIR__);
-shell_exec("$sRootDir/make.bat html");
+if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	shell_exec("$sRootDir/make.bat html");
+} else {
+	shell_exec("$sRootDir/make html");
+}
 
 
 
