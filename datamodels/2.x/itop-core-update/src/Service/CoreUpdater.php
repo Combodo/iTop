@@ -636,7 +636,7 @@ final class CoreUpdater
 					&& is_dir($sRootPath.'/'.$sFolderPath)) {
 					$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
 					$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
-					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CannotUpdateNewModules', $sLink, $sLinkManualUpdate).'::'.$aFilePath[2]);
+					throw new FileIntegrityException(Dict::Format('iTopUpdate:UI:CannotUpdateNewModules' , $sLink, $sLinkManualUpdate));
 				}
 			}
 			// Packed with missing files...
