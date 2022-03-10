@@ -51,8 +51,8 @@ $(function () {
 						<div class= "ibo-panel--title" > `+this._format(this.options.labels.columns_selection, i)+`</div>
 					</div>`;
 					sContent += `
-					<div className="ibo-panel--header-right">
-						<div className="ibo-panel--toolbar">
+					<div class="ibo-panel--header-right">
+						<div class="ibo-panel--toolbar">
 						<button class="check_all ibo-button ibo-is-regular ibo-is-neutral action" type="button"><span class=""ibo-button-label">`+this.options.labels.check_all+`</span></button>
 					    <button class="uncheck_all ibo-button ibo-is-regular ibo-is-neutral action" type="button"><span class=""ibo-button-label">`+this.options.labels.uncheck_all+`</span></button>
 				</div>
