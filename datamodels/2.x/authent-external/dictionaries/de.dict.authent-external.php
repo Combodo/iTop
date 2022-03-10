@@ -20,9 +20,9 @@
 
 * @copyright     Copyright (C) 2021 Combodo SARL
 * @licence	http://opensource.org/licenses/AGPL-3.0
-*		
+*
 */
 Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Class:UserExternal' => 'Externer Benutzer',
-	'Class:UserExternal+' => 'Externe authentifizierter '.ITOP_APPLICATION_SHORT.'-Benutzer',
+	'Class:UserExternal+' => 'Extern authentifizierter '.ITOP_APPLICATION_SHORT.'-Benutzer',
 ));
