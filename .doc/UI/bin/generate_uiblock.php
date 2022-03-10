@@ -537,8 +537,10 @@ EOF
 // Rebuild doc
 $sRootDir = dirname(__DIR__);
 if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+	echo "Windows build\n";
 	shell_exec("$sRootDir/make.bat html");
 } else {
+	echo "Linux build\n";
 	shell_exec("$sRootDir/make html");
 }
 
