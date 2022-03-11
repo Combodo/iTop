@@ -54,7 +54,13 @@ class EMail
 	{
 		$this->m_aData = array();
 		$this->m_oMessage = Swift_Message::newInstance();
-		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
+
+		$this->LoadConfig();
+		$oConfig = self::$m_oConfig;
+		$this->SetRecipientFrom(
+			$oConfig->Get('email_default_sender_address'),
+			$oConfig->Get('email_default_sender_label')
+		);
 	}
 
 	/**
