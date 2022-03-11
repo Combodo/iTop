@@ -123,12 +123,12 @@ class AjaxRenderController
 	}
 
 	/**
-	 * @param \AjaxPage $oPage
+	 * @param \JsonPage $oPage
 	 * @param bool $bTokenOnly
 	 *
 	 * @throws \Exception
 	 */
-	public static function ExportBuild(AjaxPage $oPage, $bTokenOnly)
+	public static function ExportBuild(JsonPage $oPage, $bTokenOnly)
 	{
 		register_shutdown_function(function () {
 			$aErr = error_get_last();
@@ -208,13 +208,13 @@ class AjaxRenderController
 					$aResult['message'] = Dict::Format('Core:BulkExport:ClickHereToDownload_FileName', $oExporter->GetDownloadFileName());
 				}
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 		} catch (BulkExportException $e) {
 			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->GetLocalizedMessage()));
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 		} catch (Exception $e) {
 			$aResult = array('code' => 'error', 'percentage' => 100, 'message' => utils::HtmlEntities($e->getMessage()));
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 		}
 	}
 
@@ -224,13 +224,13 @@ class AjaxRenderController
 	 * The resulting JSON is added to the page with the format:
 	 * {"code": "done or error", "counts": {"menu_id_1": count1, "menu_id_2": count2...}}
 	 *
-	 * @param \AjaxPage $oPage
+	 * @param \JsonPage $oPage
 	 */
-	public function GetMenusCount(AjaxPage $oPage)
+	public function GetMenusCount(JsonPage $oPage)
 	{
 		$aCounts = ApplicationMenu::GetMenusCount();
 		$aResult = ['code' => 'done', 'counts' => $aCounts];
-		$oPage->add(json_encode($aResult));
+		$oPage->SetData($aResult);
 	}
 
 	/**

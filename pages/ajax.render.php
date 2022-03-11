@@ -2060,10 +2060,14 @@ EOF
 			break;
 
 		case 'export_build':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->ExportBuild($oPage, false);
 			break;
 
 		case 'export_build_portal':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->ExportBuild($oPage, true);
 			break;
 
@@ -2652,7 +2656,8 @@ EOF
 		// Navigation menu
 		//--------------------------------
 		case 'get_menus_count':
-
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 
