@@ -43,8 +43,8 @@ class EMail
 
 	public function LoadConfig()
 	{
-		if (is_null(self::$m_oConfig)) {
-			self::$m_oConfig = utils::GetConfig();
+		if (is_null(static::$m_oConfig)) {
+			static::$m_oConfig = utils::GetConfig();
 		}
 	}
 
