@@ -96,6 +96,8 @@ class iTopComposer
 	{
 		$APPROOT_WITH_SLASHES = $this->GetApprootWithSlashes();
 		return array(
+			$APPROOT_WITH_SLASHES.'lib/doctrine/lexer/tests',
+
 			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
 
 			$APPROOT_WITH_SLASHES.'lib/nikic/php-parser/test',
