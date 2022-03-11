@@ -611,8 +611,9 @@ final class CoreUpdater
 	}
 
 	/**
-	 * Throw an exception if there are new modules that were not already installed
-	 * @param $sRootPath
+	 * Check if new modules (not already installed) are present, and throw an exception if that is the case as core update doesn't know how to install them automatically for know
+	 *
+	 * @param string $sRootPath
 	 *
 	 * @throws \ApplicationException
 	 * @since 2.7.7 3.0.1
