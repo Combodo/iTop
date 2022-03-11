@@ -41,11 +41,10 @@ class EMail
 	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
 
-	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
+	public function LoadConfig()
 	{
-		if (is_null(self::$m_oConfig))
-		{
-			self::$m_oConfig = new Config($sConfigFile);
+		if (is_null(self::$m_oConfig)) {
+			self::$m_oConfig = utils::GetConfig();
 		}
 	}
 
