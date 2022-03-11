@@ -57,20 +57,39 @@ class DBUnionSearch extends DBSearch
 		}
 
 		$this->aSearches = array();
-		foreach ($aSearches as $oSearch)
+		foreach ($aSearches as $iSearchIdx => $oSearch)
 		{
 			if ($oSearch instanceof DBUnionSearch)
 			{
 				foreach ($oSearch->aSearches as $oSubSearch)
 				{
-					$this->aSearches[] = $oSubSearch->DeepClone();
+					$this->aSearches[] = $this->RenameSearchParams($oSubSearch->DeepClone(), "_$iSearchIdx");
 				}
 			} else {
-				$this->aSearches[] = $oSearch->DeepClone();
+				$this->aSearches[] = $this->RenameSearchParams($oSearch->DeepClone(), "_$iSearchIdx");
 			}
 		}
 
 		$this->ComputeSelectedClasses();
+	}
+
+	/**
+	 * @param $oSearch \DBObjectSearch
+	 * @param $sParamSuffix string
+	 *
+	 * @return \DBObjectSearch
+	 */
+	protected function RenameSearchParams($oSearch, $sParamSuffix) {
+		/** @var \Expression $oExpression */
+		$oExpression = $oSearch->GetCriteria();
+		$aRenamedInternalParams = [];
+		foreach ($oSearch->GetInternalParams() as $sParamName => $val) {
+			$aRenamedInternalParams[$sParamName.$sParamSuffix] = $val;
+			$oExpression->RenameParam($sParamName, $sParamName.$sParamSuffix);
+		}
+		$oSearch->SetInternalParams($aRenamedInternalParams);
+
+		return $oSearch;
 	}
 
 	public function AllowAllData($bAllowAllData = true)
@@ -194,7 +213,7 @@ class DBUnionSearch extends DBSearch
 	 * Change the class (only subclasses are supported as of now, because the conditions must fit the new class)
 	 * Defaults to the first selected class
 	 * Only the selected classes can be changed
-	 */	 	
+	 */
 	public function ChangeClass($sNewClass, $sAlias = null)
 	{
 		if (is_null($sAlias))
@@ -353,7 +372,7 @@ class DBUnionSearch extends DBSearch
 	/**
 	 * Specify a condition on external keys or link sets
 	 * @param String sAttSpec Can be either an attribute code or extkey->[sAttSpec] or linkset->[sAttSpec] and so on, recursively
-	 *                 Example: infra_list->ci_id->location_id->country	 
+	 *                 Example: infra_list->ci_id->location_id->country
 	 * @param Object value The value to match (can be an array => IN(val1, val2...)
 	 * @return void
 	 */
@@ -483,7 +502,7 @@ class DBUnionSearch extends DBSearch
 
 	/**
 	 * Overloads for query building
-	 */ 
+	 */
 	public function ToOQL($bDevelopParams = false, $aContextParams = null, $bWithAllowAllFlag = false)
 	{
 		$aSubQueries = array();
@@ -531,7 +550,7 @@ class DBUnionSearch extends DBSearch
 		}
 
 		$oNewSearch = new DBUnionSearch($aSearches);
-		
+
 		return $oNewSearch;
 	}
 
