@@ -116,7 +116,9 @@ EOF;
 EOF;
 	}
 
-	echo ".. Copyright (C) 2010-2021 Combodo SARL\n";
+	$sYear = date('Y');
+
+	echo ".. Copyright (C) 2010-$sYear Combodo SARL\n";
 	echo ".. http://opensource.org/licenses/AGPL-3.0\n";
 	echo "\n";
 	echo ".. _$sClass:\n";
@@ -488,9 +490,10 @@ foreach ($aFactoryClasses as $sFactoryClass) {
 		// Check that manual files exists
 		$sAdditionalDescription = $sSourceDir.'/manual/'.$sDir.'AdditionalDescription.rst';
 		@mkdir(dirname($sAdditionalDescription), 0775, true);
+		$sYear = date('Y');
 		if (!is_file($sAdditionalDescription)) {
 			file_put_contents($sAdditionalDescription, <<<EOF
-.. Copyright (C) 2010-2021 Combodo SARL
+.. Copyright (C) 2010-$sYear Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
 
@@ -510,7 +513,7 @@ EOF
 		@mkdir(dirname($sFooter), 0775, true);
 		if (!is_file($sFooter)) {
 			file_put_contents($sFooter, <<<EOF
-.. Copyright (C) 2010-2021 Combodo SARL
+.. Copyright (C) 2010-$sYear Combodo SARL
 .. http://opensource.org/licenses/AGPL-3.0
 
 
