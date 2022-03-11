@@ -888,6 +888,9 @@ try
 			break;
 
 		case 'import_dashboard':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, true))
 			{
@@ -916,7 +919,7 @@ try
 			{
 				$aResult['error'] = 'Dashboard id="'.$sDashboardId.'" not found.';
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'toggle_dashboard':
@@ -1871,7 +1874,8 @@ EOF
 
 				// Save the generated PDF as an attachment
 				$sPDF = $oPage->get_pdf();
-				$oPage = new AjaxPage('');
+				$oPage = new JsonPage();
+				$oPage->SetOutputDataOnly(true);
 				$oAttachment = MetaModel::NewObject('Attachment');
 				$oAttachment->Set('item_class', $sObjClass);
 				$oAttachment->Set('item_id', $iObjKey);
@@ -1882,7 +1886,7 @@ EOF
 					'status' => 'ok',
 					'att_id' => $iAttachmentId,
 				);
-				$oPage->add(json_encode($aRet));
+				$oPage->SetData($aRet);
 			}
 			break;
 
@@ -2187,6 +2191,9 @@ EOF
 			break;
 
 		case 'cke_img_upload':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			// Image uploaded via CKEditor
 			$aResult = array(
 				'uploaded' => 0,
@@ -2257,7 +2264,7 @@ EOF
 					$aResult['error'] = $e->GetMessage();
 				}
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		/** @noinspection PhpMissingBreakStatementInspection cke_upload_and_browse and cke_browse are chained */
