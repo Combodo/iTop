@@ -189,7 +189,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @return bool true if the data are identical
 	 *
-	 * @since 2.7.6 3.0.0 N°4384 check formmanager_data
+	 * @since 2.7.6 3.0.0 N°4384 Check formmanager_data
 	 */
 	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
 	{
@@ -200,7 +200,7 @@ class ObjectFormManager extends FormManager
 			return true;
 		}
 
-		// we need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
+		// We need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
 		$oHtmlDocument = new \DOMDocument();
 
 		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
