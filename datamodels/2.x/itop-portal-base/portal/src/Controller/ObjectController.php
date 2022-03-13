@@ -450,6 +450,8 @@ class ObjectController extends BrickController
 				$oSubRequest = $oRequest;
 				$oSubRequest->request->set('operation', 'submit');
 				$oSubRequest->request->set('stimulus_code', '');
+				$oSubRequest->request->set('formmanager_class', $aData['form']['formmanager_class']);
+				$oSubRequest->request->set('formmanager_data', json_encode($aData['form']['formmanager_data']));
 
 				$aData = array('sMode' => 'apply_stimulus');
 				$aData['form'] = $oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
