@@ -26,7 +26,6 @@ Dict::Add('IT IT', 'Italian', 'Italiano', array(
 	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
 	'FilesInformation:Error:ListCorruptedFile' => 'Fichier(s) corrompu(s): %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
-	'FilesInformation:Error:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 ));
 
 
