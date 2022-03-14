@@ -12,6 +12,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Файл %1$s отсутствует',
 	'FilesInformation:Error:CorruptedFile' => 'Файл %1$s повреждён',
+	'FilesInformation:Error:ListCorruptedFile' => 'Fichier(s) corrompu(s): %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Невозможно выполнить запись в файл %1$s',
 ));
 

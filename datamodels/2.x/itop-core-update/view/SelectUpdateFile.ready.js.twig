@@ -18,6 +18,7 @@ $.ajax({
         if(data.sMessageDetails){
             $("#header-requirements-details").show();
             $('#can-core-update-details').html(data.sMessageDetails);
+            $("#toggle-requirements-details").click( function() { $("#can-core-update-details").toggle(); } );
         }
         oRequirements.removeClass("message_info");
         if (data.bStatus)

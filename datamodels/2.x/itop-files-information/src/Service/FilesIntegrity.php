@@ -81,8 +81,9 @@ class FilesIntegrity
 	 * @param string $sRootPath
 	 *
 	 * @throws \Combodo\iTop\FilesInformation\Service\FileIntegrityException
+	 * @since 2.7.7 3.0.1
 	 */
-	public static function CheckInstallationIntegrity($sRootPath = APPROOT)
+	public static function CheckInstallationIntegrity($sRootPath = APPROOT, $bExitAtFirstError = true)
 	{
 		$aFilesInfo = FilesIntegrity::GetInstalledFiles($sRootPath.'manifest.xml');
 
@@ -90,6 +91,9 @@ class FilesIntegrity
 		{
 			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:MissingFile', 'manifest.xml'));
 		}
+
+		$bHasErrors = false;
+		$sErrorFiles ="";
 
 		@clearstatcache();
 		foreach ($aFilesInfo as $aFileInfo)
@@ -103,10 +107,18 @@ class FilesIntegrity
 				$sChecksum = md5($sContent);
 				if (($iSize != $aFileInfo['size']) || ($sChecksum != $aFileInfo['md5']))
 				{
-					throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
+					if($bExitAtFirstError) {
+						throw new FileIntegrityException(Dict::Format('FilesInformation:Error:CorruptedFile', $sFile));
+					} else {
+						$bHasErrors = true;
+						$sErrorFiles .='<li> '.$aFileInfo['path'].'</li>';
+					}
 				}
 			}
 			// Packed with missing files...
+		}
+		if($bHasErrors){
+			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:ListCorruptedFile','<ul> '.$sErrorFiles.'</ul>'));
 		}
 	}
 

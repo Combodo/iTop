@@ -24,6 +24,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => '文件丢失: %1$s~~',
 	'FilesInformation:Error:CorruptedFile' => '文件 %1$s 已损坏',
+	'FilesInformation:Error:ListCorruptedFile' => 'Fichier(s) corrompu(s): %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => '无法写入文件 %1$s',
 ));
 

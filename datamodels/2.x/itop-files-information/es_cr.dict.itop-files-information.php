@@ -25,6 +25,7 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Archivo faltante: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'El archivo %1$s está corrupto',
+	'FilesInformation:Error:ListCorruptedFile' => 'Fichier(s) corrompu(s): %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'No se puede escribir al archivo %1$s',
 ));
 

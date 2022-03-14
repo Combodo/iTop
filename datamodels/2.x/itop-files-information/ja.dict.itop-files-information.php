@@ -24,6 +24,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Missing file: %1$s~~',
 	'FilesInformation:Error:CorruptedFile' => 'File %1$s is corrupted~~',
+	'FilesInformation:Error:ListCorruptedFile' => 'Fichier(s) corrompu(s): %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Can not write to file %1$s~~',
 ));
 
