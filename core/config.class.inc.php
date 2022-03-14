@@ -498,7 +498,7 @@ class Config
 		],
 		'cron_task_max_execution_time' => [
 			'type' => 'integer',
-			'description' => 'Backround tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
+			'description' => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
 			'default' => 0,
 			'value' => 0,
 			'source_of_value' => '',
