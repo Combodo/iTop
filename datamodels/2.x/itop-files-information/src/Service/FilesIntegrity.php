@@ -79,9 +79,10 @@ class FilesIntegrity
 	 * Check that files present in iTop folder corresponds to the manifest
 	 *
 	 * @param string $sRootPath
+	 * @param bool $bExitAtFirstError
 	 *
 	 * @throws \Combodo\iTop\FilesInformation\Service\FileIntegrityException
-	 * @since 2.7.7 3.0.1
+	 * @since 2.7.7 3.0.1 Add $bExitAtFirstError parameter
 	 */
 	public static function CheckInstallationIntegrity($sRootPath = APPROOT, $bExitAtFirstError = true)
 	{
