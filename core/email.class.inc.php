@@ -56,7 +56,7 @@ class EMail
 		$this->m_oMessage = Swift_Message::newInstance();
 
 		$this->LoadConfig();
-		$oConfig = self::$m_oConfig;
+		$oConfig = static::$m_oConfig;
 		$this->SetRecipientFrom(
 			$oConfig->Get('email_default_sender_address'),
 			$oConfig->Get('email_default_sender_label')
@@ -160,24 +160,23 @@ class EMail
 	{
 		// If the body of the message is in HTML, embed all images based on attachments
 		$this->EmbedInlineImages();
-		
-		$sTransport = self::$m_oConfig->Get('email_transport');
+
+		$sTransport = static::$m_oConfig->Get('email_transport');
 		switch ($sTransport)
 		{
-		case 'SMTP':
-			$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
-			$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
-			$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
-			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
-			$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
+			case 'SMTP':
+				$sHost = static::$m_oConfig->Get('email_transport_smtp.host');
+				$sPort = static::$m_oConfig->Get('email_transport_smtp.port');
+				$sEncryption = static::$m_oConfig->Get('email_transport_smtp.encryption');
+				$sUserName = static::$m_oConfig->Get('email_transport_smtp.username');
+				$sPassword = static::$m_oConfig->Get('email_transport_smtp.password');
 
-			$oTransport = Swift_SmtpTransport::newInstance($sHost, $sPort, $sEncryption);
-			if (strlen($sUserName) > 0)
-			{
-				$oTransport->setUsername($sUserName);
-				$oTransport->setPassword($sPassword);
-			}
-			break;
+				$oTransport = Swift_SmtpTransport::newInstance($sHost, $sPort, $sEncryption);
+				if (strlen($sUserName) > 0) {
+					$oTransport->setUsername($sUserName);
+					$oTransport->setPassword($sPassword);
+				}
+				break;
 
 		case 'Null':
 			$oTransport = Swift_NullTransport::newInstance();
