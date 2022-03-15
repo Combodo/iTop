@@ -16,24 +16,24 @@ namespace Combodo\iTop\Service;
 class EventData
 {
 	private $sEvent;
-	private $sEventSource;
-	private $mEventData;
-	private $mCallbackData;
+	private $mEventSource;
+	private $aEventData;
+	private $aCallbackData;
 
 	/**
 	 * EventServiceData constructor.
 	 *
 	 * @param string $sEvent
-	 * @param string $sEventSource
+	 * @param mixed $mEventSource
 	 * @param array $aEventData
 	 * @param array $aCallbackData
 	 */
-	public function __construct($sEvent, $sEventSource, $aEventData, $aCallbackData)
+	public function __construct(string $sEvent, $mEventSource, array $aEventData, array $aCallbackData)
 	{
 		$this->sEvent = $sEvent;
-		$this->mEventData = $aEventData;
-		$this->sEventSource = $sEventSource;
-		$this->mCallbackData = $aCallbackData;
+		$this->aEventData = $aEventData;
+		$this->mEventSource = $mEventSource;
+		$this->aCallbackData = $aCallbackData;
 	}
 
 	/**
@@ -46,38 +46,38 @@ class EventData
 
 	public function Get($sParam)
 	{
-		if (is_array($this->mEventData) && isset($this->mEventData[$sParam])) {
-			return $this->mEventData[$sParam];
+		if (is_array($this->aEventData) && isset($this->aEventData[$sParam])) {
+			return $this->aEventData[$sParam];
 		}
 
-		if (is_array($this->mCallbackData) && isset($this->mCallbackData[$sParam])) {
-			return $this->mCallbackData[$sParam];
+		if (is_array($this->aCallbackData) && isset($this->aCallbackData[$sParam])) {
+			return $this->aCallbackData[$sParam];
 		}
 
 		return null;
 	}
 
 	/**
-	 * @return string
+	 * @return mixed
 	 */
 	public function GetEventSource()
 	{
-		return $this->sEventSource;
+		return $this->mEventSource;
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function GetEventData()
+	public function GetEventData(): array
 	{
-		return $this->mEventData;
+		return $this->aEventData;
 	}
 
 	/**
-	 * @return mixed
+	 * @return array
 	 */
-	public function GetCallbackData()
+	public function GetCallbackData(): array
 	{
-		return $this->mCallbackData;
+		return $this->aCallbackData;
 	}
 }

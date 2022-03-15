@@ -33,11 +33,11 @@ class EventService
 	 *
 	 * @throws \Exception
 	 */
-	public static function Register($sEvent, callable $callback, $sEventSource = null, $aCallbackData = array(), $context = null, $fPriority = 0.0)
+	public static function Register(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0): string
 	{
 		is_callable($callback, false, $sName);
 
-		$aEventCallbacks = isset(self::$aEvents[$sEvent]) ? self::$aEvents[$sEvent] : array();
+		$aEventCallbacks = self::$aEvents[$sEvent] ?? [];
 		$sId = 'event_'.self::$iEventIdCounter++;
 		$aEventCallbacks[] = array(
 			'id'       => $sId,
@@ -78,7 +78,7 @@ class EventService
 	 *
 	 * @throws \Exception from the callback
 	 */
-	public static function FireEvent($sEvent, $eventSource = null, $aEventData = array())
+	public static function FireEvent(string $sEvent, $eventSource = null, array $aEventData = array())
 	{
 		$oKPI = new ExecutionKPI();
 		$sSource = isset($aEventData['debug_info']) ? " {$aEventData['debug_info']}" : '';
@@ -116,7 +116,7 @@ class EventService
 		$oKPI->ComputeStats('FireEvent', $sEvent);
 	}
 
-	private static function MatchEventSource($srcRegistered, $srcEvent)
+	private static function MatchEventSource($srcRegistered, $srcEvent): bool
 	{
 		if (empty($srcRegistered)) {
 			// no filtering
@@ -153,7 +153,7 @@ class EventService
 		return false;
 	}
 
-	private static function MatchContext($registeredContext)
+	private static function MatchContext($registeredContext): bool
 	{
 		if (empty($registeredContext)) {
 			return true;
@@ -174,7 +174,7 @@ class EventService
 		return false;
 	}
 
-	private static function GetSourcesAsString($srcRegistered)
+	private static function GetSourcesAsString($srcRegistered): string
 	{
 		if (empty($srcRegistered)) {
 			return '';
@@ -183,7 +183,7 @@ class EventService
 			return $srcRegistered;
 		}
 		if (is_array($srcRegistered)) {
-			$sStr = implode(',', $srcRegistered);
+			return implode(',', $srcRegistered);
 		}
 
 		return '';
@@ -194,7 +194,7 @@ class EventService
 	 *
 	 * @param string $sId the callback registration id
 	 */
-	public static function UnRegisterCallback($sId)
+	public static function UnRegisterCallback(string $sId)
 	{
 		$bRemoved = self::Browse(function ($sEvent, $idx, $aEventCallback) use ($sId) {
 			if ($aEventCallback['id'] == $sId) {
@@ -218,7 +218,7 @@ class EventService
 	 *
 	 * @param string $sEvent event to unregister
 	 */
-	public static function UnRegisterEvent($sEvent)
+	public static function UnRegisterEvent(string $sEvent)
 	{
 		if (!isset(self::$aEvents[$sEvent])) {
 			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
@@ -246,7 +246,7 @@ class EventService
 	 *
 	 * @return bool true if interrupted else false
 	 */
-	private static function Browse(closure $callback)
+	private static function Browse(closure $callback): bool
 	{
 		foreach (self::$aEvents as $sEvent => $aCallbackList) {
 			foreach ($aCallbackList as $idx => $aEventCallback) {
