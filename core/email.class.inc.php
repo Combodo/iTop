@@ -161,8 +161,6 @@ class EMail
 		// If the body of the message is in HTML, embed all images based on attachments
 		$this->EmbedInlineImages();
 		
-		$this->LoadConfig();
-
 		$sTransport = self::$m_oConfig->Get('email_transport');
 		switch ($sTransport)
 		{
