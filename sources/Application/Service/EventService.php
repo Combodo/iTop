@@ -72,9 +72,7 @@ class EventService
 	/**
 	 * Fire an event. Call all the callbacks registered for this event.
 	 *
-	 * @param string $sEvent event to trigger
-	 * @param string|array $eventSource source of the event
-	 * @param array $aEventData event related data
+	 * @param \Combodo\iTop\Service\EventData $oEventData
 	 *
 	 * @throws \Exception from the callback
 	 */
@@ -101,18 +99,18 @@ class EventService
 				continue;
 			}
 			$sName = $aEventCallback['name'];
-			IssueLog::Debug("Fire event '$sEventName'$sSource calling '{$sName}'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Debug("Fire event '$sEventName'$sSource calling '$sName'", LOG_EVENT_SERVICE_CHANNEL);
 			try {
 				if (is_callable($aEventCallback['callback'])) {
 					$oEventData->SetCallbackData($aEventCallback['data']);
 					call_user_func($aEventCallback['callback'], $oEventData);
 				} else {
-					IssueLog::Debug("Callback '{$sName}' not a callable anymore, unregister", LOG_EVENT_SERVICE_CHANNEL);
+					IssueLog::Debug("Callback '$sName' not a callable anymore, unregister", LOG_EVENT_SERVICE_CHANNEL);
 					self::UnRegisterCallback($aEventCallback['id']);
 				}
 			}
 			catch (Exception $e) {
-				IssueLog::Error("Event '$sEventName' for '{$sName}' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
+				IssueLog::Error("Event '$sEventName' for '$sName' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
 				throw $e;
 			}
 		}
@@ -203,7 +201,7 @@ class EventService
 			if ($aEventCallback['id'] == $sId) {
 				$sName = self::$aEvents[$sEvent][$idx]['name'];
 				unset (self::$aEvents[$sEvent][$idx]);
-				IssueLog::Trace("Unregistered callback '{$sName}' id {$sId}' on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
 
 				return false;
 			}
@@ -212,7 +210,7 @@ class EventService
 		});
 
 		if (!$bRemoved) {
-			IssueLog::Trace("No registration found for callback '{$sId}'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for callback '$sId'", LOG_EVENT_SERVICE_CHANNEL);
 		}
 	}
 
@@ -230,7 +228,7 @@ class EventService
 		}
 
 		unset(self::$aEvents[$sEvent]);
-		IssueLog::Trace("Unregistered all the callbacks on event '{$sEvent}'", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Trace("Unregistered all the callbacks on event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
 	}
 
 	/**
