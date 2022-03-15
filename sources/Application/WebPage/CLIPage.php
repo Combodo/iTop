@@ -15,6 +15,7 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Service\EventData;
 use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Service\EventService;
 
@@ -52,7 +53,7 @@ class CLIPage implements Page
 	{
 		$aData['debug_info'] = 'from: '.get_class($this).":[$this->s_title]";
 		$aData['object'] = $this;
-		EventService::FireEvent(EventName::AFTER_DISPLAY_PAGE, get_class($this), $aData);
+		EventService::FireEvent(new EventData(EventName::AFTER_DISPLAY_PAGE, get_class($this), $aData));
 	}
 
 	public function add($sText)

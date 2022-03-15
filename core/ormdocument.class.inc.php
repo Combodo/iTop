@@ -25,6 +25,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Service\EventData;
 use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Service\EventService;
 
@@ -220,7 +221,7 @@ class ormDocument
 					'object' => $oObj,
 					'document' => $oDocument,
 					);
-				EventService::FireEvent(EventName::DOWNLOAD_DOCUMENT, $sClass, $aEventData);
+				EventService::FireEvent(new EventData(EventName::DOWNLOAD_DOCUMENT, $sClass, $aEventData));
 				$oPage->TrashUnexpectedOutput();
 				$oPage->SetContentType($oDocument->GetMimeType());
 				$oPage->SetContentDisposition($sContentDisposition,$oDocument->GetFileName());

@@ -24,16 +24,15 @@ class EventData
 	 * EventServiceData constructor.
 	 *
 	 * @param string $sEvent
-	 * @param mixed $mEventSource
+	 * @param string|array|null $mEventSource
 	 * @param array $aEventData
-	 * @param array $aCallbackData
 	 */
-	public function __construct(string $sEvent, $mEventSource, array $aEventData, array $aCallbackData)
+	public function __construct(string $sEvent, $mEventSource = null, array $aEventData = [])
 	{
 		$this->sEvent = $sEvent;
 		$this->aEventData = $aEventData;
 		$this->mEventSource = $mEventSource;
-		$this->aCallbackData = $aCallbackData;
+		$this->aCallbackData = [];
 	}
 
 	/**
@@ -74,7 +73,15 @@ class EventData
 	}
 
 	/**
-	 * @return array
+	 * @param array|null $aCallbackData
+	 */
+	public function SetCallbackData(?array $aCallbackData)
+	{
+		$this->aCallbackData = $aCallbackData;
+	}
+
+	/**
+	 * @return array|null
 	 */
 	public function GetCallbackData(): array
 	{

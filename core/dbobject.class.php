@@ -5,6 +5,7 @@
  */
 
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
+use Combodo\iTop\Service\EventData;
 use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Service\EventService;
 
@@ -5806,6 +5807,7 @@ abstract class DBObject implements iDisplay
 	 * @param array $aEventData
 	 *
 	 * @throws \CoreException
+	 * @throws \Exception
 	 */
 	public function FireEvent($sEvent, $aEventData = array())
 	{
@@ -5815,7 +5817,7 @@ abstract class DBObject implements iDisplay
 		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
 			$aEventSources[] = $sClass;
 		}
-		EventService::FireEvent($sEvent, $aEventSources, $aEventData);
+		EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
 	}
 }
 

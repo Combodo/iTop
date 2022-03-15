@@ -25,7 +25,7 @@ class EventService
 	 * @param string $sEvent corresponding event
 	 * @param callable $callback The callback to call
 	 * @param array|string|null $sEventSource event filtering depending on the source of the event
-	 * @param array $aCallbackData optional data given by the registrar to the callback
+	 * @param array|null $aCallbackData optional data given by the registrar to the callback
 	 * @param array|string|null $context context filter
 	 * @param float $fPriority optional priority for callback order
 	 *
@@ -33,7 +33,7 @@ class EventService
 	 *
 	 * @throws \Exception
 	 */
-	public static function Register(string $sEvent, callable $callback, $sEventSource = null, array $aCallbackData = [], $context = null, float $fPriority = 0.0): string
+	public static function Register(string $sEvent, callable $callback, $sEventSource = null, ?array $aCallbackData = [], $context = null, float $fPriority = 0.0): string
 	{
 		is_callable($callback, false, $sName);
 
@@ -78,8 +78,10 @@ class EventService
 	 *
 	 * @throws \Exception from the callback
 	 */
-	public static function FireEvent(string $sEvent, $eventSource = null, array $aEventData = array())
+	public static function FireEvent(EventData $oEventData)
 	{
+		$sEvent = $oEventData->GetEvent();
+		$eventSource = $oEventData->GetEventSource();
 		$oKPI = new ExecutionKPI();
 		$sSource = isset($aEventData['debug_info']) ? " {$aEventData['debug_info']}" : '';
 		$sEventName = "$sEvent:".self::GetSourcesAsString($eventSource);
@@ -102,7 +104,8 @@ class EventService
 			IssueLog::Debug("Fire event '$sEventName'$sSource calling '{$sName}'", LOG_EVENT_SERVICE_CHANNEL);
 			try {
 				if (is_callable($aEventCallback['callback'])) {
-					call_user_func($aEventCallback['callback'], new EventData($sEvent, $eventSource, $aEventData, $aEventCallback['data']));
+					$oEventData->SetCallbackData($aEventCallback['data']);
+					call_user_func($aEventCallback['callback'], $oEventData);
 				} else {
 					IssueLog::Debug("Callback '{$sName}' not a callable anymore, unregister", LOG_EVENT_SERVICE_CHANNEL);
 					self::UnRegisterCallback($aEventCallback['id']);

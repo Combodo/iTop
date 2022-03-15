@@ -2,8 +2,8 @@
 
 namespace Combodo\iTop\Test\UnitTest\Service;
 
-use Combodo\iTop\Service\EventService;
 use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use ContextTag;
 use TypeError;
@@ -57,7 +57,7 @@ class EventTest extends ItopTestCase
 	{
 		$sId = EventService::Register('event', function () { $this->debug("Closure: event received !!!"); self::IncrementCallCount(); });
 		$this->debug("Registered $sId");
-		EventService::FireEvent('event');
+		EventService::FireEvent(new EventData('event'));
 		$this->assertEquals(1, self::$iEventCalls);
 	}
 
@@ -72,9 +72,9 @@ class EventTest extends ItopTestCase
 	{
 		$sId = EventService::Register('event', $callback);
 		$this->debug("Registered $sId");
-		EventService::FireEvent('event');
+		EventService::FireEvent(new EventData('event'));
 		$this->assertEquals(1, self::$iEventCalls);
-		EventService::FireEvent('event');
+		EventService::FireEvent(new EventData('event'));
 		$this->assertEquals(2, self::$iEventCalls);
 	}
 
@@ -94,7 +94,7 @@ class EventTest extends ItopTestCase
 		EventService::Register('event_a', array($oReceiver, 'BrokenCallback'));
 
 		$this->expectException(TypeError::class);
-		EventService::FireEvent('event_a');
+		EventService::FireEvent(new EventData('event_a'));
 	}
 
 	public function testRemovedCallback()
@@ -105,7 +105,7 @@ class EventTest extends ItopTestCase
 		$oReceiver = null;
 		gc_collect_cycles();
 
-		EventService::FireEvent('event_a');
+		EventService::FireEvent(new EventData('event_a'));
 		$this->assertEquals(1, self::$iEventCalls);
 	}
 
@@ -122,9 +122,9 @@ class EventTest extends ItopTestCase
 		EventService::Register('event_b', array('Combodo\iTop\Test\UnitTest\Service\TestEventReceiver', 'OnStaticEvent1'));
 		EventService::Register('event_b', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent2');
 
-		EventService::FireEvent('event_a');
+		EventService::FireEvent(new EventData('event_a'));
 		$this->assertEquals(4, self::$iEventCalls);
-		EventService::FireEvent('event_b');
+		EventService::FireEvent(new EventData('event_b'));
 		$this->assertEquals(8, self::$iEventCalls);
 	}
 
@@ -140,66 +140,66 @@ class EventTest extends ItopTestCase
 		$sId = EventService::Register('event1', array($oReceiver, 'OnEvent1'));
 		$this->debug("Registered $sId");
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
 	public function testData()
 	{
 		$oReceiver = new TestEventReceiver();
-		EventService::Register('event1', array($oReceiver, 'OnEventWithData'), '');
-		EventService::Register('event1', array($oReceiver, 'OnEventWithData'), '');
-		EventService::FireEvent('event1', '', array('text' => 'Event Data 1'));
+		EventService::Register('event1', [$oReceiver, 'OnEventWithData'], '');
+		EventService::Register('event1', [$oReceiver, 'OnEventWithData'], '');
+		EventService::FireEvent(new EventData('event1', '', ['text' => 'Event Data 1']));
 		$this->assertEquals(2, self::$iEventCalls);
 	}
 
 	public function testPriority()
 	{
 		$oReceiver = new TestEventReceiver();
-		EventService::Register('event1', array($oReceiver, 'OnEvent1'), '', null, null, 0);
-		EventService::Register('event1', array($oReceiver, 'OnEvent2'), '', null, null, 1);
+		EventService::Register('event1', [$oReceiver, 'OnEvent1'], '', null, null, 0);
+		EventService::Register('event1', [$oReceiver, 'OnEvent2'], '', null, null, 1);
 
-		EventService::Register('event2', array($oReceiver, 'OnEvent1'), '', null, null, 1);
-		EventService::Register('event2', array($oReceiver, 'OnEvent2'), '', null, null, 0);
+		EventService::Register('event2', [$oReceiver, 'OnEvent1'], '', null, null, 1);
+		EventService::Register('event2', [$oReceiver, 'OnEvent2'], '', null, null, 0);
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(2, self::$iEventCalls);
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
 	public function testContext()
 	{
 		$oReceiver = new TestEventReceiver();
-		EventService::Register('event1', array($oReceiver, 'OnEvent1'), '', null, null, 0);
-		EventService::Register('event1', array($oReceiver, 'OnEvent2'), '', null, 'test_context', 1);
-		EventService::FireEvent('event1');
+		EventService::Register('event1', [$oReceiver, 'OnEvent1'], '', null, null, 0);
+		EventService::Register('event1', [$oReceiver, 'OnEvent2'], '', null, 'test_context', 1);
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(1, self::$iEventCalls);
 		ContextTag::AddContext('test_context');
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(3, self::$iEventCalls);
 	}
 
 	public function testEventSource()
 	{
 		$oReceiver = new TestEventReceiver();
-		EventService::Register('event1', array($oReceiver, 'OnEvent1'), 'A', null, null, 0);
-		EventService::Register('event1', array($oReceiver, 'OnEvent2'), 'A', null, null, 1);
+		EventService::Register('event1', [$oReceiver, 'OnEvent1'], 'A', null, null, 0);
+		EventService::Register('event1', [$oReceiver, 'OnEvent2'], 'A', null, null, 1);
 		EventService::Register('event1', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent1', null, null, null, 2);
 
-		EventService::Register('event2', array($oReceiver, 'OnEvent1'), 'A', null, null, 1);
+		EventService::Register('event2', [$oReceiver, 'OnEvent1'], 'A', null, null, 1);
 		EventService::Register('event2', 'Combodo\iTop\Test\UnitTest\Service\TestEventReceiver::OnStaticEvent1', null, null, null, 2);
-		EventService::Register('event2', array($oReceiver, 'OnEvent2'), 'B', null, null, 0);
+		EventService::Register('event2', [$oReceiver, 'OnEvent2'], 'B', null, null, 0);
 
-		EventService::FireEvent('event1', 'A');
+		EventService::FireEvent(new EventData('event1', 'A'));
 		$this->assertEquals(3, self::$iEventCalls);
-		EventService::FireEvent('event2', 'A');
+		EventService::FireEvent(new EventData('event2', 'A'));
 		$this->assertEquals(5, self::$iEventCalls);
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(6, self::$iEventCalls);
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(7, self::$iEventCalls);
-		EventService::FireEvent('event2', array('A', 'B'));
+		EventService::FireEvent(new EventData('event2', ['A', 'B']));
 		$this->assertEquals(10, self::$iEventCalls);
 
 	}
@@ -217,18 +217,18 @@ class EventTest extends ItopTestCase
 		$sId = EventService::Register('event2', array($oReceiver, 'OnEvent1'));
 		$this->debug("Registered $sId");
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(3, self::$iEventCalls);
 
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 
 		EventService::UnRegisterEvent('event1');
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(4, self::$iEventCalls);
 
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(5, self::$iEventCalls);
 	}
 
@@ -244,18 +244,18 @@ class EventTest extends ItopTestCase
 		$sId = EventService::Register('event2', array($oReceiver, 'OnEvent1'));
 		$this->debug("Registered $sId");
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(3, self::$iEventCalls);
 
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 
 		EventService::UnRegisterAll();
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(4, self::$iEventCalls);
 
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 	}
 
@@ -271,18 +271,18 @@ class EventTest extends ItopTestCase
 		$sId = EventService::Register('event2', array($oReceiver, 'OnEvent1'));
 		$this->debug("Registered $sId");
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(3, self::$iEventCalls);
 
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 
 		EventService::UnRegisterCallback($sIdToRemove);
 
-		EventService::FireEvent('event1');
+		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(6, self::$iEventCalls);
 
-		EventService::FireEvent('event2');
+		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(7, self::$iEventCalls);
 	}
 
