@@ -1350,11 +1350,13 @@ JS;
 		ExecutionKPI::ReportStats();
 	}
 
+	const EVENT_SERVICE_AFTER_DISPLAY_PAGE = 'AfterDisplayPage';
+
 	protected function FireAfterDisplayEvent()
 	{
 		$aData['debug_info'] = 'from: '.get_class($this).":[$this->s_title]";
 		$aData['object'] = $this;
-		EventService::FireEvent(new EventData(EVENT_SERVICE_AFTER_DISPLAY_PAGE, get_class($this), $aData));
+		EventService::FireEvent(new EventData(self::EVENT_SERVICE_AFTER_DISPLAY_PAGE, get_class($this), $aData));
 	}
 
 	/**
