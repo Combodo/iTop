@@ -18,7 +18,6 @@ use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Service\EventService;
 
 
@@ -1355,7 +1354,7 @@ JS;
 	{
 		$aData['debug_info'] = 'from: '.get_class($this).":[$this->s_title]";
 		$aData['object'] = $this;
-		EventService::FireEvent(new EventData(EventName::AFTER_DISPLAY_PAGE, get_class($this), $aData));
+		EventService::FireEvent(new EventData(EVENT_SERVICE_AFTER_DISPLAY_PAGE, get_class($this), $aData));
 	}
 
 	/**

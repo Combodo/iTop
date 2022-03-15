@@ -73,17 +73,17 @@ class EventData
 	}
 
 	/**
-	 * @param array|null $aCallbackData
+	 * @param mixed $aCallbackData
 	 */
-	public function SetCallbackData(?array $aCallbackData)
+	public function SetCallbackData($aCallbackData)
 	{
 		$this->aCallbackData = $aCallbackData;
 	}
 
 	/**
-	 * @return array|null
+	 * @return mixed
 	 */
-	public function GetCallbackData(): array
+	public function GetCallbackData()
 	{
 		return $this->aCallbackData;
 	}

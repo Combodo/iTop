@@ -23,8 +23,6 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Service\EventName;
-use Combodo\iTop\Service\EventService;
 
 /**
  * Simple web page with no includes or fancy formatting, useful to generateXML documents

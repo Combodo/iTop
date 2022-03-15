@@ -1231,7 +1231,7 @@
                     </state>
                 </states>
             </lifecycle>
-            <hook_listeners>
+            <event_listeners>
               <listener id="OnBeforeInsertEvent">
                 <event>BeforeInsert</event>
                 <callback>OnBeforeInsertEvent</callback>
@@ -1242,7 +1242,7 @@
                 <callback>OnBeforeUpdateEvent</callback>
                 <priority>0</priority>
               </listener>
-            </hook_listeners>
+            </event_listeners>
             <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>

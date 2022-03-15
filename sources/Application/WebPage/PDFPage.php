@@ -18,8 +18,6 @@
  */
 
 use Combodo\iTop\Renderer\BlockRenderer;
-use Combodo\iTop\Service\EventName;
-use Combodo\iTop\Service\EventService;
 
 
 /**

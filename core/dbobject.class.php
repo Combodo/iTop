@@ -6,7 +6,6 @@
 
 use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Service\EventService;
 
 /**
@@ -177,9 +176,9 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
+			$this->m_sEventUniqId = 'DataModel_'.get_class($this).'_'.self::$m_iEventUniqCounter++;
 			$this->RegisterEvents();
-			$this->FireEvent(EventName::DB_OBJECT_LOADED);
+			$this->FireEvent(EVENT_SERVICE_DB_OBJECT_LOADED);
 			return;
 		}
 		// Creation of a brand new object
@@ -209,7 +208,7 @@ abstract class DBObject implements iDisplay
 
 		$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
 		$this->RegisterEvents();
-		$this->FireEvent(EventName::DB_OBJECT_NEW);
+		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_NEW);
 	}
 
 	protected function RegisterEvents()
@@ -360,7 +359,7 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
-		$this->FireEvent(EventName::DB_OBJECT_RELOAD);
+		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_RELOAD);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
 		{
@@ -2815,7 +2814,7 @@ abstract class DBObject implements iDisplay
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
 		$this->OnInsert();
-		$this->FireEvent(EventName::BEFORE_INSERT);
+		$this->FireEvent(EVENT_SERVICE_BEFORE_INSERT);
 
 		if ($this->m_iKey < 0)
 		{
@@ -2894,7 +2893,7 @@ abstract class DBObject implements iDisplay
 				}
 
 			$this->OnObjectKeyReady();
-			$this->FireEvent(EventName::DB_OBJECT_KEY_READY);
+			$this->FireEvent(EVENT_SERVICE_DB_OBJECT_KEY_READY);
 
 				$this->DBWriteLinks();
 				$this->WriteExternalAttributes();
@@ -2944,7 +2943,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterInsert();
-		$this->FireEvent(EventName::AFTER_INSERT);
+		$this->FireEvent(EVENT_SERVICE_AFTER_INSERT);
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -3201,7 +3200,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			$this->OnUpdate();
-			$this->FireEvent(EventName::BEFORE_UPDATE);
+			$this->FireEvent(EVENT_SERVICE_BEFORE_UPDATE);
 
 
 			$aChanges = $this->ListChanges();
@@ -3413,7 +3412,7 @@ abstract class DBObject implements iDisplay
 				}
 
 				$this->AfterUpdate();
-				$this->FireEvent(EventName::AFTER_UPDATE);
+				$this->FireEvent(EVENT_SERVICE_AFTER_UPDATE);
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue) {
@@ -3645,7 +3644,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->OnDelete();
-		$this->FireEvent(EventName::BEFORE_DELETE);
+		$this->FireEvent(EVENT_SERVICE_BEFORE_DELETE);
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3756,7 +3755,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterDelete();
-		$this->FireEvent(EventName::AFTER_DELETE);
+		$this->FireEvent(EVENT_SERVICE_AFTER_DELETE);
 
 
 		$this->m_bIsInDB = false;
@@ -3948,7 +3947,7 @@ abstract class DBObject implements iDisplay
 
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
-		$this->FireEvent(EventName::BEFORE_APPLY_STIMULUS);
+		$this->FireEvent(EVENT_SERVICE_BEFORE_APPLY_STIMULUS);
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
@@ -4068,7 +4067,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			$this->FireEvent(EventName::AFTER_APPLY_STIMULUS);
+			$this->FireEvent(EVENT_SERVICE_AFTER_APPLY_STIMULUS);
 		}
 		else
 		{

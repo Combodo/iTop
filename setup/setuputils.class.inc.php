@@ -2174,6 +2174,20 @@ JS
 
 		return $aOptionalExtensions;
 	}
+
+
+	public static function FromCamelCase($sInput) {
+		$sPattern = '!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!';
+		preg_match_all($sPattern, $sInput, $aMatches);
+		$aRet = $aMatches[0];
+		foreach ($aRet as &$sMatch) {
+			$sMatch = $sMatch == strtoupper($sMatch) ?
+				strtolower($sMatch) :
+				lcfirst($sMatch);
+		}
+		return implode('_', $aRet);
+	}
+
 }
 
 /**

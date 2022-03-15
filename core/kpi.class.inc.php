@@ -16,7 +16,6 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventName;
 use Combodo\iTop\Service\EventService;
 
 
@@ -460,9 +459,12 @@ class ExecutionKPI
 
 class KPIEventListener
 {
+	// Data model is not yet loaded, so EVENT_SERVICE_DB_OBJECT_LOADED is not yet defined
+	const EVENT_SERVICE_DB_OBJECT_LOADED = 'DBObjectLoaded';
+
 	public function __construct()
 	{
-		EventService::Register(EventName::DB_OBJECT_LOADED, [get_class($this), 'OnObjectLoaded']);
+		EventService::RegisterListener(self::EVENT_SERVICE_DB_OBJECT_LOADED, [get_class($this), 'OnObjectLoaded']);
 	}
 
 	public static function OnObjectLoaded(EventData $oEventData)

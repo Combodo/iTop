@@ -10,8 +10,6 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
-use Combodo\iTop\Service\EventName;
-use Combodo\iTop\Service\EventService;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {

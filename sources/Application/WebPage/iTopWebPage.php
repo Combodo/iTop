@@ -22,8 +22,6 @@ use Combodo\iTop\Application\UI\Base\UIBlock;
 use Combodo\iTop\Application\UI\Printable\BlockPrintHeader\BlockPrintHeader;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
-use Combodo\iTop\Service\EventName;
-use Combodo\iTop\Service\EventService;
 
 /**
  * Web page with some associated CSS and scripts (jquery) for a fancier display
