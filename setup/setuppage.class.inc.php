@@ -173,51 +173,6 @@ class SetupPage extends NiceWebPage
 	}
 
 	/**
-	 * @deprecated 3.0.0 use SetupLog::Error
-	 */
-	public static function log_error($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Error');
-		SetupLog::Error($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Warning
-	 */
-	public static function log_warning($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Warning');
-		SetupLog::Warning($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Info
-	 */
-	public static function log_info($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Info');
-		SetupLog::Info($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log_ok($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
-		SetupLog::Ok($sText);
-	}
-
-	/**
-	 * @deprecated 3.0.0 use SetupLog::Ok
-	 */
-	public static function log($sText)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetupLog::Ok');
-		SetupLog::Ok($sText);
-	}
-
-	/**
 	 * @inheritDoc
 	 */
 	protected function LoadTheme()

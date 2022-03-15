@@ -97,17 +97,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkErrorToFunctionalCI' => 'Link Error / FunctionalCI~~',
-	'Class:lnkErrorToFunctionalCI+' => 'Infra related to a known error~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI~~',
+	'Class:lnkErrorToFunctionalCI' => 'Hata / İşlevsel CI bağla',
+	'Class:lnkErrorToFunctionalCI+' => ' Bilinen bir hatayla ilgili alt bilgi',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => 'CI',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => 'CI Adı',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Error~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => 'Hata',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Error name~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => 'Hata Adı',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '~~',
-	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Reason~~',
+	'Class:lnkErrorToFunctionalCI/Attribute:reason' => 'Sebep',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '~~',
 ));
 
@@ -116,17 +116,17 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 //
 
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Class:lnkDocumentToError' => 'Link Documents / Errors~~',
-	'Class:lnkDocumentToError+' => 'A link between a document and a known error~~',
-	'Class:lnkDocumentToError/Attribute:document_id' => 'Document~~',
+	'Class:lnkDocumentToError' => 'Belge / hata bağla',
+	'Class:lnkDocumentToError+' => 'Bir belge ile bilinen bir hata arasındaki bağlantı',
+	'Class:lnkDocumentToError/Attribute:document_id' => 'Belge',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:document_name' => 'Document Name~~',
+	'Class:lnkDocumentToError/Attribute:document_name' => 'Belge Adı',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_id' => 'Error~~',
+	'Class:lnkDocumentToError/Attribute:error_id' => 'Hata',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '~~',
-	'Class:lnkDocumentToError/Attribute:error_name' => 'Error name~~',
+	'Class:lnkDocumentToError/Attribute:error_name' => 'Hata Adı',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '~~',
-	'Class:lnkDocumentToError/Attribute:link_type' => 'link_type~~',
+	'Class:lnkDocumentToError/Attribute:link_type' => 'Bağlantı tipi',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '~~',
 ));
 

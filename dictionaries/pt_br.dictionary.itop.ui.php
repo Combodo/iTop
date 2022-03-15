@@ -368,7 +368,14 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 <li>gerenciar o ativo mais importante de sua TI: Documentação</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '~~',
+	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+
+<div>This version features a brand new modern and accessible backoffice design.</div>
+
+<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
+We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+
+<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>~~',
 	'UI:WelcomeMenu:AllOpenRequests' => 'Solicitações abertas: %1$d',
 	'UI:WelcomeMenu:MyCalls' => 'Minhas solicitações',
 	'UI:WelcomeMenu:OpenIncidents' => 'Incidentes abertos: %1$d',
@@ -436,7 +443,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Error:IncorrectLinkDefinition_LinkedClass_Class' => 'Definição de ligação incorreta: a classe de objetos para gerenciar: %1$s não foi encontrado como uma chave externa na classe %2$s',
 	'UI:Error:Object_Class_Id_NotFound' => 'Objeto: %1$s:%2$d não encontrado.',
 	'UI:Error:WizardCircularReferenceInDependencies' => 'Erro: Referência circular nas dependências entre os campos, verifique o modelo de dados.',
-	'UI:Error:UploadedFileTooBig' => 'O arquivo a ser carregado é muito grande. (Tamanho máximo permitido é de %1$s). Para modificar esse limite, contate o administrador do iTop. (Verifique a configuração do PHP para upload_max_filesize e post_max_size no servidor).',
+	'UI:Error:UploadedFileTooBig' => 'O arquivo a ser carregado é muito grande. (Tamanho máximo permitido é de %1$s). Para modificar esse limite, contate o administrador do '.ITOP_APPLICATION_SHORT.'. (Verifique a configuração do PHP para upload_max_filesize e post_max_size no servidor).',
 	'UI:Error:UploadedFileTruncated.' => 'Arquivo enviado tem sido truncado!',
 	'UI:Error:NoTmpDir' => 'Diretório temporário não está definido.',
 	'UI:Error:CannotWriteToTmp_Dir' => 'Não foi possível gravar o arquivo temporário para o disco. upload_tmp_dir = "%1$s".',
@@ -522,7 +529,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:SearchValue:CheckAll' => 'Marcar todos',
 	'UI:SearchValue:UncheckAll' => 'Desmarcar todos',
 	'UI:SelectOne' => '-- selecione um --',
-	'UI:Login:Welcome' => 'Bem-vindo ao iTop!',
+	'UI:Login:Welcome' => 'Bem-vindo ao '.ITOP_APPLICATION_SHORT.'!',
 	'UI:Login:IncorrectLoginPassword' => 'Usuário/senha incorreto, tente novamente.',
 	'UI:Login:IdentifyYourself' => 'Identifique-se antes continuar',
 	'UI:Login:UserNamePrompt' => 'Usuário',
@@ -543,7 +550,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:ResetPwd-Error-Send' => 'email transport technical issue. Please Contact your administrator.',
 	'UI:ResetPwd-EmailSent' => 'Please check your email box and follow the instructions. If you receive no email, please check the login you typed.~~',
 	'UI:ResetPwd-EmailSubject' => 'Alterar a senha',
-	'UI:ResetPwd-EmailBody' => '<body><p>Você solicitou a alteração da senha do iTop.</p><p>Por favor, siga este link (passo simples) para <a href="%1$s">digitar a nova senha</a></p>.',
+	'UI:ResetPwd-EmailBody' => '<body><p>Você solicitou a alteração da senha do '.ITOP_APPLICATION_SHORT.'.</p><p>Por favor, siga este link (passo simples) para <a href="%1$s">digitar a nova senha</a></p>.',
 
 	'UI:ResetPwd-Title' => 'Alterar senha',
 	'UI:ResetPwd-Error-InvalidToken' => 'Desculpe, a senha já foi alterada, ou deve ter recebido vários e-mails. Por favor, certifique-se que você use o link fornecido no último e-mail recebido.',
@@ -717,7 +724,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
 	'UI:RunQuery:Error' => 'Ocorreu um erro ao executar a consulta',
 	'UI:Query:UrlForExcel' => 'URL a ser usada para consultas web MS-Excel',
-	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do iTop. Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>.',
+	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do '.ITOP_APPLICATION_SHORT.'. Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'Esquema de objetos',
 	'UI:Schema:TitleForClass' => 'Esquema de %1$s~~',
 	'UI:Schema:CategoryMenuItem' => 'Categoria <b>%1$s</b>',

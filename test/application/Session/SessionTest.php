@@ -3,6 +3,11 @@
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class SessionTest extends ItopTestCase
 {
 	/**

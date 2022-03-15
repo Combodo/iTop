@@ -302,13 +302,12 @@ class Dict
 	 *
 	 * @param $sSourceCode
 	 * @param $sDestCode
+	 * @since 3.0.1 Not clone sSourceCode entry if sDestCode entry already exist
 	 */
 	public static function CloneString($sSourceCode, $sDestCode)
 	{
-		foreach(self::$m_aLanguages as $sLanguageCode => $foo)
-		{
-			if (isset(self::$m_aData[$sLanguageCode][$sSourceCode]))
-			{
+		foreach(self::$m_aLanguages as $sLanguageCode => $foo) {
+			if (isset(self::$m_aData[$sLanguageCode][$sSourceCode]) && !isset(self::$m_aData[$sLanguageCode][$sDestCode] ))	{
 				self::$m_aData[$sLanguageCode][$sDestCode] = self::$m_aData[$sLanguageCode][$sSourceCode];
 			}
 		}

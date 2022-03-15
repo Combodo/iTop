@@ -1375,7 +1375,7 @@ public function PrefillSearchForm(&$aContextParam)
           <state_attribute>status</state_attribute>
         </fields_semantic>
         <style>
-          <icon>../../images/icons/icons8-service</icon>
+          <icon>../../images/icons/icons8-service.svg</icon>
         </style>
         <reconciliation>
           <attributes>

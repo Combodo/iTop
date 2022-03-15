@@ -2305,6 +2305,8 @@ EOF
 		}
 
 		// Retrieve colors (mandatory/optional depending on the element type)
+		// Note: For now we can't use CSS variables (only SCSS variables) in the style XML definition as the ibo-adjust-alpha() / ibo-adjust-lightness() used a few steps below do not support them,
+		//       if this ever should be considered, the following article might help: https://codyhouse.co/blog/post/how-to-combine-sass-color-functions-and-css-variables#other-color-functions
 		if ($sElementType === self::ENUM_STYLE_HOST_ELEMENT_TYPE_CLASS) {
 			$sMainColorForCss = $this->GetPropString($oNode, 'main_color', null, false);
 			$sMainColorForOrm = $this->GetPropString($oNode, 'main_color', null);
@@ -2362,7 +2364,7 @@ EOF
 				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
 
 				$sCssRegularClassMainColorDeclaration = "--ibo-main-color: $sMainColorScssVariableName;";
-				// Note: We have to manually force the alpha chanel in case the given color is transparent
+				// Note: We have to manually force the alpha channel in case the given color is transparent
 				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100);";
 				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900);";
 
@@ -3175,7 +3177,7 @@ EOF;
 
 			if ($bHasCompiled) {
 				if (utils::GetConfig()->Get('theme.enable_precompilation')){
-					if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))
+					/*if (utils::IsDevelopmentEnvironment() && ! empty(trim($sPrecompiledStylesheet)))  //N°4438 - Disable (temporary) copy of precompiled stylesheets after setup
 					{ //help developers to detect & push theme precompilation changes
 						$sInitialPrecompiledFilePath = null;
 						$aRootDirs = $this->oFactory->GetRootDirs();
@@ -3193,7 +3195,7 @@ EOF;
 							SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sInitialPrecompiledFilePath for next setup.");
 							copy($sThemeDir.'/main.css', $sInitialPrecompiledFilePath);
 						}
-					}
+					}*/
 
 					SetupLog::Info("Replacing theme '$sThemeId' precompiled file in file $sPostCompilationLatestPrecompiledFile for next setup.");
 					copy($sThemeDir.'/main.css', $sPostCompilationLatestPrecompiledFile);
@@ -3712,12 +3714,22 @@ EOF;
 
 	/**
 	 * Write a file only if not exists
-	 * Also add some informations in case of a write failleure
-	 * @param $sFilename
-	 * @param $sContent
+	 * Also add some informations when write failure occurs
+	 *
+	 * @param string $sFilename
+	 * @param string $sContent
+	 * @param int $flags
 	 *
 	 * @return bool|int
 	 * @throws \Exception
+	 *
+	 * @uses \unlink()
+	 * @uses \file_put_contents()
+	 *
+	 * @since 3.0.0 The file is removed before writing (commit c5d265f6)
+	 *      For now this causes model.*.php files to always be located in env-* dir, even if symlinks are enabled
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	protected function WriteFile($sFilename, $sContent, $flags = null)
 	{

@@ -389,6 +389,8 @@ $(function()
 						oInputElem[oInputParam.x_picker]('setDate', sDate);
 					}
 				}
+				// Note: In that particular case we don't use the ".ibo-is-hidden" CSS class because the widget will internally use the jQuery .show() to display itself which will not override correctly the .ibo-is-hidden rules.
+				$('#ui-datepicker-div').hide();
 			}
 		},
 

@@ -542,14 +542,26 @@ class FileLog
  */
 class LogChannels
 {
-	public const CLI          = 'CLI';
-	public const CONSOLE      = 'console';
-	public const DEADLOCK     = 'DeadLock';
-	public const INLINE_IMAGE = 'InlineImage';
-	public const PORTAL       = 'portal';
-	public const CMDB_SOURCE  = 'cmdbsource';
-	public const CORE         = 'core';
 	public const APC = 'apc';
+
+	public const CLI          = 'CLI';
+
+	/**
+	 * @var string
+	 * @since 2.7.7 N°4558 use this new channel when logging DB transactions
+	 * @since 3.0.0 logs info in CMDBSource (see commit a117906f)
+	 */
+	public const CMDB_SOURCE = 'cmdbsource';
+
+	public const CONSOLE      = 'console';
+
+	public const CORE         = 'core';
+
+	public const DEADLOCK     = 'DeadLock';
+
+	public const INLINE_IMAGE = 'InlineImage';
+
+	public const PORTAL       = 'portal';
 }
 
 
@@ -992,6 +1004,11 @@ class DeadLockLog extends LogAPI
 class DeprecatedCallsLog extends LogAPI
 {
 	public const ENUM_CHANNEL_PHP_METHOD = 'deprecated-php-method';
+	/**
+	 * @var string
+	 * @since 3.1.0
+	 */
+	public const ENUM_CHANNEL_PHP_ENDPOINT = 'deprecated-php-endpoint';
 	public const ENUM_CHANNEL_PHP_LIBMETHOD = 'deprecated-php-libmethod';
 	public const ENUM_CHANNEL_FILE = 'deprecated-file';
 	public const CHANNEL_DEFAULT = self::ENUM_CHANNEL_PHP_METHOD;
@@ -1137,7 +1154,12 @@ class DeprecatedCallsLog extends LogAPI
 	 */
 	public static function NotifyDeprecatedFile(?string $sAdditionalMessage = null): void
 	{
-		if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_FILE)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
 			return;
 		}
 
@@ -1197,6 +1219,35 @@ class DeprecatedCallsLog extends LogAPI
 		}
 
 		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_METHOD);
+	}
+
+	/**
+	 * @param string|null $sAdditionalMessage
+	 * @since 3.1.0
+	 */
+	public static function NotifyDeprecatedPhpEndpoint(?string $sAdditionalMessage = null): void
+	{
+		try {
+			if (!static::IsLogLevelEnabled(self::LEVEL_WARNING, self::ENUM_CHANNEL_PHP_ENDPOINT)) {
+				return;
+			}
+		}
+		catch (ConfigException $e) {
+			return;
+		}
+
+		$aStack = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 3);
+		$iStackDeprecatedMethodLevel = 0; // level 0 = current method, level 1 = method containing the `NotifyDeprecatedPhpMethod` call
+		$sDeprecatedUrl = $_SERVER['REQUEST_URI'];
+		$sCallerFile = $aStack[$iStackDeprecatedMethodLevel]['file'];
+		$sCallerLine = $aStack[$iStackDeprecatedMethodLevel]['line'];
+		$sMessage = "Call to endpoint {$sDeprecatedUrl} in {$sCallerFile}#L{$sCallerLine}";
+
+		if (!is_null($sAdditionalMessage)) {
+			$sMessage .= ' : '.$sAdditionalMessage;
+		}
+
+		static::Warning($sMessage, self::ENUM_CHANNEL_PHP_ENDPOINT);
 	}
 
 	public static function Log($sLevel, $sMessage, $sChannel = null, $aContext = array()): void

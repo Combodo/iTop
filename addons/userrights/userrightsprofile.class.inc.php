@@ -10,7 +10,7 @@ define('PORTAL_PROFILE_NAME', 'Portal user');
 class UserRightsBaseClassGUI extends cmdbAbstractObject
 {
 	// Whenever something changes, reload the privileges
-	
+
 	protected function AfterInsert()
 	{
 		UserRights::FlushPrivileges();
@@ -59,7 +59,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	}
 
 	protected static $m_aCacheProfiles = null;
-	
+
 	public static function DoCreateProfile($sName, $sDescription)
 	{
 		if (is_null(self::$m_aCacheProfiles))
@@ -71,7 +71,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			{
 				self::$m_aCacheProfiles[$oProfile->Get('name')] = $oProfile->GetKey();
 			}
-		}	
+		}
 
 		$sCacheKey = $sName;
 		if (isset(self::$m_aCacheProfiles[$sCacheKey]))
@@ -82,10 +82,10 @@ class URP_Profiles extends UserRightsBaseClassGUI
 		$oNewObj->Set('name', $sName);
 		$oNewObj->Set('description', $sDescription);
 		$iId = $oNewObj->DBInsertNoReload();
-		self::$m_aCacheProfiles[$sCacheKey] = $iId;	
+		self::$m_aCacheProfiles[$sCacheKey] = $iId;
 		return $iId;
 	}
-	
+
 	function GetGrantAsHtml($oUserRights, $sClass, $sAction)
 	{
 		$bGrant = $oUserRights->GetProfileActionGrant($this->GetKey(), $sClass, $sAction);
@@ -102,7 +102,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
-	
+
 	function DoShowGrantSumary($oPage)
 	{
 		if ($this->GetRawName() == "Administrator")
@@ -114,7 +114,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 
 		// Note: for sure, we assume that the instance is derived from UserRightsProfile
 		$oUserRights = UserRights::GetModuleInstance();
-	
+
 		$aDisplayData = array();
 		foreach (MetaModel::GetClasses('bizmodel,grant_by_profile') as $sClass)
 		{
@@ -123,12 +123,12 @@ class URP_Profiles extends UserRightsBaseClassGUI
 			{
 				$bGrant = $oUserRights->GetClassStimulusGrant($this->GetKey(), $sClass, $sStimulusCode);
 				if ($bGrant === true)
-				{ 
+				{
 					$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
 				}
 			}
 			$sStimuli = implode(', ', $aStimuli);
-			
+
 			$aDisplayData[] = array(
 				'class' => MetaModel::GetName($sClass),
 				'read' => $this->GetGrantAsHtml($oUserRights, $sClass, 'r'),
@@ -140,7 +140,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 				'stimuli' => $sStimuli,
 			);
 		}
-	
+
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
 		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
@@ -198,7 +198,7 @@ class URP_Profiles extends UserRightsBaseClassGUI
 	 * @param $aReasons array To store the reasons why the attribute is read-only (info about the synchro replicas)
 	 * @param $sTargetState string The target state in which to evalutate the flags, if empty the current state will be used
 	 * @return integer Flags: the binary combination of the flags applicable to this attribute
-	 */	 	  	 	
+	 */
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
 	{
 		$iFlags = parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
@@ -404,7 +404,7 @@ class URP_UserOrg extends UserRightsBaseClassGUI
 	{
 		if (!UserRights::IsLoggedIn() || UserRights::IsAdministrator()) { return; }
 
-		$oUser = UserRights::GetUserObject();		
+		$oUser = UserRights::GetUserObject();
 		$oAddon = UserRights::GetModuleInstance();
 		$aOrgs = $oAddon->GetUserOrgs($oUser, '');
 		if (count($aOrgs) > 0)
@@ -528,7 +528,7 @@ class UserRightsProfile extends UserRightsAddOnAPI
 				$oSearch->AllowAllData();
 				$oCondition = new BinaryExpression(new FieldExpression('userid'), '=', new VariableExpression('userid'));
 				$oSearch->AddConditionExpression($oCondition);
-				
+
 				$oUserOrgSet = new DBObjectSet($oSearch, array(), array('userid' => $iUser));
 				while ($oUserOrg = $oUserOrgSet->Fetch())
 				{
@@ -738,8 +738,10 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		// load and cache permissions for the current user on the given class
 		//
 		$iUser = $oUser->GetKey();
-		$aTest = @$this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode];
-		if (is_array($aTest)) return $aTest;
+		if (isset($this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode])){
+			$aTest = $this->m_aObjectActionGrants[$iUser][$sClass][$iActionCode];
+			if (is_array($aTest)) return $aTest;
+		}
 
 		$sAction = self::$m_aActionCodes[$iActionCode];
 
@@ -905,8 +907,8 @@ class UserRightsProfile extends UserRightsAddOnAPI
 
 	/**
 	 * Find out which attribute is corresponding the the dimension 'owner org'
-	 * returns null if no such attribute has been found (no filtering should occur)	 
-	 */	 	
+	 * returns null if no such attribute has been found (no filtering should occur)
+	 */
 	public static function GetOwnerOrganizationAttCode($sClass)
 	{
 		$sAttCode = null;

@@ -27,11 +27,13 @@
 namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
+use CoreException;
 use DBObject;
 
 
 /**
  * @group specificOrgInSampleData
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -249,4 +251,121 @@ class DBObjectTest extends ItopDataTestCase
 			}
 		}
 	}
+
+	/**
+	 * Test attribute integer incrementation.
+	 *
+	 * @covers DBObject::DBIncrement
+	 *
+	 * @dataProvider getAttributeIntegerDBIncrementProvider
+	 *
+	 */
+	public function testAttributeIntegerDBIncrement(string $sAttrCode, array $aValues, $expectedResult)
+	{
+		// create query object
+		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
+			'name' => 'Test Query',
+			'description' => 'Test Query',
+			'oql' => 'SELECT Person'
+		]);
+		$oQueryOQL->DBInsert();
+
+		// iterate throw increments...
+		foreach ($aValues as $aValue) {
+			$oQueryOQL->DBIncrement($sAttrCode, $aValue);
+		}
+
+		// retrieve counter current value
+		$iCounter = $oQueryOQL->Get($sAttrCode);
+
+		// assert equals
+		$this->assertEquals($expectedResult, $iCounter);
+	}
+
+	/**
+	 * Data provider for test attribute integer incrementation.
+	 *
+	 * @return array data
+	 */
+	public function getAttributeIntegerDBIncrementProvider()
+	{
+		return array(
+			'Incrementation #1' => array('export_count', [5], 5),
+			'Incrementation #2' => array('export_count', [5, 10], 15),
+			'Incrementation #3' => array('export_count', [50, 20, 10, 100], 180),
+			'Incrementation #4' => array('export_count', [50, 20, -10, 1000], 1060)
+		);
+	}
+
+	/**
+	 * Test attribute integer increment with AttributeText.
+	 *
+	 * @covers DBObject::DBIncrement
+	 *
+	 */
+	public function testAttributeTextDBIncrement()
+	{
+		// create query object
+		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
+			'name' => 'Test Query',
+			'description' => 'Test Query',
+			'oql' => 'SELECT Person'
+		]);
+		$oQueryOQL->DBInsert();
+
+		// assert exception
+		$this->expectException(CoreException::class);
+
+		// try incrementation
+		$oQueryOQL->DBIncrement('description');
+	}
+
+	/**
+	 * Test attribute integer increment when object dirty.
+	 *
+	 * @covers DBObject::DBIncrement
+	 *
+	 */
+	public function testAttributeIntegerDBIncrementDirty()
+	{
+		// create query object
+		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
+			'name' => 'Test Query',
+			'description' => 'Test Query',
+			'oql' => 'SELECT Person'
+		]);
+		$oQueryOQL->DBInsert();
+
+		// change description
+		$oQueryOQL->Set('description', 'new name');
+
+		// assert exception
+		$this->expectException(CoreException::class);
+
+		// try incrementation
+		$oQueryOQL->DBIncrement('export_count');
+	}
+
+	/**
+	 * Test query count with attribute integer increment.
+	 *
+	 * @covers DBObject::DBIncrement
+	 *
+	 */
+	public function testAttributeIntegerDBIncrementQueryCount()
+	{
+		// create query object
+		$oQueryOQL = \MetaModel::NewObject('QueryOQL', [
+			'name' => 'Test Query',
+			'description' => 'Test Query',
+			'oql' => 'SELECT Person'
+		]);
+		$oQueryOQL->DBInsert();
+
+		// assert query count
+		static::assertDBQueryCount(2, function() use (&$oQueryOQL) {
+			$oQueryOQL->DBIncrement('export_count', 1);
+		});
+	}
+
 }

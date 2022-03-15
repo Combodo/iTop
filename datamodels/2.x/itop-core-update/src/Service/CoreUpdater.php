@@ -535,7 +535,7 @@ final class CoreUpdater
 			SetupLog::Info('itop-core-update: Archive extracted, check files integrity');
 
 			// Check files integrity
-			FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/');
+			FilesIntegrity::CheckInstallationIntegrity(self::UPDATE_DIR.'web/', true);
 
 			SetupLog::Info('itop-core-update: Files integrity OK');
 		} catch (Exception $e)

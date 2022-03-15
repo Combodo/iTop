@@ -5717,7 +5717,7 @@ class AttributeMetaEnum extends AttributeEnum
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
-			$aLocalizedValues[$sKey] = Str::pure2html($this->GetValueLabel($sKey));
+			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
 		return $aLocalizedValues;

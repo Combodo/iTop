@@ -65,7 +65,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeDecimal+' => 'Valeur numérique décimale',
 
 	'Core:AttributeBoolean' => 'Booléen',
-	'Core:AttributeBoolean+' => 'Booléen',
+	'Core:AttributeBoolean+' => '',
 	'Core:AttributeBoolean/Value:null' => '',
 	'Core:AttributeBoolean/Value:yes' => 'Oui',
 	'Core:AttributeBoolean/Value:no' => 'Non',
@@ -118,7 +118,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:AttributeEmailAddress+' => 'Adresse électronique (xxxx@yyy.zzz)',
 
 	'Core:AttributeIPAddress' => 'Adresse IP',
-	'Core:AttributeIPAddress+' => 'Adresse IP',
+	'Core:AttributeIPAddress+' => '',
 
 	'Core:AttributeOQL' => 'Expression OQL',
 	'Core:AttributeOQL+' => 'Expression formattée en "Object Query Language"',
@@ -172,7 +172,7 @@ Opérateurs :<br/>
 	'Core:AttributeDeadline+' => 'Date/heure exprimée relativement à l\'heure courante',
 
 	'Core:AttributeExternalKey' => 'Clé externe',
-	'Core:AttributeExternalKey+' => 'Clé externe',
+	'Core:AttributeExternalKey+' => '',
 
 	'Core:AttributeHierarchicalKey' => 'Clé externe (hiérarchie)',
 	'Core:AttributeHierarchicalKey+' => 'Clé externe vers le parent',
@@ -202,7 +202,7 @@ Opérateurs :<br/>
 	'Core:FriendlyName-Description' => 'Nom complet',
 
 	'Core:AttributeTag' => 'Taxon',
-	'Core:AttributeTag+' => 'Taxon',
+	'Core:AttributeTag+' => '',
 	
 	'Core:Context=REST/JSON' => 'REST',
 	'Core:Context=Synchro' => 'Synchro',
@@ -994,9 +994,9 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:TagSetFieldData/Attribute:code' => 'Code',
 	'Class:TagSetFieldData/Attribute:code+' => 'Code interne. Doit contenir au moins 3 caractères alphanumériques',
 	'Class:TagSetFieldData/Attribute:label' => 'Label',
-	'Class:TagSetFieldData/Attribute:label+' => 'Label',
+	'Class:TagSetFieldData/Attribute:label+' => '',
 	'Class:TagSetFieldData/Attribute:description' => 'Description',
-	'Class:TagSetFieldData/Attribute:description+' => 'Description',
+	'Class:TagSetFieldData/Attribute:description+' => '',
 	'Class:TagSetFieldData/Attribute:finalclass' => 'Type d\'étiquette',
 	'Class:TagSetFieldData/Attribute:obj_class' => 'Type d\'objet',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Code du champ',
@@ -1087,8 +1087,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:AsyncTask/Attribute:last_error+' => '',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Dernière tentative',
 	'Class:AsyncTask/Attribute:last_attempt+' => '',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Format incorrect pour la configuration de "async_taks_retries[%1$s]". La bonne syntaxe est un tableau avec comme clés: %2$s',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Format incorrect pour la configuration de "async_taks_retries[%1$s]": clé "%2$s" invalide. Les clés attendues sont: %3$s',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]". La bonne syntaxe est un tableau avec comme clés: %2$s',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Format incorrect pour la configuration de "async_task_retries[%1$s]": clé "%2$s" invalide. Les clés attendues sont: %3$s',
 ));
 
 //

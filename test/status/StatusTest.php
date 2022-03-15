@@ -9,11 +9,6 @@ namespace Combodo\iTop\Test\UnitTest\Status;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */
 class StatusTest extends ItopTestCase
 {
 	public function setUp()
@@ -22,23 +17,15 @@ class StatusTest extends ItopTestCase
 		require_once APPROOT.'core/config.class.inc.php'; // for constants
 	}
 
-	/**
-	 *
-	 */
-	public function testStatusWrongUrl()
-	{
+    public function testStatusWrongUrl() {
 		$sPath = APPROOT.'/status_wrong.php';
 
-		exec("php $sPath", $aOutput, $iRet);
-		$this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n".var_export($aOutput, true));
+        exec("php $sPath", $aOutput, $iRet);
+        $this->assertNotEquals(0, $iRet, "Problem executing status page: $sPath, $iRet, aOutput:\n" . var_export($aOutput, true));
 
-	}
+    }
 
-	/**
-	 *
-	 */
-	public function testStatusGood()
-	{
+    public function testStatusGood() {
 		$sPath = APPROOT.'/webservices/status.php';
 
 		exec("php $sPath", $aOutput, $iRet);
@@ -62,20 +49,14 @@ class StatusTest extends ItopTestCase
 		$aResponseDecoded = json_decode($aOutput[0], true);
 
 		//Check status
-		$this->assertArrayHasKey('status', $aResponseDecoded, 'JSON does not have a status\' field. '.$sAdditionalInfo);
+		$this->assertArrayHasKey('status', $aResponseDecoded, 'JSON does not have a \'status\' field. '.$sAdditionalInfo);
 		$this->assertEquals('RUNNING', $aResponseDecoded['status'], 'Status is not \'RUNNING\'. '.$sAdditionalInfo);
 		//Check code
-		$this->assertArrayHasKey('code', $aResponseDecoded, 'JSON does not have a code\' field. '.$sAdditionalInfo);
+		$this->assertArrayHasKey('code', $aResponseDecoded, 'JSON does not have a \'code\' field. '.$sAdditionalInfo);
 		$this->assertEquals(0, $aResponseDecoded['code'], 'Code is not 0. '.$sAdditionalInfo);
 		//Check message
-		$this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a message\' field. '.$sAdditionalInfo);
+		$this->assertArrayHasKey('message', $aResponseDecoded, 'JSON does not have a \'message\' field. '.$sAdditionalInfo);
 		$this->assertEmpty($aResponseDecoded['message'], 'Message is not empty. '.$sAdditionalInfo);
-		//Check product
-		$this->assertArrayHasKey('product', $aResponseDecoded, 'JSON does not have a product\' field. '.$sAdditionalInfo);
-		$this->assertEquals(ITOP_APPLICATION, $aResponseDecoded['product'], 'Bad product (should be: '.ITOP_APPLICATION.') '.$sAdditionalInfo);
-		//Check version
-		$this->assertArrayHasKey('version', $aResponseDecoded, 'JSON does not have a version\' field. '.$sAdditionalInfo);
-		$this->assertEquals(ITOP_VERSION, $aResponseDecoded['version'], 'Bad version (should be: '.ITOP_VERSION.') '.$sAdditionalInfo);
 	}
 
 }

@@ -234,7 +234,6 @@ class DisplayTemplate
 		$sTemplate = '<div class="page_header">
 		<div class="actions_details"><a href="#"><span>Actions</span></a></div>
 		<h1>$class$: <span class="hilite">$name$</span></h1>
-		<itopblock blockclass="HistoryBlock" type="toggle" encoding="text/oql">SELECT CMDBChangeOp WHERE objkey = $id$ AND objclass = \'$class$\'</itopblock>
 		</div>
 		<img src="../../images/connect_to_network.png" style="margin-top:-10px; margin-right:10px; float:right">
 		<itoptabs>

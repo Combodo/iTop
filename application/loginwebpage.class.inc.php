@@ -490,6 +490,7 @@ class LoginWebPage extends NiceWebPage
 						{
 							EventService::FireEvent(EventName::LOGIN, null, array('code' => $iErrorCode, 'state' => $sLoginState));
 						}
+						Session::WriteClose();
 						return $iErrorCode; // Asked to exit FSM, generally login OK
 					}
 					if ($iResponse == self::LOGIN_FSM_ERROR)

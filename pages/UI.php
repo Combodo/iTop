@@ -6,6 +6,7 @@
 
 use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
@@ -18,6 +19,7 @@ use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Displays a popup welcome message, once per session at maximum
@@ -253,23 +255,25 @@ function DisplayMultipleSelectionForm(WebPage $oP, DBSearch $oFilter, string $sN
 	$oP->AddUiBlock($oForm);
 }
 
+/**
+ * @param $oP
+ * @param $aResults
+ * @param $sRelation
+ * @param $sDirection
+ * @param $oObj
+ * for operation :  'swf_navigator'
+ *
+ * @throws \DictExceptionMissingString
+ */
 function DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj)
 {
 	$oP->SetCurrentTab('UI:RelationshipList');
-	$oP->add("<div id=\"impacted_objects\">");
-	$sOldRelation = $sRelation;
-	if (($sRelation == 'impacts') && ($sDirection == 'up'))
-	{
-		$sOldRelation = 'depends on';
-	}
-	$oP->add("<div id=\"impacted_objects_lists\">");
-	$oP->add("<div id=\"impacted_objects_lists_placeholder\"></div>");
-	/*
-	 * Content is rendered asynchronously via pages/ajax.render.php?operation=relation_lists
-	 */
-
-	$oP->add("</div>");
-	$oP->add("</div>");
+	$oImpactedObject = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects", ['ibo-is-visible']);
+	$oP->AddSubBlock($oImpactedObject);
+	$oImpactedObject->AddSubBlock(AlertUIBlockFactory::MakeForWarning(Dict::S("Relation:impacts/FilteredData"), '', "alert_filtered_list")->SetIsHidden(true));
+	$oImpactedObjectList = UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists", ['ibo-is-visible']);
+	$oImpactedObject->AddSubBlock($oImpactedObjectList);
+	$oImpactedObjectList->AddSubBlock(UIContentBlockUIBlockFactory::MakeStandard("impacted_objects_lists_placeholder", ['ibo-is-visible']));
 }
 
 function DisplayNavigatorGroupTab($oP)
@@ -342,22 +346,30 @@ try
 		
 		case 'details': // Details of an object
 			$sClass = utils::ReadParam('class', '', false, 'class');
-			$id = utils::ReadParam('id', '');
-			if ( empty($sClass) || empty($id))
-			{
-				throw new ApplicationException(Dict::Format('UI:Error:2ParametersMissing', 'class', 'id'));
+
+			if (empty($sClass)) {
+				throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'class'));
 			}
 
-			if (is_numeric($id))
-			{
-				$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+			$id = utils::ReadParam('id', null);
+			if (false === is_null($id)) {
+				if (is_numeric($id)) {
+					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
+				} else {
+					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
+				}
+			} else {
+				$sAttCode = utils::ReadParam('attcode', '');
+				$sAttValue = utils::ReadParam('attvalue', '');
+
+				if ((strlen($sAttCode) === 0) || (strlen($sAttValue) === 0)) {
+					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
+				}
+
+				$oObj = MetaModel::GetObjectByColumn($sClass, $sAttCode, $sAttValue, true);
 			}
-			else
-			{
-				$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
-			}
-			if (is_null($oObj))
-			{
+
+			if (is_null($oObj)) {
 				// Check anyhow if there is a message for this object (like you've just created it)
 				$sMessageKey = $sClass.'::'.$id;
 				DisplayMessages($sMessageKey, $oP);
@@ -365,8 +377,7 @@ try
 
 				// Attempt to load the object in archive mode
 				utils::PushArchiveMode(true);
-				if (is_numeric($id))
-				{
+				if (is_numeric($id)) {
 					$oObj = MetaModel::GetObject($sClass, $id, false /* MustBeFound */);
 				}
 				else
@@ -1775,6 +1786,7 @@ EOF
 			$oP->SetCurrentTabContainer('Navigator');
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
+			$sLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
 			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
 			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
@@ -1789,26 +1801,26 @@ EOF
 					}
 				}
 			}
-		
-		// Display the tabs
-		if ($sFirstTab == 'list')
-		{
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorGroupTab($oP);
-		}
-		else
-		{
-			$oP->SetCurrentTab('UI:RelationshipGraph');
-			$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj));
-			DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
-			DisplayNavigatorGroupTab($oP);
-		}
 
-		$oP->SetCurrentTab('');
-		break;
-		
+			// Display the tabs
+			if ($sFirstTab == 'list')
+			{
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				DisplayNavigatorGroupTab($oP);
+			}
+			else
+			{
+				$oP->SetCurrentTab('UI:RelationshipGraph');
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
+				DisplayNavigatorGroupTab($oP);
+			}
+
+			$oP->SetCurrentTab('');
+			break;
+
 		///////////////////////////////////////////////////////////////////////////////////////////
 		
 		case 'kill_lock':

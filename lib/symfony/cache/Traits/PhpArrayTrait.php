@@ -28,6 +28,8 @@ trait PhpArrayTrait
     private $values;
     private $zendDetectUnicode;
 
+    private static $valuesCache = [];
+
     /**
      * Store an array of cached values.
      *
@@ -37,21 +39,21 @@ trait PhpArrayTrait
     {
         if (file_exists($this->file)) {
             if (!is_file($this->file)) {
-                throw new InvalidArgumentException(sprintf('Cache path exists and is not a file: %s.', $this->file));
+                throw new InvalidArgumentException(sprintf('Cache path exists and is not a file: "%s".', $this->file));
             }
 
             if (!is_writable($this->file)) {
-                throw new InvalidArgumentException(sprintf('Cache file is not writable: %s.', $this->file));
+                throw new InvalidArgumentException(sprintf('Cache file is not writable: "%s".', $this->file));
             }
         } else {
             $directory = \dirname($this->file);
 
             if (!is_dir($directory) && !@mkdir($directory, 0777, true)) {
-                throw new InvalidArgumentException(sprintf('Cache directory does not exist and cannot be created: %s.', $directory));
+                throw new InvalidArgumentException(sprintf('Cache directory does not exist and cannot be created: "%s".', $directory));
             }
 
             if (!is_writable($directory)) {
-                throw new InvalidArgumentException(sprintf('Cache directory is not writable: %s.', $directory));
+                throw new InvalidArgumentException(sprintf('Cache directory is not writable: "%s".', $directory));
             }
         }
 
@@ -72,7 +74,7 @@ EOF;
                 try {
                     $value = serialize($value);
                 } catch (\Exception $e) {
-                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \get_class($value)), 0, $e);
+                    throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable "%s" value.', $key, \get_class($value)), 0, $e);
                 }
             } elseif (\is_array($value)) {
                 try {
@@ -91,7 +93,7 @@ EOF;
                     $value = serialize($value);
                 }
             } elseif (!is_scalar($value)) {
-                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable %s value.', $key, \gettype($value)));
+                throw new InvalidArgumentException(sprintf('Cache key "%s" has non-serializable "%s" value.', $key, \gettype($value)));
             }
 
             $dump .= var_export($key, true).' => '.var_export($value, true).",\n";
@@ -107,6 +109,7 @@ EOF;
         unset($serialized, $unserialized, $value, $dump);
 
         @rename($tmpFile, $this->file);
+        unset(self::$valuesCache[$this->file]);
 
         $this->initialize();
     }
@@ -119,6 +122,7 @@ EOF;
         $this->values = [];
 
         $cleared = @unlink($this->file) || !file_exists($this->file);
+        unset(self::$valuesCache[$this->file]);
 
         return $this->pool->clear() && $cleared;
     }
@@ -128,11 +132,17 @@ EOF;
      */
     private function initialize()
     {
+        if (isset(self::$valuesCache[$this->file])) {
+            $this->values = self::$valuesCache[$this->file];
+
+            return;
+        }
+
         if ($this->zendDetectUnicode) {
             $zmb = ini_set('zend.detect_unicode', 0);
         }
         try {
-            $this->values = file_exists($this->file) ? (include $this->file ?: []) : [];
+            $this->values = self::$valuesCache[$this->file] = file_exists($this->file) ? (include $this->file ?: []) : [];
         } finally {
             if ($this->zendDetectUnicode) {
                 ini_set('zend.detect_unicode', $zmb);

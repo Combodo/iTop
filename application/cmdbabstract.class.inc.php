@@ -62,11 +62,11 @@ require_once(APPROOT.'application/ui.linksdirectwidget.class.inc.php');
 require_once(APPROOT.'application/ui.passwordwidget.class.inc.php');
 require_once(APPROOT.'application/ui.extkeywidget.class.inc.php');
 require_once(APPROOT.'application/ui.htmleditorwidget.class.inc.php');
-require_once(APPROOT.'sources/application/search/searchform.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionparser.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversionabstract.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontooql.class.inc.php');
-require_once(APPROOT.'sources/application/search/criterionconversion/criteriontosearchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/searchform.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionparser.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/criterionconversionabstract.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontooql.class.inc.php');
+require_once(APPROOT.'sources/Application/Search/CriterionConversion/criteriontosearchform.class.inc.php');
 
 /**
  * Class cmdbAbstractObject
@@ -393,7 +393,8 @@ JS
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
 			$oSingletonFilter->AddCondition('id', $this->GetKey(), '=');
 			$oBlock = new MenuBlock($oSingletonFilter, 'details', false);
-			$oActionMenuBlock = $oBlock->GetRenderContent($oPage);
+			$sActionMenuId = utils::Sanitize(uniqid('', true), '', utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER);
+			$oActionMenuBlock = $oBlock->GetRenderContent($oPage, [], $sActionMenuId);
 			$aHeaderBlocks['toolbar'][$oActionMenuBlock->GetId()] = $oActionMenuBlock;
 		}
 
@@ -511,32 +512,6 @@ HTML
 	}
 
 	/**
-	 * Display history tab of an object
-	 *
-	 * @deprecated 3.0.0 will be removed in 3.1, see N°3824
-	 *
-	 * @param bool $bEditMode
-	 * @param int $iLimitCount
-	 * @param int $iLimitStart
-	 *
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \CoreException
-	 *
-	 */
-	public function DisplayBareHistory(WebPage $oPage, $bEditMode = false, $iLimitCount = 0, $iLimitStart = 0)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
-		// history block (with as a tab)
-		$oHistoryFilter = new DBObjectSearch('CMDBChangeOp');
-		$oHistoryFilter->AddCondition('objkey', $this->GetKey(), '=');
-		$oHistoryFilter->AddCondition('objclass', get_class($this), '=');
-		$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-		$oBlock->SetLimit($iLimitCount, $iLimitStart);
-		$oBlock->Display($oPage, 'history');
-	}
-
-	/**
 	 * Display properties tab of an object
 	 *
 	 * @param \WebPage $oPage
@@ -651,11 +626,17 @@ HTML
 			if ($oAttDef instanceof AttributeDashboard) {
 				if (!$this->IsNew()) {
 					$sHostContainerInEditionUrlParam = ($bEditMode) ? '&host_container_in_edition=true' : '';
-					$oPage->AddAjaxTab($oAttDef->GetLabel(),
-						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='.get_class($this).'&id='.$this->GetKey().'&attcode='.$oAttDef->GetCode().$sHostContainerInEditionUrlParam,
-						true,
+					$oPage->AddAjaxTab(
 						'Class:'.$sClass.'/Attribute:'.$sAttCode,
-						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD);
+						utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php?operation=dashboard&class='
+							.get_class($this)
+							.'&id='.$this->GetKey()
+							.'&attcode='.$oAttDef->GetCode()
+							.$sHostContainerInEditionUrlParam,
+						true,
+						$oAttDef->GetLabel(),
+						AjaxTab::ENUM_TAB_PLACEHOLDER_DASHBOARD
+					);
 					// Add graphs dependencies
 					WebResourcesHelper::EnableC3JSToWebPage($oPage);
 				}
@@ -1181,8 +1162,6 @@ HTML
 		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 		$this->DisplayBareRelations($oPage, $bEditMode);
-		// TODO 3.0.0: What to do with this?
-		//$this->DisplayBareHistory($oPage, $bEditMode);
 
 		// Note: Adding the JS snippet which enables the image upload should have been done directly by the ActivityPanel which would have kept the independance principle
 		// of the UIBlock. For now we keep it this way in order to move on and trace this known limitation in N°3736.
@@ -1741,6 +1720,9 @@ HTML
 	 * @param array $aParams
 	 *
 	 * @throws \Exception
+	 *  only used in old and deprecated export.php
+	 *
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function DisplaySetAsHTMLSpreadsheet(WebPage $oPage, CMDBObjectSet $oSet, $aParams = array())
 	{
@@ -1761,6 +1743,8 @@ HTML
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \Exception
+	 * 
+	 * @internal Only to be used by `/webservices/export.php` : this is a legacy method that produces wrong HTML (no TR on table body rows)
 	 */
 	public static function GetSetAsHTMLSpreadsheet(DBObjectSet $oSet, $aParams = array())
 	{
@@ -4233,13 +4217,20 @@ HTML;
 				if (!is_null($oImage->GetData()))
 				{
 					$aSize = utils::GetImageSize($oImage->GetData());
-					$oImage = utils::ResizeImageToFit(
-						$oImage,
-						$aSize[0],
-						$aSize[1],
-						$oAttDef->Get('storage_max_width'),
-						$oAttDef->Get('storage_max_height')
-					);
+					if (is_array($aSize) && $aSize[0] > 0 && $aSize[1] > 0)
+					{
+						$oImage = utils::ResizeImageToFit(
+							$oImage,
+							$aSize[0],
+							$aSize[1],
+							$oAttDef->Get('storage_max_width'),
+							$oAttDef->Get('storage_max_height')
+						);
+					}
+					else
+					{
+						IssueLog::Warning($sClass . ':' . $this->GetKey() . '/' . $sAttCode . ': Image could not be resized. Mimetype: ' . $oImage->GetMimeType() . ', filename: ' . $oImage->GetFileName());
+					}
 				}
 				$aOtherData = utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}", null, 'raw_data');
 				if (is_array($aOtherData))

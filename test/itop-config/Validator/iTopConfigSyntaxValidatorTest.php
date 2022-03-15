@@ -13,7 +13,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use PhpParser\Node;
 use PhpParser\PrettyPrinter\Standard;
 
-class iTopConfigAstValidatorTest extends ItopTestCase
+class iTopConfigSyntaxValidatorTest extends ItopTestCase
 {
 
 	public function setUp()

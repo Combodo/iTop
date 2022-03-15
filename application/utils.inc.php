@@ -1944,28 +1944,18 @@ class utils
 
 		return $sCss;
 	}
-	
+
+	/**
+	 * Get the size of an image from a string.
+	 *
+	 * @see \getimagesizefromstring()
+	 * @param $sImageData string The image data, as a string.
+	 *
+	 * @return array|false
+	 */
 	public static function GetImageSize($sImageData)
 	{
-		if (function_exists('getimagesizefromstring')) // PHP 5.4.0 or higher
-		{
-			$aRet = @getimagesizefromstring($sImageData);
-		}
-		else if(ini_get('allow_url_fopen'))
-		{
-			// work around to avoid creating a tmp file
-			$sUri = 'data://application/octet-stream;base64,'.base64_encode($sImageData);
-			$aRet = @getimagesize($sUri);
-		}
-		else
-		{
-			// Damned, need to create a tmp file
-			$sTempFile = tempnam(SetupUtils::GetTmpDir(), 'img-');
-			@file_put_contents($sTempFile, $sImageData);
-			$aRet = @getimagesize($sTempFile);
-			@unlink($sTempFile);
-		}
-		return $aRet;
+		return @getimagesizefromstring($sImageData);
 	}
 
 	/**
@@ -2118,11 +2108,21 @@ class utils
 	}
 	
 	/**
-	 * Returns the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
-	 * this function is made
-	 * or an empty string if no such module is found (or not called within a module file)
-	 * @param number $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
-	 * @return string
+	 * **Warning** : returned result can be invalid as we're using backtrace to find the module dir name
+	 *
+	 * @param int $iCallDepth The depth of the module in the callstack. Zero when called directly from within the module
+	 *
+	 * @return string the relative (to MODULESROOT) path of the root directory of the module containing the file where the call to
+	 *     this function is made
+	 *     or an empty string if no such module is found (or not called within a module file)
+	 *
+	 * @uses \debug_backtrace()
+	 *
+	 * @since 3.0.0 Before writing model.*.php file, compiler will now always delete it.
+	 *      If you have symlinks enabled, base dir will be original module dir, but since this behavior change this won't be true anymore for model.*.php
+	 *      In consequence the backtrace analysis won't be possible for this file
+	 *      See N°4854
+	 * @link https://www.itophub.io/wiki/page?id=3_0_0%3Arelease%3A3_0_whats_new#compiler_always_generate_new_model_php compiler behavior change documentation
 	 */
 	public static function GetCurrentModuleDir($iCallDepth)
 	{
@@ -2147,9 +2147,14 @@ class utils
 	}
 
 	/**
+	 * **Warning** : as this method uses {@see GetCurrentModuleDir} it produces hazardous results.
+	 * You should better uses directly {@see GetAbsoluteUrlModulesRoot} and add the module dir name yourself ! See N°4573
+	 *
 	 * @return string the base URL for all files in the current module from which this method is called
 	 * or an empty string if no such module is found (or not called within a module file)
 	 * @throws \Exception
+	 *
+	 * @uses GetCurrentModuleDir
 	 */
 	public static function GetCurrentModuleUrl()
 	{
@@ -2404,43 +2409,19 @@ class utils
 	}
 
 	/**
-	 * @return string eg : '2_7_0' ITOP_VERSION is '2.7.1-dev'
+	 * @return string eg : '2_7_0' if iTop core version is '2.7.5-2'
+	 * @throws \ApplicationException if constant value is invalid
+	 * @uses ITOP_CORE_VERSION
 	 */
-	public static function GetItopVersionWikiSyntax() {
-		$sMinorVersion = self::GetItopMinorVersion();
+	public static function GetItopVersionWikiSyntax($sItopVersion = ITOP_CORE_VERSION)
+	{
+		$aExplodedVersion = explode('.', $sItopVersion);
 
-		return str_replace('.', '_', $sMinorVersion).'_0';
-	}
-
-	/**
-	 * @param string $sPatchVersion if non provided, will call GetItopPatchVersion
-	 *
-	 * @return string eg 2.7 if ITOP_VERSION is '2.7.0-dev'
-	 * @throws \Exception
-	 */
-	public static function GetItopMinorVersion($sPatchVersion = null) {
-		if (is_null($sPatchVersion)) {
-			$sPatchVersion = self::GetItopPatchVersion();
-		}
-		$aExplodedVersion = explode('.', $sPatchVersion);
-
-		if (count($aExplodedVersion) < 2) {
-			throw new Exception('iTop version is wrongfully configured!');
-		}
-		if (($aExplodedVersion[0] == '') || ($aExplodedVersion[1] == '')) {
-			throw new Exception('iTop version is wrongfully configured!');
+		if ((false === isset($aExplodedVersion[0])) || (false === isset($aExplodedVersion[1]))) {
+			throw new ApplicationException('iTop version is wrongfully configured!');
 		}
 
-		return sprintf('%d.%d', $aExplodedVersion[0], $aExplodedVersion[1]);
-	}
-
-	/**
-	 * @return string eg '2.7.0' if ITOP_VERSION is '2.7.0-dev'
-	 */
-	public static function GetItopPatchVersion() {
-		$aExplodedVersion = explode('-', ITOP_VERSION);
-
-		return $aExplodedVersion[0];
+		return "{$aExplodedVersion[0]}_{$aExplodedVersion[1]}_0";
 	}
 
 	/**
@@ -3057,6 +3038,20 @@ HTML;
 		}
 
 		return $aMentionedObjects;
+	}
+
+	/**
+	 * Note: This method is not ideal, but other solutions seemed even less ideal:
+	 *   * Add a "$sMaxLength" param. to utils::ToAcronym(): Does not work for every use cases (see corresponding ticket) as in some parts utils::ToAcronym isn't necessarly meant to be used in a medallion.
+	 *
+	 * @param string $sInitials
+	 *
+	 * @return string Truncates $sInitials so it can fit in medallions
+	 * @since 3.0.1 N°4913
+	 */
+	public static function FormatInitialsForMedallion(string $sInitials): string
+	{
+		return mb_substr($sInitials, 0, 3);
 	}
 
 	/**

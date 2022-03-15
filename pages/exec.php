@@ -27,21 +27,39 @@ require_once(APPROOT.'core/metamodel.class.php');
 
 utils::InitTimeZone();
 
-$sModule = utils::ReadParam('exec_module', '');
-if ($sModule == '')
+
+/**
+ * @param string $sPagePath full path (if symlink, it will be resolved)
+ * @param array $aPossibleBasePaths list of possible base paths
+ *
+ * @return string|bool false if invalid path
+ * @uses utils::RealPath()
+ */
+function CheckPageExists(string $sPagePath, array $aPossibleBasePaths)
 {
+	$sTargetPage = false;
+	foreach ($aPossibleBasePaths as $sBasePath) {
+		$sTargetPage = utils::RealPath($sPagePath, $sBasePath);
+		if ($sTargetPage !== false) {
+			return $sTargetPage;
+		}
+	}
+
+	return $sTargetPage;
+}
+
+
+$sModule = utils::ReadParam('exec_module', '');
+if ($sModule == '') {
 	echo "Missing argument 'exec_module'";
 	exit;
 }
-$sModule = basename($sModule); // protect against ../.. ...
 
 $sPage = utils::ReadParam('exec_page', '', false, 'raw_data');
-if ($sPage == '')
-{
+if ($sPage == '') {
 	echo "Missing argument 'exec_page'";
 	exit;
 }
-$sPage = basename($sPage); // protect against ../.. ...
 
 $oKPI = new ExecutionKPI();
 Session::Start();
@@ -49,11 +67,27 @@ $sEnvironment = utils::ReadParam('exec_env', utils::GetCurrentEnvironment());
 Session::WriteClose();
 $oKPI->ComputeAndReport("Session Start");
 
-$sTargetPage = APPROOT.'env-'.$sEnvironment.'/'.$sModule.'/'.$sPage;
 
-if (!file_exists($sTargetPage))
-{
-	// Do not recall the parameters (security takes precedence)
+$sEnvFullPath = APPROOT.'env-'.$sEnvironment;
+$sPageRelativePath = $sModule.'/'.$sPage;
+$sPageEnvFullPath = $sEnvFullPath.'/'.$sPageRelativePath;
+if (is_link($sPageEnvFullPath)) {
+	$oConfig = utils::GetConfig();
+	$sSourceDir = $oConfig->Get('source_dir'); // generated at compile time, works for legacy build with datamodels/1.x
+	// in case module was compiled to symlink, we need to check against real linked path as symlink is resolved
+	$aPossibleBasePaths = [
+		APPROOT.$sSourceDir,
+		APPROOT.'extensions',
+		APPROOT.'data/'.$sEnvironment.'-modules',
+		APPROOT.'data/downloaded-extensions', // Hub connector
+	];
+} else {
+	$aPossibleBasePaths = [$sEnvFullPath];
+}
+$sTargetPage = CheckPageExists($sPageEnvFullPath, $aPossibleBasePaths);
+
+if ($sTargetPage === false) {
+	// Do not recall the page parameters (security takes precedence)
 	echo "Wrong module, page name or environment...";
 	exit;
 }

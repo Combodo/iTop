@@ -705,9 +705,9 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '通知する連絡先',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'エラーが発生した場合に通知する連絡先。',
 	'Class:SynchroDataSource/Attribute:url_icon' => 'アイコンのハイパーリンク',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'iTopが同期されたアプリケーションを示すハイパーリンク（小さな）イメージ',
+	'Class:SynchroDataSource/Attribute:url_icon+' => ITOP_APPLICATION_SHORT.'が同期されたアプリケーションを示すハイパーリンク（小さな）イメージ',
 	'Class:SynchroDataSource/Attribute:url_application' => 'アプリケーションのハイパーリンク',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'iTopが同期化された外部アプリケーションのiTopオブジェクトへのハイパーリンク（該当する場合）。可能なプレースホルダ: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => ITOP_APPLICATION_SHORT.'が同期化された外部アプリケーションの'.ITOP_APPLICATION_SHORT.'オブジェクトへのハイパーリンク（該当する場合）。可能なプレースホルダ: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => '調整ポリシー',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => '全データロードの間隔',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => '全データの完全な再ロードを最低ここに指定されている間隔で行う必要があります。',
@@ -1087,8 +1087,8 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Class:AsyncTask/Attribute:last_error+' => '~~',
 	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
 	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
-    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
-    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_taks_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
 ));
 
 //

@@ -22,7 +22,15 @@
 
 define('ITOP_APPLICATION', 'iTop');
 define('ITOP_APPLICATION_SHORT', 'iTop');
+
+/**
+ * Constant containing the application version
+ * Warning: this might be different from iTop core version!
+ *
+ * @see ITOP_CORE_VERSION to get iTop core version
+ */
 define('ITOP_VERSION', '3.1.0-dev');
+
 define('ITOP_VERSION_NAME', 'Fullmoon');
 define('ITOP_REVISION', 'svn');
 define('ITOP_BUILD_DATE', '$WCNOW$');
@@ -608,6 +616,13 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		/**
+		 * The timezone is automatically set using this parameter in \utils::InitTimeZone
+		 * This method is called almost everywhere, cause it's called in \MetaModel::LoadConfig and exec.php... but you might
+		 * need to get it yourself !
+		 *
+		 * @used-by utils::InitTimeZone()
+		 */
 		'timezone' => [
 			'type' => 'string',
 			'description' => 'Timezone (reference: http://php.net/manual/en/timezones.php). If empty, it will be left unchanged and MUST be explicitly configured in PHP',
@@ -851,13 +866,23 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'impact_analysis_lazy_loading' => [
+			'type'                => 'bool',
+			'description'         => 'In the impact analysis view: display the analysis or filter before display',
+			'default'             => false,
+			'value'               => '',
+			'source_of_value'     => '',
+			'show_in_conf_sample' => false,
+		],
 		'url_validation_pattern' => [
 			'type' => 'string',
 			'description' => 'Regular expression to validate/detect the format of an URL (URL attributes and Wiki formatting for Text attributes)',
-			'default' => '(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
-			//            SHEME.......... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH........................ GET............................................ ANCHOR............................
+			'default' => /** @lang RegExp */
+			'(https?|ftp)\://([a-zA-Z0-9+!*(),;?&=\$_.-]+(\:[a-zA-Z0-9+!*(),;?&=\$_.-]+)?@)?([a-zA-Z0-9-.]{3,})(\:[0-9]{2,5})?(/([a-zA-Z0-9:%+\$_-]\.?)+)*/?(\?[a-zA-Z+&\$_.-][a-zA-Z0-9;:[\]@&%=+/\$_.-]*)?(#[a-zA-Z_.-][a-zA-Z0-9+\$_.-]*)?',
+			// SCHEME....... USER....................... PASSWORD.......................... HOST/IP........... PORT.......... PATH......................... GET............................................ ANCHOR..........................
 			// Example: http://User:passWord@127.0.0.1:8888/patH/Page.php?arrayArgument[2]=something:blah20#myAnchor
-			// Origin of this regexp: http://www.php.net/manual/fr/function.preg-match.php#93824
+			// RegExp source: http://www.php.net/manual/fr/function.preg-match.php#93824
+			// Update with N°4515
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => true,
@@ -1175,7 +1200,7 @@ class Config
 		],
 		'compatibility.include_deprecated_js_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated JS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated JS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1191,7 +1216,7 @@ class Config
 		],
 		'compatibility.include_deprecated_css_files' => [
 			'type' => 'bool',
-			'description' => 'Include the deprecated CSS files to ease usage of not migrated extensions',
+			'description' => 'Include the deprecated CSS files (in iTop previous version) to ease usage of not migrated extensions',
 			'default' => false,
 			'value' => false,
 			'source_of_value' => '',
@@ -1598,6 +1623,16 @@ class Config
 	public function Get($sPropCode)
 	{
 		return $this->m_aSettings[$sPropCode]['value'];
+	}
+
+	/**
+	 * @return mixed
+	 *
+	 * @since 3.0.1 N°4515
+	 */
+	public function GetDefault(string $sPropCode)
+	{
+		return $this->m_aSettings[$sPropCode]['default'];
 	}
 
 	/**

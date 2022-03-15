@@ -56,9 +56,16 @@ define('TAG_CLASS', 'FAQ');
 define('TAG_ATTCODE', 'domains');
 
 /**
+ * Helper class to extend for tests needing access to iTop's metamodel
+ *
+ * **⚠ Warning** Each class extending this one needs to add the following annotations :
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
+ *
+ * @since 2.7.7 3.0.1 3.1.0 N°4624 processIsolation is disabled by default and must be enabled in each test needing it (basically all tests using
+ * iTop datamodel)
  */
 class ItopDataTestCase extends ItopTestCase
 {
@@ -408,7 +415,7 @@ class ItopDataTestCase extends ItopTestCase
 	 * @return \DBObject
 	 * @throws Exception
 	 */
-	protected function CreateUser($sLogin, $iProfileId, $sPassword=null)
+	protected function CreateUser($sLogin, $iProfileId, $sPassword=null, $iContactid=2)
 	{
 		if (empty($sPassword)){
 			$sPassword = $sLogin;
@@ -419,7 +426,7 @@ class ItopDataTestCase extends ItopTestCase
 		$oUserProfile->Set('reason', 'UNIT Tests');
 		$oSet = DBObjectSet::FromObject($oUserProfile);
 		$oUser = $this->createObject('UserLocal', array(
-			'contactid' => 2,
+			'contactid' => $iContactid,
 			'login' => $sLogin,
 			'password' => $sPassword,
 			'language' => 'EN US',

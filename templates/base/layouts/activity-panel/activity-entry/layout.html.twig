@@ -1,4 +1,3 @@
-{% apply spaceless %}
 <div class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
      data-role="ibo-activity-entry"
      data-entry-type="{% block iboActivityEntryType %}{{ oUIBlock.GetType() }}{% endblock %}"
@@ -11,7 +10,7 @@
 			{% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}
 				<img class="ibo-activity-entry--author-picture" src="{{ oUIBlock.GetAuthorPictureAbsUrl() }}" alt="{{ oUIBlock.GetAuthorInitials() }}">
 			{% else %}
-				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials() }}</div>
+				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials()|slice(0, 3) }}</div>
 			{% endif %}
 		{% endblock %}
 	</div>
@@ -33,23 +32,24 @@
 				</div>
 			</div>
 			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
-				{% block iboActivityEntrySubInformation %}
-                    {% if oUIBlock.GetOrigin() is not null and oUIBlock.GetOrigin != constant('Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin::INTERACTIVE') %}
-                        <span class="ibo-activity-entry--origin" data-role="ibo-activity-entry--origin" data-tooltip-content="{{ ('Class:CMDBChange/Attribute:origin/Value:' ~ oUIBlock.GetOrigin())|dict_s }}" data-tooltip-placement="bottom">
-                            <span class="{{ oUIBlock.GetOriginDecorationClasses() }}"></span>
-                        </span>
-                    {% endif %}
-                    {% if get_config_parameter('activity_panel.show_author_name_below_entries') %}
-                        <span class="ibo-activity-entry--author-name ibo-is-hidden" data-role="ibo-activity-entry--author-name">{{ oUIBlock.GetAuthorFriendlyname() }}</span>
-                    {% endif %}
-                    <span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime"
-                          data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}"
-                          data-tooltip-placement="bottom"
-                          data-raw-datetime="{{ oUIBlock.GetRawDateTime() }}"
-                          data-formatted-datetime="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
-                {% endblock %}
+                {% apply spaceless %}
+                    {% block iboActivityEntrySubInformation %}
+                        {% if oUIBlock.GetOrigin() is not null and oUIBlock.GetOrigin != constant('Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin::INTERACTIVE') %}
+                            <span class="ibo-activity-entry--origin" data-role="ibo-activity-entry--origin" data-tooltip-content="{{ ('Class:CMDBChange/Attribute:origin/Value:' ~ oUIBlock.GetOrigin())|dict_s }}" data-tooltip-placement="bottom">
+                                <span class="{{ oUIBlock.GetOriginDecorationClasses() }}"></span>
+                            </span>
+                        {% endif %}
+                        {% if get_config_parameter('activity_panel.show_author_name_below_entries') %}
+                            <span class="ibo-activity-entry--author-name ibo-is-hidden" data-role="ibo-activity-entry--author-name">{{ oUIBlock.GetAuthorFriendlyname() }}</span>
+                        {% endif %}
+                        <span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime"
+                              data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}"
+                              data-tooltip-placement="bottom"
+                              data-raw-datetime="{{ oUIBlock.GetRawDateTime() }}"
+                              data-formatted-datetime="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
+                    {% endblock %}
+                {% endapply %}
 			</div>
 		{% endblock %}
 	</div>
 </div>
-{% endapply %}

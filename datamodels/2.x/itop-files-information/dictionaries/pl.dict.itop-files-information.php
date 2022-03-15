@@ -26,6 +26,7 @@ Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'FilesInformation:Error:MissingFile' => 'Brakujący plik: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Plik %1$s jest uszkodzony',
 	'FilesInformation:Error:CantWriteToFile' => 'Nie można zapisać do pliku %1$s',
+	'FilesInformation:Error:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 ));
 
 

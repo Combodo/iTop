@@ -22,6 +22,11 @@ use MetaModel;
 
 require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
 
+/**
+ * @runTestsInSeparateProcesses
+ * @preserveGlobalState disabled
+ * @backupGlobals disabled
+ */
 class ExceptionLogTest extends ItopDataTestCase
 {
 	protected function setUp()

@@ -183,6 +183,9 @@ $ibo-tab-container--tabs-list--background-color: $ibo-color-grey-500;
 $ibo-tab-container--tab-header--text-color--is-active: $ibo-color-blue-300;
 $ibo-tab-container--tab-header--text-color--on-hover: $ibo-color-blue-200;
 $ibo-tab-container--tab-header--background-color--on-hover: $ibo-color-grey-400;
+$ibo-tab-container--extra-tab-toggler--text-color: $ibo-color-blue-100 !default;
+$ibo-tab-container--extra-tab-toggler--text-color--on-hover: $ibo-color-blue-200 !default;
+$ibo-tab-container--extra-tab-toggler--background-color--on-hover: $ibo-color-grey-500 !default;
 $ibo-activity-panel--header--background-color: $ibo-color-grey-400;
 $ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200;
 $ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color;
@@ -244,3 +247,5 @@ $ibo-vendors-c3--legend--fill: $ibo-color-white-200;
 $ibo-vendors-c3--legend--background-color: $ibo-color-white-100;
 $ibo-vendors-c3--legend-item--fill: $ibo-color-grey-100;
 $ibo-vendors-c3--axis--fill: $ibo-color-grey-200;
+
+$ibo-run-query--highlight--background-color: $ibo-color-primary-700;

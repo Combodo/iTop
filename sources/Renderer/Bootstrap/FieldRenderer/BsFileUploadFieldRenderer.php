@@ -263,13 +263,6 @@ JS
 						\$oAttachmentTBody.append(sAttachmentRow);
 						// Preview tooltip
 						if(data.result.preview){
-							$('#display_attachment_'+data.result.att_id +' a.trigger-preview').tooltip({
-								container: 'body',
-								html: true,
-								title: function(){ 
-									return '<div class="attachment-tooltip"><img src="'+sDownloadLink+'"></div>'; 
-								}
-							});
 						}
 						// Remove button handler
 						$('#display_attachment_'+data.result.att_id+' :button').on('click', function(oEvent){
@@ -310,14 +303,7 @@ JS
 				}
 			});
 
-
-			// Preview tooltip
 			$('table#$sAttachmentTableId>tbody>tr>td a.trigger-preview').each(function(iIndex, oElem){
-				$(oElem).parent().tooltip({
-					container: 'body',
-					html: true,
-					title: function(){ return '<div class="attachment-tooltip"><img src="'+$(oElem).attr('href')+'"></div>'; }
-				});
 			});
 			// Remove button handler
 			$('.attachments_container table#$sAttachmentTableId>tbody>tr>td :button').on('click', function(oEvent){
@@ -522,7 +508,7 @@ HTML;
 
 		return <<<HTML
 	<tr id="display_attachment_{$iAttId}" class="attachment" $sLineStyle>
-	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass"><img $sIconClass src="$sAttachmentThumbUrl"></a></td>
+	  <td role="icon"><a href="$sDocDownloadUrl" target="_blank" class="$sIconClass" data-tooltip-content="<div class='attachment-tooltip'><img src='{$sDocDownloadUrl}'></div>" data-tooltip-html-enabled=true><img $sIconClass src="$sAttachmentThumbUrl" ></a></td>
 	  <td role="filename"><a href="$sDocDownloadUrl" target="_blank">$sFileName</a>$sAttachmentMeta</td>
 	  <td role="formatted-size" data-order="$iFileSizeRaw">$sFileSize</td>
 	  <td role="upload-date" data-order="$iAttachmentDateRaw">$sAttachmentDate</td>

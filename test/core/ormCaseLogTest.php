@@ -15,6 +15,7 @@ use ormCaseLog;
  * Tests of the ormCaseLog class
  *
  * @covers \ormCaseLog
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

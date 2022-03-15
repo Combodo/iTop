@@ -1338,7 +1338,7 @@ EOF
 		{
 			return null;
 		}
-		$oClassNode = self::$aLoadedClasses[$sClassName];
+		$oClassNode = $this->GetClass($sClassName);
 		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
@@ -2177,8 +2177,13 @@ class MFElement extends Combodo\iTop\DesignElement
 			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
-				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
-					$iLine, $sPath);
+				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
+				$iExistingLine = $oExisting->getLineNo();
+				
+				$sExceptionMessage = <<<EOF
+`{$sPath}` at line {$iLine} could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
+EOF;
+				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
 			}
 			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
@@ -2306,6 +2311,9 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Replaces a node by another one, making sure that recursive nodes are preserved
 	 *
 	 * @param MFElement $oNewNode The replacement
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `MFReplaceWith`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * throws fatal error in PHP 8.0)
 	 */
 	protected function ReplaceWithSingleNode($oNewNode)
 	{

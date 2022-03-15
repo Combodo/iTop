@@ -107,7 +107,7 @@ function FatalErrorCatcher($sOutput)
 		}
 		$sOutput = "$errors\n";
 		// Logging to a file does not work if the whole memory is exhausted...		
-		//SetupPage::log_error("Fatal error - in $__FILE__ , $errors");
+		// SetupLog::Error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
 }
@@ -128,7 +128,6 @@ require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 
 // Never cache this page
@@ -158,7 +157,7 @@ try
 		$sState = utils::ReadParam('step_state', '');
 		$sActionCode = utils::ReadParam('code', '');
 		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-		$oPage = new ajax_page('');
+		$oPage = new AjaxPage('');
 		$oDummyController = new WizardController('');
 		if (is_subclass_of($sClass, 'WizardStep'))
 		{

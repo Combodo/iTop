@@ -29,5 +29,4 @@ class AttributeDefTest extends ItopDataTestCase {
 		$this->assertEquals(["status" => "ENUM('active','inactive') CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"],
 			$aImportColumns);
 	}
-
 }

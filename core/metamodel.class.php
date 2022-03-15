@@ -655,7 +655,7 @@ abstract class MetaModel
 	 * @param string $sRuleId
 	 *
 	 * @throws \CoreException
-	 * @since 2.6.1 N°1918 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
+	 * @since 2.6.1 N°1968 (sous les pavés, la plage) initialize in 'root_class' property the class that has the first
 	 *         definition of the rule in the hierarchy
 	 */
 	private static function SetUniquenessRuleRootClass($sRootClass, $sRuleId)
@@ -7145,20 +7145,28 @@ abstract class MetaModel
 	/**
 	 * @param string $sClass
 	 * @param string $sAttCode
-	 * @param $value
+	 * @param mixed $value
 	 * @param bool $bMustBeFoundUnique
+	 * @param bool $bAllowAllData
 	 *
-	 * @return \DBObject
+	 * @return \DBObject if $bMustBeFoundUnique=true and no object or multiple objects found will throw a CoreException
+	 *                  else will return null
+	 *
 	 * @throws \CoreException
-	 * @throws \Exception
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 *
+	 * @since 2.7.7 Add new $bAllowAllData parameter
 	 */
-	public static function GetObjectByColumn($sClass, $sAttCode, $value, $bMustBeFoundUnique = true)
+	public static function GetObjectByColumn($sClass, $sAttCode, $value, $bMustBeFoundUnique = true, $bAllowAllData = false)
 	{
-		if (!isset(self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value]))
-		{
+		if (!isset(self::$m_aCacheObjectByColumn[$sClass][$sAttCode][$value])) {
 			self::_check_subclass($sClass);
 
 			$oObjSearch = new DBObjectSearch($sClass);
+			$oObjSearch->AllowAllData($bAllowAllData);
 			$oObjSearch->AddCondition($sAttCode, $value, '=');
 			$oSet = new DBObjectSet($oObjSearch);
 			if ($oSet->Count() == 1)

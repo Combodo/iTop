@@ -1060,7 +1060,8 @@ EOF
 			$iCol = utils::ReadParam("iCol");
 			$sDashletIdOrig = utils::ReadParam("dashletid");
 			$sFinalDashletId = Dashboard::GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletIdOrig);
-			$oPage = new ajax_page('');
+			$oPage = new AjaxPage('');
+			$oPage->SetOutputDataOnly(true);
 			$oPage->add($sFinalDashletId);
 			break;
 
@@ -1279,31 +1280,6 @@ JS
 
 		case 'about_box':
 			AjaxRenderController::DisplayAboutBox($oPage);
-			break;
-
-		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
-		case 'history':
-			$oPage->SetContentType('text/html');
-			$id = (int)utils::ReadParam('id', 0);
-			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oObj = MetaModel::GetObject($sClass, $id);
-			$oObj->DisplayBareHistory($oPage, false, $iCount, $iStart);
-			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
-			// widgets: ['myZebra', 'truncatedList']} );");
-			break;
-
-		/** @deprecated 3.0.0 Will be removed in 3.1, see N°3824 */
-		case 'history_from_filter':
-			$oPage->SetContentType('text/html');
-			$oHistoryFilter = DBSearch::unserialize($sFilter);
-			$iStart = (int)utils::ReadParam('start', 0);
-			$iCount = (int)utils::ReadParam('count', MetaModel::GetConfig()->Get('max_history_length'));
-			$oBlock = new HistoryBlock($oHistoryFilter, 'table', false);
-			$oBlock->SetLimit($iCount, $iStart);
-			$oBlock->Display($oPage, 'history');
-			//$oPage->add_ready_script("$('#history table.listResults').tableHover(); $('#history table.listResults').tablesorter( {
-			// widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'full_text_search':
@@ -1615,6 +1591,7 @@ EOF
 			break;
 
 		case 'xlsx_export_dialog':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$oPage->SetContentType('text/html');
 			$oPage->add(
@@ -1683,6 +1660,7 @@ EOF
 			break;
 
 		case 'xlsx_start':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sFilter = utils::ReadParam('filter', '', false, 'raw_data');
 			$bAdvanced = (utils::ReadParam('advanced', 'false') == 'true');
 			$oSearch = DBObjectSearch::unserialize($sFilter);
@@ -1695,6 +1673,7 @@ EOF
 			break;
 
 		case 'xlsx_run':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$sMemoryLimit = MetaModel::GetConfig()->Get('xlsx_exporter_memory_limit');
 			if (utils::SetMinMemoryLimit($sMemoryLimit) === false) {
 				IssueLog::Warning("XSLX export : cannot set memory_limit to {$sMemoryLimit}");
@@ -1712,6 +1691,7 @@ EOF
 			break;
 
 		case 'xlsx_download':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			$oPage = new DownloadPage('');
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			$oPage->SetContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -1722,6 +1702,7 @@ EOF
 			break;
 
 		case 'xlsx_abort':
+			DeprecatedCallsLog::NotifyDeprecatedPhpEndpoint('Use "export_*" operations instead of "'.$operation.'"');
 			// Stop & cleanup an export...
 			$sToken = utils::ReadParam('token', '', false, 'raw_data');
 			ExcelExporter::CleanupFromToken($sToken);
@@ -2514,7 +2495,7 @@ EOF
 				);
 
 				$oSet = new DBObjectSet($oSearch, [], $aSearchParams);
-				$oSet->OptimizeColumnLoad(array($oSearch->GetClassAlias() => array()));
+				$oSet->OptimizeColumnLoad([$oSearch->GetClassAlias() => [$sObjectImageAttCode]]);
 				$oSet->SetLimit(MetaModel::GetConfig()->Get('max_autocomplete_results'));
 				// Note: We have to this manually because of a bug in DBSearch not checking the user prefs. by default.
 				$oSet->SetShowObsoleteData(utils::ShowObsoleteData());
@@ -2539,7 +2520,7 @@ EOF
 						} else {
 							// If no image found, fallback on initials
 							$aMatch['picture_style'] = '';
-							$aMatch['initials'] = utils::ToAcronym($oObject->Get('friendlyname'));
+							$aMatch['initials'] = utils::FormatInitialsForMedallion(utils::ToAcronym($oObject->Get('friendlyname')));
 						}
 					}
 

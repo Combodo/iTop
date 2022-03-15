@@ -51,7 +51,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 
 	'iTopHub:InstalledExtensions' => 'Extensions deployed on this instance~~',
 	'iTopHub:ExtensionCategory:Manual' => 'Extensions deployed manually~~',
-	'iTopHub:ExtensionCategory:Manual+' => 'The following extensions have been deployed by copying them manually in the %1$s directory of iTop:~~',
+	'iTopHub:ExtensionCategory:Manual+' => 'The following extensions have been deployed by copying them manually in the %1$s directory of '.ITOP_APPLICATION_SHORT.':~~',
 	'iTopHub:ExtensionCategory:Remote' => 'Extensions deployed from iTop Hub~~',
 	'iTopHub:ExtensionCategory:Remote+' => 'The following extensions have been deployed from iTop Hub:~~',
 	'iTopHub:NoExtensionInThisCategory' => 'There is no extension in this category~~',
@@ -59,7 +59,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'iTopHub:ExtensionNotInstalled' => 'Not installed~~',
 	'iTopHub:GetMoreExtensions' => 'Get extensions from iTop Hub...~~',
 
-	'iTopHub:LandingWelcome' => 'Congratulations! The following extensions were downloaded from iTop Hub and deployed into your iTop.~~',
+	'iTopHub:LandingWelcome' => 'Congratulations! The following extensions were downloaded from iTop Hub and deployed into your '.ITOP_APPLICATION_SHORT.'.~~',
 	'iTopHub:GoBackToITopBtn' => 'Go Back to '.ITOP_APPLICATION_SHORT.'~~',
 	'iTopHub:Uncompressing' => 'Uncompressing extensions...~~',
 	'iTopHub:InstallationWelcome' => 'Installation of the extensions downloaded from iTop Hub~~',

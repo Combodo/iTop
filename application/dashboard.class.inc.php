@@ -583,7 +583,7 @@ JS
 		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list" data-role="ibo-dashboard--available-dashlets--list">');
 		$aAvailableDashlets = $this->GetAvailableDashlets();
 		foreach ($aAvailableDashlets as $sDashletClass => $aInfo) {
-			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashboard-editor--available-dashlet-icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashboard-editor--available-dashlet-icon" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashboard-editor--available-dashlet-icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashboard-editor--available-dashlet-icon" id="dashlet_'.$sDashletClass.'" data-tooltip-content="'.$aInfo['label'].'"  title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 
@@ -1066,11 +1066,11 @@ EOF
 					 dashboard.html(data);
 					 dashboard.unblock();
 					 if ($('#ibo-dashboard-selector$sDivId input').prop("checked")) {
-					 	$('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToStandard');
+					 	$('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToStandard');
 					 } else {
-					    $('#ibo-dashboard-selector$sDivId').data('tooltip-content', '$sSwitchToCustom');
+					    $('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToCustom');
 					 }
-					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent());
+					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent(), true);
 					}
 				 );
 			}

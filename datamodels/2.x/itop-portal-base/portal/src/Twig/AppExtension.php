@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
+use AttributeDate;
 use Twig\Extension\AbstractExtension;
 
 use AttributeDateTime;
@@ -75,6 +76,10 @@ class AppExtension extends AbstractExtension
 					if (preg_match('@^\d\d\d\d-\d\d-\d\d \d\d:\d\d:\d\d$@', trim($sDate)))
 					{
 						return AttributeDateTime::GetFormat()->Format($sDate);
+					}
+					if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate)))
+					{
+						return AttributeDate::GetFormat()->Format($sDate);
 					}
 				}
 				catch (Exception $e)
