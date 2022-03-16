@@ -50,12 +50,17 @@ use UserRights;
  */
 class ObjectFormHandlerHelper
 {
-	/** @var string ENUM_MODE_VIEW */
+	/** @var string */
 	const ENUM_MODE_VIEW = 'view';
-	/** @var string ENUM_MODE_EDIT */
+	/** @var string */
 	const ENUM_MODE_EDIT = 'edit';
-	/** @var string ENUM_MODE_CREATE */
+	/** @var string */
 	const ENUM_MODE_CREATE = 'create';
+	/**
+	 * @var string
+	 * @since 2.7.7 3.0.1 3.1.0
+	 */
+	const ENUM_MODE_APPLY_STIMULUS = 'apply_stimulus';
 
 	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 	private $oRequestManipulator;
@@ -172,7 +177,7 @@ class ObjectFormHandlerHelper
 					'label' => Dict::S('Portal:Button:Submit'),
 				),
 			);
-			if ($sMode !== 'apply_stimulus')
+			if ($sMode !== static::ENUM_MODE_APPLY_STIMULUS)
 			{
 				// Add transition buttons
 				$oSetToCheckRights = DBObjectSet::FromObject($oObject);
@@ -237,9 +242,9 @@ class ObjectFormHandlerHelper
 			// Note : We might need to distinguish form & renderer endpoints
 			switch($sMode)
 			{
-				case 'create':
-				case 'edit':
-				case 'view':
+				case static::ENUM_MODE_CREATE:
+				case static::ENUM_MODE_EDIT:
+				case static::ENUM_MODE_VIEW:
 					$sFormEndpoint = $this->oUrlGenerator->generate(
 						'p_object_'.$sMode,
 						array(
@@ -249,7 +254,7 @@ class ObjectFormHandlerHelper
 					);
 					break;
 
-				case 'apply_stimulus':
+				case static::ENUM_MODE_APPLY_STIMULUS:
 					$sFormEndpoint = $this->oUrlGenerator->generate(
 						'p_object_apply_stimulus',
 						array(

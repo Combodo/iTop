@@ -65,6 +65,9 @@ try
 	switch ($sOperation)
 	{
 		case 'add':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			$aResult = array(
 				'error' => '',
 				'att_id' => 0,
@@ -111,7 +114,7 @@ try
 					$aResult['error'] = $e->GetMessage();
 				}
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'remove':

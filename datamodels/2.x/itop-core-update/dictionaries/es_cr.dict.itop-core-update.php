@@ -76,8 +76,9 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => 'La aplicación puede ser actualizada',
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'La aplicación no puede ser actualizada: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Advertencia: la actualización de la aplicación puede fallar: %1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
-	'iTopUpdate:UI:CheckInProgress' => 'Please wait during integrity check~~',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Some modified files were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a target="_blank" href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
+	'iTopUpdate:UI:CheckInProgress'=>'Please wait during integrity check~~',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Listo para empezar',

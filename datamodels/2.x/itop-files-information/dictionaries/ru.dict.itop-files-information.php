@@ -12,8 +12,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Файл %1$s отсутствует',
 	'FilesInformation:Error:CorruptedFile' => 'Файл %1$s повреждён',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Невозможно выполнить запись в файл %1$s',
-	'FilesInformation:Error:CannotUpdateNewModules' => '<b>Some new modules were detected</b>, a partial update cannot be executed.</br>Follow the <a href="%2$s"> procedure</a> in order to manually upgrade your iTop. You must use the <a href="%1$s">setup</a> to update the application.~~',
 ));
 
 
