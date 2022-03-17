@@ -564,6 +564,7 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 				var oTemp = $('<div>'+data.name+'</div>');
 				var txt = oTemp.text(); // this causes HTML entities to be interpreted
 
+				var prevValue = $('#'+me.id).val();
 				var newValue;
 				if ($('#label_'+me.id).length) {
 					newValue = iObjectId;
@@ -576,7 +577,6 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 					newValue = txt;
 				}
 
-				var prevValue = $('#'+me.id).val();
 				$('#'+me.id).val(newValue);
 				if (prevValue != newValue) {
 					// dependent fields will be updated using the WizardHelper JS object
