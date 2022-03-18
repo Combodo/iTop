@@ -41,6 +41,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'Relation:depends on/Description' => 'Elementen waarvan dit object afhankelijk van is',
 	'Relation:depends on/DownStream' => 'Is afhankelijk van...',
 	'Relation:depends on/UpStream' => 'Impact op...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 

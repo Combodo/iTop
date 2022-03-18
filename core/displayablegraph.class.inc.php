@@ -1431,13 +1431,14 @@ class DisplayableGraph extends SimpleGraph
 	 * @param int $iObjKey
 	 * @param string $sContextKey
 	 * @param array $aContextParams
+	 * @param bool $bLazyLoading since 2.7.7 3.0.1
 	 *
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 */
-	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), $sLazyLoading = false)
+	function Display(WebPage $oP, $aResults, $sRelation, ApplicationContext $oAppContext, $aExcludedObjects, $sObjClass, $iObjKey, $sContextKey, $aContextParams = array(), $bLazyLoading = false)
 	{
-		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $sLazyLoading);
+		list($aExcludedByClass, $aAdditionalContexts) = $this->DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading);
 		$iGroupingThreshold = utils::ReadParam('g', 5);
 
 		$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/fraphael.js');
@@ -1527,11 +1528,11 @@ class DisplayableGraph extends SimpleGraph
 				// Export as Attachment requires GD (for building the PDF) AND a valid objclass/objkey couple
 				unset($aParams['export_as_attachment']);
 			}
-			if ($oP->IsPrintableVersion() || !$sLazyLoading) {
+			if ($oP->IsPrintableVersion() || !$bLazyLoading) {
 				$oP->add_ready_script(" $('#$sId').simple_graph(".json_encode($aParams).");");
 			} else {
 				$oP->add_script("function Load(){var aExcluded = [];	$('input[name^=excluded]').each( function() {if (!$(this).prop('checked'))	{	aExcluded.push($(this).val());		}} ); var params= $.extend(".json_encode($aParams).",  {excluded_classes: aExcluded}); $('#$sId').simple_graph(params);}");
-				$oP->add_ready_script("$('#impacted_objects_lists').html('".Dict::S('Relation:impacts/NoFilteredData')."');$('#impacted_groups').html('".Dict::S('Relation:impacts/NoFilteredData')."');");
+				$oP->add_ready_script("$('#impacted_objects_lists').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');$('#impacted_groups').html('".utils::TextToHtml(Dict::S('Relation:impacts/NoFilteredData'))."');");
 
 			}
 
@@ -1573,14 +1574,14 @@ EOF
 	 * @param array $aExcludedObjects
 	 * @param \WebPage $oP
 	 * @param array $aResults
-	 * @param bool $sLazyLoading
+	 * @param bool $bLazyLoading
 	 *
 	 * @return array
 	 * @throws \CoreException
 	 * @throws \DictExceptionMissingString
 	 * @since 2.7.7 & 3.0.1
 	 */
-	protected function DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $sLazyLoading)
+	protected function DisplayFiltering($sContextKey, $aContextParams, $aExcludedObjects, $oP, $aResults, $bLazyLoading)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, true, $aContextParams);
 		$aExcludedByClass = array();
@@ -1610,7 +1611,7 @@ EOF
     $('#ReloadMovieBtn').button().button('disable');
 EOF
 		);
-		if ($sLazyLoading) {
+		if ($bLazyLoading) {
 			$oP->add_ready_script("$('#ReloadMovieBtn').button('enable');");
 		} else {
 			$oP->add_ready_script("$('#dh_flash').addClass('closed');");
@@ -1629,7 +1630,7 @@ EOF
 			$oP->add("<span style=\"padding-right:2em; white-space:nowrap;\"><input type=\"checkbox\" id=\"exclude_$idx\" name=\"excluded[]\" value=\"$sSubClass\" checked onChange=\"$('#ReloadMovieBtn').button('enable')\"><label for=\"exclude_$idx\">&nbsp;".MetaModel::GetClassIcon($sSubClass)."&nbsp;$sClassName</label></span> ");
 			$idx++;
 		}
-		if ($sLazyLoading) {
+		if ($bLazyLoading) {
 			$sOnCLick = "Load(); $('#ReloadMovieBtn').attr('onclick','DoReload()');$('#ReloadMovieBtn').html('".Dict::S('UI:Button:Refresh')."');";
 			$oP->add("<p style=\"text-align:right\"><button type=\"button\" id=\"ReloadMovieBtn\" onClick=\"$sOnCLick\">".Dict::S('Relation:impacts/LoadData')."</button></p>");
 		} else {

@@ -32,6 +32,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'Relation:depends on/Description' => 'Elemente, von denen dieses Element abhängt.',
 	'Relation:depends on/DownStream' => 'Hängt ab von ...',
 	'Relation:depends on/UpStream' => 'Wirkt auf ...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 

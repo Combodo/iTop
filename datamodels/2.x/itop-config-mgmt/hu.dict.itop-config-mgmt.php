@@ -29,6 +29,8 @@ Dict::Add('HU HU', 'Hungarian', 'Magyar', array(
 	'Relation:depends on/Description' => 'Konfigurációs elemtől függnek',
 	'Relation:depends on/DownStream' => 'Függőségek',
 	'Relation:depends on/UpStream' => 'Hatások',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 

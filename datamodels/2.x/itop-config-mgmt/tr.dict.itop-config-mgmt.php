@@ -36,6 +36,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Relation:depends on/Description' => 'Bu kaleme bağımlı olan kalemler',
 	'Relation:depends on/DownStream' => 'Bağımlı olanlar...',
 	'Relation:depends on/UpStream' => 'Etkiledikleri...',
+	'Relation:impacts/LoadData'       => 'Load data~~',
+	'Relation:impacts/NoFilteredData' => 'please select objects in Graphical view tag~~',
 ));
 
 
