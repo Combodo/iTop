@@ -1779,7 +1779,7 @@ EOF
 			$oP->SetCurrentTabContainer('Navigator');
 
 			$sFirstTab = MetaModel::GetConfig()->Get('impact_analysis_first_tab');
-			$sLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
+			$bLazyLoading = MetaModel::GetConfig()->Get('impact_analysis_lazy_loading');
 			$sContextKey = "itop-config-mgmt/relation_context/$sClass/$sRelation/$sDirection";
 
 			// Check if the current object supports Attachments, similar to AttachmentPlugin::IsTargetObject
@@ -1800,13 +1800,13 @@ EOF
 			{
 				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 				$oP->SetCurrentTab('UI:RelationshipGraph');
-				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
 				DisplayNavigatorGroupTab($oP);
 			}
 			else
 			{
 				$oP->SetCurrentTab('UI:RelationshipGraph');
-				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$sLazyLoading);
+				$oDisplayGraph->Display($oP, $aResults, $sRelation, $oAppContext, array(), $sClassForAttachment, $iIdForAttachment, $sContextKey, array('this' => $oObj),$bLazyLoading);
 				DisplayNavigatorListTab($oP, $aResults, $sRelation, $sDirection, $oObj);
 				DisplayNavigatorGroupTab($oP);
 			}
