@@ -36,10 +36,20 @@ class MissingDependencyException extends CoreException
 HTML;
 		foreach ($this->aModulesInfo as $sModuleId => $aModuleErrors) {
 			$sModuleLabel = $aModuleErrors['module']['label'];
-			$sModuleMissingDependencies = implode(' + ', $aModuleErrors['dependencies']);
+			$aModuleMissingDependencies = $aModuleErrors['dependencies'];
 			$sErrorMessage .= <<<HTML
-	<li>{$sModuleLabel} ({$sModuleId}): {$sModuleMissingDependencies}</li>
+	<li><strong>{$sModuleLabel} ({$sModuleId})</strong>:
+		<ul>
 HTML;
+
+			foreach ($aModuleMissingDependencies as $sMissingModule) {
+				$sErrorMessage .= "<li>{$sMissingModule}</li>";
+			}
+			$sErrorMessage .= <<<HTML
+		</ul>
+	</li>
+HTML;
+
 		}
 		$sErrorMessage .= '</ul>';
 
