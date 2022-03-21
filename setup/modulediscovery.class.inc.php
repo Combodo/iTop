@@ -19,9 +19,32 @@
  *
  */
 
-class MissingDependencyException extends Exception
+class MissingDependencyException extends CoreException
 {
+	/**
+	 * @see init in OrderModulesByDependencies
+	 * @var array module id as key
+	 *            another array as value, containing : 'module' with module info, 'dependencies' with missing dependencies
+	 */
 	public $aModulesInfo;
+
+	public function GetMessageForHtml()
+	{
+		$sErrorMessage = <<<HTML
+<p>The following modules have unmet dependencies:</p>
+<ul>
+HTML;
+		foreach ($this->aModulesInfo as $sModuleId => $aModuleErrors) {
+			$sModuleLabel = $aModuleErrors['module']['label'];
+			$sModuleMissingDependencies = implode(' + ', $aModuleErrors['dependencies']);
+			$sErrorMessage .= <<<HTML
+	<li>{$sModuleLabel} ({$sModuleId}): {$sModuleMissingDependencies}</li>
+HTML;
+		}
+		$sErrorMessage .= '</ul>';
+
+		return $sErrorMessage;
+	}
 }
 
 class ModuleDiscovery
