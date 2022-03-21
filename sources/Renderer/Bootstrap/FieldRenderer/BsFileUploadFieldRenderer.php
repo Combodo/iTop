@@ -183,7 +183,7 @@ JS
 			'{{iAttId}}',
 			'{{sLineStyle}}',
 			'{{sDocDownloadUrl}}',
-			'{{bHasPreview}}',
+		     true,
 			'{{sAttachmentThumbUrl}}',
 			'{{sFileName}}',
 			'{{sAttachmentMeta}}',
@@ -214,7 +214,7 @@ JS
 			function UpdateAttachmentsCount(iIncrement)
 			{
 				var countContainer = $("a#$sCollapseTogglerId>span.attachments-count"),
-					iCountCurrentValue = parseInt(countContainer.text());
+				iCountCurrentValue = parseInt(countContainer.text());
 				countContainer.text(iCountCurrentValue+iIncrement);
 			}
 
@@ -246,20 +246,24 @@ JS
 							{search: "{{iAttId}}", replace:iAttId },
 							{search: "{{lineStyle}}", replace:'' },
 							{search: "{{sDocDownloadUrl}}", replace:sDownloadLink },
-							{search: "{{sHasPreview}}", replace:data.result.preview },
 							{search: "{{sAttachmentThumbUrl}}", replace:data.result.icon },
 							{search: "{{sFileName}}", replace: data.result.msg },
 							{search: "{{sAttachmentMeta}}", replace:sAttachmentMeta },
 							{search: "{{sFileSize}}", replace:data.result.file_size },
 							{search: "{{sAttachmentDate}}", replace:data.result.creation_date },
 						];
-						var sAttachmentRow = attachmentRowTemplate;
+						var sAttachmentRow = attachmentRowTemplate   ;
 						$.each(replaces, function(indexInArray, value ) {
 							var re = new RegExp(value.search, 'gi');
 							sAttachmentRow = sAttachmentRow.replace(re, value.replace);
 						});
 						
-						\$oAttachmentTBody.append(sAttachmentRow);
+						var oElem = $(sAttachmentRow);
+						if(!data.result.preview){
+							oElem.find('[data-tooltip-html-enabled="true"]').removeAttr('data-tooltip-content');
+							oElem.find('[data-tooltip-html-enabled="true"]').removeAttr('data-tooltip-html-enabled');
+						}
+						\$oAttachmentTBody.append(oElem);
 						// Remove button handler
 						$('#display_attachment_'+data.result.att_id+' :button').on('click', function(oEvent){
 							oEvent.preventDefault();
