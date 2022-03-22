@@ -454,12 +454,12 @@ class SetupUtils
 			if (!empty($sPhpNextMinVersion)) {
 				if (version_compare($sPhpVersion, self::PHP_NEXT_MIN_VERSION, '>=')) {
 					$aResult[] = new CheckResult(CheckResult::INFO,
-						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is greater than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
 				else
 				{
 					$aResult[] = new CheckResult(CheckResult::WARNING,
-						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." release, which is (".self::PHP_NEXT_MIN_VERSION.")");
+						"The current PHP Version (".$sPhpVersion.") is lower than the minimum version required to run next ".ITOP_APPLICATION." major release, which is (".self::PHP_NEXT_MIN_VERSION.")");
 				}
 			}
 
