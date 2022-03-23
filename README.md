@@ -78,19 +78,19 @@ We would like to give a special thank you 🤗 to the people from the community 
 
 - Alves, David
 - Beck, Pedro
-- Beer, Christian (a.k.a @ChristianBeer)
+- Beer, Christian (a.k.a [@ChristianBeer](https://www.github.com/ChristianBeer))
 - Bilger, Jean-François
-- Bostoen, Jeffrey (a.k.a @jbostoen)
+- Bostoen, Jeffrey (a.k.a [@jbostoen](https://www.github.com/jbostoen))
 - Cardoso, Anderson
 - Cassaro, Bruno
-- Casteleyn, Thomas (a.k.a @Hipska)
+- Casteleyn, Thomas (a.k.a [@Hipska](https://www.github.com/Hipska))
 - Castro, Randall Badilla
 - Colantoni, Maria Laura
 - Couronné, Guy
 - Dvořák, Lukáš
 - Goethals, Stefan
 - Gumble, David
-- Kaltefleiter, Lars (a.k.a @larhip)
+- Kaltefleiter, Lars (a.k.a [@larhip](https://www.github.com/larhip))
 - Khamit, Shamil
 - Kincel, Martin
 - Konečný, Kamil
@@ -99,12 +99,12 @@ We would like to give a special thank you 🤗 to the people from the community 
 - Lazcano, Federico
 - Lucas, Jonathan
 - Malik, Remie
-- Mindêllo de Andrade, Lucas (a.k.a @rokam)
+- Mindêllo de Andrade, Lucas (a.k.a [@rokam](https://www.github.com/rokam))
 - Raenker, Martin
 - Rosenke, Stephan
 - Seki, Shoji
 - Shilov, Vladimir
-- Stukalov, Ilya (a.k.a @ilya-stukalov)
+- Stukalov, Ilya (a.k.a [@ilya](https://www.github.com/ilya)-stukalov)
 - Tulio, Marco
 - Turrubiates, Miguel
 
