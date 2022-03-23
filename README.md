@@ -78,6 +78,7 @@ We would like to give a special thank you 🤗 to the people from the community 
 
 - Alves, David
 - Beck, Pedro
+- Beer, Christian (a.k.a @ChristianBeer)
 - Bilger, Jean-François
 - Bostoen, Jeffrey (a.k.a @jbostoen)
 - Cardoso, Anderson
