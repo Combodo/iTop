@@ -38,7 +38,7 @@ HTML;
 			$sModuleLabel = $aModuleErrors['module']['label'];
 			$aModuleMissingDependencies = $aModuleErrors['dependencies'];
 			$sErrorMessage .= <<<HTML
-	<li><strong>{$sModuleLabel} ({$sModuleId})</strong>:
+	<li><strong>{$sModuleLabel}</strong> ({$sModuleId}):
 		<ul>
 HTML;
 
