@@ -19,10 +19,16 @@
 ;
 // Apply a listener to <body> element so we don't have to create one for every button on the page
 
-// ibo-button elements
-$('body').on('enter_loading_state.button.itop', '[data-role="ibo-button"]', function(){
-	$(this).addClass('ibo-is-loading').prop('disabled', true);
+// ibo-button-group elements
+$('body').on('enter_loading_state.button_group.itop', '[data-role="ibo-button-group"]', function(){
+		$(this).find('[data-role="ibo-button"]').each(function(){
+			$(this).prop('disabled', true);
+		});
+		$(this).find('[data-role="ibo-button"]:first').trigger('enter_loading_state.button.itop');
 })
-.on('leave_loading_state.button.itop', '[data-role="ibo-button"]', function(){
-	$(this).removeClass('ibo-is-loading').prop('disabled', false);
+.on('leave_loading_state.button_group.itop', '[data-role="ibo-button-group"]', function(){
+	$(this).find('[data-role="ibo-button"]').each(function(){
+		$(this).prop('disabled', false);
+	});
+	$(this).find('[data-role="ibo-button"]:first').trigger('leave_loading_state.button.itop');
 });

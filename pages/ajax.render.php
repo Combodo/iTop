@@ -687,7 +687,7 @@ try
 				if ($sFilter != '') {
 					$oFilter = DBObjectSearch::FromOQL($sFilter);
 					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
-					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams);
+					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams, $aParams['currentId']);
 					$sChartType = isset($aParams['chart_type']) ? $aParams['chart_type'] : 'pie';
 					switch ($sChartType) {
 						case 'bars':

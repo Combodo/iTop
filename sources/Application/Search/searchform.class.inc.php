@@ -493,7 +493,7 @@ class SearchForm
 				$aAllowedValues = array();
 				while ($oObject = $oSet->Fetch())
 				{
-					$aAllowedValues[] = ["value"=>$oObject->GetKey(), "label" => $oObject->GetName()];
+					$aAllowedValues[$oObject->GetKey()] = $oObject->GetName();
 				}
 				return array('values' => $aAllowedValues);
 			}
