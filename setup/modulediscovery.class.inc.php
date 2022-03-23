@@ -28,6 +28,10 @@ class MissingDependencyException extends CoreException
 	 */
 	public $aModulesInfo;
 
+	/**
+	 * @return string HTML to print to the user the modules impacted
+	 * @since 2.7.7 3.0.2 3.1.0 PR #280
+	 */
 	public function GetMessageForHtml()
 	{
 		$sErrorMessage = <<<HTML
