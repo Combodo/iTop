@@ -476,11 +476,11 @@ class Config
 			'show_in_conf_sample' => true,
 		),
 		'cron_max_execution_time' => array(
-			'type' => 'integer',
-			'description' => 'Duration (seconds) of the page cron.php, must be shorter than php setting max_execution_time and shorter than the web server response timeout',
-			'default' => 600,
-			'value' => 600,
-			'source_of_value' => '',
+			'type'                => 'integer',
+			'description'         => 'Duration (seconds) of the cron.php script : if exceeded the script will exit even if there are remaining tasks to process. Must be shorter than php max_execution_time setting (note than when using CLI, this is set to 0 by default which means unlimited). If cron.php is ran via web, it must be shorter than the web server response timeout.',
+			'default'             => 600,
+			'value'               => 600,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		),
 		'cron_sleep' => array(
