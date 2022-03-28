@@ -975,7 +975,7 @@ HTML
 		$oPage->add_ready_script(<<<JS
 $('#ac_create_{$this->iId}').dialog({ width: 'auto', height: 'auto', maxHeight: $(window).height() - 50, autoOpen: false, modal: true});
 $('#dcr_{$this->iId} form').removeAttr('onsubmit');
-$('#dcr_{$this->iId} form').on('submit.uilinksWizard', oACWidget_{$this->iId}.DoCreateObject);
+$('#dcr_{$this->iId} form').find('button[type="submit"]').on('click', oACWidget_{$this->iId}.DoCreateObject);
 JS
 		);
 	}

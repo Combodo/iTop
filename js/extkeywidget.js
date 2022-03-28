@@ -736,7 +736,10 @@ function ExtKeyWidget(id, sTargetClass, sFilter, sTitle, bSelectMode, oWizHelper
 							var sId = $(this).attr('id');
 							var editorInst = CKEDITOR.instances[sId];
 							if (editorInst) {
-								editorInst.updateElement();
+								editorInst.destroy();
+							}
+							if ($('#'+sId).data('timeout_validate') != undefined) {
+								clearInterval($('#'+sId).data('timeout_validate'));
 							}
 						}
 
