@@ -7370,7 +7370,18 @@ abstract class MetaModel
 									}
 								}
 								catch (Exception $e) {
-									// No replacement will occur
+									$aContext = [
+										'placeholder'   => $sPlaceholderAttCode,
+										'replace class' => get_class($replace),
+									];
+									if ($replace instanceof DBObject) {
+										$aContext['replace id'] = $replace->GetKey();
+									}
+									IssueLog::Debug(
+										'Invalid placeholder in notification, no replacement will occur !',
+										LogChannels::NOTIFICATION,
+										$aContext
+									);
 								}
 							}
 						}
@@ -7391,7 +7402,14 @@ abstract class MetaModel
 								$aSearches[] = $aMatches[1][$idx].$sSearch.$aMatches[1][$idx];
 							}
 							catch (Exception $e) {
-								// No replacement will occur
+								IssueLog::Debug(
+									'Invalid placeholder in notification, no replacement will occur !',
+									LogChannels::NOTIFICATION,
+									[
+										'placeholder' => $sPlaceholderAttCode,
+										'replace'     => $replace,
+									]
+								);
 							}
 						}
 					}
