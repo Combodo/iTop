@@ -56,7 +56,7 @@ class FilesInformation
 
 	    try
 	    {
-		    FilesIntegrity::CheckInstallationIntegrity();
+		    FilesIntegrity::CheckInstallationIntegrity(APPROOT, false);
 	    }
         catch (FileIntegrityException $e)
 	    {

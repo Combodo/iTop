@@ -476,7 +476,7 @@ class DisplayBlock
 					$oExceptionAlert = AlertUIBlockFactory::MakeForFailure('Cannot display results', $sExceptionContent);
 					$oHtml->AddSubBlock($oExceptionAlert);
 				}
-				IssueLog::Error('Exception during GetDisplay: '.$e->getMessage());
+				ExceptionLog::LogException($e);
 			}
 		} else {
 			// render it as an Ajax (asynchronous) call

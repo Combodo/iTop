@@ -687,7 +687,7 @@ try
 				if ($sFilter != '') {
 					$oFilter = DBObjectSearch::FromOQL($sFilter);
 					$oDisplayBlock = new DisplayBlock($oFilter, 'chart_ajax', false);
-					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams);
+					$oBlock = $oDisplayBlock->GetRenderContent($oPage, $aParams, $aParams['currentId']);
 					$sChartType = isset($aParams['chart_type']) ? $aParams['chart_type'] : 'pie';
 					switch ($sChartType) {
 						case 'bars':
@@ -888,6 +888,9 @@ try
 			break;
 
 		case 'import_dashboard':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
 			if (!utils::IsTransactionValid($sTransactionId, true))
 			{
@@ -916,7 +919,7 @@ try
 			{
 				$aResult['error'] = 'Dashboard id="'.$sDashboardId.'" not found.';
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		case 'toggle_dashboard':
@@ -1851,7 +1854,8 @@ EOF
 
 				// Save the generated PDF as an attachment
 				$sPDF = $oPage->get_pdf();
-				$oPage = new AjaxPage('');
+				$oPage = new JsonPage();
+				$oPage->SetOutputDataOnly(true);
 				$oAttachment = MetaModel::NewObject('Attachment');
 				$oAttachment->Set('item_class', $sObjClass);
 				$oAttachment->Set('item_id', $iObjKey);
@@ -1862,7 +1866,7 @@ EOF
 					'status' => 'ok',
 					'att_id' => $iAttachmentId,
 				);
-				$oPage->add(json_encode($aRet));
+				$oPage->SetData($aRet);
 			}
 			break;
 
@@ -2040,10 +2044,14 @@ EOF
 			break;
 
 		case 'export_build':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->ExportBuild($oPage, false);
 			break;
 
 		case 'export_build_portal':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->ExportBuild($oPage, true);
 			break;
 
@@ -2163,6 +2171,9 @@ EOF
 			break;
 
 		case 'cke_img_upload':
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
+
 			// Image uploaded via CKEditor
 			$aResult = array(
 				'uploaded' => 0,
@@ -2233,7 +2244,7 @@ EOF
 					$aResult['error'] = $e->GetMessage();
 				}
 			}
-			$oPage->add(json_encode($aResult));
+			$oPage->SetData($aResult);
 			break;
 
 		/** @noinspection PhpMissingBreakStatementInspection cke_upload_and_browse and cke_browse are chained */
@@ -2632,7 +2643,8 @@ EOF
 		// Navigation menu
 		//--------------------------------
 		case 'get_menus_count':
-
+			$oPage = new JsonPage();
+			$oPage->SetOutputDataOnly(true);
 			$oAjaxRenderController->GetMenusCount($oPage);
 			break;
 

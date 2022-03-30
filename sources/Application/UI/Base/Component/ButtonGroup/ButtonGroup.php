@@ -25,6 +25,10 @@ class ButtonGroup extends UIBlock
 	public const BLOCK_CODE = 'ibo-button-group';
 	/** @inheritDoc */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = 'base/components/button-group/layout';
+	public const DEFAULT_JS_FILES_REL_PATH = [
+		'js/components/button-group.js',
+	];
+	public const REQUIRES_ANCESTORS_DEFAULT_JS_FILES = true;
 
 	/** @var \Combodo\iTop\Application\UI\Base\Component\Button\Button[] Buttons to be displayed as a group */
 	protected $aButtons;

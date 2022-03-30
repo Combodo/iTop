@@ -517,6 +517,8 @@ class ObjectController extends BrickController
 				$oSubRequest = $oRequest;
 				$oSubRequest->request->set('operation', 'submit');
 				$oSubRequest->request->set('stimulus_code', '');
+				$oSubRequest->request->set('formmanager_class', $aData['form']['formmanager_class']);
+				$oSubRequest->request->set('formmanager_data', json_encode($aData['form']['formmanager_data']));
 
 				$aData = array('sMode' => 'apply_stimulus');
 				$aData['form'] = $oObjectFormHandler->HandleForm($oSubRequest, $aData['sMode'], $sObjectClass, $sObjectId,
@@ -1244,7 +1246,7 @@ class ObjectController extends BrickController
 						}
 
 						$aData['att_id'] = $iAttId;
-						$aData['preview'] = $oDocument->IsPreviewAvailable() ? 'true' : 'false';
+						$aData['preview'] = $oDocument->IsPreviewAvailable() ;
 						$aData['file_size'] = $oDocument->GetFormattedSize();
 						$aData['creation_date'] = $oAttachment->Get('creation_date');
 						$aData['user_id_friendlyname'] = $oAttachment->Get('user_id_friendlyname');

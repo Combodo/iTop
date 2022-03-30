@@ -24,9 +24,8 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	// Errors
 	'FilesInformation:Error:MissingFile' => 'Fehlende Datei: %1$s',
 	'FilesInformation:Error:CorruptedFile' => 'Datei %1$s ist beschädigt',
+	'FilesInformation:Error:ListCorruptedFile' => 'File(s) corrupted: %1$s~~',
 	'FilesInformation:Error:CantWriteToFile' => 'Datei %1$s kann nicht geschrieben werden',
-	'FilesInformation:Error:CannotUpdateNewModules' =>  '<b>Einige neue Module wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
-
 ));
 
 

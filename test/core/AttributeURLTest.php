@@ -38,6 +38,7 @@ class AttributeURLTest extends ItopTestCase {
 			'Sharepoint URL 1' => ['https://mydomain1.sharepoint.com/:i:/r/sites/DSIMyDept/Shared%20Documents/Architecture%20Technique/02%20-%20R%C3%A9seau/Baie%2025C/Baie%201er/Baie-25C-1er.jpg?csf=1&web=1&e=Il3txR', 1],
 			'Sharepoint URL 2' => ['https://mydomain2.sharepoint.com/:u:/r/sites/DIS/ITSM/00_Admin_iTOP/iTop%20-%20Upgrade%20manuel/Procedure%20upgrade%20Combodo.url?csf=1&web=1&e=DAF0i3', 1],
 			'Alfresco URL 2' => ['http://alfresco.mydomain3.org/share/page/site/books/document-details?nodeRef=workspace://SpacesStore/6274f55f-a25b-4762-a863-77f7066f2034', 1],
+			'SF URL' => ['https://sourceforge.net/p/itop/discussion/customizing-itop/thread/707145b859/?limit=25#f53c', 1],
 		];
 	}
 }
