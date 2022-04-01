@@ -1725,6 +1725,16 @@ EOF
 						$aParameters['definition_file'] = "'".str_replace("'", "\\'", $sFileName)."'";
 					}
 				}
+				elseif ($sAttType == 'AttributeClass')
+				{
+                    $aParameters['class_category'] = $this->GetPropString($oField, 'class_category', '');
+                    $aParameters['more_values'] = $this->GetPropString($oField, 'more_values', '');
+                    $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
+                    $aParameters['sql'] = $this->GetMandatoryPropString($oField, 'sql');
+                    $aParameters['default_value'] = $this->GetPropString($oField, 'default_value', '');
+                    $aParameters['is_null_allowed'] = $this->GetPropBoolean($oField, 'is_null_allowed', false);
+                    $aParameters['depends_on'] = $sDependencies;
+				}
 				else
 				{
                     $aParameters['allowed_values'] = 'null'; // or "new ValueSetEnum('SELECT xxxx')"
