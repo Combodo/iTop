@@ -413,6 +413,10 @@ class DBObjectSearch extends DBSearch
 	}
 
 	/**
+	 * Important: If you need to add a condition on the same $sFilterCode several times with different $value values; do not use this method as the previous $value occurences will be replaced by the last. Instead use:
+	 *  * {@see \DBObjectSearch::AddConditionExpression()} in loops to add conditions one by one
+	 *  * {@see \DBObjectSearch::AddConditionForInOperatorUsingParam()} for IN/NOT IN queries with lots of params at once
+	 *
 	 * @param string $sFilterCode
 	 * @param mixed $value
 	 * @param string $sOpCode operator to use : 'IN', 'NOT IN', 'Contains',' Begins with', 'Finishes with', ...
@@ -423,8 +427,6 @@ class DBObjectSearch extends DBSearch
 	 * @param bool $bParseSearchString
 	 *
 	 * @throws \CoreException
-	 *
-	 * @see AddConditionForInOperatorUsingParam for IN/NOT IN queries with lots of params
 	 */
 	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSearchString = false)
 	{
