@@ -608,15 +608,7 @@ abstract class CMDBObject extends DBObject
 
 	public function DBUpdate()
 	{
-		// Copy the changes list before the update (the list should be reset afterwards)
-		$aChanges = $this->ListChanges();
-		if (count($aChanges) == 0)
-		{
-			return;
-		}
-		
-		$ret = parent::DBUpdate();
-		return $ret;
+		parent::DBUpdate();
 	}
 
 

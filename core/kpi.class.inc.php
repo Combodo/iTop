@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
 
 
 /**
@@ -39,8 +37,6 @@ class ExecutionKPI
 	 * @var array[ExecutionKPI]
 	 */
 	static protected $m_aExecutionStack = []; // embedded execution stats
-	// Event listener
-	static protected $oKPIEventListener;
 
 	protected $m_fStarted = null;
 	protected $m_fChildrenDuration = 0; // Count embedded
@@ -292,9 +288,6 @@ class ExecutionKPI
 
 	public function __construct()
 	{
-		if (is_null(static::$oKPIEventListener)) {
-			static::$oKPIEventListener = new KPIEventListener();
-		}
 		$this->ResetCounters();
 		self::Push($this);
 	}
@@ -306,7 +299,7 @@ class ExecutionKPI
 	 */
 	private static function Push(ExecutionKPI $oExecutionKPI)
 	{
-		array_push(self::$m_aExecutionStack, $oExecutionKPI);
+		self::$m_aExecutionStack[] = $oExecutionKPI;
 	}
 
 	/**
@@ -454,23 +447,5 @@ class ExecutionKPI
 		}
 		// PHP > 5.2.1 - this verb depends on a compilation option
 		return 0;
-	}
-}
-
-class KPIEventListener
-{
-	// Data model is not yet loaded, so EVENT_SERVICE_DB_OBJECT_LOADED is not yet defined
-	const EVENT_SERVICE_DB_OBJECT_LOADED = 'DBObjectLoaded';
-
-	public function __construct()
-	{
-		EventService::RegisterListener(self::EVENT_SERVICE_DB_OBJECT_LOADED, [get_class($this), 'OnObjectLoaded']);
-	}
-
-	public static function OnObjectLoaded(EventData $oEventData)
-	{
-		$oObject = $oEventData->GetEventData()['object'];
-		$oKPI = new ExecutionKPI();
-		$oKPI->ComputeStats('Objects Loaded (no duration)', get_class($oObject));
 	}
 }

@@ -149,7 +149,6 @@ abstract class DBObject implements iDisplay
 	 * @var string local events suffix
 	 */
 	protected $m_sEventUniqId = '';
-	protected static $m_iEventUniqCounter = 0;
 
 
 	/**
@@ -176,9 +175,8 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sEventUniqId = 'DataModel_'.get_class($this).'_'.self::$m_iEventUniqCounter++;
+			$this->m_sEventUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
 			$this->RegisterEvents();
-			$this->FireEvent(EVENT_SERVICE_DB_OBJECT_LOADED);
 			return;
 		}
 		// Creation of a brand new object
@@ -206,9 +204,8 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes();
 
-		$this->m_sEventUniqId = 'DataModel_'.self::$m_iEventUniqCounter++;
+		$this->m_sEventUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
 		$this->RegisterEvents();
-		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_NEW);
 	}
 
 	protected function RegisterEvents()
@@ -504,7 +501,6 @@ abstract class DBObject implements iDisplay
 		// Load extended data
 		if ($aExtendedDataSpec != null)
 		{
-			$aExtendedDataSpec['table'];
 			foreach($aExtendedDataSpec['fields'] as $sColumn)
 			{
 				$sColRef = $sClassAlias.'_extdata_'.$sColumn;
@@ -1633,10 +1629,10 @@ abstract class DBObject implements iDisplay
 	{
 		if ($sType == FriendlyNameType::SHORT) {
 			return $this->Get('friendlyname');
-		} else {
-			$oExpression = MetaModel::GetNameExpression(get_class($this), $sType);
-			$this->EvaluateExpression($oExpression);
 		}
+		$oExpression = MetaModel::GetNameExpression(get_class($this), $sType);
+
+		return $this->EvaluateExpression($oExpression);
 	}
 
 	/**
@@ -2809,6 +2805,10 @@ abstract class DBObject implements iDisplay
 		}
 
 		$sClass = get_class($this);
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBInsert $sClass::0 Starting", LogChannels::DM_CRUD);
+		}
+
 		$sRootClass = MetaModel::GetRootClass($sClass);
 
 		// Ensure the update of the values (we are accessing the data directly)
@@ -2893,7 +2893,6 @@ abstract class DBObject implements iDisplay
 				}
 
 			$this->OnObjectKeyReady();
-			$this->FireEvent(EVENT_SERVICE_DB_OBJECT_KEY_READY);
 
 				$this->DBWriteLinks();
 				$this->WriteExternalAttributes();
@@ -3105,6 +3104,11 @@ abstract class DBObject implements iDisplay
         }
 
 		$this->Reload();
+		$sClass = get_class($this);
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBInsert $sClass::{$this->m_iKey} Created", LogChannels::DM_CRUD);
+		}
+
 		return $this->m_iKey;
 	}
 
@@ -3168,14 +3172,21 @@ abstract class DBObject implements iDisplay
 		}
 		// Protect against reentrance (e.g. cascading the update of ticket logs)
 		static $aUpdateReentrance = array();
-		$sKey = get_class($this).'::'.$this->GetKey();
+		$sClass = get_class($this);
+		$sKey = $sClass.'::'.$this->GetKey();
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBUpdate $sKey Starting", LogChannels::DM_CRUD);
+		}
+
 		if (array_key_exists($sKey, $aUpdateReentrance))
 		{
+			if ($sClass == 'UserRequest') {
+				IssueLog::Debug("CRUD: DBUpdate $sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+			}
+
 			return false;
 		}
 		$aUpdateReentrance[$sKey] = true;
-
-		$this->InitPreviousValuesForUpdatedAttributes();
 
 		try
 		{
@@ -3184,7 +3195,7 @@ abstract class DBObject implements iDisplay
 			$sState = $this->GetState();
 			if ($sState != '')
 			{
-				foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
+				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
 				{
 					if ($oAttDef instanceof AttributeStopWatch)
 					{
@@ -3202,12 +3213,16 @@ abstract class DBObject implements iDisplay
 			$this->OnUpdate();
 			$this->FireEvent(EVENT_SERVICE_BEFORE_UPDATE);
 
+			$this->InitPreviousValuesForUpdatedAttributes();
 
 			$aChanges = $this->ListChanges();
 			if (count($aChanges) == 0)
 			{
 				// Attempting to update an unchanged object
 				unset($aUpdateReentrance[$sKey]);
+				if ($sClass == 'UserRequest') {
+					IssueLog::Debug("CRUD: DBUpdate $sKey Aborted (no change)", LogChannels::DM_CRUD);
+				}
 
 				return $this->m_iKey;
 			}
@@ -3218,7 +3233,7 @@ abstract class DBObject implements iDisplay
 			{
 				throw new CoreCannotSaveObjectException(array(
 					'issues' => $aIssues,
-					'class' => get_class($this),
+					'class' => $sClass,
 					'id' => $this->GetKey()
 				));
 			}
@@ -3227,7 +3242,6 @@ abstract class DBObject implements iDisplay
 			$aOriginalValues = $this->m_aOrigValues;
 
 			// Activate any existing trigger
-			$sClass = get_class($this);
 			// - TriggerOnObjectMention
 			$this->ActivateOnMentionTriggers(false);
 
@@ -3236,7 +3250,7 @@ abstract class DBObject implements iDisplay
 			$aDBChanges = array();
 			foreach ($aChanges as $sAttCode => $valuecurr)
 			{
-				$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 				if ($oAttDef->IsExternalKey())
 				{
 					$bHasANewExternalKeyValue = true;
@@ -3275,7 +3289,7 @@ abstract class DBObject implements iDisplay
 						// Update the left & right indexes for each hierarchical key
 						foreach ($aHierarchicalKeys as $sAttCode => $oAttDef)
 						{
-							$sTable = MetaModel::DBGetTable(get_class($this), $sAttCode);
+							$sTable = MetaModel::DBGetTable($sClass, $sAttCode);
 							$sSQL = "SELECT `".$oAttDef->GetSQLRight()."` AS `right`, `".$oAttDef->GetSQLLeft()."` AS `left` FROM `$sTable` WHERE id=".$this->GetKey();
 							$aRes = CMDBSource::QueryToArray($sSQL);
 							$iMyLeft = $aRes[0]['left'];
@@ -3315,7 +3329,7 @@ abstract class DBObject implements iDisplay
 						// Update scalar attributes
 						if (count($aDBChanges) != 0)
 						{
-							$oFilter = new DBObjectSearch(get_class($this));
+							$oFilter = new DBObjectSearch($sClass);
 							$oFilter->AddCondition('id', $this->m_iKey, '=');
 							$oFilter->AllowAllData();
 
@@ -3360,7 +3374,7 @@ abstract class DBObject implements iDisplay
 					$aErrors = array($e->getMessage());
 					throw new CoreCannotSaveObjectException(array(
 						'id' => $this->GetKey(),
-						'class' => get_class($this),
+						'class' => $sClass,
 						'issues' => $aErrors
 					), $e);
 				}
@@ -3383,7 +3397,7 @@ abstract class DBObject implements iDisplay
 					$aErrors = array($e->getMessage());
 					throw new CoreCannotSaveObjectException(array(
 						'id' => $this->GetKey(),
-						'class' => get_class($this),
+						'class' => $sClass,
 						'issues' => $aErrors,
 					));
 				}
@@ -3412,7 +3426,6 @@ abstract class DBObject implements iDisplay
 				}
 
 				$this->AfterUpdate();
-				$this->FireEvent(EVENT_SERVICE_AFTER_UPDATE);
 
 				// Reload to get the external attributes
 				if ($bHasANewExternalKeyValue) {
@@ -3432,12 +3445,17 @@ abstract class DBObject implements iDisplay
 			catch (Exception $e)
 			{
 				$aErrors = array($e->getMessage());
-				throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => get_class($this), 'issues' => $aErrors));
+				throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
 			}
 		}
 		finally
 		{
 			unset($aUpdateReentrance[$sKey]);
+		}
+		$this->FireEvent(EVENT_SERVICE_AFTER_UPDATE, ['changes' => $aChanges]);
+
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBUpdate $sKey Updated", LogChannels::DM_CRUD);
 		}
 
 		return $this->m_iKey;
@@ -3931,7 +3949,9 @@ abstract class DBObject implements iDisplay
 			IssueLog::Error("$sClass: Transition $sStimulusCode is not allowed in ".$this->Get($sStateAttCode));
 			return false;
 		}
-
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: ApplyStimulus $sStimulusCode $sClass::{$this->m_iKey} Starting", LogChannels::DM_CRUD);
+		}
 		// save current object values in case of an action failure (in memory rollback)
 		$aBackupValues = array();
 		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)	{
@@ -3947,7 +3967,7 @@ abstract class DBObject implements iDisplay
 
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
-		$this->FireEvent(EVENT_SERVICE_BEFORE_APPLY_STIMULUS);
+		$this->FireEvent(EVENT_SERVICE_BEFORE_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
@@ -4067,7 +4087,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			$this->FireEvent(EVENT_SERVICE_AFTER_APPLY_STIMULUS);
+			$this->FireEvent(EVENT_SERVICE_AFTER_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
 		}
 		else
 		{
@@ -4077,7 +4097,9 @@ abstract class DBObject implements iDisplay
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
 		}
-
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: ApplyStimulus $sStimulusCode $sClass::{$this->m_iKey} Ending", LogChannels::DM_CRUD);
+		}
 		return $bSuccess;
 	}
 

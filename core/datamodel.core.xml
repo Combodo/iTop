@@ -136,32 +136,6 @@
         </argument>
       </arguments>
     </event>
-    <event id="DBObjectLoaded" _delta="define">
-      <description>An object has been loaded from the database</description>
-      <arguments>
-        <argument id="object">
-          <description>The object loaded</description>
-          <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </argument>
-      </arguments>
-    </event>
-    <event id="DBObjectNew" _delta="define">
-      <description>An object has been created in memory</description>
-      <arguments>
-        <argument id="object">
-          <description>The object created</description>
-          <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </argument>
-      </arguments>
-    </event>
     <event id="DBObjectReload" _delta="define">
       <description>An object has been re-loaded from the database</description>
       <arguments>
@@ -193,7 +167,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="DoCheckToDelete" _delta="define">
+    <event id="OnCheckToDelete" _delta="define">
       <description>Check an object before it is deleted from the database</description>
       <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
       <arguments>

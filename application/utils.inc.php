@@ -3075,4 +3075,9 @@ HTML;
 
 		return $sUrl;
 	}
+
+	public static function GetUniqId()
+	{
+		return hash('sha256', uniqid(sprintf('%x', rand()), true).sprintf('%x', rand()));
+	}
 }

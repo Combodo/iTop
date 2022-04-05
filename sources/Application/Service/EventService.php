@@ -11,14 +11,14 @@ use ContextTag;
 use Exception;
 use ExecutionKPI;
 use IssueLog;
-
-define('LOG_EVENT_SERVICE_CHANNEL', 'EventService');
+use LogChannels;
 
 class EventService
 {
 	public static $aEventListeners = [];
 	private static $iEventIdCounter = 0;
 	private static $aEventDescription = [];
+	Private static $aReentranceProtection = [];
 
 	/**
 	 * Register a callback for a specific event
@@ -32,7 +32,6 @@ class EventService
 	 *
 	 * @return string Id of the registration (used for unregistering)
 	 *
-	 * @throws \Exception
 	 */
 	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, $aCallbackData = [], $context = null, float $fPriority = 0.0): string
 	{
@@ -64,8 +63,8 @@ class EventService
 		foreach (self::$aEventListeners as $aEvent) {
 			$iTotalRegistrations += count($aEvent);
 		}
-		$sEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
-		IssueLog::Trace("Registering event '$sEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)", LOG_EVENT_SERVICE_CHANNEL);
+		$sLogEventName = "$sEvent:".self::GetSourcesAsString($sEventSource);
+		IssueLog::Trace("Registering event '$sLogEventName' for '$sName' with id '$sId' (total $iTotalRegistrations)", LogChannels::EVENT_SERVICE);
 
 		return $sId;
 	}
@@ -88,10 +87,10 @@ class EventService
 		$eventSource = $oEventData->GetEventSource();
 		$oKPI = new ExecutionKPI();
 		$sSource = isset($aEventData['debug_info']) ? " {$aEventData['debug_info']}" : '';
-		$sEventName = "$sEvent:".self::GetSourcesAsString($eventSource);
-		IssueLog::Trace("Fire event '$sEventName'$sSource", LOG_EVENT_SERVICE_CHANNEL);
+		$sLogEventName = "$sEvent - ".self::GetSourcesAsString($eventSource);
+		IssueLog::Trace("Fire event '$sLogEventName'$sSource", LogChannels::EVENT_SERVICE);
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for event '$sEvent'", LogChannels::EVENT_SERVICE);
 			$oKPI->ComputeStats('FireEvent', $sEvent);
 
 			return;
@@ -105,18 +104,26 @@ class EventService
 				continue;
 			}
 			$sName = $aEventCallback['name'];
-			IssueLog::Debug("Fire event '$sEventName'$sSource calling '$sName'", LOG_EVENT_SERVICE_CHANNEL);
+			// Reentrance protection
+			if (isset(self::$aReentranceProtection[$aEventCallback['id']])) {
+				if (!self::$aReentranceProtection[$aEventCallback['id']]) {
+					unset(self::$aReentranceProtection[$aEventCallback['id']]);
+				}
+				IssueLog::Debug("Reentrance protection for '$sLogEventName'$sSource for '$sName'", LogChannels::EVENT_SERVICE);
+				continue;
+			}
+			IssueLog::Debug("Fire event '$sLogEventName'$sSource calling '$sName'", LogChannels::EVENT_SERVICE);
 			try {
 				if (is_callable($aEventCallback['callback'])) {
 					$oEventData->SetCallbackData($aEventCallback['data']);
 					call_user_func($aEventCallback['callback'], $oEventData);
 				} else {
-					IssueLog::Debug("Callback '$sName' not a callable anymore, unregister", LOG_EVENT_SERVICE_CHANNEL);
+					IssueLog::Debug("Callback '$sName' not a callable anymore, unregister", LogChannels::EVENT_SERVICE);
 					self::UnRegisterCallback($aEventCallback['id']);
 				}
 			}
 			catch (Exception $e) {
-				IssueLog::Error("Event '$sEventName' for '$sName' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
+				IssueLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
 				throw $e;
 			}
 		}
@@ -134,19 +141,19 @@ class EventService
 			return false;
 		}
 		if (is_string($srcRegistered)) {
-			$aSrcRegistered = array($srcRegistered);
+			$aSrcRegistered = [$srcRegistered];
 		} elseif (is_array($srcRegistered)) {
 			$aSrcRegistered = $srcRegistered;
 		} else {
-			$aSrcRegistered = array();
+			$aSrcRegistered = [];
 		}
 
 		if (is_string($srcEvent)) {
-			$aSrcEvent = array($srcEvent);
+			$aSrcEvent = [$srcEvent];
 		} elseif (is_array($srcEvent)) {
 			$aSrcEvent = $srcEvent;
 		} else {
-			$aSrcEvent = array();
+			$aSrcEvent = [];
 		}
 
 		foreach ($aSrcEvent as $sSrcEvent) {
@@ -187,10 +194,10 @@ class EventService
 			return '';
 		}
 		if (is_string($srcRegistered)) {
-			return $srcRegistered;
+			return substr($srcRegistered, 0, 30);
 		}
 		if (is_array($srcRegistered)) {
-			return implode(',', $srcRegistered);
+			return substr(implode(',', $srcRegistered), 0, 30);
 		}
 
 		return '';
@@ -207,7 +214,7 @@ class EventService
 			if ($aEventCallback['id'] == $sId) {
 				$sName = self::$aEventListeners[$sEvent][$idx]['name'];
 				unset (self::$aEventListeners[$sEvent][$idx]);
-				IssueLog::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+				IssueLog::Trace("Unregistered callback '$sName' id $sId' on event '$sEvent'", LogChannels::EVENT_SERVICE);
 
 				return false;
 			}
@@ -216,7 +223,7 @@ class EventService
 		});
 
 		if (!$bRemoved) {
-			IssueLog::Trace("No registration found for callback '$sId'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for callback '$sId'", LogChannels::EVENT_SERVICE);
 		}
 	}
 
@@ -228,13 +235,13 @@ class EventService
 	public static function UnRegisterEvent(string $sEvent)
 	{
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			IssueLog::Trace("No registration found for event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Trace("No registration found for event '$sEvent'", LogChannels::EVENT_SERVICE);
 
 			return;
 		}
 
 		unset(self::$aEventListeners[$sEvent]);
-		IssueLog::Trace("Unregistered all the callbacks on event '$sEvent'", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Trace("Unregistered all the callbacks on event '$sEvent'", LogChannels::EVENT_SERVICE);
 	}
 
 	/**
@@ -243,7 +250,7 @@ class EventService
 	public static function UnRegisterAll()
 	{
 		self::$aEventListeners = array();
-		IssueLog::Trace("Unregistered all events", LOG_EVENT_SERVICE_CHANNEL);
+		IssueLog::Trace("Unregistered all events", LogChannels::EVENT_SERVICE);
 	}
 
 	/**
@@ -271,7 +278,7 @@ class EventService
 	{
 		if (isset(self::$aEventDescription[$sEvent])) {
 			$sPrevious = self::$aEventDescription[$sEvent]['module'];
-			IssueLog::Error("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta", LOG_EVENT_SERVICE_CHANNEL);
+			IssueLog::Error("The Event $sEvent defined by $sModule has already been defined in $sPrevious, check your delta", LogChannels::EVENT_SERVICE);
 		}
 
 		self::$aEventDescription[$sEvent] = [
@@ -295,9 +302,31 @@ class EventService
 		return implode('_', $aRet);
 	}
 
-
 	public static function GetDefinedEventsAsJSON()
 	{
 		return json_encode(self::$aEventDescription, JSON_PRETTY_PRINT);
+	}
+
+	/**
+	 * @param string $sListenerId The id given by the RegisterListener() method
+	 * @param bool $bPermanentProtection Be very careful when setting false, infinite loops can occur
+	 *
+	 * @return void
+	 */
+	public static function EnableReentranceProtection($sListenerId, $bPermanentProtection = true)
+	{
+		self::$aReentranceProtection[$sListenerId] = $bPermanentProtection;
+	}
+
+	/**
+	 * @param string $sListenerId The id given by the RegisterListener() method
+	 *
+	 * @return void
+	 */
+	public static function DisableReentranceProtection($sListenerId)
+	{
+		if (isset(self::$aReentranceProtection[$sListenerId])) {
+			unset(self::$aReentranceProtection[$sListenerId]);
+		}
 	}
 }
