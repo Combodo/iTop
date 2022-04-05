@@ -2447,7 +2447,7 @@ fieldset .details>.field_container {
   }
 
   &[data-attribute-type="AttributeDuration"] {
-    div.field_value_container {
+    .field_value_container {
       white-space: nowrap;
     }
   }
