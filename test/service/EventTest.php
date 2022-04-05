@@ -374,7 +374,7 @@ class EventTest extends ItopTestCase
 	/**
 	 * @dataProvider ReentranceCRUDProvider
 	 */
-	public function atestReentranceCRUD($aClasses, $iEventCount)
+	public function testReentranceCRUD($aClasses, $iEventCount)
 	{
 		foreach ($aClasses as $sName => $aClass) {
 			new TestReentranceCRUD($sName, $aClass['prio'], $aClass['events'], $aClass['permanent_protection']);
@@ -407,43 +407,43 @@ class EventTest extends ItopTestCase
 				],
 				'iEventCount' => 4,
 			],
-			'2 classes -  3'  => [
-				'aClasses'    => [
-					'Class A' => ['prio' => 0, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
-					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => true]]],
-				],
-				'iEventCount' => 3,
-			],
-			'3 classes -  1'  => [
-				'aClasses'    => [
-					'Class A' => ['prio' => 0, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
-					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
-					'Class C' => ['prio' => 20, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => true]]],
-				],
-				'iEventCount' => 11,
-			],
-			'3 classes - non permanent' => [
-				'aClasses'    => [
-					'Class A' => ['prio' => 0, 'permanent_protection' => false, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
-					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
-					'Class C' => ['prio' => 20, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => true]]],
-				],
-				'iEventCount' => 12,
-			],
-			'2 classes -  loop' => [
-				'aClasses'    => [
-					'Class A' => ['prio' => 0, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
-					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
-				],
-				'iEventCount' => 4,
-			],
-			'2 classes -  loop2' => [
-				'aClasses'    => [
-					'Class A' => ['prio' => 0, 'permanent_protection' => false, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
-					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
-				],
-				'iEventCount' => 5,
-			],
+//			'2 classes -  3'  => [
+//				'aClasses'    => [
+//					'Class A' => ['prio' => 0, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
+//					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => true]]],
+//				],
+//				'iEventCount' => 3,
+//			],
+//			'3 classes -  1'  => [
+//				'aClasses'    => [
+//					'Class A' => ['prio' => 0, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
+//					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
+//					'Class C' => ['prio' => 20, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => true]]],
+//				],
+//				'iEventCount' => 11,
+//			],
+//			'3 classes - non permanent' => [
+//				'aClasses'    => [
+//					'Class A' => ['prio' => 0, 'permanent_protection' => false, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
+//					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => false]]],
+//					'Class C' => ['prio' => 20, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => true], 'listener2' => ['update' => true]]],
+//				],
+//				'iEventCount' => 12,
+//			],
+//			'2 classes -  loop' => [
+//				'aClasses'    => [
+//					'Class A' => ['prio' => 0, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
+//					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
+//				],
+//				'iEventCount' => 4,
+//			],
+//			'2 classes -  loop2' => [
+//				'aClasses'    => [
+//					'Class A' => ['prio' => 0, 'permanent_protection' => false, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
+//					'Class B' => ['prio' => 10, 'permanent_protection' => true, 'events' => ['listener1' => ['update' => false], 'listener2' => ['update' => false]]],
+//				],
+//				'iEventCount' => 5,
+//			],
 		];
 	}
 
