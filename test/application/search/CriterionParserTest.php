@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2018 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -32,6 +32,7 @@ use Combodo\iTop\Application\Search\CriterionParser;
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -43,7 +44,7 @@ class CriterionParserTest extends ItopTestCase
 		parent::setUp();
 
 		require_once(APPROOT."application/startup.inc.php");
-		require_once(APPROOT."sources/application/search/criterionparser.class.inc.php");
+		require_once(APPROOT."sources/Application/Search/criterionparser.class.inc.php");
 	}
 
 	public function testParse()

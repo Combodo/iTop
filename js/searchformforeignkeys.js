@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -47,7 +47,6 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		$('#linkedset_'+this.id+' .selection').each( function() { this.checked = false; });
 		$('#'+this.id+'_btnRemove').prop('disabled', false);
 
-
 		$('<div id="dlg_'+me.id+'"></div>').appendTo(document.body);
 
 		// me.trace(dialog);
@@ -61,7 +60,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 			$('#dlg_'+me.id).remove();
 		});
 
-		$('#'+this.iInputId).closest('form').submit(function() {
+		$('#'+this.iInputId).closest('form').on('submit', function() {
 			return me.OnFormSubmit();
 		});
 	};
@@ -169,7 +168,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 		var theMap = {
 			sTargetClass: me.sTargetClass,
 			iInputId: me.id,
-			sFilter: me.sFilter
+			sFilter: me.sfilter,
 			// bSearchMode: me.bSearchMode
 		};
 
@@ -204,8 +203,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 			function(data)
 			{
 				$(sSearchAreaId).html(data);
-				$(sSearchAreaId+' .listResults').tableHover();
-				$('#fr_'+me.id+' input:radio').click(function() { me.UpdateButtons(); });
+				$('#fr_'+me.id+' input:radio').on('click', function() { me.UpdateButtons(); });
 				me.UpdateButtons();
 				me.ajax_request = null;
 				$('#count_'+me.id).change(function(){
@@ -262,6 +260,7 @@ function SearchFormForeignKeys(id, sTargetClass, sAttCode, oSearchWidgetElmt, sF
 				$(this).parents('tr:first').remove(); // Remove the whole line, so that, next time the dialog gets displayed it's no longer there
 			}
 		);
+		theMap["sFilter"] = $('#datatable_ResultsToAdd_'+me.id+' [name="filter"]').val();
 		theMap["class"] = me.sTargetClass;
 		theMap['operation'] = 'GetFullListForeignKeysFromSelection';
 		$('#busy_'+me.iInputId).html('&nbsp;<img src="../images/indicator.gif"/>');

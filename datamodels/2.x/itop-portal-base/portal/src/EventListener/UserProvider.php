@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -15,8 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\EventListener;
@@ -67,6 +65,10 @@ class UserProvider implements ContainerAwareInterface
 	public function onKernelRequest(GetResponseEvent $oGetResponseEvent)
 	{
 		// User pre-checks
+		// Note: The following note and handling of the $iExitMethod were for the old login mechanism
+		// and hasn't been reworked after the introduction of the new one as we saw it too late.
+		// $iExitMethod and $iLogonRes may be useless now as the DoLoginEx method exits directly sometimes.
+		//
 		// Note: At this point the Exception handler is not registered, so we can't use $oApp::abort() method, hence the die().
 		// - Checking user rights and prompt if needed (401 HTTP code returned if XHR request)
 		$iExitMethod = ($oGetResponseEvent->getRequest()->isXmlHttpRequest()) ? LoginWebPage::EXIT_RETURN : LoginWebPage::EXIT_PROMPT;
@@ -111,9 +113,7 @@ class UserProvider implements ContainerAwareInterface
 	}
 
 	/**
-	 * Sets the container.
-	 *
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface|null $oContainer
+	 * @inheritDoc
 	 */
 	public function setContainer(ContainerInterface $oContainer = null)
 	{

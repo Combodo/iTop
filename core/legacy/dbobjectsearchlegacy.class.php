@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -296,6 +296,16 @@ class DBObjectSearch extends DBSearch
 		return $bFound;
 	}
 
+
+	public function RenameAliasesInNameSpace($aClassAliases, $aAliasTranslation = array())
+	{
+	}
+
+	public function TranslateConditions($aTranslationData, $bMatchAll = true, $bMarkFieldsAsResolved = true)
+	{
+	}
+
+
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
@@ -536,7 +546,7 @@ class DBObjectSearch extends DBSearch
 	 *
 	 * @throws \CoreException
 	 *
-	 * @since 2.5 N°1418
+	 * @since 2.5.0 N°1418
 	 */
 	public function AddConditionForInOperatorUsingParam($sFilterCode, $aValues, $bPositiveMatch = true)
 	{
@@ -1668,6 +1678,25 @@ class DBObjectSearch extends DBSearch
 		return $sRet;
 	}
 
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 * @param array $aValues is an array of $sAttCode => $value
+	 * @param array $aArgs
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	public function MakeInsertQuery($aValues, $aArgs = array())
+	{
+		$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($this);
+		$oSQLQuery = $oSQLObjectQueryBuilder->MakeSQLObjectUpdateQuery($aValues);
+		$aScalarArgs = MetaModel::PrepareQueryArguments($aArgs, $this->GetInternalParams());
+		$sRet = $oSQLQuery->RenderInsert($aScalarArgs);
+		return $sRet;
+	}
+
 	public function GetSQLQueryStructure($aAttToLoad, $bGetCount, $aGroupByExpr = null, $aSelectedClasses = null, $aSelectExpr = null)
 	{
 		// Hide objects that are not visible to the current user
@@ -2571,5 +2600,20 @@ class DBObjectSearch extends DBSearch
 			}
 		}
 		return $oExpression;
+	}
+
+	/**
+	 * @param array $aAttCodes array of attCodes to search into
+	 * @param string $sNeedle one word to be searched
+	 *
+	 * @throws \CoreException
+	 */
+	public function AddCondition_FullTextOnAttributes(array $aAttCodes, $sNeedle)
+	{
+	}
+
+	public function ListParameters()
+	{
+		return $this->GetCriteria()->ListParameters();
 	}
 }

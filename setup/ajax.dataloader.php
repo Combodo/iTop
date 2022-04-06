@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -32,7 +32,8 @@
  * 'file': string Name of the file to load
  * 'session_status': string 'start', 'continue' or 'end'
  * 'percent': integer 0..100 the percentage of completion once the file has been loaded 
- */ 
+ */
+$bBypassMaintenance = true; // Reset maintenance mode in case of problem
 define('SAFE_MINIMUM_MEMORY', 64*1024*1024);
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
@@ -48,7 +49,7 @@ if (empty($sMemoryLimit))
 	// On some PHP installations, memory_limit does not exist as a PHP setting!
 	// (encountered on a 5.2.0 under Windows)
 	// In that case, ini_set will not work, let's keep track of this and proceed with the data load
-	SetupPage::log_info("No memory limit has been defined in this instance of PHP");		
+	SetupLog::Info("No memory limit has been defined in this instance of PHP");
 }
 else
 {
@@ -59,11 +60,11 @@ else
 	{
 		if (ini_set('memory_limit', SAFE_MINIMUM_MEMORY) === FALSE)
 		{
-			SetupPage::log_error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");		
+			SetupLog::Error("memory_limit is too small: $iMemoryLimit and can not be increased by the script itself.");
 		}
 		else
 		{
-			SetupPage::log_info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");		
+			SetupLog::Info("memory_limit increased from $iMemoryLimit to ".SAFE_MINIMUM_MEMORY.".");
 		}
 	}
 }
@@ -89,7 +90,7 @@ function ShutdownCallback()
 	$errline = $error["line"];
 	$errstr = $error["message"];
 	$sLogMessage = "PHP error occured : msg=$errstr, no=$errno, file=$errfile, line=$errline";
-	SetupPage::log_error("Setup error: $sLogMessage");
+	SetupLog::Error("Setup error: $sLogMessage");
 	echo '<'.PHP_FATAL_ERROR_TAG.'>'.$sLogMessage.'</'.PHP_FATAL_ERROR_TAG.'>';
 }
 
@@ -106,7 +107,7 @@ function FatalErrorCatcher($sOutput)
 		}
 		$sOutput = "$errors\n";
 		// Logging to a file does not work if the whole memory is exhausted...		
-		//SetupPage::log_error("Fatal error - in $__FILE__ , $errors");
+		// SetupLog::Error("Fatal error - in $__FILE__ , $errors");
 	}
 	return $sOutput;
 }
@@ -127,7 +128,6 @@ require_once(APPROOT.'/core/log.class.inc.php');
 require_once(APPROOT.'/core/kpi.class.inc.php');
 require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 require_once('./xmldataloader.class.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 
 // Never cache this page
@@ -157,30 +157,34 @@ try
 		$sState = utils::ReadParam('step_state', '');
 		$sActionCode = utils::ReadParam('code', '');
 		$aParams = utils::ReadParam('params', array(), false, 'raw_data');
-		$oPage = new ajax_page('');
+		$oPage = new AjaxPage('');
 		$oDummyController = new WizardController('');
 		if (is_subclass_of($sClass, 'WizardStep'))
 		{
 			/** @var WizardStep $oStep */
 			$oStep = new $sClass($oDummyController, $sState);
 			$sConfigFile = utils::GetConfigFilePath();
-			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig())
-			{
+			if (file_exists($sConfigFile) && !is_writable($sConfigFile) && $oStep->RequiresWritableConfig()) {
 				$sRelativePath = utils::GetConfigFilePathRelative();
 				$oPage->error("<b>Error:</b> the configuration file '".$sRelativePath."' already exists and cannot be overwritten.");
 				$oPage->p("The wizard cannot modify the configuration file for you. If you want to upgrade ".ITOP_APPLICATION.", make sure that the file '<b>".$sRelativePath."</b>' can be modified by the web server.");
 				$oPage->output();
-			}
-			else
-			{
+			} else {
 				$oStep->AsyncAction($oPage, $sActionCode, $aParams);
 			}
 		}
-		$oPage->output();
-		break;
+			$oPage->output();
+			break;
+
+		case 'toggle_use_symbolic_links':
+			$sUseSymbolicLinks = Utils::ReadParam('bUseSymbolicLinks', false);
+			$bUseSymbolicLinks = ($sUseSymbolicLinks === 'true');
+			MFCompiler::SetUseSymbolicLinksFlag($bUseSymbolicLinks);
+			echo "toggle useSymbolicLinks flag : $bUseSymbolicLinks";
+			break;
 
 		default:
-		throw(new Exception("Error unsupported operation '$sOperation'"));
+			throw(new Exception("Error unsupported operation '$sOperation'"));
 	}
 }
 catch(Exception $e)
@@ -188,17 +192,17 @@ catch(Exception $e)
 	header("HTTP/1.0 500 Internal server error.");
 	echo "<p>An error happened while processing the installation:</p>\n";
 	echo '<p>'.$e."</p>\n";
-	SetupPage::log_error("An error happened while processing the installation: ".$e);
+	SetupLog::Error("An error happened while processing the installation: ".$e);
 }
 
 if (function_exists('memory_get_peak_usage'))
 {
 	if ($sOperation == 'file')
 	{
-		SetupPage::log_info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
+		SetupLog::Info("loading file '$sFileName', peak memory usage. ".memory_get_peak_usage());
 	}
 	else
 	{
-		SetupPage::log_info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
+		SetupLog::Info("operation '$sOperation', peak memory usage. ".memory_get_peak_usage());
 	}
 }

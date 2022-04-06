@@ -1,4 +1,4 @@
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -112,23 +112,37 @@ function OnUnload(sTransactionId, sObjClass, iObjKey, sToken)
 	if (!window.bInSubmit)
 	{
 		// If it's not a submit, then it's a "cancel" (Pressing the Cancel button, closing the window, using the back button...)
-		// IMPORTANT: the ajax request MUST BE synchronous to be executed in this context
-		$.ajax({
-			url: GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-			async: false,
-			method: 'POST',
-			data: {operation: 'on_form_cancel', transaction_id: sTransactionId, obj_class: sObjClass, obj_key: iObjKey, token: sToken }
-		});
+		var sUrl = GetAbsoluteUrlAppRoot()+'pages/ajax.render.php';
+		var oFormData = new FormData();
+		oFormData.append('operation', 'on_form_cancel');
+		oFormData.append('transaction_id', sTransactionId);
+		oFormData.append('obj_class', sObjClass);
+		oFormData.append('obj_key', iObjKey);
+		oFormData.append('token', sToken);
+		navigator.sendBeacon(sUrl, oFormData);
 	}
 }
 
 function OnSubmit(sFormId)
 {
+	if($('#'+sFormId).attr('data-form-state') === 'onsubmit')
+	{
+		return false;
+	}
+	
+	$('#'+sFormId).attr('data-form-state','onsubmit');
+
 	window.bInSubmit=true; // This is a submit, make sure that when the page gets unloaded we don't cancel the action
+
+	if ($('#'+sFormId).data('force_submit')) {
+		return true;
+	}
+
 	var bResult = CheckFields(sFormId, true);
 	if (!bResult)
 	{
 		window.bInSubmit = false; // Submit is/will be canceled
+		$('#'+sFormId).attr('data-form-state', 'default');
 	}
 	return bResult;
 }
@@ -138,6 +152,13 @@ var oFormErrors = { err_form0: 0 };
 
 function CheckFields(sFormId, bDisplayAlert)
 {
+// if some fields are in wait, no submit is allowed
+	if ($('#'+sFormId+' .blockMsg').length>0)
+	{
+		alert(Dict.S('UI:Button:Wait'));
+		return false;
+	}
+
 	$('#'+sFormId+' :submit').prop('disable', true);
 	$('#'+sFormId+' :button[type=submit]').prop('disable', true);
 	firstErrorId = '';
@@ -166,6 +187,7 @@ function CheckFields(sFormId, bDisplayAlert)
 			$('#'+oFormErrors['input_'+sFormId]).focus();
 		}
 	}
+
 	return (oFormErrors['err_'+sFormId] == 0); // If no error, submit the form
 }
 
@@ -176,10 +198,10 @@ function activateFirstTabWithError(sFormId) {
 
 	$tabs.each(function (index, element) {
 		var $fieldsWithError = $(element).find(".form_validation");
-		if ($fieldsWithError.length > 0)
+		if ($fieldsWithError.length > 0 && ($tabsContainer.tabs("instance") !== undefined))
 		{
 			$tabsContainer.tabs("option", "active", index);
-			return;
+			return false;
 		}
 	});
 }
@@ -189,7 +211,8 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 	if (bValid)
 	{
 		// Visual feedback - none when it's Ok
-		$('#v_'+sFieldId).html(''); //<img src="../images/validation_ok.png" />');
+		$('#field_'+sFieldId+' .ibo-input-wrapper').removeClass('is-error')
+		$('#v_'+sFieldId).html('');
 		$('#'+sFieldId+'[data-validate*="dependencies"]').trigger('change.dependencies').removeAttr('data-validate');
 	}
 	else
@@ -202,22 +225,16 @@ function ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain)
 			oFormErrors['input_'+sFormId] = sFieldId;
 		}
 
-		if ($('#v_'+sFieldId+' img').length == 0)
-		{
-			$('#v_'+sFieldId).html('<img src="../images/validation_error.png" style="vertical-align:middle" data-tooltip="'+sExplain+'"/>');
+		if($('#field_'+sFieldId+' .ibo-input-wrapper').attr('data-validation') === 'untouched') {
+			$('#field_'+sFieldId+' .ibo-input-wrapper').removeAttr('data-validation');
 		}
-		//Avoid replacing exisiting tooltip for periodically checked element (like CKeditor fields)
-		if($('#v_'+sFieldId).tooltip( "instance" ) === undefined)
+		else{
+			$('#field_'+sFieldId+' .ibo-input-wrapper').addClass('is-error');
+		}
+		
+		if ($('#v_'+sFieldId).text() == '')
 		{
-			// Visual feedback
-
-			$('#v_'+sFieldId).tooltip({
-				items: 'span',
-				tooltipClass: 'form_field_error',
-				content: function() {
-					return $(this).find('img').attr('data-tooltip'); // As opposed to the default 'content' handler, do not escape the contents of 'title'
-				}
-			});
+			$('#v_'+sFieldId).html(sExplain);
 		}
 	}
 }
@@ -358,26 +375,6 @@ function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue,
 	}
 }
 
-/*
-function UpdateDependentFields(aFieldNames)
-{
-	//console.log('UpdateDependentFields:');
-	//console.log(aFieldNames);
-	index = 0;
-	oWizardHelper.ResetQuery();
-	oWizardHelper.UpdateWizard();
-	while(index < aFieldNames.length )
-	{
-		sAttCode = aFieldNames[index];
-		sFieldId = oWizardHelper.GetFieldId(sAttCode);
-		$('#v_'+sFieldId).html('<img src="../images/indicator.gif" />');
-		oWizardHelper.RequestAllowedValues(sAttCode);
-		index++;
-	}
-	oWizardHelper.AjaxQueryServer();
-}
-*/
-
 function ResetPwd(id)
 {
 	// Reset the values of the password fields
@@ -411,11 +408,14 @@ function ValidatePasswordField(id, sFormId)
 				oFormErrors['input_'+sFormId] = id;
 			}
 			// Visual feedback
-			$('#v_'+id).html('<img src="../images/validation_error.png"  style="vertical-align:middle"/>');
+			$('#v_'+id).html(Dict.S('UI:Component:Input:Password:DoesNotMatch'));
+			$('#field_'+id +' .ibo-input-wrapper').addClass('is-error');
+
 			return false;
 		}
 	}
-	$('#v_'+id).html(''); //<img src="../images/validation_ok.png" />');
+	$('#v_'+id).html('');
+	$('#field_'+id +' .ibo-input-wrapper').removeClass('is-error');
 	return true;
 }
 
@@ -530,6 +530,7 @@ function UpdateDuration(iId)
 }
 
 // Called when filling an autocomplete field
+//deprecated in 2.8
 function OnAutoComplete(id, event, data, formatted)
 {
 	if (data)

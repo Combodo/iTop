@@ -1,0 +1,10 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-button--spacing-left--with-same-block: $ibo-spacing-200 !default;
+
+.ibo-button + .ibo-button {
+  margin-left: $ibo-button--spacing-left--with-same-block;
+}

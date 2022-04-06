@@ -1,0 +1,656 @@
+/*!
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+/* integrityCheck: begin (do not remove/edit) */
+
+$approot-relative: '../' !default;
+
+@import "backoffice/main";
+
+$content-border-color: $ibo-color-grey-400 !default;
+$default-font-color: $ibo-color-grey-900 !default;
+$legend-border-color: #718096 !default;
+$link-default-color: #1c94c4 !default;
+$link-hover-color: #EA7D1E !default;
+
+///////////////////////
+// Messages to the user
+$message-default-border-color: #4A5568 !default;
+$message-default-text-color: #1A202C !default;
+$message-default-bg-color: #F7FAFC !default;
+
+$message-valid-border-color: #48BB78 !default;
+$message-valid-text-color: #276749 !default;
+$message-valid-bg-color: #F0FFF4 !default;
+
+$message-warning-border-color: #ED8936 !default;
+$message-warning-text-color: #C05621 !default;
+$message-warning-bg-color: #FFFAF0 !default;
+
+$message-error-border-color: #E53E3E !default;
+$message-error-text-color: #C53030 !default;
+$message-error-bg-color: #FFF5F5 !default;
+
+$legacy-portal-removal-text-color: #e60000b8 !default;
+
+// Compilation progress bar
+$progress-bar-color: #000000 !default;
+$progress-bar-ongoing-1-bg-color: #FBD38D !default;
+$progress-bar-ongoing-2-bg-color: #FEEBC8 !default;
+$progress-bar-error-bg-color: #F56565 !default;
+
+/* Helpers classes */
+.center {
+  text-align: center;
+}
+
+/* Animations */
+@keyframes progress_bar_color_ongoing {
+  from {
+    background-color: $progress-bar-ongoing-1-bg-color;
+  }
+  to {
+    background-color: $progress-bar-ongoing-2-bg-color;
+  }
+}
+
+@-webkit-keyframes bg-pan-left {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+@keyframes bg-pan-left {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0 50%;
+  }
+}
+
+/* Theme */
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: $ibo-color-grey-100;
+  color: $default-font-color;
+  margin: 0;
+  padding: 0;
+  font-size: 10pt;
+  font-family: Tahoma, Verdana, Arial, Helvetica, serif;
+  overflow-y: auto;
+}
+
+h1 {
+  color: #555555;
+  font-size: 16pt;
+}
+
+h2 {
+  color: $default-font-color;
+  font-size: 14pt;
+  font-weight: normal;
+}
+
+h3 {
+  color: #1C94C4;
+  font-size: 12pt;
+  font-weight: bold;
+}
+
+a {
+  color: $link-default-color;
+  text-decoration: none;
+
+  &:hover {
+    color: $link-hover-color;
+  }
+}
+
+.itop-setup--message {
+  margin-top: 16px;
+}
+
+.next {
+  width: 100%;
+  text-align: right;
+}
+
+.v-spacer {
+  padding-top: 1em;
+}
+
+button {
+  margin-top: 1em;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+p.info {
+  padding-left: 50px;
+  background: url(../images/info-mid.png) no-repeat left -5px;
+  min-height: 48px;
+}
+
+p.ok {
+  padding-left: 50px;
+  background: url(../images/clean-mid.png) no-repeat left -8px;
+  min-height: 48px;
+}
+
+p.warning {
+  padding-left: 50px;
+  background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
+  min-height: 48px;
+}
+
+p.error {
+  padding-left: 50px;
+  background: url(../images/stop-mid.png) no-repeat left -5px;
+  min-height: 48px;
+}
+
+label {
+  cursor: pointer;
+}
+
+td.label {
+  text-align: left;
+}
+
+label.read-only {
+  color: #666;
+  cursor: text;
+}
+
+td.input {
+  text-align: left;
+}
+
+table.formTable {
+  border: 0;
+}
+
+.wizlabel, .wizinput {
+  color: #000;
+  font-size: 10pt;
+}
+
+.wizhelp {
+  color: #333;
+  font-size: 8pt;
+}
+
+#progress {
+  border: none;
+  width: 210px;
+  height: 26px;
+  line-height: 26px;
+  text-align: center;
+  margin: 5px;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .06) !important;
+  border-radius: 2px;
+  background-color: #EDF2F7 !important;
+
+  .progress {
+    color: $progress-bar-color !important; /* !important to overload jQuery UI style */
+    background-image: linear-gradient(270deg, $progress-bar-ongoing-1-bg-color 50%, $progress-bar-ongoing-2-bg-color 55%, $progress-bar-ongoing-1-bg-color 80%) !important; /* !important to overload jQuery UI style */
+    animation: bg-pan-left 3s infinite both;
+    background-size: 600% 100%;
+    border-radius: inherit;
+
+    &.progress-error {
+      background-image: none !important;
+      background-color: $progress-bar-error-bg-color !important; /* !important to overload jQuery UI style */
+      animation: none;
+    }
+  }
+}
+
+h3.clickable {
+  background: url(../images/plus.gif) no-repeat left;
+  padding-left: 16px;
+  cursor: hand;
+}
+
+h3.clickable.open {
+  background: url(../images/minus.gif) no-repeat left;
+  padding-left: 16px;
+  cursor: hand;
+}
+
+.message {
+  color: $message-default-text-color;
+  background-color: $message-default-bg-color;
+  border-left: 4px solid $message-default-border-color;
+  padding: 10px;
+  font-size: initial;
+
+  > .message-title {
+    font-weight: bold;
+    margin-right: 5px;
+  }
+
+  &.message-valid {
+    color: $message-valid-text-color;
+    background-color: $message-valid-bg-color;
+    border-color: $message-valid-border-color;
+  }
+
+  &.message-warning {
+    color: $message-warning-text-color;
+    background-color: $message-warning-bg-color;
+    border-color: $message-warning-border-color;
+  }
+
+  &.message-error {
+    color: $message-error-text-color;
+    background-color: $message-error-bg-color;
+    border-color: $message-error-border-color;
+  }
+}
+
+*:not(.message) + .message {
+  margin-top: 6px;
+}
+
+.text-valid {
+  color: $message-valid-text-color
+}
+
+.text-warning {
+  color: $message-warning-text-color
+}
+
+.text-error {
+  color: $message-error-text-color
+}
+
+fieldset {
+  border: none;
+  padding: 0;
+  margin: 15px 0 0 0;
+
+  > legend {
+    margin-bottom: 7px;
+    padding-bottom: 7px;
+    width: 100%;
+    color: #3C3C3C;
+    font-size: 11pt;
+    font-weight: bold;
+    border-bottom: 1px solid #D2D2D2;
+  }
+}
+
+.module-selection-banner {
+  img {
+    max-height: 48px;
+  }
+}
+
+.module-selection-body {
+  overflow: auto;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, .06) !important;
+  background-color: #F7FAFC;
+  padding: 10px;
+
+  .wiz-choice:checked ~ .description {
+    #itop-ticket-mgmt-simple-ticket-enhanced-portal:not(:checked),
+    #itop-ticket-mgmt-itil-enhanced-portal:not(:checked) {
+      ~ .description::after {
+        content: "Legacy portal is no longer part of iTop, by leaving this option unchecked your portal users won't be able to access iTop anymore.";
+        display: block;
+        margin-top: 0.5em;
+        font-weight: bold;
+        color: $legacy-portal-removal-text-color;
+      }
+    }
+  }
+}
+
+
+
+
+
+body {
+  font-size: 1.17rem;
+  font-family: "Raleway";
+}
+
+#ibo_setup_container {
+  width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+
+  pre {
+    white-space: pre-wrap;
+  }
+
+  .ibo-title {
+    @extend %ibo-vertically-centered-content;
+
+    h2 {
+      margin-bottom: 15px;
+    }
+  }
+
+  .ibo-setup--header {
+    background-color: #fff;
+    padding: 0 20px;
+    border: 3px solid $content-border-color;
+    height: 80px;
+    border-bottom: none;
+    border-radius: $ibo-border-radius-300 $ibo-border-radius-300 0 0;
+
+    .ibo-title--icon {
+      border: 0;
+      vertical-align: middle;
+      margin-right: 20px;
+    }
+  }
+
+  .ibo-setup--body {
+    display: flex;
+    flex-direction: column;
+    background-color: #fff;
+    padding: 20px;
+    border: 3px solid $content-border-color;
+    border-top: none;
+    flex-grow: 1;
+    overflow: auto;
+    border-radius: 0 0 $ibo-border-radius-300 $ibo-border-radius-300;
+
+    .ibo-setup--wizard{
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      .ibo-setup--wizard--content{
+        overflow: auto;
+      }
+      .ibo-setup--wizard--buttons-container{
+        margin-top: auto;
+        tr{
+          display: flex;
+          justify-content: flex-end;
+        }
+        button {
+          margin-left: 8px;
+        }
+      }
+    }
+    .itop-setup--message {
+      margin-top: 16px;
+    }
+
+    .ibo-setup--button-bar {
+      margin-top: 16px;
+      @extend %ibo-vertically-centered-content;
+
+      .ibo-setup--button-spacer {
+        flex-grow: 1;
+      }
+    }
+
+    .ibo-setup--js-error {
+      overflow: auto;
+      max-height: 100px;
+      color: $ibo-color-danger-800;
+      font-size: $ibo-font-size-100;
+    }
+
+    .ibo-setup--upgrade-info {
+      margin-top: 5px;
+    }
+
+    .ibo-fieldset {
+      margin-top: 12px;
+
+      & ~ .ibo-fieldset {
+        margin-top: 12px;
+      }
+    }
+
+    .ibo-field {
+      margin-top: 5px;
+    }
+
+    .ibo-setup--small-field-label {
+      .ibo-field--label {
+        width: 15%;
+      }
+    }
+
+    .ibo-field--comments {
+      font-size: $ibo-font-size-100;
+      color: $ibo-color-grey-700;
+      text-align: left;
+      width: 100%;
+      padding-left: 10px;
+    }
+
+    .ibo-alert {
+      padding: 7px 20px;
+    }
+
+    .ibo-setup--small-message {
+      font-size: $ibo-font-size-100;
+      color: $ibo-color-grey-700;
+    }
+
+    .ibo-collapsible-section {
+      margin: 10px 0 0 0;
+
+      &.ibo-setup--small {
+        .ibo-collapsible-section--header {
+          .ibo-collapsible-section--title {
+            font-size: $ibo-font-size-150;
+            font-weight: 400;
+            color: $ibo-color-grey-700;
+          }
+        }
+      }
+
+      .ibo-collapsible-section--body {
+        max-height: 400px;
+        overflow: auto;
+      }
+    }
+    .ibo-input{
+      width: auto;
+      display: inline-block;
+    }
+    table {
+        td{
+        white-space: nowrap;
+        line-height: 2.5rem;
+        padding-right: 8px;
+        padding-bottom: 1rem;
+      }
+    }
+    .setup-content-title, h2{
+      @extend %ibo-font-ral-nor-250;
+      margin-bottom: 18px;
+    }
+  }
+}
+
+.ibo-setup--button-bar {
+  margin-top: 16px;
+  @extend %ibo-vertically-centered-content;
+
+  .ibo-setup--full-width {
+    width: 100%;
+  }
+
+
+  .ibo-setup--full-width {
+    width: 100%;
+  }
+}
+
+.ibo-setup-summary-title {
+  font-size: $ibo-font-size-150;
+}
+
+#ibo-setup-licenses--components-list {
+  background-color: $ibo-color-white-200;
+  padding: 12px;
+  box-shadow: inset 0px 2px 4px 1px rgb(0, 0, 0, 0.15);
+  @extend %ibo-border-radius-300;
+}
+
+
+.setup-prefix-toggler--input--container, .setup-tls--input--container, .setup-disk-location--input--container, .setup-backup--input--container {
+  display: flex;
+  line-height: 2.5rem;
+  margin: 1rem 0;
+  input{
+    margin: 0 8px;
+  }
+}
+.setup-disk-location--input--container, .setup-backup--input--container{
+  input{
+    flex-grow: 1;
+  }
+}
+.collapsable-options{
+  margin-bottom: 18px;
+  [data-role="setup-collapsable-options--toggler"]::before {
+    margin-right: 8px;
+    @extend %fa-solid-base;
+    cursor: pointer;
+  }
+  &:not(.setup-is-opened) [data-role="setup-collapsable-options--toggler"]::before{
+    content: '\f078';
+  }
+  &.setup-is-opened [data-role="setup-collapsable-options--toggler"]::before{
+    content: '\f077';
+  }
+}
+.setup-input--hint--icon{
+  color: $ibo-color-grey-700
+}
+.setup-invalid-field--icon{
+  color: $ibo-color-red-700;
+  margin-left: 8px;
+}
+.setup-accept-licenses{
+  margin-top: 18px;
+}
+.module-selection-banner{
+  display: flex;
+  >img{
+    margin-right: 12px;
+  }
+}
+.setup-end-placeholder{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  >div {
+    padding: 0px 15px;
+  }
+  a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    @extend %ibo-font-ral-nor-250;
+    svg{
+      max-height: 150px;
+      margin-bottom: 15px;
+      width: auto;
+    }
+  }
+}
+.setup-extension--icon{
+  margin-right: 5px;
+  color: $ibo-color-blue-700;
+  font-size: $ibo-font-size-200;
+}
+.setup--wizard-choice--label + .setup--wizard-choice--more-info {
+  margin-left: 0.5rem;
+}
+/* integrityCheck: end (do not remove/edit) */
+
+/* Legacy inline stuff */
+#params_summary {
+  overflow: auto;
+}
+#params_summary div {
+  width:100%;
+  margin-top:0;
+  padding-top: 0.5em;
+  padding-left: 0;
+}
+#params_summary div ul {
+  margin-left:0;
+  padding-left: 40px;
+}
+#params_summary div.closed ul {
+  display:none;
+}
+#params_summary div li {
+  list-style: none;
+  width: 100%;
+  margin-left:0;
+  padding-left: 0em;
+}
+.title {
+  padding-left: 20px;
+  font-weight: bold;
+  cursor: pointer;
+}
+#params_summary div {
+  &.closed .title::before {
+    margin-right: 5px;
+    @extend %fa-solid-base;
+    content: '\f078';
+  }
+  &:not(.closed) .title::before {
+    margin-right: 5px;
+    @extend %fa-solid-base;
+    content: '\f077';
+  }
+}
+
+  #progress_content {
+    height: 200px;
+    overflow: auto;
+    text-align: center;
+  }
+  #installation_progress {
+    display: none;
+  }
+  #fresh_content{
+    border: 0;
+    min-height: 300px;
+    min-width: 600px;
+    display:none;
+    margin-left: auto;
+    margin-right: auto;
+  }

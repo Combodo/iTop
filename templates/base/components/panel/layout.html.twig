@@ -1,0 +1,58 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+    <div id="{{ oUIBlock.GetId() }}"
+         class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {{ oUIBlock.GetCSSColorClass() }} {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %} {% if oUIBlock.IsIconAsMedallion() %}ibo-has-medallion-icon{% endif %} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %} ibo-is-opened"
+            {% block iboPanelMetaData %}{% endblock %}
+         data-role="ibo-panel">
+        <div class="ibo-panel--header" data-role="ibo-panel--header">
+            {% block iboPanelHeader %}
+                <div class="ibo-panel--header-left" data-role="ibo-panel--header-left">
+                    {% if oUIBlock.isCollapsible() %}
+                        <div class="ibo-panel--collapsible-toggler" data-role="ibo-panel--collapsible-toggler">
+                            <i class="fas fa-caret-right ibo-panel--collapsible-toggler--closed"></i>
+                            <i class="fas fa-caret-down ibo-panel--collapsible-toggler--opened"></i>
+                        </div>
+                    {% endif %}
+                    {% block iboPanelHeaderLeft %}
+                        {% if oUIBlock.HasIcon() %}
+                            <div class="ibo-panel--icon" data-role="ibo-panel--icon">
+                                {% block iboPanelIcon %}
+                                    <div class="ibo-panel--icon-background ibo-panel--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }}" data-role="ibo-panel--icon-background" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
+                                {% endblock %}
+                            </div>
+                        {% endif %}
+                        {% if oUIBlock.HasTitle() or oUIBlock.HasSubTitle() %}
+                            <div class="ibo-panel--titles" data-role="ibo-panel--titles">
+                                {% block iboPanelTitles %}
+                                    {% if oUIBlock.HasTitle() %}
+                                        <div class="ibo-panel--title" data-role="ibo-panel--title">{% block iboPanelTitle %}{{ render_block(oUIBlock.GetTitleBlock()) }}{% endblock %}</div>
+                                    {% endif %}
+                                    {% if oUIBlock.HasSubTitle() %}
+                                        <div class="ibo-panel--subtitle" data-role="ibo-panel--subtitle">{% block iboPanelSubTitle %}{{ render_block(oUIBlock.GetSubTitleBlock()) }}{% endblock %}</div>
+                                    {% endif %}
+                                {% endblock %}
+                            </div>
+                        {% endif %}
+                    {% endblock %}
+                </div>
+                <div class="ibo-panel--header-right" data-role="ibo-panel--header-right">
+                    {% block iboPanelHeaderRight %}
+                        <div class="ibo-panel--toolbar">
+                            {% block iboPanelToolbar %}
+                                {% for oToolbarBlock in oUIBlock.GetToolbarBlocks() %}
+                                    {{ render_block(oToolbarBlock, {aPage: aPage}) }}
+                                {% endfor %}
+                            {% endblock %}
+                        </div>
+                    {% endblock %}
+                </div>
+            {% endblock %}
+        </div>
+        <div class="ibo-panel--body" data-role="ibo-panel--body">
+            {% block iboPanelBody %}
+                {% for oMainBlock in oUIBlock.GetMainBlocks() %}
+                    {{ render_block(oMainBlock, {aPage: aPage}) }}
+                {% endfor %}
+            {% endblock %}
+        </div>
+    </div>

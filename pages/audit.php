@@ -1,21 +1,18 @@
 <?php
-/**
- * Copyright (C) 2013-2019 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
+use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\Panel;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardColumn;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardRow;
 
 /**
  * Adds the context parameters to the audit rule query
@@ -161,7 +158,6 @@ try
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
 	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
-	require_once(APPROOT.'/application/csvpage.class.inc.php');
 
 	
 	require_once(APPROOT.'/application/startup.inc.php');
@@ -223,65 +219,103 @@ try
 			$oP->TrashUnexpectedOutput();
 			$oP->output();
 			exit;
-		}
-		else
-		{
-			$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
-			$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
-		    $sBlockId = 'audit_errors';
-			$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
+		} else {
+			$sTitle = Dict::S('UI:Audit:AuditErrors');
+			$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+
+			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
+			$oP->AddUiBlock($oBackButton);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+
+			$sBlockId = 'audit_errors';
+			$oP->p("<div id=\"$sBlockId\">");
 			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'csv', array('show_obsolete_data' => true));
 			$oBlock->Display($oP, 1);
-			$oP->p("</div>\n");    
+			$oP->p("</div>");
 			// Adjust the size of the Textarea containing the CSV to fit almost all the remaining space
 			$oP->add_ready_script(" $('#1>textarea').height(400);"); // adjust the size of the block			
 			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+			$oDownloadButton = ButtonUIBlockFactory::MakeForAlternativePrimaryAction('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
+
 			$oP->add_ready_script("$('a[href*=\"webservices/export.php?expression=\"]').attr('href', '".$sExportUrl."&filename=audit.csv".$sAdvanced."');");
-			$oP->add_ready_script("$('#1 :checkbox').removeAttr('onclick').click( function() { var sAdvanced = ''; if (this.checked) sAdvanced = '&advanced=1'; window.location.href='$sExportUrl'+sAdvanced; } );");
+			$oP->add_ready_script("$('#1 :checkbox').removeAttr('onclick').on('click', function() { var sAdvanced = ''; if (this.checked) sAdvanced = '&advanced=1'; window.location.href='$sExportUrl'+sAdvanced; } );");
 		}
 		break;
 						
 		case 'errors':
-		$sTitle = 'Audit Errors';
-		$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
-		$iCategory = utils::ReadParam('category', '');
-		$iRuleIndex = utils::ReadParam('rule', 0);
-	
-		$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
-		$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
-		$oDefinitionFilter->UpdateContextFromUser();
-		FilterByContext($oDefinitionFilter, $oAppContext);
-		$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
-		$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
-		$oErrorObjectSet = new CMDBObjectSet($oFilter);
-		$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
-		$oP->add('<div class="page_header"><h1>Audit Errors: <span class="hilite">'.$oAuditRule->Get('description').'</span></h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/stop.png"/></div>');
-		$oP->p('<a href="./audit.php?'.$oAppContext->GetForLink().'">[Back to audit results]</a>');
-	    $sBlockId = 'audit_errors';
-		$oP->p("<div id=\"$sBlockId\" style=\"clear:both\">\n");
-		$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
-		$oBlock->Display($oP, 1);
-		$oP->p("</div>\n");
-		$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
-		$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
-		break;
+			$sTitle = Dict::S('UI:Audit:AuditErrors');
+			$oP->SetBreadCrumbEntry('ui-tool-auditerrors', $sTitle, '', '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+			$iCategory = utils::ReadParam('category', '');
+			$iRuleIndex = utils::ReadParam('rule', 0);
+
+			$oAuditCategory = MetaModel::GetObject('AuditCategory', $iCategory);
+			$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
+			$oDefinitionFilter->UpdateContextFromUser();
+			FilterByContext($oDefinitionFilter, $oAppContext);
+			$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
+			$oFilter = GetRuleResultFilter($iRuleIndex, $oDefinitionFilter, $oAppContext);
+			$oErrorObjectSet = new CMDBObjectSet($oFilter);
+			$oAuditRule = MetaModel::GetObject('AuditRule', $iRuleIndex);
+			$oBackButton = ButtonUIBlockFactory::MakeIconLink('fas fa-chevron-left', Dict::S('Back to audit results'), "./audit.php?".$oAppContext->GetForLink());
+			$oP->AddUiBlock($oBackButton);
+			$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage($sTitle.$oAuditRule->Get('description')));
+			$sBlockId = 'audit_errors';
+			$oP->p("<div id=\"$sBlockId\">");
+			$oBlock = DisplayBlock::FromObjectSet($oErrorObjectSet, 'list', array('show_obsolete_data' => true));
+			$oBlock->Display($oP, 1);
+			$oP->p("</div>");
+			$sExportUrl = utils::GetAbsoluteUrlAppRoot()."pages/audit.php?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey();
+			$oP->add_ready_script("$('a[href*=\"pages/UI.php?operation=search\"]').attr('href', '".$sExportUrl."')");
+			break;
 		
 		case 'audit':
 		default:
-		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', utils::GetAbsoluteUrlAppRoot().'images/wrench.png');
-		$oP->add('<div class="page_header"><h1>'.Dict::S('UI:Audit:InteractiveAudit').'</h1><img style="margin-top: -20px; margin-right: 10px; float: right;" src="../images/clean.png"/></div>');
+		$oP->SetBreadCrumbEntry('ui-tool-audit', Dict::S('Menu:Audit'), Dict::S('UI:Audit:InteractiveAudit'), '', 'fas fa-stethoscope', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->AddUiBlock(TitleUIBlockFactory::MakeForPage(Dict::S('UI:Audit:InteractiveAudit')));
+		$oTotalBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-audit.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsAudited'));
+		$oErrorBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-delete.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsInError'));
+		$oWorkingBlock = DashletFactory::MakeForDashletBadge('../images/icons/icons8-checkmark.svg', '#', 0, Dict::S('UI:Audit:Dashboard:ObjectsValidated'));
+
+		$aCSSClasses = ['ibo-dashlet--is-inline', 'ibo-dashlet-badge'];
+
+		$oDashletContainerTotal = new DashletContainer();
+		$oDashletContainerError = new DashletContainer();
+		$oDashletContainerWorking = new DashletContainer();
+
+		$oDashletContainerTotal->AddSubBlock($oTotalBlock)->AddCSSClasses($aCSSClasses);
+		$oDashletContainerError->AddSubBlock($oErrorBlock)->AddCSSClasses($aCSSClasses);
+		$oDashletContainerWorking->AddSubBlock($oWorkingBlock)->AddCSSClasses($aCSSClasses);
+
+		$oDashboardRow = new DashboardRow();
+
+		$oDashboardColumnTotal = new DashboardColumn(false, true);
+		$oDashboardColumnError = new DashboardColumn(false, true);
+		$oDashboardColumnWorking = new DashboardColumn(false, true);
+		
+		$oDashboardColumnTotal->AddUIBlock($oDashletContainerTotal);
+		$oDashboardColumnError->AddUIBlock($oDashletContainerError);
+		$oDashboardColumnWorking->AddUIBlock($oDashletContainerWorking);
+		
+		$oDashboardRow->AddDashboardColumn($oDashboardColumnTotal);
+		$oDashboardRow->AddDashboardColumn($oDashboardColumnError);
+		$oDashboardRow->AddDashboardColumn($oDashboardColumnWorking);
+
+		$oDashboardRow->AddCSSClass('ibo-audit--dashboard');
+
+		$oP->AddUiBlock($oDashboardRow);
+
 		$oAuditFilter = new DBObjectSearch('AuditCategory');
 		$oCategoriesSet = new DBObjectSet($oAuditFilter);
-		$oP->add("<table style=\"margin-top: 1em; padding: 0px; border-top: 3px solid #f6f6f1; border-left: 3px solid #f6f6f1; border-bottom: 3px solid #e6e6e1;	border-right: 3px solid #e6e6e1;\">\n");
-		$oP->add("<tr><td>\n");
-		$oP->add("<table>\n");
-		$oP->add("<tr>\n");
-		$oP->add("<th><img src=\"../images/minus.gif\"></th><th class=\"alignLeft\">".Dict::S('UI:Audit:HeaderAuditRule')."</th><th>".Dict::S('UI:Audit:HeaderNbObjects')."</th><th>".Dict::S('UI:Audit:HeaderNbErrors')."</th><th>".Dict::S('UI:Audit:PercentageOk')."</th>\n");
-		$oP->add("</tr>\n");
+		
+		$aAuditCategoryPanels = [];
 		while($oAuditCategory = $oCategoriesSet->fetch())
 		{
+			$oAuditCategoryPanelBlock = new Panel($oAuditCategory->GetName());
+			$oAuditCategoryPanelBlock->SetIsCollapsible(true);
+			$aResults = array();
 			try
 			{
+				$iCount = 0;
 				$oDefinitionFilter = DBObjectSearch::FromOQL($oAuditCategory->Get('definition_set'));
 				$oDefinitionFilter->UpdateContextFromUser();
 				FilterByContext($oDefinitionFilter, $oAppContext);
@@ -294,7 +328,6 @@ try
 						$oDefinitionFilter->AddCondition('org_id', $currentOrganization, '=');
 					}
 				}
-				$aResults = array();
 				$oDefinitionSet = new CMDBObjectSet($oDefinitionFilter);
 				$iCount = $oDefinitionSet->Count();
 				$oRulesFilter = new DBObjectSearch('AuditRule');
@@ -322,17 +355,20 @@ try
 							{
 								$aObjectsWithErrors[$aErrorRow['id']] = true;
 							}
-							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">(CSV)</a>"; 
+							$aRow['nb_errors'] = ($iErrorsCount == 0) ? '0' : "<a href=\"?operation=errors&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\">$iErrorsCount</a> <a href=\"?operation=csv&category=".$oAuditCategory->GetKey()."&rule=".$oAuditRule->GetKey()."&".$oAppContext->GetForLink()."\"><img src=\"../images/icons/icons8-export-csv.svg\" class=\"ibo-audit--audit-line--csv-download\"></a>"; 
 							$aRow['percent_ok'] = sprintf('%.2f', 100.0 * (($iCount - $iErrorsCount) / $iCount));
 							$aRow['class'] = GetReportColor($iCount, $iErrorsCount);							
 						}
 						catch(Exception $e)
 						{
-							$aRow['nb_errors'] = "OQL Error"; 
-							$aRow['percent_ok'] = 'n/a';
+							$aRow['nb_errors'] = Dict::S('UI:Audit:OqlError'); 
+							$aRow['percent_ok'] = Dict::S('UI:Audit:Error:ValueNA');
 							$aRow['class'] = 'red';
 							$sMessage = Dict::Format('UI:Audit:ErrorIn_Rule_Reason', $oAuditRule->GetHyperlink(), $e->getMessage());
-							$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
+
+							$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Rule'), $sMessage);
+							$oErrorAlert->AddCSSClass('ibo-audit--error-alert');
+							$oP->AddUiBlock($oErrorAlert);
 						}
 					}
 					$aResults[] = $aRow;
@@ -340,42 +376,55 @@ try
 				$iTotalErrors = count($aObjectsWithErrors);
 				$sOverallPercentOk = ($iCount == 0) ? '100.00' : sprintf('%.2f', 100.0 * (($iCount - $iTotalErrors) / $iCount));
 				$sClass = GetReportColor($iCount, $iTotalErrors);
+				
+				$oTotalBlock->SetCount((int)$oTotalBlock->GetCount() + ($iCount));
+				$oErrorBlock->SetCount((int)$oErrorBlock->GetCount() + $iTotalErrors);
+				$oWorkingBlock->SetCount((int)$oWorkingBlock->GetCount() + ($iCount - $iTotalErrors));
+				$oAuditCategoryPanelBlock->SetSubTitle(Dict::Format('UI:Audit:AuditCategory:Subtitle', $iTotalErrors, $iCount, $sOverallPercentOk));
+
 			}
 			catch(Exception $e)
 			{
-				$aRow = array();
-				$aRow['description'] = "OQL error";
-				$aRow['nb_errors'] = "n/a"; 
-				$aRow['percent_ok'] = '';
-				$aRow['class'] = 'red';				
-				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), $e->getMessage());
-				$oP->p("<img style=\"vertical-align:middle\" src=\"../images/stop-mid.png\"/>&nbsp;".$sMessage);
-				$aResults[] = $aRow;					
-
-				$sClass = 'red';
-				$iTotalErrors = 'n/a';
-				$sOverallPercentOk = '';
+				$sMessage = Dict::Format('UI:Audit:ErrorIn_Category_Reason', $oAuditCategory->GetHyperlink(), utils::HtmlEntities($e->getMessage()));
+				$oErrorAlert = AlertUIBlockFactory::MakeForFailure(Dict::S('UI:Audit:ErrorIn_Category'), $sMessage);
+				$oErrorAlert->AddCSSClass('ibo-audit--error-alert');
+				$oP->AddUiBlock($oErrorAlert);
+				continue;
 			}
-			$oP->add("<tr>\n");
-			$oP->add("<th><img src=\"../images/minus.gif\"></th><th class=\"alignLeft\">".$oAuditCategory->GetName()."</th><th class=\"alignRight\">$iCount</th><th class=\"alignRight\">$iTotalErrors</th><th class=\"alignRight $sClass\">$sOverallPercentOk %</th>\n");
-			$oP->add("</tr>\n");
+			
+			$oAuditCategoryPanelBlock->SetColorFromColorSemantic($sClass);
+			$oAuditCategoryPanelBlock->AddCSSClass('ibo-audit--audit-category--panel');
+			$aData = [];
 			foreach($aResults as $aRow)
 			{
-				$oP->add("<tr>\n");
-				$oP->add("<td>&nbsp;</td><td colspan=\"2\">".$aRow['description']."</td><td class=\"alignRight\">".$aRow['nb_errors']."</td><td class=\"alignRight ".$aRow['class']."\">".$aRow['percent_ok']." %</td>\n");
-				$oP->add("</tr>\n");
+				$aData[] = array(
+					'audit_rule' => $aRow['description'],
+					'nb_err' => $aRow['nb_errors'],
+					'percentage_ok' => $aRow['percent_ok'],
+					'@class' => 'ibo-is-'.$aRow['class'].'',
+				);
 			}
+
+			$aAttribs = array(
+				'audit_rule' => array('label' => Dict::S('UI:Audit:HeaderAuditRule'), 'description' => Dict::S('UI:Audit:HeaderAuditRule')),
+				'nb_err' => array('label' => Dict::S('UI:Audit:HeaderNbErrors'), 'description' => Dict::S('UI:Audit:HeaderNbErrors')),
+				'percentage_ok' => array('label' => Dict::S('UI:Audit:PercentageOk'), 'description' => Dict::S('UI:Audit:PercentageOk')),
+			);
+			
+			$oAttachmentTableBlock = DataTableUIBlockFactory::MakeForStaticData('', $aAttribs, $aData);
+			$oAuditCategoryPanelBlock->AddSubBlock($oAttachmentTableBlock);
+			$aAuditCategoryPanels[] = $oAuditCategoryPanelBlock;
 		}
-		$oP->add("</table>\n");
-		$oP->add("</td></tr>\n");
-		$oP->add("</table>\n");
+		foreach ($aAuditCategoryPanels as $oAuditCategoryPanel) {
+			$oP->AddUiBlock($oAuditCategoryPanel);
+		}
 	}
 	$oP->output();
 }
 catch(CoreException $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getHtmlDesc()));	
 	$oP->output();
@@ -404,7 +453,7 @@ catch(CoreException $e)
 catch(Exception $e)
 {
 	require_once(APPROOT.'/setup/setuppage.class.inc.php');
-	$oP = new SetupPage(Dict::S('UI:PageTitle:FatalError'));
+	$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 	$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");	
 	$oP->error(Dict::Format('UI:Error_Details', $e->getMessage()));	
 	$oP->output();

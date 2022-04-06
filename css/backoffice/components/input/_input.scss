@@ -1,0 +1,95 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input--height: 30px !default;
+$ibo-input--width: 100% !default;
+
+$ibo-input--color: $ibo-color-grey-900 !default;
+$ibo-input--background-color: $ibo-color-white-100 !default;
+$ibo-input--border-color: $ibo-color-grey-500 !default;
+
+$ibo-input--padding-x: 10px !default;
+$ibo-input--padding-y: $ibo-spacing-0 !default;
+
+$ibo-input--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-input--focus--border-color: $ibo-color-primary-600 !default;
+
+$ibo-input--placeholder--color: $ibo-color-grey-600 !default;
+
+$ibo-input--disabled--background-color: $ibo-color-grey-300 !default;
+$ibo-input--placeholder--color: $ibo-color-grey-700 !default;
+
+$ibo-input-wrapper--is-error--border-color: $ibo-color-red-600 !default;
+$ibo-field-validation: $ibo-color-red-700 !default;
+
+$ibo-input--margin-x: $ibo-spacing-200 !default;
+
+.ibo-input {
+  @extend %ibo-vertically-centered-content;
+  height: $ibo-input--height;
+  width: $ibo-input--width;
+  background-color: $ibo-input--background-color;
+  color: $ibo-input--color;
+  padding: $ibo-input--padding-y $ibo-input--padding-x;
+  border: 1px solid $ibo-input--border-color;
+  border-radius: $ibo-input--border-radius;
+
+  @extend %ibo-font-ral-nor-150;
+  
+	&:focus{
+		border: 1px solid $ibo-input--focus--border-color;
+	}
+	&:disabled{
+		background-color: $ibo-input--disabled--background-color;
+		color: $ibo-input--placeholder--color;
+	}
+	&::placeholder{
+		color: $ibo-input--placeholder--color;
+	}
+}
+textarea.ibo-input{
+  height:unset;
+}
+.ibo-input-wrapper.is-error, .ibo-input-field-wrapper.is-error {
+	.ibo-input, .ibo-input-vanilla,  .cke, textarea {
+    border: 1px solid $ibo-input-wrapper--is-error--border-color;
+  }
+  .ibo-input-vanilla input{
+    border: 0;
+    background-color: #11ffee00;
+  }
+}
+input.ibo-input-vanilla{
+  width: unset;
+  display:initial;
+}
+.ibo-input-wrapper--with-buttons{
+  position: relative;
+  display: flex;
+}
+
+.ibo-field-validation {
+  color: $ibo-field-validation;
+}
+
+.file-input {
+  display: block;
+  position: relative;
+}
+
+.ibo-input--label-right {
+  margin-right: $ibo-input--margin-x;
+  display: inline;
+}
+
+.ibo-input--label-left {
+  margin-left: $ibo-input--margin-x;
+  display: inline;
+}
+
+.disabled {
+  background-color: $ibo-input--disabled--background-color;
+}

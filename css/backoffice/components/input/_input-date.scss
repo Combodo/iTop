@@ -1,0 +1,33 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-date--width: 100% !default;
+
+$ibo-input-date--button--margin--left: -20px !default;
+$ibo-input-date--button--margin--top: 5px !default;
+$ibo-input-date--button--padding: $ibo-spacing-0 !default;
+
+$ibo-input-date--button--background-color: transparent !default;
+$ibo-input-date--button--color: $ibo-color-grey-800 !default;
+
+.ibo-input-date-wrapper {
+  position: relative;
+}
+
+.ibo-input-date {
+  display: inline-block;
+  width: $ibo-input-date--width;
+}
+.ibo-input-date + button{
+	position: absolute;
+	display: inline-block;
+	margin-left: $ibo-input-date--button--margin--left;
+	margin-top: $ibo-input-date--button--margin--top;
+	padding: $ibo-input-date--button--padding;
+	
+	background-color: $ibo-input-date--button--background-color;
+	color: $ibo-input-date--button--color;
+	border: none;
+}

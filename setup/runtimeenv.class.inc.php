@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Manage a runtime environment
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -174,7 +174,7 @@ class RunTimeEnvironment
 			ROOT_MODULE => array(
 				'version_db' => '',
 				'name_db' => '',
-				'version_code' => ITOP_VERSION.'.'.ITOP_REVISION,
+				'version_code' => ITOP_VERSION_FULL,
 				'name_code' => ITOP_APPLICATION,
 			)
 		);
@@ -490,11 +490,13 @@ class RunTimeEnvironment
 	 * The list of modules to be installed in the target environment is:
 	 *  - the list of modules present in the "source_dir" (defined by the source environment) which are marked as "installed" in the source environment's database
 	 *  - plus the list of modules present in the "extra" directory of the target environment: data/<target_environment>-modules/
+	 *
 	 * @param string $sSourceEnv The name of the source environment to 'imitate'
 	 * @param bool $bUseSymLinks Whether to create symbolic links instead of copies
+	 *
 	 * @return string[]
 	 */
-	public function CompileFrom($sSourceEnv, $bUseSymLinks = false)
+	public function CompileFrom($sSourceEnv, $bUseSymLinks = null)
 	{
 		$oSourceConfig = new Config(utils::GetConfigFilePath($sSourceEnv));
 		$sSourceDir = $oSourceConfig->Get('source_dir');
@@ -504,7 +506,7 @@ class RunTimeEnvironment
 		//
 		$oFactory = new ModelFactory($sSourceDirFull);
 		$aModulesToCompile = $this->GetMFModulesToCompile($sSourceEnv, $sSourceDir);
-		foreach($aModulesToCompile as $oModule)
+		foreach ($aModulesToCompile as $oModule)
 		{
 			if ($oModule instanceof MFDeltaModule)
 			{
@@ -514,15 +516,12 @@ class RunTimeEnvironment
 			}
 			$oFactory->LoadModule($oModule);
 		}
-		
 
-		if ($oModule instanceof MFDeltaModule)
-		{
+
+		if ($oModule instanceof MFDeltaModule) {
 			// A delta was loaded, let's save a second copy of the datamodel
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'-with-delta.xml');
-		}
-		else
-		{
+		} else {
 			// No delta was loaded, let's save the datamodel now
 			$oFactory->SaveToFile(APPROOT.'data/datamodel-'.$this->sTargetEnv.'.xml');
 		}
@@ -544,7 +543,16 @@ class RunTimeEnvironment
 
 	/**
 	 * Helper function to create the database structure
+	 *
+	 * @param \Config $oConfig
+	 * @param $sMode
+	 *
 	 * @return boolean true on success, false otherwise
+	 * @throws \CoreException
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 * @throws \Exception
 	 */
 	public function CreateDatabaseStructure(Config $oConfig, $sMode)
 	{
@@ -554,7 +562,7 @@ class RunTimeEnvironment
 		}
 		else
 		{
-			$this->log_info("Creating the structure in '".$oConfig->Get('db_subname')."'.");
+			$this->log_info("Creating the structure in '".$oConfig->Get('db_name')."'.");
 		}
 	
 		//MetaModel::CheckDefinitions();
@@ -590,11 +598,16 @@ class RunTimeEnvironment
 				$this->log_ok("Database structure successfully updated.");
 	
 				// Check (and update only if it seems needed) the hierarchical keys
-				ob_start();
-				MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
-				$sFeedback = ob_get_clean();
-				$this->log_ok("Hierchical keys rebuilt: $sFeedback");
-	
+				if (MFCompiler::SkipRebuildHKeys()) {
+					$this->log_ok("Hierchical keys are NOT rebuilt due to the presence of the \"data/.setup-rebuild-hkeys-never\" file");
+				} else {
+					ob_start();
+					$this->log_ok("Start of rebuilt of hierchical keys. If you have problems with this step, you can skip it by creating a \".setup-rebuild-hkeys-never\" file in data");
+					MetaModel::CheckHKeys(false /* bDiagnosticsOnly */, true /* bVerbose*/, true /* bForceUpdate */); // Since in 1.2-beta the detection was buggy, let's force the rebuilding of HKeys
+					$sFeedback = ob_get_clean();
+					$this->log_ok("Hierchical keys rebuilt: $sFeedback");
+				}
+
 				// Check (and fix) data sync configuration
 				ob_start();
 				MetaModel::CheckDataSources(false /*$bDiagnostics*/, true/*$bVerbose*/);
@@ -721,46 +734,45 @@ class RunTimeEnvironment
 		// Record main installation
 		$oInstallRec = new ModuleInstallation();
 		$oInstallRec->Set('name', ITOP_APPLICATION);
-		$oInstallRec->Set('version', ITOP_VERSION.'.'.ITOP_REVISION);
+		$oInstallRec->Set('version', ITOP_VERSION_FULL);
 		$oInstallRec->Set('comment', $sMainComment);
 		$oInstallRec->Set('parent_id', 0); // root module
 		$oInstallRec->Set('installed', $iInstallationTime);
 		$iMainItopRecord = $oInstallRec->DBInsertNoReload();
-	
-		
+
+
 		// Record installed modules and extensions
 		//
 		$aAvailableExtensions = array();
 		$aAvailableModules = $this->AnalyzeInstallation($oConfig, $this->GetBuildDir());
-		foreach($aSelectedModuleCodes as $sModuleId)
-		{
+		foreach ($aSelectedModuleCodes as $sModuleId) {
+			if (!array_key_exists($sModuleId, $aAvailableModules)) {
+				continue;
+			}
 			$aModuleData = $aAvailableModules[$sModuleId];
 			$sName = $sModuleId;
 			$sVersion = $aModuleData['version_code'];
 			$aComments = array();
 			$aComments[] = $sShortComment;
-			if ($aModuleData['mandatory'])
-			{
+			if ($aModuleData['mandatory']) {
 				$aComments[] = 'Mandatory';
-			}
-			else
-			{
+			} else {
 				$aComments[] = 'Optional';
 			}
-			if ($aModuleData['visible'])
-			{
+			if ($aModuleData['visible']) {
 				$aComments[] = 'Visible (during the setup)';
-			}
-			else
-			{
+			} else {
 				$aComments[] = 'Hidden (selected automatically)';
 			}
-			foreach ($aModuleData['dependencies'] as $sDependOn)
-			{
-				$aComments[] = "Depends on module: $sDependOn";
+
+			$aDependencies = $aModuleData['dependencies'];
+			if (!empty($aDependencies)) {
+				foreach ($aDependencies as $sDependOn) {
+					$aComments[] = "Depends on module: $sDependOn";
+				}
 			}
 			$sComment = implode("\n", $aComments);
-	
+
 			$oInstallRec = new ModuleInstallation();
 			$oInstallRec->Set('name', $sName);
 			$oInstallRec->Set('version', $sVersion);
@@ -769,7 +781,7 @@ class RunTimeEnvironment
 			$oInstallRec->Set('installed', $iInstallationTime);
 			$oInstallRec->DBInsertNoReload();
 		}
-		
+
 		if ($this->oExtensionsMap)
 		{
 			// Mark as chosen the selected extensions code passed to us
@@ -875,19 +887,19 @@ class RunTimeEnvironment
 	 */	
 	protected function log_error($sText)
 	{
-		SetupPage::log_error($sText);
+		SetupLog::Error($sText);
 	}
 	protected function log_warning($sText)
 	{
-		SetupPage::log_warning($sText);
+		SetupLog::Warning($sText);
 	}
 	protected function log_info($sText)
 	{
-		SetupPage::log_info($sText);
+		SetupLog::Info($sText);
 	}
 	protected function log_ok($sText)
 	{
-		SetupPage::log_ok($sText);
+		SetupLog::Ok($sText);
 	}
 
 	/**
@@ -895,7 +907,7 @@ class RunTimeEnvironment
 	 *
 	 * @param string $sQuery
 	 *
-	 * @since 2.5 N°1001 utf8mb4 switch
+	 * @since 2.5.0 N°1001 utf8mb4 switch
 	 * @uses \SetupUtils::GetSetupQueriesFilePath()
 	 */
 	protected function log_db_query($sQuery)
@@ -1056,6 +1068,14 @@ class RunTimeEnvironment
 			}
 		}
 	}
+
+	public function Rollback()
+	{
+		if ($this->sFinalEnv != $this->sTargetEnv)
+		{
+			SetupUtils::tidydir(APPROOT.'env-'.$this->sTargetEnv);
+		}
+	}
 	
 	/**
 	 * Call the given handler method for all selected modules having an installation handler
@@ -1071,7 +1091,7 @@ class RunTimeEnvironment
 	            isset($aAvailableModules[$sModuleId]['installer']) )
 	        {
 	            $sModuleInstallerClass = $aAvailableModules[$sModuleId]['installer'];
-	            SetupPage::log_info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
+		        SetupLog::Info("Calling Module Handler: $sModuleInstallerClass::$sHandlerName(oConfig, {$aModule['version_db']}, {$aModule['version_code']})");
 	            $aCallSpec = array($sModuleInstallerClass, $sHandlerName);
 	            if (is_callable($aCallSpec))
 	            {
@@ -1093,8 +1113,8 @@ class RunTimeEnvironment
 	    
 	    CMDBObject::SetTrackInfo("Initialization");
 	    $oMyChange = CMDBObject::GetCurrentChange();
-	    
-	    SetupPage::log_info("starting data load session");
+
+		SetupLog::Info("starting data load session");
 	    $oDataLoader->StartSession($oMyChange);
 	    
 	    $aFiles = array();
@@ -1144,7 +1164,7 @@ class RunTimeEnvironment
 	    foreach($aPreviouslyLoadedFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
-	        SetupPage::log_info("Loading file: $sFileName (just to get the keys mapping)");
+		    SetupLog::Info("Loading file: $sFileName (just to get the keys mapping)");
 	        if (empty($sFileName) || !file_exists($sFileName))
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
@@ -1152,13 +1172,13 @@ class RunTimeEnvironment
 	        
 	        $oDataLoader->LoadFile($sFileName, true);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-	        SetupPage::log_info($sResult);
+		    SetupLog::Info($sResult);
 	    }
 	    
 	    foreach($aFiles as $sFileRelativePath)
 	    {
 	        $sFileName = APPROOT.$sFileRelativePath;
-	        SetupPage::log_info("Loading file: $sFileName");
+		    SetupLog::Info("Loading file: $sFileName");
 	        if (empty($sFileName) || !file_exists($sFileName))
 	        {
 	            throw(new Exception("File $sFileName does not exist"));
@@ -1166,11 +1186,11 @@ class RunTimeEnvironment
 	        
 	        $oDataLoader->LoadFile($sFileName);
 	        $sResult = sprintf("loading of %s done.", basename($sFileName));
-	        SetupPage::log_info($sResult);
+		    SetupLog::Info($sResult);
 	    }
 	    
 	    $oDataLoader->EndSession();
-	    SetupPage::log_info("ending data load session");
+		SetupLog::Info("ending data load session");
 	}
 	
 	/**

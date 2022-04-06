@@ -1,0 +1,18 @@
+{% apply spaceless %}
+    <span id="{{ oUIBlock.GetId() }}"
+          class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
+          data-role="ibo-button-group"
+        {% if oUIBlock.GetDataAttributes() %}
+            {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                data-{{ sName }}="{{ sValue }}"
+            {% endfor %}
+        {% endif %}
+>
+    {% for oButton in oUIBlock.GetButtons() %}
+        {{ render_block(oButton) }}
+    {% endfor %}
+</span>
+    {% for oExtraBlock in oUIBlock.GetExtraBlocks() %}
+        {{ render_block(oExtraBlock) }}
+    {% endfor %}
+{% endapply %}

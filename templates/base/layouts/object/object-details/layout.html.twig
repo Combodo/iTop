@@ -1,0 +1,22 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'base/components/panel/layout.html.twig' %}
+
+{% block iboPanelMetaData %}
+    data-object-class="{{ oUIBlock.GetClassName() }}"
+    data-object-id="{{ oUIBlock.GetObjectId() }}"
+    data-object-mode="{{ oUIBlock.GetObjectMode() }}"
+    {% if oUIBlock.HasStatus() %}data-object-state="{{ oUIBlock.GetStatusCode() }}"{% endif %}
+    data-role="ibo-object-details"
+{% endblock %}
+
+{% block iboPanelSubTitle %}
+    {% if oUIBlock.GetStatusLabel() is not empty %}
+        <span class="ibo-object-details--status" data-role="ibo-object-details--status" data-status-code="{{ oUIBlock.GetStatusCode() }}">
+            <span class="ibo-object-details--status-dot" data-role="ibo-object-details--status-dot" style="background-color: {{ oUIBlock.GetStatusColor() }};"></span>
+            <span class="ibo-object-details--status-label" data-role="ibo-object-details--status-label">{{ oUIBlock.GetStatusLabel() }}</span>
+        </span>
+    {% endif %}
+    <span class="ibo-object-details--object-class" data-role="ibo-object-details--object-class">{{ oUIBlock.GetClassLabel() }}</span>
+    {{ parent() }}
+{% endblock %}

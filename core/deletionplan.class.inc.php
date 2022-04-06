@@ -1,32 +1,12 @@
 <?php
-// Copyright (C) 2010-2013 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Algorithm to delete object(s) and maintain data integrity
- *
- * @copyright   Copyright (C) 2010-2013 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-class DeleteException extends CoreException
-{
-}
+/**
+ * Algorithm to delete object(s) and maintain data integrity
+ */
 
 /**
  * Deletion plan (other objects to be deleted/modified, eventual issues, etc.) 
@@ -116,7 +96,7 @@ class DeletionPlan
 		{
 			foreach($aToUpdate as $iId => $aData)
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 				$this->m_iToUpdate++;
 
 				$oObject = $aData['to_reset'];
@@ -142,7 +122,7 @@ class DeletionPlan
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 	}
 
 	public function GetIssues()
@@ -262,7 +242,7 @@ class DeletionPlan
 
 	public function SetDeletionIssues($oObject, $aIssues, $bSecurityIssue)
 	{
-		if (count($aIssues) > 0)
+		if (count($aIssues ?? []) > 0)
 		{
 			$sClass = get_class($oObject);
 			$iId = $oObject->GetKey();

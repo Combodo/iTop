@@ -1,0 +1,67 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* Base size: html font-size 12px */
+$ibo-font-size-50: 0.83rem !default;	/* 10px */
+$ibo-font-size-100: 1rem !default;		/* 12px */
+$ibo-font-size-150: 1.17rem !default; /* 14px */
+$ibo-font-size-200: 1.33rem !default; /* 16px */
+$ibo-font-size-250: 1.5rem !default; /* 18px */
+$ibo-font-size-300: 1.67rem !default; /* 20px */
+$ibo-font-size-350: 1.83rem !default; /* 22px */
+$ibo-font-size-400: 2rem !default; /* 24px */
+$ibo-font-size-450: 2.5rem !default; /* 30px */
+$ibo-font-size-500: 3rem !default; /* 36px */
+$ibo-font-size-550: 4rem !default; /* 48px */
+
+/* Value	Common weight name (https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight) */
+$ibo-font-weight-100: 100 !default; /* 100 Thin (Harline) */
+$ibo-font-weight-200: 200 !default; /* 200 Extra Light (Ultra Light) */
+$ibo-font-weight-300: 300 !default; /* 300 Light */
+$ibo-font-weight-400: 400 !default; /* 400 Normal (Regular) */
+$ibo-font-weight-500: 500 !default; /* 500 Medium */
+$ibo-font-weight-600: 600 !default; /* 600 Semi Bold (Demi Bold) */
+$ibo-font-weight-700: 700 !default; /* 700 Bold */
+$ibo-font-weight-800: 800 !default; /* 800 Extra Bold (Ultra Bold) */
+$ibo-font-weight-900: 900 !default; /* 900 Black (Heavy) */
+$ibo-font-weight-950: 950 !default; /* 950 Extra Black (Ultra Black) */
+
+$ibo-font-family-base: "Raleway" !default;
+$ibo-font-family-fallbacks: "sans-serif", "system-ui" !default;
+$ibo-font-family-monospace: monospace !default;
+$ibo-font-family-code: $ibo-font-family-monospace !default;
+
+:root {
+  --ibo-font-size-50: #{$ibo-font-size-50};
+  --ibo-font-size-100: #{$ibo-font-size-100};
+  --ibo-font-size-150: #{$ibo-font-size-150};
+  --ibo-font-size-200: #{$ibo-font-size-200};
+  --ibo-font-size-250: #{$ibo-font-size-250};
+  --ibo-font-size-300: #{$ibo-font-size-300};
+  --ibo-font-size-350: #{$ibo-font-size-350};
+  --ibo-font-size-400: #{$ibo-font-size-400};
+  --ibo-font-size-450: #{$ibo-font-size-450};
+  --ibo-font-size-500: #{$ibo-font-size-500};
+  --ibo-font-size-550: #{$ibo-font-size-550};
+}
+
+:root {
+  --ibo-font-weight-100: #{$ibo-font-weight-100};
+  --ibo-font-weight-200: #{$ibo-font-weight-200};
+  --ibo-font-weight-300: #{$ibo-font-weight-300};
+  --ibo-font-weight-400: #{$ibo-font-weight-400};
+  --ibo-font-weight-500: #{$ibo-font-weight-500};
+  --ibo-font-weight-600: #{$ibo-font-weight-600};
+  --ibo-font-weight-700: #{$ibo-font-weight-700};
+  --ibo-font-weight-800: #{$ibo-font-weight-800};
+  --ibo-font-weight-900: #{$ibo-font-weight-900};
+  --ibo-font-weight-950: #{$ibo-font-weight-950};
+}
+
+:root {
+  --ibo-font-family-base: #{$ibo-font-family-base};
+  --ibo-font-family-monospace: #{$ibo-font-family-monospace};
+  --ibo-font-family-code: #{$ibo-font-family-code};
+}

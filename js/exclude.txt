@@ -4,3 +4,4 @@
 #
 jquery.layout.js
 jquery.ba-bbq.js
+README.md

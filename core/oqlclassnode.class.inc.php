@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -126,6 +126,19 @@ class OQLClassNode
 
 
 		return $sOQL;
+	}
+
+	public function Browse(Closure $callback)
+	{
+		$callback($this);
+		foreach ($this->GetJoins() as $aJoins)
+		{
+			/** @var \OQLJoin $oJoin */
+			foreach ($aJoins as $oJoin)
+			{
+				$oJoin->GetOOQLClassNode()->Browse($callback);
+			}
+		}
 	}
 
 	public function GetExternalKeys()
@@ -316,6 +329,14 @@ class OQLJoin
 	public function GetRightField()
 	{
 		return $this->sRightField;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetLeftField()
+	{
+		return $this->sLeftField;
 	}
 
 }

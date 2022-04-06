@@ -1,0 +1,932 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-search-form-panel--z-index: 3 !default;
+
+$ibo-search-form-panel--body--padding-top: 18px !default;
+$ibo-search-form-panel--body--padding-bottom: 10px !default;
+$ibo-search-form-panel--body--padding-x: 14px !default;
+
+$ibo-search-form-panel--highlight--border-radius: $ibo-panel--body--border-radius $ibo-panel--body--border-radius 0 0 !default;
+
+$ibo-search-form-panel--criteria--margin-bottom: 5px !default;
+$ibo-search-form-panel--criteria--color: $ibo-color-grey-900 !default;
+$ibo-search-form-panel--criteria--background-color: $ibo-color-white-200 !default;
+$ibo-search-form-panel--criteria--border-color: $ibo-color-grey-300 !default;
+$ibo-search-form-panel--criteria--locked--background-color: $ibo-color-grey-300 !default;
+
+$ibo-search-form-panel--more-criteria--color: $ibo-color-blue-grey-800 !default;
+$ibo-search-form-panel--more-criteria--background-color: $ibo-color-white-100 !default;
+$ibo-search-form-panel--more-criteria--icon--color: $ibo-color-primary-600 !default;
+$ibo-search-form-panel--more-criteria--border-color: $ibo-search-form-panel--criteria--border-color !default;
+
+$ibo-search-form-panel--items--hover--color: $ibo-color-grey-200 !default;
+
+$ibo-search-form-panel--multiple-choice--hover--color: $ibo-color-grey-200 !default;
+
+$ibo-search-form-panel--hint--margin-left: $ibo-spacing-300 !default;
+$ibo-search-form-panel--hint--color: $ibo-color-grey-800 !default;
+
+$ibo-search-form-panel--misc-button--background-color: $ibo-search-form-panel--more-criteria--background-color !default;
+$ibo-search-form-panel--misc-button--icon--color: $ibo-search-form-panel--more-criteria--icon--color !default;
+
+$ibo-search-results-area--z-index: $ibo-search-form-panel--z-index - 2 !default; /* Minus 2 because the criteria expands between the search form panel and the results area */
+$ibo-search-results-area--margin-bottom: 300px !default; /* Arbitrary value, must be greater than the position (y) of the first result line in non sticking state, should be discussed to find a clever way to adjust it in both search page and search modals (linkedsets) */
+
+$ibo-search-results-area--datatable-toolbar--background-color--is-sticking: $ibo-panel--body--background-color !default;
+$ibo-search-results-area--datatable-toolbar--border--is-sticking: $ibo-panel--body--border !default;
+
+$ibo-search-results-area--datatable-scrollhead--background-color--is-sticking: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking !default;
+$ibo-search-results-area--datatable-scrollhead--border--is-sticking: $ibo-search-results-area--datatable-toolbar--border--is-sticking !default;
+
+/* IMPORTANT: All the code below do NOT follow the coding convention and has NOT been refactored to the UIBlock system */
+
+.search_box {
+	box-sizing: border-box;
+	position: relative;
+	z-index: 1100; /* To be over the table block/unblock UI. Not very sure about this. */
+	text-align: center; /* Used when form is closed */
+
+	/* Sizing reset */
+	* {
+		box-sizing: border-box;
+	}
+}
+
+.search_form_handler {
+	/* Hyperlink reset */
+	a {
+    @extend %ibo-hyperlink-inherited-colors;
+  }
+
+	/* Input reset */
+	input[type="text"],
+	select {
+		padding: 1px 2px;
+	}
+
+	&:not(.closed) {
+		.sf_title {
+			.sft_short {
+				display: none;
+			}
+
+
+			.sft_toggler {
+				transform: rotateX(180deg);
+				transition: transform 0.5s linear;
+			}
+		}
+	}
+
+	&.closed {
+		margin-bottom: 0.5em;
+		width: 150px;
+		overflow: hidden;
+		border-radius: 4px;
+		//background-color: $complement-color;
+
+		.sf_criterion_area {
+			height: 0;
+			opacity: 0;
+			padding: 0;
+		}
+
+		.sf_title {
+			padding: 6px 8px;
+			text-align: center;
+			font-size: 12px;
+
+			.sft_long {
+				display: none;
+			}
+
+			.sft_hint,
+			.sfobs_hint {
+				display: none;
+			}
+		}
+	}
+
+	&:not(.no_auto_submit) {
+		.sft_hint {
+			display: none;
+		}
+
+		.sfc_fg_apply {
+			display: none;
+		}
+	}
+
+	&.no_auto_submit {
+		.sfc_fg_search {
+			display: none;
+		}
+
+		.sft_hint {
+			display: inline-block;
+		}
+	}
+
+
+	&:not(.hide_obsolete_data) {
+		.sfobs_hint {
+			display: none;
+		}
+	}
+
+	&.hide_obsolete_data {
+		.sfobs_hint {
+			display: inline-block;
+		}
+	}
+
+	&.hide_obsolete_data.no_auto_submit {
+		.sfobs_hint {
+			margin-left: 30px;
+		}
+
+	}
+
+	.sf_message {
+		display: none;
+		margin: $ibo-spacing-300 $ibo-spacing-300 $ibo-spacing-0 $ibo-spacing-300;
+		border-radius: 0px;
+	}
+
+	.sf_criterion_area {
+		/*display: none;*/
+		padding: $ibo-spacing-300 $ibo-spacing-300 3px $ibo-spacing-300; /* padding-bottom must equals to padding-top - .search_form_criteria:margin-bottom */
+
+		.sf_criterion_row {
+
+			&:not(:first-child) {
+				margin-top: 20px;
+
+				&::before {
+					content: "";
+					position: absolute;
+					top: -12px;
+					left: 0px;
+					width: 100%;
+					border-top: 1px solid $ibo-color-grey-200;
+				}
+
+				&::after {
+					content: "or"; /* TODO: Make this into a dict entry */
+					position: absolute;
+					top: -20px;
+					left: 8px;
+					padding-left: 5px;
+					padding-right: 5px;
+					color: $ibo-color-grey-600;
+					background-color: $ibo-color-white-100; /* Must match .sf_criterion_area:background-color */
+				}
+			}
+
+			.sf_criterion_group {
+				display: inline;
+				.sfc_fg_button,
+				.sfc_header {
+					border: 1px solid $ibo-search-form-panel--criteria--border-color; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+					border-radius: 3px;
+				}
+			}
+		}
+
+		/* Common style between criterion and more criterion */
+		.search_form_criteria,
+		.sf_more_criterion,
+		.sf_button {
+			position: relative;
+			display: inline-block;
+			margin-right: 10px;
+			margin-top: 3px;
+			margin-bottom: 3px; /* Bottom spacing (6px) for next criteria line is actually splitted between top and bottom margin in order to center the criteria within the container. The cumulated margins fo the lines will do the trick. */
+			vertical-align: top;
+
+			&.opened {
+				margin-bottom: $ibo-spacing-0; /* To compensate the .sfc/.sfm_header:padding-bottom: 13px */
+
+				.sfc_header,
+				.sfm_header {
+          border-bottom: none !important;
+          padding-bottom: 13px; /* Must be equal to .search_form_criteria:margin-bottom + this:padding-bottom */
+        }
+			}
+
+			> * {
+				padding: 7px $ibo-spacing-300;
+				vertical-align: top;
+				border: solid 1px $ibo-search-form-panel--more-criteria--border-color;
+				border-radius: $ibo-border-radius-300;
+			}
+
+			.sfm_content {
+				position: absolute;
+				z-index: -1;
+				min-width: 100%;
+				left: 0px;
+				margin-top: -1px;
+			}
+
+      .sfc_fg_buttons,
+      .sfm_buttons{
+        white-space: nowrap;
+      }
+		}
+
+    .sf_more_criterion,
+    .sf_button {
+      min-width: 34px;
+      text-align: center;
+    }
+
+    /* Criteria tags */
+    .search_form_criteria {
+      /* Non editable criteria */
+      &.locked {
+        background-color: $ibo-search-form-panel--criteria--locked--background-color;
+
+				.sfc_title {
+					user-select: none;
+					cursor: initial;
+				}
+			}
+
+			/* Draft criteria (modifications not applied) */
+			&.draft {
+				.sfc_header,
+				.sfc_form_group {
+          border-style: dashed;
+          border-color: $ibo-color-grey-600;
+        }
+
+				.sfc_title {
+					font-style: italic;
+				}
+			}
+
+			/* Opened criteria (form group displayed) */
+			&.opened {
+				z-index: 1; /* To be over other criterion */
+
+				.sfc_toggle {
+					transform: rotateX(-180deg);
+				}
+
+				.sfc_form_group {
+          display: block;
+          margin-top: -1px;
+          z-index: -1;
+        }
+			}
+
+			&.opened_left {
+				.sfc_form_group {
+					left: auto;
+					right: 0px;
+				}
+			}
+
+			/* Add "and" on criterion but the one and submit button */
+			&:not(:last-of-type) {
+				margin-right: 12px;
+			}
+
+			> * {
+				background-color: $ibo-search-form-panel--criteria--background-color;
+				color: $ibo-search-form-panel--criteria--color;
+			}
+
+			/* Top left corner icons */
+			.sfc_toggle,
+			.sfc_close {
+				position: absolute;
+				top: 7px;
+				color: $ibo-color-primary-600;
+			}
+
+			.sfc_locked {
+				position: absolute;
+				top: 9px;
+				color: $ibo-color-grey-500;
+			}
+
+			.sfc_toggle {
+				display: inline-block;
+				right: 23px;
+				transition: all 0.3s ease-in-out;
+			}
+
+			.sfc_close,
+			.sfc_locked {
+				right: 7px;
+			}
+
+			.sfc_title {
+				max-width: 240px;
+				padding-right: 30px;
+				white-space: nowrap;
+				overflow-x: hidden;
+				text-overflow: ellipsis;
+				cursor: pointer;
+
+				.sfc_values {
+					font-weight: bold;
+				}
+
+			}
+
+			.sfc_form_group {
+        position: absolute;
+        /* Form group (operators) is displayed only when the criteria is toggled to opened state */
+        display: none;
+        max-width: 450px;
+        width: max-content;
+        max-height: 520px;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+				.sfc_fg_operators {
+					font-size: 12px;
+
+					.sfc_fg_operator {
+						&.force_hide {
+							display: none !important;
+						}
+
+						> label {
+							line-height: 20px;
+							white-space: nowrap;
+
+							> * {
+								display: inline-block;
+								vertical-align: middle;
+							}
+						}
+
+						.sfc_op_radio {
+							width: 12px;
+							margin: $ibo-spacing-0;
+							margin-right: 7px;
+						}
+
+						.sfc_op_name {
+							width: 96px;
+						}
+
+						.sfc_op_content {
+							input[type="text"] {
+								@extend .ibo-input;
+								display: unset;
+								width: 160px;
+							}
+						}
+
+						.sfc_opc_multichoices {
+							label > input {
+								vertical-align: text-top;
+								margin-left: $ibo-spacing-0;
+								margin-right: 8px;
+							}
+
+							.sfc_opc_mc_toggler {
+
+							}
+
+							.sfc_opc_mc_items_wrapper {
+								max-height: 415px; /* Must be less than .sfc_form_group:max-height - .sfc_opc_mc_toggler:height - .sfc_opc_mc_filter:height */
+								overflow-y: auto;
+								margin: $ibo-spacing-0 -8px; /* Compensate .sfc_opc_multichoices side padding so the hover style can take the full with */
+
+								.sfc_opc_mc_items {
+									.sfc_opc_mc_items_list {
+										text-align: left;
+										&.sfc_opc_mc_items_selected {
+											position: relative;
+											padding-top: 5px;
+											margin-top: 5px;
+
+											&::before {
+												content: "";
+												position: absolute;
+												border-top: 1px solid $ibo-color-grey-300;
+												width: calc(100% - 12px); /* minus margin-left x2 */
+												margin-left: 6px;
+												top: 0px;
+											}
+										}
+
+										.sfc_opc_mc_placeholder {
+											padding: 15px 8px;
+											font-style: italic;
+											text-align: center;
+										}
+
+										.sfc_opc_mc_item {
+											padding: $ibo-spacing-200 $ibo-spacing-300; /* Putting back the padding remove by .sfc_opc_mc_items */
+
+											&:hover {
+												background-color: $ibo-search-form-panel--multiple-choice--hover--color;
+											}
+
+											label {
+												display: inline-block;
+												width: 100%;
+											}
+										}
+									}
+								}
+
+								.sfc_opc_mc_items_hint {
+									margin-top: 15px;
+									margin-bottom: 15px;
+									padding-left: 9px;
+									padding-right: 9px;
+									color: $ibo-color-grey-700;
+									font-size: 10px;
+									font-style: italic;
+
+									> span {
+										margin-right: 0.5em;
+										font-style: italic;
+									}
+								}
+							}
+						}
+					}
+				}
+
+				.sfc_fg_search,
+				.sfc_fg_apply,
+				.sfc_fg_cancel {
+					margin-top: 8px;
+					//padding: 3px 6px;
+					font-size: $ibo-font-size-100; /* Not bold, so it looks like 10px/bold of more/less buttons */
+				}
+
+				.sfc_fg_search,
+				.sfc_fg_apply {
+					margin-right: 5px;
+				}
+
+				.sfc_fg_more,
+				.sfc_fg_less {
+					position: absolute;
+					bottom: 7px;
+					right: 0px;
+					cursor: pointer;
+					color: $ibo-color-blue-800;
+					font-size: 10px;
+					font-weight: bold;
+					border: none;
+					background-color: transparent;
+
+					> span {
+						margin-left: 3px;
+					}
+				}
+
+				/* Show only first operator in simple mode */
+				.sfc_fg_operator:not(:first-of-type),
+				.sfc_fg_operator:first-of-type .sfc_op_radio {
+					display: none;
+				}
+
+				.sfc_fg_less {
+					display: none;
+				}
+
+				.sfc_fg_more {
+					display: inline-block;
+				}
+
+				/* Show all operators in advanced mode */
+				&.advanced {
+
+					.sfc_fg_operator {
+						margin-bottom: 3px;
+
+						&:last-of-type {
+							margin-bottom: $ibo-spacing-0;
+						}
+					}
+
+					.sfc_fg_operator:not(:first-of-type),
+					.sfc_fg_operator:first-of-type .sfc_op_radio {
+						display: inherit;
+					}
+
+					.sfc_fg_less {
+						display: inline-block;
+					}
+
+					.sfc_fg_more {
+						display: none;
+					}
+
+					.hide_on_advanced {
+						display: none;
+					}
+
+				}
+
+				&:not(.advanced) {
+					.hide_on_less {
+						display: none;
+					}
+				}
+			}
+
+			/* Special criterion processing */
+			&.search_form_criteria_raw {
+				> * {
+					border-color: transparent;
+				}
+
+				.sfc_title {
+					cursor: initial;
+					padding-right: 20px; /* Less than regular as there is no toggle icon */
+				}
+
+				.sfc_form_group {
+					display: none;
+				}
+			}
+
+			&.search_form_criteria_enum {
+				.sfc_form_group {
+					.sfc_fg_operator_in {
+						> label {
+							display: inline-block;
+							width: 100%;
+							line-height: initial;
+							white-space: nowrap;
+
+							.sfc_op_content {
+								width: 100%;
+							}
+						}
+					}
+				}
+			}
+
+			&.search_form_criteria_tag_set {
+				.sfc_form_group {
+					.sfc_fg_operator_in {
+						> label {
+							display: inline-block;
+							width: 100%;
+							line-height: initial;
+							white-space: nowrap;
+
+							.sfc_op_content {
+								width: 100%;
+							}
+						}
+					}
+				}
+			}
+
+			&.search_form_criteria_numeric {
+				//.sfc_form_group.advanced {
+				//	.sfc_fg_operator_between {
+				//		margin-top: 5px;
+				//		margin-bottom: 5px;
+				//	}
+				//}
+				.sfc_fg_operators .sfc_fg_operator.sfc_fg_operator_between {
+					.sfc_op_content_from_outer {
+						display: inline;
+					}
+
+					.sfc_op_content_until_outer {
+						display: inline;
+						margin-left: 5px;
+					}
+
+					label {
+						&.sfc_op_content_from_label, &.sfc_op_content_until_label {
+							width: 45px;
+							display: inline-block;
+						}
+					}
+
+					input[type="text"] {
+						width: 77px;
+					}
+				}
+			}
+
+			&.search_form_criteria_date_time,
+			&.search_form_criteria_date {
+				.sfc_form_group.advanced {
+					.sfc_fg_operator_between {
+						margin-bottom: 5px;
+					}
+				}
+
+				.sfc_fg_operator_between_days {
+					input {
+						width: 135px;
+					}
+				}
+
+				button.ui-datepicker-trigger {
+					background: none;
+					border: none;
+					height: 100%;
+					padding: 2px;
+
+					img {
+						vertical-align: middle;
+					}
+				}
+			}
+		}
+
+		/* More criterion */
+		.sf_more_criterion {
+			&.opened {
+				z-index: 2; /* To be over criterion */
+
+				.sfm_content {
+					display: inherit;
+				}
+			}
+
+			&.opened_left {
+				.sfm_content {
+					left: auto;
+					right: 0px;
+				}
+			}
+
+			> * {
+				background-color: $ibo-search-form-panel--more-criteria--background-color;
+				color: $ibo-search-form-panel--more-criteria--color;
+			}
+
+			.sfm_toggler {
+				.sfm_tg_title {
+					margin-right: 7px;
+				}
+
+				.sfm_tg_icon {
+					color: $ibo-color-primary-600;
+				}
+			}
+
+			.sfm_content {
+				display: none;
+				min-width: 200px; /* To avoid element going to thin on filter, not very slick */
+
+				.sfm_lists {
+					margin: $ibo-spacing-0 -8px;
+					padding: $ibo-spacing-0 8px;
+					max-height: 400px;
+					overflow-x: hidden;
+					overflow-y: auto;
+
+					.sfl_items {
+						> li {
+							&:hover {
+								background-color: $ibo-search-form-panel--items--hover--color;
+							}
+						}
+					}
+				}
+
+				.sfm_buttons {
+					display: none;
+
+					button {
+						margin-top: 8px;
+						margin-right: 5px;
+						padding: 3px 6px;
+						font-size: 11px;
+
+						&:last-of-type {
+							margin-right: $ibo-spacing-0;
+						}
+					}
+				}
+			}
+		}
+
+		/* Misc. buttons */
+		.sf_button {
+      cursor: pointer;
+
+			> * {
+				background-color: $ibo-search-form-panel--misc-button--background-color;
+				color: $ibo-search-form-panel--misc-button--icon--color;
+			}
+		}
+	}
+
+	/* List helpers */
+	.sf_list {
+		&:not(:first-of-type) {
+			.sfl_title {
+				border-top: 1px solid $ibo-color-grey-400;
+				padding-top: 8px;
+				margin-top: 5px;
+			}
+		}
+
+		.sfl_title {
+			font-weight: bold;
+		}
+
+		.sfl_items {
+			margin: 5px -8px $ibo-spacing-0 -8px;
+			padding: $ibo-spacing-0;
+			text-align: left;
+
+			> li {
+				padding: $ibo-spacing-200 $ibo-spacing-300;
+				list-style: none;
+				white-space: nowrap;
+
+				&:hover {
+					background-color: $ibo-search-form-panel--items--hover--color;
+				}
+
+				&.sfl_i_placeholder {
+					font-style: italic;
+					opacity: 0.8;
+				}
+
+				> label {
+					display: inline-block;
+					width: 100%;
+
+					> * {
+						vertical-align: middle;
+					}
+
+					> input[type="checkbox"] {
+						margin-left: $ibo-spacing-0;
+						margin-right: $ibo-spacing-300;
+					}
+				}
+			}
+		}
+	}
+
+	.sf_filter {
+		position: relative;
+		margin-top: 8px;
+		margin-bottom: 8px;
+
+		input,
+		button,
+		.sff_picto {
+			vertical-align: middle;
+			height: 22px;
+		}
+
+		input,
+		button {
+			border: 1px solid #ABABAB;
+		}
+
+		input {
+			width: 100% !important;
+		}
+
+		button {
+			width: 23px; /* Must be equals to .sf_filter > *:height */
+			background-color: $ibo-color-white-100;
+			color: $ibo-color-primary-600;
+			font-size: 10px;
+
+			&:first-of-type {
+				margin-left: 5px;
+			}
+
+			&:not(:first-of-type) {
+				border-left: transparent;
+			}
+		}
+
+		.sff_input_wrapper {
+			position: relative;
+
+			input[type="text"] {
+				@extend .ibo-input;
+				display: unset;
+			}
+			.sff_picto {
+				position: absolute;
+				right: 7px;
+				top: 3px;
+				user-select: none;
+				color: $ibo-color-grey-800;
+			}
+
+			.sff_reset {
+				display: none;
+			}
+
+			input::-ms-clear {
+				display: none;
+			}
+		}
+
+		&.sf_with_buttons {
+			input {
+				width: calc(100% - 28px) !important; /* Minus button outter width (only one for now) */
+				min-width: 120px;
+			}
+		}
+	}
+}
+
+.sft_hint,
+.sfobs_hint,
+.sft_toggler {
+  margin-left: $ibo-search-form-panel--hint--margin-left;
+  color: $ibo-search-form-panel--hint--color;
+}
+
+.sf_results_placeholder {
+	@extend %ibo-font-size-150;
+	margin-top: 24px;
+	text-align: center;
+	
+	button {
+		margin-top: 8px;
+		> span {
+			margin-right: 0.5em;
+		}
+	}
+}
+
+
+.ibo-search-form-panel {
+  z-index: $ibo-search-form-panel--z-index;
+	margin-bottom: 8px;
+	
+	.ibo-panel--body {
+    padding: $ibo-search-form-panel--body--padding-top $ibo-search-form-panel--body--padding-x $ibo-search-form-panel--body--padding-bottom;
+    overflow: initial;
+
+    &::before {
+      border-radius: $ibo-search-form-panel--highlight--border-radius;
+    }
+  }
+}
+.ibo-criterion-area{
+	@extend %ibo-font-size-100;
+}
+#ibo-main-content .search_form_handler .sf_criterion_area{
+	padding: 0;
+}
+
+.sfm_tg_title{
+  display: none;
+}
+.ibo-criterion-group:empty ~ .sf_more_criterion .sfm_tg_title{
+  display: unset;
+}
+.sf_results_area {
+  z-index: $ibo-search-results-area--z-index;
+  margin-bottom: $ibo-search-results-area--margin-bottom; /* This is mostly to avoid glitches when the result list's bottom limit is just around the window bottom limit and the user scrolls down (boucing effect, see N°4427) */
+}
+
+/***********************/
+/* Sticky header rules */
+/***********************/
+.ibo-search-form-panel {
+  .ibo-panel--body.ibo-is-sticking {
+      position: fixed;
+
+      border-radius: 0;
+      border-bottom-color: transparent;
+  }
+}
+.ibo-datatable-panel.ibo-is-sticking {
+  .ibo-panel--header {
+    z-index: 0;
+  }
+  .ibo-datatable--toolbar {
+    position: fixed;
+    z-index: 2;
+    padding-bottom: 4px;
+    background-color: $ibo-search-results-area--datatable-toolbar--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+    border-right: $ibo-search-results-area--datatable-toolbar--border--is-sticking;
+  }
+  .dataTables_scrollHead {
+    position: fixed !important; /* Important is required as the property is already set in the style attribute by the JS lib */
+    z-index: 2;
+    background-color: $ibo-search-results-area--datatable-scrollhead--background-color--is-sticking;
+    border-left: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+    border-right: $ibo-search-results-area--datatable-scrollhead--border--is-sticking !important; /* Unfortunately the !important is necessary to overload the lib style attribute */
+  }
+}

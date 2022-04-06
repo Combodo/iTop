@@ -1,0 +1,28 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-text--width: 100% !default;
+$ibo-input-text--min-height: 12rem !default;
+$ibo-input-text--padding-x: $ibo-spacing-400 !default;
+$ibo-input-text--padding-y: 10px !default;
+
+.ibo-input-text {
+  width: $ibo-input-text--width;
+  min-height: $ibo-input-text--min-height;
+  padding: $ibo-input-text--padding-y $ibo-input-text--padding-x;
+
+  &.ibo-is-code {
+    @extend %ibo-font-code-150;
+    /* Note: There is a mic-mac in the inputs SCSS partials / PHP classes / TWIG templates. All base style should be defined in a common ancestor (AbstractInput) which should have its own BLOCK_CODE and SCSS partial; which is not the case right now.
+     * We should correct this later as now is too close to the RC to make such changes.
+     */
+    background-color: $ibo-input--background-color;
+  }
+}
+
+.ibo-input-text--export {
+  width: 100%;
+  min-height: 15em;
+}

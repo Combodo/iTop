@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Brick;
@@ -135,7 +133,7 @@ class CreateBrick extends PortalBrick
 
 				case 'rules':
 					/** @var \Combodo\iTop\DesignElement $oRuleNode */
-					foreach ($oBrickSubNode->childNodes as $oRuleNode)
+					foreach ($oBrickSubNode->GetNodes('*') as $oRuleNode)
 					{
 						if ($oRuleNode->hasAttribute('id') && $oRuleNode->getAttribute('id') !== '')
 						{

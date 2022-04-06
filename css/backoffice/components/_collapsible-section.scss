@@ -1,0 +1,87 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-collapsible-section--title--color: $ibo-panel--title--color !default;
+$ibo-collapsible-section--body--background-color: $ibo-panel--body--background-color !default;
+$ibo-collapsible-section--highlight--height: 8px !default;
+
+$ibo-collapsible-section--maximize-minimize-button--color: $ibo-panel--collapsible-toggler--color !default;
+$ibo-collapsible-section--maximize-minimize-button--right: $ibo-panel--collapsible-toggler--margin-right !default;
+
+
+$ibo-collapsible-section--body--padding-bottom: $ibo-spacing-500 !default;
+$ibo-collapsible-section--body--padding-top: $ibo-collapsible-section--body--padding-bottom + $ibo-collapsible-section--highlight--height !default;
+$ibo-collapsible-section--body--padding-x: $ibo-spacing-500 !default;
+$ibo-collapsible-section--body--border-radius: $ibo-panel--body--border-radius !default;
+$ibo-collapsible-section--body--border-size: 1px !default;
+$ibo-collapsible-section--body--border-color: $ibo-panel--base-border-color !default;
+
+
+/* Rules */
+
+.ibo-collapsible-section--header {
+	display: flex;
+	align-items: stretch;
+}
+
+.ibo-collapsible-section {
+	&.ibo-is-opened {
+		.ibo-collapsible-section--minimize-button {
+			display: block;
+		}
+
+		.ibo-collapsible-section--maximize-button {
+			display: none;
+		}
+	}
+
+	&:not(.ibo-is-opened) {
+		.ibo-collapsible-section--minimize-button {
+			display: none;
+		}
+
+		.ibo-collapsible-section--maximize-button {
+			display: block;
+		}
+
+		.ibo-collapsible-section--body {
+			display: none;
+		}
+	}
+
+	.ibo-collapsible-section--header {
+		cursor: pointer;
+
+		&:hover i {
+			opacity: 0.8;
+		}
+
+		.ibo-collapsible-section--action-button {
+      align-self: center;
+			&.ibo-collapsible-section--maximize-button, &.ibo-collapsible-section--minimize-button {
+        color: $ibo-collapsible-section--maximize-minimize-button--color;
+				margin-right: $ibo-collapsible-section--maximize-minimize-button--right;
+			}
+		}
+
+		.ibo-collapsible-section--title {
+			color: $ibo-collapsible-section--title--color;
+			@extend %ibo-font-size-250;
+			flex-grow: 1;
+		}
+	}
+
+	.ibo-collapsible-section--body {
+		position: relative;
+		padding: $ibo-collapsible-section--body--padding-top $ibo-collapsible-section--body--padding-x $ibo-collapsible-section--body--padding-bottom;
+		background-color: $ibo-collapsible-section--body--background-color;
+		border: solid $ibo-collapsible-section--body--border-size $ibo-collapsible-section--body--border-color;
+		border-radius: $ibo-collapsible-section--body--border-radius;
+		overflow: hidden; /* To force highlight color to be cropped by the border radius */
+
+		@extend %ibo-font-ral-nor-200;
+	}
+}

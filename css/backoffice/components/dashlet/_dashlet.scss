@@ -1,0 +1,40 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashlet--width: 100% !default;
+$ibo-dashlet--width--is-inline: auto !default;
+$ibo-dashlet--elements-spacing-x: $ibo-spacing-600 !default;
+$ibo-dashlet--elements-spacing-y: $ibo-spacing-600 !default;
+
+/* Rules */
+.ibo-dashlet {
+  position: relative;
+  width: calc(#{$ibo-dashlet--width} - #{$ibo-dashlet--elements-spacing-x});
+  margin: calc(#{$ibo-dashlet--elements-spacing-y} / 2) calc(#{$ibo-dashlet--elements-spacing-x} / 2);
+
+  &.dashlet-selected {
+    position: relative;
+  }
+}
+
+.ibo-dashlet--is-inline {
+  width: $ibo-dashlet--width--is-inline;
+}
+.ibo-details > .ibo-prop--apply {
+  display: table-column;
+}
+.ibo-details{
+  margin-top: 5px;
+}
+.ibo-dashlet-blocker{
+  position: absolute;
+  z-index: 9; /* To be above calendar links & all, but below .close-box (9) */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: not-allowed;
+}

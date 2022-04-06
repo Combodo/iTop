@@ -1,0 +1,31 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$family-sans-serif: $ibo-font-family-base, $ibo-font-family-fallbacks !default;
+
+$body-color: $ibo-color-grey-900 !default;
+$body-font-size: $ibo-font-size-100 !default;
+$body-weight: $ibo-font-weight-500 !default;
+
+$body-overflow-x: hidden !default;
+$body-overflow-y: auto !default;
+
+
+/**
+ * customize Bulma content variables
+ * See https://bulma.io/documentation/elements/content/
+ */
+/* Table: Reset style as much as possible to match rich text editor preview, which is the browser's default stylesheet.
+ * As there is no way to avoid bulma rules, we simply make them invalid by setting an invalid variable value, the rules will then be ignored by the browser.
+ * See N°4481 for more information
+ */
+$content-table-cell-border: 'invalid on purpose';
+$content-table-cell-border-width: 'invalid on purpose';
+$content-table-cell-padding: 'invalid on purpose';
+$content-table-cell-heading-color: 'invalid on purpose';
+$content-table-head-cell-border-width: 'invalid on purpose';
+$content-table-head-cell-color: 'invalid on purpose';
+$content-table-foot-cell-border-width: 'invalid on purpose';
+$content-table-foot-cell-color: 'invalid on purpose';

@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -23,7 +23,7 @@ require_once(APPROOT.'setup/setuppage.class.inc.php');
  * Class ModuleInstaller
  * Defines the API to implement module specific actions during the setup 
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -95,12 +95,12 @@ abstract class ModuleInstallerAPI
 				$sRepair = "UPDATE `$sTableName` SET `$sFinalClassCol` = '$sTo' WHERE `$sFinalClassCol` = BINARY '$sFrom'";
 				CMDBSource::Query($sRepair);
 				$iAffectedRows = CMDBSource::AffectedRows();
-				SetupPage::log_info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected");
+				SetupLog::Info("Renaming class in DB - final class from '$sFrom' to '$sTo': $iAffectedRows rows affected");
 			}
 		}
 		catch(Exception $e)
 		{
-			SetupPage::log_warning("Failed to rename class in DB - final class from '$sFrom' to '$sTo'. Reason: ".$e->getMessage());
+			SetupLog::Warning("Failed to rename class in DB - final class from '$sFrom' to '$sTo'. Reason: ".$e->getMessage());
 		} 
 	}
 
@@ -122,7 +122,7 @@ abstract class ModuleInstallerAPI
 		{
 			if (!MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
-				SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - from '$sFrom' to '$sTo' failed. Reason '$sAttCode' is not a valid attribute of the class '$sClass'.");
+				SetupLog::Warning("Changing enum in DB - $sClass::$sAttCode - from '$sFrom' to '$sTo' failed. Reason '$sAttCode' is not a valid attribute of the class '$sClass'.");
 				return;
 			}
 			$sOriginClass = MetaModel::GetAttributeOrigin($sClass, $sAttCode);
@@ -147,6 +147,12 @@ abstract class ModuleInstallerAPI
 							{
 								$aCurrentValues = explode("','", $aMatches[1]);
 							}
+							else
+							{
+								// not an enum currently : return !
+								// we could update values, but a clear error message will be displayed when altering the column
+								return;
+							}
 						}
 						if (!in_array($sFrom, $aNewValues))
 						{
@@ -156,7 +162,7 @@ abstract class ModuleInstallerAPI
 		
 								if (strtolower($sTo) == strtolower($sFrom))
 								{
-									SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo' (just a change in the case)"); 
+									SetupLog::Info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo' (just a change in the case)");
 									$aTargetValues = array();
 									foreach ($aCurrentValues as $sValue)
 									{
@@ -174,7 +180,7 @@ abstract class ModuleInstallerAPI
 								{
 									// 1st - Allow both values in the column definition
 									//
-									SetupPage::log_info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo'"); 
+									SetupLog::Info("Changing enum in DB - $sClass::$sAttCode from '$sFrom' to '$sTo'");
 									$aAllValues = $aCurrentValues;
 									$aAllValues[] = $sTo;
 									$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aAllValues)).") $sNullSpec";
@@ -186,7 +192,7 @@ abstract class ModuleInstallerAPI
 									$sRepair = "UPDATE `$sTableName` SET `$sEnumCol` = '$sTo' WHERE `$sEnumCol` = BINARY '$sFrom'";
 									CMDBSource::Query($sRepair);
 									$iAffectedRows = CMDBSource::AffectedRows();
-									SetupPage::log_info("Changing enum in DB - $iAffectedRows rows updated"); 
+									SetupLog::Info("Changing enum in DB - $iAffectedRows rows updated");
 					
 									// 3rd - Remove the useless value from the column definition
 									//
@@ -202,25 +208,25 @@ abstract class ModuleInstallerAPI
 									$sColumnDefinition = "ENUM(".implode(",", CMDBSource::Quote($aTargetValues)).") $sNullSpec";
 									$sRepair = "ALTER TABLE `$sTableName` MODIFY `$sEnumCol` $sColumnDefinition";
 									CMDBSource::Query($sRepair);
-									SetupPage::log_info("Changing enum in DB - removed useless value '$sFrom'");
+									SetupLog::Info("Changing enum in DB - removed useless value '$sFrom'");
 								}
 							}
 						}
 						else
 						{
-							SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sFrom' is still a valid value (".implode(', ', $aNewValues).")"); 
+							SetupLog::Warning("Changing enum in DB - $sClass::$sAttCode - '$sFrom' is still a valid value (".implode(', ', $aNewValues).")");
 						}
 					}
 					else
 					{
-						SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' is not a known value (".implode(', ', $aNewValues).")"); 
+						SetupLog::Warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' is not a known value (".implode(', ', $aNewValues).")");
 					}
 				}
 			}
 		}
 		catch(Exception $e)
 		{
-			SetupPage::log_warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' failed. Reason ".$e->getMessage());
+			SetupLog::Warning("Changing enum in DB - $sClass::$sAttCode - '$sTo' failed. Reason ".$e->getMessage());
 		}
 	}
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
     <classes>
         <class id="UserRequest" _delta="define">
             <parent>Ticket</parent>
@@ -7,7 +7,7 @@
                 <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
                 <category>bizmodel,searchable,requestmgmt</category>
@@ -21,8 +21,13 @@
                         <attribute id="ref"/>
                     </attributes>
                 </naming>
-                <display_template/>
-                <icon>images/user-request.png</icon>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
+                <style>
+                    <icon>images/user-request.svg</icon>
+                    <main_color>$ibo-color-blue-800</main_color>
+                </style>
                 <reconciliation>
                     <attributes>
                         <attribute id="ref"/>
@@ -38,25 +43,104 @@
                 <field id="status" xsi:type="AttributeEnum">
                     <always_load_in_tables>true</always_load_in_tables>
                     <values>
-                        <value id="new">new</value>
-                        <value id="waiting_for_approval">waiting_for_approval</value>
-                        <value id="approved">approved</value>
-                        <value id="rejected">rejected</value>
-                        <value id="assigned">assigned</value>
-                        <value id="pending">pending</value>
-                        <value id="escalated_tto">escalated_tto</value>
-                        <value id="escalated_ttr">escalated_ttr</value>
-                        <value id="resolved">resolved</value>
-                        <value id="closed">closed</value>
+                        <value id="new">
+                            <code>new</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="waiting_for_approval">
+                            <code>waiting_for_approval</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-hourglass-half</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="approved">
+                            <code>approved</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-user-check</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="rejected">
+                            <code>rejected</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                              <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-user-times</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="assigned">
+                            <code>assigned</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="pending">
+                            <code>pending</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-waiting-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-waiting-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-hourglass-half</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="escalated_tto">
+                            <code>escalated_tto</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                              <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-fire</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="escalated_ttr">
+                            <code>escalated_ttr</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-failure-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-failure-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-fire</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="resolved">
+                            <code>resolved</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-check</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="closed">
+                            <code>closed</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
+                    <default_style>
+                        <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                        <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                        <decoration_classes/>
+                    </default_style>
                     <sql>status</sql>
                     <default_value>new</default_value>
                     <is_null_allowed>false</is_null_allowed>
                 </field>
                 <field id="request_type" xsi:type="AttributeEnum">
                     <values>
-                        <value id="incident">incident</value>
-                        <value id="service_request">service_request</value>
+                        <value id="incident">
+                            <code>incident</code>
+                        </value>
+                        <value id="service_request">
+                            <code>service_request</code>
+                        </value>
                     </values>
                     <sql>request_type</sql>
                     <default_value></default_value>
@@ -65,9 +149,15 @@
                 </field>
                 <field id="impact" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
                     </values>
                     <sql>impact</sql>
                     <default_value>1</default_value>
@@ -76,11 +166,44 @@
                 </field>
                 <field id="priority" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                            <style>
+                                <main_color>$ibo-color-danger-700</main_color>
+                                <complementary_color>$ibo-color-white-100</complementary_color>
+                                <decoration_classes>fas fa-fire</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                            <style>
+                                <main_color>$ibo-color-warning-700</main_color>
+                                <complementary_color>$ibo-color-white-100</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                            <style>
+                                <main_color>$ibo-color-information-700</main_color>
+                                <complementary_color>$ibo-color-white-100</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                            <style>
+                                <main_color>$ibo-color-grey-700</main_color>
+                                <complementary_color>$ibo-color-white-100</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
+                    <default_style>
+                        <main_color>$ibo-color-information-700</main_color>
+                        <complementary_color>$ibo-color-white-100</complementary_color>
+                        <decoration_classes/>
+                    </default_style>
                     <dependencies>
                         <attribute id="impact"/>
                         <attribute id="urgency"/>
@@ -91,10 +214,18 @@
                 </field>
                 <field id="urgency" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                        </value>
                     </values>
                     <sql>urgency</sql>
                     <default_value>4</default_value>
@@ -102,10 +233,18 @@
                 </field>
                 <field id="origin" xsi:type="AttributeEnum">
                     <values>
-                        <value id="mail">mail</value>
-                        <value id="phone">phone</value>
-                        <value id="portal">portal</value>
-                        <value id="monitoring">monitoring</value>
+                        <value id="mail">
+                            <code>mail</code>
+                        </value>
+                        <value id="phone">
+                            <code>phone</code>
+                        </value>
+                        <value id="portal">
+                            <code>portal</code>
+                        </value>
+                        <value id="monitoring">
+                            <code>monitoring</code>
+                        </value>
                     </values>
                     <sql>origin</sql>
                     <default_value>phone</default_value>
@@ -167,8 +306,12 @@
                 </field>
                 <field id="escalation_flag" xsi:type="AttributeEnum">
                     <values>
-                        <value id="yes">yes</value>
-                        <value id="no">no</value>
+                        <value id="yes">
+                            <code>yes</code>
+                        </value>
+                        <value id="no">
+                            <code>no</code>
+                        </value>
                     </values>
                     <sql>escalation_flag</sql>
                     <default_value>no</default_value>
@@ -303,13 +446,27 @@
                 </field>
                 <field id="resolution_code" xsi:type="AttributeEnum">
                     <values>
-                        <value id="assistance">assistance</value>
-                        <value id="other">other</value>
-                        <value id="software patch">software patch</value>
-                        <value id="training">training</value>
-                        <value id="hardware repair">hardware repair</value>
-                        <value id="system update">system update</value>
-                        <value id="bug fixed">bug fixed</value>
+                        <value id="assistance">
+                            <code>assistance</code>
+                        </value>
+                        <value id="other">
+                            <code>other</code>
+                        </value>
+                        <value id="software patch">
+                            <code>software patch</code>
+                        </value>
+                        <value id="training">
+                            <code>training</code>
+                        </value>
+                        <value id="hardware repair">
+                            <code>hardware repair</code>
+                        </value>
+                        <value id="system update">
+                            <code>system update</code>
+                        </value>
+                        <value id="bug fixed">
+                            <code>bug fixed</code>
+                        </value>
                     </values>
                     <sql>resolution_code</sql>
                     <default_value>assistance</default_value>
@@ -380,10 +537,18 @@
                 </field>
                 <field id="user_satisfaction" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                        </value>
                     </values>
                     <sql>user_satisfaction</sql>
                     <default_value>1</default_value>
@@ -400,20 +565,19 @@
                     <item id="warning">
                         <rank>1</rank>
                         <color>HIGHLIGHT_CLASS_WARNING</color>
-                        <icon>images/user-request-deadline.png</icon>
+                            <icon>images/user-request-deadline.svg</icon>
                     </item>
                     <item id="critical">
                         <rank>2</rank>
                         <color>HIGHLIGHT_CLASS_CRITICAL</color>
-                        <icon>images/user-request-escalated.png</icon>
+                            <icon>images/user-request-escalated.svg</icon>
                     </item>
                     <item id="closed">
                         <rank>3</rank>
                         <color>HIGHLIGHT_CLASS_NONE</color>
-                        <icon>images/user-request-closed.png</icon>
+                            <icon>images/user-request-closed.svg</icon>
                     </item>
                 </highlight_scale>
-                <attribute>status</attribute>
                 <stimuli>
                     <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
                     <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
@@ -1238,26 +1402,23 @@
 	{
 		parent::DisplayBareRelations($oPage, $bEditMode);
 
-		if (!$bEditMode)
-		{
-			if (MetaModel::IsValidClass('KnownError'))
-			{
-				//Search for known errors
-				$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList'));
-				$iTicketID = $this->GetKey();;
-				$oKnownErrorSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT KnownError AS ke JOIN lnkErrorToFunctionalCI AS l1 ON l1.error_id=ke.id JOIN FunctionalCI AS ci ON l1.functionalci_id=ci.id JOIN lnkFunctionalCIToTicket AS l2 ON l2.functionalci_id=ci.id WHERE l2.ticket_id=$iTicketID"));
-				$iNumberKE=$oKnownErrorSet->count();
-				if ($iNumberKE > 0)
-				{
-					$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList')." ($iNumberKE)");
-				}
-				else
-				{
-					$oPage->SetCurrentTab(Dict::S('Class:UserRequest:KnownErrorList'));	
-				}			
-				self::DisplaySet($oPage, $oKnownErrorSet, array ('menu' => false));
-			}
-		}
+        if (MetaModel::IsValidClass('KnownError'))
+        {
+            //Search for known errors
+            $oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
+            $iTicketID = $this->GetKey();;
+            $oKnownErrorSet = new CMDBObjectSet(DBObjectSearch::FromOQL("SELECT KnownError AS ke JOIN lnkErrorToFunctionalCI AS l1 ON l1.error_id=ke.id JOIN FunctionalCI AS ci ON l1.functionalci_id=ci.id JOIN lnkFunctionalCIToTicket AS l2 ON l2.functionalci_id=ci.id WHERE l2.ticket_id=$iTicketID"));
+            $iNumberKE=$oKnownErrorSet->count();
+            if ($iNumberKE > 0)
+            {
+                $oPage->SetCurrentTab('Class:UserRequest:KnownErrorList', Dict::S('Class:UserRequest:KnownErrorList')." ($iNumberKE)");
+            }
+            else
+            {
+                $oPage->SetCurrentTab('Class:UserRequest:KnownErrorList');
+            }
+            self::DisplaySet($oPage, $oKnownErrorSet, array ('menu' => false));
+        }
 	}]]></code>
                 </method>
                 <method id="resolveChilds">
@@ -1626,16 +1787,22 @@
                                         <item id="sla_tto_over">
                                             <rank>20</rank>
                                         </item>
-                                        <item id="sla_ttr_passed">
-                                            <rank>30</rank>
-                                        </item>
-                                        <item id="sla_ttr_over">
-                                            <rank>40</rank>
-                                        </item>
+                                      <item id="sla_ttr_passed">
+                                        <rank>30</rank>
+                                      </item>
+                                      <item id="sla_ttr_over">
+                                        <rank>40</rank>
+                                      </item>
                                     </items>
                                 </item>
                             </items>
                         </item>
+                      <item id="public_log">
+                        <rank>100</rank>
+                      </item>
+                      <item id="private_log">
+                        <rank>110</rank>
+                      </item>
                     </items>
                 </details>
                 <search>
@@ -1752,18 +1919,18 @@
                               </dashlets>
                             </cell>
                             <cell id="1" _delta="define">
-                              <rank>10</rank>
-                              <dashlets>
-                                <dashlet id="9" xsi:type="DashletHeaderDynamic">
-                                  <rank>0</rank>
-                                  <title>Organization:Overview:UserRequests</title>
-                                  <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-                                  <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                                  <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
-                                  <group_by>status</group_by>
-                                  <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-                                </dashlet>
-                              </dashlets>
+                                <rank>10</rank>
+                                <dashlets>
+                                    <dashlet id="9" xsi:type="DashletHeaderDynamic">
+                                        <rank>0</rank>
+                                        <title>Organization:Overview:UserRequests</title>
+                                            <icon>itop-welcome-itil/images/user-request-deadline.svg</icon>
+                                        <subtitle>Menu:UserRequest:OpenRequests</subtitle>
+                                        <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
+                                        <group_by>status</group_by>
+                                        <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+                                    </dashlet>
+                                </dashlets>
                             </cell>
                             <cell id="3" _delta="define">
                               <rank>30</rank>
@@ -1804,7 +1971,7 @@
                             <dashlet id="9" xsi:type="DashletHeaderDynamic">
                                 <rank>0</rank>
                                 <title>Menu:RequestManagement</title>
-                                <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+                                    <icon>itop-welcome-itil/images/user-request-deadline.svg</icon>
                                 <subtitle>Menu:UserRequest:OpenRequests</subtitle>
                                 <query>SELECT UserRequest WHERE status != "closed"</query>
                                 <group_by>status</group_by>
@@ -1826,6 +1993,9 @@
         <menu id="RequestManagement" xsi:type="MenuGroup" _delta="define">
             <rank>30</rank>
             <enable_stimulus/>
+				    <style>
+					    <decoration_classes>fas fa-comment-alt</decoration_classes>
+				    </style>
         </menu>
         <menu id="UserRequest:Overview" xsi:type="DashboardMenuNode" _delta="define">
             <rank>0</rank>
@@ -1964,9 +2134,18 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                          AND (R.id != :this->id)
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
                                 </item>
                             </items>
@@ -1979,9 +2158,18 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted') AND (R.id != :this->id)]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                          AND (R.id != :this->id)
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
                                 </item>
                             </items>
@@ -1998,9 +2186,17 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
                                 </item>
                             </items>
@@ -2009,9 +2205,17 @@
                             <items type="array">
                                 <item id="open_incidents" _delta="define">
                                     <oql>
-                                        <![CDATA[SELECT FCI, R FROM FunctionalCI AS FCI JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id JOIN UserRequest AS R ON L.ticket_id = R.id WHERE (R.status NOT IN ('closed', 'resolved')) AND (R.request_type='incident') AND (L.impact_code != 'not_impacted')]]></oql>
+                                        <![CDATA[
+                                        SELECT FCI, R
+                                        FROM FunctionalCI AS FCI
+                                                 JOIN lnkFunctionalCIToTicket AS L ON L.functionalci_id = FCI.id
+                                                 JOIN UserRequest AS R ON L.ticket_id = R.id
+                                        WHERE (R.status NOT IN ('closed', 'resolved'))
+                                          AND (R.request_type = 'incident')
+                                          AND (L.impact_code != 'not_impacted')
+                                        ]]></oql>
                                     <dict>Tickets:Related:OpenIncidents</dict>
-                                    <icon>itop-request-mgmt/images/incident-red.png</icon>
+                                        <icon>itop-request-mgmt/images/incident-red.png</icon>
                                     <default>yes</default>
                                 </item>
                             </items>

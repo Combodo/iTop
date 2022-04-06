@@ -1,0 +1,30 @@
+{% set sAriaLabel = oUIBlock.GetLabel() is not empty ? oUIBlock.GetLabel() : (oUIBlock.GetTooltip() is not empty ? oUIBlock.GetTooltip() : '') %}
+<button id="{{ oUIBlock.GetId() }}"
+        class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-{{ oUIBlock.GetActionType() }} ibo-is-{{ oUIBlock.GetColor() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}"
+        data-role="ibo-button"
+        {% if oUIBlock.GetDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                        data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+        {% endif %}
+        {% if oUIBlock.IsDisabled() %} disabled {% endif %}
+        {# Visual tooltip... #}
+        {% if oUIBlock.GetTooltip() is not empty %}
+            data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
+        {% else %}
+            title="{{ oUIBlock.GetLabel() }}"
+        {% endif %}
+        {# ... and accessibility title. Important especially in case the button has no label, but only an icon #}
+        {% if sAriaLabel is not empty %}
+            aria-label="{{ sAriaLabel }}"
+        {% endif %}
+
+>
+    <span class="ibo-button--loading-icon fas fa-spinner fa-pulse"></span>
+    {% if oUIBlock.GetIconClass() is not empty %}
+        <span class="ibo-button--icon {{ oUIBlock.GetIconClass() }}"></span>
+    {% endif %}
+    {% if oUIBlock.GetLabel() is not empty %}
+        <span class="ibo-button--label">{{ oUIBlock.GetLabel() }}</span>
+    {% endif %}
+</button>

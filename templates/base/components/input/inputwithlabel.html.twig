@@ -1,0 +1,10 @@
+{% block iboInputLabel %}
+    {% if oUIBlock.IsLabelBefore() %}
+        <label for="{{ oUIBlock.GetId() }}" {% if oUIBlock.HasDescription() %} class="ibo-input-with-label--label ibo-has-description" data-tooltip-content="{{ oUIBlock.GetDescription() |raw }}" data-tooltip-max-width="600px" data-tooltip-html-enabled="true"{% endif %}>{{ oUIBlock.GetLabel() |raw }}</label>
+        {{ render_block(oUIBlock.GetInput()) }}
+    {% else %}
+        {{ render_block(oUIBlock.GetInput()) }}
+        <label for="{{ oUIBlock.GetId() }}" {% if oUIBlock.HasDescription() %} class="ibo-input-with-label--label ibo-has-description" data-tooltip-content="{{ oUIBlock.GetDescription() |raw }}" data-tooltip-max-width="600px" data-tooltip-html-enabled="true"{% endif %}>{{ oUIBlock.GetLabel() |raw }}</label>
+    {% endif %}
+{% endblock %}
+

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2018 Combodo SARL
+ * Copyright (c) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -26,9 +26,6 @@
  */
 final class ormTagSet extends ormSet
 {
-	private $m_bDisplayPartial = false;
-
-
 	/**
 	 * ormTagSet constructor.
 	 *
@@ -141,7 +138,7 @@ final class ormTagSet extends ormSet
 	}
 
 	/**
-	 * @return array of tags indexed by code
+	 * @return array index: code, value: corresponding {@see \TagSetFieldData}
 	 */
 	public function GetTags()
 	{
@@ -557,22 +554,4 @@ final class ormTagSet extends ormSet
 	{
 		return TagSetFieldData::GetTagDataClassName($this->sClass, $this->sAttCode);
 	}
-
-
-	/**
-	 * @return bool
-	 */
-	public function DisplayPartial()
-	{
-		return $this->m_bDisplayPartial;
-	}
-
-	/**
-	 * @param bool $m_bDisplayPartial
-	 */
-	public function SetDisplayPartial($m_bDisplayPartial)
-	{
-		$this->m_bDisplayPartial = $m_bDisplayPartial;
-	}
-
 }

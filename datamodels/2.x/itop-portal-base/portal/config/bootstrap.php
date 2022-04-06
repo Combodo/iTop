@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -147,9 +147,12 @@ if (empty($_ENV['PORTAL_ID']))
 	exit;
 }
 
-// Stacking context tag so it knows we are in the portal
-$oContext = new ContextTag('GUI:Portal');
-$oContext2 = new ContextTag('Portal:' . $_ENV['PORTAL_ID']);
+// Make sure that the PORTAL_ID constant is also defined
+// Note: This is widely used in extensions, snippets and all
+if (!defined('PORTAL_ID'))
+{
+	define('PORTAL_ID', $_ENV['PORTAL_ID']);
+}
 
 // Env. vars to be used in templates and others
 $_ENV['COMBODO_CURRENT_ENVIRONMENT'] = utils::GetCurrentEnvironment();

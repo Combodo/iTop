@@ -1,0 +1,107 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-title--text-color: $ibo-color-grey-900 !default;
+$ibo-title--padding-y: $ibo-spacing-400 !default;
+$ibo-title--padding-x: $ibo-spacing-0 !default;
+
+$ibo-title--icon--size: 90px !default;
+$ibo-title--icon--size-2: 80px !default;
+$ibo-title--icon--size-3: 70px !default;
+
+$ibo-title--icon-background--size--must-contain: contain !default;
+$ibo-title--icon-background--size--must-cover: cover !default;
+$ibo-title--icon-background--size--must-zoomout: 66.67% !default;
+
+
+.ibo-title {
+  @extend %ibo-baseline-centered-content;
+
+  color: $ibo-title--text-color;
+  padding: $ibo-title--padding-y $ibo-title--padding-x;
+}
+
+.ibo-title--icon {
+  @extend %ibo-fully-centered-content;
+  width: $ibo-title--icon--size;
+  height: $ibo-title--icon--size;
+  min-width: $ibo-title--icon--size;
+  min-height: $ibo-title--icon--size;
+  overflow: hidden;
+}
+.ibo-title--icon > .ibo-title--icon-level-2{
+  width: $ibo-title--icon--size-2;
+  height: $ibo-title--icon--size-2;
+  min-width: $ibo-title--icon--size-2;
+  min-height: $ibo-title--icon--size-2;
+}
+.ibo-title--icon > .ibo-title--icon-level-3{
+  width: $ibo-title--icon--size-3;
+  height: $ibo-title--icon--size-3;
+  min-width: $ibo-title--icon--size-3;
+  min-height: $ibo-title--icon--size-3;
+}
+
+.ibo-title--icon-background {
+  width: 100%;
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: $ibo-title--icon-background--size--must-contain;
+}
+
+.ibo-title--icon-background--must-contain {
+  background-size: $ibo-title--icon-background--size--must-contain;
+}
+
+.ibo-title--icon-background--must-cover {
+  background-size: $ibo-title--icon-background--size--must-cover;
+}
+
+.ibo-title--icon-background--must-zoomout {
+  background-size: $ibo-title--icon-background--size--must-zoomout;
+}
+
+.ibo-title--for-object-details {
+  @extend %ibo-font-size-300;
+}
+
+.ibo-title--text {
+  @extend %ibo-font-ral-med-300;
+}
+
+.ibo-title--subtitle {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  @extend %ibo-baseline-centered-content;
+  @extend %ibo-font-ral-nor-150;
+  flex-wrap: wrap;
+}
+
+
+
+.ibo-title-for-dashlet {
+	padding-top: 2em;
+}
+.ibo-title-for-dashlet--title {
+	@extend %ibo-font-size-350;
+}
+
+.ibo-title-for-dashlet--content{
+	background-color: $ibo-color-white-100;
+	border-radius: 5px;
+	border: 1px solid ;
+	border-color:$ibo-color-grey-400;
+	padding-bottom:1em;
+}
+.ibo-title-separator{
+	border-radius: 5px 5px $ibo-spacing-0 $ibo-spacing-0;
+	border-color:$ibo-color-blue-600;
+	color:$ibo-color-blue-600;
+	background-color:$ibo-color-blue-600;
+	border: 3px solid ;
+	margin:0;
+	padding:0;
+}

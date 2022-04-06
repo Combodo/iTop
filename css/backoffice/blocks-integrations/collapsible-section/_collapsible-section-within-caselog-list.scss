@@ -1,0 +1,29 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-caselog-entry-in-collapsible-section--body--background-color: transparentize($ibo-color-grey-100,0.5) !default;
+$ibo-caselog-entry-in-collapsible-section--body--padding: $ibo-spacing-300 !default;
+$ibo-caselog-entry-in-collapsible-section--body--color: $ibo-color-grey-900 !default;
+
+/* - caselog display in ormcaselog */
+.ibo-caselog-list {
+  .ibo-collapsible-section {
+    margin: 0;
+    min-width: 22em;
+
+    .ibo-collapsible-section--header .ibo-collapsible-section--title {
+      @extend %ibo-font-size-100;
+    }
+
+    .ibo-collapsible-section--body {
+      @extend %ibo-font-size-100;
+      color: $ibo-caselog-entry-in-collapsible-section--body--color;
+      padding: $ibo-caselog-entry-in-collapsible-section--body--padding;
+      background-color: $ibo-caselog-entry-in-collapsible-section--body--background-color;
+    }
+  }
+}
+  

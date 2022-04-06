@@ -1,0 +1,1 @@
+Sample data for the HTMLDOMSanitizerTest class

@@ -61,24 +61,29 @@ class iTopExtension
 	 * @var bool
 	 */
 	public $bVisible;
-	
+
 	/**
 	 * @var string[]
 	 */
 	public $aModules;
-	
+
 	/**
 	 * @var string[]
 	 */
 	public $aModuleVersion;
-	
+
+	/**
+	 * @var string[]
+	 */
+	public $aModuleInfo;
+
 	/**
 	 * @var string
 	 */
 	public $sSourceDir;
-	
+
 	/**
-	 * 
+	 *
 	 * @var string[]
 	 */
 	public $aMissingDependencies;
@@ -96,6 +101,7 @@ class iTopExtension
 		$this->sInstalledVersion = '';
 		$this->aModules = array();
 		$this->aModuleVersion = array();
+		$this->aModuleInfo = array();
 		$this->sSourceDir = '';
 		$this->bVisible = true;
 		$this->aMissingDependencies = array();
@@ -277,7 +283,6 @@ class iTopExtensionsMap
 				$oExtension->sVersion = $oXml->Get('version');
 				$oExtension->bMandatory = ($oXml->Get('mandatory') == 'true');
 				$oExtension->sMoreInfoUrl = $oXml->Get('more_info_url');
-				$oExtension->sVersion = $oXml->Get('version');
 				$oExtension->sSource = $sSource;
 				$oExtension->sSourceDir = $sSearchDir;
 				
@@ -310,11 +315,11 @@ class iTopExtensionsMap
 							$sModuleVersion = '0.0.1';
 						}
 						
-						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension))
-						{
+						if (($sParentExtensionId !== null) && (array_key_exists($sParentExtensionId, $this->aExtensions)) && ($this->aExtensions[$sParentExtensionId] instanceof iTopExtension)) {
 							// Already inside an extension, let's add this module the list of modules belonging to this extension
 							$this->aExtensions[$sParentExtensionId]->aModules[] = $sModuleName;
 							$this->aExtensions[$sParentExtensionId]->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$this->aExtensions[$sParentExtensionId]->aModuleInfo[$sModuleName] = $aModuleInfo[2];
 						}
 						else
 						{
@@ -329,8 +334,6 @@ class iTopExtensionsMap
 							}
 							
 							// Let's create a "fake" extension from this module (containing just this module) for backwards compatibility
-							$sExtensionId = $sModuleId;
-							
 							$oExtension = new iTopExtension();
 							$oExtension->sCode = $sModuleName;
 							$oExtension->sLabel = $aModuleInfo[2]['label'];
@@ -341,9 +344,10 @@ class iTopExtensionsMap
 							$oExtension->sMoreInfoUrl = $aModuleInfo[2]['doc.more_information'];
 							$oExtension->aModules = array($sModuleName);
 							$oExtension->aModuleVersion[$sModuleName] = $sModuleVersion;
+							$oExtension->aModuleInfo[$sModuleName] = $aModuleInfo[2];
 							$oExtension->sSourceDir = $sSearchDir;
 							$oExtension->bVisible = $bVisible;
-							$this->AddExtension($oExtension);							
+							$this->AddExtension($oExtension);
 						}
 
 						closedir($hDir);
@@ -451,18 +455,18 @@ class iTopExtensionsMap
 			
 			if (count($aModuleInfo) === 0)
 			{
-				SetupPage::log_warning("Eval of $sModuleFile did  not return the expected information...");
+				SetupLog::Warning("Eval of $sModuleFile did  not return the expected information...");
 			}
 		}
 		catch(ParseError $e)
 		{
 		    // Continue...
-		    SetupPage::log_warning("Eval of $sModuleFile caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
+			SetupLog::Warning("Eval of $sModuleFile caused a parse error: ".$e->getMessage()." at line ".$e->getLine());
 		}
 		catch(Exception $e)
 		{
 			// Continue...
-			SetupPage::log_warning("Eval of $sModuleFile caused an exception: ".$e->getMessage());
+			SetupLog::Warning("Eval of $sModuleFile caused an exception: ".$e->getMessage());
 		}
 		return $aModuleInfo;
 	}

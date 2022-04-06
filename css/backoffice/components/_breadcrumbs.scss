@@ -1,0 +1,127 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-breadcrumbs--margin-right: $ibo-spacing-700 !default;
+
+$ibo-breadcrumbs--item--text-color: $ibo-color-grey-800 !default;
+
+$ibo-breadcrumbs--item-icon--margin-x: $ibo-spacing-300 !default;
+$ibo-breadcrumbs--item-icon--max-width: 16px !default;
+$ibo-breadcrumbs--item-icon--text-color: $ibo-color-grey-600 !default;
+
+$ibo-breadcrumbs--item-label--max-width: 100px !default;
+
+$ibo-breadcrumbs--item-separator--margin-x: $ibo-spacing-400 !default;
+$ibo-breadcrumbs--item-separator--text-color: $ibo-color-grey-500 !default;
+
+$ibo-breadcrumbs--previous-items-list-toggler--text-color: $ibo-color-grey-700 !default;
+$ibo-breadcrumbs--previous-items-list-toggler--margin-right: 2 * $ibo-breadcrumbs--item-separator--margin-x !default;
+
+$ibo-breadcrumbs--previous-items-list--top: 37px !default;
+$ibo-breadcrumbs--previous-items-list--padding-y: $ibo-spacing-300 !default;
+$ibo-breadcrumbs--previous-items-list--background-color: $ibo-color-white-100 !default;
+
+$ibo-breadcrumbs--previous-item--text-color: $ibo-breadcrumbs--item--text-color !default;
+$ibo-breadcrumbs--previous-item--padding-x: $ibo-spacing-400 !default;
+$ibo-breadcrumbs--previous-item--padding-y: $ibo-spacing-400 !default;
+$ibo-breadcrumbs--previous-item-label--max-width: 200px !default;
+
+.ibo-breadcrumbs{
+  position: relative;
+  margin-right: $ibo-breadcrumbs--margin-right;
+  @extend %ibo-full-height-content;
+
+  &.ibo-is-overflowing {
+    justify-content: right;
+  }
+
+	* {
+		display: flex;
+		align-items: center;
+	}
+}
+.ibo-breadcrumbs--item{
+	color: $ibo-breadcrumbs--item--text-color;
+	@extend %ibo-font-ral-med-100;
+
+	&:not(:last-child){
+		&:hover{
+			.ibo-breadcrumbs--item-icon{
+				> *{
+					opacity: 1;
+					filter: none;
+				}
+			}
+		}
+	}
+}
+.ibo-breadcrumbs--item-icon{
+	margin-right: $ibo-breadcrumbs--item-icon--margin-x;
+	@extend %ibo-font-size-150;
+	transition: all 0.1s linear;
+
+	> span{
+		color: $ibo-breadcrumbs--item-icon--text-color;
+		opacity: 0.6;
+	}
+	> img{
+		height: auto;
+		max-width: $ibo-breadcrumbs--item-icon--max-width;
+		opacity: 0.3;
+		filter: grayscale(100%);
+	}
+}
+.ibo-breadcrumbs--item-label{
+	display: inline; /* Otherwise the "truncate" doesn't work with th default display: flex */
+	max-width: $ibo-breadcrumbs--item-label--max-width;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+
+.ibo-breadcrumbs--item,
+.ibo-breadcrumbs--previous-items-list-toggler {
+  &:not(:last-child){
+    &::after{
+      content: '\f054';
+      margin: 0 $ibo-breadcrumbs--item-separator--margin-x;
+      color: $ibo-breadcrumbs--item-separator--text-color;
+      @extend %fa-solid-base;
+    }
+  }
+}
+
+.ibo-breadcrumbs--previous-items-list-toggler {
+  margin-right: $ibo-breadcrumbs--previous-items-list-toggler--margin-right;
+  color: $ibo-breadcrumbs--previous-items-list-toggler--text-color !important;
+  @extend %ibo-font-ral-med-100;
+
+  &:not(:last-child) {
+    &::after {
+      position: absolute; /* To be outside of the button */
+      right: -1 * $ibo-breadcrumbs--previous-items-list-toggler--margin-right;
+    }
+  }
+}
+.ibo-breadcrumbs--previous-items-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; /* For the items to occupy the full width */
+
+  position: fixed;
+  top: $ibo-breadcrumbs--previous-items-list--top;
+  padding: $ibo-breadcrumbs--previous-items-list--padding-y 0;
+
+  background-color: $ibo-breadcrumbs--previous-items-list--background-color;
+  @extend %ibo-elevation-300;
+}
+
+.ibo-breadcrumbs--previous-item {
+  color: $ibo-breadcrumbs--previous-item--text-color;
+  @extend %ibo-font-ral-med-100;
+  padding: $ibo-breadcrumbs--previous-item--padding-y $ibo-breadcrumbs--previous-item--padding-x;
+
+  .ibo-breadcrumbs--item-label {
+    max-width: 200px;
+  }
+}

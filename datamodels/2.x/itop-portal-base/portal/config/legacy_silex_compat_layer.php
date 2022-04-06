@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 // Disable PhpUnhandledExceptionInspection as the exception handling is made by the file including this one
@@ -36,20 +34,30 @@ $oModuleDesign = new ModuleDesign($_ENV['PORTAL_ID']);
 
 // Load portal conf. such as properties, themes, templates, ...
 // Append into %combodo.portal.instance.conf%
+$oKPI = new ExecutionKPI();
 $oBasicCompat = new Basic($oModuleDesign);
 $oBasicCompat->Process($container);
+$oKPI->ComputeAndReport('Load portal conf. such as properties, themes, templates, ...');
 
 // Load portal forms definition
 // Append into %combodo.portal.instance.conf%
+$oKPI = new ExecutionKPI();
 $oFormsCompat = new Forms($oModuleDesign);
 $oFormsCompat->Process($container);
+$oKPI->ComputeAndReport('Load portal forms definition');
 
 // Load portal lists definition
 // Append into %combodo.portal.instance.conf%
+$oKPI = new ExecutionKPI();
 $oListsCompat = new Lists($oModuleDesign);
 $oListsCompat->Process($container);
+$oKPI->ComputeAndReport('Load portal lists definition');
 
 // Generating CSS files
+// Note: We do this here as it is not user dependent and therefore can be cached for everyone.
+// A dedicated listener 'CssFromSassCompiler' exists to compile files again when by-passing HTTP cache.
+// This is to keep developers comfort when tuning the SCSS files.
+$oKPI = new ExecutionKPI();
 $aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
 $aPortalConf = $container->getParameter('combodo.portal.instance.conf');
 foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
@@ -70,42 +78,6 @@ foreach ($aPortalConf['properties']['themes'] as $sKey => $value)
 		$aPortalConf['properties']['themes'][$sKey] = $aValues;
 	}
 }
-$container->setParameter('combodo.portal.instance.conf', $aPortalConf);
+$oKPI->ComputeAndReport('Generating CSS files');
 
-//TODO: The following needs to be refactored
-// Session messages
-$aAllMessages = array();
-if ((array_key_exists('obj_messages', $_SESSION)) && (!empty($_SESSION['obj_messages'])))
-{
-	foreach ($_SESSION['obj_messages'] as $sMessageKey => $aMessageObjectData)
-	{
-		$aObjectMessages = array();
-		$aRanks = array();
-		foreach ($aMessageObjectData as $sMessageId => $aMessageData)
-		{
-			$sMsgClass = 'alert alert-';
-			switch ($aMessageData['severity'])
-			{
-				case 'info':
-					$sMsgClass .= 'info';
-					break;
-				case 'error':
-					$sMsgClass .= 'danger';
-					break;
-				case 'ok':
-				default:
-					$sMsgClass .= 'success';
-					break;
-			}
-			$aObjectMessages[] = array('cssClass' => $sMsgClass, 'message' => $aMessageData['message']);
-			$aRanks[] = $aMessageData['rank'];
-		}
-		unset($_SESSION['obj_messages'][$sMessageKey]);
-		array_multisort($aRanks, $aObjectMessages);
-		foreach ($aObjectMessages as $aObjectMessage)
-		{
-			$aAllMessages[] = $aObjectMessage;
-		}
-	}
-}
-$container->setParameter('combodo.current_user.session_messages', $aAllMessages);
+$container->setParameter('combodo.portal.instance.conf', $aPortalConf);

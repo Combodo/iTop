@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,23 +20,28 @@
 /**
  * Class ApplicationContext
  *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\Helper\Session;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 require_once(APPROOT."/application/utils.inc.php");
 
 /**
  * Interface for directing end-users to the relevant application
- */ 
+ */
 interface iDBObjectURLMaker
 {
-    /**
-     * @param string $sClass
-     * @param string $iId
-     *
-     * @return string
-     */
+	/**
+	 * @param string $sClass
+	 * @param string $iId
+	 *
+	 * @return string
+	 */
 	public static function MakeObjectURL($sClass, $iId);
 }
 
@@ -200,23 +205,60 @@ class ApplicationContext
 		}
 		return implode("&", $aParams);
 	}
-	
+	/**
+	 * @since 3.0.0 N°2534 - dashboard: bug with autorefresh that deactivates filtering on organisation
+	 * Returns the params as c[menu]:..., c[org_id]:....
+	 * @return string The params
+	 */
+	public function GetForPostParams()
+	{
+		return json_encode($this->aValues);
+	}
+
 	/**
 	 * Returns the context as sequence of input tags to be inserted inside a <form> tag
+	 *
 	 * @return string The context as a sequence of <input type="hidden" /> tags
 	 */
 	public function GetForForm()
 	{
 		$sContext = "";
-		foreach($this->aValues as $sName => $sValue)
-		{
+		foreach ($this->aValues as $sName => $sValue) {
 			$sContext .= "<input type=\"hidden\" name=\"c[$sName]\" value=\"".htmlentities($sValue, ENT_QUOTES, 'UTF-8')."\" />\n";
 		}
 		return $sContext;
 	}
+	/**
+	 * Returns the context an array of input blocks
+	 *
+	 * @return array The context as a sequence of <input type="hidden" /> tags
+	 * @since 3.0.0
+	 */
+	public function GetForUIForm()
+	{
+		$aContextInputBlocks = [];
+		foreach ($this->aValues as $sName => $sValue) {
+			$aContextInputBlocks[] = InputUIBlockFactory::MakeForHidden("c[$sName]", htmlentities($sValue, ENT_QUOTES, 'UTF-8'));
+		}
+		return $aContextInputBlocks;
+	}
+
+	/**
+	 * Returns the context as sequence of input tags to be inserted inside a <form> tag
+	 *
+	 */
+	public function GetForFormBlock(): UIBlock
+	{
+		$oContext = new UIContentBlock();
+		foreach ($this->aValues as $sName => $sValue) {
+			$oContext->AddSubBlock(InputUIBlockFactory::MakeForHidden('c[$sName]', utils::HtmlEntities($sValue)));
+		}
+		return $oContext;
+	}
 
 	/**
 	 * Returns the context as a hash array 'parameter_name' => value
+	 *
 	 * @return array The context information
 	 */
 	public function GetAsHash()
@@ -294,7 +336,7 @@ class ApplicationContext
 		$sPrevious = self::GetUrlMakerClass();
 
 		self::$m_sUrlMakerClass = $sClass;
-		$_SESSION['UrlMakerClass'] = $sClass;
+		Session::Set('UrlMakerClass', $sClass);
 
 		return $sPrevious;
 	}
@@ -307,9 +349,9 @@ class ApplicationContext
 	{
 		if (is_null(self::$m_sUrlMakerClass))
 		{
-			if (isset($_SESSION['UrlMakerClass']))
+			if (Session::IsSet('UrlMakerClass'))
 			{
-				self::$m_sUrlMakerClass = $_SESSION['UrlMakerClass'];
+				self::$m_sUrlMakerClass = Session::Get('UrlMakerClass');
 			}
 			else
 			{
@@ -362,9 +404,9 @@ class ApplicationContext
 	 */
 	protected static function LoadPluginProperties()
 	{
-		if (isset($_SESSION['PluginProperties']))
+		if (Session::IsSet('PluginProperties'))
 		{
-			self::$m_aPluginProperties = $_SESSION['PluginProperties'];
+			self::$m_aPluginProperties = Session::Get('PluginProperties');
 		}
 		else
 		{
@@ -384,7 +426,7 @@ class ApplicationContext
 		if (is_null(self::$m_aPluginProperties)) self::LoadPluginProperties();
 
 		self::$m_aPluginProperties[$sPluginClass][$sProperty] = $value;
-		$_SESSION['PluginProperties'][$sPluginClass][$sProperty] = $value;
+		Session::Set(['PluginProperties', $sPluginClass, $sProperty], $value);
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright (C) 2013-2019 Combodo SARL
+ *  * Copyright (C) 2013-2021 Combodo SARL
  *  *
  *  * This file is part of iTop.
  *  *
@@ -34,7 +34,7 @@ $(function() {
 
 			_create: function () {
 				var me = this;
-				var sTitle = this.element.attr('title');
+				var sTitle = this.element.attr('data-tooltip-content');
 				var sDataTitleIcon = this.element.attr('data-title-icon');
 				var sDataCopiedTitle = this.element.attr('data-copied-title');
 				var sDataCopiedIcon = this.element.attr('data-copied-icon');
@@ -57,14 +57,17 @@ $(function() {
 				//initialize tooltip with mouse interaction
 				this.element.on('click',function(){
 					var sOriginalTitle = (me.options.copied_icon !== '' ? '<i class="'+me.options.copied_icon+' url-to-clipboard-tooltip-copied"></i>' : '') + me.options.copied_title;
-					$(this).attr('data-original-title', sOriginalTitle).tooltip('show');
+					$(this).attr('data-tooltip-content', sOriginalTitle);
+					this._tippy.setContent(sOriginalTitle);
+					this._tippy.show();
+					//CombodoTooltip.InitTooltipFromMarkup($(this), true);
 				});
 				this.element.on('mouseout',function(){
 					var sOriginalTitle = (me.options.standard_icon !== '' ? '<i class="'+me.options.standard_icon+' url-to-clipboard-tooltip-copied"></i>' : '') + me.options.standard_title;
-					$(this).attr('data-original-title', sOriginalTitle);
+					$(this).attr('data-tooltip-content', sOriginalTitle);
+					CombodoTooltip.InitTooltipFromMarkup(me.element, true);
 					$(this).removeClass('url-to-clipboard-copied');
 				});
-				this.element.tooltip({'html': true});
 			}
 		}
 	);

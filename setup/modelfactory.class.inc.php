@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) 2010-2018 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -15,8 +15,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- * along with iTop. If not, see <http://www.gnu.org/licenses/>
- *
  */
 
 /**
@@ -60,12 +58,7 @@ class MFException extends Exception
 	/**
 	 * MFException constructor.
 	 *
-	 * @param null $message
-	 * @param null $code
-	 * @param int $iSourceLineNumber
-	 * @param string $sXPath
-	 * @param string $sExtraInfo
-	 * @param null $previous
+	 * @inheritDoc
 	 */
 	public function __construct($message = null, $code = null, $iSourceLineNumber = 0, $sXPath = '', $sExtraInfo = '', $previous = null)
 	{
@@ -153,9 +146,9 @@ class MFModule
 	/**
 	 * MFModule constructor.
 	 *
-	 * @param $sId
-	 * @param $sRootDir
-	 * @param $sLabel
+	 * @param string $sId
+	 * @param string $sRootDir
+	 * @param string $sLabel
 	 * @param bool $bAutoSelect
 	 */
 	public function __construct($sId, $sRootDir, $sLabel, $bAutoSelect = false)
@@ -192,7 +185,7 @@ class MFModule
 
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetId()
 	{
@@ -200,7 +193,7 @@ class MFModule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetName()
 	{
@@ -216,7 +209,7 @@ class MFModule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetLabel()
 	{
@@ -224,7 +217,7 @@ class MFModule
 	}
 
 	/**
-	 * @return mixed
+	 * @return string
 	 */
 	public function GetRootDir()
 	{
@@ -249,6 +242,8 @@ class MFModule
 
 	/**
 	 * List all classes in this module
+	 *
+	 * @return array
 	 */
 	public function ListClasses()
 	{
@@ -261,18 +256,21 @@ class MFModule
 	public function GetDictionaryFiles()
 	{
 		$aDictionaries = array();
-		if ($hDir = opendir($this->sRootDir))
+		foreach (array($this->sRootDir, $this->sRootDir.'/dictionaries') as $sRootDir)
 		{
-			while (($sFile = readdir($hDir)) !== false)
+			if ($hDir = @opendir($sRootDir))
 			{
-				$aMatches = array();
-				if (preg_match("/^[^\\.]+.dict.".$this->sName.".php$/i", $sFile,
-					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+				while (($sFile = readdir($hDir)) !== false)
 				{
-					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
+					$aMatches = array();
+					if (preg_match("/^[^\\.]+.dict.".$this->sName.'.php$/i', $sFile,
+						$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
+					{
+						$aDictionaries[] = $sRootDir.'/'.$sFile;
+					}
 				}
+				closedir($hDir);
 			}
-			closedir($hDir);
 		}
 
 		return $aDictionaries;
@@ -287,7 +285,7 @@ class MFModule
 	}
 
 	/**
-	 * @param $sAutoSelect
+	 * @param string $sAutoSelect
 	 */
 	public function SetAutoSelect($sAutoSelect)
 	{
@@ -303,8 +301,8 @@ class MFModule
 	}
 
 	/**
-	 * @param $aFiles
-	 * @param $sCategory
+	 * @param array $aFiles
+	 * @param string $sCategory
 	 */
 	public function SetFilesToInclude($aFiles, $sCategory)
 	{
@@ -313,7 +311,7 @@ class MFModule
 	}
 
 	/**
-	 * @param $sCategory
+	 * @param string $sCategory
 	 *
 	 * @return mixed
 	 */
@@ -346,7 +344,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetName()
 	{
@@ -354,7 +352,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetRootDir()
 	{
@@ -362,7 +360,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetModuleDir()
 	{
@@ -370,7 +368,7 @@ class MFDeltaModule extends MFModule
 	}
 
 	/**
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function GetDictionaryFiles()
 	{
@@ -402,7 +400,7 @@ class MFCoreModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetRootDir()
 	{
@@ -410,7 +408,7 @@ class MFCoreModule extends MFModule
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetModuleDir()
 	{
@@ -418,7 +416,7 @@ class MFCoreModule extends MFModule
 	}
 
 	/**
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function GetDictionaryFiles()
 	{
@@ -450,7 +448,7 @@ class MFDictModule extends MFModule
 	}
 
 	/**
-	 * @return mixed|string
+	 * @inheritDoc
 	 */
 	public function GetRootDir()
 	{
@@ -458,7 +456,7 @@ class MFDictModule extends MFModule
 	}
 
 	/**
-	 * @return string
+	 * @inheritDoc
 	 */
 	public function GetModuleDir()
 	{
@@ -466,23 +464,31 @@ class MFDictModule extends MFModule
 	}
 
 	/**
-	 * @return array
+	 * Scan for dictionary files recursively in $sDir
+	 *
+	 * @inheritDoc
 	 */
-	public function GetDictionaryFiles()
+	public function GetDictionaryFiles($sDir = null)
 	{
 		$aDictionaries = array();
-		if ($hDir = opendir($this->sRootDir))
+		$sDictionaryFilePattern = '*dictionary.itop.*.php';
+
+		if($sDir === null)
 		{
-			while (($sFile = readdir($hDir)) !== false)
+			$sDir = $this->sRootDir;
+		}
+
+		if ($hDir = opendir($sDir))
+		{
+			// Matching files
+			$aDictionaries = glob($sDir.'/'.$sDictionaryFilePattern);
+
+			// Directories to scan
+			foreach(glob($sDir.'/*', GLOB_ONLYDIR|GLOB_NOSORT) as $sSubDir)
 			{
-				$aMatches = array();
-				if (preg_match("/^.*dictionary\\.itop.*.php$/i", $sFile,
-					$aMatches)) // Dictionary files are named like <Lang>.dict.<ModuleName>.php
-				{
-					$aDictionaries[] = $this->sRootDir.'/'.$sFile;
-				}
+				/** @noinspection SlowArrayOperationsInLoopInspection */
+				$aDictionaries = array_merge($aDictionaries, $this->GetDictionaryFiles($sSubDir));
 			}
-			closedir($hDir);
 		}
 
 		return $aDictionaries;
@@ -497,6 +503,17 @@ class MFDictModule extends MFModule
  */
 class ModelFactory
 {
+	/**
+	 * @var array Values of the _delta flag meaning that a node is "in definition" = currently being added to the delta
+	 * @since 3.0.0
+	 */
+	public const DELTA_FLAG_IN_DEFINITION_VALUES = ['define', 'define_if_not_exists', 'redefine', 'force'];
+	/**
+	 * @var array Values of the _delta flag meaning that a node is "in deletion" = currently being removed from the delta
+	 * @since 3.0.0
+	 */
+	public const DELTA_FLAG_IN_DELETION_VALUES = ['delete', 'delete_if_exists'];
+
 	protected $aRootDirs;
 	protected $oDOMDocument;
 	protected $oRoot;
@@ -564,6 +581,7 @@ class ModelFactory
 	 * @param bool $bReturnRes
 	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function Dump($oNode = null, $bReturnRes = false)
 	{
@@ -605,11 +623,12 @@ class ModelFactory
 	/**
 	 * To progressively replace LoadModule
 	 *
-	 * @param $oSourceNode
-	 * @param $oTargetParentNode
+	 * @param \MFElement $oSourceNode
+	 * @param \MFDocument|\MFElement $oTargetParentNode
 	 *
 	 * @throws \MFException
 	 * @throws \DOMFormatException
+	 * @throws \Exception
 	 */
 	public function LoadDelta($oSourceNode, $oTargetParentNode)
 	{
@@ -674,8 +693,8 @@ class ModelFactory
 			}
 		}
 
-		switch ($sDeltaSpec)
-		{
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		switch ($sDeltaSpec) {
 			case 'if_exists':
 			case 'must_exist':
 			case 'merge':
@@ -684,10 +703,8 @@ class ModelFactory
 				$bIfExists = ($sDeltaSpec == 'if_exists');
 				$sSearchId = $oSourceNode->hasAttribute('_rename_from') ? $oSourceNode->getAttribute('_rename_from') : $oSourceNode->getAttribute('id');
 				$oTargetNode = $oSourceNode->MergeInto($oTargetParentNode, $sSearchId, $bMustExist, $bIfExists);
-				if ($oTargetNode)
-				{
-					foreach ($oSourceNode->childNodes as $oSourceChild)
-					{
+				if ($oTargetNode) {
+					foreach ($oSourceNode->childNodes as $oSourceChild) {
 						// Continue deeper
 						$this->LoadDelta($oSourceChild, $oTargetNode);
 					}
@@ -936,18 +953,15 @@ class ModelFactory
 					}
 				}
 			}
-			catch (Exception $e)
-			{
+			catch (Exception $e) {
 				throw new Exception('Failed to load dictionary file "'.$sPHPFile.'", reason: '.$e->getMessage());
 			}
 
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$aLoadedModuleNames = array();
-			foreach (self::$aLoadedModules as $oModule)
-			{
-				$aLoadedModuleNames[] = $oModule->GetName();
+			foreach (self::$aLoadedModules as $oLoadedModule) {
+				$aLoadedModuleNames[] = $oLoadedModule->GetName();
 			}
 			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
 					$aLoadedModuleNames));
@@ -989,6 +1003,8 @@ class ModelFactory
 	 */
 	function HasLoadErrors()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
+
 		return (count(self::$aLoadErrors) > 0);
 	}
 
@@ -998,6 +1014,8 @@ class ModelFactory
 	 */
 	function GetLoadErrors()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('Errors are now sent by Exception');
+
 		return self::$aLoadErrors;
 	}
 
@@ -1068,6 +1086,7 @@ class ModelFactory
 	 * @param string $sValue
 	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function CreateElement($sTagName, $sValue = '')
 	{
@@ -1189,7 +1208,6 @@ $sHeader
 	</properties>
 	<naming format=""><attributes/></naming>
 	<reconciliation><attributes/></reconciliation>
-	<display_template/>
 	<icon>$sIcon</icon>
 	</properties>
 	<fields/>
@@ -1263,16 +1281,18 @@ EOF
 	 * @param string $sClassName
 	 * @param bool $bIncludeMetas Look for $sClassName also in meta declaration (PHP classes) if not found in XML classes
 	 *
-	 * @return null|\DOMElement
+	 * @return \MFElement|null
 	 */
 	public function GetClass($sClassName, $bIncludeMetas = false)
 	{
 		// Check if class among XML classes
+		/** @var \MFElemen|null $oClassNode */
 		$oClassNode = $this->GetNodes("/itop_design/classes//class[@id='$sClassName']")->item(0);
 
 		// If not, check if class among exposed meta classes (PHP classes)
 		if (is_null($oClassNode) && ($bIncludeMetas === true))
 		{
+			/** @var \MFElement|null $oClassNode */
 			$oClassNode = $this->GetNodes("/itop_design/meta/classes/class[@id='$sClassName']")->item(0);
 		}
 
@@ -1280,9 +1300,10 @@ EOF
 	}
 
 	/**
-	 * @param $sWellKnownParent
+	 * @param string $sWellKnownParent
 	 *
 	 * @return mixed
+	 * @throws \Exception
 	 */
 	public function AddWellKnownParent($sWellKnownParent)
 	{
@@ -1305,10 +1326,10 @@ EOF
 
 
 	/**
-	 * @param $sClassName
-	 * @param $sAttCode
+	 * @param string $sClassName
+	 * @param string $sAttCode
 	 *
-	 * @return \DOMElement|null
+	 * @return \MFElement|null
 	 * @throws \Exception
 	 */
 	public function GetField($sClassName, $sAttCode)
@@ -1317,7 +1338,8 @@ EOF
 		{
 			return null;
 		}
-		$oClassNode = self::$aLoadedClasses[$sClassName];
+		$oClassNode = $this->GetClass($sClassName);
+		/** @var \MFElement|null $oFieldNode */
 		$oFieldNode = $this->GetNodes("fields/field[@id='$sAttCode']", $oClassNode)->item(0);
 		if (($oFieldNode == null) && ($sParentClass = $oClassNode->GetChildText('parent')))
 		{
@@ -1393,16 +1415,14 @@ EOF
 	{
 		$sAlteration = $oNodeClone->getAttribute('_alteration');
 		$oNodeClone->removeAttribute('_alteration');
-		if ($oNodeClone->hasAttribute('_old_id'))
-		{
+		if ($oNodeClone->hasAttribute('_old_id')) {
 			$oNodeClone->setAttribute('_rename_from', $oNodeClone->getAttribute('_old_id'));
 			$oNodeClone->removeAttribute('_old_id');
 		}
-		switch ($sAlteration)
-		{
+		// IMPORTANT: In case of a new flag value, mind to update the iTopDesignFormat methods
+		switch ($sAlteration) {
 			case '':
-				if ($oNodeClone->hasAttribute('id'))
-				{
+				if ($oNodeClone->hasAttribute('id')) {
 					$oNodeClone->setAttribute('_delta', 'must_exist');
 				}
 				break;
@@ -1825,6 +1845,13 @@ EOF;
 	{
 		return $this->oDOMDocument->GetNodes($sXPath, $oContextNode, $bSafe);
 	}
+
+	/**
+	 * @return mixed
+	 */
+	public function GetRootDirs() {
+		return $this->aRootDirs;
+	}
 }
 
 /**
@@ -1832,6 +1859,7 @@ EOF;
  *
  * @package ModelFactory
  * @property \MFDocument $ownerDocument This is only here for type hinting as iTop replaces \DOMDocument with \MFDocument
+ * @property \MFElement $parentNode This is only here for type hinting as iTop replaces \DOMElement with \MFElement
  */
 class MFElement extends Combodo\iTop\DesignElement
 {
@@ -1852,7 +1880,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Extracts some nodes from the DOM (active nodes only !!!)
 	 *
 	 * @param string $sXPath A XPath expression
-	 * @param $sId
+	 * @param string $sId
 	 *
 	 * @return DOMNodeList
 	 */
@@ -1864,7 +1892,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Returns the node directly under the given node
 	 *
-	 * @param $sTagName
+	 * @param string $sTagName
 	 * @param bool $bMustExist
 	 *
 	 * @return MFElement
@@ -1900,7 +1928,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 *
 	 * @param string $sElementName
 	 *
-	 * @return array|null|string
+	 * @return array|string if no subnode is found, return current node text, else return results as array
 	 * @throws \DOMFormatException
 	 */
 	public function GetNodeAsArrayOfItems($sElementName = 'items')
@@ -2001,10 +2029,10 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * UNSAFE: may return nodes marked as _alteration="removed"
 	 * A method with the same signature MUST exist in MFDocument for the recursion to work fine
 	 *
-	 * @param MFElement $oRefNode The node to search for
+	 * @param \MFElement $oRefNode The node to search for
 	 * @param string $sSearchId substitutes to the value of the 'id' attribute
 	 *
-	 * @return \DOMElement|null
+	 * @return \MFElement|null
 	 * @throws \Exception
 	 */
 	public function _FindChildNode(MFElement $oRefNode, $sSearchId = null)
@@ -2016,11 +2044,11 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Find the child node matching the given node under the specified parent.
 	 * UNSAFE: may return nodes marked as _alteration="removed"
 	 *
-	 * @param DOMNode $oParent
-	 * @param MFElement $oRefNode
+	 * @param \DOMNode $oParent
+	 * @param \MFElement $oRefNode
 	 * @param string $sSearchId
 	 *
-	 * @return \DOMElement|null
+	 * @return \MFElement|null
 	 * @throws Exception
 	 */
 	public static function _FindNode(DOMNode $oParent, MFElement $oRefNode, $sSearchId = null)
@@ -2047,6 +2075,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			}
 			$sXPath = './'.$oRefNode->tagName."[@id='$sSearchId']";
 
+			/** @var \MFElement|null $oRes */
 			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
 		}
 		else
@@ -2054,6 +2083,7 @@ class MFElement extends Combodo\iTop\DesignElement
 			// Get the first one having the same tag name (ignore others)
 			$sXPath = './'.$oRefNode->tagName;
 
+			/** @var \MFElement|null $oRes */
 			$oRes = $oXPath->query($sXPath, $oRoot)->item(0);
 		}
 
@@ -2063,6 +2093,8 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Check if the current node is under a node 'added' or 'altered'
 	 * Usage: In such a case, the change must not be tracked
+	 *
+	 * @return boolean true if `_alteration` flag is set on any parent of the current node
 	 */
 	public function IsInDefinition()
 	{
@@ -2099,14 +2131,14 @@ class MFElement extends Combodo\iTop\DesignElement
 		return false;
 	}
 
-	static $aTraceAttributes = null;
+	protected static $aTraceAttributes = null;
 
 	/**
 	 * Enable/disable the trace on changed nodes
 	 *
 	 * @param array aAttributes Array of attributes (key => value) to be added onto any changed node
 	 */
-	static public function SetTrace($aAttributes = null)
+	public static function SetTrace($aAttributes = null)
 	{
 		self::$aTraceAttributes = $aAttributes;
 	}
@@ -2131,6 +2163,7 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * @param MFElement $oNode The node (including all subnodes) to add
 	 *
 	 * @throws \MFException
+	 * @throws \Exception
 	 */
 	public function AddChildNode(MFElement $oNode)
 	{
@@ -2141,14 +2174,18 @@ class MFElement extends Combodo\iTop\DesignElement
 		$oExisting = $this->_FindChildNode($oNode);
 		if ($oExisting)
 		{
-			if ($oExisting->getAttribute('_alteration') != 'removed')
-			{
+			if ($oExisting->getAttribute('_alteration') != 'removed') {
 				$sPath = MFDocument::GetItopNodePath($oNode);
 				$iLine = $oNode->getLineNo();
-				throw new MFException($sPath.' at line '.$iLine.": could not be added (already exists)", MFException::COULD_NOT_BE_ADDED,
-					$iLine, $sPath);
+				$sExistingPath = MFDocument::GetItopNodePath($oExisting);
+				$iExistingLine = $oExisting->getLineNo();
+				
+				$sExceptionMessage = <<<EOF
+`{$sPath}` at line {$iLine} could not be added : already exists in `{$sExistingPath}` at line {$iExistingLine}
+EOF;
+				throw new MFException($sExceptionMessage, MFException::COULD_NOT_BE_ADDED, $iLine, $sPath);
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 			$sFlag = 'replaced';
 		}
 		else
@@ -2166,9 +2203,12 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Modify a node and set the flags that will be used to compute the delta
 	 *
 	 * @param MFElement $oNode The node (including all subnodes) to set
-	 * @param null $sSearchId
+	 * @param string|null $sSearchId
+	 *
+	 * @return void
 	 *
 	 * @throws \MFException
+	 * @throws \Exception
 	 */
 	public function RedefineChildNode(MFElement $oNode, $sSearchId = null)
 	{
@@ -2185,18 +2225,15 @@ class MFElement extends Combodo\iTop\DesignElement
 				$sPath, $iLine);
 		}
 		$sPrevFlag = $oExisting->getAttribute('_alteration');
-		if ($sPrevFlag == 'removed')
-		{
+		if ($sPrevFlag == 'removed') {
 			$sPath = MFDocument::GetItopNodePath($this)."/".$oNode->tagName.(empty($sSearchId) ? '' : "[$sSearchId]");
 			$iLine = $oNode->getLineNo();
 			throw new MFException($sPath." at line $iLine: could not be modified (marked as deleted)",
 				MFException::COULD_NOT_BE_MODIFIED_ALREADY_DELETED, $sPath, $iLine);
 		}
-		$oExisting->ReplaceWith($oNode);
-		if (!$this->IsInDefinition())
-		{
-			if ($sPrevFlag == '')
-			{
+		$oExisting->ReplaceWithSingleNode($oNode);
+		if (!$this->IsInDefinition()) {
+			if ($sPrevFlag == '') {
 				$sPrevFlag = 'replaced';
 			}
 			$oNode->setAttribute('_alteration', $sPrevFlag);
@@ -2229,15 +2266,12 @@ class MFElement extends Combodo\iTop\DesignElement
 			}
 
 			$sPrevFlag = $oExisting->getAttribute('_alteration');
-			if ($sPrevFlag == 'removed')
-			{
+			if ($sPrevFlag == 'removed') {
 				$sFlag = $bForce ? 'forced' : 'replaced';
-			}
-			else
-			{
+			} else {
 				$sFlag = $sPrevFlag; // added, replaced or ''
 			}
-			$oExisting->ReplaceWith($oNode);
+			$oExisting->ReplaceWithSingleNode($oNode);
 		}
 		else
 		{
@@ -2268,8 +2302,7 @@ class MFElement extends Combodo\iTop\DesignElement
 
 			return $this->parentNode->IsClassNode();
 		}
-		else
-		{
+		else {
 			return false;
 		}
 	}
@@ -2278,14 +2311,15 @@ class MFElement extends Combodo\iTop\DesignElement
 	 * Replaces a node by another one, making sure that recursive nodes are preserved
 	 *
 	 * @param MFElement $oNewNode The replacement
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 rename method (from `ReplaceWith` to `ReplaceWithSingleNode`) to avoid collision with parent `\DOMElement::replaceWith` method (different method modifier and parameters :
+	 * throws fatal error in PHP 8.0)
 	 */
-	protected function ReplaceWith($oNewNode)
+	protected function ReplaceWithSingleNode($oNewNode)
 	{
 		// Move the classes from the old node into the new one
-		if ($this->IsClassNode())
-		{
-			foreach ($this->GetNodes('class') as $oChild)
-			{
+		if ($this->IsClassNode()) {
+			foreach ($this->GetNodes('class') as $oChild) {
 				$oNewNode->appendChild($oChild);
 			}
 		}
@@ -2339,12 +2373,12 @@ class MFElement extends Combodo\iTop\DesignElement
 	/**
 	 * Merge the current node into the given container
 	 *
-	 * @param DOMNode $oContainer An element or a document
+	 * @param \MFElement $oContainer An element or a document
 	 * @param string $sSearchId The id to consider (could be blank)
 	 * @param bool $bMustExist Throw an exception if the node must already be found (and not marked as deleted!)
 	 * @param bool $bIfExists Return null if the node does not exists (or is marked as deleted)
 	 *
-	 * @return DOMNode|null
+	 * @return \MFElement|null
 	 * @throws \Exception
 	 */
 	public function MergeInto($oContainer, $sSearchId, $bMustExist, $bIfExists = false)
@@ -2361,7 +2395,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
 				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-				$oContainer->AddChildNode($oTargetNode);
+				$oContainer->appendChild($oTargetNode);
 			}
 		}
 		else
@@ -2377,7 +2411,7 @@ class MFElement extends Combodo\iTop\DesignElement
 				// Beware: ImportNode(xxx, false) DOES NOT copy the node's attribute on *some* PHP versions (<5.2.17)
 				// So use this workaround to import a node and its attributes on *any* PHP version
 				$oTargetNode = $oContainer->ownerDocument->ImportNode($this->cloneNode(false), true);
-				$oContainer->AddChildNode($oTargetNode);
+				$oContainer->appendChild($oTargetNode);
 			}
 		}
 
@@ -2486,6 +2520,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * @param int $options
 	 *
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
@@ -2508,14 +2543,16 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @see DOMDocument::createElement()
 	 *
-	 * @param $sName
+	 * @param string $sName
 	 * @param null $value
 	 * @param null $namespaceURI
 	 *
-	 * @return \DOMNode
+	 * @return \MFElement
+	 * @throws \Exception
 	 */
 	function createElement($sName, $value = null, $namespaceURI = null)
 	{
+		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
 		if (($value !== '') && ($value !== null))
 		{
@@ -2552,6 +2589,10 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	public function GetNodes($sXPath, $oContextNode = null, $bSafe = true)
 	{
 		$oXPath = new DOMXPath($this);
+		// For Designer audit
+		$oXPath->registerNamespace("php", "http://php.net/xpath");
+		$oXPath->registerPhpFunctions();
+
 		if ($bSafe)
 		{
 			$sXPath .= "[not(@_alteration) or @_alteration!='removed']";
@@ -2570,9 +2611,9 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	}
 
 	/**
-	 * @param $sXPath
-	 * @param $sId
-	 * @param null $oContextNode
+	 * @param string $sXPath
+	 * @param string $sId
+	 * @param \DOMNode $oContextNode
 	 *
 	 * @return \DOMNodeList
 	 */

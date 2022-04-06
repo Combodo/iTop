@@ -141,17 +141,17 @@ class Number extends Node implements \ArrayAccess
     public function offsetExists($offset)
     {
         if ($offset === -3) {
-            return $this->sourceColumn !== null;
+            return ! is_null($this->sourceColumn);
         }
 
         if ($offset === -2) {
-            return $this->sourceLine !== null;
+            return ! is_null($this->sourceLine);
         }
 
-        if ($offset === -1
-            || $offset === 0
-            || $offset === 1
-            || $offset === 2
+        if ($offset === -1 ||
+            $offset === 0 ||
+            $offset === 1 ||
+            $offset === 2
         ) {
             return true;
         }

@@ -1,0 +1,119 @@
+<div id="{{ oUIBlock.GetId() }}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsExpanded() %}ibo-is-expanded{% endif %} {% if oUIBlock.IsClosed() %}ibo-is-closed{% endif %}"
+     data-role="ibo-activity-panel"
+     data-object-class="{{ oUIBlock.GetObjectClass() }}"
+     data-object-id="{{ oUIBlock.GetObjectId() }}"
+     data-object-mode="{{ oUIBlock.GetObjectMode() }}">
+    <div class="ibo-activity-panel--header" data-role="ibo-activity-panel--header">
+        <div class="ibo-activity-panel--tabs-togglers" data-role="ibo-activity-panel--tabs-togglers">
+            {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+                {% set sExtraCSSClass = (loop.index == 1) ? 'ibo-is-active' : '' %}
+                <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-caselog ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} {{ sExtraCSSClass }}"
+                     data-role="ibo-activity-panel--tab-toggler"
+                     data-tab-type="caselog"
+                     data-caselog-attribute-code="{{ sCaseLogAttCode }}"
+                     data-caselog-attribute-label="{{ aCaseLogData.title }}"
+                     data-caselog-rank="{{ loop.index }}">
+                    <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+                        <span class="ibo-activity-panel--tab-title-decoration" data-role="ibo-activity-panel--tab-title-decoration"></span>
+                        <span class="ibo-activity-panel--tab-title-text" data-role="ibo-activity-panel--tab-title-text" title="{{ aCaseLogData.title }}">{{ aCaseLogData.title }}</span>
+                        <span class="ibo-activity-panel--tab-title-messages-count" data-role="ibo-activity-panel--tab-title-messages-count" data-messages-count="{{ aCaseLogData.total_messages_count }}">{{ aCaseLogData.total_messages_count }}</span>
+                        <span class="ibo-activity-panel--tab-title-draft-indicator"
+                              data-role="ibo-activity-panel--tab-title-draft-indicator"
+                              data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Log:DraftIndicator:Tooltip'|dict_s }}">
+                            <span class="fas fa-pen"></span>
+                        </span>
+                    </a>
+                </div>
+            {% endfor %}
+            {% set sExtraCSSClass = (oUIBlock.GetCaseLogTabs() is empty) ? 'ibo-is-active' : '' %}
+            <div class="ibo-activity-panel--tab-toggler ibo-activity-panel--tab-toggler-for-activity {{ sExtraCSSClass }}"
+                 data-role="ibo-activity-panel--tab-toggler"
+                 data-tab-type="activity">
+                <a href="#" class="ibo-activity-panel--tab-title" data-role="ibo-activity-panel--tab-title">
+                    <span class="ibo-activity-panel--tab-title-text" title="{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}">{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}</span>
+                </a>
+            </div>
+            <div class="ibo-activity-panel--togglers" data-role="ibo-activity-panel--togglers">
+                <a href="#" class="ibo-activity-panel--expand-icon"
+                   data-role="ibo-activity-panel--expand-icon"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Expand:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-expand-alt"></span>
+                </a>
+                <a href="#" class="ibo-activity-panel--reduce-icon"
+                   data-role="ibo-activity-panel--reduce-icon"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:SizeToggler:Reduce:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-compress-alt"></span>
+                </a>
+                <a href="#" class="ibo-activity-panel--close-icon"
+                   data-role="ibo-activity-panel--close-icon"
+                   data-tooltip-content="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}"
+                   aria-label="{{ 'UI:Layout:ActivityPanel:DisplayToggler:Close:Tooltip'|dict_s }}">
+                    <span class="fas fa-fw fa-chevron-right"></span>
+                </a>
+            </div>
+        </div>
+        <div class="ibo-activity-panel--tabs-toolbars" data-role="ibo-activity-panel--tabs-toolbars">
+            {% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+                {{ include('base/layouts/activity-panel/tab-toolbar/caselog.html.twig', {oUIBlock: oUIBlock, iRank: loop.index, bIsActive: (loop.index == 1), sAttCode: sCaseLogAttCode, aData: aCaseLogData, aFilteredCaseLogsAttCodes: [sCaseLogAttCode]}) }}
+            {% endfor %}
+            {{ include('base/layouts/activity-panel/tab-toolbar/activity.html.twig', {oUIBlock: oUIBlock, bIsActive: (oUIBlock.GetCaseLogTabs()|length == 0), bPrefilterStateChanges: true, bPrefilterEdits: true}) }}
+            <div class="ibo-activity-panel--entry-forms-confirmation-dialog" data-role="ibo-activity-panel--entry-forms-confirmation-dialog" title="{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Title'|dict_s }}">
+                <div class="ibo-activity-panel--entry-forms-confirmation-explanation">{{ 'UI:Layout:ActivityPanel:MultipleEntriesSaveConfirmation:Explanation'|dict_s }}</div>
+                <label class="ibo-activity-panel--entry-forms-confirmation-preference">
+                    <input type="checkbox" class="ibo-activity-panel--entry-forms-confirmation-preference-input" data-role="ibo-activity-panel--entry-forms-confirmation-preference-input">
+                    <span class="ibo-activity-panel--entry-forms-confirmation-preference-text">{{ 'UI:UserPref:DoNotShowAgain'|dict_s }}</span>
+                </label>
+            </div>
+        </div>
+    </div>
+    {% if oUIBlock.IsComposeButtonEnabled() %}
+        <a href="#"
+           id="ibo-activity-panel--add-caselog-entry-button"
+           class="ibo-activity-panel--add-caselog-entry-button {% if oUIBlock.IsEntryFormOpened() %}ibo-is-hidden{% endif %}"
+           data-role="ibo-activity-panel--add-caselog-entry-button"
+           data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}"
+           aria-label="{{ 'UI:Layout:ActivityPanel:ComposeButton:Tooltip'|dict_s }}">
+            <i class="fas fa-feather"></i>
+        </a>
+        {% if oUIBlock.HasComposeMenu() %}
+            {{ render_block(oUIBlock.GetComposeMenu()) }}
+        {% endif %}
+    {% endif %}
+    <div class="ibo-activity-panel--body" data-role="ibo-activity-panel--body">
+        {% if oUIBlock.GetGroupedEntries()|length > 0 %}
+            {% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
+                {{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
+            {% endfor %}
+            {% if oUIBlock.HasMoreEntriesToLoad() %}
+                <div class="ibo-activity-panel--load-more-entries-container" data-role="ibo-activity-panel--load-more-entries-container">
+                    {# Note: The "more entries" button is hidden by default to avoid a visual glitch. #}
+                    {# Otherwise when the page is loaded, the button is displayed even if the current tab only show log entries (which are all loaded) #}
+                    <a href="#" class="ibo-activity-panel--load-more-entries ibo-activity-panel--load-entries-button ibo-is-hidden" data-role="ibo-activity-panel--load-more-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadMoreEntries:Tooltip'|dict_s }}">
+                        <span class="ibo-activity-panel--load-entries-icon fas fa-fw fa-angle-down" data-role="ibo-activity-panel--load-more-entries-icon"></span>
+                    </a>
+                    <a href="#" class="ibo-activity-panel--load-all-entries ibo-activity-panel--load-entries-button ibo-is-hidden" data-role="ibo-activity-panel--load-all-entries" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:LoadAllEntries:Tooltip'|dict_s }}">
+                        <span class="ibo-activity-panel--load-entries-icon fas fa-fw fa-angle-double-down" data-role="ibo-activity-panel--load-all-entries-icon"></span>
+                    </a>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="ibo-activity-panel--body--placeholder">
+                <div class="ibo-activity-panel--body--placeholder-image ibo-svg-illustration--container">
+                    {{ source("illustrations/undraw_reading_time.svg") }}
+                </div>
+                <div class="ibo-activity-panel--body--placeholder-hint">{{ 'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint'|dict_s }}</div>
+            </div>
+        {% endif %}
+    </div>
+    <div class="ibo-activity-panel--closed-cover" data-role="ibo-activity-panel--closed-cover" data-tooltip-content="{{ 'UI:Layout:ActivityPanel:ClosedCover:Tooltip'|dict_s }}" data-tooltip-placement="left">
+        <span class="ibo-activity-panel--closed-content-container" data-role="ibo-activity-panel--closed-content-container">
+            <span class="ibo-activity-panel--closed-title" data-role="ibo-activity-panel--closed-title">{{ 'UI:Layout:ActivityPanel:ClosedCover:Title'|dict_s }}</span>
+            <span class="ibo-activity-panel--open-icon" data-role="ibo-activity-panel--open-icon">
+                <span class="fas fa-fw fa-chevron-up"></span>
+            </span>
+        </span>
+    </div>
+</div>

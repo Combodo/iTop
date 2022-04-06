@@ -1,0 +1,17 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+oWidget{{ oUIBlock.iInputId }} = new LinksWidget(
+    '{{ oUIBlock.sLinkedSetId }}',
+    '{{ oUIBlock.sClass }}',
+    '{{ oUIBlock.sAttCode }}',
+    '{{ oUIBlock.iInputId }}',
+    '{{ oUIBlock.sNameSuffix }}',
+     {{ oUIBlock.bDuplicates }},
+     {{ oUIBlock.oWizHelper }},
+    '{{ oUIBlock.sExtKeyToRemote }}',
+     {{ oUIBlock.bJSDoSearch }},
+     {{ oUIBlock.iMaxAddedId }}
+);
+oWidget{{ oUIBlock.iInputId }}.Init();
+{% endapply %}

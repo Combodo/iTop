@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.6">
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="3.1">
     <classes>
         <class id="Problem" _delta="define">
             <parent>Ticket</parent>
@@ -7,7 +7,7 @@
                 <comment><![CDATA[/**
  * Persistent classes for a CMDB
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */]]></comment>
                 <category>bizmodel,searchable,problemmgmt</category>
@@ -21,8 +21,12 @@
                         <attribute id="ref"/>
                     </attributes>
                 </naming>
-                <display_template/>
-                <icon>images/problem.png</icon>
+                <fields_semantic>
+                    <state_attribute>status</state_attribute>
+                </fields_semantic>
+                <style>
+                    <icon>../../images/icons/icons8-solve.svg</icon>
+                </style>
                 <reconciliation>
                     <attributes>
                         <attribute id="ref"/>
@@ -37,11 +41,44 @@
             <fields>
                 <field id="status" xsi:type="AttributeEnum">
                     <values>
-                        <value id="new">new</value>
-                        <value id="assigned">assigned</value>
-                        <value id="resolved">resolved</value>
-                        <value id="closed">closed</value>
+                        <value id="new">
+                            <code>new</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-new-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-new-state-secondary-color</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="assigned">
+                            <code>assigned</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="resolved">
+                            <code>resolved</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-success-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-success-state-secondary-color</complementary_color>
+                                <decoration_classes>fas fa-check</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="closed">
+                            <code>closed</code>
+                            <style>
+                                <main_color>$ibo-lifecycle-frozen-state-primary-color</main_color>
+                                <complementary_color>$ibo-lifecycle-frozen-state-secondary-color</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
+                    <default_style>
+                        <main_color>$ibo-lifecycle-neutral-state-primary-color</main_color>
+                        <complementary_color>$ibo-lifecycle-neutral-state-secondary-color</complementary_color>
+                        <decoration_classes/>
+                    </default_style>
                     <sql>status</sql>
                     <default_value>new</default_value>
                     <is_null_allowed>false</is_null_allowed>
@@ -84,9 +121,15 @@
                 </field>
                 <field id="impact" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
                     </values>
                     <sql>impact</sql>
                     <default_value>1</default_value>
@@ -95,10 +138,18 @@
                 </field>
                 <field id="urgency" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                        </value>
                     </values>
                     <sql>urgency</sql>
                     <default_value>1</default_value>
@@ -107,10 +158,18 @@
                 </field>
                 <field id="priority" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                        </value>
                     </values>
                     <sql>priority</sql>
                     <default_value>1</default_value>
@@ -161,7 +220,6 @@
                 </field>
             </fields>
             <lifecycle>
-                <attribute>status</attribute>
                 <stimuli>
                     <stimulus id="ev_assign" xsi:type="StimulusUserAction"/>
                     <stimulus id="ev_reassign" xsi:type="StimulusUserAction"/>
@@ -685,6 +743,9 @@
     <menus>
         <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
             <rank>42</rank>
+				    <style>
+					    <decoration_classes>fas fa-question</decoration_classes>
+				    </style>
         </menu>
         <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
             <rank>5</rank>

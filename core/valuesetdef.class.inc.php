@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,9 +20,11 @@
 /**
  * Value set definitions (from a fixed list or from a query, etc.)
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Core\MetaModel\FriendlyNameType;
 
 require_once('MyHelpers.class.inc.php');
 
@@ -97,7 +99,7 @@ class ValueSetObjects extends ValueSetDefinition
 	protected $m_sFilterExpr; // in OQL
 	protected $m_sValueAttCode;
 	protected $m_aOrderBy;
-	protected $m_aExtraConditions;
+	protected $m_oExtraCondition;
 	private $m_bAllowAllData;
 	private $m_aModifierProperties;
 	private $m_bSort;
@@ -116,7 +118,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_aOrderBy = $aOrderBy;
 		$this->m_bAllowAllData = $bAllowAllData;
 		$this->m_aModifierProperties = $aModifierProperties;
-		$this->m_aExtraConditions = array();
+		$this->m_oExtraCondition = null;
 		$this->m_bSort = true;
 		$this->m_iLimit = 0;
 	}
@@ -124,13 +126,29 @@ class ValueSetObjects extends ValueSetDefinition
 	public function SetModifierProperty($sPluginClass, $sProperty, $value)
 	{
 		$this->m_aModifierProperties[$sPluginClass][$sProperty] = $value;
+		$this->m_bIsLoaded = false;
 	}
 
+	/**
+	 * @deprecated use SetCondition instead
+	 *
+	 * @param \DBSearch $oFilter
+	 */
 	public function AddCondition(DBSearch $oFilter)
 	{
-		$this->m_aExtraConditions[] = $oFilter;		
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use SetCondition instead');
+		$this->SetCondition($oFilter);
 	}
 
+	public function SetCondition(DBSearch $oFilter)
+	{
+		$this->m_oExtraCondition = $oFilter;
+		$this->m_bIsLoaded = false;
+	}
+	public function SetOrderBy(array $aOrderBy)
+	{
+		$this->m_aOrderBy = $aOrderBy;
+	}
 	public function ToObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		if ($this->m_bAllowAllData)
@@ -141,9 +159,9 @@ class ValueSetObjects extends ValueSetDefinition
 		{
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
 		}
-		foreach($this->m_aExtraConditions as $oExtraFilter)
+		if (!is_null($this->m_oExtraCondition))
 		{
-			$oFilter = $oFilter->Intersect($oExtraFilter);
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{
@@ -206,7 +224,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$this->m_sOperation = $sOperation;
 
 		$this->m_aValues = array();
-		
+
 		if ($this->m_bAllowAllData)
 		{
 			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
@@ -214,11 +232,12 @@ class ValueSetObjects extends ValueSetDefinition
 		else
 		{
 			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
+			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
 		}
 		if (!$oFilter) return false;
-		foreach($this->m_aExtraConditions as $oExtraFilter)
+		if (!is_null($this->m_oExtraCondition))
 		{
-			$oFilter = $oFilter->Intersect($oExtraFilter);
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
 		}
 		foreach($this->m_aModifierProperties as $sPluginClass => $aProperties)
 		{
@@ -231,7 +250,7 @@ class ValueSetObjects extends ValueSetDefinition
 		$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
 		$aFields = $oExpression->ListRequiredFields();
 		$sClass = $oFilter->GetClass();
-		foreach($aFields as $sField)
+		/*foreach($aFields as $sField)
 		{
 			$aFieldItems = explode('.', $sField);
 			if ($aFieldItems[0] != $sClass)
@@ -239,7 +258,7 @@ class ValueSetObjects extends ValueSetDefinition
 				$sOperation = 'contains';
 				break;
 			}
-		}
+		}*/
 
 		switch ($sOperation)
 		{
@@ -333,6 +352,157 @@ class ValueSetObjects extends ValueSetDefinition
 	{
 		$this->m_bSort = $bSort;
 	}
+
+	public function GetValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
+	{
+		if (!$this->m_bIsLoaded || ($sContains != $this->m_sContains) || ($sOperation != $this->m_sOperation))
+		{
+			$this->LoadValuesForAutocomplete($aArgs, $sContains, $sOperation);
+			$this->m_bIsLoaded = true;
+		}
+		// The results are already filtered and sorted (on friendly name)
+		$aRet = $this->m_aValues;
+		return $aRet;
+	}
+
+	/**
+	 * @param $aArgs
+	 * @param string $sContains
+	 * @param string $sOperation 'contains' or 'equals_start_with'
+	 *
+	 * @return bool
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	protected function LoadValuesForAutocomplete($aArgs, $sContains = '', $sOperation = 'contains')
+	{
+		$this->m_sContains = $sContains;
+		$this->m_sOperation = $sOperation;
+
+		$this->m_aValues = array();
+
+		if ($this->m_bAllowAllData) {
+			$oFilter = DBObjectSearch::FromOQL_AllData($this->m_sFilterExpr);
+		} else {
+			$oFilter = DBObjectSearch::FromOQL($this->m_sFilterExpr);
+			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
+		}
+
+		if (!$oFilter) {
+			return false;
+		}
+		if (!is_null($this->m_oExtraCondition)) {
+			$oFilter = $oFilter->Intersect($this->m_oExtraCondition);
+		}
+		foreach ($this->m_aModifierProperties as $sPluginClass => $aProperties) {
+			foreach ($aProperties as $sProperty => $value) {
+				$oFilter->SetModifierProperty($sPluginClass, $sProperty, $value);
+			}
+		}
+
+		//$oExpression = DBObjectSearch::GetPolymorphicExpression($oFilter->GetClass(), 'friendlyname');
+		$sClass = $oFilter->GetClass();
+		$sClassAlias = $oFilter->GetClassAlias();
+
+		switch ($sOperation) {
+			case 'equals':
+				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
+				$aFilters = array();
+				$oValueExpr = new ScalarExpression($sContains);
+				foreach ($aAttributes as $sAttribute) {
+					$oNewFilter = $oFilter->DeepClone();
+					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+					$oCondition = new BinaryExpression($oNameExpr, '=', $oValueExpr);
+					$oNewFilter->AddConditionExpression($oCondition);
+					$aFilters[] = $oNewFilter;
+				}
+				// Unions are much faster than OR conditions
+				$oFilter = new DBUnionSearch($aFilters);
+				break;
+			case 'start_with':
+				$aAttributes = MetaModel::GetFriendlyNameAttributeCodeList($sClass);
+				$aFilters = array();
+				$oValueExpr = new ScalarExpression($sContains.'%');
+				foreach($aAttributes as $sAttribute)
+				{
+					$oNewFilter = $oFilter->DeepClone();
+					$oNameExpr = new FieldExpression($sAttribute, $sClassAlias);
+					$oCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+					$oNewFilter->AddConditionExpression($oCondition);
+					$aFilters[] = $oNewFilter;
+				}
+				// Unions are much faster than OR conditions
+				$oFilter = new DBUnionSearch($aFilters);
+				break;
+
+			default:
+				$oValueExpr = new ScalarExpression('%'.$sContains.'%');
+				$oNameExpr = new FieldExpression('friendlyname', $sClassAlias);
+				$oNewCondition = new BinaryExpression($oNameExpr, 'LIKE', $oValueExpr);
+				$oFilter->AddConditionExpression($oNewCondition);
+				break;
+		}
+
+		$oObjects = new DBObjectSet($oFilter, $this->m_aOrderBy, $aArgs, null, $this->m_iLimit, 0, $this->m_bSort);
+		if (empty($this->m_sValueAttCode)) {
+			$aAttToLoad = ['friendlyname'];
+		} else {
+			$aAttToLoad = [$this->m_sValueAttCode];
+		}
+
+		$sImageAttr = MetaModel::GetImageAttributeCode($sClass);
+		if (!empty($sImageAttr)) {
+			$aAttToLoad [] = $sImageAttr;
+		}
+
+		$aComplementAttributeSpec = MetaModel::GetNameSpec($sClass, FriendlyNameType::COMPLEMENTARY);
+		$sFormatAdditionalField = $aComplementAttributeSpec[0];
+		$aAdditionalField = $aComplementAttributeSpec[1];
+
+		if (count($aAdditionalField) > 0) {
+			if (is_array($aAdditionalField)) {
+				$aAttToLoad = array_merge($aAttToLoad, $aAdditionalField);
+			} else {
+				$aAttToLoad [] = $aAdditionalField;
+			}
+		}
+
+		$oObjects->OptimizeColumnLoad([$sClassAlias => $aAttToLoad]);
+		while ($oObject = $oObjects->Fetch()) {
+			$aData = [];
+			if (empty($this->m_sValueAttCode)) {
+				$aData['label'] = $oObject->GetName();
+			} else {
+				$aData['label'] = $oObject->Get($this->m_sValueAttCode);
+			}
+			if ($oObject->IsObsolete()) {
+				$aData['obsolescence_flag'] = '1';
+			} else {
+				$aData['obsolescence_flag'] = '0';
+			}
+			if (count($aAdditionalField) > 0) {
+				$aArguments = [];
+				foreach ($aAdditionalField as $sAdditionalField) {
+					array_push($aArguments, $oObject->Get($sAdditionalField));
+				}
+				$aData['additional_field'] = vsprintf($sFormatAdditionalField, $aArguments);
+			} else {
+				$aData['additional_field'] = '';
+			}
+			if (!empty($sImageAttr)) {
+				/** @var \ormDocument $oImage */
+				$oImage = $oObject->Get($sImageAttr);
+				if (!$oImage->IsEmpty()) {
+					$aData['picture_url'] = $oImage->GetDisplayURL($sClass, $oObject->GetKey(), $sImageAttr);
+					$aData['initials'] = '';
+				} else {
+					$aData['initials'] = utils::ToAcronym($aData['label']);
+				}
+			}
+			$this->m_aValues[$oObject->GetKey()] = $aData;
+		}
+		return true;
+	}
 }
 
 
@@ -350,10 +520,10 @@ class ValueSetEnum extends ValueSetDefinition
 		$this->m_values = $Values;
 	}
 
-	// Helper to export the datat model
+	// Helper to export the data model
 	public function GetValueList()
 	{
-		$this->LoadValues($aArgs = array());
+		$this->LoadValues(null);
 		return $this->m_aValues;
 	}
 
@@ -379,6 +549,29 @@ class ValueSetEnum extends ValueSetDefinition
 		}
 		$this->m_aValues = $aValues;
 		return true;
+	}
+}
+
+class ValueSetEnumPadded extends ValueSetEnum
+{
+	public function __construct($Values)
+	{
+		parent::__construct($Values);
+		if (is_string($Values))
+		{
+			$this->LoadValues(null);
+		}
+		else
+		{
+			$this->m_aValues = $Values;
+		}
+		$aPaddedValues = array();
+		foreach ($this->m_aValues as $sKey => $sVal)
+		{
+			$sKey = str_pad($sKey, 3, '_', STR_PAD_LEFT);
+			$aPaddedValues[$sKey] = $sVal;
+		}
+		$this->m_values = $aPaddedValues;
 	}
 }
 

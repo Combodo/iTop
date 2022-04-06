@@ -1,0 +1,40 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends "pages/backoffice/nicewebpage/layout.html.twig" %}
+{% block iboPageBodyHtml %}
+		{{ render_block(aLayouts.oNavigationMenu, {aPage: aPage}) }}
+		<div id="ibo-page-container" class="ibo-page-container" data-role="ibo-page-container">
+			<div id="ibo-top-container" class="ibo-top-container" data-role="ibo-top-container">
+				{{ include('pages/backoffice/extension-blocks/banner.html.twig') }}
+				{{ render_block(aLayouts.oTopBar, {aPage: aPage}) }}
+			</div>
+			{{ render_block(aLayouts.oPageContent, {aPage: aPage, aLayouts: aLayouts}) }}
+
+			{# TODO: Remove this when modal development is done #}
+			<div id="at_the_end">{{ aPage.sDeferredContent|raw }}</div>
+			<div style="display:none" title="ex2" id="ex2">Please wait...</div>
+			<div style="display:none" title="dialog" id="ModalDlg"></div>
+			<div style="display:none" id="ajax_content"></div>
+			<div id="ibo-user-disconnected-dialog" class="ibo-user-disconnected-dialog ibo-is-hidden">{{ 'UI:DisconnectedDlgMessage'|dict_s }}</div>
+		</div>
+{% endblock %}
+
+{% block iboDeferredBlocks %}
+	{% if aPage.isPrintable %}
+		{% if aDeferredBlocks.oPageContent %}
+			{% for oBlock in aDeferredBlocks.oPageContent  %}
+				{{ render_block(oBlock, {aPage: aPage}) }}
+			{% endfor %}
+		{% endif %}
+	{% else %}
+		{% for aBlocks in aDeferredBlocks %}
+			{% for oBlock in aBlocks %}
+				{{ render_block(oBlock, {aPage: aPage}) }}
+			{% endfor %}
+		{% endfor %}
+	{% endif %}
+{% endblock %}
+
+{% block iboCapturedOutput %}
+    <div id="ibo-raw-output" class="ibo-raw-output ibo-is-hidden" title="Debug Output">{{ aPage.sCapturedOutput|raw }}</div>
+{% endblock %}

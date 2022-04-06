@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
 /**
  * OQL syntax analyzer, to be used prior to run the lexical analyzer
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -148,6 +148,7 @@ above            = "ABOVE"
 above_strict     = "ABOVE STRICT"
 not_above        = "NOT ABOVE"
 not_above_strict = "NOT ABOVE STRICT"
+null_val = "NULL"
 //
 // WARNING: there seems to be a bug in the Lexer about matching the longest pattern
 //          when there are alternates in the regexp.
@@ -390,6 +391,9 @@ numval {
 }
 strval {
 	$this->token = OQLParser::STRVAL;
+}
+null_val {
+    $this->token = OQLParser::NULL_VAL;
 }
 name {
 	$this->token = OQLParser::NAME;

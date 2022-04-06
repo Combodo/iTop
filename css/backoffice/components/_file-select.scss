@@ -1,0 +1,21 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-file-select--file-name-margin-left: 10px !default;
+
+.ibo-input-file-select--container {
+
+  .ibo-input-file-select {
+
+    .ibo-input-file-select--file-input {
+      display: none;
+    }
+
+    .ibo-input-file-select--file-name {
+      margin-left: $ibo-input-file-select--file-name-margin-left;
+      @extend %ibo-font-size-150;
+    }
+  }
+}

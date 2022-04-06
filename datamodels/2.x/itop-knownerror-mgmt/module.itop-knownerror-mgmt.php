@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-knownerror-mgmt/2.6.2',
+	'itop-knownerror-mgmt/3.1.0',
 	array(
 		// Identification
 		//
@@ -14,11 +14,9 @@ SetupWebPage::AddModule(
 		//
 		'dependencies' => array(
 			'itop-config-mgmt/2.2.0',
-			'itop-tickets/2.3.0',
 		),
 		'mandatory' => false,
 		'visible' => true,
-		'installer' => 'KnownErrorMgmtInstaller',
 
 		// Components
 		//
@@ -29,7 +27,6 @@ SetupWebPage::AddModule(
 			//'data.struct.itop-knownerror-mgmt.xml',
 		),
 		'data.sample' => array(
-			'data.sample.faq-domains.xml',
 		),
 		
 		// Documentation
@@ -43,42 +40,3 @@ SetupWebPage::AddModule(
 		),
 	)
 );
-
-if (!class_exists('KnownErrorMgmtInstaller'))
-{
-	// Module installation handler
-	//
-	class KnownErrorMgmtInstaller extends ModuleInstallerAPI
-	{
-		public static function BeforeWritingConfig(Config $oConfiguration)
-		{
-			// If you want to override/force some configuration values, do it here
-			return $oConfiguration;
-		}
-
-		/**
-		 * Handler called before creating or upgrading the database schema
-		 * @param $oConfiguration Config The new configuration of the application
-		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
-		 * @param $sCurrentVersion string Current version number of the module
-		 */
-		public static function BeforeDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
-		{
-			if (strlen($sPreviousVersion) > 0)
-			{
-				// If you want to migrate data from one format to another, do it here
-				self::RenameClassInDB('FAQcategory', 'FAQCategory');
-			}
-		}
-	
-		/**
-		 * Handler called after the creation/update of the database schema
-		 * @param $oConfiguration Config The new configuration of the application
-		 * @param $sPreviousVersion string PRevious version number of the module (empty string in case of first install)
-		 * @param $sCurrentVersion string Current version number of the module
-		 */
-		public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
-		{
-		}
-	}
-}

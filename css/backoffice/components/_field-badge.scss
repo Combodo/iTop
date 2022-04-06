@@ -1,0 +1,26 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-field-badge--margin: $ibo-spacing-0 !default;
+$ibo-field-badge--padding: $ibo-spacing-200 10px !default;
+$ibo-field-badge--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-field-badge--label--spacing-x: 0.5rem !default;
+
+.ibo-field-badge {
+  display: inline-flex;
+  align-items: baseline;
+  margin: $ibo-field-badge--margin;
+  padding: $ibo-field-badge--padding;
+  border-radius: $ibo-field-badge--border-radius;
+
+  /* Mind the use of these "generic" variables that allow to automatically use the right colors for a field and its value depending on which class will be append to it (see those defined in the DM) */
+  background-color: var(--ibo-main-color);
+  color: var(--ibo-complementary-color);
+}
+
+.ibo-field-badge--decoration + .ibo-field-badge--label {
+  margin-left: $ibo-field-badge--label--spacing-x;
+}

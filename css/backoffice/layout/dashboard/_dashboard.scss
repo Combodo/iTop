@@ -1,0 +1,149 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-dashboard--grid--width: 100% !default;
+$ibo-dashboard--grid--elements-spacing-x: $ibo-dashlet--elements-spacing-x !default;
+$ibo-dashboard--grid--elements-spacing-y: $ibo-dashlet--elements-spacing-y !default;
+$ibo-dashboard--top-bar-padding-bottom: 20px !default;
+
+/* Rules */
+.ibo-dashboard--top-bar {
+  @extend %ibo-full-height-content;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: $ibo-dashboard--top-bar-padding-bottom;
+
+  .ibo-dashboard--top-bar-title {
+    @extend %ibo-font-ral-bol-250;
+  }
+
+  .ibo-dashboard--top-bar-toolbar {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.ibo-dashboard--selector {
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+  margin-right: 1px;
+
+  &:hover {
+    background-color: $ibo-color-secondary-100;
+    border-radius: $ibo-button--border-radius;
+  }
+
+  .selector-label {
+    display: inline-block;
+    margin-left: 10px;
+    margin-right: 10px;
+    vertical-align: super;
+  }
+}
+
+.ibo-dashboard--grid {
+  width: $ibo-dashboard--grid--width;
+}
+
+.ibo-dashboard--grid-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  overflow: hidden; /* Because of the column negative margin (which is for the dashlets spacing) */
+
+  /* Compensate negative margin on inner borders to simulate egal dashlets spacing between rows */
+  &:not(:last-child) {
+    padding-bottom: calc(#{$ibo-dashboard--grid--elements-spacing-y} / 2);
+  }
+
+  &:not(:first-child) {
+    padding-top: calc(#{$ibo-dashboard--grid--elements-spacing-y} / 2);
+  }
+}
+
+.ibo-dashboard--grid-column {
+  display: flex;
+  flex-flow: row wrap;
+  align-items: flex-start;
+  align-content: flex-start;
+  width: calc(100% + (2 * #{$ibo-dashboard--grid--elements-spacing-x}));
+  margin: calc(-1 * #{$ibo-dashboard--grid--elements-spacing-y} / 2) calc(-1 * #{$ibo-dashboard--grid--elements-spacing-x} / 2); /* Because of the margin all around the dashlets, we need to compensate it */
+  min-width: 0;
+
+  /* Compensate negative margin on inner borders to simulate egal dashlets spacing between columns */
+  &:not(:last-child) {
+    margin-right: 0;
+  }
+
+  &:not(:first-child) {
+    margin-left: 0;
+  }
+
+  &.edit_mode {
+    margin: 1px;
+    border: 2px #ccc dashed;
+    width: 100%;
+    min-height: 40px;
+  }
+}
+
+
+// Round Toggle
+/* The switch - the box around the slider */
+.ibo-dashboard--switch {
+  position: relative;
+  display: inline-block;
+  width: 30px;
+  height: 24px;
+  vertical-align: baseline;
+}
+
+/* Hide default HTML checkbox */
+.ibo-dashboard--switch input {
+  display: none;
+}
+
+/* The slider */
+.ibo-dashboard--slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.ibo-dashboard--slider:before {
+  position: absolute;
+  right: 5px;
+  bottom: 3px;
+  color: $ibo-color-secondary-800;
+  content: "\f007";
+  font-family: "Font Awesome 5 Free", serif;
+  font-size: $ibo-font-size-50;
+  font-weight: 900;
+}
+
+.ibo-dashboard--slider:after {
+  position: absolute;
+  left: 6px;
+  bottom: 1px;
+  color: $ibo-color-primary-600;
+  content: "\f1ad";
+  font-family: "Font Awesome 5 Free", serif;
+  font-size: $ibo-font-size-150;
+  font-weight: 900;
+}
+
+input:checked + .ibo-dashboard--slider:before {
+  content: "\f1ad";
+}
+
+input:checked + .ibo-dashboard--slider:after {
+  content: "\f007";
+}

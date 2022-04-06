@@ -1,0 +1,53 @@
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-quick-create">
+	<form action="{{ oUIBlock.GetEndpoint() }}" method="get" class="ibo-quick-create--head" data-role="ibo-quick-create--head">
+		<input type="hidden" name="operation" value="new">
+		<a href="#" class="ibo-quick-create--icon" data-role="ibo-quick-create--icon"
+           aria-label="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}"
+           data-tooltip-content="{{ 'UI:Component:QuickCreate:Tooltip'|dict_s }}"
+		   data-tooltip-placement="bottom-start"
+           data-tooltip-distance-offset="25"
+        >
+			<span class="fas fa-plus"></span>
+		</a>
+		<select name="class" class="ibo-quick-create--input" data-role="ibo-quick-create--input">
+			<option value="">{{ 'UI:Component:QuickCreate:Input:Placeholder'|dict_s }}</option>
+			{% for sClassCode, sClassLabel in oUIBlock.GetAvailableClasses() %}
+				<option value="{{ sClassCode }}">{{ sClassLabel }}</option>
+			{% endfor %}
+		</select>
+	</form>
+	<div class="ibo-quick-create--drawer" data-role="ibo-quick-create--drawer">
+		<div class="ibo-quick-create--compartment">
+			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-results">
+			</div>
+			<div class="ibo-quick-create--compartment-title" data-role="ibo-quick-create--compartment-title">
+				<span>{{ 'UI:Component:QuickCreate:Recents:Title'|dict_s }}</span>
+			</div>
+			<div class="ibo-quick-create--compartment-content" data-role="ibo-quick-create--compartment-content">
+				{% if oUIBlock.GetShowHistory == false %}
+					<div class="ibo-quick-create--compartment--placeholder">
+						<div class="ibo-quick-create--compartment--placeholder-hint">{{ 'UI:Component:QuickCreate:HistoryDisabled'|dict_s }}</div>
+					</div>
+				{% elseif oUIBlock.GetLastClasses()|length > 0 %}
+					{% for aClass in oUIBlock.GetLastClasses() %}
+						<a href="{{ aClass.target_url }}" class="ibo-quick-create--compartment-element" data-role="ibo-quick-create--compartment-element" data-class-code="{{ aQuery.class }}">
+							{% if aClass.icon_url is defined %}
+                                {# Mind the empty "alt" attribute https://www.w3.org/WAI/tutorials/images/decorative/ #}
+                                <img src="{{ aClass.icon_url}}" alt="" class="ibo-quick-create--compartment-element-image">
+							{% endif %}
+							{{ aClass.label_html|raw }}
+						</a>
+					{% endfor %}
+				{% else %}
+					<div class="ibo-quick-create--compartment--placeholder">
+						<div class="ibo-quick-create--compartment--placeholder-image ibo-svg-illustration--container">
+						{{ source("illustrations/undraw_content.svg") }}
+						</div>
+
+						<div class="ibo-quick-create--compartment--placeholder-hint">{{ 'UI:Component:QuickCreate:LastClasses:NoClass:Placeholder'|dict_s }}</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

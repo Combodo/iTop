@@ -1,29 +1,16 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Typology for the attributes
- *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeUIBlockFactory;
+use Combodo\iTop\Form\Field\LabelField;
+use Combodo\iTop\Form\Field\TextAreaField;
+use Combodo\iTop\Form\Form;
+use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
+use Combodo\iTop\Form\Validator\Validator;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -34,13 +21,9 @@ require_once('ormlinkset.class.inc.php');
 require_once('ormset.class.inc.php');
 require_once('ormtagset.class.inc.php');
 require_once('htmlsanitizer.class.inc.php');
-require_once(APPROOT.'sources/autoload.php');
 require_once('customfieldshandler.class.inc.php');
 require_once('ormcustomfieldsvalue.class.inc.php');
 require_once('datetimeformat.class.inc.php');
-// This should be changed to a use when we go full-namespace
-require_once(APPROOT.'sources/form/validator/validator.class.inc.php');
-require_once(APPROOT.'sources/form/validator/notemptyextkeyvalidator.class.inc.php');
 
 /**
  * MissingColumnException - sent if an attribute is being created but the column is missing in the row
@@ -106,6 +89,14 @@ define('LINKSET_EDITMODE_ACTIONS', 2); // Show the usual 'Actions' popup menu
 define('LINKSET_EDITMODE_INPLACE', 3); // The "linked" objects can be created/modified/deleted in place
 define('LINKSET_EDITMODE_ADDREMOVE', 4); // The "linked" objects can be added/removed in place
 
+/**
+ * Attributes implementing this interface won't be accepted as `group by` field
+ * @since 2.7.4 N°3473
+ */
+interface iAttributeNoGroupBy
+{
+	//no method, just a contract on implement
+}
 
 /**
  * Attribute definition API, implemented in and many flavours (Int, String, Enum, etc.)
@@ -160,11 +151,14 @@ abstract class AttributeDefinition
 	 */
 	public function IsSearchable()
 	{
-		return static::SEARCH_WIDGET_TYPE != static::SEARCH_WIDGET_TYPE_RAW;
+		return $this->GetSearchType() != static::SEARCH_WIDGET_TYPE_RAW;
 	}
 
+	/** @var string */
 	protected $m_sCode;
-	private $m_aParams = array();
+	/** @var array */
+	protected $m_aParams;
+	/** @var string */
 	protected $m_sHostClass = '!undefined!';
 
 	public function Get($sParamName)
@@ -264,7 +258,7 @@ abstract class AttributeDefinition
 
 	// Note: I could factorize this code with the parameter management made for the AttributeDef class
 	// to be overloaded
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array();
 	}
@@ -272,11 +266,11 @@ abstract class AttributeDefinition
 	/**
 	 * @throws \Exception
 	 */
-	private function ConsistencyCheck()
+	protected function ConsistencyCheck()
 	{
 		// Check that any mandatory param has been specified
 		//
-		$aExpectedParams = $this->ListExpectedParams();
+		$aExpectedParams = static::ListExpectedParams();
 		foreach($aExpectedParams as $sParamName)
 		{
 			if (!array_key_exists($sParamName, $this->m_aParams))
@@ -295,7 +289,7 @@ abstract class AttributeDefinition
 	 * @param \DBObject $oHostObject
 	 * @param $value Object error if any, null otherwise
 	 *
-	 * @return bool
+	 * @return bool|string true for no errors, false or error message otherwise
 	 */
 	public function CheckValue(DBObject $oHostObject, $value)
 	{
@@ -311,6 +305,8 @@ abstract class AttributeDefinition
 	 */
 	public function ListDBJoins()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+
 		return "";
 		// e.g: return array("Site", "infrid", "name");
 	}
@@ -335,7 +331,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -346,7 +342,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsBasedOnOQLExpression()
+	public static function IsBasedOnOQLExpression()
 	{
 		return false;
 	}
@@ -356,7 +352,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return false;
 	}
@@ -366,7 +362,7 @@ abstract class AttributeDefinition
 	 *
 	 * @return bool
 	 */
-	static public function IsLinkSet()
+	public static function IsLinkSet()
 	{
 		return false;
 	}
@@ -385,7 +381,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value is an external key, pointing to the host class
 	 */
-	static public function IsHierarchicalKey()
+	public static function IsHierarchicalKey()
 	{
 		return false;
 	}
@@ -393,7 +389,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value is stored on an object pointed to be an external key
 	 */
-	static public function IsExternalField()
+	public static function IsExternalField()
 	{
 		return false;
 	}
@@ -418,7 +414,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value is kept in the loaded object (in memory)
 	 */
-	static public function LoadInObject()
+	public static function LoadInObject()
 	{
 		return true;
 	}
@@ -426,7 +422,7 @@ abstract class AttributeDefinition
 	/**
 	 * @return bool true if the attribute value comes from the database in one way or another
 	 */
-	static public function LoadFromDB()
+	public static function LoadFromDB()
 	{
 		return true;
 	}
@@ -836,9 +832,9 @@ abstract class AttributeDefinition
 	 */
 	public function MakeValue()
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 		$sComputeFunc = $this->Get("compute_func");
-		if (empty($sComputeFunc))
-		{
+		if (empty($sComputeFunc)) {
 			return null;
 		}
 
@@ -970,7 +966,7 @@ abstract class AttributeDefinition
 		return $this->GetAsHTML($sValue, $oHostObject, $bLocalize);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
@@ -1027,7 +1023,37 @@ abstract class AttributeDefinition
 		// Validation pattern
 		if ($this->GetValidationPattern() !== '')
 		{
-			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\Validator($this->GetValidationPattern()));
+			$oFormField->AddValidator(new Validator($this->GetValidationPattern()));
+		}
+
+		// Description
+		$sAttDescription = $this->GetDescription();
+		if(!empty($sAttDescription))
+		{
+			$oFormField->SetDescription($this->GetDescription());
+		}
+
+		// Metadata
+		$oFormField->AddMetadata('attribute-code', $this->GetCode());
+		$oFormField->AddMetadata('attribute-type', get_class($this));
+		$oFormField->AddMetadata('attribute-label', $this->GetLabel());
+		// - Attribute flags
+		$aPossibleAttFlags = MetaModel::EnumPossibleAttributeFlags();
+		foreach($aPossibleAttFlags as $sFlagCode => $iFlagValue)
+		{
+			// Note: Skip normal flag as we don't need it.
+			if($sFlagCode === 'normal')
+			{
+				continue;
+			}
+			$sFormattedFlagCode = str_ireplace('_', '-', $sFlagCode);
+			$sFormattedFlagValue = (($iFlags & $iFlagValue) === $iFlagValue) ? 'true' : 'false';
+			$oFormField->AddMetadata('attribute-flag-'.$sFormattedFlagCode, $sFormattedFlagValue);
+		}
+		// - Value raw
+		if ($this::IsScalar())
+		{
+			$oFormField->AddMetadata('value-raw', (string) $oObject->Get($this->GetCode()));
 		}
 
 		return $oFormField;
@@ -1086,13 +1112,13 @@ abstract class AttributeDefinition
 	}
 
 	/**
-	 * @param array $aArgs
-	 * @param string $sContains
-	 *
-	 * @return array|null
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
+ * @param array $aArgs
+ * @param string $sContains
+ *
+ * @return array|null
+ * @throws \CoreException
+ * @throws \OQLException
+ */
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
@@ -1102,6 +1128,20 @@ abstract class AttributeDefinition
 		}
 
 		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	/**
+	 * GetAllowedValuesForSelect is the same as GetAllowedValues except for field with obsolescence flag
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	{
+		return $this->GetAllowedValues($aArgs, $sContains);
 	}
 
 	/**
@@ -1247,11 +1287,37 @@ abstract class AttributeDefinition
 	{
 		return (string)$value;
 	}
+
+	/*
+	 * return string
+	 */
+	public function GetRenderForDataTable(string $sClassAlias) :string
+	{
+		$sRenderFunction = "return data;";
+		return $sRenderFunction;
+	}
 }
 
 class AttributeDashboard extends AttributeDefinition
 {
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
 			array("definition_file", "is_user_editable"));
@@ -1309,7 +1375,7 @@ class AttributeDashboard extends AttributeDefinition
 	}
 
 	// if this verb returns false, then GetValue must be implemented
-	static public function LoadInObject()
+	public static function LoadInObject()
 	{
 		return false;
 	}
@@ -1327,7 +1393,24 @@ class AttributeDashboard extends AttributeDefinition
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
 			array("allowed_values", "depends_on", "linked_class", "ext_key_to_me", "count_min", "count_max"));
@@ -1343,7 +1426,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return true;
 	}
 
-	static public function IsLinkSet()
+	public static function IsLinkSet()
 	{
 		return true;
 	}
@@ -1710,7 +1793,7 @@ class AttributeLinkedSet extends AttributeDefinition
 	public function GetImportColumns()
 	{
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'TEXT';
+		$aColumns[$this->GetCode()] = 'TEXT'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -2085,7 +2168,7 @@ class AttributeLinkedSet extends AttributeDefinition
 		return $oRemoteAtt;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\LinkedSetField';
 	}
@@ -2159,7 +2242,24 @@ class AttributeLinkedSet extends AttributeDefinition
  */
 class AttributeLinkedSetIndirect extends AttributeLinkedSet
 {
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("ext_key_to_remote"));
 	}
@@ -2202,22 +2302,17 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
 		/** @var \AttributeExternalKey $oExtKeyToRemote */
 		$oExtKeyToRemote = MetaModel::GetAttributeDef($this->GetLinkedClass(), $this->GetExtKeyToRemote());
 		$sRemoteClass = $oExtKeyToRemote->GetTargetClass();
-		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef)
-		{
-			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect)
-			{
+		foreach(MetaModel::ListAttributeDefs($sRemoteClass) as $sRemoteAttCode => $oRemoteAttDef) {
+			if (!$oRemoteAttDef instanceof AttributeLinkedSetIndirect) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass())
-			{
+			if ($oRemoteAttDef->GetLinkedClass() != $this->GetLinkedClass()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote())
-			{
+			if ($oRemoteAttDef->GetExtKeyToMe() != $this->GetExtKeyToRemote()) {
 				continue;
 			}
-			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe())
-			{
+			if ($oRemoteAttDef->GetExtKeyToRemote() != $this->GetExtKeyToMe()) {
 				continue;
 			}
 			$oRet = $oRemoteAttDef;
@@ -2235,7 +2330,7 @@ class AttributeLinkedSetIndirect extends AttributeLinkedSet
  */
 class AttributeDBFieldVoid extends AttributeDefinition
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("allowed_values", "depends_on", "sql"));
 	}
@@ -2287,12 +2382,12 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return $this->Get("depends_on");
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -2392,7 +2487,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
  */
 class AttributeDBField extends AttributeDBFieldVoid
 {
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("default_value", "is_null_allowed"));
 	}
@@ -2417,7 +2512,24 @@ class AttributeInteger extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2533,7 +2645,24 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_attcode', 'is_null_allowed'));
 	}
@@ -2613,6 +2742,23 @@ class AttributePercentage extends AttributeInteger
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		$iWidth = 5; // Total width of the percentage bar graph, in em...
@@ -2661,7 +2807,24 @@ class AttributeDecimal extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('digits', 'decimals' /* including precision */));
 	}
@@ -2784,7 +2947,24 @@ class AttributeBoolean extends AttributeInteger
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -2922,7 +3102,7 @@ class AttributeBoolean extends AttributeInteger
 		return $sRes;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
 	}
@@ -3025,7 +3205,24 @@ class AttributeString extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -3167,7 +3364,7 @@ class AttributeString extends AttributeDBField
 		return $this->GetOptional('display_style', 'select');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\StringField';
 	}
@@ -3195,7 +3392,7 @@ class AttributeClass extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("class_category", "more_values"));
 	}
@@ -3255,7 +3452,24 @@ class AttributeClassState extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_field'));
 	}
@@ -3299,7 +3513,9 @@ class AttributeClassState extends AttributeString
 				$aValues = MetaModel::EnumStates($sChildClass);
 				if (in_array($sValue, $aValues))
 				{
-					$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sValue.' ('.MetaModel::GetStateLabel($sChildClass, $sValue).')'.'" data-description="">'.$sValue.'</span>';
+					$sLabelForHtmlAttribute = utils::EscapeHtml($sValue.' ('.MetaModel::GetStateLabel($sChildClass, $sValue).')');
+					$sHTML = '<span class="attribute-set-item" data-code="'.$sValue.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sValue.'</span>';
+
 					return $sHTML;
 				}
 			}
@@ -3319,7 +3535,7 @@ class AttributeApplicationLanguage extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 	}
@@ -3558,8 +3774,7 @@ class AttributeFinalClass extends AttributeString
 
 	/**
 	 * @return bool
-	 * @throws \CoreException
-	 * @since 2.7
+	 * @since 2.7.0 N°2272 OQL perf finalclass in all intermediary tables
 	 */
 	public function CopyOnAllTables()
 	{
@@ -3579,11 +3794,28 @@ class AttributeFinalClass extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributePassword extends AttributeString
+class AttributePassword extends AttributeString implements iAttributeNoGroupBy
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -3639,7 +3871,7 @@ class AttributePassword extends AttributeString
  *
  * @package     iTopORM
  */
-class AttributeEncryptedString extends AttributeString
+class AttributeEncryptedString extends AttributeString implements iAttributeNoGroupBy
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
@@ -3767,6 +3999,23 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)(\|(.+))?\]\]/U');
  */
 class AttributeText extends AttributeString
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetEditClass()
 	{
 		return ($this->GetFormat() == 'text') ? 'Text' : "HTML";
@@ -3819,7 +4068,7 @@ class AttributeText extends AttributeString
 		return 65535;
 	}
 
-	static public function RenderWikiHtml($sText, $bWikiOnly = false)
+	public static function RenderWikiHtml($sText, $bWikiOnly = false)
 	{
 		if (!$bWikiOnly)
 		{
@@ -3874,7 +4123,8 @@ class AttributeText extends AttributeString
 					{
 						// Propose a std link to the object
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "<span class=\"wiki_broken_link\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
+						$sToolTipForHtml = utils::EscapeHtml(Dict::Format('Core:UnknownObjectLabel', $sClass, $sName));
+						$sReplacement = "<span class=\"wiki_broken_link ibo-is-broken-hyperlink\" data-tooltip-content=\"$sToolTipForHtml\">$sClassLabel:$sName" . (!empty($sLabel) ? " ($sLabel)" : "") . "</span>";
 						$sText = str_replace($aMatches[0], $sReplacement, $sText);
 						// Later: propose a link to create a new object
 						// Anyhow... there is no easy way to suggest default values based on the given FRIENDLY name
@@ -3909,14 +4159,15 @@ class AttributeText extends AttributeString
 		{
 			$sValue = parent::GetAsHTML($sValue, $oHostObject, $bLocalize);
 			$sValue = self::RenderWikiHtml($sValue);
+			$sValue = nl2br($sValue);
 
-			return "<div $sStyle>".str_replace("\n", "<br>\n", $sValue).'</div>';
+			return "<div $sStyle>$sValue</div>";
 		}
 		else
 		{
 			$sValue = self::RenderWikiHtml($sValue, true /* wiki only */);
 
-			return "<div class=\"HTML\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
+			return "<div class=\"HTML ibo-is-html-content\" $sStyle>".InlineImage::FixUrls($sValue).'</div>';
 		}
 
 	}
@@ -4023,7 +4274,7 @@ class AttributeText extends AttributeString
 		return $this->GetOptional('height', '');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\TextAreaField';
 	}
@@ -4156,6 +4407,23 @@ class AttributeText extends AttributeString
  */
 class AttributeLongText extends AttributeText
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "LONGTEXT".CMDBSource::GetSqlStringColumnDefinition();
@@ -4165,7 +4433,7 @@ class AttributeLongText extends AttributeText
 	{
 		// Is there a way to know the current limitation for mysql?
 		// See mysql_field_len()
-		return 65535 * 1024; // Limited... still 64 Mb!
+		return 65535 * 1024; // Limited... still 64 MB!
 	}
 }
 
@@ -4177,6 +4445,23 @@ class AttributeLongText extends AttributeText
 class AttributeCaseLog extends AttributeLongText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 
 	public function GetNullValue()
 	{
@@ -4549,7 +4834,7 @@ class AttributeCaseLog extends AttributeLongText
 		return $this->GetOptional('format', 'html'); // default format for case logs is now HTML
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\CaseLogField';
 	}
@@ -4574,6 +4859,23 @@ class AttributeCaseLog extends AttributeLongText
  */
 class AttributeHTML extends AttributeLongText
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
@@ -4609,12 +4911,29 @@ class AttributeHTML extends AttributeLongText
  */
 class AttributeEmailAddress extends AttributeString
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetValidationPattern()
 	{
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('email_validation_pattern').'$');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\EmailField';
 	}
@@ -4639,6 +4958,23 @@ class AttributeEmailAddress extends AttributeString
  */
 class AttributeIPAddress extends AttributeString
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetValidationPattern()
 	{
 		$sNum = '(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
@@ -4660,13 +4996,30 @@ class AttributeIPAddress extends AttributeString
  */
 class AttributePhoneNumber extends AttributeString
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetValidationPattern()
 	{
 		return $this->GetOptional('validation_pattern',
 			'^'.utils::GetConfig()->Get('phone_number_validation_pattern').'$');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\PhoneField';
 	}
@@ -4684,6 +5037,7 @@ class AttributePhoneNumber extends AttributeString
 
 		return '<a class="tel" href="'.$sUrl.'"><span class="text_decoration '.$sUrlDecorationClass.'"></span>'.parent::GetAsHTML($sValue).'</a>';
 	}
+
 }
 
 /**
@@ -4694,6 +5048,23 @@ class AttributePhoneNumber extends AttributeString
 class AttributeOQL extends AttributeText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 
 	public function GetEditClass()
 	{
@@ -4709,6 +5080,23 @@ class AttributeOQL extends AttributeText
 class AttributeTemplateString extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 }
 
 /**
@@ -4719,6 +5107,23 @@ class AttributeTemplateString extends AttributeString
 class AttributeTemplateText extends AttributeText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 }
 
 /**
@@ -4729,6 +5134,23 @@ class AttributeTemplateText extends AttributeText
 class AttributeTemplateHTML extends AttributeText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
@@ -4768,10 +5190,27 @@ class AttributeEnum extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
-		//return array_merge(parent::ListExpectedParams(), array());
+		//return array_merge(parent::ListExpectedParams(), array('styled_values'));
 	}
 
 	public function GetEditClass()
@@ -4779,7 +5218,42 @@ class AttributeEnum extends AttributeString
 		return "String";
 	}
 
+	/**
+	 * @param string|null $sValue
+	 *
+	 * @return \ormStyle|null
+	 */
+	public function GetStyle(?string $sValue): ?ormStyle
+	{
+		if ($this->IsParam('styled_values')) {
+			$aStyles = $this->Get('styled_values');
+			if (array_key_exists($sValue, $aStyles)) {
+				return $aStyles[$sValue];
+			}
+		}
+
+		if ($this->IsParam('default_style')) {
+			return $this->Get('default_style');
+		}
+
+		return null;
+	}
+
 	protected function GetSQLCol($bFullSpec = false)
+	{
+		// Get the definition of the column, including the actual values present in the table
+		return $this->GetSQLColHelper($bFullSpec, true);
+	}
+
+	/**
+	 * A more versatile version of GetSQLCol
+	 * @since 3.0.0
+	 * @param bool $bFullSpec
+	 * @param bool $bIncludeActualValues
+	 * @param string $sSQLTableName The table where to look for the actual values (may be useful for data synchro tables)
+	 * @return string
+	*/
+	protected function GetSQLColHelper($bFullSpec = false, $bIncludeActualValues = false, $sSQLTableName = null)
 	{
 		$oValDef = $this->GetValuesDef();
 		if ($oValDef)
@@ -4790,6 +5264,19 @@ class AttributeEnum extends AttributeString
 		{
 			$aValues = array();
 		}
+
+		// Preserve the values already present in the database to ease migrations
+		if ($bIncludeActualValues)
+		{
+			if ($sSQLTableName == null)
+			{
+				// No SQL table given, use the one of the attribute
+				$sHostClass = $this->GetHostClass();
+				$sSQLTableName = MetaModel::DBGetTable($sHostClass, $this->GetCode());
+			}
+			$aValues = array_unique(array_merge($aValues, $this->GetActualValuesInDB($sSQLTableName)));
+		}
+
 		if (count($aValues) > 0)
 		{
 			// The syntax used here do matters
@@ -4806,6 +5293,48 @@ class AttributeEnum extends AttributeString
 				.CMDBSource::GetSqlStringColumnDefinition()
 				.($bFullSpec ? " DEFAULT ''" : ""); // ENUM() is not an allowed syntax!
 		}
+	}
+
+	/**
+	 * @since 3.0.0
+	 * {@inheritDoc}
+	 * @see AttributeDefinition::GetImportColumns()
+	 */
+	public function GetImportColumns()
+	{
+		// Note: this is used by the Data Synchro to build the "data" table
+		// Right now the function is not passed the "target" SQL table, but if we improve this in the future
+		// we may call $this->GetSQLColHelper(true, true, $sDBTable); to take into account the actual 'enum' values
+		// in this table
+		return array($this->GetCode() => $this->GetSQLColHelper(false, false));
+	}
+
+	/**
+	 * Get the list of the actual 'enum' values present in the database
+	 * @since 3.0.0
+	 * @return string[]
+	 */
+	protected function GetActualValuesInDB(string $sDBTable)
+	{
+		$aValues = array();
+		try
+		{
+			$sSQL = "SELECT DISTINCT `".$this->GetSQLExpr()."` AS value FROM `$sDBTable`;";
+			$aValuesInDB = CMDBSource::QueryToArray($sSQL);
+			foreach($aValuesInDB as $aRow)
+			{
+				if ($aRow['value'] !== null)
+				{
+					$aValues[] = $aRow['value'];
+				}
+			}
+		}
+		catch(MySQLException $e)
+		{
+			// Never mind, maybe the table does not exist yet (new installation from scratch)
+			// It seems more efficient to try and ignore errors than to test if the table & column really exists
+		}
+		return CMDBSource::Quote($aValues);
 	}
 
 	protected function GetSQLColSpec()
@@ -4914,12 +5443,15 @@ class AttributeEnum extends AttributeString
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if ($bLocalize)
-		{
+		if ($bLocalize) {
 			$sLabel = $this->GetValueLabel($sValue);
-			$sDescription = $this->GetValueDescription($sValue);
+			// $sDescription = $this->GetValueDescription($sValue);
+			$oStyle = $this->GetStyle($sValue);
 			// later, we could imagine a detailed description in the title
-			$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			// $sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			$oBadge = FieldBadgeUIBlockFactory::MakeForField($sLabel, $oStyle);
+			$oRenderer = new BlockRenderer($oBadge);
+			$sRes = $oRenderer->RenderHtml();
 		}
 		else
 		{
@@ -4969,7 +5501,7 @@ class AttributeEnum extends AttributeString
 		return $sRes;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectField';
 	}
@@ -5105,7 +5637,24 @@ class AttributeEnum extends AttributeString
  */
 class AttributeMetaEnum extends AttributeEnum
 {
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array('allowed_values', 'sql', 'default_value', 'mapping');
 	}
@@ -5168,7 +5717,7 @@ class AttributeMetaEnum extends AttributeEnum
 		$aLocalizedValues = array();
 		foreach($aRawValues as $sKey => $sValue)
 		{
-			$aLocalizedValues[$sKey] = Str::pure2html($this->GetValueLabel($sKey));
+			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
 		}
 
 		return $aLocalizedValues;
@@ -5245,13 +5794,30 @@ class AttributeDateTime extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
 
-	static $oFormat = null;
+	public static $oFormat = null;
+
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 
 	/**
 	 *
 	 * @return DateTimeFormat
 	 */
-	static public function GetFormat()
+	public static function GetFormat()
 	{
 		if (self::$oFormat == null)
 		{
@@ -5283,7 +5849,7 @@ class AttributeDateTime extends AttributeDBField
 	 *
 	 * @return string
 	 */
-	static public function GetInternalFormat()
+	public static function GetInternalFormat()
 	{
 		return 'Y-m-d H:i:s';
 	}
@@ -5293,17 +5859,17 @@ class AttributeDateTime extends AttributeDBField
 	 *
 	 * @return string
 	 */
-	static public function GetSQLFormat()
+	public static function GetSQLFormat()
 	{
 		return 'Y-m-d H:i:s';
 	}
 
-	static public function SetFormat(DateTimeFormat $oDateTimeFormat)
+	public static function SetFormat(DateTimeFormat $oDateTimeFormat)
 	{
 		self::$oFormat = $oDateTimeFormat;
 	}
 
-	static public function GetSQLTimeFormat()
+	public static function GetSQLTimeFormat()
 	{
 		return 'H:i:s';
 	}
@@ -5334,7 +5900,7 @@ class AttributeDateTime extends AttributeDBField
 		return $sSearchString;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\DateTimeField';
 	}
@@ -5398,7 +5964,7 @@ class AttributeDateTime extends AttributeDBField
 		}
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -5429,7 +5995,7 @@ class AttributeDateTime extends AttributeDBField
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'VARCHAR(19)';
+		$aColumns[$this->GetCode()] = 'VARCHAR(19)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -5698,6 +6264,23 @@ class AttributeDateTime extends AttributeDBField
  */
 class AttributeDuration extends AttributeInteger
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetEditClass()
 	{
 		return "Duration";
@@ -5793,7 +6376,7 @@ class AttributeDuration extends AttributeInteger
 		return array('days' => $days, 'hours' => $hours, 'minutes' => $minutes, 'seconds' => $seconds);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\DurationField';
 	}
@@ -5826,9 +6409,26 @@ class AttributeDate extends AttributeDateTime
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE;
 
-	static $oDateFormat = null;
+	public static $oDateFormat = null;
 
-	static public function GetFormat()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function GetFormat()
 	{
 		if (self::$oDateFormat == null)
 		{
@@ -5838,7 +6438,7 @@ class AttributeDate extends AttributeDateTime
 		return self::$oDateFormat;
 	}
 
-	static public function SetFormat(DateTimeFormat $oDateFormat)
+	public static function SetFormat(DateTimeFormat $oDateFormat)
 	{
 		self::$oDateFormat = $oDateFormat;
 	}
@@ -5848,7 +6448,7 @@ class AttributeDate extends AttributeDateTime
 	 *
 	 * @return string
 	 */
-	static public function GetInternalFormat()
+	public static function GetInternalFormat()
 	{
 		return 'Y-m-d';
 	}
@@ -5858,12 +6458,12 @@ class AttributeDate extends AttributeDateTime
 	 *
 	 * @return string
 	 */
-	static public function GetSQLFormat()
+	public static function GetSQLFormat()
 	{
 		return 'Y-m-d';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
 		//return array_merge(parent::ListExpectedParams(), array());
@@ -5883,7 +6483,7 @@ class AttributeDate extends AttributeDateTime
 	{
 		// Allow an empty string to be a valid value (synonym for "reset")
 		$aColumns = array();
-		$aColumns[$this->GetCode()] = 'VARCHAR(10)';
+		$aColumns[$this->GetCode()] = 'VARCHAR(10)'.CMDBSource::GetSqlStringColumnDefinition();
 
 		return $aColumns;
 	}
@@ -5912,6 +6512,23 @@ class AttributeDate extends AttributeDateTime
  */
 class AttributeDeadline extends AttributeDateTime
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$sResult = self::FormatDeadline($value);
@@ -5992,6 +6609,22 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
 
 	/**
 	 * Return the search widget type corresponding to this attribute
@@ -6017,7 +6650,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return self::SEARCH_WIDGET_TYPE_RAW;
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("targetclass", "is_null_allowed", "on_target_delete"));
 	}
@@ -6123,6 +6756,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 	}
 
+	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	{
+		//$this->GetValuesDef();
+		$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
+		return $oValSetDef->GetValuesForAutocomplete($aArgs, $sContains);
+	}
+
+
 	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
@@ -6179,6 +6820,15 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $this->GetOptional('min_autocomplete_chars', MetaModel::GetConfig()->Get('min_autocomplete_chars'));
 	}
 
+	/**
+	 * @return int
+	 * @since 3.0.0
+	 */
+	public function GetMaxAutoCompleteResults(): int
+	{
+		return MetaModel::GetConfig()->Get('max_autocomplete_results');
+	}
+
 	public function AllowTargetCreation()
 	{
 		return $this->GetOptional('allow_target_creation', MetaModel::GetConfig()->Get('allow_target_creation'));
@@ -6216,15 +6866,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		return $oRet;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SelectObjectField';
 	}
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
-		if ($oFormField === null)
-		{
+		if ($oFormField === null) {
 			// Later : We should check $this->Get('display_style') and create a Radio / Select / ... regarding its value
 			$sFormFieldClass = static::GetFormFieldClass();
 			$oFormField = new $sFormFieldClass($this->GetCode());
@@ -6233,11 +6882,11 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		// Setting params
 		$oFormField->SetMaximumComboLength($this->GetMaximumComboLength());
 		$oFormField->SetMinAutoCompleteChars($this->GetMinAutoCompleteChars());
+		$oFormField->SetMaxAutoCompleteResults($this->GetMaxAutoCompleteResults());
 		$oFormField->SetHierarchical(MetaModel::IsHierarchicalClass($this->GetTargetClass()));
 		// Setting choices regarding the field dependencies
 		$aFieldDependencies = $this->GetPrerequisiteAttributes();
-		if (!empty($aFieldDependencies))
-		{
+		if (!empty($aFieldDependencies)) {
 			$oTmpAttDef = $this;
 			$oTmpField = $oFormField;
 			$oFormField->SetOnFinalizeCallback(function () use ($oTmpField, $oTmpAttDef, $oObject) {
@@ -6264,7 +6913,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		// If ExtKey is mandatory, we add a validator to ensure that the value 0 is not selected
 		if ($oObject->GetAttributeFlags($this->GetCode()) & OPT_ATT_MANDATORY)
 		{
-			$oFormField->AddValidator(new \Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator());
+			$oFormField->AddValidator(new NotEmptyExtKeyValidator());
 		}
 
 		parent::MakeFormField($oObject, $oFormField);
@@ -6274,8 +6923,7 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
-		if (!is_null($oHostObject))
-		{
+		if (!is_null($oHostObject)) {
 			return $oHostObject->GetAsHTML($this->GetCode(), $oHostObject);
 		}
 
@@ -6292,7 +6940,24 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	protected $m_sTargetClass;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		$aParams = parent::ListExpectedParams();
 		$idx = array_search('targetclass', $aParams);
@@ -6325,7 +6990,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		parent::SetHostClass($sHostClass);
 	}
 
-	static public function IsHierarchicalKey()
+	public static function IsHierarchicalKey()
 	{
 		return true;
 	}
@@ -6398,7 +7063,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		if ($oFilter)
 		{
 			$oValSetDef = $this->GetValuesDef();
-			$oValSetDef->AddCondition($oFilter);
+			$oValSetDef->SetCondition($oFilter);
 
 			return $oValSetDef->GetValues($aArgs, $sContains);
 		}
@@ -6414,7 +7079,7 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 		$oFilter = $this->GetHierachicalFilter($aArgs, $sContains, $iAdditionalValue);
 		if ($oFilter)
 		{
-			$oValSetDef->AddCondition($oFilter);
+			$oValSetDef->SetCondition($oFilter);
 		}
 		$oSet = $oValSetDef->ToObjectSet($aArgs, $sContains, $iAdditionalValue);
 
@@ -6469,6 +7134,23 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 class AttributeExternalField extends AttributeDefinition
 {
 	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	/**
 	 * Return the search widget type corresponding to this attribute
 	 *
 	 * @return string
@@ -6499,8 +7181,16 @@ class AttributeExternalField extends AttributeDefinition
 		return self::SEARCH_WIDGET_TYPE_RAW;
 	}
 
+	function IsSearchable()
+	{
+		if ($this->IsFriendlyName())
+		{
+			return true;
+		}
+		return parent::IsSearchable();
+	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("extkey_attcode", "target_attcode"));
 	}
@@ -6577,7 +7267,7 @@ class AttributeExternalField extends AttributeDefinition
 			return $sLabel;
 		}
 
-		if ($this->IsFriendlyName())
+		if ($this->IsFriendlyName() && ($this->Get("target_attcode") === "friendlyname"))
 		{
 			// This will be used even if we are pointing to a friendlyname in a distance > 1
 			// For example we can link to a magic friendlyname (like org_id_friendlyname)
@@ -6685,7 +7375,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $this->GetKeyAttDef($iType)->GetTargetClass();
 	}
 
-	static public function IsExternalField()
+	public static function IsExternalField()
 	{
 		return true;
 	}
@@ -6789,7 +7479,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->IsNullAllowed();
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -6884,7 +7574,7 @@ class AttributeExternalField extends AttributeDefinition
 		return $oExtAttDef->GetAsCSV($value, $sSeparator, $sTestQualifier, null, $bLocalize, $bConvertToPlainText);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
 	}
@@ -6925,6 +7615,12 @@ class AttributeExternalField extends AttributeDefinition
 			}
 		}
 		parent::MakeFormField($oObject, $oFormField);
+		if ($oFormField instanceof TextAreaField) {
+			if (method_exists($oRemoteAttDef, 'GetFormat')) {
+				/** @var \Combodo\iTop\Form\Field\TextAreaField $oFormField */
+				$oFormField->SetFormat($oRemoteAttDef->GetFormat());
+			}
+		}
 
 		// Manually setting for remote ExternalKey, otherwise, the id would be displayed.
 		if ($oRemoteAttDef instanceof AttributeExternalKey)
@@ -6942,6 +7638,16 @@ class AttributeExternalField extends AttributeDefinition
 	{
 		return false;
 	}
+
+	public function GetFormat()
+	{
+		$oRemoteAttDef = $this->GetExtAttDef();
+		if (method_exists($oRemoteAttDef, 'GetFormat')) {
+			/** @var \Combodo\iTop\Form\Field\TextAreaField $oFormField */
+			return $oRemoteAttDef->GetFormat();
+		}
+		return 'text';
+	}
 }
 
 
@@ -6952,7 +7658,24 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeURL extends AttributeString
 {
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
 		return array_merge(parent::ListExpectedParams(), array("target"));
@@ -6997,7 +7720,7 @@ class AttributeURL extends AttributeString
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('url_validation_pattern').'$');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\UrlField';
 	}
@@ -7033,7 +7756,24 @@ class AttributeBlob extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
@@ -7043,12 +7783,12 @@ class AttributeBlob extends AttributeDefinition
 		return "Document";
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -7159,10 +7899,17 @@ class AttributeBlob extends AttributeDefinition
 		//	 (temporary tables created on disk)
 		//	 We will have to remove the blobs from the list of attributes when doing the select
 		//	 then the use of Get() should finalize the load
-		if ($value instanceOf ormDocument && !$value->IsEmpty())
+		if ($value instanceOf ormDocument)
 		{
 			$aValues = array();
-			$aValues[$this->GetCode().'_data'] = $value->GetData();
+			if (!$value->IsEmpty())
+			{
+				$aValues[$this->GetCode().'_data'] = $value->GetData();
+			}
+			else
+			{
+				$aValues[$this->GetCode().'_data'] = '';
+			}
 			$aValues[$this->GetCode().'_mimetype'] = $value->GetMimeType();
 			$aValues[$this->GetCode().'_filename'] = $value->GetFileName();
 		}
@@ -7314,13 +8061,14 @@ class AttributeBlob extends AttributeDefinition
 		return $sFingerprint;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\BlobField';
 	}
 
 	public function MakeFormField(DBObject $oObject, $oFormField = null)
 	{
+		/** @var $oFormField \Combodo\iTop\Form\Field\BlobField */
 		if ($oFormField === null)
 		{
 			$sFormFieldClass = static::GetFormFieldClass();
@@ -7330,12 +8078,23 @@ class AttributeBlob extends AttributeDefinition
 		// Note: As of today we want this field to always be read-only
 		$oFormField->SetReadOnly(true);
 
-		// Generating urls
-		$value = $oObject->Get($this->GetCode());
-		$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-		$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
-
+		// Calling parent before so current value is set, then proceed
 		parent::MakeFormField($oObject, $oFormField);
+
+		// Setting current value correctly as the default method returns an empty string when there is no file yet.
+		/** @var \ormDocument $value */
+		$value = $oObject->Get($this->GetCode());
+		if(!is_object($value))
+		{
+			$oFormField->SetCurrentValue(new ormDocument());
+		}
+
+		// Generating urls
+		if(is_object($value) && !$value->IsEmpty())
+		{
+			$oFormField->SetDownloadUrl($value->GetDownloadURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+			$oFormField->SetDisplayUrl($value->GetDisplayURL(get_class($oObject), $oObject->GetKey(), $this->GetCode()));
+		}
 
 		return $oFormField;
 	}
@@ -7349,6 +8108,23 @@ class AttributeBlob extends AttributeDefinition
  */
 class AttributeImage extends AttributeBlob
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetEditClass()
 	{
 		return "Image";
@@ -7361,6 +8137,13 @@ class AttributeImage extends AttributeBlob
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$oDoc = parent::MakeRealValue($proposedValue, $oHostObj);
+
+		if (($oDoc instanceof ormDocument)
+			&& (false === $oDoc->IsEmpty())
+			&& ($oDoc->GetMimeType() === 'image/svg+xml')) {
+			$sCleanSvg = HTMLSanitizer::Sanitize($oDoc->GetData(), 'svg_sanitizer');
+			$oDoc = new ormDocument($sCleanSvg, $oDoc->GetMimeType(), $oDoc->GetFileName());
+		}
 
 		// The validation of the MIME Type is done by CheckFormat below
 		return $oDoc;
@@ -7396,24 +8179,27 @@ class AttributeImage extends AttributeBlob
 		$sRet = '';
 		$bIsCustomImage = false;
 
-		$iMaxWidthPx = $this->Get('display_max_width').'px';
-		$iMaxHeightPx = $this->Get('display_max_height').'px';
+		$iMaxWidth = $this->Get('display_max_width');
+		$sMaxWidthPx = $iMaxWidth.'px';
+		$iMaxHeight = $this->Get('display_max_height');
+		$sMaxHeightPx = $iMaxHeight.'px';
 
 		$sDefaultImageUrl = $this->Get('default_image');
 		if ($sDefaultImageUrl !== null) {
-			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+			$sRet = $this->GetHtmlForImageUrl($sDefaultImageUrl, $sMaxWidthPx, $sMaxHeightPx);
 		}
 
 		$sCustomImageUrl = $this->GetAttributeImageFileUrl($value, $oHostObject);
 		if ($sCustomImageUrl !== null) {
 			$bIsCustomImage = true;
-			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $iMaxWidthPx, $iMaxHeightPx);
+			$sRet = $this->GetHtmlForImageUrl($sCustomImageUrl, $sMaxWidthPx, $sMaxHeightPx);
 		}
 
-		$sCssClasses = 'view-image attribute-image';
+		$sCssClasses = 'ibo-input-image--image-view attribute-image';
 		$sCssClasses .= ' '.(($bIsCustomImage) ? 'attribute-image-custom' : 'attribute-image-default');
 
-		return '<div class="'.$sCssClasses.'" style="width: '.$iMaxWidthPx.'; height: '.$iMaxHeightPx.';"><span class="helper-middle"></span>'.$sRet.'</div>';
+		// Important: If you change this, mind updating edit_image.js as well
+		return '<div class="'.$sCssClasses.'" style="max-width: '.$sMaxWidthPx.'; max-height: '.$sMaxHeightPx.'; aspect-ratio: '.$iMaxWidth.' / '.$iMaxHeight.'">'.$sRet.'</div>';
 	}
 
 	/**
@@ -7458,7 +8244,7 @@ class AttributeImage extends AttributeBlob
 		return $value->GetDownloadURL(get_class($oHostObject), $oHostObject->GetKey(), $this->GetCode());
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\ImageField';
 	}
@@ -7499,7 +8285,24 @@ class AttributeStopWatch extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		// The list of thresholds must be an array of iPercent => array of 'option' => value
 		return array_merge(parent::ListExpectedParams(),
@@ -7511,12 +8314,12 @@ class AttributeStopWatch extends AttributeDefinition
 		return "StopWatch";
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -8025,8 +8828,6 @@ class AttributeStopWatch extends AttributeDefinition
 									(int)$sValue) : null;
 								break;
 							case 'passed':
-								$sHtml = $this->GetBooleanLabel((int)$sValue);
-								break;
 							case 'triggered':
 								$sHtml = $this->GetBooleanLabel((int)$sValue);
 								break;
@@ -8246,14 +9047,12 @@ class AttributeStopWatch extends AttributeDefinition
 						switch ($sThresholdCode)
 						{
 							case 'deadline':
-								break;
-
-							case 'passed':
-							case 'triggered':
-								$sRet = $this->GetBooleanLabel($value);
-								break;
-
 							case 'overrun':
+								break;
+
+							case 'triggered':
+							case 'passed':
+								$sRet = $this->GetBooleanLabel($value);
 								break;
 						}
 					}
@@ -8338,7 +9137,24 @@ class AttributeStopWatch extends AttributeDefinition
  */
 class AttributeSubItem extends AttributeDefinition
 {
-    /**
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	/**
      * Return the search widget type corresponding to this attribute
      * the computation is made by AttributeStopWatch::GetSubItemSearchType
      *
@@ -8370,7 +9186,7 @@ class AttributeSubItem extends AttributeDefinition
         return $oParent->IsSubItemNullAllowed($this->Get('item_code'), $bDefaultValue);
     }
 
-    static public function ListExpectedParams()
+    public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('target_attcode', 'item_code'));
 	}
@@ -8401,12 +9217,12 @@ class AttributeSubItem extends AttributeDefinition
 		return null;
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -8423,7 +9239,7 @@ class AttributeSubItem extends AttributeDefinition
 
 //	public function IsNullAllowed() {return false;}
 
-	static public function LoadInObject()
+	public static function LoadInObject()
 	{
 		return false;
 	} // if this verb returns false, then GetValues must be implemented
@@ -8554,7 +9370,7 @@ class AttributeSubItem extends AttributeDefinition
 		return false;
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\LabelField';
 	}
@@ -8581,11 +9397,28 @@ class AttributeSubItem extends AttributeDefinition
 /**
  * One way encrypted (hashed) password
  */
-class AttributeOneWayPassword extends AttributeDefinition
+class AttributeOneWayPassword extends AttributeDefinition implements iAttributeNoGroupBy
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
 	}
@@ -8595,12 +9428,12 @@ class AttributeOneWayPassword extends AttributeDefinition
 		return "One Way Password";
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -8784,6 +9617,23 @@ class AttributeTable extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetEditClass()
 	{
 		return "Table";
@@ -8839,6 +9689,14 @@ class AttributeTable extends AttributeDBField
 			$value = @unserialize($aCols[$sPrefix.'']);
 			if ($value === false)
 			{
+				$value = @json_decode($aCols[$sPrefix.''], true);
+				if (is_null($value))
+				{
+					$value = false;
+				}
+			}
+			if ($value === false)
+			{
 				$value = $this->MakeRealValue($aCols[$sPrefix.''], null);
 			}
 		} catch (Exception $e)
@@ -8852,7 +9710,15 @@ class AttributeTable extends AttributeDBField
 	public function GetSQLValues($value)
 	{
 		$aValues = array();
-		$aValues[$this->Get("sql")] = serialize($value);
+		try
+		{
+			$sSerializedValue = serialize($value);
+		}
+		catch (Exception $e)
+		{
+			$sSerializedValue = json_encode($value);
+		}
+		$aValues[$this->Get("sql")] = $sSerializedValue;
 
 		return $aValues;
 	}
@@ -8922,6 +9788,23 @@ class AttributeTable extends AttributeDBField
 // The PHP value is a hash array, it is stored as a TEXT column
 class AttributePropertySet extends AttributeTable
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetEditClass()
 	{
 		return "PropertySet";
@@ -8958,7 +9841,7 @@ class AttributePropertySet extends AttributeTable
 				$sValue = '*****';
 			}
 			$sRes .= "<TR>";
-			$sCell = str_replace("\n", "<br>\n", Str::pure2html((string)$sValue));
+			$sCell = str_replace("\n", "<br>\n", Str::pure2html(@(string)$sValue));
 			$sRes .= "<TD class=\"label\">$sProperty</TD><TD>$sCell</TD>";
 			$sRes .= "</TR>";
 		}
@@ -9030,20 +9913,30 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 	const EDITABLE_INPUT_ID_SUFFIX = '-setwidget-values'; // used client side, see js/jquery.itop-set-widget.js
+	protected $bDisplayLink; // Display search link in readonly mode
 
 	public function __construct($sCode, array $aParams)
 	{
 		parent::__construct($sCode, $aParams);
 		$this->aCSSClasses[] = 'attribute-set';
+		$this->bDisplayLink = true;
 	}
 
-	static public function ListExpectedParams()
+	/**
+	 * @param bool $bDisplayLink
+	 */
+	public function setDisplayLink($bDisplayLink)
+	{
+		$this->bDisplayLink = $bDisplayLink;
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('is_null_allowed', 'max_items'));
 	}
 
 	/**
-	 * Allowed values are mandatory for this attribute to be modified
+	 * Allowed different values for the set values are mandatory for this attribute to be modified
 	 *
 	 * @param array $aArgs
 	 * @param string $sContains
@@ -9052,9 +9945,9 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 */
-	public function GetAllowedValues($aArgs = array(), $sContains = '')
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
 	{
-		return parent::GetAllowedValues($aArgs, $sContains);
+		return $this->GetAllowedValues($aArgs, $sContains);
 	}
 
 	/**
@@ -9071,7 +9964,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		$aJson = array();
 
 		// possible_values
-		$aAllowedValues = $this->GetAllowedValues($aArgs);
+		$aAllowedValues = $this->GetPossibleValues($aArgs);
 		$aSetKeyValData = array();
 		foreach($aAllowedValues as $sCode => $sLabel)
 		{
@@ -9174,15 +10067,24 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return 255;
 	}
 
-	public function FromStringToArray($proposedValue)
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
 		$aValues = array();
 		if (!empty($proposedValue))
 		{
-			foreach(explode(',', $proposedValue) as $sCode)
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			// convert also , separated strings
+			if ($sSepItem !== $sDefaultSepItem)
+			{
+				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
+			}
+			foreach(explode($sSepItem, $proposedValue) as $sCode)
 			{
 				$sValue = trim($sCode);
-				$aValues[] = $sValue;
+				if ($sValue !== '')
+				{
+					$aValues[] = $sValue;
+				}
 			}
 		}
 		return $aValues;
@@ -9203,20 +10105,6 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * @param $aCols
-	 * @param string $sPrefix
-	 *
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	public function FromImportToValue($aCols, $sPrefix = '')
-	{
-		$sValue = $aCols["$sPrefix"];
-
-		return $this->MakeRealValue($sValue, null);
-	}
-
-	/**
 	 * force an allowed value (type conversion and possibly forces a value as mySQL would do upon writing!
 	 *
 	 * @param $proposedValue
@@ -9231,10 +10119,18 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
 	{
 		$oSet = new ormSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$aAllowedValues = $this->GetPossibleValues();
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim("$proposedValue");
 			$aValues = $this->FromStringToArray($proposedValue);
+			foreach ($aValues as $i => $sValue)
+			{
+				if (!isset($aAllowedValues[$sValue]))
+				{
+					unset($aValues[$i]);
+				}
+			}
 			$oSet->SetValues($aValues);
 		}
 		elseif ($proposedValue instanceof ormSet)
@@ -9318,7 +10214,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	}
 
 	/**
-	 * @param $value
+	 * @param string $value
 	 *
 	 * @return string
 	 */
@@ -9334,7 +10230,16 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		}
 		if (is_array($value))
 		{
-			return implode(', ', $value);
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			$sRes = implode($sSepItem, $value);
+			if (!empty($sRes))
+			{
+				$value = "{$sSepItem}{$sRes}{$sSepItem}";
+			}
+			else
+			{
+				$value = '';
+			}
 		}
 		return $value;
 	}
@@ -9352,7 +10257,8 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 	{
 		if ($value instanceof ormSet)
 		{
-			$value = $value->GetValues();
+			$aValues = $value->GetValues();
+			return $this->GenerateViewHtmlForValues($aValues);
 		}
 		if (is_array($value))
 		{
@@ -9361,16 +10267,364 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 		return $value;
 	}
 
+	/**
+	 * HTML representation of a list of values (read-only)
+	 * accept a list of strings
+	 *
+	 * @param array $aValues
+	 * @param string $sCssClass
+	 * @param bool $bWithLink if true will generate a link, otherwise just a "a" tag without href
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GenerateViewHtmlForValues($aValues, $sCssClass = '', $bWithLink = true)
+	{
+		if (empty($aValues)) {return '';}
+		$sHtml = '<span class="'.$sCssClass.' '.implode(' ', $this->aCSSClasses).'">';
+		foreach($aValues as $sValue) {
+			$sClass = MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode());
+			$sAttCode = $this->GetCode();
+			$sLabel = utils::EscapeHtml($this->GetValueLabel($sValue));
+			$sDescription = utils::EscapeHtml($this->GetValueDescription($sValue));
+			$oFilter = DBSearch::FromOQL("SELECT $sClass WHERE $sAttCode MATCHES '$sValue'");
+			$oAppContext = new ApplicationContext();
+			$sContext = $oAppContext->GetForLink();
+			$sUIPage = cmdbAbstractObject::ComputeStandardUIPage($oFilter->GetClass());
+			$sFilter = rawurlencode($oFilter->serialize());
+			$sLink = '';
+			if ($bWithLink && $this->bDisplayLink) {
+				$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
+				$sLink = ' href="'.$sUrl.'"';
+			}
+
+			// Prepare tooltip
+			if (empty($sDescription)) {
+				$sTooltipContent = $sLabel;
+				$sTooltipHtmlEnabled = 'false';
+			} else {
+				$sTooltipContent = <<<HTML
+<h4>$sLabel</h4>
+<div>$sDescription</div>
+HTML;
+				$sTooltipHtmlEnabled = 'true';
+			}
+			$sTooltipContent = utils::EscapeHtml($sTooltipContent);
+
+			$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sValue.'" data-code="'.$sValue.'" data-label="'.$sLabel.'" data-description="'.$sDescription.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabel.'</a>';
+		}
+		$sHtml .= '</span>';
+
+		return $sHtml;
+	}
+
+	/**
+	 * @param $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return mixed|string
+	 */
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		if (is_object($value) && ($value instanceof ormSet))
+		{
+			if ($bLocalize)
+			{
+				$aValues = $value->GetLabels();
+			}
+			else
+			{
+				$aValues = $value->GetValues();
+			}
+			$sRes = implode($sSepItem, $aValues);
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
+	}
+
 	public function GetMaxItems()
 	{
 		return $this->Get('max_items');
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SetField';
 	}
 }
+
+/**
+ * @since 2.7.0 N°985
+ */
+class AttributeEnumSet extends AttributeSet
+{
+	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_TAG_SET;
+	public static function ListExpectedParams()
+	{
+		return array_merge(parent::ListExpectedParams(), array('possible_values', 'is_null_allowed', 'max_items'));
+	}
+
+	public function GetMaxSize()
+	{
+		$aRawValues = $this->GetRawPossibleValues();
+		$iMaxItems = $this->GetMaxItems();
+		$aLengths = array();
+		foreach (array_keys($aRawValues) as $sKey)
+		{
+			$aLengths[] = strlen($sKey);
+		}
+		rsort($aLengths, SORT_NUMERIC);
+		$iMaxSize = 2;
+		for ($i = 0; $i < min($iMaxItems, count($aLengths)); $i++)
+		{
+			$iMaxSize += $aLengths[$i] + 1;
+		}
+		return max(255, $iMaxSize);
+	}
+
+	private function GetRawPossibleValues($aArgs = array(), $sContains = '')
+	{
+		/** @var ValueSetEnumPadded $oValSetDef */
+		$oValSetDef = $this->Get('possible_values');
+		if (!$oValSetDef)
+		{
+			return array();
+		}
+
+		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	public function GetPossibleValues($aArgs = array(), $sContains = '')
+	{
+		$aRawValues = $this->GetRawPossibleValues($aArgs, $sContains);
+		$aLocalizedValues = array();
+		foreach($aRawValues as $sKey => $sValue)
+		{
+			$aLocalizedValues[$sKey] = $this->GetValueLabel($sKey);
+		}
+
+		return $aLocalizedValues;
+	}
+
+	public function GetValueLabel($sValue)
+	{
+		if ($sValue instanceof ormSet)
+		{
+			$sValue = implode(', ', $sValue->GetValues());
+		}
+
+		$aValues = $this->GetRawPossibleValues();
+		if (is_array($aValues) && is_string($sValue) && isset($aValues[$sValue]))
+		{
+			$sValue = $aValues[$sValue];
+		}
+
+		if (is_null($sValue))
+		{
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
+			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
+				Dict::S('Enum:Undefined'));
+		}
+		else
+		{
+			$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, true /*user lang*/);
+			if (is_null($sLabel))
+			{
+				// Browse the hierarchy again, accepting default (english) translations
+				$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sValue, null, false);
+				if (is_null($sLabel))
+				{
+					$sDefault = trim(str_replace('_', ' ', $sValue));
+					// Browse the hierarchy again, accepting default (english) translations
+					$sLabel = $this->SearchLabel('/Attribute:'.$this->m_sCode.'/Value:'.$sDefault, $sDefault, false);
+				}
+			}
+		}
+
+		return $sLabel;
+	}
+
+	public function GetValueDescription($sValue)
+	{
+		if (is_null($sValue))
+		{
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				Dict::S('Enum:Undefined'));
+		}
+		else
+		{
+			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
+				'', true /* user language only */);
+			if (strlen($sDescription) == 0)
+			{
+				$sParentClass = MetaModel::GetParentClass($this->m_sHostClass);
+				if ($sParentClass)
+				{
+					if (MetaModel::IsValidAttCode($sParentClass, $this->m_sCode))
+					{
+						$oAttDef = MetaModel::GetAttributeDef($sParentClass, $this->m_sCode);
+						$sDescription = $oAttDef->GetValueDescription($sValue);
+					}
+				}
+			}
+		}
+
+		return $sDescription;
+	}
+
+	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
+	{
+		if ($bLocalize)
+		{
+			if ($value instanceof ormSet)
+			{
+				$sRes = $this->GenerateViewHtmlForValues($value->GetValues());
+			}
+			else
+			{
+				$sLabel = $this->GetValueLabel($value);
+				$sDescription = $this->GetValueDescription($value);
+				$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			}
+		}
+		else
+		{
+			$sRes = parent::GetAsHtml($value, $oHostObject, $bLocalize);
+		}
+
+		return $sRes;
+	}
+
+
+	/**
+	 * @param ormSet $value
+	 * @param string $sSeparator
+	 * @param string $sTextQualifier
+	 * @param \DBObject $oHostObject
+	 * @param bool $bLocalize
+	 * @param bool $bConvertToPlainText
+	 *
+	 * @return mixed|string
+	 * @throws \Exception
+	 */
+	public function GetAsCSV($value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true, $bConvertToPlainText = false)
+	{
+		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+		if (is_object($value) && ($value instanceof ormSet))
+		{
+			$aValues = $value->GetValues();
+			if ($bLocalize)
+			{
+				$aLocalizedValues = array();
+				foreach($aValues as $sValue)
+				{
+					$aLocalizedValues[] = $this->GetValueLabel($sValue);
+				}
+				$aValues = $aLocalizedValues;
+			}
+			$sRes = implode($sSepItem, $aValues);
+		}
+		else
+		{
+			$sRes = '';
+		}
+
+		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
+	}
+
+	/**
+	 * Get the value from a given string (plain text, CSV import)
+	 *
+	 * @param string $sProposedValue
+	 * @param bool $bLocalizedValue
+	 * @param string $sSepItem
+	 * @param string $sSepAttribute
+	 * @param string $sSepValue
+	 * @param string $sAttributeQualifier
+	 *
+	 * @return mixed null if no match could be found
+	 * @throws \Exception
+	 */
+	public function MakeValueFromString($sProposedValue, $bLocalizedValue = false, $sSepItem = null, $sSepAttribute = null, $sSepValue = null, $sAttributeQualifier = null)
+	{
+		if ($bLocalizedValue)
+		{
+			// Lookup for the values matching the input
+			//
+			$aValues = $this->FromStringToArray($sProposedValue);
+			$aFoundValues = array();
+			$aRawValues = $this->GetPossibleValues();
+			foreach ($aValues as $sValue)
+			{
+				$bFound = false;
+				foreach ($aRawValues as $sCode => $sRawValue)
+				{
+					if ($sValue == $sRawValue)
+					{
+						$aFoundValues[] = $sCode;
+						$bFound = true;
+						break;
+					}
+				}
+				if (!$bFound)
+				{
+					// Not found, break the import
+					return null;
+				}
+			}
+
+			return $this->MakeRealValue(implode(',', $aFoundValues), null);
+		}
+		else
+		{
+			return $this->MakeRealValue($sProposedValue, null, false);
+		}
+	}
+
+	/**
+	 * @param string $proposedValue Search string used for MATCHES
+	 *
+	 * @param string $sDefaultSepItem word separator to extract items
+	 *
+	 * @return array of EnumSet codes
+	 * @throws \Exception
+	 */
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
+	{
+		$aValues = array();
+		if (!empty($proposedValue))
+		{
+			$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
+			// convert also other separators
+			if ($sSepItem !== $sDefaultSepItem)
+			{
+				$proposedValue = str_replace($sDefaultSepItem, $sSepItem, $proposedValue);
+			}
+			foreach(explode($sSepItem, $proposedValue) as $sCode)
+			{
+				$sValue = trim($sCode);
+				if (strlen($sValue) > 2)
+				{
+					$sLabel = $this->GetValueLabel($sValue);
+					$aValues[$sLabel] = $sValue;
+				}
+			}
+		}
+		return $aValues;
+	}
+}
+
 
 class AttributeClassAttCodeSet extends AttributeSet
 {
@@ -9384,7 +10638,7 @@ class AttributeClassAttCodeSet extends AttributeSet
 		$this->aCSSClasses[] = 'attribute-class-attcode-set';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('class_field', 'attribute_definition_list', 'attribute_definition_exclusion_list'));
 	}
@@ -9512,7 +10766,6 @@ class AttributeClassAttCodeSet extends AttributeSet
 	 * @return mixed
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @throws \OQLException
 	 * @throws \Exception
 	 */
 	public function MakeRealValue($proposedValue, $oHostObj, $bIgnoreErrors = false)
@@ -9531,8 +10784,9 @@ class AttributeClassAttCodeSet extends AttributeSet
 			if (is_null($aJsonFromWidget))
 			{
 				$proposedValue = trim($proposedValue);
+				$aProposedValues = $this->FromStringToArray($proposedValue);
 				$aValues = array();
-				foreach(explode(',', $proposedValue) as $sValue)
+				foreach($aProposedValues as $sValue)
 				{
 					$sAttCode = trim($sValue);
 					if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -9591,16 +10845,15 @@ class AttributeClassAttCodeSet extends AttributeSet
 						$sAttClass = $sClass;
 
 						// Look for the first class (current or children) that have this attcode
-						foreach(MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass)
-						{
-							if(MetaModel::IsValidAttCode($sChildClass, $sAttCode))
-							{
+						foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+							if (MetaModel::IsValidAttCode($sChildClass, $sAttCode)) {
 								$sAttClass = $sChildClass;
 								break;
 							}
 						}
 
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)".'" data-description="">'.$sAttCode.'</span>';
+						$sLabelForHtmlAttribute = utils::HtmlEntities(MetaModel::GetLabel($sAttClass, $sAttCode)." ($sAttCode)");
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					} catch (Exception $e)
 					{
 						// Ignore bad values
@@ -9624,7 +10877,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		$this->aCSSClasses[] = 'attribute-query-attcode-set';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('query_field'));
 	}
@@ -9739,8 +10992,9 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		if (is_string($proposedValue) && !empty($proposedValue))
 		{
 			$proposedValue = trim($proposedValue);
+			$aProposedValues = $this->FromStringToArray($proposedValue);
 			$aValues = array();
-			foreach(explode(',', $proposedValue) as $sValue)
+			foreach($aProposedValues as $sValue)
 			{
 				$sAttCode = trim($sValue);
 				if (empty($aAllowedAttributes) || isset($aAllowedAttributes[$sAttCode]))
@@ -9784,17 +11038,15 @@ class AttributeQueryAttCodeSet extends AttributeSet
 		}
 		if (is_array($value))
 		{
-			if (!empty($oHostObject) && $bLocalize)
-			{
+			if (!empty($oHostObject) && $bLocalize) {
 				$aArgs['this'] = $oHostObject;
 				$aAllowedAttributes = $this->GetAllowedValues($aArgs);
 
 				$aLocalizedValues = array();
-				foreach($value as $sAttCode)
-				{
-					if (isset($aAllowedAttributes[$sAttCode]))
-					{
-						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$aAllowedAttributes[$sAttCode].'" data-description="">'.$sAttCode.'</span>';
+				foreach ($value as $sAttCode) {
+					if (isset($aAllowedAttributes[$sAttCode])) {
+						$sLabelForHtmlAttribute = utils::HtmlEntities($aAllowedAttributes[$sAttCode]);
+						$aLocalizedValues[] = '<span class="attribute-set-item" data-code="'.$sAttCode.'" data-label="'.$sLabelForHtmlAttribute.'" data-description="" data-tooltip-content="'.$sLabelForHtmlAttribute.'">'.$sAttCode.'</span>';
 					}
 				}
 				$value = $aLocalizedValues;
@@ -9810,7 +11062,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
  * Multi value list of tags
  *
  * @see TagSetFieldData
- * @since 2.6 N°931 tag fields
+ * @since 2.6.0 N°931 tag fields
  */
 class AttributeTagSet extends AttributeSet
 {
@@ -9827,7 +11079,7 @@ class AttributeTagSet extends AttributeSet
 		return 'TagSet';
 	}
 
-	static public function ListExpectedParams()
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array('tag_code_max_len'));
 	}
@@ -9889,7 +11141,7 @@ class AttributeTagSet extends AttributeSet
 		return json_encode($aJson);
 	}
 
-	public function FromStringToArray($proposedValue)
+	public function FromStringToArray($proposedValue, $sDefaultSepItem = ',')
 	{
 		$aValues = array();
 		if (!empty($proposedValue))
@@ -10331,19 +11583,31 @@ class AttributeTagSet extends AttributeSet
 				$sFilter = rawurlencode($oFilter->serialize());
 
 				$sLink = '';
-				if ($bWithLink)
-				{
+				if ($bWithLink && $this->bDisplayLink) {
 					$sUrl = utils::GetAbsoluteUrlAppRoot()."pages/$sUIPage?operation=search&filter=".$sFilter."&{$sContext}";
 					$sLink = ' href="'.$sUrl.'"';
 				}
 
-				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.htmlentities($sTagLabel,
-						ENT_QUOTES, 'UTF-8').'" data-description="'.htmlentities($sTagDescription, ENT_QUOTES,
-						'UTF-8').'">'.htmlentities($sTagLabel, ENT_QUOTES, 'UTF-8').'</a>';
+				$sLabelForHtml = utils::EscapeHtml($sTagLabel);
+				$sDescriptionForHtml = utils::EscapeHtml($sTagDescription);
+				if (empty($sTagDescription)) {
+					$sTooltipContent = $sTagLabel;
+					$sTooltipHtmlEnabled = 'false';
+				} else {
+					$sTagLabelEscaped = utils::EscapeHtml($sTagLabel);
+					$sTooltipContent = <<<HTML
+<h4>$sTagLabelEscaped</h4>
+<div>$sTagDescription</div>
+HTML;
+					$sTooltipHtmlEnabled = 'true';
+				}
+				$sTooltipContent = utils::HtmlEntities($sTooltipContent);
+
+				$sHtml .= '<a'.$sLink.' class="attribute-set-item attribute-set-item-'.$sTagCode.'" data-code="'.$sTagCode.'" data-label="'.$sLabelForHtml.'" data-description="'.$sDescriptionForHtml.'" data-tooltip-content="'.$sTooltipContent.'" data-tooltip-html-enabled="'.$sTooltipHtmlEnabled.'">'.$sLabelForHtml.'</a>';
 			}
 			else
 			{
-				$sHtml .= '<span class="attribute-set-item">'.$oTag.'</span>';
+				$sHtml .= '<span class="attribute-set-item">'.utils::EscapeHtml($oTag).'</span>';
 			}
 		}
 		$sHtml .= '</span>';
@@ -10384,41 +11648,6 @@ class AttributeTagSet extends AttributeSet
 		}
 
 		return $sRes;
-	}
-
-	/**
-	 * @param $value
-	 * @param string $sSeparator
-	 * @param string $sTextQualifier
-	 * @param \DBObject $oHostObject
-	 * @param bool $bLocalize
-	 * @param bool $bConvertToPlainText
-	 *
-	 * @return mixed|string
-	 */
-	public function GetAsCSV(
-		$value, $sSeparator = ',', $sTextQualifier = '"', $oHostObject = null, $bLocalize = true,
-		$bConvertToPlainText = false
-	) {
-		$sSepItem = MetaModel::GetConfig()->Get('tag_set_item_separator');
-		if (is_object($value) && ($value instanceof ormTagSet))
-		{
-			if ($bLocalize)
-			{
-				$aValues = $value->GetLabels();
-			}
-			else
-			{
-				$aValues = $value->GetValues();
-			}
-			$sRes = implode($sSepItem, $aValues);
-		}
-		else
-		{
-			$sRes = '';
-		}
-
-		return "{$sTextQualifier}{$sRes}{$sTextQualifier}";
 	}
 
 	/**
@@ -10530,7 +11759,7 @@ class AttributeTagSet extends AttributeSet
 		return parent::Fingerprint($value);
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\TagSetField';
 	}
@@ -10556,7 +11785,6 @@ class AttributeFriendlyName extends AttributeDefinition
 		$this->m_sValue = $this->Get("default_value");
 	}
 
-
 	public function GetEditClass()
 	{
 		return "";
@@ -10569,10 +11797,19 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return $this->GetOptional("depends_on", array());
+		// Code duplicated with AttributeObsolescenceFlag
+		$aAttributes = $this->GetOptional("depends_on", array());
+		$oExpression = $this->GetOQLExpression();
+		foreach ($oExpression->ListRequiredFields() as $sAttCode) {
+			if (!in_array($sAttCode, $aAttributes)) {
+				$aAttributes[] = $sAttCode;
+			}
+		}
+
+		return $aAttributes;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -10592,7 +11829,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		return array('' => $sPrefix);
 	}
 
-	static public function IsBasedOnOQLExpression()
+	public static function IsBasedOnOQLExpression()
 	{
 		return true;
 	}
@@ -10641,7 +11878,7 @@ class AttributeFriendlyName extends AttributeDefinition
 		return true;
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -10748,7 +11985,24 @@ class AttributeRedundancySettings extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array(
 			'sql',
@@ -11138,7 +12392,7 @@ class AttributeRedundancySettings extends AttributeDBField
 						$sEditValue = $bSelected ? $iCurrentValue : '';
 						$sValue = '<input class="redundancy-min-up-count" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
 						// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
-						$oPage->add_ready_script("\$('[name=\"$sName\"]').click(function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
+						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
 					}
 					else
 					{
@@ -11153,7 +12407,7 @@ class AttributeRedundancySettings extends AttributeDBField
 						$sEditValue = $bSelected ? $iCurrentValue : '';
 						$sValue = '<input class="redundancy-min-up-percent" type="string" size="3" name="'.$sName.'" value="'.$sEditValue.'">';
 						// To fix an issue on Firefox: focus set to the option (because the input is within the label for the option)
-						$oPage->add_ready_script("\$('[name=\"$sName\"]').click(function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
+						$oPage->add_ready_script("\$('[name=\"$sName\"]').on('click', function(){var me=this; setTimeout(function(){\$(me).focus();}, 100);});");
 					}
 					else
 					{
@@ -11221,7 +12475,24 @@ class AttributeCustomFields extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	static public function ListExpectedParams()
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
+	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("handler_class"));
 	}
@@ -11236,7 +12507,7 @@ class AttributeCustomFields extends AttributeDefinition
 		return true;
 	}
 
-	static public function LoadFromDB()
+	public static function LoadFromDB()
 	{
 		return false;
 	} // See ReadValue...
@@ -11296,10 +12567,12 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function ReadValueFromPostedForm($oHostObject, $sFormPrefix)
 	{
-		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),
-			true);
-
-		return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+		$aRawData = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$this->GetCode()}", '{}', 'raw_data'),	true);
+		if ($aRawData != null) {
+			return new ormCustomFieldsValue($oHostObject, $this->GetCode(), $aRawData);
+		} else{
+			return null;
+		}
 	}
 
 	public function MakeRealValue($proposedValue, $oHostObject)
@@ -11325,7 +12598,7 @@ class AttributeCustomFields extends AttributeDefinition
 		throw new Exception('Unexpected type for the value of a custom fields attribute: '.gettype($proposedValue));
 	}
 
-	static public function GetFormFieldClass()
+	public static function GetFormFieldClass()
 	{
 		return '\\Combodo\\iTop\\Form\\Field\\SubFormField';
 	}
@@ -11358,17 +12631,16 @@ class AttributeCustomFields extends AttributeDefinition
 	 */
 	public function GetForm(DBObject $oHostObject, $sFormPrefix = null)
 	{
-		try
-		{
+		try {
 			$oValue = $oHostObject->Get($this->GetCode());
 			$oHandler = $this->GetHandler($oValue->GetValues());
 			$sFormId = is_null($sFormPrefix) ? 'cf_'.$this->GetCode() : $sFormPrefix.'_cf_'.$this->GetCode();
 			$oHandler->BuildForm($oHostObject, $sFormId);
 			$oForm = $oHandler->GetForm();
-		} catch (Exception $e)
-		{
-			$oForm = new \Combodo\iTop\Form\Form('');
-			$oField = new \Combodo\iTop\Form\Field\LabelField('');
+		}
+		catch (Exception $e) {
+			$oForm = new Form('');
+			$oField = new LabelField('');
 			$oField->SetLabel('Custom field error: '.$e->getMessage());
 			$oForm->AddField($oField);
 			$oForm->Finalize();
@@ -11667,6 +12939,23 @@ class AttributeArchiveFlag extends AttributeBoolean
 
 class AttributeArchiveDate extends AttributeDate
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetLabel($sDefault = null)
 	{
 		$sDefault = Dict::S('Core:AttributeArchiveDate/Label', $sDefault);
@@ -11705,7 +12994,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		return true;
 	}
 
-	static public function IsBasedOnDBColumns()
+	public static function IsBasedOnDBColumns()
 	{
 		return false;
 	}
@@ -11716,7 +13005,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 	 *
 	 * @return bool
 	 */
-	static public function IsBasedOnOQLExpression()
+	public static function IsBasedOnOQLExpression()
 	{
 		return true;
 	}
@@ -11753,7 +13042,17 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetPrerequisiteAttributes($sClass = null)
 	{
-		return $this->GetOptional("depends_on", array());
+		// Code duplicated with AttributeFriendlyName
+		$aAttributes = $this->GetOptional("depends_on", array());
+		$oExpression = $this->GetOQLExpression();
+		foreach ($oExpression->ListRequiredFields() as $sClass => $sAttCode)
+		{
+			if (!in_array($sAttCode, $aAttributes))
+			{
+				$aAttributes[] = $sAttCode;
+			}
+		}
+		return $aAttributes;
 	}
 
 	public function IsDirectField()
@@ -11761,7 +13060,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 		return true;
 	}
 
-	static public function IsScalar()
+	public static function IsScalar()
 	{
 		return true;
 	}
@@ -11798,6 +13097,23 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 class AttributeObsolescenceDate extends AttributeDate
 {
+	/**
+	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
+	 *
+	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
+	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
+	 *
+	 * @param string $sCode
+	 * @param array $aParams
+	 *
+	 * @throws \Exception
+	 * @noinspection SenselessProxyMethodInspection
+	 */
+	public function __construct($sCode, $aParams)
+	{
+		parent::__construct($sCode, $aParams);
+	}
+
 	public function GetLabel($sDefault = null)
 	{
 		$sDefault = Dict::S('Core:AttributeObsolescenceDate/Label', $sDefault);

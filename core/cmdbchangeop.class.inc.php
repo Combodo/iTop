@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Persistent classes (internal) : cmdbChangeOp and derived
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -31,7 +31,22 @@
  * @package     iTopORM
  */
 
-class CMDBChangeOp extends DBObject
+/**
+ * Interface iCMDBChangeOp
+ *
+ * @since 3.0.0
+ */
+interface iCMDBChangeOp
+{
+	/**
+	 * Describe (as an HTML string) the modifications corresponding to this change
+	 *
+	 * @return string
+	 */
+	public function GetDescription();
+}
+
+class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 {
 	public static function Init()
 	{
@@ -54,6 +69,7 @@ class CMDBChangeOp extends DBObject
 		MetaModel::Init_AddAttribute(new AttributeExternalKey("change", array("allowed_values"=>null, "sql"=>"changeid", "targetclass"=>"CMDBChange", "is_null_allowed"=>false, "on_target_delete"=>DEL_MANUAL, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("date", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"date")));
 		MetaModel::Init_AddAttribute(new AttributeExternalField("userinfo", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"userinfo")));
+		MetaModel::Init_AddAttribute(new AttributeExternalField("user_id", array("allowed_values"=>null, "extkey_attcode"=>"change", "target_attcode"=>"user_id")));
 		MetaModel::Init_AddAttribute(new AttributeString("objclass", array("allowed_values"=>null, "sql"=>"objclass", "default_value"=>"", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeObjectKey("objkey", array("allowed_values"=>null, "class_attcode"=>"objclass", "sql"=>"objkey", "is_null_allowed"=>false, "depends_on"=>array())));
 
@@ -62,7 +78,7 @@ class CMDBChangeOp extends DBObject
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */	 
 	public function GetDescription()
 	{
@@ -83,8 +99,6 @@ class CMDBChangeOp extends DBObject
 	}
 }
 
-
-
 /**
  * Record the creation of an object  
  *
@@ -92,6 +106,9 @@ class CMDBChangeOp extends DBObject
  */
 class CMDBChangeOpCreate extends CMDBChangeOp
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -110,14 +127,13 @@ class CMDBChangeOpCreate extends CMDBChangeOp
 	}
 	
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */	 
 	public function GetDescription()
 	{
 		return Dict::S('Change:ObjectCreated');
 	}
 }
-
 
 /**
  * Record the deletion of an object 
@@ -126,6 +142,9 @@ class CMDBChangeOpCreate extends CMDBChangeOp
  */
 class CMDBChangeOpDelete extends CMDBChangeOp
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -147,15 +166,15 @@ class CMDBChangeOpDelete extends CMDBChangeOp
 		// Last friendly name of the object
 		MetaModel::Init_AddAttribute(new AttributeString("fname", array("allowed_values"=>null, "sql"=>"fname", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
 	}
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		return Dict::S('Change:ObjectDeleted');
 	}
 }
-
 
 /**
  * Record the modification of an attribute (abstract)
@@ -164,6 +183,9 @@ class CMDBChangeOpDelete extends CMDBChangeOp
  */
 class CMDBChangeOpSetAttribute extends CMDBChangeOp
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -194,6 +216,9 @@ class CMDBChangeOpSetAttribute extends CMDBChangeOp
  */
 class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -216,10 +241,10 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		$sResult = '';
@@ -250,7 +275,10 @@ class CMDBChangeOpSetAttributeScalar extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeTagSet extends CMDBChangeOpSetAttribute
 {
-    public static function Init()
+	/**
+	 * @inheritDoc
+	 */
+	public static function Init()
     {
         $aParams = array
         (
@@ -273,10 +301,10 @@ class CMDBChangeOpSetAttributeTagSet extends CMDBChangeOpSetAttribute
         MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
     }
 
-    /**
-     * Describe (as a text string) the modifications corresponding to this change
-     */
-    public function GetDescription()
+	/**
+	 * @inheritDoc
+	 */
+	public function GetDescription()
     {
         $sResult = '';
         $sTargetObjectClass = $this->Get('objclass');
@@ -307,6 +335,9 @@ class CMDBChangeOpSetAttributeTagSet extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -329,10 +360,10 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode', 'oldvalue', 'newvalue')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		$sResult = '';
@@ -363,6 +394,9 @@ class CMDBChangeOpSetAttributeURL extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -384,10 +418,10 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
@@ -402,39 +436,46 @@ class CMDBChangeOpSetAttributeBlob extends CMDBChangeOpSetAttribute
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
+			/** @var \ormDocument $oPrevDoc */
 			$oPrevDoc = $this->Get('prevdata');
-			if ($oPrevDoc->IsEmpty())
-			{
+			if ($oPrevDoc->IsEmpty()) {
 				$sPrevious = '';
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevious);
-			}
-			else
-			{
-				$sDocView = $oPrevDoc->GetAsHtml();
-				$sDocView .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_', $oPrevDoc->GetDisplayLink(get_class($this), $this->GetKey(), 'prevdata')).", \n";
-				$sDocView .= Dict::Format('UI:DownloadDocument_', $oPrevDoc->GetDownloadLink(get_class($this), $this->GetKey(), 'prevdata'))."\n";
-				//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
+			} else {
+				$sFieldAsHtml = $oPrevDoc->GetAsHTML();
+
+				$sDisplayLabel = Dict::S('UI:OpenDocumentInNewWindow_');
+				$sDisplayUrl = $oPrevDoc->GetDisplayURL(get_class($this), $this->GetKey(), 'prevdata');
+
+				$sDownloadLabel = Dict::Format('UI:DownloadDocument_');
+				$sDownloadUrl = $oPrevDoc->GetDownloadURL(get_class($this), $this->GetKey(), 'prevdata');
+
+				$sDocView = <<<HTML
+{$sFieldAsHtml}
+<a href="{$sDisplayUrl}" target="_blank">{$sDisplayLabel}</a> / <a href="{$sDownloadUrl}">{$sDownloadLabel}</a>
+HTML;
 				$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sDocView);
 			}
 		}
 		return $sResult;
 	}
 }
+
 /**
  * Safely record the modification of one way encrypted password
  */
 class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -456,10 +497,10 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
@@ -495,6 +536,9 @@ class CMDBChangeOpSetAttributeOneWayPassword extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -516,10 +560,10 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
@@ -544,7 +588,7 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sPrevString = $this->Get('prevstring');
+			$sPrevString = $this->GetAsHTML('prevstring');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sPrevString);
 		}
 		return $sResult;
@@ -558,6 +602,9 @@ class CMDBChangeOpSetAttributeEncrypted extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -579,10 +626,10 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
@@ -623,6 +670,9 @@ class CMDBChangeOpSetAttributeText extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -644,10 +694,10 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		$sResult = '';
@@ -685,6 +735,9 @@ class CMDBChangeOpSetAttributeLongText extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -705,8 +758,9 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */
 	public function GetDescription()
 	{
@@ -719,18 +773,15 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
 		$oMonoObjectSet = new DBObjectSet($oTargetSearch);
 		if (UserRights::IsActionAllowedOnAttribute($this->Get('objclass'), $this->Get('attcode'), UR_ACTION_READ, $oMonoObjectSet) == UR_ALLOWED_YES)
 		{
-			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode')))
-			{
+			if (MetaModel::IsValidAttCode($this->Get('objclass'), $this->Get('attcode'))) {
 				$oAttDef = MetaModel::GetAttributeDef($this->Get('objclass'), $this->Get('attcode'));
 				$sAttName = $oAttDef->GetLabel();
-			}
-			else
-			{
+			} else {
 				// The attribute was renamed or removed from the object ?
 				$sAttName = $this->Get('attcode');
 			}
-			$sTextView = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$this->Get('prevdata').'</div></div>';
-	
+			$sTextView = $this->Get('prevdata');
+
 			//$sDocView = $oPrevDoc->GetDisplayInline(get_class($this), $this->GetKey(), 'prevdata');
 			$sResult = Dict::Format('Change:AttName_Changed_PreviousValue_OldValue', $sAttName, $sTextView);
 		}
@@ -748,6 +799,9 @@ class CMDBChangeOpSetAttributeHTML extends CMDBChangeOpSetAttributeLongText
  */
 class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -769,10 +823,10 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 		MetaModel::Init_SetZListItems('details', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('date', 'userinfo', 'attcode')); // Attributes to be displayed for a list
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		// Temporary, until we change the options of GetDescription() -needs a more global revision
@@ -799,14 +853,18 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 			}
 			$oObj = $oMonoObjectSet->Fetch();
 			$oCaseLog = $oObj->Get($this->Get('attcode'));
-			$iMaxVisibleLength = MetaModel::getConfig()->Get('max_history_case_log_entry_length', 0);
 			$sTextEntry = '<div class="history_entry history_entry_truncated"><div class="history_html_content">'.$oCaseLog->GetEntryAt($this->Get('lastentry')).'</div></div>';
 
 			$sResult = Dict::Format('Change:AttName_EntryAdded', $sAttName, $sTextEntry);
 		}
 		return $sResult;
 	}
-	
+
+	/**
+	 * @param string $sRawText
+	 *
+	 * @return string
+	 */
 	protected function ToHtml($sRawText)
 	{
 		return str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sRawText, ENT_QUOTES, 'UTF-8'));
@@ -820,6 +878,9 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpPlugin extends CMDBChangeOp
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -841,10 +902,10 @@ class CMDBChangeOpPlugin extends CMDBChangeOp
 		*/
 		MetaModel::Init_InheritAttributes();
 	}
-	
+
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		return $this->Get('description');
@@ -858,6 +919,9 @@ class CMDBChangeOpPlugin extends CMDBChangeOp
  */
 abstract class CMDBChangeOpSetAttributeLinks extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -888,6 +952,9 @@ abstract class CMDBChangeOpSetAttributeLinks extends CMDBChangeOpSetAttribute
  */
 class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLinks
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -908,8 +975,8 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		$sResult = '';
@@ -952,6 +1019,9 @@ class CMDBChangeOpSetAttributeLinksAddRemove extends CMDBChangeOpSetAttributeLin
  */
 class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -972,8 +1042,8 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
-	 */	 
+	 * @inheritDoc
+	 */
 	public function GetDescription()
 	{
 		$sResult = '';
@@ -1007,7 +1077,7 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
 			{
 				$oField = new FieldExpression('objclass',  $oSearch->GetClassAlias());
 				$sListExpr = '('.implode(', ', CMDBSource::Quote($aLinkClasses)).')';
-				$sOQLCondition = $oField->Render()." IN $sListExpr";
+				$sOQLCondition = $oField->RenderExpression()." IN $sListExpr";
 				$oNewCondition = Expression::FromOQL($sOQLCondition);
 				$oSearch->AddConditionExpression($oNewCondition);
 			}
@@ -1039,6 +1109,9 @@ class CMDBChangeOpSetAttributeLinksTune extends CMDBChangeOpSetAttributeLinks
  */
 class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 {
+	/**
+	 * @inheritDoc
+	 */
 	public static function Init()
 	{
 		$aParams = array
@@ -1062,7 +1135,7 @@ class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 	}
 
 	/**
-	 * Describe (as a text string) the modifications corresponding to this change
+	 * @inheritDoc
 	 */
 	public function GetDescription()
 	{

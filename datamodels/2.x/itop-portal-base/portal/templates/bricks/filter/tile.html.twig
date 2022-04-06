@@ -9,11 +9,10 @@
 
 <div class="col-xs-12 col-sm-{{ brick.GetWidth }}">
 	{% block pTileWrapper %}
-		<a href="#" class="tile tile-filter-brick" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
-			<div class="tile_decoration">
+		<div class="tile tile-filter-brick" id="brick-{{ brick.GetId }}" data-brick-id="{{ brick.GetId }}">
+			<a href="#" onclick="return false;" class="tile_decoration">
 				<span class="icon {{ brick.GetDecorationClassHome }}"></span>
-
-			</div>
+			</a>
 			<div class="tile_body">
 				<div class="tile_title">{{ brick.GetTitleHome|dict_s }}</div>
 				{% if brick.HasDescription %}
@@ -32,17 +31,6 @@
 					</form>
 				</div>
 			</div>
-		</a>
+		</div>
 	{% endblock %}
 </div>
-
-<script type="text/javascript">
-	$(document).ready(function(){
-	    // Preventing click on tile to scroll up
-	    $('#brick-{{ brick.GetId }}').on('click', function(oEvent){
-	        if(oEvent.target.type !== 'submit'){
-                oEvent.preventDefault();
-			}
-		});
-	});
-</script>

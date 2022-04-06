@@ -1,0 +1,76 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% extends 'base/components/panel/layout.js.twig' %}
+
+{% block iboWidgetInstantiation %}
+    $('#{{ oUIBlock.GetId() }}').object_details({
+        is_header_visible_on_scroll: {{ oUIBlock.IsHeaderVisibleOnScroll|var_export }}
+    });
+{% endblock %}
+
+{% block iboMiscHandlers %}
+    {{ parent() }}
+
+    {% block iboKeyboardShortcutsHandlers %}
+        $('#{{ oUIBlock.GetId() }}').on('edit_object', function(){
+            let oFavoriteButton = $(this).find('#UIMenuModify');
+            if(oFavoriteButton[0]){
+                oFavoriteButton[0].click();
+            }
+            else{
+                let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:Modify"]');
+                if(oPopupItemButton[0]){
+                    oPopupItemButton[0].click();
+                }
+            }
+        });
+
+        $('#{{ oUIBlock.GetId() }}').on('delete_object', function(){
+            let oFavoriteButton = $(this).find('#UIMenuDelete');
+            if(oFavoriteButton[0]){
+                oFavoriteButton[0].click();
+            }
+            else{
+                let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:Delete"]');
+                if(oPopupItemButton[0]){
+                    oPopupItemButton[0].click();
+                }
+            }
+        });
+
+        $('#{{ oUIBlock.GetId() }}').on('new_object', function(){
+            let oFavoriteButton = $(this).find('#UIMenuNew');
+            if(oFavoriteButton[0]){
+                oFavoriteButton[0].click();
+            }
+            else{
+                let oPopupItemButton = $('[data-role="ibo-popover-menu"]').find('[data-resource-id="UI:Menu:New"]');
+                if(oPopupItemButton[0]){
+                    oPopupItemButton[0].click();
+                }
+            }
+        });
+        {% if oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_EDIT') or oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_CREATE') %}
+            $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
+                $(this).find('button[type="submit"][name=""][value=""]').click();
+            });
+        {% elseif oUIBlock.GetObjectMode() == constant('cmdbAbstractObject::ENUM_DISPLAY_MODE_STIMULUS') %}
+            $('#{{ oUIBlock.GetId() }}').on('save_object', function(){
+                $(this).find('button[type="submit"][name="submit"][value="submit"]').click();
+            });
+        {% endif %}
+    {% endblock %}
+
+    {% block iboPanelHeaderRightActionsHandlers %}
+        // Keep URL's hash parameters when clicking on a link of the header
+        $('#{{ oUIBlock.GetId() }}').on('click', '[data-role="ibo-panel--header-right"] a', function() {
+            const aMatches = /#(.*)$/.exec(window.location.href);
+            if (aMatches != null) {
+                currentHash = aMatches[1];
+                if (/#(.*)$/.test(this.href)) {
+                    this.href = this.href.replace(/#(.*)$/, '#'+currentHash);
+                }
+            }
+        });
+    {% endblock %}
+{% endblock %}

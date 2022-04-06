@@ -1,57 +1,35 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Data Exchange - synchronization with external applications (incoming data)
- *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-class SynchroExceptionNotStarted extends CoreException
-{
-}
 
 class SynchroDataSource extends cmdbAbstractObject
 {
 	public static function Init()
 	{
-		$aParams = array
-		(
-			'category' => 'core/cmdb,view_in_gui,grant_by_profile',
-			'key_type' => 'autoincrement',
-			'name_attcode' => array('name'),
-			'state_attcode' => '',
-			'reconc_keys' => array(),
-			'db_table' => 'priv_sync_datasource',
-			'db_key_field' => 'id',
+		$oStyle = new ormStyle("", "");
+		$oStyle->SetIcon('../images/synchro.png');
+		$aParams = [
+			'category'            => 'core/cmdb,view_in_gui,grant_by_profile',
+			'key_type'            => 'autoincrement',
+			'name_attcode'        => array('name'),
+			'state_attcode'       => '',
+			'reconc_keys'         => array(),
+			'db_table'            => 'priv_sync_datasource',
+			'db_key_field'        => 'id',
 			'db_finalclass_field' => 'realclass',
-			'display_template' => '',
-			'icon' => '../images/synchro.png',
-		);
+			'display_template'    => '',
+			'style'               => $oStyle,
+		];
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeString('name', array(
-			'allowed_values' => null,
-			'sql' => 'name',
-			'default_value' => null,
+			'allowed_values'  => null,
+			'sql'             => 'name',
+			'default_value'   => null,
 			'is_null_allowed' => false,
-			'depends_on' => array(),
+			'depends_on'      => array(),
 		)));
 		MetaModel::Init_AddAttribute(new AttributeText('description', array(
 			'allowed_values' => null,
@@ -266,7 +244,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	{
 		if (!$this->IsNew())
 		{
-			$oPage->SetCurrentTab(Dict::S('Core:SynchroAttributes'));
+			$oPage->SetCurrentTab('Core:SynchroAttributes');
 			$oAttributeSet = $this->Get('attribute_list');
 			$aAttributes = array();
 
@@ -404,7 +382,7 @@ class SynchroDataSource extends cmdbAbstractObject
 	 */
 	protected function DisplayStatusTab(WebPage $oPage)
 	{
-		$oPage->SetCurrentTab(Dict::S('Core:SynchroStatus'));
+		$oPage->SetCurrentTab('Core:SynchroStatus');
 
 		$sSelectSynchroLog = 'SELECT SynchroLog WHERE sync_source_id = :source_id';
 		$oSetSynchroLog = new CMDBObjectSet(DBObjectSearch::FromOQL($sSelectSynchroLog), array('start_date' => false) /* order by*/,
@@ -444,7 +422,7 @@ class SynchroDataSource extends cmdbAbstractObject
 						$sAllWarnings).'</h2>');
 			}
 
-			$oPage->add('<table class="synoptics"><tr><td style="color:#333;vertical-align:top">');
+			$oPage->add('<table class="synoptics"><tr><td>');
 
 			// List all the log entries for the user to select
 			$oPage->add('<h2 style="line-height:55px;">'.Dict::S('Core:Synchro:History').'</h2>');
@@ -487,6 +465,7 @@ class SynchroDataSource extends cmdbAbstractObject
 			var fOpacity = (aValues[sKey] == 0) ? 0.3 : 1;
 			$('#'+sKey).fadeTo("slow", fOpacity);
 		}
+		
 		//alert('id = '+id+', lastLog='+sLastLog+', id==sLastLog: '+(id==sLastLog)+' obj_updated_errors:  '+aValues['obj_updated_errors']);
 		if ( (id == sLastLog) && (aValues['obj_new_errors'] > 0) )
 		{
@@ -531,9 +510,9 @@ JS;
 			// Now build the big "synoptics" view
 			$aData = $this->ProcessLog($oLastLog);
 
-			$sNbReplica = $this->GetIcon().'&nbsp;'.Dict::Format('Core:Synchro:Nb_Replica',
+			$sNbReplica = '<img src="'.$this->GetIcon(false).'" class="ibo-class-icon ibo-is-medium" style="vertical-align:middle;">&nbsp;'.Dict::Format('Core:Synchro:Nb_Replica',
 					"<span id=\"c_nb_replica_total\">{$aData['nb_replica_total']}</span>");
-			$sNbObjects = MetaModel::GetClassIcon($this->GetTargetClass()).'&nbsp;'.Dict::Format('Core:Synchro:Nb_Class:Objects',
+			$sNbObjects = '<img src="'.MetaModel::GetClassIcon($this->GetTargetClass(), false).'" class="ibo-class-icon ibo-is-medium" style="vertical-align:middle;">&nbsp;'.Dict::Format('Core:Synchro:Nb_Class:Objects',
 					$this->GetTargetClass(), "<span id=\"c_nb_obj_total\">{$aData['nb_obj_total']}</span>");
 			$oPage->add(
 				<<<EOF
@@ -545,61 +524,58 @@ JS;
 EOF
 			);
 			$sBaseOQL = 'SELECT SynchroReplica WHERE sync_source_id='.$this->GetKey()." AND status_last_error!=''";
-			$oPage->add($this->HtmlBox('repl_ignored', $aData, '#999').'<td colspan="2">&nbsp;</td>');
+			$oPage->add($this->HtmlBox('repl_ignored', $aData, 'grey', '', '', 'ibo-data-synchro-source--replicas-status-separator').'<td colspan="2">&nbsp;</td>');
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_disappeared', $aData, '#630',
-					'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_disappeared_no_action', $aData, '#333'));
+			$oPage->add($this->HtmlBox('repl_disappeared', $aData, 'orange',
+					'rowspan="4"', '', 'ibo-data-synchro-source--replicas-status-separator').'<td rowspan="4" class="arrow"><i class="fas fa-arrow-right"></i></td>'.$this->HtmlBox('obj_disappeared_no_action', $aData, 'grey', '', '', 'ibo-data-synchro-source--replicas-status-separator'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_deleted', $aData, '#000'));
+			$oPage->add($this->HtmlBox('obj_deleted', $aData, 'bluegrey'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, '#630'));
+			$oPage->add($this->HtmlBox('obj_obsoleted', $aData, 'orange'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='obsolete'");
-			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, '#C00', '',
+			$oPage->add($this->HtmlBox('obj_disappeared_errors', $aData, 'red', '',
 				" <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"disappeared_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_existing', $aData, '#093',
-					'rowspan="3"').'<td rowspan="3" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_unchanged', $aData, '#393'));
+			$oPage->add($this->HtmlBox('repl_existing', $aData, 'green',
+					'rowspan="3"', '', 'ibo-data-synchro-source--replicas-status-separator').'<td rowspan="3" class="arrow"><i class="fas fa-arrow-right"></i></td>'.$this->HtmlBox('obj_unchanged', $aData, 'blue', '', '', 'ibo-data-synchro-source--replicas-status-separator'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_updated', $aData, '#3C3'));
+			$oPage->add($this->HtmlBox('obj_updated', $aData, 'green'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='modified'");
-			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, '#C00', '',
+			$oPage->add($this->HtmlBox('obj_updated_errors', $aData, 'red', '',
 				" <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"updated_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('repl_new', $aData, '#339',
-					'rowspan="4"').'<td rowspan="4" class="arrow">=&gt;</td>'.$this->HtmlBox('obj_new_unchanged', $aData, '#393'));
+			$oPage->add($this->HtmlBox('repl_new', $aData, 'cyan',
+					'rowspan="4"', '', 'ibo-data-synchro-source--replicas-status-separator').'<td rowspan="4" class="arrow"><i class="fas fa-arrow-right"></i></td>'.$this->HtmlBox('obj_new_unchanged', $aData, 'blue', '', '', 'ibo-data-synchro-source--replicas-status-separator'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_new_updated', $aData, '#3C3'));
+			$oPage->add($this->HtmlBox('obj_new_updated', $aData, 'green'));
 			$oPage->add("</tr>\n<tr>");
-			$oPage->add($this->HtmlBox('obj_created', $aData, '#339'));
+			$oPage->add($this->HtmlBox('obj_created', $aData, 'cyan'));
 			$oPage->add("</tr>\n<tr>");
 			$sOQL = urlencode($sBaseOQL." AND status='new'");
-			$oPage->add($this->HtmlBox('obj_new_errors', $aData, '#C00', '',
+			$oPage->add($this->HtmlBox('obj_new_errors', $aData, 'red', '',
 				" <a style=\"color:#fff\" href=\"../synchro/replica.php?operation=oql&datasource=$iDSid&oql=$sOQL\" id=\"new_errors_link\">Show</a>"));
 			$oPage->add("</tr>\n</table>\n");
 			$oPage->add('</td></tr></table>');
 			$oPage->add('<div id="status_traces" style="overflow-x:auto"></div>');
 			$oPage->add_ready_script("UpdateSynoptics('$iLastLog')");
-		}
-		else
-		{
+		} else {
 			$oPage->p('<h2>'.Dict::S('Core:Synchro:NeverRun').'</h2>');
 		}
 	}
 
-	protected function HtmlBox($sId, $aData, $sColor, $sHTMLAttribs = '', $sErrorLink = '')
+	protected function HtmlBox($sId, $aData, $sColor, $sHTMLAttribs = '', $sErrorLink = '', $sAdditionalCss = "")
 	{
 		$iCount = $aData[$sId];
 		$sCount = "<span id=\"c_{$sId}\">$iCount</span>";
 		$sLabel = Dict::Format('Core:Synchro:label_'.$sId, $sCount);
-		$sOpacity = ($iCount == 0) ? 'opacity:0.3;' : '';
-		if (isset($aData[$sId.'_warnings']))
-		{
-			$sLabel .= " <span id=\"cw_{$sId}_warnings\"><img src=\"../images/error.png\" style=\"vertical-align:middle\"/>  (<span id=\"c_{$sId}_warnings\">".$aData[$sId.'_warnings'].'</span>)</span>';
+		$sOpacity = ($iCount == 0) ? 'ibo-is-light' : '';
+		if (isset($aData[$sId.'_warnings'])) {
+			$sLabel .= " <span id=\"cw_{$sId}_warnings\" class=\"ibo-data-synchro-source--replicas-status--warning\"><i class=\"fas fa-exclamation-triangle\"></i>  (<span id=\"c_{$sId}_warnings\">".$aData[$sId.'_warnings'].'</span>)</span>';
 		}
 
-		return "<td id=\"$sId\" style=\"background-color:$sColor;$sOpacity;\" {$sHTMLAttribs}>{$sLabel}{$sErrorLink}</td>";
+		return '<td id="'.$sId.'" class="ibo-data-synchro-source--replicas-status ibo-is-'.$sColor.' '.$sOpacity.' '.$sAdditionalCss.'" '.$sHTMLAttribs.'>'.$sLabel.$sErrorLink.'</td>';
 	}
 
 	protected function ProcessLog($oLastLog)
@@ -634,13 +610,10 @@ EOF
 		$aData['repl_ignored'] = $iIgnored;
 		$aData['nb_obj_total'] = $iNew + $iExisting + $iDisappeared;
 		$aData['nb_replica_total'] = $aData['nb_obj_total'] + $iIgnored;
-		if (strlen($oLastLog->Get('traces')) > 0)
-		{
-			$aData['traces'] = '<fieldset><legend>Debug traces</legend><pre>'.htmlentities($oLastLog->Get('traces'), ENT_QUOTES,
+		if (strlen($oLastLog->Get('traces')) > 0) {
+			$aData['traces'] = '<fieldset class="ibo-fieldset"><legend class="ibo-fieldset-legend">Debug traces</legend><pre>'.htmlentities($oLastLog->Get('traces'), ENT_QUOTES,
 					'UTF-8').'</pre></fieldset>';
-		}
-		else
-		{
+		} else {
 			$aData['traces'] = '';
 		}
 
@@ -1078,28 +1051,22 @@ EOF
 	{
 		$bFixNeeded = false;
 		$bTriggerRebuildNeeded = false;
-		$aMissingFields = array();
+		$aMissingFields = [];
 		$oAttributeSet = $this->Get('attribute_list');
-		$aAttributes = array();
+		$aAttributes = [];
 
-		while ($oAttribute = $oAttributeSet->Fetch())
-		{
+		while ($oAttribute = $oAttributeSet->Fetch()) {
 			$sAttCode = $oAttribute->Get('attcode');
-			if (MetaModel::IsValidAttCode($this->GetTargetClass(), $sAttCode))
-			{
+			if (MetaModel::IsValidAttCode($this->GetTargetClass(), $sAttCode)) {
 				$aAttributes[$sAttCode] = $oAttribute;
-			}
-			else
-			{
+			} else {
 				// Old field remaining
 				$bTriggerRebuildNeeded = true;
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "Irrelevant field description for the field '$sAttCode', for the data synchro task ".$this->GetName().' ('.$this->GetKey()."), will be removed.\n";
 				}
 				$bFixNeeded = true;
-				if (!$bDiagnostics)
-				{
+				if (!$bDiagnostics) {
 					// Fix the issue
 					$oAttribute->DBDelete();
 				}
@@ -1107,66 +1074,48 @@ EOF
 		}
 
 		$sTable = $this->GetDataTable();
-		foreach ($this->ListTargetAttributes() as $sAttCode => $oAttDef)
-		{
-			if (!isset($aAttributes[$sAttCode]))
-			{
+		foreach ($this->ListTargetAttributes() as $sAttCode => $oAttDef) {
+			if (!isset($aAttributes[$sAttCode])) {
 				$bFixNeeded = true;
 				$aMissingFields[] = $sAttCode;
 				$bTriggerRebuildNeeded = true;
 				// New field missing...
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "Missing field description for the field '$sAttCode', for the data synchro task ".$this->GetName().' ('.$this->GetKey()."), will be created with default values.\n";
 				}
-				if (!$bDiagnostics)
-				{
+				if (!$bDiagnostics) {
 					// Fix the issue
 					$oAttribute = $this->CreateSynchroAtt($sAttCode);
 					$oAttribute->DBInsert();
 				}
-			}
-			else
-			{
-				$aColumns = $this->GetSQLColumns(array($sAttCode));
-				foreach ($aColumns as $sColName => $sColumnDef)
-				{
+			} else {
+				$aColumns = $this->GetSQLColumns([$sAttCode]);
+				foreach ($aColumns as $sColName => $sColumnDef) {
 					$bOneColIsMissing = false;
-					if (!CMDBSource::IsField($sTable, $sColName))
-					{
+					if (!CMDBSource::IsField($sTable, $sColName)) {
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
-						if ($bVerbose)
-						{
-							if (count($aColumns) > 1)
-							{
+						if ($bVerbose) {
+							if (count($aColumns) > 1) {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
-										$aColumns)." will be re-created.'.\n";
-							}
-							else
-							{
+										$aColumns)." will be added.'.\n";
+							} else {
 								echo "Missing column '$sColName', in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
 							}
 						}
-					}
-					elseif (strcasecmp(CMDBSource::GetFieldType($sTable, $sColName), $sColumnDef) != 0)
-					{
+					} elseif (!CMDBSource::IsSameFieldTypes($sColumnDef, CMDBSource::GetFieldSpec($sTable, $sColName))) {
 						$bFixNeeded = true;
 						$bOneColIsMissing = true;
-						if (count($aColumns) > 1)
-						{
-							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
+						if (count($aColumns) > 1) {
+							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldSpec($sTable,
 									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The columns '".implode("', '",
 									$aColumns)." will be re-created.'.\n";
-						}
-						else
-						{
-							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldType($sTable,
-									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be added.\n";
+						} else {
+							echo "Incorrect column '$sColName' (".CMDBSource::GetFieldSpec($sTable,
+									$sColName).' instead of '.$sColumnDef."), in the table '$sTable' for the data synchro task ".$this->GetName().' ('.$this->GetKey()."). The column '$sColName' will be re-created.\n";
 						}
 					}
-					if ($bOneColIsMissing)
-					{
+					if ($bOneColIsMissing) {
 						$bTriggerRebuildNeeded = true;
 						$aMissingFields[] = $sAttCode;
 					}
@@ -1175,60 +1124,47 @@ EOF
 		}
 
 		$sDBName = MetaModel::GetConfig()->Get('db_name');
-		try
-		{
+		try {
 			// Note: as per the MySQL documentation, using information_schema behaves exactly like SHOW TRIGGERS (user privileges)
 			//       and this is in fact the recommended way for better portability
 			$iTriggerCount = CMDBSource::QueryToScalar("select count(*) from information_schema.triggers where EVENT_OBJECT_SCHEMA='$sDBName' and EVENT_OBJECT_TABLE='$sTable'");
 		}
-		catch (Exception $e)
-		{
-			if ($bVerbose)
-			{
+		catch (Exception $e) {
+			if ($bVerbose) {
 				echo 'Failed to investigate on the synchro triggers (skipping the check): '.$e->getMessage().".\n";
 			}
 			// Ignore this error: consider that the trigger are there
 			$iTriggerCount = 3;
 		}
-		if ($iTriggerCount < 3)
-		{
+		if ($iTriggerCount < 3) {
 			$bFixNeeded = true;
 			$bTriggerRebuildNeeded = true;
-			if ($bVerbose)
-			{
+			if ($bVerbose) {
 				echo 'Missing trigger(s) for the data synchro task '.$this->GetName()." (table {$sTable}).\n";
 			}
 		}
 
-		$aRepairQueries = array();
+		$aRepairQueries = [];
 
-		if (count($aMissingFields) > 0)
-		{
+		if (count($aMissingFields) > 0) {
 			// The structure of the table needs adjusting
 			$aColumns = $this->GetSQLColumns($aMissingFields);
-			$aFieldDefs = array();
-			foreach ($aColumns as $sAttCode => $sColumnDef)
-			{
-				if (CMDBSource::IsField($sTable, $sAttCode))
-				{
+			$aFieldDefs = [];
+			foreach ($aColumns as $sAttCode => $sColumnDef) {
+				if (CMDBSource::IsField($sTable, $sAttCode)) {
 					$aRepairQueries[] = "ALTER TABLE `$sTable` CHANGE `$sAttCode` `$sAttCode` $sColumnDef";
-				}
-				else
-				{
+				} else {
 					$aFieldDefs[] = "`$sAttCode` $sColumnDef";
 				}
 
 			}
-			if (count($aFieldDefs) > 0)
-			{
+			if (count($aFieldDefs) > 0) {
 				$aRepairQueries[] = "ALTER TABLE `$sTable` ADD (".implode(',', $aFieldDefs).');';
 			}
 
-			if ($bDiagnostics)
-			{
-				if ($bVerbose)
-				{
-					echo "The structure of the table $sTable for the data synchro task ".$this->GetName().' ('.$this->GetKey().') must be altered (missing or incorrect fields: '.implode(',',
+			if ($bDiagnostics) {
+				if ($bVerbose) {
+					echo "The structure of the table $sTable for the data synchro task ".$this->GetName().' ('.$this->GetKey().') must be altered (missing or incorrect fields: '.implode(', ',
 							$aMissingFields).").\n";
 				}
 			}
@@ -1236,11 +1172,10 @@ EOF
 
 		// Repair the triggers
 		// Must be done after updating the columns because MySQL does check the validity of the query found into the procedure!
-		if ($bTriggerRebuildNeeded)
-		{
+		if ($bTriggerRebuildNeeded) {
 			// The triggers as well must be adjusted
 			$aTriggersDefs = $this->GetTriggersDefinition();
-			$aTriggerRepair = array();
+			$aTriggerRepair = [];
 			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_bi`;";
 			$aTriggerRepair[] = $aTriggersDefs['bi'];
 			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_bu`;";
@@ -1248,10 +1183,8 @@ EOF
 			$aTriggerRepair[] = "DROP TRIGGER IF EXISTS `{$sTable}_ad`;";
 			$aTriggerRepair[] = $aTriggersDefs['ad'];
 
-			if ($bDiagnostics)
-			{
-				if ($bVerbose)
-				{
+			if ($bDiagnostics) {
+				if ($bVerbose) {
 					echo "The triggers {$sTable}_bi, {$sTable}_bu, {$sTable}_ad for the data synchro task ".$this->GetName().' ('.$this->GetKey().") must be re-created.\n";
 					echo implode("\n", $aTriggerRepair)."\n";
 				}
@@ -1261,14 +1194,11 @@ EOF
 
 		// Execute the repair statements
 		//
-		if (!$bDiagnostics && (count($aRepairQueries) > 0))
-		{
+		if (!$bDiagnostics && (count($aRepairQueries) > 0)) {
 			// Fix the issue
-			foreach ($aRepairQueries as $sSQL)
-			{
+			foreach ($aRepairQueries as $sSQL) {
 				CMDBSource::Query($sSQL);
-				if ($bVerbose)
-				{
+				if ($bVerbose) {
 					echo "$sSQL\n";
 				}
 			}
@@ -1373,13 +1303,14 @@ EOF
 			if ($oAttDef->IsExternalKey())
 			{
 				// The pkey might be used as well as any other key column
-				$aColumns[$sAttCode] = 'VARCHAR(255)';
+				$aColumns[$sAttCode] = 'VARCHAR(255)'.CMDBSource::GetSqlStringColumnDefinition();
 			}
 			else
 			{
-				foreach ($oAttDef->GetImportColumns() as $sField => $sDBFieldType)
-				{
-					$aColumns[$sField] = $sDBFieldType;
+				if (is_iterable($oAttDef->GetImportColumns())) {
+					foreach ($oAttDef->GetImportColumns() as $sField => $sDBFieldType) {
+						$aColumns[$sField] = $sDBFieldType;
+					}
 				}
 			}
 		}
@@ -1580,7 +1511,7 @@ class SynchroAttExtKey extends SynchroAttribute
 
 	public function GetReconciliationFormElement($sTargetClass, $sFieldName)
 	{
-		$sHtml = "<select name=\"$sFieldName\">\n";
+		$sHtml = "<div class=\"field_input_zone field_input_string ibo-input-wrapper ibo-input-select-wrapper\"'><select name=\"$sFieldName\" class=\"ibo-input ibo-input-select\">\n";
 		// Id
 		$sSelected = ('' == $this->Get('reconciliation_attcode')) ? ' selected' : '';
 		$sHtml .= "<option value=\"\" $sSelected>".Dict::S('Core:SynchroAttExtKey:ReconciliationById')."</option>\n";
@@ -1594,22 +1525,19 @@ class SynchroAttExtKey extends SynchroAttribute
 
 		// Then add all remaining scalar attributes, sorted alphabetically
 		$aMoreOptions = array();
-		foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef)
-		{
-			if ($oAttDef->IsScalar() && ($sAttCode != 'friendlyname'))
-			{
+		foreach (MetaModel::ListAttributeDefs($sTargetClass) as $sAttCode => $oAttDef) {
+			if ($oAttDef->IsScalar() && ($sAttCode != 'friendlyname')) {
 				$sSelected = ($sAttCode == $this->Get('reconciliation_attcode')) ? ' selected' : '';
 				$aMoreOptions[MetaModel::GetLabel($sTargetClass,
 					$sAttCode)] = "<option value=\"$sAttCode\" $sSelected>".MetaModel::GetLabel($sTargetClass, $sAttCode)."</option>\n";
 			}
 		}
 		ksort($aMoreOptions);
-		foreach ($aMoreOptions as $sOption)
-		{
+		foreach ($aMoreOptions as $sOption) {
 			$sHtml .= $sOption;
 		}
 
-		$sHtml .= "</select>\n";
+		$sHtml .= "</select></div>\n";
 
 		return $sHtml;
 	}
@@ -1658,7 +1586,7 @@ class SynchroAttLinkSet extends SynchroAttribute
 		MetaModel::Init_AddAttribute(new AttributeString('attribute_qualifier', array(
 			'allowed_values' => null,
 			'sql' => 'attribute_qualifier',
-			'default_value' => '',
+			'default_value' => '\'',
 			'is_null_allowed' => true,
 			'depends_on' => array(),
 		)));
@@ -2046,7 +1974,7 @@ class SynchroReplica extends DBObject implements iDisplay
 	{
 		$aParams = array
 		(
-			'category' => 'core/cmdb,view_in_gui',
+			'category' => 'core/cmdb,view_in_gui,grant_by_profile',
 			'key_type' => 'autoincrement',
 			'name_attcode' => '',
 			'state_attcode' => '',
@@ -2834,25 +2762,23 @@ class SynchroReplica extends DBObject implements iDisplay
 		//$this->DisplayBareHeader($oPage, $bEditMode);
 		$oPage->AddTabContainer(OBJECT_PROPERTIES_TAB);
 		$oPage->SetCurrentTabContainer(OBJECT_PROPERTIES_TAB);
-		$oPage->SetCurrentTab(Dict::S('UI:PropertiesTab'));
+		$oPage->SetCurrentTab('UI:PropertiesTab');
 		$this->DisplayBareProperties($oPage, $bEditMode);
 	}
 
 	function DisplayBareProperties(WebPage $oPage, $bEditMode = false, $sPrefix = '', $aExtraParams = array())
 	{
-		if ($bEditMode)
-		{
+		if ($bEditMode) {
 			return;
 		} // Not editable
 
-		$oPage->add('<table style="vertical-align:top"><tr style="vertical-align:top"><td>');
+		$oPage->add('<div class="ibo-multi-column"><div class="ibo-column">');
 		$aDetails = array();
 		$sClass = get_class($this);
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PrivateDetails').'</legend>');
+		$oPage->add('<fieldset class="ibo-fieldset">');
+		$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PrivateDetails').'</legend>');
 		$aZList = MetaModel::FlattenZlist(MetaModel::GetZListItems($sClass, 'details'));
-		foreach ($aZList as $sAttCode)
-		{
+		foreach ($aZList as $sAttCode) {
 			$sDisplayValue = $this->GetAsHTML($sAttCode);
 			$aDetails[] = array(
 				'label' => '<span title="'.MetaModel::GetDescription($sClass, $sAttCode).'">'.MetaModel::GetLabel($sClass,
@@ -2862,38 +2788,47 @@ class SynchroReplica extends DBObject implements iDisplay
 		}
 		$oPage->Details($aDetails);
 		$oPage->add('</fieldset>');
-		if (strlen($this->Get('dest_class')) > 0)
+
+		$sDestClass = $this->Get('dest_class');
+		$bCanDisplayDestObjSections = true;
+		if (strlen($sDestClass) > 0)
 		{
-			$oDestObj = MetaModel::GetObject($this->Get('dest_class'), $this->Get('dest_id'), false);
-			if (is_object($oDestObj))
-			{
-				$oPage->add('<fieldset>');
-				$oPage->add('<legend>'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
-				$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
-				$oPage->add('<fieldset>');
+			$oDestObj = MetaModel::GetObject($sDestClass, $this->Get('dest_id'), false);
+			if (is_object($oDestObj)) {
+				$bCanDisplayDestObjSections = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, DBObjectSet::FromObject($oDestObj));
+
+				if ($bCanDisplayDestObjSections) {
+					$oPage->add('<fieldset class="ibo-fieldset">');
+					$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::Format('Core:SynchroReplica:TargetObject', $oDestObj->GetHyperlink()).'</legend>');
+					$oDestObj->DisplayBareProperties($oPage, false, $sPrefix, $aExtraParams);
+					$oPage->add('<fieldset>');
+				}
+			} else {
+				$bCanDisplayDestObjSections = UserRights::IsActionAllowed($sDestClass, UR_ACTION_READ, null);
 			}
 		}
-		$oPage->add('</td><td>');
-		$oPage->add('<fieldset>');
-		$oPage->add('<legend>'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
-		$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 
-		$sSQLTable = $oSource->GetDataTable();
-		$aData = $this->LoadExtendedDataFromTable($sSQLTable);
+		if ($bCanDisplayDestObjSections) {
+			$oPage->add('</div><div class="ibo-column">');
+			$oPage->add('<fieldset class="ibo-fieldset">');
+			$oPage->add('<legend class="ibo-fieldset-legend">'.Dict::S('Core:SynchroReplica:PublicData').'</legend>');
+			$oSource = MetaModel::GetObject('SynchroDataSource', $this->Get('sync_source_id'));
 
-		$aHeaders = array(
-			'attcode' => array('label' => 'Attribute Code', 'description' => ''),
-			'data' => array('label' => 'Value', 'description' => ''),
-		);
-		$aRows = array();
-		foreach ($aData as $sKey => $value)
-		{
-			$aRows[] = array('attcode' => $sKey, 'data' => $value);
+			$sSQLTable = $oSource->GetDataTable();
+			$aData = $this->LoadExtendedDataFromTable($sSQLTable);
+
+			$aHeaders = array(
+				'attcode' => array('label' => 'Attribute Code', 'description' => ''),
+				'data'    => array('label' => 'Value', 'description' => ''),
+			);
+			$aRows = array();
+			foreach ($aData as $sKey => $value) {
+				$aRows[] = array('attcode' => $sKey, 'data' => $value);
+			}
+			$oPage->Table($aHeaders, $aRows);
+			$oPage->add('</fieldset>');
+			$oPage->add('</div></div>');
 		}
-		$oPage->Table($aHeaders, $aRows);
-		$oPage->add('</fieldset>');
-		$oPage->add('</td></tr></table>');
-
 	}
 
 	public function LoadExtendedDataFromTable($sSQLTable)
@@ -2963,7 +2898,7 @@ class SynchroExecution
 		$this->m_bIsImportPhaseDateKnown = ($oImportPhaseStartDate != null);
 		$this->m_oImportPhaseStartDate = $oImportPhaseStartDate;
 
-		$this->m_oCtx = new ContextTag('Synchro');
+		$this->m_oCtx = new ContextTag(ContextTag::TAG_SYNCHRO);
 		$this->m_oCtx1 = new ContextTag('Synchro:'.$oDataSource->GetRawName()); // More precise context information
 	}
 
@@ -3001,6 +2936,7 @@ class SynchroExecution
 		$this->m_oChange->Set('userinfo', $sUserString.' '.Dict::S('Core:SyncDataExchangeComment'));
 		$this->m_oChange->Set('origin', 'synchro-data-source');
 		$this->m_oChange->DBInsert();
+		CMDBObject::SetCurrentChange($this->m_oChange);
 
 		// Start logging this execution (stats + protection against reentrance)
 		//
@@ -3377,6 +3313,7 @@ class SynchroExecution
 		self::$m_oCurrentTask = $this->m_oDataSource;
 		$this->m_oStatLog = $oLog;
 		$this->m_oChange = $oChange;
+		CMDBObject::SetCurrentChange($this->m_oChange);
 
 		// Prepare internal structures (not the first pass)
 		$this->PrepareProcessing(false);
@@ -3470,7 +3407,7 @@ class SynchroExecution
 			/** @var SynchroReplica $oReplica */
 			while($oReplica = $oSetToProcess->Fetch())
 			{
-				set_time_limit($iLoopTimeLimit);
+				set_time_limit(intval($iLoopTimeLimit));
 				$iLastReplicaProcessed = $oReplica->GetKey();
 				switch ($sDeletePolicy)
 				{
@@ -3599,7 +3536,7 @@ class SynchroExecution
 		/** @var \SynchroReplica $oReplica */
 		while ($oReplica = $oSetToProcess->Fetch())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace("Synchronizing replica id=$iLastReplicaProcessed.");
 			$oReplica->Synchro($this->m_oDataSource, $this->m_aReconciliationKeys, $this->m_aAttributes, $this->m_oChange,
@@ -3701,7 +3638,7 @@ class SynchroExecution
 		/** @var SynchroReplica $oReplica */
 		while($oReplica = $oSetToProcess->Fetch())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			$iLastReplicaProcessed = $oReplica->GetKey();
 			$this->m_oStatLog->AddTrace('Destination object to be DELETED', $oReplica);
 			$oReplica->DeleteDestObject($this->m_oChange, $this->m_oStatLog);

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -31,20 +31,16 @@ if (array_key_exists('HTTP_IF_MODIFIED_SINCE', $_SERVER) && (strlen($_SERVER['HT
 try
 {
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/webpage.class.inc.php');
-	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 	require_once(APPROOT.'/application/startup.inc.php');
 
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 
-	$oPage = new ajax_page("");
-	$oPage->no_cache();
+	$oPage = new DownloadPage("");
 
 	$operation = utils::ReadParam('operation', '');
 	$sClass = utils::ReadParam('class', 'MissingAjaxParam', false, 'class');
 
-	switch($operation)
-	{
+	switch ($operation) {
 		case 'download_document':
 			LoginWebPage::DoLoginEx('backoffice', false);
 			$id = utils::ReadParam('id', '');
@@ -62,10 +58,10 @@ try
 				ormDocument::DownloadDocument($oPage, $sClass, $id, $sField, 'attachment');
 				if ($iCacheSec > 0)
 				{
-					$oPage->add_header("Expires: "); // Reset the value set in ajax_page
-					$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
-					$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
-					$oPage->add_header("Last-Modified: Wed, 15 Jun 2015 13:21:15 GMT"); // An arbitrary date in the past is ok
+					$oPage->set_cache($iCacheSec);
+					// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
+					// so we're resetting its value ! (see N°3416)
+					$oPage->add_xframe_options('');
 				}
 			}
 			break;
@@ -76,22 +72,29 @@ try
 			$id = utils::ReadParam('id', '');
 			$sSecret = utils::ReadParam('s', '');
 			$iCacheSec = 31556926; // One year ahead: an inline image cannot change
-			if (!empty($id) && !empty($sSecret))
-			{
+			if (!empty($id) && !empty($sSecret)) {
 				ormDocument::DownloadDocument($oPage, 'InlineImage', $id, 'contents', 'inline', 'secret', $sSecret);
-				$oPage->add_header("Expires: "); // Reset the value set in ajax_page
 				$oPage->add_header("Cache-Control: no-transform,public,max-age=$iCacheSec,s-maxage=$iCacheSec");
 				$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
+				$oPage->add_header("Expires: "); // Reset the value set in ajax_page
+
+				// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
+				// so we're resetting its value ! (see N°3416)
+				$oPage->add_xframe_options('');
+
 				$oPage->add_header("Last-Modified: Wed, 15 Jun 2016 13:21:15 GMT"); // An arbitrary date in the past is ok
 			}
 			break;
 			
 		case 'dict':
 			$sSignature = Utils::ReadParam('s', ''); // Sanitization prevents / and ..
-			$oPage = new ajax_page(""); // New page to cleanup the no_cache done above
 			$oPage->SetContentType('text/javascript');
-			$oPage->add_header('Cache-control: public, max-age=86400'); // Cache for 24 hours
-			$oPage->add_header("Pragma: cache"); // Reset the value set .... where ?
+			$oPage->set_cache(86400); // Cache for 24 hours
+
+			// X-Frame http header : set in page constructor, but we need to allow frame integration for this specific page
+			// so we're resetting its value ! (see N°3416)
+			$oPage->add_xframe_options('');
+
 			$oPage->add(file_get_contents(Utils::GetCachePath().$sSignature.'.js'));
 			break;
 			

@@ -126,14 +126,16 @@ class PHPParameters extends Parameters
 
 class XMLParameters extends Parameters
 {
+	/** @var array */
+	public $aData;
 	protected $sParametersFile;
-	
+
 	public function __construct($sParametersFile)
 	{
 		parent::__construct();
 		$this->LoadFromFile($sParametersFile);
 	}
-	
+
 	public function LoadFromFile($sParametersFile)
 	{
 		$this->sParametersFile = $sParametersFile;

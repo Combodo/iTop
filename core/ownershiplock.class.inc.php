@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
+// Copyright (C) 2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -31,13 +31,13 @@ class iTopOwnershipToken extends DBObject
 	{
 		$aParams = array
 		(
-			'category' => 'application',
-			'key_type' => 'autoincrement',
-			'name_attcode' => array('obj_class', 'obj_key'),
-			'state_attcode' => '',
-			'reconc_keys' => array(''),
-			'db_table' => 'priv_ownership_token',
-			'db_key_field' => 'id',
+			'category'            => '',
+			'key_type'            => 'autoincrement',
+			'name_attcode'        => array('obj_class', 'obj_key'),
+			'state_attcode'       => '',
+			'reconc_keys'         => array(''),
+			'db_table'            => 'priv_ownership_token',
+			'db_key_field'        => 'id',
 			'db_finalclass_field' => '',
 		);
 		MetaModel::Init_Params($aParams);

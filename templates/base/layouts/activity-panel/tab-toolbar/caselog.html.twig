@@ -1,0 +1,15 @@
+{% extends 'base/layouts/activity-panel/tab-toolbar/layout.html.twig' %}
+
+{% block bExtraCSSClasses %}ibo-activity-panel--tab-toolbar-for-caselog ibo-activity-panel--tab-toolbar-for-caselog-{{ iRank }}{% endblock %}
+
+{% block bDataTabType %}caselog{% endblock %}
+
+{% block bExtraDataAttributes %}data-caselog-attribute-code="{{ sAttCode }}" data-caselog-attribute-label="{{ aData.title }}" data-caselog-rank="{{ loop.index }}"{% endblock %}
+
+{% block bTabToolbarFirstRow %}
+	{% if oUIBlock.HasCaseLogTabEntryForm(sAttCode) %}
+        <div class="ibo-activity-panel--tab-entry-form" data-role="ibo-activity-panel--tab-entry-form">
+            {{ render_block(oUIBlock.GetCaseLogTabEntryForm(sAttCode), {bInitOpened: oUIBlock.IsEntryFormOpened()}) }}
+        </div>
+    {% endif %}
+{% endblock %}

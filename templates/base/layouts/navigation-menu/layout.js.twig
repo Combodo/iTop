@@ -1,0 +1,8 @@
+$('#{{ oUIBlock.GetId() }}').navigation_menu({
+    display_counts: {% if get_config_parameter('navigation_menu.show_menus_count') %} true {% else %} false {% endif %},
+    org_id: '{{ oUIBlock.GetOrgId() }}'
+});
+
+$('#{{ oUIBlock.GetId() }}').navigation_menu('refreshCounts', null);
+
+{{ oUIBlock.GetSiloSelection().js|raw }}

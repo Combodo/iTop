@@ -1,0 +1,20 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-page-banner--background-color: $ibo-color-red-600 !default;
+$ibo-page-banner--text-color: $ibo-color-red-100 !default;
+$ibo-page-banner--text-content: "THIS IS NOT PRODUCTION INSTANCE" !default;
+
+
+#ibo-page-banner::before {
+  display: block;
+  width: 100%;
+  padding: 0.2rem;
+  text-align: center;
+  font-size: 1rem;
+  background: $ibo-page-banner--background-color;
+  color: $ibo-page-banner--text-color;
+  content: $ibo-page-banner--text-content;
+}

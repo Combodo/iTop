@@ -1,0 +1,12 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+	<div id="ibo-page-Footer" data-role="ibo-page-Footer">
+		{% if aLayouts.sFooter is not empty %}
+			{{ aLayouts.sFooter|raw }}
+		{% endif %}
+		{{ render_block(aLayouts.oFooter, {aPage: aPage}) }}
+	</div>
+
+{% endapply %}

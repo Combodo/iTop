@@ -133,13 +133,13 @@
 	-webkit-box-shadow: 5px 5px 10px 0px #656565;
 	-o-box-shadow: 5px 5px 10px 0px #656565;
 	box-shadow: 5px 5px 10px 0px #656565;
-	filter:progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=10);
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#656565, Direction=134, Strength=10);
 	padding-bottom: 1em;
 	background-color: #FFF;
 	padding-top: 1em;
 	position: absolute;
 	top: 50px;
-	left: 100px;
+	left: 190px;
 	width: 400px;
 }
 #hub-installation-progress-text {
@@ -169,11 +169,12 @@
 #hub_launch_content button {
 	cursor: pointer;
 	font-weight: bold;
-	box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgba(34, 36, 38, 0.15) inset;	
+	box-shadow: 0px 0px 0px 1px transparent inset, 0px 0em 0px 0px rgba(34, 36, 38, 0.15) inset;
 	border: 0;
 	background-color: #E0E1E2;
 	height: 40px;
 	vertical-align: middle;
+	margin: 1.2rem 0;
 	padding: 0;
 }
 #hub_launch_content button.positive {
@@ -197,6 +198,7 @@
 	background-color: rgb(221, 113, 27);
 }
 #hub_launch_content button > img {
+	box-sizing: revert;
 	width: 16px;
 	height: 16px;
 	vertical-align: middle;
@@ -206,4 +208,8 @@
 .horiz-spacer {
 	display: inline-block;
 	width: 1.5em;
+}
+
+#hub_launch_content label {
+	cursor: pointer;
 }

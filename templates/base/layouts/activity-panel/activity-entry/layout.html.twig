@@ -1,0 +1,55 @@
+<div class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsFromCurrentUser() %}ibo-is-current-user{% endif %} {% block iboActivityEntryExtraClasses %}{% endblock %}"
+     data-role="ibo-activity-entry"
+     data-entry-type="{% block iboActivityEntryType %}{{ oUIBlock.GetType() }}{% endblock %}"
+     data-entry-datetime-raw="{{ oUIBlock.GetRawDateTime() }}"
+	 data-entry-author-login="{{ oUIBlock.GetAuthorLogin() }}"
+     data-entry-origin="{{ oUIBlock.GetOrigin() }}"
+	 {% block iboActivityEntryExtraDataAttributes %}{% endblock %}>
+	<div class="ibo-activity-entry--medallion {% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}ibo-has-image{% endif %}" data-role="ibo-activity-entry--medallion" data-tooltip-content="{{ oUIBlock.GetAuthorFriendlyname() }}">
+		{% block iboActivityEntryMedallion %}
+			{% if oUIBlock.GetAuthorPictureAbsUrl() is not empty %}
+				<img class="ibo-activity-entry--author-picture" src="{{ oUIBlock.GetAuthorPictureAbsUrl() }}" alt="{{ oUIBlock.GetAuthorInitials() }}">
+			{% else %}
+				<div class="ibo-activity-entry--author-initials">{{ oUIBlock.GetAuthorInitials()|slice(0, 3) }}</div>
+			{% endif %}
+		{% endblock %}
+	</div>
+	<div class="ibo-activity-entry--information" data-role="ibo-activity-entry--information">
+		{% block iboActivityEntryInformation %}
+			<div class="ibo-activity-entry--main-information" data-role="ibo-activity-entry--main-information">
+				<div class="ibo-activity-entry--main-information-icon" data-role="ibo-activity-entry--main-information-icon">
+					{% block iboActivityEntryMainInformationIcon %}
+						{% if oUIBlock.GetDecorationClasses() is not empty %}
+							<span class="{{ oUIBlock.GetDecorationClasses() }}"></span>
+						{% endif %}
+					{% endblock %}
+				</div>
+				<div class="ibo-activity-entry--main-information-content" data-role="ibo-activity-entry--main-information-content">
+					{% block iboActivityEntryMainInformationContent %}
+						{# Content is printed as raw because it is stored as HTML in the database and should have been sanitized before storage, so we can assume it is safe #}
+						{{ oUIBlock.GetContent()|render_wiki_to_html|raw }}
+					{% endblock %}
+				</div>
+			</div>
+			<div class="ibo-activity-entry--sub-information" data-role="ibo-activity-entry--sub-information">
+                {% apply spaceless %}
+                    {% block iboActivityEntrySubInformation %}
+                        {% if oUIBlock.GetOrigin() is not null and oUIBlock.GetOrigin != constant('Combodo\\iTop\\Core\\CMDBChange\\CMDBChangeOrigin::INTERACTIVE') %}
+                            <span class="ibo-activity-entry--origin" data-role="ibo-activity-entry--origin" data-tooltip-content="{{ ('Class:CMDBChange/Attribute:origin/Value:' ~ oUIBlock.GetOrigin())|dict_s }}" data-tooltip-placement="bottom">
+                                <span class="{{ oUIBlock.GetOriginDecorationClasses() }}"></span>
+                            </span>
+                        {% endif %}
+                        {% if get_config_parameter('activity_panel.show_author_name_below_entries') %}
+                            <span class="ibo-activity-entry--author-name ibo-is-hidden" data-role="ibo-activity-entry--author-name">{{ oUIBlock.GetAuthorFriendlyname() }}</span>
+                        {% endif %}
+                        <span class="ibo-activity-entry--datetime" data-role="ibo-activity-entry--datetime"
+                              data-tooltip-content="{{ oUIBlock.GetFormattedDateTime() }}"
+                              data-tooltip-placement="bottom"
+                              data-raw-datetime="{{ oUIBlock.GetRawDateTime() }}"
+                              data-formatted-datetime="{{ oUIBlock.GetFormattedDateTime() }}">{{ oUIBlock.GetFormattedDateTime() }}</span>
+                    {% endblock %}
+                {% endapply %}
+			</div>
+		{% endblock %}
+	</div>
+</div>

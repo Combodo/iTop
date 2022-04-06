@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2010-2018 Combodo SARL
+ * Copyright (C) 2010-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -28,6 +28,8 @@ use DBObjectSearch;
 use Exception;
 
 /**
+ * @group itopRequestMgmt
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -43,7 +45,7 @@ class SearchFormTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		require_once(APPROOT."sources/application/search/searchform.class.inc.php");
+		require_once(APPROOT."sources/Application/Search/searchform.class.inc.php");
 	}
 
 	/**

@@ -257,7 +257,7 @@ class Archive_Tar extends PEAR
     {
         $this->_close();
         // ----- Look for a local copy to delete
-        if ($this->_temp_tarname != '') {
+        if ($this->_temp_tarname != '' && (bool) preg_match('/^tar[[:alnum:]]*\.tmp$/', $this->_temp_tarname)) {
             @unlink($this->_temp_tarname);
         }
     }
@@ -312,11 +312,12 @@ class Archive_Tar extends PEAR
     /**
      * @param string $p_path
      * @param bool $p_preserve
+     * @param bool $p_symlinks
      * @return bool
      */
-    public function extract($p_path = '', $p_preserve = false)
+    public function extract($p_path = '', $p_preserve = false, $p_symlinks = true)
     {
-        return $this->extractModify($p_path, '', $p_preserve);
+        return $this->extractModify($p_path, '', $p_preserve, $p_symlinks);
     }
 
     /**
@@ -557,11 +558,12 @@ class Archive_Tar extends PEAR
      *                               removed if present at the beginning of
      *                               the file/dir path.
      * @param boolean $p_preserve Preserve user/group ownership of files
+     * @param boolean $p_symlinks Allow symlinks.
      *
      * @return boolean true on success, false on error.
      * @see    extractList()
      */
-    public function extractModify($p_path, $p_remove_path, $p_preserve = false)
+    public function extractModify($p_path, $p_remove_path, $p_preserve = false, $p_symlinks = true)
     {
         $v_result = true;
         $v_list_detail = array();
@@ -573,7 +575,8 @@ class Archive_Tar extends PEAR
                 "complete",
                 0,
                 $p_remove_path,
-                $p_preserve
+                $p_preserve,
+                $p_symlinks
             );
             $this->_close();
         }
@@ -617,11 +620,12 @@ class Archive_Tar extends PEAR
      *                               removed if present at the beginning of
      *                               the file/dir path.
      * @param boolean $p_preserve Preserve user/group ownership of files
+     * @param boolean $p_symlinks Allow symlinks.
      *
      * @return true on success, false on error.
      * @see    extractModify()
      */
-    public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false)
+    public function extractList($p_filelist, $p_path = '', $p_remove_path = '', $p_preserve = false, $p_symlinks = true)
     {
         $v_result = true;
         $v_list_detail = array();
@@ -642,7 +646,8 @@ class Archive_Tar extends PEAR
                 "partial",
                 $v_list,
                 $p_remove_path,
-                $p_preserve
+                $p_preserve,
+                $p_symlinks
             );
             $this->_close();
         }
@@ -726,7 +731,7 @@ class Archive_Tar extends PEAR
      */
     public function setIgnoreList($list)
     {
-        $regexp = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
+        $list = str_replace(array('#', '.', '^', '$'), array('\#', '\.', '\^', '\$'), $list);
         $regexp = '#/' . join('$|/', $list) . '#';
         $this->setIgnoreRegexp($regexp);
     }
@@ -1268,7 +1273,7 @@ class Archive_Tar extends PEAR
             while (($v_buffer = fread($v_file, $this->buffer_length)) != '') {
                 $buffer_length = strlen("$v_buffer");
                 if ($buffer_length != $this->buffer_length) {
-                    $pack_size = ((int)($buffer_length / 512) + 1) * 512;
+                    $pack_size = ((int)($buffer_length / 512) + ($buffer_length % 512 !== 0 ? 1 : 0)) * 512;
                     $pack_format = sprintf('a%d', $pack_size);
                 } else {
                     $pack_format = sprintf('a%d', $this->buffer_length);
@@ -1392,16 +1397,20 @@ class Archive_Tar extends PEAR
 
         $v_magic = 'ustar ';
         $v_version = ' ';
+        $v_uname = '';
+        $v_gname = '';
 
         if (function_exists('posix_getpwuid')) {
             $userinfo = posix_getpwuid($v_info[4]);
             $groupinfo = posix_getgrgid($v_info[5]);
 
-            $v_uname = $userinfo['name'];
-            $v_gname = $groupinfo['name'];
-        } else {
-            $v_uname = '';
-            $v_gname = '';
+            if (isset($userinfo['name'])) {
+                $v_uname = $userinfo['name'];
+            }
+
+            if (isset($groupinfo['name'])) {
+                $v_gname = $groupinfo['name'];
+            }
         }
 
         $v_devmajor = '';
@@ -1510,8 +1519,13 @@ class Archive_Tar extends PEAR
             $userinfo = posix_getpwuid($p_uid);
             $groupinfo = posix_getgrgid($p_gid);
 
-            $v_uname = $userinfo['name'];
-            $v_gname = $groupinfo['name'];
+            if ($userinfo === false || $groupinfo === false) {
+                $v_uname = '';
+                $v_gname = '';
+            } else {
+                $v_uname = $userinfo['name'];
+                $v_gname = $groupinfo['name'];
+            }
         } else {
             $v_uname = '';
             $v_gname = '';
@@ -1692,7 +1706,16 @@ class Archive_Tar extends PEAR
         }
 
         // ----- Extract the checksum
-        $v_header['checksum'] = OctDec(trim($v_data['checksum']));
+        $v_data_checksum = trim($v_data['checksum']);
+        if (!preg_match('/^[0-7]*$/', $v_data_checksum)) {
+            $this->_error(
+                'Invalid checksum for file "' . $v_data['filename']
+                . '" : ' . $v_data_checksum . ' extracted'
+            );
+            return false;
+        }
+
+        $v_header['checksum'] = OctDec($v_data_checksum);
         if ($v_header['checksum'] != $v_checksum) {
             $v_header['filename'] = '';
 
@@ -1711,7 +1734,7 @@ class Archive_Tar extends PEAR
 
         // ----- Extract the properties
         $v_header['filename'] = rtrim($v_data['filename'], "\0");
-        if ($this->_maliciousFilename($v_header['filename'])) {
+        if ($this->_isMaliciousFilename($v_header['filename'])) {
             $this->_error(
                 'Malicious .tar detected, file "' . $v_header['filename'] .
                 '" will not install in desired directory tree'
@@ -1781,9 +1804,9 @@ class Archive_Tar extends PEAR
      *
      * @return bool
      */
-    private function _maliciousFilename($file)
+    private function _isMaliciousFilename($file)
     {
-        if (strpos($file, 'phar://') === 0) {
+        if (strpos($file, '://') !== false) {
             return true;
         }
         if (strpos($file, '../') !== false || strpos($file, '..\\') !== false) {
@@ -1819,7 +1842,7 @@ class Archive_Tar extends PEAR
 
         $v_filename = rtrim(substr($v_filename, 0, $v_filesize), "\0");
         $v_header['filename'] = $v_filename;
-        if ($this->_maliciousFilename($v_filename)) {
+        if ($this->_isMaliciousFilename($v_filename)) {
             $this->_error(
                 'Malicious .tar detected, file "' . $v_filename .
                 '" will not install in desired directory tree'
@@ -1908,6 +1931,7 @@ class Archive_Tar extends PEAR
      * @param string $p_file_list
      * @param string $p_remove_path
      * @param bool $p_preserve
+     * @param bool $p_symlinks
      * @return bool
      */
     public function _extractList(
@@ -1916,7 +1940,8 @@ class Archive_Tar extends PEAR
         $p_mode,
         $p_file_list,
         $p_remove_path,
-        $p_preserve = false
+        $p_preserve = false,
+        $p_symlinks = true
     )
     {
         $v_result = true;
@@ -2099,6 +2124,47 @@ class Archive_Tar extends PEAR
                             }
                         }
                     } elseif ($v_header['typeflag'] == "2") {
+                        if (!$p_symlinks) {
+                            $this->_warning('Symbolic links are not allowed. '
+                                . 'Unable to extract {'
+                                . $v_header['filename'] . '}'
+                            );
+                            return false;
+                        }
+                        $absolute_link = FALSE;
+                        $link_depth = 0;
+                        if (strpos($v_header['link'], "/") === 0 || strpos($v_header['link'], ':') !== FALSE) {
+                          $absolute_link = TRUE;
+                        }
+                        else {
+                            $s_filename = preg_replace('@^' . preg_quote($p_path) . '@', "", $v_header['filename']);
+                            $s_linkname = str_replace('\\', '/', $v_header['link']);
+                            foreach (explode("/", $s_filename) as $dir) {
+                                if ($dir === "..") {
+                                    $link_depth--;
+                                } elseif ($dir !== "" && $dir !== "." ) {
+                                    $link_depth++;
+                                }
+                            }
+                            foreach (explode("/", $s_linkname) as $dir){
+                                if ($link_depth <= 0) {
+                                    break;
+                                }
+                                if ($dir === "..") {
+                                    $link_depth--;
+                                } elseif ($dir !== "" && $dir !== ".") {
+                                    $link_depth++;
+                                }
+                            }
+                        }
+                        if ($absolute_link || $link_depth <= 0) {
+                            $this->_error(
+                                 'Out-of-path file extraction {'
+                                 . $v_header['filename'] . ' --> ' .
+                                 $v_header['link'] . '}'
+                            );
+                            return false;
+                        }
                         if (@file_exists($v_header['filename'])) {
                             @unlink($v_header['filename']);
                         }

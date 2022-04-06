@@ -1,28 +1,18 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
 
 /**
  * Class UILinksWidgetDirect
- *  
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ *
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
- */ 
-
+ */
 class UILinksWidgetDirect
 {
 	protected $sClass;
@@ -85,9 +75,15 @@ class UILinksWidgetDirect
 	 * @param array $aArgs
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (handling wrong values at method start)
 	 */
-	public function Display(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj)
+	public function Display(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj)
 	{
+		if (empty($aArgs)) {
+			$aArgs = [];
+		}
+
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		switch($oLinksetDef->GetEditMode())
 		{
@@ -137,8 +133,10 @@ class UILinksWidgetDirect
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
 	 * @param bool $bDisplayMenu
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, always called with default value)
 	 */
-	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $bDisplayMenu)
+	protected function DisplayAsBlock(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $bDisplayMenu)
 	{
 		$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$sTargetClass = $oLinksetDef->GetLinkedClass();
@@ -184,7 +182,7 @@ class UILinksWidgetDirect
 		// For security reasons: check that the "proposed" class is actually a subclass of the linked class
 		// and that the current user is allowed to create objects of this class
 		$sRealClass = '';
-		$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div>');
+		//$oPage->add('<div class="wizContainer" style="vertical-align:top;"><div>');
 		$aSubClasses = MetaModel::EnumChildClasses($this->sLinkedClass, ENUM_CHILD_CLASSES_ALL); // Including the specified class itself
 		$aPossibleClasses = array();
 		foreach($aSubClasses as $sCandidateClass)
@@ -207,7 +205,6 @@ class UILinksWidgetDirect
 
 		if ($sRealClass != '')
 		{
-			$oPage->add("<h1>".MetaModel::GetClassIcon($sRealClass)."&nbsp;".Dict::Format('UI:CreationTitle_Class', MetaModel::GetName($sRealClass))."</h1>\n");
 			$oLinksetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 			$sExtKeyToMe = $oLinksetDef->GetExtKeyToMe();
 			$aFieldFlags = array( $sExtKeyToMe => OPT_ATT_HIDDEN);
@@ -239,27 +236,27 @@ class UILinksWidgetDirect
 	 * @param string $sFormPrefix
 	 * @param DBObject $oCurrentObj
 	 * @param array $aButtons
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $aArgs for PHP 8.0 compatibility (protected method, caller already handles it)
 	 */
-	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs = array(), $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
+	protected function DisplayEditInPlace(WebPage $oPage, $oValue, $aArgs, $sFormPrefix, $oCurrentObj, $aButtons = array('create', 'delete'))
 	{
 		$aAttribs = $this->GetTableConfig();
-
 		$oValue->Rewind();
-		$oPage->add('<table class="listContainer" id="'.$this->sInputid.'"><tr><td>');
-
 		$aData = array();
-		while($oLinkObj = $oValue->Fetch())
-		{
+		while ($oLinkObj = $oValue->Fetch()) {
 			$aRow = array();
 			$aRow['form::select'] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.$oLinkObj->GetKey().'"/>';
-			foreach($this->aZlist as $sLinkedAttCode)
-			{
+			foreach ($this->aZlist as $sLinkedAttCode) {
 				$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 			}
 			$aData[] = $aRow;
 		}
-		$oPage->table($aAttribs, $aData);
-		$oPage->add('</td></tr></table>'); //listcontainer
+		$oDiv = UIContentBlockUIBlockFactory::MakeStandard($this->sInputid, ['listContainer']);
+		$oPage->AddSubBlock($oDiv);
+		$oDatatable = DataTableUIBlockFactory::MakeForForm($this->sInputid, $aAttribs, $aData);
+		$oDatatable->SetOptions(['select_mode' => 'custom']);
+		$oDiv->AddSubBlock($oDatatable);
 		$sInputName = $sFormPrefix.'attr_'.$this->sAttCode;
 		$aLabels = array(
 			'delete' => Dict::S('UI:Button:Delete'),
@@ -294,43 +291,36 @@ class UILinksWidgetDirect
 	 */
 	public function GetObjectsSelectionDlg($oPage, $oCurrentObj, $aAlreadyLinked, $aPrefillFormParam = array())
 	{
-		$sHtml = "<div class=\"wizContainer\" style=\"vertical-align:top;\">\n";
+		//$oPage->add("<div class=\"wizContainer\" style=\"vertical-align:top;\">\n");
 
 		$oHiddenFilter = new DBObjectSearch($this->sLinkedClass);
-		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass))
-		{
+		if (($oCurrentObj != null) && MetaModel::IsSameFamilyBranch($this->sLinkedClass, $this->sClass)) {
 			// Prevent linking to self if the linked object is of the same family
 			// and already present in the database
-			if (!$oCurrentObj->IsNew())
-			{
+			if (!$oCurrentObj->IsNew()) {
 				$oHiddenFilter->AddCondition('id', $oCurrentObj->GetKey(), '!=');
 			}
 		}
-		if (count($aAlreadyLinked) > 0)
-		{
+		if (count($aAlreadyLinked) > 0) {
 			$oHiddenFilter->AddCondition('id', $aAlreadyLinked, 'NOTIN');
 		}
 		$oHiddenCriteria = $oHiddenFilter->GetCriteria();
 		$aArgs = $oHiddenFilter->GetInternalParams();
-		$sHiddenCriteria = $oHiddenCriteria->Render($aArgs);
+		$sHiddenCriteria = $oHiddenCriteria->RenderExpression(false, $aArgs);
 
 		$oLinkSetDef = MetaModel::GetAttributeDef($this->sClass, $this->sAttCode);
 		$valuesDef = $oLinkSetDef->GetValuesDef();
 		if ($valuesDef === null)
 		{
 			$oFilter = new DBObjectSearch($this->sLinkedClass);
-		}
-		else
-		{
-			if (!$valuesDef instanceof ValueSetObjects)
-			{
+		} else {
+			if (!$valuesDef instanceof ValueSetObjects) {
 				throw new Exception('Error: only ValueSetObjects are supported for "allowed_values" in AttributeLinkedSet ('.$this->sClass.'/'.$this->sAttCode.').');
 			}
 			$oFilter = DBObjectSearch::FromOQL($valuesDef->GetFilterExpression());
 		}
 
-		if ($oCurrentObj != null)
-		{
+		if ($oCurrentObj != null) {
 			$this->SetSearchDefaultFromContext($oCurrentObj, $oFilter);
 
 			$aArgs = array_merge($oCurrentObj->ToArgs('this'), $oFilter->GetInternalParams());
@@ -339,7 +329,7 @@ class UILinksWidgetDirect
 			$oCurrentObj->PrefillForm('search', $aPrefillFormParam);
 		}
 		$oBlock = new DisplayBlock($oFilter, 'search', false);
-		$sHtml .= $oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
+		$oPage->AddUiBlock($oBlock->GetDisplay($oPage, "SearchFormToAdd_{$this->sInputid}",
 			array(
 				'result_list_outer_selector' => "SearchResultsToAdd_{$this->sInputid}",
 				'table_id' => "add_{$this->sInputid}",
@@ -349,16 +339,20 @@ class UILinksWidgetDirect
 				'query_params' => $oFilter->GetInternalParams(),
 				'hidden_criteria' => $sHiddenCriteria,
 			)
-        );
-		$sHtml .= "<form id=\"ObjectsAddForm_{$this->sInputid}\">\n";
-		$sHtml .= "<div id=\"SearchResultsToAdd_{$this->sInputid}\" style=\"vertical-align:top;background: #fff;height:100%;overflow:auto;padding:0;border:0;\">\n";
-		$sHtml .= "<div style=\"background: #fff; border:0; text-align:center; vertical-align:middle;\"><p>".Dict::S('UI:Message:EmptyList:UseSearchForm')."</p></div>\n";
-		$sHtml .= "</div>\n";
-		$sHtml .= "<input type=\"hidden\" id=\"count_{$this->sInputid}\" value=\"0\"/>";
-		$sHtml .= "<button type=\"button\" class=\"cancel\">".Dict::S('UI:Button:Cancel')."</button>&nbsp;&nbsp;<button type=\"button\" class=\"ok\" disabled=\"disabled\">".Dict::S('UI:Button:Add')."</button>";
-		$sHtml .= "</div>\n";
-		$sHtml .= "</form>\n";
-		$oPage->add($sHtml);
+		));
+		$sEmptyList = Dict::S('UI:Message:EmptyList:UseSearchForm');
+		$sCancel = Dict::S('UI:Button:Cancel');
+		$sAdd = Dict::S('UI:Button:Add');
+
+		$oPage->add(<<<HTML
+<form id="ObjectsAddForm_{$this->sInputid}">
+    <div id="SearchResultsToAdd_{$this->sInputid}">
+        <div style="background: #fff; border:0; text-align:center; vertical-align:middle;"><p>{$sEmptyList}</p></div>
+    </div>
+    <input type="hidden" id="count_{$this->sInputid}" value="0"/>
+</form>
+HTML
+		);
 	}
 
 	/**
@@ -488,6 +482,33 @@ class UILinksWidgetDirect
 			$aRow[$sLinkedAttCode] = $oLinkObj->GetAsHTML($sLinkedAttCode);
 		}
 		return $oPage->GetTableRow($aRow, $aAttribs);		
+	}
+
+	/**
+	 * @param WebPage $oPage
+	 * @param $sRealClass
+	 * @param $aValues
+	 * @param int $iTempId
+	 *
+	 * @return array
+	 */
+	public function GetFormRow($oPage, $sRealClass, $aValues, $iTempId)
+	{
+		if ($sRealClass == '')
+		{
+			$sRealClass = $this->sLinkedClass;
+		}
+		$oLinkObj = new $sRealClass();
+		$oLinkObj->UpdateObjectFromPostedForm($this->sInputid);
+
+		$aAttribs = $this->GetTableConfig();
+		$aRow = array();
+		$aRow[] = '<input type="checkbox" class="selectList'.$this->sInputid.'" value="'.($iTempId).'"/>';
+		foreach($this->aZlist as $sLinkedAttCode)
+		{
+			$aRow[] = $oLinkObj->GetAsHTML($sLinkedAttCode);
+		}
+		return $aRow;
 	}
 	
 	/**

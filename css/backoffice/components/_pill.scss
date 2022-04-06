@@ -1,0 +1,98 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-pill--margin-y: $ibo-spacing-200 !default;
+$ibo-pill--padding: 6px 10px !default;
+$ibo-pill--max-width: 240px !default;
+$ibo-pill--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-pill-new-state-primary-color: $ibo-color-blue-100 !default;
+$ibo-pill-new-state-secondary-color: $ibo-color-blue-900 !default;
+
+$ibo-pill-neutral-state-primary-color: $ibo-color-blue-100 !default;
+$ibo-pill-neutral-state-secondary-color: $ibo-color-blue-900 !default;
+
+$ibo-pill-waiting-state-primary-color: $ibo-color-orange-100 !default;
+$ibo-pill-waiting-state-secondary-color: $ibo-color-orange-800 !default;
+
+$ibo-pill-success-state-primary-color: $ibo-color-green-100 !default;
+$ibo-pill-success-state-secondary-color: $ibo-color-green-900 !default;
+
+$ibo-pill-failure-state-primary-color: $ibo-color-red-100 !default;
+$ibo-pill-failure-state-secondary-color: $ibo-color-red-800 !default;
+
+$ibo-pill-frozen-state-primary-color: $ibo-color-grey-100 !default;
+$ibo-pill-frozen-state-secondary-color: $ibo-color-grey-700 !default;
+
+/* - For basic badge */
+$ibo-pill-active-state-primary-color: $ibo-color-green-100 !default;
+$ibo-pill-active-state-secondary-color: $ibo-color-green-900 !default;
+
+$ibo-pill-inactive-state-primary-color: $ibo-color-orange-100 !default;
+$ibo-pill-inactive-state-secondary-color: $ibo-color-orange-800 !default;
+
+$ibo-pill-states-colors: (
+        'new': (
+                'primary-color': $ibo-pill-new-state-primary-color,
+                'secondary-color': $ibo-pill-new-state-secondary-color,
+        ),
+        'neutral': (
+                'primary-color': $ibo-pill-neutral-state-primary-color,
+                'secondary-color': $ibo-pill-neutral-state-secondary-color,
+        ),
+        'waiting': (
+                'primary-color': $ibo-pill-waiting-state-primary-color,
+                'secondary-color': $ibo-pill-waiting-state-secondary-color,
+        ),
+        'success': (
+                'primary-color': $ibo-pill-success-state-primary-color,
+                'secondary-color': $ibo-pill-success-state-secondary-color,
+        ),
+        'failure': (
+                'primary-color': $ibo-pill-failure-state-primary-color,
+                'secondary-color': $ibo-pill-failure-state-secondary-color,
+        ),
+        'frozen': (
+                'primary-color': $ibo-pill-frozen-state-primary-color,
+                'secondary-color': $ibo-pill-frozen-state-secondary-color,
+        ),
+        'active': (
+                'primary-color': $ibo-pill-active-state-primary-color,
+                'secondary-color': $ibo-pill-active-state-secondary-color,
+        ),
+        'inactive': (
+                'primary-color': $ibo-pill-inactive-state-primary-color,
+                'secondary-color': $ibo-pill-inactive-state-secondary-color,
+        ),
+);
+
+@each $sType, $aColors in $ibo-pill-states-colors {
+  .ibo-pill.ibo-is-#{$sType} {
+    color: map-get($aColors, 'secondary-color');
+    background-color: map-get($aColors, 'primary-color');
+  }
+}
+
+/* Rules */
+.ibo-pill {
+  /* --ibo-main-color-xxx is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
+  --ibo-main-color--100: map-get(map-get($ibo-pill-states-colors, 'neutral'), 'primary-color');
+  --ibo-main-color--900: map-get(map-get($ibo-pill-states-colors, 'neutral'), 'secondary-color');
+
+  @extend %ibo-fully-centered-content;
+  max-width: $ibo-pill--max-width;
+  margin-top: $ibo-pill--margin-y;
+  margin-bottom: $ibo-pill--margin-y;
+  padding: $ibo-pill--padding;
+  border-radius: $ibo-pill--border-radius;
+
+  color: var(--ibo-main-color--900);
+  background-color: var(--ibo-main-color--100);
+
+  &:hover, &:active {
+    color: inherit; /* Force color to stay as defined in pill instead of being overloaded by anchor's rules */
+  }
+}

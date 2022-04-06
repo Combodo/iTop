@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,25 +16,28 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Controller;
 
+use AttributeExternalKey;
+use AttributeLinkedSetIndirect;
+use BinaryExpression;
+use Combodo\iTop\Portal\Brick\AbstractBrick;
+use Combodo\iTop\Portal\Brick\BrowseBrick;
 use Combodo\iTop\Portal\Helper\BrowseBrickHelper;
+use DBObjectSearch;
+use DBObjectSet;
+use DBSearch;
+use FieldExpression;
+use IssueLog;
+use LogChannels;
+use MetaModel;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use MetaModel;
-use DBSearch;
-use DBObjectSet;
-use BinaryExpression;
-use FieldExpression;
 use VariableExpression;
-use Combodo\iTop\Portal\Brick\AbstractBrick;
-use Combodo\iTop\Portal\Brick\BrowseBrick;
 
 /**
  * Class BrowseBrickController
@@ -64,6 +67,8 @@ class BrowseBrickController extends BrickController
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId, $sBrowseMode = null, $sDataLoading = null)
 	{
+		$sPortalId = $this->getParameter('combodo.portal.instance.id');
+
 		/** @var \Combodo\iTop\Portal\Helper\BrowseBrickHelper $oBrowseBrickHelper */
 		$oBrowseBrickHelper = $this->get('browse_brick');
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
@@ -83,8 +88,9 @@ class BrowseBrickController extends BrickController
 		$sDataLoading = ($sDataLoading !== null) ? $sDataLoading : $oRequestManipulator->ReadParam('sDataLoading',
 			$oBrick->GetDataLoading());
 		// Getting search value
-		$sSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
-		if (!empty($sSearchValue))
+		$sRawSearchValue = $oRequestManipulator->ReadParam('sSearchValue', '');
+		$sSearchValue = html_entity_decode($sRawSearchValue);
+		if (strlen($sSearchValue) > 0)
 		{
 			$sDataLoading = AbstractBrick::ENUM_DATA_LOADING_LAZY;
 		}
@@ -134,10 +140,10 @@ class BrowseBrickController extends BrickController
 					$aRealiasingMap = array();
 					$oParentAtt = MetaModel::GetAttributeDef($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search']->GetClass(), $aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['parent_att']);
 					// If we work on a n:n link
-					if($oParentAtt instanceof \AttributeLinkedSetIndirect)
+					if($oParentAtt instanceof AttributeLinkedSetIndirect)
 					{
 						// Create a DBSearch from Link class
-						$oSubSearch = new \DBObjectSearch($oParentAtt->GetLinkedClass());
+						$oSubSearch = new DBObjectSearch($oParentAtt->GetLinkedClass());
 						// Join it to the bottom query
 						$oSubSearch = $oSubSearch->Join($aLevelsProperties[$aLevelsPropertiesKeys[$i + 1]]['search'],
 							DBSearch::JOIN_POINTING_TO, $oParentAtt->GetExtKeyToMe(), TREE_OPERATOR_EQUALS, $aRealiasingMap);
@@ -155,29 +161,52 @@ class BrowseBrickController extends BrickController
 					{
 						if (array_key_exists($sLevelAlias, $aRealiasingMap))
 						{
-							$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($aRealiasingMap[$sLevelAlias],
-								$sLevelAlias);
+							/** @since 2.7.2 */
+							foreach ($aRealiasingMap[$sLevelAlias] as $sAliasToChange)
+							{
+								$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->RenameAlias($sAliasToChange, $sLevelAlias);
+							}
 						}
 					}
 				}
 
 				// Adding search clause
 				// Note : For know the search is naive and looks only for the exact match. It doesn't search for words separately
-				if (!empty($sSearchValue))
+				if (strlen($sSearchValue) > 0)
 				{
 					// - Cleaning the search value by exploding and trimming spaces
-					$aSearchValues = explode(' ', $sSearchValue);
-					array_walk($aSearchValues, function (&$sSearchValue /*, $sKey*/) {
-						trim($sSearchValue);
-					});
+					$aExplodedSearchValues = explode(' ', $sSearchValue);
+					$aSearchValues = [];
+					foreach ($aExplodedSearchValues as $sValue) {
+						if (strlen($sValue) > 0) {
+							$aSearchValues[] = $sValue;
+						}
+					}
 
 					// - Retrieving fields to search
 					$aSearchFields = array($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['name_att']);
 					if (!empty($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields']))
 					{
+						$sTmpFieldClass = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetClass();
 						foreach ($aLevelsProperties[$aLevelsPropertiesKeys[$i]]['fields'] as $aTmpField)
 						{
-							$aSearchFields[] = $aTmpField['code'];
+							$sTmpFieldAttCode = $aTmpField['code'];
+
+							// Skip invalid attcodes
+							if(!MetaModel::IsValidAttCode($sTmpFieldClass, $sTmpFieldAttCode))
+							{
+								continue;
+							}
+
+							// For external key, force search on the friendlyname instead of the ID.
+							// This should be addressed more globally with the bigger issue, see N°1970
+							$oTmpFieldAttDef = MetaModel::GetAttributeDef($sTmpFieldClass, $sTmpFieldAttCode);
+							if($oTmpFieldAttDef instanceof AttributeExternalKey)
+							{
+								$sTmpFieldAttCode .= '_friendlyname';
+							}
+
+							$aSearchFields[] = $sTmpFieldAttCode;
 						}
 					}
 					// - Building query for the search values parts
@@ -236,13 +265,12 @@ class BrowseBrickController extends BrickController
 				{
 					$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->SetSelectedClasses($aLevelsClasses);
 
-					if (!empty($sSearchValue))
+					if (strlen($sSearchValue) > 0)
 					{
 						// Note : This could be way more simpler if we had a SetInternalParam($sParam, $value) verb
 						$aQueryParams = $aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->GetInternalParams();
 						// Note : $iSearchloopMax was initialized on the previous loop
-						for ($j = 0; $j <= $iSearchLoopMax; $j++)
-						{
+						for ($j = 0; $j <= $iSearchLoopMax; $j++) {
 							$aQueryParams['search_value_'.$j] = '%'.$aSearchValues[$j].'%';
 						}
 						$aLevelsProperties[$aLevelsPropertiesKeys[$i]]['search']->SetInternalParams($aQueryParams);
@@ -252,12 +280,11 @@ class BrowseBrickController extends BrickController
 			$oQuery = $aLevelsProperties[$aLevelsPropertiesKeys[0]]['search'];
 
 			// Testing appropriate data loading mode if we are in auto
-			if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_AUTO)
-			{
+			if ($sDataLoading === AbstractBrick::ENUM_DATA_LOADING_AUTO) {
 				// - Check how many records there is.
 				// - Update $sDataLoading with its new value regarding the number of record and the threshold
 				$oCountSet = new DBObjectSet($oQuery);
-				$fThreshold = (float)MetaModel::GetModuleSetting($this->getParameter('combodo.portal.instance.id'),
+				$fThreshold = (float)MetaModel::GetModuleSetting($sPortalId,
 					'lazy_loading_threshold');
 				$sDataLoading = ($oCountSet->Count() > $fThreshold) ? AbstractBrick::ENUM_DATA_LOADING_LAZY : AbstractBrick::ENUM_DATA_LOADING_FULL;
 				unset($oCountSet);
@@ -314,7 +341,16 @@ class BrowseBrickController extends BrickController
 									$oQuery = $aLevelsProperties[$aLevelProperties['levels'][0]]['search'];
 									if (!empty($sNodeId))
 									{
-										$oQuery->AddCondition($aLevelsProperties[$aLevelProperties['levels'][0]]['parent_att'], $sNodeId);
+										$sParentAttCode = $aLevelsProperties[$aLevelProperties['levels'][0]]['parent_att'];
+										$oParentAtt = MetaModel::GetAttributeDef($oQuery->GetClass(), $sParentAttCode);
+										if($oParentAtt instanceof AttributeLinkedSetIndirect)
+										{
+											$oQuery->AddConditionAdvanced($sParentAttCode.'->'.$oParentAtt->GetExtKeyToRemote(), $sNodeId);
+										}
+										else
+										{
+											$oQuery->AddCondition($sParentAttCode, $sNodeId);
+										}
 									}
 									$bFoundLevel = true;
 									break;
@@ -375,6 +411,7 @@ class BrowseBrickController extends BrickController
 				$aColumnAttrs[$sTmpClassAlias] = $aTmpColumnAttrs;
 			}
 		}
+		// Note: $aColumnAttrs already contains array of aliases => attcodes
 		$oSet->OptimizeColumnLoad($aColumnAttrs);
 
 		// Setting specified column sort, setting default datamodel one otherwise
@@ -405,23 +442,27 @@ class BrowseBrickController extends BrickController
 			}
 		}
 
+		IssueLog::Debug('Portal BrowseBrick query', LogChannels::PORTAL, array(
+			'sPortalId' => $sPortalId,
+			'sBrickId' => $sBrickId,
+			'oql' => $oSet->GetFilter()->ToOQL(),
+		));
+
+
 		// Preparing response
-		if ($oRequest->isXmlHttpRequest())
-		{
+		if ($oRequest->isXmlHttpRequest()) {
 			$aData = $aData + array(
 					'data' => $aItems,
 					'levelsProperties' => $aLevelsProperties,
 				);
 			$oResponse = new JsonResponse($aData);
-		}
-		else
-		{
+		} else {
 			$aData = $aData + array(
 					'oBrick' => $oBrick,
 					'sBrickId' => $sBrickId,
 					'sBrowseMode' => $sBrowseMode,
 					'aBrowseButtons' => $aBrowseButtons,
-					'sSearchValue' => $sSearchValue,
+					'sSearchValue' => $sRawSearchValue,
 					'sDataLoading' => $sDataLoading,
 					'aItems' => json_encode($aItems),
 					'iItemsCount' => count($aItems),

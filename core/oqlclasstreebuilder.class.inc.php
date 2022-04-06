@@ -1,6 +1,6 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -8,7 +8,7 @@
 class OQLClassTreeBuilder
 {
 	/** @var \DBObjectSearch  */
-	private $oDBObjetSearch;
+	private $oDBObjectSearch;
 	/** @var OQLClassNode */
 	private $oOQLClassNode;
 	/** @var \QueryBuilderContext  */
@@ -23,10 +23,10 @@ class OQLClassTreeBuilder
 	 * @param \DBObjectSearch $oDBObjetSearch
 	 * @param \QueryBuilderContext $oBuild
 	 */
-	public function __construct($oDBObjetSearch, $oBuild)
+	protected function __construct($oDBObjetSearch, $oBuild)
 	{
 		$this->oBuild = $oBuild;
-		$this->oDBObjetSearch = $oDBObjetSearch;
+		$this->oDBObjectSearch = $oDBObjetSearch;
 		$this->sClass = $oDBObjetSearch->GetFirstJoinedClass();
 		$this->sClassAlias = $oDBObjetSearch->GetFirstJoinedClassAlias();
 		if (empty($this->sClassAlias))
@@ -34,6 +34,25 @@ class OQLClassTreeBuilder
 			$this->sClassAlias = $oBuild->GetEmptyClassAlias();
 		}
 		$this->oOQLClassNode = new OQLClassNode($oBuild, $this->sClass, $this->sClassAlias);
+	}
+
+	/**
+	 * @param \DBObjectSearch $oDBObjetSearch
+	 * @param \QueryBuilderContext $oBuild
+	 *
+	 * @return \OQLClassNode
+	 * @throws \CoreException
+	 */
+	public static function GetOQLClassTree($oDBObjetSearch, $oBuild)
+	{
+		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($oDBObjetSearch, $oBuild);
+		$oOQLClassNode = $oOQLClassTreeBuilder->DevelopOQLClassNode();
+		$oOQLClassTreeOptimizer = new OQLClassTreeOptimizer($oOQLClassNode, $oBuild);
+		$oOQLClassTreeOptimizer->OptimizeClassTree();
+		$oOQLActualClassTreeResolver = new OQLActualClassTreeResolver($oOQLClassNode, $oBuild);
+		$oOQLClassNode = $oOQLActualClassTreeResolver->Resolve();
+
+		return $oOQLClassNode;
 	}
 
 	/**
@@ -50,6 +69,7 @@ class OQLClassTreeBuilder
 	 */
 	public function DevelopOQLClassNode()
 	{
+		$this->TranslateNestedRequests();
 		$this->AddExternalKeysFromSearch();
 		$aPolymorphicJoinAlias = $this->TranslatePolymorphicExpressions();
 		$this->AddExpectedExternalFields();
@@ -69,7 +89,7 @@ class OQLClassTreeBuilder
 	 */
 	private function AddExternalKeysFromSearch()
 	{
-		foreach ($this->oDBObjetSearch->GetCriteria_PointingTo() as $sKeyAttCode => $aPointingTo)
+		foreach ($this->oDBObjectSearch->GetCriteria_PointingTo() as $sKeyAttCode => $aPointingTo)
 		{
 			if (array_key_exists(TREE_OPERATOR_EQUALS, $aPointingTo))
 			{
@@ -202,7 +222,7 @@ class OQLClassTreeBuilder
 	private function JoinClassesForExternalKeys()
 	{
 		// Get filters from the search outgoing joins
-		$aAllPointingTo = $this->oDBObjetSearch->GetCriteria_PointingTo();
+		$aAllPointingTo = $this->oDBObjectSearch->GetCriteria_PointingTo();
 
 		// Add filters from external keys
 		foreach (array_keys($this->oOQLClassNode->GetExternalKeys()) as $sKeyAttCode)
@@ -316,7 +336,7 @@ class OQLClassTreeBuilder
 	 */
 	private function JoinClassesReferencedBy()
 	{
-		foreach ($this->oDBObjetSearch->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
+		foreach ($this->oDBObjectSearch->GetCriteria_ReferencedBy() as $sForeignClass => $aReferences)
 		{
 			foreach ($aReferences as $sForeignExtKeyAttCode => $aFiltersByOperator)
 			{
@@ -374,5 +394,14 @@ class OQLClassTreeBuilder
 			$oSelectPoly = $oOQLClassTreeBuilder->DevelopOQLClassNode();
 			$this->oOQLClassNode->AddLeftJoin($oSelectPoly, 'id', 'id', true);
 		}
+	}
+
+	/**
+	 * Rename class aliases of nested requests to avoid collision with main request
+	 */
+	private function TranslateNestedRequests()
+	{
+		$aClassAliases = $this->oDBObjectSearch->GetJoinedClasses();
+		$this->oDBObjectSearch->RenameNestedQueriesAliasesInNameSpace($aClassAliases);
 	}
 }

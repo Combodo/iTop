@@ -20,12 +20,12 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
-	'Menu:DataSources' => 'Synchronization Data Sources~~',
-	'Menu:DataSources+' => 'All Synchronization Data Sources~~',
+	'Menu:DataSources' => 'Senkronizasyon Veri Kaynakları',
+	'Menu:DataSources+' => 'Tüm Senkronizasyon Veri Kaynakları',
 	'Menu:WelcomeMenu' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenu+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenu+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 	'Menu:WelcomeMenuPage' => 'Hoşgeldiniz',
-	'Menu:WelcomeMenuPage+' => 'iTop\'a Hoşgeldiniz',
+	'Menu:WelcomeMenuPage+' => ITOP_APPLICATION_SHORT.'\'a Hoşgeldiniz',
 	'Menu:AdminTools' => 'Yönetim Araçları',
 	'Menu:AdminTools+' => 'Yönetim Araçları',
 	'Menu:AdminTools?' => 'Yönetici profiline izin verilen araçlar',
@@ -40,8 +40,8 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Notifications:Title' => 'Denetleme Kategorileri',
 	'Menu:RunQueriesMenu' => 'Sorgu çalıştır',
 	'Menu:RunQueriesMenu+' => 'Sorgu çalıştır',
-	'Menu:QueryMenu' => 'Query phrasebook~~',
-	'Menu:QueryMenu+' => 'Query phrasebook~~',
+	'Menu:QueryMenu' => 'Sorgu deyişleri kitabı',
+	'Menu:QueryMenu+' => 'Sorgu deyişleri kitabı',
 	'Menu:UniversalSearchMenu' => 'Genel sorgu',
 	'Menu:UniversalSearchMenu+' => 'Herhangi bir arama...',
 	'Menu:UserManagementMenu' => 'Kullanıcı Yönetimi',
@@ -52,7 +52,10 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:UserAccountsMenu' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu+' => 'Kullanıcı Hesapları',
 	'Menu:UserAccountsMenu:Title' => 'Kullanıcı Hesapları',
-	'Menu:MyShortcuts' => 'My Shortcuts~~',
+	'Menu:MyShortcuts' => 'Kısayollarım',
+	'Menu:UserManagement' => 'User Management~~',
+	'Menu:Queries' => 'Queries~~',
+	'Menu:ConfigurationTools' => 'Configuration~~',
 ));
 
 //
@@ -80,4 +83,13 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
 	'Class:ResourceRunQueriesMenu+' => '~~',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '~~',
 ));

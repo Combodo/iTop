@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Controller;
@@ -176,7 +174,7 @@ class UserProfileBrickController extends BrickController
 		{
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			$oFormRenderer->SetEndpoint($oUrlGenerator->generate('p_user_profile_brick'));
 			// - Creating manager
 			$oFormManager = new PreferencesFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
@@ -196,7 +194,7 @@ class UserProfileBrickController extends BrickController
 				$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
 				if ($sFormManagerClass === null || $sFormManagerData === null)
 				{
-					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
 						'Parameters formmanager_class and formmanager_data must be defined.');
 				}
@@ -213,6 +211,7 @@ class UserProfileBrickController extends BrickController
 				{
 					$aFormData['validation']['redirection'] = array(
 						'url' => $oUrlGenerator->generate('p_user_profile_brick'),
+						'timeout_duration' => 1000, //since there are several ajax request, we use a longer timeout in hope that they will all be finished in time. A promise would have been more reliable, but since this change is made in a minor version, this approach is less error prone.
 					);
 				}
 			}
@@ -248,6 +247,8 @@ class UserProfileBrickController extends BrickController
 	{
 		/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 		$oRequestManipulator = $this->get('request_manipulator');
+		/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
+		$oUrlGenerator = $this->get('url_generator');
 
 		$aFormData = array();
 
@@ -259,7 +260,7 @@ class UserProfileBrickController extends BrickController
 		{
 			// - Creating renderer
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($_SERVER['REQUEST_URI']);
+			$oFormRenderer->SetEndpoint($oUrlGenerator->generate('p_user_profile_brick'));
 			// - Creating manager
 			$oFormManager = new PasswordFormManager();
 			$oFormManager->SetRenderer($oFormRenderer)
@@ -277,9 +278,8 @@ class UserProfileBrickController extends BrickController
 			{
 				$sFormManagerClass = $oRequestManipulator->ReadParam('formmanager_class', null, FILTER_UNSAFE_RAW);
 				$sFormManagerData = $oRequestManipulator->ReadParam('formmanager_data', null, FILTER_UNSAFE_RAW);
-				if ($sFormManagerClass === null || $sFormManagerData === null)
-				{
-					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+				if ($sFormManagerClass === null || $sFormManagerData === null) {
+					IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 					throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR,
 						'Parameters formmanager_class and formmanager_data must be defined.');
 				}
@@ -373,8 +373,15 @@ class UserProfileBrickController extends BrickController
 					$aFormData['error'] = $e->GetMessage();
 				}
 
-				// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 2.8
-				$aFormData['picture_url'] = $oUrlGenerator->generate('p_object_document_display', array('sObjectClass' => get_class($oCurContact), 'sObjectId' => $oCurContact->GetKey(), 'sObjectField' => $sPictureAttCode, 'cache' => 86400, 't' => time()));
+				// TODO: This should be changed when refactoring the ormDocument GetDisplayUrl() and GetDownloadUrl() in iTop 3.0
+				$oOrmDoc = $oCurContact->Get($sPictureAttCode);
+				$aFormData['picture_url'] = $oUrlGenerator->generate('p_object_document_display', [
+					'sObjectClass' => get_class($oCurContact),
+					'sObjectId' => $oCurContact->GetKey(),
+					'sObjectField' => $sPictureAttCode,
+					'cache' => 86400,
+					's' => $oOrmDoc->GetSignature(),
+					]);
 				$aFormData['validation'] = array(
 					'valid' => true,
 					'messages' => array(),

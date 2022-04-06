@@ -1,0 +1,609 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/*
+ * IMPORTANT: This is not how vendors should be integrated in the theme, we should include the base stylesheet, THEN only overload what is necessary.
+ * By doing a complete redefinition of the vendor stylesheet like this we won't be able to upgrade the vendor easily...
+ */
+
+$ibo-vendors-jqueryui--ui-dialog--padding-x: 30px !default;
+$ibo-vendors-jqueryui--ui-dialog--border-radius: $ibo-border-radius-500 !default;
+$ibo-vendors-jqueryui--ui-dialog--background-color: $ibo-color-white-100 !default;
+
+$ibo-vendors-jqueryui--ui-dialog-titlebar--height: 50px !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--padding-x: $ibo-vendors-jqueryui--ui-dialog--padding-x !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y: .4em !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
+$ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom: solid 1px $ibo-color-grey-200 !default;
+
+$ibo-vendors-jqueryui--ui-dialog-title--padding-right: $ibo-spacing-600 !default;
+
+$ibo-vendors-jqueryui--ui-dialog-content--padding-x: $ibo-vendors-jqueryui--ui-dialog--padding-x !default;
+$ibo-vendors-jqueryui--ui-dialog-content--padding-y: $ibo-spacing-500 !default;
+
+$ibo-vendors-jqueryui--ui-dialog-buttonpane--height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height !default;
+$ibo-vendors-jqueryui--ui-dialog-buttonpane--background-color: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
+$ibo-vendors-jqueryui--ui-dialog-buttonpane--border-top: $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom !default;
+
+$ibo-vendors-jqueryui--ui-dialog--border: $ibo-vendors-jqueryui--ui-dialog--background-color !default;
+
+$ibo-vendors-jqueryui--ui-widget-overlay--background-color: $ibo-color-blue-grey-800 !default;
+
+$ibo-vendors-jqueryui--ui-datepicker--padding: $ibo-spacing-300 !default;
+$ibo-vendors-jqueryui--ui-datepicker--background-color: $ibo-color-white-100 !default;
+$ibo-vendors-jqueryui--ui-datepicker--border-radius: $ibo-border-radius-500 !default;
+$ibo-vendors-jqueryui--ui-datepicker--box-shadow: $ibo-elevation-100 !default;
+
+$ibo-vendors-jqueryui--ui-datepicker-header--margin: $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-spacing-200 $ibo-vendors-jqueryui--ui-datepicker--padding !default;
+$ibo-vendors-jqueryui--ui-datepicker-header--padding-top: $ibo-spacing-600 !default;
+
+$ibo-vendors-jqueryui--ui-datepicker-buttons--top: 0 !default;
+$ibo-vendors-jqueryui--ui-datepicker-prev--left: 0 !default;
+$ibo-vendors-jqueryui--ui-datepicker-next--right: 0 !default;
+
+$ibo-vendors-jqueryui--ui-datepicker-year--margin-left: $ibo-spacing-300 !default;
+
+$ibo-vendors-jqueryui--ui-datepicker-days--width: 23px !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--border-radius: $ibo-border-radius-full !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--color: $ibo-color-orange-700 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--active--background-color: $ibo-color-orange-700 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--active--color: $ibo-color-orange-100 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--highlight--background-color: $ibo-color-orange-200 !default;
+$ibo-vendors-jqueryui--ui-datepicker-days--hover--background-color: $ibo-color-orange-900 !default;
+
+$ibo-vendors-jqueryui--ui-slider--background-color: $ibo-color-grey-100 !default;
+$ibo-vendors-jqueryui--ui-slider--border-color: $ibo-color-grey-600 !default;
+$ibo-vendors-jqueryui--ui-slider--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--background-color: $ibo-color-white-100 !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-color: $ibo-vendors-jqueryui--ui-slider--border-color !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-radius: $ibo-vendors-jqueryui--ui-slider--border-radius !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--diameter: 1.4em !default;
+$ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-color-orange-700 !default;
+
+// Tabs
+
+.ui-dialog{
+  box-sizing: content-box; /* Necessary to overload our theme default setting */
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	left: 0;
+	background-color: $ibo-vendors-jqueryui--ui-dialog--background-color;
+	border-radius: $ibo-vendors-jqueryui--ui-dialog--border-radius;
+	overflow: hidden;
+	outline: 0;
+	z-index: 21;
+	.ui-dialog-titlebar {
+		padding: $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-x;
+		position: relative;
+		background-color: $ibo-vendors-jqueryui--ui-dialog-titlebar--background-color;
+		height: $ibo-vendors-jqueryui--ui-dialog-titlebar--height;
+		border-bottom: $ibo-vendors-jqueryui--ui-dialog-titlebar--border-bottom;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: space-between;
+	}
+	.ui-dialog-title {
+		float: left;
+		margin: .1em 0;
+		width: 100%;
+    padding-right: $ibo-vendors-jqueryui--ui-dialog-title--padding-right; /* To avoid title being visible behind the closing "X" */
+		@extend %ibo-text-truncated-with-ellipsis;
+	}
+	.ui-dialog-titlebar-close {
+		position: absolute;
+		right: 0;
+		top: $ibo-vendors-jqueryui--ui-dialog-titlebar--padding-y;
+		width: 20px;
+		margin: -10px 0 0 0;
+		padding: 1px;
+		height: 20px;
+	}
+	.ui-dialog-content {
+    box-sizing: content-box; /* Necessary to overload our theme default setting */
+		position: relative;
+		padding: $ibo-vendors-jqueryui--ui-dialog-content--padding-y $ibo-vendors-jqueryui--ui-dialog-content--padding-x;
+    overflow: auto;
+	}
+	.ui-dialog-buttonpane {
+		margin-top: auto;
+		text-align: left;
+		border-width: 1px 0 0 0;
+		background-image: none;
+		padding: .4em $ibo-vendors-jqueryui--ui-dialog--padding-x;
+		position: relative;
+		background-color: $ibo-vendors-jqueryui--ui-dialog-buttonpane--background-color;
+		border-top: $ibo-vendors-jqueryui--ui-dialog-buttonpane--border-top;
+		height: $ibo-vendors-jqueryui--ui-dialog-buttonpane--height;
+		.ui-dialog-buttonset {
+			float: right;
+		}
+		button {
+			margin: .5em .4em .5em 0;
+			cursor: pointer;
+		}
+	}
+	.ui-resizable-n {
+		height: 2px;
+		top: 0;
+	}
+	.ui-resizable-e {
+		width: 2px;
+		right: 0;
+	}
+	.ui-resizable-s {
+		height: 2px;
+		bottom: 0;
+	}
+	.ui-resizable-w {
+		width: 2px;
+		left: 0;
+	}
+	.ui-resizable-se {
+		width: 7px;
+		height: 7px;
+		right: 0;
+		bottom: 0;
+	}
+	.ui-resizable-sw {
+		width: 7px;
+		height: 7px;
+		left: 0;
+		bottom: 0;
+	}
+	.ui-resizable-ne {
+		width: 7px;
+		height: 7px;
+		right: 0;
+		top: 0;
+	}
+	.ui-resizable-nw {
+		width: 7px;
+		height: 7px;
+		left: 0;
+		top: 0;
+	}
+	.ui-button {
+		@extend .ibo-button, .ibo-is-regular, .ibo-is-secondary;
+		> .ui-icon {
+			background-image: none;
+			float: unset;
+			margin: auto;
+			&.ui-icon-closethick::after{
+				content: '\f00d';
+				font-family: 'Font Awesome 5 Free';
+				font-weight: 600;
+				text-indent: 0;
+				position: absolute;
+				left: 0px;
+				width: 100%;
+				top: 4px;
+			}
+		}
+		&.ui-dialog-titlebar-close{
+			@extend .ibo-is-alternative;
+			@extend .ibo-is-neutral;
+			
+		}
+	}
+}
+.ui-button-icon-only {
+	text-indent: -9999px;
+	white-space: nowrap;
+}
+.ui-dialog-title{
+	@extend %ibo-font-ral-nor-250;
+}
+.ui-widget-overlay.ui-front{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	opacity: .6;
+	filter: Alpha(Opacity=60);
+	background-color: $ibo-vendors-jqueryui--ui-widget-overlay--background-color;
+}
+// Resiable
+
+
+.ui-resizable {
+	position: relative;
+}
+.ui-resizable-handle {
+	position: absolute;
+	font-size: 0.1px;
+	display: block;
+	-ms-touch-action: none;
+	touch-action: none;
+}
+.ui-resizable-disabled {
+	.ui-resizable-handle {
+		display: none;
+	}
+}
+.ui-resizable-autohide {
+	.ui-resizable-handle {
+		display: none;
+	}
+}
+.ui-resizable-n {
+	cursor: n-resize;
+	height: 7px;
+	width: 100%;
+	top: -5px;
+	left: 0;
+}
+.ui-resizable-s {
+	cursor: s-resize;
+	height: 7px;
+	width: 100%;
+	bottom: -5px;
+	left: 0;
+}
+.ui-resizable-e {
+	cursor: e-resize;
+	width: 7px;
+	right: -5px;
+	top: 0;
+	height: 100%;
+}
+.ui-resizable-w {
+	cursor: w-resize;
+	width: 7px;
+	left: -5px;
+	top: 0;
+	height: 100%;
+}
+.ui-resizable-se {
+	cursor: se-resize;
+	width: 12px;
+	height: 12px;
+	right: 1px;
+	bottom: 1px;
+}
+.ui-resizable-sw {
+	cursor: sw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	bottom: -5px;
+}
+.ui-resizable-nw {
+	cursor: nw-resize;
+	width: 9px;
+	height: 9px;
+	left: -5px;
+	top: -5px;
+}
+.ui-resizable-ne {
+	cursor: ne-resize;
+	width: 9px;
+	height: 9px;
+	right: -5px;
+	top: -5px;
+}
+
+// Layout
+
+.ui-layout-pane {
+	overflow: auto;
+}
+
+// Date picker
+.ui-datepicker {
+  /* Note: We can't put the padding directly here as the jQuery JS code will position it regarding its inner width, not taking the padding here into account, so it is placed in the header/calendar elements */
+  background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
+  border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
+  box-shadow: $ibo-vendors-jqueryui--ui-datepicker--box-shadow;
+  z-index: 32 !important;
+  padding: $ibo-spacing-0 $ibo-spacing-300 5px $ibo-spacing-300;
+
+  .ui-datepicker-header {
+    position: relative;
+    margin: $ibo-vendors-jqueryui--ui-datepicker-header--margin;
+    padding-top: $ibo-vendors-jqueryui--ui-datepicker-header--padding-top;
+  }
+
+  .ui-datepicker-prev,
+  .ui-datepicker-next {
+    position: absolute;
+    top: $ibo-vendors-jqueryui--ui-datepicker-buttons--top;
+  }
+
+  .ui-datepicker-prev {
+    left: $ibo-vendors-jqueryui--ui-datepicker-prev--left;
+  }
+
+  .ui-datepicker-next {
+    right: $ibo-vendors-jqueryui--ui-datepicker-next--right;
+  }
+
+  .ui-datepicker-title {
+    display: flex;
+    justify-content: space-evenly;
+
+    select {
+      flex-grow: 1;
+      @extend %ibo-font-ral-nor-100;
+    }
+  }
+
+  .ui-datepicker-year {
+    margin-left: $ibo-vendors-jqueryui--ui-datepicker-year--margin-left;
+  }
+
+  .ui-datepicker-calendar {
+    margin: 0 $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-vendors-jqueryui--ui-datepicker--padding $ibo-vendors-jqueryui--ui-datepicker--padding;
+  }
+
+  th {
+    padding: .7em .3em;
+    text-align: center;
+    font-weight: bold;
+  }
+
+  td {
+    padding: 1px;
+
+    span,
+    a {
+      display: block;
+      padding: .2em 0;
+      text-align: center;
+      width: $ibo-vendors-jqueryui--ui-datepicker-days--width;
+      border-radius: $ibo-vendors-jqueryui--ui-datepicker-days--border-radius;
+      color: $ibo-vendors-jqueryui--ui-datepicker-days--color;
+      
+      &.ui-state-active {
+        background-color: $ibo-vendors-jqueryui--ui-datepicker-days--active--background-color;
+        color: $ibo-vendors-jqueryui--ui-datepicker-days--active--color;
+      }
+      &.ui-state-highlight:not(.ui-state-active) {
+        background-color: $ibo-vendors-jqueryui--ui-datepicker-days--highlight--background-color;
+      }
+      &.ui-state-hover:not(.ui-state-active) {
+        color: $ibo-vendors-jqueryui--ui-datepicker-days--hover--background-color;
+      }
+    }
+  }
+
+  .ui-datepicker-buttonpane {
+    background-image: none;
+    margin: .7em 0 0 0;
+    padding: 0 .2em;
+    border-left: 0;
+    border-right: 0;
+    border-bottom: 0;
+
+    button {
+      float: right;
+      margin: .5em .2em .4em;
+      cursor: pointer;
+      padding: .2em .6em .3em .6em;
+      width: auto;
+      overflow: visible;
+    }
+
+    button.ui-datepicker-current {
+      float: left;
+    }
+  }
+}
+.ui-datepicker.ui-datepicker-multi {
+	width: auto;
+}
+.ui-datepicker-multi {
+	.ui-datepicker-group {
+		float: left;
+		table {
+			width: 95%;
+			margin: 0 auto .4em;
+		}
+	}
+	.ui-datepicker-group-last {
+		.ui-datepicker-header {
+			border-left-width: 0;
+		}
+	}
+	.ui-datepicker-group-middle {
+		.ui-datepicker-header {
+			border-left-width: 0;
+		}
+	}
+	.ui-datepicker-buttonpane {
+		clear: left;
+	}
+}
+.ui-datepicker-multi-2 {
+	.ui-datepicker-group {
+		width: 50%;
+	}
+}
+.ui-datepicker-multi-3 {
+	.ui-datepicker-group {
+		width: 33.3%;
+	}
+}
+.ui-datepicker-multi-4 {
+	.ui-datepicker-group {
+		width: 25%;
+	}
+}
+.ui-datepicker-row-break {
+	clear: both;
+	width: 100%;
+	font-size: 0;
+}
+.ui-datepicker-rtl {
+	direction: rtl;
+	.ui-datepicker-prev {
+		right: 2px;
+		left: auto;
+		&:hover {
+			right: 1px;
+			left: auto;
+		}
+	}
+	.ui-datepicker-next {
+		left: 2px;
+		right: auto;
+		&:hover {
+			left: 1px;
+			right: auto;
+		}
+	}
+	.ui-datepicker-buttonpane {
+		clear: right;
+		button {
+			float: left;
+		}
+		button.ui-datepicker-current {
+			float: right;
+		}
+	}
+	.ui-datepicker-group {
+		float: right;
+	}
+	.ui-datepicker-group-last {
+		.ui-datepicker-header {
+			border-right-width: 0;
+			border-left-width: 1px;
+		}
+	}
+	.ui-datepicker-group-middle {
+		.ui-datepicker-header {
+			border-right-width: 0;
+			border-left-width: 1px;
+		}
+	}
+}
+
+// Sliders 
+
+.ui-slider {
+  position: relative;
+  text-align: left;
+  background-color: $ibo-vendors-jqueryui--ui-slider--background-color;
+  border: solid 1px $ibo-vendors-jqueryui--ui-slider--border-color;
+  border-radius: $ibo-vendors-jqueryui--ui-slider--border-radius;
+  .ui-slider-handle {
+    background-color: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--background-color;
+    border: solid 1px $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-color;
+    border-radius: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--border-radius;
+    position: absolute;
+    z-index: 2;
+    width: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--diameter;
+    height: $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--diameter;
+    -ms-touch-action: none;
+    touch-action: none;
+    cursor: pointer;
+    &:hover, &:active{
+      border: solid 1px $ibo-color-orange-700;
+    }
+  }
+  .ui-slider-range {
+    position: absolute;
+    z-index: 1;
+    font-size: .7em;
+    display: block;
+    // border: 0;
+    background-position: 0 0;
+  }
+}
+.ui-slider.ui-state-disabled {
+  .ui-slider-handle {
+    filter: inherit;
+  }
+  .ui-slider-range {
+    filter: inherit;
+  }
+}
+.ui-slider-horizontal {
+  height: .8em;
+  .ui-slider-handle {
+    top: -.2em;
+    margin-left: -.6em;
+  }
+  .ui-slider-range {
+    top: 0;
+    height: 100%;
+  }
+  .ui-slider-range-min {
+    left: 0;
+  }
+  .ui-slider-range-max {
+    right: 0;
+  }
+}
+.ui-slider-vertical {
+  width: .8em;
+  height: 100px;
+  .ui-slider-handle {
+    left: -.3em;
+    margin-left: 0;
+    margin-bottom: -.6em;
+  }
+  .ui-slider-range {
+    left: 0;
+    width: 100%;
+  }
+  .ui-slider-range-min {
+    bottom: 0;
+  }
+  .ui-slider-range-max {
+    top: 0;
+  }
+}
+
+// Autocomplete
+
+.ui-autocomplete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: default;
+  z-index: 100;
+  .ui-menu-item{
+    padding: 0;
+  }
+}
+.ui-autocomplete-input{
+  @extend .ibo-input;
+  width: auto;
+  display: inline;
+}
+
+.ui-autocomplete-category{
+  @extend .ibo-popover-menu--item-separator
+}
+// Menu
+
+.ui-menu{
+  @extend .ibo-popover-menu;
+}
+.ui-menu-item{
+  @extend .ibo-popover-menu--item;
+}
+
+// Helper
+
+.ui-helper-hidden-accessible {
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  width: 1px;
+}
+
+// Tabs
+.ui-tabs-tab.ui-state-disabled a{
+  cursor: not-allowed !important;
+}

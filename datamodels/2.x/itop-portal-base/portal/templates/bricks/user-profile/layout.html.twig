@@ -227,16 +227,10 @@
 		$('#user-profile-wrapper .form_field .help-block > p').remove();
 
 		// Submiting contact form through AJAX
-		//if($('#{{ oContactForm.id }} .field_set').field_set('hasTouchedFields'))
-		//{
-			$('#{{ oContactForm.id }}').portal_form_handler('submit', oEvent);
-		//}
+        $('#{{ oContactForm.id }}').portal_form_handler('submit', oEvent);
 
 		// Submiting preferences form through AJAX
-		//if($('#{{ oPreferencesForm.id }} .field_set').field_set('hasTouchedFields'))
-		//{
-			$('#{{ oPreferencesForm.id }}').portal_form_handler('submit', oEvent);
-		//}
+        $('#{{ oPreferencesForm.id }}').portal_form_handler('submit', oEvent);
 
 		{% if oPasswordForm is not null %}
 			// Submiting password form through AJAX

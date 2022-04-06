@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,8 +16,6 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 
@@ -52,49 +50,58 @@ use UserRights;
  */
 class ObjectFormHandlerHelper
 {
-	/** @var string ENUM_MODE_VIEW */
+	/** @var string */
 	const ENUM_MODE_VIEW = 'view';
-	/** @var string ENUM_MODE_EDIT */
+	/** @var string */
 	const ENUM_MODE_EDIT = 'edit';
-	/** @var string ENUM_MODE_CREATE */
+	/** @var string */
 	const ENUM_MODE_CREATE = 'create';
+	/**
+	 * @var string
+	 * @since 2.7.7 3.0.1 3.1.0
+	 */
+	const ENUM_MODE_APPLY_STIMULUS = 'apply_stimulus';
 
-	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator */
 	private $oRequestManipulator;
-	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulator */
 	private $oContextManipulator;
-	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper */
+	/** @var \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper */
+	private $oNavigationRuleHelper;
+	/** @var \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator */
 	private $oScopeValidator;
-	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper */
+	/** @var \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper */
 	private $oSecurityHelper;
-	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator */
+	/** @var \Combodo\iTop\Portal\Routing\UrlGenerator $oUrlGenerator */
 	private $oUrlGenerator;
-	/** @var array */
+	/** @var array $aCombodoPortalInstanceConf */
 	private $aCombodoPortalInstanceConf;
 	/** @var string $sPortalId */
 	private $sPortalId;
-	/** @var \Combodo\iTop\Portal\Twig\AppExtension */
+	/** @var \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension */
 	private $oAppExtension;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
 	private $oContainer;
 
 	/**
 	 * ObjectFormHandlerHelper constructor.
 	 *
-	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper       $oRequestManipulator
-	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper       $oContextManipulator
-	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper           $oScopeValidator
-	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper                 $oSecurityHelper
+	 * @param \Combodo\iTop\Portal\Helper\RequestManipulatorHelper $oRequestManipulator
+	 * @param \Combodo\iTop\Portal\Helper\ContextManipulatorHelper $oContextManipulator
+	 * @param \Combodo\iTop\Portal\Helper\NavigationRuleHelper $oNavigationRuleHelper
+	 * @param \Combodo\iTop\Portal\Helper\ScopeValidatorHelper $oScopeValidator
+	 * @param \Combodo\iTop\Portal\Helper\SecurityHelper $oSecurityHelper
 	 * @param \Symfony\Component\Routing\Generator\UrlGeneratorInterface $oUrlGenerator
-	 * @param array                                                      $aCombodoPortalInstanceConf
-	 * @param string                                                     $sPortalId
-	 * @param \Combodo\iTop\Portal\Twig\AppExtension                     $oAppExtension
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface  $oContainer
+	 * @param array $aCombodoPortalInstanceConf
+	 * @param string $sPortalId
+	 * @param \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension
+	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
 	 */
-	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
+	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, NavigationRuleHelper $oNavigationRuleHelper, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
 	{
 		$this->oRequestManipulator = $oRequestManipulator;
 		$this->oContextManipulator = $oContextManipulator;
+		$this->oNavigationRuleHelper = $oNavigationRuleHelper;
 		$this->oScopeValidator = $oScopeValidator;
 		$this->oSecurityHelper = $oSecurityHelper;
 		$this->oUrlGenerator = $oUrlGenerator;
@@ -106,10 +113,10 @@ class ObjectFormHandlerHelper
 
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sMode
-	 * @param string                                    $sObjectClass
-	 * @param string                                    $sObjectId
-	 * @param string                                    $aFormProperties
+	 * @param string $sMode
+	 * @param string $sObjectClass
+	 * @param string $sObjectId
+	 * @param array $aFormProperties
 	 *
 	 * @return array
 	 *
@@ -125,9 +132,10 @@ class ObjectFormHandlerHelper
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
+		$aOriginalFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
 		if ($aFormProperties === null)
 		{
-			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
+			$aFormProperties = $aOriginalFormProperties;
 		}
 
 		// - Create and
@@ -150,7 +158,7 @@ class ObjectFormHandlerHelper
 				// Preparing object
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObject);
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
 				);
 				$oObject->PrefillForm('creation_from_0', $aPrefillFormParam);
@@ -169,7 +177,7 @@ class ObjectFormHandlerHelper
 					'label' => Dict::S('Portal:Button:Submit'),
 				),
 			);
-			if ($sMode !== 'apply_stimulus')
+			if ($sMode !== static::ENUM_MODE_APPLY_STIMULUS)
 			{
 				// Add transition buttons
 				$oSetToCheckRights = DBObjectSet::FromObject($oObject);
@@ -215,30 +223,59 @@ class ObjectFormHandlerHelper
 			else
 			{
 				$aPrefillFormParam = array(
-					'user' => $_SESSION["auth_user"],
+					'user' => UserRights::GetUser(),
 					'origin' => 'portal',
 					'stimulus' => $this->oRequestManipulator->ReadParam('apply_stimulus', null)['code'],
 				);
 				$oObject->PrefillForm('state_change', $aPrefillFormParam);
 			}
 
-			// Preparing callback urls
-			$aCallbackUrls = $this->oContextManipulator->GetCallbackUrls($aActionRules, $oObject, $bModal);
-			$aFormData['submit_callback'] = $aCallbackUrls['submit'];
-			$aFormData['cancel_callback'] = $aCallbackUrls['cancel'];
+			// Preparing navigation rules
+			$aNavigationRules = $this->oNavigationRuleHelper->PrepareRulesForForm($aFormProperties, $oObject, $bModal);
+			$aFormData['submit_rule'] = $aNavigationRules['submit'];
+			$aFormData['cancel_rule'] = $aNavigationRules['cancel'];
+			/** @deprecated We keep the "xxx_callback" name to keep compatibility with extensions using the portal_form_handler.js widget but they will be removed in a future version. */
+			$aFormData['submit_callback'] = $aNavigationRules['submit']['url'];
+			$aFormData['cancel_callback'] = $aNavigationRules['cancel']['url'];
 
 			// Preparing renderer
 			// Note : We might need to distinguish form & renderer endpoints
-			if (in_array($sMode, array('create', 'edit', 'view')))
+			switch($sMode)
 			{
-				$sFormEndpoint = $this->oUrlGenerator->generate('p_object_'.$sMode, array('sObjectClass' => $sObjectClass, 'sObjectId' => $sObjectId));
+				case static::ENUM_MODE_CREATE:
+				case static::ENUM_MODE_EDIT:
+				case static::ENUM_MODE_VIEW:
+					$sFormEndpoint = $this->oUrlGenerator->generate(
+						'p_object_'.$sMode,
+						array(
+							'sObjectClass' => $sObjectClass,
+							'sObjectId' => $sObjectId,
+						)
+					);
+					break;
+
+				case static::ENUM_MODE_APPLY_STIMULUS:
+					$sFormEndpoint = $this->oUrlGenerator->generate(
+						'p_object_apply_stimulus',
+						array(
+							'sObjectClass' => $sObjectClass,
+							'sObjectId' => $sObjectId,
+							'sStimulusCode' => $this->oRequestManipulator->ReadParam('sStimulusCode'),
+						)
+					);
+					break;
+
+				default:
+					// As of N°2306 we don't put the $_SERVER['REQUEST_URI'] anymore as it could lead to XSS.
+					$sFormEndpoint = null;
+					break;
 			}
-			else
-			{
-				$sFormEndpoint = $_SERVER['REQUEST_URI'];
-			}
+
 			$oFormRenderer = new BsFormRenderer();
-			$oFormRenderer->SetEndpoint($sFormEndpoint);
+			if($sFormEndpoint !== null)
+			{
+				$oFormRenderer->SetEndpoint($sFormEndpoint);
+			}
 
 			$oFormManager = new ObjectFormManager();
 			$oFormManager->SetContainer($this->oContainer)
@@ -246,32 +283,29 @@ class ObjectFormHandlerHelper
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
 				->SetRenderer($oFormRenderer)
-				->SetFormProperties($aFormProperties)
-				->SetIsSubmittable(isset($aFormData['buttons']['submit']));
+				->SetFormProperties($aFormProperties);
 
 			$oFormManager->Build();
-
+			$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 			// Check the number of editable fields
 			$aFormData['editable_fields_count'] = $oFormManager->GetForm()->GetEditableFieldCount();
-		}
-		else
-		{
+		} else {
 			// Update / Submit / Cancel
+			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $sFormManagerClass */
 			$sFormManagerClass = $this->oRequestManipulator->ReadParam('formmanager_class', '', FILTER_UNSAFE_RAW);
 			$sFormManagerData = $this->oRequestManipulator->ReadParam('formmanager_data', '', FILTER_UNSAFE_RAW);
 			if (empty($sFormManagerClass) || empty($sFormManagerData))
 			{
-				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formamanager_data must be defined.');
+				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Parameters formmanager_class and formmanager_data must be defined.');
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
-			/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
-			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
+			$bTrustContent = $sFormManagerClass::CanTrustFormLayoutContent($sFormManagerData, $aOriginalFormProperties);
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData, $bTrustContent);
 			$oFormManager->SetContainer($this->oContainer);
 
 			// Applying action rules if present
-			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== ''))
-			{
+			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
 				$aActionRules = ContextManipulatorHelper::DecodeRulesToken($oFormManager->GetActionRulesToken());
 				$oObj = $oFormManager->GetObject();
 				$this->oContextManipulator->PrepareObject($aActionRules, $oObj);
@@ -292,23 +326,16 @@ class ObjectFormHandlerHelper
 					);
 					if ($aFormData['validation']['valid'] === true)
 					{
-						// Note : We don't use $sObjectId there as it can be null if we are creating a new one. Instead we use the id from the created object once it has been seralized
+						// Note : We don't use $sObjectId there as it can be null if we are creating a new one. Instead we use the id from the created object once it has been serialized
 						// Check if stimulus has to be applied
 						$sStimulusCode = $this->oRequestManipulator->ReadParam('stimulus_code', '');
 						if (!empty($sStimulusCode))
 						{
 							$aFormData['validation']['redirection'] = array(
 								'url' => $this->oUrlGenerator->generate('p_object_apply_stimulus', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey(), 'sStimulusCode' => $sStimulusCode)),
-								'ajax' => true,
+								'modal' => true,
 							);
 						}
-						// Otherwise, we show the object if there is no default
-//						else
-//						{
-//							$aFormData['validation']['redirection'] = array(
-//								'alternative_url' => $this->oUrlGenerator->generate('p_object_edit', array('sObjectClass' => $sObjectClass, 'sObjectId' => $oFormManager->GetObject()->GetKey()))
-//							);
-//						}
 					}
 					break;
 
@@ -365,8 +392,9 @@ class ObjectFormHandlerHelper
 		$aFormData['object_state'] = $oFormManager->GetObject()->GetState();
 		$aFormData['fieldset'] = $aFieldSetData;
 		$aFormData['display_mode'] = (isset($aFormProperties['properties'])) ? $aFormProperties['properties']['display_mode'] : ApplicationHelper::FORM_DEFAULT_DISPLAY_MODE;
+		$aFormData['hidden_fields'] = $oFormManager->GetHiddenFieldsId();
 		// - Set a text to be copied on title if the object is not in creation
-		if($sMode !== static::ENUM_MODE_CREATE)
+		if($sMode !== static::ENUM_MODE_CREATE && !empty($sObjectId))
 		{
 			$aFormData['title_clipboard_text'] = Dict::Format(
 				'Brick:Portal:Object:Copy:TextToCopy',
@@ -409,5 +437,20 @@ class ObjectFormHandlerHelper
 		}
 
 		return $oTwig->render($sId, $aData);
+	}
+
+	/**
+	 * Return an array of the available modes for a form.
+	 *
+	 * @since 2.7.0
+	 * @return array
+	 */
+	public static function GetAllowedModes()
+	{
+		return array(
+			static::ENUM_MODE_VIEW,
+			static::ENUM_MODE_EDIT,
+			static::ENUM_MODE_CREATE,
+		);
 	}
 }

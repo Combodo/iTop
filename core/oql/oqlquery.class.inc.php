@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Classes defined for lexical analyze (see oql-parser.y)
  *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -173,7 +173,7 @@ class MatchOqlExpression extends MatchExpression implements CheckableExpression
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oLeftExpr->RenderExpression(true), 0));
 		}
 		// Only field MATCHES scalar is allowed
-		if (!$this->m_oRightExpr instanceof ScalarExpression)
+		if (!$this->m_oRightExpr instanceof ScalarExpression && !$this->m_oRightExpr instanceof VariableOqlExpression)
 		{
 			throw new OqlNormalizeException('Only "field MATCHES string" syntax is allowed', $sSourceQuery, new OqlName($this->m_oRightExpr->RenderExpression(true), 0));
 		}
@@ -185,6 +185,43 @@ class ScalarOqlExpression extends ScalarExpression implements CheckableExpressio
 	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
 	{
 		// a scalar is always fine
+	}
+}
+
+class NestedQueryOqlExpression extends NestedQueryExpression implements CheckableExpression
+{
+	/** @var OQLObjectQuery */
+	private $m_oOQLObjectQuery;
+
+	/**
+	 * NestedQueryOqlExpression constructor.
+	 *
+	 * @param OQLObjectQuery $oOQLObjectQuery
+	 */
+	public function __construct($oOQLObjectQuery )
+	{
+		parent::__construct($oOQLObjectQuery->ToDBSearch(""));
+		$this->m_oOQLObjectQuery = $oOQLObjectQuery;
+	}
+
+	/**
+	 * Recursively check the validity of the expression with regard to the data model
+	 * and the query in which it is used
+	 *
+	 * @param ModelReflection $oModelReflection MetaModel to consider
+	 * @param array $aAliases
+	 * @param string $sSourceQuery
+	 *
+	 * @throws \OqlNormalizeException
+	 */
+	public function Check(ModelReflection $oModelReflection, $aAliases, $sSourceQuery)
+	{
+		$this->m_oOQLObjectQuery->Check($oModelReflection, "", $aAliases);
+	}
+
+	public function GetOQLObjectQuery()
+	{
+		return $this->m_oOQLObjectQuery;
 	}
 }
 
@@ -399,7 +436,7 @@ class OqlObjectQuery extends OqlQuery
 	 * @param ModelReflection $oModelReflection MetaModel to consider	 	
 	 * @throws OqlNormalizeException
 	 */	 	
-	public function Check(ModelReflection $oModelReflection, $sSourceQuery)
+	public function Check(ModelReflection $oModelReflection, $sSourceQuery, $aParentAliases = array())
 	{
 		$sClass = $this->GetClass($oModelReflection);
 		$sClassAlias = $this->GetClassAlias();
@@ -409,7 +446,7 @@ class OqlObjectQuery extends OqlQuery
 			throw new UnknownClassOqlException($sSourceQuery, $this->GetClassDetails(), $oModelReflection->GetClasses());
 		}
 
-		$aAliases = array($sClassAlias => $sClass);
+		$aAliases = array_merge(array($sClassAlias => $sClass),$aParentAliases);
 
 		$aJoinSpecs = $this->GetJoins();
 		if (is_array($aJoinSpecs))
@@ -567,6 +604,7 @@ class OqlUnionQuery extends OqlQuery
 
 	public function __construct(OqlObjectQuery $oLeftQuery, OqlQuery $oRightQueryOrUnion)
 	{
+		parent::__construct();
 		$this->aQueries[] = $oLeftQuery;
 		if ($oRightQueryOrUnion instanceof OqlUnionQuery)
 		{
@@ -637,6 +675,7 @@ class OqlUnionQuery extends OqlQuery
 		}
 		foreach ($aColumnToClasses as $iColumn => $aClasses)
 		{
+			$sRootClass = null;
 			foreach ($aClasses as $iQuery => $aData)
 			{
 				if ($iQuery == 0)
@@ -708,10 +747,6 @@ class OqlUnionQuery extends OqlQuery
 			{
 				// first loop
 				$sAncestor = $sClass;
-			}
-			elseif ($sClass == $sAncestor)
-			{
-				// remains the same
 			}
 			elseif ($oModelReflection->GetRootClass($sClass) != $oModelReflection->GetRootClass($sAncestor))
 			{

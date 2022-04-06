@@ -2,6 +2,7 @@
 
 namespace Combodo\iTop;
 
+use AttributeDate;
 use AttributeDateTime;
 use Dict;
 use Exception;
@@ -11,6 +12,13 @@ use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use utils;
 
+/**
+ * Class TwigExtension
+ *
+ * @author Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @package Combodo\iTop
+ * @deprecated 3.1.0 N°4034
+ */
 class TwigExtension
 {
 	/**
@@ -48,6 +56,10 @@ class TwigExtension
 						{
 							return AttributeDateTime::GetFormat()->Format($sDate);
 						}
+						if (preg_match('@^\d\d\d\d-\d\d-\d\d$@', trim($sDate)))
+						{
+							return AttributeDate::GetFormat()->Format($sDate);
+						}
 					}
 					catch (Exception $e)
 					{
@@ -80,30 +92,14 @@ class TwigExtension
 
 		// Filter to add itopversion to an url
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_itop_version', function ($sUrl) {
-			if (strpos($sUrl, '?') === false)
-			{
-				$sUrl = $sUrl."?itopversion=".ITOP_VERSION;
-			}
-			else
-			{
-				$sUrl = $sUrl."&itopversion=".ITOP_VERSION;
-			}
-
+			$sUrl = utils::AddParameterToUrl($sUrl, 'itopversion', ITOP_VERSION);
 			return $sUrl;
 		}));
 
 		// Filter to add a module's version to an url
 		$oTwigEnv->addFilter(new Twig_SimpleFilter('add_module_version', function ($sUrl, $sModuleName) {
 			$sModuleVersion = utils::GetCompiledModuleVersion($sModuleName);
-
-			if (strpos($sUrl, '?') === false)
-			{
-				$sUrl = $sUrl."?moduleversion=".$sModuleVersion;
-			}
-			else
-			{
-				$sUrl = $sUrl."&moduleversion=".$sModuleVersion;
-			}
+			$sUrl = utils::AddParameterToUrl($sUrl, 'moduleversion', $sModuleVersion);
 
 			return $sUrl;
 		}));
@@ -123,6 +119,14 @@ class TwigExtension
 			return $oConfig->Get($sParamName);
 		}));
 
+		// Function to get a module setting
+		// Usage in twig: {{ get_module_setting(<MODULE_CODE>, <PROPERTY_CODE> [, <DEFAULT_VALUE>]) }}
+		// since 3.0.0, but see N°4034 for upcoming evolutions in the 3.1
+		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_module_setting', function (string $sModuleCode, string $sPropertyCode, $defaultValue = null) {
+			$oConfig = MetaModel::GetConfig();
+			return $oConfig->GetModuleSetting($sModuleCode, $sPropertyCode, $defaultValue);
+		}));
+
 		// Function to get the URL of a static page in a module
 		// Usage in twig: {{ get_static_page_module_url('itop-my-module', 'path-to-my-page') }}
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('get_static_page_module_url', function($sModuleName, $sPage)
@@ -137,4 +141,5 @@ class TwigExtension
 			return utils::GetAbsoluteUrlModulePage($sModuleName, $sPage);
 		}));
 	}
+
 }

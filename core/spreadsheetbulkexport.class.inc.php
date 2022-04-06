@@ -1,28 +1,22 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSetUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\Column\ColumnUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\MultiColumn\MultiColumnUIBlockFactory;
 
 /**
  * Bulk export: "spreadsheet" export: a simplified HTML export in which the date/time columns are split in two column: date AND time
-*
-* @copyright   Copyright (C) 2015 Combodo SARL
-* @license     http://opensource.org/licenses/AGPL-3.0
-*/
-
+ *
+ * @copyright   Copyright (C) 2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
 class SpreadsheetBulkExport extends TabularBulkExport
 {
 	public function DisplayUsage(Page $oP)
@@ -36,62 +30,81 @@ class SpreadsheetBulkExport extends TabularBulkExport
 
 	public function EnumFormParts()
 	{
-		return array_merge(parent::EnumFormParts(), array('spreadsheet_options' => array('no-localize') ,'interactive_fields_spreadsheet' => array('interactive_fields_spreadsheet')));
+		return array_merge(parent::EnumFormParts(), array('spreadsheet_options' => array('no-localize'), 'interactive_fields_spreadsheet' => array('interactive_fields_spreadsheet')));
 	}
 
-	public function DisplayFormPart(WebPage $oP, $sPartId)
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
 	{
-		switch($sPartId)
-		{
+		switch ($sPartId) {
 			case 'interactive_fields_spreadsheet':
-				$this->GetInteractiveFieldsWidget($oP, 'interactive_fields_spreadsheet');
+				return $this->GetInteractiveFieldsWidget($oP, 'interactive_fields_spreadsheet');
 				break;
-					
-			case 'spreadsheet_options':
-				$sChecked = (utils::ReadParam('no_localize', 0) == 1) ? ' checked ' : '';
-				$oP->add('<fieldset><legend>'.Dict::S('Core:BulkExport:SpreadsheetOptions').'</legend>');
-				$oP->add('<table>');
-				$oP->add('<tr>');
 
-				$oP->add('<td style="vertical-align:top">');
-				$sChecked = (utils::ReadParam('formatted_text', 1) == 1) ? ' checked ' : '';
-				$oP->add('<h3>'.Dict::S('Core:BulkExport:TextFormat').'</h3>');
-				$oP->add('<input type="hidden" name="formatted_text" value="0">'); // Trick to pass the zero value if the checkbox below is unchecked, since we want the default value to be "1"
-				$oP->add('<input type="checkbox" id="spreadsheet_formatted_text" name="formatted_text" value="1"'.$sChecked.'><label for="spreadsheet_formatted_text"> '.Dict::S('Core:BulkExport:OptionFormattedText').'</label><br/><br/>');
-				$oP->add('<input type="checkbox" id="spreadsheet_no_localize" name="no_localize" value="1"'.$sChecked.'><label for="spreadsheet_no_localize"> '.Dict::S('Core:BulkExport:OptionNoLocalize').'</label>');
-				$oP->add('</td>');
+			case 'spreadsheet_options':
+				$oPanel = PanelUIBlockFactory::MakeNeutral(Dict::S('Core:BulkExport:SpreadsheetOptions'));
+
+				$oMulticolumn = MultiColumnUIBlockFactory::MakeStandard();
+				$oPanel->AddSubBlock($oMulticolumn);
+
+				$oFieldSetFormat = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:TextFormat'));
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetFormat));
+
+				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionFormattedText'), "formatted_text", "1", "spreadsheet_formatted_text", "checkbox");
+				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('formatted_text', 0) == 1));
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oCheckBox->SetBeforeInput(false);
+				$oFieldSetFormat->AddSubBlock($oCheckBox);
+				$oFieldSetFormat->AddSubBlock(new Html('<br>'));
+
+				$oCheckBox = InputUIBlockFactory::MakeForInputWithLabel(Dict::S('Core:BulkExport:OptionNoLocalize'), "no_localize", "1", "spreadsheet_no_localize", "checkbox");
+				$oCheckBox->GetInput()->SetIsChecked((utils::ReadParam('no_localize', 0) == 1));
+				$oCheckBox->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oCheckBox->SetBeforeInput(false);
+				$oFieldSetFormat->AddSubBlock($oCheckBox);
+
+				$oFieldSetDate = FieldSetUIBlockFactory::MakeStandard(Dict::S('Core:BulkExport:DateTimeFormat'));
+				$oMulticolumn->AddColumn(ColumnUIBlockFactory::MakeForBlock($oFieldSetDate));
 
 				$sDateTimeFormat = utils::ReadParam('date_format', (string)AttributeDateTime::GetFormat(), true, 'raw_data');
-				$sDefaultChecked = ($sDateTimeFormat == (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
-				$sCustomChecked = ($sDateTimeFormat !== (string)AttributeDateTime::GetFormat()) ? ' checked' : '';
 
-				$oP->add('<td>');
-				$oP->add('<h3>'.Dict::S('Core:BulkExport:DateTimeFormat').'</h3>');
 				$sDefaultFormat = htmlentities((string)AttributeDateTime::GetFormat(), ENT_QUOTES, 'UTF-8');
 				$sExample = htmlentities(date((string)AttributeDateTime::GetFormat()), ENT_QUOTES, 'UTF-8');
-				$oP->add('<input type="radio" id="spreadsheet_date_time_format_default" name="spreadsheet_date_format_radio" value="default"'.$sDefaultChecked.'><label for="spreadsheet_date_time_format_default"> '.Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample).'</label><br/>');
-				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
-				$oP->add('<input type="radio" id="spreadsheet_date_time_format_custom" name="spreadsheet_date_format_radio" value="custom"'.$sCustomChecked.'><label for="spreadsheet_date_time_format_custom"> '.Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput).'</label>');
-				$oP->add('</td>');
+				$oRadioDefault = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatDefault_Example', $sDefaultFormat, $sExample), "spreadsheet_date_format_radio", "default", "spreadsheet_date_time_format_default", "radio");
+				$oRadioDefault->GetInput()->SetIsChecked(($sDateTimeFormat == (string)AttributeDateTime::GetFormat()));
+				$oRadioDefault->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oRadioDefault->SetBeforeInput(false);
+				$oFieldSetDate->AddSubBlock($oRadioDefault);
+				$oFieldSetDate->AddSubBlock(new Html('</br>'));
 
-				$oP->add('</tr>');
-				$oP->add('</table>');
-				$oP->add('</fieldset>');
-				$sJSTooltip = json_encode('<div class="date_format_tooltip">'.Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip').'</div>');
+				$sFormatInput = '<input type="text" size="15" name="date_format" id="spreadsheet_custom_date_time_format" title="" value="'.htmlentities($sDateTimeFormat, ENT_QUOTES, 'UTF-8').'"/>';
+				$oRadioCustom = InputUIBlockFactory::MakeForInputWithLabel(Dict::Format('Core:BulkExport:DateTimeFormatCustom_Format', $sFormatInput), "spreadsheet_date_format_radio", "custom", "spreadsheet_date_time_format_custom", "radio");
+				$oRadioCustom->SetDescription(Dict::S('UI:CSVImport:CustomDateTimeFormatTooltip'));
+				$oRadioCustom->GetInput()->SetIsChecked($sDateTimeFormat !== (string)AttributeDateTime::GetFormat());
+				$oRadioCustom->GetInput()->AddCSSClass('ibo-input-checkbox');
+				$oRadioCustom->SetBeforeInput(false);
+				$oFieldSetDate->AddSubBlock($oRadioCustom);
+
 				$oP->add_ready_script(
-						<<<EOF
-$('#spreadsheet_custom_date_time_format').tooltip({content: function() { return $sJSTooltip; } });
+					<<<EOF
 $('#form_part_spreadsheet_options').on('preview_updated', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_date_time_format_default').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_date_time_format_custom').on('click', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 $('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); });
 $('#spreadsheet_custom_date_time_format').on('click', function() { $('#spreadsheet_date_time_format_custom').prop('checked', true); FormatDatesInPreview('spreadsheet', 'spreadsheet'); }).on('keyup', function() { FormatDatesInPreview('spreadsheet', 'spreadsheet'); });
 EOF
-						);
+				);
+
+				return $oPanel;
 				break;
 
 			default:
-				return parent:: DisplayFormPart($oP, $sPartId);
+				return parent:: GetFormPart($oP, $sPartId);
 		}
 	}
 
@@ -199,8 +212,8 @@ EOF
 		// Integration within MS-Excel web queries + HTTPS + IIS:
 		// MS-IIS set these header values with no-cache... while Excel fails to do the job if using HTTPS
 		// Then the fix is to force the reset of header values Pragma and Cache-control
-		$oPage->add_header("Pragma:", true);
-		$oPage->add_header("Cache-control:", true);
+		$oPage->add_header("Pragma:");
+		$oPage->add_header("Cache-control:");
 	}
 
 	public function GetHeader()
@@ -266,7 +279,7 @@ EOF
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		while($aRow = $oSet->FetchAssoc())
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 
 			$sData .= "<tr>";
 			foreach($this->aStatusInfo['fields'] as $iCol => $aFieldSpec)
@@ -340,7 +353,7 @@ EOF
 						}
 						else if ($oAttDef instanceof AttributeTagSet)
 						{
-							$sField = $oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, '');
+							$sField = utils::HtmlEntities($oObj->GetAsCSV($sAttCode, $this->bLocalizeOutput, ''));
 							$sData .= "<td x:str>$sField</td>";
 						}
 						else
@@ -362,7 +375,7 @@ EOF
 			$sData .= "</tr>";
 			$iCount++;
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 		$this->aStatusInfo['position'] += $this->iChunkSize;
 		if ($this->aStatusInfo['total'] == 0)
 		{

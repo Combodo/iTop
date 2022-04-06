@@ -1,0 +1,24 @@
+{% for oSubBlock in oUIBlock.GetSubBlocks() %}{{ render_block(oSubBlock, {aPage: aPage}) }}{% endfor %}
+
+{% if oUIBlock.GetOptions("select_mode") is not empty %}
+    <input type="hidden" name="selectionMode" value="{{ oUIBlock.GetOption("selectionMode") }}">
+    <input type="hidden" name="selectionCount" value="0">
+    <div data-target="ibo-datatable--selection"></div>
+    {% if oUIBlock.GetAjaxData("extra_params") is not empty %}
+        <input type="hidden" name="extra_params" value="{{ oUIBlock.GetAjaxData("extra_params")|raw|json_encode }}">
+    {% endif %}
+    {% if oUIBlock.GetAjaxData("filter") is not empty %}
+        <input type="hidden" name="filter" value="{{ oUIBlock.GetAjaxData("filter")|raw }}">
+    {% endif %}
+{% endif %}
+
+<table id="{{ oUIBlock.GetId() }}" width="100%" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsHidden() %}ibo-is-hidden{% endif %}" data-role="ibo-datatable">
+    <thead>
+    {% if oUIBlock.GetOption("select_mode") is not empty %}
+        <th></th>
+    {% endif %}
+    {% for aColumn in oUIBlock.GetDisplayColumns() %}
+        <th class="ibo-datatable-header" {% if aColumn["description"] is not empty %}title="{{ aColumn["description"] }}"{% endif %}>{{ aColumn["attribute_label"] }} </th>
+    {% endfor %}
+    </thead>
+</table>

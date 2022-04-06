@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -16,25 +16,21 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\Form;
 
 use AttachmentPlugIn;
 use AttributeDateTime;
-use AttributeTagSet;
+use AttributeSet;
 use CMDBChangeOpAttachmentAdded;
 use CMDBChangeOpAttachmentRemoved;
-use CMDBSource;
 use Combodo\iTop\Form\Field\Field;
 use Combodo\iTop\Form\Field\FileUploadField;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Form;
 use Combodo\iTop\Form\FormManager;
 use Combodo\iTop\Portal\Helper\ApplicationHelper;
-use CoreCannotSaveObjectException;
 use DBObject;
 use DBObjectSearch;
 use DBObjectSet;
@@ -46,7 +42,6 @@ use Exception;
 use InlineImage;
 use IssueLog;
 use MetaModel;
-use ormTagSet;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -82,40 +77,65 @@ class ObjectFormManager extends FormManager
 	protected $aFormProperties;
 	/** @var array $aCallbackUrls */
 	protected $aCallbackUrls = array();
-	/** @var boolean $bIsSubmittable */
-	protected $bIsSubmittable = true;
-	
 	/**
-	 * Creates an instance of \Combodo\iTop\Portal\Form\ObjectFormManager from JSON data that must contain at least :
-	 * - formobject_class : The class of the object that is being edited/viewed
-	 * - formmode : view|edit|create
-	 * - values for parent
+	 * List of hidden fields, used for form update (eg. remove them from the form regarding they dependencies)
 	 *
-	 * @param string $sJson
-	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
-	 *
-	 * @throws \Exception
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
+	 * @var array $aHiddenFieldsId
+	 * @since 2.7.5
 	 */
-	static function FromJSON($sJson)
+	protected $aHiddenFieldsId = array();
+
+	/**
+	 * @param string|array $formManagerData value of the formmanager_data portal parameter, either JSON or object
+	 *
+	 * @return array formmanager_data as a PHP array
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 */
+	protected static function DecodeFormManagerData($formManagerData)
 	{
-		if (is_array($sJson))
-		{
-			$aJson = $sJson;
+		if (is_array($formManagerData)) {
+			return $formManagerData;
 		}
-		else
-		{
-			$aJson = json_decode($sJson, true);
+
+		return json_decode($formManagerData, true);
+	}
+
+	/**
+	 * @param string $sJson JSON data that must contain at least :
+	 *       - formobject_class : The class of the object that is being edited/viewed
+	 *       - formmode : view|edit|create
+	 *       - values for parent
+	 * @param bool $bTrustContent if false then won't allow modified TWIG content
+	 *
+	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
+	 *
+	 * @inheritDoc
+	 * @throws \Exception
+	 * @throws \SecurityException if twig content is present and $bTrustContent is false
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
+	 */
+	public static function FromJSON($sJson, $bTrustContent = false)
+	{
+		$aJson = static::DecodeFormManagerData($sJson);
+
+		$oConfig = utils::GetConfig();
+		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
+		if ($bIsContentCheckEnabled && (false === $bTrustContent)) {
+			/** @noinspection NestedPositiveIfStatementsInspection */
+			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
+				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
+				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
+				throw new \SecurityException('Twig content not allowed in this context!');
+			}
 		}
 
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
 
 		// Retrieving object to edit
-		if (!isset($aJson['formobject_class']))
-		{
+		if (!isset($aJson['formobject_class'])) {
 			throw new Exception('Object class must be defined in order to generate the form');
 		}
 		$sObjectClass = $aJson['formobject_class'];
@@ -156,12 +176,42 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Retrieving callback urls
-		if (!isset($aJson['formcallbacks']))
-		{
+		if (!isset($aJson['formcallbacks'])) {
 			// TODO
 		}
 
 		return $oFormManager;
+	}
+
+	/**
+	 * @param string $sPostedFormManagerData received data from the browser
+	 * @param array $aOriginalFormProperties data generated server side
+	 *
+	 * @return bool true if the data are identical
+	 *
+	 * @since 2.7.6 3.0.0 N°4384 Check formmanager_data
+	 */
+	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
+	{
+		$aPostedFormManagerData = static::DecodeFormManagerData($sPostedFormManagerData);
+		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
+
+		if ($sPostedFormLayoutType === 'xhtml') {
+			return true;
+		}
+
+		// We need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
+		$oHtmlDocument = new \DOMDocument();
+
+		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
+		$oHtmlDocument->loadXML('<root>'.$sPostedFormLayoutContent.'</root>');
+		$sPostedFormLayoutRendered = $oHtmlDocument->saveHTML();
+
+		$sOriginalFormLayoutContent = (isset($aOriginalFormProperties['layout']['content'])) ? $aOriginalFormProperties['layout']['content'] : '';
+		$oHtmlDocument->loadXML('<root>'.$sOriginalFormLayoutContent.'</root>');
+		$sOriginalFormLayoutContentRendered = $oHtmlDocument->saveHTML();
+
+		return ($sPostedFormLayoutRendered === $sOriginalFormLayoutContentRendered);
 	}
 
 	/**
@@ -177,7 +227,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetContainer(ContainerInterface $oContainer)
 	{
@@ -199,7 +249,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param \DBObject $oObject
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetObject(DBObject $oObject)
 	{
@@ -221,7 +271,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param string $sMode
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetMode($sMode)
 	{
@@ -229,29 +279,7 @@ class ObjectFormManager extends FormManager
 
 		return $this;
 	}
-	
-	/**
-	 *
-	 * @return string
-	 */
-	public function GetIsSubmittable()
-	{
-		return $this->bIsSubmittable;
-	}
 
-	/**
-	 *
-	 * @param boolean $bIsSubmittable
-	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
-	 */
-	public function SetIsSubmittable($bIsSubmittable)
-	{
-		$this->bIsSubmittable = $bIsSubmittable;
-
-		return $this;
-	}
-	
 	/**
 	 *
 	 * @return string
@@ -265,7 +293,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param string $sActionRulesToken
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetActionRulesToken($sActionRulesToken)
 	{
@@ -287,7 +315,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param array $aFormProperties
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetFormProperties($aFormProperties)
 	{
@@ -309,7 +337,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * @param array $aCallbackUrls
 	 *
-	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager
+	 * @return $this
 	 */
 	public function SetCallbackUrls($aCallbackUrls)
 	{
@@ -329,13 +357,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Creates a JSON string from the current object including :
-	 * - formobject_class
-	 * - formobject_id
-	 * - formmode
-	 * - values for parent
-	 *
-	 * @return array
+	 * @inheritDoc
 	 */
 	public function ToJSON()
 	{
@@ -353,6 +375,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
+	 * @inheritDoc
 	 * @throws \CoreException
 	 * @throws \OQLException
 	 * @throws \Exception
@@ -377,6 +400,19 @@ class ObjectFormManager extends FormManager
 		}
 
 		// Building form from its properties
+		// - Consistency checks for stimulus form
+		if (isset($this->aFormProperties['stimulus_code']))
+		{
+			$aTransitions = MetaModel::EnumTransitions($sObjectClass, $this->oObject->GetState());
+			if (!isset($aTransitions[$this->aFormProperties['stimulus_code']]))
+			{
+				$aStimuli = Metamodel::EnumStimuli($sObjectClass);
+				$sStimulusLabel = $aStimuli[$this->aFormProperties['stimulus_code']]->GetLabel();
+
+				$sExceptionMessage = Dict::Format('UI:Error:Invalid_Stimulus_On_Object_In_State', $sStimulusLabel, $this->oObject->GetName(), $this->oObject->GetStateLabel());
+				throw new Exception($sExceptionMessage);
+			}
+		}
 		// - The fields
 		switch ($this->aFormProperties['type'])
 		{
@@ -675,8 +711,7 @@ class ObjectFormManager extends FormManager
 			// Failsafe for AttributeType that would not have MakeFormField and therefore could not be used in a form
 			if ($oField !== null)
 			{
-				// If a form is in edit mode and can't be submitted to update an object (only transitions available), we have no reason to allow fields to be editable
-				if ($this->sMode !== static::ENUM_MODE_VIEW && $this->GetIsSubmittable())
+				if ($this->sMode !== static::ENUM_MODE_VIEW)
 				{
 					// Field dependencies
 					$aFieldDependencies = $oAttDef->GetPrerequisiteAttributes();
@@ -932,8 +967,21 @@ class ObjectFormManager extends FormManager
 					if ($this->oContainer !== null)
 					{
 						// Override hardcoded URLs in ormDocument pointing to back office console
-						$sDisplayUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
-						$sDownloadUrl = $this->oContainer->get('url_generator')->generate('p_object_document_download', array('sObjectClass' => get_class($this->oObject), 'sObjectId' => $this->oObject->GetKey(), 'sObjectField' => $sAttCode, 'cache' => 86400));
+						$oOrmDoc = $this->oObject->Get($sAttCode);
+						$sDisplayUrl = $this->oContainer->get('url_generator')->generate('p_object_document_display', [
+							'sObjectClass' => get_class($this->oObject),
+							'sObjectId' => $this->oObject->GetKey(),
+							'sObjectField' => $sAttCode,
+							'cache' => 86400,
+							's' => $oOrmDoc->GetSignature(),
+							]);
+						$sDownloadUrl = $this->oContainer->get('url_generator')->generate('p_object_document_download', [
+							'sObjectClass' => get_class($this->oObject),
+							'sObjectId' => $this->oObject->GetKey(),
+							'sObjectField' => $sAttCode,
+							'cache' => 86400,
+							's' => $oOrmDoc->GetSignature(),
+						]);
 						/** @var \Combodo\iTop\Form\Field\BlobField $oField */
 						$oField->SetDisplayUrl($sDisplayUrl)
 							->SetDownloadUrl($sDownloadUrl);
@@ -956,7 +1004,20 @@ class ObjectFormManager extends FormManager
 				$oField->SetDisplayMode($aFieldsExtraData[$sAttCode]['display_mode']);
 			}
 
-			$oForm->AddField($oField);
+			// Overload (AttributeDefinition) flags metadata as they have been changed while building the form
+			$oField->AddMetadata('attribute-flag-hidden', $oField->GetHidden() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-read-only', $oField->GetReadOnly() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-mandatory', $oField->GetMandatory() ? 'true' : 'false');
+			$oField->AddMetadata('attribute-flag-must-change', $oField->GetMustChange() ? 'true' : 'false');
+
+			// Do not add hidden fields as they are of no use, if one is necessary because another depends on it, it will be automatically added.
+			// Note: We do this at the end because during the process an hidden field could have become writable if mandatory and empty for example.
+			if($oField->GetHidden() === false)
+			{
+				$oForm->AddField($oField);
+			} else {
+				$this->aHiddenFieldsId[]=$oField->GetId();
+			}
 		}
 
 		// Checking dependencies to ensure that all needed fields are in the form
@@ -1003,7 +1064,8 @@ class ObjectFormManager extends FormManager
 			// Adding attachment field
 			if ($bClassAllowed)
 			{
-				$oField = new FileUploadField('attachments_for_form_'.$oForm->GetId());
+				// set id to a unique key - avoid collisions with another attribute that could exist with the name 'attachments'
+				$oField = new FileUploadField('attachments_plugin');
 				$oField->SetLabel(Dict::S('Portal:Attachments'))
 					->SetUploadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_add'))
 					->SetDownloadEndpoint($this->oContainer->get('url_generator')->generate('p_object_attachment_download',
@@ -1035,9 +1097,7 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
-	 * Calls all form fields OnCancel method in order to delegate them the cleanup;
-	 *
-	 * @param array $aArgs
+	 * @inheritDoc
 	 *
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
@@ -1063,6 +1123,26 @@ class ObjectFormManager extends FormManager
 	}
 
 	/**
+	 * @inheritDoc
+	 */
+	public function CheckTransaction(&$aData)
+	{
+		$isTransactionValid = \utils::IsTransactionValid($this->oForm->GetTransactionId(), false); //The transaction token is kept in order to preserve BC with ajax forms (the second call would fail if the token is deleted). (The GC will take care of cleaning the token for us later on)
+		if (!$isTransactionValid) {
+			if ($this->oObject->IsNew()) {
+				$sError = Dict::S('UI:Error:ObjectAlreadyCreated');
+			} else {
+				$sError = Dict::S('UI:Error:ObjectAlreadyUpdated');
+			}
+
+			$aData['messages']['error'] += [
+				'_main' => [$sError]
+			];
+			$aData['valid'] = false;
+		}
+	}
+
+	/**
 	 * Validates the form and returns an array with the validation status and the messages.
 	 * If the form is valid, creates/updates the object.
 	 *
@@ -1073,9 +1153,7 @@ class ObjectFormManager extends FormManager
 	 *          'errors' => array()
 	 *    )
 	 *
-	 * @param array $aArgs
-	 *
-	 * @return array
+	 * @inheritDoc
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1086,102 +1164,106 @@ class ObjectFormManager extends FormManager
 	 */
 	public function OnSubmit($aArgs = null)
 	{
-		$aData = array(
-			'valid' => true,
-			'messages' => array(
-				'success' => array(),
-				'warnings' => array(), // Not used as of today, just to show that the structure is ready for change like this.
-				'error' => array(),
-			),
-		);
+		$aData = parent::OnSubmit($aArgs);
+
+		if (! $aData['valid']) {
+			return $aData;
+		}
 
 		// Update object and form
 		$this->OnUpdate($aArgs);
 
 		// Check if form valid
-		if ($this->oForm->Validate())
-		{
-			// The try catch is essentially to start a MySQL transaction in order to ensure that all or none objects are persisted when creating an object with links
-			try
-			{
-				$sObjectClass = get_class($this->oObject);
-
-				// Starting transaction
-				CMDBSource::Query('START TRANSACTION');
-				// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-				$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
-				if ($bAllowWrite)
-				{
-					$this->oObject->AllowWrite(true);
-				}
-
-				// Writing object to DB
-				$bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified());
-				$bWasModified = $this->oObject->IsModified();
-				try
-				{
-					$this->oObject->DBWrite();
-				}
-				catch (CoreCannotSaveObjectException $e)
-				{
-					throw new Exception($e->getHtmlMessage());
-				}
-				// Finalizing images link to object, otherwise it will be cleaned by the GC
-				InlineImage::FinalizeInlineImages($this->oObject);
-				// Finalizing attachments link to object
-				// TODO : This has to be refactored when the function from itop-attachments has been migrated into the core
-				if (isset($aArgs['attachmentIds']))
-				{
-					$this->FinalizeAttachments($aArgs['attachmentIds']);
-				}
-				// Checking if we have to apply a stimulus
-				if (isset($aArgs['applyStimulus']))
-				{
-					$this->oObject->ApplyStimulus($aArgs['applyStimulus']['code']);
-				}
-				// Activating triggers only on update
-				if ($bActivateTriggers)
-				{
-					$sTriggersQuery = $this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['triggers_query'];
-					if ($sTriggersQuery !== null)
-					{
-						$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
-						$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL($sTriggersQuery), array(),
-							array('parent_classes' => $aParentClasses));
-						/** @var \Trigger $oTrigger */
-						while ($oTrigger = $oTriggerSet->Fetch())
-						{
-							$oTrigger->DoActivate($this->oObject->ToArgs('this'));
-						}
-					}
-				}
-				// Removing transaction id from DB
-				// TODO : utils::RemoveTransaction($this->oForm->GetTransactionId()); ?
-				// Ending transaction with a commit as everything was fine
-				CMDBSource::Query('COMMIT');
-
-				// Resetting caselog fields value, otherwise the value will stay in it after submit.
-				$this->oForm->ResetCaseLogFields();
-
-				if ($bWasModified)
-				{
-					$aData['messages']['success'] += array('_main' => array(Dict::S('Brick:Portal:Object:Form:Message:Saved')));
-				}
-			}
-			catch (Exception $e)
-			{
-				// End transaction with a rollback as something failed
-				CMDBSource::Query('ROLLBACK');
-				$aData['valid'] = false;
-				$aData['messages']['error'] += array('_main' => array($e->getMessage()));
-				IssueLog::Error(__METHOD__.' at line '.__LINE__.' : Rollback during submit ('.$e->getMessage().')');
-			}
-		}
-		else
+		if (! $this->oForm->Validate())
 		{
 			// Handle errors
 			$aData['valid'] = false;
 			$aData['messages']['error'] += $this->oForm->GetErrorMessages();
+			return $aData;
+		}
+
+		$sObjectClass = get_class($this->oObject);
+
+		try {
+			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
+			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+			if ($bAllowWrite) {
+				$this->oObject->AllowWrite(true);
+			}
+
+			// Writing object to DB
+			$bIsNew = $this->oObject->IsNew();
+			$bWasModified = $this->oObject->IsModified();
+			$bActivateTriggers = (!$bIsNew && $bWasModified);
+			try
+			{
+				$this->oObject->DBWrite();
+			}
+			catch (Exception $e) {
+				if ($bIsNew) {
+					throw new Exception(Dict::S('Portal:Error:ObjectCannotBeCreated'));
+				}
+				throw new Exception(Dict::S('Portal:Error:ObjectCannotBeUpdated'));
+			}
+			// Finalizing images link to object, otherwise it will be cleaned by the GC
+			InlineImage::FinalizeInlineImages($this->oObject);
+			// Finalizing attachments link to object
+			// TODO : This has to be refactored when the function from itop-attachments has been migrated into the core
+			if (isset($aArgs['attachmentIds']))
+			{
+				$this->FinalizeAttachments($aArgs['attachmentIds']);
+			}
+
+			// Checking if we have to apply a stimulus
+			if (isset($aArgs['applyStimulus']))
+			{
+				$this->oObject->ApplyStimulus($aArgs['applyStimulus']['code']);
+			}
+			// Activating triggers only on update
+			if ($bActivateTriggers)
+			{
+				$sTriggersQuery = $this->oContainer->getParameter('combodo.portal.instance.conf')['properties']['triggers_query'];
+				if ($sTriggersQuery !== null)
+				{
+					$aParentClasses = MetaModel::EnumParentClasses($sObjectClass, ENUM_PARENT_CLASSES_ALL);
+					$oTriggerSet = new DBObjectSet(DBObjectSearch::FromOQL($sTriggersQuery), array(),
+						array('parent_classes' => $aParentClasses));
+					/** @var \Trigger $oTrigger */
+					while ($oTrigger = $oTriggerSet->Fetch())
+					{
+						try
+						{
+							$oTrigger->DoActivate($this->oObject->ToArgs('this'));
+						}
+						catch(Exception $e)
+						{
+							utils::EnrichRaisedException($oTrigger, $e);
+						}
+					}
+				}
+			}
+
+			// Resetting caselog fields value, otherwise the value will stay in it after submit.
+			$this->oForm->ResetCaseLogFields();
+
+			if ($bWasModified)
+			{
+				//=if (isNew) because $bActivateTriggers = (!$this->oObject->IsNew() && $this->oObject->IsModified())
+				if(!$bActivateTriggers)
+				{
+					$aData['messages']['success'] += array(	'_main' => array(Dict::Format('UI:Title:Object_Of_Class_Created', $this->oObject->GetName(),MetaModel::GetName(get_class($this->oObject)))));
+				}
+				else
+				{
+					$aData['messages']['success'] += array('_main' => array(Dict::Format('UI:Class_Object_Updated', MetaModel::GetName(get_class($this->oObject)), $this->oObject->GetName())));
+				}
+			}
+		}
+		catch (Exception $e)
+		{
+			$aData['valid'] = false;
+			$aData['messages']['error'] += array('_main' => array($e->getMessage()));
+			IssueLog::Error(__METHOD__.' at line '.__LINE__.' : '.$e->getMessage());
 		}
 
 		return $aData;
@@ -1192,7 +1274,7 @@ class ObjectFormManager extends FormManager
 	 *
 	 * Note : Doesn't update the object, see ObjectFormManager::OnSubmit() for that;
 	 *
-	 * @param array $aArgs
+	 * @inheritDoc
 	 *
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
@@ -1272,25 +1354,19 @@ class ObjectFormManager extends FormManager
 
 							// Setting value in the object
 							$this->oObject->Set($sAttCode, $oLinkSet);
-						}
-						elseif ($oAttDef instanceof AttributeTagSet)
-						{
-							/** @var \ormTagSet $oTagSet */
-							$oTagSet = $this->oObject->Get($sAttCode);
-							if (is_null($oTagSet))
-							{
-								$oTagSet = new ormTagSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
+						} elseif ($oAttDef instanceof AttributeSet) {
+							/** @var \ormSet $oTagSet */
+							$oOrmSet = $this->oObject->Get($sAttCode);
+							if (is_null($oOrmSet)) {
+								$oOrmSet = new \ormSet(get_class($this->oObject), $sAttCode, $oAttDef->GetMaxItems());
 							}
-							$oTagSet->ApplyDelta(json_decode($value, true));
-							$this->oObject->Set($sAttCode, $oTagSet);
-						}
-						elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
+							$oOrmSet->ApplyDelta(json_decode($value, true));
+							$this->oObject->Set($sAttCode, $oOrmSet);
+						} elseif ($oAttDef instanceof AttributeDateTime) // AttributeDate is derived from AttributeDateTime
 						{
-							if ($value != null)
-							{
+							if ($value != null) {
 								$value = $oAttDef->GetFormat()->Parse($value);
-								if (is_object($value))
-								{
+								if (is_object($value)) {
 									$value = $value->format($oAttDef->GetInternalFormat());
 								}
 							}
@@ -1465,5 +1541,23 @@ class ObjectFormManager extends FormManager
 			$oChangeOp->Set('filename', $sFileName);
 		}
 		return $oChangeOp;
+	}
+
+	/**
+	 * @return array
+	 * @since 2.7.5
+	 */
+	public function GetHiddenFieldsId()
+	{
+		return $this->aHiddenFieldsId;
+	}
+
+	/**
+	 * @param array $aHiddenFieldsId
+	 * @since 2.7.5
+	 */
+	public function SetHiddenFieldsId($aHiddenFieldsId)
+	{
+		$this->aHiddenFieldsId = $aHiddenFieldsId;
 	}
 }

@@ -2,7 +2,7 @@
 /**
  * Localized data
  *
- * @copyright Copyright (C) 2010-2018 Combodo SARL
+ * @copyright Copyright (C) 2010-2021 Combodo SARL
  * @license	http://opensource.org/licenses/AGPL-3.0
  *
  * This file is part of iTop.
@@ -21,10 +21,6 @@
  * along with iTop. If not, see <http://www.gnu.org/licenses/>
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
-));
-
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
 	'Core:DeletedObjectTip' => 'The object has been deleted on %1$s (%2$s)',
 
@@ -36,7 +32,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeLinkedSet' => '对象数组',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
 
-	'Core:AttributeDashboard' => '面板',
+	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
+
+	'Core:AttributeDashboard' => '仪表盘',
 	'Core:AttributeDashboard+' => '',
 
 	'Core:AttributePhoneNumber' => '电话号码',
@@ -108,8 +106,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Core:AttributeEncryptedString' => '加密字符串',
 	'Core:AttributeEncryptedString+' => 'String encrypted with a local key',
-	'Core:AttributeEncryptUnknownLibrary' => 'Encryption library specified (%1$s) unknown~~',
-	'Core:AttributeEncryptFailedToDecrypt' => '** decryption error **~~',
+	'Core:AttributeEncryptUnknownLibrary' => '未知的加密库 (%1$s)',
+	'Core:AttributeEncryptFailedToDecrypt' => '** 解密错误 **',
 
 	'Core:AttributeText' => '文本',
 	'Core:AttributeText+' => '多行字符串',
@@ -206,6 +204,13 @@ Operators:<br/>
 
 	'Core:AttributeTag' => '标签',
 	'Core:AttributeTag+' => '标签',
+	
+	'Core:Context=REST/JSON' => 'REST',
+	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Setup' => '安装向导',
+	'Core:Context=GUI:Console' => 'Console~~',
+	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Portal' => '门户',
 ));
 
 
@@ -225,6 +230,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChange/Attribute:date+' => '变更被记录的日期和时间',
 	'Class:CMDBChange/Attribute:userinfo' => '杂项. 信息',
 	'Class:CMDBChange/Attribute:userinfo+' => '呼叫者已定义的信息',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
+	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:webservice-soap' => 'SOAP webservices~~',
+	'Class:CMDBChange/Attribute:origin/Value:custom-extension' => 'By an extension~~',
 ));
 
 //
@@ -243,7 +256,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:objclass' => '对象的类别',
 	'Class:CMDBChangeOp/Attribute:objclass+' => 'object class',
 	'Class:CMDBChangeOp/Attribute:objkey' => '对象id',
-	'Class:CMDBChangeOp/Attribute:objkey+' => 'object id',
+	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp sub-class',
 	'Class:CMDBChangeOp/Attribute:finalclass+' => 'Name of the final class',
 ));
@@ -294,12 +307,16 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Change:ObjectCreated' => '对象已创建',
 	'Change:ObjectDeleted' => '对象已删除',
 	'Change:ObjectModified' => '对象已修改',
+	'Change:TwoAttributesChanged' => '已编辑 %1$s 和 %2$s',
+	'Change:ThreeAttributesChanged' => '已编辑 %1$s, %2$s 以及额外的1个',
+	'Change:FourOrMoreAttributesChanged' => '已编辑 %1$s, %2$s 以及额外的 %3$s 个',
 	'Change:AttName_SetTo_NewValue_PreviousValue_OldValue' => '%1$s 设置成 %2$s (原来的值: %3$s)',
 	'Change:AttName_SetTo' => '%1$s 设置成 %2$s',
 	'Change:Text_AppendedTo_AttName' => '%1$s 追加到 %2$s',
 	'Change:AttName_Changed_PreviousValue_OldValue' => '%1$s 已修改, 原来的值: %2$s',
 	'Change:AttName_Changed' => '%1$s 已修改',
 	'Change:AttName_EntryAdded' => '%1$s 已修改, 新条目已添加: %2$s',
+	'Change:State_Changed_NewValue_OldValue' => '从 %2$s 变为 %1$s',
 	'Change:LinkSet:Added' => '已添加 %1$s',
 	'Change:LinkSet:Removed' => '已移除 %1$s',
 	'Change:LinkSet:Modified' => '已修改 %1$s',
@@ -395,13 +412,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventIssue/Attribute:impact+' => '重要性如何',
 	'Class:EventIssue/Attribute:page' => 'Page',
 	'Class:EventIssue/Attribute:page+' => 'HTTP entry point',
-	'Class:EventIssue/Attribute:arguments_post' => 'Posted arguments',
-	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST arguments',
-	'Class:EventIssue/Attribute:arguments_get' => 'URL arguments',
-	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET arguments',
+	'Class:EventIssue/Attribute:arguments_post' => 'POST 参数',
+	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST 参数',
+	'Class:EventIssue/Attribute:arguments_get' => 'URL 参数',
+	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET 参数',
 	'Class:EventIssue/Attribute:callstack' => '调用栈',
 	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
-	'Class:EventIssue/Attribute:data' => 'Data',
+	'Class:EventIssue/Attribute:data' => '数据',
 	'Class:EventIssue/Attribute:data+' => '更多信息',
 ));
 
@@ -414,7 +431,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventWebService+' => 'Trace of an web service call',
 	'Class:EventWebService/Attribute:verb' => 'Verb',
 	'Class:EventWebService/Attribute:verb+' => 'Name of the operation',
-	'Class:EventWebService/Attribute:result' => 'Result',
+	'Class:EventWebService/Attribute:result' => '结果',
 	'Class:EventWebService/Attribute:result+' => 'Overall success/failure',
 	'Class:EventWebService/Attribute:log_info' => 'Info log',
 	'Class:EventWebService/Attribute:log_info+' => 'Result info log',
@@ -422,7 +439,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventWebService/Attribute:log_warning+' => 'Result warning log',
 	'Class:EventWebService/Attribute:log_error' => 'Error log',
 	'Class:EventWebService/Attribute:log_error+' => 'Result error log',
-	'Class:EventWebService/Attribute:data' => 'Data',
+	'Class:EventWebService/Attribute:data' => '数据',
 	'Class:EventWebService/Attribute:data+' => 'Result data',
 ));
 
@@ -430,7 +447,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventRestService' => 'REST/JSON 调用',
 	'Class:EventRestService+' => 'Trace of a REST/JSON service call',
 	'Class:EventRestService/Attribute:operation' => '操作',
-	'Class:EventRestService/Attribute:operation+' => 'Argument \'operation\'',
+	'Class:EventRestService/Attribute:operation+' => '参数 \'操作\'',
 	'Class:EventRestService/Attribute:version' => '版本',
 	'Class:EventRestService/Attribute:version+' => '参数 \'版本\'',
 	'Class:EventRestService/Attribute:json_input' => '输入',
@@ -438,7 +455,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventRestService/Attribute:code' => '代码',
 	'Class:EventRestService/Attribute:code+' => '返回代码',
 	'Class:EventRestService/Attribute:json_output' => '响应',
-	'Class:EventRestService/Attribute:json_output+' => 'HTTP response (json)',
+	'Class:EventRestService/Attribute:json_output+' => 'HTTP 响应 (json)',
 	'Class:EventRestService/Attribute:provider' => 'Provider',
 	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation',
 ));
@@ -481,6 +498,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:trigger_list+' => '该操作关联的触发器',
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
 	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
+	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
 ));
 
 //
@@ -499,12 +517,20 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:ActionEmail' => '邮件通知',
 	'Class:ActionEmail+' => '',
+	'Class:ActionEmail/Attribute:status+' => 'This status drives who will be notified: just the Test recipient, all (To, cc and Bcc) or no-one~~',
+	'Class:ActionEmail/Attribute:status/Value:test+' => 'Only the Test recipient is notified~~',
+	'Class:ActionEmail/Attribute:status/Value:enabled+' => 'All To, Cc and Bcc emails are notified~~',
+	'Class:ActionEmail/Attribute:status/Value:disabled+' => 'The email notification will not be sent~~',
 	'Class:ActionEmail/Attribute:test_recipient' => '测试收件人',
 	'Class:ActionEmail/Attribute:test_recipient+' => 'Detination in case status is set to "Test"',
-	'Class:ActionEmail/Attribute:from' => '发件人',
-	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header',
-	'Class:ActionEmail/Attribute:reply_to' => '回复到',
-	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header',
+	'Class:ActionEmail/Attribute:from' => '发件人~~',
+	'Class:ActionEmail/Attribute:from+' => 'Will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:from_label' => 'From (label)~~',
+	'Class:ActionEmail/Attribute:from_label+' => 'Sender display name will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to' => '回复到~~',
+	'Class:ActionEmail/Attribute:reply_to+' => 'Will be sent into the email header~~',
+	'Class:ActionEmail/Attribute:reply_to_label' => 'Reply to (label)~~',
+	'Class:ActionEmail/Attribute:reply_to_label+' => 'Reply to display name will be sent into the email header~~',
 	'Class:ActionEmail/Attribute:to' => '收件人',
 	'Class:ActionEmail/Attribute:to+' => 'Destination of the email',
 	'Class:ActionEmail/Attribute:cc' => '抄送',
@@ -533,11 +559,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger' => '触发器',
 	'Class:Trigger+' => 'Custom event handler',
 	'Class:Trigger/Attribute:description' => '描述',
-	'Class:Trigger/Attribute:description+' => '一行描述',
+	'Class:Trigger/Attribute:description+' => '简短描述',
 	'Class:Trigger/Attribute:action_list' => '触发的行为',
 	'Class:Trigger/Attribute:action_list+' => 'Actions performed when the trigger is activated',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类别',
 	'Class:Trigger/Attribute:finalclass+' => 'Name of the final class',
+	'Class:Trigger/Attribute:context' => '上下文',
+	'Class:Trigger/Attribute:context+' => '触发场景',
 ));
 
 //
@@ -550,7 +578,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObject/Attribute:target_class' => '目标类',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
 	'Class:TriggerOnObject/Attribute:filter' => '过滤器',
-	'Class:TriggerOnObject/Attribute:filter+' => '',
+	'Class:TriggerOnObject/Attribute:filter+' => 'Limit the object list (of the target class) which will activate the trigger~~',
 	'TriggerOnObject:WrongFilterQuery' => 'Wrong filter query: %1$s',
 	'TriggerOnObject:WrongFilterClass' => 'The filter query must return objects of class "%1$s"',
 ));
@@ -618,8 +646,19 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TriggerOnObjectUpdate' => '触发器 (对象更新时)',
 	'Class:TriggerOnObjectUpdate+' => 'Trigger on object update of [a child class of] the given class~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => 'Target fields~~',
-	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '~~',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes' => '目标字段',
+	'Class:TriggerOnObjectUpdate/Attribute:target_attcodes+' => '',
+));
+
+//
+// Class: TriggerOnObjectMention
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:TriggerOnObjectMention' => 'Trigger (on object mention)~~',
+	'Class:TriggerOnObjectMention+' => 'Trigger on mention (@xxx) of an object of [a child class of] the given class in a log attribute~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter' => 'Mentioned filter~~',
+	'Class:TriggerOnObjectMention/Attribute:mentioned_filter+' => 'Limit the list of mentioned objects which will activate the trigger. If empty, any mentioned object (of any class) will activate it.~~',
 ));
 
 //
@@ -627,11 +666,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnThresholdReached' => '触发器 (基于阀值)',
-	'Class:TriggerOnThresholdReached+' => '当达到某个阀值时触发',
+	'Class:TriggerOnThresholdReached' => '触发器 (基于阈值)',
+	'Class:TriggerOnThresholdReached+' => '当达到某个阈值时触发',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code' => '秒表',
 	'Class:TriggerOnThresholdReached/Attribute:stop_watch_code+' => '',
-	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阀值',
+	'Class:TriggerOnThresholdReached/Attribute:threshold_index' => '阈值',
 	'Class:TriggerOnThresholdReached/Attribute:threshold_index+' => '',
 ));
 
@@ -667,9 +706,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:notify_contact_id' => '要通知的人',
 	'Class:SynchroDataSource/Attribute:notify_contact_id+' => 'Contact to notify in case of error',
 	'Class:SynchroDataSource/Attribute:url_icon' => '图标的超链接',
-	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which iTop is synchronized',
+	'Class:SynchroDataSource/Attribute:url_icon+' => 'Hyperlink a (small) image representing the application with which '.ITOP_APPLICATION_SHORT.' is synchronized',
 	'Class:SynchroDataSource/Attribute:url_application' => '应用的超链接',
-	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the iTop object in the external application with which iTop is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
+	'Class:SynchroDataSource/Attribute:url_application+' => 'Hyperlink to the '.ITOP_APPLICATION_SHORT.' object in the external application with which '.ITOP_APPLICATION_SHORT.' is synchronized (if applicable). Possible placeholders: $this->attribute$ and $replica->primary_key$',
 	'Class:SynchroDataSource/Attribute:reconciliation_policy' => 'Reconciliation policy',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity' => 'Full load interval',
 	'Class:SynchroDataSource/Attribute:full_load_periodicity+' => 'A complete reload of all data must occur at least as often as specified here',
@@ -698,7 +737,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'SynchroDataSource:Definition' => '定义',
 	'Core:SynchroAttributes' => '属性',
 	'Core:SynchroStatus' => '状态',
-	'Core:Synchro:ErrorsLabel' => 'Errors',
+	'Core:Synchro:ErrorsLabel' => '错误',
 	'Core:Synchro:CreatedLabel' => '已创建',
 	'Core:Synchro:ModifiedLabel' => '已修改',
 	'Core:Synchro:UnchangedLabel' => '保持不变',
@@ -738,8 +777,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Error:DeleteRetentionDurationMustBeSpecified' => 'A delete retention period must be specified, since objects are to be deleted after being marked as obsolete',
 	'Class:SynchroDataSource/Error:DeletePolicyUpdateMustBeSpecified' => 'Obsolete objects are to be updated, but no update is specified.',
 	'Class:SynchroDataSource/Error:DataTableAlreadyExists' => 'The table %1$s already exists in the database. Please use another name for the synchro data table.',
-	'Core:SynchroReplica:PublicData' => 'Public Data',
-	'Core:SynchroReplica:PrivateDetails' => 'Private Details',
+	'Core:SynchroReplica:PublicData' => '公共数据',
+	'Core:SynchroReplica:PrivateDetails' => '专属详情',
 	'Core:SynchroReplica:BackToDataSource' => '返回同步数据源: %1$s',
 	'Core:SynchroReplica:ListOfReplicas' => 'List of Replica',
 	'Core:SynchroAttExtKey:ReconciliationById' => 'id (Primary Key)',
@@ -772,10 +811,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncSendEmail/Attribute:to' => '收件人',
 	'Class:AsyncSendEmail/Attribute:subject' => '主题',
 	'Class:AsyncSendEmail/Attribute:body' => '正文',
-	'Class:AsyncSendEmail/Attribute:header' => 'Header',
+	'Class:AsyncSendEmail/Attribute:header' => '抬头',
 	'Class:CMDBChangeOpSetAttributeOneWayPassword' => '加密密码',
 	'Class:CMDBChangeOpSetAttributeOneWayPassword/Attribute:prev_pwd' => '之前的值',
-	'Class:CMDBChangeOpSetAttributeEncrypted' => 'Encrypted Field',
+	'Class:CMDBChangeOpSetAttributeEncrypted' => '加密字段',
 	'Class:CMDBChangeOpSetAttributeEncrypted/Attribute:prevstring' => '之前的值',
 	'Class:CMDBChangeOpSetAttributeCaseLog' => 'Case Log',
 	'Class:CMDBChangeOpSetAttributeCaseLog/Attribute:lastentry' => 'Last Entry',
@@ -913,11 +952,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:OptionLinkSets' => '包含外链的对象',
 	'Core:BulkExport:OptionFormattedText' => '保持文本格式',
 	'Core:BulkExport:ScopeDefinition' => '定义要导出的对象',
-	'Core:BulkExportLabelOQLExpression' => 'OQL Query:',
+	'Core:BulkExportLabelOQLExpression' => 'OQL 查询:',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:',
-	'Core:BulkExportMessageEmptyOQL' => 'Please enter a valid OQL query.',
+	'Core:BulkExportMessageEmptyOQL' => '请输入有效的OQL 查询.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.',
-	'Core:BulkExportQueryPlaceholder' => 'Type an OQL query here...',
+	'Core:BulkExportQueryPlaceholder' => '请在这里输入OQL 查询...',
 	'Core:BulkExportCanRunNonInteractive' => '点击这里运行非交互式导出.',
 	'Core:BulkExportLegacyExport' => '点击这里进入旧版导出.',
 	'Core:BulkExport:XLSXOptions' => 'Excel 选项',
@@ -954,7 +993,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:TagSetFieldData+' => '~~',
 
 	'Class:TagSetFieldData/Attribute:code' => '代码',
-	'Class:TagSetFieldData/Attribute:code+' => 'Internal code. Must contain at least 3 alphanumeric characters~~',
+	'Class:TagSetFieldData/Attribute:code+' => '内部代码. 必须至少包含3个数字或字母',
 	'Class:TagSetFieldData/Attribute:label' => '标签',
 	'Class:TagSetFieldData/Attribute:label+' => '显示的标签',
 	'Class:TagSetFieldData/Attribute:description' => '描述',
@@ -1039,4 +1078,60 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AsyncTask/Attribute:event_id+' => '',
 	'Class:AsyncTask/Attribute:finalclass' => 'Final class~~',
 	'Class:AsyncTask/Attribute:finalclass+' => '~~',
+	'Class:AsyncTask/Attribute:status' => '状态',
+	'Class:AsyncTask/Attribute:status+' => '~~',
+	'Class:AsyncTask/Attribute:remaining_retries' => '剩余重试次数',
+	'Class:AsyncTask/Attribute:remaining_retries+' => '~~',
+	'Class:AsyncTask/Attribute:last_error_code' => 'Last error code~~',
+	'Class:AsyncTask/Attribute:last_error_code+' => '~~',
+	'Class:AsyncTask/Attribute:last_error' => 'Last error~~',
+	'Class:AsyncTask/Attribute:last_error+' => '~~',
+	'Class:AsyncTask/Attribute:last_attempt' => 'Last attempt~~',
+	'Class:AsyncTask/Attribute:last_attempt+' => '~~',
+    'Class:AsyncTask:InvalidConfig_Class_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]". Expecting an array with the following keys: %2$s~~',
+    'Class:AsyncTask:InvalidConfig_Class_InvalidKey_Keys' => 'Invalid format for the configuration of "async_task_retries[%1$s]": unexpected key "%2$s". Expecting only the following keys: %3$s~~',
+));
+
+//
+// Class: AbstractResource
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:AbstractResource' => '抽象资源',
+	'Class:AbstractResource+' => '',
+));
+
+//
+// Class: ResourceAdminMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceAdminMenu' => '资源管理菜单',
+	'Class:ResourceAdminMenu+' => '',
+));
+
+//
+// Class: ResourceRunQueriesMenu
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceRunQueriesMenu' => 'Resource Run Queries Menu~~',
+	'Class:ResourceRunQueriesMenu+' => '',
+));
+
+//
+// Class: Action
+//
+
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Class:ResourceSystemMenu' => 'Resource System Menu~~',
+	'Class:ResourceSystemMenu+' => '',
+));
+
+
+
+
+// Additional language entries not present in English dict
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+ 'INTERNAL:JQuery-DatePicker:LangCode' => 'zh-CN',
 ));

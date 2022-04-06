@@ -1,20 +1,21 @@
 <?php
-// Copyright (C) 2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/**
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
 
 define('EXPORTER_DEFAULT_CHUNK_SIZE', 1000);
 
@@ -44,7 +45,7 @@ class BulkExportMissingParameterException extends BulkExportException
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -109,7 +110,7 @@ class BulkExportResultGC implements iBackgroundProcess
 		{
 			// Next one ?
 			$oSet = new CMDBObjectSet(DBObjectSearch::FromOQL($sOQL), array('created' => true) /* order by*/, array(), null, 1 /* limit count */);
-			$oSet->OptimizeColumnLoad(array('temp_file_path'));
+			$oSet->OptimizeColumnLoad(array('BulkExportResult' => array('temp_file_path')));
 			$oResult = $oSet->Fetch();
 			if (is_null($oResult))
 			{
@@ -129,7 +130,7 @@ class BulkExportResultGC implements iBackgroundProcess
 /**
  * Class BulkExport
  *
- * @copyright   Copyright (C) 2015 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -170,6 +171,7 @@ abstract class BulkExport
 			$oRefClass = new ReflectionClass($sPHPClass);
 			if ($oRefClass->isSubclassOf('BulkExport') && !$oRefClass->isAbstract())
 			{
+				/** @var BulkExport $oBulkExporter */
 				$oBulkExporter = new $sPHPClass();
 				if ($oBulkExporter->IsFormatSupported($sFormatCode, $oSearch))
 				{
@@ -189,7 +191,7 @@ abstract class BulkExport
      *
      * @param int $iPersistentToken The identifier of the BulkExportResult object storing the information
      *
-     * @return iBulkExport|null
+     * @return BulkExport|null
      * @throws ArchivedObjectException
      * @throws CoreException
      * @throws ReflectionException
@@ -343,10 +345,10 @@ abstract class BulkExport
 			$this->oBulkExportResult->Set('format', $this->sFormatCode);
 			$this->oBulkExportResult->Set('search', $this->oSearch->serialize());
 			$this->oBulkExportResult->Set('chunk_size', $this->iChunkSize);
-            $this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
             $this->oBulkExportResult->Set('localize_output', $this->bLocalizeOutput);
         }
 		$this->oBulkExportResult->Set('status_info', json_encode($this->GetStatusInfo()));
+		$this->oBulkExportResult->Set('temp_file_path', $this->sTmpFile);
 		utils::PushArchiveMode(false);
 		$ret = $this->oBulkExportResult->DBWrite();
 		utils::PopArchiveMode();
@@ -367,20 +369,37 @@ abstract class BulkExport
 			utils::PopArchiveMode();
 		}
 	}
-	
+
 	public function EnumFormParts()
 	{
 		return array();
 	}
-	
+
+	/**
+	 * @deprecated 3.0.0 use GetFormPart instead
+	 */
 	public function DisplayFormPart(WebPage $oP, $sPartId)
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use GetFormPart instead');
+		$oP->AddSubBlock($this->GetFormPart($oP, $sPartId));
 	}
-	
+
+
+	/**
+	 * @param \WebPage $oP
+	 * @param $sPartId
+	 *
+	 * @return UIContentBlock
+	 */
+	public function GetFormPart(WebPage $oP, $sPartId)
+	{
+	}
+
 	public function DisplayUsage(Page $oP)
 	{
-		
+
 	}
+
 	public function ReadParameters()
 	{
 		$this->bLocalizeOutput = !((bool)utils::ReadParam('no_localize', 0, true, 'integer'));
@@ -418,6 +437,11 @@ abstract class BulkExport
 	public function GetStatistics()
 	{
 		
+	}
+
+	public function SetFields($sFields)
+	{
+
 	}
 	
 	public function GetDownloadFileName()

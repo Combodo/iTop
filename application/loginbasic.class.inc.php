@@ -1,8 +1,11 @@
 <?php
+
+use Combodo\iTop\Application\Helper\Session;
+
 /**
  * Class LoginBasic
  *
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -20,15 +23,19 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnModeDetection(&$iErrorCode)
 	{
-		if (!isset($_SESSION['login_mode']))
+		if (!Session::IsSet('login_mode'))
 		{
 			if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
 			{
-				$_SESSION['login_mode'] = 'basic';
+				Session::Set('login_mode', 'basic');
+			}
+			elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION']))
+			{
+				Session::Set('login_mode', 'basic');
 			}
 			elseif (isset($_SERVER['PHP_AUTH_USER']))
 			{
-				$_SESSION['login_mode'] = 'basic';
+				Session::Set('login_mode', 'basic');
 			}
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -36,10 +43,10 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnReadCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (!Session::IsSet('login_mode') || Session::Get('login_mode') == 'basic')
 		{
-			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
-			$_SESSION['login_temp_auth_user'] =  $sAuthUser;
+			list($sAuthUser) = $this->GetAuthUserAndPassword();
+			Session::Set('login_temp_auth_user', $sAuthUser);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -47,10 +54,10 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnCheckCredentials(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (Session::Get('login_mode') == 'basic')
 		{
 			list($sAuthUser, $sAuthPwd) = $this->GetAuthUserAndPassword();
-			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, $_SESSION['login_mode'], 'internal'))
+			if (!UserRights::CheckCredentials($sAuthUser, $sAuthPwd, Session::Get('login_mode'), 'internal'))
 			{
 				$iErrorCode = LoginWebPage::EXIT_CODE_WRONGCREDENTIALS;
 				return LoginWebPage::LOGIN_FSM_ERROR;
@@ -61,17 +68,17 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (Session::Get('login_mode') == 'basic')
 		{
 			list($sAuthUser) = $this->GetAuthUserAndPassword();
-			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', $_SESSION['login_mode']);
+			LoginWebPage::OnLoginSuccess($sAuthUser, 'internal', Session::Get('login_mode'));
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
 	protected function OnError(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (Session::Get('login_mode') == 'basic')
 		{
 			LoginWebPage::HTTP401Error();
 		}
@@ -80,9 +87,9 @@ class LoginBasic extends AbstractLoginFSMExtension
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		if ($_SESSION['login_mode'] == 'basic')
+		if (Session::Get('login_mode') == 'basic')
 		{
-			$_SESSION['can_logoff'] = true;
+			Session::Set('can_logoff', true);
 			return LoginWebPage::CheckLoggedUser($iErrorCode);
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
@@ -92,9 +99,19 @@ class LoginBasic extends AbstractLoginFSMExtension
 	{
 		$sAuthUser = '';
 		$sAuthPwd = null;
+		$sAuthorization = '';
 		if (isset($_SERVER['HTTP_AUTHORIZATION']) && !empty($_SERVER['HTTP_AUTHORIZATION']))
 		{
-			list($sAuthUser, $sAuthPwd) = explode(':', base64_decode(substr($_SERVER['HTTP_AUTHORIZATION'], 6)));
+			$sAuthorization = $_SERVER['HTTP_AUTHORIZATION'];
+		}
+		elseif (isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']) && !empty($_SERVER['REDIRECT_HTTP_AUTHORIZATION']))
+		{
+			$sAuthorization = $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
+		}
+
+		if (!empty($sAuthorization))
+		{
+			list($sAuthUser, $sAuthPwd) = explode(':', base64_decode(substr($sAuthorization, 6)));
 		}
 		else
 		{

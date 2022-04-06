@@ -1,20 +1,14 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
+use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
+use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout as DashboardLayoutUIBlock;
 
 require_once(APPROOT.'application/dashboardlayout.class.inc.php');
 require_once(APPROOT.'application/dashlet.class.inc.php');
@@ -24,21 +18,33 @@ require_once(APPROOT.'core/modelreflection.class.inc.php');
  *
  * A user editable dashboard page
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
  */
 abstract class Dashboard
 {
+	/** @var string $sTitle*/
 	protected $sTitle;
+	/** @var bool $bAutoReload */
 	protected $bAutoReload;
+	/** @var float|int $iAutoReloadSec */
 	protected $iAutoReloadSec;
+	/** @var string $sLayoutClass */
 	protected $sLayoutClass;
+	/** @var array $aWidgetsData */
 	protected $aWidgetsData;
+	/** @var \DOMNode|null $oDOMNode */
 	protected $oDOMNode;
+	/** @var string $sId */
 	protected $sId;
+	/** @var array $aCells */
 	protected $aCells;
+	/** @var \ModelReflection $oMetaModel */
 	protected $oMetaModel;
-	
+
+	/**
+	 * Dashboard constructor.
+	 *
+	 * @param string $sId
+	 */
 	public function __construct($sId)
 	{
 		$this->sTitle = '';
@@ -51,7 +57,7 @@ abstract class Dashboard
 	}
 
 	/**
-	 * @param $sXml
+	 * @param string $sXml
 	 *
 	 * @throws \Exception
 	 */
@@ -64,7 +70,10 @@ abstract class Dashboard
 		restore_error_handler();
 		$this->FromDOMDocument($oDoc);
 	}
-	
+
+	/**
+	 * @param \DOMDocument $oDoc
+	 */
 	public function FromDOMDocument(DOMDocument $oDoc)
 	{
 		$this->oDOMNode = $oDoc->getElementsByTagName('dashboard')->item(0);
@@ -160,9 +169,10 @@ abstract class Dashboard
 	protected function InitDashletFromDOMNode($oDomNode)
     {
         $sId = $oDomNode->getAttribute('id');
+
 	    $sDashletType = $oDomNode->getAttribute('xsi:type');
 
-        // Test if dashlet can be instanciated, otherwise (uninstalled, broken, ...) we display a placeholder
+        // Test if dashlet can be instantiated, otherwise (uninstalled, broken, ...) we display a placeholder
 	    $sClass = static::GetDashletClassFromType($sDashletType);
 	    /** @var \Dashlet $oNewDashlet */
 	    $oNewDashlet = new $sClass($this->oMetaModel, $sId);
@@ -172,7 +182,13 @@ abstract class Dashboard
         return $oNewDashlet;
     }
 
-	static function SortOnRank($aItem1, $aItem2)
+	/**
+	 * @param array $aItem1
+	 * @param array $aItem2
+	 *
+	 * @return int
+	 */
+	public static function SortOnRank($aItem1, $aItem2)
 	{
 		return ($aItem1['rank'] > $aItem2['rank']) ? +1 : -1;
 	}
@@ -200,6 +216,10 @@ abstract class Dashboard
 		}
 	}
 
+	/**
+	 * @return string
+	 * @throws \Exception
+	 */
 	public function ToXml()
 	{
 		$oDoc = new DOMDocument();
@@ -268,7 +288,9 @@ abstract class Dashboard
 		}
 	}
 
-
+	/**
+	 * @param array $aParams
+	 */
 	public function FromParams($aParams)
 	{
 		$this->sLayoutClass = $aParams['layout_class'];
@@ -305,42 +327,85 @@ abstract class Dashboard
 	{
 		
 	}
-	
+
+	/**
+	 * @return mixed
+	 */
+	public function GetId()
+	{
+		return $this->sId;
+	}
+
+	/**
+	 * Return a sanitize ID for usages in XML/HTML attributes
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	public function GetSanitizedId()
+	{
+		return utils::Sanitize($this->GetId(), '', 'element_identifier');
+	}
+
+	/**
+	 * @return string
+	 */
 	public function GetLayout()
 	{
 		return $this->sLayoutClass;
 	}
-	
+
+	/**
+	 * @param string $sLayoutClass
+	 */
 	public function SetLayout($sLayoutClass)
 	{
 		$this->sLayoutClass = $sLayoutClass;
 	}
-	
+
+	/**
+	 * @return string
+	 */
 	public function GetTitle()
 	{
 		return $this->sTitle;
 	}
 
+	/**
+	 * @param string $sTitle
+	 */
 	public function SetTitle($sTitle)
 	{
 		$this->sTitle = $sTitle;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function GetAutoReload()
 	{
 		return $this->bAutoReload;
 	}
 
+	/**
+	 * @param bool $bAutoReload
+	 */
 	public function SetAutoReload($bAutoReload)
 	{
 		$this->bAutoReload = $bAutoReload;
 	}
 
+	/**
+	 * @return float|int
+	 */
 	public function GetAutoReloadInterval()
 	{
 		return $this->iAutoReloadSec;
 	}
 
+	/**
+	 * @param bool $iAutoReloadSec
+	 */
 	public function SetAutoReloadInterval($iAutoReloadSec)
 	{
 		$this->iAutoReloadSec = max(MetaModel::GetConfig()->Get('min_reload_interval'), (int)$iAutoReloadSec);
@@ -356,31 +421,29 @@ abstract class Dashboard
 		$this->aCells[] = array($oDashlet);
 	}
 
-    /**
-     * @param \WebPage $oPage     *
-     * @param array $aExtraParams
-     *
-     * @throws \ReflectionException
-     */
+	/**
+	 * @param \WebPage $oPage *
+	 * @param array $aExtraParams
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Exception
+	 */
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
 		// menu to pick a layout and edit other properties of the dashboard
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard-editor--properties"><div class="ui-widget-header ui-corner-all ibo-dashboard-editor--properties-title">'.Dict::S('UI:DashboardEdit:Properties').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div style="text-align:center">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
-		$oPage->add('<div id="select_layout" style="text-align:center">');
-		foreach( get_declared_classes() as $sLayoutClass)
-		{
-			if (is_subclass_of($sLayoutClass, 'DashboardLayout'))
-			{
+		$oPage->add('<div class="ibo-dashboard-editor--properties-subtitle" data-role="ibo-dashboard-editor--properties-subtitle">'.Dict::S('UI:DashboardEdit:Layout').'</div>');
+		$oPage->add('<div id="select_layout" class="ibo-dashboard-editor--layout-list" data-role="ibo-dashboard-editor--layout-list">');
+		foreach (get_declared_classes() as $sLayoutClass) {
+			if (is_subclass_of($sLayoutClass, 'DashboardLayout')) {
 				$oReflection = new ReflectionClass($sLayoutClass);
-				if (!$oReflection->isAbstract())
-				{
+				if (!$oReflection->isAbstract()) {
 					$aCallSpec = array($sLayoutClass, 'GetInfo');
 					$aInfo = call_user_func($aCallSpec);
 					$sChecked = ($this->sLayoutClass == $sLayoutClass) ? 'checked' : '';
-					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" /></label>'); // title="" on either the img or the label does nothing !
+					$oPage->add('<input type="radio" name="layout_class" '.$sChecked.' value="'.$sLayoutClass.'" id="layout_'.$sLayoutClass.'"><label for="layout_'.$sLayoutClass.'"><img src="'.$sUrl.$aInfo['icon'].'" class="ibo-dashboard--properties--icon" data-role="ibo-dashboard--properties--icon"/></label>'); // title="" on either the img or the label does nothing !
 				}
 			}
 		}
@@ -411,14 +474,15 @@ abstract class Dashboard
 		$oPage->add_ready_script(
 <<<EOF
 	// Note: the title gets deleted by the validation mechanism
-	$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+	$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
+	CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 	$("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 	
 	$('#attr_auto_reload').change( function(ev) {
 		$("#attr_auto_reload_sec").prop('disabled', !$(this).is(':checked'));
 	} );
 
-	$('#select_layout').buttonset();
+	$('#select_layout').controlgroup();
 	$('#select_dashlet').droppable({
 		accept: '.dashlet',
 		drop: function(event, ui) {
@@ -428,7 +492,7 @@ abstract class Dashboard
 		},
 	});
 
-	$('#event_bus').bind('dashlet-selected', function(event, data){
+	$('#event_bus').on('dashlet-selected', function(event, data){
 		var sDashletId = data.dashlet_id;
 		var sPropId = 'dashlet_properties_'+sDashletId;
 		$('.dashlet_properties').each(function() {
@@ -449,61 +513,108 @@ EOF
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 * @param bool $bEditMode
 	 * @param array $aExtraParams
 	 * @param bool $bCanEdit
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		$oPage->add('<div class="dashboard-title-line"><div class="dashboard-title">'.htmlentities(Dict::S($this->sTitle), ENT_QUOTES, 'UTF-8', false).'</div></div>');
+		if (!array_key_exists('dashboard_div_id', $aExtraParams)) {
+			$aExtraParams['dashboard_div_id'] = utils::Sanitize($this->GetId(), '', 'element_identifier');
+		}
 
-		$oLayout = new $this->sLayoutClass;
 		/** @var \DashboardLayoutMultiCol $oLayout */
-		$oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
-		if (!$bEditMode)
-		{
+		$oLayout = new $this->sLayoutClass();
+
+		foreach ($this->aCells as $iCellIdx => $aDashlets) {
+			foreach ($aDashlets as $oDashlet) {
+				$aDashletCoordinates = $oLayout->GetDashletCoordinates($iCellIdx);
+				$this->PrepareDashletForRendering($oDashlet, $aDashletCoordinates, $aExtraParams);
+			}
+		}
+
+		$oDashboard = $oLayout->Render($oPage, $this->aCells, $bEditMode, $aExtraParams);
+		$oPage->AddUiBlock($oDashboard);
+
+		$bFromDasboardPage = isset($aExtraParams['from_dashboard_page']) ? isset($aExtraParams['from_dashboard_page']) : false;
+
+		if ($bFromDasboardPage) {
+			$sTitleForHTML = utils::HtmlEntities(Dict::S($this->sTitle));
+			$sHtml = "<div class=\"ibo-top-bar--toolbar-dashboard-title\" title=\"{$sTitleForHTML}\">{$sTitleForHTML}</div>";
+			if ($oPage instanceof iTopWebPage) {
+				$oTopBar = $oPage->GetTopBarLayout();
+				$oToolbar = ToolbarUIBlockFactory::MakeStandard();
+				$oTopBar->SetToolbar($oToolbar);
+
+				$oToolbar->AddHtml($sHtml);
+			} else {
+				$oPage->add_script(<<<JS
+$(".ibo-top-bar--toolbar-dashboard-title").html("$sTitleForHTML").attr("title",  $('<div>').html("$sTitleForHTML").text());
+JS
+				);
+			}
+		} else {
+			$oDashboard->SetTitle(Dict::S($this->sTitle));
+		}
+
+		if (!$bEditMode) {
 			$oPage->add_linked_script('../js/dashlet.js');
 			$oPage->add_linked_script('../js/dashboard.js');
 		}
+
+		return $oDashboard;
 	}
 
+	/**
+	 * @param \WebPage $oPage
+	 *
+	 * @throws \ReflectionException
+	 * @throws \Exception
+	 */
 	public function RenderDashletsSelection(WebPage $oPage)
 	{
 		// Toolbox/palette to drag and drop dashlets
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashboard--available-dashlets"><div class="ui-widget-header ui-corner-all ibo-dashboard--available-dashlet--title">'.Dict::S('UI:DashboardEdit:Dashlets').'</div>');
 		$sUrl = utils::GetAbsoluteUrlAppRoot();
 
-		$oPage->add('<div id="select_dashlet" style="text-align:center; max-height:120px; overflow-y:auto;">');
+		$oPage->add('<div id="select_dashlet" class="ibo-dashboard--available-dashlets--list" data-role="ibo-dashboard--available-dashlets--list">');
 		$aAvailableDashlets = $this->GetAvailableDashlets();
-		foreach($aAvailableDashlets as $sDashletClass => $aInfo)
-		{
-			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="dashlet_icon ui-widget-content ui-corner-all" id="dashlet_'.$sDashletClass.'" title="'.$aInfo['label'].'" style="width:34px; height:34px; display:inline-block; margin:2px;"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
+		foreach ($aAvailableDashlets as $sDashletClass => $aInfo) {
+			$oPage->add('<span dashlet_class="'.$sDashletClass.'" class="ibo-dashboard-editor--available-dashlet-icon dashlet_icon ui-widget-content ui-corner-all" data-role="ibo-dashboard-editor--available-dashlet-icon" id="dashlet_'.$sDashletClass.'" data-tooltip-content="'.$aInfo['label'].'"  title="'.$aInfo['label'].'"><img src="'.$sUrl.$aInfo['icon'].'" /></span>');
 		}
 		$oPage->add('</div>');
 
 		$oPage->add('</div>');
-		$oPage->add_ready_script("$('.dashlet_icon').draggable({helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
+		$oPage->add_ready_script("$('.dashlet_icon').draggable({cursor: 'move', helper: 'clone', appendTo: 'body', zIndex: 10000, revert:'invalid'});");
 	}
-	
+
+	/**
+	 * @param \WebPage $oPage
+	 * @param array $aExtraParams
+	 */
 	public function RenderDashletsProperties(WebPage $oPage, $aExtraParams = array())
 	{
 		// Toolbox/palette to edit the properties of each dashlet
-		$oPage->add('<div class="ui-widget-content ui-corner-all"><div class="ui-widget-header ui-corner-all" style="text-align:center; padding: 2px;">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
+		$oPage->add('<div class="ui-widget-content ui-corner-all ibo-dashlet--properties"><div class="ui-widget-header ui-corner-all ibo-dashlet--properties--title">'.Dict::S('UI:DashboardEdit:DashletProperties').'</div>');
 
-		$oPage->add('<div id="dashlet_properties" style="text-align:center">');
-		foreach($this->aCells as $aCell)
+		/** @var \DashboardLayoutMultiCol $oLayout */
+		$oLayout = new $this->sLayoutClass();
+
+		$oPage->add('<div id="dashlet_properties">');
+		foreach($this->aCells as $iCellIdx => $aCell)
 		{
 			/** @var \Dashlet $oDashlet */
 			foreach($aCell as $oDashlet)
 			{
-				$sId = $oDashlet->GetID();
 				if ($oDashlet->IsVisible())
 				{
-					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$sId.'" style="display:none">');
+					$oPage->add('<div class="dashlet_properties" id="dashlet_properties_'.$oDashlet->GetID().'" style="display:none">');
 					$oForm = $oDashlet->GetForm();
 					$this->SetFormParams($oForm, $aExtraParams);
-					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');		
+					$oForm->RenderAsPropertySheet($oPage, false, '.itop-dashboard');
 					$oPage->add('</div>');
 				}
 			}
@@ -525,16 +636,13 @@ EOF
 
 		foreach( get_declared_classes() as $sDashletClass)
 		{
-			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instanciated.
-			if ( is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, array('DashletUnknown', 'DashletProxy')) )
-			{
+			// DashletUnknown is not among the selection as it is just a fallback for dashlets that can't instantiated.
+			if (is_subclass_of($sDashletClass, 'Dashlet') && !in_array($sDashletClass, array('DashletUnknown', 'DashletProxy'))) {
 				$oReflection = new ReflectionClass($sDashletClass);
-				if (!$oReflection->isAbstract())
-				{
+				if (!$oReflection->isAbstract()) {
 					$aCallSpec = array($sDashletClass, 'IsVisible');
 					$bVisible = call_user_func($aCallSpec);
-					if ($bVisible)
-					{
+					if ($bVisible) {
 						$aCallSpec = array($sDashletClass, 'GetInfo');
 						$aInfo = call_user_func($aCallSpec);
 						$aDashlets[$sDashletClass] = $aInfo;
@@ -545,7 +653,10 @@ EOF
 
 		return $aDashlets;
 	}
-	
+
+	/**
+	 * @return int|mixed
+	 */
 	protected function GetNewDashletId()
 	{
 		$iNewId = 0;
@@ -560,14 +671,32 @@ EOF
 		return $iNewId + 1;
 	}
 
+	/**
+	 * Prepare dashlet for rendering (eg. change its ID or another processing).
+	 * Meant to be overloaded.
+	 *
+	 * @param \Dashlet $oDashlet
+	 * @param array $aCoordinates
+	 * @param array $aExtraParams
+	 *
+	 * @return void
+	 */
+	abstract protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array());
+
     /**
-     * @param $oForm
+     * @param \DesignerForm $oForm
      * @param array $aExtraParams
      *
      * @return mixed
      */
 	abstract protected function SetFormParams($oForm, $aExtraParams = array());
 
+	/**
+	 * @param string $sType
+	 * @param \ModelFactory|null $oFactory
+	 *
+	 * @return string
+	 */
 	public static function GetDashletClassFromType($sType, $oFactory = null)
 	{
 		if (is_subclass_of($sType, 'Dashlet'))
@@ -578,45 +707,90 @@ EOF
 	}
 
 	/**
-	 * @return mixed
+	 *  N°2634: we must have a unique id per dashlet!
+	 * To avoid collision with other dashlets with the same ID we prefix it with row/cell id
+	 * Collisions typically happen with extensions.
+	 *
+	 * @param boolean $bIsCustomized
+	 * @param string $sDashboardDivId
+	 * @param int $iRow
+	 * @param int $iCol
+	 * @param string $sDashletOrigId
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.0 N°2735
 	 */
-	public function GetId()
+	public static function GetDashletUniqueId($bIsCustomized, $sDashboardDivId, $iRow, $iCol, $sDashletOrigId)
 	{
-		return $this->sId;
+		if(strpos($sDashletOrigId, '_ID_row') !== false)
+		{
+			return $sDashletOrigId;
+		}
+
+		$sDashletId = $sDashboardDivId."_ID_row".$iRow."_col".$iCol."_".$sDashletOrigId;
+		if ($bIsCustomized)
+		{
+			$sDashletId = 'CUSTOM_'.$sDashletId;
+		}
+
+		return $sDashletId;
 	}
 }
 
+/**
+ * Class RuntimeDashboard
+ */
 class RuntimeDashboard extends Dashboard
 {
-	protected $bCustomized;
+	/** @var string $sDefinitionFile */
 	private $sDefinitionFile = '';
+	/** @var null $sReloadURL */
 	private $sReloadURL = null;
+	/** @var bool $bCustomized */
+	protected $bCustomized;
 
-
+	/**
+	 * @inheritDoc
+	 */
 	public function __construct($sId)
 	{
 		parent::__construct($sId);
-		$this->bCustomized = false;
 		$this->oMetaModel = new ModelReflectionRuntime();
+		$this->bCustomized = false;
 	}
-		
+
+	/**
+	 * @return bool
+	 * @since 2.7.0
+	 */
+	public function GetCustomFlag()
+	{
+		return $this->bCustomized;
+	}
+
+	/**
+	 * @param bool $bCustomized
+	 * @since 2.7.0
+	 */
 	public function SetCustomFlag($bCustomized)
 	{
 		$this->bCustomized = $bCustomized;
 	}
 
 	/**
-	 * @param \DesignerForm $oForm
-	 *
-	 * @param array $aExtraParams
-	 *
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	protected function SetFormParams($oForm, $aExtraParams = array())
 	{
 		$oForm->SetSubmitParams(utils::GetAbsoluteUrlAppRoot().'pages/ajax.render.php', array('operation' => 'update_dashlet_property', 'extra_params' => $aExtraParams));
 	}
-	
+
+	/**
+	 * @inheritDoc
+	 * @throws \Exception
+	 */
 	public function Save()
 	{
 		$sXml = $this->ToXml();
@@ -632,7 +806,7 @@ class RuntimeDashboard extends Dashboard
 		}
 		else
 		{
-			// No such customized dasboard for the current user, let's create a new record
+			// No such customized dashboard for the current user, let's create a new record
 			$oUserDashboard = new UserDashboard();
 			$oUserDashboard->Set('user_id', UserRights::GetUserId());
 			$oUserDashboard->Set('menu_code', $this->sId);
@@ -642,7 +816,18 @@ class RuntimeDashboard extends Dashboard
 		$oUserDashboard->DBWrite();
 		utils::PopArchiveMode();
 	}
-	
+
+	/**
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreCannotSaveObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \DeleteException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
 	public function Revert()
 	{
 		$oUDSearch = new DBObjectSearch('UserDashboard');
@@ -669,33 +854,35 @@ class RuntimeDashboard extends Dashboard
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
 	 */
 	public static function GetDashboard($sDashboardFile, $sDashBoardId)
 	{
 		$bCustomized = false;
 
-		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashBoardId, false))
-		{
+		$sDashboardFileSanitized = utils::RealPath($sDashboardFile, APPROOT);
+		if (false === $sDashboardFileSanitized) {
+			throw new SecurityException('Invalid dashboard file !');
+		}
+
+		if (!appUserPreferences::GetPref('display_original_dashboard_'.$sDashBoardId, false)) {
 			// Search for an eventual user defined dashboard
 			$oUDSearch = new DBObjectSearch('UserDashboard');
 			$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
 			$oUDSearch->AddCondition('menu_code', $sDashBoardId, '=');
 			$oUDSet = new DBObjectSet($oUDSearch);
-			if ($oUDSet->Count() > 0)
-			{
+			if ($oUDSet->Count() > 0) {
 				// Assuming there is at most one couple {user, menu}!
 				$oUserDashboard = $oUDSet->Fetch();
 				$sDashboardDefinition = $oUserDashboard->Get('contents');
 				$bCustomized = true;
-			}
-			else
-			{
-				$sDashboardDefinition = @file_get_contents($sDashboardFile);
+			} else {
+				$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 			}
 		}
 		else
 		{
-			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+			$sDashboardDefinition = @file_get_contents($sDashboardFileSanitized);
 		}
 
 		if ($sDashboardDefinition !== false)
@@ -703,58 +890,90 @@ class RuntimeDashboard extends Dashboard
 			$oDashboard = new RuntimeDashboard($sDashBoardId);
 			$oDashboard->FromXml($sDashboardDefinition);
 			$oDashboard->SetCustomFlag($bCustomized);
-			$oDashboard->SetDefinitionFile($sDashboardFile);
-		}
-		else
-		{
+			$oDashboard->SetDefinitionFile($sDashboardFileSanitized);
+		} else {
 			$oDashboard = null;
 		}
+
 		return $oDashboard;
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
-	 * @param bool $bEditMode
-	 * @param array $aExtraParams (class and id of the current object
+	 * @param string $sDashboardFile file name relative to the current module folder
+	 * @param string $sDashBoardId code of the dashboard either menu_id or <class>__<attcode>
 	 *
+	 * @return null|RuntimeDashboard
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \Exception
+	 */
+	public static function GetDashboardToEdit($sDashboardFile, $sDashBoardId)
+	{
+		$bCustomized = false;
+
+		// Search for an eventual user defined dashboard
+		$oUDSearch = new DBObjectSearch('UserDashboard');
+		$oUDSearch->AddCondition('user_id', UserRights::GetUserId(), '=');
+		$oUDSearch->AddCondition('menu_code', $sDashBoardId, '=');
+		$oUDSet = new DBObjectSet($oUDSearch);
+		if ($oUDSet->Count() > 0) {
+			// Assuming there is at most one couple {user, menu}!
+			$oUserDashboard = $oUDSet->Fetch();
+			$sDashboardDefinition = $oUserDashboard->Get('contents');
+			$bCustomized = true;
+		} else {
+			$sDashboardDefinition = @file_get_contents($sDashboardFile);
+		}
+
+
+		if ($sDashboardDefinition !== false) {
+			$oDashboard = new RuntimeDashboard($sDashBoardId);
+			$oDashboard->FromXml($sDashboardDefinition);
+			$oDashboard->SetCustomFlag($bCustomized);
+			$oDashboard->SetDefinitionFile($sDashboardFile);
+		} else {
+			$oDashboard = null;
+		}
+
+		return $oDashboard;
+	}
+
+	/**
+	 * @inheritDoc
 	 * @throws \Exception
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array(), $bCanEdit = true)
 	{
-		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class']))
-		{
+		if (!isset($aExtraParams['query_params']) && isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
-		}
-		else
-		{
+		} else {
 			$aRenderParams = $aExtraParams;
 		}
 
-		parent::Render($oPage, $bEditMode, $aRenderParams);
+		$oDashboard = parent::Render($oPage, $bEditMode, $aRenderParams);
 
-		if (isset($aExtraParams['query_params']['this->object()']))
-		{
+		if (isset($aExtraParams['query_params']['this->object()'])) {
 			/** @var \DBObject $oObj */
 			$oObj = $aExtraParams['query_params']['this->object()'];
 			$aAjaxParams = array('this->class' => get_class($oObj), 'this->id' => $oObj->GetKey());
-		}
-		else
-		{
+			if (isset($aExtraParams['from_dashboard_page'])) {
+				$aAjaxParams['from_dashboard_page'] = $aExtraParams['from_dashboard_page'];
+			}
+		} else {
 			$aAjaxParams = $aExtraParams;
 		}
-		if (!$bEditMode && !$oPage->IsPrintableVersion())
-		{
+		if (!$bEditMode && !$oPage->IsPrintableVersion()) {
 			$sId = $this->GetId();
-			$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
-			if ($this->GetAutoReload())
-			{
-				$sFile = addslashes($this->GetDefinitionFile());
-				$sExtraParams = json_encode($aAjaxParams);
+			$sDivId = utils::Sanitize($sId, '', 'element_identifier');
+			if ($this->GetAutoReload()) {
 				$iReloadInterval = 1000 * $this->GetAutoReloadInterval();
-				$sReloadURL = $this->GetReloadURL();
+
 				$oPage->add_script(
-<<<EOF
+					<<<JS
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
 					clearInterval(AutoReloadDashboardId$sDivId);
@@ -766,25 +985,18 @@ class RuntimeDashboard extends Dashboard
 				function ReloadDashboard$sDivId()
 				{
 					// Do not reload when a dialog box is active
-					if (!($('.ui-dialog:visible').length > 0) && $('.dashboard_contents#$sDivId').is(':visible'))
+					if (!($('.ui-dialog:visible').length > 0) && $('.ibo-dashboard#$sDivId').is(':visible'))
 					{
-						$('.dashboard_contents#$sDivId').block();
-						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
-						   { operation: 'reload_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL'},
-						   function(data){
-							 $('.dashboard_contents#$sDivId').html(data);
-							 $('.dashboard_contents#$sDivId').unblock();
-							}
-						 );
+						updateDashboard$sDivId();
 					}
 				}
-EOF
+JS
 				);
 			}
 			else
 			{
 				$oPage->add_script(
-<<<EOF
+					<<<EOF
 				if (typeof(AutoReloadDashboardId$sDivId) !== 'undefined')
 				{
 					clearInterval(AutoReloadDashboardId$sDivId);
@@ -794,63 +1006,81 @@ EOF
 				);
 			}
 
-			if ($bCanEdit)
-			{
-				$this->RenderSelector($oPage, $aAjaxParams);
-				$this->RenderEditionTools($oPage, $aAjaxParams);
+			if ($bCanEdit) {
+				$this->RenderSelector($oPage, $oDashboard, $aAjaxParams);
+				$this->RenderEditionTools($oPage, $oDashboard, $aAjaxParams);
 			}
 		}
 	}
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param WebPage $oPage
+	 * @param \Combodo\iTop\Application\UI\Base\Layout\Dashboard\DashboardLayout $oDashboard
+	 * @param bool $bFromDashboardPage
 	 * @param array $aAjaxParams
+	 *
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MySQLException
 	 */
-	protected function RenderSelector($oPage, $aAjaxParams = array())
+	protected function RenderSelector(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aAjaxParams = array())
 	{
+		if (!$this->HasCustomDashboard()) {
+			return;
+		}
 		$sId = $this->GetId();
-		$sDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sId);
+		$sDivId = utils::Sanitize($sId, '', 'element_identifier');
 		$sExtraParams = json_encode($aAjaxParams);
 
-		$sSelectorHtml = '<div class="dashboard-selector">';
-		if ($this->HasCustomDashboard())
-		{
-			$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
-			$sStandard = Dict::S('UI:Toggle:StandardDashboard');
-			$sSelectorHtml .= '<div class="selector-label">'.$sStandard.'</div>';
-			$sSelectorHtml .= '<label class="switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="slider round"></span></label></input></label>';
-			$sCustom = Dict::S('UI:Toggle:CustomDashboard');
-			$sSelectorHtml .= '<div class="selector-label">'.$sCustom.'</div>';
+		$sSwitchToStandard = Dict::S('UI:Toggle:SwitchToStandardDashboard');
+		$sSwitchToCustom = Dict::S('UI:Toggle:SwitchToCustomDashboard');
+		$bStandardSelected = appUserPreferences::GetPref('display_original_dashboard_'.$sId, false);
 
-		}
+		$sSelectorHtml = '<div id="ibo-dashboard-selector'.$sDivId.'" class="ibo-dashboard--selector" data-tooltip-content="'.($bStandardSelected ? $sSwitchToCustom : $sSwitchToStandard).'">';
+		$sSelectorHtml .= '<label class="ibo-dashboard--switch"><input type="checkbox" onchange="ToggleDashboardSelector'.$sDivId.'();" '.($bStandardSelected ? '' : 'checked').'><span class="ibo-dashboard--slider"></span></label></input></label>';
 		$sSelectorHtml .= '</div>';
-		$sSelectorHtml = addslashes($sSelectorHtml);
+
 		$sFile = addslashes($this->GetDefinitionFile());
 		$sReloadURL = $this->GetReloadURL();
 
-		$oPage->add_ready_script(
-<<<EOF
-	$('.dashboard-title').after('$sSelectorHtml');
-EOF
-		);
+		$bFromDashboardPage = isset($aAjaxParams['from_dashboard_page']) ? isset($aAjaxParams['from_dashboard_page']) : false;
+		if ($bFromDashboardPage) {
+			if ($oPage instanceof iTopWebPage) {
+				$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+				$oToolbar->AddHtml($sSelectorHtml);
+			}
+		} else {
+			$oToolbar = $oDashboard->GetToolbar();
+			$oToolbar->AddHtml($sSelectorHtml);
+		}
 
 		$oPage->add_script(
-<<<EOF
+			<<<JS
 			function ToggleDashboardSelector$sDivId()
 			{
-				$('.dashboard_contents#$sDivId').block();
+			    var dashboard = $('.ibo-dashboard#$sDivId')
+				dashboard.block();
 				$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 				   { operation: 'toggle_dashboard', dashboard_id: '$sId', file: '$sFile', extra_params: $sExtraParams, reload_url: '$sReloadURL' },
 				   function(data) {
-					 $('.dashboard_contents#$sDivId').html(data);
-					 $('.dashboard_contents#$sDivId').unblock();
+					 dashboard.html(data);
+					 dashboard.unblock();
+					 if ($('#ibo-dashboard-selector$sDivId input').prop("checked")) {
+					 	$('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToStandard');
+					 } else {
+					    $('#ibo-dashboard-selector$sDivId').attr('data-tooltip-content', '$sSwitchToCustom');
+					 }
+					 CombodoTooltip.InitAllNonInstantiatedTooltips($('#ibo-dashboard-selector$sDivId').parent(), true);
 					}
 				 );
 			}
-EOF
+JS
 		);
 	}
 
+	/**
+	 * @return bool
+	 */
 	protected function HasCustomDashboard()
 	{
 		try
@@ -875,45 +1105,59 @@ EOF
 	 *
 	 * @throws \Exception
 	 */
-	protected function RenderEditionTools(WebPage $oPage, $aExtraParams)
+	protected function RenderEditionTools(WebPage $oPage, DashboardLayoutUIBlock $oDashboard, $aExtraParams)
 	{
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.iframe-transport.js');
 		$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.fileupload.js');
-		$sEditMenu = "<div id=\"DashboardMenu\"><ul><li><img src=\"../images/pencil-menu.png\"><ul>";
-	
+		$sId = utils::Sanitize($this->GetId(), '', 'element_identifier');
+
+		$sMenuTogglerId = "ibo-dashboard-menu-toggler-{$sId}";
+		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
+		$sName = 'UI:Dashboard:Actions';
+
+		$bFromDashboardPage = isset($aExtraParams['from_dashboard_page']) ? isset($aExtraParams['from_dashboard_page']) : false;
+		if ($bFromDashboardPage) {
+			if (!($oPage instanceof iTopWebPage)) {
+				// TODO 3.0 change the menu
+				return;
+			}
+			$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
+		} else {
+			$oToolbar = $oDashboard->GetToolbar();
+		}
+		$oActionButton = ButtonUIBlockFactory::MakeIconAction('fas fa-ellipsis-v', Dict::S($sName), $sName, '', false, $sMenuTogglerId)
+			->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler')
+			->AddCSSClass('ibo-action-button');
+
+		$oToolbar->AddSubBlock($oActionButton);
+
 		$aActions = array();
 		$sFile = addslashes($this->sDefinitionFile);
 		$sJSExtraParams = json_encode($aExtraParams);
-		$bCanEdit = true;
-		if ($this->HasCustomDashboard())
-		{
-			$bCanEdit = !appUserPreferences::GetPref('display_original_dashboard_'.$this->GetId(), false);
-		}
-		if ($bCanEdit)
-		{
-			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:Edit'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+		if ($this->HasCustomDashboard()) {
+			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:EditCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
+			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
+			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:DeleteCustom'),
+				"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
+			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
+		} else {
+			$oEdit = new JSPopupMenuItem('UI:Dashboard:Edit', Dict::S('UI:Dashboard:CreateCustom'), "return EditDashboard('{$this->sId}', '$sFile', $sJSExtraParams)");
 			$aActions[$oEdit->GetUID()] = $oEdit->GetMenuItem();
 		}
 
-		if ($this->bCustomized)
-		{
-			$oRevert = new JSPopupMenuItem('UI:Dashboard:RevertConfirm', Dict::S('UI:Dashboard:Revert'),
-											"if (confirm('".addslashes(Dict::S('UI:Dashboard:RevertConfirm'))."')) return RevertDashboard('{$this->sId}', $sJSExtraParams); else return false");
-			$aActions[$oRevert->GetUID()] = $oRevert->GetMenuItem();
-		}
+
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
-		$sEditMenu .= $oPage->RenderPopupMenuItems($aActions);
-		$sEditMenu = addslashes($sEditMenu);
+
+		$oActionsMenu = $oPage->GetPopoverMenu($sPopoverMenuId, $aActions)
+			->SetTogglerJSSelector("#$sMenuTogglerId")
+			->SetContainer(PopoverMenu::ENUM_CONTAINER_BODY);
+
+		$oToolbar->AddSubBlock($oActionButton)
+			->AddSubBlock($oActionsMenu);
+
 		$sReloadURL = $this->GetReloadURL();
-		$oPage->add_ready_script(
-<<<EOF
-	$('.dashboard-title').after('$sEditMenu');
-	$('#DashboardMenu>ul').popupmenu();
-	
-EOF
-		);
 		$oPage->add_script(
-<<<EOF
+			<<<EOF
 function EditDashboard(sId, sDashboardFile, aExtraParams)
 {
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', {operation: 'dashboard_editor', id: sId, file: sDashboardFile, extra_params: aExtraParams, reload_url: '$sReloadURL'},
@@ -939,9 +1183,7 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 *
-	 * @throws \ReflectionException
+	 * @inheritDoc
 	 */
 	public function RenderProperties($oPage, $aExtraParams = array())
 	{
@@ -949,7 +1191,7 @@ EOF
 
 		$oPage->add_ready_script(
 <<<EOF
-	$('#select_layout input').click( function() {
+	$('#select_layout input').on('click', function() {
 		var sLayoutClass = $(this).val();
 		$('.itop-dashboard').runtimedashboard('option', {layout_class: sLayoutClass});
 	} );
@@ -977,7 +1219,7 @@ EOF
 
 
 	/**
-	 * @param \iTopWebPage $oPage
+	 * @param \WebPage $oPage
 	 *
 	 * @param array $aExtraParams
 	 *
@@ -988,28 +1230,27 @@ EOF
 	 */
 	public function RenderEditor($oPage, $aExtraParams = array())
 	{
-		if (isset($aExtraParams['this->class']))
-		{
+		if (isset($aExtraParams['this->class'])) {
 			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
 			$aRenderParams = array('query_params' => $oObj->ToArgsForQuery());
-		}
-		else
-		{
+		} else {
 			$aRenderParams = $aExtraParams;
 		}
+		$aRenderParams['dashboard_div_id'] = $aExtraParams['dashboard_div_id'];
 		$sJSExtraParams = json_encode($aExtraParams);
-		$oPage->add('<div id="dashboard_editor">');
+		$oPage->add('<div id="dashboard_editor" class="ibo-dashboard-editor" data-role="ibo-dashboard-editor">');
 		$oPage->add('<div class="ui-layout-center">');
+		$this->SetCustomFlag(true);
 		$this->Render($oPage, true, $aRenderParams);
 		$oPage->add('</div>');
-		$oPage->add('<div class="ui-layout-east">');
+		$oPage->add('<div class="ui-layout-east ibo-dashboard-editor--pane" data-role="ibo-dashboard-editor--pane">');
 		$this->RenderProperties($oPage, $aExtraParams);
 		$this->RenderDashletsSelection($oPage);
 		$this->RenderDashletsProperties($oPage, $aExtraParams);
 		$oPage->add('</div>');
 		$oPage->add('<div id="event_bus"/>'); // For exchanging messages between the panes, same as in the designer
 		$oPage->add('</div>');
-		
+
 		$sDialogTitle = Dict::S('UI:DashboardEdit:Title');
 		$sOkButtonLabel = Dict::S('UI:Button:Save');
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
@@ -1028,7 +1269,7 @@ EOF
 		$sAutoApplyConfirmationMessage = addslashes(Dict::S('UI:AutoApplyConfirmationMessage'));
 		
 		$oPage->add_ready_script(
-<<<EOF
+<<<JS
 window.bLeavingOnUserAction = false;
 
 $('#dashboard_editor').dialog({
@@ -1037,7 +1278,24 @@ $('#dashboard_editor').dialog({
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: function() {
+	{ text: "$sCancelButtonLabel",
+	 class: "ibo-is-alternative",
+	 click: function() {
+		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
+		if (oDashboard.is_modified())
+		{
+			if (!confirm('$sCancelConfirmationMessage'))
+			{
+				return;
+			}
+		}
+		window.bLeavingOnUserAction = true;
+		$(this).dialog( "close" );
+		$(this).remove();
+	} },
+	{ text: "$sOkButtonLabel",
+	 class: "ibo-is-primary",
+	 click: function() {
 		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
 		if (oDashboard.is_dirty())
 		{
@@ -1053,45 +1311,33 @@ $('#dashboard_editor').dialog({
 		window.bLeavingOnUserAction = true;
 		oDashboard.save($(this));
 	} },
-	{ text: "$sCancelButtonLabel", click: function() {
-		var oDashboard = $('.itop-dashboard').data('itopRuntimedashboard');
-		if (oDashboard.is_modified())
-		{
-			if (!confirm('$sCancelConfirmationMessage'))
-			{
-				return;
-			}
-		}
-		window.bLeavingOnUserAction = true;
-		$(this).dialog( "close" );
-		$(this).remove();
-	} },
 	],
 	close: function() { $(this).remove(); }
 });
 
 $('#dashboard_editor .ui-layout-center').runtimedashboard({
-	dashboard_id: '$sId', layout_class: '$sLayoutClass', title: '$sTitle',
-	auto_reload: $sAutoReload, auto_reload_sec: $sAutoReloadSec,
-	submit_to: '$sUrl', submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
-	render_to: '$sUrl', render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	dashboard_id: '$sId', 
+	layout_class: '$sLayoutClass', 
+	title: '$sTitle',
+	auto_reload: $sAutoReload, 
+	auto_reload_sec: $sAutoReloadSec,
+	submit_to: '$sUrl', 
+	submit_parameters: {operation: 'save_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
+	render_to: '$sUrl', 
+	render_parameters: {operation: 'render_dashboard', file: '$sFile', extra_params: $sJSExtraParams, reload_url: '$sReloadURL'},
 	new_dashlet_parameters: {operation: 'new_dashlet'}
 });
 
-dashboard_prop_size = GetUserPreference('dashboard_prop_size', 350);
-$('#dashboard_editor').layout({
-	east: {
-		minSize: 200,
-		size: dashboard_prop_size,
-		togglerLength_open: 0,
-		togglerLength_closed: 0, 
-		onresize_end: function(name, elt, state, options, layout)
-		{
-			if (state.isSliding == false)
-			{
-				SetUserPreference('dashboard_prop_size', state.size, true);
-			}
-		},
+var dashboard_prop_size = GetUserPreference('dashboard_prop_size', 400);
+$('#dashboard_editor > .itop-dashboard').width($('#dashboard_editor').width() - dashboard_prop_size);
+
+// We check when we finish click on the pane with the resize slider
+// if the pane size changed (% 5px), if it's the case we save the value in userpref
+$('#dashboard_editor > .itop-dashboard').on('mouseup',function (){
+	var iWidthDiff = $(this).width() - ($('#dashboard_editor').width()  - dashboard_prop_size);
+	if( Math.abs(iWidthDiff) > 5){
+		dashboard_prop_size = iWidthDiff;
+		SetUserPreference('dashboard_prop_size', $('#dashboard_editor').width() - $(this).width(), true);
 	}
 });
 
@@ -1113,11 +1359,18 @@ window.onbeforeunload = function() {
 	}
 	// return nothing ! safer for IE
 };
-EOF
+JS
 		);
 		$oPage->add_ready_script("");
 	}
-	
+
+	/**
+	 * @param string|null $sOQL
+	 *
+	 * @return \DesignerForm
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
+	 */
 	public static function GetDashletCreationForm($sOQL = null)
 	{
 		$oAppContext = new ApplicationContext();
@@ -1228,6 +1481,9 @@ EOF
 	/**
 	 * @param \WebPage $oPage
 	 * @param $sOQL
+	 *
+	 * @throws \DictExceptionMissingString
+	 * @throws \ReflectionException
 	 */
 	public static function GetDashletCreationDlgFromOQL($oPage, $sOQL)
 	{
@@ -1243,36 +1499,41 @@ EOF
 		$sCancelButtonLabel = Dict::S('UI:Button:Cancel');
 		
 		$oPage->add_ready_script(
-<<<EOF
+			<<<JS
 $('#dashlet_creation_dlg').dialog({
 	width: 600,
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: function() {
-		var oForm = $(this).find('form');
-		var sFormId = oForm.attr('id');
-		var oParams = null;
-		var aErrors = ValidateForm(sFormId, false);
-		if (aErrors.length == 0)
-		{
-			oParams = ReadFormParams(sFormId);
-		}
-		oParams.operation = 'add_dashlet';
-		var me = $(this);
-		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
-			me.dialog( "close" );
-			me.remove();
-			$('body').append(data);
-		});
-	} },
-	{ text: "$sCancelButtonLabel", click: function() {
+	{ text: "$sCancelButtonLabel", 
+	  click: function() {
 		$(this).dialog( "close" ); $(this).remove();
-	} },
+		} ,
+		'class': 'ibo-button ibo-is-alternative ibo-is-neutral action cancel'
+	},
+	{ text: "$sOkButtonLabel", 
+	  click: function() {
+			var oForm = $(this).find('form');
+			var sFormId = oForm.attr('id');
+			var oParams = null;
+			var aErrors = ValidateForm(sFormId, false);
+			if (aErrors.length == 0)
+			{
+				oParams = ReadFormParams(sFormId);
+			}
+			oParams.operation = 'add_dashlet';
+			var me = $(this);
+			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
+				me.dialog( "close" );
+				me.remove();
+				$('body').append(data);
+			});
+		},
+		'class': 'ibo-button ibo-is-regular ibo-is-primary action' }
 	],
 	close: function() { $(this).remove(); }
 });
-EOF
+JS
 		);
 	}
 
@@ -1292,13 +1553,103 @@ EOF
 		$this->sDefinitionFile = $sDefinitionFile;
 	}
 
+	/**
+	 * @return string|null
+	 */
 	public function GetReloadURL()
 	{
 		return $this->sReloadURL;
 	}
 
+	/**
+	 * @param string $sReloadURL
+	 */
 	public function SetReloadURL($sReloadURL)
 	{
 		$this->sReloadURL = $sReloadURL;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	protected function PrepareDashletForRendering(Dashlet $oDashlet, $aCoordinates, $aExtraParams = array())
+	{
+		$sDashletIdOrig = $oDashlet->GetID();
+		$sDashboardSanitizedId = $this->GetSanitizedId();
+		$sDashletIdNew = static::GetDashletUniqueId($this->GetCustomFlag(), $sDashboardSanitizedId, $aCoordinates[1], $aCoordinates[0], $sDashletIdOrig);
+		$oDashlet->SetID($sDashletIdNew);
+		$this->UpdateDashletUserPrefs($oDashlet, $sDashletIdOrig, $aExtraParams);
+	}
+
+	/**
+	 * Migrate dashlet specific prefs to new format
+	 *      Before 2.7.0 we were using the same for dashboard menu or dashboard attributes, standard or custom :
+	 *          <alias>-<class>|Dashlet<idx_dashlet>
+	 *      Since 2.7.0 it is the following, with a "CUSTOM_" prefix if necessary :
+	 *          * dashboard menu : <dashboard_id>_IDrow<row_idx>-col<col_idx>-<dashlet_idx>
+	 *          * dashboard attribute : <class>__<attcode>_IDrow<row_idx>-col<col_idx>-<dashlet_idx>
+	 *
+	 * @param \Dashlet $oDashlet
+	 * @param string $sDashletIdOrig
+	 *
+	 * @param array $aExtraParams
+	 *
+	 * @since 2.7.0 N°2735
+	 */
+	private function UpdateDashletUserPrefs(Dashlet $oDashlet, $sDashletIdOrig, array $aExtraParams)
+	{
+		$bIsDashletWithListPref = ($oDashlet instanceof  DashletObjectList);
+		if (!$bIsDashletWithListPref)
+		{
+			return;
+		}
+		/** @var \DashletObjectList $oDashlet */
+
+		$bDashletIdInNewFormat = ($sDashletIdOrig === $oDashlet->GetID());
+		if ($bDashletIdInNewFormat)
+		{
+			return;
+		}
+
+		$sNewPrefKey = $this->GetDashletObjectListAppUserPreferencesPrefix($oDashlet, $aExtraParams, $oDashlet->GetID());
+		$sPrefValueForNewKey = appUserPreferences::GetPref($sNewPrefKey, null);
+		$bHasPrefInNewFormat = ($sPrefValueForNewKey !== null);
+		if ($bHasPrefInNewFormat)
+		{
+			return;
+		}
+
+		$sOldPrefKey = $this->GetDashletObjectListAppUserPreferencesPrefix($oDashlet, $aExtraParams, $sDashletIdOrig);
+		$sPrefValueForOldKey = appUserPreferences::GetPref($sOldPrefKey, null);
+		$bHasPrefInOldFormat = ($sPrefValueForOldKey !== null);
+		if (!$bHasPrefInOldFormat)
+		{
+			return;
+		}
+
+		appUserPreferences::SetPref($sNewPrefKey, $sPrefValueForOldKey);
+		appUserPreferences::UnsetPref($sOldPrefKey);
+	}
+
+	/**
+	 * @param \DashletObjectList $oDashlet
+	 * @param array $aExtraParams
+	 * @param string $sDashletId
+	 *
+	 * @return string
+	 * @since 2.7.0
+	 */
+	private function GetDashletObjectListAppUserPreferencesPrefix(DashletObjectList $oDashlet, $aExtraParams, $sDashletId)
+	{
+		$sDataTableId = Dashlet::APPUSERPREFERENCES_PREFIX.$sDashletId;
+		$aClassAliases = array();
+		try {
+			$oFilter = $oDashlet->GetDBSearch($aExtraParams);
+			$aClassAliases = $oFilter->GetSelectedClasses();
+		} catch (Exception $e) {
+			//on error, return default value
+			return null;
+		}
+		return DataTableSettings::GetAppUserPreferenceKey($aClassAliases, $sDataTableId);
 	}
 }

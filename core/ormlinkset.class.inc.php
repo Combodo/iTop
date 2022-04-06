@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -24,12 +24,15 @@ require_once('dbobjectiterator.php');
  * The value for an attribute representing a set of links between the host object and "remote" objects
  *
  * @package     iTopORM
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 {
+	public const LINK_ALIAS = 'Link';
+	public const REMOTE_ALIAS = 'Remote';
+
 	protected $sHostClass; // subclass of DBObject
 	protected $sAttCode; // xxxxxx_list
 	protected $sClass; // class of the links
@@ -145,11 +148,14 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
     /**
      * @param DBObject $oObject
      * @param string $sClassAlias
-     * @deprecated Since iTop 2.4, use ormLinkset->AddItem() instead.
+     *
+     * @deprecated Since iTop 2.4, use {@link \ormLinkSet::AddItem()} instead.
      */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
     {
-        $this->AddItem($oObject);
+	    // cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+	    //DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
+	    $this->AddItem($oObject);
     }
 
 	/**
@@ -254,16 +260,13 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
      */
     public function ToArray($bWithId = true)
     {
-        $aRet = array();
-        foreach($this as $oItem)
-        {
-            if ($bWithId)
-            {
-                $aRet[$oItem->GetKey()] = $oItem;
-            }
-            else
-            {
-                $aRet[] = $oItem;
+	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use foreach($this as $oItem){} instead');
+	    $aRet = array();
+	    foreach ($this as $oItem) {
+		    if ($bWithId) {
+			    $aRet[$oItem->GetKey()] = $oItem;
+		    } else {
+			    $aRet[] = $oItem;
             }
         }
         return $aRet;
@@ -716,80 +719,80 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
                             {
                                 unset($this->aRemoved[$sLinkKey]);
                             }
-                            $bIsDuplicate = true;
-                            break;
+	                        $bIsDuplicate = true;
+	                        break;
                         }
                     }
-                    if ($bIsDuplicate)
-                    {
-                        continue;
-                    }
+					if ($bIsDuplicate) {
+						continue;
+					}
 				}
 
-			}
-			else
-			{
-				if (!array_key_exists($oLink->GetKey(), $aExistingLinks))
-				{
+			} else {
+				if (!array_key_exists($oLink->GetKey(), $aExistingLinks)) {
 					$oLink->DBClone();
 				}
 			}
 			$oLink->DBWrite();
+
+			$this->aPreserved[$oLink->GetKey()] = $oLink;
+			$this->aOriginalObjects[$oLink->GetKey()] = $oLink;
 		}
-		foreach ($this->aRemoved as $iLinkId)
-		{
-			if (array_key_exists($iLinkId, $aExistingLinks))
-			{
+		$this->aAdded = [];
+
+		foreach ($this->aRemoved as $iLinkId) {
+			if (array_key_exists($iLinkId, $aExistingLinks)) {
 				$oLink = $aExistingLinks[$iLinkId];
-				if ($oAttDef->IsIndirect())
-				{
+				if ($oAttDef->IsIndirect()) {
 					$oLink->DBDelete();
-				}
-				else
-				{
+				} else {
 					$oExtKeyToRemote = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToMe);
-					if ($oExtKeyToRemote->IsNullAllowed())
-					{
-						if ($oLink->Get($sExtKeyToMe) == $oHostObject->GetKey())
-						{
+					if ($oExtKeyToRemote->IsNullAllowed()) {
+						if ($oLink->Get($sExtKeyToMe) == $oHostObject->GetKey()) {
 							// Detach the link object from this
 							$oLink->Set($sExtKeyToMe, 0);
 							$oLink->DBUpdate();
 						}
-					}
-					else
-					{
+					} else {
 						$oLink->DBDelete();
 					}
 				}
+				unset($this->aPreserved[$oLink->GetKey()], $this->aOriginalObjects[$oLink->GetKey()]);
 			}
 		}
+		$this->aRemoved = [];
+
 		// Note: process modifications at the end: if a link to remove has also been listed as modified, then it will be gracefully ignored
-		foreach ($this->aModified as $iLinkId => $oLink)
-		{
-			if (array_key_exists($oLink->GetKey(), $aExistingLinks))
-			{
+		foreach ($this->aModified as $iLinkId => $oLink) {
+			if (array_key_exists($oLink->GetKey(), $aExistingLinks)) {
 				$oLink->DBUpdate();
-			}
-			else
-			{
+			} else {
 				$oLink->DBClone();
 			}
+			$this->aPreserved[$oLink->GetKey()] = $oLink;
+			$this->aOriginalObjects[$oLink->GetKey()] = $oLink;
 		}
+		$this->aModified = [];
 
 		// End of the critical section
 		//
 		$oMtx->Unlock();
+
+		// we updated the instance (original/preserved/added/modified/removed arrays) all along the way
+		$this->bHasDelta = false;
+		$this->oOriginalSet->GetFilter()->SetInternalParams(['id', $oHostObject->GetKey()]);
 	}
 
 	/**
 	 * @param bool $bShowObsolete
 	 *
-	 * @return \DBObjectSet
+	 * @return \DBObjectSet indirect relations will get `SELECT L,R ...` (l = lnk class, R = remote)
 	 * @throws \CoreException
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \Exception
+	 *
+	 * @since 3.0.0 N°2334 returns both lnk and remote classes for indirect relations
 	 */
 	public function ToDBObjectSet($bShowObsolete = true)
 	{
@@ -798,21 +801,46 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$oLinkSearch = $this->GetFilter();
 		if ($oAttDef->IsIndirect())
 		{
+			$oLinkSearch->RenameAlias($oLinkSearch->GetClassAlias(), self::LINK_ALIAS);
 			$sExtKeyToRemote = $oAttDef->GetExtKeyToRemote();
 			/** @var \AttributeExternalKey $oLinkingAttDef */
 			$oLinkingAttDef = MetaModel::GetAttributeDef($this->sClass, $sExtKeyToRemote);
+
+			// N°2334 add pointed class (SELECT L,R) to have all fields (lnk + remote) in display
+			// the pointed class is always present in the search, as generated by \AttributeLinkedSet::GetDefaultValue
 			$sTargetClass = $oLinkingAttDef->GetTargetClass();
+			$oRemoteClassSearch = new DBObjectSearch($sTargetClass, self::REMOTE_ALIAS);
+
 			if (!$bShowObsolete && MetaModel::IsObsoletable($sTargetClass))
 			{
 				$oNotObsolete = new BinaryExpression(
-					new FieldExpression('obsolescence_flag', $sTargetClass),
+					new FieldExpression('obsolescence_flag', self::REMOTE_ALIAS),
 					'=',
 					new ScalarExpression(0)
 				);
-				$oNotObsoleteRemote = new DBObjectSearch($sTargetClass);
-				$oNotObsoleteRemote->AddConditionExpression($oNotObsolete);
-				$oLinkSearch->AddCondition_PointingTo($oNotObsoleteRemote, $sExtKeyToRemote);
+				$oRemoteClassSearch->AddConditionExpression($oNotObsolete);
 			}
+
+			if (!utils::IsArchiveMode() && MetaModel::IsArchivable($sTargetClass))
+			{
+				$oNotArchived = new BinaryExpression(
+					new FieldExpression('archive_flag', self::REMOTE_ALIAS),
+					'=',
+					new ScalarExpression(0)
+				);
+
+				$oRemoteClassSearch->AddConditionExpression($oNotArchived);
+			}
+
+			$aReAliasingMap = [];
+			$oLinkSearch->AddCondition_PointingTo($oRemoteClassSearch, $sExtKeyToRemote, TREE_OPERATOR_EQUALS, $aReAliasingMap);
+			if (array_key_exists(self::REMOTE_ALIAS, $aReAliasingMap)) {
+				// If 'Remote' alias has been renamed, change it back.
+				if ($aReAliasingMap[self::REMOTE_ALIAS][0] != self::REMOTE_ALIAS) {
+					$oLinkSearch->RenameAlias($aReAliasingMap[self::REMOTE_ALIAS][0], self::REMOTE_ALIAS);
+				}
+			}
+			$oLinkSearch->SetSelectedClasses([self::LINK_ALIAS, self::REMOTE_ALIAS]);
 		}
 		$oLinkSet = new DBObjectSet($oLinkSearch);
 		$oLinkSet->SetShowObsoleteData($bShowObsolete);

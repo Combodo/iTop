@@ -1,0 +1,17 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+// Note: We use the child ">" selector to ensure this applies only the child tab container, not another one that would be nested
+.ibo-object-details.ibo-has-medallion-icon {
+  > .ibo-panel--body {
+    // Only for horizontal tabs
+    > .ibo-tab-container:not(.ibo-is-vertical) {
+      > .ibo-tab-container--tabs-list {
+        // Align tab toggler's title with the panel's title
+        padding-left: calc(#{$ibo-object-details--icon--spacing--as-medallion} + #{$ibo-object-details--icon--size} + #{$ibo-object-details--icon--spacing--as-medallion} - #{$ibo-tab-container--tab-toggler--padding-x});
+      }
+    }
+  }
+}

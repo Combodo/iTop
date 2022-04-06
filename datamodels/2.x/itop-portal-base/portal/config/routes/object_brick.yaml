@@ -1,4 +1,4 @@
-# Copyright (C) 2010-2018 Combodo SARL
+# Copyright (C) 2010-2021 Combodo SARL
 #
 #  This file is part of iTop.
 #
@@ -34,6 +34,11 @@ p_object_view:
   path: '/object/view/{sObjectClass}/{sObjectId}'
   defaults:
     _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewAction'
+
+p_object_view_from_attribute:
+  path: '/object/view/{sObjectClass}/{sObjectAttCode}/{sObjectAttValue}'
+  defaults:
+    _controller: 'Combodo\iTop\Portal\Controller\ObjectController::ViewFromAttributeAction'
 
 p_object_apply_stimulus:
   path: '/object/apply-stimulus/{sStimulusCode}/{sObjectClass}/{sObjectId}'

@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-change-mgmt/2.6.2',
+	'itop-change-mgmt/3.1.0',
 	array(
 		// Identification
 		//
@@ -85,7 +85,7 @@ class ChangeManagementInstaller extends ModuleInstallerAPI
 
 		if (CMDBSource::IsField($sSourceTable, $sField) && CMDBSource::IsField($sTargetTable, $sField) && CMDBSource::IsField($sSourceTable, $sSourceKeyField) && CMDBSource::IsField($sTargetTable, $sTargetKeyField))
 		{
-			SetupWebPage::log_info("Issue #464 - Copying change/start_date into ticket/start_date"); 
+			SetupLog::Info("Issue #464 - Copying change/start_date into ticket/start_date");
 			$sRepair = "UPDATE `$sTargetTable`, `$sSourceTable` SET `$sTargetTable`.`$sField` = `$sSourceTable`.`$sField` WHERE `$sTargetTable`.`$sField` IS NULL AND`$sTargetTable`.`$sTargetKeyField` = `$sSourceTable`.`$sSourceKeyField`";
 			CMDBSource::Query($sRepair);
 		}

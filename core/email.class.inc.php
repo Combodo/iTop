@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,9 +20,13 @@
 /**
  * Send an email (abstraction for synchronous/asynchronous modes)
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Pelago\Emogrifier\CssInliner;
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
+use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
 Swift_Preferences::getInstance()->setCharset('UTF-8');
 
@@ -100,7 +104,7 @@ class EMail
 		}
 		if (array_key_exists('reply_to', $aData))
 		{
-			$oMessage->SetRecipientReplyTo($aData['reply_to']);
+			$oMessage->SetRecipientReplyTo($aData['reply_to']['address'], $aData['reply_to']['label']);
 		}
 		if (array_key_exists('to', $aData))
 		{
@@ -304,8 +308,12 @@ class EMail
 			$oHeaders = $this->m_oMessage->getHeaders();
 			switch(strtolower($sKey))
 			{
+				case 'return-path':
+					$this->m_oMessage->setReturnPath($sValue);
+					break;
+
 				default:
-				$oHeaders->addTextHeader($sKey, $sValue);
+					$oHeaders->addTextHeader($sKey, $sValue);
 			}
 		}
 	}
@@ -317,22 +325,36 @@ class EMail
 		// Note: Swift will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
-		
+
 		$oMsgId = $this->m_oMessage->getHeaders()->get('Message-ID');
 		$oMsgId->SetId($sId);
 	}
-	
+
 	public function SetReferences($sReferences)
 	{
 		$this->AddToHeader('References', $sReferences);
 	}
 
+	/**
+	 * Set the "In-Reply-To" header to allow emails to group as a conversation in modern mail clients (GMail, Outlook 2016+, ...)
+	 *
+	 * @link https://en.wikipedia.org/wiki/Email#Header_fields
+	 *
+	 * @param string $sMessageId
+	 *
+	 * @since 3.0.1 N°4849
+	 */
+	public function SetInReplyTo(string $sMessageId)
+	{
+		$this->AddToHeader('In-Reply-To', $sMessageId);
+	}
+
 	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
 	{
-		if (($sMimeType === 'text/html') && ($sCustomStyles !== null))
-		{
-			$emogrifier = new \Pelago\Emogrifier($sBody, $sCustomStyles);
-			$sBody = $emogrifier->emogrify(); // Adds html/body tags if not already present
+		if (($sMimeType === 'text/html') && ($sCustomStyles !== null)) {
+			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
+			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
+			$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
 		}
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 		$this->m_oMessage->setBody($sBody, $sMimeType);
@@ -461,10 +483,14 @@ class EMail
 		}
 	}
 
-	public function SetRecipientReplyTo($sAddress)
+	public function SetRecipientReplyTo($sAddress, $sLabel = '')
 	{
-		$this->m_aData['reply_to'] = $sAddress;
-		if (!empty($sAddress))
+		$this->m_aData['reply_to'] = array('address' => $sAddress, 'label' => $sLabel);
+		if ($sLabel != '')
+		{
+			$this->m_oMessage->setReplyTo(array($sAddress => $sLabel));
+		}
+		else if (!empty($sAddress))
 		{
 			$this->m_oMessage->setReplyTo($sAddress);
 		}

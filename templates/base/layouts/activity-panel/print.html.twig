@@ -1,0 +1,55 @@
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-tab-container" data-role="ibo-activity-panel" data-object-class="{{ oUIBlock.GetObjectClass() }}" data-object-id="{{ oUIBlock.GetObjectId() }}" data-object-mode="{{ oUIBlock.GetObjectMode() }}">
+	<div class="ibo-activity-panel--header">
+		<div class="ibo-title--text title">
+			{{ 'UI:Layout:ActivityPanel:Tab:Activity:Title'|dict_s }}
+		</div>
+		<div class="ibo-activity-panel--tabs-toolbars">
+			<div class="ibo-activity-panel--tab-toolbar ibo-activity-panel--tab-toolbar-for-activity ibo-is-active" data-role="ibo-activity-panel--tab-toolbar" data-tab-type="activity">
+				<div class="ibo-activity-panel--tab-toolbar-actions">
+					<div class="ibo-activity-panel--tab-toolbar-middle-actions">
+						{% if oUIBlock.HasCaseLogTabs() %}
+							{% for sCaseLogAttCode, aCaseLogData in oUIBlock.GetCaseLogTabs() %}
+                                <label class="ibo-activity-panel--tab-toolbar-action ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} "
+                                       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Logs:Tooltip'|dict_s }}"
+                                       data-role="ibo-activity-panel--filter"
+                                       data-target-entry-types="caselog"
+                                       data-entry-caselog-attribute-code="{{ sCaseLogAttCode }}">
+                                    <span class=".ibo-activity-panel--tab-toggler-for-caselog-{{ loop.index }} ibo-activity-panel--tab-title-decoration"></span>
+                                    {{ aCaseLogData.title }}
+                                </label>
+                            {% endfor %}
+						{% endif %}
+						{% if oUIBlock.HasStates() %}
+							<label class="ibo-activity-panel--tab-toolbar-action"
+							       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Tooltip'|dict_s }}"
+							       data-role="ibo-activity-panel--filter"
+							       data-target-entry-types="transition">
+								{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Transitions:Title'|dict_s }}
+							</label>
+						{% endif %}
+						<label class="ibo-activity-panel--tab-toolbar-action"
+						       data-tooltip-content="{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Tooltip'|dict_s }}"
+						       data-role="ibo-activity-panel--filter"
+						       data-target-entry-types="edits">
+							{{ 'UI:Layout:ActivityPanel:Tab:Toolbar:Filter:Edits:Title'|dict_s }}
+						</label>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="ibo-activity-panel--body">
+		{% if oUIBlock.GetGroupedEntries()|length > 0 %}
+			{% for aEntryGroup in oUIBlock.GetGroupedEntries() %}
+				{{ include('base/layouts/activity-panel/entry-group.html.twig', {aEntryGroup: aEntryGroup}) }}
+			{% endfor %}
+		{% else %}
+			<div class="ibo-activity-panel--body--placeholder">
+				<div class="ibo-activity-panel--body--placeholder-image ibo-svg-illustration--container">
+					{{ source("illustrations/undraw_reading_time.svg") }}
+				</div>
+				<div class="ibo-activity-panel--body--placeholder-hint">{{ 'UI:Layout:ActivityPanel:NoEntry:Placeholder:Hint'|dict_s }}</div>
+			</div>
+		{% endif %}
+	</div>
+</div>

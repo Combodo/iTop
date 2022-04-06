@@ -1,0 +1,54 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-select-icon--icon--padding-right: $ibo-spacing-200 !default;
+
+$ibo-input-select-icon--menu--z-index: 21 !default;
+$ibo-input-select-icon--menu--max-height: 300px !default;
+
+$ibo-input-select-icon--menu--icon--max-height: 80px !default;
+$ibo-input-select-icon--menu--icon--max-width: 45px !default;
+$ibo-input-select-icon--menu--icon--margin-right: 10px !default;
+
+.ibo-input-select-icon{
+  display: inline-flex;
+  text-align: left;
+	>img{
+		max-height: 100%;
+		max-width: 100%;
+		padding-right: $ibo-input-select-icon--icon--padding-right;
+	}
+  >span{
+    overflow: hidden;
+  }
+}
+
+.ibo-input-select-icon--menu {
+	position: absolute;
+	z-index: $ibo-input-select-icon--menu--z-index;
+	max-height: $ibo-input-select-icon--menu--max-height;
+	overflow-x: hidden;
+	overflow-y: auto;
+	@extend .ibo-popover-menu;
+	@extend .ibo-is-opened;
+	flex-wrap: nowrap;
+}
+
+.ibo-input-select-icon--menu--item {
+	@extend .ibo-popover-menu--item;
+
+	> * {
+		width: 100%;
+		white-space: nowrap;
+		overflow-x: hidden;
+		text-overflow: ellipsis;
+
+		> .ibo-input-select-icon--menu--icon {
+			max-width: $ibo-input-select-icon--menu--icon--max-height;
+			max-height: $ibo-input-select-icon--menu--icon--max-width;
+			margin-right: $ibo-input-select-icon--menu--icon--margin-right;
+		}
+	}
+}

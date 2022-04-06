@@ -185,15 +185,7 @@ $(function()
 					.trigger('itop.search.criteria_enum.autocomplete.submit');
 			});
 
-			// - Check / Uncheck all toggler
-			oTogglerElem.on('click', function(oEvent){
-				// Check / uncheck all allowed values
-				var bChecked = $(this).closest('.sfc_opc_mc_toggler').find('input:checkbox').prop('checked');
-				oOpContentElem.find('.sfc_opc_mc_item:visible input:checkbox').prop('checked', bChecked);
 
-				// Apply criteria
-				//me._apply();
-			});
 
 			if(this._hasAutocompleteAllowedValues())
 			{
@@ -208,11 +200,20 @@ $(function()
 		{
 			var me = this;
 
+
 			var oOpContentElem = oOpElem.find('.sfc_opc_multichoices');
 			var oTogglerElem = oOpContentElem.find('.sfc_opc_mc_toggler');
 			var oFilterElem = oOpContentElem.find('.sf_filter');
 			var oAllowedValuesElem = oOpContentElem.find('.sfc_opc_mc_items');
 			var oDynamicListElem = oOpContentElem.find('.sfc_opc_mc_items_dynamic');
+
+			// - Check / Uncheck all toggler
+			oTogglerElem.on('click', function(oEvent){
+				// Check / uncheck all allowed values
+				var bChecked = $(this).closest('.sfc_opc_mc_toggler').find('input:checkbox').prop('checked');
+				oOpContentElem.find('.sfc_opc_mc_item:visible input:checkbox').prop('checked', bChecked);
+			});
+
 
 			// DOM elements
 			// - Filter
@@ -224,8 +225,9 @@ $(function()
 			for (var i in aSortedValues)
 			{
 				var sValCode = aSortedValues[i][0];
-				var sValLabel = aSortedValues[i][1];
-				var oValueElem = this._makeListItemElement(sValLabel, sValCode);
+				var sValLabel = $('<div/>').html(aSortedValues[i][1]).text();
+				//_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
+				var oValueElem = this._makeListItemElement(sValLabel, sValCode, false, false, aSortedValues[i][2], aSortedValues[i][3]);
 				oValueElem.appendTo(oDynamicListElem);
 
 				if (this._isSelectedValues(sValCode))
@@ -295,9 +297,62 @@ $(function()
 			var oValuesWrapperElem = oOpContentElem.find('.sfc_opc_mc_items_wrapper');
 			var oAllowedValuesElem = oValuesWrapperElem.find('.sfc_opc_mc_items');
 
+			// - Check / Uncheck all toggler
+			oTogglerElem.on('click', function(oEvent){
+				// Check / uncheck all allowed values
+				var bChecked = $(this).closest('.sfc_opc_mc_toggler').find('input:checkbox').prop('checked');
+				if(bChecked)
+				{
+					// - Apply on check
+					oAllowedValuesElem.find('.sfc_opc_mc_item input').each(function(){
+						if(!$(this).find("input[type=\"checkbox\"]").is(":checked"))
+						{
+							var oItemElem = $(this).closest('.sfc_opc_mc_item');
+
+							// Hide item
+							oItemElem.hide();
+
+							// Copy item to selected items list
+							var oValues = {};
+							oValues[oItemElem.find('input:checkbox').val()] = oItemElem.text();
+							me._addSelectedValues(oValues);
+						}
+					});
+				}
+				else
+				{
+					// - Apply on uncheck
+					oAllowedValuesElem.find('.sfc_opc_mc_item').each(function(){
+						if(!$(this).is(":visible"))
+						{
+							// Show item among allowed values (if still there, could have been removed by another search needle)
+							var oAllowedValueElem = oAllowedValuesElem.find('.sfc_opc_mc_item[data-value-code="'+$(this).attr('data-value-code')+'"]');
+							if (oAllowedValueElem.length > 0)
+							{
+								oAllowedValuesElem.find('.sfc_opc_mc_item[data-value-code="'+$(this).attr('data-value-code')+'"]')
+									.show()
+									.find('input:checkbox')
+									.prop('checked', false);
+							}
+
+							// Remove item from selected values
+							$(this).closest(".sfc_opc_mc_items_wrapper").find('.sfc_opc_mc_items_selected').find('.sfc_opc_mc_item[data-value-code="'+$(this).attr('data-value-code')+'"]').remove();
+						}
+					});
+					oAllowedValuesElem.closest(".sfc_opc_mc_items_wrapper").find('.sfc_opc_mc_items_selected').find('.sfc_opc_mc_item').each(function(){
+						//$(this).add(oAllowedValuesElem);
+						$(this).remove();
+					});
+
+					me._refreshSelectedValues();
+				}
+
+			});
 			// DOM
 			// - Hide toggler for now
 			oTogglerElem.hide();
+			//but when there are values under the search, this checkbox must come back
+
 
 			// - Set typing hint
 			this._setACTypingHint();
@@ -379,7 +434,6 @@ $(function()
 							.done(function(oResponse, sStatus, oXHR){
 								me._onACSearchSuccess(oResponse);
 
-
 								if (Object.keys(oResponse).length >= 150)
 								{
                                     me._emptyACTempHint();
@@ -406,16 +460,26 @@ $(function()
 									});
 
                                     me._onACSearchContainsSuccess(oResponseContains);
+
+
                                 });
 							})
 							.fail(function(oResponse, sStatus, oXHR){  me._onACSearchFail(oResponse, sStatus); })
-							.always(function(oResponse, sStatus, oXHR){ me._onACSearchAlways(); });
+							.always(function(oResponse, sStatus, oXHR){
+								me._onACSearchAlways();
+								if (me.element.find('.sfc_opc_mc_item').length>0)
+								{
+									oTogglerElem.show();
+								}
+								else
+								{
+									oTogglerElem.hide();
+								}
+							});
 
 						oFilterElem.find('.sff_reset').show();
 					}, me.options.autocomplete.xhr_throttle);
 				}
-
-				me._updateTogglerLabel();
 			});
 
 			// - Apply on check
@@ -464,6 +528,11 @@ $(function()
 			oFilterElem.find('.sff_search_dialog').on('click', function(){
 				oForeignKeysWidgetCurrent.ShowModalSearchForeignKeys();
 			});
+
+			var oTogglerTextElem = this.element.find('.sfc_opc_mc_toggler label span');
+			var sFilterVal = this.element.find('.sf_filter input[type="text"]').val();
+
+			oTogglerTextElem.text( oTogglerTextElem.attr('data-label-filtered'));
 		},
 		_computeTitle: function(sTitle)
 		{
@@ -622,12 +691,12 @@ $(function()
 				for(var skey in oResponse)
 				{
 					var sValue = oResponse[skey].value;
-				    var sLabel = oResponse[skey].label;
+				    var sLabel =  $('<div/>').html(oResponse[skey].label).text();
 					// Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
 					var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
 					var bInitChecked = bSelected;
 					var bInitHidden = bSelected;
-					var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden);
+					var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden,oResponse[skey].obsolescence_flag,oResponse[skey].additional_field);
 					oValueElem.appendTo(oDynamicListElem);
 				}
 			}
@@ -651,11 +720,12 @@ $(function()
                 {
                     var sValue = oResponse[skey].value;
                     var sLabel = oResponse[skey].label;
+
                     // Note: We don't use the _isSelectedValue() method here as it only returns "applied" values; at this moment will could have a checked value that is not among selected (me.options.values) yet. The result would be an hidden item from the AC results.
                     var bSelected = (this.element.find(this._getSelectedValuesWrapperSelector() + ' .sfc_opc_mc_item[data-value-code="' + sValue + '"]').length > 0);
                     var bInitChecked = bSelected;
                     var bInitHidden = bSelected;
-                    var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden);
+                    var oValueElem = this._makeListItemElement(sLabel, sValue, bInitChecked, bInitHidden,oResponse[skey].obsolescence_flag,oResponse[skey].additional_field);
                     oValueElem.appendTo(oDynamicListElem);
                 }
             }
@@ -675,7 +745,7 @@ $(function()
 			{
 				var sErrorMessage = Dict.Format('Error:XHR:Fail', '');
 
-				this._setACHint('=/');
+				this._setACHint(sErrorMessage);
 				this.handler.triggerHandler('itop.search.criteria.error_occured', sErrorMessage);
 			}
 		},
@@ -794,6 +864,15 @@ $(function()
 				oSelectedValuesElem.hide();
 			}
 
+			var oTogglerElem= this.element.find('.sfc_opc_multichoices').find('.sfc_opc_mc_toggler');
+			if (this.element.find('.sfc_opc_mc_item').length>0)
+			{
+				oTogglerElem.show();
+			}
+			else
+			{
+				oTogglerElem.hide();
+			}
 			// TODO: Reorder
 			// oSelectedValuesElem.html('');
 			// var aSortedValues = this._sortValuesByLabel(this.options.values);
@@ -817,16 +896,20 @@ $(function()
 				// eg. {2: "IT Department", 3: "Demo"} in regular mode
 				else
 				{
-					aSortable.push([sKey, oSource[sKey]]);
+					if(oSource[sKey]["label"]) {
+						aSortable.push([sKey, oSource[sKey]["label"], oSource[sKey]["obsolescence_flag"], oSource[sKey]["additional_field"]]);
+					} else {
+						aSortable.push([sKey, oSource[sKey]]);
+					}
 				}
 			}
 
 			aSortable.sort(function(a, b) {
-				if(a[1] < b[1])
+				if(a[1].toLowerCase() < b[1].toLowerCase())
 				{
 					return -1;
 				}
-				else if(a[1] > b[1])
+				else if(a[1].toLowerCase() > b[1].toLowerCase())
 				{
 					return 1;
 				}
@@ -837,9 +920,17 @@ $(function()
 			return aSortable;
 		},
 		// - Make a jQuery element for a list item
-		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden)
+		_makeListItemElement: function(sLabel, sValue, bInitChecked, bInitHidden,bObsolete, sAdditionalField)
 		{
-			var sEscapedLabel = sLabel; // Note: We don't escape this anymore as there is an issue with AttributeExternalKey being already escaped. This will be put back in iTop 2.7 with the AttributeDefinition::GetAllowedValues() refactoring. $('<div />').text(sLabel).html();
+			var sEscapedLabel = $('<div />').text(sLabel).html();
+			if (bObsolete == 1)	{
+				sEscapedLabel = '<span class="object-ref-icon text_decoration"><span class="fas fa-eye-slash object-obsolete fa-1x fa-fw"></span></span>'+sEscapedLabel;
+			}
+
+			if (sAdditionalField != undefined )	{
+				sEscapedLabel = sEscapedLabel+'<br><i>'+sAdditionalField+'</i>';
+			}
+
 			var oItemElem = $('<div></div>')
 				.addClass('sfc_opc_mc_item')
 				.attr('data-value-code', sValue)

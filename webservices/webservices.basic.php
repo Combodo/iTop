@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Implementation of iTop SOAP services
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -41,14 +41,14 @@ class BasicServices extends WebServicesBase
 	 */
 	static public function GetVersion()
 	{
-		if (ITOP_REVISION == '$WCREV$')
+		if (ITOP_REVISION == 'svn')
 		{
 			$sVersionString = ITOP_VERSION.' [dev]';
 		}
 		else
 		{
 			// This is a build made from SVN, let display the full information
-			$sVersionString = ITOP_VERSION."-".ITOP_REVISION." ".ITOP_BUILD_DATE;
+			$sVersionString = ITOP_VERSION_FULL." ".ITOP_BUILD_DATE;
 		}
 
 		return $sVersionString;
@@ -172,9 +172,7 @@ class BasicServices extends WebServicesBase
 
 		try
 		{
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
-			$oMyChange->Set("userinfo", "Administrator");
+			CMDBObject::SetTrackInfo('Administrator');
 
 			$oNewTicket = MetaModel::NewObject($sClass);
 			$this->MyObjectSetScalar('title', 'title', $sTitle, $oNewTicket, $oRes);
@@ -230,7 +228,7 @@ class BasicServices extends WebServicesBase
 			$this->MyObjectSetScalar('impact', 'impact', $sImpact, $oNewTicket, $oRes);
 			$this->MyObjectSetScalar('urgency', 'urgency', $sUrgency, $oNewTicket, $oRes);
 
-			$this->MyObjectInsert($oNewTicket, 'created', $oMyChange, $oRes);
+			$this->MyObjectInsert($oNewTicket, 'created', $oRes);
 		}
 		catch (CoreException $e)
 		{

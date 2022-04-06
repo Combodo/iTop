@@ -1,0 +1,45 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-popover-menu--item--padding-y: $ibo-spacing-400 !default;
+$ibo-popover-menu--item--padding-right: $ibo-spacing-600 !default;
+$ibo-popover-menu--item--padding-left: $ibo-spacing-500 !default;
+$ibo-popover-menu--item--text-color: $ibo-color-grey-900 !default;
+$ibo-popover-menu--item--hyperlink-color: $ibo-popover-menu--item--text-color !default;
+$ibo-popover-menu--item--hover-background-color: $ibo-color-grey-200 !default;
+
+$ibo-popover-menu--item-separator--padding: $ibo-spacing-0 !default;
+$ibo-popover-menu--item-separator--margin: $ibo-spacing-0 !default;
+$ibo-popover-menu--item-separator--background-color: $ibo-color-grey-200 !default;
+
+$ibo-popover-menu--item--icon--color: $ibo-color-grey-700 !default;
+$ibo-popover-menu--item--icon--font-size: $ibo-font-size-200 !default;
+$ibo-popover-menu--item--icon--padding-right: 5px !default;
+
+.ibo-popover-menu--item{
+  padding: $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-right $ibo-popover-menu--item--padding-y $ibo-popover-menu--item--padding-left;
+  color: $ibo-popover-menu--item--text-color;
+
+  a {
+    color: $ibo-popover-menu--item--text-color;
+  }
+
+  &:hover{
+    background-color: $ibo-popover-menu--item--hover-background-color;
+    color: inherit;
+  }
+  &.ibo-popover-menu--item-separator{
+    padding: $ibo-popover-menu--item-separator--padding;
+    margin: $ibo-popover-menu--item-separator--margin;
+    background-color: $ibo-popover-menu--item-separator--background-color
+  }
+}
+
+.ibo-popover-menu--item--icon{
+  padding-right: $ibo-popover-menu--item--icon--padding-right;
+  color: $ibo-popover-menu--item--icon--color;
+  font-size: $ibo-popover-menu--item--icon--font-size;
+}

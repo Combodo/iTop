@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -19,12 +19,11 @@
 /**
  * Core automated tests - basics
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
-require_once(APPROOT.'/core/coreexception.class.inc.php');
 require_once(APPROOT.'/core/attributedef.class.inc.php');
 require_once(APPROOT.'/core/filterdef.class.inc.php');
 require_once(APPROOT.'/core/stimulus.class.inc.php');
@@ -434,22 +433,13 @@ abstract class TestBizModel extends TestHandler
 	}
 	protected function ObjectToDB($oNew, $bReload = false)
 	{
-		if ($oNew instanceof CMDBObject)
+		if ($bReload)
 		{
-			$oChange = $this->GetCurrentChange();
-			$oNew::SetCurrentChange($oChange);
-			$oNew->DBWrite();
+			$iId = $oNew->DBInsert();
 		}
 		else
 		{
-			if ($bReload)
-			{
-				$iId = $oNew->DBInsert();
-			}
-			else
-			{
-				$iId = $oNew->DBInsertNoReload();
-			}
+			$iId = $oNew->DBInsertNoReload();
 		}
 		return $iId;
 	}

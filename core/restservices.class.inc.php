@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2013-2015 Combodo SARL
+// Copyright (C) 2013-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@
  * Definition of common structures + the very minimum service provider (manage objects)
  *
  * @package     REST Services
- * @copyright   Copyright (C) 2013 Combodo SARL
+ * @copyright   Copyright (C) 2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @api
  */
@@ -135,6 +135,7 @@ class ObjectResult
  */
 class RestResultWithObjects extends RestResult
 {
+	/** @var array "DBObject_class:DBObject_key" as key, {@see \ObjectResult} as value */
 	public $objects;
 
 	/**
@@ -303,7 +304,7 @@ class CoreServices implements iRestServiceProvider
 	 *
 	 * @param string $sVersion The version (e.g. 1.0) supported by the services
 	 * @param string $sVerb
-	 * @param $aParams
+	 * @param object $aParams
 	 *
 	 * @return RestResult The standardized result structure (at least a message)
 	 * @throws \CoreException
@@ -467,6 +468,18 @@ class CoreServices implements iRestServiceProvider
             }
 			else
 			{
+                                if (!$bExtendedOutput && RestUtils::GetOptionalParam($aParams, 'output_fields', '*') != '*') 
+                                {
+                                        $aFields = $aShowFields[$sClass];
+                                        //Id is not a valid attribute to optimize
+                                        if (in_array('id', $aFields)) 
+                                        {
+                                            unset($aFields[array_search('id', $aFields)]);
+                                        }
+                                        $aAttToLoad = array($oObjectSet->GetClassAlias() => $aFields);
+                                        $oObjectSet->OptimizeColumnLoad($aAttToLoad);
+                                }
+                                
 				while ($oObject = $oObjectSet->Fetch())
 				{
 					$oResult->AddObject(0, '', $oObject, $aShowFields, $bExtendedOutput);
@@ -476,6 +489,7 @@ class CoreServices implements iRestServiceProvider
 			break;
 
 		case 'core/delete':
+			RestUtils::InitTrackingComment($aParams);
 			$sClass = RestUtils::GetClass($aParams, 'class');
 			$key = RestUtils::GetMandatoryParam($aParams, 'key');
 			$bSimulate = RestUtils::GetOptionalParam($aParams, 'simulate', false);

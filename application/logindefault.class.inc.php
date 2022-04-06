@@ -1,8 +1,10 @@
 <?php
 /**
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
+use Combodo\iTop\Application\Helper\Session;
 
 /**
  * Class LoginDefaultBefore
@@ -23,7 +25,7 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 	{
 		$iErrorCode = LoginWebPage::EXIT_CODE_OK;
 
-		unset($_SESSION['login_temp_auth_user']);
+		Session::Unset('login_temp_auth_user');
 
 		// Check if proposed login mode is present and allowed
 		$aAllowedLoginTypes = MetaModel::GetConfig()->GetAllowedLoginTypes();
@@ -32,11 +34,11 @@ class LoginDefaultBefore extends AbstractLoginFSMExtension
 		if ($index !== false)
 		{
 			// Force login mode
-			$_SESSION['login_mode'] = $sProposedLoginMode;
+			Session::Set('login_mode', $sProposedLoginMode);
 		}
 		else
 		{
-			unset($_SESSION['login_mode']);
+			Session::Unset('login_mode');
 		}
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
@@ -91,7 +93,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnCredentialsOk(&$iErrorCode)
 	{
-		if (!isset($_SESSION['login_mode']))
+		if (!Session::IsSet('login_mode'))
 		{
 			// If no plugin validated the user, exit
 			self::ResetLoginSession();
@@ -110,7 +112,7 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 
 	protected function OnConnected(&$iErrorCode)
 	{
-		unset($_SESSION['login_temp_auth_user']);
+		Session::Unset('login_temp_auth_user');
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
@@ -118,11 +120,11 @@ class LoginDefaultAfter extends AbstractLoginFSMExtension implements iLogoutExte
 	private static function ResetLoginSession()
 	{
 		LoginWebPage::ResetSession();
-		foreach (array_keys($_SESSION) as $sKey)
+		foreach (Session::ListVariables() as $sKey)
 		{
 			if (utils::StartsWith($sKey, 'login_'))
 			{
-				unset($_SESSION[$sKey]);
+				Session::Unset($sKey);
 			}
 		}
 	}

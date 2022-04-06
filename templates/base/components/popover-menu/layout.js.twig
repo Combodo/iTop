@@ -1,0 +1,10 @@
+$('#{{ oUIBlock.GetId() }}').popover_menu({
+    toggler: {{ oUIBlock.GetTogglerJSSelector()|json_encode|raw }},
+    container: {{ oUIBlock.GetContainer()|json_encode|raw }},
+    position: {
+        target: {{ oUIBlock.GetTargetForPositionJSSelector()|json_encode|raw }},
+        vertical: {{ oUIBlock.GetVerticalPosition()|json_encode|raw }},
+        horizontal: {{ oUIBlock.GetHorizontalPosition()|json_encode|raw }},
+    },
+    add_visual_hint_to_toggler: {{ oUIBlock.HasVisualHintToAddToToggler()|var_export }}
+});

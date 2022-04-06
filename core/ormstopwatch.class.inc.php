@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -22,7 +22,7 @@ require_once('backgroundprocess.inc.php');
  * ormStopWatch
  * encapsulate the behavior of a stop watch that will be stored as an attribute of class AttributeStopWatch 
  *
- * @copyright   Copyright (C) 2010-2017 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -251,17 +251,27 @@ class ormStopWatch
 		return $sRes;
 	}
 
+	/**
+	 * @param \DBObject $oObject
+	 * @param \AttributeStopWatch $oAttDef
+	 *
+	 * @return float goal value (in second)
+	 * @uses \iMetricComputer::ComputeMetric()
+	 * @throws \CoreException
+	 */
 	protected function ComputeGoal($oObject, $oAttDef)
 	{
 		$sMetricComputer = $oAttDef->Get('goal_computing');
+		/** @var \iMetricComputer $oComputer */
 		$oComputer = new $sMetricComputer();
+
 		$aCallSpec = array($oComputer, 'ComputeMetric');
 		if (!is_callable($aCallSpec))
 		{
 			throw new CoreException("Unknown class/verb '$sMetricComputer/ComputeMetric'");
 		}
-		$iRet = call_user_func($aCallSpec, $oObject);
-		return $iRet;
+
+		return $oComputer->ComputeMetric($oObject);
 	}
 
 	/**
@@ -525,10 +535,10 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 						$iPercent = $aThresholdData['percent']; // could be different than the index !
 		
 						$sNow = date(AttributeDateTime::GetSQLFormat());
-						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < '$sNow'";
+						$sExpression = "SELECT $sClass WHERE {$sAttCode}_laststart AND {$sAttCode}_{$iThreshold}_triggered = 0 AND {$sAttCode}_{$iThreshold}_deadline < :now";
 						$oFilter = DBObjectSearch::FromOQL($sExpression);
-						$oSet = new DBObjectSet($oFilter);
-						$oSet->OptimizeColumnLoad(array($sAttCode));
+						$oSet = new DBObjectSet($oFilter, array(), array('now' => $sNow));
+						$oSet->OptimizeColumnLoad(array($sClass => array($sAttCode)));
 						while ((time() < $iTimeLimit) && ($oObj = $oSet->Fetch()))
 						{
 							$sClass = get_class($oObj);
@@ -597,14 +607,22 @@ class CheckStopWatchThresholds implements iBackgroundProcess
 							// Activate any existing trigger
 							// 
 							$sClassList = implode("', '", MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+
 							$oTriggerSet = new DBObjectSet(
-								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code=:stop_watch_code AND threshold_index = :threshold_index"),
+								DBObjectSearch::FromOQL("SELECT TriggerOnThresholdReached AS t WHERE t.target_class IN ('$sClassList') AND stop_watch_code MATCHES :stop_watch_code AND threshold_index = :threshold_index"),
 								array(), // order by
 								array('stop_watch_code' => $sAttCode, 'threshold_index' => $iThreshold)
 							);
 							while ($oTrigger = $oTriggerSet->Fetch())
 							{
-								$oTrigger->DoActivate($oObj->ToArgs('this'));
+								try
+								{
+									$oTrigger->DoActivate($oObj->ToArgs('this'));
+								}
+								catch(Exception $e)
+								{
+									utils::EnrichRaisedException($oTrigger, $e);
+								}
 							}
 						}
 					}

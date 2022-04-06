@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -26,7 +26,7 @@ require_once(APPROOT.'/core/simplecrypt.class.inc.php');
  * If a cryptographic random number generator is available (on Linux or Windows)
  * it will be used for generating the salt.
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     itopORM
  */
@@ -35,7 +35,7 @@ class ormPassword
 {
 	protected $m_sHashed;
 	protected $m_sSalt;
-	
+
 	/**
 	 * Constructor, initializes the password from the encrypted values
 	 */
@@ -51,9 +51,10 @@ class ormPassword
 	 */
 	public function SetPassword($sClearTextPassword)
 	{
-		$this->m_sHashed = password_hash($sClearTextPassword, PASSWORD_DEFAULT);
+		$iHashAlgo = MetaModel::GetConfig()->GetPasswordHashAlgo();
+		$this->m_sHashed = password_hash($sClearTextPassword, $iHashAlgo);
 	}
-	
+
 	/**
 	 * Print the password: displays some stars
 	 * @return string
@@ -96,18 +97,15 @@ class ormPassword
 	{
 		$bResult = false;
 		$aInfo = password_get_info($this->m_sHashed);
-		switch ($aInfo["algo"])
+		if (is_null($aInfo["algo"]) || $aInfo["algo"] === 0)
 		{
-			case 0:
-				//unknown, assume it's a legacy password
-				$sHashedPwd = $this->ComputeHash($sClearTextPassword);
-				if ($this->m_sHashed == $sHashedPwd)
-				{
-					$bResult = true;
-				}
-				break;
-			default:
-				$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
+			//unknown, assume it's a legacy password
+			$sHashedPwd = $this->ComputeHash($sClearTextPassword);
+			$bResult = ($this->m_sHashed == $sHashedPwd);
+		}
+		else
+		{
+			$bResult = password_verify($sClearTextPassword, $this->m_sHashed);
 		}
 		return $bResult;
 	}

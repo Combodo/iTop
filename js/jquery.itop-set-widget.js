@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 2010-2018 Combodo SARL
+ *  Copyright (c) 2010-2021 Combodo SARL
  *
  *    This file is part of iTop.
  *
@@ -150,6 +150,9 @@ $.widget('itop.set_widget',
 				options: this.possibleValues,
 				create: false,
 				placeholder: Dict.S("Core:AttributeSet:placeholder"),
+				inputClass: 'selectize-input ibo-input ibo-input-set ibo-input-selectize',
+				// To avoid dropdown to be cut by the container's overflow hidden rule
+				dropdownParent: 'body',
 				onInitialize: function () {
 					var selectizeWidget = this;
 					setWidget._onInitialize(selectizeWidget);
@@ -161,7 +164,11 @@ $.widget('itop.set_widget',
 				onItemRemove: function (value) {
 					var selectizeWidget = this;
 					setWidget._onTagRemove(value, selectizeWidget);
-				}
+				},
+				onDropdownOpen: function (oDropdownElem) {
+					oDropdownElem.addClass('set-dropdown');
+					setWidget._updateDropdownPosition(this.$control, oDropdownElem);
+				},
 			});
 
 			this.selectizeWidget = $inputWidget[0].selectize; // keeping this for set widget public methods
@@ -257,6 +264,9 @@ $.widget('itop.set_widget',
 				$item.addClass(setWidget.ITEM_CSS_CLASS);
 				$item.addClass(setWidget.ITEM_CSS_CLASS + '-' + setItemCode); // no escape as codes are already pretty restrictive
 
+				// Set text as tooltip in case it would be truncated
+				$item.attr('data-tooltip-content', $item[0].childNodes[0].nodeValue.trim());
+
 				if (setWidget._isCodeInPartialValues(setItemCode)) {
 					inputWidget.getItem(setItemCode).addClass(setWidget.ITEM_PARTIAL_CSS_CLASS);
 				}
@@ -268,6 +278,12 @@ $.widget('itop.set_widget',
 				console.debug("tagAdd");
 			}
 			this.setItemsCodesStatus[setItemCode] = this.STATUS_ADDED;
+
+			$item.addClass(this.ITEM_CSS_CLASS);
+
+			// Set text as tooltip in case it would be truncated
+			$item.attr('data-tooltip-content', $item[0].childNodes[0].nodeValue.trim());
+			CombodoTooltip.InitTooltipFromMarkup($item);
 
 			if (this._isCodeInPartialValues(setItemCode)) {
 				this._partialCodeRemove(setItemCode);
@@ -336,5 +352,34 @@ $.widget('itop.set_widget',
 
 		_isCodeInPartialValues: function (setItemCode) {
 			return (this.partialValues.indexOf(setItemCode) >= 0);
+		},
+		/**
+		 * Update the dropdown's position so it always fits in the screen
+		 *
+		 * @param {object} oControlElem jQuery object representing the "control" input (= where the user types) of the external key
+		 * @param {object} oDropdownElem jQuery object representing the results dropdown
+		 * @return {void}
+		 */
+		_updateDropdownPosition: function (oControlElem, oDropdownElem) {
+			const fWindowHeight = window.innerHeight;
+
+			const fControlTopY = oControlElem.offset().top;
+			const fControlHeight = oControlElem.outerHeight();
+
+			const fDropdownTopY = oDropdownElem.offset().top;
+			// This one is "let" as it might be updated if necessary
+			let fDropdownHeight = oDropdownElem.outerHeight();
+			const fDropdownBottomY = fDropdownTopY + fDropdownHeight;
+
+			if (fDropdownBottomY > fWindowHeight) {
+				// Set dropdown max-height to 1/3 of the screen, this way we are sure the dropdown will fit in either the top / bottom half of the screen
+				oDropdownElem.css('max-height', '30vh');
+				fDropdownHeight = oDropdownElem.outerHeight();
+
+				// Position dropdown above input if not enough space on the bottom part of the screen
+				if ((fDropdownTopY / fWindowHeight) > 0.6) {
+					oDropdownElem.css('top', fDropdownTopY - fDropdownHeight - fControlHeight);
+				}
+			}
 		}
 	});

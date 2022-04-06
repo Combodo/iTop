@@ -18,12 +18,10 @@
         }
     ],
     "require": {
-        "php": ">=4.4.0"
+        "php": ">=5.2.0"
     },
     "autoload": {
-        "psr-0": {
-            "PEAR": ""
-        }
+        "classmap": ["PEAR/"]
     },
     "extra": {
         "branch-alias": {
@@ -38,6 +36,6 @@
         "source": "https://github.com/pear/PEAR_Exception"
     },
     "require-dev": {
-        "phpunit/phpunit": "*"
+        "phpunit/phpunit": "<9"
     }
 }

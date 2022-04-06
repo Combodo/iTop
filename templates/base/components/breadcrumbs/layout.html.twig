@@ -1,0 +1,11 @@
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-breadcrumbs">
+    <span class="ibo-breadcrumbs--previous-items-container ibo-is-hidden" data-role="ibo-breadcrumbs--previous-items-container">
+        <button class="ibo-breadcrumbs--previous-items-list-toggler ibo-button ibo-is-alternative ibo-is-neutral" data-role="ibo-breadcrumbs--previous-items-list-toggler"
+           aria-label="{{ 'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label'|dict_s }}"
+           data-tooltip-content="{{ 'UI:Component:Breadcrumbs:PreviousItemsListToggler:Label'|dict_s }}"
+        >
+            <span class="fas fa-ellipsis-h"></span>
+        </button>
+        <div class="ibo-breadcrumbs--previous-items-list ibo-is-hidden" data-role="ibo-breadcrumbs--previous-items-list"></div>
+    </span>
+</div>

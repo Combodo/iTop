@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -275,6 +275,14 @@ $(function()
 			if( (oField.html !== undefined) && (oField.html !== '') )
 			{
 				oFieldContainer.html(oField.html);
+			}
+			// HTML metadata
+			if( (oField.html_metadata !== undefined) && (Object.keys(oField.html_metadata).length > 0) )
+			{
+				for(var i in oField.html_metadata)
+				{
+					oFieldContainer.attr('data-' + i, oField.html_metadata[i]);
+				}
 			}
 			// JS files
 			if( (oField.js_files !== undefined) && (oField.js_files.length > 0) )

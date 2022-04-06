@@ -1,0 +1,8 @@
+<div class="ibo-navigation-menu--menu-nodes" data-role="ibo-navigation-menu--menu-nodes" data-menu-group-id="{{ aMenuGroup.sId }}">
+	<h2 class="ibo-navigation-menu--menu-nodes-title">{{ aMenuGroup.sTitle }}</h2>
+	<ul>
+		{% for aMenuNode in aMenuGroup.aSubMenuNodes %}
+			{{ include('base/layouts/navigation-menu/menu-node.html.twig', { aMenuNode: aMenuNode }) }}
+		{% endfor %}
+	</ul>
+</div>

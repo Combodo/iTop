@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
  * Helper class to build interactive forms to be used either in stand-alone
  * modal dialog or in "property-sheet" panes.
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 class DesignerForm
@@ -102,23 +102,27 @@ class DesignerForm
 				$sReturn .= '<fieldset>';
 				$sReturn .= '<legend>'.$sLabel.'</legend>';
 			}
-			foreach($aFields as $oField)
-			{
+			/** @var \DesignerFormField $oField */
+			foreach($aFields as $oField) {
 				$aRow = $oField->Render($oP, $sFormId);
-				if ($oField->IsVisible())
-				{
-					$sValidation = '&nbsp;<span class="prop_apply">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
+				if ($oField->IsVisible()) {
+					$sValidation = '<span class="prop_apply ibo-prop--apply ibo-button ibo-is-alternative">'.$this->GetValidationArea($oField->GetFieldId()).'</span>';
 					$sField = $aRow['value'].$sValidation;
-					$aDetails[] = array('label' => $aRow['label'], 'value' => $sField);
-				}
-				else
-				{
+					$aDetails[] = array(
+						'label' => $aRow['label'],
+						'value' => $sField,
+						'attcode' => $oField->GetCode(),
+						'attlabel' => $aRow['label'],
+						'inputid' => $this->GetFieldId($oField->GetCode()),
+						'inputtype' => $oField->GetInputType(),
+					);
+				} else {
 					$sHiddenFields .= $aRow['value'];
 				}
 			}
 			$sReturn .= $oP->GetDetails($aDetails);
-			if ($sLabel != '')
-			{
+
+			if ($sLabel != '') {
 				$sReturn .= '</fieldset>';
 			}
 		}
@@ -207,51 +211,41 @@ class DesignerForm
 		$sActionUrl = addslashes($this->sSubmitTo);
 		$sJSSubmitParams = json_encode($this->aSubmitParams);
 		$sFormId = $this->GetFormId();
-		if ($this->oParentForm == null)
-		{
+		if ($this->oParentForm == null) {
 			$sReturn = '<form id="'.$sFormId.'" onsubmit="return false;">';
 			$sReturn .= '<table class="prop_table">';
-			$sReturn .= '<thead><tr><th class="prop_header">'.Dict::S('UI:Form:Property').'</th><th class="prop_header">'.Dict::S('UI:Form:Value').'</th><th colspan="2" class="prop_header">&nbsp;</th></tr></thead><tbody>';
+			$sReturn .= '<thead><tr><th class="ibo-prop-header">'.Dict::S('UI:Form:Property').'</th><th class="ibo-prop-header">'.Dict::S('UI:Form:Value').'</th><th colspan="2" class="ibo-prop-header">&nbsp;</th></tr></thead><tbody>';
 		}
 
 		$sHiddenFields = '';
-		foreach($this->aFieldSets as $sLabel => $aFields)
-		{
+		foreach ($this->aFieldSets as $sLabel => $aFields) {
 			$aDetails = array();
-			if ($sLabel != '')
-			{
+			if ($sLabel != '') {
 				$sReturn .= $this->StartRow().'<th colspan="4">'.$sLabel.'</th>'.$this->EndRow();
 			}
 
 
-			foreach($aFields as $oField)
-			{
+			foreach ($aFields as $oField) {
 				$aRow = $oField->Render($oP, $sFormId, 'property');
-				if ($oField->IsVisible())
-				{
+				if ($oField->IsVisible()) {
 					$sFieldId = $this->GetFieldId($oField->GetCode());
-					$sValidation = $this->GetValidationArea($sFieldId, '<span title="Apply" class="ui-icon ui-icon-circle-check"/>');
-					$sValidationFields = '</td><td class="prop_icon prop_apply">'.$sValidation.'</td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td>'.$this->EndRow();
-					
-					$sPath = $this->GetHierarchyPath().'/'.$oField->GetCode();
-					
-					if (is_null($aRow['label']))
-					{
+					$sValidation = $this->GetValidationArea($sFieldId, '<div class="ibo-button ibo-is-alternative ibo-is-success" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></div>');
+					$sValidationFields = '</td><td class="prop_icon prop_apply ibo-prop--apply" >'.$sValidation.'</td><td  class="prop_icon prop_cancel ibo-prop--cancel"><span><div class="ibo-button ibo-is-alternative ibo-is-neutral" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-undo"></i></div></span></td>'
+						.$this->EndRow();
+
+					if (is_null($aRow['label'])) {
 						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_value" colspan="2">'.$aRow['value'];
-					}
-					else
-					{
+					} else {
 						$sReturn .= $this->StartRow($sFieldId).'<td class="prop_label">'.$aRow['label'].'</td><td class="prop_value">'.$aRow['value'];
 					}
-					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField))
-					{
+					if (!($oField instanceof DesignerFormSelectorField) && !($oField instanceof DesignerMultipleSubFormField)) {
 						$sReturn .= $sValidationFields;
 					}
 					$sNotifyParentSelectorJS = is_null($sNotifyParentSelector) ? 'null' : "'".addslashes($sNotifyParentSelector)."'";
 					$sAutoApply = $oField->IsAutoApply() ? 'true' : 'false';
 					$sHandlerEquals = $oField->GetHandlerEquals();
 					$sHandlerGetValue = $oField->GetHandlerGetValue();
-					
+
 					$sWidgetClass = $oField->GetWidgetClass();
 					$sJSExtraParams = '';
 					if (count($oField->GetWidgetExtraParams()) > 0)
@@ -266,6 +260,7 @@ class DesignerForm
 					$this->AddReadyScript(
 <<<EOF
 $('#row_$sFieldId').$sWidgetClass({parent_selector: $sNotifyParentSelectorJS, field_id: '$sFieldId', equals: $sHandlerEquals, get_field_value: $sHandlerGetValue, auto_apply: $sAutoApply, value: '', submit_to: '$sActionUrl', submit_parameters: $sJSSubmitParams $sJSExtraParams });
+CombodoTooltip.InitTooltipFromMarkup($('#$sFormId [data-tooltip-content]'));
 EOF
 					);
 				}
@@ -291,7 +286,6 @@ EOF
 		}
 		$this->AddReadyScript(
 <<<EOF
-		$('.prop_table').tableHover();
 		var idx = 0;
 		$('.prop_table tbody tr').each(function() {
 			if ((idx % 2) == 0)
@@ -360,7 +354,7 @@ EOF
 <<<EOF
 $('#$sDialogId').dialog({
 		height: 'auto',
-		maxHeight: $(window).height() - 8,
+		maxHeight: $(window).height() * 0.9,
 		width: $iDialogWidth,
 		modal: true,
 		autoOpen: $sAutoOpen,
@@ -548,7 +542,7 @@ EOF
 	
 	public function GetValidationArea($sId, $sContent = '')
 	{
-		return "<span style=\"display:inline-block;width:20px;\" id=\"v_{$sId}\"><span class=\"ui-icon ui-icon-alert\"></span>$sContent</span>";
+		return "<span id=\"v_{$sId}\">$sContent</span>";
 	}
 	public function GetAsyncActionClass()
 	{
@@ -716,9 +710,25 @@ class DesignerFormField
 		$this->bMandatory = false;
 		$this->bReadOnly = false;
 		$this->bAutoApply = false;
-		$this->aCSSClasses = array();
+		$this->aCSSClasses = [];
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input';
+		}
 		$this->bDisplayed = true;
 		$this->aWidgetExtraParams = array();
+	}
+
+	/**
+	 * Important, for now we use constants from the \cmdbAbstractObject class, introducing a coupling that should not exist.
+	 * This has been traced under N°4241 and will be discussed during the next modernization batch.
+	 *
+	 * @return string|null Return the input type of the field
+	 * @see \cmdbAbstractObject::ENUM_INPUT_TYPE_XXX
+	 * @since 3.0.0
+	 */
+	public function GetInputType(): ?string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_SINGLE_INPUT;
 	}
 
 	/**
@@ -1020,10 +1030,10 @@ class DesignerTextField extends DesignerFormField
 			$sMandatory = $this->bMandatory ? 'true' :  'false';
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', $(this).closest('form').attr('id'), $sForbiddenValues); } );
+$('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern', $(this).closest('form').attr('id'), $sForbiddenValues); } );
 {
 	var myTimer = null;
-	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+	$('#$sId').on('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
 			);
@@ -1055,6 +1065,23 @@ EOF
 
 class DesignerLongTextField extends DesignerTextField
 {
+	public function __construct($sCode, $sLabel = '', $defaultValue = '')
+	{
+		parent::__construct($sCode, $sLabel, $defaultValue);
+
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-text';
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_TEXTAREA;
+	}
+
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
@@ -1078,10 +1105,10 @@ class DesignerLongTextField extends DesignerTextField
 		{
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues); } );
+$('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues); } );
 {
 	var myTimer = null;
-	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+	$('#$sId').on('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
 			);
@@ -1129,10 +1156,10 @@ class DesignerIntegerField extends DesignerFormField
 			$sMandatory = $this->bMandatory ? 'true' :  'false';
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change keyup validate', function() { ValidateInteger('$sId', $sMandatory,  $(this).closest('form').attr('id'), $sMin, $sMax); } );
+$('#$sId').on('change keyup validate', function() { ValidateInteger('$sId', $sMandatory,  $(this).closest('form').attr('id'), $sMin, $sMax); } );
 {
 	var myTimer = null;
-	$('#$sId').bind('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
+	$('#$sId').on('keyup', function() { clearTimeout(myTimer); myTimer = setTimeout(function() { $('#$sId').trigger('change', {} ); }, 100); });
 }
 EOF
 			);
@@ -1179,12 +1206,34 @@ class DesignerComboField extends DesignerFormField
 		$this->bOtherChoices = false;
 		$this->sNullLabel = Dict::S('UI:SelectOne');
 
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-select';
+		}
+
 		$this->bAutoApply = true;
 		$this->bSorted = true; // Sorted by default
 	}
-	
-	public function SetAllowedValues($aAllowedValues)
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
 	{
+		if ($this->bMultipleSelection) {
+			return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_MULTIPLE_CHOICES;
+		}
+		else {
+			return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_RAW;
+		}
+	}
+
+	public function SetAllowedValues(?array $aAllowedValues)
+	{
+		// Make sure to have an actual array for values
+		if (is_null($aAllowedValues)) {
+			$aAllowedValues = [];
+		}
+
 		$this->aAllowedValues = $aAllowedValues;
 	}
 	
@@ -1261,11 +1310,11 @@ class DesignerComboField extends DesignerFormField
 		{
 			if ($this->bMultipleSelection)
 			{
-				$sHtml = "<select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
+				$sHtml = "<span><select $sCSSClasses multiple size=\"8\"id=\"$sId\" name=\"$sName\">";
 			}
 			else
 			{
-				$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\">";
+				$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\">";
 				if ($this->sNullLabel != '')
 				{
 					$sHtml .= "<option value=\"\">".$this->sNullLabel."</option>";
@@ -1285,18 +1334,19 @@ class DesignerComboField extends DesignerFormField
 				$sHtmlValue = str_replace(' ', '&nbsp;', htmlentities($sDisplayValue, ENT_QUOTES, 'UTF-8'));
 				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
 			}
-			$sHtml .= "</select>";
+			$sHtml .= "</select></span>";
 			if ($this->bOtherChoices)
 			{
 				$sHtml .= '<br/><input type="checkbox" id="other_chk_'.$sId.'"><label for="other_chk_'.$sId.'">&nbsp;Other:</label>&nbsp;<input type="text" id="other_'.$sId.'" name="other_'.$sName.'" size="30"/>'; 
 			}
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '',  $(this).closest('form').attr('id'), null, null); } );
+$('#$sId').on('change validate', function() { ValidateWithPattern('$sId', $sMandatory, '',  $(this).closest('form').attr('id'), null, null); } );
 EOF
 			);
 		}
 		return array('label' => $this->sLabel, 'value' => $sHtml);
+
 	}
 
 	public function ReadParam(&$aValues)
@@ -1315,6 +1365,17 @@ class DesignerBooleanField extends DesignerFormField
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->bAutoApply = true;
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-checkbox';
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_CHECKBOX;
 	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
@@ -1375,6 +1436,14 @@ class DesignerHiddenField extends DesignerFormField
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
+	}
 	
 	public function IsVisible()
 	{
@@ -1402,6 +1471,14 @@ class DesignerIconSelectionField extends DesignerFormField
 		$this->bAutoApply = true;
 		$this->sUploadUrl = null;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return cmdbAbstractObject::ENUM_INPUT_TYPE_DROPDOWN_DECORATED;
+	}
 	
 	public function SetAllowedValues($aAllowedValues)
 	{
@@ -1418,28 +1495,33 @@ class DesignerIconSelectionField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$idx = 0;
-		foreach($this->aAllowedValues as $index => $aValue)
-		{
-			if ($aValue['value'] == $this->defaultValue)
-			{
+		$idxFallback = 0;
+		foreach ($this->aAllowedValues as $index => $aValue) {
+			if ($aValue['value'] == $this->defaultValue) {
 				$idx = $index;
 				break;
 			}
+			//fallback if url of default value contains ../
+			//for contact, icon is http://localhost/env-production/itop-structure/../../images/icons/icons8-customer.svg => not found http://localhost/images/icons/icons8-customer.svg
+			if (basename($aValue['value']) == basename($this->defaultValue)) {
+				$idxFallback = $index;
+			}
+		}
+		if ($idx == 0) {
+			$idx = $idxFallback;
 		}
 		$sJSItems = json_encode($this->aAllowedValues);
 		$sPostUploadTo = ($this->sUploadUrl == null) ? 'null' : "'{$this->sUploadUrl}'";
-		if (!$this->IsReadOnly())
-		{
+		if (!$this->IsReadOnly()) {
 			$sDefaultValue = ($this->defaultValue !== '') ? $this->defaultValue : $this->aAllowedValues[$idx]['value'];
-			$sValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/>";
+			$sCSSClasses = ContextTag::Check(ContextTag::TAG_CONSOLE) ? 'class="ibo-input-select-wrapper"' : '';
+			$sValue = "<span $sCSSClasses><input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"{$sDefaultValue}\"/></span>";
 			$oP->add_ready_script(
-<<<EOF
+				<<<EOF
 	$('#$sId').icon_select({current_idx: $idx, items: $sJSItems, post_upload_to: $sPostUploadTo});
 EOF
 			);
-		}
-		else
-		{
+		} else {
 			$sValue = '<span style="display:inline-block;line-height:48px;height:48px;"><span><img style="vertical-align:middle" src="'.$this->aAllowedValues[$idx]['icon'].'" />&nbsp;'.htmlentities($this->aAllowedValues[$idx]['label'], ENT_QUOTES, 'UTF-8').'</span></span>';
 		}
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' : '';
@@ -1454,18 +1536,21 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
+		$aFolderList = [
+			APPROOT.'env-'.utils::GetCurrentEnvironment() => utils::GetAbsoluteUrlModulesRoot(),
+			APPROOT.'images/icons' => utils::GetAbsoluteUrlAppRoot().'images/icons',
+		];
+		if (count(self::$aAllIcons) == 0) {
+			foreach ($aFolderList as $sFolderPath => $sUrlPrefix) {
+				$aIcons = self::FindIconsOnDisk($sFolderPath);
+				ksort($aIcons);
 
-		if (count(self::$aAllIcons) == 0)
-		{
-			self::$aAllIcons = self::FindIconsOnDisk(APPROOT.'env-'.utils::GetCurrentEnvironment());
-			ksort(self::$aAllIcons);
+				foreach ($aIcons as $sFilePath) {
+					self::$aAllIcons[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => $sUrlPrefix.$sFilePath);
+				}
+			}
 		}
-		$aValues = array();
-		foreach(self::$aAllIcons as $sFilePath)
-		{
-			$aValues[] = array('value' => $sFilePath, 'label' => basename($sFilePath), 'icon' => utils::GetAbsoluteUrlModulesRoot().$sFilePath);
-		}
-		$this->SetAllowedValues($aValues);
+		$this->SetAllowedValues(self::$aAllIcons);
 	}
 
 	static protected function FindIconsOnDisk($sBaseDir, $sDir = '')
@@ -1493,28 +1578,32 @@ class RunTimeIconSelectionField extends DesignerIconSelectionField
 			$sAvailableIcons .= '   static $sKey = '.var_export($sKey, true).';'.PHP_EOL;
 			$sAvailableIcons .= '   static $aIconFiles = '.var_export($aFiles, true).';'.PHP_EOL;
 			$sAvailableIcons .= '}'.PHP_EOL;
+			SetupUtils::builddir(dirname($sCacheFile));
 			file_put_contents($sCacheFile, $sAvailableIcons, LOCK_EX);
 		}
+
 		return $aFiles;
 	}
 
-	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '')
+	static protected function _FindIconsOnDisk($sBaseDir, $sDir = '', &$aFilesSpecs = [])
 	{
-		$aResult = array();
+		$aResult = [];
 		// Populate automatically the list of icon files
-		if ($hDir = @opendir($sBaseDir.'/'.$sDir))
-		{
-			while (($sFile = readdir($hDir)) !== false)
-			{
+		if ($hDir = @opendir($sBaseDir.'/'.$sDir)) {
+			while (($sFile = readdir($hDir)) !== false) {
 				$aMatches = array();
-				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile))
-				{
+				if (($sFile != '.') && ($sFile != '..') && ($sFile != 'lifecycle') && is_dir($sBaseDir.'/'.$sDir.'/'.$sFile)) {
 					$sDirSubPath = ($sDir == '') ? $sFile : $sDir.'/'.$sFile;
-					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath));
+					$aResult = array_merge($aResult, self::_FindIconsOnDisk($sBaseDir, $sDirSubPath, $aFilesSpecs));
 				}
-				if (preg_match("/\.(png|jpg|jpeg|gif)$/i", $sFile, $aMatches)) // png, jp(e)g and gif are considered valid
+				$sSize = filesize($sBaseDir.'/'.$sDir.'/'.$sFile);
+				if (isset($aFilesSpecs[$sFile]) && $aFilesSpecs[$sFile] == $sSize) {
+					continue;
+				}
+				if (preg_match("/\.(png|jpg|jpeg|gif|svg)$/i", $sFile, $aMatches)) // png, jp(e)g, gif and svg are considered valid
 				{
 					$aResult[$sFile.'_'.$sDir] = $sDir.'/'.$sFile;
+					$aFilesSpecs[$sFile] = $sSize;
 				}
 			}
 			closedir($hDir);
@@ -1560,6 +1649,14 @@ class DesignerSortableField extends DesignerFormField
 		parent::__construct($sCode, $sLabel, $defaultValue);
 		$this->aAllowedValues = array();
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
+	}
 	
 	public function SetAllowedValues($aAllowedValues)
 	{
@@ -1596,6 +1693,17 @@ class DesignerFormSelectorField extends DesignerFormField
 		$this->defaultRealValue = $defaultValue;
 		$this->aSubForms = array();
 		$this->bSorted = true;
+		if (ContextTag::Check(ContextTag::TAG_CONSOLE)) {
+			$this->aCSSClasses[] = 'ibo-input-select';
+		}
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
 	}
 
 	public function IsSorted()
@@ -1638,27 +1746,23 @@ class DesignerFormSelectorField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
+		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' : '';
 
 		$this->aCSSClasses[] = 'formSelector';
-		
+
 		$sCSSClasses = '';
-		if (count($this->aCSSClasses) > 0)
-		{
+		if (count($this->aCSSClasses) > 0) {
 			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 		}
 
-		if ($this->IsSorted())
-		{
+		if ($this->IsSorted()) {
 			uasort($this->aSubForms, array(get_class($this), 'SortOnFormLabel'));
 		}
-		
-		if ($this->IsReadOnly())
-		{
+
+		if ($this->IsReadOnly()) {
 			$sDisplayValue = '';
 			$sHiddenValue = '';
-			foreach($this->aSubForms as $iKey => $aFormData)
-			{
+			foreach ($this->aSubForms as $iKey => $aFormData) {
 				if ($iKey == $this->defaultValue) // Default value is actually the index
 				{
 					$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
@@ -1667,35 +1771,29 @@ class DesignerFormSelectorField extends DesignerFormField
 				}
 			}
 			$sHtml = "<span $sCSSClasses>".$sDisplayValue.$sHiddenValue."</span>";
-		}
-		else
-		{
-			$sHtml = "<select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
-			foreach($this->aSubForms as $iKey => $aFormData)
-			{
+		} else {
+			$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
+			foreach ($this->aSubForms as $iKey => $aFormData) {
 				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
 				$sValue = htmlentities($aFormData['value'], ENT_QUOTES, 'UTF-8');
 				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
 				$sHtml .= "<option data-value=\"$sValue\" value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
 			}
-			$sHtml .= "</select>";
+			$sHtml .= "</select></span>";
 		}
-				
-		if ($sRenderMode == 'property')
-		{
-			$sHtml .= '</td><td class="prop_icon prop_apply"><span title="Apply" class="ui-icon ui-icon-circle-check"/></td><td  class="prop_icon prop_cancel"><span title="Revert" class="ui-icon ui-icon-circle-close"/></td></tr>';
+
+		if ($sRenderMode == 'property') {
+			$sHtml .= '</td><td class="prop_icon prop_apply ibo-prop--apply"><span><button class="ibo-button ibo-is-alternative ibo-is-success" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Apply').'"><i class="fas fa-check"></i></button></span></td><td class="prop_icon prop_cancel ibo-prop--cancel"><span><button class="ibo-button ibo-is-alternative ibo-is-neutral" data-tooltip-content="'.Dict::Format('UI:DashboardEdit:Revert').'"><i class="fas fa-times"></i></button></span></td></tr>';
 		}
-		foreach($this->aSubForms as $sKey => $aFormData)
-		{
+		foreach ($this->aSubForms as $sKey => $aFormData) {
 			$sId = $this->oForm->GetFieldId($this->sCode);
 			$sStyle = (($sKey == $this->defaultValue) && $this->oForm->IsDisplayed()) ? '' : 'style="display:none"';
 			$oSubForm = $aFormData['form'];
 			$oSubForm->SetParentForm($this->oForm);
 			$oSubForm->CopySubmitParams($this->oForm);
 			$oSubForm->SetPrefix($this->oForm->GetPrefix().$sKey.'_');
-			
-			if ($sRenderMode == 'property')
-			{
+
+			if ($sRenderMode == 'property') {
 				// Note: Managing the visibility of nested subforms had several implications
 				// 1) Attributes are displayed in a table and we have to group them in as many tbodys as necessary to hide/show the various options depending on the current selection
 				// 2) It is not possible to nest tbody tags. Therefore, it is not possible to manage the visibility the same way as it is done for the dialog mode (using nested divs).
@@ -1729,7 +1827,7 @@ class DesignerFormSelectorField extends DesignerFormField
 		{
 			$oP->add_ready_script(
 <<<EOF
-$('#$sId').bind('change reverted', function() {	$('.subform_{$sId}').hide(); $('.{$sId}_'+this.value).show(); } );
+$('#$sId').on('change reverted', function() {	$('.subform_{$sId}').hide(); $('.{$sId}_'+this.value).show(); } );
 EOF
 			);
 		}
@@ -1793,6 +1891,14 @@ class DesignerSubFormField extends DesignerFormField
 		parent::__construct('', $sLabel, '');
 		$this->oSubForm = $oSubForm;
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
+	}
 	
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')
 	{
@@ -1835,6 +1941,14 @@ class DesignerStaticTextField extends DesignerFormField
 	public function __construct($sCode, $sLabel = '', $defaultValue = '')
 	{
 		parent::__construct($sCode, $sLabel, $defaultValue);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetInputType(): ?string
+	{
+		return null;
 	}
 
 	public function Render(WebPage $oP, $sFormId, $sRenderMode='dialog')

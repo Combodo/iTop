@@ -1,0 +1,11 @@
+<div {% if oUIBlock.GetId() is defined %}id="{{ oUIBlock.GetId() }}"{% endif %} class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-popover-menu">
+    {% for aSection in oUIBlock.GetSections() %}
+        {% if aSection.aItems|length > 0 %}
+            <div class="ibo-popover-menu--section" data-role="ibo-popover-menu--section">
+                {% for oUIBlockItem in aSection.aItems %}
+                    {{ render_block(oUIBlockItem, {aPage: aPage}) }}
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>

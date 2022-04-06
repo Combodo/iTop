@@ -1,0 +1,14 @@
+<div id="welcome_popup">
+    <div class="ibo-welcome-popup--image ibo-svg-illustration--container">
+        {{ source("images/illustrations/undraw_relaunch_day.svg") }}
+    </div>
+    <div class="ibo-welcome-popup--text">
+        <div>
+            {{ 'UI:WelcomeMenu:Text'| dict_s|raw }}
+        </div>
+        <div class="ibo-welcome-popup--text--options">
+        <input type="checkbox" checked id="display_welcome_popup"/><label for="display_welcome_popup">{{'UI:DisplayThisMessageAtStartup'| dict_s}}</label>
+        </div>
+    </div>
+
+</div>

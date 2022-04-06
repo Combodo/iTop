@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * ormDocument
  * encapsulate the behavior of a binary data set that will be stored an attribute of class AttributeBlob 
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -75,6 +75,27 @@ class ormDocument
 		return $this->m_sMimeType;
 	}
 
+	/**
+	 * @return int size in bits
+	 * @uses strlen which returns the no of bits used
+	 * @since 2.7.0
+	 */
+	public function GetSize()
+	{
+		return strlen($this->m_data);
+	}
+
+	/**
+	 * @param int $precision
+	 *
+	 * @return string
+	 * @uses utils::BytesToFriendlyFormat()
+	 */
+	public function GetFormattedSize($precision = 2)
+	{
+		$bytes = $this->GetSize();
+		return utils::BytesToFriendlyFormat($bytes, $precision);
+	}
 	public function GetData()
 	{
 		return $this->m_data;
@@ -97,7 +118,8 @@ class ormDocument
 		else
 		{
 			$data = $this->GetData();
-			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8').' [ '.$this->GetMimeType().', size: '.strlen($data).' byte(s) ]<br/>';
+			$sSize = utils::BytesToFriendlyFormat(strlen($data));
+			$sResult = htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8').' ('.$sSize.')<br/>';
 		}
 		return $sResult;
 	}
@@ -108,7 +130,8 @@ class ormDocument
 	 */	 	 	
 	public function GetDisplayLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode\" target=\"_blank\" >".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+		$sUrl = $this->GetDisplayURL($sClass, $Id, $sAttCode);
+		return "<a href=\"$sUrl\" target=\"_blank\" >".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 	
 	/**
@@ -117,7 +140,8 @@ class ormDocument
 	 */	 	 	
 	public function GetDownloadLink($sClass, $Id, $sAttCode)
 	{
-		return "<a href=\"".utils::GetAbsoluteUrlAppRoot()."pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
+		$sUrl = $this->GetDownloadURL($sClass, $Id, $sAttCode);
+		return "<a href=\"$sUrl\">".htmlentities($this->GetFileName(), ENT_QUOTES, 'UTF-8')."</a>\n";
 	}
 
 	/**
@@ -126,8 +150,9 @@ class ormDocument
 	 */
 	public function GetDisplayURL($sClass, $Id, $sAttCode)
 	{
+		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
-		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode";
+		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.render.php?operation=display_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
 
 	/**
@@ -137,7 +162,7 @@ class ormDocument
 	public function GetDownloadURL($sClass, $Id, $sAttCode)
 	{
 		// Compute a signature to reset the cache anytime the data changes (this is acceptable if used only with icon files)
-		$sSignature = md5($this->GetData());
+		$sSignature = $this->GetSignature();
 		// TODO: When refactoring this with the URLMaker system, mind to also change calls in the portal (look for the "p_object_document_display" route)
 		return utils::GetAbsoluteUrlAppRoot() . "pages/ajax.document.php?operation=download_document&class=$sClass&id=$Id&field=$sAttCode&s=$sSignature&cache=86400";
 	}
@@ -151,6 +176,8 @@ class ormDocument
 			case 'image/jpg':
 			case 'image/jpeg':
 			case 'image/gif':
+			case 'image/bmp':
+			case 'image/svg+xml':
 			$bRet = true;
 			break;
 		}
@@ -196,5 +223,13 @@ class ormDocument
 		{
 			$oPage->p($e->getMessage());
 		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function GetSignature(): string
+	{
+		return md5($this->GetData());
 	}
 }

@@ -1,0 +1,4 @@
+$('#{{ oUIBlock.GetId() }}').alert({
+	bOpenedByDefault: {{ oUIBlock.IsOpenedByDefault()|var_export }}
+	{% if oUIBlock.IsSaveCollapsibleStateEnabled() %}, collapsibleStateStorageKey: '{{ oUIBlock.GetSessionCollapsibleStateStorageKey() }}'{% endif %}
+});

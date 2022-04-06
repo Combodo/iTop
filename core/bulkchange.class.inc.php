@@ -1,44 +1,13 @@
 <?php
-// Copyright (C) 2010-2017 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
-/**
- * Bulk change facility (common to interactive and batch usages)
- *
- * @copyright   Copyright (C) 2010-2015 Combodo SARL
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
-
 
 // The BOM is added at the head of exported UTF-8 CSV data, and removed (if present) from input UTF-8 data.
 // This helps MS-Excel (Version > 2007, Windows only) in changing its interpretation of a CSV file (by default Excel reads data as ISO-8859-1 -not 100% sure!)
 define('UTF8_BOM', chr(239).chr(187).chr(191)); // 0xEF, 0xBB, 0xBF
 
-/**
- * BulkChange
- * Interpret a given data set and update the DB accordingly (fake mode avail.) 
- *
- * @package     iTopORM
- */
-
-class BulkChangeException extends CoreException
-{
-}
 
 /**
  * CellChangeSpec
@@ -245,6 +214,7 @@ class RowStatus_Issue extends RowStatus
 
 /**
  * BulkChange
+ * Interpret a given data set and update the DB accordingly (fake mode avail.)
  *
  * @package iTopORM
  */
@@ -309,7 +279,7 @@ class BulkChange
 				$value = $oForeignAtt->MakeValueFromString($aRowData[$iCol], $this->m_bLocalizedValues);
 			}
 			$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
-			$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+			$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 		}
 
 		$oExtObjects = new CMDBObjectSet($oReconFilter);
@@ -363,6 +333,7 @@ class BulkChange
 				foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 				{
 					// Default reporting
+					// $aRowData[$iCol] is always null
 					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
 				}
 				if ($oExtKey->IsNullAllowed())
@@ -395,7 +366,7 @@ class BulkChange
 					}
 					$aCacheKeys[] = $value;
 					$oReconFilter->AddCondition($sForeignAttCode, $value, '=');
-					$aResults[$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					$aResults[$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 				}
 				$sCacheKey = implode('_|_', $aCacheKeys); // Unique key for this query...
 				$iForeignKey = null;
@@ -465,7 +436,7 @@ class BulkChange
 						foreach ($aKeyConfig as $sForeignAttCode => $iCol)
 						{
 							// Report the change on reconciliation values as well
-							$aResults[$iCol] = new CellStatus_Modify($aRowData[$iCol]);
+							$aResults[$iCol] = new CellStatus_Modify(utils::HtmlEntities($aRowData[$iCol]));
 						}
 					}
 				}
@@ -481,20 +452,23 @@ class BulkChange
 		foreach ($this->m_aAttList as $sAttCode => $iCol)
 		{
 			// skip the private key, if any
-			if ($sAttCode == 'id') continue;
+			if (($sAttCode == 'id') || ($sAttCode == 'friendlyname')) {
+				continue;
+			}
 
 			$oAttDef = MetaModel::GetAttributeDef($this->m_sClass, $sAttCode);
 
 			// skip reconciliation keys
-			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)){ continue; }
+			if (!$oAttDef->IsWritable() && in_array($sAttCode, $this->m_aReconcilKeys)) {
+				continue;
+			}
 
 			$aReasons = array();
 			$iFlags = ($oTargetObj->IsNew())
 				? $oTargetObj->GetInitialStateAttributeFlags($sAttCode, $aReasons)
 				: $oTargetObj->GetAttributeFlags($sAttCode, $aReasons);
-			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) )
-			{
-					$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
+			if ( (($iFlags & OPT_ATT_READONLY) == OPT_ATT_READONLY) && ( $oTargetObj->Get($sAttCode) != $aRowData[$iCol]) ) {
+				$aErrors[$sAttCode] = Dict::Format('UI:CSVReport-Value-Issue-Readonly', $sAttCode, $oTargetObj->Get($sAttCode), $aRowData[$iCol]);
 			}
 			else if ($oAttDef->IsLinkSet() && $oAttDef->IsIndirect())
 			{
@@ -538,7 +512,7 @@ class BulkChange
 		{
 			if ($sAttCode == 'id')
 			{
-				$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+				$aResults[$iCol]= new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 			}
 			else
 			{
@@ -554,7 +528,7 @@ class BulkChange
 				}
 				if (isset($aErrors[$sAttCode]))
 				{
-					$aResults[$iCol]= new CellStatus_Issue($aRowData[$iCol], $sOrigValue, $aErrors[$sAttCode]);
+					$aResults[$iCol]= new CellStatus_Issue(utils::HtmlEntities($aRowData[$iCol]), $sOrigValue, $aErrors[$sAttCode]);
 				}
 				elseif (array_key_exists($sAttCode, $aChangedFields))
 				{
@@ -577,7 +551,7 @@ class BulkChange
 					}
 					else
 					{
-						$aResults[$iCol]= new CellStatus_Void($aRowData[$iCol]);
+						$aResults[$iCol]= new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 					}
 				}
 			}
@@ -654,7 +628,7 @@ class BulkChange
 		return $aResults;
 	}
 
-	
+
 	protected function CreateObject(&$aResult, $iRow, $aRowData, CMDBChange $oChange = null)
 	{
 		$oTargetObj = MetaModel::NewObject($this->m_sClass);
@@ -731,18 +705,17 @@ class BulkChange
 		//
 		if ($oChange)
 		{
-			$oTargetObj::SetCurrentChange($oChange);
 			$newID = $oTargetObj->DBInsert();
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
-			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = new CellStatus_Void($newID);
 		}
 		else
 		{
-			$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
-			$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
-			$aResult[$iRow]["id"] = new CellStatus_Void(0);
+			$newID = 0;
 		}
+
+		$aResult[$iRow]["__STATUS__"] = new RowStatus_NewObj();
+		$aResult[$iRow]["finalclass"] = get_class($oTargetObj);
+		$aResult[$iRow]["id"] = new CellStatus_Void($newID);
+
 		return $oTargetObj;
 	}
 
@@ -786,7 +759,6 @@ class BulkChange
 			{
 				try
 				{
-					$oTargetObj::SetCurrentChange($oChange);
 					$oTargetObj->DBUpdate();
 				}
 				catch(CoreException $e)
@@ -852,6 +824,11 @@ class BulkChange
 	
 	public function Process(CMDBChange $oChange = null)
 	{
+		if ($oChange)
+		{
+			CMDBObject::SetCurrentChange($oChange);
+		}
+
 		// Note: $oChange can be null, in which case the aim is to check what would be done
 
 		// Debug...
@@ -921,7 +898,7 @@ class BulkChange
 								{
 									// Leave the cell unchanged
 									$aResult[$iRow]["__STATUS__"]= new RowStatus_Issue(Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
-									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, $this->m_aData[$iRow][$iCol], Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
+									$aResult[$iRow][$sAttCode] = new CellStatus_Issue(null, utils::HtmlEntities($this->m_aData[$iRow][$iCol]), Dict::S('UI:CSVReport-Row-Issue-DateFormat'));
 								}
 							}
 						}
@@ -944,7 +921,7 @@ class BulkChange
 		$iLoopTimeLimit = MetaModel::GetConfig()->Get('max_execution_time_per_loop');
 		foreach($this->m_aData as $iRow => $aRowData)
 		{
-			set_time_limit($iLoopTimeLimit);
+			set_time_limit(intval($iLoopTimeLimit));
 			if (isset($aResult[$iRow]["__STATUS__"]))
 			{
 				// An issue at the earlier steps - skip the rest
@@ -1063,13 +1040,13 @@ class BulkChange
 				$iObj = $oObj->GetKey();
 				if (!in_array($iObj, $aVisited))
 				{
-					set_time_limit($iLoopTimeLimit);
+					set_time_limit(intval($iLoopTimeLimit));
 					$iRow++;
 					$this->UpdateMissingObject($aResult, $iRow, $oObj, $oChange);
 				}
 			}
 		}
-		set_time_limit($iPreviousTimeLimit);
+		set_time_limit(intval($iPreviousTimeLimit));
 
 		// Fill in the blanks - the result matrix is expected to be 100% complete
 		//
@@ -1079,7 +1056,7 @@ class BulkChange
 			{
 				if (!array_key_exists($iCol, $aResult[$iRow]))
 				{
-					$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+					$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 				}
 			}
 			foreach($this->m_aExtKeys as $sAttCode => $aForeignAtts)
@@ -1093,7 +1070,7 @@ class BulkChange
 					if (!array_key_exists($iCol, $aResult[$iRow]))
 					{
 						// The foreign attribute is one of our reconciliation key
-						$aResult[$iRow][$iCol] = new CellStatus_Void($aRowData[$iCol]);
+						$aResult[$iRow][$iCol] = new CellStatus_Void(utils::HtmlEntities($aRowData[$iCol]));
 					}
 				}
 			}
@@ -1206,25 +1183,22 @@ class BulkChange
 				$oPage->add('<p>'.$sCollapsedLabel.'&nbsp;&nbsp;<a class="truncated" onclick="OnTruncatedHistoryToggle(true);">'.$sLinkLabel.'</p>');
 
 				$oPage->add_ready_script(
-<<<EOF
+					<<<EOF
 	$('#$sAjaxDivId table.listResults').addClass('truncated');
 	$('#$sAjaxDivId table.listResults tr:last td').addClass('truncated');
 EOF
 				);
 
-				
+
 				$sAppContext = $oAppContext->GetForLink();
 				$oPage->add_script(
-<<<EOF
+					<<<EOF
 	function OnTruncatedHistoryToggle(bShowAll)
 	{
 		$('#csv_history_reload').html('<img src="../images/indicator.gif"/>');
 		$.get(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?{$sAppContext}', {operation: 'displayCSVHistory', showall: bShowAll}, function(data)
 			{
 				$('#$sAjaxDivId').html(data);
-				var table = $('#$sAjaxDivId .listResults');
-				table.tableHover(); // hover tables
-				table.tablesorter( { widgets: ['myZebra', 'truncatedList']} ); // sortable and zebra tables
 			}
 		);
 	}

@@ -1,19 +1,22 @@
 @CHARSET "UTF-8";
 
+*, ::before, ::after {
+	box-sizing: content-box;
+}
+
 html,body {
 	height: 100%;
 }
 
 h1 {
 	color: #1C94C4;
-	font-size: 16pt;
+	font-size: 1.83rem;
 }
 
 a {
 	text-decoration: none;
 	color: #1c94c4;
 	font-family: Tahoma, Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
 }
 
 a:hover {
@@ -27,11 +30,14 @@ a:hover {
 }
 
 #login-body {
-	background: #eee;
+	background: #E1E7EC;
 	margin: 0;
 	padding: 0;
 	height: 100%;
 	position: relative;
+	font-size: 1rem;
+	font-family: "Raleway";
+	font-weight: 500;
 }
 
 #login-header {
@@ -60,7 +66,7 @@ a:hover {
 #login-content {
 	padding: 20px;
 	background-color: #fff;
-	border: 2px solid #CBD2D9;
+	border: 2px solid #CCD4DB;
 	border-radius: 4px;
 	margin-top: 224px;
 }
@@ -80,6 +86,7 @@ a:hover {
 
 #login-logo img {
 	border: 0;
+	max-height: 54px;
 }
 
 #login-form {
@@ -97,7 +104,6 @@ a:hover {
 	width: 70%;
 	margin-left: 15%;
 	color: #37322f;
-	font-size: 12px;
 	margin-top: 10px;
 }
 
@@ -106,10 +112,9 @@ a:hover {
 }
 
 #login-form-content .divider hr {
-	margin-left:auto;
-	margin-right:auto;
+	margin: 0.5rem auto;
 	width:40%;
-	color: #eee;
+	background-color: #E1E7EC;
 }
 
 #login-form-content .divider hr.left {
@@ -123,19 +128,6 @@ a:hover {
 #login-input > div {
 	text-align: left;
 	margin-top: 10px;
-}
-
-#login-input input {
-	background-color: #fff;
-	height: 2em;
-	padding: 0.1em 1em;
-	border: solid 2px #DDD;
-	border-radius: 0.25em;
-	width: calc(100% - 2em - 4px);
-}
-
-#login-input input:focus {
-	border-color: #A0AEC0;
 }
 
 #login-additional-controls > div {
@@ -164,17 +156,17 @@ a:hover {
 	width: 100%;
 }
 
-#login-submit input.login-submit-secondary {
+#login-submit input.login-submit-secondary, #forgot_pwd_sent input.forgot_pwd_done {
 	background-color: #e0e0e0;
 	color: #333a4b;
 }
 
-#login-submit input {
-	background-color: #333a4b;
+#login-submit input, #forgot_pwd_sent input{
+	background-color: #404B5A;
 	padding: 0.1em 1em;
 	border-radius: 0.25em;
 	width: 100%;
-	color: #eee;
+	color: #E1E7EC;
 	border: 0;
 	height: 2.2em;
 	margin-top: 10px;
@@ -188,7 +180,9 @@ a:hover {
 .v-spacer {
 	padding-top: 1em;
 }
-
+#login-sso-buttons{
+	padding: 0 10px;
+}
 .sso-button {
 	margin: 5px 0px;
 	position: relative;
@@ -217,3 +211,19 @@ a:hover {
 	margin-bottom: auto;
 }
 
+#login-input .invalid input{
+	border-color: #F56565;
+}
+
+
+#login-input .invalid .message, #login-submit.invalid .message {
+	color: #F56565;
+	display: inline-block;
+	padding: 5px;
+}
+
+#forgot_pwd_sent{
+	margin-left: 15%;
+	width: 70%;
+}
+	

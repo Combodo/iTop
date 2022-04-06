@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -26,22 +26,38 @@ $(function()
 	$.widget( 'itop.portal_form_handler', $.itop.form_handler,
 	{
 		options: {
-			submit_url: null,
-			cancel_url: null
+			base_url: null,     // Base URL of the application
+			submit_url: null,   // Deprecated. We kept those properties to preserve compatibility with extensions
+			cancel_url: null,   // but you should start using xxx_rule.url as soon as possible.
+			submit_rule: {
+				category: 'redirect',
+				url: null,
+				modal: false,
+				timeout_duration: 400,
+			},
+			cancel_rule: {
+				category: 'close',
+				url: null,
+				modal: false,
+			},
 		},
 		
 		// the constructor
 		_create: function()
 		{
-			this.element
-			.addClass('portal_form_handler');
+			this.element.addClass('portal_form_handler');
 	
 			// Safe check for options
-			if(this.options.submit_url === "")
-				this.options.submit_url = null;
-			if(this.options.cancel_url === "")
-				this.options.cancel_url = null;
-			
+			if(this.options.submit_rule.url === '')
+				this.options.submit_rule.url = null;
+			if(this.options.cancel_rule.url === '')
+				this.options.cancel_rule.url = null;
+			// Deprecated, see this.options.submit_url
+			if((this.options.submit_url !== null) && (this.options.submit_url !== ''))
+				this.options.submit_rule.url = this.options.submit_url;
+			if((this.options.cancel_url !== null) && (this.options.cancel_url !== ''))
+				this.options.cancel_rule.url = this.options.cancel_url;
+
 			this._super();
 		},
    
@@ -125,6 +141,36 @@ $(function()
 							me.element.find('.form_field').removeClass('has-success has-warning has-error');
 							me.element.find('.form_field .help-block').html('');
 
+							// Determine where we go in case validation is successful
+							var sRuleType = me.options.submit_rule.category;
+							var bRedirectInModal = me.options.submit_rule.modal;
+							var iRedirectTimeout = me.options.submit_rule.timeout_duration;
+							var sRedirectUrl = me.options.submit_rule.url;
+							// - The validation might want us to be redirect elsewhere
+							if(oValidation.valid)
+							{
+								// Checking if we have to redirect to another page
+								// Typically this happens when applying a stimulus, we redirect to the transition form
+								// This code let the ajax response override the initial parameters
+								if(oValidation.redirection !== undefined)
+								{
+									var oRedirection = oValidation.redirection;
+									if(oRedirection.modal !== undefined)
+									{
+										bRedirectInModal = oRedirection.modal;
+									}
+									if(oRedirection.url !== undefined)
+									{
+										sRedirectUrl = oRedirection.url;
+									}
+									if(oRedirection.timeout_duration !== undefined)
+									{
+										iRedirectTimeout = oRedirection.timeout_duration;
+									}
+									sRuleType = 'redirect';
+								}
+							}
+
 							// For each type of messages (error, warning, success)...
 							for(var sMessageType in oMessages)
 							{
@@ -143,13 +189,50 @@ $(function()
 									}
 									else
 									{
-										oHelpBlock = me.element.find('.form_alerts .alert.alert-' + sMessageType);
-										oHelpBlock.show();
+										// Success messages are displayed out of the form as it will be closed
+										if(sMessageType === 'success')
+										{
+											// If not redirecting in a modal, will be set as session message
+											if((sRuleType === 'redirect') && (bRedirectInModal === false) && (sRedirectUrl !== null))
+											{
+												oHelpBlock = null;
+											}
+											// Otherwise, display it in main page
+											else
+											{
+												oHelpBlock = $('#session-messages');
+											}
+										}
+										// Warning and error messages are displayed in the form
+										else
+										{
+											oHelpBlock = me.element.find('.form_alerts .alert.alert-' + sMessageType);
+											oHelpBlock.show();
+										}
 									}
 									// ... add the message to its help block
 									for(var i in oMessages[sMessageType][sFieldId])
 									{
-										oHelpBlock.append($('<p>' + oMessages[sMessageType][sFieldId][i] + '</p>'));
+										var sMessageContent = oMessages[sMessageType][sFieldId][i];
+										if(oHelpBlock === null)
+										{
+											$.post(
+												// Note: We might want to expose some routes directly in JS to ease their use
+												GetAddSessionMessageUrl(),
+												{
+													sSeverity: sMessageType,
+													sContent: sMessageContent,
+												}
+											);
+										}
+										else if(oHelpBlock.attr('id') === 'session-messages')
+										{
+											oHelpBlock.append($('<div class="alert alert-dismissible alert-' + sMessageType + '" data-object-class="' + oData.form.object_class + '" data-object-id="' + oData.form.object_id + '"><button type="button" class="close" data-dismiss="alert" aria-label="X"><span class="fas fa-times"></span></button>' + sMessageContent + '</div>'));
+										}
+										else
+										{
+											oHelpBlock.append($('<p>' + sMessageContent + '</p>'));
+										}
 									}
 								}
 							}
@@ -157,72 +240,20 @@ $(function()
 							// Scrolling to top so the user can see messages
 							$('body').scrollTop(0);
 						
-							// If everything is okay, we close the form and reload it.
+							// If everything is okay, we close the form and apply the submit rule.
 							if(oValidation.valid)
 							{
-								
 								$('body').trigger('unregister_blocker.portal.itop', {'sBlockerId': me.element.attr('id')});
-								
-								if(me.options.is_modal)
-								{
-									me.element.closest('.modal').modal('hide');
-								}
 
 								// Checking if we have to redirect to another page
-								if(oValidation.redirection !== undefined)
+								if(sRuleType === 'redirect')
 								{
-									var oRedirection = oValidation.redirection;
-									var bRedirectionAjax = (oRedirection.ajax !== undefined) ? oRedirection.ajax : false;
-									var sUrl = null;
-
-									// URL priority order :
-									// redirection.url > me.option.submit_url > redirection.alternative_url
-									if(oRedirection.url !== undefined)
-									{
-										sUrl = oRedirection.url;
-									}
-									else if(me.options.submit_url !== null)
-									{
-										sUrl = me.options.submit_url;
-									}
-									else if(oRedirection.alternative_url !== undefined)
-									{
-										sUrl = oRedirection.alternative_url;
-									}
-
-									if(sUrl !== null)
-									{
-										if(bRedirectionAjax)
-										{
-											// Creating a new modal
-											CombodoPortalToolbox.OpenModal({
-												content: {
-													endpoint: sUrl,
-													data: {
-														// Passing form manager data to the next page, just in case it needs it (eg. when applying stimulus)
-														formmanager_class: me.options.formmanager_class,
-														formmanager_data: JSON.stringify(me.options.formmanager_data)
-													},
-												},
-											});
-										}
-										else
-										{
-											// Showing loader while redirecting, otherwise user tend to click somewhere in the page.
-											// Note : We use a timeout because .always() is called right after here and will hide the loader
-											setTimeout(function(){ me._disableFormBeforeLoading(); }, 50);
-											// Redirecting after a few ms so the user can see what happend
-											setTimeout(function() { location.href = sUrl; }, 400);
-										}
-									}
+									me._applyRedirectRule(sRedirectUrl, bRedirectInModal, iRedirectTimeout);
 								}
-								else if(me.options.submit_url !== null)
+								// Close rule only needs to be applied to non modal forms (modal is always closed on submit)
+								else if(sRuleType === 'close')
 								{
-									// Showing loader while redirecting, otherwise user tend to click somewhere in the page.
-									// Note : We use a timeout because .always() is called right after here and will hide the loader
-									setTimeout(function(){ me._disableFormBeforeLoading(); }, 50);
-									// Redirecting after a few ms so the user can see what happend
-									setTimeout(function() { location.href = me.options.submit_url; }, 400);
+									me._applyCloseRule();
 								}
 							}
 						}
@@ -269,38 +300,31 @@ $(function()
 					},
 					function(oData)
 					{
-						if(me.options.cancel_url !== null)
+						if(me.options.cancel_rule.category === 'redirect')
 						{
-							location.href = me.options.cancel_url;
+							me._applyRedirectRule(me.options.cancel_rule.url, me.options.cancel_rule.modal);
+						}
+						else if(me.options.cancel_rule.category === 'close')
+						{
+							me._applyCloseRule();
 						}
 					}
 				)
-				.always(function(){
-					// Close the modal only if fields had to be cancelled
-					if(me.options.is_modal)
-					{
-						me.element.closest('.modal').modal('hide');
-					}
+				.always(function()
+				{
 					me._enableFormAfterLoading();
 				});
 			}
 			// Otherwise we can close the modal immediately
 			else
 			{
-				if(me.options.cancel_url !== null)
+				if(me.options.cancel_rule.category === 'redirect')
 				{
-					location.href = me.options.cancel_url;
+					me._applyRedirectRule(me.options.cancel_rule.url, me.options.cancel_rule.modal);
 				}
-				else
+				else if(me.options.cancel_rule.category === 'close')
 				{
-					if(me.options.is_modal)
-					{
-						me.element.closest('.modal').modal('hide');
-					}
-					else
-					{
-						location.reload();
-					}
+					me._applyCloseRule();
 				}
 			}
 		},
@@ -342,6 +366,61 @@ $(function()
 		_enableFormAfterLoading: function()
 		{
 			$('#page_overlay').fadeOut(200);
+		},
+		_applyRedirectRule: function(sRedirectUrl, bRedirectInModal, iRedirectTimeout)
+		{
+			var me = this;
+
+			//optional argument
+			iRedirectTimeout = (typeof iRedirectTimeout !== 'undefined' && iRedirectTimeout != null ) ? iRedirectTimeout : 400;
+
+			// Always close current modal
+			if(this.options.is_modal)
+			{
+				this.element.closest('.modal').modal('hide');
+			}
+
+			if(sRedirectUrl !== null)
+			{
+				if(bRedirectInModal === true)
+				{
+					// Creating a new modal
+					CombodoPortalToolbox.OpenModal({
+						content: {
+							endpoint: sRedirectUrl,
+							data: {
+								// Passing form manager data to the next page, just in case it needs it (eg. when applying stimulus)
+								formmanager_class: this.options.formmanager_class,
+								formmanager_data: JSON.stringify(this.options.formmanager_data)
+							},
+						},
+					});
+				}
+				else
+				{
+					// Showing loader while redirecting, otherwise user tend to click somewhere in the page.
+					// Note: We use a timeout because .always() is called right after here and will hide the loader
+					setTimeout(function(){ me._disableFormBeforeLoading(); }, 50);
+					// Redirecting after a few ms so the user can see what happened
+					setTimeout(function() { location.href = sRedirectUrl; }, iRedirectTimeout);
+				}
+			}
+		},
+		_applyCloseRule: function()
+		{
+			if(this.options.is_modal)
+			{
+				this.element.closest('.modal').modal('hide');
+			}
+			else
+			{
+				// Try to close the window
+				window.close();
+
+				// In some browser (eg. Firefox 70), window won't close if it has NOT been open by JS. In that case, we try to redirect to homepage as a fallback.
+				var sHomepageUrl = (this.options.base_url !== null) ? this.options.base_url : $('#sidebar .menu .brick_menu_item:first a').attr('href')
+				window.location.href = sHomepageUrl;
+			}
 		},
 		submit: function(oEvent)
 		{

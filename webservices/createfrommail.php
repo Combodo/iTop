@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -84,11 +84,8 @@ function CreateTicket($sSenderEmail, $sSubject, $sBody)
 			$oTicket->Set('workgroup_id', DEFAULT_WORKGROUP_ID); // Same as above...
 
 			// Record the change information about the object
-			$oMyChange = MetaModel::NewObject("CMDBChange");
-			$oMyChange->Set("date", time());
 			$sUserString = $oContact->GetName().', submitted by email';
-			$oMyChange->Set("userinfo", $sUserString);
-			$oTicket::SetCurrentChange($oMyChange);
+			CMDBObject::SetTrackInfo($sUserString);
 			$oTicket->DBInsert();
 		}
 		else

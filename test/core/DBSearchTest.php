@@ -1,5 +1,5 @@
 <?php
-// Copyright (c) 2010-2018 Combodo SARL
+// Copyright (c) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -37,6 +37,7 @@ use FunctionExpression;
 
 
 /**
+ * @group itopStorageMgmt
  * Tests of the DBSearch class.
  * <ul>
  * <li>MakeGroupByQuery</li>
@@ -56,9 +57,13 @@ class DBSearchTest extends ItopDataTestCase
 	protected function setUp()
 	{
 		parent::setUp();
+
+		require_once(APPROOT.'application/itopwebpage.class.inc.php');
+		require_once(APPROOT.'application/displayblock.class.inc.php');
 	}
 
 	/**
+	 * @group itopRequestMgmt
 	 * @dataProvider UReqProvider
 	 * @param $iOrgNb
 	 * @param $iPersonNb
@@ -482,6 +487,7 @@ class DBSearchTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopRequestMgmt
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 */
@@ -614,7 +620,7 @@ class DBSearchTest extends ItopDataTestCase
 			$sExceptionClass = get_class($e);
 		}
 
-		static::assertEquals('OQLParserException', $sExceptionClass);
+		static::assertEquals('OQLParserSyntaxErrorException', $sExceptionClass);
 	}
 
 	public function testSanity_GroupFunction_In_GroupByPart()
@@ -630,7 +636,7 @@ class DBSearchTest extends ItopDataTestCase
 			$sExceptionClass = get_class($e);
 		}
 
-		static::assertEquals('OQLParserException', $sExceptionClass);
+		static::assertEquals('OQLParserSyntaxErrorException', $sExceptionClass);
 	}
 
 	public function testSanity_UnknownGroupFunction_In_SelectPart()
@@ -656,4 +662,87 @@ class DBSearchTest extends ItopDataTestCase
 		static::assertEquals('', $sExceptionClass);
 	}
 
+	/**
+	 * @group itopRequestMgmt
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function testSelectInWithVariableExpressions()
+	{
+		$aReq = array(array(1, 0, 0), array(1, 1, 3), array(1, 2, 1), array(1, 0, 1), array(1, 1, 0), array(1, 2, 1));
+		$sOrgs = $this->init_db(3, 4, $aReq);
+		$allOrgIds = explode(",", $sOrgs);
+
+		$TwoOrgIdsOnly = array($allOrgIds[0], $allOrgIds[1]);
+		$oSearch = DBSearch::FromOQL("SELECT UserRequest WHERE org_id IN (:org_ids)");
+		self::assertNotNull($oSearch);
+		$oSet = new \CMDBObjectSet($oSearch, array(), array('org_ids' => $TwoOrgIdsOnly));
+		static::assertEquals(4, $oSet->Count());
+
+		// Content now generated with ajax call
+		//		$_SERVER['REQUEST_URI'] = 'FAKE_REQUEST_URI';
+		//		$_SERVER['REQUEST_METHOD'] = 'FAKE_REQUEST_METHOD';
+		//		$oP = new \iTopWebPage("test");
+		//		$oBlock = new \DisplayBlock($oSet->GetFilter(), 'list', false);
+		//		$oHtml = $oBlock->GetDisplay($oP, 'package_table', array('menu' => true, 'display_limit' => false));
+		//		$sHtml = BlockRenderer::RenderBlockTemplate($oHtml);
+		//
+		//		$iHtmlUserRequestLineCount = substr_count($sHtml, '<tr><td  data-object-class="UserRequest"');
+		//		static::assertEquals(4, $iHtmlUserRequestLineCount, "Failed Generated html :".$sHtml);
+
+		// As using $oP we added some content in the PHP buffer, we need to empty it !
+		// Otherwise PHPUnit will throw the error : "Test code or tested code did not (only) close its own output buffers"
+		// Previously we were using a output() call but this is time consuming and could cause "risky test" error !
+		// ob_get_clean();
+	}
+
+	/**
+	 * @since 2.7.2 3.0.0 N°3324
+	 */
+	public function testAllowAllData() {
+		$oSimpleSearch = \DBObjectSearch::FromOQL('SELECT FunctionalCI');
+		$oSimpleSearch->AllowAllData(false);
+		self::assertFalse($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
+		$oSimpleSearch->AllowAllData(true);
+		self::assertTrue($oSimpleSearch->IsAllDataAllowed(), 'DBSearch AllowData value');
+
+		$sNestedQuery = 'SELECT FunctionalCI WHERE id IN (SELECT Server)';
+		$this->CheckNestedSearch($sNestedQuery, true);
+		$this->CheckNestedSearch($sNestedQuery, false);
+	}
+
+	private function CheckNestedSearch($sQuery, $bAllowAllData) {
+		$oNestedQuerySearch = \DBObjectSearch::FromOQL($sQuery);
+		$oNestedQuerySearch->AllowAllData($bAllowAllData);
+		self::assertEquals($bAllowAllData, $oNestedQuerySearch->IsAllDataAllowed(), 'root DBSearch AllowData value');
+		$oNestedSearchInExpression = null;
+		$oNestedQuerySearch->GetCriteria()->Browse(function ($oExpression) use (&$oNestedSearchInExpression) {
+			if ($oExpression instanceof \NestedQueryExpression) {
+				$oNestedSearchInExpression = $oExpression->GetNestedQuery();
+
+				return;
+			}
+		});
+		self::assertNotNull($oNestedSearchInExpression, 'We must have a DBSearch inside a NestedQueryExpression inside the root DBSearch');
+		/** @var \DBObjectSearch $oNestedSearchInExpression */
+		self::assertEquals($bAllowAllData, $oNestedSearchInExpression->IsAllDataAllowed(), 'Nested DBSearch AllowData value');
+	}
+
+	/**
+	 * BUG N°4031 check AttributeObjectKey used in JOIN condition
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \OQLException
+	 */
+	public function testAttributeObjectKey()
+	{
+		$sQuery = "SELECT II FROM InlineImage AS II JOIN UserRequest AS UR ON II.item_id = UR.id WHERE II.item_class = 'UserRequest'";
+		$oSearch = \DBObjectSearch::FromOQL($sQuery);
+		$oSearch->MakeSelectQuery();
+		self::assertTrue(true);
+	}
 }

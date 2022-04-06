@@ -17,6 +17,8 @@ use MetaModel;
 use TagSetFieldData;
 
 /**
+ * @group itopFaqLight
+ *
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
@@ -102,6 +104,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
@@ -119,17 +122,8 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oObjWithTagSet->DBWrite();
 
 		// Try to delete the tag, must complain !
-		try
-		{
-			$oTagData->DBDelete();
-		} catch (DeleteException $e)
-		{
-			static::assertTrue(true);
-
-			return;
-		}
-		// Should not pass here
-		static::assertFalse(true);
+		$this->expectException(DeleteException::class);
+		$oTagData->DBDelete();
 	}
 
 	/**
@@ -199,6 +193,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * Test that tag code cannot be modified if used
 	 *
 	 * @throws \CoreException
@@ -217,19 +212,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		$oObjWithTagSet->DBWrite();
 
 		// Try to change the code of the tag, must complain !
-		try
-		{
-			$oTagData->Set('code', 'tag1');
-			$oTagData->DBWrite();
-
-		} catch (CoreException $e)
-		{
-			static::assertTrue(true);
-
-			return;
-		}
-		// Should not pass here
-		static::assertFalse(true);
+		$oTagData->Set('code', 'tag1');
+		$this->expectException(CoreException::class);
+		$oTagData->DBWrite();
 	}
 
 	/**
@@ -263,6 +248,9 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		static::assertFalse(true);
 	}
 
+	/**
+	 * @group itopFaqLight
+	 */
 	public function testMaxTagsAllowed()
 	{
 		/** @var \AttributeTagSet $oAttDef */

@@ -1,0 +1,18 @@
+{% apply spaceless %}
+    <div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.HasIcon() %}ibo-has-icon{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}" data-role="ibo-title">
+        {% if oUIBlock.HasIcon() %}
+            <div class="ibo-title--icon">
+                <div class="ibo-title--icon-background ibo-title--icon-background--must-{{ oUIBlock.GetIconCoverMethod() }} ibo-title--icon-level-{{ oUIBlock.GetLevel() }}" style="background-image: url('{{ oUIBlock.GetIconUrl()|raw }}');"></div>
+            </div>
+        {% endif %}
+        <div class="ibo-title--content">
+            {% block iboPageTitleText %}
+                <h{{ oUIBlock.GetLevel() }} class="ibo-title--text is-size-{{ oUIBlock.GetLevel() + 2 }}">
+                    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+                        {{ render_block(oSubBlock, {aPage: aPage}) }}
+                    {% endfor %}
+                </h{{ oUIBlock.GetLevel() }}>
+            {% endblock %}
+        </div>
+    </div>
+{% endapply %}

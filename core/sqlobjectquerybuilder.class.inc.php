@@ -2,7 +2,7 @@
 /**
  * Class SQLObjectQueryBuilder
  *
- * @copyright   Copyright (C) 2010-2019 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -92,14 +92,7 @@ class SQLObjectQueryBuilder
 	 */
 	private function GetOQLClassTree($oBuild)
 	{
-		$oOQLClassTreeBuilder = new OQLClassTreeBuilder($this->oDBObjetSearch, $oBuild);
-		$oOQLClassNode = $oOQLClassTreeBuilder->DevelopOQLClassNode();
-		$oOQLClassTreeOptimizer = new OQLClassTreeOptimizer($oOQLClassNode, $oBuild);
-		$oOQLClassTreeOptimizer->OptimizeClassTree();
-		$oOQLActualClassTreeResolver = new OQLActualClassTreeResolver($oOQLClassNode, $oBuild);
-		$oOQLClassNode = $oOQLActualClassTreeResolver->Resolve();
-
-		return $oOQLClassNode;
+		return OQLClassTreeBuilder::GetOQLClassTree($this->oDBObjetSearch, $oBuild);
 	}
 
 	/**
@@ -246,24 +239,16 @@ class SQLObjectQueryBuilder
 				continue;
 			}
 			$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-			foreach ($oAttDef->GetSQLExpressions() as $sColId => $sSQLExpr)
+			$oFieldSQLExp = new FieldExpressionResolved($oAttDef->GetSQLExpressions(), $sClassAlias);
+			/**
+			 * @var string $sPluginClass
+			 * @var iQueryModifier $oQueryModifier
+			 */
+			foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
 			{
-				if (!empty($sColId))
-				{
-					// Multi column attributes
-					$oBuild->m_oQBExpressions->AddSelect($sSelectedClassAlias.$sAttCode.$sColId, new FieldExpression($sAttCode.$sColId, $sClassAlias));
-				}
-				$oFieldSQLExp = new FieldExpressionResolved($sSQLExpr, $sClassAlias);
-				/**
-				 * @var string $sPluginClass
-				 * @var iQueryModifier $oQueryModifier
-				 */
-				foreach (MetaModel::EnumPlugins('iQueryModifier') as $sPluginClass => $oQueryModifier)
-				{
-					$oFieldSQLExp = $oQueryModifier->GetFieldExpression($oBuild, $sClass, $sAttCode, $sColId, $oFieldSQLExp, $oBaseSQLQuery);
-				}
-				$aTranslation[$sClassAlias][$sAttCode.$sColId] = $oFieldSQLExp;
+				$oFieldSQLExp = $oQueryModifier->GetFieldExpression($oBuild, $sClass, $sAttCode, '', $oFieldSQLExp, $oBaseSQLQuery);
 			}
+			$aTranslation[$sClassAlias][$sAttCode] = $oFieldSQLExp;
 		}
 
 		// Translate the selected columns

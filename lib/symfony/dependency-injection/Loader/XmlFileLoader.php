@@ -76,7 +76,7 @@ class XmlFileLoader extends FileLoader
             return false;
         }
 
-        if (null === $type && 'xml' === pathinfo($resource, PATHINFO_EXTENSION)) {
+        if (null === $type && 'xml' === pathinfo($resource, \PATHINFO_EXTENSION)) {
             return true;
         }
 
@@ -170,7 +170,7 @@ class XmlFileLoader extends FileLoader
 
         foreach ($defaults['tags'] as $tag) {
             if ('' === $tag->getAttribute('name')) {
-                throw new InvalidArgumentException(sprintf('The tag name for tag "<defaults>" in %s must be a non-empty string.', $file));
+                throw new InvalidArgumentException(sprintf('The tag name for tag "<defaults>" in "%s" must be a non-empty string.', $file));
             }
         }
 
@@ -278,7 +278,7 @@ class XmlFileLoader extends FileLoader
             $definition->setDeprecated(true, $deprecated[0]->nodeValue ?: null);
         }
 
-        $definition->setArguments($this->getArgumentsAsPhp($service, 'argument', $file, false, $definition instanceof ChildDefinition));
+        $definition->setArguments($this->getArgumentsAsPhp($service, 'argument', $file, $definition instanceof ChildDefinition));
         $definition->setProperties($this->getArgumentsAsPhp($service, 'property', $file));
 
         if ($factories = $this->getChildren($service, 'factory')) {
@@ -336,7 +336,7 @@ class XmlFileLoader extends FileLoader
             }
 
             if ('' === $tag->getAttribute('name')) {
-                throw new InvalidArgumentException(sprintf('The tag name for service "%s" in %s must be a non-empty string.', (string) $service->getAttribute('id'), $file));
+                throw new InvalidArgumentException(sprintf('The tag name for service "%s" in "%s" must be a non-empty string.', (string) $service->getAttribute('id'), $file));
             }
 
             $definition->addTag($tag->getAttribute('name'), $parameters);
@@ -378,7 +378,7 @@ class XmlFileLoader extends FileLoader
         try {
             $dom = XmlUtils::loadFile($file, [$this, 'validateSchema']);
         } catch (\InvalidArgumentException $e) {
-            throw new InvalidArgumentException(sprintf('Unable to parse file "%s": %s', $file, $e->getMessage()), $e->getCode(), $e);
+            throw new InvalidArgumentException(sprintf('Unable to parse file "%s": ', $file).$e->getMessage(), $e->getCode(), $e);
         }
 
         $this->validateExtensions($dom, $file);
@@ -423,7 +423,7 @@ class XmlFileLoader extends FileLoader
         // anonymous services "in the wild"
         if (false !== $nodes = $xpath->query('//container:services/container:service[not(@id)]')) {
             foreach ($nodes as $node) {
-                @trigger_error(sprintf('Top-level anonymous services are deprecated since Symfony 3.4, the "id" attribute will be required in version 4.0 in %s at line %d.', $file, $node->getLineNo()), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Top-level anonymous services are deprecated since Symfony 3.4, the "id" attribute will be required in version 4.0 in %s at line %d.', $file, $node->getLineNo()), \E_USER_DEPRECATED);
 
                 // give it a unique name
                 $id = sprintf('%d_%s', ++$count, preg_replace('/^.*\\\\/', '', $node->getAttribute('class')).$suffix);
@@ -452,11 +452,10 @@ class XmlFileLoader extends FileLoader
      *
      * @param string $name
      * @param string $file
-     * @param bool   $lowercase
      *
      * @return mixed
      */
-    private function getArgumentsAsPhp(\DOMElement $node, $name, $file, $lowercase = true, $isChildDefinition = false)
+    private function getArgumentsAsPhp(\DOMElement $node, $name, $file, $isChildDefinition = false)
     {
         $arguments = [];
         foreach ($this->getChildren($node, $name) as $arg) {
@@ -493,7 +492,7 @@ class XmlFileLoader extends FileLoader
                         throw new InvalidArgumentException(sprintf('Tag "<%s>" with type="service" has no or empty "id" attribute in "%s".', $name, $file));
                     }
                     if ($arg->hasAttribute('strict')) {
-                        @trigger_error(sprintf('The "strict" attribute used when referencing the "%s" service is deprecated since Symfony 3.3 and will be removed in 4.0.', $arg->getAttribute('id')), E_USER_DEPRECATED);
+                        @trigger_error(sprintf('The "strict" attribute used when referencing the "%s" service is deprecated since Symfony 3.3 and will be removed in 4.0.', $arg->getAttribute('id')), \E_USER_DEPRECATED);
                     }
 
                     $arguments[$key] = new Reference($arg->getAttribute('id'), $invalidBehavior);
@@ -506,10 +505,10 @@ class XmlFileLoader extends FileLoader
                     $arguments[$key] = new Expression($arg->nodeValue);
                     break;
                 case 'collection':
-                    $arguments[$key] = $this->getArgumentsAsPhp($arg, $name, $file, false);
+                    $arguments[$key] = $this->getArgumentsAsPhp($arg, $name, $file);
                     break;
                 case 'iterator':
-                    $arg = $this->getArgumentsAsPhp($arg, $name, $file, false);
+                    $arg = $this->getArgumentsAsPhp($arg, $name, $file);
                     try {
                         $arguments[$key] = new IteratorArgument($arg);
                     } catch (InvalidArgumentException $e) {
@@ -578,7 +577,7 @@ class XmlFileLoader extends FileLoader
                     $path = str_replace([$ns, str_replace('http://', 'https://', $ns)], str_replace('\\', '/', $extension->getXsdValidationBasePath()).'/', $items[$i + 1]);
 
                     if (!is_file($path)) {
-                        throw new RuntimeException(sprintf('Extension "%s" references a non-existent XSD file "%s"', \get_class($extension), $path));
+                        throw new RuntimeException(sprintf('Extension "%s" references a non-existent XSD file "%s".', \get_class($extension), $path));
                     }
 
                     $schemaLocations[$items[$i]] = $path;
@@ -621,9 +620,13 @@ $imports
 EOF
         ;
 
-        $disableEntities = libxml_disable_entity_loader(false);
-        $valid = @$dom->schemaValidateSource($source);
-        libxml_disable_entity_loader($disableEntities);
+        if (\LIBXML_VERSION < 20900) {
+            $disableEntities = libxml_disable_entity_loader(false);
+            $valid = @$dom->schemaValidateSource($source);
+            libxml_disable_entity_loader($disableEntities);
+        } else {
+            $valid = @$dom->schemaValidateSource($source);
+        }
 
         foreach ($tmpfiles as $tmpfile) {
             @unlink($tmpfile);
@@ -641,13 +644,13 @@ EOF
     {
         foreach ($alias->attributes as $name => $node) {
             if (!\in_array($name, ['alias', 'id', 'public'])) {
-                @trigger_error(sprintf('Using the attribute "%s" is deprecated for the service "%s" which is defined as an alias in "%s". Allowed attributes for service aliases are "alias", "id" and "public". The XmlFileLoader will raise an exception in Symfony 4.0, instead of silently ignoring unsupported attributes.', $name, $alias->getAttribute('id'), $file), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using the attribute "%s" is deprecated for the service "%s" which is defined as an alias in "%s". Allowed attributes for service aliases are "alias", "id" and "public". The XmlFileLoader will raise an exception in Symfony 4.0, instead of silently ignoring unsupported attributes.', $name, $alias->getAttribute('id'), $file), \E_USER_DEPRECATED);
             }
         }
 
         foreach ($alias->childNodes as $child) {
             if ($child instanceof \DOMElement && self::NS === $child->namespaceURI) {
-                @trigger_error(sprintf('Using the element "%s" is deprecated for the service "%s" which is defined as an alias in "%s". The XmlFileLoader will raise an exception in Symfony 4.0, instead of silently ignoring unsupported elements.', $child->localName, $alias->getAttribute('id'), $file), E_USER_DEPRECATED);
+                @trigger_error(sprintf('Using the element "%s" is deprecated for the service "%s" which is defined as an alias in "%s". The XmlFileLoader will raise an exception in Symfony 4.0, instead of silently ignoring unsupported elements.', $child->localName, $alias->getAttribute('id'), $file), \E_USER_DEPRECATED);
             }
         }
     }
@@ -669,7 +672,7 @@ EOF
             // can it be handled by an extension?
             if (!$this->container->hasExtension($node->namespaceURI)) {
                 $extensionNamespaces = array_filter(array_map(function ($ext) { return $ext->getNamespace(); }, $this->container->getExtensions()));
-                throw new InvalidArgumentException(sprintf('There is no extension able to load the configuration for "%s" (in %s). Looked for namespace "%s", found %s', $node->tagName, $file, $node->namespaceURI, $extensionNamespaces ? sprintf('"%s"', implode('", "', $extensionNamespaces)) : 'none'));
+                throw new InvalidArgumentException(sprintf('There is no extension able to load the configuration for "%s" (in "%s"). Looked for namespace "%s", found "%s".', $node->tagName, $file, $node->namespaceURI, $extensionNamespaces ? sprintf('"%s"', implode('", "', $extensionNamespaces)) : 'none'));
             }
         }
     }

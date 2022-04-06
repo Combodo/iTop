@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -30,9 +30,7 @@
 if (!defined('__DIR__')) define('__DIR__', dirname(__FILE__));
 require_once(__DIR__.'/../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/webpage.class.inc.php');
-require_once(APPROOT.'/application/csvpage.class.inc.php');
-require_once(APPROOT.'/application/clipage.class.inc.php');
+
 
 require_once(APPROOT.'/application/startup.inc.php');
 
@@ -212,6 +210,7 @@ function ReadMandatoryParam($oP, $sParam, $sSanitizationFilter)
 if (utils::IsModeCLI())
 {
 	$oP = new CLIPage("iTop - Bulk import");
+	SetupUtils::CheckPhpAndExtensionsForCli($oP, -2);
 }
 else
 {
@@ -226,7 +225,7 @@ catch(Exception $e)
 {
 	$oP->p("Error: ".$e->GetMessage());
 	$oP->output();
-	exit -2;
+	exit(-2);
 }
 
 if (utils::IsModeCLI())
@@ -245,21 +244,20 @@ if (utils::IsModeCLI())
 	{
 		$oP->p("Access restricted or wrong credentials ('$sAuthUser')");
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 
 	if (!is_readable($sCsvFile))
 	{
 		$oP->p("Input file could not be found or could not be read: '$sCsvFile'");
 		$oP->output();
-		exit -1;
+		exit(-1);
 	}
 	$sCSVData = file_get_contents($sCsvFile);
 
 }
 else
 {
-	$_REQUEST['login_mode'] = 'basic';
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 	LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 

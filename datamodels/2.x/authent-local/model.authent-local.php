@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,18 +21,63 @@
  * Authent Local
  * User authentication Module, password stored in the local database
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
 
+class UserLocalPasswordValidity
+{
+	/** @var bool */
+	protected $m_bPasswordValidity;
+	/** @var string|null */
+	protected $m_sPasswordValidityMessage;
+
+	/**
+	 * UserLocalPasswordValidity constructor.
+	 *
+	 * @param bool $m_bPasswordValidity
+	 * @param string $m_sPasswordValidityMessage
+	 */
+	public function __construct($m_bPasswordValidity, $m_sPasswordValidityMessage = null)
+	{
+		$this->m_bPasswordValidity = $m_bPasswordValidity;
+		$this->m_sPasswordValidityMessage = $m_sPasswordValidityMessage;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isPasswordValid()
+	{
+		return $this->m_bPasswordValidity;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getPasswordValidityMessage()
+	{
+		return $this->m_sPasswordValidityMessage;
+	}
+}
+
 class UserLocal extends UserInternal
 {
+	const EXPIRE_CAN   = 'can_expire';
+	const EXPIRE_NEVER = 'never_expire';
+	const EXPIRE_FORCE = 'force_expire';
+	const EXPIRE_ONE_TIME_PWD = 'otp_expire';
+	
+	/** @var UserLocalPasswordValidity|null */
+	protected $m_oPasswordValidity = null;
+
 	public static function Init()
 	{
 		$aParams = array
 		(
-			"category" => "addon/authentication,grant_by_profile",
+			"category" => "addon/authentication,grant_by_profile,silo",
 			"key_type" => "autoincrement",
 			"name_attcode" => "login",
 			"state_attcode" => "",
@@ -40,15 +85,30 @@ class UserLocal extends UserInternal
 			"db_table" => "priv_user_local",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 
 		MetaModel::Init_AddAttribute(new AttributeOneWayPassword("password", array("allowed_values"=>null, "sql"=>"pwd", "default_value"=>null, "is_null_allowed"=>false, "depends_on"=>array())));
 
+		$sExpireEnum = implode(',', array(self::EXPIRE_CAN, self::EXPIRE_NEVER, self::EXPIRE_FORCE, self::EXPIRE_ONE_TIME_PWD));
+		MetaModel::Init_AddAttribute(new AttributeEnum("expiration", array("allowed_values"=>new ValueSetEnum($sExpireEnum), "sql"=>"expiration", "default_value"=>self::EXPIRE_NEVER, "is_null_allowed"=>false, "depends_on"=>array())));
+		MetaModel::Init_AddAttribute(new AttributeDate("password_renewed_date", array("allowed_values"=>null, "sql"=>"password_renewed_date", "default_value"=>"", "is_null_allowed"=>true, "depends_on"=>array())));
+
 		// Display lists
-		MetaModel::Init_SetZListItems('details', array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list')); // Attributes to be displayed for the complete details
+		MetaModel::Init_SetZListItems('details',
+			array(
+				'col:col1' =>
+					array(
+						'fieldset:UserLocal:info' =>  array('contactid', 'org_id', 'email', 'login', 'password', 'language', 'status', 'profile_list', 'allowed_org_list',)
+					),
+				'col:col2' =>
+					array(
+						'fieldset:UserLocal:password:expiration' =>  array('expiration', 'password_renewed_date',),
+					),
+			)
+
+		); // Attributes to be displayed for the complete details
 		MetaModel::Init_SetZListItems('list', array('first_name', 'last_name', 'login', 'org_id')); // Attributes to be displayed for a list
 		// Search criteria
 		MetaModel::Init_SetZListItems('standard_search', array('login', 'contactid', 'status', 'org_id')); // Criteria of the std search form
@@ -77,18 +137,23 @@ class UserLocal extends UserInternal
 		{
 			return false;
 		}
+		if($this->Get('expiration') == self::EXPIRE_ONE_TIME_PWD)
+		{
+			return false;
+		}
 		return true;
 	}
 
 	public function ChangePassword($sOldPassword, $sNewPassword)
 	{
-		$oPassword = $this->Get('password'); // ormPassword object
+		/** @var \ormPassword $oPassword */
+		$oPassword = $this->Get('password');
 		// Cannot compare directly the values since they are hashed, so
 		// Let's ask the password to compare the hashed values
 		if ($oPassword->CheckPassword($sOldPassword))
 		{
 			$this->SetPassword($sNewPassword);
-			return true;
+			return $this->IsPasswordValid();
 		}
 		return false;
 	}
@@ -100,6 +165,143 @@ class UserLocal extends UserInternal
 	{
 		$this->Set('password', $sNewPassword);
 		$this->DBUpdate();
+	}
+
+	public function Set($sAttCode, $value)
+	{
+		$result = parent::Set($sAttCode, $value);
+
+		if ('password' == $sAttCode)
+		{
+			$this->ValidatePassword($value);
+		}
+
+		return $result;
+	}
+
+	protected function OnUpdate()
+	{
+		parent::OnUpdate();
+
+		$this->OnWrite();
+	}
+
+	protected function OnInsert()
+	{
+		parent::OnInsert();
+		$sToday = date(\AttributeDate::GetInternalFormat());
+		$this->Set('password_renewed_date', $sToday);
+
+		$this->OnWrite();
+	}
+
+	protected function OnWrite()
+	{
+		if (empty($this->m_oPasswordValidity))
+		{
+			return;
+		}
+
+		if (array_key_exists('password_renewed_date', $this->ListChanges()))
+		{
+			return;
+		}
+
+		$sNow = date(\AttributeDate::GetInternalFormat());
+		$this->Set('password_renewed_date', $sNow);
+	
+		// Reset the "force" expiration flag when the user updates her/his own password!
+		if ($this->IsCurrentUser())
+		{
+			if (($this->Get('expiration') == self::EXPIRE_FORCE))
+			{
+				$this->Set('expiration', self::EXPIRE_CAN);
+			}
+		}
+	}
+
+	public function IsPasswordValid()
+	{
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
+		{
+			// during the setup, the admin account can have whatever password you want ...
+			return true;
+		}
+
+		return (empty($this->m_oPasswordValidity)) || ($this->m_oPasswordValidity->isPasswordValid());
+	}
+
+
+	public function getPasswordValidityMessage()
+	{
+		if (ContextTag::Check(ContextTag::TAG_SETUP))
+		{
+			// during the setup, the admin account can have whatever password you want ...
+			return null;
+		}
+
+		if (empty($this->m_oPasswordValidity))
+		{
+			return null;
+		}
+
+		return $this->m_oPasswordValidity->getPasswordValidityMessage();
+	}
+
+	/**
+	 * set the $m_oPasswordValidity based on UserLocalPasswordValidator instances vote.
+	 *
+	 * @param string $proposedValue
+	 * @param Config|null $config internal use (unit tests)
+	 * @param null|UserLocalPasswordValidator[] $aValidatorCollection internal use (unit tests)
+	 *
+	 * @return void
+	 */
+	public function ValidatePassword($proposedValue, $config = null, $aValidatorCollection = null)
+	{
+		if (null == $config)
+		{
+			$config =  MetaModel::GetConfig();
+		}
+
+		//if the $proposedValue is an ormPassword, then it cannot be checked
+		//this if is even more permissive as we can only check against strings
+		if (!is_string($proposedValue) && !empty($proposedValue))
+		{
+			$this->m_oPasswordValidity = new UserLocalPasswordValidity(true);
+			return;
+		}
+
+		if (null == $aValidatorCollection)
+		{
+			$aValidatorCollection = MetaModel::EnumPlugins('iModuleExtension', 'UserLocalPasswordValidator');
+		}
+
+		foreach ($aValidatorCollection as $oUserLocalPasswordValidator)
+		{
+			$this->m_oPasswordValidity = $oUserLocalPasswordValidator->ValidatePassword($proposedValue, $this, $config);
+
+			if (!$this->m_oPasswordValidity->isPasswordValid())
+			{
+				return;
+			}
+		}
+	}
+
+	public function DoCheckToWrite()
+	{
+		if (! $this->IsPasswordValid())
+		{
+			$this->m_aCheckIssues[] = $this->m_oPasswordValidity->getPasswordValidityMessage();
+		}
+		
+		// A User cannot force a one-time password on herself/himself
+		if ($this->IsCurrentUser()) {
+			if (array_key_exists('expiration', $this->ListChanges()) && ($this->Get('expiration') == self::EXPIRE_ONE_TIME_PWD)) {
+				$this->m_aCheckIssues[] = Dict::S('Class:UserLocal/Error:OneTimePasswordChangeIsNotAllowed');
+			}
+		}
+		parent::DoCheckToWrite();
 	}
 
 	/**
@@ -120,7 +322,7 @@ class UserLocal extends UserInternal
 		{
 			if (strpos('contactid,login,language,password,status,profile_list,allowed_org_list', $sAttCode) !== false)
 			{
-				// contactid and allowed_org_list are disabled to make sure the portal remains accessible 
+				// contactid and allowed_org_list are disabled to make sure the portal remains accessible
 				$aReasons[] = 'Sorry, this attribute is read-only in the demonstration mode!';
 				$iFlags |= OPT_ATT_READONLY;
 			}
@@ -129,3 +331,79 @@ class UserLocal extends UserInternal
 	}
 }
 
+
+
+interface UserLocalPasswordValidator extends iModuleExtension
+{
+	/**
+	 * @param string $proposedValue
+	 * @param UserLocal $oUserLocal
+	 * @param Config $config
+	 *
+	 * @return UserLocalPasswordValidity
+	 */
+	public function ValidatePassword($proposedValue, UserLocal $oUserLocal, $config);
+}
+
+class UserPasswordPolicyRegex implements UserLocalPasswordValidator
+{
+	public function __construct()
+	{
+	}
+
+	/**
+	 * @param string $proposedValue
+	 * @param UserLocal $oUserLocal
+	 * @param Config $config
+	 *
+	 * @return UserLocalPasswordValidity
+	 */
+	public function ValidatePassword($proposedValue, UserLocal $oUserLocal, $config)
+	{
+		$sPattern = $config->GetModuleSetting('authent-local', 'password_validation.pattern');
+
+		if ('' == $sPattern)
+		{
+			return new UserLocalPasswordValidity(true);
+		}
+
+		$isMatched = preg_match("/{$sPattern}/", $proposedValue);
+
+		if ($isMatched === false)
+		{
+			return new UserLocalPasswordValidity(
+				false,
+				'Unknown error : Failed to check the password.'
+			);
+		}
+
+		if ($isMatched === 1)
+		{
+			return new UserLocalPasswordValidity(true);
+		}
+
+		$sUserLanguage = Dict::GetUserLanguage();
+		$customMessages = $config->GetModuleSetting('authent-local', 'password_validation.message', null);
+		if (is_string($customMessages) )
+		{
+			$sMessage = $customMessages;
+		}
+		elseif (isset($customMessages) && array_key_exists($sUserLanguage, $customMessages))
+		{
+			$sMessage = $customMessages[$sUserLanguage];
+		}
+		elseif (isset($customMessages) && array_key_exists('EN US', $customMessages))
+		{
+			$sMessage = $customMessages['EN US'];
+		}
+		else
+		{
+			$sMessage = Dict::S('Error:UserLocalPasswordValidator:UserPasswordPolicyRegex:ValidationFailed');
+		}
+
+		return new UserLocalPasswordValidity(
+			false,
+			$sMessage
+		);
+	}
+}

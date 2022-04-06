@@ -1,0 +1,52 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% apply spaceless %}
+
+var selectionCount{{ oUIBlock.sIdShortcuts }} = $('#{{ oUIBlock.sIdShortcuts }} [name="selectionCount"]');
+selectionCount{{ oUIBlock.sIdShortcuts }}.on('change',function()
+				{
+					let iCountSelected = selectionCount{{ oUIBlock.sIdShortcuts }}.val();
+					if (iCountSelected == 0)
+					{
+						$('#shortcut_btn_rename').prop('disabled', true);
+						$('#shortcut_btn_delete').prop('disabled', true);
+					}
+					else if (iCountSelected == 1)
+					{
+						$('#shortcut_btn_rename').prop('disabled', false);
+						$('#shortcut_btn_delete').prop('disabled', false);
+					}
+					else
+					{
+						$('#shortcut_btn_rename').prop('disabled', true);
+						$('#shortcut_btn_delete').prop('disabled', false);
+					}
+				}
+				);
+
+$('#shortcut_btn_rename').prop('disabled', true);
+$('#shortcut_btn_delete').prop('disabled', true);
+
+$('#shortcut_btn_rename').on('click', function() {
+	var oParams = getMultipleSelectionParams('{{ oUIBlock.sIdShortcuts }}')
+	oParams.operation = 'shortcut_rename_dlg';
+
+	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
+		$('body').append(data);
+	});
+	return false;
+});
+$('#shortcut_btn_delete').on('click', function() {
+	if (confirm('{{'UI:ShortcutDelete:Confirm' |dict_s }}'))
+	{
+		var oParams = getMultipleSelectionParams('{{ oUIBlock.sIdShortcuts }}')
+		oParams.operation = 'shortcut_delete_go';
+
+		$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data){
+			$('body').append(data);
+		});
+	}
+	return false;
+});
+
+{% endapply %}

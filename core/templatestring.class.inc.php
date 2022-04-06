@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -24,7 +24,7 @@
  *     $oString = new TemplateString("Blah $this->friendlyname$ is in location $this->location_id->name$ ('$this->location_id->org_id->name$)");
  *     echo $oString->Render(array('this' => $oContact));
 
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 

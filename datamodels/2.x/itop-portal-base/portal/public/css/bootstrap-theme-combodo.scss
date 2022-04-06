@@ -1,3 +1,21 @@
+/*!
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
 @import 'variables.scss';
 
 /*!
@@ -4204,7 +4222,8 @@ a.thumbnail.active {
 .alert {
     padding: 15px;
     margin-bottom: 18px;
-    border: 1px solid transparent;
+    border: none;
+	border-left: 4px solid transparent;
     border-radius: $border-radius-base
 }
 .alert h4 {
@@ -4228,13 +4247,14 @@ a.thumbnail.active {
 .alert-dismissable .close,
 .alert-dismissible .close {
     position: relative;
-    top: -2px;
+    top: 2px;
     right: -21px;
-    color: inherit
+    color: inherit;
+	font-size: 14px;
 }
 .alert-success {
     background-color: $state-success-bg;
-    border-color: #d6e9c6;
+    border-color: $state-success-border;
     color: $state-success-text
 }
 .alert-success hr {
@@ -5109,8 +5129,8 @@ button.close {
 }
 .modal-backdrop.in {
     background-color: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(1px);
-    -webkit-backdrop-filter: blur(1px);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
 }
 .modal-header {
     padding: 15px;

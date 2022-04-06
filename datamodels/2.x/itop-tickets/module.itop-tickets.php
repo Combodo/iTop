@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__,
-	'itop-tickets/2.6.2',
+	'itop-tickets/3.1.0',
 	array(
 		// Identification
 		//
@@ -13,10 +13,10 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.4.0',
+			'itop-structure/2.7.1',
 		),
-		'mandatory' => true,
-		'visible' => false,
+		'mandatory' => false,
+		'visible' => true,
 		'installer' => 'TicketsInstaller',
 
 		// Components
@@ -33,7 +33,7 @@ SetupWebPage::AddModule(
 		
 		// Documentation
 		//
-		'doc.manual_setup' => '/documentation/itop-tickets.htm',
+		'doc.manual_setup'     => 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().':admin:cron',
 		'doc.more_information' => '',
 
 		// Default settings
@@ -50,23 +50,59 @@ class TicketsInstaller extends ModuleInstallerAPI
 	public static function AfterDatabaseCreation(Config $oConfiguration, $sPreviousVersion, $sCurrentVersion)
 	{
 		// Delete all Triggers corresponding to a no more valid class
+		CMDBObject::SetTrackInfo('Uninstallation');
 		$oSearch = new DBObjectSearch('TriggerOnObject');
 		$oSet = new DBObjectSet($oSearch);
-		$oChange = null;
 		while($oTrigger = $oSet->Fetch())
 		{
-			if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
+			try
 			{
-				if ($oChange == null)
+				if (!MetaModel::IsValidClass($oTrigger->Get('target_class')))
 				{
-					// Create the change for its first use
-					$oChange = new CMDBChange;
-					$oChange->Set("date", time());
-					$oChange->Set("userinfo", "Uninstallation");
+					$oTrigger->DBDelete();
 				}
-				$oTrigger::SetCurrentChange($oChange);
-				$oTrigger->DBDelete();
 			}
+			catch(Exception $e)
+			{
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+		}
+		// It's not very clear if it make sense to test a particular version,
+		// as the loading mechanism checks object existence using reconc_keys
+		// and do not recreate them, nor update existing.
+		// Without test, new entries added to the data files, would be automatically loaded
+		if (($sPreviousVersion === '') ||
+			(version_compare($sPreviousVersion, $sCurrentVersion, '<')
+				&& version_compare($sPreviousVersion, '3.0.0', '<'))) {
+			$oDataLoader = new XMLDataLoader();
+
+			CMDBObject::SetTrackInfo("Initialization");
+			$oMyChange = CMDBObject::GetCurrentChange();
+
+			$sLang = null;
+			// - Try to get app. language from configuration fil (app. upgrade)
+			$sConfigFileName = APPCONF.'production/'.ITOP_CONFIG_FILE;
+			if (file_exists($sConfigFileName)) {
+				$oFileConfig = new Config($sConfigFileName);
+				if (is_object($oFileConfig)) {
+					$sLang = str_replace(' ', '_', strtolower($oFileConfig->GetDefaultLanguage()));
+				}
+			}
+
+			// - I still no language, get the default one
+			if (null === $sLang) {
+				$sLang = str_replace(' ', '_', strtolower($oConfiguration->GetDefaultLanguage()));
+			}
+
+			$sFileName = dirname(__FILE__)."/data/{$sLang}.data.itop-tickets.xml";
+			SetupLog::Info("Searching file: $sFileName");
+			if (!file_exists($sFileName)) {
+				$sFileName = dirname(__FILE__)."/data/en_us.data.itop-tickets.xml";
+			}
+			SetupLog::Info("Loading file: $sFileName");
+			$oDataLoader->StartSession($oMyChange);
+			$oDataLoader->LoadFile($sFileName, false, true);
+			$oDataLoader->EndSession();
 		}
 	}
 }

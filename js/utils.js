@@ -1,121 +1,9 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
 // Some general purpose JS functions for the iTop application
-
-//IE 8 compatibility, copied from: https://developer.mozilla.org/en-US/docs/JavaScript/Reference/Global_Objects/Array/IndexOf
-if (!Array.prototype.indexOf) {
-
-	if (false) // deactivated since it causes troubles: for(k in aData) => returns the indexOf function as first element on empty arrays !
-	{
-		Array.prototype.indexOf = function (searchElement /*, fromIndex */) {
-			"use strict";
-			if (this == null) {
-				throw new TypeError();
-			}
-			var t = Object(this);
-			var len = t.length >>> 0;
-			if (len === 0) {
-				return -1;
-			}
-			var n = 0;
-			if (arguments.length > 1) {
-				n = Number(arguments[1]);
-				if (n != n) { // shortcut for verifying if it's NaN
-					n = 0;
-				} else if (n != 0 && n != Infinity && n != -Infinity) {
-					n = (n > 0 || -1) * Math.floor(Math.abs(n));
-				}
-			}
-			if (n >= len) {
-				return -1;
-			}
-			var k = n >= 0 ? n : Math.max(len-Math.abs(n), 0);
-			for (; k < len; k++) {
-				if (k in t && t[k] === searchElement) {
-					return k;
-				}
-			}
-			return -1;
-		}
-	}
-}
-// Polyfill for Array.from for IE
-// Copied from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/from
-if (!Array.from) {
-  Array.from = (function () {
-    var toStr = Object.prototype.toString;
-    var isCallable = function (fn) {
-      return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
-    };
-    var toInteger = function (value) {
-      var number = Number(value);
-      if (isNaN(number)) { return 0; }
-      if (number === 0 || !isFinite(number)) { return number; }
-      return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
-    };
-    var maxSafeInteger = Math.pow(2, 53) - 1;
-    var toLength = function (value) {
-      var len = toInteger(value);
-      return Math.min(Math.max(len, 0), maxSafeInteger);
-    };
-
-    // The length property of the from method is 1.
-    return function from(arrayLike/*, mapFn, thisArg */) {
-      // 1. Let C be the this value.
-      var C = this;
-
-      // 2. Let items be ToObject(arrayLike).
-      var items = Object(arrayLike);
-
-      // 3. ReturnIfAbrupt(items).
-      if (arrayLike == null) {
-        throw new TypeError('Array.from requires an array-like object - not null or undefined');
-      }
-
-      // 4. If mapfn is undefined, then let mapping be false.
-      var mapFn = arguments.length > 1 ? arguments[1] : void undefined;
-      var T;
-      if (typeof mapFn !== 'undefined') {
-        // 5. else
-        // 5. a If IsCallable(mapfn) is false, throw a TypeError exception.
-        if (!isCallable(mapFn)) {
-          throw new TypeError('Array.from: when provided, the second argument must be a function');
-        }
-
-        // 5. b. If thisArg was supplied, let T be thisArg; else let T be undefined.
-        if (arguments.length > 2) {
-          T = arguments[2];
-        }
-      }
-
-      // 10. Let lenValue be Get(items, "length").
-      // 11. Let len be ToLength(lenValue).
-      var len = toLength(items.length);
-
-      // 13. If IsConstructor(C) is true, then
-      // 13. a. Let A be the result of calling the [[Construct]] internal method 
-      // of C with an argument list containing the single item len.
-      // 14. a. Else, Let A be ArrayCreate(len).
-      var A = isCallable(C) ? Object(new C(len)) : new Array(len);
-
-      // 16. Let k be 0.
-      var k = 0;
-      // 17. Repeat, while k < len… (also steps a - h)
-      var kValue;
-      while (k < len) {
-        kValue = items[k];
-        if (mapFn) {
-          A[k] = typeof T === 'undefined' ? mapFn(kValue, k) : mapFn.call(T, kValue, k);
-        } else {
-          A[k] = kValue;
-        }
-        k += 1;
-      }
-      // 18. Let putStatus be Put(A, "length", len, true).
-      A.length = len;
-      // 20. Return A.
-      return A;
-    };
-  }());
-}
 
 /**
  * Reload a truncated list
@@ -129,8 +17,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 		try {
 			aAjaxRequest = aTruncatedLists[divId];
 			aAjaxRequest.abort();
-		}
-		catch (e) {
+		} catch (e) {
 			// Do nothing special, just continue
 			console.log('Uh,uh, exception !');
 		}
@@ -141,7 +28,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 			aTruncatedLists[divId] = undefined;
 			if (data.length > 0) {
 				$('#'+divId).html(data);
-				$('#'+divId+' .listResults').tableHover(); // hover tables
+				//$('#'+divId+' .listResults').tableHover(); // hover tables
 				$('#'+divId+' .listResults').each(function () {
 					var table = $(this);
 					var id = $(this).parent();
@@ -150,8 +37,7 @@ function ReloadTruncatedList(divId, sSerializedFilter, sExtraParams) {
 					if (checkbox) {
 						// There is a checkbox in the first column, don't make it sortable
 						table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager")}); // sortable and zebra tables
-					}
-					else {
+					} else {
 						// There is NO checkbox in the first column, all columns are considered sortable
 						table.tablesorter({widgets: ['myZebra', 'truncatedList']}).tablesorterPager({container: $("#pager"), totalRows: 97, filter: sSerializedFilter, extra_params: sExtraParams}); // sortable and zebra tables
 					}
@@ -185,17 +71,19 @@ function TruncateList(divId, iLimit, sNewLabel, sLinkLabel) {
 function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 	// Check if the user is not editing the list properties right now
 	var bDialogOpen = false;
-	var oDataTable = $('#'+divId+' :itop-datatable');
+	//TODO 3.0.0 Datatable - to check
+	var oDataTable = $('#'+divId+' .ibo-datatable');
 	var bIsDataTable = false;
 	if (oDataTable.length > 0) {
-		bDialogOpen = oDataTable.datatable('IsDialogOpen');
+		bDialogOpen = ($('#datatable_dlg_datatable_'+divId+' :visible').length > 0);
+		//bDialogOpen = oDataTable.datatable('IsDialogOpen');
 		bIsDataTable = true;
 	}
 	if (!bDialogOpen) {
 		if (bIsDataTable) {
-			oDataTable.datatable('DoRefresh');
-		}
-		else {
+			oDataTable.DataTable().clearPipeline();
+			oDataTable.DataTable().ajax.reload(null, false);
+		} else {
 			$('#'+divId).block();
 
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?style='+sStyle,
@@ -211,7 +99,7 @@ function ReloadBlock(divId, sStyle, sSerializedFilter, sExtraParams) {
 }
 
 function SaveGroupBySortOrder(sTableId, aValues) {
-	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
 	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
 	if (aValues.length != 0) {
 		$sValue = JSON.stringify(aValues);
@@ -222,7 +110,7 @@ function SaveGroupBySortOrder(sTableId, aValues) {
 }
 
 function LoadGroupBySortOrder(sTableId) {
-	var sDashboardId = $('#'+sTableId).closest('.dashboard_contents').attr('id');
+	var sDashboardId = $('#'+sTableId).closest('.ibo-dashboard').attr('id');
 	var sPrefKey = 'GroupBy_'+sDashboardId+'_'+sTableId;
 	var sValues = GetUserPreference(sPrefKey, null);
 	if (sValues != null) {
@@ -244,6 +132,14 @@ function UpdateFileName(id, sNewFileName) {
 	$('#'+id).val(sNewFileName);
 	$('#'+id).trigger('validate');
 	$('#name_'+id).text(sNewFileName);
+	if(sNewFileName=='') {
+		$('#do_remove_'+id).val('1');
+		$('#remove_attr_'+id).addClass('ibo-is-hidden');
+	} else {
+		$('#do_remove_'+id).val('0');
+		$('#remove_attr_'+id).removeClass('ibo-is-hidden');
+	}
+
 	return true;
 }
 
@@ -251,11 +147,11 @@ function UpdateFileName(id, sNewFileName) {
  * Reload a search form for the specified class
  */
 function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sExtraParams) {
-	var oDiv = $('#ds_'+divId);
+	var oDiv = $('#'+divId).parent();
 	oDiv.block();
 	// deprecated in jQuery 1.8 
 	//var oFormEvents = $('#ds_'+divId+' form').data('events');
-	var oForm = $('#ds_'+divId+' form');
+	var oForm = $('#'+divId+' form');
 	var oFormEvents = $._data(oForm[0], "events");
 
 	// Save the submit handlers
@@ -265,11 +161,11 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 			aSubmit [index] = {data: oFormEvents.submit[index].data, namespace: oFormEvents.submit[index].namespace, handler: oFormEvents.submit[index].handler};
 		}
 	}
-	sAction = $('#ds_'+divId+' form').attr('action');
+	sAction = $('#'+divId+' form').attr('action');
 
 	// Save the current values in the form
 	var oMap = {};
-	$('#ds_'+divId+" form :input[name!='']").each(function () {
+	$('#'+divId+" form :input[name!='']").each(function () {
 		oMap[this.name] = this.value;
 	});
 	oMap.operation = 'search_form';
@@ -278,30 +174,29 @@ function ReloadSearchForm(divId, sClassName, sBaseClass, sContext, sTableId, sEx
 	oMap.currentId = divId;
 	oMap._table_id_ = sTableId;
 	oMap.action = sAction;
-	if(sExtraParams['selection_mode'])
-	{
+	if(sExtraParams['selection_mode']) {
 		oMap.selection_mode = sExtraParams['selection_mode'];
 	}
-	if(sExtraParams['result_list_outer_selector'])
-	{
+	if(sExtraParams['result_list_outer_selector']) {
 		oMap.result_list_outer_selector = sExtraParams['result_list_outer_selector'];
 	}
-	if(sExtraParams['cssCount'])
-	{
+	if(sExtraParams['cssCount']) {
 		oMap.css_count = sExtraParams['cssCount'];
 		$(sExtraParams['cssCount']).val(0).trigger('change');
 	}
-	if(sExtraParams['table_inner_id'])
-	{
+	if(sExtraParams['table_inner_id']) {
 		oMap.table_inner_id = sExtraParams['table_inner_id'];
+	} else{
+		oMap.table_inner_id = sTableId;
 	}
+
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?'+sContext, oMap,
 		function (data) {
 			oDiv.empty();
 			oDiv.append(data);
 			oDiv.unblock();
 			oDiv.parent().resize(); // Inform the parent that the form has just been (potentially) resized
-			oDiv.find('form').triggerHandler('itop.search.form.reloaded');
+			oDiv.find('form.search_form_handler').triggerHandler('itop.search.form.reloaded');
 		}
 	);
 }
@@ -315,8 +210,7 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 	sPreviousValue = undefined;
 	try {
 		sPreviousValue = oUserPreferences[sPreferenceCode];
-	}
-	catch (err) {
+	} catch (err) {
 		sPreviousValue = undefined;
 	}
 	oUserPreferences[sPreferenceCode] = sPrefValue;
@@ -328,15 +222,39 @@ function SetUserPreference(sPreferenceCode, sPrefValue, bPersistent) {
 
 /**
  * Get user specific preferences
- * depends on a global variable oUserPreferences created/filled by the iTopWebPage
  * that acts as a local -write through- cache
+ * @borrows global variable oUserPreferences created/filled by the iTopWebPage if login method was called
  */
 function GetUserPreference(sPreferenceCode, sDefaultValue) {
 	var value = sDefaultValue;
-	if ((typeof(oUserPreferences) !== 'undefined') && (typeof(oUserPreferences[sPreferenceCode]) !== 'undefined')) {
+	if ((typeof (oUserPreferences) !== 'undefined') && (typeof (oUserPreferences[sPreferenceCode]) !== 'undefined')) {
 		value = oUserPreferences[sPreferenceCode];
 	}
 	return value;
+}
+
+/**
+ * @param {string} sPreferenceCode
+ * @param {boolean} bDefaultValue
+ * @returns {boolean}
+ * @since 3.0.0
+ */
+function GetUserPreferenceAsBoolean(sPreferenceCode, bDefaultValue) {
+	let sVal = GetUserPreference(sPreferenceCode, bDefaultValue);
+	try {
+		sVal = sVal.toLowerCase();
+	} catch (error) {
+		// nothing : this may be the boolean default value !
+	}
+
+	if (sVal === "true") {
+		return true;
+	}
+	if (sVal === "false") {
+		return false;
+	}
+
+	return bDefaultValue;
 }
 
 /**
@@ -359,13 +277,26 @@ function CheckAll(sSelector, bValue) {
 function ToggleField(value, field_id) {
 	if (value) {
 		$('#'+field_id).prop('disabled', false);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', false);
-	}
-	else {
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.enable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', false);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').removeClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', false);
+		}
+	} else {
 		$('#'+field_id).prop('disabled', true);
-		// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
-		$('#'+field_id+' :input').prop('disabled', true);
+		if ($('#'+field_id).hasClass('selectized')) {
+			$('#'+field_id)[0].selectize.disable();
+		} else if ($('#'+field_id).parent().find('.ibo-input-select-autocomplete').length > 0) {
+			$('#'+field_id).parent().find('.ibo-input-select-autocomplete').prop('disabled', true);
+			$('#'+field_id).parent().find('.ibo-input-select--action-buttons').addClass('ibo-is-hidden');
+		} else {
+			// In case the field is rendered as a div containing several inputs (e.g. RedundancySettings)
+			$('#'+field_id+' :input').prop('disabled', true);
+		}
 	}
 	$('#'+field_id).trigger('update');
 	$('#'+field_id).trigger('validate');
@@ -377,13 +308,11 @@ function ToggleField(value, field_id) {
  */
 function BlockField(field_id, bBlocked) {
 	if (bBlocked) {
-		$('#'+field_id).block({message: ' ** disabled ** '});
-	}
-	else {
+		$('#'+field_id).block({message: ' ** disabled ** ', enableValidation : true});
+	} else {
 		$('#'+field_id).unblock();
 	}
 }
-
 /**
  * Updates (enables/disables) a "duration" field
  */
@@ -395,8 +324,7 @@ function ToggleDurationField(field_id) {
 		for (var i = 0; i < aSubFields.length; i++) {
 			$('#'+field_id+'_'+aSubFields[i]).prop('disabled', true);
 		}
-	}
-	else {
+	} else {
 		for (var i = 0; i < aSubFields.length; i++) {
 			$('#'+field_id+'_'+aSubFields[i]).prop('disabled', false);
 		}
@@ -414,7 +342,7 @@ function PropagateCheckBox(bCurrValue, aFieldsList, bCheck) {
 			ToggleField(bCheck, sFieldId);
 
 			// Cascade propagation
-            $('#enable_'+sFieldId).trigger('change');
+			$('#enable_'+sFieldId).trigger('change');
 		}
 	}
 }
@@ -426,8 +354,7 @@ function FixTableSorter(table) {
 		if (checkbox) {
 			// There is a checkbox in the first column, don't make it sort-able
 			table.tablesorter({headers: {0: {sorter: false}}, widgets: ['myZebra', 'truncatedList']}); // sort-able and zebra tables
-		}
-		else {
+		} else {
 			// There is NO checkbox in the first column, all columns are considered sort-able
 			table.tablesorter({widgets: ['myZebra', 'truncatedList']}); // sort-able and zebra tables
 		}
@@ -444,8 +371,8 @@ function DashletCreationDlg(sOQL, sContext) {
 function ShortcutListDlg(sOQL, sDataTableId, sContext) {
 	var sDataTableName = 'datatable_'+sDataTableId;
 	var oTableSettings = {
-		oColumns: $('#'+sDataTableName).datatable('option', 'oColumns'),
-		iPageSize: $('#'+sDataTableName).datatable('option', 'iPageSize')
+		oColumns: $('#datatable_dlg_'+sDataTableName).DataTableSettings('GetColumns'),
+		iPageSize: $('#'+sDataTableName).DataTable().ajax.params()['length']
 	};
 	var sTableSettings = JSON.stringify(oTableSettings);
 
@@ -459,15 +386,23 @@ function ExportListDlg(sOQL, sDataTableId, sFormat, sDlgTitle) {
 	var aFields = [];
 	if (sDataTableId != '') {
 		var sDataTableName = 'datatable_'+sDataTableId;
-		var oColumns = $('#'+sDataTableName).datatable('option', 'oColumns');
+		var oColumns = $('#'+sDataTableName).DataTable().ajax.params()['columns'];
 		for (var j in oColumns) {
-			for (var k in oColumns[j]) {
-				if (oColumns[j][k].checked) {
-					var sCode = oColumns[j][k].code;
-					if (sCode == '_key_') {
-						sCode = 'id';
+			if (oColumns[j]['data']) {
+				var sCode = oColumns[j]['data'].split("/");
+				if (sCode[1] == '_key_') {
+					sCode[1] = 'id';
+				}
+				aFields.push(sCode[0]+'.'+sCode[1]);
+			} else {
+				for (var k in oColumns[j]) {
+					if (oColumns[j][k].checked) {
+						var sCode = oColumns[j][k].code;
+						if (sCode == '_key_') {
+							sCode = 'id';
+						}
+						aFields.push(j+'.'+sCode);
 					}
-					aFields.push(j+'.'+sCode);
 				}
 			}
 		}
@@ -506,40 +441,35 @@ function ExportStartExport() {
 				if (this.checked) {
 					oParams[this.name] = $(this).val();
 				}
-			}
-			else {
+			} else {
 				oParams[this.name] = $(this).val();
 			}
 		}
 	});
-	$(':itop-tabularfieldsselector:visible').tabularfieldsselector('close_all_tooltips');
-	$('#export-form').hide();
-	$('#export-feedback').show();
+	$('#export-form').addClass('ibo-is-hidden');
+	$('#export-feedback').removeClass('ibo-is-hidden');
 	oParams.operation = 'export_build';
 	oParams.format = $('#export-form :input[name=format]').val();
 	var sQueryMode = $(':input[name=query_mode]:checked').val();
 	if ($(':input[name=query_mode]:checked').length > 0) {
 		if (sQueryMode == 'oql') {
 			oParams.expression = $('#export-form :input[name=expression]').val();
-		}
-		else {
+		} else {
 			oParams.query = $('#export-form :input[name=query]').val();
 		}
-	}
-	else {
+	} else {
 		oParams.expression = $('#export-form :input[name=expression]').val();
 		oParams.query = $('#export-form :input[name=query]').val();
 	}
 	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
 			if (data == null) {
 				ExportError('Export failed (no data provided), please contact your administrator');
-			}
-			else {
+			} else {
 				ExportRun(data);
 			}
 		}, 'json')
-		.fail(function () {
-			ExportError('Export failed, please contact your administrator');
+		.fail(function (data) {
+			ExportError('Export failed, please contact your administrator<br/>'+data.responseText);
 		});
 }
 
@@ -560,8 +490,7 @@ function ExportRun(data) {
 			var sDataState = $('#export-form').attr('data-state');
 			if (sDataState == 'cancelled') {
 				oParams.operation = 'export_cancel';
-			}
-			else {
+			} else {
 				oParams.operation = 'export_build';
 			}
 
@@ -576,16 +505,12 @@ function ExportRun(data) {
 			sMessage = '<a href="'+GetAbsoluteUrlAppRoot()+'pages/ajax.render.php?operation=export_download&token='+data.token+'" target="_blank">'+data.message+'</a>';
 			$('.export-message').html(sMessage);
 			$('.export-progress-bar').hide();
-			$('#export-btn').hide();
 			$('#export-form').attr('data-state', 'done');
 			if (data.text_result != undefined) {
 				if (data.mime_type == 'text/html') {
 					$('#export_content').parent().html(data.text_result);
-					$('#export_text_result').show();
-					$('#export_text_result .listResults').tableHover();
-					$('#export_text_result .listResults').tablesorter({widgets: ['myZebra']});
-				}
-				else {
+					$('#export_text_result').removeClass('ibo-is-hidden');
+				} else {
 					if ($('#export_text_result').closest('ui-dialog').length == 0) {
 						// not inside a dialog box, adjust the height... approximately
 						var jPane = $('#export_text_result').closest('.ui-layout-content');
@@ -598,7 +523,7 @@ function ExportRun(data) {
 						$('#export_content').height(iTotalHeight-80);
 					}
 					$('#export_content').val(data.text_result);
-					$('#export_text_result').show();
+					$('#export_text_result').removeClass('ibo-is-hidden');
 				}
 			}
 			$('#export-dlg-submit').button('option', 'label', Dict.S('UI:Button:Done')).button('enable');
@@ -631,8 +556,7 @@ function ExportInitButton(sSelector) {
 				}
 				if ($(this).hasClass('ui-button')) {
 					$(this).button('option', 'label', Dict.S('UI:Button:Cancel'));
-				}
-				else {
+				} else {
 					$(this).html(Dict.S('UI:Button:Cancel'));
 				}
 				$('#export-form').attr('data-state', 'running');
@@ -642,8 +566,7 @@ function ExportInitButton(sSelector) {
 			case 'running':
 				if ($(this).hasClass('ui-button')) {
 					$(this).button('disable');
-				}
-				else {
+				} else {
 					$(this).prop('disabled', true);
 				}
 				$('#export-form').attr('data-state', 'cancelled');
@@ -660,13 +583,31 @@ function ExportInitButton(sSelector) {
 	});
 }
 
-function DisplayHistory(sSelector, sFilter, iCount, iStart) {
-	$(sSelector).block();
-	var oParams = {operation: 'history_from_filter', filter: sFilter, start: iStart, count: iCount};
-	$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function (data) {
-			$(sSelector).html(data).unblock();
-		}
-	);
+/**
+ * @deprecated 3.0.0 N°4367 deprecated, use {@see CombodoSanitizer.EscapeHtml} instead
+ *
+ * @param sValue value to escape
+ * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+ * @returns {string} escaped value, ready to insert in the DOM without XSS risk
+ *
+ * @since 2.6.5, 2.7.2, 3.0.0 N°3332
+ * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+ * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
+ *        example the text() JQuery way) isn't safe
+ */
+function EncodeHtml(sValue, bReplaceAmp) {
+	var sEncodedValue = (sValue+'')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#x27;')
+		.replace(/\//g, '&#x2F;');
+
+	if (bReplaceAmp) {
+		sEncodedValue = sEncodedValue.replace(/&/g, '&amp;');
+	}
+
+	return sEncodedValue;
 }
 
 // Very simple equivalent to format: placeholders are %1$s %2$d ...
@@ -676,8 +617,7 @@ function Format() {
 	if (arguments[0] instanceof Array) {
 		str = arguments[0][0].toString();
 		args = arguments[0];
-	}
-	else {
+	} else {
 		str = arguments[0].toString();
 		if (arguments.length > 1) {
 			var t = typeof arguments[1];
@@ -706,8 +646,7 @@ else {
 Dict.S = function (sEntry) {
 	if (sEntry in Dict._entries) {
 		return Dict._entries[sEntry];
-	}
-	else {
+	} else {
 		return sEntry;
 	}
 };
@@ -715,4 +654,444 @@ Dict.Format = function () {
 	var args = Array.from(arguments);
 	args[0] = Dict.S(arguments[0]);
 	return Format(args);
+};
+
+// TODO 3.0.0: Move functions above either in CombodoGlobalToolbox or CombodoBackofficeToolbox and deprecate them
+/**
+ * A toolbox for common JS operations accross the app no matter the GUI. Meant to be used by Combodo developers and the community.
+ *
+ * Note: All functions like those above should be moved in the corresponding toolbox to avoid name collision with other libs and scripts.
+ *
+ * @api
+ * @since 3.0.0
+ */
+const CombodoGlobalToolbox = {
+	/**
+	 * Return true if oDOMElem is visible to the user, meaning that it is in the current viewport AND is not behind another element.
+	 *
+	 * @param oDOMElem {Object} DOM element to check
+	 * @param bCompletely {boolean} Should oDOMElem be completely visible for the function to return true?
+	 * @param iThreshold {integer} Use when bCompletely = true, a threshold in pixels to consider oDOMElem as completely visible. This is useful when elements are next to others as the browser can consider 1 pixel is overlapping the next element.
+	 * @returns {boolean}
+	 * @url: https://stackoverflow.com/questions/123999/how-to-tell-if-a-dom-element-is-visible-in-the-current-viewport
+	 */
+	IsElementVisibleToTheUser: function (oDOMElem, bCompletely = false, iThreshold = 0) {
+		const oRect = oDOMElem.getBoundingClientRect(),
+			fViewportWidth = window.innerWidth || doc.documentElement.clientWidth,
+			fViewportHeight = window.innerHeight || doc.documentElement.clientHeight,
+			efp = function (x, y) {
+				return document.elementFromPoint(x, y)
+			};
+
+		// Return false if it's not in the viewport
+		if (oRect.right < 0 || oRect.bottom < 0
+			|| oRect.left > fViewportWidth || oRect.top > fViewportHeight) {
+			return false;
+		}
+
+		if (bCompletely === true) {
+			// Return true if ALL of its four corners are visible
+			return (
+				oDOMElem.contains(efp(oRect.left+iThreshold, oRect.top+iThreshold))
+				&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.top+iThreshold))
+				&& oDOMElem.contains(efp(oRect.right-iThreshold, oRect.bottom-iThreshold))
+				&& oDOMElem.contains(efp(oRect.left+iThreshold, oRect.bottom-iThreshold))
+			);
+		} else {
+			// Return true if ANY of its four corners are visible
+			return (
+				oDOMElem.contains(efp(oRect.left, oRect.top))
+				|| oDOMElem.contains(efp(oRect.right, oRect.top))
+				|| oDOMElem.contains(efp(oRect.right, oRect.bottom))
+				|| oDOMElem.contains(efp(oRect.left, oRect.bottom))
+			);
+		}
+	},
+	/**
+	 * @param sUrl {string} The URL to append the new param to
+	 * @param sParamName {string} Name of the parameter
+	 * @param sParamValue {string} Value of the param, needs to be already URL encoded
+	 * @return {string} The sUrl parameter with the sParamName / sParamValue append at the end of the query string (but before the hash if any)
+	 */
+	AddParameterToUrl: function(sUrl, sParamName, sParamValue)
+	{
+		const sNewParamForUrl = sParamName + '=' + sParamValue;
+
+		// Split URL around the '#'. Note that if there are multiple '#' in the URL (which is not permitted!) this method won't work.
+		const aHashParts = sUrl.split('#');
+		// Part of the URL starting from the protocol to the character before the '#' if one, to the end of the URL otherwise
+		const sPreHashPart = aHashParts[0];
+		// Part of the URL starting just after the '#' if one, null otherwise
+		const sPostHashPart = aHashParts[1] ?? null;
+
+		sUrl = sPreHashPart + (sUrl.split('?')[1] ? '&' : '?') + sNewParamForUrl + (sPostHashPart !== null ? '#' + sPostHashPart : '');
+
+		return sUrl;
+	},
+	/**
+	 * This method should be a JS mirror of the PHP {@see utils::FilterXSS} method
+	 *
+	 * @param sInput {string} Input text to filter from XSS attacks
+	 * @returns {string} The sInput string filtered from possible XSS attacks
+	 */
+	FilterXSS: function (sInput) {
+		let sOutput = sInput;
+
+		// Remove HTML script tags
+		sOutput = sOutput.replace(/<script/g, '&lt;script WARNING: scripts are not allowed in tooltips');
+
+		return sOutput;
+	},
+	/**
+	 * Pause the JS activity for iDuration milliseconds
+	 *
+	 * @see N°2763 for the original code idea
+	 * @return {void}
+	 * @param iDuration {integer} Duration in milliseconds
+	 */
+	Pause: function (iDuration) {
+		const oDate = new Date();
+		let oCurrentDate = null;
+
+		do {
+			oCurrentDate = new Date();
+		}
+		while ((oCurrentDate - oDate) < iDuration);
+	}
+};
+
+/**
+ * Helper for tooltip instantiation (abstraction layer between iTop markup and tooltip plugin to ease its replacement in the future)
+ *
+ * Note: Content SHOULD be HTML entity encoded to avoid markup breaks (eg. when using a double quote in a sentence)
+ *
+ * @api
+ * @since 3.0.0
+ */
+const CombodoTooltip = {
+	/**
+	 * Instantiate a tooltip on oElem from its data attributes
+	 *
+	 * Note: Content SHOULD be HTML entity encoded to avoid markup breaks (eg. when using a double quote in a sentence)
+	 *
+	 * @param {Object} oElem The jQuery object representing the element
+	 * @param {boolean} bForce When set to true, tooltip will be instantiate even if one already exists, overwritting it.
+	 */
+	InitTooltipFromMarkup: function (oElem, bForce = false) {
+		const oOptions = {};
+
+		// First, check if the tooltip isn't already instantiated
+		if ((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === false)) {
+			return false;
+		}
+		else if((oElem.attr('data-tooltip-instantiated') === 'true') && (bForce === true) && (oElem[0]._tippy !== undefined)){
+			oElem[0]._tippy.destroy();
+		}
+
+		// Content must be reworked before getting into the tooltip
+		// - Should we enable HTML content or keep text as is
+		const bEnableHTML = oElem.attr('data-tooltip-html-enabled') === 'true';
+		oOptions['allowHTML'] = bEnableHTML;
+
+		// - Content should be sanitized unless the developer says otherwise
+		// Note: Condition is inversed on purpose. When the developer is instantiating a tooltip,
+		// we want they to explicitly declare that they want the sanitizer to be skipped.
+		// Whereas in this code, it's easier to follow the logic with the variable oriented this way.
+		const bSanitizeContent = oElem.attr('data-tooltip-sanitizer-skipped') !== 'true';
+
+		let sContent = oElem.attr('data-tooltip-content');
+		// - Check if both HTML and sanitizer are enabled
+		if (bEnableHTML && bSanitizeContent) {
+			sContent = CombodoGlobalToolbox.FilterXSS(sContent);
+		}
+		oOptions['content'] = sContent;
+
+		// Interaction (selection, click, ...) have to be enabled manually
+		// Important: When set to true, if "data-tooltip-append-to" is not specified, tooltip will be append to the parent element instead of the body
+		const bInteractive = oElem.attr('data-tooltip-interaction-enabled') === 'true';
+		oOptions['interactive'] = bInteractive;
+
+		// Element to append the tooltip to
+		const sAppendToOriginalValue = oElem.attr('data-tooltip-append-to');
+		let mAppendTo;
+
+		if (sAppendToOriginalValue === undefined || sAppendToOriginalValue === '') {
+			mAppendTo = null;
+		} else if (sAppendToOriginalValue === 'body') {
+			mAppendTo = document.body;
+		} else if (sAppendToOriginalValue === 'parent') {
+			mAppendTo = oElem.parent()[0];
+		} else {
+			// We have a selector, try to get the first matching element
+			const oAppendToElems = $(sAppendToOriginalValue);
+			if (oAppendToElems.length === 0) {
+				CombodoJSConsole.Debug('CombodoTooltip: Could not create tooltip as there was no result for the element it should have been append to "'+sAppendToOriginalValue+'"');
+				return false;
+			} else {
+				mAppendTo = oAppendToElems[0];
+			}
+		}
+
+		// - Only set option if there is an actual value, otherwise, let the lib. handle it with it's default options
+		if (mAppendTo !== null) {
+			oOptions['appendTo'] = mAppendTo;
+		}
+
+		// Max. width overload
+		const sMaxWidth = oElem.attr('data-tooltip-max-width');
+		if ((sMaxWidth !== undefined) && (sMaxWidth !== '')) {
+			oOptions['maxWidth'] = sMaxWidth;
+		}
+
+		oOptions['placement'] = oElem.attr('data-tooltip-placement') ?? 'top';
+		oOptions['trigger'] = oElem.attr('data-tooltip-trigger') ?? 'mouseenter focus';
+
+		const sShiftingOffset = oElem.attr('data-tooltip-shifting-offset');
+		const sDistanceOffset = oElem.attr('data-tooltip-distance-offset');
+		oOptions['offset'] = [
+			(sShiftingOffset === undefined) ? 0 : parseInt(sShiftingOffset),
+			(sDistanceOffset === undefined) ? 10 : parseInt(sDistanceOffset),
+		];
+
+		oOptions['animation'] = oElem.attr('data-tooltip-animation') ?? 'shift-away-subtle';
+
+		const sShowDelay = oElem.attr('data-tooltip-show-delay');
+		const sHideDelay = oElem.attr('data-tooltip-hide-delay');
+		oOptions['delay'] = [
+			(typeof sShowDelay === 'undefined') ? 200 : parseInt(sShowDelay),
+			(typeof sHideDelay === 'undefined') ? null : parseInt(sHideDelay),
+		];
+
+		oOptions['theme'] = oElem.attr('data-tooltip-theme') ?? '';
+
+		tippy(oElem[0], oOptions);
+
+		// Mark tooltip as instantiated
+		oElem.attr('data-tooltip-instantiated', 'true');
+	},
+	/**
+	 * Instantiate all tooltips that are not already.
+	 * Useful after AJAX calls or dynamic content modification for examples.
+	 *
+	 * @param {Object} oContainerElem Tooltips will only be instantiated if they are contained within this jQuery object
+	 * @param {boolean} bForce Whether the tooltip instantiation should be forced or not (if already done)
+	 */
+	InitAllNonInstantiatedTooltips: function (oContainerElem = null, bForce = false) {
+		if (oContainerElem === null) {
+			oContainerElem = $('body');
+		}
+
+		oContainerElem.find('[data-tooltip-content]' + (bForce ? '' : ':not([data-tooltip-instantiated="true"])')).each(function () {
+			CombodoTooltip.InitTooltipFromMarkup($(this), bForce);
+		});
+	},
+	/**
+	 * Instantiate a singleton for tooltips of elements matching sSelector.
+	 * Used to guarantee that tooltips from said selector elements won't show at same time.
+	 * Require selector elements tooltips to be instantiated before.
+	 *
+	 * @param {string} sSelector jQuery selector used to get elements tooltips
+	 */
+	InitSingletonFromSelector: function (sSelector) {
+		let oTippyInstances = [];
+		$(sSelector).each(function(){
+			if($(this)[0]._tippy !== undefined){
+				oTippyInstances.push($(this)[0]._tippy);
+			}
+		});
+		let aOptions = {
+			moveTransition: 'transform 0.2s ease-out',
+		}
+		tippy.createSingleton(oTippyInstances, $.extend(aOptions, oTippyInstances[0].props));
+	}
+};
+
+/**
+ * Helper to print messages in the browser JS console, use this instead of "console.xxx()" directly as this checks that the method exists.
+ *
+ * @api
+ * @since 3.0.0
+ */
+const CombodoJSConsole = {
+	/**
+	 * @param sMessage {string} Message to output in the JS console
+	 * @param sLevel {string} Console canal to use for the output, values can be log|debug|warn|error, default is log
+	 * @returns {boolean}
+	 * @internal
+	 */
+	_Trace: function(sMessage, sLevel = 'log') {
+		// Check if browser has JS console
+		if (!window.console) {
+			return false;
+		}
+
+		// Check if browser has the wanted log level
+		if (!window.console[sLevel]) {
+			sLevel = 'log';
+		}
+
+		window.console[sLevel](sMessage);
+	},
+	/**
+	 * Equivalent of a "console.log(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 */
+	Log: function(sMessage) {
+		this._Trace(sMessage, 'log');
+	},
+	/**
+	 * Equivalent of a "console.info(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 */
+	Info: function(sMessage) {
+		this._Trace(sMessage, 'info');
+	},
+	/**
+	 * Equivalent of a "console.debug(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 */
+	Debug: function(sMessage) {
+		this._Trace(sMessage, 'debug');
+	},
+	/**
+	 * Equivalent of a "console.warn(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 */
+	Warn: function(sMessage) {
+		this._Trace(sMessage, 'warn');
+	},
+	/**
+	 * Equivalent of a "console.error(sMessage)"
+	 *
+	 * @param sMessage {string}
+	 */
+	Error: function(sMessage) {
+		this._Trace(sMessage, 'error');
+	}
+}
+
+/**
+ * Helper to Sanitize string
+ *
+ * Note: Same as in php (see \utils::Sanitize)
+ *
+ * @api
+ * @since 2.6.5 2.7.6 3.0.0 N°4367
+ */
+const CombodoSanitizer = {
+	ENUM_SANITIZATION_FILTER_INTEGER: 'integer',
+	ENUM_SANITIZATION_FILTER_STRING: 'string',
+	ENUM_SANITIZATION_FILTER_CONTEXT_PARAM: 'context_param',
+	ENUM_SANITIZATION_FILTER_PARAMETER: 'parameter',
+	ENUM_SANITIZATION_FILTER_FIELD_NAME: 'field_name',
+	ENUM_SANITIZATION_FILTER_TRANSACTION_ID: 'transaction_id',
+	ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER: 'element_identifier',
+	ENUM_SANITIZATION_FILTER_VARIABLE_NAME: 'variable_name',
+
+	/**
+	 * @param {String} sValue The string to sanitize
+	 * @param {String} sDefaultValue The string to return if sValue not match (used for some filters)
+	 * @param {String} sSanitizationFilter one of the ENUM_SANITIZATION_FILTERs
+	 */
+	Sanitize: function (sValue, sDefaultValue, sSanitizationFilter) {
+		switch (sSanitizationFilter) {
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_INTEGER:
+				return this._CleanString(sValue, sDefaultValue, /[^0-9-+]*/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_STRING:
+				return $("<div>").text(sValue).text();
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_TRANSACTION_ID:
+				return this._ReplaceString(sValue, sDefaultValue, /^([\. A-Za-z0-9_=-]*)$/g, '');
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_PARAMETER:
+				return this._ReplaceString(sValue, sDefaultValue, /^([ A-Za-z0-9_=-]*)$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_FIELD_NAME:
+				return this._ReplaceString(sValue, sDefaultValue, /^[A-Za-z0-9_]+(->[A-Za-z0-9_]+)*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_CONTEXT_PARAM:
+				return this._ReplaceString(sValue, sDefaultValue, /^[ A-Za-z0-9_=%:+-]*$/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_-]/g);
+
+			case CombodoSanitizer.ENUM_SANITIZATION_FILTER_VARIABLE_NAME:
+				return this._CleanString(sValue, sDefaultValue, /[^a-zA-Z0-9_]/g);
+
+		}
+		return sDefaultValue;
+	},
+	_CleanString: function (sValue, sDefaultValue, sRegExp) {
+		return sValue.replace(sRegExp, '');
+	},
+
+	_ReplaceString: function (sValue, sDefaultValue, sRegExp) {
+		if (sRegExp.test(sValue)) {
+			return sValue;
+		} else {
+			return sDefaultValue;
+		}
+	},
+
+	/**
+	 * @param sValue value to escape
+	 * @param bReplaceAmp if false don't replace "&" (can be useful when sValue contains html entities we want to keep)
+	 *
+	 * @returns {string} escaped value, ready to insert in the DOM without XSS risk
+	 *
+	 * @since 2.6.5, 2.7.2, 3.0.0 N°3332
+	 * @since 3.0.0 N°4367 deprecate EncodeHtml and copy the method here (CombodoSanitizer.EscapeHtml)
+	 *
+	 * @see https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html#rule-1-html-encode-before-inserting-untrusted-data-into-html-element-content
+	 * @see https://stackoverflow.com/questions/295566/sanitize-rewrite-html-on-the-client-side/430240#430240 why inserting in the DOM (for
+	 *        example the text() JQuery way) isn't safe
+	 */
+	EscapeHtml: function (sValue, bReplaceAmp) {
+		if (bReplaceAmp) {
+			return $('<div/>').text(sValue).html();
+		}
+
+		let sEncodedValue = (sValue+'')
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/"/g, '&quot;')
+			.replace(/'/g, '&#x27;')
+			.replace(/\//g, '&#x2F;');
+
+		return sEncodedValue;
+	}
+};
+
+/**
+ * Helper for InlineImages
+ * @since 3.0.0
+ */
+const CombodoInlineImage = {
+	/**
+	 * Max width to apply on inline images
+	 */
+	max_width: 600,
+	/**
+	 * @param sMaxWidth {string} {@see CombodoInlineImage.max_width}
+	 */
+	SetMaxWidth: function (sMaxWidth) {
+		this.max_width = sMaxWidth;
+	},
+	/**
+	 * Apply the {@see CombodoInlineImage.max_width} to all inline images
+	 */
+	FixImagesWidth: function () {
+		$('img[data-img-id]').each(function() {
+			if ($(this).width() > CombodoInlineImage.max_width)
+			{
+				$(this).css({'max-width': CombodoInlineImage.max_width+'px', width: '', height: '', 'max-height': ''});
+			}
+			$(this).addClass('inline-image').attr('href', $(this).attr('src'));
+		}).magnificPopup({type: 'image', closeOnContentClick: true });
+	}
 }

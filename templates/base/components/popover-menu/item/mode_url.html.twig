@@ -1,0 +1,20 @@
+{% extends 'base/components/popover-menu/item/layout.html.twig' %}
+
+{% block iboPopoverMenuItem %}
+    <a id="{{ oUIBlock.GetID() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}" data-role="ibo-popover-menu--item" data-resource-id="{{ oUIBlock.GetUID() }}" data-uid="{{ oUIBlock.GetUID() }}" href="{{ oUIBlock.GetUrl() }}" target="{{ oUIBlock.GetTarget() }}"
+            {% if oUIBlock.HasDataAttributes() %}
+                {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                    data-{{ sName }}="{{ sValue }}"
+                {% endfor %}
+            {% endif %}
+            {% if oUIBlock.GetTooltip() is not empty %}
+                data-tooltip-content="{{ oUIBlock.GetTooltip() }}"
+            {% endif %}
+    >
+        {% if oUIBlock.GetIconClass() is not empty %}
+            <i class="ibo-popover-menu--item--icon fa-fw {{ oUIBlock.GetIconClass() }}"></i>
+        {% endif %}
+        {{ oUIBlock.GetLabel() }}
+    </a>
+{% endblock %}
+

@@ -1,30 +1,26 @@
 <?php
-// Copyright (C) 2010-2012 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
-
-
 /**
- * Web page used for the setup
+ * Copyright (C) 2013-2021 Combodo SARL
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
  */
 
-require_once(APPROOT.'/application/nicewebpage.class.inc.php');
+use Combodo\iTop\Application\UI\Base\Component\Title\Title;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlockUIBlockFactory;
+
 require_once(APPROOT.'setup/modulediscovery.class.inc.php');
 require_once(APPROOT.'setup/runtimeenv.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
@@ -37,145 +33,22 @@ SetupLog::Enable(APPROOT.'/log/setup.log');
  */
 class SetupPage extends NiceWebPage
 {
+	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/setuppage/layout';
+
 	public function __construct($sTitle)
 	{
 		parent::__construct($sTitle);
 		$this->add_linked_script("../js/jquery.blockUI.js");
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/@popperjs/core/dist/umd/popper.js');
+		$this->add_linked_script(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy-bundle.umd.js');
 		$this->add_linked_script("../setup/setup.js");
-		$this->add_style(
-			<<<CSS
-body {
-	background-color: #eee;
-	margin: 0;
-	padding: 0;
-	font-size: 10pt;
-	overflow-y: auto;
-}
-#header {
-	width: 600px;
-	margin-left: auto;
-	margin-right: auto;
-	margin-top: 50px;
-	padding: 20px;
-	background: #f6f6f1;
-	height: 54px;
-	border-top: 1px solid #000;
-	border-left: 1px solid #000;
-	border-right: 1px solid #000;
-}
-#header img {
-	border: 0;
-	vertical-align: middle;
-	margin-right: 20px;
-}
-#header h1 {
-	vertical-align: middle;
-	height: 54px;
-	noline-height: 54px;
-	margin: 0;
-}
-#setup {
-	width: 600px;
-	margin-left: auto;
-	margin-right: auto;
-	padding: 20px;
-	background-color: #fff;
-	border-left: 1px solid #000;
-	border-right: 1px solid #000;
-	border-bottom: 1px solid #000;
-}
-.center {
-	text-align: center;
-}
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-awesome/css/all.min.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/font-combodo/font-combodo.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/dist/tippy.css');
+		$this->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'node_modules/tippy.js/animations/shift-away-subtle.css');
 
-h1 {
-	color: #555555;
-	font-size: 16pt;
-}
-h2 {
-	color: #000;
-	font-size: 14pt;
-}
-h3 {
-	color: #1C94C4;
-	font-size: 12pt;
-	font-weight: bold;
-}
-.next {
-	width: 100%;
-	text-align: right;
-}
-.v-spacer {
-	padding-top: 1em;
-}
-button {
-	margin-top: 1em;
-	padding-left: 1em;
-	padding-right: 1em;
-}
-p.info {
-	padding-left: 50px;
-	background: url(../images/info-mid.png) no-repeat left -5px;
-	min-height: 48px;
-}
-p.ok {
-	padding-left: 50px;
-	background: url(../images/clean-mid.png) no-repeat left -8px;
-	min-height: 48px;
-}
-p.warning {
-	padding-left: 50px;
-	background: url(../images/messagebox_warning-mid.png) no-repeat left -5px;
-	min-height: 48px;
-}
-p.error {
-	padding-left: 50px;
-	background: url(../images/stop-mid.png) no-repeat left -5px;
-	min-height: 48px;
-}
-td.label {
-	text-align: left;
-}
-label.read-only {
-	color: #666;
-	cursor: text;
-}
-td.input {
-	text-align: left;
-}
-table.formTable {
-	border: 0;
-	cellpadding: 2px;
-	cellspacing: 0;
-}
-.wizlabel, .wizinput {
-	color: #000;
-	font-size: 10pt;
-}
-.wizhelp {
-	color: #333;
-	font-size: 8pt;
-}
-#progress { 
-    border:1px solid #000000; 
-    width: 180px; 
-    height: 20px; 
-    line-height: 20px; 
-    text-align: center;
-    margin: 5px;
-}
-h3.clickable {
-	background: url(../images/plus.gif) no-repeat left;
-	padding-left:16px;
-	cursor: hand;	
-}
-h3.clickable.open {
-	background: url(../images/minus.gif) no-repeat left;
-	padding-left:16px;
-	cursor: hand;	
-}
-CSS
-		);
+		$this->LoadTheme();
+		$this->add_saas("css/setup.scss");
 	}
 
 	/**
@@ -205,25 +78,25 @@ CSS
 	public function info($sText)
 	{
 		$this->add("<p class=\"info\">$sText</p>\n");
-		$this->log_info($sText);
+		SetupLog::Info($sText);
 	}
 
 	public function ok($sText)
 	{
-		$this->add("<p class=\"ok\">$sText</p>\n");
-		$this->log_ok($sText);
+		$this->add("<div class=\"message message-valid\"><span class=\"message-title\">Success:</span>$sText</div>");
+		SetupLog::Ok($sText);
 	}
 
 	public function warning($sText)
 	{
-		$this->add("<p class=\"warning\">$sText</p>\n");
-		$this->log_warning($sText);
+		$this->add("<div class=\"message message-warning\"><span class=\"message-title\">Warning:</span>$sText</div>");
+		SetupLog::Warning($sText);
 	}
 
 	public function error($sText)
 	{
-		$this->add("<p class=\"error\">$sText</p>\n");
-		$this->log_error($sText);
+		$this->add("<div class=\"message message-error\">$sText</div>");
+		SetupLog::Error($sText);
 	}
 
 	public function form($aData)
@@ -275,7 +148,7 @@ CSS
 			$this->p("<li>$sItem</li>\n");
 		}
 		$this->p('</ul>');
-		$this->add_ready_script("$('#{$sId}').click( function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
+		$this->add_ready_script("$('#{$sId}').on('click', function() { $(this).toggleClass('open'); $('#{$sId}_list').toggle();} );\n");
 		if (!$bOpen)
 		{
 			$this->add_ready_script("$('#{$sId}').toggleClass('open'); $('#{$sId}_list').toggle();\n");
@@ -284,35 +157,34 @@ CSS
 
 	public function output()
 	{
-		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png';
-		$this->s_content = "<div id=\"header\"><h1><a href=\"http://www.combodo.com/itop\" target=\"_blank\"><img title=\"iTop by Combodo\" alt=\" \" src=\"{$sLogo}?t=".utils::GetCacheBusterTimestamp()."\"></a>&nbsp;".htmlentities($this->s_title,
-				ENT_QUOTES, self::PAGES_CHARSET)."</h1>\n</div><div id=\"setup\">{$this->s_content}\n</div>\n";
+		$sLogo = utils::GetAbsoluteUrlAppRoot().'/images/itop-logo.png?t='.utils::GetCacheBusterTimestamp();
+		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard();
+		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
+		$oSetupPage->AddSubBlock($oHeader);
+		$oTitle = TitleUIBlockFactory::MakeForPageWithIcon($this->s_title, $sLogo, Title::DEFAULT_ICON_COVER_METHOD, false);
+		$oHeader->AddSubBlock($oTitle);
+		$oSetup = UIContentBlockUIBlockFactory::MakeStandard('setup', ['ibo-setup--body']);
+		$oSetupPage->AddSubBlock($oSetup);
+		$oSetup->AddSubBlock($this->oContentLayout);
+
+		$this->oContentLayout = $oSetupPage;
 
 		return parent::output();
 	}
 
-	public static function log_error($sText)
+	/**
+	 * @inheritDoc
+	 */
+	protected function LoadTheme()
 	{
-		SetupLog::Error($sText);
+		// Do nothing
 	}
 
-	public static function log_warning($sText)
+	/**
+	 * @inheritDoc
+	 */
+	protected function GetFaviconAbsoluteUrl()
 	{
-		SetupLog::Warning($sText);
-	}
-
-	public static function log_info($sText)
-	{
-		SetupLog::Info($sText);
-	}
-
-	public static function log_ok($sText)
-	{
-		SetupLog::Ok($sText);
-	}
-
-	public static function log($sText)
-	{
-		SetupLog::Ok($sText);
+		return utils::GetAbsoluteUrlAppRoot().'setup/favicon.ico';
 	}
 }

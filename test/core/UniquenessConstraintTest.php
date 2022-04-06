@@ -10,21 +10,16 @@ use MetaModel;
 /**
  * Class UniquenessConstraintTest
  *
- * @since 2.6 N°659 uniqueness constraint
+ * @since 2.6.0 N°659 uniqueness constraint
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
-/**
- * @runTestsInSeparateProcesses
- * @preserveGlobalState disabled
- * @backupGlobals disabled
- */class UniquenessConstraintTest extends ItopTestCase
+class UniquenessConstraintTest extends ItopTestCase
 {
 	protected function setUp()
 	{
 		parent::setUp();
 		require_once(APPROOT.'/core/metamodel.class.php');
-		require_once(APPROOT.'/core/coreexception.class.inc.php');
 	}
 
 	/**

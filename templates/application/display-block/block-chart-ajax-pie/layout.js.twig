@@ -1,0 +1,39 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+var chart = c3.generate({
+    bindto: d3.select('#my_chart_{{ oUIBlock.sId }}'),
+    data: {
+        columns: {{ oUIBlock.sJSColumns|raw }},
+        type: 'pie',
+        names: {{ oUIBlock.sJSNames|raw }},
+        onclick: function (d) {
+            var aURLs = {{ oUIBlock.sJSURLs|raw }};
+            window.location.href= aURLs[d.index];
+        },
+        order: null
+    },
+    legend: {
+        show: true,
+        position: 'right'
+    },
+    tooltip: {
+        format: {
+            value: function (value) { return value; }
+        }
+    }
+});
+
+if (typeof(charts) === "undefined")
+{
+    charts = [];
+	refreshChart = [];
+}
+var idxChart=charts.length;
+charts.push(chart);
+var refreshChart{{ oUIBlock.sId|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }}='	$.post("{{ oUIBlock.sURLForRefresh|raw }}&refresh='+idxChart+'","", function (data) {'+
+															'charts['+idxChart+'].unload();'+
+															'setTimeout(function () {eval(data.js);},50);'+
+														'});';
+
+refreshChart.push(refreshChart{{ oUIBlock.sId|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_VARIABLE_NAME')) }});

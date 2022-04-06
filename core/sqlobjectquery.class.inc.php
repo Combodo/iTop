@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2015-2017 Combodo SARL
+// Copyright (C) 2015-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -21,7 +21,7 @@
  * SQLObjectQuery
  * build a mySQL compatible SQL query
  *
- * @copyright   Copyright (C) 2015-2017 Combodo SARL
+ * @copyright   Copyright (C) 2015-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -318,7 +318,40 @@ class SQLObjectQuery extends SQLQuery
 		return "UPDATE $sFrom SET $sValues WHERE $sWhere";
 	}
 
-	// Interface, build the SQL query
+
+	/**
+	 * Generate an INSERT statement.
+	 * Note : unlike `RenderUpdate` and `RenderSelect`, it is limited to one and only one table.
+	 *
+	 *
+	 * @param array $aArgs
+	 * @return string
+	 * @throws CoreException
+	 */
+	public function RenderInsert($aArgs = array())
+	{
+		$this->PrepareRendering();
+		$aJoinInfo = reset($this->__aFrom);
+
+		if ($aJoinInfo['jointype'] != 'first' || count($this->__aFrom) > 1)
+		{
+			throw new CoreException('Cannot render insert');
+		}
+
+		$sFrom   = "`{$aJoinInfo['tablename']}`";
+
+		$sColList = '`'.implode('`,`', array_keys($this->m_aValues)).'`';
+
+		$aSetValues = array();
+		foreach ($this->__aSetValues as $sFieldSpec => $value)
+		{
+			$aSetValues[] = CMDBSource::Quote($value);
+		}
+		$sValues = implode(',', $aSetValues);
+
+		return "INSERT INTO $sFrom ($sColList) VALUES  ($sValues)";
+	}
+
 
 	/**
 	 * @param array $aOrderBy
@@ -355,15 +388,18 @@ class SQLObjectQuery extends SQLQuery
 		{
 			if (count($this->__aSelectedIdFields) > 0)
 			{
-				$aCountFields = array();
-				foreach ($this->__aSelectedIdFields as $sFieldExpr)
-				{
-					$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
+				$aCountFields = [];
+				$aCountI = [];
+				$i = 0;
+				foreach ($this->__aSelectedIdFields as $sFieldExpr) {
+					$aCountFields[] = "COALESCE($sFieldExpr, 0) AS idCount$i"; // Null values are excluded from the count
+					$aCountI[] = 'idCount'.$i++;
 				}
 				$sCountFields = implode(', ', $aCountFields);
+				$sCountI = implode('+ ', $aCountI);
 				// Count can be limited for performance reason, in this case the total amount is not important,
 				// we only need to know if the number of entries is greater than a certain amount.
-				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_";
+				$sSQL = "SELECT COUNT(*) AS COUNT FROM (SELECT$sLineSep DISTINCT $sCountFields $sLineSep FROM $sFrom$sLineSep WHERE $sWhere $sLimit) AS _alderaan_ WHERE $sCountI>0";
 			}
 			else
 			{
@@ -424,7 +460,21 @@ class SQLObjectQuery extends SQLQuery
 		{
 			$sLimit = '';
 		}
-		$sSQL = "SELECT $sSelect,$sLineSep COUNT(*) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
+		if (count($this->__aSelectedIdFields) > 0)
+		{
+			$aCountFields = array();
+			foreach ($this->__aSelectedIdFields as $sFieldExpr)
+			{
+				$aCountFields[] = "COALESCE($sFieldExpr, 0)"; // Null values are excluded from the count
+			}
+			$sCountFields = implode(', ', $aCountFields);
+			$sCountClause = "DISTINCT $sCountFields";
+		}
+		else
+		{
+			$sCountClause = '*';
+		}
+		$sSQL = "SELECT $sSelect,$sLineSep COUNT($sCountClause) AS _itop_count_$sLineSep FROM $sFrom$sLineSep WHERE $sWhere$sLineSep $sGroupBy $sOrderBy$sLineSep $sLimit";
 		return $sSQL;
 	}
 
@@ -444,7 +494,17 @@ class SQLObjectQuery extends SQLQuery
 		}
 	}
 
-	private function PrepareSingleTable(SQLObjectQuery $oRootQuery, &$aFrom, $sCallerAlias = '', $aJoinData)
+	/**
+	 * @param \SQLObjectQuery $oRootQuery
+	 * @param $aFrom
+	 * @param $sCallerAlias
+	 * @param $aJoinData
+	 *
+	 * @return string
+	 *
+	 * @since 2.7.7 3.0.1 3.1.0 N°3129 Remove default value for $sCallerAlias for PHP 8.0 compat (Private method with only 2 calls in the class, both providing the optional parameter)
+	 */
+	private function PrepareSingleTable(SQLObjectQuery $oRootQuery, &$aFrom, $sCallerAlias, $aJoinData)
 	{
 		$aTranslationTable[$this->m_sTable]['*'] = $this->m_sTableAlias;
 		$sJoinCond = '';
@@ -563,6 +623,7 @@ class SQLObjectQuery extends SQLQuery
 		$aTempFrom = array(); // temporary subset of 'from' specs, to be grouped in the final query
 		foreach ($this->m_aJoinSelects as $aJoinData)
 		{
+			/** @var \SQLObjectQuery $oRightSelect */
 			$oRightSelect = $aJoinData["select"];
 
 			$oRightSelect->PrepareSingleTable($oRootQuery, $aTempFrom, $this->m_sTableAlias, $aJoinData);

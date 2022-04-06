@@ -1,0 +1,36 @@
+{% apply spaceless %}
+<form id="{{ oUIBlock.GetId() }}"
+      class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {% if oUIBlock.IsSubmitAutonomous() and (bInitOpened == false) %}ibo-is-closed{% endif %}"
+      data-role="ibo-caselog-entry-form"
+      data-object-class="{{ oUIBlock.GetObjectClass() }}"
+      data-object-id="{{ oUIBlock.GetObjectId() }}"
+      data-attribute-code="{{ oUIBlock.GetAttCode() }}"
+      data-attribute-label="{{ oUIBlock.GetAttLabel() }}"
+      data-submit-mode="{{ oUIBlock.GetSubmitMode() }}"
+      method="post">
+    <div class="ibo-caselog-entry-form--actions">
+        <div class="ibo-caselog-entry-form--action-buttons--extra-actions"
+             data-role="ibo-caselog-entry-form--action-buttons--extra-actions">
+            {% for TextInputActionButton in oUIBlock.GetExtraActionButtons() %}
+                {{ render_block(TextInputActionButton, {aPage: aPage}) }}
+            {% endfor %}
+        </div>
+        <div class="ibo-caselog-entry-form--action-buttons--main-actions" data-role="ibo-caselog-entry-form--action-buttons--main-actions">
+            {% for FormActionButton in oUIBlock.GetMainActionButtons() %}
+                {{ render_block(FormActionButton, {aPage: aPage}) }}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="ibo-caselog-entry-form--text-input" data-role="ibo-caselog-entry-form--text-input">
+        {{ render_block(oUIBlock.GetTextInput(), {aPage: aPage}) }}
+    </div>
+    <div class="ibo-caselog-entry-form--extra-inputs" data-role="ibo-caselog-entry-form--extra-inputs">
+    </div>
+    <div class="ibo-caselog-entry-form--lock-indicator ibo-is-hidden" data-role="ibo-caselog-entry-form--lock-indicator">
+        <span class="ibo-caselog-entry-form--lock-icon" data-role="ibo-caselog-entry-form--lock-icon">
+            <span class="fas fa-lock"></span>
+        </span>
+        <span class="ibo-caselog-entry-form--lock-message" data-role="ibo-caselog-entry-form--lock-message"></span>
+    </div>
+</form>
+{% endapply %}

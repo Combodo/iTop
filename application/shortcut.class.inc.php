@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -15,13 +15,14 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 
 
 /**
  * Persistent class Shortcut and derived
  * Shortcuts of any kind
  *
- * @copyright   Copyright (C) 2010-2016 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -39,7 +40,6 @@ abstract class Shortcut extends DBObject implements iDisplay
 			"db_table" => "priv_shortcut",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "realclass",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		//MetaModel::Init_InheritAttributes();
@@ -101,7 +101,7 @@ function ShortcutRenameOK()
 	});
 }
 
-$('#shortcut_rename_dlg form').bind('submit', function() { return false; });
+$('#shortcut_rename_dlg form').on('submit', function() { return false; });
 
 $('#shortcut_rename_dlg').dialog({
 	width: 400,
@@ -161,7 +161,6 @@ class ShortcutOQL extends Shortcut
 			"db_table" => "priv_shortcut_oql",
 			"db_key_field" => "id",
 			"db_finalclass_field" => "",
-			"display_template" => "",
 		);
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
@@ -287,10 +286,10 @@ class ShortcutOQL extends Shortcut
 		$sRateTitle = addslashes(Dict::Format('Class:ShortcutOQL/Attribute:auto_reload_sec/tip', MetaModel::GetConfig()->Get('min_reload_interval')));
 
 		$oPage->add_ready_script(
-<<<EOF
-
+<<<JS
 // Note: the title gets deleted by the validation mechanism
-$("#attr_auto_reload_sec").tooltip({items: 'input', content: '$sRateTitle'});
+$("#attr_auto_reload_sec").attr('data-tooltip-content', '$sRateTitle');
+CombodoTooltip.InitTooltipFromMarkup($("#attr_auto_reload_sec"));
 $("#attr_auto_reload_sec").prop('disabled', !$('#attr_auto_reload').is(':checked'));
 
 $('#attr_auto_reload').change( function(ev) {
@@ -316,23 +315,30 @@ function ShortcutCreationOK()
 	});
 }
 
-$('#shortcut_creation_dlg form').bind('submit', function() { ShortcutCreationOK(); return false; });
+$('#shortcut_creation_dlg form').on('submit', function() { ShortcutCreationOK(); return false; });
 
 $('#shortcut_creation_dlg').dialog({
 	width: 400,
 	modal: true,
 	title: '$sDialogTitle',
 	buttons: [
-	{ text: "$sOkButtonLabel", click: ShortcutCreationOK },
-	{ text: "$sCancelButtonLabel", click: function() {
-		$(this).dialog( "close" ); $(this).remove();
-	} },
+	{
+		text: "$sCancelButtonLabel",
+        class: "ibo-is-alternative",
+		click: function() {
+			$(this).dialog( "close" );
+			$(this).remove();
+		}
+	},
+	{
+		text: "$sOkButtonLabel",
+        class: "ibo-is-primary",
+		click: ShortcutCreationOK
+	},
 	],
 	close: function() { $(this).remove(); }
 });
-EOF
+JS
 		);
 	}
 }
-
-?>

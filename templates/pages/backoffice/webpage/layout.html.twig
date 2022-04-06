@@ -1,0 +1,117 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+<!DOCTYPE html>
+<html lang="{{ aPage.aMetadata.sLang }}">
+<head>
+    <meta charset="{{ aPage.aMetadata.sCharset }}">
+    {# This block can be used to add your own meta tags by extending the default template #}
+    {% block iboPageExtraMetas %}
+    {% endblock %}
+    {% if aPage.aMetadata.sBaseUrl is defined or aPage.aMetadata.sBaseTarget is defined %}
+        <base {% if aPage.aMetadata.sBaseUrl is defined %}href="{{ aPage.aMetadata.sBaseUrl }}"{% endif %} {% if aPage.aMetadata.sBaseTarget is defined %}target="{{ aPage.aMetadata.sBaseTarget }}"{% endif %}>
+    {% endif %}
+    <title>{{ aPage.sTitle }}</title>
+    {% if aPage.sFaviconUrl is defined %}
+        <link rel="shortcut icon" href="{{ aPage.sFaviconUrl|add_itop_version|raw }}">
+    {% endif %}
+    <link rel="search" type="application/opensearchdescription+xml" title="iTop" href="{{ aPage.sAbsoluteUrlAppRoot }}pages/opensearch.xml.php">
+    {# Main fonts have to be preloaded to avoid blocking content rendering #}
+    {% for aPreloadedFont in aPage.aPreloadedFonts %}
+        <link rel="preload" href="{{ aPreloadedFont['font'] }}" as="font" type="font/{{ aPreloadedFont['type'] }}" crossorigin>
+    {% endfor %}
+    {# Stylesheets MUST be loaded before any scripts otherwise we may face problems such as
+	- Visual glitches
+	- jQuery scripts spurious problems (like failing on a 'reload') #}
+    {% block iboPageCssFiles %}
+	    {% for aCssFileData in aPage.aCssFiles %}
+		    {% if aCssFileData['condition'] != '' %}<!--[if {{ aCssFileData['condition'] }}]>{% endif %}
+			<link type="text/css" href="{{ aCssFileData['link']|add_itop_version|raw }}" rel="stylesheet">
+			{% if aCssFileData['condition'] != '' %}<![endif]-->{% endif %}
+	    {% endfor %}
+    {% endblock %}
+
+    {% block iboPageCssInline %}
+        {# We put each styles in a dedicated style tag to prevent massive failure if 1 style is broken (eg. missing semi-colon, bracket, ...) #}
+        {% for sCssInline in aPage.aCssInline %}
+            <style>
+                {{ sCssInline|raw }}
+            </style>
+        {% endfor %}
+    {% endblock %}
+
+    {% block iboPageJsInlineEarly %}
+        {% for sJsInline in aPage.aJsInlineEarly %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+            {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
+</head>
+<body data-gui-type="backoffice">
+{% if aPage.isPrintable %}
+<div class="printable-content" style="width: 27.7cm;"> {% endif %}
+    {% block iboPageBodyHtml %}
+
+        <div id="ibo-page-container">
+            {{ render_block(oLayout, {aPage: aPage}) }}
+        </div>
+    {% endblock %}
+    {% if aPage.isPrintable %}</div> {% endif %}
+
+{% block iboDeferredBlocks %}
+    {% for oBlock in aDeferredBlocks %}
+        {{ render_block(oBlock, {aPage: aPage}) }}
+    {% endfor %}
+{% endblock %}
+{% if aPage.aJsFiles is not empty %}
+    <script type="text/javascript">
+    var aListJsFiles = [];
+    {% for sJsFile in aPage.aJsFiles %}
+            aListJsFiles.push("{{ sJsFile|raw }}");
+        {% endfor %}
+    </script>
+{% endif %}
+{% block iboPageJsFiles %}
+    {% for sJsFile in aPage.aJsFiles %}
+        <script type="text/javascript" src="{{ sJsFile|add_itop_version|raw }}"></script>
+    {% endfor %}
+{% endblock %}
+
+{% block iboPageJsInlineScripts %}
+    {% if aPage.aJsInlineOnInit is not empty or aPage.aJsInlineOnDomReady is not empty %}
+        <script type="text/javascript">
+            {# TODO 3.0.0: How to do this in native JS? #}
+            $(document).ready(function () {
+                {% block iboPageJsInlineOnInit %}
+                    {% for sJsInline in aPage.aJsInlineOnInit %}
+                        {{ sJsInline|raw }}
+                    {% endfor %}
+                {% endblock %}
+
+                {% block iboPageJsInlineOnDomReady %}
+                    setTimeout(function () {
+                        {% for sJsInline in aPage.aJsInlineOnDomReady %}
+                        {{ sJsInline|raw }}
+                        {% endfor %}
+                    }, 50);
+                {% endblock %}
+            });
+        </script>
+    {% endif %}
+    {% block iboPageJsInlineLive %}
+        {% for sJsInline in aPage.aJsInlineLive %}
+            {# We put each scripts in a dedicated script tag to prevent massive failure if 1 script is broken (eg. missing semi-colon or non closed multi-line comment) #}
+            <script type="text/javascript">
+                {{ sJsInline|raw }}
+            </script>
+        {% endfor %}
+    {% endblock %}
+{% endblock %}
+
+{% block iboCapturedOutput %}
+    {{ aPage.sCapturedOutput|raw }}
+{% endblock %}
+
+</body>
+</html>

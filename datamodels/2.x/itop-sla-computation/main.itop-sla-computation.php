@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2018 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -20,7 +20,7 @@
 /**
  * Module itop-sla-computation: implements an extensible mechanism
  *
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -42,15 +42,17 @@ class SLAComputation implements iWorkingTimeComputer
 	 *
 	 * @return void
 	 * @throws \CoreException
+	 *
+	 * @deprecated will be removed soon (see N°2683)
 	 */
 	public static function SelectModule($sClassName)
 	{
-		if (!class_exists($sClassName))
-		{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
+		if (!class_exists($sClassName)) {
 			throw new CoreException("Could not select this module, '$sClassName' in not a valid class name");
 		}
-		if (($sClassName != 'SLAComputationAddOnAPI') && !is_subclass_of($sClassName, 'SLAComputationAddOnAPI'))
-		{
+		if (($sClassName != 'SLAComputationAddOnAPI') && !is_subclass_of($sClassName, 'SLAComputationAddOnAPI')) {
 			throw new CoreException("Could not select this module, the class '$sClassName' is not derived from SLAComputationAddOnAPI (parent class:".get_parent_class($sClassName)." )");
 		}
 		self::$m_oAddOn = new $sClassName;
@@ -131,6 +133,8 @@ class SLAComputation implements iWorkingTimeComputer
  * 24x7 (no holiday) computation. To override this behavior, implement
  * a derived class from this one, overloading the behavior, and call
  * SLAComputation::SetExtension()
+ *
+ * @deprecated will be removed soon (see N°2683)
  */
 class SLAComputationAddOnAPI
 {
@@ -139,6 +143,8 @@ class SLAComputationAddOnAPI
 	 */
 	public function Init()
 	{
+		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
+		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod();
 	}
 
 	/**

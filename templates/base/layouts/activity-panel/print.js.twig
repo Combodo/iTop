@@ -1,0 +1,15 @@
+// Change on activity filters
+$('[data-role="ibo-activity-panel--filter"]').on('click', function(){
+	const sTabType = $(this).attr('data-target-entry-types');
+	if(sTabType=="caselog")
+	{
+		const sTabTypeCaseLog = $(this).attr('data-entry-caselog-attribute-code');
+		$(this).closest('.ibo-activity-panel').find('[data-entry-type="'+sTabType+'"][data-entry-caselog-attribute-code="'+sTabTypeCaseLog+'"]').toggle();
+	}
+	else
+	{
+		$(this).closest('.ibo-activity-panel').find('[data-entry-type="'+sTabType+'"]').toggle();
+	}
+	$(this).toggleClass('strikethrough');
+});
+$('.ibo-activity-panel').find('.ibo-activity-panel--entry-group').removeClass('ibo-is-hidden');

@@ -1,20 +1,25 @@
 <?php
-// Copyright (C) 2010-2015 Combodo SARL
-//
-//   This file is part of iTop.
-//
-//   iTop is free software; you can redistribute it and/or modify	
-//   it under the terms of the GNU Affero General Public License as published by
-//   the Free Software Foundation, either version 3 of the License, or
-//   (at your option) any later version.
-//
-//   iTop is distributed in the hope that it will be useful,
-//   but WITHOUT ANY WARRANTY; without even the implied warranty of
-//   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-//   GNU Affero General Public License for more details.
-//
-//   You should have received a copy of the GNU Affero General Public License
-//   along with iTop. If not, see <http://www.gnu.org/licenses/>
+
+/**
+ * Copyright (C) 2013-2021 Combodo SARL
+ *
+ * This file is part of iTop.
+ *
+ * iTop is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * iTop is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ */
+
+use Combodo\iTop\Application\UI\Base\iUIBlock;
+use Symfony\Component\DependencyInjection\Container;
 
 require_once(APPROOT.'application/newsroomprovider.class.inc.php');
 
@@ -25,9 +30,10 @@ require_once(APPROOT.'application/newsroomprovider.class.inc.php');
  * You may implement such interfaces in a module file (e.g. main.mymodule.php)
  *
  * @api
- * @copyright   Copyright (C) 2010-2012 Combodo SARL
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  * @package     Extensibility
+ * @since       2.7.0
  */
 interface iLoginExtension
 {
@@ -39,6 +45,9 @@ interface iLoginExtension
 	public function ListSupportedLoginModes();
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLoginFSMExtension extends iLoginExtension
 {
 	/**
@@ -56,17 +65,22 @@ interface iLoginFSMExtension extends iLoginExtension
 	public function LoginAction($sLoginState, &$iErrorCode);
 }
 
+/**
+ * @since 2.7.0
+ */
 abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 {
-	public abstract function ListSupportedLoginModes();
+	/**
+	 * @inheritDoc
+	 */
+	abstract public function ListSupportedLoginModes();
 
 	/**
 	 * @inheritDoc
 	 */
 	public function LoginAction($sLoginState, &$iErrorCode)
 	{
-		switch ($sLoginState)
-		{
+		switch ($sLoginState) {
 			case LoginWebPage::LOGIN_STATE_START:
 				return $this->OnStart($iErrorCode);
 
@@ -149,27 +163,50 @@ abstract class AbstractLoginFSMExtension implements iLoginFSMExtension
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnCredentialsOK(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnUsersOK(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnConnected(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 
+	/**
+	 * @param int $iErrorCode (see LoginWebPage::EXIT_CODE_...)
+	 *
+	 * @return int LoginWebPage::LOGIN_FSM_RETURN_ERROR, LoginWebPage::LOGIN_FSM_RETURN_OK or LoginWebPage::LOGIN_FSM_RETURN_IGNORE
+	 */
 	protected function OnError(&$iErrorCode)
 	{
 		return LoginWebPage::LOGIN_FSM_CONTINUE;
 	}
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLogoutExtension extends iLoginExtension
 {
 	/**
@@ -178,6 +215,9 @@ interface iLogoutExtension extends iLoginExtension
 	public function LogoutAction();
 }
 
+/**
+ * @since 2.7.0
+ */
 interface iLoginUIExtension extends iLoginExtension
 {
 	/**
@@ -186,7 +226,11 @@ interface iLoginUIExtension extends iLoginExtension
 	public function GetTwigContext();
 }
 
-
+/**
+ * @api
+ * @package     Extensibility
+ * @since 2.7.0
+ */
 interface iPreferencesExtension
 {
 	/**
@@ -202,6 +246,33 @@ interface iPreferencesExtension
 	 * @return bool true if the operation has been used
 	 */
 	public function ApplyPreferences(WebPage $oPage, $sOperation);
+}
+
+/**
+ * Extend this class instead of implementing iPreferencesExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractPreferencesExtension implements iPreferencesExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function DisplayPreferences(WebPage $oPage)
+	{
+		// Do nothing
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function ApplyPreferences(WebPage $oPage, $sOperation)
+	{
+		// Do nothing
+	}
+
 }
 
 /**
@@ -359,9 +430,80 @@ interface iApplicationUIExtension
 	 *
 	 * @param DBObjectSet $oSet A set of persistent objects (DBObject)
 	 *
-	 * @return string[string]
+	 * @return array
 	 */
 	public function EnumAllowedActions(DBObjectSet $oSet);
+}
+
+/**
+ * Extend this class instead of implementing iApplicationUIExtension if you don't need to overload
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractApplicationUIExtension implements iApplicationUIExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDisplayProperties($oObject, WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDisplayRelations($oObject, WebPage $oPage, $bEditMode = false)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnFormSubmit($oObject, $sFormPrefix = '')
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnFormCancel($sTempId)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function EnumUsedAttributes($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetIcon($oObject)
+	{
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHilightClass($oObject)
+	{
+		return HILIGHT_CLASS_NONE;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function EnumAllowedActions(DBObjectSet $oSet)
+	{
+		return array();
+	}
+
 }
 
 /**
@@ -391,7 +533,7 @@ interface iApplicationObjectExtension
 	public function OnIsModified($oObject);
 
 	/**
-	 * Invoked to determine wether an object can be written to the database
+	 * Invoked to determine whether an object can be written to the database
 	 *
 	 * The GUI calls this verb and reports any issue.
 	 * Anyhow, this API can be called in other contexts such as the CSV import tool.
@@ -419,7 +561,10 @@ interface iApplicationObjectExtension
 	 * Invoked when an object is updated into the database. The method is called right <b>after</b> the object has been written to the
 	 * database.
 	 *
-	 * Changes made to the object can be get using {@link $oObject::$m_aChanges}. Do not call {@link \DBObject::ListChanges} for this purpose !
+	 * Useful methods you can call on $oObject :
+	 *
+	 * * {@see DBObject::ListPreviousValuesForUpdatedAttributes()} : list of changed attributes and their values before the change
+	 * * {@see DBObject::Get()} : for a given attribute the new value that was persisted
 	 *
 	 * @param \cmdbAbstractObject $oObject The target object
 	 * @param CMDBChange|null $oChange A change context. Since 2.0 it is fine to ignore it, as the framework does maintain this information
@@ -427,7 +572,7 @@ interface iApplicationObjectExtension
 	 *
 	 * @return void
 	 *
-	 * @since 2.7.0 N°2293 can access object changes by calling {@link $oObject::$m_aChanges}
+	 * @since 2.7.0 N°2293 can access object changes by calling {@see DBObject::ListPreviousValuesForUpdatedAttributes()} on $oObject
 	 */
 	public function OnDBUpdate($oObject, $oChange = null);
 
@@ -456,6 +601,62 @@ interface iApplicationObjectExtension
 	 * @return void
 	 */
 	public function OnDBDelete($oObject, $oChange = null);
+}
+
+/**
+ * Extend this class instead of iApplicationObjectExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ */
+abstract class AbstractApplicationObjectExtension implements iApplicationObjectExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function OnIsModified($oObject)
+	{
+		return false;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnCheckToWrite($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnCheckToDelete($oObject)
+	{
+		return array();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBUpdate($oObject, $oChange = null)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBInsert($oObject, $oChange = null)
+	{
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function OnDBDelete($oObject, $oChange = null)
+	{
+	}
+
 }
 
 /**
@@ -575,6 +776,10 @@ abstract class ApplicationPopupMenuItem
 	/** @ignore */
 	protected $sLabel;
 	/** @ignore */
+	protected $sTooltip;	
+	/** @ignore */
+	protected $sIconClass;
+	/** @ignore */
 	protected $aCssClasses;
 
 	/**
@@ -584,12 +789,13 @@ abstract class ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param array $aCssClasses The CSS classes to add to the menu
 	 */
 	public function __construct($sUID, $sLabel)
 	{
 		$this->sUID = $sUID;
 		$this->sLabel = $sLabel;
+		$this->sTooltip = '';
+		$this->sIconClass = '';
 		$this->aCssClasses = array();
 	}
 
@@ -644,6 +850,47 @@ abstract class ApplicationPopupMenuItem
 		$this->aCssClasses[] = $sCssClass;
 	}
 
+
+	/**
+	 * @param $sTooltip
+	 * 
+	 * @since 3.0.0
+	 */
+	public function SetTooltip($sTooltip)
+	{
+		$this->sTooltip = $sTooltip;
+	}
+
+	/**
+	 * @return string
+	 * 
+	 * @since 3.0.0
+	 */
+	public function GetTooltip()
+	{
+		return $this->sTooltip;
+	}
+	
+	/**
+	 * @param $sIconClass
+	 * 
+	 * @since 3.0.0
+	 */
+	public function SetIconClass($sIconClass)
+	{
+		$this->sIconClass = $sIconClass;
+	}	
+	
+	/**
+	 * @return string
+	 *
+	 * @since 3.0.0
+	 */
+	public function GetIconClass()
+	{
+		return $this->sIconClass;
+	}
+	
 	/**
 	 * Returns the components to create a popup menu item in HTML
 	 *
@@ -662,6 +909,8 @@ abstract class ApplicationPopupMenuItem
 /**
  * Class for adding an item into a popup menu that browses to the given URL
  *
+ * Note: This works only in the backoffice, {@see \URLButtonItem} for the end-user portal
+ *
  * @api
  * @package     Extensibility
  * @since 2.0
@@ -669,7 +918,7 @@ abstract class ApplicationPopupMenuItem
 class URLPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sURL;
+	protected $sUrl;
 	/** @ignore */
 	protected $sTarget;
 
@@ -678,25 +927,45 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 	 *
 	 * @param string $sUID The unique identifier of this menu in iTop... make sure you pass something unique enough
 	 * @param string $sLabel The display label of the menu (must be localized)
-	 * @param string $sURL If the menu is an hyperlink, provide the absolute hyperlink here
+	 * @param string $sUrl If the menu is an hyperlink, provide the absolute hyperlink here
 	 * @param string $sTarget In case the menu is an hyperlink and a specific target is needed (_blank for example), pass it here
 	 */
-	public function __construct($sUID, $sLabel, $sURL, $sTarget = '_top')
+	public function __construct($sUID, $sLabel, $sUrl, $sTarget = '_top')
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sURL = $sURL;
+		$this->sUrl = $sUrl;
 		$this->sTarget = $sTarget;
 	}
 
 	/** @ignore */
 	public function GetMenuItem()
 	{
-		return array('label' => $this->GetLabel(), 'url' => $this->sURL, 'target' => $this->sTarget, 'css_classes' => $this->aCssClasses);
+		return array('label' => $this->GetLabel(),
+			'url' => $this->GetUrl(),
+			'target' => $this-> GetTarget(),
+			'css_classes' => $this->aCssClasses,
+			'icon_class' => $this->sIconClass,
+			'tooltip' => $this->sTooltip
+		);
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
+	}
+
+	/** @ignore */
+	public function GetTarget()
+	{
+		return $this->sTarget;
 	}
 }
 
 /**
  * Class for adding an item into a popup menu that triggers some Javascript code
+ *
+ * Note: This works only in the backoffice, {@see \JSButtonItem} for the end-user portal
  *
  * @api
  * @package     Extensibility
@@ -705,7 +974,9 @@ class URLPopupMenuItem extends ApplicationPopupMenuItem
 class JSPopupMenuItem extends ApplicationPopupMenuItem
 {
 	/** @ignore */
-	protected $sJSCode;
+	protected $sJsCode;
+	/** @ignore */
+	protected $sUrl;
 	/** @ignore */
 	protected $aIncludeJSFiles;
 
@@ -723,7 +994,8 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function __construct($sUID, $sLabel, $sJSCode, $aIncludeJSFiles = array())
 	{
 		parent::__construct($sUID, $sLabel);
-		$this->sJSCode = $sJSCode;
+		$this->sJsCode = $sJSCode;
+		$this->sUrl = '#';
 		$this->aIncludeJSFiles = $aIncludeJSFiles;
 	}
 
@@ -733,9 +1005,11 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 		// Note: the semicolumn is a must here!
 		return array(
 			'label' => $this->GetLabel(),
-			'onclick' => $this->sJSCode.'; return false;',
-			'url' => '#',
-			'css_classes' => $this->aCssClasses,
+			'onclick' => $this->GetJsCode().'; return false;',
+			'url' => $this->GetUrl(),
+			'css_classes' => $this->GetCssClasses(),
+			'icon_class' => $this->sIconClass,
+			'tooltip' => $this->sTooltip
 		);
 	}
 
@@ -743,6 +1017,18 @@ class JSPopupMenuItem extends ApplicationPopupMenuItem
 	public function GetLinkedScripts()
 	{
 		return $this->aIncludeJSFiles;
+	}
+	
+	/** @ignore */
+	public function GetJsCode()
+	{
+		return $this->sJsCode;
+	}
+	
+	/** @ignore */
+	public function GetUrl()
+	{
+		return $this->sUrl;
 	}
 }
 
@@ -815,11 +1101,14 @@ class JSButtonItem extends JSPopupMenuItem
  * @api
  * @package     Extensibility
  * @since 2.0
+ * @deprecated 3.0.0 If you need to include:
+ *   * JS/CSS files/snippets, use {@see \iBackofficeLinkedScriptsExtension}, {@see \iBackofficeLinkedStylesheetsExtension}, etc instead
+ *   * HTML (and optionally JS/CSS), use {@see \iPageUIBlockExtension} to manipulate {@see \Combodo\iTop\Application\UI\Base\UIBlock} instead
  */
 interface iPageUIExtension
 {
 	/**
-	 * Add content to the North pane
+	 * Add content to the header of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -828,7 +1117,7 @@ interface iPageUIExtension
 	public function GetNorthPaneHtml(iTopWebPage $oPage);
 
 	/**
-	 * Add content to the South pane
+	 * Add content to the footer of the page
 	 *
 	 * @param iTopWebPage $oPage The page to insert stuff into.
 	 *
@@ -847,13 +1136,277 @@ interface iPageUIExtension
 }
 
 /**
+ * Implement this interface to add content to any iTopWebPage
+ *
+ * There are 3 places where content can be added:
+ *
+ * * The north pane: (normaly empty/hidden) at the top of the page, spanning the whole
+ *   width of the page
+ * * The south pane: (normaly empty/hidden) at the bottom of the page, spanning the whole
+ *   width of the page
+ * * The admin banner (two tones gray background) at the left of the global search.
+ *   Limited space, use it for short messages
+ *
+ * Each of the methods of this interface is supposed to return the HTML to be inserted at
+ * the specified place and can use the passed iTopWebPage object to add javascript or CSS definitions
+ *
+ * @api
+ * @package     Extensibility
+ * @since 3.0.0
+ */
+interface iPageUIBlockExtension
+{
+	/**
+	 * Add content to the "admin banner"
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetBannerBlock();
+
+	/**
+	 * Add content to the header of the page
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetHeaderBlock();
+
+	/**
+	 * Add content to the footer of the page
+	 *
+	 * @return iUIBlock|null The Block to add into the page
+	 */
+	public function GetFooterBlock();
+}
+
+/**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.7.0
+ * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
+ */
+abstract class AbstractPageUIExtension implements iPageUIExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetNorthPaneHtml(iTopWebPage $oPage)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetSouthPaneHtml(iTopWebPage $oPage)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
+		return '';
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerHtml(iTopWebPage $oPage)
+	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use iPageUIBlockExtension instead');
+
+		return '';
+	}
+
+}
+
+/**
+ * Extend this class instead of iPageUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       3.0.0
+ */
+abstract class AbstractPageUIBlockExtension implements iPageUIBlockExtension
+{
+	/**
+	 * @inheritDoc
+	 */
+	public function GetBannerBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetHeaderBlock()
+	{
+		return null;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function GetFooterBlock()
+	{
+		return null;
+	}
+}
+
+/**
+ * Implement this interface to add script (JS) files to the backoffice pages
+ *
+ * @see \iTopWebPage::$a_linked_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeLinkedScriptsExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_linked_scripts Each script will be included using this property
+	 * @return array An array of absolute URLs to the files to include
+	 */
+	public function GetLinkedScriptsAbsUrls(): array;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages' head.
+ * Will be executed first, BEFORE the DOM interpretation.
+ *
+ * @see \iTopWebPage::$a_early_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeEarlyScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_early_scripts
+	 * @return string
+	 */
+	public function GetEarlyScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed immediately, without waiting for the DOM to be ready.
+ *
+ * @see \iTopWebPage::$a_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_scripts
+	 * @return string
+	 */
+	public function GetScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed right when the DOM is ready.
+ *
+ * @see \iTopWebPage::$a_init_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeInitScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_init_scripts
+	 * @return string
+	 */
+	public function GetInitScript(): string;
+}
+
+/**
+ * Implement this interface to add inline script (JS) to the backoffice pages that will be executed slightly AFTER the DOM is ready (just after the init. scripts).
+ *
+ * @see \iTopWebPage::$a_ready_scripts
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeReadyScriptExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_ready_scripts
+	 * @return string
+	 */
+	public function GetReadyScript(): string;
+}
+
+/**
+ * Implement this interface to add stylesheets (CSS) to the backoffice pages
+ *
+ * @see \iTopWebPage::$a_linked_stylesheets
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeLinkedStylesheetsExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_linked_stylesheets
+	 * @return array An array of absolute URLs to the files to include
+	 */
+	public function GetLinkedStylesheetsAbsUrls(): array;
+}
+
+/**
+ * Implement this interface to add inline style (CSS) to the backoffice pages' head.
+ *
+ * @see \iTopWebPage::$a_styles
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeStyleExtension
+{
+	/**
+	 * @see \iTopWebPage::$a_styles
+	 * @return string
+	 */
+	public function GetStyle(): string;
+}
+
+/**
+ * Implement this interface to add Dict entries
+ *
+ * @see \iTopWebPage::$a_dict_entries
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries
+	 * @return array
+	 */
+	public function GetDictEntries(): array;
+}
+
+/**
+ * Implement this interface to add Dict entries prefixes
+ *
+ * @see \iTopWebPage::$a_dict_entries_prefixes
+ * @api
+ * @since 3.0.0
+ */
+interface iBackofficeDictEntriesPrefixesExtension
+{
+	/**
+	 * @see \iTopWebPage::a_dict_entries_prefixes
+	 * @return array
+	 */
+	public function GetDictEntriesPrefixes(): array;
+}
+
+/**
  * Implement this interface to add content to any enhanced portal page
  *
  * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
  *
  * @api
  * @package     Extensibility
- * @since 2.4
+ * @since 2.4.0
  */
 interface iPortalUIExtension
 {
@@ -864,65 +1417,65 @@ interface iPortalUIExtension
 	/**
 	 * Returns an array of CSS file urls
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
 	 */
-	public function GetCSSFiles(\Silex\Application $oApp);
+	public function GetCSSFiles(Container $oContainer);
 
 	/**
 	 * Returns inline (raw) CSS
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetCSSInline(\Silex\Application $oApp);
+	public function GetCSSInline(Container $oContainer);
 
 	/**
 	 * Returns an array of JS file urls
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return array
 	 */
-	public function GetJSFiles(\Silex\Application $oApp);
+	public function GetJSFiles(Container $oContainer);
 
 	/**
 	 * Returns raw JS code
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetJSInline(\Silex\Application $oApp);
+	public function GetJSInline(Container $oContainer);
 
 	/**
 	 * Returns raw HTML code to put at the end of the <body> tag
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetBodyHTML(\Silex\Application $oApp);
+	public function GetBodyHTML(Container $oContainer);
 
 	/**
 	 * Returns raw HTML code to put at the end of the #main-wrapper element
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetMainContentHTML(\Silex\Application $oApp);
+	public function GetMainContentHTML(Container $oContainer);
 
 	/**
 	 * Returns raw HTML code to put at the end of the #topbar and #sidebar elements
 	 *
-	 * @param \Silex\Application $oApp
+	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
 	 *
 	 * @return string
 	 */
-	public function GetNavigationMenuHTML(\Silex\Application $oApp);
+	public function GetNavigationMenuHTML(Container $oContainer);
 }
 
 /**
@@ -933,7 +1486,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetCSSFiles(\Silex\Application $oApp)
+	public function GetCSSFiles(Container $oContainer)
 	{
 		return array();
 	}
@@ -941,7 +1494,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetCSSInline(\Silex\Application $oApp)
+	public function GetCSSInline(Container $oContainer)
 	{
 		return null;
 	}
@@ -949,7 +1502,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetJSFiles(\Silex\Application $oApp)
+	public function GetJSFiles(Container $oContainer)
 	{
 		return array();
 	}
@@ -957,7 +1510,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetJSInline(\Silex\Application $oApp)
+	public function GetJSInline(Container $oContainer)
 	{
 		return null;
 	}
@@ -965,7 +1518,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetBodyHTML(\Silex\Application $oApp)
+	public function GetBodyHTML(Container $oContainer)
 	{
 		return null;
 	}
@@ -973,7 +1526,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetMainContentHTML(\Silex\Application $oApp)
+	public function GetMainContentHTML(Container $oContainer)
 	{
 		return null;
 	}
@@ -981,7 +1534,7 @@ abstract class AbstractPortalUIExtension implements iPortalUIExtension
 	/**
 	 * @inheritDoc
 	 */
-	public function GetNavigationMenuHTML(\Silex\Application $oApp)
+	public function GetNavigationMenuHTML(Container $oContainer)
 	{
 		return null;
 	}
@@ -1077,11 +1630,6 @@ class RestResult
 
 	/**
 	 * Default constructor - ok!
-	 *
-	 * @param DBObject $oObject The object being reported
-	 * @param string $sAttCode The attribute code (must be valid)
-	 *
-	 * @return string A scalar representation of the value
 	 */
 	public function __construct()
 	{
@@ -1527,4 +2075,17 @@ class RestUtils
 
 		return $oObject;
 	}
+}
+
+
+/**
+ * Helpers for modules extensibility, with discover performed by the MetaModel.
+ *
+ *
+ * @api
+ * @package     Extensibility
+ */
+interface iModuleExtension
+{
+	public function __construct();
 }

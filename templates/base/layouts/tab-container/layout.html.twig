@@ -1,0 +1,88 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+<div id="{{ oUIBlock.GetId() }}" class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-is-{{ oUIBlock.GetLayout() }}{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}"
+     data-role="ibo-tab-container" data-status="loading">
+    {% block iboTabContainer %}
+        <ul class="ibo-tab-container--tabs-list" data-role="ibo-tab-container--tabs-list">
+            {% if not aPage.isPrintable %}
+                {% block iboTabContainerTabsList %}
+                    {% for oTab in oUIBlock.GetSubBlocks() %}
+                        {% block iboTabContainerTab %}
+                            {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_AJAX') %}
+                                <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
+                                    data-tab-id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
+                                    data-tab-type="{{ oTab.GetType() }}"
+                                    data-cache="{{ oTab.GetCache() }}"
+                                    data-placeholder="{{ oTab.GetPlaceholderAbsPath() }}">
+                                    <a data-target="{{ oTab.GetUrl() }}" class="ibo-tab-container--tab-toggler"
+                                       data-role="ibo-tab-container--tab-toggler">
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
+                                    </a>
+                                </li>
+                            {% elseif oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
+                                <li class="ibo-tab-container--tab-header" data-role="ibo-tab-container--tab-header"
+                                    data-tab-id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
+                                    data-tab-type="{{ oTab.GetType() }}">
+                                    <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
+                                       class="ibo-tab-container--tab-toggler" data-role="ibo-tab-container--tab-toggler">
+                                        <span class="ibo-tab-container--tab-toggler-label" data-role="ibo-tab-container--tab-toggler-label" title="{{ oTab.GetTitle() }}">{{ oTab.GetTitle() }}</span>
+                                    </a>
+                                </li>
+                            {% endif %}
+                        {% endblock %}
+                    {% endfor %}
+                    <li class="ibo-tab-container--extra-tabs-container ibo-tab-container--tab-header ibo-is-hidden" data-role="ibo-tab-container--extra-tabs-container">
+                        <a href="#" class="ibo-tab-container--extra-tabs-list-toggler" data-role="ibo-tab-container--extra-tabs-list-toggler"
+                           aria-label="{{ 'UI:Layout:TabContainer:ExtraTabsListToggler:Label'|dict_s }}"
+                           data-tooltip-content="{{ 'UI:Layout:TabContainer:ExtraTabsListToggler:Label'|dict_s }}"
+                        >
+                            <span class="fas fa-ellipsis-v"></span>
+                        </a>
+                        <div class="ibo-tab-container--extra-tabs-list ibo-is-hidden" data-role="ibo-tab-container--extra-tabs-list">
+                            {% for oTab in oUIBlock.GetSubBlocks() %}
+                                <a href="#tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
+                                   class="ibo-tab-container--extra-tab-toggler" data-role="ibo-tab-container--extra-tab-toggler">
+                                    <span>{{ oTab.GetTitle() }}</span>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </li>
+                {% endblock %}
+            {% endif %}
+        </ul>
+
+        {% block iboTabContainerTabsContainers %}
+            {% if not aPage.isPrintable %}
+                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{% if oUIBlock.GetIsScrollable() %} ibo-is-scrollable{% endif %}" data-role="ibo-tab-container--tab-container-list">
+                    {% for oTab in oUIBlock.GetSubBlocks() %}
+                        {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
+                            <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
+                                 class="ibo-tab-container--tab-container">
+                                <div class="ibo-tab-container--tab-container--label"><span>{{ oTab.GetTitle() }}</span></div>
+                                {{ render_block(oTab, {aPage: aPage}) }}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div id="{{ oUIBlock.GetId() }}--tab-container-list" class="ibo-tab-container--tab-container-list{" data-role="ibo-tab-container--tab-container-list">
+                {% for oTab in oUIBlock.GetSubBlocks() %}
+                    <div id="tab_{{ oTab.GetId()|sanitize(constant('utils::ENUM_SANITIZATION_FILTER_ELEMENT_IDENTIFIER')) }}"
+                         class="ibo-tab-container--tab-container">
+                        <div class="ibo-title--text title">
+                            {{ oTab.GetTitle() }}
+                        </div>
+                        {% if oTab.GetType() == constant('TabManager::ENUM_TAB_TYPE_HTML') %}
+                            {{ render_block(oTab, {aPage: aPage}) }}
+                        {% else %}
+                            <div class="printable-tab-content"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endblock %}
+
+    {% endblock %}
+</div>
+

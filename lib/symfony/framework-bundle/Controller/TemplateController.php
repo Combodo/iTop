@@ -45,7 +45,7 @@ class TemplateController implements ContainerAwareInterface
      */
     public function setContainer(ContainerInterface $container = null)
     {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.4 and will be removed in 4.0. Inject a Twig Environment or an EngineInterface using the constructor instead.', __METHOD__), E_USER_DEPRECATED);
+        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.4 and will be removed in 4.0. Inject a Twig Environment or an EngineInterface using the constructor instead.', __METHOD__), \E_USER_DEPRECATED);
 
         if ($container->has('templating')) {
             $this->templating = $container->get('templating');
@@ -75,17 +75,17 @@ class TemplateController implements ContainerAwareInterface
             throw new \LogicException('You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.');
         }
 
-        if ($maxAge) {
+        if (null !== $maxAge) {
             $response->setMaxAge($maxAge);
         }
 
-        if ($sharedAge) {
+        if (null !== $sharedAge) {
             $response->setSharedMaxAge($sharedAge);
         }
 
         if ($private) {
             $response->setPrivate();
-        } elseif (false === $private || (null === $private && ($maxAge || $sharedAge))) {
+        } elseif (false === $private || (null === $private && (null !== $maxAge || null !== $sharedAge))) {
             $response->setPublic();
         }
 

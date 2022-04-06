@@ -1,0 +1,43 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-edits-entry--short-description--text-color: inherit !default;
+$ibo-edits-entry--long-description-toggler-icon--top: 3px !default;
+$ibo-edits-entry--long-description-toggler-icon--right: 0 !default;
+$ibo-edits-entry--long-description--margin-top: $ibo-spacing-300 !default;
+
+/* CSS rules */
+/* - Long description */
+a.ibo-edits-entry--short-description {
+  position: relative;
+  display: block;
+  color: $ibo-edits-entry--short-description--text-color;
+}
+
+.ibo-edits-entry--long-description-toggler-icon {
+  position: absolute;
+  top: $ibo-edits-entry--long-description-toggler-icon--top;
+  right: $ibo-edits-entry--long-description-toggler-icon--right;
+  transition: all 0.2s ease-in-out;
+}
+
+.ibo-edits-entry--long-description {
+  display: none;
+  margin-top: $ibo-edits-entry--long-description--margin-top;
+  list-style: inside;
+}
+
+/* - Long desc. opened */
+.ibo-edits-entry {
+  &:not(.ibo-is-closed) {
+    .ibo-edits-entry--long-description-toggler-icon {
+			transform: rotateX(180deg);
+		}
+		.ibo-edits-entry--long-description{
+			display: block;
+		}
+	}
+}

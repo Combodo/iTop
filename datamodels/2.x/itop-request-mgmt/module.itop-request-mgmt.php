@@ -3,7 +3,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-request-mgmt/2.6.2',
+	'itop-request-mgmt/3.1.0',
 	array(
 		// Identification
 		//
@@ -13,7 +13,6 @@ SetupWebPage::AddModule(
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-config-mgmt/2.4.0',
 			'itop-tickets/2.4.0',
 		),
 		'mandatory' => false,

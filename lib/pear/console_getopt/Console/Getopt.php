@@ -123,7 +123,7 @@ class Console_Getopt
          * erroneous POSIX fix.
          */
         if ($version < 2) {
-            if (isset($args[0]{0}) && $args[0]{0} != '-') {
+            if (isset($args[0][0]) && $args[0][0] != '-') {
                 array_shift($args);
             }
         }
@@ -138,10 +138,10 @@ class Console_Getopt
                 break;
             }
 
-            if ($arg{0} != '-' || (strlen($arg) > 1 && $arg{1} == '-' && !$long_options)) {
+            if ($arg[0] != '-' || (strlen($arg) > 1 && $arg[1] == '-' && !$long_options)) {
                 $non_opts = array_merge($non_opts, array_slice($args, $i));
                 break;
-            } elseif (strlen($arg) > 1 && $arg{1} == '-') {
+            } elseif (strlen($arg) > 1 && $arg[1] == '-') {
                 $error = Console_Getopt::_parseLongOption(substr($arg, 2),
                                                           $long_options,
                                                           $opts,
@@ -186,11 +186,11 @@ class Console_Getopt
     protected static function _parseShortOption($arg, $short_options, &$opts, &$argIdx, $args, $skip_unknown)
     {
         for ($i = 0; $i < strlen($arg); $i++) {
-            $opt     = $arg{$i};
+            $opt     = $arg[$i];
             $opt_arg = null;
 
             /* Try to find the short option in the specifier string. */
-            if (($spec = strstr($short_options, $opt)) === false || $arg{$i} == ':') {
+            if (($spec = strstr($short_options, $opt)) === false || $arg[$i] == ':') {
                 if ($skip_unknown === true) {
                     break;
                 }
@@ -199,8 +199,8 @@ class Console_Getopt
                 return PEAR::raiseError($msg);
             }
 
-            if (strlen($spec) > 1 && $spec{1} == ':') {
-                if (strlen($spec) > 2 && $spec{2} == ':') {
+            if (strlen($spec) > 1 && $spec[1] == ':') {
+                if (strlen($spec) > 2 && $spec[2] == ':') {
                     if ($i + 1 < strlen($arg)) {
                         /* Option takes an optional argument. Use the remainder of
                            the arg string if there is anything left. */
@@ -296,11 +296,11 @@ class Console_Getopt
                 $next_option_rest = '';
             }
 
-            if ($opt_rest != '' && $opt{0} != '=' &&
+            if ($opt_rest != '' && $opt[0] != '=' &&
                 $i + 1 < count($long_options) &&
                 $opt == substr($long_options[$i+1], 0, $opt_len) &&
                 $next_option_rest != '' &&
-                $next_option_rest{0} != '=') {
+                $next_option_rest[0] != '=') {
 
                 $msg = "Console_Getopt: option --$opt is ambiguous";
                 return PEAR::raiseError($msg);

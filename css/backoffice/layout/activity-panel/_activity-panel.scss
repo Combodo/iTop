@@ -1,0 +1,455 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+/* SCSS variables */
+$ibo-activity-panel--width: 480px !default;
+/* TODO: This should be changed when responsive breakpoints are defined and used */
+$ibo-activity-panel--is-expanded--width: 60vw !default;
+$ibo-activity-panel--is-closed--width: 32px !default;
+$ibo-activity-panel--height: 100% !default;
+$ibo-activity-panel--padding-x: $ibo-spacing-500 !default;
+$ibo-activity-panel--padding-y: $ibo-spacing-0 !default;
+
+/* - Header */
+$ibo-activity-panel--header--background-color: $ibo-color-grey-100 !default;
+
+$ibo-activity-panel--togglers--color: $ibo-color-grey-600 !default;
+$ibo-activity-panel--togglers--on-hover--color: $ibo-color-grey-800 !default;
+$ibo-activity-panel--togglers--elements-spacing: 0.75rem !default;
+
+/* - Tabs togglers*/
+$ibo-activity-panel--tabs-togglers--padding-x: $ibo-activity-panel--padding-x * 3 !default; /* We need to increase this so the size toggler which will be set in abs. pos. can overlap it nicely */
+$ibo-activity-panel--tab-toolbar-action--color: $ibo-color-grey-900 !default;
+
+$ibo-activity-panel--tab-toolbar-info--color: $ibo-activity-panel--tab-toolbar-action--color !default;
+/* - Tab toggler */
+$ibo-activity-panel--tab-toggler--caselog-highlight-colors: $ibo-caselog-highlight-colors !default;
+$ibo-activity-panel--tab-toggler--is-active--background-color: $ibo-color-grey-200 !default;
+
+/* - Tab title */
+$ibo-activity-panel--tab-title--padding-x: $ibo-spacing-500 !default;
+$ibo-activity-panel--tab-title--padding-y: $ibo-spacing-300 !default;
+$ibo-activity-panel--tab-title--on-hover--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
+$ibo-activity-panel--tab-title--is-active--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
+
+$ibo-activity-panel--tab-title-decoration--width: 12px !default;
+$ibo-activity-panel--tab-title-decoration--height: $ibo-activity-panel--tab-title-decoration--width !default;
+$ibo-activity-panel--tab-title-decoration--margin-right: $ibo-spacing-300 !default;
+$ibo-activity-panel--tab-title-decoration--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-activity-panel--tab-title-draft-indicator--margin-x: $ibo-activity-panel--tab-title-decoration--margin-right !default;
+
+$ibo-activity-panel--tab-title-messages-count--margin-left: $ibo-activity-panel--tab-title-draft-indicator--margin-x !default;
+$ibo-activity-panel--tab-title-messages-count--background-color: $ibo-color-grey-200 !default;
+$ibo-activity-panel--tab-title-messages-count--padding-x: $ibo-spacing-200 !default;
+$ibo-activity-panel--tab-title-messages-count--padding-y: $ibo-spacing-0 !default;
+$ibo-activity-panel--tab-title-messages-count--border-radius: $ibo-border-radius-300 !default;
+
+$ibo-activity-panel--tab-title-text--max-width: 100px !default;
+
+/* - Tab toolbar */
+$ibo-activity-panel--tab-toolbar--padding-x: 10px !default;
+$ibo-activity-panel--tab-toolbar--text-color: $ibo-color-grey-800 !default;
+$ibo-activity-panel--tab-toolbar--background-color: $ibo-activity-panel--tab-toggler--is-active--background-color !default;
+
+$ibo-activity-panel--tab-toolbar-actions--margin-y: $ibo-spacing-200 !default;
+$ibo-activity-panel--tab-toolbar-actions--margin-x: $ibo-spacing-0 !default;
+$ibo-activity-panel--tab-toolbar-actions--height: 32px !default;
+$ibo-activity-panel--tab-toolbar-right-actions--elements-spacing: $ibo-spacing-500 !default;
+
+$ibo-activity-panel--tab-toolbar-action--elements-separator-content: "-" !default;
+$ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x: $ibo-spacing-300 !default;
+$ibo-activity-panel--tab-toolbar-info-icon--margin-left: $ibo-spacing-300 !default;
+$ibo-activity-panel--tab-toolbar-filter--sibling-spacing: 18px !default;
+$ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right: $ibo-spacing-300 !default;
+
+$ibo-activity-panel--filter-options-toggler--padding-left: 0.5rem !default;
+$ibo-activity-panel--filter-options--padding-x: $ibo-spacing-400 !default;
+$ibo-activity-panel--filter-options--padding-y: $ibo-spacing-300 !default;
+$ibo-activity-panel--filter-options--top: 24px !default;
+$ibo-activity-panel--filter-options--left: -1 * $ibo-activity-panel--filter-options--padding-x !default;
+$ibo-activity-panel--filter-options--max-width: 200px !default;
+$ibo-activity-panel--filter-options--background-color: $ibo-activity-panel--tab-toolbar--background-color !default;
+$ibo-activity-panel--filter-options--border-radius: $ibo-border-radius-300 !default;
+$ibo-activity-panel--filter-option--sibling-spacing: $ibo-spacing-300 !default;
+$ibo-activity-panel--filter-option-input--margin-right: 0.5rem !default;
+
+/* - Body */
+$ibo-activity-panel--body--padding-y: $ibo-activity-panel--padding-x !default;
+$ibo-activity-panel--body--padding-x: $ibo-activity-panel--padding-x !default;
+
+$ibo-activity-panel--body--placeholder--margin-top: $ibo-spacing-500 !default;
+$ibo-activity-panel--body--placeholder-image--width: 250px !default;
+$ibo-activity-panel--body--placeholder-hint--margin-top: $ibo-spacing-500 !default;
+$ibo-activity-panel--body--placeholder-hint--color: $ibo-color-grey-800 !default;
+
+$ibo-activity-panel--add-caselog-entry-button--right: 12px !default;
+$ibo-activity-panel--add-caselog-entry-button--top: 76px + $ibo-activity-panel--add-caselog-entry-button--right !default;
+$ibo-activity-panel--add-caselog-entry-button--diameter: 36px !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color: $ibo-color-primary-600 !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color--on-hover: $ibo-color-primary-500 !default;
+$ibo-activity-panel--add-caselog-entry-button--background-color--is-active: $ibo-color-primary-700 !default;
+$ibo-activity-panel--add-caselog-entry-button--color: $ibo-color-white-100 !default;
+$ibo-activity-panel--add-caselog-entry-button--border-radius: $ibo-border-radius-full !default;
+$ibo-activity-panel--add-caselog-entry-button--box-shadow: $ibo-elevation-100 !default;
+$ibo-activity-panel--add-caselog-entry-button--hover--box-shadow: $ibo-elevation-200 !default;
+
+$ibo-activity-panel--add-caselog-entry-button--icon--height: 100% !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--width: $ibo-activity-panel--add-caselog-entry-button--icon--height !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--font-size: $ibo-font-size-200 !default;
+$ibo-activity-panel--add-caselog-entry-button--icon--line-height: 33px !default;
+
+$ibo-activity-panel--entry-forms-confirmation-explanation--spacing: $ibo-spacing-500 !default;
+$ibo-activity-panel--entry-forms-confirmation-preference-input--spacing: 0.5rem !default;
+
+$ibo-activity-panel--closed-cover--background-color: $ibo-activity-panel--header--background-color !default;
+$ibo-activity-panel--open-icon--margin-left: 0.75rem !default;
+
+/* Whole layout */
+.ibo-activity-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: $ibo-activity-panel--width;
+  height: $ibo-activity-panel--height;
+  transition: width 0.2s ease-in-out;
+
+  &.ibo-is-expanded {
+    width: $ibo-activity-panel--is-expanded--width;
+
+    .ibo-activity-panel--expand-icon {
+      display: none;
+    }
+  }
+
+  &:not(.ibo-is-expanded) {
+    .ibo-activity-panel--reduce-icon {
+      display: none;
+    }
+  }
+
+  &.ibo-is-closed {
+    width: $ibo-activity-panel--is-closed--width;
+
+    .ibo-activity-panel--header,
+    .ibo-activity-panel--body,
+    .ibo-activity-panel--add-caselog-entry-button {
+      display: none;
+    }
+
+    .ibo-activity-panel--closed-cover {
+      display: inherit;
+    }
+  }
+}
+
+/* Header */
+.ibo-activity-panel--header{
+	position: relative;
+	background-color: $ibo-activity-panel--header--background-color;
+
+	/* Remove hyperlinks default color */
+	> .ibo-activity-panel--tabs-togglers a{
+		color: $ibo-activity-panel--tab-toolbar--text-color;
+	}
+}
+
+/* Size/display togglers */
+.ibo-activity-panel--togglers {
+  position: absolute;
+  right: $ibo-activity-panel--padding-x;
+  top: 0;
+  bottom: 0;
+  @extend %ibo-fully-centered-content;
+  color: $ibo-activity-panel--togglers--color;
+
+  &:hover {
+    color: $ibo-activity-panel--togglers--on-hover--color;
+  }
+
+  > *:not(:first-child) {
+    margin-left: $ibo-activity-panel--togglers--elements-spacing;
+  }
+}
+
+/* Tabs togglers */
+.ibo-activity-panel--tabs-togglers{
+	position: relative; /* For size toggler */
+	padding-left: $ibo-activity-panel--tabs-togglers--padding-x;
+	padding-right: $ibo-activity-panel--tabs-togglers--padding-x;
+	@extend %ibo-fully-centered-content;
+}
+.ibo-activity-panel--tab-toggler{
+	&.ibo-is-active{
+		.ibo-activity-panel--tab-title{
+			background-color: $ibo-activity-panel--tab-title--is-active--background-color;
+		}
+    .ibo-activity-panel--tab-title-messages-count{
+      display: none;
+    }
+	}
+  &.ibo-is-draft{
+    .ibo-activity-panel--tab-title-draft-indicator{
+      display: initial;
+    }
+  }
+}
+/* - Specific decoration regarding the case log rank */
+@each $sColor in $ibo-activity-panel--tab-toggler--caselog-highlight-colors {
+	.ibo-activity-panel--tab-toggler-for-caselog-#{index($ibo-activity-panel--tab-toggler--caselog-highlight-colors, $sColor)}{
+		.ibo-activity-panel--tab-title-decoration{
+			background-color: $sColor;
+		}
+	}
+}
+
+/* Tab title */
+.ibo-activity-panel--tab-title{
+	padding: $ibo-activity-panel--tab-title--padding-y $ibo-activity-panel--tab-title--padding-x;
+	@extend %ibo-fully-centered-content;
+
+	&:hover{
+		background-color: $ibo-activity-panel--tab-title--on-hover--background-color;
+	}
+}
+.ibo-activity-panel--tab-title-decoration{
+	display: inline-flex;
+	margin-right: $ibo-activity-panel--tab-title-decoration--margin-right;
+	width: $ibo-activity-panel--tab-title-decoration--width;
+	height: $ibo-activity-panel--tab-title-decoration--height;
+	border-radius: $ibo-activity-panel--tab-title-decoration--border-radius;
+	@extend %ibo-depression-100;
+}
+.ibo-activity-panel--tab-title-messages-count{
+  display: inline-block;
+  margin-left: $ibo-activity-panel--tab-title-messages-count--margin-left;
+  background-color: $ibo-activity-panel--tab-title-messages-count--background-color;
+  padding: $ibo-activity-panel--tab-title-messages-count--padding-y $ibo-activity-panel--tab-title-messages-count--padding-x;
+  border-radius: $ibo-activity-panel--tab-title-messages-count--border-radius;
+
+  &[data-messages-count="0"]{
+    display: none;
+  }
+}
+.ibo-activity-panel--tab-title-draft-indicator{
+  display: none;
+  margin-left: $ibo-activity-panel--tab-title-draft-indicator--margin-x;
+  @extend %ibo-font-size-50;
+}
+.ibo-activity-panel--tab-title-text{
+	max-width: $ibo-activity-panel--tab-title-text--max-width;
+	@extend %ibo-text-truncated-with-ellipsis;
+}
+
+/* Tab toolbar */
+.ibo-activity-panel--tab-toolbar{
+	display: none;
+	flex-direction: column;
+	padding-left: $ibo-activity-panel--tab-toolbar--padding-x;
+	padding-right: $ibo-activity-panel--tab-toolbar--padding-x;
+	background-color: $ibo-activity-panel--tab-toolbar--background-color;
+
+	&.ibo-is-active{
+		display: flex;
+	}
+}
+.ibo-activity-panel--tab-toolbar-actions{
+	@extend %ibo-fully-centered-content;
+	justify-content: space-between;
+	flex-wrap: nowrap;
+  margin: $ibo-activity-panel--tab-toolbar-actions--margin-y $ibo-activity-panel--tab-toolbar-actions--margin-x;
+	height: $ibo-activity-panel--tab-toolbar-actions--height;
+}
+.ibo-activity-panel--tab-toolbar-left-actions,
+.ibo-activity-panel--tab-toolbar-middle-actions,
+.ibo-activity-panel--tab-toolbar-right-actions{
+	@extend %ibo-vertically-centered-content;
+}
+.ibo-activity-panel--tab-toolbar-left-actions{
+	.ibo-activity-panel--tab-toolbar-action{
+		&:not(:first-child){
+			&::before{
+				content: $ibo-activity-panel--tab-toolbar-action--elements-separator-content;
+				margin: 0 $ibo-activity-panel--tab-toolbar-action--elements-separator-margin-x;
+			}
+		}
+	}
+}
+.ibo-activity-panel--tab-toolbar-middle-actions {
+	.ibo-activity-panel--tab-toolbar-action{
+		> input{
+			margin-right: $ibo-activity-panel--tab-toolbar-filter--checkbox-margin-right;
+		}
+
+		&:not(:first-child){
+			margin-left: $ibo-activity-panel--tab-toolbar-filter--sibling-spacing;
+		}
+	}
+}
+.ibo-activity-panel--tab-toolbar-right-actions {
+	.ibo-activity-panel--tab-toolbar-info {
+    color: $ibo-activity-panel--tab-toolbar-info--color;
+    > .ibo-activity-panel--tab-toolbar-info-icon {
+			margin-left: $ibo-activity-panel--tab-toolbar-info-icon--margin-left;
+		}
+
+		&:not(:first-child) {
+			margin-left: $ibo-activity-panel--tab-toolbar-right-actions--elements-spacing;
+		}
+	}
+}
+.ibo-activity-panel--tab-toolbar-action{
+  position: relative;
+  color: $ibo-activity-panel--tab-toolbar-action--color;
+	@extend %ibo-fully-centered-content;
+}
+.ibo-activity-panel--filter{
+  cursor: pointer;
+}
+.ibo-activity-panel--filter-options-toggler{
+  padding-left: $ibo-activity-panel--filter-options-toggler--padding-left;
+  color: $ibo-activity-panel--tab-toolbar-action--color;
+
+  &.ibo-is-closed{
+    transform: rotateX(180deg);
+
+    + .ibo-activity-panel--filter-options{
+      display: none;
+    }
+  }
+}
+.ibo-activity-panel--filter-options{
+  position: absolute;
+  z-index: 1; /* To be over the activity body */
+  display: flex;
+  flex-direction: column;
+  top: $ibo-activity-panel--filter-options--top;
+  left: $ibo-activity-panel--filter-options--left;
+  max-width: $ibo-activity-panel--filter-options--max-width;
+  padding: $ibo-activity-panel--filter-options--padding-y $ibo-activity-panel--filter-options--padding-x;
+  background-color: $ibo-activity-panel--filter-options--background-color;
+  border-radius: $ibo-activity-panel--filter-options--border-radius;
+
+  @extend %ibo-elevation-300;
+}
+.ibo-activity-panel--filter-option{
+  cursor: pointer;
+  @extend %ibo-vertically-centered-content;
+  @extend %ibo-text-truncated-with-ellipsis;
+
+  &:not(:first-child){
+    margin-top: $ibo-activity-panel--filter-option--sibling-spacing;
+  }
+}
+.ibo-activity-panel--filter-option-input{
+  margin-right: $ibo-activity-panel--filter-option-input--margin-right;
+}
+
+
+
+/* Body */
+.ibo-activity-panel--body{
+	flex-grow: 1; /* To occupy all the space not used by the header  */
+	overflow: auto;
+	padding: $ibo-activity-panel--body--padding-y $ibo-activity-panel--body--padding-x;
+}
+
+.ibo-activity-panel--body--placeholder{
+	margin-top: $ibo-activity-panel--body--placeholder--margin-top;
+}
+.ibo-activity-panel--body--placeholder-image{
+	@extend %ibo-fully-centered-content;
+
+	> svg {
+		width: $ibo-activity-panel--body--placeholder-image--width;
+		height: inherit;
+	}
+}
+.ibo-activity-panel--body--placeholder-hint{
+	margin-top: $ibo-activity-panel--body--placeholder-hint--margin-top;
+	color: $ibo-activity-panel--body--placeholder-hint--color;
+
+	@extend %ibo-font-ral-ita-100;
+	@extend %ibo-fully-centered-content;
+}
+
+.ibo-activity-panel--add-caselog-entry-button {
+  @extend %ibo-baseline-centered-content;
+  position: absolute;
+  z-index: 1;
+  right: $ibo-activity-panel--add-caselog-entry-button--right;
+  top: $ibo-activity-panel--add-caselog-entry-button--top;
+
+	width: $ibo-activity-panel--add-caselog-entry-button--diameter;
+	height: $ibo-activity-panel--add-caselog-entry-button--diameter;
+
+	background-color: $ibo-activity-panel--add-caselog-entry-button--background-color;
+	color: $ibo-activity-panel--add-caselog-entry-button--color;
+
+	border-radius: $ibo-activity-panel--add-caselog-entry-button--border-radius;
+	box-shadow: $ibo-activity-panel--add-caselog-entry-button--box-shadow;
+
+	> i{
+		text-align: center;
+		height: $ibo-activity-panel--add-caselog-entry-button--icon--height;
+		width: $ibo-activity-panel--add-caselog-entry-button--icon--width;
+		font-size: $ibo-activity-panel--add-caselog-entry-button--icon--font-size;
+		line-height: $ibo-activity-panel--add-caselog-entry-button--icon--line-height;
+	}
+	&:hover {
+		color: $ibo-activity-panel--add-caselog-entry-button--color;
+    background-color: $ibo-activity-panel--add-caselog-entry-button--background-color--on-hover;
+    box-shadow: $ibo-activity-panel--add-caselog-entry-button--hover--box-shadow;
+  }
+  &:active {
+    color: $ibo-activity-panel--add-caselog-entry-button--color;
+    background-color: $ibo-activity-panel--add-caselog-entry-button--background-color--is-active;
+  }
+	&.ibo-is-hidden{
+		display: none;
+	}
+}
+
+/* Entry forms confirmation dialog */
+.ibo-activity-panel {
+  .ibo-activity-panel--entry-forms-confirmation-dialog {
+    display: none; /* Dialog will be moved elsewhere in the DOM on display so this rule won't apply anymore and it will be OK */
+  }
+}
+.ibo-activity-panel--entry-forms-confirmation-explanation{
+  margin-bottom: $ibo-activity-panel--entry-forms-confirmation-explanation--spacing;
+}
+.ibo-activity-panel--entry-forms-confirmation-preference{
+  @extend %ibo-vertically-centered-content;
+}
+.ibo-activity-panel--entry-forms-confirmation-preference-input{
+  margin-right: $ibo-activity-panel--entry-forms-confirmation-preference-input--spacing;
+}
+
+
+/* Closed cover */
+.ibo-activity-panel--closed-cover {
+  display: none;
+  position: absolute;
+  z-index: 2; // Above the compose button and all
+  // padding-top: 64px;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  @extend %ibo-fully-centered-content;
+  // align-items: flex-start;
+  background-color: $ibo-activity-panel--closed-cover--background-color;
+  cursor: pointer;
+}
+
+.ibo-activity-panel--closed-content-container {
+  transform: rotateZ(-90deg);
+  white-space: nowrap;
+}
+
+.ibo-activity-panel--open-icon {
+  margin-left: $ibo-activity-panel--open-icon--margin-left;
+}

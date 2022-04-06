@@ -1,0 +1,239 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-input-select--padding-x: $ibo-input--padding-x !default;
+$ibo-input-select--option--padding-x: $ibo-input-select--padding-x !default;
+$ibo-input-select--option--padding-y: $ibo-spacing-200 !default;
+
+$ibo-input-select--value--min-midth: 50px;
+
+$ibo-input-select-autocomplete--value--min-midth: 150px;
+$ibo-input-select-selectize--value--min-midth: 150px;
+$ibo-input-select-selectize--value--height: 100% !default;
+$ibo-input-select-selectize--value--line-height: $ibo-input--height !default;
+$ibo-input-select-selectize--dropdown--max-height: 50vh !default;
+$ibo-input-select-selectize--dropdown--max-width: 50em !default;
+$ibo-input-select-selectize--item--active--text-color: $ibo-color-grey-800 !default;
+$ibo-input-select-selectize--item--active--background-color: $ibo-color-blue-100 !default;
+
+$ibo-input-select-wrapper--width: 100% !default;
+
+$ibo-input-select-wrapper--after--right: 8px !default;
+$ibo-input-select-wrapper--after--height: 28px !default;
+$ibo-input-select-wrapper--after--margin-left: -16px !default;
+$ibo-input-select-wrapper--after--margin-top: 1px !default;
+$ibo-input-select-wrapper--after--padding-top: 3px !default;
+$ibo-input-select-wrapper--after--background-color: inherit !default;
+$ibo-input-select-wrapper--after--color: $ibo-color-grey-900 !default;
+
+$ibo-input-select--action-button--height: 28px !default;
+$ibo-input-select--action-button--width: 23px !default;
+$ibo-input-select--action-button--margin-top: $ibo-spacing-0 !default;
+$ibo-input-select--action-button--margin-right: 3px !default;
+$ibo-input-select--action-button--background-color: inherit !default;
+$ibo-input-select--action-button--color: $ibo-color-grey-800 !default;
+$ibo-input-select--action-button--padding-x: $ibo-spacing-100 !default;
+$ibo-input-select--action-button--padding-y: $ibo-spacing-0 !default;
+$ibo-input-select--select-wrapper--action-button--margin-right: 20px !default;
+
+$ibo-input-select--action-button--padding-left: 6px !default;
+$ibo-input-select--action-button--padding-right: $ibo-spacing-100 !default;
+
+$ibo-input-select--autocomplete-item-image--size: 25px !default;
+$ibo-input-select--autocomplete-item-image--margin-right: 0.5rem !default;
+$ibo-input-select--autocomplete-item-image--background-color: $ibo-color-blue-100 !default;
+$ibo-input-select--autocomplete-item-image--border: 1px solid $ibo-color-grey-600 !default;
+
+.ibo-input-select {
+  display: inline-flex;
+  min-width: $ibo-input-select--value--min-midth;
+
+  &:not(.ibo-input-select-autocomplete):not(.ibo-input-selectize) {
+    appearance: none;
+  }
+
+  &.ibo-input-selectize {
+    padding-right: 0;
+    padding-left: 0;
+    min-width: $ibo-input-select-selectize--value--min-midth !important;
+
+    input {
+      border-width: 0px;
+      color: inherit;
+      border-color: $ibo-color-white-100;
+      padding-left: $ibo-input-select--padding-x;
+
+      @extend %ibo-font-ral-nor-150;
+    }
+
+    > [data-value] {
+      height: $ibo-input-select-selectize--value--height;
+      line-height: $ibo-input-select-selectize--value--line-height;
+      padding-left: $ibo-input-select--padding-x;
+    }
+  }
+
+  &[size]{
+    height: auto;
+  }
+
+  &[multiple] {
+    padding-left: unset;
+    padding-right: unset;
+
+    option {
+      padding: $ibo-input-select--option--padding-y $ibo-input-select--option--padding-x;
+    }
+  }
+}
+.ibo-input-select-autocomplete{
+  min-width: $ibo-input-select-autocomplete--value--min-midth !important;
+  text-overflow: ellipsis;
+}
+.ibo-input-selectize {
+  min-width: $ibo-input-select-selectize--value--min-midth !important;
+
+  > div {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  > input {
+    background-color: unset;
+    border: unset;
+    &:focus{
+      outline: none !important; /* Overwrite browsers default focus outline */
+    }
+  }
+  
+  &.input-active{
+    border: 1px solid $ibo-input--focus--border-color;
+  }
+}
+.ibo-input-select-wrapper{
+	position:relative;
+}
+.ibo-input-select-wrapper--with-buttons .selectize-control
+{
+	display: grid;
+	width: $ibo-input-select-wrapper--width;
+}
+.ibo-input-select-wrapper::after{
+	position: absolute;
+	content: "\f0d7";
+	font-family: "Font Awesome 5 Free";
+	font-weight: 600;
+	
+	height: $ibo-input-select-wrapper--after--height;
+	margin-left: $ibo-input-select-wrapper--after--margin-left;
+	margin-top: $ibo-input-select-wrapper--after--margin-top;
+	padding-top: $ibo-input-select-wrapper--after--padding-top;
+	
+	background-color: $ibo-input-select-wrapper--after--background-color;
+	color: $ibo-input-select-wrapper--after--color;
+	pointer-events: none;
+}
+.ibo-input-select-wrapper--with-buttons {
+  @extend .ibo-input-wrapper--with-buttons;
+}
+
+.ibo-input-select-container {
+  display: flex;
+}
+
+.ibo-input-select-wrapper--with-buttons:not(.ibo-input-select-autocomplete-wrapper)::after {
+  position: absolute;
+  content: "\f0d7";
+  font-family: "Font Awesome 5 Free";
+  font-weight: 600;
+  cursor: pointer;
+
+  right: $ibo-input-select-wrapper--after--right;
+  height: $ibo-input-select-wrapper--after--height;
+  margin-left: $ibo-input-select-wrapper--after--margin-left;
+  margin-top: $ibo-input-select-wrapper--after--margin-top;
+  padding-top: $ibo-input-select-wrapper--after--padding-top;
+
+  background-color: $ibo-input-select-wrapper--after--background-color;
+  color: $ibo-input-select-wrapper--after--color;
+  pointer-events: none;
+}
+.ibo-input-select--action-buttons{
+  position: absolute;
+  display: flex;
+  height: $ibo-input-select--action-button--height;
+  margin-top: $ibo-input-select--action-button--margin-top;
+  margin-right: $ibo-input-select--action-button--margin-right;
+
+  font-size: $ibo-font-size-100;
+  background-color: $ibo-input-select--action-button--background-color;
+  color: $ibo-input-select--action-button--color;
+  padding: $ibo-input-select--action-button--padding-y $ibo-input-select--action-button--padding-x;
+  text-align: right;
+  bottom: 0;
+  top: 0;
+  right: 0;
+}
+
+.ibo-input-select-wrapper .ibo-input-select--action-buttons{
+  margin-right: $ibo-input-select--select-wrapper--action-button--margin-right;
+}
+
+.ibo-input-select--action-button {
+  display: flex;
+  align-items: center;
+  padding-left: $ibo-input-select--action-button--padding-left;
+  padding-right: $ibo-input-select--action-button--padding-right;
+  float: right;
+}
+
+/*2 types of selectize to manage (select + autocomplete)*/
+.selectize-dropdown.ui-autocomplete,
+.selectize-dropdown.set-dropdown,
+.selectize-dropdown.plugin-custom_itop {
+  z-index: 2000; /* Note: This is not great as it does not take into account other elements z-index, but as selectize puts its dropdown under the <body> tag, we cannot have a z-index relative to input container. */
+  max-height: $ibo-input-select-selectize--dropdown--max-height;
+  max-width: $ibo-input-select-selectize--dropdown--max-width ;
+  overflow-y: auto;
+}
+
+.selectize-dropdown.ui-menu .ui-state-active {
+  margin: unset;
+  background-color: $ibo-input-select-selectize--item--active--background-color;
+  color: $ibo-input-select-selectize--item--active--text-color;
+}
+
+.ibo-input-select--autocomplete-item {
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
+
+.ibo-input-select--autocomplete-item-image {
+  width: $ibo-input-select--autocomplete-item-image--size;
+  height: $ibo-input-select--autocomplete-item-image--size;
+  /* min-xxx are here to avoid medallion to be horizontally compressed when the title is to long */
+  min-width: $ibo-input-select--autocomplete-item-image--size;
+  min-height: $ibo-input-select--autocomplete-item-image--size;
+  background-position: center center;
+  background-size: 100%;
+  border-radius: 100%;
+  margin-right: $ibo-input-select--autocomplete-item-image--margin-right;
+  background-color: $ibo-input-select--autocomplete-item-image--background-color;
+  border: $ibo-input-select--autocomplete-item-image--border;
+
+  @extend %ibo-fully-centered-content;
+}
+
+.ibo-input-select--autocomplete-item-txt {
+  @extend %ibo-text-truncated-with-ellipsis;
+}
+
+/* Use "select" in order to avoid stylizing selectize wrapper that copy select classes*/
+select.ibo-input-select-placeholder{
+  @extend .ibo-input;
+  @extend .ibo-input-select;
+}

@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2013-2019 Combodo SARL
+ * Copyright (C) 2013-2021 Combodo SARL
  *
  * This file is part of iTop.
  *
@@ -15,17 +15,15 @@
  * GNU Affero General Public License for more details.
  *
  * You should have received a copy of the GNU Affero General Public License
- *
- *
  */
 
 namespace Combodo\iTop\Portal\DependencyInjection\SilexCompatBootstrap\PortalXmlConfiguration;
 
+use Combodo\iTop\Application\Branding;
 use Combodo\iTop\DesignElement;
+use Combodo\iTop\Portal\Helper\UIExtensionsHelper;
 use DOMFormatException;
 use Exception;
-use iPortalUIExtension;
-use MetaModel;
 use Symfony\Component\DependencyInjection\Container;
 use utils;
 
@@ -54,9 +52,6 @@ class Basic extends AbstractConfiguration
 			$aPortalConf = $this->ParseGlobalProperties($aPortalConf);
 			// - Rectifying portal logo url
 			$aPortalConf = $this->AppendLogoUri($aPortalConf);
-
-			// - class list
-			$aPortalConf['ui_extensions'] = $this->GetUiExtensions($oContainer);
 		}
 		catch (Exception $oException)
 		{
@@ -70,6 +65,7 @@ class Basic extends AbstractConfiguration
 	 * Returns an array containing the initial portal configuration with all default values
 	 *
 	 * @return array
+	 * @throws \Exception
 	 */
 	private function GetInitialPortalConf()
 	{
@@ -77,7 +73,7 @@ class Basic extends AbstractConfiguration
 			'properties' => array(
 				'id' => $_ENV['PORTAL_ID'],
 				'name' => 'Page:DefaultTitle',
-				'logo' => (file_exists(MODULESROOT.'branding/portal-logo.png')) ? utils::GetAbsoluteUrlModulesRoot().'branding/portal-logo.png' : '../images/logo-itop-dark-bg.svg',
+				'logo' => Branding::GetPortalLogoAbsoluteUrl(),
 				'themes' => array(
 					'bootstrap' => 'itop-portal-base/portal/public/css/bootstrap-theme-combodo.scss',
 					'portal' => 'itop-portal-base/portal/public/css/portal.scss',
@@ -97,13 +93,6 @@ class Basic extends AbstractConfiguration
 				),
 			),
 			'forms' => array(),
-			'ui_extensions' => array(
-				'css_files' => array(),
-				'css_inline' => null,
-				'js_files' => array(),
-				'js_inline' => null,
-				'html' => array(),
-			),
 			'bricks' => array(),
 			'bricks_total_width' => 0,
 		);
@@ -282,83 +271,5 @@ class Basic extends AbstractConfiguration
 		$aPortalConf['properties']['logo'] = $sLogoUri;
 
 		return $aPortalConf;
-	}
-
-	/**
-	 * @param \Symfony\Component\DependencyInjection\Container $oContainer
-	 *
-	 * @return array
-	 * @throws \Exception
-	 */
-	private function GetUiExtensions(Container $oContainer)
-	{
-		$aUIExtensions = array(
-			'css_files' => array(),
-			'css_inline' => null,
-			'js_files' => array(),
-			'js_inline' => null,
-			'html' => array(),
-		);
-		$aUIExtensionHooks = array(
-			iPortalUIExtension::ENUM_PORTAL_EXT_UI_BODY,
-			iPortalUIExtension::ENUM_PORTAL_EXT_UI_NAVIGATION_MENU,
-			iPortalUIExtension::ENUM_PORTAL_EXT_UI_MAIN_CONTENT,
-		);
-
-		/** @var iPortalUIExtension $oExtensionInstance */
-		foreach (MetaModel::EnumPlugins('iPortalUIExtension') as $oExtensionInstance)
-		{
-			// Adding CSS files
-			$aImportPaths = array($_ENV['COMBODO_PORTAL_BASE_ABSOLUTE_PATH'].'css/');
-			foreach ($oExtensionInstance->GetCSSFiles($oContainer) as $sCSSFile)
-			{
-				// Removing app root url as we need to pass a path on the file system (relative to app root)
-				$sCSSFilePath = str_replace(utils::GetAbsoluteUrlAppRoot(), '', $sCSSFile);
-				// Compiling SCSS file
-				$sCSSFileCompiled = utils::GetAbsoluteUrlAppRoot().utils::GetCSSFromSASS($sCSSFilePath,
-						$aImportPaths);
-
-				if (!in_array($sCSSFileCompiled, $aUIExtensions['css_files']))
-				{
-					$aUIExtensions['css_files'][] = $sCSSFileCompiled;
-				}
-			}
-
-			// Adding CSS inline
-			$sCSSInline = $oExtensionInstance->GetCSSInline($oContainer);
-			if ($sCSSInline !== null)
-			{
-				$aUIExtensions['css_inline'] .= "\n\n".$sCSSInline;
-			}
-
-			// Adding JS files
-			$aUIExtensions['js_files'] = array_merge($aUIExtensions['js_files'],
-				$oExtensionInstance->GetJSFiles($oContainer));
-
-			// Adding JS inline
-			$sJSInline = $oExtensionInstance->GetJSInline($oContainer);
-			if ($sJSInline !== null)
-			{
-				// Note: Semi-colon is to prevent previous script that would have omitted it.
-				$aUIExtensions['js_inline'] .= "\n\n;\n".$sJSInline;
-			}
-
-			// Adding HTML for each hook
-			foreach ($aUIExtensionHooks as $sUIExtensionHook)
-			{
-				$sFunctionName = 'Get'.$sUIExtensionHook.'HTML';
-				$sHTML = $oExtensionInstance->$sFunctionName($oContainer);
-				if ($sHTML !== null)
-				{
-					if (!array_key_exists($sUIExtensionHook, $aUIExtensions['html']))
-					{
-						$aUIExtensions['html'][$sUIExtensionHook] = '';
-					}
-					$aUIExtensions['html'][$sUIExtensionHook] .= "\n\n".$sHTML;
-				}
-			}
-		}
-
-		return $aUIExtensions;
 	}
 }

@@ -1,0 +1,12 @@
+{# @copyright   Copyright (C) 2010-2021 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+{% set sTagName = oUIBlock.HasUrl() ? 'a' : 'span' %}
+<{{ sTagName }} id="{{ oUIBlock.GetId() }}"
+    {% if oUIBlock.HasUrl() %}href="{{ oUIBlock.GetUrl()|raw }}"{% endif %}
+    class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} {{ oUIBlock.GetCSSColorClass() }}"
+    data-role="ibo-pill"
+    {% if oUIBlock.HasTooltip() %}data-tooltip-content="{{ oUIBlock.GetTooltip() }}" data-tooltip-show-delay="500"{% endif %}>
+    {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+        {{ render_block(oSubBlock, {aPage: aPage}) }}
+    {% endfor %}
+</{{ sTagName }}>

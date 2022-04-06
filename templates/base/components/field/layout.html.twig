@@ -1,0 +1,42 @@
+{% set aParams = oUIBlock.GetParams() %}
+<div id="{{ oUIBlock.GetId() }}"
+     class="{{ oUIBlock.GetBlocksInheritanceCSSClassesAsString() }} {{ oUIBlock.GetAdditionalCSSClassesAsString() }} ibo-field-{{ oUIBlock.GetLayout() }}
+        {% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %}"
+     data-role="ibo-field"
+     data-attribute-code="{{ oUIBlock.GetAttCode() }}"
+     data-attribute-type="{{ oUIBlock.GetAttType() }}"
+     data-attribute-label="{{ oUIBlock.GetAttLabel() }}"
+        {# Note: This might not the best way to this, we might rather have some properties for this flags in te Field class. #}
+        {# For the moment this just aims at restoring the metadata introduced in iTop 2.7. Refactoring the Field class with specialization for each type must be designed by all the team #}
+        {# as we might want to re-use / adapt the Field classes introduced with the end-user portal #}
+     data-attribute-flag-hidden="{{ oUIBlock.IsHidden()|var_export }}"
+     data-attribute-flag-read-only="{{ oUIBlock.IsReadOnly()|var_export }}"
+     data-attribute-flag-mandatory="{{ oUIBlock.IsMandatory()|var_export }}"
+     data-attribute-flag-must-change="{{ oUIBlock.IsMustChange()|var_export }}"
+     data-attribute-flag-must-prompt="{{ oUIBlock.IsMustPrompt()|var_export }}"
+     data-attribute-flag-slave="{{ oUIBlock.IsSlave()|var_export }}"
+     data-value-raw="{{ oUIBlock.GetValueRaw() }}"
+        {% if oUIBlock.GetDataAttributes() %}
+            {% for sName, sValue in oUIBlock.GetDataAttributes() %}
+                data-{{ sName }}="{{ sValue }}"
+            {% endfor %}
+        {% endif %}
+>
+    <div class="ibo-field--label">{{ oUIBlock.GetLabel()|raw }}
+        {% if oUIBlock.GetLayout() == constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
+            {% if oUIBlock.GetComments() %}
+                <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>
+            {% endif %}
+        {% endif %}
+    </div>
+    <div class="ibo-field--value" {% if oUIBlock.GetValueId() %}id="{{ oUIBlock.GetValueId() }}"{% endif %}>
+        {% for oSubBlock in oUIBlock.GetSubBlocks() %}
+            {{ render_block(oSubBlock, {aPage: aPage}) }}
+        {% endfor %}
+    </div>
+    {% if oUIBlock.GetLayout() != constant("Combodo\\iTop\\Application\\UI\\Base\\Component\\Field\\Field::ENUM_FIELD_LAYOUT_LARGE") %}
+        {% if oUIBlock.GetComments() %}
+            <div class="ibo-field--comments">{{ oUIBlock.GetComments()|raw }}</div>
+        {% endif %}
+    {% endif %}
+</div>

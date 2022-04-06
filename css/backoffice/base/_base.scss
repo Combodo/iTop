@@ -1,0 +1,89 @@
+/*
+ * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @license     http://opensource.org/licenses/AGPL-3.0
+ */
+
+$ibo-scrollbar--scrollbar-width: 8px !default;
+$ibo-scrollbar--scrollbar-height: $ibo-scrollbar--scrollbar-width !default; /* For horizontal scrollbars */
+$ibo-scrollbar--scrollbar-track-background-color: $ibo-color-transparent !default;
+$ibo-scrollbar--scrollbar-track-border-radius: $ibo-border-radius-500 !default;
+$ibo-scrollbar--scrollbar-thumb-background-color: $ibo-color-grey-300 !default;
+$ibo-scrollbar--scrollbar-thumb-border: none !default;
+$ibo-scrollbar--scrollbar-thumb-border-radius: $ibo-border-radius-500 !default;
+
+$ibo-hyperlink-color: $ibo-color-primary-700 !default;
+$ibo-hyperlink-color--on-hover: $ibo-color-primary-800 !default;
+$ibo-hyperlink-color--on-active: $ibo-color-primary-900 !default;
+
+$ibo-svg-illustration--fill: $ibo-color-primary-500 !default;
+
+$ibo-content-block--background-color: $ibo-color-white-100 !default;
+$ibo-content-block--border: 1px solid $ibo-color-grey-400 !default;
+
+/* CSS variables */
+:root{
+	--ibo-scrollbar--scrollbar-width: #{$ibo-scrollbar--scrollbar-width};
+	--ibo-scrollbar--scrollbar-height: #{$ibo-scrollbar--scrollbar-height};
+	--ibo-scrollbar--scrollbar-track-background-color: #{$ibo-scrollbar--scrollbar-track-background-color};
+	--ibo-scrollbar--scrollbar-track-border-radius: #{$ibo-scrollbar--scrollbar-track-border-radius};
+	--ibo-scrollbar--scrollbar-thumb-background-color: #{$ibo-scrollbar--scrollbar-thumb-background-color};
+	--ibo-scrollbar--scrollbar-thumb-border: #{$ibo-scrollbar--scrollbar-thumb-border};
+	--ibo-scrollbar--scrollbar-thumb-border-radius: #{$ibo-scrollbar--scrollbar-thumb-border-radius};
+
+	--ibo-hyperlink-color: #{$ibo-hyperlink-color};
+	--ibo-hyperlink-color--on-hover: #{$ibo-hyperlink-color--on-hover};
+	--ibo-hyperlink-color--on-active: #{$ibo-hyperlink-color--on-active};
+}
+
+/* Box sizing reset */
+*,
+*::before,
+*::after{
+	box-sizing: border-box;
+}
+
+/* Scrollbar reset */
+*{
+	/* - For Firefox and future W3C specs. */
+	scrollbar-width: thin;
+	scrollbar-color: var(--ibo-scrollbar--scrollbar-thumb-background-color) var(--ibo-scrollbar--scrollbar-track-background-color);
+
+	/* - For Chrome/Edge/Safari */
+	&::-webkit-scrollbar {
+		width: var(--ibo-scrollbar--scrollbar-width);
+		height: var(--ibo-scrollbar--scrollbar-height);
+	}
+	&::-webkit-scrollbar-track {
+		background-color: var(--ibo-scrollbar--scrollbar-track-background-color);
+		border-radius: var(--ibo-scrollbar--scrollbar-track-border-radius);
+	}
+	::-webkit-scrollbar-thumb {
+		background-color: var(--ibo-scrollbar--scrollbar-thumb-background-color);
+		border: var(--ibo-scrollbar--scrollbar-thumb-border);
+		border-radius: var(--ibo-scrollbar--scrollbar-thumb-border-radius);
+	}
+}
+
+
+/* Base font size (used by all typographies) */
+html{
+	font-size: 12px;
+}
+
+/* Hyperlinks reset, ensure that they are of the right color and without decoration everywhere (of course this can be overloaded in some components) */
+a{
+	color: var(--ibo-hyperlink-color);
+	text-decoration: none;
+
+	&:hover,
+	&:active,
+	&:visited{
+		text-decoration: none;
+	}
+	&:hover{
+		color: var(--ibo-hyperlink-color--on-hover);
+	}
+	&:active{
+		color: var(--ibo-hyperlink-color--on-active);
+	}
+}

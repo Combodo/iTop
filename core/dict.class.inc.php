@@ -1,5 +1,5 @@
 <?php
-// Copyright (C) 2010-2016 Combodo SARL
+// Copyright (C) 2010-2021 Combodo SARL
 //
 //   This file is part of iTop.
 //
@@ -16,45 +16,16 @@
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
-/**
- * Class Dict
- * Management of localizable strings 
- *
- * @copyright   Copyright (C) 2010-2018 Combodo SARL
- * @license     http://opensource.org/licenses/AGPL-3.0
- */
-
-class DictException extends CoreException
-{
-}
-
-class DictExceptionUnknownLanguage extends DictException
-{
-	public function __construct($sLanguageCode)
-	{
-		$aContext = array();
-		$aContext['language_code'] = $sLanguageCode;
-		parent::__construct('Unknown localization language', $aContext);
-	}
-}
-
-class DictExceptionMissingString extends DictException
-{
-	public function __construct($sLanguageCode, $sStringCode)
-	{
-		$aContext = array();
-		$aContext['language_code'] = $sLanguageCode;
-		$aContext['string_code'] = $sStringCode;
-		parent::__construct('Missing localized string', $aContext);
-	}
-}
-
 
 define('DICT_ERR_STRING', 1); // when a string is missing, return the identifier
 define('DICT_ERR_EXCEPTION', 2); // when a string is missing, throw an exception
 //define('DICT_ERR_LOG', 3); // when a string is missing, log an error
 
 
+/**
+ * Class Dict
+ * Management of localizable strings
+ */
 class Dict
 {
 	protected static $m_iErrorMode = DICT_ERR_STRING;
@@ -64,6 +35,8 @@ class Dict
 	protected static $m_aLanguages = array(); // array( code => array( 'description' => '...', 'localized_description' => '...') ...)
 	protected static $m_aData = array();
 	protected static $m_sApplicationPrefix = null;
+	/** @var \ApcService $m_oApcService  */
+	protected static $m_oApcService = null;
 
 	/**
 	 * @param $sLanguageCode
@@ -145,15 +118,17 @@ class Dict
 	{
 		// Attempt to find the string in the user language
 		//
-		self::InitLangIfNeeded(self::GetUserLanguage());
+		$sLangCode = self::GetUserLanguage();
+		self::InitLangIfNeeded($sLangCode);
 
-		if (!array_key_exists(self::GetUserLanguage(), self::$m_aData))
+		if (!array_key_exists($sLangCode, self::$m_aData))
 		{
+			IssueLog::Warning("Cannot find $sLangCode in dictionnaries. default labels displayed");
 			// It may happen, when something happens before the dictionaries get loaded
 			return $sStringCode;
 		}
-		$aCurrentDictionary = self::$m_aData[self::GetUserLanguage()];
-		if (array_key_exists($sStringCode, $aCurrentDictionary))
+		$aCurrentDictionary = self::$m_aData[$sLangCode];
+		if (is_array($aCurrentDictionary) && array_key_exists($sStringCode, $aCurrentDictionary))
 		{
 			return $aCurrentDictionary[$sStringCode];
 		}
@@ -164,7 +139,7 @@ class Dict
 			self::InitLangIfNeeded(self::$m_sDefaultLanguage);
 			
 			$aDefaultDictionary = self::$m_aData[self::$m_sDefaultLanguage];
-			if (array_key_exists($sStringCode, $aDefaultDictionary))
+			if (is_array($aDefaultDictionary) && array_key_exists($sStringCode, $aDefaultDictionary))
 			{
 				return $aDefaultDictionary[$sStringCode];
 			}
@@ -173,7 +148,7 @@ class Dict
 			self::InitLangIfNeeded('EN US');
 
 			$aDefaultDictionary = self::$m_aData['EN US'];
-			if (array_key_exists($sStringCode, $aDefaultDictionary))
+			if (is_array($aDefaultDictionary) && array_key_exists($sStringCode, $aDefaultDictionary))
 			{
 				return $aDefaultDictionary[$sStringCode];
 			}
@@ -232,7 +207,26 @@ class Dict
 	{
 		self::$m_aLanguages = $aLanguagesList;
 	}
-	
+
+	/**
+	 * @since 2.7.6 N°4125
+	 * @return \ApcService
+	 */
+	public static function GetApcService() {
+		if (self::$m_oApcService === null){
+			self::$m_oApcService = new ApcService();
+		}
+		return self::$m_oApcService;
+	}
+
+	/**
+	 * @since 2.7.6 N°4125
+	 * @param \ApcService $m_oApcService
+	 */
+	public static function SetApcService($oApcService) {
+		self::$m_oApcService = $oApcService;
+	}
+
 	/**
 	 * Load a language from the language dictionary, if not already loaded
 	 * @param string $sLangCode Language code
@@ -241,20 +235,23 @@ class Dict
 	public static function InitLangIfNeeded($sLangCode)
 	{
 		if (array_key_exists($sLangCode, self::$m_aData)) return true;
-		
+
 		$bResult = false;
-		
-		if (function_exists('apc_fetch') && (self::$m_sApplicationPrefix !== null))
+
+		if (self::GetApcService()->function_exists('apc_fetch')
+			&& (self::$m_sApplicationPrefix !== null))
 		{
 			// Note: For versions of APC older than 3.0.17, fetch() accepts only one parameter
 			//
-			self::$m_aData[$sLangCode] = apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
-			if (self::$m_aData[$sLangCode] === false)
-			{
+			self::$m_aData[$sLangCode] = self::GetApcService()->apc_fetch(self::$m_sApplicationPrefix.'-dict-'.$sLangCode);
+			if (self::$m_aData[$sLangCode] === false) {
 				unset(self::$m_aData[$sLangCode]);
-			}
-			else
-			{
+			} else if (! is_array(self::$m_aData[$sLangCode])) {
+				// N°4125: we dont fix dictionnary corrupted cache (on iTop side).
+				// but we log an error in a dedicated channel to let itop administrator be aware of a potential APCu issue to fix.
+				IssueLog::Error("APCu corrupted data (with $sLangCode dictionnary). APCu configuration and running version should be troubleshooted...", LogChannels::APC);
+				$bResult = true;
+			} else {
 				$bResult = true;
 			}
 		}
@@ -263,9 +260,10 @@ class Dict
 			$sDictFile = APPROOT.'env-'.utils::GetCurrentEnvironment().'/dictionaries/'.str_replace(' ', '-', strtolower($sLangCode)).'.dict.php';
 			require_once($sDictFile);
 			
-			if (function_exists('apc_store') && (self::$m_sApplicationPrefix !== null))
+			if (self::GetApcService()->function_exists('apc_store')
+				&& (self::$m_sApplicationPrefix !== null))
 			{
-				apc_store(self::$m_sApplicationPrefix.'-dict-'.$sLangCode, self::$m_aData[$sLangCode]);
+				self::GetApcService()->apc_store(self::$m_sApplicationPrefix.'-dict-'.$sLangCode, self::$m_aData[$sLangCode]);
 			}
 			$bResult = true;
 		}
@@ -304,13 +302,12 @@ class Dict
 	 *
 	 * @param $sSourceCode
 	 * @param $sDestCode
+	 * @since 3.0.1 Not clone sSourceCode entry if sDestCode entry already exist
 	 */
 	public static function CloneString($sSourceCode, $sDestCode)
 	{
-		foreach(self::$m_aLanguages as $sLanguageCode => $foo)
-		{
-			if (isset(self::$m_aData[$sLanguageCode][$sSourceCode]))
-			{
+		foreach(self::$m_aLanguages as $sLanguageCode => $foo) {
+			if (isset(self::$m_aData[$sLanguageCode][$sSourceCode]) && !isset(self::$m_aData[$sLanguageCode][$sDestCode] ))	{
 				self::$m_aData[$sLanguageCode][$sDestCode] = self::$m_aData[$sLanguageCode][$sSourceCode];
 			}
 		}
