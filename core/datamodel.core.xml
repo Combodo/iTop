@@ -12,8 +12,8 @@
     </profiles>
   </user_rights>
   <events>
-    <event id="BeforeInsert" _delta="define">
-      <description>An object is about to be inserted in the database</description>
+    <event id="DBInsertRequested" _delta="define">
+      <description>An object insert in the database has been requested. All changes to the object will be persisted automatically.</description>
       <replaces>DBObject::OnInsert</replaces>
       <arguments>
         <argument id="object">
@@ -26,9 +26,9 @@
         </argument>
       </arguments>
     </event>
-    <event id="DBObjectKeyReady" _delta="define">
-      <description>A key (id) has been generated for an object inserted into the database (use GetKey() to read the new key)</description>
-      <replaces>DBObject::OnObjectKeyReady</replaces>
+    <event id="DBBeforeInsert" _delta="define">
+      <description>An object is about to be inserted in the database (no change possible)</description>
+      <replaces>DBObject::OnInsert</replaces>
       <arguments>
         <argument id="object">
           <description>The object inserted</description>
@@ -40,8 +40,8 @@
         </argument>
       </arguments>
     </event>
-    <event id="AfterInsert" _delta="define">
-      <description>An object has been inserted into the database</description>
+    <event id="DBAfterInsertNoReload" _delta="define">
+      <description>An object has been inserted into the database (but not reloaded). All changes to the object will be persisted automatically.</description>
       <replaces>DBObject::AfterInsert</replaces>
       <arguments>
         <argument id="object">
@@ -54,8 +54,22 @@
         </argument>
       </arguments>
     </event>
-    <event id="BeforeUpdate" _delta="define">
-      <description>An object is about to be updated in the database</description>
+    <event id="DBUpdateRequested" _delta="define">
+      <description>An object update has been requested. All changes to the object will be persisted automatically.</description>
+      <replaces>DBObject::OnUpdate, DBObject::DoComputeValues</replaces>
+      <arguments>
+        <argument id="object">
+          <description>The object updated</description>
+          <type>DBObject</type>
+        </argument>
+        <argument id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </argument>
+      </arguments>
+    </event>
+    <event id="DBBeforeUpdate" _delta="define">
+      <description>An object is about to be updated in the database (no change possible)</description>
       <replaces>DBObject::OnUpdate</replaces>
       <arguments>
         <argument id="object">
@@ -68,8 +82,8 @@
         </argument>
       </arguments>
     </event>
-    <event id="AfterUpdate" _delta="define">
-      <description>An object has been updated into the database</description>
+    <event id="DBAfterUpdateNoReload" _delta="define">
+      <description>An object has been updated into the database (but not reloaded). All changes to the object will be LOST.</description>
       <replaces>DBObject::AfterUpdate</replaces>
       <arguments>
         <argument id="object">
@@ -82,7 +96,21 @@
         </argument>
       </arguments>
     </event>
-    <event id="BeforeDelete" _delta="define">
+    <event id="DBAfterUpdate" _delta="define">
+      <description>An object has been updated into the database and reloaded. All changes to the object will be persisted automatically.</description>
+      <replaces>DBObject::AfterUpdate</replaces>
+      <arguments>
+        <argument id="object">
+          <description>The object updated</description>
+          <type>DBObject</type>
+        </argument>
+        <argument id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </argument>
+      </arguments>
+    </event>
+    <event id="DBBeforeDelete" _delta="define">
       <description>An object is about to be deleted in the database</description>
       <replaces>DBObject::OnDelete</replaces>
       <arguments>
@@ -96,7 +124,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="AfterDelete" _delta="define">
+    <event id="DBAfterDelete" _delta="define">
       <description>An object has been deleted into the database</description>
       <replaces>DBObject::AfterDelete</replaces>
       <arguments>
@@ -110,12 +138,16 @@
         </argument>
       </arguments>
     </event>
-    <event id="BeforeApplyStimulus" _delta="define">
+    <event id="DBBeforeApplyStimulus" _delta="define">
       <description>A stimulus is about to be applied to an object</description>
       <arguments>
         <argument id="object">
           <description>The object where the stimulus is to be applied</description>
           <type>DBObject</type>
+        </argument>
+        <argument id="stimulus">
+          <description>Current stimulus applied</description>
+          <type>string</type>
         </argument>
         <argument id="debug_info">
           <description>Debug string</description>
@@ -123,12 +155,16 @@
         </argument>
       </arguments>
     </event>
-    <event id="AfterApplyStimulus" _delta="define">
+    <event id="DBAfterApplyStimulus" _delta="define">
       <description>A stimulus has been applied to an object</description>
       <arguments>
         <argument id="object">
           <description>The object where the stimulus has been applied</description>
           <type>DBObject</type>
+        </argument>
+        <argument id="stimulus">
+          <description>Current stimulus applied</description>
+          <type>string</type>
         </argument>
         <argument id="debug_info">
           <description>Debug string</description>
@@ -149,8 +185,8 @@
         </argument>
       </arguments>
     </event>
-    <event id="OnCheckToWrite" _delta="define">
-      <description>Check an object before it is written into the database</description>
+    <event id="DBCheckToWrite" _delta="define">
+      <description>Check an object before it is written into the database (no change possible)</description>
       <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
       <arguments>
         <argument id="object">
@@ -167,8 +203,8 @@
         </argument>
       </arguments>
     </event>
-    <event id="OnCheckToDelete" _delta="define">
-      <description>Check an object before it is deleted from the database</description>
+    <event id="DBCheckToDelete" _delta="define">
+      <description>Check an object before it is deleted from the database (no change possible)</description>
       <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
       <arguments>
         <argument id="object">

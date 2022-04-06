@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -4618,7 +4618,6 @@ HTML;
 				$this->m_aCheckIssues = array_merge($this->m_aCheckIssues, $aNewIssues);
 			}
 		}
-		$this->FireEvent(EVENT_SERVICE_ON_CHECK_TO_WRITE, array('error_messages' => &$this->m_aCheckIssues));
 
 		// User rights
 		//
@@ -4667,7 +4666,6 @@ HTML;
 				$this->m_aDeleteIssues = array_merge($this->m_aDeleteIssues, $aNewIssues);
 			}
 		}
-		$this->FireEvent(EVENT_SERVICE_ON_CHECK_TO_DELETE, array('error_messages' => &$this->m_aDeleteIssues));
 
 		// User rights
 		//

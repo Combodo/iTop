@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -189,14 +189,8 @@ abstract class DBObject implements iDisplay
 		{
 			$this->m_aCurrValues[$sAttCode] = $this->GetDefaultValue($sAttCode);
 			$this->m_aOrigValues[$sAttCode] = null;
-			if ($oAttDef->IsExternalField() || ($oAttDef instanceof AttributeFriendlyName))
-			{
-				// This field has to be read from the DB
-				// Leave the flag unset (optimization) 
-			}
-			else
-			{
-				// No need to trigger a reload for that attribute
+			if (!$oAttDef->IsExternalField() && !$oAttDef instanceof AttributeFriendlyName) {
+				// No need to trigger a reload action for that attribute
 				// Let's consider it as being already fully loaded
 				$this->m_aLoadedAtt[$sAttCode] = true;
 			}
@@ -356,6 +350,10 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
+		$sClass = get_class($this);
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: Reload $sClass::{$this->m_iKey} from DB", LogChannels::DM_CRUD);
+		}
 		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_RELOAD);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
@@ -608,6 +606,7 @@ abstract class DBObject implements iDisplay
 		}
 		if ($oAttDef->IsLinkSet() && ($value != null)) {
 			$realvalue = clone $this->m_aCurrValues[$sAttCode];
+			/** @var iDBObjectSetIterator $value */
 			$realvalue->UpdateFromCompleteList($value);
 		} else {
 			$realvalue = $oAttDef->MakeRealValue($value, $this);
@@ -778,11 +777,12 @@ abstract class DBObject implements iDisplay
 		}
 		else
 		{
-			if (isset($this->m_aLoadedAtt[$sAttCode]))
-			{
-				// Standard case... we have the information directly
-			}
-			elseif ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
+//			if (isset($this->m_aLoadedAtt[$sAttCode]))
+//			{
+//				// Standard case... we have the information directly
+//			}
+//			else
+			if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 			{
 				// Lazy load (polymorphism): complete by reloading the entire object
 				$oKPI = new ExecutionKPI();
@@ -1495,7 +1495,7 @@ abstract class DBObject implements iDisplay
 		if($this->HasHighlightIcon()) {
 			$sIconUrl = MetaModel::GetHighlightScale($sClass)[$this->ComputeHighlightCode()]['icon'];
 			if($bImgTag) {
-				return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\"/>";
+				return "<img src=\"$sIconUrl\" style=\"vertical-align:middle\" alt=''/>";
 			}
 			else {
 				return $sIconUrl;
@@ -1507,7 +1507,7 @@ abstract class DBObject implements iDisplay
 		$sIconUrl = $this->HasInstanceIcon() ? $this->Get($sImageAttCode)->GetDisplayURL($sClass, $this->GetKey(), $sImageAttCode) : '';
 		if (strlen($sIconUrl) > 0) {
 			if($bImgTag) {
-				return "<img src=\"$sIconUrl\"/>";
+				return "<img src=\"$sIconUrl\" alt=''/>";
 			}
 			else {
 				return $sIconUrl;
@@ -2341,6 +2341,7 @@ abstract class DBObject implements iDisplay
 
 			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
+			$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE, array('error_messages' => &$this->m_aCheckIssues));
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
 			{
@@ -2368,6 +2369,8 @@ abstract class DBObject implements iDisplay
 	protected function DoCheckToDelete(&$oDeletionPlan)
 	{
 		$this->m_aDeleteIssues = array(); // Ok
+
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE, array('error_messages' => &$this->m_aDeleteIssues));
 
 		if ($this->InSyncScope())
 		{
@@ -2539,15 +2542,16 @@ abstract class DBObject implements iDisplay
 		return $this->m_aPreviousValuesForUpdatedAttributes;
 	}
 
-	
-    /**
-     * Whether or not an object was modified since last read from the DB
-     * (ie: does it differ from the DB ?)
-     * 
-     * @api
-     *
-     * @return bool
-     */
+
+	/**
+	 * Whether an object was modified since last read from the DB or not
+	 * (ie: does it differ from the DB ?)
+	 *
+	 * @api
+	 *
+	 * @return bool
+	 * @throws \Exception
+	 */
 	public function IsModified()
 	{
 		$aChanges = $this->ListChanges();
@@ -2555,11 +2559,12 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
-     * Whether or not $oSibling is equal to the current DBObject
-     * 
+	 * Whether $oSibling is equal to the current DBObject or not
+	 *
 	 * @param DBObject $oSibling
 	 *
 	 * @return bool
+	 * @throws \Exception
 	 */
 	public function Equals($oSibling)
 	{
@@ -2806,7 +2811,7 @@ abstract class DBObject implements iDisplay
 
 		$sClass = get_class($this);
 		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBInsert $sClass::0 Starting", LogChannels::DM_CRUD);
+			IssueLog::Debug("CRUD: DBInsert $sClass::0 Requested", LogChannels::DM_CRUD);
 		}
 
 		$sRootClass = MetaModel::GetRootClass($sClass);
@@ -2814,7 +2819,7 @@ abstract class DBObject implements iDisplay
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
 		$this->OnInsert();
-		$this->FireEvent(EVENT_SERVICE_BEFORE_INSERT);
+		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
 
 		if ($this->m_iKey < 0)
 		{
@@ -2859,6 +2864,11 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBInsert $sClass::0 About to write in DB", LogChannels::DM_CRUD);
+		}
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_INSERT);
+
 		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
 		if ($bIsTransactionEnabled)
@@ -2892,7 +2902,7 @@ abstract class DBObject implements iDisplay
 					$this->DBInsertSingleTable($sParentClass);
 				}
 
-			$this->OnObjectKeyReady();
+				$this->OnObjectKeyReady();
 
 				$this->DBWriteLinks();
 				$this->WriteExternalAttributes();
@@ -2942,7 +2952,17 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterInsert();
-		$this->FireEvent(EVENT_SERVICE_AFTER_INSERT);
+
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: $sClass::{$this->m_iKey} Inserted in DB", LogChannels::DM_CRUD);
+		}
+
+		// Prevent DBUpdate at this point (reentrance protection)
+		$sClass = get_class($this);
+		$sClassKey = $sClass.'::'.$this->m_iKey;
+		self::$aUpdateReentrance[$sClassKey] = true;
+		$this->FireEvent(EVENT_SERVICE_DB_AFTER_INSERT_NO_RELOAD);
+		unset(self::$aUpdateReentrance[$sClassKey]);
 
 		// Activate any existing trigger 
 		$sClass = get_class($this);
@@ -2963,6 +2983,10 @@ abstract class DBObject implements iDisplay
 		
 		// - TriggerOnObjectMention
 		$this->ActivateOnMentionTriggers(true);
+
+		if ($this->IsModified()) {
+			$this->DBUpdate();
+		}
 
 		return $this->m_iKey;
 	}
@@ -3092,22 +3116,17 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsert()
 	{
-	    $this->DBInsertNoReload();
-
+		$sClass = get_class($this);
         if (MetaModel::DBIsReadOnly())
         {
-            $sClass = get_class($this);
             $sErrorMessage = "Cannot Insert object of class '$sClass' because of an ongoing maintenance: the database is in ReadOnly mode";
 
             IssueLog::Error("$sErrorMessage\n".MyHelpers::get_callstack_text(1));
             throw new CoreException("$sErrorMessage (see the log for more information)");
         }
 
+		$this->DBInsertNoReload();
 		$this->Reload();
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBInsert $sClass::{$this->m_iKey} Created", LogChannels::DM_CRUD);
-		}
 
 		return $this->m_iKey;
 	}
@@ -3152,6 +3171,8 @@ abstract class DBObject implements iDisplay
 		$this->m_iKey = self::GetNextTempId(get_class($this));
 	}
 
+	private static $aUpdateReentrance = [];
+
 	/**
 	 * Update an object in DB
 	 *
@@ -3171,14 +3192,13 @@ abstract class DBObject implements iDisplay
 			throw new CoreException("DBUpdate: could not update a newly created object, please call DBInsert instead");
 		}
 		// Protect against reentrance (e.g. cascading the update of ticket logs)
-		static $aUpdateReentrance = array();
 		$sClass = get_class($this);
 		$sKey = $sClass.'::'.$this->GetKey();
 		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBUpdate $sKey Starting", LogChannels::DM_CRUD);
+			IssueLog::Debug("CRUD: DBUpdate $sKey Requested", LogChannels::DM_CRUD);
 		}
 
-		if (array_key_exists($sKey, $aUpdateReentrance))
+		if (array_key_exists($sKey, self::$aUpdateReentrance))
 		{
 			if ($sClass == 'UserRequest') {
 				IssueLog::Debug("CRUD: DBUpdate $sKey Rejected (reentrance)", LogChannels::DM_CRUD);
@@ -3186,7 +3206,7 @@ abstract class DBObject implements iDisplay
 
 			return false;
 		}
-		$aUpdateReentrance[$sKey] = true;
+		self::$aUpdateReentrance[$sKey] = true;
 
 		try
 		{
@@ -3211,15 +3231,15 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			$this->OnUpdate();
-			$this->FireEvent(EVENT_SERVICE_BEFORE_UPDATE);
+			$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
 
+			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
-
 			$aChanges = $this->ListChanges();
 			if (count($aChanges) == 0)
 			{
 				// Attempting to update an unchanged object
-				unset($aUpdateReentrance[$sKey]);
+				unset(self::$aUpdateReentrance[$sKey]);
 				if ($sClass == 'UserRequest') {
 					IssueLog::Debug("CRUD: DBUpdate $sKey Aborted (no change)", LogChannels::DM_CRUD);
 				}
@@ -3275,6 +3295,10 @@ abstract class DBObject implements iDisplay
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
 				$iTransactionRetry = $iTransactionRetryCount;
 			}
+			if ($sClass == 'UserRequest') {
+				IssueLog::Debug("CRUD: DBUpdate $sKey About to be written in DB", LogChannels::DM_CRUD);
+			}
+			$this->FireEvent(EVENT_SERVICE_DB_BEFORE_UPDATE);
 			while ($iTransactionRetry > 0)
 			{
 				try
@@ -3427,20 +3451,15 @@ abstract class DBObject implements iDisplay
 
 				$this->AfterUpdate();
 
-				// Reload to get the external attributes
-				if ($bHasANewExternalKeyValue) {
-					$this->Reload(true /* AllowAllData */);
-				} else {
-					// Reset original values although the object has not been reloaded
-					foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
-					{
-						if ($bLoaded)
-						{
-							$value = $this->m_aCurrValues[$sAttCode];
-							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
-						}
-					}
+				if ($sClass == 'UserRequest') {
+					IssueLog::Debug("CRUD: DBUpdate $sKey Updated", LogChannels::DM_CRUD);
 				}
+				$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE_NO_RELOAD, ['changes' => $aChanges]);
+
+				// Reload to get the external/computed attributes
+				$this->Reload(true);
+
+				$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE, ['changes' => $aChanges]);
 			}
 			catch (Exception $e)
 			{
@@ -3450,12 +3469,12 @@ abstract class DBObject implements iDisplay
 		}
 		finally
 		{
-			unset($aUpdateReentrance[$sKey]);
+			unset(self::$aUpdateReentrance[$sKey]);
 		}
-		$this->FireEvent(EVENT_SERVICE_AFTER_UPDATE, ['changes' => $aChanges]);
 
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBUpdate $sKey Updated", LogChannels::DM_CRUD);
+		if ($this->IsModified()) {
+			// Controlled reentrance
+			$this->DBUpdate();
 		}
 
 		return $this->m_iKey;
@@ -3662,7 +3681,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->OnDelete();
-		$this->FireEvent(EVENT_SERVICE_BEFORE_DELETE);
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_DELETE);
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3773,7 +3792,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterDelete();
-		$this->FireEvent(EVENT_SERVICE_AFTER_DELETE);
+		$this->FireEvent(EVENT_SERVICE_DB_AFTER_DELETE);
 
 
 		$this->m_bIsInDB = false;
@@ -3967,7 +3986,7 @@ abstract class DBObject implements iDisplay
 
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
-		$this->FireEvent(EVENT_SERVICE_BEFORE_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
 
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
@@ -4087,7 +4106,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			$this->FireEvent(EVENT_SERVICE_AFTER_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
+			$this->FireEvent(EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
 		}
 		else
 		{
