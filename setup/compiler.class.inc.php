@@ -2028,24 +2028,13 @@ EOF
 
 		$oPresentation = $oClass->GetUniqueElement('presentation');
 		$sZlists = '';
-		/** @var DOMElement $oListNode */
+		/** @var \MFElement $oListNode */
 		foreach ($oPresentation->GetNodes('/*/items/parent::*') as $oListNode)
 		{
 			$sListTag = $oListNode->tagName();
-			if (isset($aListRef[$sListTag]))
-			{
-				$sListCode = $aListRef[$sListTag];
-			}
-			else
-			{
-				$sListCode = $sListTag;
-			}
+			$sListCode = isset($aListRef[$sListTag]) ? $aListRef[$sListTag] : $sListTag;
 
 			$aAttributes = $oListNode->GetNodeAsArrayOfItems();
-			if (!is_array($aAttributes))
-			{
-				$aAttributes = array();
-			}
 			$this->ArrayOfItemsToZList($aAttributes);
 	
 			$sZAttributes = var_export($aAttributes, true);
