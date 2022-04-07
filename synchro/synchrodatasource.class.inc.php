@@ -2818,8 +2818,8 @@ class SynchroReplica extends DBObject implements iDisplay
 			$aData = $this->LoadExtendedDataFromTable($sSQLTable);
 
 			$aHeaders = array(
-				'attcode' => array('label' => 'Attribute Code', 'description' => ''),
-				'data'    => array('label' => 'Value', 'description' => ''),
+				'attcode' => array('label' => Dict::S('UI:Form:Property'), 'description' => ''),
+				'data'    => array('label' => Dict::S('UI:Form:Value'), 'description' => ''),
 			);
 			$aRows = array();
 			foreach ($aData as $sKey => $value) {
