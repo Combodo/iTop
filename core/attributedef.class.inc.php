@@ -4667,7 +4667,7 @@ class AttributeCaseLog extends AttributeLongText
 		$aColumns = array();
 		$aColumns[$this->GetCode()] = 'LONGTEXT' // 2^32 (4 Gb)
 			.CMDBSource::GetSqlStringColumnDefinition();
-		$aColumns[$this->GetCode().'_index'] = 'BLOB';
+		$aColumns[$this->GetCode().'_index'] = 'TEXT';
 
 		return $aColumns;
 	}
