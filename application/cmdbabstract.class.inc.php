@@ -2132,7 +2132,7 @@ HTML;
 					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
 					$sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
-	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autoomplete="off" />
+	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
 </div>{$sValidationSpan}{$sReloadSpan}
 HTML;
 					break;
@@ -5716,4 +5716,130 @@ JS
 			'AttributeOneWayPassword',
 		);
 	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventInsertRequested()
+	{
+		$sClass = get_class($this);
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBInsert $sClass::0 Requested", LogChannels::DM_CRUD);
+		}
+		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventInsertBefore()
+	{
+		$sClass = get_class($this);
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBInsert $sClass::0 About to write in DB", LogChannels::DM_CRUD);
+		}
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_INSERT);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventInsertAfter()
+	{
+		$sClass = get_class($this);
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: $sClass::{$this->m_iKey} Inserted in DB", LogChannels::DM_CRUD);
+		}
+
+		$this->FireEvent(EVENT_SERVICE_DB_AFTER_INSERT);
+	}
+
+	/**
+	 * @param array $aEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventCheckToWrite(array $aEventData)
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE, $aEventData);
+	}
+
+	/**
+	 * @param array $aEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventCheckToDelete(array $aEventData)
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE, $aEventData);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventUpdateRequested()
+	{
+		$sClass = get_class($this);
+		$sKey = $sClass.'::'.$this->GetKey();
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBUpdate $sKey Requested", LogChannels::DM_CRUD);
+		}
+
+		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventUpdateBefore()
+	{
+		$sClass = get_class($this);
+		$sKey = $sClass.'::'.$this->GetKey();
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBUpdate $sKey About to be written in DB", LogChannels::DM_CRUD);
+		}
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_UPDATE);
+	}
+
+	/**
+	 * @param array $aEventData
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventUpdateAfter(array $aEventData)
+	{
+		$sClass = get_class($this);
+		$sKey = $sClass.'::'.$this->GetKey();
+		if ($sClass == 'UserRequest') {
+			IssueLog::Debug("CRUD: DBUpdate $sKey Updated", LogChannels::DM_CRUD);
+		}
+		$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE, $aEventData);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventDeleteBefore()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_DELETE);
+	}
+
+	/**
+	 * @return void
+	 * @throws \CoreException
+	 */
+	final protected function EventDeleteAfter()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_AFTER_DELETE);
+	}
+
 }

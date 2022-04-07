@@ -150,6 +150,8 @@ abstract class DBObject implements iDisplay
 	 */
 	protected $m_sEventUniqId = '';
 
+	private static $aUpdateReentrance = [];
+
 
 	/**
      * DBObject constructor.
@@ -2341,7 +2343,7 @@ abstract class DBObject implements iDisplay
 
 			$oKPI = new ExecutionKPI();
 			$this->DoCheckToWrite();
-			$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_WRITE, array('error_messages' => &$this->m_aCheckIssues));
+			$this->EventCheckToWrite(['error_messages' => &$this->m_aCheckIssues]);
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
 			if (count($this->m_aCheckIssues) == 0)
 			{
@@ -2370,7 +2372,7 @@ abstract class DBObject implements iDisplay
 	{
 		$this->m_aDeleteIssues = array(); // Ok
 
-		$this->FireEvent(EVENT_SERVICE_DB_CHECK_TO_DELETE, array('error_messages' => &$this->m_aDeleteIssues));
+		$this->EventCheckToDelete(['error_messages' => &$this->m_aDeleteIssues]);
 
 		if ($this->InSyncScope())
 		{
@@ -2810,16 +2812,12 @@ abstract class DBObject implements iDisplay
 		}
 
 		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBInsert $sClass::0 Requested", LogChannels::DM_CRUD);
-		}
-
 		$sRootClass = MetaModel::GetRootClass($sClass);
 
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
 		$this->OnInsert();
-		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
+		$this->EventInsertRequested();
 
 		if ($this->m_iKey < 0)
 		{
@@ -2864,10 +2862,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBInsert $sClass::0 About to write in DB", LogChannels::DM_CRUD);
-		}
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_INSERT);
+		$this->EventInsertBefore();
 
 		$iTransactionRetry = 1;
 		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
@@ -2953,15 +2948,11 @@ abstract class DBObject implements iDisplay
 
 		$this->AfterInsert();
 
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: $sClass::{$this->m_iKey} Inserted in DB", LogChannels::DM_CRUD);
-		}
-
 		// Prevent DBUpdate at this point (reentrance protection)
 		$sClass = get_class($this);
 		$sClassKey = $sClass.'::'.$this->m_iKey;
 		self::$aUpdateReentrance[$sClassKey] = true;
-		$this->FireEvent(EVENT_SERVICE_DB_AFTER_INSERT_NO_RELOAD);
+		$this->EventInsertAfter();
 		unset(self::$aUpdateReentrance[$sClassKey]);
 
 		// Activate any existing trigger 
@@ -3171,7 +3162,6 @@ abstract class DBObject implements iDisplay
 		$this->m_iKey = self::GetNextTempId(get_class($this));
 	}
 
-	private static $aUpdateReentrance = [];
 
 	/**
 	 * Update an object in DB
@@ -3194,9 +3184,6 @@ abstract class DBObject implements iDisplay
 		// Protect against reentrance (e.g. cascading the update of ticket logs)
 		$sClass = get_class($this);
 		$sKey = $sClass.'::'.$this->GetKey();
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBUpdate $sKey Requested", LogChannels::DM_CRUD);
-		}
 
 		if (array_key_exists($sKey, self::$aUpdateReentrance))
 		{
@@ -3231,7 +3218,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 			$this->OnUpdate();
-			$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
+			$this->EventUpdateRequested();
 
 			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
@@ -3295,10 +3282,7 @@ abstract class DBObject implements iDisplay
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
 				$iTransactionRetry = $iTransactionRetryCount;
 			}
-			if ($sClass == 'UserRequest') {
-				IssueLog::Debug("CRUD: DBUpdate $sKey About to be written in DB", LogChannels::DM_CRUD);
-			}
-			$this->FireEvent(EVENT_SERVICE_DB_BEFORE_UPDATE);
+			$this->EventUpdateBefore();
 			while ($iTransactionRetry > 0)
 			{
 				try
@@ -3451,15 +3435,11 @@ abstract class DBObject implements iDisplay
 
 				$this->AfterUpdate();
 
-				if ($sClass == 'UserRequest') {
-					IssueLog::Debug("CRUD: DBUpdate $sKey Updated", LogChannels::DM_CRUD);
-				}
-				$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE_NO_RELOAD, ['changes' => $aChanges]);
 
 				// Reload to get the external/computed attributes
 				$this->Reload(true);
 
-				$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE, ['changes' => $aChanges]);
+				$this->EventUpdateAfter(['changes' => $aChanges]);
 			}
 			catch (Exception $e)
 			{
@@ -3681,7 +3661,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->OnDelete();
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_DELETE);
+		$this->EventDeleteBefore();
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3792,7 +3772,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		$this->AfterDelete();
-		$this->FireEvent(EVENT_SERVICE_DB_AFTER_DELETE);
+		$this->EventDeleteAfter();
 
 
 		$this->m_bIsInDB = false;
@@ -5858,6 +5838,46 @@ abstract class DBObject implements iDisplay
 			$aEventSources[] = $sClass;
 		}
 		EventService::FireEvent(new EventData($sEvent, $aEventSources, $aEventData));
+	}
+
+	protected function EventInsertRequested()
+	{
+	}
+
+	protected function EventInsertBefore()
+	{
+	}
+
+	protected function EventInsertAfter()
+	{
+	}
+
+	protected function EventCheckToWrite(array $aEventData)
+	{
+	}
+
+	protected function EventCheckToDelete(array $aEventData)
+	{
+	}
+
+	protected function EventUpdateRequested()
+	{
+	}
+
+	protected function EventUpdateBefore()
+	{
+	}
+
+	protected function EventUpdateAfter(array $aEventData)
+	{
+	}
+
+	protected function EventDeleteBefore()
+	{
+	}
+
+	protected function EventDeleteAfter()
+	{
 	}
 }
 

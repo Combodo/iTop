@@ -27,8 +27,10 @@ namespace Combodo\iTop\Test\UnitTest;
  */
 
 use ArchivedObjectException;
-use CMDBSource;
 use CMDBObject;
+use CMDBSource;
+use Combodo\iTop\Service\EventData;
+use Combodo\iTop\Service\EventService;
 use Contact;
 use DBObject;
 use DBObjectSet;
@@ -73,6 +75,9 @@ class ItopDataTestCase extends ItopTestCase
 	// For cleanup
 	private $aCreatedObjects = array();
 
+	// Counts
+	public $aReloadCount = [];
+
 	const USE_TRANSACTION = true;
 	const CREATE_TEST_ORG = false;
 
@@ -96,6 +101,8 @@ class ItopDataTestCase extends ItopTestCase
 		{
 			$this->CreateTestOrganization();
 		}
+
+		EventService::RegisterListener(EVENT_SERVICE_DB_OBJECT_RELOAD, [$this, 'CountObjectReload']);
 	}
 
 	/**
@@ -790,6 +797,44 @@ class ItopDataTestCase extends ItopTestCase
 		$this->iTestOrgId = $oOrg->GetKey();
 	}
 
+	public function ResetReloadCount()
+	{
+		$this->aReloadCount = [];
+	}
+
+	public function DebugReloadCount($sMsg, $bResetCount = true)
+	{
+		$iTotalCount = 0;
+		$aTotalPerClass = [];
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$iClassCount = 0;
+			foreach ($aCountByKeys as $iCount) {
+				$iClassCount += $iCount;
+			}
+			$iTotalCount += $iClassCount;
+			$aTotalPerClass[$sClass] = $iClassCount;
+		}
+		$this->debug("$sMsg - $iTotalCount reload(s)");
+		foreach ($this->aReloadCount as $sClass => $aCountByKeys) {
+			$this->debug("    $sClass => $aTotalPerClass[$sClass] reload(s)");
+			foreach ($aCountByKeys as $sKey => $iCount) {
+				$this->debug("        $sClass::$sKey => $iCount");
+			}
+		}
+		if ($bResetCount) {
+			$this->ResetReloadCount();
+		}
+	}
+
+	public function CountObjectReload(EventData $oData)
+	{
+		$oObject = $oData->Get('object');
+		$sClass = get_class($oObject);
+		$sKey = $oObject->GetKey();
+		$iCount = $this->aReloadCount[$sClass][$sKey] ?? 0;
+		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
+	}
+
 	/**
 	 *  Assert that a series of operations will trigger a given number of MySL queries
 	 *
@@ -811,7 +856,7 @@ class ItopDataTestCase extends ItopTestCase
 		}
 		else
 		{
-			// Otherwise PHP Unit will consider that no assertion has been made
+			// Otherwise, PHP Unit will consider that no assertion has been made
 			static::assertTrue(true);
 		}
 	}

@@ -243,6 +243,51 @@ class DBObjectTest extends ItopDataTestCase
 		});
 	}
 
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testInsertNoReloadAttributeRefresh_ExternalKeysAndFields()
+	{
+		$this->ResetReloadCount();
+
+		static::assertDBQueryCount(0, function() use (&$oObject){
+			$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+		});
+		static::assertDBQueryCount(49, function() use (&$oObject) {
+			$oObject->DBInsertNoReload();
+		});
+		$this->DebugReloadCount("Person::DBInsertNoReload()");
+
+		static::assertDBQueryCount(3, function() use (&$oObject){
+			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
+			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
+		});
+		$this->DebugReloadCount("Get('org_id_friendlyname') and Get('location_id_friendlyname')");
+
+		// External key given as an id
+		static::assertDBQueryCount(1, function() use (&$oObject){
+			$oObject->Set('org_id', 2);
+			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+		});
+		$this->DebugReloadCount("Set('org_id', 2) andGet('org_id_friendlyname')");
+
+		// External key given as an object
+		static::assertDBQueryCount(1, function() use (&$oBordeaux){
+			$oBordeaux = \MetaModel::GetObject('Location', 1);
+		});
+		$this->DebugReloadCount("GetObject('Location', 1)");
+
+		static::assertDBQueryCount(5, function() use (&$oBordeaux, &$oObject){
+			$oObject->Set('location_id', $oBordeaux);
+			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
+			static::assertEquals('IT Department', $oObject->Get('org_name'));
+			static::assertEquals('Bordeaux', $oObject->Get('location_id_friendlyname'));
+		});
+		$this->DebugReloadCount("Set('location_id',...) Get('org_id_friendlyname') Get('org_name') Get('location_id_friendlyname')");
+	}
+
 	public function testSetExtKeyUnsetDependentAttribute()
 	{
 		$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));

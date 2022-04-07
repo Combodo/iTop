@@ -1076,7 +1076,7 @@ EOF
 		$oDescription = $oEvent->GetOptionalElement('description');
 		$sDescription = empty($oDescription) ? '' : $oDescription->GetText('');
 
-		$sConstant = 'EVENT_SERVICE_'.strtoupper(SetupUtils::FromCamelCase($sName));
+		$sConstant = $sName;
 
 		$sOutput = "define('$sConstant', '$sName');\n";
 		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', '$sDescription', '$sModuleName');\n";

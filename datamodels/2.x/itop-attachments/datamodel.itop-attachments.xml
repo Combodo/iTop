@@ -203,6 +203,40 @@
 		}
 	}]]></code>
         </method>
+        <method id="EventUpdateAfter">
+          <comment>	/**
+            * @param array $aEventData
+            *
+            * @return void
+            * @throws \CoreException
+            */
+          </comment>
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-ExNihilo</type>
+          <code><![CDATA[
+            	final protected function EventUpdateAfter(array $aEventData)
+	{
+		$this->FireEvent(EVENT_SERVICE_ATTACHMENT_AFTER_UPDATE);
+	}
+]]></code>
+        </method>
+        <method id="EventDeleteAfter">
+          <comment>	/**
+            * @return void
+            * @throws \CoreException
+            */
+          </comment>
+          <static>false</static>
+          <access>protected</access>
+          <type>Overload-ExNihilo</type>
+          <code><![CDATA[
+            	final protected function EventDeleteAfter()
+	{
+		$this->FireEvent(EVENT_SERVICE_ATTACHMENT_AFTER_DELETE);
+	}
+]]></code>
+        </method>
       </methods>
       <presentation>
         <details>
@@ -253,4 +287,38 @@
       </presentation>
     </class>
   </classes>
+  <events>
+    <event id="EVENT_SERVICE_ATTACHMENT_AFTER_UPDATE" _delta="define">
+      <description>An attachment has been updated in database.</description>
+      <replaces>Attachment::AfterUpdate</replaces>
+      <arguments>
+        <argument id="object">
+          <description>The object updated</description>
+          <type>DBObject</type>
+        </argument>
+        <argument id="changes">
+          <description>Array of all the attributes changed</description>
+          <type>array</type>
+        </argument>
+        <argument id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </argument>
+      </arguments>
+    </event>
+    <event id="EVENT_SERVICE_ATTACHMENT_AFTER_DELETE" _delta="define">
+      <description>An attachment has been deleted from database.</description>
+      <replaces>Attachment::AfterDelete</replaces>
+      <arguments>
+        <argument id="object">
+          <description>The object deleted</description>
+          <type>DBObject</type>
+        </argument>
+        <argument id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </argument>
+      </arguments>
+    </event>
+  </events>
 </itop_design>
