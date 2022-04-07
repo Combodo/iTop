@@ -255,19 +255,19 @@ class DBObjectTest extends ItopDataTestCase
 		static::assertDBQueryCount(0, function() use (&$oObject){
 			$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
 		});
-		static::assertDBQueryCount(49, function() use (&$oObject) {
+		static::assertDBQueryCount(28, function() use (&$oObject) {
 			$oObject->DBInsertNoReload();
 		});
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
-		static::assertDBQueryCount(3, function() use (&$oObject){
+		static::assertDBQueryCount(0, function() use (&$oObject){
 			static::assertEquals('Demo', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('Grenoble', $oObject->Get('location_id_friendlyname'));
 		});
 		$this->DebugReloadCount("Get('org_id_friendlyname') and Get('location_id_friendlyname')");
 
 		// External key given as an id
-		static::assertDBQueryCount(1, function() use (&$oObject){
+		static::assertDBQueryCount(2, function() use (&$oObject){
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
@@ -279,7 +279,7 @@ class DBObjectTest extends ItopDataTestCase
 		});
 		$this->DebugReloadCount("GetObject('Location', 1)");
 
-		static::assertDBQueryCount(5, function() use (&$oBordeaux, &$oObject){
+		static::assertDBQueryCount(0, function() use (&$oBordeaux, &$oObject){
 			$oObject->Set('location_id', $oBordeaux);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 			static::assertEquals('IT Department', $oObject->Get('org_name'));

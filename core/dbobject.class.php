@@ -779,12 +779,11 @@ abstract class DBObject implements iDisplay
 		}
 		else
 		{
-//			if (isset($this->m_aLoadedAtt[$sAttCode]))
-//			{
-//				// Standard case... we have the information directly
-//			}
-//			else
-			if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
+			if (isset($this->m_aLoadedAtt[$sAttCode]))
+			{
+				// Standard case... we have the information directly
+			}
+			elseif ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
 			{
 				// Lazy load (polymorphism): complete by reloading the entire object
 				$oKPI = new ExecutionKPI();
