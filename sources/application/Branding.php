@@ -44,16 +44,16 @@ class Branding
 	/** @var \string[][] Relative paths to the logos from the current environment folder */
 	public static $aLogoPaths = [
 		self::ENUM_LOGO_TYPE_MAIN_LOGO_FULL => [
-			'default' => 'images/itop-logo.png',
+			'default' => 'images/logos/logo-itop-simple-light.svg',
 		],
 		self::ENUM_LOGO_TYPE_MAIN_LOGO_COMPACT => [
-			'default' => 'images/itop-logo-square.png',
+			'default' => 'images/logos/logo-itop-compact-orange.svg',
 		],
 		self::ENUM_LOGO_TYPE_PORTAL_LOGO => [
-			'default' => 'images/logo-itop-dark-bg.svg',
+			'default' => 'images/logos/logo-itop-simple-light.svg',
 		],
 		self::ENUM_LOGO_TYPE_LOGIN_LOGO => [
-			'default' => 'images/itop-logo.png',
+			'default' => 'images/logos/logo-itop-baseline-dark.svg',
 		],
 	];
 
