@@ -2823,7 +2823,11 @@ class SynchroReplica extends DBObject implements iDisplay
 			);
 			$aRows = array();
 			foreach ($aData as $sKey => $value) {
-				$aRows[] = array('attcode' => $sKey, 'data' => $value);
+				if ((strpos(CMDBSource::GetFieldType($sSQLTable, $sKey), 'blob') !== false))
+				{
+					$aRows[] = array('attcode' => $sKey, 'data' => chunk_split(base64_encode($value)));
+				}
+				else $aRows[] = array('attcode' => $sKey, 'data' => $value);
 			}
 			$oPage->Table($aHeaders, $aRows);
 			$oPage->add('</fieldset>');
