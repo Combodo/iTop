@@ -766,89 +766,68 @@ abstract class DBObject implements iDisplay
      */
 	public function GetStrict($sAttCode)
 	{
-		if ($sAttCode == 'id')
-		{
+		if ($sAttCode == 'id') {
 			return $this->m_iKey;
 		}
 
 		$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
 
-		if (!$oAttDef->LoadInObject())
-		{
+		if (!$oAttDef->LoadInObject()) {
 			$value = $oAttDef->GetValue($this);
-		}
-		else
-		{
-			if (isset($this->m_aLoadedAtt[$sAttCode]))
-			{
-				// Standard case... we have the information directly
-			}
-			elseif ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty)
-			{
+		} elseif (!isset($this->m_aLoadedAtt[$sAttCode])) {
+			if ($this->m_bIsInDB && !$this->m_bFullyLoaded && !$this->m_bDirty) {
 				// Lazy load (polymorphism): complete by reloading the entire object
 				$oKPI = new ExecutionKPI();
 				$this->Reload();
 				$oKPI->ComputeStats('Reload', get_class($this).'/'.$sAttCode);
-			}
-			elseif ($oAttDef->IsBasedOnOQLExpression())
-			{
+			} elseif ($oAttDef->IsBasedOnOQLExpression()) {
 				// Recompute -which is likely to call Get()
 				//
 				/** @var AttributeFriendlyName|\AttributeObsolescenceFlag $oAttDef */
 				$this->m_aCurrValues[$sAttCode] = $this->EvaluateExpression($oAttDef->GetOQLExpression());
 				$this->m_aLoadedAtt[$sAttCode] = true;
-			}
-			else
-			{
-				// Not loaded... is it related to an external key?
-				if ($oAttDef->IsExternalField())
-				{
-					// Let's get the object and compute all of the corresponding attributes
-					// (i.e not only the requested attribute)
-					//
-					/** @var \AttributeExternalField $oAttDef */
-					$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
+			} elseif ($oAttDef->IsExternalField()) {
+				// Let's get the object and compute all the corresponding attributes
+				// (i.e. not only the requested attribute)
+				//
+				/** @var \AttributeExternalField $oAttDef */
+				$sExtKeyAttCode = $oAttDef->GetKeyAttCode();
 
-					if (($iRemote = $this->Get($sExtKeyAttCode)) && ($iRemote > 0)) // Objects in memory have negative IDs
-					{
-						$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
-						// Note: "allow all data" must be enabled because the external fields are always visible
-						//       to the current user even if this is not the case for the remote object
-						//       This is consistent with the behavior of the lists
-						/** @var \AttributeExternalKey $oExtKeyAttDef */
-						$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote, true, true);
-					}
-					else
-					{
-						$oRemote = null;
-					}
-	
-					foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef)
-					{
-						/** @var \AttributeExternalField $oDef */
-						if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sExtKeyAttCode))
-						{
-							if ($oRemote)
-							{
-								$this->m_aCurrValues[$sCode] = $oRemote->Get($oDef->GetExtAttCode());
-							}
-							else
-							{
-								$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
-							}
-							$this->m_aLoadedAtt[$sCode] = true;
+				if (($iRemote = $this->Get($sExtKeyAttCode)) && ($iRemote > 0)) // Objects in memory have negative IDs
+				{
+					$oExtKeyAttDef = MetaModel::GetAttributeDef(get_class($this), $sExtKeyAttCode);
+					// Note: "allow all data" must be enabled because the external fields are always visible
+					//       to the current user even if this is not the case for the remote object
+					//       This is consistent with the behavior of the lists
+					/** @var \AttributeExternalKey $oExtKeyAttDef */
+					$oRemote = MetaModel::GetObject($oExtKeyAttDef->GetTargetClass(), $iRemote, true, true);
+				} else {
+					$oRemote = null;
+				}
+
+				foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sCode => $oDef) {
+					/** @var \AttributeExternalField $oDef */
+					if ($oDef->IsExternalField() && ($oDef->GetKeyAttCode() == $sExtKeyAttCode)) {
+						if ($oRemote) {
+							$this->m_aCurrValues[$sCode] = $oRemote->Get($oDef->GetExtAttCode());
+						} else {
+							$this->m_aCurrValues[$sCode] = $this->GetDefaultValue($sCode);
 						}
+						$this->m_aLoadedAtt[$sCode] = true;
 					}
 				}
 			}
 			$value = $this->m_aCurrValues[$sAttCode];
+		} else {
+			$value = $this->m_aCurrValues[$sAttCode];
 		}
 
-		if ($value instanceof ormLinkSet)
-		{
+
+		if ($value instanceof ormLinkSet) {
 			$value->Rewind();
 		}
-		return $value; 
+
+		return $value;
 	}
 
     /**

@@ -29,6 +29,7 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreException;
 use DBObject;
+use lnkPersonToTeam;
 use MetaModel;
 
 
@@ -114,7 +115,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrg->DBUpdate();
 
 		$this->assertCount(0, $oOrg->ListChanges());
-		$this->assertCount(1, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
 
 		$oOrg->DBDelete();
 
@@ -124,9 +125,7 @@ class DBObjectTest extends ItopDataTestCase
 		$oOrg->Set('code', strtoupper('testListPreviousValuesForUpdatedAttributes'));
 		$oOrg->DBUpdate();
 		$oOrg->DBUpdate();
-		$this->markTestIncomplete('This test has not been implemented yet. wait for N°4967 fix');
-		$this->debug("ERROR: N°4967 - 'Previous Values For Updated Attributes' not updated if DBUpdate is called without modifying the object");
-		//$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
+		$this->assertCount(0, $oOrg->ListPreviousValuesForUpdatedAttributes());
 	}
 
 	/**
@@ -253,11 +252,14 @@ class DBObjectTest extends ItopDataTestCase
 		$this->ResetReloadCount();
 
 		static::assertDBQueryCount(0, function() use (&$oObject){
-			$oObject = \MetaModel::NewObject('Person', array('name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2));
+			$oObject = \MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
 		});
 		static::assertDBQueryCount(28, function() use (&$oObject) {
 			$oObject->DBInsertNoReload();
 		});
+		$sClass = get_class($oObject);
+		$sKey = $oObject->GetKey();
+		$this->debug("Created $sClass::$sKey");
 		$this->DebugReloadCount("Person::DBInsertNoReload()");
 
 		static::assertDBQueryCount(0, function() use (&$oObject){
@@ -271,11 +273,12 @@ class DBObjectTest extends ItopDataTestCase
 			$oObject->Set('org_id', 2);
 			static::assertEquals('IT Department', $oObject->Get('org_id_friendlyname'));
 		});
-		$this->DebugReloadCount("Set('org_id', 2) andGet('org_id_friendlyname')");
+		$this->assertEquals(1, $this->GetObjectReloadCount($sClass, $sKey));
+		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
 
 		// External key given as an object
 		static::assertDBQueryCount(1, function() use (&$oBordeaux){
-			$oBordeaux = \MetaModel::GetObject('Location', 1);
+			$oBordeaux = MetaModel::GetObject('Location', 1);
 		});
 		$this->DebugReloadCount("GetObject('Location', 1)");
 
@@ -287,6 +290,71 @@ class DBObjectTest extends ItopDataTestCase
 		});
 		$this->DebugReloadCount("Set('location_id',...) Get('org_id_friendlyname') Get('org_name') Get('location_id_friendlyname')");
 	}
+
+
+	/**
+	 * @covers DBObject::NewObject
+	 * @covers DBObject::Get
+	 * @covers DBObject::Set
+	 */
+	public function testInsertNoReloadAttributeLinkSet()
+	{
+		$this->ResetReloadCount();
+
+		static::assertDBQueryCount(0, function() use (&$oPerson){
+			$oPerson = MetaModel::NewObject('Person', ['name' => 'Foo', 'first_name' => 'John', 'org_id' => 3, 'location_id' => 2]);
+		});
+		static::assertDBQueryCount(28, function() use (&$oPerson) {
+			$oPerson->DBInsertNoReload();
+		});
+		$sPersonClass = get_class($oPerson);
+		$sPersonKey = $oPerson->GetKey();
+		$this->debug("Created $sPersonClass::$sPersonKey");
+		$this->DebugReloadCount("Person::DBInsertNoReload()");
+
+		static::assertDBQueryCount(1, function() use (&$oTeam, &$oPerson){
+			$oTeam = MetaModel::NewObject('Team', ['name' => 'Team Foo', 'org_id' => 3]);
+			// Add person to team
+			$oNewLink = new lnkPersonToTeam();
+			$oNewLink->Set('person_id', $oPerson->GetKey());
+			$oPersons = $oTeam->Get('persons_list');
+			$oPersons->AddItem($oNewLink);
+			$oTeam->Set('persons_list', $oPersons);
+		});
+
+//		global $fItopStarted;
+//		$fItopStarted = microtime(true);
+//		ExecutionKPI::EnableDuration(2);
+//		$oKPI = new ExecutionKPI();
+		static::assertDBQueryCount(92, function() use (&$oTeam) {
+			$oTeam->DBInsertNoReload();
+		});
+//		$oKPI->ComputeAndReport('Team DBInsertNoReload');
+//		$_SERVER['REQUEST_URI'] = $this->GetTestId();
+//		$_SERVER['REQUEST_METHOD'] = '';
+//		ExecutionKPI::ReportStats();
+		$this->assertCount(0, $oTeam->ListChanges());
+
+		$oTeam->DBUpdate();
+		$this->assertCount(0, $oTeam->ListChanges());
+		$this->DebugReloadCount("Team::DBUpdate()");
+
+		$sTeamClass = get_class($oTeam);
+		$sTeamKey = $oTeam->GetKey();
+		$this->debug("Created $sTeamClass::$sTeamKey");
+		$this->DebugReloadCount("Team::DBInsertNoReload()");
+
+		$this->assertCount(0, $oTeam->ListChanges());
+
+		// External key given as an id
+		static::assertDBQueryCount(2, function() use (&$oTeam){
+			$oTeam->Set('org_id', 2);
+			static::assertEquals('IT Department', $oTeam->Get('org_id_friendlyname'));
+		});
+		$this->DebugReloadCount("Set('org_id', 2) and Get('org_id_friendlyname')");
+		$this->assertCount(1, $oTeam->ListChanges());
+	}
+
 
 	public function testSetExtKeyUnsetDependentAttribute()
 	{

@@ -831,8 +831,13 @@ class ItopDataTestCase extends ItopTestCase
 		$oObject = $oData->Get('object');
 		$sClass = get_class($oObject);
 		$sKey = $oObject->GetKey();
-		$iCount = $this->aReloadCount[$sClass][$sKey] ?? 0;
+		$iCount = $this->GetObjectReloadCount($sClass, $sKey);
 		$this->aReloadCount[$sClass][$sKey] = 1 + $iCount;
+	}
+
+	public function GetObjectReloadCount($sClass, $sKey)
+	{
+		return $this->aReloadCount[$sClass][$sKey] ?? 0;
 	}
 
 	/**
