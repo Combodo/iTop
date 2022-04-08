@@ -73,7 +73,7 @@ class UnauthenticatedWebPage extends NiceWebPage
 
 		$this->sContent = '';
 		$this->sPanelTitle = '';
-		$this->sPanelIcon = Branding::GetFullMainLogoAbsoluteUrl();
+		$this->sPanelIcon = Branding::GetLoginLogoAbsoluteUrl();
 		$this->SetContentType('text/html');
 		
 		
