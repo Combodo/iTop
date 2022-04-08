@@ -3585,6 +3585,8 @@ EOF;
 	 * @param $sRelativeDir
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 2.7.0 N°2498
 	 */
 	protected function WriteStaticOnlyHtaccess($sTempTargetDir)
 	{
@@ -3626,6 +3628,8 @@ EOF;
 	 * @param $sModuleVersion
 	 *
 	 * @throws \Exception
+	 *
+	 * @since 2.7.0 N°2498
 	 */
 	protected function WriteStaticOnlyWebConfig($sTempTargetDir)
 	{
