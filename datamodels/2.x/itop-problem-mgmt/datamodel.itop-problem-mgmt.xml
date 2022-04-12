@@ -175,6 +175,10 @@
                     <default_value>1</default_value>
                     <is_null_allowed>false</is_null_allowed>
                     <display_style>list</display_style>
+                    <dependencies>
+                        <attribute id="impact"/>
+                        <attribute id="urgency"/>
+                    </dependencies>
                 </field>
                 <field id="related_change_id" xsi:type="AttributeExternalKey">
                     <filter><![CDATA[SELECT Change WHERE status != "closed"]]></filter>
@@ -564,10 +568,10 @@
                             <rank>50</rank>
                         </item>
                         <item id="related_incident_list">
-                            <rank>50</rank>
+                            <rank>60</rank>
                         </item>
                         <item id="col:col1">
-                            <rank>60</rank>
+                            <rank>70</rank>
                             <items>
                                 <item id="fieldset:Ticket:baseinfo">
                                     <rank>10</rank>
@@ -575,31 +579,44 @@
                                         <item id="ref">
                                             <rank>10</rank>
                                         </item>
-                                        <item id="title">
+                                        <item id="org_id">
                                             <rank>20</rank>
                                         </item>
-                                        <item id="org_id">
+                                        <item id="caller_id">
                                             <rank>30</rank>
                                         </item>
                                         <item id="status">
                                             <rank>40</rank>
                                         </item>
-                                        <item id="priority">
+                                        <item id="product">
                                             <rank>50</rank>
                                         </item>
-                                        <item id="service_id">
+                                        <item id="title">
                                             <rank>60</rank>
                                         </item>
-                                        <item id="servicesubcategory_id">
+                                        <item id="description">
                                             <rank>70</rank>
-                                        </item>
-                                        <item id="product">
-                                            <rank>80</rank>
                                         </item>
                                     </items>
                                 </item>
                                 <item id="fieldset:Ticket:moreinfo">
                                     <rank>20</rank>
+                                    <items>
+                                        <item id="service_id">
+                                            <rank>10</rank>
+                                        </item>
+                                        <item id="servicesubcategory_id">
+                                            <rank>20</rank>
+                                        </item>
+                                    </items>
+                                </item>
+                            </items>
+                        </item>
+                        <item id="col:col2">
+                            <rank>80</rank>
+                            <items>
+                                <item id="fieldset:Ticket:Type">
+                                    <rank>10</rank>
                                     <items>
                                         <item id="impact">
                                             <rank>10</rank>
@@ -607,18 +624,13 @@
                                         <item id="urgency">
                                             <rank>20</rank>
                                         </item>
-                                        <item id="description">
+                                        <item id="priority">
                                             <rank>30</rank>
                                         </item>
                                     </items>
                                 </item>
-                            </items>
-                        </item>
-                        <item id="col:col2">
-                            <rank>70</rank>
-                            <items>
                                 <item id="fieldset:Ticket:date">
-                                    <rank>10</rank>
+                                    <rank>20</rank>
                                     <items>
                                         <item id="start_date">
                                             <rank>10</rank>
@@ -637,22 +649,25 @@
                                         </item>
                                     </items>
                                 </item>
+                            </items>
+                        </item>
+                        <item id="col:col3">
+                            <rank>90</rank>
+                            <items>
                                 <item id="fieldset:Ticket:contact">
-                                    <rank>20</rank>
+                                    <rank>10</rank>
                                     <items>
-                                        <item id="caller_id">
+                                        
+                                        <item id="team_id">
                                             <rank>10</rank>
                                         </item>
-                                        <item id="team_id">
-                                            <rank>20</rank>
-                                        </item>
                                         <item id="agent_id">
-                                            <rank>30</rank>
+                                            <rank>20</rank>
                                         </item>
                                     </items>
                                 </item>
                                 <item id="fieldset:Ticket:relation">
-                                    <rank>30</rank>
+                                    <rank>20</rank>
                                     <items>
                                         <item id="related_change_id">
                                             <rank>10</rank>
@@ -743,9 +758,9 @@
     <menus>
         <menu id="ProblemManagement" xsi:type="MenuGroup" _delta="define_if_not_exists">
             <rank>42</rank>
-				    <style>
-					    <decoration_classes>fas fa-question</decoration_classes>
-				    </style>
+                <style>
+                    <decoration_classes>fas fa-question</decoration_classes>
+                </style>
         </menu>
         <menu id="Problem:Shortcuts" xsi:type="TemplateMenuNode" _delta="define_if_not_exists">
             <rank>5</rank>
