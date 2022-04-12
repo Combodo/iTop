@@ -3032,6 +3032,50 @@ EOF;
 		$sDmStylesheetId = 'datamodel-compiled-scss-rules';
 		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
 
+		// Parsing themes from modules
+		/** @var \DOMNodeList $oModuleThemeNodes */
+		$oModuleThemesNodes = $oBrandingNode->GetNodes('module_themes/module_theme');
+		$aModuleThemesParameters = array(
+			'variables' => array(),
+			'variable_imports' => array(),
+			'utility_imports' => array(),
+			'stylesheets' => array(),
+		);
+		foreach($oModuleThemesNodes as $oModuleTheme) {
+			$sThemeId = $oModuleTheme->getAttribute('id');
+
+
+			/** @var \DOMNodeList $oVariables */
+			$oVariables = $oModuleTheme->GetNodes('variables/variable');
+			foreach ($oVariables as $oVariable) {
+				$sVariableId = $oVariable->getAttribute('id');
+				$aModuleThemesParameters['variables'][$sVariableId] = $oVariable->GetText();
+			}
+
+			/** @var \DOMNodeList $oImports */
+			$oImports = $oModuleTheme->GetNodes('imports/import');
+			foreach ($oImports as $oImport) {
+				$sImportId = $oImport->getAttribute('id');
+				$sImportType = $oImport->getAttribute('xsi:type');
+				if ($sImportType === 'variables') {
+					$aModuleThemesParameters['variable_imports'][$sImportId] = $oImport->GetText();
+				} elseif ($sImportType === 'utilities') {
+					$aModuleThemesParameters['utility_imports'][$sImportId] = $oImport->GetText();
+				} else {
+					SetupLog::Warning('CompileThemes: Module Theme #'.$sThemeId.' has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
+				}
+			}
+
+			// Stylesheets
+			// - Manually added in the XML
+			/** @var \DOMNodeList $oStylesheets */
+			$oStylesheets = $oModuleTheme->GetNodes('stylesheets/stylesheet');
+			foreach ($oStylesheets as $oStylesheet) {
+				$sStylesheetId = $oStylesheet->getAttribute('id');
+				$aModuleThemesParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+			}
+		}
+
 		// Parsing themes from DM
 		$aThemes = array();
 		/** @var \DOMNodeList $oThemeNodes */
@@ -3080,6 +3124,13 @@ EOF;
 			// - Computed from the DM
 			$aThemeParameters['stylesheets'][$sDmStylesheetId] = $sThemesRelDirPath.$sDmStylesheetFilename;
 
+			// - Overload default values with module ones
+			foreach ($aThemeParameters as $sThemeParameterName => $aThemeParameter) {
+				if(array_key_exists($sThemeParameterName, $aModuleThemesParameters)){
+					$aThemeParameters[$sThemeParameterName] = array_merge($aThemeParameter, $aModuleThemesParameters[$sThemeParameterName]);
+				}
+			}
+			
 			$aThemes[$sThemeId] = [
 				'theme_parameters' => $aThemeParameters,
 				'precompiled_stylesheet' => $oTheme->GetChildText('precompiled_stylesheet', '')
