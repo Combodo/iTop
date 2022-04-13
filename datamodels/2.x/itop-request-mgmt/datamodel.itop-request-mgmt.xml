@@ -1377,7 +1377,12 @@
                     <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
-		$this->Set('priority', $this->ComputePriority());
+		$iPriority = $this->ComputePriority();
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'priority');
+		if(is_null($iPriority) && !$oAttDef->IsNullAllowed()){
+			$iPriority = $oAttDef->GetDefaultValue();
+		}
+		$this->Set('priority', $iPriority);
 
 		// Compute the request_type if not already defined (by the user)
 		$sType = $this->Get('request_type');

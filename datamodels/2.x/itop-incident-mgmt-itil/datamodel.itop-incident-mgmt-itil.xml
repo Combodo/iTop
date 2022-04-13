@@ -1184,7 +1184,12 @@
 	{
 
 		// Compute the priority of the ticket
-		$this->Set('priority', $this->ComputePriority());
+		$iPriority = $this->ComputePriority();
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'priority');
+		if(is_null($iPriority) && !$oAttDef->IsNullAllowed()){
+			$iPriority = $oAttDef->GetDefaultValue();
+		}
+		$this->Set('priority', $iPriority);
 
 		return parent::ComputeValues();
 	}]]></code>

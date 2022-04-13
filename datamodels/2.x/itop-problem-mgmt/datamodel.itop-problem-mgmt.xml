@@ -172,7 +172,7 @@
                         </value>
                     </values>
                     <sql>priority</sql>
-                    <default_value>1</default_value>
+                    <default_value>4</default_value>
                     <is_null_allowed>false</is_null_allowed>
                     <display_style>list</display_style>
                 </field>
@@ -522,7 +522,12 @@
                     <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
-		$this->Set('priority', $this->ComputePriority());
+		$iPriority = $this->ComputePriority();
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'priority');
+		if(is_null($iPriority) && !$oAttDef->IsNullAllowed()){
+			$iPriority = $oAttDef->GetDefaultValue();
+		}
+		$this->Set('priority', $iPriority);
 	}]]></code>
                 </method>
                 <method id="OnInsert">
