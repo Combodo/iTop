@@ -4386,14 +4386,22 @@ abstract class DBObject implements iDisplay
 					$sAttCode = $sPlaceholderAttCode;
 				}
 
-				if ($sVerb == 'hyperlink')
+				if (in_array($sVerb, ['hyperlink', 'url']))
 				{
 					$sPortalId = ($sAttCode === '') ? 'console' : $sAttCode;
 					if (!array_key_exists($sPortalId, self::$aPortalToURLMaker))
 					{
 						throw new Exception("Unknown portal id '$sPortalId' in placeholder '$sPlaceholderAttCode''");
 					}
-					$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+					
+					if($sVerb == 'hyperlink')
+					{
+						$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+					}
+					else
+					{
+						$ret = ApplicationContext::MakeObjectUrl(get_class($this), $this->GetKey(), self::$aPortalToURLMaker[$sPortalId], false);
+					}
 				}
 				else
 				{
