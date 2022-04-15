@@ -1873,8 +1873,14 @@
         <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
-    <module_themes>
-    </module_themes>
+    <themes_common>
+        <variables>
+        </variables>
+        <imports>
+        </imports>
+        <stylesheets>
+        </stylesheets>
+    </themes_common>
   </branding>
   <user_rights>
     <groups>

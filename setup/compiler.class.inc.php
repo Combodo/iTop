@@ -3032,48 +3032,44 @@ EOF;
 		$sDmStylesheetId = 'datamodel-compiled-scss-rules';
 		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
 
-		// Parsing themes from modules
-		/** @var \DOMNodeList $oModuleThemeNodes */
-		$oModuleThemesNodes = $oBrandingNode->GetNodes('module_themes/module_theme');
-		$aModuleThemesParameters = array(
+		// Parsing theme from common theme node
+		/** @var \DOMNodeList $oThemesCommonNodes */
+		$oThemesCommonNodes = $oBrandingNode->GetUniqueElement('themes_common');
+		$aThemesCommonParameters = array(
 			'variables' => array(),
 			'variable_imports' => array(),
 			'utility_imports' => array(),
 			'stylesheets' => array(),
 		);
-		foreach($oModuleThemesNodes as $oModuleTheme) {
-			$sThemeId = $oModuleTheme->getAttribute('id');
 
+		/** @var \DOMNodeList $oThemesCommonVariables */
+		$oThemesCommonVariables = $oThemesCommonNodes->GetNodes('variables/variable');
+		foreach ($oThemesCommonVariables as $oVariable) {
+			$sVariableId = $oVariable->getAttribute('id');
+			$aThemesCommonParameters['variables'][$sVariableId] = $oVariable->GetText();
+		}
 
-			/** @var \DOMNodeList $oVariables */
-			$oVariables = $oModuleTheme->GetNodes('variables/variable');
-			foreach ($oVariables as $oVariable) {
-				$sVariableId = $oVariable->getAttribute('id');
-				$aModuleThemesParameters['variables'][$sVariableId] = $oVariable->GetText();
+		/** @var \DOMNodeList $oThemesCommonImports */
+		$oThemesCommonImports = $oThemesCommonNodes->GetNodes('imports/import');
+		foreach ($oThemesCommonImports as $oImport) {
+			$sImportId = $oImport->getAttribute('id');
+			$sImportType = $oImport->getAttribute('xsi:type');
+			if ($sImportType === 'variables') {
+				$aThemesCommonParameters['variable_imports'][$sImportId] = $oImport->GetText();
+			} elseif ($sImportType === 'utilities') {
+				$aThemesCommonParameters['utility_imports'][$sImportId] = $oImport->GetText();
+			} else {
+				SetupLog::Warning('CompileThemes: Theme common has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
 			}
+		}
 
-			/** @var \DOMNodeList $oImports */
-			$oImports = $oModuleTheme->GetNodes('imports/import');
-			foreach ($oImports as $oImport) {
-				$sImportId = $oImport->getAttribute('id');
-				$sImportType = $oImport->getAttribute('xsi:type');
-				if ($sImportType === 'variables') {
-					$aModuleThemesParameters['variable_imports'][$sImportId] = $oImport->GetText();
-				} elseif ($sImportType === 'utilities') {
-					$aModuleThemesParameters['utility_imports'][$sImportId] = $oImport->GetText();
-				} else {
-					SetupLog::Warning('CompileThemes: Module Theme #'.$sThemeId.' has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
-				}
-			}
-
-			// Stylesheets
-			// - Manually added in the XML
-			/** @var \DOMNodeList $oStylesheets */
-			$oStylesheets = $oModuleTheme->GetNodes('stylesheets/stylesheet');
-			foreach ($oStylesheets as $oStylesheet) {
-				$sStylesheetId = $oStylesheet->getAttribute('id');
-				$aModuleThemesParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
-			}
+		// Stylesheets
+		// - Manually added in the XML
+		/** @var \DOMNodeList $oThemesCommonStylesheets */
+		$oThemesCommonStylesheets = $oThemesCommonNodes->GetNodes('stylesheets/stylesheet');
+		foreach ($oThemesCommonStylesheets as $oStylesheet) {
+			$sStylesheetId = $oStylesheet->getAttribute('id');
+			$aThemesCommonParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
 		}
 
 		// Parsing themes from DM
@@ -3126,8 +3122,8 @@ EOF;
 
 			// - Overload default values with module ones
 			foreach ($aThemeParameters as $sThemeParameterName => $aThemeParameter) {
-				if(array_key_exists($sThemeParameterName, $aModuleThemesParameters)){
-					$aThemeParameters[$sThemeParameterName] = array_merge($aThemeParameter, $aModuleThemesParameters[$sThemeParameterName]);
+				if(array_key_exists($sThemeParameterName, $aThemesCommonParameters)){
+					$aThemeParameters[$sThemeParameterName] = array_merge($aThemeParameter, $aThemesCommonParameters[$sThemeParameterName]);
 				}
 			}
 			
