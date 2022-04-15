@@ -1368,7 +1368,16 @@ EOF
 				foreach($aUpdatedProperties as $sProp)
 				{
 					$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
-					$aCurrentValues[$sDecodedProp] = (isset($aPreviousValues[$sProp]) ? $aPreviousValues[$sProp] : ''); // Set the previous value
+					// Set the previous value
+					if  ( isset($aPreviousValues[$sProp]) && $aPreviousValues[$sProp] != '' ){
+						$aCurrentValues[$sDecodedProp] = $aPreviousValues[$sProp];
+					} else {
+						if(gettype($aCurrentValues[$sDecodedProp]) == "array") {
+							$aCurrentValues[$sDecodedProp] = [];
+						} else {
+							$aCurrentValues[$sDecodedProp] = '';
+						}
+					}
 					$aUpdatedDecoded[] = $sDecodedProp;
 				}
 
