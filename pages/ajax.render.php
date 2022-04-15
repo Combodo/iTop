@@ -943,8 +943,6 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			//$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults')
-			//.tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'reload_dashboard':
@@ -963,12 +961,11 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			//$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults')
-			//.tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'save_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
+
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
@@ -982,14 +979,23 @@ try
 
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
-			$oDashboard->Save();
+			$bIsNew = $oDashboard->Save();
 
 			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
 			$sDashboardDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
-
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_script(
-				<<<JS
+			$sOperation = 'reload_dashboard';
+			if ($bIsNew)
+			{
+				$oPage->add_script(
+					<<<JS
+			window.location.reload();
+JS
+				);
+			}
+			else// trigger a reload of the current page since the dashboard just changed
+			{
+				$oPage->add_script(
+					<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
@@ -999,7 +1005,8 @@ try
 				}
 			 );
 JS
-			);
+				);
+			}
 			break;
 
 		case 'revert_dashboard':
