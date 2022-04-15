@@ -23,8 +23,9 @@ class MissingDependencyException extends CoreException
 {
 	/**
 	 * @see \ModuleDiscovery::OrderModulesByDependencies property init
-	 * @var array module id as key
-	 *            another array as value, containing : 'module' with module info, 'dependencies' with missing dependencies
+	 * @var array<string, array<string>>
+	 *     module id as key
+	 *     another array as value, containing : 'module' with module info, 'dependencies' with missing dependencies
 	 */
 	public $aModulesInfo;
 
