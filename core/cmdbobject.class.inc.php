@@ -121,7 +121,7 @@ abstract class CMDBObject extends DBObject
 	 *
 	 * @throws \CoreException
 	 *
-	 * @since 2.7.4 3.0.0 N°3717 new method to reset current change
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 new method to reset current change
 	 */
 	public static function SetCurrentChangeFromParams($sUserInfo, $sOrigin = null, $oDate = null)
 	{
@@ -222,7 +222,7 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Set to {@link $m_oCurrChange} a standard change record (done here 99% of the time, and nearly once per page)
 	 *
-	 * @since 2.7.4 CMDBChange **will be persisted later** in \CMDBChangeOp::OnInsert (was done previously directly here)
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 {@see CMDBChange} **will be persisted later** in {@see \CMDBChangeOp::OnInsert} (was done previously directly here)
 	 *     This will avoid creating in DB CMDBChange lines without any corresponding CMDBChangeOp
 	 */
 	protected static function CreateChange()

@@ -8,7 +8,7 @@ use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
 /**
- * @since 2.7.4 tests history objects creation
+ * @since 2.7.7 3.0.2 3.1.0 N°3717 tests history objects creation
  *
  * @package Combodo\iTop\Test\UnitTest\Core
  */
