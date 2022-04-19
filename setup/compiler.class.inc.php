@@ -3033,43 +3033,45 @@ EOF;
 		$this->WriteFile($sThemesAbsDirPath.$sDmStylesheetFilename, $sDmStylesheetContent);
 
 		// Parsing theme from common theme node
-		/** @var \DOMNodeList $oThemesCommonNodes */
-		$oThemesCommonNodes = $oBrandingNode->GetUniqueElement('themes_common');
+		/** @var \MFElement $oThemesCommonNodes */
+		$oThemesCommonNodes = $oBrandingNode->GetUniqueElement('themes_common', false);
 		$aThemesCommonParameters = array(
 			'variables' => array(),
 			'variable_imports' => array(),
 			'utility_imports' => array(),
 			'stylesheets' => array(),
 		);
-
-		/** @var \DOMNodeList $oThemesCommonVariables */
-		$oThemesCommonVariables = $oThemesCommonNodes->GetNodes('variables/variable');
-		foreach ($oThemesCommonVariables as $oVariable) {
-			$sVariableId = $oVariable->getAttribute('id');
-			$aThemesCommonParameters['variables'][$sVariableId] = $oVariable->GetText();
-		}
-
-		/** @var \DOMNodeList $oThemesCommonImports */
-		$oThemesCommonImports = $oThemesCommonNodes->GetNodes('imports/import');
-		foreach ($oThemesCommonImports as $oImport) {
-			$sImportId = $oImport->getAttribute('id');
-			$sImportType = $oImport->getAttribute('xsi:type');
-			if ($sImportType === 'variables') {
-				$aThemesCommonParameters['variable_imports'][$sImportId] = $oImport->GetText();
-			} elseif ($sImportType === 'utilities') {
-				$aThemesCommonParameters['utility_imports'][$sImportId] = $oImport->GetText();
-			} else {
-				SetupLog::Warning('CompileThemes: Theme common has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
+		
+		if($oThemesCommonNodes !== null) {
+			/** @var \DOMNodeList $oThemesCommonVariables */
+			$oThemesCommonVariables = $oThemesCommonNodes->GetNodes('variables/variable');
+			foreach ($oThemesCommonVariables as $oVariable) {
+				$sVariableId = $oVariable->getAttribute('id');
+				$aThemesCommonParameters['variables'][$sVariableId] = $oVariable->GetText();
 			}
-		}
-
-		// Stylesheets
-		// - Manually added in the XML
-		/** @var \DOMNodeList $oThemesCommonStylesheets */
-		$oThemesCommonStylesheets = $oThemesCommonNodes->GetNodes('stylesheets/stylesheet');
-		foreach ($oThemesCommonStylesheets as $oStylesheet) {
-			$sStylesheetId = $oStylesheet->getAttribute('id');
-			$aThemesCommonParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+	
+			/** @var \DOMNodeList $oThemesCommonImports */
+			$oThemesCommonImports = $oThemesCommonNodes->GetNodes('imports/import');
+			foreach ($oThemesCommonImports as $oImport) {
+				$sImportId = $oImport->getAttribute('id');
+				$sImportType = $oImport->getAttribute('xsi:type');
+				if ($sImportType === 'variables') {
+					$aThemesCommonParameters['variable_imports'][$sImportId] = $oImport->GetText();
+				} elseif ($sImportType === 'utilities') {
+					$aThemesCommonParameters['utility_imports'][$sImportId] = $oImport->GetText();
+				} else {
+					SetupLog::Warning('CompileThemes: Theme common has an import (#'.$sImportId.') without explicit xsi:type, it will be ignored. Check Datamodel XML Reference to fix it.');
+				}
+			}
+	
+			// Stylesheets
+			// - Manually added in the XML
+			/** @var \DOMNodeList $oThemesCommonStylesheets */
+			$oThemesCommonStylesheets = $oThemesCommonNodes->GetNodes('stylesheets/stylesheet');
+			foreach ($oThemesCommonStylesheets as $oStylesheet) {
+				$sStylesheetId = $oStylesheet->getAttribute('id');
+				$aThemesCommonParameters['stylesheets'][$sStylesheetId] = $oStylesheet->GetText();
+			}
 		}
 
 		// Parsing themes from DM
