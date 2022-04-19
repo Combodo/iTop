@@ -2424,26 +2424,33 @@ fieldset .details>.field_container {
 
 								.selectize-dropdown,
 								.selectize-input,
-								.selectize-input input{
-									font-size: 12px;
-								}
-								.selectize-input{
-									padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
-									border: 1px solid #ABABAB;
-									border-radius: 0;
+                .selectize-input input {
+                  font-size: 12px;
+                }
 
-									.attribute-set-item.partial-code{
-										color: transparentize($gray-darker, 0.4);
-										background-color: lighten($gray-lighter, 5%);
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
-	}
+                .selectize-input {
+                  padding: 2px 2px 0px 2px; /* padding-bottom = padding-top - item margin-bottom */
+                  border: 1px solid #ABABAB;
+                  border-radius: 0;
+
+                  .attribute-set-item.partial-code {
+                    color: transparentize($gray-darker, 0.4);
+                    background-color: lighten($gray-lighter, 5%);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &[data-attribute-type="AttributeDuration"] {
+    .field_value_container {
+      white-space: nowrap;
+    }
+  }
 }
 .one-col-details .details .field_container.field_small {
 	div.field_label {
