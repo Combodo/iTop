@@ -223,6 +223,8 @@ class AjaxController extends Controller
 
 	/**
 	 * @throws \SecurityException if CSRF token invalid
+	 *
+	 * @since 3.1.0 N°4919
 	 */
 	public function OperationLaunchSetup()
 	{
