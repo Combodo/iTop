@@ -984,16 +984,14 @@ try
 			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
 			$sDashboardDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
 			$sOperation = 'reload_dashboard';
-			if ($bIsNew)
-			{
+			if ($bIsNew) {
+				// Trigger a reload of the current page since the dashboard just changed
 				$oPage->add_script(
 					<<<JS
 			window.location.reload();
 JS
 				);
-			}
-			else// trigger a reload of the current page since the dashboard just changed
-			{
+			} else {
 				$oPage->add_script(
 					<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
