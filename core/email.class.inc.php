@@ -35,12 +35,18 @@ class EMail
 {
 	// Serialization formats
 	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
-							   // Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
+	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
-	
+
 	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
 
+	/**
+	 * @throws \ConfigException
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.8 3.0.2 3.1.0 N°4947
+	 */
 	public function LoadConfig()
 	{
 		if (is_null(static::$m_oConfig)) {
