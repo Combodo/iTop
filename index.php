@@ -25,9 +25,11 @@ if (file_exists(dirname(__FILE__).'/'.$sConfigFile))
 		}
 		else
 		{
-			echo "<p><b>Security Warning</b>: the configuration file '$sConfigFile' should be read-only.</p>";
-			echo "<p>Please modify the access rights to this file.</p>";
-			echo "<p>Click <a href=\"$sStartPage\">here</a> to ignore this warning and continue to run iTop.</p>";
+			echo <<<HTML
+<p><b>Security Warning</b>: the configuration file '{$sConfigFile}' should be read-only.</p>
+<p>Please modify the access rights to this file.</p>
+<p>Click <a href="{$sStartPage}">here</a> to ignore this warning and continue to run iTop.</p>
+HTML;
 		}
 	}
 	else
