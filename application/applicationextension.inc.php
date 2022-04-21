@@ -1083,11 +1083,11 @@ abstract class AbstractPageUIExtension implements iPageUIExtension
 /**
  * Implement this interface to add content to any enhanced portal page
  *
- * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
- *
  * @api
  * @package     Extensibility
- * @since 2.4.0
+ *
+ * @since 2.4.0 interface creation
+ * @since 2.7.0 change method signatures due to Silex to Symfony migration
  */
 interface iPortalUIExtension
 {
@@ -1160,7 +1160,11 @@ interface iPortalUIExtension
 }
 
 /**
- * IMPORTANT! Experimental API, may be removed at anytime, we don't recommend to use it just now!
+ * Extend this class instead of iPortalUIExtension if you don't need to overload all methods
+ *
+ * @api
+ * @package     Extensibility
+ * @since       2.4.0
  */
 abstract class AbstractPortalUIExtension implements iPortalUIExtension
 {
