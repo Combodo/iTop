@@ -6,12 +6,6 @@
 # maintenance mode (N°2240)
 /.maintenance
 
-# listing prevention in conf directory
-/conf/**
-!/conf/.htaccess
-!/conf/index.php
-!/conf/web.config
-
 # composer reserver directory, from sources, populate/update using "composer install"
 vendor/*
 test/vendor/*
@@ -19,6 +13,7 @@ test/vendor/*
 # all conf but listing prevention
 /conf/**
 !/conf/.htaccess
+!/conf/index.php
 !/conf/web.config
 
 # all datas but listing prevention
