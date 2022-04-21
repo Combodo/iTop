@@ -34,10 +34,11 @@ class ItopTestCase extends TestCase
 {
 	const TEST_LOG_DIR = 'test';
 
-    protected function setUp()
+	/** @noinspection UsingInclusionOnceReturnValueInspection avoid errors for approot includes */
+	protected function setUp(): void
 	{
 		@include_once '../approot.inc.php';
-        @include_once '../../approot.inc.php';
+		@include_once '../../approot.inc.php';
 		@include_once '../../../approot.inc.php';
 		@include_once '../../../../approot.inc.php';
 		@include_once '../../../../../approot.inc.php';
@@ -45,7 +46,7 @@ class ItopTestCase extends TestCase
 		@include_once '../../../../../../../approot.inc.php';
 		@include_once '../../../../../../../../approot.inc.php';
 
-        $this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
+		$this->debug("\n----------\n---------- ".$this->getName()."\n----------\n");
 
 	}
 
@@ -57,9 +58,9 @@ class ItopTestCase extends TestCase
 	        {
 	        	echo "$sMsg\n";
 	        }
-	        else
-	        {
-	        	print_r($sMsg);
+	        else {
+		        /** @noinspection ForgottenDebugOutputInspection */
+		        print_r($sMsg);
 	        }
         }
     }

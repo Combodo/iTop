@@ -47,9 +47,9 @@ class ormLinkSetTest extends ItopDataTestCase
 	/**
      * @throws Exception
      */
-    protected function setUp()
+    protected function setUp(): void
     {
-        parent::setUp();
+	    parent::setUp();
     }
 
     /**

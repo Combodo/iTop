@@ -21,13 +21,12 @@ use UserLocal;
 class UserLocalTest extends ItopDataTestCase
 {
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'application/startup.inc.php');
-		require_once (APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
-		require_once (APPROOT.'env-production/authent-local/model.authent-local.php');
+		require_once(APPROOT.'test/coreExtensions/UserLocalTest/UserLocalPasswordPolicyMock.php');
+		require_once(APPROOT.'env-production/authent-local/model.authent-local.php');
 	}
 
 	/**

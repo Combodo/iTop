@@ -22,10 +22,9 @@ class OQLToSQLTest extends ItopDataTestCase
 	const USE_TRANSACTION = false;
 	const TEST_CSV_RESULT = 'OQLToSQLTest.csv';
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'application/startup.inc.php');
 
 		SetupUtils::builddir(APPROOT.'log/test/OQLToSQL');
 	}

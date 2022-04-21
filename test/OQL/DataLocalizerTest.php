@@ -17,10 +17,10 @@ class DataLocalizerTest extends ItopDataTestCase
 	const USE_TRANSACTION = false;
 	const TEST_CSV_RESULT = 'DataLocalizerTest.csv';
 
-	public function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'application/startup.inc.php');
+
 		ApplicationContext::SetPluginProperty('QueryLocalizerPlugin', 'language_code', 'FR FR');
 
 		SetupUtils::builddir(APPROOT.'log/test/OQLToSQL');

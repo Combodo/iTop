@@ -22,10 +22,9 @@ class OQLToSQLAllCLassesTest extends ItopDataTestCase
 {
 	const USE_TRANSACTION = false;
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
-		require_once(APPROOT.'application/startup.inc.php');
 
 		SetupUtils::builddir(APPROOT.'log/test/OQLToSQL');
 	}

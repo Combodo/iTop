@@ -39,14 +39,14 @@ use Exception;
 class dictTest extends ItopTestCase
 {
 	private $sEnvName;
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'coreexception.class.inc.php');
-		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'dict.class.inc.php');
-		require_once (APPROOT.'core'. DIRECTORY_SEPARATOR . 'apc-service.class.inc.php');
+		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'coreexception.class.inc.php');
+		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'dict.class.inc.php');
+		require_once(APPROOT.'core'.DIRECTORY_SEPARATOR.'apc-service.class.inc.php');
 		$this->sEnvName = time();
-		$sDictionaryFolder = APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries";
+		$sDictionaryFolder = APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries";
 		@mkdir($sDictionaryFolder, 0777, true);
 
 		$sContent = <<<PHP
@@ -74,12 +74,12 @@ PHP;
 		//require_once 'mockDict.incphp';
 	}
 
-	protected function tearDown()
+	protected function tearDown(): void
 	{
-		foreach (glob(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries" . DIRECTORY_SEPARATOR . "*") as $sFile){
+		foreach (glob(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries".DIRECTORY_SEPARATOR."*") as $sFile) {
 			unlink($sFile);
 		}
-		rmdir(APPROOT."env-$this->sEnvName" . DIRECTORY_SEPARATOR . "dictionaries");
+		rmdir(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries");
 		rmdir(APPROOT."env-$this->sEnvName");
 	}
 

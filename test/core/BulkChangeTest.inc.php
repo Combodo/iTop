@@ -2,8 +2,8 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CMDBSource;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use MetaModel;
 
 /**
@@ -14,7 +14,8 @@ use MetaModel;
 class BulkChangeTest extends ItopDataTestCase {
 	const CREATE_TEST_ORG = true;
 
-	protected function setUp() {
+	protected function setUp(): void
+	{
 		parent::setUp();
 		require_once(APPROOT.'core/coreexception.class.inc.php');
 		require_once(APPROOT.'core/bulkchange.class.inc.php');

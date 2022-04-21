@@ -24,12 +24,6 @@
  */
 class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 {
-	public function setUp()
-	{
-		parent::setUp();
-		require_once(APPROOT.'application/utils.inc.php');
-	}
-
 	public function testEndsWith()
 	{
 		$this->assertFalse(utils::EndsWith('a', 'bbbb'));

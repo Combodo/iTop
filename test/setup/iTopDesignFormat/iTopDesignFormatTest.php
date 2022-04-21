@@ -17,7 +17,7 @@ use iTopDesignFormat;
  */
 class TestForITopDesignFormatClass extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

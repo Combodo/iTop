@@ -23,19 +23,18 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 
 use Combodo\iTop\Test\UnitTest\ItopTestCase;
 use Config;
-use PHPUnit\Framework\TestCase;
 
-	/**
+/**
 	 * @runTestsInSeparateProcesses
 	 * @preserveGlobalState disabled
 	 * @backupGlobals disabled
 	 */
 class ConfigTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once (APPROOT.'core/config.class.inc.php');
+		require_once(APPROOT.'core/config.class.inc.php');
 	}
 
 	/**

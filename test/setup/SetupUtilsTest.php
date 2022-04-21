@@ -17,7 +17,7 @@ use SetupUtils;
  */
 class SetupUtilsTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

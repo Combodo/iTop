@@ -17,7 +17,7 @@ class LogAPITest extends ItopTestCase
 	private $mockFileLog;
 	private $oMetaModelConfig;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		$this->mockFileLog = $this->createMock('FileLog');

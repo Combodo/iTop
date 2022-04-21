@@ -51,16 +51,6 @@ class CriterionConversionTest extends ItopDataTestCase
 	const CREATE_TEST_ORG = true;
 
 	/**
-	 * @throws \Exception
-	 */
-	protected function setUp()
-	{
-		parent::setUp();
-
-		require_once(APPROOT."sources/application/search/criterionconversionabstract.class.inc.php");
-	}
-
-	/**
 	 * @dataProvider ToOqlProvider
 	 *
 	 * @param $sClass

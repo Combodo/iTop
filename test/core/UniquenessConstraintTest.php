@@ -16,7 +16,7 @@ use MetaModel;
  */
 class UniquenessConstraintTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'/core/metamodel.class.php');

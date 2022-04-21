@@ -24,13 +24,6 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  */
 class DashboardLayoutTest extends ItopTestCase
 {
-	public function setUp()
-	{
-		parent::setUp();
-
-		require_once APPROOT.'application/dashboardlayout.class.inc.php';
-	}
-
 	/**
 	 * @return array
 	 */

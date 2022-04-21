@@ -30,19 +30,16 @@ if (!defined('DEBUG_UNIT_TEST')) {
 class StatusIncTest extends TestCase {
 
     /**
-     *
-     * @var string 
+     * @var string
      */
     protected $sAppRoot = '';
 
-    /**
-     * 
-     */
-    protected function setUp() {
-        //AppRoot is the directory containing the directory 
-        //Assume getcwd() is runned inside APPROOT/test
-        $this->sAppRoot = __DIR__ . '/../../sources/application/status';
-    }
+	protected function setUp(): void
+	{
+		//AppRoot is the directory containing the directory
+		//Assume getcwd() is runned inside APPROOT/test
+		$this->sAppRoot = __DIR__.'/../../sources/application/status';
+	}
 
     /**
      * @expectedException \Exception
