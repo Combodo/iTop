@@ -40,7 +40,7 @@ class iTopComposerTest extends ItopTestCase
 	public function testIsTestDir($sDirName, $bIsTest)
 	{
 		$isTestDir = iTopComposer::IsTestDir($sDirName);
-		$this->assertInternalType('int', $isTestDir);
+		$this->assertIsInt($isTestDir);
 		if (true === $bIsTest) {
 			$this->assertTrue(($isTestDir > 0));
 		} else {
