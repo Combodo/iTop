@@ -11,7 +11,7 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  * @backupGlobals disabled
  */
 class AttributeURLTest extends ItopTestCase {
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'core/attributedef.class.inc.php';
