@@ -409,8 +409,6 @@ class AsyncSendEmail extends AsyncTask
 		$oNew->Set('to', $oEMail->GetRecipientTO(true /* string */));
 		$oNew->Set('subject', $oEMail->GetSubject());
 
-//		$oNew->Set('version', 1);
-//		$sMessage = serialize($oEMail);
 		$oNew->Set('version', 2);
 		$sMessage = $oEMail->SerializeV2();
 		$oNew->Set('message', $sMessage);

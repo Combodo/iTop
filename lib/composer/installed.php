@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9ad341f73a2aa0bd50515d88e1daac99b124238f',
+        'reference' => 'c47f2245669135902b32c54f3edf7f1bc52de81e',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9ad341f73a2aa0bd50515d88e1daac99b124238f',
+            'reference' => 'c47f2245669135902b32c54f3edf7f1bc52de81e',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -26,6 +26,84 @@
             'install_path' => __DIR__ . '/../combodo/tcpdf',
             'aliases' => array(),
             'reference' => 'aedd4b7b8cf7fcc24e617c405c9d3304150f4b94',
+            'dev_requirement' => false,
+        ),
+        'container-interop/container-interop' => array(
+            'pretty_version' => '1.2.0',
+            'version' => '1.2.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../container-interop/container-interop',
+            'aliases' => array(),
+            'reference' => '79cbf1341c22ec75643d841642dd5d6acd83bdb8',
+            'dev_requirement' => false,
+        ),
+        'container-interop/container-interop-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '^1.2',
+            ),
+        ),
+        'laminas/laminas-loader' => array(
+            'pretty_version' => '2.6.1',
+            'version' => '2.6.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-loader',
+            'aliases' => array(),
+            'reference' => '5d01c2c237ae9e68bec262f339947e2ea18979bc',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-mail' => array(
+            'pretty_version' => '2.12.5',
+            'version' => '2.12.5.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-mail',
+            'aliases' => array(),
+            'reference' => 'ed5b36a0deef4ffafe6138c2ae9cafcffafab856',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-mime' => array(
+            'pretty_version' => '2.7.4',
+            'version' => '2.7.4.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-mime',
+            'aliases' => array(),
+            'reference' => 'e45a7d856bf7b4a7b5bd00d6371f9961dc233add',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-servicemanager' => array(
+            'pretty_version' => '3.5.2',
+            'version' => '3.5.2.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-servicemanager',
+            'aliases' => array(),
+            'reference' => '0669e1eec8d9f61e35a5bc5012796d49f418b259',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-stdlib' => array(
+            'pretty_version' => '3.2.1',
+            'version' => '3.2.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-stdlib',
+            'aliases' => array(),
+            'reference' => '2b18347625a2f06a1a485acfbc870f699dbe51c6',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-validator' => array(
+            'pretty_version' => '2.13.5',
+            'version' => '2.13.5.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-validator',
+            'aliases' => array(),
+            'reference' => 'd334dddda43af263d6a7e5024fd2b013cb6981f7',
+            'dev_requirement' => false,
+        ),
+        'laminas/laminas-zendframework-bridge' => array(
+            'pretty_version' => '1.1.1',
+            'version' => '1.1.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../laminas/laminas-zendframework-bridge',
+            'aliases' => array(),
+            'reference' => '6ede70583e101030bcace4dcddd648f760ddf642',
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
@@ -118,7 +196,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '1.0',
+                0 => '^1.0',
+                1 => '1.0',
             ),
         ),
         'psr/log' => array(
@@ -164,15 +243,6 @@
             'install_path' => __DIR__ . '/../scssphp/scssphp',
             'aliases' => array(),
             'reference' => '5b3c9d704950d8f9637f5110c36c281ec47dc13c',
-            'dev_requirement' => false,
-        ),
-        'swiftmailer/swiftmailer' => array(
-            'pretty_version' => 'v5.4.12',
-            'version' => '5.4.12.0',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../swiftmailer/swiftmailer',
-            'aliases' => array(),
-            'reference' => '181b89f18a90f8925ef805f950d47a7190e9b950',
             'dev_requirement' => false,
         ),
         'symfony/cache' => array(
@@ -424,6 +494,15 @@
                 0 => '6.3.5',
             ),
         ),
+        'true/punycode' => array(
+            'pretty_version' => 'v2.1.1',
+            'version' => '2.1.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../true/punycode',
+            'aliases' => array(),
+            'reference' => 'a4d0c11a36dd7f4e7cd7096076cab6d3378a071e',
+            'dev_requirement' => false,
+        ),
         'twig/twig' => array(
             'pretty_version' => 'v1.42.4',
             'version' => '1.42.4.0',
@@ -432,6 +511,42 @@
             'aliases' => array(),
             'reference' => 'e587180584c3d2d6cb864a0454e777bb6dcb6152',
             'dev_requirement' => false,
+        ),
+        'zendframework/zend-loader' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '2.6.1',
+            ),
+        ),
+        'zendframework/zend-mail' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '^2.10.0',
+            ),
+        ),
+        'zendframework/zend-mime' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '^2.7.2',
+            ),
+        ),
+        'zendframework/zend-servicemanager' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '^3.4.0',
+            ),
+        ),
+        'zendframework/zend-stdlib' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '3.2.1',
+            ),
+        ),
+        'zendframework/zend-validator' => array(
+            'dev_requirement' => false,
+            'replaced' => array(
+                0 => '^2.13.0',
+            ),
         ),
     ),
 );
