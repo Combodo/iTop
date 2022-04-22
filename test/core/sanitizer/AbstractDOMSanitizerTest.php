@@ -9,7 +9,7 @@ abstract class AbstractDOMSanitizerTest extends ItopTestCase
 	const INPUT_DIRECTORY = 'input';
 	const OUTPUT_DIRECTORY = 'output';
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/utils.inc.php');

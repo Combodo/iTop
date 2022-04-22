@@ -304,74 +304,60 @@ function ValidateField(sFieldId, sPattern, bMandatory, sFormId, nullValue, origi
 
 function ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue)
 {
-	var bValid;
-	var sExplain = '';
-	var sTextContent;
+	if ($('#'+sFieldId).size() > 0) {
+		var bValid;
+		var sExplain = '';
+		var sTextContent;
 
-	if ($('#'+sFieldId).prop('disabled'))
-	{
-		bValid = true; // disabled fields are not checked
-	}
-	else
-	{
-		// Get the contents without the tags
-		var oFormattedContents = $("#cke_"+sFieldId+" iframe");
-		if (oFormattedContents.length == 0)
-		{
-			var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
-			sTextContent = oSourceContents.val();
-		}
-		else
-		{
-			sTextContent = oFormattedContents.contents().find("body").text();
-			
-			if (sTextContent == '')
-			{
-				// No plain text, maybe there is just an image...
-				var oImg = oFormattedContents.contents().find("body img");
-				if (oImg.length != 0)
-				{
-					sTextContent = 'image';
+		if ($('#'+sFieldId).prop('disabled')) {
+			bValid = true; // disabled fields are not checked
+		} else {
+			// Get the contents without the tags
+			var oFormattedContents = $("#cke_"+sFieldId+" iframe");
+			if (oFormattedContents.length == 0) {
+				var oSourceContents = $("#cke_"+sFieldId+" textarea.cke_source");
+				sTextContent = oSourceContents.val();
+			} else {
+				sTextContent = oFormattedContents.contents().find("body").text();
+
+				if (sTextContent == '') {
+					// No plain text, maybe there is just an image...
+					var oImg = oFormattedContents.contents().find("body img");
+					if (oImg.length != 0) {
+						sTextContent = 'image';
+					}
 				}
 			}
-		}
 
-		// Get the original value without the tags
-		var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
-		var sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
-	
-		if (bMandatory && (sTextContent == nullValue))
-		{
-			bValid = false;
-			sExplain = Dict.S('UI:ValueMustBeSet');
-		}
-		else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents))
-		{
-			bValid = false;
-			if (sTextOriginalContents == nullValue)
-			{
+			// Get the original value without the tags
+			var oFormattedOriginalContents = (originalValue !== undefined) ? $('<div></div>').html(originalValue) : undefined;
+			var sTextOriginalContents = (oFormattedOriginalContents !== undefined) ? oFormattedOriginalContents.text() : undefined;
+
+			if (bMandatory && (sTextContent == nullValue)) {
+				bValid = false;
 				sExplain = Dict.S('UI:ValueMustBeSet');
-			}
-			else
-			{
-				// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
-				sExplain = Dict.S('UI:ValueMustBeChanged');
+			} else if ((sTextOriginalContents != undefined) && (sTextContent == sTextOriginalContents)) {
+				bValid = false;
+				if (sTextOriginalContents == nullValue) {
+					sExplain = Dict.S('UI:ValueMustBeSet');
+				} else {
+					// Note: value change check is not working well yet as the HTML to Text conversion is not exactly the same when done from the PHP value or the CKEditor value.
+					sExplain = Dict.S('UI:ValueMustBeChanged');
+				}
+			} else {
+				bValid = true;
 			}
 		}
-		else
-		{
-			bValid = true;
+
+		ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
+
+		if ($('#'+sFieldId).data('timeout_validate') == undefined) {
+			// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
+			var iTimeoutValidate = setInterval(function () {
+				ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
+			}, 500);
+			$('#'+sFieldId).data('timeout_validate', iTimeoutValidate);
 		}
-	}
-
-	ReportFieldValidationStatus(sFieldId, sFormId, bValid, sExplain);
-
-	if ($('#'+sFieldId).data('timeout_validate') == undefined) {
-		// We need to check periodically as CKEditor doesn't trigger our events. More details in UIHTMLEditorWidget::Display() @ line 92
-		var iTimeoutValidate = setInterval(function () {
-			ValidateCKEditField(sFieldId, sPattern, bMandatory, sFormId, nullValue, originalValue);
-		}, 500);
-		$('#'+sFieldId).data('timeout_validate', iTimeoutValidate);
 	}
 }
 

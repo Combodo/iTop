@@ -27,10 +27,10 @@ class TransactionsTest extends ItopTestCase
 	/** @var DeadLockInjection */
 	private $oMySQLiMock;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once ('DeadLockInjection.php');
+		require_once('DeadLockInjection.php');
 		require_once(APPROOT.'/core/cmdbsource.class.inc.php');
 		$sEnv = 'production';
 		$sConfigFile = APPCONF.$sEnv.'/config-itop.php';
