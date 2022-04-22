@@ -490,6 +490,11 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 			{
 				$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
 				$res = $oExpression->Evaluate(array());
+				if (is_numeric($res)) {
+					// N°3091 after PHPUnit upgrade from 6 to 8.5 some errors were thrown here
+					//   example : assertEquals was returning false for expected=8 and actual=08
+					$res = (float) $res;
+				}
 				static::assertEquals($aRow[$sFormat], $res, "Format %$sFormat not matching MySQL for '$sDate'");
 			}
 		}
