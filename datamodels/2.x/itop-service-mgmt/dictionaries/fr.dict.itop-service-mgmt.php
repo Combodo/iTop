@@ -374,6 +374,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'heures',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
+	'Class:SLT/Attribute:slas_list' => 'SLAs',
+	'Class:SLT/Attribute:slas_list+' => 'Tous les niveaux de service utilisant cet objectif',
 ));
 
 //

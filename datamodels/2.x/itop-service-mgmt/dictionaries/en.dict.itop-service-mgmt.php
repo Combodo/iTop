@@ -384,6 +384,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:SLT/Attribute:unit/Value:hours+' => 'hours',
 	'Class:SLT/Attribute:unit/Value:minutes' => 'minutes',
 	'Class:SLT/Attribute:unit/Value:minutes+' => 'minutes',
+	'Class:SLT/Attribute:slas_list' => 'SLAs',
+	'Class:SLT/Attribute:slas_list+' => 'All the service level agreements using this SLT',
 ));
 
 //

@@ -1615,49 +1615,62 @@ public function PrefillSearchForm(&$aContextParam)
 				</method>
 			</methods>
 			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="description">
-							<rank>30</rank>
-						</item>
-						<item id="slts_list">
-							<rank>40</rank>
-						</item>
-						<item id="customercontracts_list">
-							<rank>50</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="description">
-							<rank>30</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="slts_list">
+              <rank>40</rank>
+            </item>
+            <item id="customercontracts_list">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
 		</class>
 		<class id="SLT" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -1748,83 +1761,110 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="hours">
 							<code>hours</code>
-						</value>
-						<value id="minutes">
-							<code>minutes</code>
-						</value>
-					</values>
-					<sql>unit</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-					<display_style>radio_horizontal</display_style>
-				</field>
-			</fields>
+            </value>
+            <value id="minutes">
+              <code>minutes</code>
+            </value>
+          </values>
+          <sql>unit</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="slas_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLAToSLT</linked_class>
+          <ext_key_to_me>slt_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>sla_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
 			<methods/>
 			<presentation>
 				<details>
 					<items>
 						<item id="name">
 							<rank>10</rank>
-						</item>
-						<item id="priority">
-							<rank>20</rank>
-						</item>
-						<item id="request_type">
-							<rank>30</rank>
-						</item>
-						<item id="metric">
-							<rank>40</rank>
-						</item>
-						<item id="value">
-							<rank>50</rank>
-						</item>
-						<item id="unit">
-							<rank>60</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="priority">
-							<rank>20</rank>
-						</item>
-						<item id="request_type">
-							<rank>30</rank>
-						</item>
-						<item id="metric">
-							<rank>40</rank>
-						</item>
-						<item id="value">
-							<rank>50</rank>
-						</item>
-						<item id="unit">
-							<rank>60</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="priority">
-							<rank>10</rank>
-						</item>
-						<item id="request_type">
-							<rank>20</rank>
-						</item>
-						<item id="metric">
-							<rank>30</rank>
-						</item>
-						<item id="value">
-							<rank>40</rank>
-						</item>
-						<item id="unit">
-							<rank>50</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="unit">
+              <rank>60</rank>
+            </item>
+            <item id="slas_list">
+              <rank>100</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="unit">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="priority">
+              <rank>10</rank>
+            </item>
+            <item id="request_type">
+              <rank>20</rank>
+            </item>
+            <item id="metric">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="unit">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
 		</class>
 		<class id="lnkSLAToSLT" _delta="define">
 			<parent>cmdbAbstractObject</parent>
