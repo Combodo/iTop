@@ -224,7 +224,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1'  => 'Target Field',
 	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:1+' => 'The field to set, in the current object',
 	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2'  => 'Modifier',
-	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Textual information to modify the source date, eg. "monday next week"',
+	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:2+' => 'Textual information to modify the source date, eg. "+3 days"',
 	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3'  => 'Source field',
 	'Class:cmdbAbstractObject/Method:SetComputedDateIfNull/Param:3+' => 'The field used as source to apply the Modifier logic',
 	'Class:cmdbAbstractObject/Method:Reset'                          => 'Reset',
