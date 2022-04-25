@@ -54,7 +54,7 @@ class DBSearchTest extends ItopDataTestCase
 	/**
 	 * @throws \Exception
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

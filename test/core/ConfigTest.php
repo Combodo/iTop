@@ -31,10 +31,10 @@ use Config;
  */
 class ConfigTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
-		require_once (APPROOT.'core/config.class.inc.php');
+		require_once(APPROOT.'core/config.class.inc.php');
 	}
 
 	/**

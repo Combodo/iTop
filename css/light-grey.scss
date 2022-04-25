@@ -2582,6 +2582,12 @@
 				}
 			}
 		}
+
+    &[data-attribute-type="AttributeDuration"] {
+      .field_value_container {
+        white-space: nowrap;
+      }
+    }
 	}
 
 	.one-col-details .details .field_container.field_small {

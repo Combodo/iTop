@@ -79,7 +79,7 @@ class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @throws Exception
 	 */
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/utils.inc.php');
@@ -101,15 +101,12 @@ class ItopDataTestCase extends ItopTestCase
 	/**
 	 * @throws Exception
 	 */
-	protected function tearDown()
+	protected function tearDown(): void
 	{
-		if (static::USE_TRANSACTION)
-		{
+		if (static::USE_TRANSACTION) {
 			$this->debug("ROLLBACK !!!");
 			CMDBSource::Query('ROLLBACK');
-		}
-		else
-		{
+		} else {
 			$this->debug("");
 			$this->aCreatedObjects = array_reverse($this->aCreatedObjects);
 			foreach ($this->aCreatedObjects as $oObject)

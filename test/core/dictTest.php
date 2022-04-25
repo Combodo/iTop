@@ -39,8 +39,7 @@ use Exception;
 class dictTest extends ItopTestCase
 {
 	private $sEnvName;
-
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
@@ -74,7 +73,7 @@ PHP;
 		$_SESSION['itop_env'] = $this->sEnvName;
 	}
 
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		foreach (glob(APPROOT."env-$this->sEnvName".DIRECTORY_SEPARATOR."dictionaries".DIRECTORY_SEPARATOR."*") as $sFile) {
 			unlink($sFile);

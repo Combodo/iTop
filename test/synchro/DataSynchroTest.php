@@ -43,7 +43,7 @@ class DataSynchroTest extends ItopDataTestCase
 	private $oOrg1;
 	private $oOrg2;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

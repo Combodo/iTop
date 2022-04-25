@@ -43,7 +43,7 @@ class DBObjectTest extends ItopDataTestCase
 {
 	const CREATE_TEST_ORG = true;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'core/dbobject.class.php');

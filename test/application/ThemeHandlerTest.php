@@ -20,7 +20,7 @@ class ThemeHandlerTest extends ItopTestCase
 	private $sTmpDir;
 	private $aDirsToCleanup= [];
 
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/themehandler.class.inc.php');
@@ -42,7 +42,7 @@ class ThemeHandlerTest extends ItopTestCase
 		$this->RecurseCopy(APPROOT."/test/application/theme-handler/expected/css", $this->sTmpDir."/branding/css");
 	}
 
-	public function tearDown()
+	public function tearDown(): void
 	{
 		parent::tearDown();
 

@@ -29,7 +29,7 @@
 namespace Combodo\iTop\Test\UnitTest\Application\Search;
 
 use Combodo\iTop\Application\Search\CriterionParser;
-use Combodo\iTop\Test\UnitTest\ItopTestCase;
+use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 
 /**
  * @group itopRequestMgmt
@@ -37,16 +37,8 @@ use Combodo\iTop\Test\UnitTest\ItopTestCase;
  * @preserveGlobalState disabled
  * @backupGlobals disabled
  */
-class CriterionParserTest extends ItopTestCase
+class CriterionParserTest extends ItopDataTestCase
 {
-	protected function setUp()
-	{
-		parent::setUp();
-
-		require_once(APPROOT."application/startup.inc.php");
-		require_once(APPROOT."sources/Application/Search/criterionparser.class.inc.php");
-	}
-
 	public function testParse()
 	{
 		$sBaseOql = 'SELECT UserRequest';

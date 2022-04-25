@@ -24,7 +24,7 @@ class ActionEmailTest extends ItopDataTestCase
 	/** @var \ActionEmail|null Temp ActionEmail created for tests */
 	protected static $oActionEmail = null;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

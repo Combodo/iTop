@@ -78,23 +78,31 @@ class CMDBChangeOp extends DBObject implements iCMDBChangeOp
 	}
 
 	/**
-	 * @inheritDoc
-	 */	 
+	 * Describe (as a text string) the modifications corresponding to this change
+	 */
 	public function GetDescription()
 	{
 		return '';
 	}
 
 	/**
-	 * Safety net: in case the change is not given, let's guarantee that it will
-	 * be set to the current ongoing change (or create a new one)	
-	 */	
+	 * Safety net:
+	 * * if change isn't persisted yet, use the current change and persist it if needed
+	 * * in case the change is not given, let's guarantee that it will be set to the current ongoing change (or create a new one)
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 do persist the current change if needed
+	 */
 	protected function OnInsert()
 	{
-		if ($this->Get('change') <= 0)
-		{
-			$this->Set('change', CMDBObject::GetCurrentChange());
+		$iChange = $this->Get('change');
+		if (($iChange <= 0) || (is_null($iChange))) {
+			$oChange = CMDBObject::GetCurrentChange();
+			if ($oChange->IsNew()) {
+				$oChange->DBWrite();
+			}
+			$this->Set('change', $oChange);
 		}
+
 		parent::OnInsert();
 	}
 }

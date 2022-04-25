@@ -147,6 +147,7 @@ class QueryLogEntry
 			$iRepeat = utils::ReadParam('repeat', 3);
 			try
 			{
+				$resQuery = null;
 				$fRefTime = MyHelpers::getmicrotime();
 				for($i = 0 ; $i < $iRepeat ; $i++)
 				{
@@ -167,7 +168,6 @@ class QueryLogEntry
 			catch (Exception $e)
 			{
 				$this->aErrors[] = "Failed to execute the SQL:".$e->getMessage();
-				$resQuery = null;
 			}
 			if ($resQuery)
 			{

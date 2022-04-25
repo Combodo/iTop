@@ -47,7 +47,7 @@ use utils;
  */
 class UserRightsTest extends ItopDataTestCase
 {
-	public function setUp()
+	public function setUp(): void
 	{
 		parent::setUp();
 

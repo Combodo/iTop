@@ -451,7 +451,12 @@ class MFCompiler
 					}
 					catch (DOMFormatException $e)
 					{
-						throw new Exception("Failed to process class '$sClass', from '$sModuleRootDir': ".$e->getMessage());
+						$sMessage = "Failed to process class '$sClass', ";
+						if (!empty($sModuleRootDir)) {
+							$sMessage .= "from '$sModuleRootDir': ";
+						}
+						$sMessage .= $e->getMessage();
+						throw new Exception($sMessage);
 					}
 				}
 			}
@@ -2006,10 +2011,12 @@ EOF
 
 			// Note: We can't use ModelFactory::GetField() as the current clas doesn't seem to be loaded yet.
 			$oField = $this->oFactory->GetNodes('field[@id="'.$sStateAttCode.'"]', $oFields)->item(0);
+			if ($oField == null) {
+				throw new DOMFormatException("Non existing attribute '$sStateAttCode'", null, null, $oStateAttribute);
+			}
 			$oValues = $oField->GetUniqueElement('values');
 			$oValueNodes = $oValues->getElementsByTagName('value');
-			foreach($oValueNodes as $oValue)
-			{
+			foreach ($oValueNodes as $oValue) {
 				$sLifecycle .= "		MetaModel::Init_DefineState(\n";
 				$sLifecycle .= "			\"".$oValue->GetText()."\",\n";
 				$sLifecycle .= "			array(\n";

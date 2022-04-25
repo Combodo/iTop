@@ -12,7 +12,7 @@ use Exception;
 
 class iTopConfigAstValidatorTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'env-production/itop-config/src/Validator/iTopConfigAstValidator.php';

@@ -1394,7 +1394,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		catch(MissingDependencyException $e)
 		{
-			$oPage->warning($e->getMessage());
+			$oPage->warning($e->getHtmlDesc());
 		}
 
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
@@ -2138,7 +2138,7 @@ class WizStepSummary extends WizardStep
 			catch(MissingDependencyException $e)
 			{
 				$this->bDependencyCheck = false;
-				$this->sDependencyIssue = $e->getMessage();
+				$this->sDependencyIssue = $e->getHtmlDesc();
 			}
 		}
 		return $this->bDependencyCheck;

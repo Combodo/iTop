@@ -113,6 +113,26 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange = $oChange;
 	}
 
+	/**
+	 * @param string $sUserInfo
+	 * @param string $sOrigin
+	 * @param \DateTime $oDate
+	 *
+	 * @throws \CoreException
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 new method to reset current change
+	 */
+	public static function SetCurrentChangeFromParams($sUserInfo, $sOrigin = null, $oDate = null)
+	{
+		static::SetTrackInfo($sUserInfo);
+		static::SetTrackOrigin($sOrigin);
+		static::CreateChange();
+
+		if (!is_null($oDate)) {
+			static::$m_oCurrChange->Set("date", $oDate);
+		}
+	}
+
 	//
 	// Todo: simplify the APIs and do not pass the current change as an argument anymore
 	//       SetTrackInfo to be invoked in very few cases (UI.php, CSV import, Data synchro)
@@ -144,6 +164,8 @@ abstract class CMDBObject extends DBObject
 	 *    $oMyChange->Set("userinfo", 'this is done by ... for ...');
 	 *    $iChangeId = $oMyChange->DBInsert();
 	 *
+	 * **warning** : this will do nothing if current change already exists !
+	 *
 	 * @see SetCurrentChange to specify a CMDBObject instance instead
 	 *
 	 * @param string $sInfo
@@ -171,6 +193,8 @@ abstract class CMDBObject extends DBObject
 	/**
 	 * Provides information about the origin of the change
 	 *
+	 * **warning** : this will do nothing if current change already exists !
+	 *
 	 * @see SetTrackInfo
 	 * @see SetCurrentChange to specify a CMDBObject instance instead
 	 *
@@ -181,18 +205,15 @@ abstract class CMDBObject extends DBObject
 	{
 		self::$m_sOrigin = $sOrigin;
 	}
-	
+
 	/**
 	 * Get the additional information (defaulting to user name)
-	 */	 	
-	protected static function GetTrackInfo()
+	 */
+	public static function GetTrackInfo()
 	{
-		if (is_null(self::$m_sInfo))
-		{
+		if (is_null(self::$m_sInfo)) {
 			return CMDBChange::GetCurrentUserName();
-		}
-		else
-		{
+		} else {
 			return self::$m_sInfo;
 		}
 	}
@@ -243,6 +264,9 @@ abstract class CMDBObject extends DBObject
 	 * @throws \CoreWarning
 	 * @throws \MySQLException
 	 * @throws \OQLException
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°3717 {@see CMDBChange} **will be persisted later** in {@see \CMDBChangeOp::OnInsert} (was done previously directly here)
+	 *     This will avoid creating in DB CMDBChange lines without any corresponding CMDBChangeOp
 	 */
 	protected static function CreateChange()
 	{
@@ -251,7 +275,6 @@ abstract class CMDBObject extends DBObject
 		self::$m_oCurrChange->Set("userinfo", self::GetTrackInfo());
 		self::$m_oCurrChange->Set("user_id", self::GetTrackUserId());
 		self::$m_oCurrChange->Set("origin", self::GetTrackOrigin());
-		self::$m_oCurrChange->DBInsert();
 	}
 
 	/**
