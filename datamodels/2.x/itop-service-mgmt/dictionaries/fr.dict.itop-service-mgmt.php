@@ -331,7 +331,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:SLA/Attribute:slts_list' => 'SLTs',
 	'Class:SLA/Attribute:slts_list+' => '',
 	'Class:SLA/Attribute:customercontracts_list' => 'Contrats clients',
-	'Class:SLA/Attribute:customercontracts_list+' => '',
+	'Class:SLA/Attribute:customercontracts_list+' => 'Services contractés par des clients avec ce niveau de service',
 	'Class:SLA/Error:UniqueLnkCustomerContractToService' => 'Impossible de sauvegarder le lien avec le contrat client %1$s et le service %2$s : un SLA existe déjà.',
 ));
 

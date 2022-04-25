@@ -1544,43 +1544,42 @@ public function PrefillSearchForm(&$aContextParam)
 				</reconciliation>
 			</properties>
 			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="description" xsi:type="AttributeText">
-					<sql>description</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="org_id" xsi:type="AttributeExternalKey">
-					<sql>org_id</sql>
-					<target_class>Organization</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="organization_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>org_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="slts_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkSLAToSLT</linked_class>
-					<ext_key_to_me>sla_id</ext_key_to_me>
-					<count_min>0</count_min>
-					<count_max>0</count_max>
-					<ext_key_to_remote>slt_id</ext_key_to_remote>
-					<duplicates/>
-				</field>
-				<field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkCustomerContractToService</linked_class>
-					<ext_key_to_me>sla_id</ext_key_to_me>
-					<count_min>0</count_min>
-					<count_max>0</count_max>
-					<ext_key_to_remote>customercontract_id</ext_key_to_remote>
-					<duplicates>true</duplicates>
-				</field>
-			</fields>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="organization_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLAToSLT</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>slt_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="customercontracts_list" xsi:type="AttributeLinkedSet">
+          <linked_class>lnkCustomerContractToService</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <edit_mode>none</edit_mode>
+        </field>
+      </fields>
 			<methods>
 				<method id="DoCheckToWrite">
 					<static>false</static>
@@ -1590,6 +1589,7 @@ public function PrefillSearchForm(&$aContextParam)
 	{
 		parent::DoCheckToWrite();
 
+		/* This check is now useless as customercontracts_list is no more editable from the SLA side
 		$aCustomerContracts = $this->Get("customercontracts_list");
 		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
 		{
@@ -1610,6 +1610,7 @@ public function PrefillSearchForm(&$aContextParam)
 				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));
 			}
 		}
+		*/
 	}
 			     ]]></code>
 				</method>
