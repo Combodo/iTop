@@ -100,6 +100,8 @@ class iTopComposer
 
 			$APPROOT_WITH_SLASHES.'lib/goaop/framework/tests',
 
+			$APPROOT_WITH_SLASHES.'lib/laminas/laminas-servicemanager/src/Test',
+
 			$APPROOT_WITH_SLASHES.'lib/nikic/php-parser/test',
 
 			$APPROOT_WITH_SLASHES.'lib/pear/archive_tar/tests',
@@ -122,10 +124,12 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/filesystem/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/finder/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests',
+			$APPROOT_WITH_SLASHES.'lib/symfony/http-client-contracts/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-foundation/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-kernel/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests/Fixtures/TestBundle/FooBundle/Controller/Test',
+			$APPROOT_WITH_SLASHES.'lib/symfony/mime/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/routing/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/stopwatch/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/twig-bridge/Tests',
