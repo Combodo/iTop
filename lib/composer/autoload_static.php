@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
+class ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -1191,6 +1191,8 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Psr\\Log\\LoggerInterface' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerInterface.php',
         'Psr\\Log\\LoggerTrait' => __DIR__ . '/..' . '/psr/log/Psr/Log/LoggerTrait.php',
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
+        'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
         'Psr\\SimpleCache\\CacheException' => __DIR__ . '/..' . '/psr/simple-cache/src/CacheException.php',
         'Psr\\SimpleCache\\CacheInterface' => __DIR__ . '/..' . '/psr/simple-cache/src/CacheInterface.php',
         'Psr\\SimpleCache\\InvalidArgumentException' => __DIR__ . '/..' . '/psr/simple-cache/src/InvalidArgumentException.php',
@@ -1454,6 +1456,9 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateNameParser' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TemplateNameParser.php',
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TemplateReference' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TemplateReference.php',
         'Symfony\\Bundle\\FrameworkBundle\\Templating\\TimedPhpEngine' => __DIR__ . '/..' . '/symfony/framework-bundle/Templating/TimedPhpEngine.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\ForwardCompatTestTrait' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/ForwardCompatTestTrait.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\KernelTestCase' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/KernelTestCase.php',
+        'Symfony\\Bundle\\FrameworkBundle\\Test\\WebTestCase' => __DIR__ . '/..' . '/symfony/framework-bundle/Test/WebTestCase.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\PhpExtractor' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/PhpExtractor.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\PhpStringTokenParser' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/PhpStringTokenParser.php',
         'Symfony\\Bundle\\FrameworkBundle\\Translation\\TranslationLoader' => __DIR__ . '/..' . '/symfony/framework-bundle/Translation/TranslationLoader.php',
@@ -2258,6 +2263,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Symfony\\Component\\VarDumper\\Dumper\\DataDumperInterface' => __DIR__ . '/..' . '/symfony/var-dumper/Dumper/DataDumperInterface.php',
         'Symfony\\Component\\VarDumper\\Dumper\\HtmlDumper' => __DIR__ . '/..' . '/symfony/var-dumper/Dumper/HtmlDumper.php',
         'Symfony\\Component\\VarDumper\\Exception\\ThrowingCasterException' => __DIR__ . '/..' . '/symfony/var-dumper/Exception/ThrowingCasterException.php',
+        'Symfony\\Component\\VarDumper\\Test\\VarDumperTestTrait' => __DIR__ . '/..' . '/symfony/var-dumper/Test/VarDumperTestTrait.php',
         'Symfony\\Component\\VarDumper\\VarDumper' => __DIR__ . '/..' . '/symfony/var-dumper/VarDumper.php',
         'Symfony\\Component\\Yaml\\Command\\LintCommand' => __DIR__ . '/..' . '/symfony/yaml/Command/LintCommand.php',
         'Symfony\\Component\\Yaml\\Dumper' => __DIR__ . '/..' . '/symfony/yaml/Dumper.php',
@@ -2806,11 +2812,11 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$prefixesPsr0;
-            $loader->fallbackDirsPsr0 = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$fallbackDirsPsr0;
-            $loader->classMap = ComposerStaticInit0018331147de7601e7552f7da8e3bb8b::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239::$prefixDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239::$prefixesPsr0;
+            $loader->fallbackDirsPsr0 = ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239::$fallbackDirsPsr0;
+            $loader->classMap = ComposerStaticInit5e7efdfe4e8f9526eb41991410b96239::$classMap;
 
         }, null, ClassLoader::class);
     }
