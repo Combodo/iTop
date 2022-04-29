@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '51fdd8ab85c2859972d4ecbb40c711f8857cf05c',
+        'reference' => '9f9560f322ed091f816fa7c0b03442a02bb82325',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '51fdd8ab85c2859972d4ecbb40c711f8857cf05c',
+            'reference' => '9f9560f322ed091f816fa7c0b03442a02bb82325',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
