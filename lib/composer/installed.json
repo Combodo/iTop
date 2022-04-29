@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "combodo/tcpdf",
-            "version": "6.3.5",
-            "version_normalized": "6.3.5.0",
+            "version": "6.4.4",
+            "version_normalized": "6.4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/combodo-itop-libs/TCPDF.git",
-                "reference": "aedd4b7b8cf7fcc24e617c405c9d3304150f4b94"
+                "reference": "0e31c013ccd000aa6762e9186778aa6e259ac8e8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/aedd4b7b8cf7fcc24e617c405c9d3304150f4b94",
-                "reference": "aedd4b7b8cf7fcc24e617c405c9d3304150f4b94",
+                "url": "https://api.github.com/repos/combodo-itop-libs/TCPDF/zipball/0e31c013ccd000aa6762e9186778aa6e259ac8e8",
+                "reference": "0e31c013ccd000aa6762e9186778aa6e259ac8e8",
                 "shasum": ""
             },
             "require": {
@@ -21,7 +21,7 @@
             "replace": {
                 "tecnickcom/tcpdf": "self.version"
             },
-            "time": "2020-09-28T12:19:09+00:00",
+            "time": "2022-03-10T14:36:39+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -59,8 +59,26 @@
                     "email": "contact@combodo.com"
                 }
             ],
-            "description": "TCPDF fork adding requirements for iTop: Specific fonts.",
+            "description": "TCPDF is a PHP class for generating PDF documents and barcodes.",
             "homepage": "https://github.com/combodo-itop-libs/TCPDF",
+            "keywords": [
+                "PDFD32000-2008",
+                "TCPDF",
+                "barcodes",
+                "datamatrix",
+                "pdf",
+                "pdf417",
+                "qrcode"
+            ],
+            "support": {
+                "source": "https://github.com/combodo-itop-libs/TCPDF/tree/6.4.4"
+            },
+            "funding": [
+                {
+                    "url": "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&currency_code=GBP&business=paypal@tecnick.com&item_name=donation%20for%20tcpdf%20project",
+                    "type": "custom"
+                }
+            ],
             "install-path": "../combodo/tcpdf"
         },
         {

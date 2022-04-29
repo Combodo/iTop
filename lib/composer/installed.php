@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '9f9560f322ed091f816fa7c0b03442a02bb82325',
+        'reference' => '33afa208a306f8486092ad9520344138ce45e780',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,16 +16,16 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '9f9560f322ed091f816fa7c0b03442a02bb82325',
+            'reference' => '33afa208a306f8486092ad9520344138ce45e780',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
-            'pretty_version' => '6.3.5',
-            'version' => '6.3.5.0',
+            'pretty_version' => '6.4.4',
+            'version' => '6.4.4.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../combodo/tcpdf',
             'aliases' => array(),
-            'reference' => 'aedd4b7b8cf7fcc24e617c405c9d3304150f4b94',
+            'reference' => '0e31c013ccd000aa6762e9186778aa6e259ac8e8',
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
@@ -421,7 +421,7 @@
         'tecnickcom/tcpdf' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '6.3.5',
+                0 => '6.4.4',
             ),
         ),
         'twig/twig' => array(
