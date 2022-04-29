@@ -50,14 +50,24 @@ foreach ($aDeniedButStillPresent as $sDir)
 		continue;
 	}
 
-	try
-	{
+	try {
 		SetupUtils::rrmdir($sDir);
 		echo "OK Remove denied test dir: '$sDir'\n";
 	}
-	catch (\Exception $e)
-	{
+	catch (\Exception $e) {
 		echo "\nFAILED to remove denied test dir: '$sDir'\n";
 	}
+}
 
+
+$aAllowedAndDeniedDirs = array_merge(
+	$oiTopComposer->ListAllowedTestDir(),
+	$oiTopComposer->ListDeniedTestDir()
+);
+$aExistingDirs = $oiTopComposer->ListAllTestDir();
+$aMissing = array_diff($aExistingDirs, $aAllowedAndDeniedDirs);
+if (false === empty($aMissing)) {
+	echo "Some new tests dirs exists !\n"
+		.'  They must be declared either in the allowed or denied list in '.iTopComposer::class." (see N°2651).\n"
+		.'  List of dirs:'."\n".var_export($aMissing, true);
 }

@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'c47f2245669135902b32c54f3edf7f1bc52de81e',
+        'reference' => '56f8f9b38d649bb36bca6d4bdc35719862ef7cad',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,16 +16,16 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'c47f2245669135902b32c54f3edf7f1bc52de81e',
+            'reference' => '56f8f9b38d649bb36bca6d4bdc35719862ef7cad',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
-            'pretty_version' => '6.3.5',
-            'version' => '6.3.5.0',
+            'pretty_version' => '6.4.4',
+            'version' => '6.4.4.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../combodo/tcpdf',
             'aliases' => array(),
-            'reference' => 'aedd4b7b8cf7fcc24e617c405c9d3304150f4b94',
+            'reference' => '0e31c013ccd000aa6762e9186778aa6e259ac8e8',
             'dev_requirement' => false,
         ),
         'container-interop/container-interop' => array(
@@ -107,12 +107,12 @@
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
-            'pretty_version' => 'v4.12.0',
-            'version' => '4.12.0.0',
+            'pretty_version' => 'v4.13.2',
+            'version' => '4.13.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nikic/php-parser',
             'aliases' => array(),
-            'reference' => '6608f01670c3cc5079e18c1dab1104e002579143',
+            'reference' => '210577fe3cf7badcc5814d99455df46564f3c077',
             'dev_requirement' => false,
         ),
         'paragonie/random_compat' => array(
@@ -196,8 +196,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '^1.0',
-                1 => '1.0',
+                0 => '1.0',
+                1 => '^1.0',
             ),
         ),
         'psr/log' => array(
@@ -237,12 +237,12 @@
             ),
         ),
         'scssphp/scssphp' => array(
-            'pretty_version' => '1.0.6',
-            'version' => '1.0.6.0',
+            'pretty_version' => 'v1.10.2',
+            'version' => '1.10.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../scssphp/scssphp',
             'aliases' => array(),
-            'reference' => '5b3c9d704950d8f9637f5110c36c281ec47dc13c',
+            'reference' => '387f4f4abf5d99f16be16314c5ab856f81c82f46',
             'dev_requirement' => false,
         ),
         'symfony/cache' => array(
@@ -491,7 +491,7 @@
         'tecnickcom/tcpdf' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => '6.3.5',
+                0 => '6.4.4',
             ),
         ),
         'true/punycode' => array(
@@ -504,12 +504,12 @@
             'dev_requirement' => false,
         ),
         'twig/twig' => array(
-            'pretty_version' => 'v1.42.4',
-            'version' => '1.42.4.0',
+            'pretty_version' => 'v1.42.5',
+            'version' => '1.42.5.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twig/twig',
             'aliases' => array(),
-            'reference' => 'e587180584c3d2d6cb864a0454e777bb6dcb6152',
+            'reference' => '87b2ea9d8f6fd014d0621ca089bb1b3769ea3f8e',
             'dev_requirement' => false,
         ),
         'zendframework/zend-loader' => array(

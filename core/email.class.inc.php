@@ -614,5 +614,4 @@ class EMail
 			$this->m_oMessage->setReplyTo($sAddress);
 		}
 	}
-
 }
