@@ -14,7 +14,7 @@
     "nikic/php-parser": "~4.13.2",
     "pear/archive_tar": "~1.4.14",
     "pelago/emogrifier": "~3.1.0",
-    "scssphp/scssphp": "1.0.6",
+    "scssphp/scssphp": "~1.10.2",
     "swiftmailer/swiftmailer": "5.4.12",
     "symfony/console": "~3.4.47",
     "symfony/dotenv": "~3.4.47",
