@@ -12,7 +12,6 @@ $missingExtensions = array();
 extension_loaded('ctype') || $missingExtensions[] = 'ctype';
 extension_loaded('dom') || $missingExtensions[] = 'dom';
 extension_loaded('gd') || $missingExtensions[] = 'gd';
-extension_loaded('iconv') || $missingExtensions[] = 'iconv';
 extension_loaded('json') || $missingExtensions[] = 'json';
 extension_loaded('libxml') || $missingExtensions[] = 'libxml';
 extension_loaded('mysqli') || $missingExtensions[] = 'mysqli';
