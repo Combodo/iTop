@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '14f18371ff806c027100f6a593ec09f93d76ccf7',
+        'reference' => '9ebd884f6e55363b145c271dfc1a9d64cae4d2db',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '14f18371ff806c027100f6a593ec09f93d76ccf7',
+            'reference' => '9ebd884f6e55363b145c271dfc1a9d64cae4d2db',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -83,12 +83,12 @@
             'dev_requirement' => false,
         ),
         'pelago/emogrifier' => array(
-            'pretty_version' => 'v2.1.0',
-            'version' => '2.1.0.0',
+            'pretty_version' => 'v3.1.0',
+            'version' => '3.1.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../pelago/emogrifier',
             'aliases' => array(),
-            'reference' => '40c3d4f475d44ffc7265a760d1dd0e81f579f96f',
+            'reference' => 'f6a5c7d44612d86c3901c93f1592f5440e6b2cd8',
             'dev_requirement' => false,
         ),
         'psr/cache' => array(

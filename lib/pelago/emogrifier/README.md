@@ -30,11 +30,9 @@ into inline style attributes in your HTML code.
 - [How it works](#how-it-works)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Options](#options)
-- [Installing with Composer](#installing-with-composer)
 - [Supported CSS selectors](#supported-css-selectors)
 - [Caveats](#caveats)
-- [Processing HTML](#processing-html)
+- [Steps to release a new version](#steps-to-release-a-new-version)
 - [Maintainers](#maintainers)
 
 ## How it Works
@@ -45,14 +43,211 @@ selectors.
 
 ## Installation
 
-For installing emogrifier, either add pelago/emogrifier to your
-project's composer.json, or you can use composer as below:
+For installing emogrifier, either add `pelago/emogrifier` to the `require`
+section in your project's `composer.json`, or you can use composer as below:
 
 ```bash
 composer require pelago/emogrifier
 ```
 
+See https://getcomposer.org/ for more information and documentation.
+
 ## Usage
+
+### Inlining Css
+
+The most basic way to use the `CssInliner` class is to create an instance with
+the original HTML, inline the external CSS, and then get back the resulting
+HTML:
+
+```php
+use Pelago\Emogrifier\CssInliner;
+
+…
+
+$visualHtml = CssInliner::fromHtml($html)->inlineCss($css)->render();
+```
+
+If there is no external CSS file and all CSS is located within `<style>`
+elements in the HTML, you can omit the `$css` parameter:
+
+```php
+$visualHtml = CssInliner::fromHtml($html)->inlineCss()->render();
+```
+
+If you would like to get back only the content of the `<body>` element instead of
+the complete HTML document, you can use the `renderBodyContent` method instead:
+
+```php
+$bodyContent = $visualHtml = CssInliner::fromHtml($html)->inlineCss()
+  ->renderBodyContent();
+```
+
+If you would like to modify the inlining process with any of the available
+[options](#options), you will need to call the corresponding methods
+before inlining the CSS. The code then would look like this:
+
+```php
+$visualHtml = CssInliner::fromHtml($html)->disableStyleBlocksParsing()
+  ->inlineCss($css)->render();
+```
+
+There are also some other HTML-processing classes available
+(all of which are subclasses of `AbstractHtmlProcessor`) which you can use
+to further change the HTML after inlining the CSS.
+(For more details on the classes, please have a look at the sections below.)
+`CssInliner` and all HTML-processing classes can share the same `DOMDocument`
+instance to work on:
+
+```php
+use Pelago\Emogrifier\CssInliner;
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
+use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+
+…
+
+$cssInliner = CssInliner::fromHtml($html)->inlineCss($css);
+$domDocument = $cssInliner->getDomDocument();
+HtmlPruner::fromDomDocument($domDocument)->removeElementsWithDisplayNone()
+  ->removeRedundantClassesAfterCssInlined($cssInliner);
+$finalHtml = CssToAttributeConverter::fromDomDocument($domDocument)
+  ->convertCssToVisualAttributes()->render();
+```
+
+### Normalizing and cleaning up HTML
+
+The `HtmlNormalizer` class normalizes the given HTML in the following ways:
+
+- add a document type (HTML5) if missing
+- disentangle incorrectly nested tags
+- add HEAD and BODY elements (if they are missing)
+- reformat the HTML
+
+The class can be used like this:
+
+```php
+use Pelago\Emogrifier\HtmlProcessor\HtmlNormalizer;
+
+…
+
+$cleanHtml = HtmlNormalizer::fromHtml($rawHtml)->render();
+```
+
+### Converting CSS styles to visual HTML attributes
+
+The `CssToAttributeConverter` converts a few style attributes values to visual
+HTML attributes. This allows to get at least a bit of visual styling for email
+clients that do not support CSS well. For example, `style="width: 100px"`
+will be converted to `width="100"`.
+
+The class can be used like this:
+
+```php
+use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
+
+…
+
+$visualHtml = CssToAttributeConverter::fromHtml($rawHtml)
+  ->convertCssToVisualAttributes()->render();
+```
+
+You can also have the `CssToAttributeConverter` work on a `DOMDocument`:
+
+```php
+$visualHtml = CssToAttributeConverter::fromDomDocument($domDocument)
+  ->convertCssToVisualAttributes()->render();
+```
+
+### Removing redundant content and attributes from the HTML
+
+The `HtmlPruner` class can reduce the size of the HTML by removing elements with
+a `display: none` style declaration, and/or removing classes from `class`
+attributes that are not required.
+
+It can be used like this:
+
+```php
+use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
+
+…
+
+$prunedHtml = HtmlPruner::fromHtml($html)->removeElementsWithDisplayNone()
+  ->removeRedundantClasses($classesToKeep)->render();
+```
+
+The `removeRedundantClasses` method accepts a whitelist of names of classes that
+should be retained.  If this is a post-processing step after inlining CSS, you
+can alternatively use `removeRedundantClassesAfterCssInlined`, passing it the
+`CssInliner` instance that has inlined the CSS (and having the `HtmlPruner` work
+on the `DOMDocument`).  This will use information from the `CssInliner` to
+determine which classes are still required (namely, those used in uninlinable
+rules that have been copied to a `<style>` element):
+
+```php
+$prunedHtml = HtmlPruner::fromDomDocument($cssInliner->getDomDocument())
+  ->removeElementsWithDisplayNone()
+  ->removeRedundantClassesAfterCssInlined($cssInliner)->render();
+```
+
+The `removeElementsWithDisplayNone` method will not remove any elements which
+have the class `-emogrifier-keep`.  So if, for example, there are elements which
+by default have `display: none` but are revealed by an `@media` rule, or which
+are intended as a preheader, you can add that class to those elements.  The
+paragraph in this HTML snippet will not be removed even though it has
+`display: none` (which has presumably been applied by `CssInliner::inlineCss()`
+from a CSS rule `.preheader { display: none; }`):
+
+```html
+<p class="preheader -emogrifier-keep" style="display: none;">
+  Hello World!
+</p>
+```
+
+The `removeRedundantClassesAfterCssInlined` (or `removeRedundantClasses`)
+method, if invoked after `removeElementsWithDisplayNone`, will remove the
+`-emogrifier-keep` class.
+
+### Options
+
+There are several options that you can set on the `CssInliner` instance before
+calling the `inlineCss` method (or on the `Emogrifier` instance before calling
+the `emogrify` method):
+
+* `->disableStyleBlocksParsing()` - By default, `CssInliner` will grab
+  all `<style>` blocks in the HTML and will apply the CSS styles as inline
+  "style" attributes to the HTML. The `<style>` blocks will then be removed
+  from the HTML. If you want to disable this functionality so that `CssInliner`
+  leaves these `<style>` blocks in the HTML and does not parse them, you should
+  use this option. If you use this option, the contents of the `<style>` blocks
+  will _not_ be applied as inline styles and any CSS you want `CssInliner` to
+  use must be passed in as described in the [Usage section](#usage) above.
+* `->disableInlineStylesParsing()` - By default, `CssInliner`
+  preserves all of the "style" attributes on tags in the HTML you pass to it.
+  However if you want to discard all existing inline styles in the HTML before
+  the CSS is applied, you should use this option.
+* `->addAllowedMediaType(string $mediaName)` - By default, `CssInliner`
+  will keep only media types `all`, `screen` and `print`. If you want to keep
+  some others, you can use this method to define them.
+* `->removeAllowedMediaType(string $mediaName)` - You can use this
+  method to remove media types that Emogrifier keeps.
+* `->addExcludedSelector(string $selector)` - Keeps elements from
+  being affected by CSS inlining.  Note that only elements matching the supplied
+  selector(s) will be excluded from CSS inlining, not necessarily their
+  descendants.  If you wish to exclude an entire subtree, you should provide
+  selector(s) which will match all elements in the subtree, for example by using
+  the universal selector:
+  ```php
+  $cssInliner->addExcludedSelector('.message-preview');
+  $cssInliner->addExcludedSelector('.message-preview *');
+  ```
+
+### Using the legacy Emogrifier class
+
+In version 3.0.0, the `Emogrifier` class has been deprecated, and it will be
+removed for version 4.0.0. Please update your code to use the new
+`CssInliner` class instead.
+
+If you are still using the deprecated class, here is how to use it:
 
 First, you provide Emogrifier with the HTML and CSS you would like to merge.
 This can happen directly during instantiation:
@@ -92,73 +287,47 @@ the complete HTML document, you can use the `emogrifyBodyContent` instead:
 $bodyContent = $emogrifier->emogrifyBodyContent();
 ```
 
-## Options
+### Migrating from `Emogrifier` to `CssInliner`
 
-There are several options that you can set on the Emogrifier object before
-calling the `emogrify` method:
+#### Minimal example
 
-* `$emogrifier->disableStyleBlocksParsing()` - By default, Emogrifier will grab
-  all `<style>` blocks in the HTML and will apply the CSS styles as inline
-  "style" attributes to the HTML. The `<style>` blocks will then be removed
-  from the HTML. If you want to disable this functionality so that Emogrifier
-  leaves these `<style>` blocks in the HTML and does not parse them, you should
-  use this option. If you use this option, the contents of the `<style>` blocks
-  will _not_ be applied as inline styles and any CSS you want Emogrifier to
-  use must be passed in as described in the [Usage section](#usage) above.
-* `$emogrifier->disableInlineStylesParsing()` - By default, Emogrifier
-  preserves all of the "style" attributes on tags in the HTML you pass to it.
-  However if you want to discard all existing inline styles in the HTML before
-  the CSS is applied, you should use this option.
-* `$emogrifier->disableInvisibleNodeRemoval()` - By default, Emogrifier removes
-  elements from the DOM that have the style attribute `display: none;`.  If
-  you would like to keep invisible elements in the DOM, use this option.
-  Note: This option will be removed in Emogrifier 3.0. HTML tags with
-  `display: none;` then will always be retained.
-* `$emogrifier->addAllowedMediaType(string $mediaName)` - By default, Emogrifier
-  will keep only media types `all`, `screen` and `print`. If you want to keep
-  some others, you can use this method to define them.
-* `$emogrifier->removeAllowedMediaType(string $mediaName)` - You can use this
-  method to remove media types that Emogrifier keeps.
-* `$emogrifier->addExcludedSelector(string $selector)` - Keeps elements from
-  being affected by emogrification.
-* `$emogrifier->enableCssToHtmlMapping()` - Some email clients don't support CSS
-  well, even if inline and prefer HTML attributes. This function allows you to
-  put properties such as height, width, background color and font color in your
-  CSS while the transformed content will have all the available HTML
-  attributes set. This option will be removed in Emogrifier 3.0. Please use the
-  `CssToAttributeConverter` class instead.
+Old code using `Emogrifier`:
 
-## Installing with Composer
-
-Download the [`composer.phar`](https://getcomposer.org/composer.phar) locally
-or install [Composer](https://getcomposer.org/) globally:
-
-```bash
-curl -s https://getcomposer.org/installer | php
+```php
+$emogrifier = new Emogrifier($html);
+$html = $emogrifier->emogrify();
 ```
 
-Run the following command for a local installation:
+New code using `CssInliner`:
 
-```bash
-php composer.phar require pelago/emogrifier:^2.1.0
+```php
+$html = CssInliner::fromHtml($html)->inlineCss()->render();
 ```
 
-Or for a global installation, run the following command:
+NB: In this example, the old code removes elements with `display: none;`
+while the new code does not, as the default behaviors of the old and
+the new class differ in this regard.
 
-```bash
-composer require pelago/emogrifier:^2.1.0
+#### More complex example
+
+Old code using `Emogrifier`:
+
+```php
+$emogrifier = new Emogrifier($html, $css);
+$emogrifier->enableCssToHtmlMapping();
+
+$html = $emogrifier->emogrify();
 ```
 
-You can also add follow lines to your `composer.json` and run the
-`composer update` command:
+New code using `CssInliner` and family:
 
-```json
-"require": {
-  "pelago/emogrifier": "^2.1.0"
-}
+```php
+$domDocument = CssInliner::fromHtml($html)->inlineCss($css)->getDomDocument();
+
+HtmlPruner::fromDomDocument($domDocument)->removeElementsWithDisplayNone(),
+$html = CssToAttributeConverter::fromDomDocument($domDocument)
+  ->convertCssToVisualAttributes()->render();
 ```
-
-See https://getcomposer.org/ for more information and documentation.
 
 ## Supported CSS selectors
 
@@ -168,7 +337,8 @@ Emogrifier currently supports the following
  * [type](https://developer.mozilla.org/en-US/docs/Web/CSS/Type_selectors)
  * [class](https://developer.mozilla.org/en-US/docs/Web/CSS/Class_selectors)
  * [ID](https://developer.mozilla.org/en-US/docs/Web/CSS/ID_selectors)
- * [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors):
+ * [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors)
+   (partial support)
  * [attribute](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors):
     * presence
     * exact value match
@@ -178,42 +348,103 @@ Emogrifier currently supports the following
     * value with `$` (suffix match)
     * value with `*` (substring match)
  * [adjacent](https://developer.mozilla.org/en-US/docs/Web/CSS/Adjacent_sibling_selectors)
+ * [general sibling](https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_combinator)
  * [child](https://developer.mozilla.org/en-US/docs/Web/CSS/Child_selectors)
  * [descendant](https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_selectors)
  * [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes):
+   * [empty](https://developer.mozilla.org/en-US/docs/Web/CSS/:empty)
    * [first-child](https://developer.mozilla.org/en-US/docs/Web/CSS/:first-child)
+   * [first-of-type](https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type)
+     (with a type, e.g. `p:first-of-type` but not `*:first-of-type` which will
+     behave as `*:first-child`)
    * [last-child](https://developer.mozilla.org/en-US/docs/Web/CSS/:last-child)
+   * [last-of-type](https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type)
+     (with a type)
    * [not()](https://developer.mozilla.org/en-US/docs/Web/CSS/:not)
+   * [nth-child()](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-child)
+   * [nth-last-child()](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-child)
+   * [nth-last-of-type()](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type)
+     (with a type)
+   * [nth-of-type()](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type)
+     (with a type)
+   * [only-child](https://developer.mozilla.org/en-US/docs/Web/CSS/:only-child)
 
 The following selectors are not implemented yet:
 
- * [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors)
+ * [universal](https://developer.mozilla.org/en-US/docs/Web/CSS/Universal_selectors):
+   * with
+     [child combinator](https://developer.mozilla.org/en-US/docs/Web/CSS/Child_combinator)
+   * as ancestor with 
+     [descendant combinator](https://developer.mozilla.org/en-US/docs/Web/CSS/Descendant_combinator)
+     (e.g. `p *` is supported but `* p` is not)
  * [case-insensitive attribute value](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors#case-insensitive)
- * [general sibling](https://developer.mozilla.org/en-US/docs/Web/CSS/General_sibling_selectors)
- * [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes)
-   (some of them will never be supported)
+ * static [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes):
+   * [first-of-type](https://developer.mozilla.org/en-US/docs/Web/CSS/:first-of-type)
+     without a type (will behave as `:first-child`)
+   * [last-of-type](https://developer.mozilla.org/en-US/docs/Web/CSS/:last-of-type)
+     without a type (will behave as `:last-child`)
+   * [nth-last-of-type()](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-last-of-type)
+     without a type (will behave as `:nth-last-child()`)
+   * [nth-of-type()](https://developer.mozilla.org/en-US/docs/Web/CSS/:nth-of-type)
+     without a type (will behave as `:nth-child()`)
+   * any pseudo-classes not listed above as supported – rules involving them
+     will nonetheless be preserved and copied to a `<style>` element in the 
+     HTML – including (but not necessarily limited to) the following:
+     * [any-link](https://developer.mozilla.org/en-US/docs/Web/CSS/:any-link)
+     * [only-of-type](https://developer.mozilla.org/en-US/docs/Web/CSS/:only-of-type)
+     * [optional](https://developer.mozilla.org/en-US/docs/Web/CSS/:optional)
+     * [required](https://developer.mozilla.org/en-US/docs/Web/CSS/:required)
+     
+Rules involving the following selectors cannot be applied as inline styles.
+They will, however, be preserved and copied to a `<style>` element in the HTML:
+     
+ * dynamic [pseudo-classes](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes)
+   (such as `:hover`)
  * [pseudo-elements](https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements)
+   (such as `::after`)
 
 ## Caveats
 
 * Emogrifier requires the HTML and the CSS to be UTF-8. Encodings like
   ISO8859-1 or ISO8859-15 are not supported.
-* Emogrifier now preserves all valuable @media queries. Media queries
-  can be very useful in responsive email design. See
+* Emogrifier preserves all valuable `@media` rules.  Media queries can be very
+  useful in responsive email design.  See
   [media query support](https://litmus.com/help/email-clients/media-query-support/).
+  However, in order for them to be effective, you may need to add `!important`
+  to some of the declarations within them so that they will override CSS styles
+  that have been inlined.  For example, with the following CSS, the `font-size`
+  declaration in the `@media` rule would not override the font size for `p`
+  elements from the preceding rule after that has been inlined as 
+  `<p style="font-size: 16px;">` in the HTML, without the `!important` directive
+  (even though `!important` would not be necessary if the CSS were not inlined):
+  ```css
+  p {
+    font-size: 16px;
+  }
+  @media (max-width: 640px) {
+    p {
+      font-size: 14px !important;
+    }
+  } 
+  ```
+* Emogrifier cannot inline CSS rules involving selectors with pseudo-elements
+  (such as `::after`) or dynamic pseudo-classes (such as `:hover`) – it is
+  impossible.  However, such rules will be preserved and copied to a `<style>`
+  element, as for `@media` rules.  The same caveat about the possible need for
+  the `!important` directive also applies with pseudo-classes.
 * Emogrifier will grab existing inline style attributes _and_ will
   grab `<style>` blocks from your HTML, but it will not grab CSS files
-  referenced in <link> elements. (The problem email clients are going to ignore
-  these tags anyway, so why leave them in your HTML?)
+  referenced in `<link>` elements or `@import` rules (though it will leave them
+  intact for email clients that support them).
 * Even with styles inline, certain CSS properties are ignored by certain email
   clients. For more information, refer to these resources:
     * [http://www.email-standards.org/](http://www.email-standards.org/)
     * [https://www.campaignmonitor.com/css/](https://www.campaignmonitor.com/css/)
     * [http://templates.mailchimp.com/resources/email-client-css-support/](http://templates.mailchimp.com/resources/email-client-css-support/)
-* All CSS attributes that apply to a node will be applied, even if they are
+* All CSS attributes that apply to an element will be applied, even if they are
   redundant. For example, if you define a font attribute _and_ a font-size
-  attribute, both attributes will be applied to that node (in other words, the
-  more specific attribute will not be combined into the more general
+  attribute, both attributes will be applied to that element (in other words,
+  the more specific attribute will not be combined into the more general
   attribute).
 * There's a good chance you might encounter problems if your HTML is not
   well-formed and valid (DOMDocument might complain). If you get problems like
@@ -223,53 +454,6 @@ The following selectors are not implemented yet:
 * Emogrifier automatically converts the provided (X)HTML into HTML5, i.e.,
   self-closing tags will lose their slash. To keep your HTML valid, it is
   recommended to use HTML5 instead of one of the XHTML variants.
-* Emogrifier only supports CSS1 level selectors and a few CSS2 level selectors
-  (but not all of them). It does not support pseudo selectors. (Emogrifier
-  works by converting CSS selectors to XPath selectors, and pseudo selectors
-  cannot be converted accurately).
-
-## Processing HTML
-
-The Emogrifier package also provides classes for (post-)processing the HTML
-generated by `emogrify` (and it also works on any other HTML).
-
-### Normalizing and cleaning up HTML
-
-The `HtmlNormalizer` class normalizes the given HTML in the following ways:
-
-- add a document type (HTML5) if missing
-- disentangle incorrectly nested tags
-- add HEAD and BODY elements (if they are missing)
-- reformat the HTML
-
-The class can be used like this:
-
-```php
-$normalizer = new \Pelago\Emogrifier\HtmlProcessor\HtmlNormalizer($rawHtml);
-$cleanHtml = $normalizer->render();
-```
-
-### Converting CSS styles to visual HTML attributes
-
-The `CssToAttributeConverter` converts a few style attributes values to visual
-HTML attributes. This allows to get at least a bit of visual styling for email
-clients that do not support CSS well. For example, `style="width: 100px"`
-will be converted to `width="100"`.
-
-The class can be used like this:
-
-```php
-$converter = new \Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter($rawHtml);
-$visualHtml = $converter->convertCssToVisualAttributes()->render();
-```
-
-### Technology preview of new classes
-
-Currently, a refactoring effort is underway, aiming towards replacing the
-grown-over-time `Emogrifier` class with the new `CssInliner` class and moving
-additional HTML processing into separate `CssProcessor` classes (which will
-inherit from `AbstractHtmlProcessor`). You can try the new classes, but be
-aware that the APIs of the new classes still are subject to change. 
 
 ## Steps to release a new version
 
@@ -277,11 +461,11 @@ aware that the APIs of the new classes still are subject to change.
    changes.
 1. In the [composer.json](composer.json), update the `branch-alias` entry to
    point to the release _after_ the upcoming release.
-1. In the [README.md](README.md), update the version numbers in the section
-   [Installing with Composer](#installing-with-composer).
-1. In the [CHANGELOG.md](CHANGELOG.md), set the version number and remove any
-   empty sections.
+1. In the [CHANGELOG.md](CHANGELOG.md), create a new section with subheadings
+   for changes _after_ the upcoming release, set the version number for the
+   upcoming release, and remove any empty sections.
 1. Have the pull request reviewed and merged.
+1. Tag the new release.
 1. In the [Releases tab](https://github.com/MyIntervals/emogrifier/releases),
    create a new release and copy the change log entries to the new release.
 1. Post about the new release on social media.
