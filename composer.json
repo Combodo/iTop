@@ -21,7 +21,8 @@
     "symfony/framework-bundle": "~3.4.47",
     "symfony/polyfill-php70": "1.*",
     "symfony/twig-bundle": "~3.4.47",
-    "symfony/yaml": "~3.4.47"
+    "symfony/yaml": "~3.4.47",
+    "twig/twig": "~1.42.5"
   },
   "require-dev": {
     "symfony/stopwatch": "~3.4.47",
