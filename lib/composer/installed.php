@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '33afa208a306f8486092ad9520344138ce45e780',
+        'reference' => '1882b696c58d1e8e3d687196b0974e6b9ec64312',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '33afa208a306f8486092ad9520344138ce45e780',
+            'reference' => '1882b696c58d1e8e3d687196b0974e6b9ec64312',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -29,12 +29,12 @@
             'dev_requirement' => false,
         ),
         'nikic/php-parser' => array(
-            'pretty_version' => 'v3.1.5',
-            'version' => '3.1.5.0',
+            'pretty_version' => 'v4.13.2',
+            'version' => '4.13.2.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nikic/php-parser',
             'aliases' => array(),
-            'reference' => 'bb87e28e7d7b8d9a7fda231d37457c9210faf6ce',
+            'reference' => '210577fe3cf7badcc5814d99455df46564f3c077',
             'dev_requirement' => false,
         ),
         'paragonie/random_compat' => array(
