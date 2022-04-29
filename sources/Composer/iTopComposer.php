@@ -123,7 +123,6 @@ class iTopComposer
 			$APPROOT_WITH_SLASHES.'lib/symfony/event-dispatcher/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/filesystem/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/finder/Tests',
-			$APPROOT_WITH_SLASHES.'lib/symfony/framework-bundle/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-client-contracts/Test',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-foundation/Tests',
 			$APPROOT_WITH_SLASHES.'lib/symfony/http-kernel/Tests',
