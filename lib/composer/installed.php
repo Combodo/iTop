@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'ddd41d2ba79c93a1f904f4994f7f2b7ee7269312',
+        'reference' => 'c38e0ffb77d5e754478213ad82fa2ccef0a1b8dd',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'ddd41d2ba79c93a1f904f4994f7f2b7ee7269312',
+            'reference' => 'c38e0ffb77d5e754478213ad82fa2ccef0a1b8dd',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -176,12 +176,12 @@
             ),
         ),
         'scssphp/scssphp' => array(
-            'pretty_version' => 'v1.10.2',
-            'version' => '1.10.2.0',
+            'pretty_version' => '1.0.6',
+            'version' => '1.0.6.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../scssphp/scssphp',
             'aliases' => array(),
-            'reference' => '387f4f4abf5d99f16be16314c5ab856f81c82f46',
+            'reference' => '5b3c9d704950d8f9637f5110c36c281ec47dc13c',
             'dev_requirement' => false,
         ),
         'swiftmailer/swiftmailer' => array(

@@ -1,9 +1,8 @@
 <?php
-
 /**
  * SCSSPHP
  *
- * @copyright 2012-2020 Leaf Corcoran
+ * @copyright 2012-2019 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -13,15 +12,12 @@
 namespace ScssPhp\ScssPhp\Formatter;
 
 use ScssPhp\ScssPhp\Formatter;
+use ScssPhp\ScssPhp\Formatter\OutputBlock;
 
 /**
  * Crunched formatter
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
- *
- * @deprecated since 1.4.0. Use the Compressed formatter instead.
- *
- * @internal
  */
 class Crunched extends Formatter
 {
@@ -30,8 +26,6 @@ class Crunched extends Formatter
      */
     public function __construct()
     {
-        @trigger_error('The Crunched formatter is deprecated since 1.4.0. Use the Compressed formatter instead.', E_USER_DEPRECATED);
-
         $this->indentLevel = 0;
         $this->indentChar = '  ';
         $this->break = '';
@@ -71,8 +65,6 @@ class Crunched extends Formatter
      */
     protected function blockSelectors(OutputBlock $block)
     {
-        assert(! empty($block->selectors));
-
         $inner = $this->indentStr();
 
         $this->write(
