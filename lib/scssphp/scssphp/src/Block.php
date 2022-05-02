@@ -1,9 +1,8 @@
 <?php
-
 /**
  * SCSSPHP
  *
- * @copyright 2012-2020 Leaf Corcoran
+ * @copyright 2012-2019 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -16,18 +15,16 @@ namespace ScssPhp\ScssPhp;
  * Block
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
- *
- * @internal
  */
 class Block
 {
     /**
-     * @var string|null
+     * @var string
      */
     public $type;
 
     /**
-     * @var Block|null
+     * @var \ScssPhp\ScssPhp\Block
      */
     public $parent;
 
@@ -37,22 +34,22 @@ class Block
     public $sourceName;
 
     /**
-     * @var int
+     * @var integer
      */
     public $sourceIndex;
 
     /**
-     * @var int
+     * @var integer
      */
     public $sourceLine;
 
     /**
-     * @var int
+     * @var integer
      */
     public $sourceColumn;
 
     /**
-     * @var array|null
+     * @var array
      */
     public $selectors;
 
@@ -67,7 +64,7 @@ class Block
     public $children;
 
     /**
-     * @var Block|null
+     * @var \ScssPhp\ScssPhp\Block
      */
     public $selfParent;
 }

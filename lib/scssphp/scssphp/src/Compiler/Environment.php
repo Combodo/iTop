@@ -1,9 +1,8 @@
 <?php
-
 /**
  * SCSSPHP
  *
- * @copyright 2012-2020 Leaf Corcoran
+ * @copyright 2012-2019 Leaf Corcoran
  *
  * @license http://opensource.org/licenses/MIT MIT
  *
@@ -16,40 +15,18 @@ namespace ScssPhp\ScssPhp\Compiler;
  * Compiler environment
  *
  * @author Anthon Pang <anthon.pang@gmail.com>
- *
- * @internal
  */
 class Environment
 {
     /**
-     * @var \ScssPhp\ScssPhp\Block|null
+     * @var \ScssPhp\ScssPhp\Block
      */
     public $block;
 
     /**
-     * @var \ScssPhp\ScssPhp\Compiler\Environment|null
+     * @var \ScssPhp\ScssPhp\Compiler\Environment
      */
     public $parent;
-
-    /**
-     * @var Environment|null
-     */
-    public $declarationScopeParent;
-
-    /**
-     * @var Environment|null
-     */
-    public $parentStore;
-
-    /**
-     * @var array|null
-     */
-    public $selectors;
-
-    /**
-     * @var string|null
-     */
-    public $marker;
 
     /**
      * @var array
@@ -62,7 +39,7 @@ class Environment
     public $storeUnreduced;
 
     /**
-     * @var int
+     * @var integer
      */
     public $depth;
 }
