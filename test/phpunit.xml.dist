@@ -22,7 +22,7 @@
     <ini name="error_reporting" value="E_ALL"/>
     <ini name="display_errors" value="On"/>
     <ini name="log_errors" value="On"/>
-    <ini name="html_errors" value="On"/>
+    <ini name="html_errors" value="Off"/>
   </php>
 
   <testsuites>
