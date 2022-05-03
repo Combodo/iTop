@@ -1363,8 +1363,12 @@
                         ),
                 );
                 $iPriority = null;
-                if (isset($aPriorities[(int)$this->Get('impact')]) && isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')]))
-                {
+                $oAttDef = MetaModel::GetAttributeDef(get_class($this), 'priority');
+				if (!$oAttDef->IsNullAllowed()) {
+					$iPriority = $oAttDef->GetDefaultValue();
+				}
+
+                if (isset($aPriorities[(int)$this->Get('impact')]) && isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')])) {
                         $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
                 }
                 return $iPriority;              
@@ -1377,12 +1381,7 @@
                     <code><![CDATA[	public function ComputeValues()
 	{
 		// Compute the priority of the ticket
-		$iPriority = $this->ComputePriority();
-		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'priority');
-		if(is_null($iPriority) && !$oAttDef->IsNullAllowed()){
-			$iPriority = $oAttDef->GetDefaultValue();
-		}
-		$this->Set('priority', $iPriority);
+		$this->Set('priority', $this->ComputePriority());
 
 		// Compute the request_type if not already defined (by the user)
 		$sType = $this->Get('request_type');
