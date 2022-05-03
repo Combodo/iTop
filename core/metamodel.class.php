@@ -7378,7 +7378,7 @@ abstract class MetaModel
 										$aContext['replace id'] = $replace->GetKey();
 									}
 									IssueLog::Debug(
-										'Invalid placeholder in notification, no replacement will occur !',
+										'Invalid placeholder in notification, no replacement will occur!',
 										LogChannels::NOTIFICATION,
 										$aContext
 									);
