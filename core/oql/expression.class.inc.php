@@ -2762,25 +2762,96 @@ class FunctionExpression extends Expression
 				return $iRet;
 
 			case 'DATE_FORMAT':
-				if (count($this->m_aArgs) != 2)
-				{
+				if (count($this->m_aArgs) != 2) {
 					throw new \Exception("Function {$this->m_sVerb} requires 2 arguments");
 				}
 				$oDate = new DateTime($this->m_aArgs[0]->Evaluate($aArgs));
-				$sFormat = $this->m_aArgs[1]->Evaluate($aArgs);
-				$sFormat = str_replace(
-					array('%y', '%x', '%w', '%W', '%v', '%T', '%S', '%r', '%p', '%M', '%l', '%k', '%I', '%h', '%b', '%a', '%D', '%c', '%e', '%Y', '%d', '%m', '%H', '%i', '%s'),
-					array('y', 'o', 'w', 'l', 'W', 'H:i:s', 's', 'h:i:s A', 'A', 'F', 'g', 'H', 'h', 'h','M', 'D', 'jS', 'n', 'j', 'Y', 'd', 'm', 'H', 'i', 's'),
-					$sFormat);
-				if (preg_match('/%j/', $sFormat))
-				{
-					$sFormat = str_replace('%j', date_format($oDate, 'z') + 1, $sFormat);
-				}
-				if (preg_match('/%[fUuVX]/', $sFormat))
-				{
+				$sFormatForMysqlDateFormat = $this->m_aArgs[1]->Evaluate($aArgs);
+
+				if (preg_match('/%[fUuVX]/', $sFormatForMysqlDateFormat)) {
 					throw new NotYetEvaluatedExpression("Expression ".$this->RenderExpression().' cannot be evaluated (known limitation)');
 				}
-				$sRet = date_format($oDate, $sFormat);
+
+				if (preg_match('/%j/', $sFormatForMysqlDateFormat)) {
+					$sFormatForMysqlDateFormat = str_replace('%j', 'z', $sFormatForMysqlDateFormat);
+					$sRet = date_format($oDate, $sFormatForMysqlDateFormat);
+					$sRet++;
+					/** @noinspection PhpUnnecessaryLocalVariableInspection */
+					$sRet = str_pad($sRet, 3, '0', STR_PAD_LEFT);
+
+					return $sRet;
+				}
+
+				/**
+				 * @var string[] $aFormatsForMysqlDateFormat
+				 * @link https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html#function_date-format
+				 */
+				//@formatter:off we want to keep every single item on its own line to ease comp between MySQL and PHP formats !
+				$aFormatsForMysqlDateFormat = [
+					'%y',
+					'%x',
+					'%w',
+					'%W',
+					'%v',
+					'%T',
+					'%S',
+					'%r',
+					'%p',
+					'%M',
+					'%l',
+					'%k',
+					'%I',
+					'%h',
+					'%b',
+					'%a',
+					'%D',
+					'%c',
+					'%e',
+					'%Y',
+					'%d',
+					'%m',
+					'%H',
+					'%i',
+					'%s'
+				];
+				//@formatter:on
+				/**
+				 * @var string[] $aFormatsForPhpDateFormat
+				 * @link https://www.php.net/manual/en/datetime.format.php
+				 */
+				//@formatter:off we want to keep every single item on its own line to ease comp between MySQL and PHP formats !
+				$aFormatsForPhpDateFormat = [
+					'y',
+					'o',
+					'w',
+					'l',
+					'W',
+					'H:i:s',
+					's',
+					'h:i:s A',
+					'A',
+					'F',
+					'g',
+					'G',
+					'h',
+					'h',
+					'M',
+					'D',
+					'jS',
+					'n',
+					'j',
+					'Y',
+					'd',
+					'm',
+					'H',
+					'i',
+					's'
+				];
+				//@formatter:on
+				$sFormatForPhpDateFormat = str_replace($aFormatsForMysqlDateFormat, $aFormatsForPhpDateFormat, $sFormatForMysqlDateFormat);
+				/** @noinspection PhpUnnecessaryLocalVariableInspection */
+				$sRet = date_format($oDate, $sFormatForPhpDateFormat);
+
 				return $sRet;
 
 			case 'TO_DAYS':

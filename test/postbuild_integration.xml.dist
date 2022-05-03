@@ -17,6 +17,13 @@
         verbose="true"
 >
 
+    <php>
+        <ini name="error_reporting" value="E_ALL"/>
+        <ini name="display_errors" value="On"/>
+        <ini name="log_errors" value="On"/>
+        <ini name="html_errors" value="On"/>
+    </php>
+
     <testsuites>
         <testsuite name="PostBuildIntegration">
             <directory>postbuild_integration</directory>
