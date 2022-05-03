@@ -58,7 +58,7 @@ class EMail
 	public function __construct()
 	{
 		$this->m_aData = array();
-		$this->m_oMessage = Swift_Message::newInstance();
+		$this->m_oMessage = new Swift_Message();
 		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
 	}
 
@@ -172,7 +172,7 @@ class EMail
 			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
 			$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
 
-			$oTransport = Swift_SmtpTransport::newInstance($sHost, $sPort, $sEncryption);
+			$oTransport = new Swift_SmtpTransport($sHost, $sPort, $sEncryption);
 			if (strlen($sUserName) > 0)
 			{
 				$oTransport->setUsername($sUserName);
@@ -181,20 +181,20 @@ class EMail
 			break;
 
 		case 'Null':
-			$oTransport = Swift_NullTransport::newInstance();
+			$oTransport = new Swift_NullTransport();
 			break;
 		
 		case 'LogFile':
-			$oTransport = Swift_LogFileTransport::newInstance();
+			$oTransport = new Swift_LogFileTransport();
 			$oTransport->setLogFile(APPROOT.'log/mail.log');
 			break;
 			
 		case 'PHPMail':
 		default:
-			$oTransport = Swift_MailTransport::newInstance();
+			$oTransport = new Swift_SendmailTransport();
 		}
 
-		$oMailer = Swift_Mailer::newInstance($oTransport);
+		$oMailer = new Swift_Mailer($oTransport);
 
 		$aFailedRecipients = array();
 		$this->m_oMessage->setMaxLineLength(0);
@@ -364,7 +364,7 @@ class EMail
 			$this->m_aData['attachments'] = array();
 		}
 		$this->m_aData['attachments'][] = array('data' => base64_encode($data), 'filename' => $sFileName, 'mimeType' => $sMimeType);
-		$this->m_oMessage->attach(Swift_Attachment::newInstance($data, $sFileName, $sMimeType));
+		$this->m_oMessage->attach(new Swift_Attachment($data, $sFileName, $sMimeType));
 	}
 
 	public function SetSubject($sSubject)
