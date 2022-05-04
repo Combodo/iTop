@@ -19,7 +19,7 @@ define('UR_ACTION_CREATE', 7); // Instantiate an object
 define('UR_ACTION_APPLICATION_DEFINED', 10000); // Application specific actions (CSV import, View schema...)
 
 /**
- * User management module API  
+ * User management module API
  *
  * @package     iTopORM
  */
@@ -139,7 +139,7 @@ abstract class UserRightsAddOnAPI
 		$oExpression = new FieldExpression($sAttCode, $sClass);
 		$oFilter  = new DBObjectSearch($sClass);
 		$oListExpr = ListExpression::FromScalars($aAllowedOrgs);
-		
+
 		$oCondition = new BinaryExpression($oExpression, 'IN', $oListExpr);
 		$oFilter->AddConditionExpression($oCondition);
 
@@ -156,7 +156,7 @@ abstract class UserRightsAddOnAPI
 				$oShareSearch = new DBObjectSearch('SharedObject');
 				$oOrgField = new FieldExpression('org_id', 'SharedObject');
 				$oShareSearch->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
-	
+
 				$oSearchSharers = new DBObjectSearch('Organization');
 				$oSearchSharers->AllowAllData();
 				$oSearchSharers->AddCondition_ReferencedBy($oShareSearch, 'sharing_org_id');
@@ -172,16 +172,16 @@ abstract class UserRightsAddOnAPI
 					$oFilter->MergeConditionExpression(new BinaryExpression($oExpression, 'IN', $oSharersList));
 				}
 			}
-	
+
 			$aShareProperties = SharedObject::GetSharedClassProperties($sClass);
 			if ($aShareProperties)
 			{
 				$sShareClass = $aShareProperties['share_class'];
 				$sShareAttCode = $aShareProperties['attcode'];
-	
+
 				$oSearchShares = new DBObjectSearch($sShareClass);
 				$oSearchShares->AllowAllData();
-	
+
 				$sHierarchicalKeyCode = MetaModel::IsHierarchicalClass('Organization');
 				$oOrgField = new FieldExpression('org_id', $sShareClass);
 				$oSearchShares->AddConditionExpression(new BinaryExpression($oOrgField, 'IN', $oListExpr));
@@ -236,7 +236,7 @@ abstract class User extends cmdbAbstractObject
 
 		MetaModel::Init_AddAttribute(new AttributeApplicationLanguage("language", array("sql"=>"language", "default_value"=>"EN US", "is_null_allowed"=>false, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeEnum("status", array("allowed_values" => new ValueSetEnum('enabled,disabled'), "sql"=>"status", "default_value"=>"enabled", "is_null_allowed"=>false, "depends_on"=>array())));
-		
+
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("profile_list", array("linked_class"=>"URP_UserProfile", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"profileid", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 		MetaModel::Init_AddAttribute(new AttributeLinkedSetIndirect("allowed_org_list", array("linked_class"=>"URP_UserOrg", "ext_key_to_me"=>"userid", "ext_key_to_remote"=>"allowed_org_id", "allowed_values"=>null, "count_min"=>1, "count_max"=>0, "depends_on"=>array())));
 
@@ -504,7 +504,7 @@ abstract class User extends cmdbAbstractObject
 			return '<span style="background-color: #ffdddd;">'.Dict::S('UI:UserManagement:ActionAllowed:No').'</span>';
 		}
 	}
-	
+
 	function DoShowGrantSumary($oPage, $sClassCategory)
 	{
 		if (UserRights::IsAdministrator($this))
@@ -536,7 +536,7 @@ abstract class User extends cmdbAbstractObject
 			{
 				$sStimuli = '<em title="'.Dict::S('UI:UserManagement:NoLifeCycleApplicable+').'">'.Dict::S('UI:UserManagement:NoLifeCycleApplicable').'</em>';
 			}
-			
+
 			$aDisplayData[] = array(
 				'class' => MetaModel::GetName($sClass),
 				'read' => $this->GetGrantAsHtml($sClass, UR_ACTION_READ),
@@ -550,7 +550,7 @@ abstract class User extends cmdbAbstractObject
 		}
 
 		$oKPI->ComputeAndReport('Computation of user rights');
-	
+
 		$aDisplayConfig = array();
 		$aDisplayConfig['class'] = array('label' => Dict::S('UI:UserManagement:Class'), 'description' => Dict::S('UI:UserManagement:Class+'));
 		$aDisplayConfig['read'] = array('label' => Dict::S('UI:UserManagement:Action:Read'), 'description' => Dict::S('UI:UserManagement:Action:Read+'));
@@ -585,7 +585,7 @@ abstract class User extends cmdbAbstractObject
 
 		}
 	}
-	
+
   	public function CheckToDelete(&$oDeletionPlan)
   	{
   		if (MetaModel::GetConfig()->Get('demo_mode'))
@@ -597,8 +597,8 @@ abstract class User extends cmdbAbstractObject
 			return false;
 		}
 		return parent::CheckToDelete($oDeletionPlan);
-  	} 
-	
+  	}
+
 	protected function DBDeleteSingleObject()
 	{
 		if (MetaModel::GetConfig()->Get('demo_mode'))
@@ -633,7 +633,7 @@ abstract class User extends cmdbAbstractObject
  */
 abstract class UserInternal extends User
 {
-	// Nothing special, just a base class to categorize this type of authenticated users	
+	// Nothing special, just a base class to categorize this type of authenticated users
 	public static function Init()
 	{
 		$aParams = array
@@ -662,15 +662,15 @@ abstract class UserInternal extends User
 
 	/**
 	 * Use with care!
-	 */	 	
+	 */
 	public function SetPassword($sNewPassword)
 	{
 	}
 
 	/**
-	 * The email recipient is the person who is allowed to regain control when the password gets lost	
+	 * The email recipient is the person who is allowed to regain control when the password gets lost
 	 * Throws an exception if the feature cannot be available
-	 */	
+	 */
 	public function GetResetPasswordEmail()
 	{
 		if (!MetaModel::IsValidAttCode(get_class($this), 'contactid'))
@@ -703,7 +703,7 @@ abstract class UserInternal extends User
 }
 
 /**
- * Self register extension  
+ * Self register extension
  *
  * @package     iTopORM
  */
@@ -719,10 +719,10 @@ interface iSelfRegister
 	 * @return bool true if the user is a valid one, false otherwise
 	 */
 	public static function CheckCredentialsAndCreateUser($sName, $sPassword, $sLoginMode, $sAuthentication);
-	
+
 	/**
 	 * Called after the user has been authenticated and found in iTop. This method can
-	 * Update the user's definition on the fly (profiles...) to keep it in sync with an external source 
+	 * Update the user's definition on the fly (profiles...) to keep it in sync with an external source
 	 * @param User $oUser The user to update/synchronize
 	 * @param string $sLoginMode The login mode used (cas|form|basic|url)
 	 * @param string $sAuthentication The authentication method used
@@ -732,7 +732,7 @@ interface iSelfRegister
 }
 
 /**
- * User management core API  
+ * User management core API
  *
  * @package     iTopORM
  */
@@ -830,7 +830,7 @@ class UserRights
 		else
 		{
 			return true;
-		}	
+		}
 	}
 
 	/**
@@ -1053,6 +1053,10 @@ class UserRights
 				Dict::SetUserLanguage(self::GetUserLanguage());
 				Session::Set('impersonate_user', $sLogin);
 				self::_ResetSessionCache();
+
+				//N°5135 - Impersonate: history of changes versus log entries
+				//track impersonation inside changelogs
+				CMDBObject::SetCurrentChangeFromParams(null);
 			}
 		}
 		return $bRet;
@@ -1066,9 +1070,14 @@ class UserRights
 		if (!is_null(self::$m_oRealUser))
 		{
 			self::$m_oUser = self::$m_oRealUser;
+			self::$m_oRealUser = null;
 			Dict::SetUserLanguage(self::GetUserLanguage());
 			Session::Unset('impersonate_user');
 			self::_ResetSessionCache();
+
+			//N°5135 - Impersonate: history of changes versus log entries
+			//stop tracking impersonation inside changelogs
+			CMDBObject::SetCurrentChangeFromParams(null);
 		}
 	}
 
@@ -1136,7 +1145,7 @@ class UserRights
 		if (is_null(self::$m_oUser))
 		{
 			return 'EN US';
-		
+
 		}
 		else
 		{
@@ -1483,7 +1492,7 @@ class UserRights
 	{
 		if (!self::IsLoggedIn())
 		{
-			//throw new UserRightException('No user logged in', array());	
+			//throw new UserRightException('No user logged in', array());
 			return false;
 		}
 		return true;
@@ -1871,7 +1880,7 @@ class UserRights
 					case 'internal':
 					$sBaseClass = 'UserInternal';
 					break;
-					
+
 					default:
 					echo "<p>sAuthentication = $sAuthentication</p>\n";
 					assert(false); // should never happen
@@ -1936,7 +1945,7 @@ class UserRights
 		Session::Unset('profile_list');
 		Session::Unset('archive_allowed');
 	}
-	
+
 	/**
 	 * Fake error handler to silently discard fatal errors
 	 * @param int $iErrNo
@@ -1968,7 +1977,7 @@ class ActionChecker
 	var $iActionCode;
 	var $iAllowedCount = null;
 	var $aAllowedIDs = null;
-	
+
 	public function __construct(DBSearch $oFilter, $iActionCode)
 	{
 		$this->oFilter = $oFilter;
@@ -1976,7 +1985,7 @@ class ActionChecker
 		$this->iAllowedCount = null;
 		$this->aAllowedIDs = null;
 	}
-	
+
 	/**
 	 * returns the number of objects for which the action is allowed
 	 * @return integer The number of "allowed" objects 0..N
@@ -1986,7 +1995,7 @@ class ActionChecker
 		if ($this->iAllowedCount == null) $this->CheckObjects();
 		return $this->iAllowedCount;
 	}
-	
+
 	/**
 	 * If IsAllowed returned UR_ALLOWED_DEPENDS, this methods returns
 	 * an array of ObjKey => Status (true|false)
@@ -1997,7 +2006,7 @@ class ActionChecker
 		if ($this->aAllowedIDs == null) $this->IsAllowed();
 		return $this->aAllowedIDs;
 	}
-	
+
 	/**
 	 * Check if the speficied stimulus is allowed for the set of objects
 	 * @return UR_ALLOWED_YES, UR_ALLOWED_NO or UR_ALLOWED_DEPENDS
@@ -2048,7 +2057,7 @@ class ActionChecker
 class StimulusChecker extends ActionChecker
 {
 	var $sState = null;
-	
+
 	public function __construct(DBSearch $oFilter, $sState, $iStimulusCode)
 	{
 		parent::__construct($oFilter, $iStimulusCode);
@@ -2063,7 +2072,7 @@ class StimulusChecker extends ActionChecker
 	{
 		$sClass = $this->oFilter->GetClass();
 		if (MetaModel::IsAbstract($sClass)) return UR_ALLOWED_NO; // Safeguard, not implemented if the base class of the set is abstract !
-		
+
 		$oSet = new DBObjectSet($this->oFilter);
 		$iActionAllowed = UserRights::IsStimulusAllowed($sClass,  $this->iActionCode, $oSet);
 		if ($iActionAllowed == UR_ALLOWED_NO)
@@ -2075,7 +2084,7 @@ class StimulusChecker extends ActionChecker
 		{
 			// Hmmm, may not be needed right now because we limit the "multiple" action to object in
 			// the same state... may be useful later on if we want to extend this behavior...
-			
+
 			// Check for each object if the action is allowed or not
 			$this->aAllowedIDs = array();
 			$oSet->Rewind();
@@ -2100,15 +2109,15 @@ class StimulusChecker extends ActionChecker
 						$this->aAllowedIDs[$oObj->GetKey()] = true;
 						$this->iState = $oObj->GetState();
 						$this->iAllowedCount++;
-					}					
+					}
 				}
 				else
 				{
-					$this->aAllowedIDs[$oObj->GetKey()] = false;					
-				}				
+					$this->aAllowedIDs[$oObj->GetKey()] = false;
+				}
 			}
 		}
-		
+
 		if ($this->iAllowedCount == $oSet->Count())
 		{
 			$iActionAllowed = UR_ALLOWED_YES;
@@ -2120,9 +2129,9 @@ class StimulusChecker extends ActionChecker
 
 		return $iActionAllowed;
 	}
-	
+
 	public function GetState()
 	{
 		return $this->iState;
-	}		
+	}
 }

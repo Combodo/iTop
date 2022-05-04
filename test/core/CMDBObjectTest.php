@@ -21,6 +21,17 @@ use MetaModel;
  */
 class CMDBObjectTest extends ItopDataTestCase
 {
+	private $sAdminLogin;
+	private $sImpersonatedLogin;
+
+	/**
+	 * @throws Exception
+	 */
+	protected function setUp(): void
+	{
+		parent::setUp();
+	}
+
 	/**
 	 * @covers CMDBObject::SetCurrentChange
 	 */
@@ -71,5 +82,70 @@ class CMDBObjectTest extends ItopDataTestCase
 		$oTestObject->DBDelete();
 		CMDBObject::SetCurrentChange($oInitialCurrentChange);
 		CMDBObject::SetTrackInfo($sInitialTrackInfo);
+	}
+
+	/**
+	 * @covers CMDBObject::SetCurrentChange
+	 *
+	 * @since 3.0.1 N°5135 - Impersonate: history of changes versus log entries
+	 */
+	public function testCurrentChangeUnderImpersonation() {
+		$this->CreateTestOrganization();
+
+		$sUid = date('dmYHis');
+		$sAdminLogin = "admin-user-".$sUid;
+		$sImpersonatedLogin = "impersonated-user-".$sUid;
+
+		$this->CreateUserForImpersonation($sAdminLogin, 'Administrator', 'AdminName', 'AdminSurName');
+		$this->CreateUserForImpersonation($sImpersonatedLogin, 'Configuration Manager', 'ImpersonatedName', 'ImpersonatedSurName');
+
+		$_SESSION = [];
+		\UserRights::Login($sAdminLogin);
+
+		// save initial conditions
+		$oInitialCurrentChange = CMDBObject::GetCurrentChange();
+		$sInitialTrackInfo = CMDBObject::GetTrackInfo();
+
+		// reset current change
+		CMDBObject::SetCurrentChange(null);
+
+		$this->CreateSimpleObject();
+		self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+			'TrackInfo : no impersonation');
+
+		\UserRights::Impersonate($sImpersonatedLogin);
+		$this->CreateSimpleObject();
+		self::assertEquals("AdminSurName AdminName on behalf of ImpersonatedSurName ImpersonatedName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+			'TrackInfo : impersonation');
+
+		\UserRights::Deimpersonate();
+		$this->CreateSimpleObject();
+		self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+			'TrackInfo : no impersonation after deimpersonate');
+
+		// restore initial conditions
+		CMDBObject::SetCurrentChange($oInitialCurrentChange);
+		CMDBObject::SetTrackInfo($sInitialTrackInfo);
+	}
+
+	private function CreateSimpleObject(){
+		/** @var \DocumentWeb $oTestObject */
+		$oTestObject = MetaModel::NewObject('DocumentWeb');
+		$oTestObject->Set('name', 'PHPUnit test');
+		$oTestObject->Set('org_id', $this->getTestOrgId() );
+		$oTestObject->Set('url', 'https://www.combodo.com');
+		$oTestObject->DBWrite();
+	}
+
+	private function CreateUserForImpersonation($sLogin, $sProfileName, $sName, $sSurname){
+		/** @var \Person $oPerson */
+		$oPerson = $this->createObject('Person', array(
+			'name' => $sName,
+			'first_name' => $sSurname,
+			'org_id' => $this->getTestOrgId(),
+		));
+
+		$oProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => $sProfileName), true);
+		$this->CreateUser($sLogin, $oProfile->GetKey(), "1234567Azert@", $oPerson->GetKey());
 	}
 }
