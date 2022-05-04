@@ -30,7 +30,9 @@ namespace Combodo\iTop\Test\UnitTest\Core;
 use CMDBSource;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use CoreOqlMultipleResultsForbiddenException;
+use DBObjectSearch;
 use DBSearch;
+use DBUnionSearch;
 use Exception;
 use Expression;
 use FunctionExpression;
@@ -734,5 +736,57 @@ class DBSearchTest extends ItopDataTestCase
 		$oSearch = \DBObjectSearch::FromOQL($sQuery);
 		$oSearch->MakeSelectQuery();
 		self::assertTrue(true);
+	}
+
+	/**
+	 * N°4992 in a Union search, when using same param name in distinct DBSearch composing the union, make sure the params are renamed and distinct
+	 *
+	 * @return void
+	 */
+	public function testUnionParams()
+	{
+		$sSearchAParamValue = 'R-000001';
+		$sSearchBParamValue = 'R-000002';
+
+		$oSearchA = new DBObjectSearch('UserRequest');
+		$oSearchA->AddCondition('ref', $sSearchAParamValue, '=');
+		$oSearchB = new DBObjectSearch('UserRequest');
+		$oSearchB->AddCondition('ref', $sSearchBParamValue, '=');
+		$oUnionSearch = new DBUnionSearch([$oSearchA, $oSearchB]);
+
+		/** @var DBObjectSearch[] $aSearches */
+		$aSearches = $oUnionSearch->GetSearches();
+		$this->assertCount(2, $aSearches);
+
+		$aSearchAParams = $aSearches[0]->GetInternalParams();
+		$this->assertCount(1, $aSearchAParams);
+		$this->assertSame($sSearchAParamValue, array_values($aSearchAParams)[0]);
+
+		$aSearchBParams = $aSearches[1]->GetInternalParams();
+		$this->assertCount(1, $aSearchBParams);
+		$this->assertSame($sSearchBParamValue, array_values($aSearchBParams)[0]);
+
+		$sUnionSqlActualValue = $oUnionSearch->MakeSelectQuery([], [], null, null, 0, 0, true);
+		$sUnionSqlExpectedValue = <<<SQL
+SELECT COUNT(*) AS COUNT FROM (SELECT
+ 1 
+ FROM (
+SELECT
+ DISTINCT `UserRequest_Ticket`.`id` AS `UserRequestid`
+ FROM 
+   `ticket` AS `UserRequest_Ticket`
+ WHERE ((`UserRequest_Ticket`.`ref` = 'R-000001') AND COALESCE((`UserRequest_Ticket`.`finalclass` IN ('UserRequest')), 1))
+   
+ UNION
+ SELECT
+ DISTINCT `UserRequest_Ticket`.`id` AS `UserRequestid`
+ FROM 
+   `ticket` AS `UserRequest_Ticket`
+ WHERE ((`UserRequest_Ticket`.`ref` = 'R-000002') AND COALESCE((`UserRequest_Ticket`.`finalclass` IN ('UserRequest')), 1))
+   
+) as __selects__
+) AS _union_alderaan_
+SQL;
+		$this->assertSame($sUnionSqlExpectedValue, $sUnionSqlActualValue, 'Generated query doesn\'t match expected value');
 	}
 }

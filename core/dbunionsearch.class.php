@@ -37,18 +37,20 @@
  
 class DBUnionSearch extends DBSearch
 {
-	protected $aSearches; // source queries
-	protected $aSelectedClasses; // alias => classes (lowest common ancestors) computed at construction
+	/** @var \DBObjectSearch[] $aSearches source queries */
+	protected $aSearches;
+	/** @var array $aSelectedClasses alias as key, classes (lowest common ancestors) computed at construction as value */
+	protected $aSelectedClasses;
 
-    /**
-     * DBUnionSearch constructor.
-     *
-     * @api
-     *
-     * @param $aSearches
-     *
-     * @throws CoreException
-     */
+	/**
+	 * DBUnionSearch constructor.
+	 *
+	 * @api
+	 *
+	 * @param $aSearches
+	 *
+	 * @throws CoreException
+	 */
 	public function __construct($aSearches)
 	{
 		if (count ($aSearches) == 0)
@@ -79,7 +81,8 @@ class DBUnionSearch extends DBSearch
 	 *
 	 * @return \DBObjectSearch
 	 */
-	protected function RenameSearchParams($oSearch, $sParamSuffix) {
+	protected function RenameSearchParams($oSearch, $sParamSuffix)
+	{
 		/** @var \Expression $oExpression */
 		$oExpression = $oSearch->GetCriteria();
 		$aRenamedInternalParams = [];
