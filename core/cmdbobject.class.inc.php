@@ -214,6 +214,7 @@ abstract class CMDBObject extends DBObject
 		if (is_null(self::$m_sInfo)) {
 			return CMDBChange::GetCurrentUserName();
 		} else {
+			//N°5135 - add impersonation information in activity log/current cmdb change
 			if (UserRights::IsImpersonated()){
 				return sprintf("%s (%s)", CMDBChange::GetCurrentUserName(), self::$m_sInfo);
 			} else {
@@ -231,7 +232,10 @@ abstract class CMDBObject extends DBObject
 	 */
 	protected static function GetTrackUserId()
 	{
-		if (is_null(self::$m_sUserId))
+		if (is_null(self::$m_sUserId)
+			//N°5135 - indicate impersonation inside changelogs
+			&& (false === UserRights::IsImpersonated())
+		)
 		{
 			return CMDBChange::GetCurrentUserId();
 		}

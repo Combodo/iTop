@@ -1685,7 +1685,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						if ($sObjClass == $this->GetLinkedClass())
 						{
-							// Simplify the output if the exact class could be determined implicitely 
+							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
@@ -2007,7 +2007,7 @@ class AttributeLinkedSet extends AttributeDefinition
 					{
 						if ($sObjClass == $this->GetLinkedClass())
 						{
-							// Simplify the output if the exact class could be determined implicitely 
+							// Simplify the output if the exact class could be determined implicitely
 							continue;
 						}
 					}
@@ -2412,7 +2412,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 		return false;
 	}
 
-	// 
+	//
 	protected function ScalarToSQL($value)
 	{
 		return $value;
@@ -4587,7 +4587,12 @@ class AttributeCaseLog extends AttributeLongText
 			{
 				if (strlen($proposedValue) > 0)
 				{
-					$oCaseLog->AddLogEntry($proposedValue);
+					//N°5135 - add impersonation information in caselog
+					if (UserRights::IsImpersonated()){
+						$oCaseLog->AddLogEntry($proposedValue, '', UserRights::GetConnectedUserId());
+					} else {
+						$oCaseLog->AddLogEntry($proposedValue);
+					}
 				}
 			}
 			$ret = $oCaseLog;
@@ -5394,7 +5399,7 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue))
 		{
-			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
 			$sLabel = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue,
 				Dict::S('Enum:Undefined'));
 		}
@@ -5416,7 +5421,7 @@ class AttributeEnum extends AttributeString
 	{
 		if (is_null($sValue))
 		{
-			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label		
+			// Unless a specific label is defined for the null value of this enum, use a generic "undefined" label
 			$sDescription = Dict::S('Class:'.$this->GetHostClass().'/Attribute:'.$this->GetCode().'/Value:'.$sValue.'+',
 				Dict::S('Enum:Undefined'));
 		}
@@ -7213,7 +7218,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	protected function GetSQLCol($bFullSpec = false)
 	{
-		// throw new CoreException("external attribute: does it make any sense to request its type ?");  
+		// throw new CoreException("external attribute: does it make any sense to request its type ?");
 		$oExtAttDef = $this->GetExtAttDef();
 
 		return $oExtAttDef->GetSQLCol($bFullSpec);
@@ -9262,7 +9267,7 @@ class AttributeSubItem extends AttributeDefinition
 		return $res;
 	}
 
-	// 
+	//
 //	protected function ScalarToSQL($value) {return $value;} // format value as a valuable SQL literal (quoted outside)
 
 	public function FromSQLToValue($aCols, $sPrefix = '')

@@ -107,7 +107,7 @@ class CMDBObjectTest extends ItopDataTestCase
 		$sAdminLogin = "admin-user-".$sUid;
 		$sImpersonatedLogin = "impersonated-user-".$sUid;
 
-		$this->CreateUserForImpersonation($sAdminLogin, 'Administrator', 'AdminName', 'AdminSurName');
+		$iAdminUserId = $this->CreateUserForImpersonation($sAdminLogin, 'Administrator', 'AdminName', 'AdminSurName');
 		$this->CreateUserForImpersonation($sImpersonatedLogin, 'Configuration Manager', 'ImpersonatedName', 'ImpersonatedSurName');
 
 		$_SESSION = [];
@@ -134,6 +134,8 @@ class CMDBObjectTest extends ItopDataTestCase
 			self::assertEquals($sTrackInfo, CMDBObject::GetCurrentChange()->Get('userinfo'),
 			'TrackInfo : no impersonation');
 		}
+		self::assertEquals($iAdminUserId, CMDBObject::GetCurrentChange()->Get('user_id'),
+			'TrackInfo : admin userid');
 
 		\UserRights::Impersonate($sImpersonatedLogin);
 		$this->CreateSimpleObject();
@@ -146,6 +148,9 @@ class CMDBObjectTest extends ItopDataTestCase
 				'TrackInfo : impersonation');
 		}
 
+		self::assertEquals(null, CMDBObject::GetCurrentChange()->Get('user_id'),
+			'TrackInfo : no userid to force userinfo being displayed on UI caselog side');
+
 		\UserRights::Deimpersonate();
 		$this->CreateSimpleObject();
 		if (is_null($sTrackInfo)){
@@ -155,6 +160,8 @@ class CMDBObjectTest extends ItopDataTestCase
 			self::assertEquals($sTrackInfo, CMDBObject::GetCurrentChange()->Get('userinfo'),
 				'TrackInfo : no impersonation');
 		}
+		self::assertEquals($iAdminUserId, CMDBObject::GetCurrentChange()->Get('user_id'),
+			'TrackInfo : admin userid');
 
 		// restore initial conditions
 		CMDBObject::SetCurrentChange($oInitialCurrentChange);
@@ -170,7 +177,7 @@ class CMDBObjectTest extends ItopDataTestCase
 		$oTestObject->DBWrite();
 	}
 
-	private function CreateUserForImpersonation($sLogin, $sProfileName, $sName, $sSurname){
+	private function CreateUserForImpersonation($sLogin, $sProfileName, $sName, $sSurname): int {
 		/** @var \Person $oPerson */
 		$oPerson = $this->createObject('Person', array(
 			'name' => $sName,
@@ -179,6 +186,8 @@ class CMDBObjectTest extends ItopDataTestCase
 		));
 
 		$oProfile = \MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => $sProfileName), true);
-		$this->CreateUser($sLogin, $oProfile->GetKey(), "1234567Azert@", $oPerson->GetKey());
+		$oUser = $this->CreateUser($sLogin, $oProfile->GetKey(), "1234567Azert@", $oPerson->GetKey());
+
+		return $oUser->GetKey();
 	}
 }
