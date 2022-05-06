@@ -2279,12 +2279,10 @@ abstract class DBObject implements iDisplay
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
 					// Note: $aReasonInfo['name'] could be reported (the task owning the attribute)
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-					$sAttLabel = $oAttDef->GetLabel();
 					if (!empty($aReasons))
 					{
-						// Todo: associate the attribute code with the error
-						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel);
+						$sAttLabel = $this->GetLabel($sAttCode);
+						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel, $sAttCode);
 					}
 				}
 			}
