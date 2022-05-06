@@ -1056,7 +1056,7 @@ class UserRights
 
 				//N°5135 - Impersonate: history of changes versus log entries
 				//track impersonation inside changelogs
-				CMDBObject::SetCurrentChangeFromParams(null);
+				CMDBObject::CreateChange();
 			}
 		}
 		return $bRet;
@@ -1077,7 +1077,7 @@ class UserRights
 
 			//N°5135 - Impersonate: history of changes versus log entries
 			//stop tracking impersonation inside changelogs
-			CMDBObject::SetCurrentChangeFromParams(null);
+			CMDBObject::CreateChange();
 		}
 	}
 

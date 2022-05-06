@@ -84,12 +84,23 @@ class CMDBObjectTest extends ItopDataTestCase
 		CMDBObject::SetTrackInfo($sInitialTrackInfo);
 	}
 
+	public function CurrentChangeUnderImpersonationProvider(){
+		return [
+			'no track info' => [ 'sTrackInfo' => null ],
+			'track info from approvalbase' => [
+				'sTrackInfo' => 'ImpersonatedSurName ImpersonatedName Approved on behalf of YYY',
+				'sExpectedChangeLogWhenImpersonation' => "AdminSurName AdminName on behalf of ImpersonatedSurName ImpersonatedName (ImpersonatedSurName ImpersonatedName Approved on behalf of YYY)",
+			],
+		];
+	}
+
 	/**
 	 * @covers CMDBObject::SetCurrentChange
-	 *
 	 * @since 3.0.1 N°5135 - Impersonate: history of changes versus log entries
+	 *
+	 * @dataProvider CurrentChangeUnderImpersonationProvider
 	 */
-	public function testCurrentChangeUnderImpersonation() {
+	public function testCurrentChangeUnderImpersonation($sTrackInfo=null, $sExpectedChangeLogWhenImpersonation=null) {
 		$this->CreateTestOrganization();
 
 		$sUid = date('dmYHis');
@@ -109,19 +120,41 @@ class CMDBObjectTest extends ItopDataTestCase
 		// reset current change
 		CMDBObject::SetCurrentChange(null);
 
+		if (is_null($sTrackInfo)){
+			CMDBObject::SetTrackInfo(null);
+		} else {
+			CMDBObject::SetTrackInfo($sTrackInfo);
+		}
+
 		$this->CreateSimpleObject();
-		self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+		if (is_null($sTrackInfo)){
+			self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
 			'TrackInfo : no impersonation');
+		} else {
+			self::assertEquals($sTrackInfo, CMDBObject::GetCurrentChange()->Get('userinfo'),
+			'TrackInfo : no impersonation');
+		}
 
 		\UserRights::Impersonate($sImpersonatedLogin);
 		$this->CreateSimpleObject();
-		self::assertEquals("AdminSurName AdminName on behalf of ImpersonatedSurName ImpersonatedName", CMDBObject::GetCurrentChange()->Get('userinfo'),
-			'TrackInfo : impersonation');
+
+		if (is_null($sExpectedChangeLogWhenImpersonation)){
+			self::assertEquals("AdminSurName AdminName on behalf of ImpersonatedSurName ImpersonatedName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+				'TrackInfo : impersonation');
+		} else {
+			self::assertEquals($sExpectedChangeLogWhenImpersonation, CMDBObject::GetCurrentChange()->Get('userinfo'),
+				'TrackInfo : impersonation');
+		}
 
 		\UserRights::Deimpersonate();
 		$this->CreateSimpleObject();
-		self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
-			'TrackInfo : no impersonation after deimpersonate');
+		if (is_null($sTrackInfo)){
+			self::assertEquals("AdminSurName AdminName", CMDBObject::GetCurrentChange()->Get('userinfo'),
+				'TrackInfo : no impersonation');
+		} else {
+			self::assertEquals($sTrackInfo, CMDBObject::GetCurrentChange()->Get('userinfo'),
+				'TrackInfo : no impersonation');
+		}
 
 		// restore initial conditions
 		CMDBObject::SetCurrentChange($oInitialCurrentChange);
