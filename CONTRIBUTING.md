@@ -138,9 +138,6 @@ When your code is working, please:
 
 Detailed procedure to work on fork and create PR is available [in GitHub help pages](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
 
-You might check the ["Allow edits from maintainers" PR checkbox][allow_edits_checkbox] to ease review.
-
-[allow_edits_checkbox]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork#enabling-repository-maintainer-permissions-on-existing-pull-requests
 
 ### 🙏 We are thankful
 
