@@ -65,7 +65,7 @@ In this example, when 3.1.0-beta is shipped that will become:
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
 
-And when 3.0.0 final will be out:
+And when 3.1.0 final will be out:
 
 - `develop`: future 3.2.0 version
 - `support/3.1`: 3.1.x maintenance version (will host developments for 3.1.1)
