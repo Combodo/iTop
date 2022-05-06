@@ -1056,6 +1056,7 @@ class UserRights
 
 				//N°5135 - Impersonate: history of changes versus log entries
 				//track impersonation inside changelogs
+				CMDBObject::SetTrackUserId(null);
 				CMDBObject::CreateChange();
 			}
 		}
@@ -1070,6 +1071,7 @@ class UserRights
 		if (!is_null(self::$m_oRealUser))
 		{
 			self::$m_oUser = self::$m_oRealUser;
+			//N°5135 - fix IsImpersonated() after calling Deimpersonate()
 			self::$m_oRealUser = null;
 			Dict::SetUserLanguage(self::GetUserLanguage());
 			Session::Unset('impersonate_user');
