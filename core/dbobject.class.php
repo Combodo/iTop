@@ -2265,7 +2265,7 @@ abstract class DBObject implements iDisplay
 		if ($res !== true)
 		{
 			// $res contains the error description
-			$this->m_aCheckIssues[] = "Consistency rules not followed: $res";
+			$this->m_aCheckIssues[] = Dict::Format('Core:CheckConsistencyError', $res);
 		}
 
 		// Synchronization: are we attempting to modify an attribute for which an external source is master?
