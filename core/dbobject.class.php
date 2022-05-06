@@ -2249,8 +2249,9 @@ abstract class DBObject implements iDisplay
 		foreach($aChanges as $sAttCode => $value) {
 			$res = $this->CheckValue($sAttCode);
 			if ($res !== true) {
+				$sAttLabel = $this->GetLabel($sAttCode);
 				// $res contains the error description
-				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
+				$this->m_aCheckIssues[] = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
 			}
 
 			$this->DoCheckLinkedSetDuplicates($sAttCode, $value);
