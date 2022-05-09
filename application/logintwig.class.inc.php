@@ -8,7 +8,7 @@
 
 
 use Combodo\iTop\Application\Branding;
-use Combodo\iTop\TwigExtension;
+use Combodo\iTop\Application\TwigBase\Twig\Extension;
 
 /**
  * Twig context for modules extending the login screen
@@ -234,7 +234,7 @@ class LoginTwigRenderer
 
 		$oLoader = new Twig_Loader_Chain($aTwigLoaders);
 		$this->oTwig = new Twig_Environment($oLoader);
-		TwigExtension::RegisterTwigExtensions($this->oTwig);
+		Extension::RegisterTwigExtensions($this->oTwig);
 	}
 
 	public function GetDefaultVars()
