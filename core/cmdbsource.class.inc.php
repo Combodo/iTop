@@ -705,7 +705,11 @@ class CMDBSource
 	private static function Commit()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if (isset($aStackTrace[2])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].')';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
@@ -739,7 +743,11 @@ class CMDBSource
 	private static function Rollback()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if (isset($aStackTrace[2])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].')';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
