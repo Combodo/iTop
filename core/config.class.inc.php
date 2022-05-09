@@ -1008,8 +1008,8 @@ class Config
 			'type' => 'integer',
 			'description' => 'Maximum length of the history table (in the "History" tab on each object) before it gets truncated. Latest modifications are displayed first.',
 			// examples... not used
-			'default' => 50,
-			'value' => 50,
+			'default' => 200,
+			'value' => 200,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
