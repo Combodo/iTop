@@ -131,7 +131,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerenciamento de Problemas',
-	'Menu:ProblemManagement+' => '',
+	'Menu:ProblemManagement+' => 'Lista de Gerenciamento de Problemas',
 	'Menu:Problem:Shortcuts' => 'Atalhos',
 	'Menu:NewError' => 'Novo erro conhecido',
 	'Menu:NewError+' => '',

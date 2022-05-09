@@ -295,7 +295,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Class:lnkPersonToTeam/Attribute:person_name' => 'Nome da pessoa',
 	'Class:lnkPersonToTeam/Attribute:person_name+' => '',
 	'Class:lnkPersonToTeam/Attribute:role_id' => 'Função',
-	'Class:lnkPersonToTeam/Attribute:role_id+' => '',
+	'Class:lnkPersonToTeam/Attribute:role_id+' => 'Define a função da Pessoa na Equipe (Líder de Equipe, Gerente...).',
 	'Class:lnkPersonToTeam/Attribute:role_name' => 'Nome da função',
 	'Class:lnkPersonToTeam/Attribute:role_name+' => '',
 ));

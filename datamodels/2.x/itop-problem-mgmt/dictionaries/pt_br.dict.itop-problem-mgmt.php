@@ -45,7 +45,7 @@
 // Class:<class_name>/Stimulus:<stimulus_code>+
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Menu:ProblemManagement' => 'Gerenciamento de Problemas',
-	'Menu:ProblemManagement+' => '',
+	'Menu:ProblemManagement+' => 'Lista de Gerenciamento de Problemas',
 	'Menu:Problem:Overview' => 'Visão geral',
 	'Menu:Problem:Overview+' => '',
 	'Menu:NewProblem' => 'Novo problema',
