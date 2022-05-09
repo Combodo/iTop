@@ -5209,45 +5209,34 @@ abstract class DBObject implements iDisplay
 		if ($sSourceAttCode == 'id')
 		{
 			$oSourceAttDef = null;
-		}
-		else
-		{
-			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode))
-			{
+		} else {
+			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode)) {
 				throw new Exception("Unknown attribute ".get_class($this)."::".$sDestAttCode);
 			}
-			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode))
-			{
+			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode)) {
 				throw new Exception("Unknown attribute ".get_class($oSourceObject)."::".$sSourceAttCode);
 			}
 
 			$oSourceAttDef = MetaModel::GetAttributeDef(get_class($oSourceObject), $sSourceAttCode);
 		}
-		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet())
-		{
+		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet()) {
 			// The copy requires that we create a new object set (the semantic of DBObject::Set is unclear about link sets)
 			/** @var \AttributeLinkedSet $oSourceAttDef */
-			$oDestSet = DBObjectSet::FromScratch($oSourceAttDef->GetLinkedClass());
+			$oDestSet = $this->Get($sDestAttCode);
 			$oSourceSet = $oSourceObject->Get($sSourceAttCode);
 			$oSourceSet->Rewind();
 			/** @var \DBObject $oSourceLink */
-			while ($oSourceLink = $oSourceSet->Fetch())
-			{
+			while ($oSourceLink = $oSourceSet->Fetch()) {
 				// Clone the link
 				$sLinkClass = get_class($oSourceLink);
 				$oLinkClone = MetaModel::NewObject($sLinkClass);
-				foreach(MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef)
-				{
+				foreach (MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef) {
 					// As of now, ignore other attribute (do not attempt to recurse!)
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-					{
+					if ($oAttDef->IsScalar() && $oAttDef->IsWritable()) {
 						$oLinkClone->Set($sAttCode, $oSourceLink->Get($sAttCode));
 					}
 				}
-
-				// Not necessary - this will be handled by DBObject
-				// $oLinkClone->Set($oSourceAttDef->GetExtKeyToMe(), 0);
-				$oDestSet->AddObject($oLinkClone);
+				$oDestSet->AddItem($oLinkClone);
 			}
 			$this->Set($sDestAttCode, $oDestSet);
 		}

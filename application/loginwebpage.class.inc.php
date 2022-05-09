@@ -131,10 +131,6 @@ class LoginWebPage extends NiceWebPage
 		//add profiles not already linked with user
 		foreach ($aProfiles as $iProfileId)
 		{
-			$oLink = new URP_UserProfile();
-			$oLink->Set('profileid', $iProfileId);
-			$oLink->Set('reason', $sOrigin);
-
 			$oProfilesSet->AddItem(MetaModel::NewObject('URP_UserProfile', array('profileid' => $iProfileId, 'reason' => $sOrigin)));
 		}
 		$oUser->Set('profile_list', $oProfilesSet);

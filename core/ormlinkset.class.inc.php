@@ -153,8 +153,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
      */
 	public function AddObject(DBObject $oObject, $sClassAlias = '')
     {
-	    // cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-	    //DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
+	    DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use \ormLinkSet::AddItem() instead');
 	    $this->AddItem($oObject);
     }
 
