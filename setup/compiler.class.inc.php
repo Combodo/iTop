@@ -2986,8 +2986,8 @@ EOF;
 	 */
 	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
 	{
-		if (($sIcon = $oBrandingNode->GetChildText($sNodeName)) && (strlen($sIcon) > 0))
-		{
+		$sIcon = trim($oBrandingNode->GetChildText($sNodeName));
+		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
 			$aIconName=explode(".", $sIcon);
 			$sIconExtension=$aIconName[count($aIconName)-1];
