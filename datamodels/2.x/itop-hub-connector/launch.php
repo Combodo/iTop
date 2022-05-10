@@ -280,7 +280,6 @@ try {
 	switch ($sTargetRoute) {
 		case 'inform_after_setup':
 			// Hidden IFRAME at the end of the setup
-			require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 			$oPage = new NiceWebPage('');
 			$aDataToPost = MakeDataToPost($sTargetRoute);
 			$oPage->add('<form id="hub_launch_form" action="'.$sHubUrlStateless.'" method="post">');

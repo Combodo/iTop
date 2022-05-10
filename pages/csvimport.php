@@ -33,7 +33,6 @@ use Combodo\iTop\Renderer\BlockRenderer;
 try {
 	require_once('../approot.inc.php');
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 
 	require_once(APPROOT.'/application/startup.inc.php');
 	require_once(APPROOT.'/application/loginwebpage.class.inc.php');

@@ -28,12 +28,12 @@ require_once (APPROOT.'application/utils.inc.php');
 require_once (APPROOT.'core/log.class.inc.php');
 IssueLog::Enable(APPROOT.'log/error.log');
 
-require_once (APPROOT.'setup/runtimeenv.class.inc.php');
-require_once (APPROOT.'setup/backup.class.inc.php');
-require_once (APPROOT.'core/mutex.class.inc.php');
-require_once (APPROOT.'core/dict.class.inc.php');
-require_once (APPROOT.'setup/xmldataloader.class.inc.php');
-require_once (__DIR__.'/hubruntimeenvironment.class.inc.php');
+require_once(APPROOT.'setup/runtimeenv.class.inc.php');
+require_once(APPROOT.'setup/backup.class.inc.php');
+require_once(APPROOT.'core/mutex.class.inc.php');
+require_once(APPROOT.'core/dict.class.inc.php');
+require_once(APPROOT.'setup/xmldataloader.class.inc.php');
+require_once(__DIR__.'/hubruntimeenvironment.class.inc.php');
 
 /**
  * Overload of DBBackup to handle logging
