@@ -172,7 +172,7 @@
                         </value>
                     </values>
                     <sql>priority</sql>
-                    <default_value>1</default_value>
+                    <default_value>4</default_value>
                     <is_null_allowed>false</is_null_allowed>
                     <display_style>list</display_style>
                     <dependencies>
@@ -485,39 +485,40 @@
                     <static>false</static>
                     <access>public</access>
                     <type>LifecycleAction</type>
-                    <code><![CDATA[        public function ComputePriority()
-        {
-                // priority[impact][urgency]
-                $aPriorities = array(
-                        // single person
-                        1 => array(
-                                        1 => 1,
-                                        2 => 1,
-                                        3 => 2,
-                                        4 => 4,
-                        ),
-                        // a group
-                        2 => array(
-                                1 => 1,
-                                2 => 2,
-                                3 => 3,
-                                4 => 4,
-                        ),
-                        // a departement!
-                        3 => array(
-                                        1 => 2,
-                                        2 => 3,
-                                        3 => 3,
-                                        4 => 4,
-                        ),
-                );
-                $iPriority = 1;
-                if (isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')]))
-                {
-                        $iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
-                }
-                return $iPriority;              
-        }]]></code>
+                    <code><![CDATA[public function ComputePriority()
+	{
+		// priority[impact][urgency]
+		$aPriorities = array(
+			// single person
+			1 => array(
+				1 => 1,
+				2 => 1,
+				3 => 2,
+				4 => 4,
+			),
+			// a group
+			2 => array(
+				1 => 1,
+				2 => 2,
+				3 => 3,
+				4 => 4,
+			),
+			// a departement!
+			3 => array(
+				1 => 2,
+				2 => 3,
+				3 => 3,
+				4 => 4,
+			),
+		);
+		$oAttDef = MetaModel::GetAttributeDef(get_class($this), 'priority');
+		$iPriority = $oAttDef->IsNullAllowed() ? null : $oAttDef->GetDefaultValue();
+
+		if (isset($aPriorities[(int)$this->Get('impact')]) && isset($aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')])) {
+			$iPriority = $aPriorities[(int)$this->Get('impact')][(int)$this->Get('urgency')];
+		}
+		return $iPriority;
+	}]]></code>
                 </method>
                 <method id="ComputeValues">
                     <static>false</static>
