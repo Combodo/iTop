@@ -30,7 +30,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error',
 	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s',
-	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\': %3$s',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s',
 
 	'Core:AttributeLinkedSet' => 'Array of objects',
 	'Core:AttributeLinkedSet+' => 'Any kind of objects of the same class or subclass',
