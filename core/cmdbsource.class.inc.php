@@ -705,11 +705,8 @@ class CMDBSource
 	private static function Commit()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		if (array_key_exists(2,$aStackTrace)) {
-			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
-		} else {
-			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].')';
-		}		if (!self::IsInsideTransaction()) {
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
 			throw new MySQLNoTransactionException('Trying to commit transaction whereas none have been started !', null);
@@ -742,11 +739,7 @@ class CMDBSource
 	private static function Rollback()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		if (array_key_exists(2,$aStackTrace)) {
-			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
-		} else {
-			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].')';
-		}
+		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
