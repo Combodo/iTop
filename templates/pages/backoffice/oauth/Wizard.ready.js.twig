@@ -1,0 +1,126 @@
+// Function used to open OAuth popup
+var oWindowObjectReference = null;
+var sPreviousUrl = null;
+var oListener = null
+
+const oOnOauthSuccess = function (event){
+    clearInterval(oListener);
+    $.post(
+            {{ sAjaxUri }},
+            {
+                operation: 'get_display_authentication_results',
+                provider: $('[name="provider"]:checked').val(),
+                client_id: $('[name="client_id"]').val(),
+                client_secret: $('[name="client_secret"]').val(),
+                scope: $(this).find('[name="scope"]').val(),
+                additional: $(this).find('[name="additional"]').val(),
+                redirect_url: event.data
+            },
+            function(oData){
+                if(oData.status == 'success')
+                {
+                    oData.data.forEach(function(item, index){
+                        new Function(item)();
+                    });
+                }
+                $('.ibo-oauth-wizard--form--submit').trigger('leave_loading_state.button.itop');
+            }
+    );
+}
+const oOpenSignInWindow = function (url, name){
+    // Remove any existing event listener
+    window.removeEventListener('message', oOnOauthSuccess);
+    if(oListener !== null){
+        clearInterval(oListener);
+    }
+
+    // Window features
+    const sWindowFeatures = 'toolbar=no, menubar=no, width=600, height=700, top=100, left=100';
+
+    if (oWindowObjectReference === null || oWindowObjectReference.closed) {
+        /* If the pointer to the window object in memory does not exist
+         or if such pointer exists but the window was closed */
+        oWindowObjectReference = window.open(url, name, sWindowFeatures);
+    } else if (sPreviousUrl !== url) {
+        /* If the resource to load is different,
+         then we load it in the already opened secondary window, and then
+         we bring such window back on top/in front of its parent window. */
+        oWindowObjectReference = window.open(url, name, sWindowFeatures);
+        oWindowObjectReference.focus();
+    } else {
+        /* Else the window reference must exist and the window
+         is not closed; therefore, we can bring it back on top of any other
+         window with the focus() method. There would be no need to re-create
+         the window or to reload the referenced resource. */
+        oWindowObjectReference.focus();
+    }
+    /* Let know every second our child window that we're waiting for it to complete,
+    once we reach our landing page, it'll send us a reply
+     */
+    oListener = window.setInterval(function(){
+        oWindowObjectReference.postMessage('anyone', {{ sReturnUri }});
+    }, 1000);
+    /* Once we receive a response, transmit it to the server to get authenticate and display
+    results
+     */
+    window.addEventListener('message', oOnOauthSuccess, false);
+    // Assign the previous URL
+    sPreviousUrl = url;
+};
+
+// Function used when the form is submitted
+
+const oOnFormSubmit = function(){
+    $('.ibo-oauth-wizard--form--submit').trigger('enter_loading_state.button.itop');
+    $.post(
+            {{ sAjaxUri }},
+            {
+                operation: 'get_authorization_url',
+                provider: $('[name="provider"]:checked').val(),
+                client_id: $(this).find('[name="client_id"]').val(),
+                client_secret: $(this).find('[name="client_secret"]').val(),
+                scope: $(this).find('[name="scope"]').val(),
+                additional: $(this).find('[name="additional"]').val()
+            },
+            function(oData){
+                if(oData.status == 'success')
+                {
+                    oOpenSignInWindow(oData.data.authorization_url, 'OAuth authorization')
+                }
+                else{
+                    $('.ibo-oauth-wizard--form--submit').trigger('leave_loading_state.button.itop');
+                }
+            }
+    );
+    return false;
+}
+
+// Function used to update provider image
+
+function oUpdateProviderImage(elem){
+
+    var oColor1 = $(elem).prev('[name="provider"]').attr('data-color1');
+    var oColor2 = $(elem).prev('[name="provider"]').attr('data-color2');
+    var oColor4 = $(elem).prev('[name="provider"]').attr('data-color3');
+    var oColor3 = $(elem).prev('[name="provider"]').attr('data-color4');
+
+    $('#fcef55fc-4968-45b2-93bb-1a1080c85fc7').attr('fill', oColor1);
+    $('#e8fa0310-b872-4adf-aedd-0c6eda09f3b8').attr('fill', oColor1);
+    $('#a4813fcf-056e-4514-bb8b-e6506f49341f').attr('fill', oColor1);
+    $('#e73810fe-4cf4-40cc-8c7c-ca544ce30bd4-108').attr('fill', oColor2);
+    $('#e12ee00d-aa4a-4413-a013-11d20b7f97f7').attr('fill', oColor2);
+    $('#b4d4939a-c6e6-4f4d-ba6c-e8b05485017d').attr('fill', oColor2);
+    $('#b06d66ec-6c84-45dd-8c27-1263a6253192-107').attr('fill', oColor3);
+    $('#f58f497e-6949-45c8-be5f-eee2aa0f6586').attr('fill', oColor3);
+    $('#aff120b1-519b-4e96-ac87-836aa55663de').attr('fill', oColor3);
+    $('#aff120b1-519b-4e96-ac87-836aa55663de').attr('fill', oColor3);
+    $('#ae7af94f-88d7-4204-9f07-e3651de85c05-111').attr('fill', oColor4);
+    $('#a6768b0e-63d0-4b31-8462-9b2e0b00f0fd-112').attr('fill', oColor4);
+}
+$('body').on('click', '.ui-checkboxradio-radio-label', function(){
+    oUpdateProviderImage(this)
+})
+oUpdateProviderImage($('[name="provider"]:checked').next());
+
+// Initialize provider buttons
+$('#select_layout').controlgroup(); 
