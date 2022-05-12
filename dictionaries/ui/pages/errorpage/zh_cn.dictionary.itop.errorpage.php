@@ -18,8 +18,8 @@
  */
 // Navigation menu
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'UI:ErrorPage:UnstableVersion' => 'You are using an unstable version that may include bugs. If you think this error occurred because of this please send us your feedback!~~',
-	'UI:ErrorPage:KittyDisclaimer' => 'No kitty were injured during the making of this GIF and release.
+	'UI:ErrorPage:UnstableVersion' => '您正在使用可能有缺陷的不稳定版。如果您认为这个错误的产生与此相关，请您与我们发聩！',
+	'UI:ErrorPage:KittyDisclaimer' => '制作此GIF和发布没有伤害任何猫咪:-)
 
-- The R&amp;D Team~~',
+- 研发团队',
 ));

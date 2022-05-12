@@ -19,12 +19,12 @@
 // Display DataTable
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Datatables:Language:Processing'        => '请稍候...',
-	'UI:Datatables:Language:LengthMenu'        => '_MENU_ 每页',
+	'UI:Datatables:Language:LengthMenu'        => '_MENU_每页',
 	'UI:Datatables:Language:ZeroRecords'       => '未找到相关结果',
-	'UI:Datatables:Language:Info'              => '_TOTAL_ 项',
+	'UI:Datatables:Language:Info'              => '_TOTAL_项',
 	'UI:Datatables:Language:InfoEmpty'         => '未找到相关信息',
 	'UI:Datatables:Language:EmptyTable'        => '表格中暂无数据',
-	'UI:Datatables:Language:Error'             => 'An error occured while running the query~~',
+	'UI:Datatables:Language:Error'             => '运行查询时出错',
 	'UI:Datatables:Language:DisplayLength:All' => '全部',
 	'UI:Datatables:Language:Sort:Ascending'    => '顺序排序',
 	'UI:Datatables:Language:Sort:Descending'   => '倒序排序',
