@@ -1,0 +1,48 @@
+{# @copyright   Copyright (C) 2010-2022 Combodo SARL #}
+{# @license     http://opensource.org/licenses/AGPL-3.0 #}
+
+<div class="ibo-oauth-wizard">
+    <h1>{{ 'UI:OAuth:Wizard:Page:Title'|dict_s }}</h1>
+
+    <div class="ibo-oauth-wizard">
+
+        <div class="ibo-oauth-wizard--form--container">
+            <div id="select_layout">
+                {% set sIsChecked = 'checked' %}
+                {% for aSelect in aProviders %}
+                    <input type="radio" name="provider" {{ sIsChecked }} value="{{ aSelect.name }}" id="layout_{{ aSelect.name }}" data-color1="{{ aSelect.colors.0 }}" data-color2="{{ aSelect.colors.1 }}" data-color3="{{ aSelect.colors.2 }}" data-color4="{{ aSelect.colors.3 }}">
+                    <label for="layout_{{ aSelect.name }}">
+                        <img src="{{ aSelect.icon }}" alt="{{ aSelect.name }}" class="ibo-dashboard--properties--icon" data-role="ibo-dashboard--properties--icon"/>
+                    </label>
+
+                    {% set sIsChecked = '' %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <fieldset>
+            <legend>{{ 'UI:OAuth:Wizard:Form:Panel:Title'|dict_s }}</legend>
+            <form class="ibo-oauth-wizard--form">
+                <input type="hidden" name="url" value="">
+                {% for sName, aInput in aInputs %}
+                    <div class="details">
+                        <div class="field_container field_small">
+                            <div class="field_label label"><label for="wizard_input_{{ sName }}">{{ aInput.label }}</label></div>
+                            <div class="field_data">
+                                <input
+                                        type="{{ aInput.type }}"
+                                        id="wizard_input_{{ sName }}"
+                                        name="{{ sName }}"
+                                        {% if aInput.real_only %} readonly {% endif %}
+                                        value="{{ aInput.value }}"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </form>
+        </fieldset>
+    </div>
+
+
+</div>
