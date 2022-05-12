@@ -85,9 +85,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:KnownError/Attribute:version' => '版本',
 	'Class:KnownError/Attribute:version+' => '',
 	'Class:KnownError/Attribute:ci_list' => '配置项',
-	'Class:KnownError/Attribute:ci_list+' => '该已知错误相关的所有配置项',
+	'Class:KnownError/Attribute:ci_list+' => '此已知错误相关的所有配置项',
 	'Class:KnownError/Attribute:document_list' => '文档',
-	'Class:KnownError/Attribute:document_list+' => '该已知错误相关的所有文档',
+	'Class:KnownError/Attribute:document_list+' => '此已知错误相关的所有文档',
 ));
 
 //
@@ -95,15 +95,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkErrorToFunctionalCI' => '关联 已知问题/功能配置项',
-	'Class:lnkErrorToFunctionalCI+' => '已知问题和功能配置项之间的关联',
+	'Class:lnkErrorToFunctionalCI' => '关联错误/功能配置项',
+	'Class:lnkErrorToFunctionalCI+' => '错误和功能配置项之间的关联',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => '配置项',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => '配置项名称',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => '已知问题',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => '错误',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '已知问题名称',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '错误名称',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '原因',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
@@ -114,15 +114,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToError' => '关联 文档/已知问题',
-	'Class:lnkDocumentToError+' => '文档和已知问题之间的关联',
+	'Class:lnkDocumentToError' => '关联文档/错误',
+	'Class:lnkDocumentToError+' => '文档和错误之间的关联',
 	'Class:lnkDocumentToError/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => '文档名称',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '',
-	'Class:lnkDocumentToError/Attribute:error_id' => '已知问题',
+	'Class:lnkDocumentToError/Attribute:error_id' => '错误',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '',
-	'Class:lnkDocumentToError/Attribute:error_name' => '已知问题名称',
+	'Class:lnkDocumentToError/Attribute:error_name' => '错误名称',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => '关联类型',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',
@@ -132,10 +132,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProblemManagement' => '问题管理',
 	'Menu:ProblemManagement+' => '问题管理',
 	'Menu:Problem:Shortcuts' => '快捷方式',
-	'Menu:NewError' => '新建已知问题',
-	'Menu:NewError+' => '新建已知问题',
-	'Menu:SearchError' => '搜索已知问题',
-	'Menu:SearchError+' => '搜索已知问题',
+	'Menu:NewError' => '新建已知错误',
+	'Menu:NewError+' => '新建已知错误',
+	'Menu:SearchError' => '搜索已知错误',
+	'Menu:SearchError+' => '搜索已知错误',
 	'Menu:Problem:KnownErrors' => '所有已知错误',
 	'Menu:Problem:KnownErrors+' => '所有已知错误',
 ));

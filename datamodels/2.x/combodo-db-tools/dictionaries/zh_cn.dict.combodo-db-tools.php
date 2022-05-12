@@ -23,23 +23,23 @@
 // Database inconsistencies
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	// Dictionary entries go here
-	'Menu:DBToolsMenu' => 'DB 工具',
-	'DBTools:Class' => 'Class~~',
+	'Menu:DBToolsMenu' => '数据库工具',
+	'DBTools:Class' => '类',
 	'DBTools:Title' => '数据库维护工具',
 	'DBTools:ErrorsFound' => '发现错误',
-	'DBTools:Indication' => 'Important: after fixing errors in the database you\'ll have to run the analysis again as new inconsistencies will be generated~~',
-	'DBTools:Disclaimer' => 'DISCLAIMER: BACKUP YOUR DATABASE BEFORE RUNNING THE FIXES~~',
+	'DBTools:Indication' => '重要：修复数据库错误后，可能会出现新的不一致，您必须重新运行一次分析。',
+	'DBTools:Disclaimer' => '免责申明：应用修复前备份数据库',
 	'DBTools:Error' => '错误',
 	'DBTools:Count' => '个数',
-	'DBTools:SQLquery' => 'SQL 查询',
-	'DBTools:FixitSQLquery' => 'SQL query To Fix it (indication)~~',
-	'DBTools:SQLresult' => 'SQL 结果',
-	'DBTools:NoError' => '数据库OK ',
+	'DBTools:SQLquery' => 'SQL查询',
+	'DBTools:FixitSQLquery' => 'SQL查询以修正其（指示）',
+	'DBTools:SQLresult' => 'SQL结果',
+	'DBTools:NoError' => '数据库正确',
 	'DBTools:HideIds' => '错误列表',
 	'DBTools:ShowIds' => '详细视图',
 	'DBTools:ShowReport' => '报告',
 	'DBTools:IntegrityCheck' => '完整性检查',
-	'DBTools:FetchCheck' => 'Fetch Check (long)~~',
+	'DBTools:FetchCheck' => '提取检查（长）',
 	'DBTools:SelectAnalysisType' => '请选择分析类型',
 
 	'DBTools:Analyze' => '分析',
@@ -47,17 +47,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:ShowAll' => '显示所有错误',
 
 	'DBTools:Inconsistencies' => '数据库不一致',
-	'DBTools:DetailedErrorTitle' => '%2$s error(s) in class %1$s: %3$s~~',
+	'DBTools:DetailedErrorTitle' => '%2$s个错误在类%1$s：%3$s',
 
-	'DBAnalyzer-Integrity-OrphanRecord' => 'Orphan record in `%1$s`, it should have its counterpart in table `%2$s`~~',
-	'DBAnalyzer-Integrity-InvalidExtKey' => '无效的外键 %1$s (列: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-MissingExtKey' => '外键丢失 %1$s (列: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-InvalidValue' => '无效的值 %1$s (列: `%2$s.%3$s`)',
-	'DBAnalyzer-Integrity-UsersWithoutProfile' => 'Some user accounts have no profile at all~~',
-	'DBAnalyzer-Integrity-HKInvalid' => 'Broken hierarchical key `%1$s`~~',
-	'DBAnalyzer-Fetch-Count-Error' => 'Fetch count error in `%1$s`, %2$d entries fetched / %3$d counted~~',
-	'DBAnalyzer-Integrity-FinalClass' => 'Field `%2$s`.`%1$s` must have the same value than `%3$s`.`%1$s`~~',
-	'DBAnalyzer-Integrity-RootFinalClass' => 'Field `%2$s`.`%1$s` must contains a valid class~~',
+	'DBAnalyzer-Integrity-OrphanRecord' => '孤立记录位于`%1$s`，其应该在表`%2$s`中有对应物',
+	'DBAnalyzer-Integrity-InvalidExtKey' => '无效的外键%1$s（列：`%2$s.%3$s`）',
+	'DBAnalyzer-Integrity-MissingExtKey' => '外键丢失%1$s（列：`%2$s.%3$s`）',
+	'DBAnalyzer-Integrity-InvalidValue' => '无效的值%1$s（列：`%2$s.%3$s`）',
+	'DBAnalyzer-Integrity-UsersWithoutProfile' => '一些用户账号没有角色',
+	'DBAnalyzer-Integrity-HKInvalid' => '缺失的层级键`%1$s`',
+	'DBAnalyzer-Fetch-Count-Error' => '提取计数错误位于`%1$s`， %2$d条目已提取，/%3$d已计数',
+	'DBAnalyzer-Integrity-FinalClass' => '字段`%2$s`.`%1$s`必须有相同值而不非`%3$s`.`%1$s`',
+	'DBAnalyzer-Integrity-RootFinalClass' => '字段`%2$s`.`%1$s`必须包含有效的类',
 ));
 
 // Database Info
@@ -70,25 +70,25 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:LostAttachments' => '缺失附件',
-	'DBTools:LostAttachments:Disclaimer' => 'Here you can search your database for lost or misplaced attachments. This is NOT a data recovery tool, is does not retrieve deleted data.~~',
+	'DBTools:LostAttachments:Disclaimer' => '您可以在此搜索数据库中丢失或错放的附件。这不是数据恢复同居，其无法恢复已删除的数据。',
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',
-	'DBTools:LostAttachments:Button:Restore:Confirm' => '该操作无法回退, 请确认是否继续还原.',
+	'DBTools:LostAttachments:Button:Restore:Confirm' => '该操作无法回退，请确认是否继续还原。',
 	'DBTools:LostAttachments:Button:Busy' => '请稍后...',
 
-	'DBTools:LostAttachments:Step:Analyze' => '首先, 通过分析数据库来搜索丢失或误挪动的附件.',
+	'DBTools:LostAttachments:Step:Analyze' => '首先，通过分析数据库来搜索丢失或误挪动的附件。',
 
-	'DBTools:LostAttachments:Step:AnalyzeResults' => '分析结果:',
-	'DBTools:LostAttachments:Step:AnalyzeResults:None' => '非常好! 所有附件都是正常的.',
-	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => '某些附件 (%1$d) 看起来放错了位置. 请检查下面的列表并选择要挪动的文件.',
+	'DBTools:LostAttachments:Step:AnalyzeResults' => '分析结果：',
+	'DBTools:LostAttachments:Step:AnalyzeResults:None' => '非常好！所有附件都是正常的。',
+	'DBTools:LostAttachments:Step:AnalyzeResults:Some' => '某些附件（%1$d）看起来放错了位置。请检查下面的列表并选择要挪动的文件。',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:Filename' => '文件名',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:CurrentLocation' => '当前位置',
 	'DBTools:LostAttachments:Step:AnalyzeResults:Item:TargetLocation' => '移动到...',
 
-	'DBTools:LostAttachments:Step:RestoreResults' => '还原结果:',
-	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d 的附件被还原.',
+	'DBTools:LostAttachments:Step:RestoreResults' => '还原结果：',
+	'DBTools:LostAttachments:Step:RestoreResults:Results' => '%1$d/%2$d的附件被还原。',
 
-	'DBTools:LostAttachments:StoredAsInlineImage' => 'Stored as inline image~~',
-	'DBTools:LostAttachments:History' => '附件 "%1$s" restored with DB 工具~~'
+	'DBTools:LostAttachments:StoredAsInlineImage' => '存储为内嵌图像',
+	'DBTools:LostAttachments:History' => '附件“%1$s”已使用数据库工具恢复'
 ));

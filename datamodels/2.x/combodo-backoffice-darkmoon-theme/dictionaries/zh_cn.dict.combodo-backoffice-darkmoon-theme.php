@@ -22,5 +22,5 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'theme:darkmoon' => 'Dark moon~~',
+	'theme:darkmoon' => '暗月',
 ));

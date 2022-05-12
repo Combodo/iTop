@@ -7,5 +7,5 @@
  */
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'theme:light-grey' => 'Light Grey (deprecated)~~',
+	'theme:light-grey' => '浅灰（已过时）',
 ));
