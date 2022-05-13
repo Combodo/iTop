@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "16a1d6529177e5ab83a163236d9602ea",
+    "content-hash": "070937bbd448424d38382295e72909d6",
     "packages": [
         {
             "name": "combodo/tcpdf",
