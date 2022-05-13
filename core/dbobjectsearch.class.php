@@ -430,17 +430,13 @@ class DBObjectSearch extends DBSearch
 	 */
 	public function AddCondition($sFilterCode, $value, $sOpCode = null, $bParseSearchString = false)
 	{
-		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetClassFilterDefs($this->GetClass()));
+		MyHelpers::CheckKeyInArray('filter code in class: '.$this->GetClass(), $sFilterCode, MetaModel::GetFilterAttribList($this->GetClass()));
 
 		$oField = new FieldExpression($sFilterCode, $this->GetClassAlias());
-		if (empty($sOpCode))
-		{
-			if ($sFilterCode == 'id')
-			{
+		if (empty($sOpCode)) {
+			if ($sFilterCode == 'id') {
 				$sOpCode = '=';
-			}
-			else
-			{
+			} else {
 				$oAttDef = MetaModel::GetAttributeDef($this->GetClass(), $sFilterCode);
 				$oNewCondition = $oAttDef->GetSmartConditionExpression($value, $oField, $this->m_aParams);
 				$this->AddConditionExpression($oNewCondition);
