@@ -6,7 +6,7 @@ var oListener = null
 const oOnOauthSuccess = function (event){
     clearInterval(oListener);
     $.post(
-            {{ sAjaxUri }},
+            '{{ sAjaxUri }}',
             {
                 operation: 'get_display_authentication_results',
                 provider: $('[name="provider"]:checked').val(),
@@ -58,7 +58,7 @@ const oOpenSignInWindow = function (url, name){
     once we reach our landing page, it'll send us a reply
      */
     oListener = window.setInterval(function(){
-        oWindowObjectReference.postMessage('anyone', {{ sReturnUri }});
+        oWindowObjectReference.postMessage('anyone', '{{ sReturnUri }}');
     }, 1000);
     /* Once we receive a response, transmit it to the server to get authenticate and display
     results
@@ -73,9 +73,9 @@ const oOpenSignInWindow = function (url, name){
 const oOnFormSubmit = function(){
     $('.ibo-oauth-wizard--form--submit').trigger('enter_loading_state.button.itop');
     $.post(
-            {{ sAjaxUri }},
+            '{{ sAjaxUri }}',
             {
-                operation: 'get_authorization_url',
+                operation: 'GetAuthorizationUrl',
                 provider: $('[name="provider"]:checked').val(),
                 client_id: $(this).find('[name="client_id"]').val(),
                 client_secret: $(this).find('[name="client_secret"]').val(),
@@ -123,4 +123,6 @@ $('body').on('click', '.ui-checkboxradio-radio-label', function(){
 oUpdateProviderImage($('[name="provider"]:checked').next());
 
 // Initialize provider buttons
-$('#select_layout').controlgroup(); 
+$('#select_layout').buttonset();
+
+$('.ibo-oauth-wizard--form').on('submit', oOnFormSubmit);

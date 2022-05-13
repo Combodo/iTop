@@ -105,7 +105,7 @@ EOF;
 	 */
 	public static function InitizalizeRedirectUri()
 	{
-		static::$sRedirectUri = utils::GetAbsoluteUrlAppRoot().'pages/oauth/landing.php';
+		static::$sRedirectUri = utils::GetAbsoluteUrlAppRoot().'pages/oauth.landing.php';
 	}
 
 	/**

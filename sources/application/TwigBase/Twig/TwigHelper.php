@@ -24,8 +24,10 @@ class TwigHelper
 		Extension::RegisterTwigExtensions($oTwig);
 		$sLocalPath = utils::LocalPath($sViewPath);
 		$sLocalPath = str_replace('env-'.utils::GetCurrentEnvironment(), 'twig', $sLocalPath);
-		$sCachePath = utils::GetCachePath().$sLocalPath;
-		$oTwig->setCache($sCachePath);
+		if (!utils::IsDevelopmentEnvironment()) {
+			$sCachePath = utils::GetCachePath().$sLocalPath;
+			$oTwig->setCache($sCachePath);
+		}
 
 		return $oTwig;
 	}

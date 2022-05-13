@@ -37,4 +37,9 @@ $('#ibo-oauth-wizard--conf--result').text($sConf);
 JS;
 
 	}
+
+	public static function GetResultDisplayTemplate()
+	{
+		return 'DisplayConfig.html.twig';
+	}
 }
