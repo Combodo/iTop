@@ -12,7 +12,7 @@ class OAuthClientResultDisplayConf implements IOAuthClientResultDisplay
 		$oConfResultPanel = new Panel(Dict::S('UI:OAuth:Wizard:ResultConf:Panel:Title'), [],Panel::DEFAULT_COLOR_SCHEME, 'ibo-oauth-wizard--conf--panel');
 		$oConfResultPanel->AddCSSClass('ibo-oauth-wizard--result--panel');
 		$oConfResultPanel->SetIsCollapsible(true);
-		$oConfResultPanel->AddHtml('<p>'.Dict::S('UI:OAuthEmailSynchro:Wizard:ResultConf:Panel:Description').'</p>');
+		$oConfResultPanel->AddHtml('<p>'.Dict::S('UI:OAuth:Wizard:ResultConf:Panel:Description').'</p>');
 		$oConfResultPanel->AddHtml('<pre><code id="ibo-oauth-wizard--conf--result"></code></pre>');
 		return $oConfResultPanel;
 	}
