@@ -43,6 +43,7 @@ class OAuthWizardController extends Controller
 			'redirect_uri'  => ['type' => 'text', 'label' => Dict::S('UI:OAuth:Wizard:Form:Input:RedirectUri:Label'), 'read_only' => true, 'value' => OAuthClientProviderAbstract::GetRedirectUri()],
 		];
 
+		// TODO: Needs to handle mail to ticket part too
 		$aParams['aAdditionalBlocks'] = [
 			OAuthClientResultDisplayConf::GetResultDisplayTemplate(),
 		];

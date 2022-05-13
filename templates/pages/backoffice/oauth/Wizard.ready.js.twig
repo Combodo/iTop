@@ -8,7 +8,7 @@ const oOnOauthSuccess = function (event){
     $.post(
             '{{ sAjaxUri }}',
             {
-                operation: 'get_display_authentication_results',
+                operation: 'GetDisplayAuthenticationResults',
                 provider: $('[name="provider"]:checked').val(),
                 client_id: $('[name="client_id"]').val(),
                 client_secret: $('[name="client_secret"]').val(),

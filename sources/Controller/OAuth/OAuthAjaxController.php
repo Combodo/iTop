@@ -36,7 +36,8 @@ class OAuthAjaxController extends Controller
 		$sAdditional = utils::ReadParam('additional', '', false, 'raw');
 
 		$sRedirectUrlQuery = parse_url($sRedirectUrl)['query'];
-		$aOAuthResultDisplayClasses = utils::GetClassesForInterface('Combodo\iTop\Core\Authentication\Client\OAuth\IOAuthClientResultDisplay', '', array('[\\\\/]lib[\\\\/]', '[\\\\/]node_modules[\\\\/]', '[\\\\/]test[\\\\/]'));
+		// TODO: Needs to handle mail to ticket part too
+		$aOAuthResultDisplayClasses = ['\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientResultDisplayConf'];
 		$aAdditional = [];
 		parse_str($sAdditional, $aAdditional);
 
