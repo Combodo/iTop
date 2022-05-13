@@ -519,6 +519,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Composer\\iTopComposer' => __DIR__ . '/../..' . '/sources/Composer/iTopComposer.php',
         'Combodo\\iTop\\Controller\\AjaxRenderController' => __DIR__ . '/../..' . '/sources/Controller/AjaxRenderController.php',
         'Combodo\\iTop\\Controller\\OAuth\\OAuthAjaxController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthAjaxController.php',
+        'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthLandingController.php',
         'Combodo\\iTop\\Controller\\OAuth\\OAuthWizardController' => __DIR__ . '/../..' . '/sources/Controller/OAuth/OAuthWizardController.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientResultDisplay' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/IOAuthClientResultDisplay.php',

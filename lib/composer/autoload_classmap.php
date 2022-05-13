@@ -151,6 +151,7 @@ return array(
     'Combodo\\iTop\\Composer\\iTopComposer' => $baseDir . '/sources/Composer/iTopComposer.php',
     'Combodo\\iTop\\Controller\\AjaxRenderController' => $baseDir . '/sources/Controller/AjaxRenderController.php',
     'Combodo\\iTop\\Controller\\OAuth\\OAuthAjaxController' => $baseDir . '/sources/Controller/OAuth/OAuthAjaxController.php',
+    'Combodo\\iTop\\Controller\\OAuth\\OAuthLandingController' => $baseDir . '/sources/Controller/OAuth/OAuthLandingController.php',
     'Combodo\\iTop\\Controller\\OAuth\\OAuthWizardController' => $baseDir . '/sources/Controller/OAuth/OAuthWizardController.php',
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientProvider' => $baseDir . '/sources/Core/Authentication/Client/OAuth/IOAuthClientProvider.php',
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\IOAuthClientResultDisplay' => $baseDir . '/sources/Core/Authentication/Client/OAuth/IOAuthClientResultDisplay.php',
