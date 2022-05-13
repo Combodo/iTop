@@ -23,7 +23,7 @@ const oOnOauthSuccess = function (event){
                         new Function(item)();
                     });
                 }
-                $('.ibo-oauth-wizard--form--submit').trigger('leave_loading_state.button.itop');
+                $('.ibo-oauth-wizard--form--submit').prop('disabled', false);
             }
     );
 }
@@ -71,7 +71,7 @@ const oOpenSignInWindow = function (url, name){
 // Function used when the form is submitted
 
 const oOnFormSubmit = function(){
-    $('.ibo-oauth-wizard--form--submit').trigger('enter_loading_state.button.itop');
+    $('.ibo-oauth-wizard--form--submit').prop('disabled', true);
     $.post(
             '{{ sAjaxUri }}',
             {
@@ -88,7 +88,7 @@ const oOnFormSubmit = function(){
                     oOpenSignInWindow(oData.data.authorization_url, 'OAuth authorization')
                 }
                 else{
-                    $('.ibo-oauth-wizard--form--submit').trigger('leave_loading_state.button.itop');
+                    $('.ibo-oauth-wizard--form--submit').prop('disabled', false);
                 }
             }
     );
