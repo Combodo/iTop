@@ -1,5 +1,7 @@
 <?php
-
+/*
+ * @deprecated 3.1.0 N°3141 - Deprecate legacy SQL build
+ */
 class QueryBuilderExpressions
 {
 	/**
