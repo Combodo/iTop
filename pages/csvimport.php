@@ -51,7 +51,7 @@ try {
 	/**
 	 * Helper function to build a select from the list of valid classes for a given action
 	 *
-	 * @deprecated since 3.0.0 use GetClassesSelectUIBlock
+	 * @deprecated 3.0.0 use GetClassesSelectUIBlock
 	 *
 	 * @param $sDefaultValue
 	 * @param integer $iWidthPx The width (in pixels) of the drop-down list

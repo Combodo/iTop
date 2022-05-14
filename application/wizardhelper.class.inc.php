@@ -358,10 +358,11 @@ class WizardHelper
 {$sWizardHelperJsVar}.UpdateFields();
 JS;
 	}
-/*
- * Function with an old pattern of code
- * @deprecated since 3.1
-*/
+
+	/*
+	 * Function with an old pattern of code
+	 * @deprecated 3.1.0
+	*/
 	static function ParseJsonSet($oMe, $sLinkClass, $sExtKeyToMe, $sJsonSet)
 	{
 		$aSet = json_decode($sJsonSet, true); // true means hash array instead of object

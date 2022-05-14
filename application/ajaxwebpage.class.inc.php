@@ -11,7 +11,7 @@
 /**
  * Class ajax_page
  *
- * @deprecated since 3.0.0 will be removed in 3.1.0 - moved to AjaxPage
+ * @deprecated 3.0.0 will be removed in 3.1.0 - moved to AjaxPage
  */
 class ajax_page extends AjaxPage
 {
