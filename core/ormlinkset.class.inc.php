@@ -311,7 +311,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \CoreUnexpectedValue
 	 * @throws \MySQLException
 	 */
-	public function Count()
+	public function Count(): int
 	{
 		$this->LoadOriginalIds();
 		$iRet = count($this->aPreserved) + count($this->aAdded) + count($this->aModified);
@@ -326,7 +326,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws Exception
 	 * @internal param int $iRow
 	 */
-	public function Seek($iPosition)
+	public function Seek($iPosition): void
 	{
 		$this->LoadOriginalIds();
 
