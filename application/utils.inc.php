@@ -2820,6 +2820,23 @@ HTML;
 	}
 
 	//----------------------------------------------
+	// PHP function helpers
+	//----------------------------------------------
+
+	/**
+	 * Helper around the native strlen() PHP method to keep allowing usage of null value when computing the length of a string as null value is no longer allowed with PHP 8.1+
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return int Length of $sString, 0 if null
+	 * @since 3.0.2 N°5172
+	 */
+	public static function StrLen(?string $sString): int
+	{
+		return strlen($sString ?? '');
+	}
+
+	//----------------------------------------------
 	// Environment helpers
 	//----------------------------------------------
 
