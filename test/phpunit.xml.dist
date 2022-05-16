@@ -40,6 +40,14 @@
          timeoutForLargeTests="60"
          verbose="false">
 
+  <php>
+    <!--
+      N°4224 workaround for old PHPUnit 6 and phpunit-mock-objects E_DEPRECATED notices
+      To remove when switching to PHPUnit 8.5 and later !
+    -->
+    <ini name="error_reporting" value="E_ALL &amp; ~E_DEPRECATED"/>
+  </php>
+
   <testsuites>
     <testsuite name="Extensions">
       <directory>../env-production/*/test</directory>
