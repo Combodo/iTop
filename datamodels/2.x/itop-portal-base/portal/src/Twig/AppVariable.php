@@ -56,20 +56,9 @@ class AppVariable implements ArrayAccess
     }
 
     /**
-     * Whether a offset exists
-     * @link  https://php.net/manual/en/arrayaccess.offsetexists.php
-     *
-     * @param mixed $offset <p>
-     *                      An offset to check for.
-     *                      </p>
-     *
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
+     * @inheritDoc
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         if ($this->container->hasParameter($offset)) {
             return true;
@@ -82,17 +71,9 @@ class AppVariable implements ArrayAccess
     }
 
     /**
-     * Offset to retrieve
-     * @link  https://php.net/manual/en/arrayaccess.offsetget.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to retrieve.
-     *                      </p>
-     *
-     * @return mixed Can return all value types.
-     * @since 5.0.0
+     * @inheritDoc
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         if ($this->container->hasParameter($offset)) {
             return $this->container->getParameter($offset);
@@ -105,20 +86,9 @@ class AppVariable implements ArrayAccess
     }
 
     /**
-     * Offset to set
-     * @link  https://php.net/manual/en/arrayaccess.offsetset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to assign the value to.
-     *                      </p>
-     * @param mixed $value  <p>
-     *                      The value to set.
-     *                      </p>
-     *
-     * @return void
-     * @since 5.0.0
+     * @inheritDoc
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
 
         if ($this->container->hasParameter($offset)) {
@@ -141,17 +111,10 @@ class AppVariable implements ArrayAccess
     }
 
     /**
-     * Offset to unset
-     * @link  https://php.net/manual/en/arrayaccess.offsetunset.php
-     *
-     * @param mixed $offset <p>
-     *                      The offset to unset.
-     *                      </p>
-     *
-     * @return void
-     * @since 5.0.0
+     * @inheritDoc
      */
-    public function offsetUnset($offset){
+    public function offsetUnset($offset): void
+    {
         if ($this->container->hasParameter($offset)) {
             $this->container->setParameter($offset, null);
             return;
