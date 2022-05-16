@@ -38,24 +38,19 @@ use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
-define ('EMAIL_SEND_OK', 0);
-define ('EMAIL_SEND_PENDING', 1);
-define ('EMAIL_SEND_ERROR', 2);
-
-class EMail
+class EMailLaminas
 {
 	// Serialization formats
 	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
-							   // Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
+	// Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
 	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
-	
+
 	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
 
-	public function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
+	public static function LoadConfig($sConfigFile = ITOP_DEFAULT_CONFIG_FILE)
 	{
-		if (is_null(self::$m_oConfig))
-		{
+		if (is_null(self::$m_oConfig)) {
 			self::$m_oConfig = new Config($sConfigFile);
 		}
 	}
@@ -95,77 +90,69 @@ class EMail
 	{
 		$aData = unserialize($sSerializedMessage);
 		$oMessage = new Email();
-		
-		if (array_key_exists('body', $aData))
-		{
+
+		if (array_key_exists('body', $aData)) {
 			$oMessage->SetBody($aData['body']['body'], $aData['body']['mimeType']);
 		}
-		if (array_key_exists('message_id', $aData))
-		{
+		if (array_key_exists('message_id', $aData)) {
 			$oMessage->SetMessageId($aData['message_id']);
 		}
-		if (array_key_exists('bcc', $aData))
-		{
+		if (array_key_exists('bcc', $aData)) {
 			$oMessage->SetRecipientBCC($aData['bcc']);
 		}
-		if (array_key_exists('cc', $aData))
-		{
+		if (array_key_exists('cc', $aData)) {
 			$oMessage->SetRecipientCC($aData['cc']);
 		}
-		if (array_key_exists('from', $aData))
-		{
+		if (array_key_exists('from', $aData)) {
 			$oMessage->SetRecipientFrom($aData['from']['address'], $aData['from']['label']);
 		}
-		if (array_key_exists('reply_to', $aData))
-		{
+		if (array_key_exists('reply_to', $aData)) {
 			$oMessage->SetRecipientReplyTo($aData['reply_to']['address'], $aData['reply_to']['label']);
 		}
-		if (array_key_exists('to', $aData))
-		{
+		if (array_key_exists('to', $aData)) {
 			$oMessage->SetRecipientTO($aData['to']);
 		}
-		if (array_key_exists('subject', $aData))
-		{
+		if (array_key_exists('subject', $aData)) {
 			$oMessage->SetSubject($aData['subject']);
 		}
-		
-		if (array_key_exists('headers', $aData))
-		{
-			foreach($aData['headers'] as $sKey => $sValue)
-			{
+
+		if (array_key_exists('headers', $aData)) {
+			foreach ($aData['headers'] as $sKey => $sValue) {
 				$oMessage->AddToHeader($sKey, $sValue);
 			}
 		}
-		if (array_key_exists('parts', $aData))
-		{
-			foreach($aData['parts'] as $aPart)
-			{
+		if (array_key_exists('parts', $aData)) {
+			foreach ($aData['parts'] as $aPart) {
 				$oMessage->AddPart($aPart['text'], $aPart['mimeType']);
 			}
 		}
-		if (array_key_exists('attachments', $aData))
-		{
-			foreach($aData['attachments'] as $aAttachment)
-			{
+		if (array_key_exists('attachments', $aData)) {
+			foreach ($aData['attachments'] as $aAttachment) {
 				$oMessage->AddAttachment(base64_decode($aAttachment['data']), $aAttachment['filename'], $aAttachment['mimeType']);
 			}
 		}
+
 		return $oMessage;
 	}
-	
-  	protected function SendAsynchronous(&$aIssues, $oLog = null)
+
+	protected function SendAsynchronous(&$aIssues, $oLog = null)
 	{
-		try
-		{
+		try {
 			AsyncSendEmail::AddToQueue($this, $oLog);
 		}
-		catch(Exception $e)
-		{
+		catch (Exception $e) {
 			$aIssues = array($e->GetMessage());
+
 			return EMAIL_SEND_ERROR;
 		}
 		$aIssues = array();
+
 		return EMAIL_SEND_PENDING;
+	}
+
+	public static function GetMailer()
+	{
+		return new EMailLaminas();
 	}
 
 	/**
@@ -173,93 +160,90 @@ class EMail
 	 */
 	protected function SendSynchronous(&$aIssues, $oLog = null)
 	{
-		
+
 		$this->LoadConfig();
 
 		$sTransport = self::$m_oConfig->Get('email_transport');
-		switch ($sTransport)
-		{
-		case 'SMTP':
-			$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
-			$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
-			$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
-			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
-			$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
+		switch ($sTransport) {
+			case 'SMTP':
+				$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
+				$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
+				$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
+				$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
+				$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
 
-			$oTransport = new Smtp();
-			$aOptions= [
-				'host'              => $sHost,
-				'port'              => $sPort,
-				'connection_class'  => 'login',
-				'connection_config' => [
-					'ssl' => $sEncryption,
-				],
-			];
-			if (strlen($sUserName) > 0)
-			{
-				$aOptions['connection_config']['username'] = $sUserName;
-				$aOptions['connection_config']['password'] = $sPassword;
-			}
-			$oOptions = new SmtpOptions($aOptions);
-			$oTransport->setOptions($oOptions);
-			break;
-		case 'SMTP_OAuth':
-			$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
-			$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
-			$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
-			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
+				$oTransport = new Smtp();
+				$aOptions = [
+					'host'              => $sHost,
+					'port'              => $sPort,
+					'connection_class'  => 'login',
+					'connection_config' => [
+						'ssl' => $sEncryption,
+					],
+				];
+				if (strlen($sUserName) > 0) {
+					$aOptions['connection_config']['username'] = $sUserName;
+					$aOptions['connection_config']['password'] = $sPassword;
+				}
+				$oOptions = new SmtpOptions($aOptions);
+				$oTransport->setOptions($oOptions);
+				break;
+			case 'SMTP_OAuth':
+				$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
+				$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
+				$sEncryption = self::$m_oConfig->Get('email_transport_smtp.encryption');
+				$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
 
-			$oTransport = new Smtp();
-			$aOptions= [
-				'host'              => $sHost,
-				'port'              => $sPort,
-				'connection_class'  => 'Laminas\Mail\Protocol\Smtp\Auth\Oauth',
-				'connection_config' => [
-					'ssl' => $sEncryption,
-				],
-			];
-			if (strlen($sUserName) > 0)
-			{
-				$aOptions['connection_config']['username'] = $sUserName;
-			}
-			$oOptions = new SmtpOptions($aOptions);
-			$oTransport->setOptions($oOptions);
+				$oTransport = new Smtp();
+				$aOptions = [
+					'host'              => $sHost,
+					'port'              => $sPort,
+					'connection_class'  => 'Laminas\Mail\Protocol\Smtp\Auth\Oauth',
+					'connection_config' => [
+						'ssl' => $sEncryption,
+					],
+				];
+				if (strlen($sUserName) > 0) {
+					$aOptions['connection_config']['username'] = $sUserName;
+				}
+				$oOptions = new SmtpOptions($aOptions);
+				$oTransport->setOptions($oOptions);
 
-			\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::getProviderForSMTP());
-			break;
-		case 'Null':
-			$oTransport = new Smtp();
-			break;
-		
-		case 'LogFile':
-			$oTransport = new File();
-			$aOptions   = new FileOptions([
-				'path' => APPROOT.'log/mail.log',
-			]);
-			$oTransport->setOptions($aOptions);
-			break;
-			
-		case 'PHPMail':
-		default:
-			$oTransport = new Smtp();
+				\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::getProviderForSMTP());
+				break;
+			case 'Null':
+				$oTransport = new Smtp();
+				break;
+
+			case 'LogFile':
+				$oTransport = new File();
+				$aOptions = new FileOptions([
+					'path' => APPROOT.'log/mail.log',
+				]);
+				$oTransport->setOptions($aOptions);
+				break;
+
+			case 'PHPMail':
+			default:
+				$oTransport = new Smtp();
 		}
-		
+
 		$oKPI = new ExecutionKPI();
-		try
-		{
+		try {
 			$oTransport->send($this->m_oMessage);
 			$aIssues = array();
 			$oKPI->ComputeStats('Email Sent', 'Succeded');
+
 			return EMAIL_SEND_OK;
 		}
-		catch(Laminas\Mail\Transport\Exception\RuntimeException $e){
+		catch (Laminas\Mail\Transport\Exception\RuntimeException $e) {
 			IssueLog::Warning('Email sending failed: Some recipients were invalid');
 			$aIssues = array('Some recipients were invalid.');
 			$oKPI->ComputeStats('Email Sent', 'Error received');
+
 			return EMAIL_SEND_ERROR;
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			$oKPI->ComputeStats('Email Sent', 'Error received');
 			throw $e;
 		}
@@ -287,18 +271,14 @@ class EMail
 		$oImagesList = $oXPath->query($sXPath);
 		$oImagesContent = new \Laminas\Mime\Message();
 		$aImagesParts = [];
-		if ($oImagesList->length != 0)
-		{
-			foreach($oImagesList as $oImg)
-			{
+		if ($oImagesList->length != 0) {
+			foreach ($oImagesList as $oImg) {
 				$iAttId = $oImg->getAttribute(InlineImage::DOM_ATTR_ID);
 				$oAttachment = MetaModel::GetObject('InlineImage', $iAttId, false, true /* Allow All Data */);
-				if ($oAttachment)
-				{
+				if ($oAttachment) {
 					$sImageSecret = $oImg->getAttribute('data-img-secret');
 					$sAttachmentSecret = $oAttachment->Get('secret');
-					if ($sImageSecret !== $sAttachmentSecret)
-					{
+					if ($sImageSecret !== $sAttachmentSecret) {
 						// @see N°1921
 						// If copying from another iTop we could get an IMG pointing to an InlineImage with wrong secret
 						continue;
@@ -314,7 +294,7 @@ class EMail
 					$oNewAttachment->filename = $oDoc->GetFileName();
 					$oNewAttachment->disposition = Mime::DISPOSITION_INLINE;
 					$oNewAttachment->encoding = Mime::ENCODING_BASE64;
-					
+
 					$oImagesContent->addPart($oNewAttachment);
 					$oImg->setAttribute('src', 'cid:'.$sCid);
 					$aImagesParts[] = $oNewAttachment;
@@ -322,29 +302,24 @@ class EMail
 			}
 		}
 		$sBody = $oDOMDoc->saveHTML();
+
 		return $aImagesParts;
 	}
 
 	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
 	{
 		//select a default sender if none is provided.
-		if(empty($this->m_aData['from']['address']) && !empty($this->m_aData['to'])){
+		if (empty($this->m_aData['from']['address']) && !empty($this->m_aData['to'])) {
 			$this->SetRecipientFrom($this->m_aData['to']);
 		}
 
-		if ($bForceSynchronous)
-		{
+		if ($bForceSynchronous) {
 			return $this->SendSynchronous($aIssues, $oLog);
-		}
-		else
-		{
+		} else {
 			$bConfigASYNC = MetaModel::GetConfig()->Get('email_asynchronous');
-			if ($bConfigASYNC)
-			{
+			if ($bConfigASYNC) {
 				return $this->SendAsynchronous($aIssues, $oLog);
-			}
-			else
-			{
+			} else {
 				return $this->SendSynchronous($aIssues, $oLog);
 			}
 		}
@@ -352,17 +327,14 @@ class EMail
 
 	public function AddToHeader($sKey, $sValue)
 	{
-		if (!array_key_exists('headers', $this->m_aData))
-		{
+		if (!array_key_exists('headers', $this->m_aData)) {
 			$this->m_aData['headers'] = array();
 		}
 		$this->m_aData['headers'][$sKey] = $sValue;
-		
-		if (strlen($sValue) > 0)
-		{
+
+		if (strlen($sValue) > 0) {
 			$oHeaders = $this->m_oMessage->getHeaders();
-			switch(strtolower($sKey))
-			{
+			switch (strtolower($sKey)) {
 				case 'return-path':
 					$this->m_oMessage->setReturnPath($sValue);
 					break;
@@ -376,7 +348,7 @@ class EMail
 	public function SetMessageId($sId)
 	{
 		$this->m_aData['message_id'] = $sId;
-		
+
 		// Note: Swift will add the angle brackets for you
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
@@ -405,7 +377,7 @@ class EMail
 
 	/**
 	 * Set current Email body and process inline images.
-	 * 
+	 *
 	 * @param $sBody
 	 * @param string $sMimeType
 	 * @param $sCustomStyles
@@ -419,7 +391,7 @@ class EMail
 	{
 		$oBody = new Laminas\Mime\Message();
 		$aAdditionalParts = [];
-		
+
 		if (($sMimeType === Mime::TYPE_HTML) && ($sCustomStyles !== null)) {
 			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
 			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
@@ -428,22 +400,22 @@ class EMail
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
 
 		// We don't want these modifications in m_aData['body'], otherwise it'll ruin asynchronous mail as they go through this method twice
-		if ($sMimeType === Mime::TYPE_HTML){
+		if ($sMimeType === Mime::TYPE_HTML) {
 			$aAdditionalParts = $this->EmbedInlineImages($sBody);
-	    }
-		
+		}
+
 		// Add body content to as a new part
 		$oNewPart = new Part($sBody);
 		$oNewPart->encoding = Mime::ENCODING_8BIT;
 		$oNewPart->type = $sMimeType;
 		$oBody->addPart($oNewPart);
-		
+
 		// Add additional images as new body parts
 		foreach ($aAdditionalParts as $oAdditionalPart) {
 			$oBody->addPart($oAdditionalPart);
 		}
 
-		if($oBody->isMultiPart()){
+		if ($oBody->isMultiPart()) {
 			$oContentTypeHeader = $this->m_oMessage->getHeaders();
 			foreach ($oContentTypeHeader as $oHeader) {
 				if (!$oHeader instanceof ContentType) {
@@ -455,12 +427,13 @@ class EMail
 				break;
 			}
 		}
-		
+
 		$this->m_oMessage->setBody($oBody);
 	}
 
 	/**
 	 * Add a new part to the existing body
+	 *
 	 * @param $sText
 	 * @param string $sMimeType
 	 *
@@ -468,8 +441,7 @@ class EMail
 	 */
 	public function AddPart($sText, string $sMimeType = Mime::TYPE_HTML)
 	{
-		if (!array_key_exists('parts', $this->m_aData))
-		{
+		if (!array_key_exists('parts', $this->m_aData)) {
 			$this->m_aData['parts'] = array();
 		}
 		$this->m_aData['parts'][] = array('text' => $sText, 'mimeType' => $sMimeType);
@@ -483,7 +455,7 @@ class EMail
 	{
 		$oBody = $this->m_oMessage->getBody();
 
-		if(!$oBody->isMultiPart()){
+		if (!$oBody->isMultiPart()) {
 			$multipart_content = new Part($oBody->generateMessage());
 			$multipart_content->setType($oBody->getParts()[0]->getType());
 			$multipart_content->setBoundary($oBody->getMime()->boundary());
@@ -492,8 +464,7 @@ class EMail
 			$oBody->addPart($multipart_content);
 		}
 
-		if (!array_key_exists('attachments', $this->m_aData))
-		{
+		if (!array_key_exists('attachments', $this->m_aData)) {
 			$this->m_aData['attachments'] = array();
 		}
 		$this->m_aData['attachments'][] = array('data' => base64_encode($data), 'filename' => $sFileName, 'mimeType' => $sMimeType);
@@ -506,7 +477,7 @@ class EMail
 
 		$oBody->addPart($oNewAttachment);
 
-		if($oBody->isMultiPart()){
+		if ($oBody->isMultiPart()) {
 			$oContentTypeHeader = $this->m_oMessage->getHeaders();
 			foreach ($oContentTypeHeader as $oHeader) {
 				if (!$oHeader instanceof ContentType) {
@@ -535,27 +506,25 @@ class EMail
 
 	/**
 	 * Helper to transform and sanitize addresses
-	 * - get rid of empty addresses	 
-	 */	 	
+	 * - get rid of empty addresses
+	 */
 	protected function AddressStringToArray($sAddressCSVList)
 	{
 		$aAddresses = array();
-		foreach(explode(',', $sAddressCSVList) as $sAddress)
-		{
+		foreach (explode(',', $sAddressCSVList) as $sAddress) {
 			$sAddress = trim($sAddress);
-			if (strlen($sAddress) > 0)
-			{
+			if (strlen($sAddress) > 0) {
 				$aAddresses[] = $sAddress;
 			}
 		}
+
 		return $aAddresses;
 	}
-	
+
 	public function SetRecipientTO($sAddress)
 	{
 		$this->m_aData['to'] = $sAddress;
-		if (!empty($sAddress))
-		{
+		if (!empty($sAddress)) {
 			$aAddresses = $this->AddressStringToArray($sAddress);
 			$this->m_oMessage->setTo($aAddresses);
 		}
@@ -564,32 +533,25 @@ class EMail
 	public function GetRecipientTO($bAsString = false)
 	{
 		$aRes = $this->m_oMessage->getTo();
-		if ($aRes === null || $aRes->count() === 0)
-		{
+		if ($aRes === null || $aRes->count() === 0) {
 			// There is no "To" header field
 			$aRes = array();
 		}
-		if ($bAsString)
-		{
+		if ($bAsString) {
 			$aStrings = array();
-			foreach ($aRes as $oEmail)
-			{
+			foreach ($aRes as $oEmail) {
 				$sName = $oEmail->getName();
 				$sEmail = $oEmail->getEmail();
-				if (is_null($sName))
-				{
+				if (is_null($sName)) {
 					$aStrings[] = $sEmail;
-				}
-				else
-				{
+				} else {
 					$sName = str_replace(array('<', '>'), '', $sName);
 					$aStrings[] = "$sName <$sEmail>";
 				}
 			}
+
 			return implode(', ', $aStrings);
-		}
-		else
-		{
+		} else {
 			return $aRes;
 		}
 	}
@@ -597,8 +559,7 @@ class EMail
 	public function SetRecipientCC($sAddress)
 	{
 		$this->m_aData['cc'] = $sAddress;
-		if (!empty($sAddress))
-		{
+		if (!empty($sAddress)) {
 			$aAddresses = $this->AddressStringToArray($sAddress);
 			$this->m_oMessage->setCc($aAddresses);
 		}
@@ -607,8 +568,7 @@ class EMail
 	public function SetRecipientBCC($sAddress)
 	{
 		$this->m_aData['bcc'] = $sAddress;
-		if (!empty($sAddress))
-		{
+		if (!empty($sAddress)) {
 			$aAddresses = $this->AddressStringToArray($sAddress);
 			$this->m_oMessage->setBcc($aAddresses);
 		}
@@ -617,12 +577,9 @@ class EMail
 	public function SetRecipientFrom($sAddress, $sLabel = '')
 	{
 		$this->m_aData['from'] = array('address' => $sAddress, 'label' => $sLabel);
-		if ($sLabel != '')
-		{
-			$this->m_oMessage->setFrom(array($sAddress => $sLabel));		
-		}
-		else if (!empty($sAddress))
-		{
+		if ($sLabel != '') {
+			$this->m_oMessage->setFrom(array($sAddress => $sLabel));
+		} else if (!empty($sAddress)) {
 			$this->m_oMessage->setFrom($sAddress);
 		}
 	}
@@ -630,12 +587,9 @@ class EMail
 	public function SetRecipientReplyTo($sAddress, $sLabel = '')
 	{
 		$this->m_aData['reply_to'] = array('address' => $sAddress, 'label' => $sLabel);
-		if ($sLabel != '')
-		{
+		if ($sLabel != '') {
 			$this->m_oMessage->setReplyTo(array($sAddress => $sLabel));
-		}
-		else if (!empty($sAddress))
-		{
+		} else if (!empty($sAddress)) {
 			$this->m_oMessage->setReplyTo($sAddress);
 		}
 	}

@@ -90,7 +90,7 @@ class Oauth extends Login
 
 		try {
 			while (true) {
-				$sResponse = $this->_receive(60);
+				$sResponse = $this->_receive(30);
 
 				IssueLog::Debug("SMTP Oauth receiving $sResponse", static::LOG_CHANNEL);
 
@@ -100,7 +100,7 @@ class Oauth extends Login
 				} else {
 					if (preg_match('/Unauthorized/i', $sResponse) ||
 						preg_match('/Rejected/i', $sResponse) ||
-						preg_match('/^(535|432|454|534|500|530|538)/', $sResponse)) {
+						preg_match('/^(535|432|454|534|500|530|538|334)/', $sResponse)) {
 						IssueLog::Error('Unable to authenticate for outgoing mails for provider '.self::$oProvider::GetVendorName()." Error: $sResponse", static::LOG_CHANNEL);
 
 						return false;

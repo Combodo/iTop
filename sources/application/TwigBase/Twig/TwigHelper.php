@@ -17,9 +17,13 @@ use WebPage;
 
 class TwigHelper
 {
-	public static function GetTwigEnvironment($sViewPath)
+	public static function GetTwigEnvironment($sViewPath, $aAdditionalPaths = [])
 	{
 		$oLoader = new Twig_Loader_Filesystem($sViewPath);
+		foreach ($aAdditionalPaths as $sAdditionalPath) {
+			$oLoader->addPath($sAdditionalPath);
+		}
+
 		$oTwig = new Twig_Environment($oLoader);
 		Extension::RegisterTwigExtensions($oTwig);
 		$sLocalPath = utils::LocalPath($sViewPath);

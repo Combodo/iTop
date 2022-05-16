@@ -30,18 +30,8 @@ use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
 Swift_Preferences::getInstance()->setCharset('UTF-8');
 
-
-define ('EMAIL_SEND_OK', 0);
-define ('EMAIL_SEND_PENDING', 1);
-define ('EMAIL_SEND_ERROR', 2);
-
 class EmailSwiftMailer
 {
-	// Serialization formats
-	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
-							   // Did not work with attachements since their binary representation cannot be stored as a valid UTF-8 string
-	const FORMAT_V2 = 2; // New format, only the raw data are serialized (base64 encoded if needed)
-	
 	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
 
@@ -153,6 +143,11 @@ class EmailSwiftMailer
 		}
 		$aIssues = array();
 		return EMAIL_SEND_PENDING;
+	}
+
+	public static function GetMailer()
+	{
+		return new EmailSwiftMailer();
 	}
 
 	protected function SendSynchronous(&$aIssues, $oLog = null)

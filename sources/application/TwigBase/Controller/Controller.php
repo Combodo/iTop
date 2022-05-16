@@ -71,14 +71,14 @@ abstract class Controller
 	 * @param string $sViewPath Path of the twig files
 	 * @param string $sModuleName name of the module (or 'core' if not a module)
 	 */
-	public function __construct($sViewPath, $sModuleName = 'core')
+	public function __construct($sViewPath, $sModuleName = 'core', $aAdditionalPaths = [])
 	{
 		$this->m_aLinkedScripts = array();
 		$this->m_aLinkedStylesheets = array();
 		$this->m_aSaas = array();
 		$this->m_aAjaxTabs = array();
 		$this->m_aDefaultParams = array();
-		$this->SetViewPath($sViewPath);
+		$this->SetViewPath($sViewPath, $aAdditionalPaths);
 		$this->SetModuleName($sModuleName);
 		if ($sModuleName != 'core')
 		{
@@ -116,9 +116,9 @@ abstract class Controller
 	 *
 	 * @param string $sViewPath
 	 */
-	public function SetViewPath($sViewPath)
+	public function SetViewPath($sViewPath, $aAdditionalPaths = [])
 	{
-		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath);
+		$oTwig = TwigHelper::GetTwigEnvironment($sViewPath, $aAdditionalPaths);
 		$this->m_oTwig = $oTwig;
 	}
 

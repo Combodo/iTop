@@ -3,7 +3,6 @@
 namespace Combodo\iTop\Controller\OAuth;
 
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
-use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderAbstract;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use utils;
 
@@ -36,13 +35,17 @@ class OAuthAjaxController extends Controller
 		$sAdditional = utils::ReadParam('additional', '', false, 'raw');
 
 		$sRedirectUrlQuery = parse_url($sRedirectUrl)['query'];
-		// TODO: Needs to handle mail to ticket part too
-		$aOAuthResultDisplayClasses = ['\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientResultDisplayConf'];
+
+		$aOAuthResultDisplayClasses[] = '\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientResultDisplayConf';
+		if (class_exists('Combodo\iTop\Extension\Service\OAuthClientResultDisplayMailbox')) {
+			$aOAuthResultDisplayClasses[] = 'Combodo\iTop\Extension\Service\OAuthClientResultDisplayMailbox';
+		}
+
 		$aAdditional = [];
 		parse_str($sAdditional, $aAdditional);
 
-		$sProviderClass = "\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProvider".$sProvider;
-		$sRedirectUrl = OAuthClientProviderAbstract::GetRedirectUri();
+		//		$sProviderClass = "\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProvider".$sProvider;
+		//		$sRedirectUrl = OAuthClientProviderAbstract::GetRedirectUri();
 
 		$aQuery = [];
 		parse_str($sRedirectUrlQuery, $aQuery);

@@ -9,11 +9,25 @@ namespace Combodo\iTop\Controller\OAuth;
 use Combodo\iTop\Application\TwigBase\Controller\Controller;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderAbstract;
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientResultDisplayConf;
+use Combodo\iTop\Extension\Service\OAuthClientResultDisplayMailbox;
 use Dict;
 use utils;
 
 class OAuthWizardController extends Controller
 {
+	public function __construct($sViewPath, $sModuleName = 'core')
+	{
+		$aAdditionalPaths = [];
+
+		// Add extensions' template path
+		// TODO Rewrite in 3.1 with utils::GetClassesForInterface('Combodo\iTop\Core\Authentication\Client\OAuth\IOAuthClientResultDisplay', ...)
+		if (class_exists('Combodo\iTop\Extension\Service\OAuthClientResultDisplayMailbox')) {
+			$aAdditionalPaths[] = utils::GetAbsoluteModulePath('combodo-oauth-email-synchro').'templates';
+		}
+
+		parent::__construct($sViewPath, $sModuleName, $aAdditionalPaths);
+	}
+
 	public function OperationWizard()
 	{
 		$aParams = [];
@@ -44,9 +58,10 @@ class OAuthWizardController extends Controller
 		];
 
 		// TODO: Needs to handle mail to ticket part too
-		$aParams['aAdditionalBlocks'] = [
-			OAuthClientResultDisplayConf::GetResultDisplayTemplate(),
-		];
+		$aParams['aAdditionalBlocks'][] = OAuthClientResultDisplayConf::GetResultDisplayTemplate();
+		if (class_exists('Combodo\iTop\Extension\Service\OAuthClientResultDisplayMailbox')) {
+			$aParams['aAdditionalBlocks'][] = OAuthClientResultDisplayMailbox::GetResultDisplayTemplate();
+		}
 
 		$this->DisplayPage($aParams);
 	}
