@@ -58,6 +58,10 @@ const oOpenSignInWindow = function (url, name){
     once we reach our landing page, it'll send us a reply
      */
     oListener = window.setInterval(function(){
+        if (oWindowObjectReference.closed) {
+            $('.ibo-oauth-wizard--form--submit').prop('disabled', false);
+            clearInterval(oListener);
+        }
         oWindowObjectReference.postMessage('anyone', '{{ sReturnUri }}');
     }, 1000);
     /* Once we receive a response, transmit it to the server to get authenticate and display
@@ -112,7 +116,6 @@ function oUpdateProviderImage(elem){
     $('#b4d4939a-c6e6-4f4d-ba6c-e8b05485017d').attr('fill', oColor2);
     $('#b06d66ec-6c84-45dd-8c27-1263a6253192-107').attr('fill', oColor3);
     $('#f58f497e-6949-45c8-be5f-eee2aa0f6586').attr('fill', oColor3);
-    $('#aff120b1-519b-4e96-ac87-836aa55663de').attr('fill', oColor3);
     $('#aff120b1-519b-4e96-ac87-836aa55663de').attr('fill', oColor3);
     $('#ae7af94f-88d7-4204-9f07-e3651de85c05-111').attr('fill', oColor4);
     $('#a6768b0e-63d0-4b31-8462-9b2e0b00f0fd-112').attr('fill', oColor4);
