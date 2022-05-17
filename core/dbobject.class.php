@@ -1732,6 +1732,7 @@ abstract class DBObject implements iDisplay
 		$iFlags = 0; // By default (if no life cycle) no flag at all
 		$sClass = get_class($this);
 
+		// The code below prevents to hide a DashboardAttribute for eg.
 		$aReadOnlyAtts = $this->GetReadOnlyAttributes();
 		if (($aReadOnlyAtts != null) && (in_array($sAttCode, $aReadOnlyAtts)))
 		{
