@@ -1,6 +1,6 @@
 <?php
 /*
- * @copyright   Copyright (C) 2010-2021 Combodo SARL
+ * @copyright   Copyright (C) 2010-2022 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
@@ -2249,8 +2249,9 @@ abstract class DBObject implements iDisplay
 		foreach($aChanges as $sAttCode => $value) {
 			$res = $this->CheckValue($sAttCode);
 			if ($res !== true) {
+				$sAttLabel = $this->GetLabel($sAttCode);
 				// $res contains the error description
-				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
+				$this->m_aCheckIssues[] = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
 			}
 
 			$this->DoCheckLinkedSetDuplicates($sAttCode, $value);
@@ -2265,7 +2266,7 @@ abstract class DBObject implements iDisplay
 		if ($res !== true)
 		{
 			// $res contains the error description
-			$this->m_aCheckIssues[] = "Consistency rules not followed: $res";
+			$this->m_aCheckIssues[] = Dict::Format('Core:CheckConsistencyError', $res);
 		}
 
 		// Synchronization: are we attempting to modify an attribute for which an external source is master?
@@ -2278,12 +2279,10 @@ abstract class DBObject implements iDisplay
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
 					// Note: $aReasonInfo['name'] could be reported (the task owning the attribute)
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-					$sAttLabel = $oAttDef->GetLabel();
 					if (!empty($aReasons))
 					{
-						// Todo: associate the attribute code with the error
-						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel);
+						$sAttLabel = $this->GetLabel($sAttCode);
+						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel, $sAttCode);
 					}
 				}
 			}
