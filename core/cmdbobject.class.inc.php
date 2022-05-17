@@ -681,58 +681,6 @@ abstract class CMDBObject extends DBObject
 		return $ret;
 	}
 
-	/*
-	 * @deprecated since 3.1.0
-	 * Not used and not working !
-	*/
-	public static function BulkUpdate(DBSearch $oFilter, array $aValues)
-	{
-		return static::BulkUpdateTracked_Internal($oFilter, $aValues);
-	}
-
-	/*
-	 * @deprecated since 3.1.0
-	 * Not used and not working !
-	*/
-	public static function BulkUpdateTracked(CMDBChange $oChange, DBSearch $oFilter, array $aValues)
-	{
-		self::SetCurrentChange($oChange);
-		static::BulkUpdateTracked_Internal($oFilter, $aValues);
-	}
-
-	/*
-	 * @deprecated since 3.1.0
-	 * Not used and not working because  parent::BulkUpdate doesn't exist!
-	*/
-	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
-	{
-		// $aValues is an array of $sAttCode => $value
-
-		// Get the list of objects to update (and load it before doing the change)
-		$oObjSet = new CMDBObjectSet($oFilter);
-		$oObjSet->Load();
-
-		// Keep track of the previous values (will be overwritten when the objects are synchronized with the DB)
-		$aOriginalValues = array();
-		$oObjSet->Rewind();
-		while ($oItem = $oObjSet->Fetch())
-		{
-			$aOriginalValues[$oItem->GetKey()] = $oItem->m_aOrigValues;
-		}
-
-		// Update in one single efficient query
-		$ret = parent::BulkUpdate($oFilter, $aValues);
-
-		// Record... in many queries !!!
-		$oObjSet->Rewind();
-		while ($oItem = $oObjSet->Fetch())
-		{
-			$aChangedValues = $oItem->ListChangedValues($aValues);
-			$oItem->RecordAttChanges($aChangedValues, $aOriginalValues[$oItem->GetKey()]);
-		}
-		return $ret;
-	}
-
 	public function DBArchive()
 	{
 		// Note: do the job anyway, so as to repair any DB discrepancy

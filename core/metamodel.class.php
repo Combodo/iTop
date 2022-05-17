@@ -7080,38 +7080,11 @@ abstract class MetaModel
 	}
 
 	/**
-	 * Deletion of records, bypassing {@link DBObject::DBDelete} !!!
-	 * It is NOT recommended to use this shortcut
-	 * In particular, it will not work
-	 *  - if the class is not a final class
-	 *  - if the class has a hierarchical key (need to rebuild the indexes)
-	 *  - if the class overload DBDelete !
+	 * @internal
 	 *
-	 * @deprecated do not use : dead code, will be removed in the future
-	 * @experimental
-	 *
-	 * @param \DBObjectSearch $oFilter
-	 *
-	 * @throws \MySQLException
-	 * @throws \MySQLHasGoneAwayException
-	 * @todo: protect it against forbidden usages (in such a case, delete objects one by one)
-	 *
-	 */
-	public static function BulkDelete(DBObjectSearch $oFilter)
-	{
-		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('do not use : dead code, will be removed in the future');
-		$sSQL = $oFilter->MakeDeleteQuery();
-		if (!self::DBIsReadOnly()) {
-			CMDBSource::Query($sSQL);
-		}
-	}
-
-	/**
-	 * @param DBObjectSearch $oFilter
 	 * @param array $aValues array of attcode => value
+	 * @param DBObjectSearch $oFilter
 	 *
-	 * @deprecated do not use : dead code, will be removed in the future
-	 * @experimental
 	 * @return int Modified objects
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException

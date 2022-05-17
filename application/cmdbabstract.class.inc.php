@@ -4525,16 +4525,6 @@ HTML;
 		}
 	}
 
-	/*
-	 * @deprecated since 3.1.0
-	 * Not used and not working !
-	*/
-	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
-	{
-		// Todo - invoke the extension
-		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);
-	}
-
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		// Invoke extensions before the deletion (the deletion will do some cleanup and we might loose some information
