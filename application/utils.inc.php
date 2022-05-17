@@ -358,6 +358,11 @@ class utils
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
+			// For URL
+			case 'url':
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
+				break;
+
 			default:
 			case 'raw_data':
 				$retValue = $value;
