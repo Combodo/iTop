@@ -1604,6 +1604,7 @@ Dict::Add('EN US', 'English', 'English', array(
 // OAuth
 Dict::Add('EN US', 'English', 'English', array(
 	'Menu:OAuthWizardMenu' => 'OAuth 2.0',
+	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration',
 	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration',
 	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration',
 	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id',
