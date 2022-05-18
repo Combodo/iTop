@@ -255,7 +255,7 @@ abstract class Dashlet
 		catch(OqlException $e)
 		{
 			$oPage->add('<div class="dashlet-content">');
-			$oPage->p($e->GetUserFriendlyDescription());
+			$oPage->p(utils::HtmlEntities($e->GetUserFriendlyDescription()));
 			$oPage->add('</div>');
 		}
 		catch(Exception $e)
