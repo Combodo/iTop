@@ -359,6 +359,7 @@ class utils
 				break;
 
 			// For URL
+			/* @since 2.7.7, 3.0.2, 3.1.0 N°4899 */
 			case 'url':
 				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				break;
