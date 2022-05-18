@@ -1827,7 +1827,7 @@ class utils
 	 */
 	public static function HtmlEntities($sValue)
 	{
-		return htmlentities($sValue, ENT_QUOTES, 'UTF-8');
+		return htmlentities($sValue ?? '', ENT_QUOTES, 'UTF-8');
 	}
 
 	/**
