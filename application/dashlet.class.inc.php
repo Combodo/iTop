@@ -919,28 +919,24 @@ class DashletObjectList extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		try {
-			$sTitle = $this->aProperties['title'];
-			$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
+		$sTitle = $this->aProperties['title'];
+		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 
-			$oPage->add('<div class="dashlet-content">');
-			$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
-			if ($sHtmlTitle != '') {
-				$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
-			}
-			$oFilter = $this->GetDBSearch($aExtraParams);
-			$oBlock = new DisplayBlock($oFilter, 'list');
-			$aParams = array(
-				'menu'     => $sShowMenu,
-				'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
-			);
-			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
-			$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
-			$oPage->add('</div>');
+		$oPage->add('<div class="dashlet-content">');
+		$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
+		if ($sHtmlTitle != '')
+		{
+			$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
 		}
-		catch(Exception $e){
-			$oPage->add(utils::HtmlEntities($e->getMessage()));
-		}
+		$oFilter = $this->GetDBSearch($aExtraParams);
+		$oBlock = new DisplayBlock($oFilter, 'list');
+		$aParams = array(
+			'menu' => $sShowMenu,
+			'table_id' => self::APPUSERPREFERENCES_PREFIX.$this->sId,
+		);
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
+		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+		$oPage->add('</div>');
 	}
 
 	public function GetDBSearch($aExtraParams = array())
@@ -1202,96 +1198,97 @@ abstract class DashletGroupBy extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		try {
-			$sTitle = $this->aProperties['title'];
-			$sQuery = $this->aProperties['query'];
-			$sStyle = $this->aProperties['style'];
+		$sTitle = $this->aProperties['title'];
+		$sQuery = $this->aProperties['query'];
+		$sStyle = $this->aProperties['style'];
 
-			// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further
-			if (isset($aExtraParams['query_params']))
-			{
-				$aQueryParams = $aExtraParams['query_params'];
-			}
-			elseif (isset($aExtraParams['this->class']) && isset($aExtraParams['this->id']))
-			{
-				$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
-				$aQueryParams = $oObj->ToArgsForQuery();
-			}
-			else
-			{
-				$aQueryParams = array();
-			}
-			$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
-			$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
-
-			$sClass = $oFilter->GetClass();
-			if (!$this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode)) {
-				$oPage->add('<p>'.Dict::S('UI:DashletGroupBy:MissingGroupBy').'</p>');
-			} else {
-				switch ($sStyle) {
-					case 'bars':
-						$sType = 'chart';
-						$aParams = array(
-							'chart_type'            => 'bars',
-							'chart_title'           => $sTitle,
-							'group_by'              => $this->sGroupByExpr,
-							'group_by_label'        => $this->sGroupByLabel,
-							'aggregation_function'  => $this->sAggregationFunction,
-							'aggregation_attribute' => $this->sAggregationAttribute,
-							'limit'                 => $this->sLimit,
-							'order_direction'       => $this->sOrderDirection,
-							'order_by'              => $this->sOrderBy,
-						);
-						$sHtmlTitle = ''; // done in the itop block
-						break;
-
-					case 'pie':
-						$sType = 'chart';
-						$aParams = array(
-							'chart_type'            => 'pie',
-							'chart_title'           => $sTitle,
-							'group_by'              => $this->sGroupByExpr,
-							'group_by_label'        => $this->sGroupByLabel,
-							'aggregation_function'  => $this->sAggregationFunction,
-							'aggregation_attribute' => $this->sAggregationAttribute,
-							'limit'                 => $this->sLimit,
-							'order_direction'       => $this->sOrderDirection,
-							'order_by'              => $this->sOrderBy,
-						);
-						$sHtmlTitle = ''; // done in the itop block
-						break;
-
-					case 'table':
-					default:
-						$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
-						$sType = 'count';
-						$aParams = array(
-							'group_by'              => $this->sGroupByExpr,
-							'group_by_label'        => $this->sGroupByLabel,
-							'aggregation_function'  => $this->sAggregationFunction,
-							'aggregation_attribute' => $this->sAggregationAttribute,
-							'limit'                 => $this->sLimit,
-							'order_direction'       => $this->sOrderDirection,
-							'order_by'              => $this->sOrderBy,
-						);
-						break;
-				}
-
-				$oPage->add('<div class="dashlet-content">');
-				if ($sHtmlTitle != '') {
-					$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
-				}
-				$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-				$oBlock = new DisplayBlock($oFilter, $sType);
-				$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
-				if ($bEditMode) {
-					$oPage->add('<div class="dashlet-blocker"></div>');
-				}
-				$oPage->add('</div>');
-			}
+		// First perform the query - if the OQL is not ok, it will generate an exception : no need to go further
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
 		}
-		catch(Exception $e){
-			$oPage->add(utils::HtmlEntities($e->getMessage()));
+		elseif (isset($aExtraParams['this->class']) && isset($aExtraParams['this->id']))
+		{
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
+			$aQueryParams = $oObj->ToArgsForQuery();
+		}
+		else
+		{
+			$aQueryParams = array();
+		}
+		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
+		$oFilter->SetShowObsoleteData(utils::ShowObsoleteData());
+
+		$sClass = $oFilter->GetClass();
+		if (!$this->oModelReflection->IsValidAttCode($sClass, $this->sGroupByAttCode))
+		{
+			$oPage->add('<p>'.Dict::S('UI:DashletGroupBy:MissingGroupBy').'</p>');
+		}
+		else
+		{
+			switch($sStyle)
+			{
+				case 'bars':
+					$sType = 'chart';
+					$aParams = array(
+						'chart_type' => 'bars',
+						'chart_title' => $sTitle,
+						'group_by' => $this->sGroupByExpr,
+						'group_by_label' => $this->sGroupByLabel,
+						'aggregation_function' => $this->sAggregationFunction,
+						'aggregation_attribute' => $this->sAggregationAttribute,
+						'limit' => $this->sLimit,
+						'order_direction' => $this->sOrderDirection,
+						'order_by' => $this->sOrderBy,
+					);
+					$sHtmlTitle = ''; // done in the itop block
+					break;
+
+				case 'pie':
+					$sType = 'chart';
+					$aParams = array(
+						'chart_type' => 'pie',
+						'chart_title' => $sTitle,
+						'group_by' => $this->sGroupByExpr,
+						'group_by_label' => $this->sGroupByLabel,
+						'aggregation_function' => $this->sAggregationFunction,
+						'aggregation_attribute' => $this->sAggregationAttribute,
+						'limit' => $this->sLimit,
+						'order_direction' => $this->sOrderDirection,
+						'order_by' => $this->sOrderBy,
+					);
+					$sHtmlTitle = ''; // done in the itop block
+					break;
+
+				case 'table':
+				default:
+					$sHtmlTitle = utils::HtmlEntities(Dict::S($sTitle)); // done in the itop block
+					$sType = 'count';
+					$aParams = array(
+						'group_by' => $this->sGroupByExpr,
+						'group_by_label' => $this->sGroupByLabel,
+						'aggregation_function' => $this->sAggregationFunction,
+						'aggregation_attribute' => $this->sAggregationAttribute,
+						'limit' => $this->sLimit,
+						'order_direction' => $this->sOrderDirection,
+						'order_by' => $this->sOrderBy,
+					);
+					break;
+			}
+
+			$oPage->add('<div class="dashlet-content">');
+			if ($sHtmlTitle != '')
+			{
+				$oPage->add('<div class="main_header"><h1>&nbsp;'.$sHtmlTitle.'</h1></div>');
+			}
+			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+			$oBlock = new DisplayBlock($oFilter, $sType);
+			$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+			if($bEditMode)
+			{
+				$oPage->add('<div class="dashlet-blocker"></div>');
+			}
+			$oPage->add('</div>');
 		}
 	}
 
@@ -2053,69 +2050,63 @@ class DashletHeaderDynamic extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		try{
-			$sTitle = utils::HtmlEntities($this->aProperties['title']);
-			$sIcon = $this->aProperties['icon'];
-			$sSubtitle = utils::HtmlEntities($this->aProperties['subtitle']);
-			$sQuery = $this->aProperties['query'];
-			$sGroupBy = $this->aProperties['group_by'];
+		$sTitle = utils::HtmlEntities($this->aProperties['title']);
+		$sIcon = $this->aProperties['icon'];
+		$sSubtitle = utils::HtmlEntities($this->aProperties['subtitle']);
+		$sQuery = $this->aProperties['query'];
+		$sGroupBy = $this->aProperties['group_by'];
 
-			$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
-			$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
+		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
+		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
 
-			$aValues = $this->GetValues();
-			if (count($aValues) > 0)
-			{
-				// Stats grouped by <group_by>
-				$sCSV = implode(',', $aValues);
-				$aParams = array(
-					'title[block]' => $sTitle,
-					'label[block]' => $sSubtitle,
-					'status[block]' => $sGroupBy,
-					'status_codes[block]' => $sCSV,
-					'context_filter' => 1,
-				);
-			}
-			else
-			{
-				// Simple stats
-				$aParams = array(
-					'title[block]' => $sTitle,
-					'label[block]' => $sSubtitle,
-					'context_filter' => 1,
-				);
-			}
-
-			$oPage->add('<div class="dashlet-content">');
-			$oPage->add('<div class="main_header">');
-
-			$oPage->add('<img src="'.$sIconPath.'">');
-
-			if (isset($aExtraParams['query_params']))
-			{
-				$aQueryParams = $aExtraParams['query_params'];
-			}
-			elseif (isset($aExtraParams['this->class']))
-			{
-				$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
-				$aQueryParams = $oObj->ToArgsForQuery();
-			}
-			else
-			{
-				$aQueryParams = array();
-			}
-
-			$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
-			$oBlock = new DisplayBlock($oFilter, 'summary');
-			$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
-			$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
-
-			$oPage->add('</div>');
-			$oPage->add('</div>');
+		$aValues = $this->GetValues();
+		if (count($aValues) > 0)
+		{
+			// Stats grouped by <group_by>
+			$sCSV = implode(',', $aValues);
+			$aParams = array(
+				'title[block]' => $sTitle,
+				'label[block]' => $sSubtitle,
+				'status[block]' => $sGroupBy,
+				'status_codes[block]' => $sCSV,
+				'context_filter' => 1,
+			);
 		}
-		catch(Exception $e){
-			$oPage->add(utils::HtmlEntities($e->getMessage()));
+		else
+		{
+			// Simple stats
+			$aParams = array(
+				'title[block]' => $sTitle,
+				'label[block]' => $sSubtitle,
+				'context_filter' => 1,
+			);
 		}
+
+		$oPage->add('<div class="dashlet-content">');
+		$oPage->add('<div class="main_header">');
+
+		$oPage->add('<img src="'.$sIconPath.'">');
+
+		if (isset($aExtraParams['query_params']))
+		{
+			$aQueryParams = $aExtraParams['query_params'];
+		}
+		elseif (isset($aExtraParams['this->class']))
+		{
+			$oObj = MetaModel::GetObject($aExtraParams['this->class'], $aExtraParams['this->id']);
+			$aQueryParams = $oObj->ToArgsForQuery();
+		}
+		else
+		{
+			$aQueryParams = array();
+		}
+		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
+		$oBlock = new DisplayBlock($oFilter, 'summary');
+		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
+		$oBlock->Display($oPage, $sBlockId, array_merge($aExtraParams, $aParams));
+
+		$oPage->add('</div>');
+		$oPage->add('</div>');
 	}
 
 	/**
