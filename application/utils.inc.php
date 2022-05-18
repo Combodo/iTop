@@ -97,6 +97,11 @@ class utils
 	 * @since 3.0.0
 	 */
 	public const ENUM_SANITIZATION_FILTER_RAW_DATA = 'raw_data';
+	/**
+	 * @var string
+	 * @since 3.0.2, 3.1.0 N°4899
+	 */
+	public const ENUM_SANITIZATION_FILTER_URL = 'url';
 
 	/**
 	 * @var string
@@ -455,7 +460,7 @@ class utils
 				break;
 
 			// For URL
-			case 'url':
+			case static::ENUM_SANITIZATION_FILTER_URL:
 				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				break;
 
