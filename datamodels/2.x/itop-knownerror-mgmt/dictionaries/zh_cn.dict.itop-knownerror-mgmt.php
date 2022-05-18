@@ -62,7 +62,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:KnownError/Attribute:symptom+' => '',
 	'Class:KnownError/Attribute:root_cause' => '问题根源',
 	'Class:KnownError/Attribute:root_cause+' => '',
-	'Class:KnownError/Attribute:workaround' => '解决过程',
+	'Class:KnownError/Attribute:workaround' => '解决流程',
 	'Class:KnownError/Attribute:workaround+' => '',
 	'Class:KnownError/Attribute:solution' => '解决方案',
 	'Class:KnownError/Attribute:solution+' => '',

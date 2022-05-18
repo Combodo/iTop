@@ -62,7 +62,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQ/Attribute:error_code+' => '',
 	'Class:FAQ/Attribute:key_words' => '关键字',
 	'Class:FAQ/Attribute:key_words+' => '',
-	'Class:FAQ/Attribute:domains' => '领域',
+	'Class:FAQ/Attribute:domains' => '范围',
 ));
 
 //
@@ -75,7 +75,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FAQCategory/Attribute:name' => '名称',
 	'Class:FAQCategory/Attribute:name+' => '',
 	'Class:FAQCategory/Attribute:faq_list' => 'FAQ',
-	'Class:FAQCategory/Attribute:faq_list+' => '该类别FAQ相关的所有常见问题',
+	'Class:FAQCategory/Attribute:faq_list+' => '此类别FAQ相关的所有常见问题',
 ));
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:ProblemManagement' => '问题管理',

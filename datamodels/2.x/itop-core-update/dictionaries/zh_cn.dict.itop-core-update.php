@@ -54,6 +54,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
     'iTopUpdate:UI:Status' => '状态',
     'iTopUpdate:UI:Action' => '升级',
+    'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.'升级程序',
     'iTopUpdate:UI:History' => '版本历史',
     'iTopUpdate:UI:Progress' => '升级进度',
 
@@ -75,9 +76,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
     'iTopUpdate:UI:CanCoreUpdate:Yes' => '应用无法升级',
 	'iTopUpdate:UI:CanCoreUpdate:No' => '应用无法升级：%1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => '警告：应用升级可能失败：%1$s',
-	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>检测到一些文件被修改</b>，无法执行局部升级。</br>请按照<a target="_blank" href="%2$s">中的流程</a>手动升级'.ITOP_APPLICATION_SHORT.'。必须使用<a href="%1$s">安装</a>以升级应用。',
-	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>检测到一些新模块</b>，无法执行局部升级。</br>请按照<a target="_blank" href="%2$s">中的流程</a>手动升级'.ITOP_APPLICATION_SHORT.'。必须使用<a href="%1$s">安装</a>以升级应用。',
+	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>检测到一些文件被修改</b>，无法执行局部升级。</br>请按照<a target="_blank" href="%2$s">此流程</a>手动升级'.ITOP_APPLICATION_SHORT.'。必须使用<a href="%1$s">安装程序</a>以升级应用。',
+	'iTopUpdate:UI:CannotUpdateNewModules' => '<b>检测到一些新模块</b>，无法执行局部升级。</br>请按照<a target="_blank" href="%2$s">此流程</a>手动升级'.ITOP_APPLICATION_SHORT.'。必须使用<a href="%1$s">安装程序</a>以升级应用。',
 	'iTopUpdate:UI:CheckInProgress' => '请等待完整性检查完成',
+
+
+
+	'iTopUpdate:UI:SetupLaunch' => '启动'.ITOP_APPLICATION_SHORT.'升级程序', 
+	'iTopUpdate:UI:SetupLaunchConfirm' => '将启动'.ITOP_APPLICATION_SHORT.'升级程序，确定吗？',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => '准备开始',

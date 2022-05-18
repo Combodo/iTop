@@ -400,10 +400,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SLT/Attribute:request_type/Value:service_request+' => '服务请求',
 	'Class:SLT/Attribute:metric' => '指标',
 	'Class:SLT/Attribute:metric+' => '',
-	'Class:SLT/Attribute:metric/Value:tto' => '响应时间',
-	'Class:SLT/Attribute:metric/Value:tto+' => '响应时间',
-	'Class:SLT/Attribute:metric/Value:ttr' => '解决时间',
-	'Class:SLT/Attribute:metric/Value:ttr+' => '解决时间',
+	'Class:SLT/Attribute:metric/Value:tto' => '响应时限',
+	'Class:SLT/Attribute:metric/Value:tto+' => '响应时限',
+	'Class:SLT/Attribute:metric/Value:ttr' => '解决时限',
+	'Class:SLT/Attribute:metric/Value:ttr+' => '解决时限',
 	'Class:SLT/Attribute:value' => '值',
 	'Class:SLT/Attribute:value+' => '',
 	'Class:SLT/Attribute:unit' => '单位',
@@ -467,7 +467,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkCustomerContractToProviderContract' => '关联 客户合同/供应商合同',
+	'Class:lnkCustomerContractToProviderContract' => '关联客户合同/供应商合同',
 	'Class:lnkCustomerContractToProviderContract+' => '',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id' => '客户合同',
 	'Class:lnkCustomerContractToProviderContract/Attribute:customercontract_id+' => '',

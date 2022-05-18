@@ -32,7 +32,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'bkp-mysqldump-notfound' => '找不到mysqldump：%1$s——请确认它正确的安装路径，或者调整'.ITOP_APPLICATION_SHORT.'配置文件的选项mysql_bindir。',
 	'bkp-mysqldump-issue' => 'mysqldump无法运行（retcode=%1$d）：请确认它正确的安装路径,或者调整'.ITOP_APPLICATION_SHORT.'配置文件的选项mysql_bindir',
 	'bkp-missing-dir' => '目标目录<code>%1$s</code>找不到',
-	'bkp-free-disk-space' => '<b>%1$s空闲</b>在<code>%2$s</code>',
+	'bkp-free-disk-space' => '<b>%1$s可用空间</b>位于<code>%2$s</code>',
 	'bkp-dir-not-writeable' => '%1$s没有写入权限',
 	'bkp-wrong-format-spec' => '当前文件名格式错误（%1$s）。默认格式应该是：%2$s',
 	'bkp-name-sample' => '备份文件将以数据库名、日期和时间进行命名。例如：%1$s',

@@ -88,7 +88,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Core:AttributeArchiveFlag' => '是否归档',
 	'Core:AttributeArchiveFlag/Value:yes' => '是',
-	'Core:AttributeArchiveFlag/Value:yes+' => '该对象仅在归档模式可见',
+	'Core:AttributeArchiveFlag/Value:yes+' => '此对象仅在归档模式可见',
 	'Core:AttributeArchiveFlag/Value:no' => '否',
 	'Core:AttributeArchiveFlag/Label' => '已归档',
 	'Core:AttributeArchiveFlag/Label+' => '',
@@ -130,8 +130,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeHTML' => 'HTML',
 	'Core:AttributeHTML+' => 'HTML字符串',
 
-	'Core:AttributeEmailAddress' => '邮箱地址',
-	'Core:AttributeEmailAddress+' => '邮箱地址',
+	'Core:AttributeEmailAddress' => '邮箱',
+	'Core:AttributeEmailAddress+' => '邮箱',
 
 	'Core:AttributeIPAddress' => 'IP地址',
 	'Core:AttributeIPAddress+' => 'IP地址',
@@ -313,7 +313,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeScalar' => '属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar+' => '对象属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '旧值',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '以前该属性的值',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '此属性的旧值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性的新值',
 ));
@@ -345,7 +345,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob+' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '之前的值',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '该数据之前的内容',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '此数据之前的内容',
 ));
 
 //
@@ -356,7 +356,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeText' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText+' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '旧值',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '该文本之前的内容',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '此文本之前的内容',
 ));
 
 //
@@ -486,7 +486,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventLoginUsage/Attribute:user_id+' => '登录',
 	'Class:EventLoginUsage/Attribute:contact_name' => '用户名',
 	'Class:EventLoginUsage/Attribute:contact_name+' => '用户名',
-	'Class:EventLoginUsage/Attribute:contact_email' => '用户邮箱',
+	'Class:EventLoginUsage/Attribute:contact_email' => '邮箱',
 	'Class:EventLoginUsage/Attribute:contact_email+' => '用户的邮箱地址',
 ));
 
@@ -510,10 +510,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:status/Value:disabled' => '停用',
 	'Class:Action/Attribute:status/Value:disabled+' => '停用',
 	'Class:Action/Attribute:trigger_list' => '相关的触发器',
-	'Class:Action/Attribute:trigger_list+' => '该操作关联的触发器',
+	'Class:Action/Attribute:trigger_list+' => '此操作关联的触发器',
 	'Class:Action/Attribute:finalclass' => '操作子类',
 	'Class:Action/Attribute:finalclass+' => '类名称',
-	'Action:WarningNoTriggerLinked' => '警告，此操作没有链接任何触发器。至少链接1个触发器前其不会被激活。',
+	'Action:WarningNoTriggerLinked' => '警告，此操作没有关联任何触发器。在至少关联1个触发器前，其不会被激活。',
 ));
 
 //
@@ -695,7 +695,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:lnkTriggerAction' => '操作/触发器',
-	'Class:lnkTriggerAction+' => '链接触发器和操作',
+	'Class:lnkTriggerAction+' => '关联触发器和操作',
 	'Class:lnkTriggerAction/Attribute:action_id' => '操作',
 	'Class:lnkTriggerAction/Attribute:action_id+' => '要执行的操作',
 	'Class:lnkTriggerAction/Attribute:action_name' => '操作',
@@ -822,7 +822,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:SyncSplitModeCLIOnly' => '通知仅在CLI模式下运行才能批量执行',
 	'Core:Synchro:ListReplicas_AllReplicas_Errors_Warnings' => '%1$s个复制，%2$s个错误，%3$s个告警。',
 	'Core:SynchroReplica:TargetObject' => '已同步的对象: %1$s',
-	'Class:AsyncSendEmail' => 'Email (异步)',
+	'Class:AsyncSendEmail' => '电子邮件 (异步)',
 	'Class:AsyncSendEmail/Attribute:to' => '收件人',
 	'Class:AsyncSendEmail/Attribute:subject' => '主题',
 	'Class:AsyncSendEmail/Attribute:body' => '正文',
@@ -1004,7 +1004,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: TagSetFieldData
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TagSetFieldData' => '%2$s给类%1$s',
+	'Class:TagSetFieldData' => '类%1$s的%2$s',
 	'Class:TagSetFieldData+' => '~~',
 
 	'Class:TagSetFieldData/Attribute:code' => '编码',

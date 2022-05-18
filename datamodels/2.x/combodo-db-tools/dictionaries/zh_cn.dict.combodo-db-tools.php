@@ -74,7 +74,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',
-	'DBTools:LostAttachments:Button:Restore:Confirm' => '该操作无法回退，请确认是否继续还原。',
+	'DBTools:LostAttachments:Button:Restore:Confirm' => '此操作无法回退，请确认是否继续还原。',
 	'DBTools:LostAttachments:Button:Busy' => '请稍后...',
 
 	'DBTools:LostAttachments:Step:Analyze' => '首先，通过分析数据库来搜索丢失或误挪动的附件。',

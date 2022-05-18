@@ -75,7 +75,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopHub:InstallationProgress:DatabaseBackup' => ITOP_APPLICATION_SHORT.'本机备份...',
 	'iTopHub:InstallationProgress:ExtensionsInstallation' => '安装扩展',
 	'iTopHub:InstallationEffect:MissingDependencies' => '扩展无法安装，因为未知的依赖。',
-	'iTopHub:InstallationEffect:MissingDependencies_Details' => '该扩展依赖模块：%1$s',
+	'iTopHub:InstallationEffect:MissingDependencies_Details' => '此扩展依赖模块：%1$s',
 	'iTopHub:InstallationProgress:InstallationSuccessful' => '安装成功！',
 
 	'iTopHub:InstallationStatus:Installed_Version' => '%1$s版本：%2$s.',
