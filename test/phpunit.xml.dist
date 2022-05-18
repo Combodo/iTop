@@ -44,10 +44,6 @@
     <testsuite name="Itop-Tickets">
       <directory>itop-tickets</directory>
     </testsuite>
-    <!-- OQL : taking too long (20min+)... we should move this to nightlies ! See N°4655 -->
-    <!-- testsuite name="OQL">
-        <directory>OQL</directory>
-    </testsuite -->
     <testsuite name="Setup">
       <directory>setup</directory>
     </testsuite>
