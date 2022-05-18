@@ -1461,7 +1461,7 @@ EOF
 								if ( ($iFlags & OPT_ATT_SLAVE) && ($paramValue != $oObj->Get($sAttCode)) )
 								{
 									$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 									unset($aExpectedAttributes[$sAttCode]);
 								}
 							}

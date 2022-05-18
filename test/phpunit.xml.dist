@@ -44,12 +44,8 @@
     <testsuite name="Application">
       <directory>application</directory>
     </testsuite>
-    <!-- OQL : taking too long (20min+)... we should move this to nightlies ! See N°4655 -->
-    <!--testsuite name="OQL">
-        <directory>OQL</directory>
-    </testsuite-->
-    <testsuite name="Sources">
-      <directory>sources</directory>
+    <testsuite name="Setup">
+      <directory>setup</directory>
     </testsuite>
     <testsuite name="Status">
       <directory>status</directory>

@@ -236,6 +236,11 @@ try {
 			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
 		}
 
+		// CSRF transaction id verification
+		if(!$bSimulate && !utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
+			throw new CoreException(Dict::S('UI:Error:InvalidToken'));
+		}
+
 		$aResult = array();
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
@@ -522,6 +527,7 @@ try {
 		$oForm = FormUIBlockFactory::MakeStandard('wizForm');
 		$oContainer->AddSubBlock($oForm);
 
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("transaction_id", utils::GetNewTransactionId()));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("step", ($iCurrentStep + 1)));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("separator", htmlentities($sSeparator, ENT_QUOTES, 'UTF-8')));
 		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("text_qualifier", htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8')));
@@ -681,7 +687,7 @@ EOF
 		// Add graphs dependencies
 		WebResourcesHelper::EnableC3JSToWebPage($oPage);
 
-		$oPage->add_script(		
+		$oPage->add_script(
 <<< EOF
 function CSVGoBack()
 {
@@ -1178,7 +1184,7 @@ EOF
 		}
 	
 		$aGuesses = GuessParameters($sUTF8Data); // Try to predict the parameters, based on the input data
-		
+
 		$iSkippedLines = utils::ReadParam('nb_skipped_lines', '');
 		$bBoxSkipLines = utils::ReadParam('box_skiplines', 0);
 		$sTextQualifier = utils::ReadParam('text_qualifier', '', false, 'raw_data');

@@ -3929,7 +3929,7 @@ HTML;
 				}
 				elseif ($iFlags & OPT_ATT_SLAVE)
 				{
-					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 				}
 				else
 				{

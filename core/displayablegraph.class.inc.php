@@ -1195,8 +1195,10 @@ class DisplayableGraph extends SimpleGraph
 	 * @param float $xMax Right coordinate of the bounding box to display the graph
 	 * @param float $yMin Top coordinate of the bounding box to display the graph
 	 * @param float $yMax Bottom coordinate of the bounding box to display the graph
+	 *
+	 * @since 2.7.7 3.0.2 3.1.0 N°4985 $sComments param is no longer optional
 	 */
-	function RenderAsPDF(PDFPage $oPage, $sComments = '', $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
+	function RenderAsPDF(PDFPage $oPage, $sComments, $sContextKey, $xMin = -1, $xMax = -1, $yMin = -1, $yMax = -1)
 	{
 		$aContextDefs = static::GetContextDefinitions($sContextKey, false); // No need to develop the parameters
 		$oPdf = $oPage->get_tcpdf();
