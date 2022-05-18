@@ -1368,7 +1368,7 @@ JS;
 	 * Get an ID (for any kind of HTML tag) that is guaranteed unique in this page
 	 *
 	 * @return int The unique ID (in this page)
-	 * @deprecated since 3.0.0 use utils::GetUniqueId() instead
+	 * @deprecated 3.0.0 use utils::GetUniqueId() instead
 	 */
 	public function GetUniqueId()
 	{

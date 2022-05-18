@@ -605,4 +605,26 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			'2G'            => ['2G', 2 * 1024 * 1024 * 1024],
 		];
 	}
+
+	/**
+	 * @param string|null $sString
+	 * @param int $iExpected
+	 *
+	 * @dataProvider StrLenProvider
+	 */
+	public function testStrLen(?string $sString, int $iExpected)
+	{
+		$iComputed = utils::StrLen($sString);
+		self::assertEquals($iExpected, $iComputed, 'Length was not as expected');
+	}
+
+	public function StrLenProvider(): array
+	{
+		return [
+			'null value' => [null, 0],
+			'0 character' => ['', 0],
+			'1 character' => ['a', 1],
+			'5 characters' => ['abcde', 5],
+		];
+	}
 }

@@ -265,7 +265,7 @@ EOF
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if (($oFilter instanceof DBObjectSearch)) {
 			// OQL Developed for Count
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
@@ -280,7 +280,7 @@ EOF
 		$oCountResultQuerySet->AddSubBlock(UIContentBlockUIBlockFactory::MakeForCode($sSQL));
 		$aMoreInfoBlocks[] = $oCountResultQuerySet;
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
+		if (($oFilter instanceof DBObjectSearch)) {
 			// OQL Developed
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);

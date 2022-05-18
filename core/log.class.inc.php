@@ -710,6 +710,7 @@ abstract class LogAPI
 	/**
 	 * @throws \ConfigException if log wrongly configured
 	 * @uses GetMinLogLevel
+	 * @since 3.0.0 N°3731
 	 */
 	final public static function IsLogLevelEnabled(string $sLevel, string $sChannel, string $sConfigKey = self::ENUM_CONFIG_PARAM_FILE): bool
 	{

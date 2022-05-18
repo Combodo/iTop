@@ -17,7 +17,9 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 //
 
-// THIS FILE IS DEPRECATED
+/*
+* @deprecated 3.0.0 N°3141 - Deprecate legacy SQL build
+*/
 
 /** @internal Dev hack for disabling some query build optimizations (Folding/Merging) */
 define('ENABLE_OPT', true);

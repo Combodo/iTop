@@ -1,13 +1,11 @@
 <p align="center"><a href="https://www.combodo.com/itop-193" target="_blank">
-    <img src="https://www.combodo.com/logos/logo-itop.svg">
+    <img src="https://www.combodo.com/logos/logo-itop-baseline.svg" width=350>
 </a></p>
 
 
-# iTop - ITSM & CMDB
- 
-iTop stands for *IT Operations Portal*.
-It is a complete open source, ITIL, web based service management tool including a fully customizable CMDB, a helpdesk system and a document management tool. 
-iTop also offers mass import tools and web services to integrate with your IT
+iTop stands for IT Operations Portal. It is a complete open source and web based IT service management platform including a fully customizable CMDB, a helpdesk system and a document management tool. It is ITIL compliant and easily customizable and extensible thanks to a high number of adds-on and web services to integrate with your IT.
+
+iTop also offers mass import tools to help you being even more efficient.
 
 ## Features
 - Fully configurable [Configuration Management (CMDB)][10]

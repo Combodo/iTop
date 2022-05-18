@@ -17,7 +17,6 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ExceptionLog;
-use MetaModel;
 
 
 require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
@@ -33,12 +32,6 @@ class ExceptionLogTest extends ItopDataTestCase
 	{
 		require_once(__DIR__.'/ExceptionLogTest/Exceptions.php');
 		parent::setUp();
-
-		// We are using PHPUnit\Framework\MockObject\Generator::generateMock that is throwing notice !
-		// Changing config so that those won't be caught by \DeprecatedCallsLog::DeprecatedNoticesErrorHandler
-		// disabling devenv is easier than changing log config O:)
-		$oConfig = MetaModel::GetConfig();
-		$oConfig->Set('developer_mode.enabled', false);
 	}
 
 	/**

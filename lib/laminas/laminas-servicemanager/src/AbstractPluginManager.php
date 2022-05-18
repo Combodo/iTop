@@ -186,7 +186,7 @@ abstract class AbstractPluginManager extends ServiceManager implements PluginMan
      *
      * Returns the creation context.
      *
-     * @deprecated since 3.0.0. The creation context should be passed during
+     * @deprecated 3.0.0. The creation context should be passed during
      *     instantiation instead.
      * @param ContainerInterface $container
      * @return void

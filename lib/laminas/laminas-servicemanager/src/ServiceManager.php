@@ -158,7 +158,7 @@ class ServiceManager implements ServiceLocatorInterface
      *
      * Returns the creation context.
      *
-     * @deprecated since 3.0.0. Factories using 3.0 should use the container
+     * @deprecated 3.0.0. Factories using 3.0 should use the container
      *     instance passed to the factory instead.
      * @return ContainerInterface
      */

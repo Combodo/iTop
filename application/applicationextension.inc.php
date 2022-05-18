@@ -1184,7 +1184,7 @@ interface iPageUIBlockExtension
  * @api
  * @package     Extensibility
  * @since       2.7.0
- * @deprecated since 3.0.0 use AbstractPageUIBlockExtension instead
+ * @deprecated 3.0.0 use AbstractPageUIBlockExtension instead
  */
 abstract class AbstractPageUIExtension implements iPageUIExtension
 {

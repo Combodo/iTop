@@ -677,20 +677,33 @@ abstract class CMDBObject extends DBObject
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
 	{
 		$ret = parent::DBDelete($oDeletionPlan);
+
 		return $ret;
 	}
 
+	/*
+	 * @deprecated since 3.1.0
+	 * Not used and not working !
+	*/
 	public static function BulkUpdate(DBSearch $oFilter, array $aValues)
 	{
 		return static::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
+	/*
+	 * @deprecated since 3.1.0
+	 * Not used and not working !
+	*/
 	public static function BulkUpdateTracked(CMDBChange $oChange, DBSearch $oFilter, array $aValues)
 	{
 		self::SetCurrentChange($oChange);
 		static::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
+	/*
+	 * @deprecated since 3.1.0
+	 * Not used and not working because  parent::BulkUpdate doesn't exist!
+	*/
 	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
 	{
 		// $aValues is an array of $sAttCode => $value

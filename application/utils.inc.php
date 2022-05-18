@@ -454,6 +454,11 @@ class utils
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
+			// For URL
+			case 'url':
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
+				break;
+
 			default:
 			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;
@@ -2807,6 +2812,24 @@ HTML;
 		}
 
 		return $aPrefs[$sShortcutId];
+	}
+
+	//----------------------------------------------
+	// PHP function helpers
+	//----------------------------------------------
+
+	/**
+	 * Helper around the native strlen() PHP method to keep allowing usage of null value when computing the length of a string as null value is no longer allowed with PHP 8.1+
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return int Length of $sString, 0 if null
+	 * @since 3.0.2 N°5172
+	 */
+	public static function StrLen(?string $sString): int
+	{
+		return strlen($sString ?? '');
 	}
 
 	//----------------------------------------------
