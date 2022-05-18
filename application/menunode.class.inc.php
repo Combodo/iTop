@@ -655,7 +655,7 @@ abstract class MenuNode
 		$this->sMenuId = $sMenuId;
 		$this->iParentIndex = $iParentIndex;
 		$this->aReflectionProperties = array();
-		if (strlen($sEnableClass) > 0)
+		if (utils::StrLen($sEnableClass) > 0)
 		{
 			$this->aReflectionProperties['enable_class'] = $sEnableClass;
 			$this->aReflectionProperties['enable_action'] = $iActionCode;
