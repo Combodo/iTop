@@ -557,7 +557,7 @@ class Config
 		),
 		'email_transport_smtp.oauth.provider'      => [
 			'type'                => 'string',
-			'description'         => 'TODO',
+			'description'         => 'Email OAuth provider',
 			'default'             => '',
 			'value'               => '',
 			'source_of_value'     => '',
@@ -565,7 +565,7 @@ class Config
 		],
 		'email_transport_smtp.oauth.client_id'     => [
 			'type'                => 'string',
-			'description'         => 'TODO',
+			'description'         => 'Email OAuth client id',
 			'default'             => '',
 			'value'               => '',
 			'source_of_value'     => '',
@@ -573,7 +573,7 @@ class Config
 		],
 		'email_transport_smtp.oauth.client_secret' => [
 			'type'                => 'string',
-			'description'         => 'TODO',
+			'description'         => 'Email OAuth client secret',
 			'default'             => '',
 			'value'               => '',
 			'source_of_value'     => '',
@@ -581,7 +581,7 @@ class Config
 		],
 		'email_transport_smtp.oauth.access_token'  => [
 			'type'                => 'string',
-			'description'         => 'TODO',
+			'description'         => 'Email OAuth access token',
 			'default'             => '',
 			'value'               => '',
 			'source_of_value'     => '',
@@ -589,7 +589,7 @@ class Config
 		],
 		'email_transport_smtp.oauth.refresh_token' => [
 			'type'                => 'string',
-			'description'         => 'TODO',
+			'description'         => 'Email OAuth refresh token',
 			'default'             => '',
 			'value'               => '',
 			'source_of_value'     => '',
