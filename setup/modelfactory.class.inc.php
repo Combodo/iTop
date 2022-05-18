@@ -2561,12 +2561,14 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 *
 	 * @param string $sName
 	 * @param null $value
-	 * @param null $namespaceURI
+	 * @param string $namespaceURI
 	 *
 	 * @return \MFElement
 	 * @throws \Exception
+	 *
+	 * @since 3.1.0 N°4517 $namespaceURI parameter must be empty string by default so
 	 */
-	function createElement($sName, $value = null, $namespaceURI = null)
+	function createElement($sName, $value = null, $namespaceURI = '')
 	{
 		/** @var \MFElement $oElement */
 		$oElement = $this->importNode(new MFElement($sName, null, $namespaceURI));
