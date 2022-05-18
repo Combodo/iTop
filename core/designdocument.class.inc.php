@@ -77,6 +77,7 @@ class DesignDocument extends DOMDocument
 	 *
 	 * @return int
 	 */
+	#[\ReturnTypeWillChange]
 	public function save($filename, $options = 0)
 	{
 		$this->documentElement->setAttribute('xmlns:xsi', "http://www.w3.org/2001/XMLSchema-instance");

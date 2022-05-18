@@ -2538,6 +2538,7 @@ class MFDocument extends \Combodo\iTop\DesignDocument
 	 * @return string
 	 * @throws \Exception
 	 */
+	#[\ReturnTypeWillChange]
 	public function saveXML(DOMNode $node = null, $options = 0)
 	{
 		$oRootNode = $this->firstChild;
