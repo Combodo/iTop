@@ -454,6 +454,11 @@ class utils
 				$retValue = preg_replace('/[^a-zA-Z0-9_]/', '', $value);
 				break;
 
+			// For URL
+			case 'url':
+				$retValue = filter_var($value, FILTER_SANITIZE_URL);
+				break;
+
 			default:
 			case static::ENUM_SANITIZATION_FILTER_RAW_DATA:
 				$retValue = $value;

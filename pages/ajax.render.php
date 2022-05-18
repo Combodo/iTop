@@ -932,7 +932,7 @@ try
 
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'url');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
@@ -950,7 +950,7 @@ try
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'url');
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
@@ -967,7 +967,7 @@ try
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
 
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'url');
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
 			$sJSExtraParams = json_encode($aExtraParams);
 			$aParams = array();
@@ -1009,7 +1009,7 @@ JS
 
 		case 'revert_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'url');
 			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->Revert();
@@ -1039,7 +1039,7 @@ EOF
 			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'url');
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->SetReloadURL($sReloadURL);
@@ -1051,7 +1051,7 @@ EOF
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'string');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, 'url');
 			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
 			if (!is_null($oDashboard)) {
 				if (!empty($sReloadURL)) {

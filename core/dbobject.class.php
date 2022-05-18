@@ -2026,9 +2026,9 @@ abstract class DBObject implements iDisplay
 	/**
 	 * check attributes together
 	 *
-     * @overwritable-hook You can extend this method in order to provide your own logic.
-     * 
-	 * @return bool 
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
+	 *
+	 * @return true|string true if successful, the error description otherwise
 	 */
 	public function CheckConsistency()
 	{
