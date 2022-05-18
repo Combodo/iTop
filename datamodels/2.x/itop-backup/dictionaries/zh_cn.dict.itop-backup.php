@@ -49,7 +49,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'bkp-status-backups-manual' => '手动备份',
 	'bkp-status-backups-none' => '尚未开始备份',
 	'bkp-next-backup' => '下一次备份将发生在<b>%1$s</b>（%2$s）的%3$s',
-	'bkp-next-backup-unknown' => '下一次备份<b>尚未被计划</b。',
+	'bkp-next-backup-unknown' => '下一次备份<b>尚未被计划</b>。',
 	'bkp-button-backup-now' => '立即备份！',
 	'bkp-button-restore-now' => '还原！',
 	'bkp-confirm-backup' => '请确认是否立即开始备份。',
