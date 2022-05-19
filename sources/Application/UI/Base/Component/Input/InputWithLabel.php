@@ -9,6 +9,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Input;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * You might want to use a {@link \Combodo\iTop\Application\UI\Base\Component\Field\Field} component instead...
@@ -134,7 +135,7 @@ class InputWithLabel extends UIBlock
 	 */
 	public function HasDescription(): bool
 	{
-		return strlen($this->sDescription) > 0;
+		return utils::StrLen($this->sDescription) > 0;
 	}
 
 }
