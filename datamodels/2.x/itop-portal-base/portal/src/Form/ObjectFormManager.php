@@ -703,7 +703,7 @@ class ObjectFormManager extends FormManager
 
 			/** @var Field $oField */
 			$oField = null;
-			if (is_callable(get_class($oAttDef).'::MakeFormField'))
+			if (is_callable([$oAttDef, 'MakeFormField']))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 			}

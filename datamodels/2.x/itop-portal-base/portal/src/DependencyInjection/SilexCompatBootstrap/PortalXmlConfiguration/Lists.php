@@ -91,7 +91,10 @@ class Lists extends AbstractConfiguration
 				}
 				// - Sorting list items by rank
 				usort($aListItems, function ($a, $b) {
-					return $a['rank'] > $b['rank'];
+					if ($a['rank'] == $b['rank']) {
+						return 0;
+					}
+					return $a['rank'] > $b['rank'] ? 1 : -1;
 				});
 				$aClassLists[$sListId] = $aListItems;
 			}

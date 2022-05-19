@@ -197,6 +197,11 @@ try {
 			throw new CoreException(Dict::S('UI:ActionNotAllowed'));
 		}
 
+		// CSRF transaction id verification
+		if(!$bSimulate && !utils::IsTransactionValid(utils::ReadPostedParam('transaction_id', '', 'raw_data'))){
+			throw new CoreException(Dict::S('UI:Error:InvalidToken'));
+		}
+
 		$aResult = array();
 		$sCSVData = utils::ReadParam('csvdata', '', false, 'raw_data');
 		$sCSVDataTruncated = utils::ReadParam('csvdata_truncated', '', false, 'raw_data');
@@ -487,11 +492,12 @@ try {
 			$sHtml .= "<td class=\"$sCSSMessageClass\" style=\"background-color:#f1f1f1;\">$sMessage</td>";
 			$sHtml .= '</tr>';
 		}
-		
+
 		$iUnchanged = count($aRes) - $iErrors - $iModified - $iCreated;
 		$sHtml .= '</table>';
 		$oPage->add('<div class="wizContainer" style="width:auto;display:inline-block;">');
 		$oPage->add('<form enctype="multipart/form-data" id="wizForm" method="post">');
+		$oPage->add('<input type="hidden" name="transaction_id" value="' . utils::GetNewTransactionId() . '">');
 		$oPage->add('<input type="hidden" name="step" value="'.($iCurrentStep+1).'"/>');
 		$oPage->add('<input type="hidden" name="separator" value="'.htmlentities($sSeparator, ENT_QUOTES, 'UTF-8').'"/>');
 		$oPage->add('<input type="hidden" name="text_qualifier" value="'.htmlentities($sTextQualifier, ENT_QUOTES, 'UTF-8').'"/>');
