@@ -283,6 +283,7 @@ class utils
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
+	 * @since 2.7.7, 3.0.2, 3.1.0 new 'url' N°4899
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
@@ -359,7 +360,6 @@ class utils
 				break;
 
 			// For URL
-			/* @since 2.7.7, 3.0.2, 3.1.0 N°4899 */
 			case 'url':
 				$retValue = filter_var($value, FILTER_SANITIZE_URL);
 				break;
