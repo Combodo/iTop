@@ -116,7 +116,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:related_problems_list+' => '此变更相关的所有问题',
 	'Class:Change/Attribute:child_changes_list' => '子变更',
 	'Class:Change/Attribute:child_changes_list+' => '此变更相关的所有子变更',
-	'Class:Change/Attribute:parent_id_friendlyname' => '父级变更昵称',
+	'Class:Change/Attribute:parent_id_friendlyname' => '父级变更通用名',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Stimulus:ev_assign' => '分配',
 	'Class:Change/Stimulus:ev_assign+' => '',

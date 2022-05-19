@@ -146,7 +146,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Contact/Attribute:cis_list' => '配置项',
 	'Class:Contact/Attribute:cis_list+' => '此联系人关联的所有配置项',
 	'Class:Contact/Attribute:finalclass' => '联系人子类',
-	'Class:Contact/Attribute:finalclass+' => '终态类的名称',
+	'Class:Contact/Attribute:finalclass+' => '终态类名称',
 ));
 
 //
@@ -232,7 +232,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:cis_list' => '配置项',
 	'Class:Document/Attribute:cis_list+' => '此文档关联的所有配置项',
 	'Class:Document/Attribute:finalclass' => '文档子类',
-	'Class:Document/Attribute:finalclass+' => '终态类的名称',
+	'Class:Document/Attribute:finalclass+' => '终态类名称',
 ));
 
 //
@@ -278,7 +278,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Typology/Attribute:name' => '名称',
 	'Class:Typology/Attribute:name+' => '',
 	'Class:Typology/Attribute:finalclass' => '类型',
-	'Class:Typology/Attribute:finalclass+' => '终态类的名称',
+	'Class:Typology/Attribute:finalclass+' => '终态类名称',
 ));
 
 //
@@ -357,7 +357,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:SearchContacts' => '搜索联系人',
 	'Menu:SearchContacts+' => '搜索联系人',
 	'Menu:ConfigManagement:Shortcuts' => '快捷方式',
-	'Menu:ConfigManagement:AllContacts' => '所有联系人:%1$d',
+	'Menu:ConfigManagement:AllContacts' => '所有联系人：%1$d',
 	'Menu:Typology' => '类型配置',
 	'Menu:Typology+' => '类型配置',
 	'UI_WelcomeMenu_AllConfigItems' => '摘要',

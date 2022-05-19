@@ -38,7 +38,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Error:HTTP:404' => '页面找不到',
 	'Error:HTTP:500' => '内部错误',
 	'Error:HTTP:GetHelp' => '如果问题仍然存在，请联系系统管理员。',
-	'Error:XHR:Fail' => '无法加载数据, 请联系管理员',
+	'Error:XHR:Fail' => '无法加载数据，请联系管理员',
 	'Portal:ErrorUserLoggedOut' => '您已退出，请重新登录。',
 	'Portal:Datatables:Language:Processing' => '请稍后...',
 	'Portal:Datatables:Language:Search' => '过滤器：',
@@ -65,8 +65,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 // Object form
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => '关闭此条目',
-	'Portal:Form:Close:Warning' => '确认离开此表单吗？可能会丢失已输入的数据。',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => '关闭此录入',
+	'Portal:Form:Close:Warning' => '确认离开此表单吗？可能会丢失已录入的数据。',
 	'Portal:Error:ObjectCannotBeCreated' => '错误：无法创建对象。重新提交表单前请检查关联的对象和附件。',
 	'Portal:Error:ObjectCannotBeUpdated' => '错误：无法更新对象。重新提交表单前请检查关联的对象和附件。',
 ));

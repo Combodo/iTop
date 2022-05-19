@@ -127,7 +127,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:FunctionalCI/Attribute:softwares_list' => '软件',
 	'Class:FunctionalCI/Attribute:softwares_list+' => '此配置项上已安装的所有软件',
 	'Class:FunctionalCI/Attribute:finalclass' => '二级配置项',
-	'Class:FunctionalCI/Attribute:finalclass+' => '类名称',
+	'Class:FunctionalCI/Attribute:finalclass+' => '终态类名称',
 	'Class:FunctionalCI/Tab:OpenedTickets' => '活跃的工单',
 ));
 

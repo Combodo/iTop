@@ -56,7 +56,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBAnalyzer-Integrity-UsersWithoutProfile' => '一些用户账号没有角色',
 	'DBAnalyzer-Integrity-HKInvalid' => '缺失的层级键`%1$s`',
 	'DBAnalyzer-Fetch-Count-Error' => '提取计数错误位于`%1$s`， %2$d条目已提取，/%3$d已计数',
-	'DBAnalyzer-Integrity-FinalClass' => '字段`%2$s`.`%1$s`必须有相同值而不非`%3$s`.`%1$s`',
+	'DBAnalyzer-Integrity-FinalClass' => '字段`%2$s`.`%1$s`必须有相同值而不是`%3$s`.`%1$s`',
 	'DBAnalyzer-Integrity-RootFinalClass' => '字段`%2$s`.`%1$s`必须包含有效的类',
 ));
 
@@ -70,7 +70,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Lost attachments
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'DBTools:LostAttachments' => '缺失附件',
-	'DBTools:LostAttachments:Disclaimer' => '您可以在此搜索数据库中丢失或错放的附件。这不是数据恢复同居，其无法恢复已删除的数据。',
+	'DBTools:LostAttachments:Disclaimer' => '可以在此搜索数据库中丢失或错放的附件。这不是数据恢复工具，其无法恢复已删除的数据。',
 
 	'DBTools:LostAttachments:Button:Analyze' => '分析',
 	'DBTools:LostAttachments:Button:Restore' => '还原',

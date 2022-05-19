@@ -37,10 +37,10 @@
 //////////////////////////////////////////////////////////////////////
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s（已删除）',
-	'Core:DeletedObjectTip' => '此对象已经被删除位于%1$s（%2$s）',
+	'Core:DeletedObjectTip' => '此对象已经被删除于%1$s（%2$s）',
 
 	'Core:UnknownObjectLabel' => '找不到对象（类：%1$s，id：%2$d）',
-	'Core:UnknownObjectTip' => '找不到对象。其可能已经被删除了一段时间了并且日志已经被随之清楚了。',
+	'Core:UnknownObjectTip' => '找不到对象。其可能已经被删除了一段时间了并且日志已经被随之清除了。',
 
 	'Core:UniquenessDefaultError' => '唯一性规则“%1$s"错误',
 
@@ -194,7 +194,7 @@ Operators:<br/>
 	'Core:AttributeHierarchicalKey+' => '指向父级的外键',
 
 	'Core:AttributeExternalField' => '外部字段',
-	'Core:AttributeExternalField+' => '映射道外键的字段',
+	'Core:AttributeExternalField+' => '映射到外键的字段',
 
 	'Core:AttributeURL' => 'URL',
 	'Core:AttributeURL+' => '文本字符串的相对或绝对URL',
@@ -209,7 +209,7 @@ Operators:<br/>
 	'Core:AttributeTable+' => '有索引的两维数组',
 
 	'Core:AttributePropertySet' => '属性',
-	'Core:AttributePropertySet+' => '无类属性列表（名称和值）',
+	'Core:AttributePropertySet+' => '无类型属性列表（名称和值）',
 
 	'Core:AttributeFriendlyName' => '通用名称',
 	'Core:AttributeFriendlyName+' => '自动创建的属性；通用名称基于多个属性自动计算',
@@ -273,7 +273,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOp/Attribute:objkey' => '对象id',
 	'Class:CMDBChangeOp/Attribute:objkey+' => '对象id',
 	'Class:CMDBChangeOp/Attribute:finalclass' => 'CMDBChangeOp子类',
-	'Class:CMDBChangeOp/Attribute:finalclass+' => '类名称',
+	'Class:CMDBChangeOp/Attribute:finalclass+' => '终态类名称',
 ));
 
 //
@@ -373,7 +373,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Event/Attribute:userinfo' => '用户信息',
 	'Class:Event/Attribute:userinfo+' => '进行操作或触发事件的用户身份',
 	'Class:Event/Attribute:finalclass' => '事件子类',
-	'Class:Event/Attribute:finalclass+' => '类名称',
+	'Class:Event/Attribute:finalclass+' => '终态类名称',
 ));
 
 //
@@ -512,7 +512,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:trigger_list' => '相关的触发器',
 	'Class:Action/Attribute:trigger_list+' => '此操作关联的触发器',
 	'Class:Action/Attribute:finalclass' => '操作子类',
-	'Class:Action/Attribute:finalclass+' => '类名称',
+	'Class:Action/Attribute:finalclass+' => '终态类名称',
 	'Action:WarningNoTriggerLinked' => '警告，此操作没有关联任何触发器。在至少关联1个触发器前，其不会被激活。',
 ));
 
@@ -578,7 +578,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Trigger/Attribute:action_list' => '触发的行为',
 	'Class:Trigger/Attribute:action_list+' => '触发器激活后所执行的操作',
 	'Class:Trigger/Attribute:finalclass' => '触发器子类',
-	'Class:Trigger/Attribute:finalclass+' => '类名称',
+	'Class:Trigger/Attribute:finalclass+' => '终态类名称',
 	'Class:Trigger/Attribute:context' => '上下文',
 	'Class:Trigger/Attribute:context+' => '触发场景',
 ));
@@ -588,7 +588,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:TriggerOnObject' => '触发器（类无关）',
+	'Class:TriggerOnObject' => '触发器（类相关）',
 	'Class:TriggerOnObject+' => '在给定类对象的触发器',
 	'Class:TriggerOnObject/Attribute:target_class' => '目标类',
 	'Class:TriggerOnObject/Attribute:target_class+' => '',
@@ -694,7 +694,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkTriggerAction' => '操作/触发器',
+	'Class:lnkTriggerAction' => '关联操作/触发器',
 	'Class:lnkTriggerAction+' => '关联触发器和操作',
 	'Class:lnkTriggerAction/Attribute:action_id' => '操作',
 	'Class:lnkTriggerAction/Attribute:action_id+' => '要执行的操作',
@@ -735,7 +735,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:action_on_multiple+' => '搜索返回多个对象时要执行的操作',
 	'Class:SynchroDataSource/Attribute:user_delete_policy' => '授权用户',
 	'Class:SynchroDataSource/Attribute:user_delete_policy+' => '谁可以删除同步的对象',
-	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => 'Nobody',
+	'Class:SynchroDataSource/Attribute:delete_policy/Value:never' => '没人',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:depends' => '仅限管理员',
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:always' => '所有授权用户',
 	'Class:SynchroDataSource/Attribute:delete_policy_update' => '更新规则',
@@ -855,7 +855,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:attribute_list' => '属性列表',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '仅限管理员',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '允许所有人删除此些对象',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '没有人',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => '没人',
 	'Class:SynchroAttribute' => '同步属性',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => '同步数据源',
 	'Class:SynchroAttribute/Attribute:attcode' => '属性代码',
@@ -930,7 +930,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	// Bulk export
 	'Core:BulkExport:MissingParameter_Param' => '缺少参数“%1$s”',
-	'Core:BulkExport:InvalidParameter_Query' => '参数“query”的值不合法。没有查询手册对应此id：“"%1$s”。',
+	'Core:BulkExport:InvalidParameter_Query' => '参数“query”的值不合法。没有查询手册对应此id：“%1$s”。',
 	'Core:BulkExport:ExportFormatPrompt' => '导出格式：',
 	'Core:BulkExportOf_Class' => '%1$s导出',
 	'Core:BulkExport:ClickHereToDownload_FileName' => '点击这里下载%1$s',

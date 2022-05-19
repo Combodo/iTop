@@ -30,7 +30,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'bkp-status-checks' => '设置与检查',
 	'bkp-mysqldump-ok' => '已找到mysqldump：%1$s',
 	'bkp-mysqldump-notfound' => '找不到mysqldump：%1$s——请确认它正确的安装路径，或者调整'.ITOP_APPLICATION_SHORT.'配置文件的选项mysql_bindir。',
-	'bkp-mysqldump-issue' => 'mysqldump无法运行（retcode=%1$d）：请确认它正确的安装路径,或者调整'.ITOP_APPLICATION_SHORT.'配置文件的选项mysql_bindir',
+	'bkp-mysqldump-issue' => 'mysqldump无法运行（retcode=%1$d）：请确认它正确的安装路径，或者调整'.ITOP_APPLICATION_SHORT.'配置文件的选项mysql_bindir',
 	'bkp-missing-dir' => '目标目录<code>%1$s</code>找不到',
 	'bkp-free-disk-space' => '<b>%1$s可用空间</b>位于<code>%2$s</code>',
 	'bkp-dir-not-writeable' => '%1$s没有写入权限',

@@ -132,7 +132,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Change/Attribute:related_incident_list+' => '此变更相关的所有事件',
 	'Class:Change/Attribute:child_changes_list' => '子变更',
 	'Class:Change/Attribute:child_changes_list+' => '此变更相关的字变更',
-	'Class:Change/Attribute:parent_id_friendlyname' => '父级变更昵称',
+	'Class:Change/Attribute:parent_id_friendlyname' => '父级变更通用名',
 	'Class:Change/Attribute:parent_id_friendlyname+' => '',
 	'Class:Change/Attribute:parent_id_finalclass_recall' => '变更类型',
 	'Class:Change/Attribute:parent_id_finalclass_recall+' => '',

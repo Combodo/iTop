@@ -95,15 +95,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkErrorToFunctionalCI' => '关联错误/功能配置项',
-	'Class:lnkErrorToFunctionalCI+' => '错误和功能配置项之间的关联',
+	'Class:lnkErrorToFunctionalCI' => '关联已知错误/功能配置项',
+	'Class:lnkErrorToFunctionalCI+' => '已知错误和功能配置项之间的关联',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id' => '配置项',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_id+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name' => '配置项名称',
 	'Class:lnkErrorToFunctionalCI/Attribute:functionalci_name+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => '错误',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_id' => '已知错误',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_id+' => '',
-	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '错误名称',
+	'Class:lnkErrorToFunctionalCI/Attribute:error_name' => '已知错误名称',
 	'Class:lnkErrorToFunctionalCI/Attribute:error_name+' => '',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason' => '原因',
 	'Class:lnkErrorToFunctionalCI/Attribute:reason+' => '',
@@ -114,15 +114,15 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 //
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:lnkDocumentToError' => '关联文档/错误',
-	'Class:lnkDocumentToError+' => '文档和错误之间的关联',
+	'Class:lnkDocumentToError' => '关联文档/已知错误',
+	'Class:lnkDocumentToError+' => '文档和已知错误之间的关联',
 	'Class:lnkDocumentToError/Attribute:document_id' => '文档',
 	'Class:lnkDocumentToError/Attribute:document_id+' => '',
 	'Class:lnkDocumentToError/Attribute:document_name' => '文档名称',
 	'Class:lnkDocumentToError/Attribute:document_name+' => '',
-	'Class:lnkDocumentToError/Attribute:error_id' => '错误',
+	'Class:lnkDocumentToError/Attribute:error_id' => '已知错误',
 	'Class:lnkDocumentToError/Attribute:error_id+' => '',
-	'Class:lnkDocumentToError/Attribute:error_name' => '错误名称',
+	'Class:lnkDocumentToError/Attribute:error_name' => '已知错误名称',
 	'Class:lnkDocumentToError/Attribute:error_name+' => '',
 	'Class:lnkDocumentToError/Attribute:link_type' => '关联类型',
 	'Class:lnkDocumentToError/Attribute:link_type+' => '',

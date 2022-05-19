@@ -41,11 +41,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditCategory/Attribute:name' => '类别名称',
 	'Class:AuditCategory/Attribute:name+' => '类别简称',
 	'Class:AuditCategory/Attribute:description' => '审计类别描述',
-	'Class:AuditCategory/Attribute:description+' => '以前审计类别的详细描述',
+	'Class:AuditCategory/Attribute:description+' => '此审计类别的详细描述',
 	'Class:AuditCategory/Attribute:definition_set' => '定义',
 	'Class:AuditCategory/Attribute:definition_set+' => '定义用于审计的对象的OQL表达式',
 	'Class:AuditCategory/Attribute:rules_list' => '审计规则',
-	'Class:AuditCategory/Attribute:rules_list+' => '以前类别的审计规则',
+	'Class:AuditCategory/Attribute:rules_list+' => '此类别的审计规则',
 ));
 
 //
@@ -369,7 +369,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:WelcomeMenuPage+' => '欢迎使用'.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => '欢迎使用'.ITOP_APPLICATION_SHORT,
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'是完全开源的I 操作门户。</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.'是完全开源的IT操作门户。</p>
 <ul>它包括:
 <li>完整的CMDB（配置管理数据库），用于登记和管理您的IT资产。</li>
 <li>事件管理模块用于跟踪和传递所有发生在IT系统中的事件。</li>
@@ -607,7 +607,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => '多个联系人存在相同的邮箱地址',
 	'UI:Login:Error:NoValidProfiles'               => '无效的资料',
 	'UI:CSVImport:MappingSelectOne'                => '--请选择--',
-	'UI:CSVImport:MappingNotApplicable'            => '--忽略此栏--',
+	'UI:CSVImport:MappingNotApplicable'            => '--忽略此字段--',
 	'UI:CSVImport:NoData'                          => '数据为空...，请提供数据！',
 	'UI:Title:DataPreview'                         => '数据预览',
 	'UI:CSVImport:ErrorOnlyOneColumn'              => '错误：数据仅包含一列。您选择了合适的分隔符了吗？',
@@ -1208,7 +1208,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Favorites:ShowObsoleteData+' => '在搜索结果中显示已废弃的数据',
 	'UI:NavigateAwayConfirmationMessage' => '所有修改都将丢失。',
 	'UI:CancelConfirmationMessage' => '您将丢失所有修改。是否继续？',
-	'UI:AutoApplyConfirmationMessage' => '有些修改尚未生效。您希望'.ITOP_APPLICATION_SHORT.'估计这些吗？',
+	'UI:AutoApplyConfirmationMessage' => '有些修改尚未生效。您希望'.ITOP_APPLICATION_SHORT.'顾及这些吗？',
 	'UI:Create_Class_InState' => '创建%1$s在状态：',
 	'UI:OrderByHint_Values' => '排列顺序：%1$s',
 	'UI:Menu:AddToDashboard' => '添加到仪表盘...',
@@ -1234,7 +1234,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:OnlyForThisList' => '仅这个列表',
 	'UI:ForAllLists' => '默认所有列表',
 	'UI:ExtKey_AsLink' => '%1$s（超链接）',
-	'UI:ExtKey_AsFriendlyName' => '%1$s（昵称）',
+	'UI:ExtKey_AsFriendlyName' => '%1$s（通用称）',
 	'UI:ExtField_AsRemoteField' => '%1$s（%2$s）',
 	'UI:Button:MoveUp' => '上移',
 	'UI:Button:MoveDown' => '下移',
@@ -1279,7 +1279,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:DashletUnknown:Description' => '未知组件（可能已被卸载）',
 	'UI:DashletUnknown:RenderText:View' => '无法渲染此组件',
 	'UI:DashletUnknown:RenderText:Edit' => '无法渲染此组件（类“%1$s”）。请与系统管理员确认其是否仍然可用。',
-	'UI:DashletUnknown:RenderNoDataText:Edit' => '此组件五预览（类“%1$s”）。',
+	'UI:DashletUnknown:RenderNoDataText:Edit' => '此组件无预览（类“%1$s”）。',
 	'UI:DashletUnknown:Prop-XMLConfiguration' => '配置（显示为纯XML）',
 
 	'UI:DashletProxy:Label' => '代理',

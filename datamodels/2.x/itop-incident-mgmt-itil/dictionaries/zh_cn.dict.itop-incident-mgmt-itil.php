@@ -233,6 +233,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Incident/Error:CannotAssignParentIncidentIdToSelf' => '不能分配父级事件给自己',
 
 	'Class:Incident/Method:ResolveChildTickets' => '解决子工单',
-	'Class:Incident/Method:ResolveChildTickets+' => '级联解决子工单（事件自动解决），和调整以下内容保持一至：服务，团队，处理人，解决方案',
+	'Class:Incident/Method:ResolveChildTickets+' => '级联解决子工单（事件自动解决），并且调整以下内容使其保持一致：服务，团队，处理人，解决方案',
 	'Tickets:Related:OpenIncidents' => '打开的事件',
 ));
