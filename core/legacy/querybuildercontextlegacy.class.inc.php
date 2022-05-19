@@ -17,6 +17,7 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
+ * @deprecated 3.1.0 N°3141 - Deprecate legacy SQL build
  * Associated with the metamodel -> MakeQuery/MakeQuerySingleTable
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL

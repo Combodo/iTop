@@ -15,7 +15,6 @@ use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
-require_once(APPROOT.'/application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'/application/wizardhelper.class.inc.php');
 require_once(APPROOT.'/application/ui.linkswidget.class.inc.php');
 

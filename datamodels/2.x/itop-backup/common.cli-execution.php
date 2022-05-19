@@ -30,7 +30,6 @@ if (!defined('APPROOT'))
 	}
 }
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/ajaxwebpage.class.inc.php');
 require_once(APPROOT.'core/log.class.inc.php');
 require_once(APPROOT.'application/startup.inc.php');
 

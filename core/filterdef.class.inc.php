@@ -31,8 +31,9 @@ require_once('MyHelpers.class.inc.php');
 
 
 /**
- * Definition of a filter (could be made out of an existing attribute, or from an expression) 
+ * Definition of a filter (could be made out of an existing attribute, or from an expression)
  *
+ * @deprecated  3.1.0 not used N°4690 - Deprecate "FilterCodes"
  * @package     iTopORM
  */
 abstract class FilterDefinition
@@ -46,6 +47,7 @@ abstract class FilterDefinition
 	
 	public function __construct($sCode, $aParams = array())
 	{
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod("Deprecated class ".$this->GetClass().". Do not use. Will be removed in next version.");
 		$this->m_sCode = $sCode;
 		$this->m_aParams = $aParams;
 		$this->ConsistencyCheck();
@@ -98,8 +100,9 @@ abstract class FilterDefinition
 }
 
 /**
- * Match against the object unique identifier 
+ * Match against the object unique identifier
  *
+ * @deprecated 3.1.0 N°4690 - Deprecate "FilterCodes"
  * @package     iTopORM
  */
 class FilterPrivateKey extends FilterDefinition
@@ -145,8 +148,9 @@ class FilterPrivateKey extends FilterDefinition
 }
 
 /**
- * Match against an existing attribute (the attribute type will determine the available operators) 
+ * Match against an existing attribute (the attribute type will determine the available operators)
  *
+ * @deprecated 3.1.0 N°4690 - Deprecate "FilterCodes"
  * @package     iTopORM
  */
 class FilterFromAttribute extends FilterDefinition

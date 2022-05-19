@@ -277,7 +277,7 @@ class ActionEmail extends ActionNotification
 	protected function FindRecipients($sRecipAttCode, $aArgs)
 	{
 		$sOQL = $this->Get($sRecipAttCode);
-		if (strlen($sOQL) == '') return '';
+		if (strlen($sOQL) === 0) return '';
 
 		try
 		{

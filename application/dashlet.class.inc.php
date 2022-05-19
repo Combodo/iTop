@@ -262,7 +262,7 @@ abstract class Dashlet
 			}
 		} catch (OqlException $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
-			$oDashletContainer->AddHtml('<p>'.$e->GetUserFriendlyDescription().'</p>');
+			$oDashletContainer->AddHtml('<p>'.utils::HtmlEntities($e->GetUserFriendlyDescription()).'</p>');
 		} catch (Exception $e) {
 			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.$e->getMessage().'</p>');
