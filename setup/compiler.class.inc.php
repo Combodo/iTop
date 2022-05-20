@@ -617,7 +617,20 @@ EOF;
 			// files to include (PHP datamodels)
 			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
 			{
-				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
+					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				} else {
+					$sMissingBusinessFileMessage = 'A module business file is non existing on disk after compilation !';
+					$aContext = [
+						'moduleId'       => $oModule->GetId(),
+						'moduleLocation' => $oModule->GetRootDir(),
+						'includedFile'   => $sRelFileName,
+					];
+					if (utils::IsDevelopmentEnvironment()) {
+						throw new CoreException($sMissingBusinessFileMessage, $aContext);
+					}
+					SetupLog::Warning($sMissingBusinessFileMessage, null, $aContext);
+				}
 			}
 			// files to include (PHP webservices providers)
 			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
