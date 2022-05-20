@@ -1161,16 +1161,18 @@ class ObjectFormManager extends FormManager
 		$sObjectClass = get_class($this->oObject);
 
 		try {
+			// modification flags
+			$bIsNew = $this->oObject->IsNew();
+			$bWasModified = $this->oObject->IsModified();
+			$bActivateTriggers = (!$bIsNew && $bWasModified);
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+			$bAllowWrite = $this->oContainer->get('security_helper')->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
 
 			// Writing object to DB
-			$bIsNew = $this->oObject->IsNew();
-			$bWasModified = $this->oObject->IsModified();
-			$bActivateTriggers = (!$bIsNew && $bWasModified);
 			try
 			{
 				$this->oObject->DBWrite();
