@@ -12,6 +12,7 @@ use Combodo\iTop\CoreUpdate\Service\CoreUpdater;
 
 function AppUpgradeCopyFiles($sSourceDir)
 {
+	CoreUpdater::CopyDir($sSourceDir, APPROOT);
 	// Update Core update files
 	$sSource = realpath($sSourceDir.'/datamodels/2.x/itop-core-update');
 	if ($sSource !== false)
