@@ -23,6 +23,7 @@
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+DeprecatedCallsLog::NotifyDeprecatedFile("querybuildercontextlegacy.class.inc.php is deprecated. Please use querybuildercontext.class.inc.php instead");
 
 class QueryBuilderContext
 {

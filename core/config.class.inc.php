@@ -1457,11 +1457,11 @@ class Config
 			'show_in_conf_sample' => false,
 		],
 		'use_legacy_dbsearch' => [
-			'type' => 'bool',
-			'description' => 'If set, DBSearch will use legacy SQL query generation',
-			'default' => false,
-			'value' => false,
-			'source_of_value' => '',
+			'type'                => 'bool',
+			'description'         => 'Deprecated since 3.1.0, there is now only one dbsearch method.',
+			'default'             => false,
+			'value'               => false,
+			'source_of_value'     => '',
 			'show_in_conf_sample' => false,
 		],
 		'query_cache_enabled' => [
