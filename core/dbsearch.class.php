@@ -16,10 +16,24 @@
  *
  * You should have received a copy of the GNU Affero General Public License
  */
+
+
+$bUseLegacyDBSearch = utils::GetConfig()->Get('use_legacy_dbsearch');
+
+if ($bUseLegacyDBSearch)
+{
+	// excluded from autoload
+	require_once (APPROOT.'core/legacy/querybuilderexpressionslegacy.class.inc.php');
+	require_once (APPROOT.'core/legacy/querybuildercontextlegacy.class.inc.php');
+	require_once(APPROOT.'core/legacy/dbobjectsearchlegacy.class.php');
+}
+else
+{
 	// excluded from autoload
 	require_once (APPROOT.'core/querybuilderexpressions.class.inc.php');
 	require_once (APPROOT.'core/querybuildercontext.class.inc.php');
 	require_once(APPROOT.'core/dbobjectsearch.class.php');
+}
 
 /**
  * An object search

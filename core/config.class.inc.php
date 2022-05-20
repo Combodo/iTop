@@ -1456,6 +1456,14 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'use_legacy_dbsearch' => [
+			'type' => 'bool',
+			'description' => 'If set, DBSearch will use legacy SQL query generation',
+			'default' => false,
+			'value' => false,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'query_cache_enabled' => [
 			'type' => 'bool',
 			'description' => 'If set, DBSearch will use cache for query generation',
