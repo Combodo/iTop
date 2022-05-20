@@ -114,7 +114,7 @@ class QueryLogEntry
 			$aGroupedBy = array();
 			foreach ($this->aGroupByExpr as $oExpr)
 			{
-				$aGroupedBy[] = $oExpr->Render();
+				$aGroupedBy[] = $oExpr->RenderExpression();
 			}
 			$this->sQueryDesc = implode(', ', $aGroupedBy);
 

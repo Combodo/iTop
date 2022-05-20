@@ -1898,16 +1898,13 @@ class DBObjectSearch extends DBSearch
 		// Hide objects that are not visible to the current user
 		//
 		$oSearch = $this;
-		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered())
-		{
+		if (!$this->IsAllDataAllowed() && !$this->IsDataFiltered()) {
 			$oVisibleObjects = UserRights::GetSelectFilter($this->GetClass(), $this->GetModifierProperties('UserRightsGetSelectFilter'));
-			if ($oVisibleObjects === false)
-			{
+			if ($oVisibleObjects === false) {
 				// Make sure this is a valid search object, saying NO for all
 				$oVisibleObjects = DBObjectSearch::FromEmptySet($this->GetClass());
 			}
-			if (is_object($oVisibleObjects))
-			{
+			if (is_object($oVisibleObjects)) {
 				$oVisibleObjects->AllowAllData();
 				$oSearch = $this->Intersect($oVisibleObjects);
 				$oSearch->SetDataFiltered();
@@ -1927,63 +1924,49 @@ class DBObjectSearch extends DBSearch
 			if (isset($_SERVER['REQUEST_URI']))
 			{
 				$aContextData['sRequestUri'] = $_SERVER['REQUEST_URI'];
-			}
-			else if (isset($_SERVER['SCRIPT_NAME']))
-			{
+			} else if (isset($_SERVER['SCRIPT_NAME'])) {
 				$aContextData['sRequestUri'] = $_SERVER['SCRIPT_NAME'];
-			}
-			else
-			{
+			} else {
 				$aContextData['sRequestUri'] = '';
 			}
 
 			// Need to identify the query
 			$sOqlQuery = $oSearch->ToOql(false, null, true);
-			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false))
-			{
+			if ((strpos($sOqlQuery, '`id` IN (') !== false) || (strpos($sOqlQuery, '`id` NOT IN (') !== false)) {
 				// Requests containing "id IN" are not worth caching
 				$bCanCache = false;
 			}
 
 			$aContextData['sOqlQuery'] = $sOqlQuery;
 
-			if (count($aModifierProperties))
-			{
+			if (count($aModifierProperties)) {
 				array_multisort($aModifierProperties);
 				$sModifierProperties = json_encode($aModifierProperties);
-			}
-			else
-			{
+			} else {
 				$sModifierProperties = '';
 			}
 			$aContextData['sModifierProperties'] = $sModifierProperties;
 
 			$sRawId = Dict::GetUserLanguage().'-'.$sOqlQuery.$sModifierProperties;
-			if (!is_null($aAttToLoad))
-			{
+			if (!is_null($aAttToLoad)) {
 				$sRawId .= json_encode($aAttToLoad);
 			}
 			$aContextData['aAttToLoad'] = $aAttToLoad;
-			if (!is_null($aGroupByExpr))
-			{
-				foreach($aGroupByExpr as $sAlias => $oExpr)
-				{
-					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->Render();
+			if (!is_null($aGroupByExpr)) {
+				foreach ($aGroupByExpr as $sAlias => $oExpr) {
+					$sRawId .= 'g:'.$sAlias.'!'.$oExpr->RenderExpression();
 				}
 			}
-			if (!is_null($aSelectExpr))
-			{
-				foreach($aSelectExpr as $sAlias => $oExpr)
-				{
-					$sRawId .= 'se:'.$sAlias.'!'.$oExpr->Render();
+			if (!is_null($aSelectExpr)) {
+				foreach ($aSelectExpr as $sAlias => $oExpr) {
+					$sRawId .= 'se:'.$sAlias.'!'.$oExpr->RenderExpression();
 				}
 			}
 			$aContextData['aGroupByExpr'] = $aGroupByExpr;
 			$aContextData['aSelectExpr'] = $aSelectExpr;
 			$sRawId .= $bGetCount;
 			$aContextData['bGetCount'] = $bGetCount;
-			if (is_array($aSelectedClasses))
-			{
+			if (is_array($aSelectedClasses)) {
 				$sRawId .= implode(',', $aSelectedClasses); // Unions may alter the list of selected columns
 			}
 			$aContextData['aSelectedClasses'] = $aSelectedClasses;
@@ -2094,17 +2077,13 @@ class DBObjectSearch extends DBSearch
 			// 3rd step - position the attributes in the hierarchy of classes
 			//
 			$oSubClassExp->Browse(function($oNode) use ($sSubClass) {
-				if ($oNode instanceof FieldExpression)
-				{
+				if ($oNode instanceof FieldExpression) {
 					$sAttCode = $oNode->GetName();
 					$oAttDef = MetaModel::GetAttributeDef($sSubClass, $sAttCode);
-					if ($oAttDef->IsExternalField())
-					{
+					if ($oAttDef->IsExternalField()) {
 						$sKeyAttCode = $oAttDef->GetKeyAttCode();
 						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sKeyAttCode);
-					}
-					else
-					{
+					} else {
 						$sClassOfAttribute = MetaModel::GetAttributeOrigin($sSubClass, $sAttCode);
 					}
 					$sParent = MetaModel::GetAttributeOrigin($sClassOfAttribute, $oNode->GetName());
@@ -2112,12 +2091,11 @@ class DBObjectSearch extends DBSearch
 				}
 			});
 
-			$sSignature = $oSubClassExp->Render();
-			if (!array_key_exists($sSignature, $aExpressions))
-			{
+			$sSignature = $oSubClassExp->RenderExpression();
+			if (!array_key_exists($sSignature, $aExpressions)) {
 				$aExpressions[$sSignature] = array(
 					'expression' => $oSubClassExp,
-					'classes' => array(),
+					'classes'    => array(),
 				);
 			}
 			$aExpressions[$sSignature]['classes'][] = $sSubClass;

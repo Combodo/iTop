@@ -107,7 +107,7 @@ abstract class Expression {
 	/**
 	 * recursive rendering
 	 *
-	 * @deprecated use RenderExpression
+	 * @deprecated 3.0.0 use RenderExpression
 	 *
 	 * @param array $aArgs used as input by default, or used as output if bRetrofitParams set to True
 	 * @param bool $bRetrofitParams
@@ -118,7 +118,7 @@ abstract class Expression {
 	public function Render(&$aArgs = null, $bRetrofitParams = false)
 	{
 		// cannot notify depreciation for now as this is still MASSIVELY used in iTop core !
-		//DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
+		DeprecatedCallsLog::NotifyDeprecatedPhpMethod('use RenderExpression');
 
 		return $this->RenderExpression(false, $aArgs, $bRetrofitParams);
 	}
@@ -1765,6 +1765,7 @@ class FieldExpression extends UnaryExpression
 	 */
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
+
 		$sAttCode = $this->GetName();
 		$sParentAlias = $this->GetParent();
 
@@ -3049,8 +3050,7 @@ class FunctionExpression extends Expression
 	public function MakeValueLabel($oFilter, $sValue, $sDefault)
 	{
 		static $aWeekDayToString = null;
-		if (is_null($aWeekDayToString))
-		{
+		if (is_null($aWeekDayToString)) {
 			// Init the correspondance table
 			$aWeekDayToString = array(
 				0 => Dict::S('DayOfWeek-Sunday'),
@@ -3059,7 +3059,7 @@ class FunctionExpression extends Expression
 				3 => Dict::S('DayOfWeek-Wednesday'),
 				4 => Dict::S('DayOfWeek-Thursday'),
 				5 => Dict::S('DayOfWeek-Friday'),
-				6 => Dict::S('DayOfWeek-Saturday')
+				6 => Dict::S('DayOfWeek-Saturday'),
 			);
 		}
 		static $aMonthToString = null;
@@ -3067,15 +3067,15 @@ class FunctionExpression extends Expression
 		{
 			// Init the correspondance table
 			$aMonthToString = array(
-				1 => Dict::S('Month-01'),
-				2 => Dict::S('Month-02'),
-				3 => Dict::S('Month-03'),
-				4 => Dict::S('Month-04'),
-				5 => Dict::S('Month-05'),
-				6 => Dict::S('Month-06'),
-				7 => Dict::S('Month-07'),
-				8 => Dict::S('Month-08'),
-				9 => Dict::S('Month-09'),
+				1  => Dict::S('Month-01'),
+				2  => Dict::S('Month-02'),
+				3  => Dict::S('Month-03'),
+				4  => Dict::S('Month-04'),
+				5  => Dict::S('Month-05'),
+				6  => Dict::S('Month-06'),
+				7  => Dict::S('Month-07'),
+				8  => Dict::S('Month-08'),
+				9  => Dict::S('Month-09'),
 				10 => Dict::S('Month-10'),
 				11 => Dict::S('Month-11'),
 				12 => Dict::S('Month-12'),
@@ -3083,30 +3083,25 @@ class FunctionExpression extends Expression
 		}
 
 		$sRes = $sDefault;
-		if (strtolower($this->m_sVerb) == 'date_format')
-		{
+		if (strtolower($this->m_sVerb) == 'date_format') {
 			$oFormatExpr = $this->m_aArgs[1];
-			if ($oFormatExpr->Render() == "'%w'")
-			{
-				if (isset($aWeekDayToString[(int)$sValue]))
-				{
+			//o
+			if ($oFormatExpr->RenderExpression() == "'%w'") {
+				if (isset($aWeekDayToString[(int)$sValue])) {
 					$sRes = $aWeekDayToString[(int)$sValue];
 				}
-			}
-			elseif ($oFormatExpr->Render() == "'%Y-%m'")
-			{
+			} //o
+			elseif ($oFormatExpr->RenderExpression() == "'%Y-%m'") {
 				// yyyy-mm => "yyyy month"
-				$iMonth = (int) substr($sValue, -2); // the two last chars
+				$iMonth = (int)substr($sValue, -2); // the two last chars
 				$sRes = substr($sValue, 0, 4).' '.$aMonthToString[$iMonth];
-			}
-			elseif ($oFormatExpr->Render() == "'%Y-%m-%d'")
-			{
+			} //o
+			elseif ($oFormatExpr->RenderExpression() == "'%Y-%m-%d'") {
 				// yyyy-mm-dd => "month d"
-				$iMonth = (int) substr($sValue, 5, 2);
+				$iMonth = (int)substr($sValue, 5, 2);
 				$sRes = $aMonthToString[$iMonth].' '.(int)substr($sValue, -2);
-			}
-			elseif ($oFormatExpr->Render() == "'%H'")
-			{
+			} //o
+			elseif ($oFormatExpr->RenderExpression() == "'%H'") {
 				// H => "H Hour(s)"
 				$sRes = $sValue.':00';
 			}
