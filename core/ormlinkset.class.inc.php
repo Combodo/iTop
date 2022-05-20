@@ -374,7 +374,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 */
-	public function current(): mixed
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
+	public function current()
 	{
 		$this->LoadOriginalIds();
 
@@ -439,7 +441,9 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 	 * @link http://php.net/manual/en/iterator.key.php
 	 * @return mixed scalar on success, or null on failure.
 	 */
-	public function key(): mixed
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
+	public function key()
 	{
 		return $this->iCursor;
 	}

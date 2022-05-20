@@ -760,12 +760,16 @@ class RelationTypeIterator implements Iterator
 		$this->iCurrentIdx++;
 	}
 	
-	public function current(): mixed
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
+	public function current()
 	{
 		return $this->aList[$this->iCurrentIdx];
 	}
 	
-	public function key(): mixed
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
+	public function key()
 	{
 		return $this->iCurrentIdx;
 	}

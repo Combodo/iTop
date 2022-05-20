@@ -38,7 +38,9 @@ class OQLParser_yyToken implements ArrayAccess
         return isset($this->metadata[$offset]);
     }
 
-    function offsetGet($offset): mixed
+	// Return type mixed is not supported by PHP 7.4, we can remove the following PHP attribute and add the return type once iTop min PHP version is PHP 8.0+
+	#[\ReturnTypeWillChange]
+    function offsetGet($offset)
     {
         return $this->metadata[$offset];
     }
