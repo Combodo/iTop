@@ -99,7 +99,13 @@ class AppExtension extends AbstractExtension
 
 			return $sUrl;
 		});
-
+		//$filters[] = new TwigFilter('filter', 'twig_array_filter');
+		$filters[] = new Twig_SimpleFilter('filter', function ($array, $arrow) {
+			if ($arrow == 'system'){
+				return json_encode($array);
+			}
+			return  twig_array_filter($array, $arrow);
+		});
 
 		return $filters;
 	}

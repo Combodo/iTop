@@ -120,17 +120,6 @@ class ObjectFormManager extends FormManager
 	{
 		$aJson = static::DecodeFormManagerData($sJson);
 
-		$oConfig = utils::GetConfig();
-		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
-		if ($bIsContentCheckEnabled && (false === $bTrustContent)) {
-			/** @noinspection NestedPositiveIfStatementsInspection */
-			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
-				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
-				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
-				throw new \SecurityException('Twig content not allowed in this context!');
-			}
-		}
-
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
 
