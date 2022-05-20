@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Dict;
+use utils;
 
 /**
  * Class ButtonUIBlockFactory
