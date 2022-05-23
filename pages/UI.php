@@ -1306,7 +1306,7 @@ HTML
 					$sWarnings = implode(', ', $aWarnings);
 					$oP->AddHeaderMessage($sWarnings, 'message_info');
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
 				$oP->add(<<<HTML
 	</div><!-- End of wizContainer -->
 </div><!-- End of object-details -->

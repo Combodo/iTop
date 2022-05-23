@@ -283,7 +283,7 @@ class utils
 	 *
 	 * @since 2.5.2 2.6.0 new 'transaction_id' filter
 	 * @since 2.7.0 new 'element_identifier' filter
-	 * @since 2.7.7, 3.0.2, 3.1.0 new 'url' N°4899
+	 * @since 2.7.7, 3.0.2, 3.1.0 N°4899 - new 'url' filter
 	 */
 	protected static function Sanitize_Internal($value, $sSanitizationFilter)
 	{
