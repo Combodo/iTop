@@ -26,6 +26,7 @@
 @include APPROOT."/core/oauth.php";
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
+use Combodo\iTop\Core\Email\iEMail;
 use Laminas\Mail\Header\ContentType;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\File;
@@ -38,7 +39,7 @@ use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
-class EMailLaminas
+class EMailLaminas implements iEMail
 {
 	// Serialization formats
 	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
@@ -56,9 +57,11 @@ class EMailLaminas
 	}
 
 	protected $m_oMessage;
+	protected $oEMail;
 
-	public function __construct()
+	public function __construct(EMail $oEMail)
 	{
+		$this->oEMail = $oEMail;
 		$this->m_aData = array();
 		$this->m_oMessage = new Message();
 		$this->m_oMessage->setEncoding('UTF-8');
@@ -138,7 +141,7 @@ class EMailLaminas
 	protected function SendAsynchronous(&$aIssues, $oLog = null)
 	{
 		try {
-			AsyncSendEmail::AddToQueue($this, $oLog);
+			AsyncSendEmail::AddToQueue($this->oEMail, $oLog);
 		}
 		catch (Exception $e) {
 			$aIssues = array($e->GetMessage());
@@ -150,9 +153,9 @@ class EMailLaminas
 		return EMAIL_SEND_PENDING;
 	}
 
-	public static function GetMailer()
+	public static function GetMailer(EMail $oEMail)
 	{
-		return new EMailLaminas();
+		return new EMailLaminas($oEMail);
 	}
 
 	/**
@@ -334,14 +337,7 @@ class EMailLaminas
 
 		if (strlen($sValue) > 0) {
 			$oHeaders = $this->m_oMessage->getHeaders();
-			switch (strtolower($sKey)) {
-				case 'return-path':
-					$this->m_oMessage->setReturnPath($sValue);
-					break;
-
-				default:
-					$oHeaders->addHeaderLine($sKey, $sValue);
-			}
+			$oHeaders->addHeaderLine($sKey, $sValue);
 		}
 	}
 
@@ -387,7 +383,7 @@ class EMailLaminas
 	 * @throws \CoreException
 	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
-	public function SetBody($sBody, string $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
+	public function SetBody($sBody, $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{
 		$oBody = new Laminas\Mime\Message();
 		$aAdditionalParts = [];
@@ -439,7 +435,7 @@ class EMailLaminas
 	 *
 	 * @return void
 	 */
-	public function AddPart($sText, string $sMimeType = Mime::TYPE_HTML)
+	public function AddPart($sText, $sMimeType = Mime::TYPE_HTML)
 	{
 		if (!array_key_exists('parts', $this->m_aData)) {
 			$this->m_aData['parts'] = array();

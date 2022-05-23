@@ -24,13 +24,14 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\Email\iEMail;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
 Swift_Preferences::getInstance()->setCharset('UTF-8');
 
-class EmailSwiftMailer
+class EmailSwiftMailer implements iEMail
 {
 	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
@@ -44,9 +45,11 @@ class EmailSwiftMailer
 	}
 
 	protected $m_oMessage;
+	protected $oEMail;
 
-	public function __construct()
+	public function __construct(EMail $oEMail)
 	{
+		$this->oEMail = $oEMail;
 		$this->m_aData = array();
 		$this->m_oMessage = new Swift_Message();
 		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
@@ -134,7 +137,7 @@ class EmailSwiftMailer
 	{
 		try
 		{
-			AsyncSendEmail::AddToQueue($this, $oLog);
+			AsyncSendEmail::AddToQueue($this->oEMail, $oLog);
 		}
 		catch(Exception $e)
 		{
@@ -145,9 +148,9 @@ class EmailSwiftMailer
 		return EMAIL_SEND_PENDING;
 	}
 
-	public static function GetMailer()
+	public static function GetMailer(EMail $oEMail)
 	{
-		return new EmailSwiftMailer();
+		return new EmailSwiftMailer($oEMail);
 	}
 
 	protected function SendSynchronous(&$aIssues, $oLog = null)

@@ -25,13 +25,14 @@
  */
 
 use Combodo\iTop\Core\Email\EmailFactory;
+use Combodo\iTop\Core\Email\iEMail;
 
 
 define ('EMAIL_SEND_OK', 0);
 define ('EMAIL_SEND_PENDING', 1);
 define ('EMAIL_SEND_ERROR', 2);
 
-class EMail
+class EMail implements iEMail
 {
 	protected $oMailer;
 
@@ -42,7 +43,7 @@ class EMail
 
 	public function __construct()
 	{
-		$this->oMailer = EmailFactory::GetMailer();
+		$this->oMailer = EmailFactory::GetMailer($this);
 	}
 
 	/**

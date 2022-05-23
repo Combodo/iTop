@@ -161,6 +161,7 @@ return array(
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientProviderGoogle' => $baseDir . '/sources/Core/Authentication/Client/OAuth/OAuthClientProviderGoogle.php',
     'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientResultDisplayConf' => $baseDir . '/sources/Core/Authentication/Client/OAuth/OAuthClientResultDisplayConf.php',
     'Combodo\\iTop\\Core\\Email\\EmailFactory' => $baseDir . '/sources/Core/Email/EmailFactory.php',
+    'Combodo\\iTop\\Core\\Email\\iEMail' => $baseDir . '/sources/Core/Email/iEMail.php',
     'Combodo\\iTop\\DesignDocument' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\DesignElement' => $baseDir . '/core/designdocument.class.inc.php',
     'Combodo\\iTop\\TwigExtension' => $baseDir . '/application/twigextension.class.inc.php',

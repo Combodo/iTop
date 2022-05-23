@@ -529,6 +529,7 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientProviderGoogle' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/OAuthClientProviderGoogle.php',
         'Combodo\\iTop\\Core\\Authentication\\Client\\OAuth\\OAuthClientResultDisplayConf' => __DIR__ . '/../..' . '/sources/Core/Authentication/Client/OAuth/OAuthClientResultDisplayConf.php',
         'Combodo\\iTop\\Core\\Email\\EmailFactory' => __DIR__ . '/../..' . '/sources/Core/Email/EmailFactory.php',
+        'Combodo\\iTop\\Core\\Email\\iEMail' => __DIR__ . '/../..' . '/sources/Core/Email/iEMail.php',
         'Combodo\\iTop\\DesignDocument' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\DesignElement' => __DIR__ . '/../..' . '/core/designdocument.class.inc.php',
         'Combodo\\iTop\\TwigExtension' => __DIR__ . '/../..' . '/application/twigextension.class.inc.php',
