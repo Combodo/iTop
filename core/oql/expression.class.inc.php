@@ -3085,23 +3085,20 @@ class FunctionExpression extends Expression
 		$sRes = $sDefault;
 		if (strtolower($this->m_sVerb) == 'date_format') {
 			$oFormatExpr = $this->m_aArgs[1];
-			//o
+
 			if ($oFormatExpr->RenderExpression() == "'%w'") {
 				if (isset($aWeekDayToString[(int)$sValue])) {
 					$sRes = $aWeekDayToString[(int)$sValue];
 				}
-			} //o
-			elseif ($oFormatExpr->RenderExpression() == "'%Y-%m'") {
+			} elseif ($oFormatExpr->RenderExpression() == "'%Y-%m'") {
 				// yyyy-mm => "yyyy month"
 				$iMonth = (int)substr($sValue, -2); // the two last chars
 				$sRes = substr($sValue, 0, 4).' '.$aMonthToString[$iMonth];
-			} //o
-			elseif ($oFormatExpr->RenderExpression() == "'%Y-%m-%d'") {
+			} elseif ($oFormatExpr->RenderExpression() == "'%Y-%m-%d'") {
 				// yyyy-mm-dd => "month d"
 				$iMonth = (int)substr($sValue, 5, 2);
 				$sRes = $aMonthToString[$iMonth].' '.(int)substr($sValue, -2);
-			} //o
-			elseif ($oFormatExpr->RenderExpression() == "'%H'") {
+			} elseif ($oFormatExpr->RenderExpression() == "'%H'") {
 				// H => "H Hour(s)"
 				$sRes = $sValue.':00';
 			}
