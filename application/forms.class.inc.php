@@ -1223,7 +1223,7 @@ class DesignerComboField extends DesignerFormField
 		$sChecked = $this->defaultValue ? 'checked' : '';
 		$sMandatory = $this->bMandatory ? 'true' :  'false';
 		$sReadOnly = $this->IsReadOnly() ? 'disabled="disabled"' :  '';
-		if ($this->IsSorted() && isset($this->aAllowedValues) )
+		if ($this->IsSorted() )
 		{
 			asort($this->aAllowedValues);
 		}
@@ -1271,17 +1271,15 @@ class DesignerComboField extends DesignerFormField
 					$sHtml .= "<option value=\"\">".$this->sNullLabel."</option>";
 				}
 			}
-			if ( isset($this->aAllowedValues) ) {
-				foreach ($this->aAllowedValues as $sKey => $sDisplayValue) {
-					if ($this->bMultipleSelection) {
-						$sSelected = in_array($sKey, $this->defaultValue) ? 'selected' : '';
-					} else {
-						$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
-					}
-					// Quick and dirty: display the menu parents as a tree
-					$sHtmlValue = str_replace(' ', '&nbsp;', $sDisplayValue);
-					$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
+			foreach ($this->aAllowedValues as $sKey => $sDisplayValue) {
+				if ($this->bMultipleSelection) {
+					$sSelected = in_array($sKey, $this->defaultValue) ? 'selected' : '';
+				} else {
+					$sSelected = ($sKey == $this->defaultValue) ? 'selected' : '';
 				}
+				// Quick and dirty: display the menu parents as a tree
+				$sHtmlValue = str_replace(' ', '&nbsp;', $sDisplayValue);
+				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
 			}
 			$sHtml .= "</select>";
 			if ($this->bOtherChoices)
