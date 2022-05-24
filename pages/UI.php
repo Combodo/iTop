@@ -1169,7 +1169,7 @@ EOF
 					$sWarnings = implode(', ', $aWarnings);
 					$oP->AddHeaderMessage($sWarnings, 'message_warning');
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
 			}
 		}
 		break;

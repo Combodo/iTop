@@ -103,6 +103,12 @@ class SecurityHelper
 			return false;
 		}
 
+		// Forcing allowed writing on the object if necessary. This is used in some particular cases.
+		$bObjectIsCurrentUser = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
+		if(in_array($sAction , array(UR_ACTION_MODIFY, UR_ACTION_READ)) && $bObjectIsCurrentUser){
+			return true;
+	    }
+
 		// Checking the scopes layer
 		// - Transforming scope action as there is only 2 values
 		$sScopeAction = ($sAction === UR_ACTION_READ) ? UR_ACTION_READ : UR_ACTION_MODIFY;
