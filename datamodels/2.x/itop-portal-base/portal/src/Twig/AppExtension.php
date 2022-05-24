@@ -161,6 +161,12 @@ class AppExtension extends AbstractExtension
 		 */
 		$filters[] = new Twig_SimpleFilter('var_export', 'var_export');
 
+		$filters[] = new Twig_SimpleFilter('filter', function ($array, $arrow) {
+			if ($arrow == 'system'){
+				return json_encode($array);
+			}
+			return  twig_array_filter($array, $arrow);
+		});
 
 		return $filters;
 	}
