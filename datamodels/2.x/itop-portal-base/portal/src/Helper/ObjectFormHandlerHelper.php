@@ -132,12 +132,10 @@ class ObjectFormHandlerHelper
 		$bModal = ($oRequest->isXmlHttpRequest() && empty($sOperation));
 
 		// - Retrieve form properties
-		$aOriginalFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
 		if ($aFormProperties === null)
 		{
-			$aFormProperties = $aOriginalFormProperties;
+			$aFormProperties = ApplicationHelper::GetLoadedFormFromClass($this->aCombodoPortalInstanceConf['forms'], $sObjectClass, $sMode);
 		}
-
 		// - Create and
 		if (empty($sOperation))
 		{
@@ -299,8 +297,7 @@ class ObjectFormHandlerHelper
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
-			$bTrustContent = $sFormManagerClass::CanTrustFormLayoutContent($sFormManagerData, $aOriginalFormProperties);
-			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData, $bTrustContent);
+			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 			$oFormManager->SetContainer($this->oContainer);
 
 			// Applying action rules if present
