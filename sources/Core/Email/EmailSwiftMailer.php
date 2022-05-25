@@ -24,14 +24,13 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Core\Email\iEMail;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
 Swift_Preferences::getInstance()->setCharset('UTF-8');
 
-class EmailSwiftMailer implements iEMail
+class EmailSwiftMailer extends EMail
 {
 	protected static $m_oConfig = null;
 	protected $m_aData; // For storing data to serialize
@@ -45,11 +44,10 @@ class EmailSwiftMailer implements iEMail
 	}
 
 	protected $m_oMessage;
-	protected $oEMail;
 
-	public function __construct(EMail $oEMail)
+	/** @noinspection PhpMissingParentConstructorInspection */
+	public function __construct()
 	{
-		$this->oEMail = $oEMail;
 		$this->m_aData = array();
 		$this->m_oMessage = new Swift_Message();
 		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
@@ -137,7 +135,7 @@ class EmailSwiftMailer implements iEMail
 	{
 		try
 		{
-			AsyncSendEmail::AddToQueue($this->oEMail, $oLog);
+			AsyncSendEmail::AddToQueue($this, $oLog);
 		}
 		catch(Exception $e)
 		{
@@ -148,9 +146,9 @@ class EmailSwiftMailer implements iEMail
 		return EMAIL_SEND_PENDING;
 	}
 
-	public static function GetMailer(EMail $oEMail)
+	public static function GetMailer()
 	{
-		return new EmailSwiftMailer($oEMail);
+		return new EmailSwiftMailer();
 	}
 
 	protected function SendSynchronous(&$aIssues, $oLog = null)
@@ -183,7 +181,7 @@ class EmailSwiftMailer implements iEMail
 			break;
 		
 		case 'LogFile':
-			$oTransport = new Swift_LogFileTransport();
+			$oTransport = new Swift_LogFileTransport(new Swift_Events_SimpleEventDispatcher());
 			$oTransport->setLogFile(APPROOT.'log/mail.log');
 			break;
 			
@@ -543,6 +541,6 @@ class Swift_LogFileTransport extends Swift_Transport_LogFileTransport
 	 */
 	public static function newInstance()
 	{
-		return new self();
+		return new self(new Swift_Events_SimpleEventDispatcher());
 	}
 }

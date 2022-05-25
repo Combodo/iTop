@@ -43,7 +43,7 @@ class EMail implements iEMail
 
 	public function __construct()
 	{
-		$this->oMailer = EmailFactory::GetMailer($this);
+		$this->oMailer = EmailFactory::GetMailer();
 	}
 
 	/**

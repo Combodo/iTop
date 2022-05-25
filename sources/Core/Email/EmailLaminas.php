@@ -26,7 +26,6 @@
 @include APPROOT."/core/oauth.php";
 
 use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
-use Combodo\iTop\Core\Email\iEMail;
 use Laminas\Mail\Header\ContentType;
 use Laminas\Mail\Message;
 use Laminas\Mail\Transport\File;
@@ -39,7 +38,7 @@ use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
 
-class EMailLaminas implements iEMail
+class EMailLaminas extends Email
 {
 	// Serialization formats
 	const ORIGINAL_FORMAT = 1; // Original format, consisting in serializing the whole object, inculding the Swift Mailer's object.
@@ -57,11 +56,10 @@ class EMailLaminas implements iEMail
 	}
 
 	protected $m_oMessage;
-	protected $oEMail;
 
-	public function __construct(EMail $oEMail)
+	/** @noinspection PhpMissingParentConstructorInspection */
+	public function __construct()
 	{
-		$this->oEMail = $oEMail;
 		$this->m_aData = array();
 		$this->m_oMessage = new Message();
 		$this->m_oMessage->setEncoding('UTF-8');
@@ -141,7 +139,7 @@ class EMailLaminas implements iEMail
 	protected function SendAsynchronous(&$aIssues, $oLog = null)
 	{
 		try {
-			AsyncSendEmail::AddToQueue($this->oEMail, $oLog);
+			AsyncSendEmail::AddToQueue($this, $oLog);
 		}
 		catch (Exception $e) {
 			$aIssues = array($e->GetMessage());
@@ -153,9 +151,9 @@ class EMailLaminas implements iEMail
 		return EMAIL_SEND_PENDING;
 	}
 
-	public static function GetMailer(EMail $oEMail)
+	public static function GetMailer()
 	{
-		return new EMailLaminas($oEMail);
+		return new EMailLaminas();
 	}
 
 	/**
