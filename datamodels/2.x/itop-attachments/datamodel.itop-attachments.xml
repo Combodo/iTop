@@ -293,7 +293,7 @@
       <replaces>Attachment::AfterUpdate</replaces>
       <arguments>
         <argument id="object">
-          <description>The object updated</description>
+          <description>The attachment updated</description>
           <type>DBObject</type>
         </argument>
         <argument id="changes">
@@ -311,7 +311,7 @@
       <replaces>Attachment::AfterDelete</replaces>
       <arguments>
         <argument id="object">
-          <description>The object deleted</description>
+          <description>The attachment deleted</description>
           <type>DBObject</type>
         </argument>
         <argument id="debug_info">
