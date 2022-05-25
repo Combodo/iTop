@@ -3215,11 +3215,7 @@ abstract class DBObject implements iDisplay
 			list($bRes, $aIssues) = $this->CheckToWrite();
 			if (!$bRes)
 			{
-				throw new CoreCannotSaveObjectException(array(
-					'issues' => $aIssues,
-					'class' => $sClass,
-					'id' => $this->GetKey()
-				));
+				throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
 			}
 
 			// Save the original values (will be reset to the new values when the object get written to the DB)
@@ -3230,8 +3226,8 @@ abstract class DBObject implements iDisplay
 			$this->ActivateOnMentionTriggers(false);
 
 			$bHasANewExternalKeyValue = false;
-			$aHierarchicalKeys = array();
-			$aDBChanges = array();
+			$aHierarchicalKeys = [];
+			$aDBChanges = [];
 			foreach ($aChanges as $sAttCode => $valuecurr)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
@@ -3304,7 +3300,7 @@ abstract class DBObject implements iDisplay
 
 							MetaModel::HKReplugBranch($iNewLeft, $iNewLeft + $iDelta - 1, $oAttDef, $sTable);
 
-							$aHKChanges = array();
+							$aHKChanges = [];
 							$aHKChanges[$sAttCode] = $aDBChanges[$sAttCode];
 							$aHKChanges[$oAttDef->GetSQLLeft()] = $iNewLeft;
 							$aHKChanges[$oAttDef->GetSQLRight()] = $iNewLeft + $iDelta - 1;
@@ -3357,11 +3353,7 @@ abstract class DBObject implements iDisplay
 						}
 					}
 					$aErrors = array($e->getMessage());
-					throw new CoreCannotSaveObjectException(array(
-						'id' => $this->GetKey(),
-						'class' => $sClass,
-						'issues' => $aErrors
-					), $e);
+					throw new CoreCannotSaveObjectException(['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors], $e);
 				}
 				catch (CoreCannotSaveObjectException $e)
 				{
@@ -3379,12 +3371,8 @@ abstract class DBObject implements iDisplay
 					{
 						CMDBSource::Query('ROLLBACK');
 					}
-					$aErrors = array($e->getMessage());
-					throw new CoreCannotSaveObjectException(array(
-						'id' => $this->GetKey(),
-						'class' => $sClass,
-						'issues' => $aErrors,
-					));
+					$aErrors = [$e->getMessage()];
+					throw new CoreCannotSaveObjectException(['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors,]);
 				}
 			}
 
@@ -3396,6 +3384,21 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
+				// Reload to get the external attributes
+				if ($bHasANewExternalKeyValue) {
+					$this->Reload(true /* AllowAllData */);
+				} else {
+					// Reset original values although the object has not been reloaded
+					foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
+					{
+						if ($bLoaded)
+						{
+							$value = $this->m_aCurrValues[$sAttCode];
+							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
+						}
+					}
+				}
+
 				// - TriggerOnObjectUpdate
 				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
@@ -3412,16 +3415,12 @@ abstract class DBObject implements iDisplay
 
 				$this->AfterUpdate();
 
-
-				// Reload to get the external/computed attributes
-				$this->Reload(true);
-
 				$this->EventUpdateAfter(['changes' => $aChanges]);
 			}
 			catch (Exception $e)
 			{
-				$aErrors = array($e->getMessage());
-				throw new CoreCannotSaveObjectException(array('id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors));
+				$aErrors = [$e->getMessage()];
+				throw new CoreException($e->getMessage(), ['id' => $this->GetKey(), 'class' => $sClass, 'issues' => $aErrors]);
 			}
 		}
 		finally
