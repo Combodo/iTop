@@ -34,7 +34,6 @@ if (!defined('APPROOT')) {
 	require_once(__DIR__.'/../../approot.inc.php');
 }
 require_once(APPROOT.'application/application.inc.php');
-require_once(APPROOT.'application/itopwebpage.class.inc.php');
 
 require_once(APPROOT.'application/startup.inc.php');
 
