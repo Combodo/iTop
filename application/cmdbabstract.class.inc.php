@@ -5778,9 +5778,9 @@ JS
 	final protected function EventUpdateRequested()
 	{
 		$sClass = get_class($this);
-		$sKey = $sClass.'::'.$this->GetKey();
 		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBUpdate $sKey Requested", LogChannels::DM_CRUD);
+			$sKey = $sClass.'::'.$this->GetKey();
+			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Requested", LogChannels::DM_CRUD);
 		}
 
 		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
@@ -5793,9 +5793,9 @@ JS
 	final protected function EventUpdateBefore()
 	{
 		$sClass = get_class($this);
-		$sKey = $sClass.'::'.$this->GetKey();
 		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBUpdate $sKey About to be written in DB", LogChannels::DM_CRUD);
+			$sKey = $sClass.'::'.$this->GetKey();
+			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey About to be written in DB", LogChannels::DM_CRUD);
 		}
 		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_UPDATE);
 	}
@@ -5809,9 +5809,9 @@ JS
 	final protected function EventUpdateAfter(array $aEventData)
 	{
 		$sClass = get_class($this);
-		$sKey = $sClass.'::'.$this->GetKey();
 		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBUpdate $sKey Updated", LogChannels::DM_CRUD);
+			$sKey = $sClass.'::'.$this->GetKey();
+			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Updated", LogChannels::DM_CRUD);
 		}
 		$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE, $aEventData);
 	}
