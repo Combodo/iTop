@@ -28,7 +28,7 @@ class GetSelectFilterTest extends ItopDataTestCase
 	private $sPassword = "IAAuytrez9876[}543ç_è-(";
 	private $oUser;
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once(APPROOT.'application/startup.inc.php');

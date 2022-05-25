@@ -1394,7 +1394,7 @@ class WizStepModulesChoice extends WizardStep
 		}
 		catch(MissingDependencyException $e)
 		{
-			$oPage->warning($e->getMessage());
+			$oPage->warning($e->getHtmlDesc());
 		}
 
 		$this->bUpgrade = ($this->oWizard->GetParameter('install_mode') != 'install');
@@ -2138,7 +2138,7 @@ class WizStepSummary extends WizardStep
 			catch(MissingDependencyException $e)
 			{
 				$this->bDependencyCheck = false;
-				$this->sDependencyIssue = $e->getMessage();
+				$this->sDependencyIssue = $e->getHtmlDesc();
 			}
 		}
 		return $this->bDependencyCheck;
@@ -2599,79 +2599,7 @@ class WizStepDone extends WizardStep
 		$sForm .= '<input type="hidden" name="auth_pwd" value="'.htmlentities($this->oWizard->GetParameter('admin_pwd'), ENT_QUOTES, 'UTF-8').'">';
 		$sForm .= "<button id=\"enter_itop\" class=\"ibo-button ibo-is-regular ibo-is-primary\" type=\"submit\">Enter ".ITOP_APPLICATION."</button></div>";
 		$sForm .= '</form>';
-		$sPHPVersion = phpversion();
-		$sMySQLVersion = SetupUtils::GetMySQLVersion(
-			$this->oWizard->GetParameter('db_server'),
-			$this->oWizard->GetParameter('db_user'),
-			$this->oWizard->GetParameter('db_pwd'),
-			$this->oWizard->GetParameter('db_tls_enabled'),
-			$this->oWizard->GetParameter('db_tls_ca')
-		);
-		$aParameters = json_decode($this->oWizard->GetParameter('selected_components', '{}'), true);
-		$sCompactWizChoices = array();
-		foreach($aParameters as $iStep => $aChoices)
-		{
-			$aShortChoices = array();
-			foreach($aChoices as $sChoiceCode)
-			{
-				$sShortCode = str_replace('_', '', $sChoiceCode);
-				$aShortChoices[] = $sShortCode;
-			}
-			$sCompactWizChoices[] = implode(' ',$aShortChoices);
-		}
-		$sInstallMode = 'i';
-		if ($this->oWizard->GetParameter('install_mode', 'install') == 'upgrade')
-		{
-			if (!$this->oWizard->GetParameter('license'))
-			{
-				// When the version does not change we don't ask for the licence again
-				$sInstallMode = 'r';
-			}
-			else
-			{
-				// An actual upgrade
-				$sInstallMode = 'u';
-			}
 
-		}
-		$aUrlParams = array(
-			'p' => ITOP_APPLICATION,
-			'v' => ITOP_VERSION,
-			'php' => $sPHPVersion,
-			'mysql' => $sMySQLVersion,
-			'os' => PHP_OS,
-			's' => ($this->oWizard->GetParameter('sample_data', '') == 'yes') ? 1 : 0 ,
-			'l' => $this->oWizard->GetParameter('default_language'),
-			'i' => $sInstallMode,
-			'w' => json_encode($sCompactWizChoices),
-		);
-		$aSafeParams = array();
-		foreach($aUrlParams as $sCode => $sValue)
-		{
-			$aSafeParams[] = $sCode.'='.urlencode($sValue);
-		}
-		$sImgUrl = 'http://www.combodo.com/stats/?'.implode('&', $aSafeParams);
-
-		$aAdditionalModules = array();
-		foreach(json_decode($this->oWizard->GetParameter('additional_extensions_modules'), true) as $idx => $aModuleInfo)
-		{
-			if (in_array('_'.$idx, $aParameters[count($aParameters)-1])) {
-				// Extensions "choices" can now have more than one module
-				foreach ($aModuleInfo['modules'] as $sModuleName) {
-					$aAdditionalModules[] = $sModuleName;
-				}
-			}
-		}
-		$idx = 0;
-		$aReportedModules = array();
-		while ($idx < count($aAdditionalModules) && (strlen($sImgUrl.'&m='.urlencode(implode(' ', $aReportedModules))) < 2000)) // reasonable limit for the URL: 2000 chars
-		{
-			$aReportedModules[] = $aAdditionalModules[$idx];
-			$idx++;
-		}
-		$sImgUrl .= '&m='.urlencode(implode(' ', $aReportedModules));
-
-		$oPage->add('<img style="visibility: hidden;border:0" src="'.$sImgUrl.'"/>');
 		$sForm = addslashes($sForm);
 		$oPage->add_ready_script("$('#wiz_form').append('$sForm');");
 		// avoid leaving in a dirty state

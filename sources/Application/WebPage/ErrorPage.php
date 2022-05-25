@@ -60,7 +60,7 @@ class ErrorPage extends NiceWebPage
 
 	public function output()
 	{
-		$sLogo = Branding::GetFullMainLogoAbsoluteUrl();
+		$sLogo = Branding::GetLoginLogoAbsoluteUrl();
 		$oSetupPage = UIContentBlockUIBlockFactory::MakeStandard('ibo_setup_container', ['ibo-setup']);
 		$oHeader = UIContentBlockUIBlockFactory::MakeStandard('header', ['ibo-setup--header']);
 		$oSetupPage->AddSubBlock($oHeader);

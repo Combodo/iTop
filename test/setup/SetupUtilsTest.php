@@ -22,7 +22,7 @@ class SetupUtilsTest extends ItopTestCase
 	const INFO = 2;
 	const TRACE = 3; // for log purposes : replace old SetupLog::Log calls
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

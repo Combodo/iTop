@@ -566,7 +566,7 @@ class DisplayBlock
 			if (($this->m_sStyle != 'links') && ($this->m_sStyle != 'search') && ($this->m_sStyle != 'list_search')) {
 				$oAppContext = new ApplicationContext();
 				$sClass = $this->m_oFilter->GetClass();
-				$aFilterCodes = array_keys(MetaModel::GetClassFilterDefs($sClass));
+				$aFilterCodes = MetaModel::GetFiltersList($sClass);
 				$aCallSpec = array($sClass, 'MapContextParam');
 				if (is_callable($aCallSpec)) {
 					foreach ($oAppContext->GetNames() as $sContextParam) {

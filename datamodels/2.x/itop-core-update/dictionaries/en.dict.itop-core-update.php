@@ -54,6 +54,7 @@ Dict::Add('EN US', 'English', 'English', array(
 
     'iTopUpdate:UI:Status' => 'Status',
     'iTopUpdate:UI:Action' => 'Update',
+    'iTopUpdate:UI:Setup' => ITOP_APPLICATION_SHORT.' Setup',
     'iTopUpdate:UI:History' => 'Versions History',
     'iTopUpdate:UI:Progress' => 'Progress of the upgrade',
 
@@ -80,6 +81,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:UI:CheckInProgress'=>'Please wait during integrity check',
 
 
+
+	'iTopUpdate:UI:SetupLaunch' => 'Launch '.ITOP_APPLICATION_SHORT.' Setup',
+	'iTopUpdate:UI:SetupLaunchConfirm' => 'This will launch '.ITOP_APPLICATION_SHORT.' setup, are you sure?',
 
 	// Setup Messages
     'iTopUpdate:UI:SetupMessage:Ready' => 'Ready to start',

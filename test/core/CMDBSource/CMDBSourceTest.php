@@ -21,7 +21,7 @@ use utils;
  */
 class CMDBSourceTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 
 		parent::setUp();

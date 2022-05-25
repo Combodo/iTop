@@ -455,7 +455,11 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 	}
 
 	/**
-	 * Systematically check all supported format specs, for a given date
+	 * For a given date,
+	 * for all different formats (1st array element returned by {@see static::TimeFormatsProvider}),
+	 * compare value returned by :
+	 *   * DATE_FORMAT() SQL function,
+	 *   * FunctionExpression('DATE_FORMAT', ...) result
 	 *
 	 * @covers       FunctionExpression::Evaluate()
 	 * @dataProvider EveryTimeFormatProvider
@@ -481,7 +485,8 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 		}
 		$sSelects = "SELECT ".implode(', ', $aSelects);
 		$aRes = CMDBSource::QueryToArray($sSelects);
-		$aRow = $aRes[0];
+		/** @var array $aMysqlDateFormatRsultsForAllFormats format as key, MySQL evaluated result as value */
+		$aMysqlDateFormatRsultsForAllFormats = $aRes[0];
 		foreach ($aFormats as $sFormatDesc => $aFormatSpec)
 		{
 			$sFormat = $aFormatSpec[0];
@@ -489,8 +494,8 @@ class ExpressionEvaluateTest extends iTopDataTestCase
 			if ($bProcessed)
 			{
 				$oExpression = new FunctionExpression('DATE_FORMAT', array(new ScalarExpression($sDate), new ScalarExpression("%$sFormat")));
-				$res = $oExpression->Evaluate(array());
-				static::assertEquals($aRow[$sFormat], $res, "Format %$sFormat not matching MySQL for '$sDate'");
+				$itopExpressionResult = $oExpression->Evaluate(array());
+				static::assertSame($aMysqlDateFormatRsultsForAllFormats[$sFormat], $itopExpressionResult, "Format %$sFormat not matching MySQL for '$sDate'");
 			}
 		}
 	}

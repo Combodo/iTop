@@ -854,6 +854,11 @@ abstract class AttributeDefinition
 	//abstract protected GetBasicFilterHTMLInput();
 	abstract public function GetBasicFilterSQLExpr($sOpCode, $value);
 
+	/**
+	 *  since 3.1.0 return has changed (N°4690 - Deprecate "FilterCodes")
+	 *
+	 * @return array filtercode => attributecode
+	 */
 	public function GetFilterDefinitions()
 	{
 		return array();
@@ -2452,7 +2457,7 @@ class AttributeDBFieldVoid extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -7486,7 +7491,7 @@ class AttributeExternalField extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -8523,18 +8528,17 @@ class AttributeStopWatch extends AttributeDefinition
 	public function GetFilterDefinitions()
 	{
 		$aRes = array(
-			$this->GetCode() => new FilterFromAttribute($this),
-			$this->GetCode().'_started' => new FilterFromAttribute($this, '_started'),
-			$this->GetCode().'_laststart' => new FilterFromAttribute($this, '_laststart'),
-			$this->GetCode().'_stopped' => new FilterFromAttribute($this, '_stopped')
+			$this->GetCode()              => $this->GetCode(),
+			$this->GetCode().'_started'   => $this->GetCode(),
+			$this->GetCode().'_laststart' => $this->GetCode(),
+			$this->GetCode().'_stopped'   => $this->GetCode(),
 		);
-		foreach($this->ListThresholds() as $iThreshold => $aFoo)
-		{
+		foreach ($this->ListThresholds() as $iThreshold => $aFoo) {
 			$sPrefix = $this->GetCode().'_'.$iThreshold;
-			$aRes[$sPrefix.'_deadline'] = new FilterFromAttribute($this, '_deadline');
-			$aRes[$sPrefix.'_passed'] = new FilterFromAttribute($this, '_passed');
-			$aRes[$sPrefix.'_triggered'] = new FilterFromAttribute($this, '_triggered');
-			$aRes[$sPrefix.'_overrun'] = new FilterFromAttribute($this, '_overrun');
+			$aRes[$sPrefix.'_deadline'] = $this->GetCode();
+			$aRes[$sPrefix.'_passed'] = $this->GetCode();
+			$aRes[$sPrefix.'_triggered'] = $this->GetCode();
+			$aRes[$sPrefix.'_overrun'] = $this->GetCode();
 		}
 
 		return $aRes;
@@ -9276,7 +9280,7 @@ class AttributeSubItem extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()
@@ -11935,7 +11939,7 @@ class AttributeFriendlyName extends AttributeDefinition
 
 	public function GetFilterDefinitions()
 	{
-		return array($this->GetCode() => new FilterFromAttribute($this));
+		return array($this->GetCode() => $this->GetCode());
 	}
 
 	public function GetBasicFilterOperators()

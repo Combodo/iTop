@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Button;
 
 use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Dict;
+use utils;
 
 /**
  * Class ButtonUIBlockFactory
@@ -423,11 +424,11 @@ class ButtonUIBlockFactory extends AbstractUIBlockFactory
 		$oButton->SetActionType($sActionType)
 			->SetColor($sColor);
 
-		if (strlen($sValue) > 0) {
+		if (utils::StrLen($sValue) > 0) {
 			$oButton->SetValue($sValue);
 		}
 
-		if (strlen($sName) > 0) {
+		if (utils::StrLen($sName) > 0) {
 			$oButton->SetName($sName);
 		}
 

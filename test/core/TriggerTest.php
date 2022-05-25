@@ -2,11 +2,9 @@
 
 namespace Combodo\iTop\Test\UnitTest\Core;
 
-use Combodo\iTop\Portal\Controller\ObjectController;
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
 use ContextTag;
 use MetaModel;
-use PHPUnit\Exception;
 use TriggerOnObjectCreate;
 
 /**
@@ -24,7 +22,7 @@ class TriggerTest extends ItopDataTestCase
 	const USE_TRANSACTION = false;
 
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 	}

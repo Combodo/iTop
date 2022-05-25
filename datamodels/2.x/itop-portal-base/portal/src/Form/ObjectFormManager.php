@@ -120,17 +120,6 @@ class ObjectFormManager extends FormManager
 	{
 		$aJson = static::DecodeFormManagerData($sJson);
 
-		$oConfig = utils::GetConfig();
-		$bIsContentCheckEnabled = $oConfig->GetModuleSetting(PORTAL_ID, 'enable_formmanager_content_check', true);
-		if ($bIsContentCheckEnabled && (false === $bTrustContent)) {
-			/** @noinspection NestedPositiveIfStatementsInspection */
-			if (isset($aJson['formproperties']['layout']['type']) && ($aJson['formproperties']['layout']['type'] === 'twig')) {
-				// There will be an IssueLog above in the hierarchy due to the exception, but we are logging here so that we can output the JSON data !
-				IssueLog::Error('Portal received a query with forbidden twig content!', \LogChannels::PORTAL, ['formmanager_data' => $aJson]);
-				throw new \SecurityException('Twig content not allowed in this context!');
-			}
-		}
-
 		/** @var \Combodo\iTop\Portal\Form\ObjectFormManager $oFormManager */
 		$oFormManager = parent::FromJSON($sJson);
 
@@ -703,7 +692,7 @@ class ObjectFormManager extends FormManager
 
 			/** @var Field $oField */
 			$oField = null;
-			if (is_callable(get_class($oAttDef).'::MakeFormField'))
+			if (is_callable([$oAttDef, 'MakeFormField']))
 			{
 				$oField = $oAttDef->MakeFormField($this->oObject);
 			}
@@ -1185,16 +1174,18 @@ class ObjectFormManager extends FormManager
 		$sObjectClass = get_class($this->oObject);
 
 		try {
+			// modification flags
+			$bIsNew = $this->oObject->IsNew();
+			$bWasModified = $this->oObject->IsModified();
+			$bActivateTriggers = (!$bIsNew && $bWasModified);
+
 			// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-			$bAllowWrite = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+			$bAllowWrite = $this->oContainer->get('security_helper')->IsActionAllowed($bIsNew ? UR_ACTION_CREATE : UR_ACTION_MODIFY, $sObjectClass, $this->oObject->GetKey());
 			if ($bAllowWrite) {
 				$this->oObject->AllowWrite(true);
 			}
 
 			// Writing object to DB
-			$bIsNew = $this->oObject->IsNew();
-			$bWasModified = $this->oObject->IsModified();
-			$bActivateTriggers = (!$bIsNew && $bWasModified);
 			try
 			{
 				$this->oObject->DBWrite();

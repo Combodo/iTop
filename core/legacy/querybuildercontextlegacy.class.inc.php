@@ -17,11 +17,13 @@
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
 
 /**
+ * @deprecated 3.1.0 N°3141 - Deprecate legacy SQL build
  * Associated with the metamodel -> MakeQuery/MakeQuerySingleTable
  *
  * @copyright   Copyright (C) 2010-2021 Combodo SARL
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+DeprecatedCallsLog::NotifyDeprecatedFile("querybuildercontextlegacy.class.inc.php is deprecated. Please use querybuildercontext.class.inc.php instead");
 
 class QueryBuilderContext
 {

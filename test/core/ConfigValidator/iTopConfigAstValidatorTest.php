@@ -12,7 +12,7 @@ use Exception;
 
 class iTopConfigAstValidatorTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 		require_once APPROOT.'env-production/itop-config/src/Validator/iTopConfigAstValidator.php';
@@ -31,9 +31,9 @@ class iTopConfigAstValidatorTest extends ItopTestCase
 		$this->assertTrue(true, 'The file is valid and interpreted as such');
 	}
 
-	//FIXME disabled test, is failing for now with error "Invalid configuration: LEVEL_WARNING of type Identifier is forbidden in line 152"
-	public function __testValidateFileValidLogLevelMinConst()
+	public function testValidateFileValidLogLevelMinConst()
 	{
+		$this->markTestSkipped(' disabled test, is failing for now with error "Invalid configuration: LEVEL_WARNING of type Identifier is forbidden in line 152"');
 		try {
 			$this->CallValidatorOnFile('config-itop_VALID_log-level-min_const.php');
 		}

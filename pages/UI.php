@@ -14,7 +14,6 @@ use Combodo\iTop\Application\UI\Base\Component\GlobalSearch\GlobalSearchHelper;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\QuickCreate\QuickCreateHelper;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
 use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\ToolbarUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -359,8 +358,8 @@ try
 					$oObj = MetaModel::GetObjectByName($sClass, $id, false /* MustBeFound */);
 				}
 			} else {
-				$sAttCode = utils::ReadParam('attcode', '');
-				$sAttValue = utils::ReadParam('attvalue', '');
+				$sAttCode = utils::ReadParam('attcode', '', false, utils::ENUM_SANITIZATION_FILTER_FIELD_NAME);
+				$sAttValue = utils::ReadParam('attvalue', '', false, utils::ENUM_SANITIZATION_FILTER_RAW_DATA);
 
 				if ((strlen($sAttCode) === 0) || (strlen($sAttValue) === 0)) {
 					throw new ApplicationException(Dict::Format('UI:Error:1ParametersMissing', 'id'));
@@ -1170,7 +1169,7 @@ EOF
 					$sWarnings = implode(', ', $aWarnings);
 					$oP->AddHeaderMessage($sWarnings, 'message_warning');
 				}
-				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj);
+				cmdbAbstractObject::DisplayCreationForm($oP, $sClass, $oObj, [], ['transaction_id' => $sTransactionId]);
 			}
 		}
 		break;
@@ -1462,7 +1461,7 @@ EOF
 								if ( ($iFlags & OPT_ATT_SLAVE) && ($paramValue != $oObj->Get($sAttCode)) )
 								{
 									$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+									$aErrors[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 									unset($aExpectedAttributes[$sAttCode]);
 								}
 							}

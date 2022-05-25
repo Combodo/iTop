@@ -24,12 +24,17 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Laminas\Mail\Header\ContentType;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\File;
+use Laminas\Mail\Transport\FileOptions;
+use Laminas\Mail\Transport\SmtpOptions;
+use Laminas\Mail\Transport\Smtp;
+use Laminas\Mime\Mime;
+use Laminas\Mime\Part;
 use Pelago\Emogrifier\CssInliner;
 use Pelago\Emogrifier\HtmlProcessor\CssToAttributeConverter;
 use Pelago\Emogrifier\HtmlProcessor\HtmlPruner;
-
-Swift_Preferences::getInstance()->setCharset('UTF-8');
-
 
 define ('EMAIL_SEND_OK', 0);
 define ('EMAIL_SEND_PENDING', 1);
@@ -58,7 +63,8 @@ class EMail
 	public function __construct()
 	{
 		$this->m_aData = array();
-		$this->m_oMessage = Swift_Message::newInstance();
+		$this->m_oMessage = new Message();
+		$this->m_oMessage->setEncoding('UTF-8');
 		$this->SetRecipientFrom(MetaModel::GetConfig()->Get('email_default_sender_address'), MetaModel::GetConfig()->Get('email_default_sender_label'));
 	}
 
@@ -72,12 +78,18 @@ class EMail
 	{
 		return serialize($this->m_aData);
 	}
-	
+
 	/**
 	 * Custom de-serialization method
+	 *
 	 * @param string $sSerializedMessage The serialized representation of the message
+	 *
+	 * @return \EMail
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
 	 */
-	static public function UnSerializeV2($sSerializedMessage)
+	public static function UnSerializeV2($sSerializedMessage)
 	{
 		$aData = unserialize($sSerializedMessage);
 		$oMessage = new Email();
@@ -114,7 +126,6 @@ class EMail
 		{
 			$oMessage->SetSubject($aData['subject']);
 		}
-		
 		
 		if (array_key_exists('headers', $aData))
 		{
@@ -155,10 +166,11 @@ class EMail
 		return EMAIL_SEND_PENDING;
 	}
 
+	/**
+	 * @throws \Exception
+	 */
 	protected function SendSynchronous(&$aIssues, $oLog = null)
 	{
-		// If the body of the message is in HTML, embed all images based on attachments
-		$this->EmbedInlineImages();
 		
 		$this->LoadConfig();
 
@@ -172,50 +184,54 @@ class EMail
 			$sUserName = self::$m_oConfig->Get('email_transport_smtp.username');
 			$sPassword = self::$m_oConfig->Get('email_transport_smtp.password');
 
-			$oTransport = Swift_SmtpTransport::newInstance($sHost, $sPort, $sEncryption);
+			$oTransport = new Smtp();
+			$aOptions= [
+				'host'              => $sHost,
+				'port'              => $sPort,
+				'connection_class'  => 'login',
+				'connection_config' => [
+					'ssl' => $sEncryption,
+				],
+			];
 			if (strlen($sUserName) > 0)
 			{
-				$oTransport->setUsername($sUserName);
-				$oTransport->setPassword($sPassword);
+				$aOptions['connection_config']['username'] = $sUserName;
+				$aOptions['connection_config']['password'] = $sPassword;
 			}
+			$oOptions = new SmtpOptions($aOptions);
+			$oTransport->setOptions($oOptions);
 			break;
 
 		case 'Null':
-			$oTransport = Swift_NullTransport::newInstance();
+			$oTransport = new Smtp();
 			break;
 		
 		case 'LogFile':
-			$oTransport = Swift_LogFileTransport::newInstance();
-			$oTransport->setLogFile(APPROOT.'log/mail.log');
+			$oTransport = new File();
+			$aOptions   = new FileOptions([
+				'path' => APPROOT.'log/mail.log',
+			]);
+			$oTransport->setOptions($aOptions);
 			break;
 			
 		case 'PHPMail':
 		default:
-			$oTransport = Swift_MailTransport::newInstance();
+			$oTransport = new Smtp();
 		}
-
-		$oMailer = Swift_Mailer::newInstance($oTransport);
-
-		$aFailedRecipients = array();
-		$this->m_oMessage->setMaxLineLength(0);
+		
 		$oKPI = new ExecutionKPI();
 		try
 		{
-			$iSent = $oMailer->send($this->m_oMessage, $aFailedRecipients);
-			if ($iSent === 0)
-			{
-				// Beware: it seems that $aFailedRecipients sometimes contains the recipients that actually received the message !!!
-				IssueLog::Warning('Email sending failed: Some recipients were invalid, aFailedRecipients contains: '.implode(', ', $aFailedRecipients));
-				$aIssues = array('Some recipients were invalid.');
-				$oKPI->ComputeStats('Email Sent', 'Error received');
-				return EMAIL_SEND_ERROR;
-			}
-			else
-			{
-				$aIssues = array();
-				$oKPI->ComputeStats('Email Sent', 'Succeded');
-				return EMAIL_SEND_OK;
-			}
+			$oTransport->send($this->m_oMessage);
+			$aIssues = array();
+			$oKPI->ComputeStats('Email Sent', 'Succeded');
+			return EMAIL_SEND_OK;
+		}
+		catch(Laminas\Mail\Transport\Exception\RuntimeException $e){
+			IssueLog::Warning('Email sending failed: Some recipients were invalid');
+			$aIssues = array('Some recipients were invalid.');
+			$oKPI->ComputeStats('Email Sent', 'Error received');
+			return EMAIL_SEND_ERROR;
 		}
 		catch (Exception $e)
 		{
@@ -223,51 +239,65 @@ class EMail
 			throw $e;
 		}
 	}
-	
+
 	/**
 	 * Reprocess the body of the message (if it is an HTML message)
 	 * to replace the URL of images based on attachments by a link
-	 * to an embedded image (i.e. cid:....)
+	 * to an embedded image (i.e. cid:....) and returns images to be attached as an array
+	 *
+	 * @param string $sBody Email body to process/alter
+	 *
+	 * @return array Array of Part that needs to be added as inline attachment later to render as embed
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
 	 */
-	protected function EmbedInlineImages()
+	protected function EmbedInlineImages(string &$sBody)
 	{
-		if ($this->m_aData['body']['mimeType'] == 'text/html')
+		$oDOMDoc = new DOMDocument();
+		$oDOMDoc->preserveWhitespace = true;
+		@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$sBody); // For loading HTML chunks where the character set is not specified
+
+		$oXPath = new DOMXPath($oDOMDoc);
+		$sXPath = '//img[@'.InlineImage::DOM_ATTR_ID.']';
+		$oImagesList = $oXPath->query($sXPath);
+		$oImagesContent = new \Laminas\Mime\Message();
+		$aImagesParts = [];
+		if ($oImagesList->length != 0)
 		{
-			$oDOMDoc = new DOMDocument();
-			$oDOMDoc->preserveWhitespace = true;
-			@$oDOMDoc->loadHTML('<?xml encoding="UTF-8"?>'.$this->m_aData['body']['body']); // For loading HTML chunks where the character set is not specified
-
-			$oXPath = new DOMXPath($oDOMDoc);
-			$sXPath = '//img[@'.InlineImage::DOM_ATTR_ID.']';
-			$oImagesList = $oXPath->query($sXPath);
-
-			if ($oImagesList->length != 0)
+			foreach($oImagesList as $oImg)
 			{
-				foreach($oImagesList as $oImg)
+				$iAttId = $oImg->getAttribute(InlineImage::DOM_ATTR_ID);
+				$oAttachment = MetaModel::GetObject('InlineImage', $iAttId, false, true /* Allow All Data */);
+				if ($oAttachment)
 				{
-					$iAttId = $oImg->getAttribute(InlineImage::DOM_ATTR_ID);
-					$oAttachment = MetaModel::GetObject('InlineImage', $iAttId, false, true /* Allow All Data */);
-					if ($oAttachment)
+					$sImageSecret = $oImg->getAttribute('data-img-secret');
+					$sAttachmentSecret = $oAttachment->Get('secret');
+					if ($sImageSecret !== $sAttachmentSecret)
 					{
-						$sImageSecret = $oImg->getAttribute('data-img-secret');
-						$sAttachmentSecret = $oAttachment->Get('secret');
-						if ($sImageSecret !== $sAttachmentSecret)
-						{
-							// @see N°1921
-							// If copying from another iTop we could get an IMG pointing to an InlineImage with wrong secret
-							continue;
-						}
-
-						$oDoc = $oAttachment->Get('contents');
-						$oSwiftImage = new Swift_Image($oDoc->GetData(), $oDoc->GetFileName(), $oDoc->GetMimeType());
-						$sCid = $this->m_oMessage->embed($oSwiftImage);
-						$oImg->setAttribute('src', $sCid);
+						// @see N°1921
+						// If copying from another iTop we could get an IMG pointing to an InlineImage with wrong secret
+						continue;
 					}
+
+					$oDoc = $oAttachment->Get('contents');
+
+					$sCid = uniqid('', true);
+
+					$oNewAttachment = new Part($oDoc->GetData());
+					$oNewAttachment->id = $sCid;
+					$oNewAttachment->type = $oDoc->GetMimeType();
+					$oNewAttachment->filename = $oDoc->GetFileName();
+					$oNewAttachment->disposition = Mime::DISPOSITION_INLINE;
+					$oNewAttachment->encoding = Mime::ENCODING_BASE64;
+					
+					$oImagesContent->addPart($oNewAttachment);
+					$oImg->setAttribute('src', 'cid:'.$sCid);
+					$aImagesParts[] = $oNewAttachment;
 				}
 			}
-			$sHtmlBody = $oDOMDoc->saveHTML();
-			$this->m_oMessage->setBody($sHtmlBody, 'text/html', 'UTF-8');
 		}
+		$sBody = $oDOMDoc->saveHTML();
+		return $aImagesParts;
 	}
 
 	public function Send(&$aIssues, $bForceSynchronous = false, $oLog = null)
@@ -313,7 +343,7 @@ class EMail
 					break;
 
 				default:
-					$oHeaders->addTextHeader($sKey, $sValue);
+					$oHeaders->addHeaderLine($sKey, $sValue);
 			}
 		}
 	}
@@ -326,8 +356,7 @@ class EMail
 		// so let's remove the angle brackets if present, for historical reasons
 		$sId = str_replace(array('<', '>'), '', $sId);
 
-		$oMsgId = $this->m_oMessage->getHeaders()->get('Message-ID');
-		$oMsgId->SetId($sId);
+		$this->m_oMessage->getHeaders()->addHeaderLine('Message-ID', $sId);
 	}
 
 	public function SetReferences($sReferences)
@@ -349,35 +378,123 @@ class EMail
 		$this->AddToHeader('In-Reply-To', $sMessageId);
 	}
 
-	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
+	/**
+	 * Set current Email body and process inline images.
+	 * 
+	 * @param $sBody
+	 * @param string $sMimeType
+	 * @param $sCustomStyles
+	 *
+	 * @return void
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
+	 */
+	public function SetBody($sBody, string $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
 	{
-		if (($sMimeType === 'text/html') && ($sCustomStyles !== null)) {
+		$oBody = new Laminas\Mime\Message();
+		$aAdditionalParts = [];
+		
+		if (($sMimeType === Mime::TYPE_HTML) && ($sCustomStyles !== null)) {
 			$oDomDocument = CssInliner::fromHtml($sBody)->inlineCss($sCustomStyles)->getDomDocument();
 			HtmlPruner::fromDomDocument($oDomDocument)->removeElementsWithDisplayNone();
 			$sBody = CssToAttributeConverter::fromDomDocument($oDomDocument)->convertCssToVisualAttributes()->render(); // Adds html/body tags if not already present
 		}
 		$this->m_aData['body'] = array('body' => $sBody, 'mimeType' => $sMimeType);
-		$this->m_oMessage->setBody($sBody, $sMimeType);
+
+		// We don't want these modifications in m_aData['body'], otherwise it'll ruin asynchronous mail as they go through this method twice
+		if ($sMimeType === Mime::TYPE_HTML){
+			$aAdditionalParts = $this->EmbedInlineImages($sBody);
+	    }
+		
+		// Add body content to as a new part
+		$oNewPart = new Part($sBody);
+		$oNewPart->encoding = Mime::ENCODING_8BIT;
+		$oNewPart->type = $sMimeType;
+		$oBody->addPart($oNewPart);
+		
+		// Add additional images as new body parts
+		foreach ($aAdditionalParts as $oAdditionalPart) {
+			$oBody->addPart($oAdditionalPart);
+		}
+
+		if($oBody->isMultiPart()){
+			$oContentTypeHeader = $this->m_oMessage->getHeaders();
+			foreach ($oContentTypeHeader as $oHeader) {
+				if (!$oHeader instanceof ContentType) {
+					continue;
+				}
+
+				$oHeader->setType(Mime::MULTIPART_MIXED);
+				$oHeader->addParameter('boundary', $oBody->getMime()->boundary());
+				break;
+			}
+		}
+		
+		$this->m_oMessage->setBody($oBody);
 	}
 
-	public function AddPart($sText, $sMimeType = 'text/html')
+	/**
+	 * Add a new part to the existing body
+	 * @param $sText
+	 * @param string $sMimeType
+	 *
+	 * @return void
+	 */
+	public function AddPart($sText, string $sMimeType = Mime::TYPE_HTML)
 	{
 		if (!array_key_exists('parts', $this->m_aData))
 		{
 			$this->m_aData['parts'] = array();
 		}
 		$this->m_aData['parts'][] = array('text' => $sText, 'mimeType' => $sMimeType);
-		$this->m_oMessage->addPart($sText, $sMimeType);
+		$oNewPart = new Part($sText);
+		$oNewPart->encoding = Mime::ENCODING_8BIT;
+		$oNewPart->type = $sMimeType;
+		$this->m_oMessage->getBody()->addPart($oNewPart);
 	}
 
 	public function AddAttachment($data, $sFileName, $sMimeType)
 	{
+		$oBody = $this->m_oMessage->getBody();
+
+		if(!$oBody->isMultiPart()){
+			$multipart_content = new Part($oBody->generateMessage());
+			$multipart_content->setType($oBody->getParts()[0]->getType());
+			$multipart_content->setBoundary($oBody->getMime()->boundary());
+
+			$oBody = new Laminas\Mime\Message();
+			$oBody->addPart($multipart_content);
+		}
+
 		if (!array_key_exists('attachments', $this->m_aData))
 		{
 			$this->m_aData['attachments'] = array();
 		}
 		$this->m_aData['attachments'][] = array('data' => base64_encode($data), 'filename' => $sFileName, 'mimeType' => $sMimeType);
-		$this->m_oMessage->attach(Swift_Attachment::newInstance($data, $sFileName, $sMimeType));
+		$oNewAttachment = new Part($data);
+		$oNewAttachment->type = $sMimeType;
+		$oNewAttachment->filename = $sFileName;
+		$oNewAttachment->disposition = Mime::DISPOSITION_ATTACHMENT;
+		$oNewAttachment->encoding = Mime::ENCODING_BASE64;
+
+
+		$oBody->addPart($oNewAttachment);
+
+		if($oBody->isMultiPart()){
+			$oContentTypeHeader = $this->m_oMessage->getHeaders();
+			foreach ($oContentTypeHeader as $oHeader) {
+				if (!$oHeader instanceof ContentType) {
+					continue;
+				}
+
+				$oHeader->setType(Mime::MULTIPART_MIXED);
+				$oHeader->addParameter('boundary', $oBody->getMime()->boundary());
+				break;
+			}
+		}
+
+		$this->m_oMessage->setBody($oBody);
 	}
 
 	public function SetSubject($sSubject)
@@ -422,7 +539,7 @@ class EMail
 	public function GetRecipientTO($bAsString = false)
 	{
 		$aRes = $this->m_oMessage->getTo();
-		if ($aRes === null)
+		if ($aRes === null || $aRes->count() === 0)
 		{
 			// There is no "To" header field
 			$aRes = array();
@@ -430,8 +547,10 @@ class EMail
 		if ($bAsString)
 		{
 			$aStrings = array();
-			foreach ($aRes as $sEmail => $sName)
+			foreach ($aRes as $oEmail)
 			{
+				$sName = $oEmail->getName();
+				$sEmail = $oEmail->getEmail();
 				if (is_null($sName))
 				{
 					$aStrings[] = $sEmail;
@@ -494,79 +613,5 @@ class EMail
 		{
 			$this->m_oMessage->setReplyTo($sAddress);
 		}
-	}
-
-}
-
-/////////////////////////////////////////////////////////////////////////////////////
-
-/**
- * Extension to SwiftMailer: "debug" transport that pretends messages have been sent,
- * but just log them to a file.
- *
- * @package Swift
- * @author  Denis Flaven
- */
-class Swift_Transport_LogFileTransport extends Swift_Transport_NullTransport
-{
-	protected $sLogFile;
-	
-	/**
-	 * Sends the given message.
-	 *
-	 * @param Swift_Mime_Message $message
-	 * @param string[]           $failedRecipients An array of failures by-reference
-	 *
-	 * @return int     The number of sent emails
-	 */
-	public function send(Swift_Mime_Message $message, &$failedRecipients = null)
-	{
-		$hFile = @fopen($this->sLogFile, 'a');
-		if ($hFile)
-		{
-			$sTxt = "================== ".date('Y-m-d H:i:s')." ==================\n";
-			$sTxt .= $message->toString()."\n";
-		
-			@fwrite($hFile, $sTxt);
-			@fclose($hFile);
-		}
-		
-		return parent::send($message, $failedRecipients);
-	}
-	
-	public function setLogFile($sFilename)
-	{
-		$this->sLogFile = $sFilename;
-	}
-}
-
-/**
- * Pretends messages have been sent, but just log them to a file.
- *
- * @package Swift
- * @author  Denis Flaven
- */
-class Swift_LogFileTransport extends Swift_Transport_LogFileTransport
-{
-	/**
-	 * Create a new LogFileTransport.
-	 */
-	public function __construct()
-	{
-		call_user_func_array(
-		array($this, 'Swift_Transport_LogFileTransport::__construct'),
-		Swift_DependencyContainer::getInstance()
-		->createDependenciesFor('transport.null')
-		);
-	}
-
-	/**
-	 * Create a new LogFileTransport instance.
-	 *
-	 * @return Swift_LogFileTransport
-	 */
-	public static function newInstance()
-	{
-		return new self();
 	}
 }

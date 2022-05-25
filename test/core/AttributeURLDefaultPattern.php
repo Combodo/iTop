@@ -9,6 +9,6 @@ class AttributeURLDefaultPattern extends AttributeURL {
 	{
 		/** @noinspection OneTimeUseVariablesInspection */
 		$oConfig = utils::GetConfig();
-		return $oConfig->GetDefault('url_validation_pattern');
+		return '^'.$oConfig->GetDefault('url_validation_pattern').'$';
 	}
 }

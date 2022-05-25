@@ -19,17 +19,13 @@
  *
  */
 
+use Combodo\iTop\Test\UnitTest\ItopTestCase;
+
 /**
  * @covers utils
  */
-class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
+class UtilsTest extends ItopTestCase
 {
-	public function setUp()
-	{
-		parent::setUp();
-		require_once(APPROOT.'application/utils.inc.php');
-	}
-
 	public function testEndsWith()
 	{
 		$this->assertFalse(utils::EndsWith('a', 'bbbb'));
@@ -609,6 +605,81 @@ class UtilsTest extends \Combodo\iTop\Test\UnitTest\ItopTestCase
 			'56k'           => ['56k', 56 * 1024],
 			'512M'          => ['512M', 512 * 1024 * 1024],
 			'2G'            => ['2G', 2 * 1024 * 1024 * 1024],
+		];
+	}
+
+	/**
+	 * @param string|null $sString
+	 * @param int $iExpected
+	 *
+	 * @dataProvider StrLenProvider
+	 */
+	public function testStrLen(?string $sString, int $iExpected)
+	{
+		$iComputed = utils::StrLen($sString);
+		self::assertEquals($iExpected, $iComputed, 'Length was not as expected');
+	}
+
+	public function StrLenProvider(): array
+	{
+		return [
+			'null value' => [null, 0],
+			'0 character' => ['', 0],
+			'1 character' => ['a', 1],
+			'5 characters' => ['abcde', 5],
+		];
+	}
+
+	/**
+	 * Test sanitizer.
+	 *
+	 * @param $type string type of sanitizer
+	 * @param $valueToSanitize ? value to sanitize
+	 * @param $expectedResult ? expected result
+	 *
+	 * @return void
+	 *
+	 * @dataProvider sanitizerDataProvider
+	 */
+	public function testSanitizer($type, $valueToSanitize, $expectedResult)
+	{
+		$this->assertEquals($expectedResult, utils::Sanitize($valueToSanitize, null, $type), 'url sanitize failed');
+	}
+
+	/**
+	 * DataProvider for testSanitizer
+	 *
+	 * @return array
+	 */
+	public function sanitizerDataProvider()
+	{
+		return [
+			'good integer'            => ['integer', '2565', '2565'],
+			'bad integer'             => ['integer', 'a2656', '2656'],
+			/**
+			 * 'class' filter needs a loaded datamodel... and is only an indirection to \MetaModel::IsValidClass so might very important to test !
+			 * If we switch this class to ItopDataTestCase then we are seeing :
+			 *   - the class now takes 18s to process instead of... 459ms when using ItopTestCase !!!
+			 *   - multiple errors are thrown in testGetAbsoluteUrlAppRootPersistency :(
+			 * We decided it wasn't worse the effort to test the 'class' filter !
+			 */
+			//			'good class' => ['class', 'UserRequest', 'UserRequest'],
+			//			'bad class' => ['class', 'MyUserRequest',null],
+			'good string'             => ['string', 'Is Peter smart and funny?', 'Is Peter smart and funny?'],
+			'bad string'              => ['string', 'Is Peter <smart> & funny?', 'Is Peter &#60;smart&#62; &#38; funny?'],
+			'good transaction_id'     => ['transaction_id', '8965.-dd', '8965.-dd'],
+			'bad transaction_id'      => ['transaction_id', '8965.-dd+', null],
+			'good parameter'          => ['parameter', 'JU8965-dd=_', 'JU8965-dd=_'],
+			'bad parameter'           => ['parameter', '8965.-dd+', null],
+			'good field_name'         => ['field_name', 'Name->bUzz38', 'Name->bUzz38'],
+			'bad field_name'          => ['field_name', 'name-buzz', null],
+			'good context_param'      => ['context_param', '%dssD25_=%:+-', '%dssD25_=%:+-'],
+			'bad context_param'       => ['context_param', '%dssD,25_=%:+-', null],
+			'good element_identifier' => ['element_identifier', 'AD05nb', 'AD05nb'],
+			'bad element_identifier' => ['element_identifier', 'AD05nb+', 'AD05nb'],
+			'good url' => ['url', 'https://www.w3schools.com', 'https://www.w3schools.com'],
+			'bad url' => ['url', 'https://www.w3schoo��ls.co�m', 'https://www.w3schools.com'],
+			'raw_data' => ['raw_data', '<Test>\s😃😃😃', '<Test>\s😃😃😃'],
 		];
 	}
 }

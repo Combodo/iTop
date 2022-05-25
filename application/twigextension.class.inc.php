@@ -4,6 +4,7 @@ namespace Combodo\iTop;
 
 use AttributeDate;
 use AttributeDateTime;
+use DeprecatedCallsLog;
 use Dict;
 use Exception;
 use MetaModel;
@@ -11,6 +12,8 @@ use Twig_Environment;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
 use utils;
+
+DeprecatedCallsLog::NotifyDeprecatedFile('instead use sources/Application/TwigBase/Twig/Extension.php, which is loaded by the autoloader');
 
 /**
  * Class TwigExtension

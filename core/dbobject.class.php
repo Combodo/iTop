@@ -2026,9 +2026,9 @@ abstract class DBObject implements iDisplay
 	/**
 	 * check attributes together
 	 *
-     * @overwritable-hook You can extend this method in order to provide your own logic.
-     * 
-	 * @return bool 
+	 * @overwritable-hook You can extend this method in order to provide your own logic.
+	 *
+	 * @return true|string true if successful, the error description otherwise
 	 */
 	public function CheckConsistency()
 	{
@@ -2249,8 +2249,9 @@ abstract class DBObject implements iDisplay
 		foreach($aChanges as $sAttCode => $value) {
 			$res = $this->CheckValue($sAttCode);
 			if ($res !== true) {
+				$sAttLabel = $this->GetLabel($sAttCode);
 				// $res contains the error description
-				$this->m_aCheckIssues[] = "Unexpected value for attribute '$sAttCode': $res";
+				$this->m_aCheckIssues[] = Dict::Format('Core:CheckValueError', $sAttLabel, $sAttCode, $res);
 			}
 
 			$this->DoCheckLinkedSetDuplicates($sAttCode, $value);
@@ -2265,7 +2266,7 @@ abstract class DBObject implements iDisplay
 		if ($res !== true)
 		{
 			// $res contains the error description
-			$this->m_aCheckIssues[] = "Consistency rules not followed: $res";
+			$this->m_aCheckIssues[] = Dict::Format('Core:CheckConsistencyError', $res);
 		}
 
 		// Synchronization: are we attempting to modify an attribute for which an external source is master?
@@ -2278,12 +2279,10 @@ abstract class DBObject implements iDisplay
 				if ($iFlags & OPT_ATT_SLAVE)
 				{
 					// Note: $aReasonInfo['name'] could be reported (the task owning the attribute)
-					$oAttDef = MetaModel::GetAttributeDef(get_class($this), $sAttCode);
-					$sAttLabel = $oAttDef->GetLabel();
 					if (!empty($aReasons))
 					{
-						// Todo: associate the attribute code with the error
-						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel);
+						$sAttLabel = $this->GetLabel($sAttCode);
+						$this->m_aCheckIssues[] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $sAttLabel, $sAttCode);
 					}
 				}
 			}
@@ -4470,14 +4469,22 @@ abstract class DBObject implements iDisplay
 					$sAttCode = $sPlaceholderAttCode;
 				}
 
-				if ($sVerb == 'hyperlink')
+				if (in_array($sVerb, ['hyperlink', 'url']))
 				{
 					$sPortalId = ($sAttCode === '') ? 'console' : $sAttCode;
 					if (!array_key_exists($sPortalId, self::$aPortalToURLMaker))
 					{
 						throw new Exception("Unknown portal id '$sPortalId' in placeholder '$sPlaceholderAttCode''");
 					}
-					$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+					
+					if($sVerb == 'hyperlink')
+					{
+						$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);
+					}
+					else
+					{
+						$ret = ApplicationContext::MakeObjectUrl(get_class($this), $this->GetKey(), self::$aPortalToURLMaker[$sPortalId], false);
+					}
 				}
 				else
 				{
@@ -5237,45 +5244,34 @@ abstract class DBObject implements iDisplay
 		if ($sSourceAttCode == 'id')
 		{
 			$oSourceAttDef = null;
-		}
-		else
-		{
-			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode))
-			{
+		} else {
+			if (!MetaModel::IsValidAttCode(get_class($this), $sDestAttCode)) {
 				throw new Exception("Unknown attribute ".get_class($this)."::".$sDestAttCode);
 			}
-			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode))
-			{
+			if (!MetaModel::IsValidAttCode(get_class($oSourceObject), $sSourceAttCode)) {
 				throw new Exception("Unknown attribute ".get_class($oSourceObject)."::".$sSourceAttCode);
 			}
 
 			$oSourceAttDef = MetaModel::GetAttributeDef(get_class($oSourceObject), $sSourceAttCode);
 		}
-		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet())
-		{
+		if (is_object($oSourceAttDef) && $oSourceAttDef->IsLinkSet()) {
 			// The copy requires that we create a new object set (the semantic of DBObject::Set is unclear about link sets)
 			/** @var \AttributeLinkedSet $oSourceAttDef */
-			$oDestSet = DBObjectSet::FromScratch($oSourceAttDef->GetLinkedClass());
+			$oDestSet = $this->Get($sDestAttCode);
 			$oSourceSet = $oSourceObject->Get($sSourceAttCode);
 			$oSourceSet->Rewind();
 			/** @var \DBObject $oSourceLink */
-			while ($oSourceLink = $oSourceSet->Fetch())
-			{
+			while ($oSourceLink = $oSourceSet->Fetch()) {
 				// Clone the link
 				$sLinkClass = get_class($oSourceLink);
 				$oLinkClone = MetaModel::NewObject($sLinkClass);
-				foreach(MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef)
-				{
+				foreach (MetaModel::ListAttributeDefs($sLinkClass) as $sAttCode => $oAttDef) {
 					// As of now, ignore other attribute (do not attempt to recurse!)
-					if ($oAttDef->IsScalar() && $oAttDef->IsWritable())
-					{
+					if ($oAttDef->IsScalar() && $oAttDef->IsWritable()) {
 						$oLinkClone->Set($sAttCode, $oSourceLink->Get($sAttCode));
 					}
 				}
-
-				// Not necessary - this will be handled by DBObject
-				// $oLinkClone->Set($oSourceAttDef->GetExtKeyToMe(), 0);
-				$oDestSet->AddObject($oLinkClone);
+				$oDestSet->AddItem($oLinkClone);
 			}
 			$this->Set($sDestAttCode, $oDestSet);
 		}

@@ -29,7 +29,7 @@ use iTopDesignFormat;
  */
 class iTopModulesXmlVersionIntegrationTest extends ItopTestCase
 {
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 

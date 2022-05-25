@@ -932,7 +932,7 @@ try
 
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
@@ -943,8 +943,6 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			//$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults')
-			//.tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'reload_dashboard':
@@ -952,7 +950,7 @@ try
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = RuntimeDashboard::GetDashboard($sDashboardFile, $sDashboardId);
 			$aResult = array('error' => '');
 			if (!is_null($oDashboard))
@@ -963,14 +961,13 @@ try
 				}
 				$oDashboard->Render($oPage, false, $aExtraParams);
 			}
-			//$oPage->add_ready_script("$('.ibo-dashboard table.listResults').tableHover(); $('.ibo-dashboard table.listResults')
-			//.tablesorter( { widgets: ['myZebra', 'truncatedList']} );");
 			break;
 
 		case 'save_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'context_param');
+
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			appUserPreferences::SetPref('display_original_dashboard_'.$sDashboardId, false);
 			$sJSExtraParams = json_encode($aExtraParams);
 			$aParams = array();
@@ -982,14 +979,21 @@ try
 
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
-			$oDashboard->Save();
+			$bIsNew = $oDashboard->Save();
 
 			$sDashboardFile = addslashes(utils::ReadParam('file', '', false, 'string'));
 			$sDashboardDivId = preg_replace('/[^a-zA-Z0-9_]/', '', $sDashboardId);
-
-			// trigger a reload of the current page since the dashboard just changed
-			$oPage->add_script(
-				<<<JS
+			$sOperation = 'reload_dashboard';
+			if ($bIsNew) {
+				// Trigger a reload of the current page since the dashboard just changed
+				$oPage->add_script(
+					<<<JS
+			window.location.reload();
+JS
+				);
+			} else {
+				$oPage->add_script(
+					<<<JS
 			$('.ibo-dashboard#{$sDashboardDivId}').block();
 			$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php',
 			   { operation: 'reload_dashboard', dashboard_id: '{$sDashboardId}', file: '{$sDashboardFile}', extra_params: {$sJSExtraParams}, reload_url: '{$sReloadURL}'},
@@ -999,12 +1003,13 @@ try
 				}
 			 );
 JS
-			);
+				);
+			}
 			break;
 
 		case 'revert_dashboard':
 			$sDashboardId = utils::ReadParam('dashboard_id', '', false, 'raw_data');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			appUserPreferences::UnsetPref('display_original_dashboard_'.$sDashboardId);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->Revert();
@@ -1034,7 +1039,7 @@ EOF
 			$aParams['cells'] = utils::ReadParam('cells', array(), false, 'raw_data');
 			$aParams['auto_reload'] = utils::ReadParam('auto_reload', false);
 			$aParams['auto_reload_sec'] = utils::ReadParam('auto_reload_sec', 300);
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = new RuntimeDashboard($sDashboardId);
 			$oDashboard->FromParams($aParams);
 			$oDashboard->SetReloadURL($sReloadURL);
@@ -1046,7 +1051,7 @@ EOF
 			$aExtraParams = utils::ReadParam('extra_params', array(), false, 'raw_data');
 			$aExtraParams['dashboard_div_id'] = utils::Sanitize($sId, '', 'element_identifier');
 			$sDashboardFile = utils::ReadParam('file', '', false, 'string');
-			$sReloadURL = utils::ReadParam('reload_url', '', false, 'raw_data');
+			$sReloadURL = utils::ReadParam('reload_url', '', false, utils::ENUM_SANITIZATION_FILTER_URL);
 			$oDashboard = RuntimeDashboard::GetDashboardToEdit($sDashboardFile, $sId);
 			if (!is_null($oDashboard)) {
 				if (!empty($sReloadURL)) {
@@ -1113,7 +1118,16 @@ EOF
 				$aUpdatedDecoded = array();
 				foreach ($aUpdatedProperties as $sProp) {
 					$sDecodedProp = str_replace('attr_', '', $sProp); // Remove the attr_ prefix
-					$aCurrentValues[$sDecodedProp] = (isset($aPreviousValues[$sProp]) ? $aPreviousValues[$sProp] : ''); // Set the previous value
+					// Set the previous value
+					if  ( isset($aPreviousValues[$sProp]) && $aPreviousValues[$sProp] != '' ){
+						$aCurrentValues[$sDecodedProp] = $aPreviousValues[$sProp];
+					} else {
+						if(gettype($aCurrentValues[$sDecodedProp]) == "array") {
+							$aCurrentValues[$sDecodedProp] = [];
+						} else {
+							$aCurrentValues[$sDecodedProp] = '';
+						}
+					}
 					$aUpdatedDecoded[] = $sDecodedProp;
 				}
 

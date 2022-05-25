@@ -1,8 +1,12 @@
+@import "../utilities/mixins";
+
 $progress-bar-background-color: $border-light !default;
 $progress-value-background-color: $text !default;
 $progress-border-radius: $radius-rounded !default;
 
 $progress-indeterminate-duration: 1.5s !default;
+
+$progress-colors: $colors !default;
 
 .progress {
   @extend %block;
@@ -35,7 +39,7 @@ $progress-indeterminate-duration: 1.5s !default;
   }
 
   // Colors
-  @each $name, $pair in $colors {
+  @each $name, $pair in $progress-colors {
     $color: nth($pair, 1);
 
     &.is-#{$name} {
@@ -74,6 +78,10 @@ $progress-indeterminate-duration: 1.5s !default;
 
     &::-moz-progress-bar {
       background-color: transparent;
+    }
+
+    &::-ms-fill {
+      animation-name: none;
     }
   }
 

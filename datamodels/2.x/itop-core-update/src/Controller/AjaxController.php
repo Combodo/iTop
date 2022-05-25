@@ -17,6 +17,7 @@ use Dict;
 use Exception;
 use IssueLog;
 use MetaModel;
+use SecurityException;
 use SetupUtils;
 use utils;
 
@@ -211,13 +212,30 @@ class AjaxController extends Controller
 			CoreUpdater::UpdateDatabase();
 			$iResponseCode = 200;
 		}
-		catch (Exception $e)
-		{
+		catch (Exception $e) {
 			IssueLog::Error("Compile: ".$e->getMessage());
 			$aParams['sError'] = $e->getMessage();
 			$iResponseCode = 500;
 		}
 
 		$this->DisplayJSONPage($aParams, $iResponseCode);
+	}
+
+	/**
+	 * @throws \SecurityException if CSRF token invalid
+	 *
+	 * @since 3.1.0 N°4919
+	 */
+	public function OperationLaunchSetup()
+	{
+		$sTransactionId = utils::ReadParam('transaction_id', '', false, 'transaction_id');
+		if (false === utils::IsTransactionValid($sTransactionId)) {
+			throw new SecurityException('Access forbidden');
+		}
+
+		$sConfigFile = APPCONF.'production/config-itop.php';
+		@chmod($sConfigFile, 0770); // Allow overwriting the file
+
+		header('Location: ../setup/');
 	}
 }

@@ -1544,120 +1544,100 @@ public function PrefillSearchForm(&$aContextParam)
 				</reconciliation>
 			</properties>
 			<fields>
-				<field id="name" xsi:type="AttributeString">
-					<sql>name</sql>
-					<default_value/>
-					<is_null_allowed>false</is_null_allowed>
-				</field>
-				<field id="description" xsi:type="AttributeText">
-					<sql>description</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-				</field>
-				<field id="org_id" xsi:type="AttributeExternalKey">
-					<sql>org_id</sql>
-					<target_class>Organization</target_class>
-					<is_null_allowed>false</is_null_allowed>
-					<on_target_delete>DEL_MANUAL</on_target_delete>
-				</field>
-				<field id="organization_name" xsi:type="AttributeExternalField">
-					<extkey_attcode>org_id</extkey_attcode>
-					<target_attcode>name</target_attcode>
-				</field>
-				<field id="slts_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkSLAToSLT</linked_class>
-					<ext_key_to_me>sla_id</ext_key_to_me>
-					<count_min>0</count_min>
-					<count_max>0</count_max>
-					<ext_key_to_remote>slt_id</ext_key_to_remote>
-					<duplicates/>
-				</field>
-				<field id="customercontracts_list" xsi:type="AttributeLinkedSetIndirect">
-					<linked_class>lnkCustomerContractToService</linked_class>
-					<ext_key_to_me>sla_id</ext_key_to_me>
-					<count_min>0</count_min>
-					<count_max>0</count_max>
-					<ext_key_to_remote>customercontract_id</ext_key_to_remote>
-					<duplicates>true</duplicates>
-				</field>
-			</fields>
-			<methods>
-				<method id="DoCheckToWrite">
-					<static>false</static>
-					<access>public</access>
-					<code><![CDATA[
-					public function DoCheckToWrite()
-	{
-		parent::DoCheckToWrite();
-
-		$aCustomerContracts = $this->Get("customercontracts_list");
-		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
-		{
-			// Recurse inside the subdirectories
-			$sOql = "SELECT lnkCustomerContractToService AS ccs WHERE ccs.customercontract_id=:customercontract_id AND ccs.service_id=:service_id";
-			$aQueryParams['customercontract_id'] = $oCustomerContracts->Get("customercontract_id");
-			$aQueryParams['service_id'] = $oCustomerContracts->Get("service_id");
-			if ($this->Get("id") != null)
-			{
-				$sOql = $sOql." AND ccs.sla_id!=:sla_id";
-				$aQueryParams['sla_id'] = $this->Get("id");
-			}
-			$oQuery = DBSearch::FromOQL($sOql, $aQueryParams);
-			$oResultSql = new DBObjectSet($oQuery);
-			$oResultSql->OptimizeColumnLoad(['ccs' => ['customercontract_name','service_name']]);
-			if ($aCurrentRow = $oResultSql->Fetch())
-			{
-				$this->m_aCheckIssues[] = Dict::Format('Class:SLA/Error:UniqueLnkCustomerContractToService',$aCurrentRow->Get('customercontract_name'),$aCurrentRow->Get('service_name'));
-			}
-		}
-	}
-			     ]]></code>
-				</method>
-			</methods>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="org_id" xsi:type="AttributeExternalKey">
+          <sql>org_id</sql>
+          <target_class>Organization</target_class>
+          <is_null_allowed>false</is_null_allowed>
+          <on_target_delete>DEL_MANUAL</on_target_delete>
+        </field>
+        <field id="organization_name" xsi:type="AttributeExternalField">
+          <extkey_attcode>org_id</extkey_attcode>
+          <target_attcode>name</target_attcode>
+        </field>
+        <field id="slts_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLAToSLT</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>slt_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+        <field id="customercontracts_list" xsi:type="AttributeLinkedSet">
+          <linked_class>lnkCustomerContractToService</linked_class>
+          <ext_key_to_me>sla_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <edit_mode>none</edit_mode>
+        </field>
+      </fields>
+			<methods/>
 			<presentation>
-				<details>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="description">
-							<rank>30</rank>
-						</item>
-						<item id="slts_list">
-							<rank>40</rank>
-						</item>
-						<item id="customercontracts_list">
-							<rank>50</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-						<item id="description">
-							<rank>30</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="org_id">
-							<rank>20</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+            <item id="slts_list">
+              <rank>40</rank>
+            </item>
+            <item id="customercontracts_list">
+              <rank>50</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+            <item id="description">
+              <rank>30</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="org_id">
+              <rank>20</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
 		</class>
 		<class id="SLT" _delta="define">
 			<parent>cmdbAbstractObject</parent>
@@ -1748,83 +1728,110 @@ public function PrefillSearchForm(&$aContextParam)
 					<values>
 						<value id="hours">
 							<code>hours</code>
-						</value>
-						<value id="minutes">
-							<code>minutes</code>
-						</value>
-					</values>
-					<sql>unit</sql>
-					<default_value/>
-					<is_null_allowed>true</is_null_allowed>
-					<display_style>radio_horizontal</display_style>
-				</field>
-			</fields>
+            </value>
+            <value id="minutes">
+              <code>minutes</code>
+            </value>
+          </values>
+          <sql>unit</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <display_style>radio_horizontal</display_style>
+        </field>
+        <field id="slas_list" xsi:type="AttributeLinkedSetIndirect">
+          <linked_class>lnkSLAToSLT</linked_class>
+          <ext_key_to_me>slt_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+          <ext_key_to_remote>sla_id</ext_key_to_remote>
+          <duplicates/>
+        </field>
+      </fields>
 			<methods/>
 			<presentation>
 				<details>
 					<items>
 						<item id="name">
 							<rank>10</rank>
-						</item>
-						<item id="priority">
-							<rank>20</rank>
-						</item>
-						<item id="request_type">
-							<rank>30</rank>
-						</item>
-						<item id="metric">
-							<rank>40</rank>
-						</item>
-						<item id="value">
-							<rank>50</rank>
-						</item>
-						<item id="unit">
-							<rank>60</rank>
-						</item>
-					</items>
-				</details>
-				<search>
-					<items>
-						<item id="name">
-							<rank>10</rank>
-						</item>
-						<item id="priority">
-							<rank>20</rank>
-						</item>
-						<item id="request_type">
-							<rank>30</rank>
-						</item>
-						<item id="metric">
-							<rank>40</rank>
-						</item>
-						<item id="value">
-							<rank>50</rank>
-						</item>
-						<item id="unit">
-							<rank>60</rank>
-						</item>
-					</items>
-				</search>
-				<list>
-					<items>
-						<item id="priority">
-							<rank>10</rank>
-						</item>
-						<item id="request_type">
-							<rank>20</rank>
-						</item>
-						<item id="metric">
-							<rank>30</rank>
-						</item>
-						<item id="value">
-							<rank>40</rank>
-						</item>
-						<item id="unit">
-							<rank>50</rank>
-						</item>
-					</items>
-				</list>
-			</presentation>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="unit">
+              <rank>60</rank>
+            </item>
+            <item id="slas_list">
+              <rank>100</rank>
+            </item>
+          </items>
+        </details>
+        <search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+            <item id="value">
+              <rank>50</rank>
+            </item>
+            <item id="unit">
+              <rank>60</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="priority">
+              <rank>20</rank>
+            </item>
+            <item id="request_type">
+              <rank>30</rank>
+            </item>
+            <item id="metric">
+              <rank>40</rank>
+            </item>
+          </items>
+        </default_search>
+        <list>
+          <items>
+            <item id="priority">
+              <rank>10</rank>
+            </item>
+            <item id="request_type">
+              <rank>20</rank>
+            </item>
+            <item id="metric">
+              <rank>30</rank>
+            </item>
+            <item id="value">
+              <rank>40</rank>
+            </item>
+            <item id="unit">
+              <rank>50</rank>
+            </item>
+          </items>
+        </list>
+      </presentation>
 		</class>
 		<class id="lnkSLAToSLT" _delta="define">
 			<parent>cmdbAbstractObject</parent>

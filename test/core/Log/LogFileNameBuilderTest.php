@@ -28,21 +28,20 @@ class LogFileNameBuilderTest extends ItopTestCase
 		clearstatcache(true, $sLogFile);
 	}
 
-	protected function setUp()
+	protected function setUp(): void
 	{
 		parent::setUp();
 
 		require_once APPROOT.'core/log.class.inc.php';
 	}
 
-	protected function tearDown()
+	protected function tearDown(): void
 	{
 		parent::tearDown();
 
 		// remove log files created in the test
 		$aTestLogFiles = glob(__DIR__.DIRECTORY_SEPARATOR.self::TEST_LOGFILE_PREFIX.'*.'.self::TEST_LOGFILE_EXTENSION);
-		foreach ($aTestLogFiles as $sLogFile)
-		{
+		foreach ($aTestLogFiles as $sLogFile) {
 			unlink($sLogFile);
 		}
 	}

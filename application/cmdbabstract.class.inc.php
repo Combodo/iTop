@@ -1449,7 +1449,7 @@ HTML
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
-	 * @deprecated since 3.0.0
+	 * @deprecated 3.0.0
 	 */
 	public static function GetDisplayExtendedSet(WebPage $oPage, CMDBObjectSet $oSet, $aExtraParams = array())
 	{
@@ -3930,7 +3930,7 @@ HTML;
 				}
 				elseif ($iFlags & OPT_ATT_SLAVE)
 				{
-					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel());
+					$aErrors[$sAttCode] = Dict::Format('UI:AttemptingToSetASlaveAttribute_Name', $oAttDef->GetLabel(), $sAttCode);
 				}
 				else
 				{
@@ -4516,22 +4516,14 @@ HTML;
 	 */
 	protected function SetWarningsAsSessionMessages($sMessageIdPrefix)
 	{
-		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings))
-		{
+		if (!empty($this->m_aCheckWarnings) && is_array($this->m_aCheckWarnings)) {
 			$iMsgNb = 0;
-			foreach ($this->m_aCheckWarnings as $sWarningMessage)
-			{
+			foreach ($this->m_aCheckWarnings as $sWarningMessage) {
 				$iMsgNb++;
 				$sMessageId = "$sMessageIdPrefix-$iMsgNb"; // each message must have its own messageId !
 				$this->SetSessionMessageFromInstance($sMessageId, $sWarningMessage, 'warning', 0);
 			}
 		}
-	}
-
-	protected static function BulkUpdateTracked_Internal(DBSearch $oFilter, array $aValues)
-	{
-		// Todo - invoke the extension
-		return parent::BulkUpdateTracked_Internal($oFilter, $aValues);
 	}
 
 	protected function DBDeleteTracked_Internal(&$oDeletionPlan = null)
@@ -5205,7 +5197,7 @@ EOF
 			} else {
 				$sStatus = $bResult ? Dict::S('UI:BulkModifyStatusModified') : Dict::S('UI:BulkModifyStatusSkipped');
 			}
-			$sChecked = $bResult ? 'checked' : '';
+
 			$aRows[] = array(
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,

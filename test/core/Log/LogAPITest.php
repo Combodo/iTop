@@ -15,7 +15,6 @@ namespace Combodo\iTop\Test\UnitTest\Core\Log;
 
 
 use Combodo\iTop\Test\UnitTest\ItopDataTestCase;
-use MetaModel;
 
 /**
  * @runTestsInSeparateProcesses
@@ -27,15 +26,9 @@ class LogAPITest extends ItopDataTestCase
 	private $mockFileLog;
 	private $oMetaModelConfig;
 
-	protected function setUp()
+	protected function setUp():void
 	{
 		parent::setUp();
-
-		// We are using PHPUnit\Framework\MockObject\Generator::generateMock that is throwing notice !
-		// Changing config so that those won't be caught by \DeprecatedCallsLog::DeprecatedNoticesErrorHandler
-		// disabling devenv is easier than changing log config O:)
-		$oConfig = MetaModel::GetConfig();
-		$oConfig->Set('developer_mode.enabled', false);
 
 		$this->mockFileLog = $this->createMock('FileLog');
 		$this->oMetaModelConfig = $this->createMock('Config');

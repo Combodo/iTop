@@ -52,26 +52,26 @@ Here are the branches we use and their meaning :
 
 For example, if no version is currently prepared for shipping we could have:
 
-- `develop` containing future 3.0.0 version
+- `develop` containing future 3.1.0 version
+- `support/3.0`: 3.0.x maintenance version
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
-- `support/2.5`: 2.5.x maintenance version
 
-In this example, when 3.0.0-beta is shipped that will become:
+In this example, when 3.1.0-beta is shipped that will become:
 
-- `develop`: future 3.1.0 version
-- `release/3.0.0`: 3.0.0-beta
+- `develop`: future 3.2.0 version
+- `release/3.1.0`: 3.1.0-beta
+- `support/3.0`: 3.0.x maintenance version
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
-- `support/2.5`: 2.5.x maintenance version
 
-And when 3.0.0 final will be out:
+And when 3.1.0 final will be out:
 
-- `develop`: future 3.1.0 version
-- `support/3.0`: 3.0.x maintenance version (will host developments for 3.0.1)
+- `develop`: future 3.2.0 version
+- `support/3.1`: 3.1.x maintenance version (will host developments for 3.1.1)
+- `support/3.0`: 3.0.x maintenance version
 - `support/2.7`: 2.7.x maintenance version
 - `support/2.6`: 2.6.x maintenance version
-- `support/2.5`: 2.5.x maintenance version
 
 Also note that we have a "micro-version" concept : each of those versions have a very small amount of modifications. They are made from
  `support/*` branches as well. For example 2.6.2-1 and 2.6.2-2 were made from the `support/2.6.2` branch. 
@@ -133,13 +133,11 @@ When your code is working, please:
 
 * stash as much as possible your commits,
 * rebase your branch on our repo last commit,
-* create a pull request.
+* create a pull request
+* mind to check the "[Allow edits from maintainers](https://docs.github.com/en/github-ae@latest/pull-requests/collaborating-with-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork)" option !
 
 Detailed procedure to work on fork and create PR is available [in GitHub help pages](https://help.github.com/articles/creating-a-pull-request-from-a-fork/).
 
-You might check the ["Allow edits from maintainers" PR checkbox][allow_edits_checkbox] to ease review.
-
-[allow_edits_checkbox]: https://docs.github.com/en/github/collaborating-with-issues-and-pull-requests/working-with-forks/allowing-changes-to-a-pull-request-branch-created-from-a-fork#enabling-repository-maintainer-permissions-on-existing-pull-requests
 
 ### 🙏 We are thankful
 

@@ -351,19 +351,21 @@ class CMDBSource
 	}
 
 	/**
+	 * Get the version of the database server.
+	 *
 	 * @return string
 	 * @throws \MySQLException
 	 *
-	 * @uses \CMDBSource::QueryToCol() so needs a connection opened !
+	 * @uses \CMDBSource::QueryToScalar() so needs a connection opened !
 	 */
 	public static function GetDBVersion()
 	{
-		$aVersions = self::QueryToCol('SELECT Version() as version', 'version');
-		return $aVersions[0];
+		return static::QueryToScalar('SELECT VERSION()', 0);
 	}
 
 	/**
-	 * @return string
+	 * @deprecated Use `CMDBSource::GetDBVersion` instead.
+	 * @uses mysqli_get_server_info
 	 */
 	public static function GetServerInfo()
 	{
@@ -705,7 +707,11 @@ class CMDBSource
 	private static function Commit()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction COMMIT $sCaller", LogChannels::CMDB_SOURCE);
@@ -739,7 +745,11 @@ class CMDBSource
 	private static function Rollback()
 	{
 		$aStackTrace = debug_backtrace(DEBUG_BACKTRACE_PROVIDE_OBJECT , 3);
-		$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		if(isset($aStackTrace[2]['class']) && isset($aStackTrace[2]['function'])) {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].'): '.$aStackTrace[2]['class'].'->'.$aStackTrace[2]['function'].'()';
+		} else {
+			$sCaller = 'From '.$aStackTrace[1]['file'].'('.$aStackTrace[1]['line'].') ';
+		}
 		if (!self::IsInsideTransaction()) {
 			// should not happen !
 			IssueLog::Error("No Transaction ROLLBACK $sCaller", LogChannels::CMDB_SOURCE);
@@ -1499,19 +1509,13 @@ class CMDBSource
 	 * Returns the value of the specified server variable
 	 * @param string $sVarName Name of the server variable
 	 * @return mixed Current value of the variable
-	 */	   	
+	 * @throws \MySQLQueryHasNoResultException|\MySQLException
+	 */
 	public static function GetServerVariable($sVarName)
 	{
-		$result = '';
-		$sSql = "SELECT @@$sVarName as theVar";
-		$aRows = self::QueryToArray($sSql);
-		if (count($aRows) > 0)
-		{
-			$result = $aRows[0]['theVar'];
-		}
-		return $result;
+		$sSql = 'SELECT @@'.$sVarName;
+		return static::QueryToScalar($sSql, 0) ?: '';
 	}
-
 
 	/**
 	 * Returns the privileges of the current user
