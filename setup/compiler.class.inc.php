@@ -592,15 +592,18 @@ EOF;
 				{
 					// Write the code into the given module as model.<module>.php
 					//
-					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
+					$sModelFileName = 'model.'.$sModuleName.'.php';
+					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/'.$sModelFileName;
 					$this->WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode);
+					// In case the model file wasn't present in the module file, we're adding it ! (N°4875)
+					$oModule->AddFileToInclude('business', $sModelFileName);
 				}
 				else
 				{
 					// Write the code into core/main.php
 					//
 					$this->sMainPHPCode .=
-					<<<EOF
+						<<<EOF
 /**
  * Data model from the delta file
  */
@@ -608,10 +611,8 @@ EOF;
 EOF;
 					$this->sMainPHPCode .= $sCompiledCode;
 				}
-			}
-			else
-			{
-					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
+			} else {
+				$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
 
 			// files to include (PHP datamodels)
@@ -634,8 +635,7 @@ EOF;
 				}
 			}
 			// files to include (PHP webservices providers)
-			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
-			{
+			foreach ($oModule->GetFilesToInclude('webservices') as $sRelFileName) {
 				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module

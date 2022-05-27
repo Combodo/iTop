@@ -328,6 +328,14 @@ class MFModule
 		return $this->aFilesToInclude[$sCategory];
 	}
 
+	public function AddFileToInclude($sCategory, $sFile)
+	{
+		if (in_array($sFile, $this->aFilesToInclude[$sCategory], true)) {
+			return;
+		}
+		$this->aFilesToInclude[$sCategory][] = $sFile;
+	}
+
 }
 
 /**
