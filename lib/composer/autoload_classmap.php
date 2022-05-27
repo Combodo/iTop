@@ -606,7 +606,6 @@ return array(
     'Laminas\\ServiceManager\\PsrContainerDecorator' => $vendorDir . '/laminas/laminas-servicemanager/src/PsrContainerDecorator.php',
     'Laminas\\ServiceManager\\ServiceLocatorInterface' => $vendorDir . '/laminas/laminas-servicemanager/src/ServiceLocatorInterface.php',
     'Laminas\\ServiceManager\\ServiceManager' => $vendorDir . '/laminas/laminas-servicemanager/src/ServiceManager.php',
-    'Laminas\\ServiceManager\\Test\\CommonPluginManagerTrait' => $vendorDir . '/laminas/laminas-servicemanager/src/Test/CommonPluginManagerTrait.php',
     'Laminas\\ServiceManager\\Tool\\ConfigDumper' => $vendorDir . '/laminas/laminas-servicemanager/src/Tool/ConfigDumper.php',
     'Laminas\\ServiceManager\\Tool\\ConfigDumperCommand' => $vendorDir . '/laminas/laminas-servicemanager/src/Tool/ConfigDumperCommand.php',
     'Laminas\\ServiceManager\\Tool\\FactoryCreator' => $vendorDir . '/laminas/laminas-servicemanager/src/Tool/FactoryCreator.php',

@@ -974,7 +974,6 @@ class ComposerStaticInit0018331147de7601e7552f7da8e3bb8b
         'Laminas\\ServiceManager\\PsrContainerDecorator' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/PsrContainerDecorator.php',
         'Laminas\\ServiceManager\\ServiceLocatorInterface' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/ServiceLocatorInterface.php',
         'Laminas\\ServiceManager\\ServiceManager' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/ServiceManager.php',
-        'Laminas\\ServiceManager\\Test\\CommonPluginManagerTrait' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Test/CommonPluginManagerTrait.php',
         'Laminas\\ServiceManager\\Tool\\ConfigDumper' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Tool/ConfigDumper.php',
         'Laminas\\ServiceManager\\Tool\\ConfigDumperCommand' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Tool/ConfigDumperCommand.php',
         'Laminas\\ServiceManager\\Tool\\FactoryCreator' => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src/Tool/FactoryCreator.php',
