@@ -1319,7 +1319,7 @@ EOF
 				}
 
 				$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sEventUniqId, \"$sListenerId\", null, $sListenerPriority);";
+				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerPriority);";
 			}
 		}
 

@@ -4435,7 +4435,15 @@ HTML;
 	 */
 	public function DBInsertNoReload()
 	{
-		$res = parent::DBInsertNoReload();
+		return $this->DBInsert();
+	}
+
+	/**
+	 * @inheritdoc
+	 */
+	public function DBInsert()
+	{
+		$res = parent::DBInsert();
 
 		$this->SetWarningsAsSessionMessages('create');
 
@@ -4480,13 +4488,13 @@ HTML;
 
 		// Protection against reentrance (e.g. cascading the update of ticket logs)
 		// Note: This is based on the fix made on r 3190 in DBObject::DBUpdate()
-		static $aUpdateReentrance = array();
-		$sKey = get_class($this).'::'.$this->GetKey();
-		if (array_key_exists($sKey, $aUpdateReentrance))
-		{
+		if (!MetaModel::StartReentranceProtection($this)) {
+			$sClass = get_class($this);
+			$sKey = $this->GetKey();
+			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
+
 			return $res;
 		}
-		$aUpdateReentrance[$sKey] = true;
 
 		try
 		{
@@ -4497,13 +4505,13 @@ HTML;
 				$oExtensionInstance->OnDBUpdate($this, self::GetCurrentChange());
 			}
 		}
-		catch (Exception $e)
-		{
-			throw $e;
-		}
 		finally
 		{
-			unset($aUpdateReentrance[$sKey]);
+			MetaModel::StopReentranceProtection($this);
+		}
+
+		if ($this->IsModified()) {
+			return $this->DBUpdate();
 		}
 
 		return $res;

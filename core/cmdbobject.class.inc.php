@@ -629,12 +629,6 @@ abstract class CMDBObject extends DBObject
 		return $newKey;
 	}
 
-	public function DBUpdate()
-	{
-		parent::DBUpdate();
-	}
-
-
 	/**
 	 * @param null $oDeletionPlan
 	 *

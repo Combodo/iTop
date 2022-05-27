@@ -8154,6 +8154,11 @@ class AttributeImage extends AttributeBlob
 		return $oDoc;
 	}
 
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		return new ormDocument('', '', '');
+	}
+
 	/**
 	 * Check that the supplied ormDocument actually contains an image
 	 * {@inheritDoc}
@@ -13076,7 +13081,7 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return $this->MakeRealValue("", $oHostObject);
+		return $this->MakeRealValue(false, $oHostObject);
 	}
 
 	public function IsNullAllowed()

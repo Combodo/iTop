@@ -148,10 +148,10 @@ abstract class DBObject implements iDisplay
 	/**
 	 * @var string local events suffix
 	 */
-	protected $m_sEventUniqId = '';
+	protected $m_sObjectUniqId = '';
 
-	private static $aUpdateReentrance = [];
-
+	protected $m_bIsReadOnly = false;
+	protected $m_sReadOnlyMessage = '';
 
 	/**
      * DBObject constructor.
@@ -177,7 +177,7 @@ abstract class DBObject implements iDisplay
 			$this->m_bFullyLoaded = $this->IsFullyLoaded();
 			$this->m_aTouchedAtt = array();
 			$this->m_aModifiedAtt = array();
-			$this->m_sEventUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
+			$this->m_sObjectUniqId = get_class($this).'::'.$this->GetKey().'_'.utils::GetUniqId();
 			$this->RegisterEvents();
 			return;
 		}
@@ -200,7 +200,7 @@ abstract class DBObject implements iDisplay
 
 		$this->UpdateMetaAttributes();
 
-		$this->m_sEventUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
+		$this->m_sObjectUniqId = get_class($this).'::0'.'_'.utils::GetUniqId();
 		$this->RegisterEvents();
 	}
 
@@ -465,7 +465,17 @@ abstract class DBObject implements iDisplay
 				// which is something that could happen on open joins
 				$sAttRef = $sClassAlias.$sAttCode;
 
-				if (array_key_exists($sAttRef, $aRow))
+				// Due to custom formatting rules, empty friendlynames may be rendered as non-empty strings
+				// let's fix this and make sure we render an empty string if the key == 0
+				if ($oAttDef instanceof AttributeExternalField && $oAttDef->IsFriendlyName()) {
+					$sKeyRef = $sClassAlias.$oAttDef->GetKeyAttCode();
+					if (array_key_exists($sKeyRef, $aRow) && $aRow[$sKeyRef] == '0') {
+						$value = '';
+						$bIsDefined = true;
+					}
+				}
+
+				if (!$bIsDefined && array_key_exists($sAttRef, $aRow))
 				{
 					$value = $oAttDef->FromSQLToValue($aRow, $sAttRef);
 					$bIsDefined = true;
@@ -552,6 +562,11 @@ abstract class DBObject implements iDisplay
      */
 	public function Set($sAttCode, $value)
 	{
+		$sMessage = $this->IsReadOnly();
+		if ($sMessage !== false) {
+			throw new CoreException($sMessage);
+		}
+
 		if ($sAttCode == 'finalclass') {
 			// Ignore it - this attribute is set upon object creation and that's it
 			return false;
@@ -2783,180 +2798,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DBInsertNoReload()
 	{
-		if ($this->m_bIsInDB)
-		{
-			throw new CoreException("The object already exists into the Database, you may want to use the clone function");
-		}
-
-		$sClass = get_class($this);
-		$sRootClass = MetaModel::GetRootClass($sClass);
-
-		// Ensure the update of the values (we are accessing the data directly)
-		$this->DoComputeValues();
-		$this->OnInsert();
-		$this->EventInsertRequested();
-
-		if ($this->m_iKey < 0)
-		{
-			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
-			$this->m_iKey = null; 
-		}
-
-		// If not automatically computed, then check that the key is given by the caller
-		if (!MetaModel::IsAutoIncrementKey($sRootClass))
-		{
-			if (empty($this->m_iKey))
-			{
-				throw new CoreWarning("Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber", array('class' => $sRootClass));
-			}
-		}
-
-		// Ultimate check - ensure DB integrity
-		list($bRes, $aIssues) = $this->CheckToWrite();
-		if (!$bRes)
-		{
-			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
-		}
-
-		// Stop watches
-		$sState = $this->GetState();
-		if ($sState != '')
-		{
-			foreach(MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-			{
-				if ($oAttDef instanceof AttributeStopWatch)
-				{
-					if (in_array($sState, $oAttDef->GetStates()))
-					{
-						// Start the stop watch and compute the deadlines
-						/** @var \ormStopWatch $oSW */
-						$oSW = $this->Get($sAttCode);
-						$oSW->Start($this, $oAttDef);
-						$oSW->ComputeDeadlines($this, $oAttDef);
-						$this->Set($sAttCode, $oSW);
-					}
-				}
-			}
-		}
-
-		$this->EventInsertBefore();
-
-		$iTransactionRetry = 1;
-		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
-		if ($bIsTransactionEnabled)
-		{
-			// TODO Deep clone this object before the transaction (to use it in case of rollback)
-			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
-			$iTransactionRetryCount = 1;
-			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
-			$iTransactionRetry = $iTransactionRetryCount;
-		}
-		while ($iTransactionRetry > 0) {
-			try {
-				$iTransactionRetry--;
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('START TRANSACTION');
-				}
-
-				// First query built upon on the root class, because the ID must be created first
-				$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
-
-				// Then do the leaf class, if different from the root class
-				if ($sClass != $sRootClass) {
-					$this->DBInsertSingleTable($sClass);
-				}
-
-				// Then do the other classes
-				foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
-					if ($sParentClass == $sRootClass) {
-						continue;
-					}
-					$this->DBInsertSingleTable($sParentClass);
-				}
-
-				$this->OnObjectKeyReady();
-
-				$this->DBWriteLinks();
-				$this->WriteExternalAttributes();
-
-				// Write object creation history within the transaction
-				$this->RecordObjCreation();
-
-				if ($bIsTransactionEnabled) {
-					CMDBSource::Query('COMMIT');
-				}
-				break;
-			}
-			catch (Exception $e) {
-				IssueLog::Error($e->getMessage());
-				if ($bIsTransactionEnabled)
-				{
-					CMDBSource::Query('ROLLBACK');
-					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e))
-					{
-						// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
-						if ($iTransactionRetry > 0)
-						{
-							// wait and retry
-							IssueLog::Error("Insert TRANSACTION Retrying...");
-							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
-							continue;
-						}
-						else
-						{
-							IssueLog::Error("Insert Deadlock TRANSACTION prevention failed.");
-						}
-					}
-				}
-				throw $e;
-			}
-		}
-
-		$this->m_bIsInDB = true;
-		$this->m_bDirty = false;
-		foreach ($this->m_aCurrValues as $sAttCode => $value)
-		{
-			if (is_object($value))
-			{
-				$value = clone $value;
-			}
-			$this->m_aOrigValues[$sAttCode] = $value;
-		}
-
-		$this->AfterInsert();
-
-		// Prevent DBUpdate at this point (reentrance protection)
-		$sClass = get_class($this);
-		$sClassKey = $sClass.'::'.$this->m_iKey;
-		self::$aUpdateReentrance[$sClassKey] = true;
-		$this->EventInsertAfter();
-		unset(self::$aUpdateReentrance[$sClassKey]);
-
-		// Activate any existing trigger 
-		$sClass = get_class($this);
-		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
-		$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)"), array(), $aParams);
-		while ($oTrigger = $oSet->Fetch())
-		{
-			/** @var \Trigger $oTrigger */
-			try
-			{
-				$oTrigger->DoActivate($this->ToArgs('this'));
-			}
-			catch(Exception $e)
-			{
-				utils::EnrichRaisedException($oTrigger, $e);
-			}
-		}
-		
-		// - TriggerOnObjectMention
-		$this->ActivateOnMentionTriggers(true);
-
-		if ($this->IsModified()) {
-			$this->DBUpdate();
-		}
-
-		return $this->m_iKey;
+		return $this->DBInsert();
 	}
 
     /**
@@ -3093,8 +2935,162 @@ abstract class DBObject implements iDisplay
             throw new CoreException("$sErrorMessage (see the log for more information)");
         }
 
-		$this->DBInsertNoReload();
-		$this->Reload();
+		if ($this->m_bIsInDB) {
+			throw new CoreException('The object already exists into the Database, you may want to use the clone function');
+		}
+
+		$sClass = get_class($this);
+		$sRootClass = MetaModel::GetRootClass($sClass);
+
+		// Ensure the update of the values (we are accessing the data directly)
+		$this->DoComputeValues();
+		$this->OnInsert();
+		$this->EventInsertRequested();
+
+		if ($this->m_iKey < 0) {
+			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
+			$this->m_iKey = null;
+		}
+
+		// If not automatically computed, then check that the key is given by the caller
+		if (!MetaModel::IsAutoIncrementKey($sRootClass)) {
+			if (empty($this->m_iKey)) {
+				throw new CoreWarning('Missing key for the object to write - This class is supposed to have a user defined key, not an autonumber', array('class' => $sRootClass));
+			}
+		}
+
+		// Ultimate check - ensure DB integrity
+		$this->SetReadOnly('No modification allowed during CheckToWrite');
+		list($bRes, $aIssues) = $this->CheckToWrite();
+		$this->SetReadWrite();
+		if (!$bRes) {
+			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
+		}
+
+		// Stop watches
+		$sState = $this->GetState();
+		if ($sState != '') {
+			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
+				if ($oAttDef instanceof AttributeStopWatch) {
+					if (in_array($sState, $oAttDef->GetStates())) {
+						// Start the stop watch and compute the deadlines
+						/** @var \ormStopWatch $oSW */
+						$oSW = $this->Get($sAttCode);
+						$oSW->Start($this, $oAttDef);
+						$oSW->ComputeDeadlines($this, $oAttDef);
+						$this->Set($sAttCode, $oSW);
+					}
+				}
+			}
+		}
+
+		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_BEFORE_INSERT);
+		$this->EventInsertBefore();
+		$this->SetReadWrite();
+
+		$iTransactionRetry = 1;
+		$bIsTransactionEnabled = MetaModel::GetConfig()->Get('db_core_transactions_enabled');
+		if ($bIsTransactionEnabled) {
+			// TODO Deep clone this object before the transaction (to use it in case of rollback)
+			// $iTransactionRetryCount = MetaModel::GetConfig()->Get('db_core_transactions_retry_count');
+			$iTransactionRetryCount = 1;
+			$iTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
+			$iTransactionRetry = $iTransactionRetryCount;
+		}
+		while ($iTransactionRetry > 0) {
+			try {
+				$iTransactionRetry--;
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('START TRANSACTION');
+				}
+
+				// First query built upon on the root class, because the ID must be created first
+				$this->m_iKey = $this->DBInsertSingleTable($sRootClass);
+
+				// Then do the leaf class, if different from the root class
+				if ($sClass != $sRootClass) {
+					$this->DBInsertSingleTable($sClass);
+				}
+
+				// Then do the other classes
+				foreach (MetaModel::EnumParentClasses($sClass) as $sParentClass) {
+					if ($sParentClass == $sRootClass) {
+						continue;
+					}
+					$this->DBInsertSingleTable($sParentClass);
+				}
+
+				$this->OnObjectKeyReady();
+
+				$this->DBWriteLinks();
+				$this->WriteExternalAttributes();
+
+				// Write object creation history within the transaction
+				$this->RecordObjCreation();
+
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('COMMIT');
+				}
+				break;
+			}
+			catch (Exception $e) {
+				IssueLog::Error($e->getMessage());
+				if ($bIsTransactionEnabled) {
+					CMDBSource::Query('ROLLBACK');
+					if (!CMDBSource::IsInsideTransaction() && CMDBSource::IsDeadlockException($e)) {
+						// Deadlock found when trying to get lock; try restarting transaction (only in main transaction)
+						if ($iTransactionRetry > 0) {
+							// wait and retry
+							IssueLog::Error('Insert TRANSACTION Retrying...');
+							usleep(random_int(1, 5) * 1000 * $iTransactionRetryDelay * ($iTransactionRetryCount - $iTransactionRetry));
+							continue;
+						} else {
+							IssueLog::Error('Insert Deadlock TRANSACTION prevention failed.');
+						}
+					}
+				}
+				throw $e;
+			}
+		}
+
+		$this->m_bIsInDB = true;
+		$this->m_bDirty = false;
+		foreach ($this->m_aCurrValues as $sAttCode => $value) {
+			if (is_object($value)) {
+				$value = clone $value;
+			}
+			$this->m_aOrigValues[$sAttCode] = $value;
+		}
+
+		// Prevent DBUpdate at this point (reentrance protection)
+		MetaModel::StartReentranceProtection($this);
+
+		$this->AfterInsert();
+
+		$this->EventInsertAfter();
+
+		// Activate any existing trigger
+		$sClass = get_class($this);
+		$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
+		$oSet = new DBObjectSet(DBObjectSearch::FromOQL('SELECT TriggerOnObjectCreate AS t WHERE t.target_class IN (:class_list)'), array(), $aParams);
+		while ($oTrigger = $oSet->Fetch()) {
+			/** @var \Trigger $oTrigger */
+			try {
+				$oTrigger->DoActivate($this->ToArgs('this'));
+			}
+			catch (Exception $e) {
+				utils::EnrichRaisedException($oTrigger, $e);
+			}
+		}
+
+		// - TriggerOnObjectMention
+		$this->ActivateOnMentionTriggers(true);
+
+		MetaModel::StopReentranceProtection($this);
+
+		if ($this->IsModified()) {
+			$this->DBUpdate();
+		}
 
 		return $this->m_iKey;
 	}
@@ -3160,17 +3156,13 @@ abstract class DBObject implements iDisplay
 		}
 		// Protect against reentrance (e.g. cascading the update of ticket logs)
 		$sClass = get_class($this);
-		$sKey = $sClass.'::'.$this->GetKey();
+		$sKey = $this->GetKey();
+		if (!MetaModel::StartReentranceProtection($this)) {
 
-		if (array_key_exists($sKey, self::$aUpdateReentrance))
-		{
-			if ($sClass == 'UserRequest') {
-				IssueLog::Debug("CRUD: DBUpdate $sKey Rejected (reentrance)", LogChannels::DM_CRUD);
-			}
+			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
 
 			return false;
 		}
-		self::$aUpdateReentrance[$sKey] = true;
 
 		try
 		{
@@ -3203,16 +3195,16 @@ abstract class DBObject implements iDisplay
 			if (count($aChanges) == 0)
 			{
 				// Attempting to update an unchanged object
-				unset(self::$aUpdateReentrance[$sKey]);
-				if ($sClass == 'UserRequest') {
-					IssueLog::Debug("CRUD: DBUpdate $sKey Aborted (no change)", LogChannels::DM_CRUD);
-				}
+				MetaModel::StopReentranceProtection($this);
+				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Aborted (no change)", LogChannels::DM_CRUD);
 
 				return $this->m_iKey;
 			}
 
 			// Ultimate check - ensure DB integrity
+			$this->SetReadOnly('No modification allowed during CheckToWrite');
 			list($bRes, $aIssues) = $this->CheckToWrite();
+			$this->SetReadWrite();
 			if (!$bRes)
 			{
 				throw new CoreCannotSaveObjectException(['issues' => $aIssues, 'class' => $sClass, 'id' => $this->GetKey()]);
@@ -3221,20 +3213,11 @@ abstract class DBObject implements iDisplay
 			// Save the original values (will be reset to the new values when the object get written to the DB)
 			$aOriginalValues = $this->m_aOrigValues;
 
-			// Activate any existing trigger
-			// - TriggerOnObjectMention
-			$this->ActivateOnMentionTriggers(false);
-
-			$bHasANewExternalKeyValue = false;
 			$aHierarchicalKeys = [];
 			$aDBChanges = [];
 			foreach ($aChanges as $sAttCode => $valuecurr)
 			{
 				$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
-				if ($oAttDef->IsExternalKey())
-				{
-					$bHasANewExternalKeyValue = true;
-				}
 				if ($oAttDef->IsBasedOnDBColumns())
 				{
 					$aDBChanges[$sAttCode] = $aChanges[$sAttCode];
@@ -3255,7 +3238,10 @@ abstract class DBObject implements iDisplay
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
 				$iTransactionRetry = $iTransactionRetryCount;
 			}
+			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_BEFORE_UPDATE);
 			$this->EventUpdateBefore();
+			$this->SetReadWrite();
+
 			while ($iTransactionRetry > 0)
 			{
 				try
@@ -3384,18 +3370,13 @@ abstract class DBObject implements iDisplay
 			$this->m_aModifiedAtt = array();
 
 			try {
-				// Reload to get the external attributes
-				if ($bHasANewExternalKeyValue) {
-					$this->Reload(true /* AllowAllData */);
-				} else {
-					// Reset original values although the object has not been reloaded
-					foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
+				// Reset original values although the object has not been reloaded
+				foreach ($this->m_aLoadedAtt as $sAttCode => $bLoaded)
+				{
+					if ($bLoaded)
 					{
-						if ($bLoaded)
-						{
-							$value = $this->m_aCurrValues[$sAttCode];
-							$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
-						}
+						$value = $this->m_aCurrValues[$sAttCode];
+						$this->m_aOrigValues[$sAttCode] = is_object($value) ? clone $value : $value;
 					}
 				}
 
@@ -3413,6 +3394,11 @@ abstract class DBObject implements iDisplay
 					}
 				}
 
+				// Activate any existing trigger
+				// - TriggerOnObjectMention
+				// Forgotten by the fix of N°3245
+				$this->ActivateOnMentionTriggers(false);
+
 				$this->AfterUpdate();
 
 				$this->EventUpdateAfter(['changes' => $aChanges]);
@@ -3425,7 +3411,7 @@ abstract class DBObject implements iDisplay
 		}
 		finally
 		{
-			unset(self::$aUpdateReentrance[$sKey]);
+			MetaModel::StopReentranceProtection($this);
 		}
 
 		if ($this->IsModified()) {
@@ -5795,6 +5781,37 @@ abstract class DBObject implements iDisplay
 		return $oExpression->Evaluate($aArgs);
 	}
 
+	final public function SetReadOnly($sMessage) {
+		$this->m_bIsReadOnly = true;
+		$this->m_sReadOnlyMessage = $sMessage;
+	}
+
+	final public function SetReadWrite() {
+		$this->m_bIsReadOnly = false;
+		$this->m_sReadOnlyMessage = '';
+	}
+
+	/**
+	 * @return false|string
+	 */
+	public function IsReadOnly()
+	{
+		if ($this->m_bIsReadOnly) {
+			return $this->m_sReadOnlyMessage;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get the unique id of the object instance in memory
+	 * @return string
+	 */
+	public function GetObjectUniqId()
+	{
+		return $this->m_sObjectUniqId;
+	}
+
 	/**
 	 * @param $sEvent
 	 * @param array $aEventData
@@ -5806,7 +5823,7 @@ abstract class DBObject implements iDisplay
 	{
 		$aEventData['debug_info'] = 'from: '.get_class($this).':'.$this->GetKey();
 		$aEventData['object'] = $this;
-		$aEventSources = [$this->m_sEventUniqId];
+		$aEventSources = [$this->m_sObjectUniqId];
 		foreach (MetaModel::EnumParentClasses(get_class($this), ENUM_PARENT_CLASSES_ALL, false) as $sClass) {
 			$aEventSources[] = $sClass;
 		}

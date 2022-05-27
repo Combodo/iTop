@@ -128,6 +128,8 @@ abstract class MetaModel
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
 
+	protected static $m_aReentryProtection = [];
+
 	/**
 	 * MetaModel constructor.
 	 */
@@ -6823,6 +6825,11 @@ abstract class MetaModel
 	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
+		$oObject = self::GetReentryObject($sClass, $iKey);
+		if ($oObject !== false) {
+			return $oObject;
+		}
+
 		$oObject = self::GetObjectWithArchive($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
 
 		if (empty($oObject))
@@ -7558,6 +7565,35 @@ abstract class MetaModel
 
 		/** @var AttributeEnum $oAttDef */
 		return $oAttDef->GetStyle($sValue);
+	}
+
+	protected static function GetReentryObject($sClass, $sKey)
+	{
+		if (isset(self::$m_aReentryProtection[$sClass][$sKey])) {
+			return self::$m_aReentryProtection[$sClass][$sKey];
+		}
+		return false;
+	}
+
+	/**
+	 * @param \DBObject $oObject
+	 *
+	 * @return bool true if reentry possible
+	 */
+	public static function StartReentranceProtection(DBObject $oObject)
+	{
+		if (isset(self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()])) {
+			return false;
+		}
+		self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()] = $oObject;
+		return true;
+	}
+
+	public static function StopReentranceProtection(DBObject $oObject)
+	{
+		if (isset(self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()])) {
+			unset(self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()]);
+		}
 	}
 }
 
