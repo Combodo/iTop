@@ -99,7 +99,8 @@ class AppExtension extends AbstractExtension
 
 			return $sUrl;
 		});
-		//$filters[] = new TwigFilter('filter', 'twig_array_filter');
+		//since 2.7.7 3.0.2 3.1.0 N°4867 "Twig content not allowed" error when use the extkey widget search icon in the user portal
+		//overwrite native twig filter : disable use of 'system' filter
 		$filters[] = new Twig_SimpleFilter('filter', function ($array, $arrow) {
 			if ($arrow == 'system'){
 				return json_encode($array);

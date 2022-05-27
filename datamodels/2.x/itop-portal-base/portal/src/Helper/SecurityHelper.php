@@ -104,7 +104,7 @@ class SecurityHelper
 		}
 
 		// Forcing allowed writing on the object if necessary. This is used in some particular cases.
-		$bObjectIsCurrentUser = ($sObjectClass === 'Person' && $this->oObject->GetKey() == UserRights::GetContactId());
+		$bObjectIsCurrentUser = ($sObjectClass === 'Person' && $sObjectId == UserRights::GetContactId());
 		if(in_array($sAction , array(UR_ACTION_MODIFY, UR_ACTION_READ)) && $bObjectIsCurrentUser){
 			return true;
 	    }
