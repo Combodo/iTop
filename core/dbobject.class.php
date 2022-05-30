@@ -1880,7 +1880,7 @@ abstract class DBObject implements iDisplay
 				$oTargetObj = MetaModel::GetObject($sTargetClass, $toCheck, false /*must be found*/, true /*allow all data*/);
 				if (is_null($oTargetObj))
 				{
-					return "Target object not found ($sTargetClass::$toCheck)";
+					return "Target object not found (".utils::HtmlEntities($sTargetClass).".::".utils::HtmlEntities($toCheck).")";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
@@ -1889,7 +1889,7 @@ abstract class DBObject implements iDisplay
 				$aValues = $oAtt->GetAllowedValues(array('this' => $this));
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return "Value not allowed [$toCheck]";
+					return "Value not allowed [". utils::HtmlEntities($toCheck)."]";
 				}
 			}
 		}
@@ -1903,7 +1903,7 @@ abstract class DBObject implements iDisplay
 					$oTag->SetValues(explode(' ', $toCheck));
 				} catch (Exception $e)
 				{
-					return "Tag value '$toCheck' is not a valid tag list";
+					return "Tag value [". utils::HtmlEntities($toCheck)."] is not a valid tag list";
 				}
 
 				return true;
@@ -1931,7 +1931,7 @@ abstract class DBObject implements iDisplay
 					$oTag->SetValues($aValues);
 				} catch (Exception $e)
 				{
-					return "Set value '$toCheck' is not a valid set";
+					return "Set value[". utils::HtmlEntities($toCheck)."] is not a valid set";
 				}
 
 				return true;
@@ -1951,7 +1951,7 @@ abstract class DBObject implements iDisplay
 			{
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return "Value not allowed [$toCheck]";
+					return "Value not allowed [". utils::HtmlEntities($toCheck)."]";
 				}
 			}
 			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
@@ -1964,7 +1964,7 @@ abstract class DBObject implements iDisplay
 			}
 			if (!$oAtt->CheckFormat($toCheck))
 			{
-				return "Wrong format [$toCheck]";
+				return "Wrong format [". utils::HtmlEntities($toCheck)."]";
 			}
 		}
 		else
