@@ -3063,7 +3063,7 @@ abstract class DBObject implements iDisplay
 		}
 
 		// Prevent DBUpdate at this point (reentrance protection)
-		MetaModel::StartReentranceProtection($this);
+		MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 
 		$this->AfterInsert();
 
@@ -3086,7 +3086,7 @@ abstract class DBObject implements iDisplay
 		// - TriggerOnObjectMention
 		$this->ActivateOnMentionTriggers(true);
 
-		MetaModel::StopReentranceProtection($this);
+		MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 
 		if ($this->IsModified()) {
 			$this->DBUpdate();
@@ -3157,7 +3157,7 @@ abstract class DBObject implements iDisplay
 		// Protect against reentrance (e.g. cascading the update of ticket logs)
 		$sClass = get_class($this);
 		$sKey = $this->GetKey();
-		if (!MetaModel::StartReentranceProtection($this)) {
+		if (!MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this)) {
 
 			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
 
@@ -3195,7 +3195,7 @@ abstract class DBObject implements iDisplay
 			if (count($aChanges) == 0)
 			{
 				// Attempting to update an unchanged object
-				MetaModel::StopReentranceProtection($this);
+				MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 				IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Aborted (no change)", LogChannels::DM_CRUD);
 
 				return $this->m_iKey;
@@ -3411,7 +3411,7 @@ abstract class DBObject implements iDisplay
 		}
 		finally
 		{
-			MetaModel::StopReentranceProtection($this);
+			MetaModel::StopReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 		}
 
 		if ($this->IsModified()) {

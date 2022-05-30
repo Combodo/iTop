@@ -128,7 +128,9 @@ abstract class MetaModel
 	/** @var string */
 	protected static $m_sEnvironment = 'production';
 
-	protected static $m_aReentryProtection = [];
+	public const REENTRANCE_TYPE_UPDATE = 'update';
+
+	protected static $m_aReentranceProtection = [];
 
 	/**
 	 * MetaModel constructor.
@@ -6800,6 +6802,19 @@ abstract class MetaModel
 			}
 			$sClass = $aRow[$sClassAlias."finalclass"];
 		}
+
+		// if an object is already being updated, then this method will return this object instead of recreating a new one.
+		// At this point the method DBUpdate of a new object with the same class and id won't do anything due to reentrance protection,
+		// so to ensure that the potential modifications are correctly saved, the object currently being updated is returned.
+		// DBUpdate() method then will take care that all the modifications will be saved.
+		if (array_key_exists($sClassAlias.'id', $aRow)) {
+			$iKey = $aRow[$sClassAlias."id"];
+			$oObject = self::GetReentranceObject(Metamodel::REENTRANCE_TYPE_UPDATE, $sClass, $iKey);
+			if ($oObject !== false) {
+				return $oObject;
+			}
+		}
+
 		return new $sClass($aRow, $sClassAlias, $aAttToLoad, $aExtendedDataSpec);
 	}
 
@@ -6825,11 +6840,6 @@ abstract class MetaModel
 	 */
 	public static function GetObject($sClass, $iKey, $bMustBeFound = true, $bAllowAllData = false, $aModifierProperties = null)
 	{
-		$oObject = self::GetReentryObject($sClass, $iKey);
-		if ($oObject !== false) {
-			return $oObject;
-		}
-
 		$oObject = self::GetObjectWithArchive($sClass, $iKey, $bMustBeFound, $bAllowAllData, $aModifierProperties);
 
 		if (empty($oObject))
@@ -7567,32 +7577,33 @@ abstract class MetaModel
 		return $oAttDef->GetStyle($sValue);
 	}
 
-	protected static function GetReentryObject($sClass, $sKey)
+	protected static function GetReentranceObject($sType, $sClass, $sKey)
 	{
-		if (isset(self::$m_aReentryProtection[$sClass][$sKey])) {
-			return self::$m_aReentryProtection[$sClass][$sKey];
+		if (isset(self::$m_aReentranceProtection[$sType][$sClass][$sKey])) {
+			return self::$m_aReentranceProtection[$sType][$sClass][$sKey];
 		}
 		return false;
 	}
 
 	/**
+	 * @param $sType
 	 * @param \DBObject $oObject
 	 *
 	 * @return bool true if reentry possible
 	 */
-	public static function StartReentranceProtection(DBObject $oObject)
+	public static function StartReentranceProtection($sType, DBObject $oObject)
 	{
-		if (isset(self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()])) {
+		if (isset(self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()])) {
 			return false;
 		}
-		self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()] = $oObject;
+		self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()] = $oObject;
 		return true;
 	}
 
-	public static function StopReentranceProtection(DBObject $oObject)
+	public static function StopReentranceProtection($sType, DBObject $oObject)
 	{
-		if (isset(self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()])) {
-			unset(self::$m_aReentryProtection[get_class($oObject)][$oObject->GetKey()]);
+		if (isset(self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()])) {
+			unset(self::$m_aReentranceProtection[$sType][get_class($oObject)][$oObject->GetKey()]);
 		}
 	}
 }
