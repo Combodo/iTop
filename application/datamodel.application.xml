@@ -200,7 +200,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="EVENT_SERVICE_DB_BEFORE_INSERT" _delta="define">
+    <event id="EVENT_SERVICE_DB_ABOUT_TO_INSERT" _delta="define">
       <description>An object is about to be inserted in the database (no change possible)</description>
       <replaces>DBObject::OnInsert</replaces>
       <arguments>
@@ -214,7 +214,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="EVENT_SERVICE_DB_AFTER_INSERT" _delta="define">
+    <event id="EVENT_SERVICE_DB_INSERT_DONE" _delta="define">
       <description>An object has been inserted into the database (but not reloaded). All changes to the object will be persisted automatically.</description>
       <replaces>DBObject::AfterInsert</replaces>
       <arguments>
@@ -242,7 +242,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="EVENT_SERVICE_DB_BEFORE_UPDATE" _delta="define">
+    <event id="EVENT_SERVICE_DB_ABOUT_TO_UPDATE" _delta="define">
       <description>An object is about to be updated in the database (no change possible)</description>
       <replaces>DBObject::OnUpdate</replaces>
       <arguments>
@@ -256,7 +256,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="EVENT_SERVICE_DB_AFTER_UPDATE" _delta="define">
+    <event id="EVENT_SERVICE_DB_UPDATE_DONE" _delta="define">
       <description>An object has been updated into the database and reloaded. All changes to the object will be persisted automatically.</description>
       <replaces>DBObject::AfterUpdate</replaces>
       <arguments>
@@ -270,7 +270,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="EVENT_SERVICE_DB_BEFORE_DELETE" _delta="define">
+    <event id="EVENT_SERVICE_DB_ABOUT_TO_DELETE" _delta="define">
       <description>An object is about to be deleted in the database</description>
       <replaces>DBObject::OnDelete</replaces>
       <arguments>
@@ -284,7 +284,7 @@
         </argument>
       </arguments>
     </event>
-    <event id="EVENT_SERVICE_DB_AFTER_DELETE" _delta="define">
+    <event id="EVENT_SERVICE_DB_DELETE_DONE" _delta="define">
       <description>An object has been deleted into the database</description>
       <replaces>DBObject::AfterDelete</replaces>
       <arguments>
@@ -302,12 +302,24 @@
       <description>A stimulus is about to be applied to an object</description>
       <arguments>
         <argument id="object">
-          <description>The object where the stimulus is to be applied</description>
+          <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
         </argument>
         <argument id="stimulus">
           <description>Current stimulus applied</description>
           <type>string</type>
+        </argument>
+        <argument id="previous_state">
+          <description>Object previous state</description>
+          <type>string</type>
+        </argument>
+        <argument id="new_state">
+          <description>Object new state</description>
+          <type>string</type>
+        </argument>
+        <argument id="save_object">
+          <description>The object must be saved in the database</description>
+          <type>boolean</type>
         </argument>
         <argument id="debug_info">
           <description>Debug string</description>
@@ -319,12 +331,57 @@
       <description>A stimulus has been applied to an object</description>
       <arguments>
         <argument id="object">
-          <description>The object where the stimulus has been applied</description>
+          <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
         </argument>
         <argument id="stimulus">
           <description>Current stimulus applied</description>
           <type>string</type>
+        </argument>
+        <argument id="previous_state">
+          <description>Object previous state</description>
+          <type>string</type>
+        </argument>
+        <argument id="new_state">
+          <description>Object new state</description>
+          <type>string</type>
+        </argument>
+        <argument id="save_object">
+          <description>The object is asked to be saved in the database</description>
+          <type>boolean</type>
+        </argument>
+        <argument id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </argument>
+      </arguments>
+    </event>
+    <event id="EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED" _delta="define">
+      <description>A stimulus has failed</description>
+      <arguments>
+        <argument id="action">
+          <description>The action that failed to apply the stimulus</description>
+          <type>string</type>
+        </argument>
+        <argument id="object">
+          <description>The object where the stimulus is targeted</description>
+          <type>DBObject</type>
+        </argument>
+        <argument id="stimulus">
+          <description>Current stimulus applied</description>
+          <type>string</type>
+        </argument>
+        <argument id="previous_state">
+          <description>Object previous state</description>
+          <type>string</type>
+        </argument>
+        <argument id="new_state">
+          <description>Object new state</description>
+          <type>string</type>
+        </argument>
+        <argument id="save_object">
+          <description>The object must be saved in the database</description>
+          <type>boolean</type>
         </argument>
         <argument id="debug_info">
           <description>Debug string</description>

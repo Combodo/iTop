@@ -1232,14 +1232,14 @@
                 </states>
             </lifecycle>
             <event_listeners>
-              <listener id="OnBeforeInsertEvent">
-                <event>BeforeInsert</event>
-                <callback>OnBeforeInsertEvent</callback>
+              <listener id="OnInsertRequested">
+                <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
+                <callback>OnInsertRequested</callback>
                 <priority>0</priority>
               </listener>
-              <listener id="OnBeforeUpdateEvent">
-                <event>BeforeUpdate</event>
-                <callback>OnBeforeUpdateEvent</callback>
+              <listener id="OnUpdateRequested">
+                <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
+                <callback>OnUpdateRequested</callback>
                 <priority>0</priority>
               </listener>
             </event_listeners>
@@ -1594,12 +1594,12 @@
 		$this->UpdateImpactedItems();
 	}]]></code>
                 </method>
-                <method id="OnBeforeInsertEvent">
+                <method id="OnInsertRequested">
                     <static>false</static>
                     <access>public</access>
                     <type>Internal</type>
                     <code><![CDATA[
-    public function OnBeforeInsertEvent(Combodo\iTop\Service\EventData $oEventData)
+    public function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
 		$this->ComputeImpactedItems();
 
@@ -1607,12 +1607,12 @@
 		$this->SetIfNull('start_date', time());
 	}]]></code>
                 </method>
-                <method id="OnBeforeUpdateEvent">
+                <method id="OnUpdateRequested">
                     <static>false</static>
                     <access>public</access>
                     <type>Internal</type>
                     <code><![CDATA[
-   	public function OnBeforeUpdateEvent(Combodo\iTop\Service\EventData $oEventData)
+   	public function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))

@@ -1080,11 +1080,21 @@ EOF
 		$sName = $oEvent->getAttribute('id');
 		$oDescription = $oEvent->GetOptionalElement('description');
 		$sDescription = empty($oDescription) ? '' : $oDescription->GetText('');
-
+		$aArguments = [];
+		foreach ($oEvent->GetNodes('./arguments/argument') as $oArgumentNode) {
+			$aArg = [];
+			$sArgId = $oArgumentNode->getAttribute('id');
+			$oArgDesc = $oArgumentNode->GetOptionalElement('description');
+			$aArg['description'] = empty($oArgDesc) ? '' : $oArgDesc->GetText('');
+			$oArgType = $oArgumentNode->GetOptionalElement('type');
+			$aArg['type'] = empty($oArgType) ? '' : $oArgType->GetText('');
+			$aArguments[$sArgId] = $aArg;
+		}
+		$sArguments = var_export($aArguments, true);
 		$sConstant = $sName;
 
 		$sOutput = "define('$sConstant', '$sName');\n";
-		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', '$sDescription', '$sModuleName');\n";
+		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', '$sDescription', $sArguments, '$sModuleName');\n";
 
 		return $sOutput;
 	}

@@ -6015,7 +6015,9 @@ class AttributeDateTime extends AttributeDBField
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		// null value will be replaced by the current date, if not already set, in DoComputeValues
+		if (!$this->IsNullAllowed()) {
+			return date($this->GetInternalFormat());
+		}
 		return $this->GetNullValue();
 	}
 
@@ -7805,7 +7807,7 @@ class AttributeBlob extends AttributeDefinition
 
 	public function GetDefaultValue(DBObject $oHostObject = null)
 	{
-		return "";
+		return new ormDocument('', '', '');
 	}
 
 	public function IsNullAllowed(DBObject $oHostObject = null)
@@ -11348,6 +11350,13 @@ class AttributeTagSet extends AttributeSet
 	public function GetNullValue()
 	{
 		return new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+	}
+
+	public function GetDefaultValue(DBObject $oHostObject = null)
+	{
+		$oTagSet =  new ormTagSet(MetaModel::GetAttributeOrigin($this->GetHostClass(), $this->GetCode()), $this->GetCode(), $this->GetMaxItems());
+		$oTagSet->SetValues([]);
+		return $oTagSet;
 	}
 
 	public function IsNull($proposedValue)

@@ -1034,13 +1034,11 @@ abstract class DBObject implements iDisplay
 
 	/**
 	 * Compute scalar attributes that depend on any other type of attribute
-     * 
-     * if you want to customize this behaviour, overwrite @see ComputeValues()
 	 *
-	 * @throws \CoreException
-	 * @throws \CoreUnexpectedValue
+	 * if you want to customize this behaviour, overwrite @internal
 	 *
-	 * @internal
+	 * @see ComputeValues()
+	 *
 	 */
 	final public function DoComputeValues()
 	{
@@ -1055,17 +1053,7 @@ abstract class DBObject implements iDisplay
 			if ($aCallInfo["function"] != "ComputeValues") continue;
 			return; //skip!
 		}
-		
-		// Set the "null-not-allowed" datetimes (and dates) whose value is not initialized
-		foreach(MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef)
-		{
-			// AttributeDate is derived from AttributeDateTime
-			if (($oAttDef instanceof AttributeDateTime) && (!$oAttDef->IsNullAllowed()) && ($this->Get($sAttCode) == $oAttDef->GetNullValue()))
-			{
-				$this->Set($sAttCode, date($oAttDef->GetInternalFormat()));
-			}
-		}
-		
+
 		$this->ComputeValues();
 	}
 
@@ -2255,8 +2243,6 @@ abstract class DBObject implements iDisplay
 	 */
 	public function DoCheckToWrite()
 	{
-		$this->DoComputeValues();
-
 		$this->DoCheckUniqueness();
 
 		$aChanges = $this->ListChanges();
@@ -2323,7 +2309,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
 	 *
 	 */
-	final public function CheckToWrite()
+	final public function CheckToWrite($bDoComputeValues = true)
 	{
 		if (MetaModel::SkipCheckToWrite())
 		{
@@ -2334,6 +2320,9 @@ abstract class DBObject implements iDisplay
 			$this->m_aCheckIssues = array();
 
 			$oKPI = new ExecutionKPI();
+			if ($bDoComputeValues) {
+				$this->DoComputeValues();
+			}
 			$this->DoCheckToWrite();
 			$this->EventCheckToWrite(['error_messages' => &$this->m_aCheckIssues]);
 			$oKPI->ComputeStats('CheckToWrite', get_class($this));
@@ -2961,7 +2950,7 @@ abstract class DBObject implements iDisplay
 
 		// Ultimate check - ensure DB integrity
 		$this->SetReadOnly('No modification allowed during CheckToWrite');
-		list($bRes, $aIssues) = $this->CheckToWrite();
+		list($bRes, $aIssues) = $this->CheckToWrite(false);
 		$this->SetReadWrite();
 		if (!$bRes) {
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
@@ -2984,7 +2973,7 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_BEFORE_INSERT);
+		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_INSERT);
 		$this->EventInsertBefore();
 		$this->SetReadWrite();
 
@@ -3203,7 +3192,7 @@ abstract class DBObject implements iDisplay
 
 			// Ultimate check - ensure DB integrity
 			$this->SetReadOnly('No modification allowed during CheckToWrite');
-			list($bRes, $aIssues) = $this->CheckToWrite();
+			list($bRes, $aIssues) = $this->CheckToWrite(false);
 			$this->SetReadWrite();
 			if (!$bRes)
 			{
@@ -3238,7 +3227,7 @@ abstract class DBObject implements iDisplay
 				$iIsTransactionRetryDelay = MetaModel::GetConfig()->Get('db_core_transactions_retry_delay_ms');
 				$iTransactionRetry = $iTransactionRetryCount;
 			}
-			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_BEFORE_UPDATE);
+			$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
 			$this->EventUpdateBefore();
 			$this->SetReadWrite();
 
@@ -3380,6 +3369,10 @@ abstract class DBObject implements iDisplay
 					}
 				}
 
+				$this->AfterUpdate();
+
+				$this->EventUpdateAfter(['changes' => $aChanges]);
+
 				// - TriggerOnObjectUpdate
 				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
 				$oSet = new DBObjectSet(DBObjectSearch::FromOQL("SELECT TriggerOnObjectUpdate AS t WHERE t.target_class IN (:class_list)"),
@@ -3398,10 +3391,6 @@ abstract class DBObject implements iDisplay
 				// - TriggerOnObjectMention
 				// Forgotten by the fix of N°3245
 				$this->ActivateOnMentionTriggers(false);
-
-				$this->AfterUpdate();
-
-				$this->EventUpdateAfter(['changes' => $aChanges]);
 			}
 			catch (Exception $e)
 			{
@@ -3928,18 +3917,25 @@ abstract class DBObject implements iDisplay
 
 		$aTransitionDef = $aStateTransitions[$sStimulusCode];
 
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
-
 		// Change the state before proceeding to the actions, this is necessary because an action might
 		// trigger another stimuli (alternative: push the stimuli into a queue)
 		$sPreviousState = $this->Get($sStateAttCode);
 		$sNewState = $aTransitionDef['target_state'];
 		$this->Set($sStateAttCode, $sNewState);
 
+		$aEventData = [
+			'stimulus' => $sStimulusCode,
+			'previous_state' => $sPreviousState,
+			'new_state' => $sNewState,
+			'save_object' => !$bDoNotWrite,
+		];
+		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS, $aEventData);
+
 		// $aTransitionDef is an
 		//    array('target_state'=>..., 'actions'=>array of handlers procs, 'user_restriction'=>TBD
 
 		$bSuccess = true;
+		$sActionDesc = '';
 		foreach ($aTransitionDef['actions'] as $actionHandler)
 		{
 			if (is_string($actionHandler))
@@ -4048,7 +4044,7 @@ abstract class DBObject implements iDisplay
 				}
 			}
 
-			$this->FireEvent(EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS, ['stimulus' => $sStimulusCode]);
+			$this->FireEvent(EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS, $aEventData);
 		}
 		else
 		{
@@ -4057,6 +4053,8 @@ abstract class DBObject implements iDisplay
 			{
 				$this->m_aCurrValues[$sAttCode] = $aBackupValues[$sAttCode];
 			}
+			$aEventData['action'] = $sActionDesc;
+			$this->FireEvent(EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED, $aEventData);
 		}
 		if ($sClass == 'UserRequest') {
 			IssueLog::Debug("CRUD: ApplyStimulus $sStimulusCode $sClass::{$this->m_iKey} Ending", LogChannels::DM_CRUD);

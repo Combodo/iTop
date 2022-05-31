@@ -5740,7 +5740,7 @@ JS
 		if ($sClass == 'UserRequest') {
 			IssueLog::Debug("CRUD: DBInsert $sClass::0 About to write in DB", LogChannels::DM_CRUD);
 		}
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_INSERT);
+		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_INSERT);
 	}
 
 	/**
@@ -5754,7 +5754,7 @@ JS
 			IssueLog::Debug("CRUD: $sClass::{$this->m_iKey} Inserted in DB", LogChannels::DM_CRUD);
 		}
 
-		$this->FireEvent(EVENT_SERVICE_DB_AFTER_INSERT);
+		$this->FireEvent(EVENT_SERVICE_DB_INSERT_DONE);
 	}
 
 	/**
@@ -5805,7 +5805,7 @@ JS
 			$sKey = $sClass.'::'.$this->GetKey();
 			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey About to be written in DB", LogChannels::DM_CRUD);
 		}
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_UPDATE);
+		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
 	}
 
 	/**
@@ -5821,7 +5821,7 @@ JS
 			$sKey = $sClass.'::'.$this->GetKey();
 			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Updated", LogChannels::DM_CRUD);
 		}
-		$this->FireEvent(EVENT_SERVICE_DB_AFTER_UPDATE, $aEventData);
+		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_DONE, $aEventData);
 	}
 
 	/**
@@ -5830,7 +5830,7 @@ JS
 	 */
 	final protected function EventDeleteBefore()
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_BEFORE_DELETE);
+		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_DELETE);
 	}
 
 	/**
@@ -5839,7 +5839,7 @@ JS
 	 */
 	final protected function EventDeleteAfter()
 	{
-		$this->FireEvent(EVENT_SERVICE_DB_AFTER_DELETE);
+		$this->FireEvent(EVENT_SERVICE_DB_DELETE_DONE);
 	}
 
 }

@@ -1198,7 +1198,19 @@
 					</state>
 				</states>
 			</lifecycle>
-			<methods>
+      <event_listeners>
+        <listener id="OnInsertRequested">
+          <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
+          <callback>OnInsertRequested</callback>
+          <priority>0</priority>
+        </listener>
+        <listener id="OnUpdateRequested">
+          <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
+          <callback>OnUpdateRequested</callback>
+          <priority>0</priority>
+        </listener>
+      </event_listeners>
+      <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
 					<access>public</access>
@@ -1537,27 +1549,25 @@
 		$this->UpdateImpactedItems();
 	}]]></code>
 				</method>
-				<method id="OnInsert">
+				<method id="OnInsertRequested">
 					<static>false</static>
 					<access>protected</access>
 					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    protected function OnInsert()
+    protected function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
-	  parent::OnInsert();
 		$this->ComputeImpactedItems();
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
 	}]]></code>
 				</method>
-				<method id="OnUpdate">
+				<method id="OnUpdateRequested">
 					<static>false</static>
 					<access>protected</access>
 					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    protected function OnUpdate()
+    protected function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
-        parent::OnUpdate();
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {
