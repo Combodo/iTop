@@ -352,10 +352,6 @@ abstract class DBObject implements iDisplay
 	public function Reload($bAllowAllData = false)
 	{
 		assert($this->m_bIsInDB);
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: Reload $sClass::{$this->m_iKey} from DB", LogChannels::DM_CRUD);
-		}
 		$this->FireEvent(EVENT_SERVICE_DB_OBJECT_RELOAD);
 		$aRow = MetaModel::MakeSingleRow(get_class($this), $this->m_iKey, false /* must be found */, true /* AllowAllData */);
 		if (empty($aRow))
@@ -3147,7 +3143,6 @@ abstract class DBObject implements iDisplay
 		$sClass = get_class($this);
 		$sKey = $this->GetKey();
 		if (!MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this)) {
-
 			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Rejected (reentrance)", LogChannels::DM_CRUD);
 
 			return false;
@@ -3899,9 +3894,6 @@ abstract class DBObject implements iDisplay
 			IssueLog::Error("$sClass: Transition $sStimulusCode is not allowed in ".$this->Get($sStateAttCode));
 			return false;
 		}
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: ApplyStimulus $sStimulusCode $sClass::{$this->m_iKey} Starting", LogChannels::DM_CRUD);
-		}
 		// save current object values in case of an action failure (in memory rollback)
 		$aBackupValues = array();
 		foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)	{
@@ -4055,9 +4047,6 @@ abstract class DBObject implements iDisplay
 			}
 			$aEventData['action'] = $sActionDesc;
 			$this->FireEvent(EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED, $aEventData);
-		}
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: ApplyStimulus $sStimulusCode $sClass::{$this->m_iKey} Ending", LogChannels::DM_CRUD);
 		}
 		return $bSuccess;
 	}
