@@ -297,6 +297,7 @@ class ObjectFormHandlerHelper
 				throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Parameters formmanager_class and formmanager_data must be defined.');
 			}
 
+			$this->CheckReadFormDataAllowed($sFormManagerData);
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
 			$oFormManager->SetContainer($this->oContainer);
 
@@ -433,6 +434,29 @@ class ObjectFormHandlerHelper
 		}
 
 		return $oTwig->render($sId, $aData);
+	}
+
+	/**
+	 * Check if read object include in form data is allowed, throw an exception otherwise.
+	 *
+	 * @since 2.7.7
+	 *
+	 * @param $sFormManagerData form data to check
+	 *
+	 * @return void
+	 * @throws \CoreException
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public function CheckReadFormDataAllowed($sFormManagerData){
+		$aJsonFromData = json_decode($sFormManagerData, true);
+		if(isset($aJsonFromData['formobject_class'])
+			&& isset($aJsonFromData['formobject_id'])
+			&& !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $aJsonFromData['formobject_class'], $aJsonFromData['formobject_id'])){
+			throw new HttpException(Response::HTTP_INTERNAL_SERVER_ERROR, 'Form data access denied.');
+		}
 	}
 
 	/**
