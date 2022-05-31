@@ -274,7 +274,7 @@ class EventService
 	}
 
 	// For information only
-	public static function RegisterEvent(string $sEvent, string $sDescription, string $sModule)
+	public static function RegisterEvent(string $sEvent, string $sDescription, array $aArguments, string $sModule)
 	{
 		if (isset(self::$aEventDescription[$sEvent])) {
 			$sPrevious = self::$aEventDescription[$sEvent]['module'];
@@ -285,6 +285,7 @@ class EventService
 			'constant'=> 'EVENT_SERVICE_'.strtoupper(self::FromCamelCase($sEvent)),
 			'name'=> $sEvent,
 			'description' => $sDescription,
+			'arguments' => $aArguments,
 			'module' => $sModule,
 		];
 	}
