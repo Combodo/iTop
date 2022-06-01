@@ -1579,3 +1579,20 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Afficher les messages de %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Afficher au plus %1$s messages dans le menu %2$s.',
 ));
+
+
+// OAuth
+Dict::Add('FR FR', 'French', 'Français', array(
+	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
+	'core/Operation:Wizard/Title' => 'Configuration OAuth 2.0',
+	'UI:OAuth:Wizard:Page:Title' => 'Configuration OAuth 2.0',
+	'UI:OAuth:Wizard:Form:Panel:Title' => 'Configuration OAuth 2.0',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Id client',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Secret client',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Paramètres additionnels',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'URI de redirection',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentification',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration pour SMTP',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Copier ces lignes dans la configuration pour utiliser cette connexion OAyth 2.0 pour les mails sortants',
+));

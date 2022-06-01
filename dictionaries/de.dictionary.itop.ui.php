@@ -441,6 +441,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Fehler: die Objekte wurden bereits gelöscht!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Sie sind nicht berechtigt, mehrere Objekte der Klasse %1$s zu löschen',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Sie sind nicht berechtigt, Objekte der Klasse zu löschen %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Sie sind nicht berechtigt, diese Massenaktualisierung der Objekte der Klasse "%1$s" durchzuführen.',
 	'UI:Error:ObjectAlreadyCloned' => 'Fehler: das Objekt wurde bereits dupliziert!',
 	'UI:Error:ObjectAlreadyCreated' => 'Fehler: das Objekt wurde bereits erstellt!',
@@ -449,6 +450,7 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Error:InvalidDashboard' => 'Fehler: Ungültiges Dashboard',
 	'UI:Error:MaintenanceMode' => 'Die Anwendung befindet sich derzeit im Wartungsmodus.',
 	'UI:Error:MaintenanceTitle' => 'Wartung',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
@@ -1540,6 +1542,8 @@ Wenn Aktionen mit Trigger verknüpft sind, bekommt jede Aktion eine Auftragsnumm
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Gefiltert',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Gefiltert über %1$s',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1575,4 +1579,21 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:ResetCache' => 'Cache zurücksetzen',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
+));
+
+
+// OAuth
+Dict::Add('DE DE', 'German', 'Deutsch', array(
+	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
+	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));

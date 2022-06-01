@@ -440,6 +440,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Chyba: objekty už boli vymazané!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Nemáte povolenie vykonať hromadné vymazanie objektov triedy %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Nemáte povolenie na vymazanie objektov triedy %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Nemáte povolenie na vykonanie hromadnej aktualizácie objektov triedy %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Chyba: objekt už bol klonovaný!',
 	'UI:Error:ObjectAlreadyCreated' => 'Chyba: objekt už bol vytvorený!',
@@ -448,6 +449,7 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => 'Application is currently in maintenance~~',
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Počet',
 	'UI:GroupBy:Count+' => '',
@@ -1542,6 +1544,8 @@ Keď sú priradené spúštačom, každej akcii je dané číslo "príkazu", šp
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Filtered~~',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Filtered on %1$s~~',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1577,4 +1581,21 @@ Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
 	'UI:Newsroom:ResetCache' => 'Reset cache~~',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Display messages from %1$s~~',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Display up to %1$s messages in the %2$s menu.~~',
+));
+
+
+// OAuth
+Dict::Add('SK SK', 'Slovak', 'Slovenčina', array(
+	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
+	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));

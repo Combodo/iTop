@@ -453,6 +453,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:ObjectsAlreadyDeleted' => '错误: 对象已被删除!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => '您无权进行 %1$s 类对象的批量删除',
 	'UI:Error:DeleteNotAllowedOn_Class' => '您无权删除 %1$s 类的对象',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => '您无权进行 %1$s 类对象的批量更新',
 	'UI:Error:ObjectAlreadyCloned' => '错误: 该对象已被克隆!',
 	'UI:Error:ObjectAlreadyCreated' => '错误: 该对象已被创建!',
@@ -461,6 +462,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:InvalidDashboard' => 'Error: invalid dashboard~~',
 	'UI:Error:MaintenanceMode' => '应用正在维护中',
 	'UI:Error:MaintenanceTitle' => '维护',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => '个数',
 	'UI:GroupBy:Count+' => '元素数量',
@@ -1553,6 +1555,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'UI:Search:Criteria:Raw:Filtered' => '已过滤',
 	'UI:Search:Criteria:Raw:FilteredOn' => '基于 %1$s 过滤',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1588,4 +1592,21 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:ResetCache' => '重置缓存',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '显示来自 %1$s 的消息',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => '在 %2$s 菜单中最多显示 %1$s 条消息.',
+));
+
+
+// OAuth
+Dict::Add('ZH CN', 'Chinese', '简体中文', array(
+	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
+	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));

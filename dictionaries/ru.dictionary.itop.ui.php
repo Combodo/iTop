@@ -432,6 +432,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:ObjectsAlreadyDeleted' => 'Ошибка: объект уже удалён!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => 'Вам не разрешено выполнять массовое удаления объектов класса %1$s',
 	'UI:Error:DeleteNotAllowedOn_Class' => 'Вы не можете удалять объекты класса %1$s',
+	'UI:Error:ReadNotAllowedOn_Class' => 'You are not allowed to view objects of class %1$s~~',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => 'Вам не разрешено выполнять массовое обновление объектов класса %1$s',
 	'UI:Error:ObjectAlreadyCloned' => 'Ошибка: объект уже клонирован!',
 	'UI:Error:ObjectAlreadyCreated' => 'Ошибка: объект уже создан!',
@@ -440,6 +441,7 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Error:InvalidDashboard' => 'Ошибка: недопустимый дашборд',
 	'UI:Error:MaintenanceMode' => 'Приложение в режиме технического обслуживания',
 	'UI:Error:MaintenanceTitle' => 'Техническое обслуживание',
+	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
 	'UI:GroupBy:Count' => 'Количество',
 	'UI:GroupBy:Count+' => 'Количество элементов',
@@ -1531,6 +1533,8 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 
 	'UI:Search:Criteria:Raw:Filtered' => 'Отфильтровано',
 	'UI:Search:Criteria:Raw:FilteredOn' => 'Отфильтровано по %1$s',
+
+	'UI:StateChanged' => 'State changed~~',
 ));
 
 //
@@ -1566,4 +1570,21 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'UI:Newsroom:ResetCache' => 'Сбросить кеш',
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Показать сообщения от %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Отобразите не более %1$s сообщений в меню %2$s.',
+));
+
+
+// OAuth
+Dict::Add('RU RU', 'Russian', 'Русский', array(
+	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
+	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
+	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
+	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
+	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
+	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
+	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
+	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
+	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));
