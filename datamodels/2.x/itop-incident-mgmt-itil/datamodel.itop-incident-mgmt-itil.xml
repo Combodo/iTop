@@ -1053,24 +1053,24 @@
 				</states>
 			</lifecycle>
       <event_listeners>
-        <listener id="OnInsertRequested">
+        <listener id="OnIncidentInsertRequested">
           <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
-          <callback>OnInsertRequested</callback>
+          <callback>OnIncidentInsertRequested</callback>
           <priority>0</priority>
         </listener>
-        <listener id="OnUpdateRequested">
+        <listener id="OnIncidentUpdateRequested">
           <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
-          <callback>OnUpdateRequested</callback>
+          <callback>OnIncidentUpdateRequested</callback>
           <priority>0</priority>
         </listener>
-        <listener id="OnComputeValues">
+        <listener id="OnIncidentComputeValues">
           <event>EVENT_SERVICE_DB_COMPUTE_VALUES</event>
-          <callback>OnComputeValues</callback>
+          <callback>OnIncidentComputeValues</callback>
           <priority>0</priority>
         </listener>
-        <listener id="OnCheckToWrite">
+        <listener id="OnIncidentCheckToWrite">
           <event>EVENT_SERVICE_DB_CHECK_TO_WRITE</event>
-          <callback>OnCheckToWrite</callback>
+          <callback>OnIncidentCheckToWrite</callback>
           <priority>0</priority>
         </listener>
       </event_listeners>
@@ -1144,11 +1144,11 @@
 		return true;
 	}]]></code>
 				</method>
-				<method id="OnCheckToWrite">
+				<method id="OnIncidentCheckToWrite">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[public function OnCheckToWrite(Combodo\iTop\Service\EventData $oEventData)
+					<type>Overload-ExNihilo</type>
+					<code><![CDATA[public function OnIncidentCheckToWrite(Combodo\iTop\Service\EventData $oEventData)
   {
     if (!$this->IsNew() && ($this->Get('parent_incident_id') == $this->GetKey()))
     {
@@ -1198,11 +1198,11 @@
 		return $iPriority;
 	}]]></code>
 				</method>
-				<method id="OnComputeValues">
+				<method id="OnIncidentComputeValues">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function OnComputeValues(Combodo\iTop\Service\EventData $oEventData)
+					<type>Overload-ExNihilo</type>
+					<code><![CDATA[	public function OnIncidentComputeValues(Combodo\iTop\Service\EventData $oEventData)
 	{
 
 		// Compute the priority of the ticket
@@ -1484,11 +1484,11 @@
 		$this->UpdateImpactedItems();
 	}]]></code>
 				</method>
-				<method id="OnInsertRequested">
+				<method id="OnIncidentInsertRequested">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
+					<type>Overload-ExNihilo</type>
+					<code><![CDATA[	public function OnIncidentInsertRequested(Combodo\iTop\Service\EventData $oEventData)
 
 	{
 		$this->ComputeImpactedItems();
@@ -1496,11 +1496,11 @@
 		$this->SetIfNull('start_date', time());
 	}]]></code>
 				</method>
-				<method id="OnUpdateRequested">
+				<method id="OnIncidentUpdateRequested">
 					<static>false</static>
 					<access>public</access>
-					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
+					<type>Overload-ExNihilo</type>
+					<code><![CDATA[	public function OnIncidentUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))

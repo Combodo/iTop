@@ -283,21 +283,23 @@ function DisplayEvents(WebPage $oPage, $sClass)
 	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
 	$oPage->AddSubBlock($oTable);
 
-	$aClasses = [];
-	foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
-		if (MetaModel::IsAbstract($sChildClass)) {
-			continue;
-		}
-		$aClasses[] = $sChildClass;
-	}
 	$aSources = [];
-	foreach ($aClasses as $sChildClass) {
-		$oObject = MetaModel::NewObject($sChildClass);
-		$aSources[] = $oObject->GetObjectUniqId();
-		foreach (MetaModel::EnumParentClasses($sChildClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
-			if (!in_array($sParentClass, $aSources)) {
-				$aSources[] = $sParentClass;
+	if (MetaModel::IsAbstract($sClass)) {
+		foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+			if (!MetaModel::IsAbstract($sChildClass)) {
+				$oObject = MetaModel::NewObject($sChildClass);
+				$aSources[] = $oObject->GetObjectUniqId();
+				break;
 			}
+		}
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+			$aSources[] = $sParentClass;
+		}
+	} else {
+		$oObject = MetaModel::NewObject($sClass);
+		$aSources[] = $oObject->GetObjectUniqId();
+		foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+				$aSources[] = $sParentClass;
 		}
 	}
 	$aListeners = [];
@@ -321,9 +323,19 @@ function DisplayEvents(WebPage $oPage, $sClass)
 		'module'   => ['label' => 'Module'],
 	];
 	$aRows = [];
+	$oReflectionClass = new ReflectionClass($sClass);
 	foreach ($aListeners as $aListener) {
 		if (is_object($aListener['callback'][0])) {
-			$sListener = get_class($aListener['callback'][0]).'->'.$aListener['callback'][1].'(Combodo\iTop\Service\EventData $oEventData)';
+			$sListenerClass = $sClass;
+			if ($aListener['callback'][0] != $sClass) {
+				$oListenerReflectionClass = new ReflectionClass(get_class($aListener['callback'][0]));
+				if (!$oListenerReflectionClass->isSubclassOf($sClass)) {
+					$sListenerClass = get_class($aListener['callback'][0]);
+				} elseif (!$oReflectionClass->hasMethod($aListener['callback'][1])) {
+					continue;
+				}
+			}
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(Combodo\iTop\Service\EventData $oEventData)';
 		} else {
 			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(Combodo\iTop\Service\EventData $oEventData)';
 		}

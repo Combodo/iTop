@@ -1588,18 +1588,18 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
       </fields>
       <event_listeners>
-        <listener id="OnCheckToWrite">
+        <listener id="OnSLACheckToWrite">
           <event>EVENT_SERVICE_DB_CHECK_TO_WRITE</event>
-          <callback>OnCheckToWrite</callback>
+          <callback>OnSLACheckToWrite</callback>
           <priority>0</priority>
         </listener>
       </event_listeners>
       <methods>
-	      <method id="OnCheckToWrite">
+	      <method id="OnSLACheckToWrite">
 		      <static>false</static>
 		      <access>public</access>
 		      <code><![CDATA[
-					public function OnCheckToWrite(Combodo\iTop\Service\EventData $oEventData)
+					public function OnSLACheckToWrite(Combodo\iTop\Service\EventData $oEventData)
 	{
 		$aCustomerContracts = $this->Get("customercontracts_list");
 		foreach ($aCustomerContracts as $sAttCode => $oCustomerContracts)
