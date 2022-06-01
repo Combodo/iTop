@@ -423,6 +423,23 @@
                     </state>
                 </states>
             </lifecycle>
+          <event_listeners>
+            <listener id="OnInsertRequested">
+              <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
+              <callback>OnInsertRequested</callback>
+              <priority>0</priority>
+            </listener>
+            <listener id="OnUpdateRequested">
+              <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
+              <callback>OnUpdateRequested</callback>
+              <priority>0</priority>
+            </listener>
+            <listener id="OnComputeValues">
+              <event>EVENT_SERVICE_DB_COMPUTE_VALUES</event>
+              <callback>OnComputeValues</callback>
+              <priority>0</priority>
+            </listener>
+          </event_listeners>
             <methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
@@ -520,31 +537,31 @@
 		return $iPriority;
 	}]]></code>
                 </method>
-                <method id="ComputeValues">
+                <method id="OnComputeValues">
                     <static>false</static>
                     <access>public</access>
                     <type>Overload-DBObject</type>
-                    <code><![CDATA[	public function ComputeValues()
+                    <code><![CDATA[	public function OnComputeValues(Combodo\iTop\Service\EventData $oEventData)
 	{
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
 	}]]></code>
                 </method>
-                <method id="OnInsert">
+                <method id="OnInsertRequested">
                     <static>false</static>
-                    <access>protected</access>
+                    <access>public</access>
                     <type>Overload-DBObject</type>
-                    <code><![CDATA[	protected function OnInsert()
+                    <code><![CDATA[	public function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
 		$this->SetIfNull('start_date', time());
 		$this->SetIfNull('last_update', time());
 	}]]></code>
                 </method>
-                <method id="OnUpdate">
+                <method id="OnUpdateRequested">
                     <static>false</static>
-                    <access>protected</access>
+                    <access>public</access>
                     <type>Overload-DBObject</type>
-                    <code><![CDATA[	protected function OnUpdate()
+                    <code><![CDATA[	public function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
 		$this->Set('last_update', time());
 	}]]></code>

@@ -1209,6 +1209,16 @@
           <callback>OnUpdateRequested</callback>
           <priority>0</priority>
         </listener>
+        <listener id="OnComputeValues">
+          <event>EVENT_SERVICE_DB_COMPUTE_VALUES</event>
+          <callback>OnComputeValues</callback>
+          <priority>0</priority>
+        </listener>
+        <listener id="OnCheckToWrite">
+          <event>EVENT_SERVICE_DB_CHECK_TO_WRITE</event>
+          <callback>OnCheckToWrite</callback>
+          <priority>0</priority>
+        </listener>
       </event_listeners>
       <methods>
 				<method id="GetTicketRefFormat">
@@ -1294,13 +1304,12 @@
 		return true;
 	}]]></code>
 				</method>
-				<method id="DoCheckToWrite">
+				<method id="OnCheckToWrite">
 					<static>false</static>
 					<access>public</access>
 					<type>Overload-DBObject</type>
-					<code><![CDATA[public function DoCheckToWrite()
+					<code><![CDATA[public function OnCheckToWrite(Combodo\iTop\Service\EventData $oEventData)
   {
-    parent::DoCheckToWrite();
     if (!$this->IsNew() && ($this->Get('parent_request_id') == $this->GetKey()))
     {
       $this->m_aCheckIssues[] = Dict::Format('Class:UserRequest/Error:CannotAssignParentRequestIdToSelf');
@@ -1349,17 +1358,14 @@
 		return $iPriority;
 	}]]></code>
 				</method>
-				<method id="ComputeValues">
+				<method id="OnComputeValues">
 					<static>false</static>
 					<access>public</access>
 					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function ComputeValues()
+					<code><![CDATA[	public function OnComputeValues(Combodo\iTop\Service\EventData $oEventData)
 	{
-
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
-
-		return parent::ComputeValues();
 	}]]></code>
 				</method>
 				<method id="DisplayBareRelations">
@@ -1551,10 +1557,10 @@
 				</method>
 				<method id="OnInsertRequested">
 					<static>false</static>
-					<access>protected</access>
+					<access>public</access>
 					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    protected function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
+    public function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
 		$this->ComputeImpactedItems();
 		$this->SetIfNull('last_update', time());
@@ -1563,10 +1569,10 @@
 				</method>
 				<method id="OnUpdateRequested">
 					<static>false</static>
-					<access>protected</access>
+					<access>public</access>
 					<type>Overload-DBObject</type>
 					<code><![CDATA[
-    protected function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
+    public function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))

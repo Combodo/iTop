@@ -283,15 +283,37 @@ function DisplayEvents(WebPage $oPage, $sClass)
 	$oTable = DataTableUIBlockFactory::MakeForStaticData(Dict::S('UI:Schema:Events:Defined'), $aColumns, $aRows);
 	$oPage->AddSubBlock($oTable);
 
-	$oObject = MetaModel::NewObject($sClass);
-	$aSources = [$oObject->GetObjectUniqId()];
-	foreach (MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
-		$aSources[] = $sParentClass;
+	$aClasses = [];
+	foreach (MetaModel::EnumChildClasses($sClass, ENUM_CHILD_CLASSES_ALL) as $sChildClass) {
+		if (MetaModel::IsAbstract($sChildClass)) {
+			continue;
+		}
+		$aClasses[] = $sChildClass;
+	}
+	$aSources = [];
+	foreach ($aClasses as $sChildClass) {
+		$oObject = MetaModel::NewObject($sChildClass);
+		$aSources[] = $oObject->GetObjectUniqId();
+		foreach (MetaModel::EnumParentClasses($sChildClass, ENUM_PARENT_CLASSES_ALL, false) as $sParentClass) {
+			if (!in_array($sParentClass, $aSources)) {
+				$aSources[] = $sParentClass;
+			}
+		}
 	}
 	$aListeners = [];
 	foreach (array_keys($aEvents) as $sEvent) {
 		$aListeners = array_merge($aListeners, EventService::GetListeners($sEvent, $aSources));
 	}
+	usort($aListeners, function ($a, $b) {
+		if ($a['event'] == $b['event']) {
+			if ($a['priority'] == $b['priority']) {
+				return 0;
+			}
+
+			return ($a['priority'] > $b['priority']) ? 1 : -1;
+		}
+		return ($a['event'] > $b['event']) ? 1 : -1;
+	});
 	$aColumns = [
 		'event'    => ['label' => 'Event'],
 		'listener' => ['label' => 'Listener'],

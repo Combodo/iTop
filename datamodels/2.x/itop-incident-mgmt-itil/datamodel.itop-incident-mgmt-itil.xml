@@ -1052,6 +1052,28 @@
 					</state>
 				</states>
 			</lifecycle>
+      <event_listeners>
+        <listener id="OnInsertRequested">
+          <event>EVENT_SERVICE_DB_INSERT_REQUESTED</event>
+          <callback>OnInsertRequested</callback>
+          <priority>0</priority>
+        </listener>
+        <listener id="OnUpdateRequested">
+          <event>EVENT_SERVICE_DB_UPDATE_REQUESTED</event>
+          <callback>OnUpdateRequested</callback>
+          <priority>0</priority>
+        </listener>
+        <listener id="OnComputeValues">
+          <event>EVENT_SERVICE_DB_COMPUTE_VALUES</event>
+          <callback>OnComputeValues</callback>
+          <priority>0</priority>
+        </listener>
+        <listener id="OnCheckToWrite">
+          <event>EVENT_SERVICE_DB_CHECK_TO_WRITE</event>
+          <callback>OnCheckToWrite</callback>
+          <priority>0</priority>
+        </listener>
+      </event_listeners>
 			<methods>
 				<method id="GetTicketRefFormat">
 					<static>true</static>
@@ -1122,13 +1144,12 @@
 		return true;
 	}]]></code>
 				</method>
-				<method id="DoCheckToWrite">
+				<method id="OnCheckToWrite">
 					<static>false</static>
 					<access>public</access>
 					<type>Overload-DBObject</type>
-					<code><![CDATA[public function DoCheckToWrite()
+					<code><![CDATA[public function OnCheckToWrite(Combodo\iTop\Service\EventData $oEventData)
   {
-    parent::DoCheckToWrite();
     if (!$this->IsNew() && ($this->Get('parent_incident_id') == $this->GetKey()))
     {
       $this->m_aCheckIssues[] = Dict::Format('Class:Incident/Error:CannotAssignParentIncidentIdToSelf');
@@ -1177,17 +1198,15 @@
 		return $iPriority;
 	}]]></code>
 				</method>
-				<method id="ComputeValues">
+				<method id="OnComputeValues">
 					<static>false</static>
 					<access>public</access>
 					<type>Overload-DBObject</type>
-					<code><![CDATA[	public function ComputeValues()
+					<code><![CDATA[	public function OnComputeValues(Combodo\iTop\Service\EventData $oEventData)
 	{
 
 		// Compute the priority of the ticket
 		$this->Set('priority', $this->ComputePriority());
-
-		return parent::ComputeValues();
 	}]]></code>
 				</method>
 				<method id="DisplayBareRelations">
@@ -1465,26 +1484,24 @@
 		$this->UpdateImpactedItems();
 	}]]></code>
 				</method>
-				<method id="OnInsert">
+				<method id="OnInsertRequested">
 					<static>false</static>
-					<access>protected</access>
+					<access>public</access>
 					<type>Overload-DBObject</type>
-					<code><![CDATA[	protected function OnInsert()
+					<code><![CDATA[	public function OnInsertRequested(Combodo\iTop\Service\EventData $oEventData)
 
 	{
-        parent::OnInsert();    
 		$this->ComputeImpactedItems();
 		$this->SetIfNull('last_update', time());
 		$this->SetIfNull('start_date', time());
 	}]]></code>
 				</method>
-				<method id="OnUpdate">
+				<method id="OnUpdateRequested">
 					<static>false</static>
-					<access>protected</access>
+					<access>public</access>
 					<type>Overload-DBObject</type>
-					<code><![CDATA[	protected function OnUpdate()
+					<code><![CDATA[	public function OnUpdateRequested(Combodo\iTop\Service\EventData $oEventData)
 	{
-        parent::OnUpdate(); 
         $aChanges = $this->ListChanges();
         if (array_key_exists('functionalcis_list', $aChanges))
         {
