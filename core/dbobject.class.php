@@ -1049,7 +1049,7 @@ abstract class DBObject implements iDisplay
 			if ($aCallInfo["function"] != "ComputeValues") continue;
 			return; //skip!
 		}
-
+		$this->EventComputeValues();
 		$this->ComputeValues();
 	}
 
@@ -2305,7 +2305,7 @@ abstract class DBObject implements iDisplay
 	 * @throws \OQLException
 	 *
 	 */
-	final public function CheckToWrite($bDoComputeValues = true)
+	public function CheckToWrite($bDoComputeValues = true)
 	{
 		if (MetaModel::SkipCheckToWrite())
 		{
@@ -5826,6 +5826,10 @@ abstract class DBObject implements iDisplay
 	}
 
 	protected function EventInsertAfter()
+	{
+	}
+
+	protected function EventComputeValues()
 	{
 	}
 

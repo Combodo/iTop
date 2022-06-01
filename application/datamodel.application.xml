@@ -186,6 +186,23 @@
     </menu>
   </menus>
   <events>
+    <event id="EVENT_SERVICE_DB_COMPUTE_VALUES" _delta="define">
+      <description>An object needs to be recomputed after changes</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <replaces>DBObject::ComputeValues</replaces>
+      <event_data>
+        <event_datum id="object">
+          <description>The object inserted</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
     <event id="EVENT_SERVICE_DB_INSERT_REQUESTED" _delta="define">
       <description>An object insert in the database has been requested. All changes to the object will be persisted automatically.</description>
       <sources>

@@ -5723,10 +5723,6 @@ JS
 	 */
 	final protected function EventInsertRequested()
 	{
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBInsert $sClass::0 Requested", LogChannels::DM_CRUD);
-		}
 		$this->FireEvent(EVENT_SERVICE_DB_INSERT_REQUESTED);
 	}
 
@@ -5736,10 +5732,6 @@ JS
 	 */
 	final protected function EventInsertBefore()
 	{
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: DBInsert $sClass::0 About to write in DB", LogChannels::DM_CRUD);
-		}
 		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_INSERT);
 	}
 
@@ -5749,12 +5741,12 @@ JS
 	 */
 	final protected function EventInsertAfter()
 	{
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			IssueLog::Debug("CRUD: $sClass::{$this->m_iKey} Inserted in DB", LogChannels::DM_CRUD);
-		}
-
 		$this->FireEvent(EVENT_SERVICE_DB_INSERT_DONE);
+	}
+
+	final protected function EventComputeValues()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_COMPUTE_VALUES);
 	}
 
 	/**
@@ -5785,12 +5777,6 @@ JS
 	 */
 	final protected function EventUpdateRequested()
 	{
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			$sKey = $sClass.'::'.$this->GetKey();
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Requested", LogChannels::DM_CRUD);
-		}
-
 		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_REQUESTED);
 	}
 
@@ -5800,11 +5786,6 @@ JS
 	 */
 	final protected function EventUpdateBefore()
 	{
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			$sKey = $sClass.'::'.$this->GetKey();
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey About to be written in DB", LogChannels::DM_CRUD);
-		}
 		$this->FireEvent(EVENT_SERVICE_DB_ABOUT_TO_UPDATE);
 	}
 
@@ -5816,11 +5797,6 @@ JS
 	 */
 	final protected function EventUpdateAfter(array $aEventData)
 	{
-		$sClass = get_class($this);
-		if ($sClass == 'UserRequest') {
-			$sKey = $sClass.'::'.$this->GetKey();
-			IssueLog::Debug("CRUD: DBUpdate $sClass::$sKey Updated", LogChannels::DM_CRUD);
-		}
 		$this->FireEvent(EVENT_SERVICE_DB_UPDATE_DONE, $aEventData);
 	}
 
