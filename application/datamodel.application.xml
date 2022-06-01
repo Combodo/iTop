@@ -188,300 +188,347 @@
   <events>
     <event id="EVENT_SERVICE_DB_INSERT_REQUESTED" _delta="define">
       <description>An object insert in the database has been requested. All changes to the object will be persisted automatically.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::OnInsert</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object inserted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_ABOUT_TO_INSERT" _delta="define">
       <description>An object is about to be inserted in the database (no change possible)</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::OnInsert</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object inserted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_INSERT_DONE" _delta="define">
       <description>An object has been inserted into the database (but not reloaded). All changes to the object will be persisted automatically.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::AfterInsert</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object inserted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_UPDATE_REQUESTED" _delta="define">
       <description>An object update has been requested. All changes to the object will be persisted automatically.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::OnUpdate, DBObject::DoComputeValues</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object updated</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_ABOUT_TO_UPDATE" _delta="define">
       <description>An object is about to be updated in the database (no change possible)</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::OnUpdate</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object updated</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_UPDATE_DONE" _delta="define">
       <description>An object has been updated into the database and reloaded. All changes to the object will be persisted automatically.</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::AfterUpdate</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object updated</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_ABOUT_TO_DELETE" _delta="define">
       <description>An object is about to be deleted in the database</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::OnDelete</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object deleted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_DELETE_DONE" _delta="define">
       <description>An object has been deleted into the database</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>DBObject::AfterDelete</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object deleted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_BEFORE_APPLY_STIMULUS" _delta="define">
       <description>A stimulus is about to be applied to an object</description>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="stimulus">
+        </event_datum>
+        <event_datum id="stimulus">
           <description>Current stimulus applied</description>
           <type>string</type>
-        </argument>
-        <argument id="previous_state">
+        </event_datum>
+        <event_datum id="previous_state">
           <description>Object previous state</description>
           <type>string</type>
-        </argument>
-        <argument id="new_state">
+        </event_datum>
+        <event_datum id="new_state">
           <description>Object new state</description>
           <type>string</type>
-        </argument>
-        <argument id="save_object">
+        </event_datum>
+        <event_datum id="save_object">
           <description>The object must be saved in the database</description>
           <type>boolean</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_AFTER_APPLY_STIMULUS" _delta="define">
       <description>A stimulus has been applied to an object</description>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="stimulus">
+        </event_datum>
+        <event_datum id="stimulus">
           <description>Current stimulus applied</description>
           <type>string</type>
-        </argument>
-        <argument id="previous_state">
+        </event_datum>
+        <event_datum id="previous_state">
           <description>Object previous state</description>
           <type>string</type>
-        </argument>
-        <argument id="new_state">
+        </event_datum>
+        <event_datum id="new_state">
           <description>Object new state</description>
           <type>string</type>
-        </argument>
-        <argument id="save_object">
+        </event_datum>
+        <event_datum id="save_object">
           <description>The object is asked to be saved in the database</description>
           <type>boolean</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_APPLY_STIMULUS_FAILED" _delta="define">
       <description>A stimulus has failed</description>
-      <arguments>
-        <argument id="action">
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="action">
           <description>The action that failed to apply the stimulus</description>
           <type>string</type>
-        </argument>
-        <argument id="object">
+        </event_datum>
+        <event_datum id="object">
           <description>The object where the stimulus is targeted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="stimulus">
+        </event_datum>
+        <event_datum id="stimulus">
           <description>Current stimulus applied</description>
           <type>string</type>
-        </argument>
-        <argument id="previous_state">
+        </event_datum>
+        <event_datum id="previous_state">
           <description>Object previous state</description>
           <type>string</type>
-        </argument>
-        <argument id="new_state">
+        </event_datum>
+        <event_datum id="new_state">
           <description>Object new state</description>
           <type>string</type>
-        </argument>
-        <argument id="save_object">
+        </event_datum>
+        <event_datum id="save_object">
           <description>The object must be saved in the database</description>
           <type>boolean</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_OBJECT_RELOAD" _delta="define">
       <description>An object has been re-loaded from the database</description>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The object re-loaded</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_CHECK_TO_WRITE" _delta="define">
       <description>Check an object before it is written into the database (no change possible)</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>cmdbAbstractObject::DoCheckToWrite</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object to check</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="error_messages">
+        </event_datum>
+        <event_datum id="error_messages">
           <description>Array of strings where all the errors found during the object checking are added</description>
           <type>array</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DB_CHECK_TO_DELETE" _delta="define">
       <description>Check an object before it is deleted from the database (no change possible)</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
       <replaces>cmdbAbstractObject::DoCheckToDelete</replaces>
-      <arguments>
-        <argument id="object">
+      <event_data>
+        <event_datum id="object">
           <description>The object to check</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="error_messages">
+        </event_datum>
+        <event_datum id="error_messages">
           <description>Array of strings where all the errors found during the object checking are added</description>
           <type>array</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_DOWNLOAD_DOCUMENT" _delta="define">
       <description>A document has been downloaded from the GUI</description>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="ormDocument">ormDocument</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The object containing the document</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="document">
+        </event_datum>
+        <event_datum id="document">
           <description>The document downloaded</description>
           <type>ormDocument</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_AFTER_DISPLAY_PAGE" _delta="define">
       <description>The current page is completely displayed</description>
-      <available_filters>Class hierarchy of the displayed page</available_filters>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="CLIPage">CLIPage</source>
+        <source id="WebPage">WebPage</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The page displayed</description>
           <type>Page</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_LOGIN" _delta="define">
       <description>Inform the listeners about the connection states</description>
-      <available_filters/>
-      <arguments>
-        <argument id="code">
+      <event_data>
+        <event_datum id="code">
           <description>The login step result code (LoginWebPage::EXIT_CODE_...) </description>
           <type>integer</type>
-        </argument>
-        <argument id="state">
+        </event_datum>
+        <event_datum id="state">
           <description>Current login state (LoginWebPage::LOGIN_STATE_CONNECTED...)</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
   </events>
   <meta>

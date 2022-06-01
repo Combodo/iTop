@@ -12,13 +12,13 @@ use Exception;
 use ExecutionKPI;
 use IssueLog;
 use LogChannels;
+use ReflectionClass;
 
 class EventService
 {
 	public static $aEventListeners = [];
 	private static $iEventIdCounter = 0;
 	private static $aEventDescription = [];
-	Private static $aReentranceProtection = [];
 
 	/**
 	 * Register a callback for a specific event
@@ -33,20 +33,24 @@ class EventService
 	 * @return string Id of the registration (used for unregistering)
 	 *
 	 */
-	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, $aCallbackData = [], $context = null, float $fPriority = 0.0): string
+	public static function RegisterListener(string $sEvent, callable $callback, $sEventSource = null, $aCallbackData = [], $context = null, float $fPriority = 0.0, $sModuleId = ''): string
 	{
-		is_callable($callback, false, $sName);
+		if (!is_callable($callback, false, $sName)) {
+			return false;
+		}
 
 		$aEventCallbacks = self::$aEventListeners[$sEvent] ?? [];
 		$sId = 'event_'.self::$iEventIdCounter++;
 		$aEventCallbacks[] = array(
 			'id'       => $sId,
+			'event'    => $sEvent,
 			'callback' => $callback,
 			'source'   => $sEventSource,
 			'name'     => $sName,
 			'data'     => $aCallbackData,
 			'context'  => $context,
 			'priority' => $fPriority,
+			'module'   => $sModuleId,
 		);
 		usort($aEventCallbacks, function ($a, $b) {
 			$fPriorityA = $a['priority'];
@@ -96,31 +100,15 @@ class EventService
 			return;
 		}
 
-		foreach (self::$aEventListeners[$sEvent] as $aEventCallback) {
-			if (!self::MatchEventSource($aEventCallback['source'], $eventSource)) {
-				continue;
-			}
+		foreach (self::GetListeners($sEvent, $eventSource) as $aEventCallback) {
 			if (!self::MatchContext($aEventCallback['context'])) {
 				continue;
 			}
 			$sName = $aEventCallback['name'];
-			// Reentrance protection
-			if (isset(self::$aReentranceProtection[$aEventCallback['id']])) {
-				if (!self::$aReentranceProtection[$aEventCallback['id']]) {
-					unset(self::$aReentranceProtection[$aEventCallback['id']]);
-				}
-				IssueLog::Debug("Reentrance protection for '$sLogEventName'$sSource for '$sName'", LogChannels::EVENT_SERVICE);
-				continue;
-			}
 			IssueLog::Debug("Fire event '$sLogEventName'$sSource calling '$sName'", LogChannels::EVENT_SERVICE);
 			try {
-				if (is_callable($aEventCallback['callback'])) {
-					$oEventData->SetCallbackData($aEventCallback['data']);
-					call_user_func($aEventCallback['callback'], $oEventData);
-				} else {
-					IssueLog::Debug("Callback '$sName' not a callable anymore, unregister", LogChannels::EVENT_SERVICE);
-					self::UnRegisterCallback($aEventCallback['id']);
-				}
+				$oEventData->SetCallbackData($aEventCallback['data']);
+				call_user_func($aEventCallback['callback'], $oEventData);
 			}
 			catch (Exception $e) {
 				IssueLog::Error("Event '$sLogEventName' for '$sName' id {$aEventCallback['id']} failed with error: ".$e->getMessage());
@@ -128,6 +116,20 @@ class EventService
 			}
 		}
 		$oKPI->ComputeStats('FireEvent', $sEvent);
+	}
+
+	public static function GetListeners($sEvent, $eventSource)
+	{
+		$aListeners = [];
+		if (isset(self::$aEventListeners[$sEvent])) {
+			foreach (self::$aEventListeners[$sEvent] as $aEventCallback) {
+				if (self::MatchEventSource($aEventCallback['source'], $eventSource)) {
+					$aListeners[] = $aEventCallback;
+				}
+			}
+		}
+
+		return $aListeners;
 	}
 
 	private static function MatchEventSource($srcRegistered, $srcEvent): bool
@@ -208,7 +210,7 @@ class EventService
 	 *
 	 * @param string $sId the callback registration id
 	 */
-	public static function UnRegisterCallback(string $sId)
+	public static function UnRegisterListener(string $sId)
 	{
 		$bRemoved = self::Browse(function ($sEvent, $idx, $aEventCallback) use ($sId) {
 			if ($aEventCallback['id'] == $sId) {
@@ -232,7 +234,7 @@ class EventService
 	 *
 	 * @param string $sEvent event to unregister
 	 */
-	public static function UnRegisterEvent(string $sEvent)
+	public static function UnRegisterEventListeners(string $sEvent)
 	{
 		if (!isset(self::$aEventListeners[$sEvent])) {
 			IssueLog::Trace("No registration found for event '$sEvent'", LogChannels::EVENT_SERVICE);
@@ -274,7 +276,7 @@ class EventService
 	}
 
 	// For information only
-	public static function RegisterEvent(string $sEvent, string $sDescription, array $aArguments, string $sModule)
+	public static function RegisterEvent(string $sEvent, array $aDescription, string $sModule)
 	{
 		if (isset(self::$aEventDescription[$sEvent])) {
 			$sPrevious = self::$aEventDescription[$sEvent]['module'];
@@ -282,12 +284,27 @@ class EventService
 		}
 
 		self::$aEventDescription[$sEvent] = [
-			'constant'=> 'EVENT_SERVICE_'.strtoupper(self::FromCamelCase($sEvent)),
 			'name'=> $sEvent,
-			'description' => $sDescription,
-			'arguments' => $aArguments,
+			'description' => $aDescription,
 			'module' => $sModule,
 		];
+	}
+
+	public static function GetEventsByClass($sClass)
+	{
+		$aRes = [];
+		$oClass = new ReflectionClass($sClass);
+		foreach (self::$aEventDescription as $sEvent => $aEventInfo) {
+			if (isset($aEventInfo['description']['sources'])) {
+				foreach ($aEventInfo['description']['sources'] as $sSource) {
+					if ($sClass == $sSource || $oClass->isSubclassOf($sSource)) {
+						$aRes[$sEvent] = $aEventInfo;
+					}
+				}
+			}
+		}
+
+		return $aRes;
 	}
 
 	// Intentionally duplicated from SetupUtils, not yet loaded when RegisterEvent is called

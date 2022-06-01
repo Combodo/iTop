@@ -228,7 +228,7 @@ class EventTest extends ItopTestCase
 		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 
-		EventService::UnRegisterEvent('event1');
+		EventService::UnRegisterEventListeners('event1');
 
 		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(4, self::$iEventCalls);
@@ -282,7 +282,7 @@ class EventTest extends ItopTestCase
 		EventService::FireEvent(new EventData('event2'));
 		$this->assertEquals(4, self::$iEventCalls);
 
-		EventService::UnRegisterCallback($sIdToRemove);
+		EventService::UnRegisterListener($sIdToRemove);
 
 		EventService::FireEvent(new EventData('event1'));
 		$this->assertEquals(6, self::$iEventCalls);

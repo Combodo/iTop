@@ -291,34 +291,40 @@
     <event id="EVENT_SERVICE_ATTACHMENT_AFTER_UPDATE" _delta="define">
       <description>An attachment has been updated in database.</description>
       <replaces>Attachment::AfterUpdate</replaces>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="Attachment">Attachment</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The attachment updated</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="changes">
+        </event_datum>
+        <event_datum id="changes">
           <description>Array of all the attributes changed</description>
           <type>array</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
     <event id="EVENT_SERVICE_ATTACHMENT_AFTER_DELETE" _delta="define">
       <description>An attachment has been deleted from database.</description>
       <replaces>Attachment::AfterDelete</replaces>
-      <arguments>
-        <argument id="object">
+      <sources>
+        <source id="Attachment">Attachment</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
           <description>The attachment deleted</description>
           <type>DBObject</type>
-        </argument>
-        <argument id="debug_info">
+        </event_datum>
+        <event_datum id="debug_info">
           <description>Debug string</description>
           <type>string</type>
-        </argument>
-      </arguments>
+        </event_datum>
+      </event_data>
     </event>
   </events>
 </itop_design>

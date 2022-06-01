@@ -1078,23 +1078,13 @@ EOF
 	protected function CompileEvent(DesignElement $oEvent, string $sModuleName)
 	{
 		$sName = $oEvent->getAttribute('id');
-		$oDescription = $oEvent->GetOptionalElement('description');
-		$sDescription = empty($oDescription) ? '' : $oDescription->GetText('');
-		$aArguments = [];
-		foreach ($oEvent->GetNodes('./arguments/argument') as $oArgumentNode) {
-			$aArg = [];
-			$sArgId = $oArgumentNode->getAttribute('id');
-			$oArgDesc = $oArgumentNode->GetOptionalElement('description');
-			$aArg['description'] = empty($oArgDesc) ? '' : $oArgDesc->GetText('');
-			$oArgType = $oArgumentNode->GetOptionalElement('type');
-			$aArg['type'] = empty($oArgType) ? '' : $oArgType->GetText('');
-			$aArguments[$sArgId] = $aArg;
-		}
-		$sArguments = var_export($aArguments, true);
+		$aEventDescription = DesignElement::ToArray($oEvent);
+
+		$sDescription = var_export($aEventDescription, true);
 		$sConstant = $sName;
 
 		$sOutput = "define('$sConstant', '$sName');\n";
-		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', '$sDescription', $sArguments, '$sModuleName');\n";
+		$sOutput .= "Combodo\iTop\Service\EventService::RegisterEvent('$sName', $sDescription, '$sModuleName');\n";
 
 		return $sOutput;
 	}
@@ -1329,7 +1319,7 @@ EOF
 				}
 
 				$sListenerPriority = (float)($oListener->GetChildText('priority', '0'));
-				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerPriority);";
+				$sEvents .= "\n		Combodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", $sEventListener, \$this->m_sObjectUniqId, \"$sListenerId\", null, $sListenerPriority, '$sModuleRelativeDir');";
 			}
 		}
 
@@ -3698,7 +3688,7 @@ EOF;
 			$sEventSource = $aHook['source'];
 			$sContext = $aHook['context'];
 			$sPriority = $aHook['priority'];
-			$sRegister .= "\nCombodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority);";
+			$sRegister .= "\nCombodo\iTop\Service\EventService::RegisterListener(\"$sEventName\", '$sClassName::$sCallback', $sEventSource, null, $sContext, $sPriority, '$sModuleId');";
 			$sCallbackFct = $aHook['content'];
 			$sMethods .= "\n    {$sCallbackFct}\n\n";
 		}
