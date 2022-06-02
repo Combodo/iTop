@@ -335,9 +335,9 @@ function DisplayEvents(WebPage $oPage, $sClass)
 					continue;
 				}
 			}
-			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $sListenerClass.'->'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
 		} else {
-			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(Combodo\iTop\Service\EventData $oEventData)';
+			$sListener = $aListener['callback'][0].'::'.$aListener['callback'][1].'(\Combodo\iTop\Service\EventData $oEventData)';
 		}
 		$aRows[] = [
 			'event'    => $aListener['event'],

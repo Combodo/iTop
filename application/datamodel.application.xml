@@ -500,7 +500,7 @@
     <event id="EVENT_SERVICE_DOWNLOAD_DOCUMENT" _delta="define">
       <description>A document has been downloaded from the GUI</description>
       <sources>
-        <source id="ormDocument">ormDocument</source>
+        <source id="Document">Document</source>
       </sources>
       <event_data>
         <event_datum id="object">
