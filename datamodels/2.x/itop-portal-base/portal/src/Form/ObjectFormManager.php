@@ -91,6 +91,7 @@ class ObjectFormManager extends FormManager
 	 * @return array formmanager_data as a PHP array
 	 *
 	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 * @since 2.7.7 3.0.1 only used once but kept
 	 */
 	protected static function DecodeFormManagerData($formManagerData)
 	{
@@ -106,14 +107,13 @@ class ObjectFormManager extends FormManager
 	 *       - formobject_class : The class of the object that is being edited/viewed
 	 *       - formmode : view|edit|create
 	 *       - values for parent
-	 * @param bool $bTrustContent if false then won't allow modified TWIG content
 	 *
 	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
 	 *
 	 * @inheritDoc
 	 * @throws \Exception
-	 * @throws \SecurityException if twig content is present and $bTrustContent is false
-	 *
+	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
+	 * @since 2.7.7 3.0.1 N°4867 remove param $bTrustContent
 	 */
 	public static function FromJSON($sJson)
 	{
