@@ -517,23 +517,6 @@
         </event_datum>
       </event_data>
     </event>
-    <event id="EVENT_SERVICE_AFTER_DISPLAY_PAGE" _delta="define">
-      <description>The current page is completely displayed</description>
-      <sources>
-        <source id="CLIPage">CLIPage</source>
-        <source id="WebPage">WebPage</source>
-      </sources>
-      <event_data>
-        <event_datum id="object">
-          <description>The page displayed</description>
-          <type>Page</type>
-        </event_datum>
-        <event_datum id="debug_info">
-          <description>Debug string</description>
-          <type>string</type>
-        </event_datum>
-      </event_data>
-    </event>
     <event id="EVENT_SERVICE_LOGIN" _delta="define">
       <description>Inform the listeners about the connection states</description>
       <event_data>
