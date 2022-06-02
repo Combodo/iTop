@@ -11,6 +11,7 @@ require_once(APPROOT."setup/runtimeenv.class.inc.php");
 
 use Config;
 use Exception;
+use ModelFactory;
 use RunTimeEnvironment;
 use SetupUtils;
 
@@ -126,4 +127,49 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		}
 		throw new Exception('No configuration file available');
 	}
+
+	protected function GetMFModulesToCompile($sSourceEnv, $sSourceDir)
+	{
+		$aRet =  parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
+
+		// Add new mandatory modules
+		$sSourceDirFull = APPROOT.$sSourceDir;
+		if (!is_dir($sSourceDirFull))
+		{
+			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
+		}
+		$aDirsToCompile = array($sSourceDirFull);
+		if (is_dir(APPROOT.'extensions'))
+		{
+			$aDirsToCompile[] = APPROOT.'extensions';
+		}
+		$sExtraDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';
+		if (is_dir($sExtraDir))
+		{
+			$aDirsToCompile[] = $sExtraDir;
+		}
+
+		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
+		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+
+		$oFactory = new ModelFactory($aDirsToCompile);
+		$aModules = $oFactory->FindModules();
+		$aAvailableModules = [];
+		/** @var \MFModule $oModule */
+		foreach ($aModules as $oModule) {
+			$aAvailableModules[$oModule->GetName()] = $oModule;
+		}
+		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
+			if ($oExtension->bMarkedAsChosen) {
+				foreach ($oExtension->aModules as $sModuleName) {
+					if (!isset($aRet[$sModuleName])) {
+						$aRet[$sModuleName] = $aAvailableModules[$sModuleName];
+					}
+				}
+			}
+		}
+
+		return $aRet;
+	}
+
 }

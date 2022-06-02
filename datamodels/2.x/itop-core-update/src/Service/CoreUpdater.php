@@ -9,7 +9,6 @@
 
 namespace Combodo\iTop\CoreUpdate\Service;
 
-use Combodo\iTop\FilesInformation\Service\FileIntegrityException;
 use Combodo\iTop\FilesInformation\Service\FilesIntegrity;
 use DBBackup;
 use Dict;
@@ -539,9 +538,6 @@ final class CoreUpdater
 			$sRootPath = self::UPDATE_DIR.'web/';
 			FilesIntegrity::CheckInstallationIntegrity($sRootPath);
 
-			///Check new modules
-			self::CheckNewModules($sRootPath);
-
 			SetupLog::Info('itop-core-update: Files integrity OK');
 		} catch (Exception $e)
 		{
@@ -607,40 +603,6 @@ final class CoreUpdater
 			self::RRmdir(self::UPDATE_DIR);
 			self::RRmdir(self::DOWNLOAD_DIR);
 			throw $e;
-		}
-	}
-
-	/**
-	 * Check if new modules (not already installed) are present, and throw an exception if that is the case as core update doesn't know how to install them automatically for know
-	 *
-	 * @param string $sRootPath
-	 *
-	 * @throws \ApplicationException
-	 * @since 2.7.7 3.0.1
-	 */
-	private static function CheckNewModules($sRootPath)
-	{
-		$aFilesInfo = FilesIntegrity::GetInstalledFiles($sRootPath.'manifest.xml');
-
-		if ($aFilesInfo === false) {
-			throw new FileIntegrityException(Dict::Format('FilesInformation:Error:MissingFile', 'manifest.xml'));
-		}
-
-		@clearstatcache();
-		$sSourceDir = MetaModel::GetConfig()->Get('source_dir');
-		foreach ($aFilesInfo as $aFileInfo) {
-			if (strpos($aFileInfo['path'], $sSourceDir) === 0) {
-				$aFilePath = explode('/', $aFileInfo['path']);
-				$sFolderPath = $aFilePath[0].'/'.$aFilePath[1].'/'.$aFilePath[2];
-				//if module don't already exist in itop and if module listed in manifest.xml is included in zip
-				if (!is_dir(APPROOT.'/'.$sFolderPath) && !is_file(APPROOT.'/'.$sFolderPath)
-					&& is_dir($sRootPath.'/'.$sFolderPath)) {
-					$sLink = utils::GetAbsoluteUrlAppRoot().'setup/';
-					$sLinkManualUpdate = 'https://www.itophub.io/wiki/page?id='.utils::GetItopVersionWikiSyntax().'%3Ainstall%3Aupgrading_itop#manually';
-					throw new FileIntegrityException(Dict::Format('iTopUpdate:UI:CannotUpdateNewModules' , $sLink, $sLinkManualUpdate));
-				}
-			}
-			// Packed with missing files...
 		}
 	}
 }
