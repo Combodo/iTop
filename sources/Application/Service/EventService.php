@@ -97,7 +97,7 @@ class EventService
 		$sLogEventName = "$sEvent - ".self::GetSourcesAsString($eventSource).' '.json_encode($oEventData->GetEventData());
 		EventHelper::Trace("Fire event '$sLogEventName'");
 		if (!isset(self::$aEventListeners[$sEvent])) {
-			EventHelper::Debug("No listener found for '$sLogEventName'", $sEvent, $eventSource);
+			EventHelper::Debug("No listener for '$sLogEventName'", $sEvent, $eventSource);
 			$oKPI->ComputeStats('FireEvent', $sEvent);
 
 			return;
