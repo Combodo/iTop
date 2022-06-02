@@ -53,7 +53,6 @@ class DownloadPage extends AjaxPage
 		$oKpi->ComputeAndReport(get_class($this).' output');
 		echo $sContent;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sContent) / 1024).' Kb)');
-		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 }

@@ -17,8 +17,6 @@ use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
 use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
 
 
 /**
@@ -1346,17 +1344,7 @@ JS;
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
-		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
-	}
-
-	const EVENT_SERVICE_AFTER_DISPLAY_PAGE = 'AfterDisplayPage';
-
-	protected function FireAfterDisplayEvent()
-	{
-		$aData['debug_info'] = 'from: '.get_class($this).":[$this->s_title]";
-		$aData['object'] = $this;
-		EventService::FireEvent(new EventData(self::EVENT_SERVICE_AFTER_DISPLAY_PAGE, get_class($this), $aData));
 	}
 
 	/**

@@ -15,8 +15,6 @@
 //
 //   You should have received a copy of the GNU Affero General Public License
 //   along with iTop. If not, see <http://www.gnu.org/licenses/>
-use Combodo\iTop\Service\EventData;
-use Combodo\iTop\Service\EventService;
 
 /**
  * CLI page 
@@ -39,7 +37,6 @@ class CLIPage implements Page
 
     public function output()
     {
-	    $this->FireAfterDisplayEvent();
 	    if (class_exists('DBSearch')) {
 		    DBSearch::RecordQueryTrace();
 	    }
@@ -47,13 +44,6 @@ class CLIPage implements Page
 		    ExecutionKPI::ReportStats();
 	    }
     }
-
-	protected function FireAfterDisplayEvent()
-	{
-		$aData['debug_info'] = 'from: '.get_class($this).":[$this->s_title]";
-		$aData['object'] = $this;
-		EventService::FireEvent(new EventData(EVENT_SERVICE_AFTER_DISPLAY_PAGE, get_class($this), $aData));
-	}
 
 	public function add($sText)
 	{

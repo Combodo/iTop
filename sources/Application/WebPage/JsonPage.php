@@ -100,7 +100,6 @@ class JsonPage extends WebPage
 
 		echo $sJSON;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sJSON) / 1024).' Kb)');
-		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 

@@ -53,7 +53,6 @@ class CSVPage extends WebPage
 	    echo trim($this->s_content);
 	    echo "\n";
 	    $oKpi->ComputeAndReport('Echoing ('.round(strlen($this->s_content) / 1024).' Kb)');
-	    $this->FireAfterDisplayEvent();
 
 	    if (class_exists('DBSearch')) {
 		    DBSearch::RecordQueryTrace();

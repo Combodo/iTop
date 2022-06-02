@@ -72,7 +72,6 @@ class XMLPage extends WebPage
 		if (class_exists('DBSearch')) {
 			DBSearch::RecordQueryTrace();
 		}
-		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 

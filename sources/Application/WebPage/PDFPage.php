@@ -157,7 +157,6 @@ EOF
 		}
 		$this->flush();
 		echo $this->oPdf->Output($this->s_title.'.pdf', 'S');
-		$this->FireAfterDisplayEvent();
 	}
 
 	public function get_pdf()

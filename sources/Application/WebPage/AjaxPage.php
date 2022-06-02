@@ -232,7 +232,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 		// Echo global HTML
 		echo $sHtml;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
-		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 	}
 

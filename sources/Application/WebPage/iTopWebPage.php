@@ -950,7 +950,6 @@ HTML;
 		$oKpi->ComputeAndReport('Echoing ('.round(strlen($sHtml) / 1024).' Kb)');
 
 		DBSearch::RecordQueryTrace();
-		$this->FireAfterDisplayEvent();
 		ExecutionKPI::ReportStats();
 
 		return;
