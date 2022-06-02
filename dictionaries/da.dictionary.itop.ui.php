@@ -1666,7 +1666,7 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 ));
 
 // OAuth
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
+Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0~~',
 	'core/Operation:Wizard/Title'                   => 'OAuth 2.0 Configuration~~',
 	'UI:OAuth:Wizard:Page:Title'                    => 'OAuth 2.0 Configuration~~',
