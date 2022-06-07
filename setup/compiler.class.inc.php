@@ -620,16 +620,17 @@ EOF;
 				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
 					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 				} else {
-					$sMissingBusinessFileMessage = 'A module business file is non existing on disk after compilation !';
-					$aContext = [
-						'moduleId'       => $oModule->GetId(),
-						'moduleLocation' => $oModule->GetRootDir(),
-						'includedFile'   => $sRelFileName,
-					];
+					/** @noinspection NestedPositiveIfStatementsInspection */
 					if (utils::IsDevelopmentEnvironment()) {
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file : check the module.php "datamodel" key !';
+						$aContext = [
+							'moduleId'       => $oModule->GetId(),
+							'moduleLocation' => $oModule->GetRootDir(),
+							'includedFile'   => $sRelFileName,
+						];
+						SetupLog::Error($sMissingBusinessFileMessage, null, $aContext);
 						throw new CoreException($sMissingBusinessFileMessage, $aContext);
 					}
-					SetupLog::Warning($sMissingBusinessFileMessage, null, $aContext);
 				}
 			}
 			// files to include (PHP webservices providers)
