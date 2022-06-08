@@ -107,9 +107,9 @@ function CheckEmailSetting($oP)
 			}
 		}
 		break;
-		
+
 		case 'SMTP':
-		$oP->info("iTop is configured to use the <b>SMTP</b> transport.");
+		$oP->info("iTop is configured to use the <b>$sTransport</b> transport.");
 		$sHost = MetaModel::GetConfig()->Get('email_transport_smtp.host');
 		$sPort = MetaModel::GetConfig()->Get('email_transport_smtp.port');
 		$sEncryption = MetaModel::GetConfig()->Get('email_transport_smtp.encryption');
@@ -124,7 +124,26 @@ function CheckEmailSetting($oP)
 			$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().").");
 		}
 		break;
-		
+
+		case 'SMTP_OAuth':
+			$oP->info("iTop is configured to use the <b>$sTransport</b> transport.");
+			$sHost = MetaModel::GetConfig()->Get('email_transport_smtp.host');
+			$sPort = MetaModel::GetConfig()->Get('email_transport_smtp.port');
+			$sEncryption = MetaModel::GetConfig()->Get('email_transport_smtp.encryption');
+			$sDisplayEncryption = empty($sEncryption) ? '<em>no encryption</em> ' : $sEncryption;
+			$sUserName = MetaModel::GetConfig()->Get('email_transport_smtp.username');
+			$sDisplayUserName = empty($sUserName) ? '<em>no user</em> ' : $sUserName;
+			$sProvider = MetaModel::GetConfig()->Get('email_transport_smtp.oauth.provider');
+			$sDisplayProvider = empty($sProvider) ? '<em>no Provider</em> ' : $sProvider;
+			$sClientID = MetaModel::GetConfig()->Get('email_transport_smtp.oauth.client_id');
+			$sDisplayClientID = empty($sClientID) ? '<em>no password</em> ' : $sClientID;
+			$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, provider: $sDisplayProvider, user: $sDisplayUserName, client id: $sDisplayClientID, encryption: $sDisplayEncryption.");
+			if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sClientID == '') && ($sProvider == '')) {
+				$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().').');
+			}
+			break;
+
+
 		case 'Null':
 		$oP->warning("iTop is configured to use the <b>Null</b> transport: emails sending will have no effect.");
 		$bRet = false;

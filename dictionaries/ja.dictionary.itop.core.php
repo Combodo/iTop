@@ -21,22 +21,24 @@
  */
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Core:DeletedObjectLabel' => '%1s (削除されました)',
-	'Core:DeletedObjectTip' => 'オブジェクトは削除されました %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'オブジェクトは削除されました %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'オブジェクトは見つかりません (クラス: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
+	'Core:UnknownObjectTip'   => 'オブジェクトは見つかりません。しばらく前に削除され、その後ログが削除されたかもしれません。',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'オブジェクト配列',
+	'Core:AttributeLinkedSet'  => 'オブジェクト配列',
 	'Core:AttributeLinkedSet+' => '同一あるいはサブクラスに属するオブジェクト',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard'  => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '~~',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber'  => 'Phone number~~',
 	'Core:AttributePhoneNumber+' => '~~',
 
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',

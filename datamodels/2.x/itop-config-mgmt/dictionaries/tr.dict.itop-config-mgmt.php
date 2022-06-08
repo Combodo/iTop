@@ -1581,3 +1581,4 @@ Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Menu:Software' => 'Yazılım Kataloğu',
 	'Menu:Software+' => 'Yazılım Kataloğu',
 ));
+?>

@@ -10,22 +10,24 @@
  */
 Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'Core:DeletedObjectLabel' => '%1ы (удален)',
-	'Core:DeletedObjectTip' => 'Объект был удален %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'Объект был удален %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Объект не найден (class: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
+	'Core:UnknownObjectTip'   => 'Объект не удается найти. Возможно, он был удален некоторое время назад, и журнал с тех пор был очищен.',
 
 	'Core:UniquenessDefaultError' => 'Ошибка правила уникальности \'%1$s\'',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Массив объектов (1-n)',
+	'Core:AttributeLinkedSet'  => 'Массив объектов (1-n)',
 	'Core:AttributeLinkedSet+' => 'Список объектов заданного класса, указывающих на текущий объект',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => 'Дашборд',
+	'Core:AttributeDashboard'  => 'Дашборд',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Номер телефона',
+	'Core:AttributePhoneNumber'  => 'Номер телефона',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Дата устаревания',

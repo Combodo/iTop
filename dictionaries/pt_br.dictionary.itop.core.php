@@ -23,22 +23,24 @@
  */
 Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'Core:DeletedObjectLabel' => '%1s (excluído)',
-	'Core:DeletedObjectTip' => 'O objeto foi excluído em %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'O objeto foi excluído em %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Objeto não encontrado (classe: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'O objeto não pode ser encontrado. Ele pode ter sido eliminado há algum tempo e o log foi removido desde então.',
+	'Core:UnknownObjectTip'   => 'O objeto não pode ser encontrado. Ele pode ter sido eliminado há algum tempo e o log foi removido desde então.',
 
 	'Core:UniquenessDefaultError' => 'Regra de exclusividade \'%1$s\' com erro',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Array de objetos',
+	'Core:AttributeLinkedSet'  => 'Array de objetos',
 	'Core:AttributeLinkedSet+' => 'Qualquer tipo de objetos da mesma classe ou subclasses',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => 'Painel de controle',
+	'Core:AttributeDashboard'  => 'Painel de controle',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Número de telefone',
+	'Core:AttributePhoneNumber'  => 'Número de telefone',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Obsolescência data',
