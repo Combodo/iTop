@@ -2827,7 +2827,7 @@ class SynchroReplica extends DBObject implements iDisplay
 				{
 					$aRows[] = array('attcode' => $sKey, 'data' => chunk_split(base64_encode($value)));
 				}
-				else $aRows[] = array('attcode' => $sKey, 'data' => $value);
+				else $aRows[] = array('attcode' => $sKey, 'data' => utils::EscapeHtml($value));
 			}
 			$oPage->Table($aHeaders, $aRows);
 			$oPage->add('</fieldset>');
