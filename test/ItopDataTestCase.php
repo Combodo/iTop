@@ -785,6 +785,7 @@ class ItopDataTestCase extends ItopTestCase
 		// Create a specific organization for the tests
 		$oOrg = $this->CreateOrganization('UnitTestOrganization');
 		$this->iTestOrgId = $oOrg->GetKey();
+		return $oOrg;
 	}
 
 
