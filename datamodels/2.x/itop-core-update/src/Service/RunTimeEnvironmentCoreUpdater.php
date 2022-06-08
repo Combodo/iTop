@@ -132,7 +132,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	{
 		$aRet =  parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
 
-		// Add new mandatory modules
+		// Add new mandatory modules from datamodel 2.x only
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull))
 		{
@@ -147,6 +147,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		foreach ($aModules as $oModule) {
 			$aAvailableModules[$oModule->GetName()] = $oModule;
 		}
+		// TODO check the auto-selected modules here
 		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if ($oExtension->bMarkedAsChosen) {
 				foreach ($oExtension->aModules as $sModuleName) {
