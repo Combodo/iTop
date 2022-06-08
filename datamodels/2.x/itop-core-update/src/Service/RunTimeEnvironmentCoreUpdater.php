@@ -132,25 +132,13 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 	{
 		$aRet =  parent::GetMFModulesToCompile($sSourceEnv, $sSourceDir);
 
-		// Add new mandatory modules
+		// Add new mandatory modules from datamodel 2.x only
 		$sSourceDirFull = APPROOT.$sSourceDir;
 		if (!is_dir($sSourceDirFull))
 		{
 			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
 		}
-		$aDirsToCompile = array($sSourceDirFull);
-		if (is_dir(APPROOT.'extensions'))
-		{
-			$aDirsToCompile[] = APPROOT.'extensions';
-		}
-		$sExtraDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';
-		if (is_dir($sExtraDir))
-		{
-			$aDirsToCompile[] = $sExtraDir;
-		}
-
-		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+		$aDirsToCompile = [$sSourceDirFull];
 
 		$oFactory = new ModelFactory($aDirsToCompile);
 		$aModules = $oFactory->FindModules();
@@ -159,10 +147,11 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		foreach ($aModules as $oModule) {
 			$aAvailableModules[$oModule->GetName()] = $oModule;
 		}
+		// TODO check the auto-selected modules here
 		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if ($oExtension->bMarkedAsChosen) {
 				foreach ($oExtension->aModules as $sModuleName) {
-					if (!isset($aRet[$sModuleName])) {
+					if (!isset($aRet[$sModuleName]) && isset($aAvailableModules[$sModuleName])) {
 						$aRet[$sModuleName] = $aAvailableModules[$sModuleName];
 					}
 				}

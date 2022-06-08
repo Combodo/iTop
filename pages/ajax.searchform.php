@@ -18,7 +18,7 @@ try
 	$oKPI->ComputeAndReport('Data model loaded');
 	$oKPI = new ExecutionKPI();
 
-	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx(null /* any portal */, false, LoginWebPage::EXIT_RETURN))
+	if (LoginWebPage::EXIT_CODE_OK != LoginWebPage::DoLoginEx('backoffice', false, LoginWebPage::EXIT_RETURN))
 	{
 		throw new SecurityException('You must be logged in');
 	}

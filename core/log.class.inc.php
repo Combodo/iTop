@@ -547,6 +547,7 @@ class LogChannels
 	/**
 	 * @var string
 	 * @since 3.0.1 N°4849
+	 * @since 2.7.7 N°4635
 	 */
 	public const NOTIFICATIONS = 'notifications';
 
