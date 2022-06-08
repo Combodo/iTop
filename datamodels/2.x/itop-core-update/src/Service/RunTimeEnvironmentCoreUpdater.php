@@ -150,7 +150,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		foreach($this->oExtensionsMap->GetAllExtensions() as $oExtension) {
 			if ($oExtension->bMarkedAsChosen) {
 				foreach ($oExtension->aModules as $sModuleName) {
-					if (!isset($aRet[$sModuleName])) {
+					if (!isset($aRet[$sModuleName]) && isset($aAvailableModules[$sModuleName])) {
 						$aRet[$sModuleName] = $aAvailableModules[$sModuleName];
 					}
 				}
