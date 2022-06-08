@@ -138,19 +138,7 @@ class RunTimeEnvironmentCoreUpdater extends RunTimeEnvironment
 		{
 			throw new Exception("The source directory '$sSourceDirFull' does not exist (or could not be read)");
 		}
-		$aDirsToCompile = array($sSourceDirFull);
-		if (is_dir(APPROOT.'extensions'))
-		{
-			$aDirsToCompile[] = APPROOT.'extensions';
-		}
-		$sExtraDir = APPROOT.'data/'.$this->sTargetEnv.'-modules/';
-		if (is_dir($sExtraDir))
-		{
-			$aDirsToCompile[] = $sExtraDir;
-		}
-
-		$aExtraDirs = $this->GetExtraDirsToScan($aDirsToCompile);
-		$aDirsToCompile = array_merge($aDirsToCompile, $aExtraDirs);
+		$aDirsToCompile = [$sSourceDirFull];
 
 		$oFactory = new ModelFactory($aDirsToCompile);
 		$aModules = $oFactory->FindModules();
