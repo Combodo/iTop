@@ -464,6 +464,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Error:MaintenanceTitle' => '维护',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => '个数',
 	'UI:GroupBy:Count+' => '元素数量',
 	'UI:CountOfObjects' => '%1$d 个对象符合指定的条件.',

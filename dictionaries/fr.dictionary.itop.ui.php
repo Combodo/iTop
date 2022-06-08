@@ -451,6 +451,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Error:MaintenanceTitle' => 'Maintenance',
 	'UI:Error:InvalidToken' => 'Erreur: l\'opération a déjà été effectuée (CSRF token not found)',
 
+	'UI:Error:SMTP:UnknownVendor' => 'Le provider SMTP Oauth 2.0 %1$s n\'existe pas',
+
 	'UI:GroupBy:Count' => 'Nombre',
 	'UI:GroupBy:Count+' => 'Nombre d\'éléments',
 	'UI:CountOfObjects' => '%1$d objets correspondants aux critères.',

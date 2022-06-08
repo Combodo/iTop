@@ -470,6 +470,8 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Error:MaintenanceTitle' => 'Onderhoud',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => 'Aantal',
 	'UI:GroupBy:Count+' => 'Aantal objecten',
 	'UI:CountOfObjects' => '%1$d objecten voldoen aan de criteria.',

@@ -465,6 +465,8 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellaño', array(
 	'UI:Error:MaintenanceTitle' => 'Mantenimiento',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => 'Cuenta',
 	'UI:GroupBy:Count+' => 'Número de Elementos',
 	'UI:CountOfObjects' => '%1$d Elementos cumplen Criterio.',
