@@ -24,6 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\Email\EmailFactory;
 use Combodo\iTop\Core\Email\iEMail;
 
 define ('EMAIL_SEND_OK', 0);
@@ -104,47 +105,12 @@ class EMail implements iEMail
 		$this->AddToHeader('In-Reply-To', $sMessageId);
 	}
 
-	/**
-	 * Set current Email body and process inline images.
-	 *
-	 * @param $sBody
-	 * @param string $sMimeType
-	 * @param $sCustomStyles
-	 *
-	 * @return void
-	 * @throws \ArchivedObjectException
-	 * @throws \CoreException
-	 * @throws \Symfony\Component\CssSelector\Exception\SyntaxErrorException
-	 */
-	public function SetBody($sBody, string $sMimeType = Mime::TYPE_HTML, $sCustomStyles = null)
+	public function SetBody($sBody, $sMimeType = 'text/html', $sCustomStyles = null)
 	{
 		$this->oMailer->SetBody($sBody, $sMimeType, $sCustomStyles);
 		}
 
-		if($oBody->isMultiPart()){
-			$oContentTypeHeader = $this->m_oMessage->getHeaders();
-			foreach ($oContentTypeHeader as $oHeader) {
-				if (!$oHeader instanceof ContentType) {
-					continue;
-				}
-
-				$oHeader->setType(Mime::MULTIPART_MIXED);
-				$oHeader->addParameter('boundary', $oBody->getMime()->boundary());
-				break;
-			}
-		}
-
-		$this->m_oMessage->setBody($oBody);
-	}
-
-	/**
-	 * Add a new part to the existing body
-	 * @param $sText
-	 * @param string $sMimeType
-	 *
-	 * @return void
-	 */
-	public function AddPart($sText, string $sMimeType = Mime::TYPE_HTML)
+	public function AddPart($sText, $sMimeType = 'text/html')
 	{
 		$this->oMailer->AddPart($sText, $sMimeType);
 	}
