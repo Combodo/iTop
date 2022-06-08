@@ -24,6 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
+use Combodo\iTop\Core\Email\EmailFactory;
 use Combodo\iTop\Core\Email\iEMail;
 
 Swift_Preferences::getInstance()->setCharset('UTF-8');
