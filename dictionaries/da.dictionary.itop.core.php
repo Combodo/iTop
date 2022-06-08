@@ -29,6 +29,8 @@ Dict::Add('DA DA', 'Danish', 'Dansk', array(
 	'Core:UnknownObjectTip' => 'Objektet kunne ikke findes. Det kan være slettet, uden at loggen er blevt tømt.',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:CheckConsistencyError' => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError' => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
 	'Core:AttributeLinkedSet' => 'Array af objekter',
 	'Core:AttributeLinkedSet+' => '',

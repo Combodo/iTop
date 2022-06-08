@@ -21,22 +21,24 @@
  */
 Dict::Add('FR FR', 'French', 'Français', array(
 	'Core:DeletedObjectLabel' => '%1s (effacé)',
-	'Core:DeletedObjectTip' => 'L\'objet a été effacé le %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'L\'objet a été effacé le %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Classe: %1$s, Identifiant: %2$d',
-	'Core:UnknownObjectTip' => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
+	'Core:UnknownObjectTip'   => 'L\'objet n\'a pu être trouvé. Il se peut que les archives aient été purgées après son effacement.',
 
 	'Core:UniquenessDefaultError' => 'La règle d\'unicité \'%1$s\' renvoie une erreur',
+	'Core:CheckConsistencyError'  => 'La règle d\'intégrité %1$s n\'est pas respectée',
+	'Core:CheckValueError'        => 'Valeur de l\'attribut incorrecte \'%1$s\' (%2$s) : %3$s',
 
-	'Core:AttributeLinkedSet' => 'Objets liés (1-n)',
+	'Core:AttributeLinkedSet'  => 'Objets liés (1-n)',
 	'Core:AttributeLinkedSet+' => 'Liste d\'objets d\'une classe donnée et pointant sur l\'objet courant',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Des doublons sont présents dans le champ \'%1$s\' : %2$s',
 
-	'Core:AttributeDashboard' => 'Tableau de bord',
+	'Core:AttributeDashboard'  => 'Tableau de bord',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Numéro de téléphone',
+	'Core:AttributePhoneNumber'  => 'Numéro de téléphone',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Date d\'obsolescence',

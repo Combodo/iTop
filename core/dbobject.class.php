@@ -1471,7 +1471,7 @@ abstract class DBObject implements iDisplay
 	public function GetIcon($bImgTag = true)
 	{
 		$sClass = get_class($this);
-		
+
 		if($this->HasHighlightIcon()) {
 			$sIconUrl = MetaModel::GetHighlightScale($sClass)[$this->ComputeHighlightCode()]['icon'];
 			if($bImgTag) {
@@ -1506,7 +1506,7 @@ abstract class DBObject implements iDisplay
 	{
 		$bHasInstanceIcon = false;
 		$sClass = get_class($this);
-		
+
 		if (!$this->IsNew() && MetaModel::HasImageAttributeCode($sClass)) {
 			$sImageAttCode = MetaModel::GetImageAttributeCode($sClass);
 			if (!empty($sImageAttCode)) {
@@ -1515,7 +1515,7 @@ abstract class DBObject implements iDisplay
 				$bHasInstanceIcon = !$oImage->IsEmpty();
 			}
 		}
-		
+
 		return $bHasInstanceIcon;
 	}
 
@@ -1540,7 +1540,7 @@ abstract class DBObject implements iDisplay
 				$bHasHighlightIcon = true;
 			}
 		}
-		
+
 		return $bHasHighlightIcon;
 	}
 
@@ -1929,7 +1929,7 @@ abstract class DBObject implements iDisplay
 				/** @var \AttributeExternalKey $oAtt */
 				$sTargetClass = $oAtt->GetTargetClass();
 				if (false === MetaModel::IsObjectInDB($sTargetClass, $toCheck)) {
-					return "Target object not found ($sTargetClass::$toCheck)";
+					return "Target object not found (".utils::HtmlEntities($sTargetClass).".::".utils::HtmlEntities($toCheck).")";
 				}
 			}
 			if ($oAtt->IsHierarchicalKey())
@@ -1938,7 +1938,7 @@ abstract class DBObject implements iDisplay
 				$aValues = $oAtt->GetAllowedValues(array('this' => $this));
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return "Value not allowed [$toCheck]";
+					return "Value not allowed [". utils::HtmlEntities($toCheck)."]";
 				}
 			}
 		}
@@ -1952,7 +1952,7 @@ abstract class DBObject implements iDisplay
 					$oTag->SetValues(explode(' ', $toCheck));
 				} catch (Exception $e)
 				{
-					return "Tag value '$toCheck' is not a valid tag list";
+					return "Tag value [". utils::HtmlEntities($toCheck)."] is not a valid tag list";
 				}
 
 				return true;
@@ -1980,7 +1980,7 @@ abstract class DBObject implements iDisplay
 					$oTag->SetValues($aValues);
 				} catch (Exception $e)
 				{
-					return "Set value '$toCheck' is not a valid set";
+					return "Set value[". utils::HtmlEntities($toCheck)."] is not a valid set";
 				}
 
 				return true;
@@ -2000,7 +2000,7 @@ abstract class DBObject implements iDisplay
 			{
 				if (!array_key_exists($toCheck, $aValues))
 				{
-					return "Value not allowed [$toCheck]";
+					return "Value not allowed [". utils::HtmlEntities($toCheck)."]";
 				}
 			}
 			if (!is_null($iMaxSize = $oAtt->GetMaxSize()))
@@ -2013,7 +2013,7 @@ abstract class DBObject implements iDisplay
 			}
 			if (!$oAtt->CheckFormat($toCheck))
 			{
-				return "Wrong format [$toCheck]";
+				return "Wrong format [". utils::HtmlEntities($toCheck)."]";
 			}
 		}
 		else
@@ -2933,7 +2933,7 @@ abstract class DBObject implements iDisplay
 				utils::EnrichRaisedException($oTrigger, $e);
 			}
 		}
-		
+
 		// - TriggerOnObjectMention
 		$this->ActivateOnMentionTriggers(true);
 
@@ -3380,7 +3380,7 @@ abstract class DBObject implements iDisplay
 						utils::EnrichRaisedException($oTrigger, $e);
 					}
 				}
-				
+
 				$this->AfterUpdate();
 
 				// Reload to get the external attributes
@@ -4440,7 +4440,7 @@ abstract class DBObject implements iDisplay
 					{
 						throw new Exception("Unknown portal id '$sPortalId' in placeholder '$sPlaceholderAttCode''");
 					}
-					
+
 					if($sVerb == 'hyperlink')
 					{
 						$ret = $this->GetHyperlink(self::$aPortalToURLMaker[$sPortalId], false);

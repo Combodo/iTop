@@ -91,6 +91,7 @@ class ObjectFormManager extends FormManager
 	 * @return array formmanager_data as a PHP array
 	 *
 	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
+	 * @since 2.7.7 3.0.1 N°4867 now only used once, but we decided to keep this method anyway
 	 */
 	protected static function DecodeFormManagerData($formManagerData)
 	{
@@ -106,17 +107,15 @@ class ObjectFormManager extends FormManager
 	 *       - formobject_class : The class of the object that is being edited/viewed
 	 *       - formmode : view|edit|create
 	 *       - values for parent
-	 * @param bool $bTrustContent if false then won't allow modified TWIG content
 	 *
 	 * @return \Combodo\iTop\Portal\Form\ObjectFormManager new instance init from JSON data
 	 *
 	 * @inheritDoc
 	 * @throws \Exception
-	 * @throws \SecurityException if twig content is present and $bTrustContent is false
-	 *
 	 * @since 2.7.6 3.0.0 N°4384 new $bTrustContent parameter
+	 * @since 2.7.7 3.0.1 N°4867 remove param $bTrustContent
 	 */
-	public static function FromJSON($sJson, $bTrustContent = false)
+	public static function FromJSON($sJson)
 	{
 		$aJson = static::DecodeFormManagerData($sJson);
 
@@ -170,37 +169,6 @@ class ObjectFormManager extends FormManager
 		}
 
 		return $oFormManager;
-	}
-
-	/**
-	 * @param string $sPostedFormManagerData received data from the browser
-	 * @param array $aOriginalFormProperties data generated server side
-	 *
-	 * @return bool true if the data are identical
-	 *
-	 * @since 2.7.6 3.0.0 N°4384 Check formmanager_data
-	 */
-	public static function CanTrustFormLayoutContent($sPostedFormManagerData, $aOriginalFormProperties)
-	{
-		$aPostedFormManagerData = static::DecodeFormManagerData($sPostedFormManagerData);
-		$sPostedFormLayoutType = (isset($aPostedFormManagerData['formproperties']['layout']['type'])) ? $aPostedFormManagerData['formproperties']['layout']['type'] : '';
-
-		if ($sPostedFormLayoutType === 'xhtml') {
-			return true;
-		}
-
-		// We need to parse the content so that autoclose tags are returned correctly (`<div />` => `<div></div>`)
-		$oHtmlDocument = new \DOMDocument();
-
-		$sPostedFormLayoutContent = (isset($aPostedFormManagerData['formproperties']['layout']['content'])) ? $aPostedFormManagerData['formproperties']['layout']['content'] : '';
-		$oHtmlDocument->loadXML('<root>'.$sPostedFormLayoutContent.'</root>');
-		$sPostedFormLayoutRendered = $oHtmlDocument->saveHTML();
-
-		$sOriginalFormLayoutContent = (isset($aOriginalFormProperties['layout']['content'])) ? $aOriginalFormProperties['layout']['content'] : '';
-		$oHtmlDocument->loadXML('<root>'.$sOriginalFormLayoutContent.'</root>');
-		$sOriginalFormLayoutContentRendered = $oHtmlDocument->saveHTML();
-
-		return ($sPostedFormLayoutRendered === $sOriginalFormLayoutContentRendered);
 	}
 
 	/**
