@@ -22,22 +22,24 @@
  */
 Dict::Add('PL PL', 'Polish', 'Polski', array(
 	'Core:DeletedObjectLabel' => '%1s (usunięto)',
-	'Core:DeletedObjectTip' => 'Obiekt został usunięty w dniu %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => 'Obiekt został usunięty w dniu %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => 'Nie znaleziono obiektu (klasa: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
+	'Core:UnknownObjectTip'   => 'Nie można znaleźć obiektu. Być może został usunięty jakiś czas temu, a od tego czasu dziennik został wyczyszczony.',
 
 	'Core:UniquenessDefaultError' => 'Błąd zasady niepowtarzalności \'%1$s\'',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Tablica obiektów',
+	'Core:AttributeLinkedSet'  => 'Tablica obiektów',
 	'Core:AttributeLinkedSet+' => 'Wszelkiego rodzaju obiekty tej samej klasy lub podklasy',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplikaty w polu \'%1$s\' : %2$s',
 
-	'Core:AttributeDashboard' => 'Pulpit',
+	'Core:AttributeDashboard'  => 'Pulpit',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Numer telefonu',
+	'Core:AttributePhoneNumber'  => 'Numer telefonu',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Data utraty ważności',

@@ -58,7 +58,6 @@ class DBSearchTest extends ItopDataTestCase
 	{
 		parent::setUp();
 
-		require_once(APPROOT.'application/itopwebpage.class.inc.php');
 		require_once(APPROOT.'application/displayblock.class.inc.php');
 	}
 

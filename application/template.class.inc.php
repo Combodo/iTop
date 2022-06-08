@@ -229,7 +229,6 @@ class DisplayTemplate
 	static public function UnitTest()
 	{
 		require_once(APPROOT.'/application/startup.inc.php');
-		require_once(APPROOT."/application/itopwebpage.class.inc.php");
 		
 		$sTemplate = '<div class="page_header">
 		<div class="actions_details"><a href="#"><span>Actions</span></a></div>

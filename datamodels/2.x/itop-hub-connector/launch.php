@@ -259,7 +259,6 @@ function MakeDataToPost($sTargetRoute)
 
 try {
 	require_once(APPROOT.'/application/application.inc.php');
-	require_once(APPROOT.'/application/itopwebpage.class.inc.php');
 	require_once(APPROOT.'/setup/extensionsmap.class.inc.php');
 	require_once('hubconnectorpage.class.inc.php');
 

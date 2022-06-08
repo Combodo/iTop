@@ -76,7 +76,6 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'iTopUpdate:UI:CanCoreUpdate:No' => 'Anwendungsupgrade nicht möglich: %1$s',
 	'iTopUpdate:UI:CanCoreUpdate:Warning' => 'Vorsicht: App-Upgrade kann fehlschlagen: %1$s',
 	'iTopUpdate:UI:CannotUpdateUseSetup' => '<b>Einige angepasste Dateien wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a target="_blank" href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
-	'iTopUpdate:UI:CannotUpdateNewModules' =>   '<b>Einige neue Module wurden erkannt</b>, eine Teil-Update kann nicht ausgeführt werden.<br/>Befolgen Sie das  <a target="_blank" href="%2$s">Verfahren</a>, um Ihr iTop manuell zu aktualisieren. Sie müssen das <a href="%1$s">Setup</a> benutzen, um Ihre Applikation zu aktualisieren.<br />',
 	'iTopUpdate:UI:CheckInProgress'=>'Please wait during integrity check~~',
 
 	// Setup Messages

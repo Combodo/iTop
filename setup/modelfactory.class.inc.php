@@ -971,9 +971,9 @@ class ModelFactory
 		catch (Exception $e) {
 			$aLoadedModuleNames = array();
 			foreach (self::$aLoadedModules as $oLoadedModule) {
-				$aLoadedModuleNames[] = $oLoadedModule->GetName();
+				$aLoadedModuleNames[] = $oLoadedModule->GetName().':'.$oLoadedModule->GetVersion();
 			}
-			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(',',
+			throw new Exception('Error loading module "'.$oModule->GetName().'": '.$e->getMessage().' - Loaded modules: '.implode(', ',
 					$aLoadedModuleNames));
 		}
 	}

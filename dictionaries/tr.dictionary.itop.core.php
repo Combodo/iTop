@@ -31,22 +31,24 @@
 //
 Dict::Add('TR TR', 'Turkish', 'Türkçe', array(
 	'Core:DeletedObjectLabel' => '%1s (Silinmiş)',
-	'Core:DeletedObjectTip' => 'Nesne%1$s (%2$s) \'de silinmiştir',
+	'Core:DeletedObjectTip'   => 'Nesne%1$s (%2$s) \'de silinmiştir',
 
 	'Core:UnknownObjectLabel' => 'Nesne bulunamadı (sınıf: %1$s, id: %2$d)',
-	'Core:UnknownObjectTip' => 'Nesne bulunamadı.Nesne ve günlük kaydı bir süre önce silinmiş olabilir',
+	'Core:UnknownObjectTip'   => 'Nesne bulunamadı.Nesne ve günlük kaydı bir süre önce silinmiş olabilir',
 
 	'Core:UniquenessDefaultError' => 'Uniqueness rule \'%1$s\' in error~~',
+	'Core:CheckConsistencyError'  => 'Consistency rules not followed: %1$s~~',
+	'Core:CheckValueError'        => 'Unexpected value for attribute \'%1$s\' (%2$s) : %3$s~~',
 
-	'Core:AttributeLinkedSet' => 'Nesnelerin dizisi',
+	'Core:AttributeLinkedSet'  => 'Nesnelerin dizisi',
 	'Core:AttributeLinkedSet+' => 'Aynı sınıf veya alt sınıfın her türlü nesnesi',
 
 	'Core:AttributeLinkedSetDuplicatesFound' => 'Duplicates in the \'%1$s\' field : %2$s~~',
 
-	'Core:AttributeDashboard' => 'Dashboard~~',
+	'Core:AttributeDashboard'  => 'Dashboard~~',
 	'Core:AttributeDashboard+' => '',
 
-	'Core:AttributePhoneNumber' => 'Phone number~~',
+	'Core:AttributePhoneNumber'  => 'Phone number~~',
 	'Core:AttributePhoneNumber+' => '',
 
 	'Core:AttributeObsolescenceDate' => 'Obsolescence date~~',
