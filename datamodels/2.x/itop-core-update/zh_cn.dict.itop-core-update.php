@@ -103,6 +103,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'iTopUpdate:Error:InvalidToken' => '无效的token',
 	'iTopUpdate:Error:UpdateFailed' => '升级失败',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => '上传上限太小. 请调整 PHP 配置.',
+	'iTopUpdate:Error:PackageVersionNotCompatible' => '%1$s cannot be installed automatically on %2$s. Please perform upgrade manually.~~',
 
 	'iTopUpdate:UI:RestoreArchive' => '您可以从归档文件 \'%1$s\' 还原应用程序',
 	'iTopUpdate:UI:RestoreBackup' => '您可以从 \'%1$s\' 还原数据库',

@@ -103,6 +103,7 @@ Dict::Add('EN US', 'English', 'English', array(
 	'iTopUpdate:Error:InvalidToken' => 'Invalid token',
 	'iTopUpdate:Error:UpdateFailed' => 'Upgrade failed ',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'The upload max size seems too small for update. Please change the PHP configuration.',
+	'iTopUpdate:Error:PackageVersionNotCompatible' => '%1$s cannot be installed automatically on %2$s. Please perform upgrade manually.',
 
 	'iTopUpdate:UI:RestoreArchive' => 'You can restore your application from the archive \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'You can restore the database from \'%1$s\'',

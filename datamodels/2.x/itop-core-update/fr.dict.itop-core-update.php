@@ -103,6 +103,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'iTopUpdate:Error:InvalidToken' => 'Information manquante',
 	'iTopUpdate:Error:UpdateFailed' => 'La mise à jour a échoué',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'La taille maximale de chargement de fichier semble trop petite pour faire la mise à jour. Veuillez changer la configuration de PHP.',
+	'iTopUpdate:Error:PackageVersionNotCompatible' => 'Vous essayez d\'installer %1$s via la mise à jour de l\'application, ce qui n\'est pas possible sur %2$s. Vous devez lancer la procédure d\'installation standard.',
 
 	'iTopUpdate:UI:RestoreArchive' => 'Vous pouvez restaurer l\'application depuis \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Vous pouvez restaurer la base de données depuis \'%1$s\'',
