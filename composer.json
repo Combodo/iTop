@@ -24,7 +24,7 @@
     "symfony/framework-bundle": "5.4.*",
     "symfony/twig-bundle": "5.4.*",
     "symfony/yaml": "5.4.*",
-    "thenetworg/oauth2-azure": "^2.0",
+    "thenetworg/oauth2-azure": "^2.0"
   },
   "require-dev": {
     "symfony/stopwatch": "5.4.*",

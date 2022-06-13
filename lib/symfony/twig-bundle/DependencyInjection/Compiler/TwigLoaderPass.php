@@ -33,7 +33,7 @@ class TwigLoaderPass implements CompilerPassInterface
         $found = 0;
 
         foreach ($container->findTaggedServiceIds('twig.loader', true) as $id => $attributes) {
-            $priority = isset($attributes[0]['priority']) ? $attributes[0]['priority'] : 0;
+            $priority = $attributes[0]['priority'] ?? 0;
             $prioritizedLoaders[$priority][] = $id;
             ++$found;
         }
@@ -43,7 +43,7 @@ class TwigLoaderPass implements CompilerPassInterface
         }
 
         if (1 === $found) {
-            $container->setAlias('twig.loader', $id)->setPrivate(true);
+            $container->setAlias('twig.loader', $id);
         } else {
             $chainLoader = $container->getDefinition('twig.loader.chain');
             krsort($prioritizedLoaders);
@@ -54,7 +54,7 @@ class TwigLoaderPass implements CompilerPassInterface
                 }
             }
 
-            $container->setAlias('twig.loader', 'twig.loader.chain')->setPrivate(true);
+            $container->setAlias('twig.loader', 'twig.loader.chain');
         }
     }
 }

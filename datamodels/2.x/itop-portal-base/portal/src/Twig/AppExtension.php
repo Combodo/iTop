@@ -19,6 +19,7 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
+use Combodo\iTop\Application\TwigBase\Twig\Extension;
 use Twig\Extension\AbstractExtension;
 
 /**

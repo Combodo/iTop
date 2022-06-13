@@ -44,23 +44,30 @@ class StopwatchEvent
     private $started = [];
 
     /**
+     * @var string
+     */
+    private $name;
+
+    /**
      * @param float       $origin        The origin time in milliseconds
      * @param string|null $category      The event category or null to use the default
      * @param bool        $morePrecision If true, time is stored as float to keep the original microsecond precision
+     * @param string|null $name          The event name or null to define the name as default
      *
      * @throws \InvalidArgumentException When the raw time is not valid
      */
-    public function __construct($origin, $category = null, $morePrecision = false)
+    public function __construct(float $origin, string $category = null, bool $morePrecision = false, string $name = null)
     {
         $this->origin = $this->formatTime($origin);
         $this->category = \is_string($category) ? $category : 'default';
         $this->morePrecision = $morePrecision;
+        $this->name = $name ?? 'default';
     }
 
     /**
      * Gets the category.
      *
-     * @return string The category
+     * @return string
      */
     public function getCategory()
     {
@@ -68,9 +75,9 @@ class StopwatchEvent
     }
 
     /**
-     * Gets the origin.
+     * Gets the origin in milliseconds.
      *
-     * @return float The origin in milliseconds
+     * @return float
      */
     public function getOrigin()
     {
@@ -140,7 +147,7 @@ class StopwatchEvent
     /**
      * Gets all event periods.
      *
-     * @return StopwatchPeriod[] An array of StopwatchPeriod instances
+     * @return StopwatchPeriod[]
      */
     public function getPeriods()
     {
@@ -148,9 +155,9 @@ class StopwatchEvent
     }
 
     /**
-     * Gets the relative time of the start of the first period.
+     * Gets the relative time of the start of the first period in milliseconds.
      *
-     * @return int|float The time (in milliseconds)
+     * @return int|float
      */
     public function getStartTime()
     {
@@ -166,9 +173,9 @@ class StopwatchEvent
     }
 
     /**
-     * Gets the relative time of the end of the last period.
+     * Gets the relative time of the end of the last period in milliseconds.
      *
-     * @return int|float The time (in milliseconds)
+     * @return int|float
      */
     public function getEndTime()
     {
@@ -178,9 +185,9 @@ class StopwatchEvent
     }
 
     /**
-     * Gets the duration of the events (including all periods).
+     * Gets the duration of the events in milliseconds (including all periods).
      *
-     * @return int|float The duration (in milliseconds)
+     * @return int|float
      */
     public function getDuration()
     {
@@ -200,9 +207,9 @@ class StopwatchEvent
     }
 
     /**
-     * Gets the max memory usage of all periods.
+     * Gets the max memory usage of all periods in bytes.
      *
-     * @return int The memory usage (in bytes)
+     * @return int
      */
     public function getMemory()
     {
@@ -217,9 +224,9 @@ class StopwatchEvent
     }
 
     /**
-     * Return the current time relative to origin.
+     * Return the current time relative to origin in milliseconds.
      *
-     * @return float Time in ms
+     * @return float
      */
     protected function getNow()
     {
@@ -229,26 +236,23 @@ class StopwatchEvent
     /**
      * Formats a time.
      *
-     * @param int|float $time A raw time
-     *
-     * @return float The formatted time
-     *
      * @throws \InvalidArgumentException When the raw time is not valid
      */
-    private function formatTime($time)
+    private function formatTime(float $time): float
     {
-        if (!is_numeric($time)) {
-            throw new \InvalidArgumentException('The time must be a numerical value.');
-        }
-
         return round($time, 1);
     }
 
     /**
-     * @return string
+     * Gets the event name.
      */
-    public function __toString()
+    public function getName(): string
     {
-        return sprintf('%s: %.2F MiB - %d ms', $this->getCategory(), $this->getMemory() / 1024 / 1024, $this->getDuration());
+        return $this->name;
+    }
+
+    public function __toString(): string
+    {
+        return sprintf('%s/%s: %.2F MiB - %d ms', $this->getCategory(), $this->getName(), $this->getMemory() / 1024 / 1024, $this->getDuration());
     }
 }

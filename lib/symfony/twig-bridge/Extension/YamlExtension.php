@@ -12,7 +12,6 @@
 namespace Symfony\Bridge\Twig\Extension;
 
 use Symfony\Component\Yaml\Dumper as YamlDumper;
-use Symfony\Component\Yaml\Yaml;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 
@@ -21,12 +20,12 @@ use Twig\TwigFilter;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  */
-class YamlExtension extends AbstractExtension
+final class YamlExtension extends AbstractExtension
 {
     /**
      * {@inheritdoc}
      */
-    public function getFilters()
+    public function getFilters(): array
     {
         return [
             new TwigFilter('yaml_encode', [$this, 'encode']),
@@ -34,7 +33,7 @@ class YamlExtension extends AbstractExtension
         ];
     }
 
-    public function encode($input, $inline = 0, $dumpObjects = 0)
+    public function encode($input, int $inline = 0, int $dumpObjects = 0): string
     {
         static $dumper;
 
@@ -43,21 +42,13 @@ class YamlExtension extends AbstractExtension
         }
 
         if (\defined('Symfony\Component\Yaml\Yaml::DUMP_OBJECT')) {
-            if (\is_bool($dumpObjects)) {
-                @trigger_error('Passing a boolean flag to toggle object support is deprecated since Symfony 3.1 and will be removed in 4.0. Use the Yaml::DUMP_OBJECT flag instead.', \E_USER_DEPRECATED);
-
-                $flags = $dumpObjects ? Yaml::DUMP_OBJECT : 0;
-            } else {
-                $flags = $dumpObjects;
-            }
-
-            return $dumper->dump($input, $inline, 0, $flags);
+            return $dumper->dump($input, $inline, 0, $dumpObjects);
         }
 
         return $dumper->dump($input, $inline, 0, false, $dumpObjects);
     }
 
-    public function dump($value, $inline = 0, $dumpObjects = false)
+    public function dump($value, int $inline = 0, int $dumpObjects = 0): string
     {
         if (\is_resource($value)) {
             return '%Resource%';
@@ -68,13 +59,5 @@ class YamlExtension extends AbstractExtension
         }
 
         return $this->encode($value, $inline, $dumpObjects);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getName()
-    {
-        return 'yaml';
     }
 }

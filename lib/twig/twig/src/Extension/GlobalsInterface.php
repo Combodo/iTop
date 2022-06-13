@@ -21,6 +21,5 @@ namespace Twig\Extension;
  */
 interface GlobalsInterface
 {
+    public function getGlobals(): array;
 }
-
-class_alias('Twig\Extension\GlobalsInterface', 'Twig_Extension_GlobalsInterface');

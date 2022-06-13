@@ -16,7 +16,6 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\ExtensionInterface;
-use Symfony\Component\Finder\Finder;
 
 /**
  * An implementation of BundleInterface that adds a few conventions for DependencyInjection extensions.
@@ -59,7 +58,7 @@ abstract class Bundle implements BundleInterface
     /**
      * Returns the bundle's container extension.
      *
-     * @return ExtensionInterface|null The container extension
+     * @return ExtensionInterface|null
      *
      * @throws \LogicException
      */
@@ -70,7 +69,7 @@ abstract class Bundle implements BundleInterface
 
             if (null !== $extension) {
                 if (!$extension instanceof ExtensionInterface) {
-                    throw new \LogicException(sprintf('Extension "%s" must implement Symfony\Component\DependencyInjection\Extension\ExtensionInterface.', \get_class($extension)));
+                    throw new \LogicException(sprintf('Extension "%s" must implement Symfony\Component\DependencyInjection\Extension\ExtensionInterface.', get_debug_type($extension)));
                 }
 
                 // check naming convention
@@ -116,16 +115,9 @@ abstract class Bundle implements BundleInterface
     }
 
     /**
-     * {@inheritdoc}
+     * Returns the bundle name (the class short name).
      */
-    public function getParent()
-    {
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    final public function getName()
+    final public function getName(): string
     {
         if (null === $this->name) {
             $this->parseClassName();
@@ -134,48 +126,8 @@ abstract class Bundle implements BundleInterface
         return $this->name;
     }
 
-    /**
-     * Finds and registers Commands.
-     *
-     * Override this method if your bundle commands do not follow the conventions:
-     *
-     * * Commands are in the 'Command' sub-directory
-     * * Commands extend Symfony\Component\Console\Command\Command
-     */
     public function registerCommands(Application $application)
     {
-        if (!is_dir($dir = $this->getPath().'/Command')) {
-            return;
-        }
-
-        if (!class_exists('Symfony\Component\Finder\Finder')) {
-            throw new \RuntimeException('You need the symfony/finder component to register bundle commands.');
-        }
-
-        $finder = new Finder();
-        $finder->files()->name('*Command.php')->in($dir);
-
-        $prefix = $this->getNamespace().'\\Command';
-        foreach ($finder as $file) {
-            $ns = $prefix;
-            if ($relativePath = $file->getRelativePath()) {
-                $ns .= '\\'.str_replace('/', '\\', $relativePath);
-            }
-            $class = $ns.'\\'.$file->getBasename('.php');
-            if ($this->container) {
-                $commandIds = $this->container->hasParameter('console.command.ids') ? $this->container->getParameter('console.command.ids') : [];
-                $alias = 'console.command.'.strtolower(str_replace('\\', '_', $class));
-                if (isset($commandIds[$alias]) || $this->container->has($alias)) {
-                    continue;
-                }
-            }
-            $r = new \ReflectionClass($class);
-            if ($r->isSubclassOf('Symfony\\Component\\Console\\Command\\Command') && !$r->isAbstract() && !$r->getConstructor()->getNumberOfRequiredParameters()) {
-                @trigger_error(sprintf('Auto-registration of the command "%s" is deprecated since Symfony 3.4 and won\'t be supported in 4.0. Use PSR-4 based service discovery instead.', $class), \E_USER_DEPRECATED);
-
-                $application->add($r->newInstance());
-            }
-        }
     }
 
     /**

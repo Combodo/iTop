@@ -11,12 +11,14 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\ExpressionLanguage\ExpressionFunctionProviderInterface;
 use Symfony\Component\Routing\Matcher\TraceableUrlMatcher;
 use Symfony\Component\Routing\RouterInterface;
 
@@ -25,51 +27,25 @@ use Symfony\Component\Routing\RouterInterface;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @final since version 3.4
+ * @final
  */
-class RouterMatchCommand extends ContainerAwareCommand
+class RouterMatchCommand extends Command
 {
     protected static $defaultName = 'router:match';
+    protected static $defaultDescription = 'Help debug routes by simulating a path info match';
 
     private $router;
+    private $expressionLanguageProviders;
 
     /**
-     * @param RouterInterface $router
+     * @param iterable<mixed, ExpressionFunctionProviderInterface> $expressionLanguageProviders
      */
-    public function __construct($router = null)
+    public function __construct(RouterInterface $router, iterable $expressionLanguageProviders = [])
     {
-        if (!$router instanceof RouterInterface) {
-            @trigger_error(sprintf('%s() expects an instance of "%s" as first argument since Symfony 3.4. Not passing it is deprecated and will throw a TypeError in 4.0.', __METHOD__, RouterInterface::class), \E_USER_DEPRECATED);
-
-            parent::__construct($router);
-
-            return;
-        }
-
         parent::__construct();
 
         $this->router = $router;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * BC to be removed in 4.0
-     */
-    public function isEnabled()
-    {
-        if (null !== $this->router) {
-            return parent::isEnabled();
-        }
-        if (!$this->getContainer()->has('router')) {
-            return false;
-        }
-        $router = $this->getContainer()->get('router');
-        if (!$router instanceof RouterInterface) {
-            return false;
-        }
-
-        return parent::isEnabled();
+        $this->expressionLanguageProviders = $expressionLanguageProviders;
     }
 
     /**
@@ -80,11 +56,11 @@ class RouterMatchCommand extends ContainerAwareCommand
         $this
             ->setDefinition([
                 new InputArgument('path_info', InputArgument::REQUIRED, 'A path info'),
-                new InputOption('method', null, InputOption::VALUE_REQUIRED, 'Sets the HTTP method'),
-                new InputOption('scheme', null, InputOption::VALUE_REQUIRED, 'Sets the URI scheme (usually http or https)'),
-                new InputOption('host', null, InputOption::VALUE_REQUIRED, 'Sets the URI host'),
+                new InputOption('method', null, InputOption::VALUE_REQUIRED, 'Set the HTTP method'),
+                new InputOption('scheme', null, InputOption::VALUE_REQUIRED, 'Set the URI scheme (usually http or https)'),
+                new InputOption('host', null, InputOption::VALUE_REQUIRED, 'Set the URI host'),
             ])
-            ->setDescription('Helps debug routes by simulating a path info match')
+            ->setDescription(self::$defaultDescription)
             ->setHelp(<<<'EOF'
 The <info>%command.name%</info> shows which routes match a given request and which don't and for what reason:
 
@@ -102,13 +78,8 @@ EOF
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // BC to be removed in 4.0
-        if (null === $this->router) {
-            $this->router = $this->getContainer()->get('router');
-        }
-
         $io = new SymfonyStyle($input, $output);
 
         $context = $this->router->getContext();
@@ -123,6 +94,9 @@ EOF
         }
 
         $matcher = new TraceableUrlMatcher($this->router->getRouteCollection(), $context);
+        foreach ($this->expressionLanguageProviders as $provider) {
+            $matcher->addExpressionLanguageProvider($provider);
+        }
 
         $traces = $matcher->getTraces($input->getArgument('path_info'));
 
@@ -150,6 +124,6 @@ EOF
             return 1;
         }
 
-        return null;
+        return 0;
     }
 }

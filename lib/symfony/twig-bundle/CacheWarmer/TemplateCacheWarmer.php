@@ -12,8 +12,8 @@
 namespace Symfony\Bundle\TwigBundle\CacheWarmer;
 
 use Psr\Container\ContainerInterface;
-use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Twig\Environment;
 use Twig\Error\Error;
 
@@ -28,43 +28,46 @@ class TemplateCacheWarmer implements CacheWarmerInterface, ServiceSubscriberInte
     private $twig;
     private $iterator;
 
-    /**
-     * TemplateCacheWarmer constructor.
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct($container, \Traversable $iterator)
+    public function __construct(ContainerInterface $container, iterable $iterator)
     {
         // As this cache warmer is optional, dependencies should be lazy-loaded, that's why a container should be injected.
-        if ($container instanceof ContainerInterface) {
-            $this->container = $container;
-        } elseif ($container instanceof Environment) {
-            $this->twig = $container;
-            @trigger_error(sprintf('Using a "%s" as first argument of %s is deprecated since Symfony 3.4 and will be unsupported in version 4.0. Use a %s instead.', Environment::class, __CLASS__, ContainerInterface::class), \E_USER_DEPRECATED);
-        } else {
-            throw new \InvalidArgumentException(sprintf('"%s" only accepts instance of Psr\Container\ContainerInterface as first argument.', __CLASS__));
-        }
-
+        $this->container = $container;
         $this->iterator = $iterator;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return string[] A list of template files to preload on PHP 7.4+
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir)
     {
         if (null === $this->twig) {
             $this->twig = $this->container->get('twig');
         }
 
+        $files = [];
+
         foreach ($this->iterator as $template) {
             try {
-                $this->twig->loadTemplate($template);
+                $template = $this->twig->load($template);
+
+                if (\is_callable([$template, 'unwrap'])) {
+                    $files[] = (new \ReflectionClass($template->unwrap()))->getFileName();
+                }
             } catch (Error $e) {
-                // problem during compilation, give up
-                // might be a syntax error or a non-Twig template
+                /*
+                 * Problem during compilation, give up for this template (e.g. syntax errors).
+                 * Failing silently here allows to ignore templates that rely on functions that aren't available in
+                 * the current environment. For example, the WebProfilerBundle shouldn't be available in the prod
+                 * environment, but some templates that are never used in prod might rely on functions the bundle provides.
+                 * As we can't detect which templates are "really" important, we try to load all of them and ignore
+                 * errors. Error checks may be performed by calling the lint:twig command.
+                 */
             }
         }
+
+        return $files;
     }
 
     /**

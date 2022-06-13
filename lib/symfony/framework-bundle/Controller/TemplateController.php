@@ -11,10 +11,7 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAwareInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Templating\EngineInterface;
 use Twig\Environment;
 
 /**
@@ -22,60 +19,36 @@ use Twig\Environment;
  *
  * @author Fabien Potencier <fabien@symfony.com>
  *
- * @final since version 3.4
+ * @final
  */
-class TemplateController implements ContainerAwareInterface
+class TemplateController
 {
-    /**
-     * @deprecated since version 3.4, to be removed in 4.0
-     */
-    protected $container;
-
     private $twig;
-    private $templating;
 
-    public function __construct(Environment $twig = null, EngineInterface $templating = null)
+    public function __construct(Environment $twig = null)
     {
         $this->twig = $twig;
-        $this->templating = $templating;
-    }
-
-    /**
-     * @deprecated since version 3.4, to be removed in 4.0 alongside with the ContainerAwareInterface type.
-     */
-    public function setContainer(ContainerInterface $container = null)
-    {
-        @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.4 and will be removed in 4.0. Inject a Twig Environment or an EngineInterface using the constructor instead.', __METHOD__), \E_USER_DEPRECATED);
-
-        if ($container->has('templating')) {
-            $this->templating = $container->get('templating');
-        } elseif ($container->has('twig')) {
-            $this->twig = $container->get('twig');
-        }
-        $this->container = $container;
     }
 
     /**
      * Renders a template.
      *
-     * @param string    $template  The template name
-     * @param int|null  $maxAge    Max age for client caching
-     * @param int|null  $sharedAge Max age for shared (proxy) caching
-     * @param bool|null $private   Whether or not caching should apply for client caches only
-     *
-     * @return Response A Response instance
+     * @param string    $template   The template name
+     * @param int|null  $maxAge     Max age for client caching
+     * @param int|null  $sharedAge  Max age for shared (proxy) caching
+     * @param bool|null $private    Whether or not caching should apply for client caches only
+     * @param array     $context    The context (arguments) of the template
+     * @param int       $statusCode The HTTP status code to return with the response. Defaults to 200
      */
-    public function templateAction($template, $maxAge = null, $sharedAge = null, $private = null)
+    public function templateAction(string $template, int $maxAge = null, int $sharedAge = null, bool $private = null, array $context = [], int $statusCode = 200): Response
     {
-        if ($this->templating) {
-            $response = new Response($this->templating->render($template));
-        } elseif ($this->twig) {
-            $response = new Response($this->twig->render($template));
-        } else {
-            throw new \LogicException('You can not use the TemplateController if the Templating Component or the Twig Bundle are not available.');
+        if (null === $this->twig) {
+            throw new \LogicException('You cannot use the TemplateController if the Twig Bundle is not available.');
         }
 
-        if (null !== $maxAge) {
+        $response = new Response($this->twig->render($template, $context), $statusCode);
+
+        if ($maxAge) {
             $response->setMaxAge($maxAge);
         }
 
@@ -90,5 +63,10 @@ class TemplateController implements ContainerAwareInterface
         }
 
         return $response;
+    }
+
+    public function __invoke(string $template, int $maxAge = null, int $sharedAge = null, bool $private = null, array $context = [], int $statusCode = 200): Response
+    {
+        return $this->templateAction($template, $maxAge, $sharedAge, $private, $context, $statusCode);
     }
 }

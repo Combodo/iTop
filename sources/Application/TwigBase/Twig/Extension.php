@@ -28,6 +28,24 @@ class Extension
 	 *
 	 * @param Environment $oTwigEnv
 	 */
+	public static function RegisterTwigExtensions(Environment &$oTwigEnv): void
+	{
+		$aFilters = static::GetFilters();
+		foreach ($aFilters as $oFilter) {
+			$oTwigEnv->addFilter($oFilter);
+		}
+
+		$aFunctions = static::GetFunctions();
+		foreach ($aFunctions as $oFunction) {
+			$oTwigEnv->addFunction($oFunction);
+		}
+	}
+
+	/**
+	 * @used-by \Combodo\iTop\Portal\Twig\AppExtension
+	 * @return TwigFilter[] Custom TWIG filters used in iTop
+	 * @since 3.1.0
+	 */
 	public static function GetFilters()
 	{
 		$aFilters = [];
@@ -136,7 +154,7 @@ class Extension
 
 	/**
 	 * @used-by \Combodo\iTop\Portal\Twig\AppExtension
-	 * @return \Twig_SimpleFunction[] Custom TWIG function used in iTop
+	 * @return \TwigFunction[] Custom TWIG function used in iTop
 	 * @since 3.1.0
 	 */
 	public static function GetFunctions()
