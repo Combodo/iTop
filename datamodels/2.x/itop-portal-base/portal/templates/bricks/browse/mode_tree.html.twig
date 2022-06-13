@@ -196,8 +196,8 @@
 				var url = '';
 
                 var liElem = $('<li></li>').addClass('list-group-item');
-                var aElem = $('<span></span>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
-                var nameElem = $('<a></a>').addClass('tree-item').text(item.name);
+                var aElem = $('<a></a>').addClass('tree-item-wrapper').attr('data-item-id', item.id).attr('data-level-alias', item.level_alias);
+                var nameElem = $('<span></span>').addClass('tree-item').text(item.name);
                 // Building node
                 $('ul[data-level-id="'+nodeId+'"]').append(liElem);
                 aElem.append(nameElem);
