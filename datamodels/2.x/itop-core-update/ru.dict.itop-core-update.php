@@ -91,7 +91,6 @@ Dict::Add('RU RU', 'Russian', 'Русский', array(
 	'iTopUpdate:Error:InvalidToken' => 'Недопустимый токен',
 	'iTopUpdate:Error:UpdateFailed' => 'Ошибка обновления',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'Максимальный размер загрузки недостаточный для обновления. Пожалуйста, измените конфигурацию PHP.',
-	'iTopUpdate:Error:PackageVersionNotCompatible' => '%1$s cannot be installed automatically on %2$s. Please perform upgrade manually.~~',
 
 	'iTopUpdate:UI:RestoreArchive' => 'Вы можете восстановить приложение из архива \'%1$s\'',
 	'iTopUpdate:UI:RestoreBackup' => 'Вы можете восстановить базу данных из резервной копии \'%1$s\'',

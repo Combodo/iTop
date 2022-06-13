@@ -105,7 +105,6 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'iTopUpdate:Error:InvalidToken' => 'Token ongeldig',
 	'iTopUpdate:Error:UpdateFailed' => 'Upgrade mislukt',
 	'iTopUpdate:Error:FileUploadMaxSizeTooSmall' => 'De maximale bestandsgrootte voor uploads lijkt te klein voor deze update. Controleer de PHP-configuratie.',
-	'iTopUpdate:Error:PackageVersionNotCompatible' => '%1$s cannot be installed automatically on %2$s. Please perform upgrade manually.~~',
 
 	'iTopUpdate:UI:RestoreArchive' => 'Je kan de toepassing herstellen via het archief "%1$s"',
 	'iTopUpdate:UI:RestoreBackup' => 'Je kan de database herstellen via het archief "%1$s"',
