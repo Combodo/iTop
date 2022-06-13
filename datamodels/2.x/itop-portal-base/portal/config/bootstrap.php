@@ -21,7 +21,7 @@
 // Disable PhpUnhandledExceptionInspection as the exception handling is made by the file including this one
 /** @noinspection PhpUnhandledExceptionInspection */
 
-use Symfony\Component\Debug\Debug;
+use Symfony\Component\ErrorHandler\Debug;
 use Symfony\Component\Dotenv\Dotenv;
 
 // Global autoloader (portal autoloader is already required through module.itop-portal-base.php)
@@ -43,55 +43,43 @@ if (!defined('MODULESROOT'))
 
 // Load cached env vars if the .env.local.php file exists
 // Run "composer dump-env prod" to create it (requires symfony/flex >=1.2)
-if (is_array($sEnv = @include dirname(__DIR__).'/.env.local.php'))
-{
-	$_ENV += $sEnv;
-}
-elseif (!class_exists(Dotenv::class))
-{
+if (file_exists(dirname(__DIR__).'/.env.local.php')) {
+	if (is_array($sEnv = @include dirname(__DIR__).'/.env.local.php')) {
+		$_ENV += $sEnv;
+	}
+} elseif (!class_exists(Dotenv::class)) {
 	throw new RuntimeException('Please run "composer require symfony/dotenv" to load the ".env" files configuring the application.');
-}
-else
-{
+} else {
 	$sPath = dirname(__DIR__).'/.env';
 	$oDotenv = new Dotenv();
+	$oDotenv->usePutenv();
 
 	// load all the .env files
-	if (method_exists($oDotenv, 'loadEnv'))
-	{
+	if (method_exists($oDotenv, 'loadEnv')) {
 		$oDotenv->loadEnv($sPath);
-	}
-	else
-	{
+	} else {
 		// fallback code in case your Dotenv component is not 4.2 or higher (when loadEnv() was added)
 
-		if (file_exists($sPath) || !file_exists($sPathDist = "$sPath.dist"))
-		{
+		if (file_exists($sPath) || !file_exists($sPathDist = "$sPath.dist")) {
 			$oDotenv->load($sPath);
-		}
-		else
-		{
+		} else {
 			$oDotenv->load($sPathDist);
 		}
 
-		if (null === $sEnv = (isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : (isset($_ENV['APP_ENV']) ? $_ENV['APP_ENV'] : null)))
-		{
+		if (null === $sEnv = (isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : (isset($_ENV['APP_ENV']) ? $_ENV['APP_ENV'] : null))) {
 			$oDotenv->populate(array('APP_ENV' => $sEnv = 'prod'));
 		}
 
-		if ('test' !== $sEnv && file_exists($sPathDist = "$sPath.local"))
-		{
+		if ('test' !== $sEnv && file_exists($sPathDist = "$sPath.local")) {
 			$oDotenv->load($sPathDist);
 			$sEnv = isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : (isset($_ENV['APP_ENV']) ? $_ENV['APP_ENV'] : $sEnv);
 		}
 
-		if (file_exists($sPathDist = "$sPath.$sEnv"))
-		{
+		if (file_exists($sPathDist = "$sPath.$sEnv")) {
 			$oDotenv->load($sPathDist);
 		}
 
-		if (file_exists($sPathDist = "$sPath.$sEnv.local"))
-		{
+		if (file_exists($sPathDist = "$sPath.$sEnv.local")) {
 			$oDotenv->load($sPathDist);
 		}
 	}

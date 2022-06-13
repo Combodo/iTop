@@ -19,17 +19,7 @@
 
 namespace Combodo\iTop\Portal\Twig;
 
-use AttributeDate;
-use Combodo\iTop\Application\TwigBase\Twig\Extension;
 use Twig\Extension\AbstractExtension;
-
-use AttributeDateTime;
-use AttributeText;
-use Twig_SimpleFilter;
-use Twig_SimpleFunction;
-use utils;
-use Dict;
-use MetaModel;
 
 /**
  * Class AppExtension

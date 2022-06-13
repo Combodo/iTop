@@ -22,6 +22,7 @@ namespace Combodo\iTop\Renderer;
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use Twig\Environment;
 use utils;
 
 /**
@@ -40,7 +41,7 @@ class BlockRenderer
 	/** @var string[] TWIG_ADDITIONAL_PATHS Additional paths for resources to be loaded either as a template or as an image, ... */
 	public const TWIG_ADDITIONAL_PATHS = [APPROOT.'images/'];
 
-	/** @var \Twig_Environment $oTwigEnv Singleton used during rendering */
+	/** @var Environment $oTwigEnv Singleton used during rendering */
 	protected static $oTwigEnv;
 
 	/**
