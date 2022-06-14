@@ -2143,6 +2143,13 @@ class WizStepSummary extends WizardStep
 		return array('class' => 'WizStepDone', 'state' => '');
 	}
 
+	private function NeedsRgpdConsent()
+	{
+		$sMode = $this->oWizard->GetParameter('install_mode');
+		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
+		return $sMode == 'install' && !SetupUtils::IsProductVersion($aSelectedModules);
+	}
+
 	public function Display(WebPage $oPage)
 	{
 		$oPage->add_style(
@@ -2296,6 +2303,34 @@ CSS
 		$oPage->add('</div>'); // progress_content
 		$oPage->add('</fieldset>');
 
+		if ($this->NeedsRgpdConsent()) {
+			$oConfig = new Config(utils::GetConfigFilePath());
+			$oProductionEnv = new RunTimeEnvironment('production');
+			$oProductionEnv->InitDataModel($oConfig, true);
+			$sRgpdUrl = $oConfig->GetModuleSetting('itop-hub-connector', 'rgpd_url', '');
+			$oPage->add('<div id="rgpd_message" class="message message-info">iTop software is compliant with the processing of personal data according to the European General Data Protection Regulation (GDPR).
+By installing iTop you agree that some information will be collected by Combodo to help you manage your instances and for statistical purposes.
+This data remains anonymous until it is associated to a user account on iTop Hub.
+List of collected data available in our Data privacy section.<p><a target="_blank" href="' . $sRgpdUrl . '">More informations here</a></p>');
+			$oPage->add('<input type="checkbox" id="rgpd_consent">');
+			$oPage->add('<label for="rgpd_consent">&nbsp;I accept the processing of my personal data</label>');
+			$oPage->add('</div>');
+			$oPage->add_ready_script('$("#rgpd_consent").bind("click change", function() { WizardUpdateButtons(); });');
+		}
+		$oPage->add_script(
+			<<<JS
+				function isRgpdConsentOk(){
+		            let eRgpdConsent = $("#rgpd_consent");
+		            if(eRgpdConsent.length){
+		                if(!eRgpdConsent[0].checked){
+		                    return false;
+		                }
+		            }
+                    return true;
+				}
+JS
+		);
+
 		$sJSONData = json_encode($aInstallParams);
 		$oPage->add('<input type="hidden" id="installer_parameters" value="'.htmlentities($sJSONData, ENT_QUOTES, 'UTF-8').'"/>');
 
@@ -2436,6 +2471,7 @@ JS
 	WizardUpdateButtons();
 	$('#setup_msg').html('$sMessage');
 	$('#progress').progression( {Current:{$aRes['percentage-completed']}, Maximum: 100} );
+	$("#rgpd_message").hide();
 	
 	//$("#percentage").html('{$aRes['percentage-completed']} % completed<br/>{$aRes['next-step-label']}');
 	ExecuteStep('{$aRes['next-step']}');
@@ -2475,7 +2511,7 @@ EOF
 	 */
 	public function JSCanMoveForward()
 	{
-		return 'return (($("#wiz_form").data("installation_status") === "not started") || ($("#wiz_form").data("installation_status") === "completed"));';
+		return 'return (($("#wiz_form").data("installation_status") === "not started" && isRgpdConsentOk()) || ($("#wiz_form").data("installation_status") === "completed"));';
 	}
 
 	/**
