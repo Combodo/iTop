@@ -2147,7 +2147,7 @@ class WizStepSummary extends WizardStep
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
 		$aSelectedModules = json_decode($this->oWizard->GetParameter('selected_modules'), true);
-		return $sMode == 'install' && !SetupUtils::IsProductVersion($aSelectedModules);
+		return $sMode == 'install' && !SetupUtils::IsProductVersion(array_flip($aSelectedModules));
 	}
 
 	public function Display(WebPage $oPage)
