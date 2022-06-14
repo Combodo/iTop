@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'caf939bf5835556317f457cd33e666e2de1d7815',
+        'reference' => 'df5d514c286b21749f8366f3a8efd575afb96ccf',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'caf939bf5835556317f457cd33e666e2de1d7815',
+            'reference' => 'df5d514c286b21749f8366f3a8efd575afb96ccf',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -71,12 +71,12 @@
             'dev_requirement' => false,
         ),
         'guzzlehttp/guzzle' => array(
-            'pretty_version' => '6.5.5',
-            'version' => '6.5.5.0',
+            'pretty_version' => '6.5.7',
+            'version' => '6.5.7.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../guzzlehttp/guzzle',
             'aliases' => array(),
-            'reference' => '9d4290de1cfd701f38099ef7e183b64b4b7b0c5e',
+            'reference' => '724562fa861e21a4071c652c8a159934e4f05592',
             'dev_requirement' => false,
         ),
         'guzzlehttp/promises' => array(
