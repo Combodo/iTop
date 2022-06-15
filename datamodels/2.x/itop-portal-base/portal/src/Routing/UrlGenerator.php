@@ -26,20 +26,28 @@ use utils;
 /**
  * Class UrlGenerator
  *
- * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
- * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @author Benjamin Dalsass <benjamin.dalsass@combodo.com>
  * @package Combodo\iTop\Portal\Routing
- * @since   2.7.0
+ * @since   3.1.0
  */
 class UrlGenerator implements RouterInterface
 {
+	/** @var \Symfony\Component\Routing\RouterInterface $router */
 	private $router;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param \Symfony\Component\Routing\RouterInterface $router
+	 */
 	public function __construct(RouterInterface $router)
 	{
 		$this->router = $router;
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
 	{
 		$parameters = $this->getExtraParams($parameters);
@@ -47,21 +55,33 @@ class UrlGenerator implements RouterInterface
 		return $this->router->generate($name, $parameters, $referenceType);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function setContext(RequestContext $context)
 	{
 		$this->router->setContext($context);
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function getContext()
 	{
 		return $this->router->getContext();
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function getRouteCollection()
 	{
 		return $this->router->getRouteCollection();
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function match($pathinfo)
 	{
 		return $this->router->match($pathinfo);

@@ -20,27 +20,43 @@
 namespace Combodo\iTop\Portal\Twig;
 
 use Combodo\iTop\Portal\EventListener\UserProvider;
-use Twig\Extension\AbstractExtension;
-use Twig\Extension\GlobalsInterface;
 
-class GlobalAccessor extends AbstractExtension implements GlobalsInterface
+/**
+ * Class CurrentUserAccessor
+ *
+ * Compatibility purpose 3.1:
+ * Twig templates access current user objet directly from container, but it's not possible anymore.
+ * >> app['combodo.current_user'].Get('first_name')
+ * To prevent changes in templates we expose a service CurrentUserAccessor with a bridge role.
+ *
+ * @author Benjamin Dalsass <benjamin.dalsass@combodo.com>
+ * @package Combodo\iTop\Portal\Twig
+ * @since   3.1.0
+ */
+class CurrentUserAccessor
 {
-
+	/** @var \Combodo\iTop\Portal\EventListener\UserProvider $userProvider */
 	private $userProvider;
 
+	/**
+	 * Constructor.
+	 *
+	 * @param \Combodo\iTop\Portal\EventListener\UserProvider $userProvider
+	 */
 	public function __construct(UserProvider $userProvider)
 	{
 		$this->userProvider = $userProvider;
 	}
 
-	public function getGlobals(): array
-	{
-		$data = array();
-		$data['allowed_portals'] = $this->userProvider->getAllowedPortals();
-
-		return $data;
-	}
-
+	/**
+	 * Get (UserLocal meme function)
+	 *
+	 * @param $key
+	 *
+	 * @return int|mixed|\ormLinkSet|string|null
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 */
 	public function Get($key)
 	{
 		return $this->userProvider->getCurrentUser()->Get($key);

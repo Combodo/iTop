@@ -83,10 +83,6 @@ services:
   # Add more service definitions when explicit configuration is needed
   # Please note that last definitions always *replace* previous ones
 
-  Combodo\iTop\Portal\Routing\UrlGenerator:
-    decorates: 'router'
-    arguments: ['@Combodo\iTop\Portal\Routing\UrlGenerator.inner']
-
   # Legacy code as a service: since it is not in the auto-wiring path, it needs to be explicitly declared
   ModuleDesign:
     public: true
@@ -102,16 +98,18 @@ services:
       - '@Combodo\iTop\Portal\Twig\AppVariable.inner'
       - '@service_container'
 
+  Combodo\iTop\Portal\Routing\UrlGenerator:
+    decorates: 'router'
+    arguments: ['@Combodo\iTop\Portal\Routing\UrlGenerator.inner']
+
   # Standard services
   combodo.current_contact.photo_url:
     public: true
     class: Combodo\iTop\Portal\VariableAccessor\CombodoCurrentContactPhotoUrl
     arguments: ['@Combodo\iTop\Portal\EventListener\UserProvider', '@service_container']
-  # Note: This service is initialized with a UserLocal object as it needs a class that can be instantiated.
-  # Anyway, it will be replaced with the real class by UserProvider in onKernelRequestEvent.
-  # Note: Services relying on this one should use \User in their signature and not \UserLocal.
+
   combodo.current_user:
-    alias: Combodo\iTop\Portal\Twig\GlobalAccessor
+    alias: Combodo\iTop\Portal\Twig\CurrentUserAccessor
     public: true
 
   # Aliases
