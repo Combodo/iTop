@@ -81,15 +81,15 @@ class SetupUtils
 		$aResult = array();
 
 		// For log file(s)
-		if (!is_dir(APPROOT.'log'))
-		{
+		if (!is_dir(APPROOT.'log')) {
 			@mkdir(APPROOT.'log');
 		}
 
 		self::CheckPhpVersion($aResult);
 
 		// Check the common directories
-		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
+		$sTmpDir = static::GetTmpDir();
+		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data', $sTmpDir));
 		$aResult = array_merge($aResult, $aWritableDirsErrors);
 
 		$aMandatoryExtensions = array(
