@@ -617,7 +617,21 @@ EOF;
 			// files to include (PHP datamodels)
 			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
 			{
-				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
+					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				} else {
+					/** @noinspection NestedPositiveIfStatementsInspection */
+					if (utils::IsDevelopmentEnvironment()) {
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file : check the module.php "datamodel" key !';
+						$aContext = [
+							'moduleId'       => $oModule->GetId(),
+							'moduleLocation' => $oModule->GetRootDir(),
+							'includedFile'   => $sRelFileName,
+						];
+						SetupLog::Error($sMissingBusinessFileMessage, null, $aContext);
+						throw new CoreException($sMissingBusinessFileMessage, $aContext);
+					}
+				}
 			}
 			// files to include (PHP webservices providers)
 			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
