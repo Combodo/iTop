@@ -26,13 +26,10 @@ class AnnotationFileLoader extends FileLoader
 {
     protected $loader;
 
-    /**
-     * @throws \RuntimeException
-     */
     public function __construct(FileLocatorInterface $locator, AnnotationClassLoader $loader)
     {
         if (!\function_exists('token_get_all')) {
-            throw new \RuntimeException('The Tokenizer extension is required for the routing annotation loaders.');
+            throw new \LogicException('The Tokenizer extension is required for the routing annotation loaders.');
         }
 
         parent::__construct($locator);
@@ -46,11 +43,11 @@ class AnnotationFileLoader extends FileLoader
      * @param string      $file A PHP file path
      * @param string|null $type The resource type
      *
-     * @return RouteCollection|null A RouteCollection instance
+     * @return RouteCollection|null
      *
      * @throws \InvalidArgumentException When the file does not exist or its routes cannot be parsed
      */
-    public function load($file, $type = null)
+    public function load($file, string $type = null)
     {
         $path = $this->locator->locate($file);
 
@@ -64,10 +61,8 @@ class AnnotationFileLoader extends FileLoader
             $collection->addResource(new FileResource($path));
             $collection->addCollection($this->loader->load($class, $type));
         }
-        if (\PHP_VERSION_ID >= 70000) {
-            // PHP 7 memory manager will not release after token_get_all(), see https://bugs.php.net/70098
-            gc_mem_caches();
-        }
+
+        gc_mem_caches();
 
         return $collection;
     }
@@ -75,7 +70,7 @@ class AnnotationFileLoader extends FileLoader
     /**
      * {@inheritdoc}
      */
-    public function supports($resource, $type = null)
+    public function supports($resource, string $type = null)
     {
         return \is_string($resource) && 'php' === pathinfo($resource, \PATHINFO_EXTENSION) && (!$type || 'annotation' === $type);
     }
@@ -83,11 +78,9 @@ class AnnotationFileLoader extends FileLoader
     /**
      * Returns the full class name for the first class in the file.
      *
-     * @param string $file A PHP file path
-     *
-     * @return string|false Full class name if found, false otherwise
+     * @return string|false
      */
-    protected function findClass($file)
+    protected function findClass(string $file)
     {
         $class = false;
         $namespace = false;
@@ -99,12 +92,10 @@ class AnnotationFileLoader extends FileLoader
 
         $nsTokens = [\T_NS_SEPARATOR => true, \T_STRING => true];
         if (\defined('T_NAME_QUALIFIED')) {
-            $nsTokens[T_NAME_QUALIFIED] = true;
+            $nsTokens[\T_NAME_QUALIFIED] = true;
         }
-
         for ($i = 0; isset($tokens[$i]); ++$i) {
             $token = $tokens[$i];
-
             if (!isset($token[1])) {
                 continue;
             }
@@ -126,6 +117,9 @@ class AnnotationFileLoader extends FileLoader
                 $skipClassToken = false;
                 for ($j = $i - 1; $j > 0; --$j) {
                     if (!isset($tokens[$j][1])) {
+                        if ('(' === $tokens[$j] || ',' === $tokens[$j]) {
+                            $skipClassToken = true;
+                        }
                         break;
                     }
 

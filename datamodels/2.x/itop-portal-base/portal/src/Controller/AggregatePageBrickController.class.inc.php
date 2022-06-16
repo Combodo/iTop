@@ -40,11 +40,11 @@ class AggregatePageBrickController extends BrickController
 {
 	/**
 	 * @param \Symfony\Component\HttpFoundation\Request $oRequest
-	 * @param string                                    $sBrickId
+	 * @param string $sBrickId
 	 *
 	 * @return \Symfony\Component\HttpFoundation\Response
 	 *
-	 * @throws \Combodo\iTop\Portal\Brick\BrickNotFoundException
+	 * @throws BrickNotFoundException
 	 * @throws \Exception
 	 */
 	public function DisplayAction(Request $oRequest, $sBrickId)

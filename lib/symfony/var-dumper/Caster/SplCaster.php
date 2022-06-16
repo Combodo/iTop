@@ -17,27 +17,29 @@ use Symfony\Component\VarDumper\Cloner\Stub;
  * Casts SPL related classes to array representation.
  *
  * @author Nicolas Grekas <p@tchwork.com>
+ *
+ * @final
  */
 class SplCaster
 {
-    private static $splFileObjectFlags = [
+    private const SPL_FILE_OBJECT_FLAGS = [
         \SplFileObject::DROP_NEW_LINE => 'DROP_NEW_LINE',
         \SplFileObject::READ_AHEAD => 'READ_AHEAD',
         \SplFileObject::SKIP_EMPTY => 'SKIP_EMPTY',
         \SplFileObject::READ_CSV => 'READ_CSV',
     ];
 
-    public static function castArrayObject(\ArrayObject $c, array $a, Stub $stub, $isNested)
+    public static function castArrayObject(\ArrayObject $c, array $a, Stub $stub, bool $isNested)
     {
         return self::castSplArray($c, $a, $stub, $isNested);
     }
 
-    public static function castArrayIterator(\ArrayIterator $c, array $a, Stub $stub, $isNested)
+    public static function castArrayIterator(\ArrayIterator $c, array $a, Stub $stub, bool $isNested)
     {
         return self::castSplArray($c, $a, $stub, $isNested);
     }
 
-    public static function castHeap(\Iterator $c, array $a, Stub $stub, $isNested)
+    public static function castHeap(\Iterator $c, array $a, Stub $stub, bool $isNested)
     {
         $a += [
             Caster::PREFIX_VIRTUAL.'heap' => iterator_to_array(clone $c),
@@ -46,7 +48,7 @@ class SplCaster
         return $a;
     }
 
-    public static function castDoublyLinkedList(\SplDoublyLinkedList $c, array $a, Stub $stub, $isNested)
+    public static function castDoublyLinkedList(\SplDoublyLinkedList $c, array $a, Stub $stub, bool $isNested)
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $mode = $c->getIteratorMode();
@@ -61,7 +63,7 @@ class SplCaster
         return $a;
     }
 
-    public static function castFileInfo(\SplFileInfo $c, array $a, Stub $stub, $isNested)
+    public static function castFileInfo(\SplFileInfo $c, array $a, Stub $stub, bool $isNested)
     {
         static $map = [
             'path' => 'getPath',
@@ -127,7 +129,7 @@ class SplCaster
             }
         }
 
-        if (isset($a[$prefix.'realPath'])) {
+        if ($a[$prefix.'realPath'] ?? false) {
             $a[$prefix.'realPath'] = new LinkStub($a[$prefix.'realPath']);
         }
 
@@ -145,7 +147,7 @@ class SplCaster
         return $a;
     }
 
-    public static function castFileObject(\SplFileObject $c, array $a, Stub $stub, $isNested)
+    public static function castFileObject(\SplFileObject $c, array $a, Stub $stub, bool $isNested)
     {
         static $map = [
             'csvControl' => 'getCsvControl',
@@ -167,7 +169,7 @@ class SplCaster
 
         if (isset($a[$prefix.'flags'])) {
             $flagsArray = [];
-            foreach (self::$splFileObjectFlags as $value => $name) {
+            foreach (self::SPL_FILE_OBJECT_FLAGS as $value => $name) {
                 if ($a[$prefix.'flags'] & $value) {
                     $flagsArray[] = $name;
                 }
@@ -182,7 +184,7 @@ class SplCaster
         return $a;
     }
 
-    public static function castObjectStorage(\SplObjectStorage $c, array $a, Stub $stub, $isNested)
+    public static function castObjectStorage(\SplObjectStorage $c, array $a, Stub $stub, bool $isNested)
     {
         $storage = [];
         unset($a[Caster::PREFIX_DYNAMIC."\0gcdata"]); // Don't hit https://bugs.php.net/65967
@@ -203,14 +205,21 @@ class SplCaster
         return $a;
     }
 
-    public static function castOuterIterator(\OuterIterator $c, array $a, Stub $stub, $isNested)
+    public static function castOuterIterator(\OuterIterator $c, array $a, Stub $stub, bool $isNested)
     {
         $a[Caster::PREFIX_VIRTUAL.'innerIterator'] = $c->getInnerIterator();
 
         return $a;
     }
 
-    private static function castSplArray($c, array $a, Stub $stub, $isNested)
+    public static function castWeakReference(\WeakReference $c, array $a, Stub $stub, bool $isNested)
+    {
+        $a[Caster::PREFIX_VIRTUAL.'object'] = $c->get();
+
+        return $a;
+    }
+
+    private static function castSplArray($c, array $a, Stub $stub, bool $isNested): array
     {
         $prefix = Caster::PREFIX_VIRTUAL;
         $flags = $c->getFlags();

@@ -39,7 +39,7 @@ class StreamOutput extends Output
      *
      * @throws InvalidArgumentException When first argument is not a real stream
      */
-    public function __construct($stream, $verbosity = self::VERBOSITY_NORMAL, $decorated = null, OutputFormatterInterface $formatter = null)
+    public function __construct($stream, int $verbosity = self::VERBOSITY_NORMAL, bool $decorated = null, OutputFormatterInterface $formatter = null)
     {
         if (!\is_resource($stream) || 'stream' !== get_resource_type($stream)) {
             throw new InvalidArgumentException('The StreamOutput class needs a stream as its first argument.');
@@ -57,7 +57,7 @@ class StreamOutput extends Output
     /**
      * Gets the stream attached to this StreamOutput instance.
      *
-     * @return resource A stream resource
+     * @return resource
      */
     public function getStream()
     {
@@ -67,7 +67,7 @@ class StreamOutput extends Output
     /**
      * {@inheritdoc}
      */
-    protected function doWrite($message, $newline)
+    protected function doWrite(string $message, bool $newline)
     {
         if ($newline) {
             $message .= \PHP_EOL;
@@ -93,6 +93,11 @@ class StreamOutput extends Output
      */
     protected function hasColorSupport()
     {
+        // Follow https://no-color.org/
+        if (isset($_SERVER['NO_COLOR']) || false !== getenv('NO_COLOR')) {
+            return false;
+        }
+
         if ('Hyper' === getenv('TERM_PROGRAM')) {
             return true;
         }
@@ -105,16 +110,6 @@ class StreamOutput extends Output
                 || 'xterm' === getenv('TERM');
         }
 
-        if (\function_exists('stream_isatty')) {
-            return @stream_isatty($this->stream);
-        }
-
-        if (\function_exists('posix_isatty')) {
-            return @posix_isatty($this->stream);
-        }
-
-        $stat = @fstat($this->stream);
-        // Check if formatted mode is S_IFCHR
-        return $stat ? 0020000 === ($stat['mode'] & 0170000) : false;
+        return stream_isatty($this->stream);
     }
 }

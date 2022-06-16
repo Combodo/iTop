@@ -14,8 +14,10 @@
     z-index: 99999;
 }
 
-.sf-minitoolbar a {
-    display: block;
+.sf-minitoolbar button {
+    background-color: transparent;
+    padding: 0;
+    border: none;
 }
 .sf-minitoolbar svg,
 .sf-minitoolbar img {
@@ -71,6 +73,10 @@
     display: inline-block;
 }
 
+.sf-toolbarreset .sf-cancel-button {
+    color: #444;
+}
+
 .sf-toolbarreset .hide-button {
     background: #444;
     display: block;
@@ -81,10 +87,13 @@
     height: 36px;
     cursor: pointer;
     text-align: center;
+    border: none;
+    margin: 0;
+    padding: 0;
 }
 .sf-toolbarreset .hide-button svg {
     max-height: 18px;
-    margin-top: 10px;
+    margin-top: 1px;
 }
 
 .sf-toolbar-block {
@@ -94,11 +103,14 @@
     height: 36px;
     margin-right: 0;
     white-space: nowrap;
+    max-width: 15%;
 }
 .sf-toolbar-block > a,
 .sf-toolbar-block > a:hover {
     display: block;
     text-decoration: none;
+    background-color: transparent;
+    color: inherit;
 }
 
 .sf-toolbar-block span {
@@ -236,6 +248,7 @@ div.sf-toolbar .sf-toolbar-block a:hover {
     padding: 0 10px;
 }
 .sf-toolbar-block-request .sf-toolbar-info-piece a {
+    background-color: transparent;
     text-decoration: none;
 }
 .sf-toolbar-block-request .sf-toolbar-info-piece a:hover {
@@ -279,6 +292,8 @@ div.sf-toolbar .sf-toolbar-block a:hover {
     display: block;
     height: 36px;
     padding: 0 7px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .sf-toolbar-block-request .sf-toolbar-icon {
     padding-left: 0;
@@ -407,34 +422,6 @@ div.sf-toolbar .sf-toolbar-block a:hover {
     display: none;
 }
 
-/* Override the setting when the toolbar is on the top */
-{% if position == 'top' %}
-    .sf-minitoolbar {
-        border-bottom-left-radius: 4px;
-        border-top-left-radius: 0;
-        bottom: auto;
-        right: 0;
-        top: 0;
-    }
-
-    .sf-toolbarreset {
-        bottom: auto;
-        box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
-        top: 0;
-    }
-
-    .sf-toolbar-block .sf-toolbar-info {
-        bottom: auto;
-        top: 36px;
-    }
-{% endif %}
-
-{% if not floatable %}
-    .sf-toolbarreset {
-        position: static;
-    }
-{% endif %}
-
 /* Responsive Design */
 .sf-toolbar-icon .sf-toolbar-label,
 .sf-toolbar-icon .sf-toolbar-value {
@@ -523,7 +510,7 @@ div.sf-toolbar .sf-toolbar-block a:hover {
 @media (min-width: 1024px) {
     .sf-toolbar-block .sf-toolbar-info-piece-additional,
     .sf-toolbar-block .sf-toolbar-info-piece-additional-detail {
-        display: inline-block;
+        display: inline;
     }
 
     .sf-toolbar-block .sf-toolbar-info-piece-additional:empty,
@@ -560,6 +547,11 @@ div.sf-toolbar .sf-toolbar-block a:hover {
     float: left;
     padding: 5px 0;
     margin-right: 10px;
+}
+
+.sf-full-stack {
+    left: 0px;
+    font-size: 12px;
 }
 
 /***** Media query print: Do not print the Toolbar. *****/

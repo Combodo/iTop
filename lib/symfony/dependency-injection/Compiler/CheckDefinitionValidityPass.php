@@ -14,6 +14,7 @@ namespace Symfony\Component\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\EnvParameterException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Loader\FileLoader;
 
 /**
  * This pass validates each definition individually only taking the information
@@ -38,17 +39,17 @@ class CheckDefinitionValidityPass implements CompilerPassInterface
     {
         foreach ($container->getDefinitions() as $id => $definition) {
             // synthetic service is public
-            if ($definition->isSynthetic() && !($definition->isPublic() || $definition->isPrivate())) {
+            if ($definition->isSynthetic() && !$definition->isPublic()) {
                 throw new RuntimeException(sprintf('A synthetic service ("%s") must be public.', $id));
             }
 
             // non-synthetic, non-abstract service has class
-            if (!$definition->isAbstract() && !$definition->isSynthetic() && !$definition->getClass()) {
+            if (!$definition->isAbstract() && !$definition->isSynthetic() && !$definition->getClass() && !$definition->hasTag('container.service_locator') && (!$definition->getFactory() || !preg_match(FileLoader::ANONYMOUS_ID_REGEXP, $id))) {
                 if ($definition->getFactory()) {
                     throw new RuntimeException(sprintf('Please add the class to service "%s" even if it is constructed by a factory since we might need to add method calls based on compile-time checks.', $id));
                 }
                 if (class_exists($id) || interface_exists($id, false)) {
-                    if (0 === strpos($id, '\\') && 1 < substr_count($id, '\\')) {
+                    if (str_starts_with($id, '\\') && 1 < substr_count($id, '\\')) {
                         throw new RuntimeException(sprintf('The definition for "%s" has no class attribute, and appears to reference a class or interface. Please specify the class attribute explicitly or remove the leading backslash by renaming the service to "%s" to get rid of this error.', $id, substr($id, 1)));
                     }
 

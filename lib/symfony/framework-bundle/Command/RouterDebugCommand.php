@@ -12,15 +12,17 @@
 namespace Symfony\Bundle\FrameworkBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Console\Helper\DescriptorHelper;
-use Symfony\Bundle\FrameworkBundle\Controller\ControllerNameParser;
+use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Completion\CompletionInput;
+use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-use Symfony\Component\Routing\Route;
+use Symfony\Component\HttpKernel\Debug\FileLinkFormatter;
+use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -29,50 +31,23 @@ use Symfony\Component\Routing\RouterInterface;
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Tobias Schultze <http://tobion.de>
  *
- * @final since version 3.4
+ * @final
  */
-class RouterDebugCommand extends ContainerAwareCommand
+class RouterDebugCommand extends Command
 {
+    use BuildDebugContainerTrait;
+
     protected static $defaultName = 'debug:router';
+    protected static $defaultDescription = 'Display current routes for an application';
     private $router;
+    private $fileLinkFormatter;
 
-    /**
-     * @param RouterInterface $router
-     */
-    public function __construct($router = null)
+    public function __construct(RouterInterface $router, FileLinkFormatter $fileLinkFormatter = null)
     {
-        if (!$router instanceof RouterInterface) {
-            @trigger_error(sprintf('%s() expects an instance of "%s" as first argument since Symfony 3.4. Not passing it is deprecated and will throw a TypeError in 4.0.', __METHOD__, RouterInterface::class), \E_USER_DEPRECATED);
-
-            parent::__construct($router);
-
-            return;
-        }
-
         parent::__construct();
 
         $this->router = $router;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * BC to be removed in 4.0
-     */
-    public function isEnabled()
-    {
-        if (null !== $this->router) {
-            return parent::isEnabled();
-        }
-        if (!$this->getContainer()->has('router')) {
-            return false;
-        }
-        $router = $this->getContainer()->get('router');
-        if (!$router instanceof RouterInterface) {
-            return false;
-        }
-
-        return parent::isEnabled();
+        $this->fileLinkFormatter = $fileLinkFormatter;
     }
 
     /**
@@ -87,7 +62,7 @@ class RouterDebugCommand extends ContainerAwareCommand
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The output format (txt, xml, json, or md)', 'txt'),
                 new InputOption('raw', null, InputOption::VALUE_NONE, 'To output raw route(s)'),
             ])
-            ->setDescription('Displays current routes for an application')
+            ->setDescription(self::$defaultDescription)
             ->setHelp(<<<'EOF'
 The <info>%command.name%</info> displays the configured routes:
 
@@ -101,87 +76,101 @@ EOF
     /**
      * {@inheritdoc}
      *
-     * @throws \InvalidArgumentException When route does not exist
+     * @throws InvalidArgumentException When route does not exist
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        // BC to be removed in 4.0
-        if (null === $this->router) {
-            $this->router = $this->getContainer()->get('router');
-        }
-
         $io = new SymfonyStyle($input, $output);
         $name = $input->getArgument('name');
-        $helper = new DescriptorHelper();
+        $helper = new DescriptorHelper($this->fileLinkFormatter);
         $routes = $this->router->getRouteCollection();
+        $container = null;
+        if ($this->fileLinkFormatter) {
+            $container = function () {
+                return $this->getContainerBuilder($this->getApplication()->getKernel());
+            };
+        }
 
         if ($name) {
-            if (!$route = $routes->get($name)) {
-                throw new InvalidArgumentException(sprintf('The route "%s" does not exist.', $name));
+            $route = $routes->get($name);
+            $matchingRoutes = $this->findRouteNameContaining($name, $routes);
+
+            if (!$input->isInteractive() && !$route && \count($matchingRoutes) > 1) {
+                $helper->describe($io, $this->findRouteContaining($name, $routes), [
+                    'format' => $input->getOption('format'),
+                    'raw_text' => $input->getOption('raw'),
+                    'show_controllers' => $input->getOption('show-controllers'),
+                    'output' => $io,
+                ]);
+
+                return 0;
             }
 
-            $callable = $this->extractCallable($route);
+            if (!$route && $matchingRoutes) {
+                $default = 1 === \count($matchingRoutes) ? $matchingRoutes[0] : null;
+                $name = $io->choice('Select one of the matching routes', $matchingRoutes, $default);
+                $route = $routes->get($name);
+            }
+
+            if (!$route) {
+                throw new InvalidArgumentException(sprintf('The route "%s" does not exist.', $name));
+            }
 
             $helper->describe($io, $route, [
                 'format' => $input->getOption('format'),
                 'raw_text' => $input->getOption('raw'),
                 'name' => $name,
                 'output' => $io,
-                'callable' => $callable,
+                'container' => $container,
             ]);
         } else {
-            foreach ($routes as $route) {
-                $this->convertController($route);
-            }
-
             $helper->describe($io, $routes, [
                 'format' => $input->getOption('format'),
                 'raw_text' => $input->getOption('raw'),
                 'show_controllers' => $input->getOption('show-controllers'),
                 'output' => $io,
+                'container' => $container,
             ]);
         }
+
+        return 0;
     }
 
-    private function convertController(Route $route)
+    private function findRouteNameContaining(string $name, RouteCollection $routes): array
     {
-        if ($route->hasDefault('_controller')) {
-            $nameParser = new ControllerNameParser($this->getApplication()->getKernel());
-            try {
-                $route->setDefault('_controller', $nameParser->build($route->getDefault('_controller')));
-            } catch (\InvalidArgumentException $e) {
-            }
-        }
-    }
-
-    /**
-     * @return callable|null
-     */
-    private function extractCallable(Route $route)
-    {
-        if (!$route->hasDefault('_controller')) {
-            return null;
-        }
-
-        $controller = $route->getDefault('_controller');
-
-        if (1 === substr_count($controller, ':')) {
-            list($service, $method) = explode(':', $controller);
-            try {
-                return sprintf('%s::%s', \get_class($this->getApplication()->getKernel()->getContainer()->get($service)), $method);
-            } catch (ServiceNotFoundException $e) {
+        $foundRoutesNames = [];
+        foreach ($routes as $routeName => $route) {
+            if (false !== stripos($routeName, $name)) {
+                $foundRoutesNames[] = $routeName;
             }
         }
 
-        $nameParser = new ControllerNameParser($this->getApplication()->getKernel());
-        try {
-            $shortNotation = $nameParser->build($controller);
-            $route->setDefault('_controller', $shortNotation);
+        return $foundRoutesNames;
+    }
 
-            return $controller;
-        } catch (\InvalidArgumentException $e) {
+    public function complete(CompletionInput $input, CompletionSuggestions $suggestions): void
+    {
+        if ($input->mustSuggestArgumentValuesFor('name')) {
+            $suggestions->suggestValues(array_keys($this->router->getRouteCollection()->all()));
+
+            return;
         }
 
-        return null;
+        if ($input->mustSuggestOptionValuesFor('format')) {
+            $helper = new DescriptorHelper();
+            $suggestions->suggestValues($helper->getFormats());
+        }
+    }
+
+    private function findRouteContaining(string $name, RouteCollection $routes): RouteCollection
+    {
+        $foundRoutes = new RouteCollection();
+        foreach ($routes as $routeName => $route) {
+            if (false !== stripos($routeName, $name)) {
+                $foundRoutes->add($routeName, $route);
+            }
+        }
+
+        return $foundRoutes;
     }
 }

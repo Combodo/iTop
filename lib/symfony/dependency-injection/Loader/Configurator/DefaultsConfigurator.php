@@ -11,40 +11,45 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
 
 /**
  * @author Nicolas Grekas <p@tchwork.com>
- *
- * @method InstanceofConfigurator instanceof(string $fqcn)
  */
 class DefaultsConfigurator extends AbstractServiceConfigurator
 {
-    const FACTORY = 'defaults';
-
     use Traits\AutoconfigureTrait;
     use Traits\AutowireTrait;
     use Traits\BindTrait;
     use Traits\PublicTrait;
 
+    public const FACTORY = 'defaults';
+
+    private $path;
+
+    public function __construct(ServicesConfigurator $parent, Definition $definition, string $path = null)
+    {
+        parent::__construct($parent, $definition, null, []);
+
+        $this->path = $path;
+    }
+
     /**
      * Adds a tag for this definition.
-     *
-     * @param string $name       The tag name
-     * @param array  $attributes An array of attributes
      *
      * @return $this
      *
      * @throws InvalidArgumentException when an invalid tag name or attribute is provided
      */
-    final public function tag($name, array $attributes = [])
+    final public function tag(string $name, array $attributes = []): self
     {
-        if (!\is_string($name) || '' === $name) {
+        if ('' === $name) {
             throw new InvalidArgumentException('The tag name in "_defaults" must be a non-empty string.');
         }
 
         foreach ($attributes as $attribute => $value) {
-            if (!is_scalar($value) && null !== $value) {
+            if (null !== $value && !is_scalar($value)) {
                 throw new InvalidArgumentException(sprintf('Tag "%s", attribute "%s" in "_defaults" must be of a scalar-type.', $name, $attribute));
             }
         }
@@ -56,12 +61,8 @@ class DefaultsConfigurator extends AbstractServiceConfigurator
 
     /**
      * Defines an instanceof-conditional to be applied to following service definitions.
-     *
-     * @param string $fqcn
-     *
-     * @return InstanceofConfigurator
      */
-    final protected function setInstanceof($fqcn)
+    final public function instanceof(string $fqcn): InstanceofConfigurator
     {
         return $this->parent->instanceof($fqcn);
     }

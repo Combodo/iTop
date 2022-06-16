@@ -11,16 +11,20 @@
 
 namespace Symfony\Bundle\FrameworkBundle\Routing;
 
+use Psr\Container\ContainerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\Config\Resource\FileExistenceResource;
+use Symfony\Component\Config\Resource\FileResource;
 use Symfony\Component\DependencyInjection\Config\ContainerParametersResource;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface as SymfonyContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\ParameterNotFoundException;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
-use Symfony\Component\DependencyInjection\ServiceSubscriberInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\WarmableInterface;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;
 use Symfony\Component\Routing\Router as BaseRouter;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 
 /**
  * This Router creates the Loader only when the cache is empty.
@@ -31,20 +35,28 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
 {
     private $container;
     private $collectedParameters = [];
+    private $paramFetcher;
 
     /**
-     * @param ContainerInterface $container A ContainerInterface instance
-     * @param mixed              $resource  The main resource to load
-     * @param array              $options   An array of options
-     * @param RequestContext     $context   The context
+     * @param mixed $resource The main resource to load
      */
-    public function __construct(ContainerInterface $container, $resource, array $options = [], RequestContext $context = null)
+    public function __construct(ContainerInterface $container, $resource, array $options = [], RequestContext $context = null, ContainerInterface $parameters = null, LoggerInterface $logger = null, string $defaultLocale = null)
     {
         $this->container = $container;
-
         $this->resource = $resource;
-        $this->context = $context ?: new RequestContext();
+        $this->context = $context ?? new RequestContext();
+        $this->logger = $logger;
         $this->setOptions($options);
+
+        if ($parameters) {
+            $this->paramFetcher = \Closure::fromCallable([$parameters, 'get']);
+        } elseif ($container instanceof SymfonyContainerInterface) {
+            $this->paramFetcher = \Closure::fromCallable([$container, 'getParameter']);
+        } else {
+            throw new \LogicException(sprintf('You should either pass a "%s" instance or provide the $parameters argument of the "%s" method.', SymfonyContainerInterface::class, __METHOD__));
+        }
+
+        $this->defaultLocale = $defaultLocale;
     }
 
     /**
@@ -56,6 +68,16 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
             $this->collection = $this->container->get('routing.loader')->load($this->resource, $this->options['resource_type']);
             $this->resolveParameters($this->collection);
             $this->collection->addResource(new ContainerParametersResource($this->collectedParameters));
+
+            try {
+                $containerFile = ($this->paramFetcher)('kernel.cache_dir').'/'.($this->paramFetcher)('kernel.container_class').'.php';
+                if (file_exists($containerFile)) {
+                    $this->collection->addResource(new FileResource($containerFile));
+                } else {
+                    $this->collection->addResource(new FileExistenceResource($containerFile));
+                }
+            } catch (ParameterNotFoundException $exception) {
+            }
         }
 
         return $this->collection;
@@ -63,8 +85,10 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
 
     /**
      * {@inheritdoc}
+     *
+     * @return string[] A list of classes to preload on PHP 7.4+
      */
-    public function warmUp($cacheDir)
+    public function warmUp(string $cacheDir)
     {
         $currentDir = $this->getOption('cache_dir');
 
@@ -74,6 +98,11 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
         $this->getGenerator();
 
         $this->setOption('cache_dir', $currentDir);
+
+        return [
+            $this->getOption('generator_class'),
+            $this->getOption('matcher_class'),
+        ];
     }
 
     /**
@@ -101,15 +130,15 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
 
             $schemes = [];
             foreach ($route->getSchemes() as $scheme) {
-                $schemes = array_merge($schemes, explode('|', $this->resolve($scheme)));
+                $schemes[] = explode('|', $this->resolve($scheme));
             }
-            $route->setSchemes($schemes);
+            $route->setSchemes(array_merge([], ...$schemes));
 
             $methods = [];
             foreach ($route->getMethods() as $method) {
-                $methods = array_merge($methods, explode('|', $this->resolve($method)));
+                $methods[] = explode('|', $this->resolve($method));
             }
-            $route->setMethods($methods);
+            $route->setMethods(array_merge([], ...$methods));
             $route->setCondition($this->resolve($route->getCondition()));
         }
     }
@@ -139,9 +168,7 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
             return $value;
         }
 
-        $container = $this->container;
-
-        $escapedValue = preg_replace_callback('/%%|%([^%\s]++)%/', function ($match) use ($container, $value) {
+        $escapedValue = preg_replace_callback('/%%|%([^%\s]++)%/', function ($match) use ($value) {
             // skip %%
             if (!isset($match[1])) {
                 return '%%';
@@ -151,15 +178,21 @@ class Router extends BaseRouter implements WarmableInterface, ServiceSubscriberI
                 throw new RuntimeException(sprintf('Using "%%%s%%" is not allowed in routing configuration.', $match[1]));
             }
 
-            $resolved = $container->getParameter($match[1]);
+            $resolved = ($this->paramFetcher)($match[1]);
 
-            if (\is_string($resolved) || is_numeric($resolved)) {
+            if (is_scalar($resolved)) {
                 $this->collectedParameters[$match[1]] = $resolved;
 
-                return (string) $this->resolve($resolved);
+                if (\is_string($resolved)) {
+                    $resolved = $this->resolve($resolved);
+                }
+
+                if (is_scalar($resolved)) {
+                    return false === $resolved ? '0' : (string) $resolved;
+                }
             }
 
-            throw new RuntimeException(sprintf('The container parameter "%s", used in the route configuration value "%s", must be a string or numeric, but it is of type "%s".', $match[1], $value, \gettype($resolved)));
+            throw new RuntimeException(sprintf('The container parameter "%s", used in the route configuration value "%s", must be a string or numeric, but it is of type "%s".', $match[1], $value, get_debug_type($resolved)));
         }, $value);
 
         return str_replace('%%', '%', $escapedValue);

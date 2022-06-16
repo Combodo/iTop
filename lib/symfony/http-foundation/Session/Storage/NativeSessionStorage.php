@@ -17,6 +17,11 @@ use Symfony\Component\HttpFoundation\Session\Storage\Handler\StrictSessionHandle
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\AbstractProxy;
 use Symfony\Component\HttpFoundation\Session\Storage\Proxy\SessionHandlerProxy;
 
+// Help opcache.preload discover always-needed symbols
+class_exists(MetadataBag::class);
+class_exists(StrictSessionHandler::class);
+class_exists(SessionHandlerProxy::class);
+
 /**
  * This provides a base class for session attribute storage.
  *
@@ -74,28 +79,17 @@ class NativeSessionStorage implements SessionStorageInterface
      * cookie_path, "/"
      * cookie_secure, ""
      * cookie_samesite, null
-     * entropy_file, ""
-     * entropy_length, "0"
      * gc_divisor, "100"
      * gc_maxlifetime, "1440"
      * gc_probability, "1"
-     * hash_bits_per_character, "4"
-     * hash_function, "0"
      * lazy_write, "1"
      * name, "PHPSESSID"
      * referer_check, ""
      * serialize_handler, "php"
-     * use_strict_mode, "0"
+     * use_strict_mode, "1"
      * use_cookies, "1"
      * use_only_cookies, "1"
      * use_trans_sid, "0"
-     * upload_progress.enabled, "1"
-     * upload_progress.cleanup, "1"
-     * upload_progress.prefix, "upload_progress_"
-     * upload_progress.name, "PHP_SESSION_UPLOAD_PROGRESS"
-     * upload_progress.freq, "1%"
-     * upload_progress.min-freq, "1"
-     * url_rewriter.tags, "a=href,area=href,frame=src,form=,fieldset="
      * sid_length, "32"
      * sid_bits_per_character, "5"
      * trans_sid_hosts, $_SERVER['HTTP_HOST']
@@ -114,6 +108,7 @@ class NativeSessionStorage implements SessionStorageInterface
             'cache_expire' => 0,
             'use_cookies' => 1,
             'lazy_write' => 1,
+            'use_strict_mode' => 1,
         ];
 
         session_register_shutdown();
@@ -150,6 +145,12 @@ class NativeSessionStorage implements SessionStorageInterface
             throw new \RuntimeException(sprintf('Failed to start the session because headers have already been sent by "%s" at line %d.', $file, $line));
         }
 
+        $sessionId = $_COOKIE[session_name()] ?? null;
+        if ($sessionId && !preg_match('/^[a-zA-Z0-9,-]{22,}$/', $sessionId)) {
+            // the session ID in the header is invalid, create a new one
+            session_id(session_create_id());
+        }
+
         // ok to try and start the session
         if (!session_start()) {
             throw new \RuntimeException('Failed to start the session.');
@@ -178,7 +179,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setId($id)
+    public function setId(string $id)
     {
         $this->saveHandler->setId($id);
     }
@@ -194,7 +195,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function setName($name)
+    public function setName(string $name)
     {
         $this->saveHandler->setName($name);
     }
@@ -202,7 +203,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function regenerate($destroy = false, $lifetime = null)
+    public function regenerate(bool $destroy = false, int $lifetime = null)
     {
         // Cannot regenerate the session ID for non-active sessions.
         if (\PHP_SESSION_ACTIVE !== session_status()) {
@@ -254,7 +255,7 @@ class NativeSessionStorage implements SessionStorageInterface
 
         // Register error handler to add information about the current save handler
         $previousHandler = set_error_handler(function ($type, $msg, $file, $line) use (&$previousHandler) {
-            if (\E_WARNING === $type && 0 === strpos($msg, 'session_write_close():')) {
+            if (\E_WARNING === $type && str_starts_with($msg, 'session_write_close():')) {
                 $handler = $this->saveHandler instanceof SessionHandlerProxy ? $this->saveHandler->getHandler() : $this->saveHandler;
                 $msg = sprintf('session_write_close(): Failed to write session data with "%s" handler', \get_class($handler));
             }
@@ -309,7 +310,7 @@ class NativeSessionStorage implements SessionStorageInterface
     /**
      * {@inheritdoc}
      */
-    public function getBag($name)
+    public function getBag(string $name)
     {
         if (!isset($this->bags[$name])) {
             throw new \InvalidArgumentException(sprintf('The SessionBagInterface "%s" is not registered.', $name));
@@ -370,9 +371,8 @@ class NativeSessionStorage implements SessionStorageInterface
         $validOptions = array_flip([
             'cache_expire', 'cache_limiter', 'cookie_domain', 'cookie_httponly',
             'cookie_lifetime', 'cookie_path', 'cookie_secure', 'cookie_samesite',
-            'entropy_file', 'entropy_length', 'gc_divisor',
-            'gc_maxlifetime', 'gc_probability', 'hash_bits_per_character',
-            'hash_function', 'lazy_write', 'name', 'referer_check',
+            'gc_divisor', 'gc_maxlifetime', 'gc_probability',
+            'lazy_write', 'name', 'referer_check',
             'serialize_handler', 'use_strict_mode', 'use_cookies',
             'use_only_cookies', 'use_trans_sid', 'upload_progress.enabled',
             'upload_progress.cleanup', 'upload_progress.prefix', 'upload_progress.name',
@@ -382,10 +382,20 @@ class NativeSessionStorage implements SessionStorageInterface
 
         foreach ($options as $key => $value) {
             if (isset($validOptions[$key])) {
+                if (str_starts_with($key, 'upload_progress.')) {
+                    trigger_deprecation('symfony/http-foundation', '5.4', 'Support for the "%s" session option is deprecated. The settings prefixed with "session.upload_progress." can not be changed at runtime.', $key);
+                    continue;
+                }
+                if ('url_rewriter.tags' === $key) {
+                    trigger_deprecation('symfony/http-foundation', '5.4', 'Support for the "%s" session option is deprecated. Use "trans_sid_tags" instead.', $key);
+                }
                 if ('cookie_samesite' === $key && \PHP_VERSION_ID < 70300) {
                     // PHP < 7.3 does not support same_site cookies. We will emulate it in
                     // the start() method instead.
                     $this->emulateSameSite = $value;
+                    continue;
+                }
+                if ('cookie_secure' === $key && 'auto' === $value) {
                     continue;
                 }
                 ini_set('url_rewriter.tags' !== $key ? 'session.'.$key : $key, $value);
