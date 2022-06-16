@@ -151,6 +151,9 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 			var sString = "$('#"+aRefreshed[i]+"').trigger('change').trigger('update');";
 			window.setTimeout(sString, 1); // Synchronous 'trigger' does nothing, call it asynchronously
 		}
+		if($('.blockUI').length == 0) {
+			$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
+		}
 	};
 	
 	this.UpdateWizard = function ()
@@ -179,6 +182,10 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 			function(html){
 				$('#ajax_content').html(html);
 				$('.blockUI').parent().unblock();
+
+				if($('.blockUI').length == 0) {
+					$('.disabledDuringFieldLoading').prop("disabled", false).removeClass('disabledDuringFieldLoading');
+				}
 				//console.log('data received:', oWizardHelper);
 				//oWizardHelper.FromJSON(json_data);
 				//oWizardHelper.UpdateFields(); // Is done directly in the html provided by ajax.render.php
@@ -215,6 +222,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 		index = 0;
 		this.ResetQuery();
 		this.UpdateWizard();
+		var fieldForm=null;
 		while(index < aFieldNames.length )
 		{
 			sAttCode = aFieldNames[index];
@@ -225,9 +233,13 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 					message: '',
 					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
 				});
+				fieldForm=$('#field_' + sFieldId).closest('form');
 				this.RequestAllowedValues(sAttCode);
 			}
 			index++;
+		}
+		if(fieldForm!=null){
+			fieldForm.find('button[type=submit]:not(:disabled)').prop("disabled", true).addClass('disabledDuringFieldLoading');
 		}
 		this.AjaxQueryServer();
 	};
