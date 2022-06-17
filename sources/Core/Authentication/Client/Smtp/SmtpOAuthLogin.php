@@ -92,7 +92,7 @@ class Oauth extends Login
 			while (true) {
 				$sResponse = $this->_receive(30);
 
-				IssueLog::Debug("SMTP Oauth receiving $sResponse", static::LOG_CHANNEL);
+				IssueLog::Debug("SMTP Oauth receiving ".trim($sResponse), static::LOG_CHANNEL);
 
 				if ($sResponse === '+') {
 					// Send empty client response.

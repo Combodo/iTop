@@ -2,47 +2,68 @@
 
 namespace Combodo\iTop\Core\Authentication\Client\OAuth;
 
+use CoreException;
+use Dict;
 use GuzzleHttp\Client;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use MetaModel;
 
-class OAuthClientProviderFactory {
+class OAuthClientProviderFactory
+{
+	/**
+	 * @return mixed
+	 * @throws \CoreException
+	 */
 	public static function getProviderForSMTP()
 	{
 		$sProviderVendor = MetaModel::GetConfig()->Get('email_transport_smtp.oauth.provider'); // email_transport_smtp.oauth.provider
-		$sProviderClass = "\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProvider".$sProviderVendor;
+		$sProviderClass = self::getProviderClass($sProviderVendor);
 		$aProviderVendorParams = [
 			'clientId'     => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.client_id'),  // email_transport_smtp.oauth.client_id
 			'clientSecret' => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.client_secret'),// email_transport_smtp.oauth.client_secret
 			'redirectUri'  => $sProviderClass::GetRedirectUri(),
-			'scope' => $sProviderClass::GetRequiredSMTPScope()
+			'scope'        => $sProviderClass::GetRequiredSMTPScope(),
 		];
 		$aAccessTokenParams = [
 			"access_token"  => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.access_token'), // email_transport_smtp.oauth.access_token
 			"refresh_token" => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.refresh_token'), // email_transport_smtp.oauth.refresh_token
-			'scope' => $sProviderClass::GetRequiredSMTPScope()
+			'scope'         => $sProviderClass::GetRequiredSMTPScope(),
 		];
 		$aCollaborators = [
 			'httpClient' => new Client(['verify' => false]),
 		];
-		
+
 		return new $sProviderClass($aProviderVendorParams, $aCollaborators, $aAccessTokenParams);
 	}
-	public static function getVendorProvider($sProviderVendor, $sClientId, $sClientSecret, $sScope, $aAdditional){
+
+	/**
+	 * @param $sProviderVendor
+	 * @param $sClientId
+	 * @param $sClientSecret
+	 * @param $sScope
+	 * @param $aAdditional
+	 *
+	 * @return mixed
+	 * @throws \CoreException
+	 */
+	public static function getVendorProvider($sProviderVendor, $sClientId, $sClientSecret, $sScope, $aAdditional)
+	{
 		$sRedirectUrl = OAuthClientProviderAbstract::GetRedirectUri();
-		$sProviderClass = "\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProvider".$sProviderVendor;
+		$sProviderClass = self::getProviderClass($sProviderVendor);
 		$aCollaborators = [
 			'httpClient' => new Client(['verify' => false]),
 		];
 
 		return new $sProviderClass(array_merge(['clientId' => $sClientId, 'clientSecret' => $sClientSecret, 'redirectUri' => $sRedirectUrl, 'scope' => $sScope], $aAdditional), $aCollaborators);
 	}
-	
-	public static function getVendorProviderForAccessUrl($sProviderVendor, $sClientId, $sClientSecret, $sScope, $aAdditional){
+
+	public static function getVendorProviderForAccessUrl($sProviderVendor, $sClientId, $sClientSecret, $sScope, $aAdditional)
+	{
 		$oProvider = static::getVendorProvider($sProviderVendor, $sClientId, $sClientSecret, $sScope, $aAdditional);
+
 		return $oProvider->GetVendorProvider()->getAuthorizationUrl([
 			'scope' => [
-				$sScope
+				$sScope,
 			],
 		]);
 	}
@@ -58,16 +79,33 @@ class OAuthClientProviderFactory {
 	{
 		return $oProvider->GetVendorProvider()->getAccessToken('authorization_code', ['code' => $sCode, 'scope' => $oProvider->GetScope()]);
 	}
-	
+
 	public static function getConfFromRedirectUrl($sProviderVendor, $sClientId, $sClientSecret, $sRedirectUrlQuery)
 	{
 		$sRedirectUrl = OAuthClientProviderAbstract::GetRedirectUri();
-		$sProviderClass = "\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProvider".$sProviderVendor;
+		$sProviderClass = self::getProviderClass($sProviderVendor);
 		$aQuery = [];
 		parse_str($sRedirectUrlQuery, $aQuery);
 		$sCode = $aQuery['code'];
 		$oProvider = new $sProviderClass(['clientId' => $sClientId, 'clientSecret' => $sClientSecret, 'redirectUri' => $sRedirectUrl]);
+
 		return $sProviderClass::getConfFromAccessToken($oProvider->GetVendorProvider()->getAccessToken('authorization_code', ['code' => $sCode]), $sClientId, $sClientSecret);
+	}
+
+	/**
+	 * @param $sProviderVendor
+	 *
+	 * @return string
+	 * @throws \CoreException
+	 */
+	public static function getProviderClass($sProviderVendor): string
+	{
+		$sProviderClass = "\Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProvider".$sProviderVendor;
+		if (!class_exists($sProviderClass)) {
+			throw new CoreException(dict::Format('UI:Error:SMTP:UnknownVendor', $sProviderVendor));
+		}
+
+		return $sProviderClass;
 	}
 
 }
