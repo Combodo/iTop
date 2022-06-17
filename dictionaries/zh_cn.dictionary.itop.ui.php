@@ -477,6 +477,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceTitle' => '维护',
 	'UI:Error:InvalidToken' => 'Error: 所请求的操作已执行 (未发现 CSRF token )',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => '个数',
 	'UI:GroupBy:Count+' => '项目数',
 	'UI:CountOfObjects' => '%1$d 个对象符合指定的条件.',
