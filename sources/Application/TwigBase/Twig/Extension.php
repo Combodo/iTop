@@ -141,14 +141,6 @@ class Extension
 		// @see https://www.php.net/manual/fr/function.var-export.php
 		$aFilters[] = new TwigFilter('var_export', 'var_export');
 
-		$aFilters[] = new TwigFilter('filter', function ($array, $arrow) {
-			if ($arrow == 'system') {
-				return json_encode($array);
-			}
-
-			return twig_array_filter($array, $arrow);
-		});
-
 		return $aFilters;
 	}
 
