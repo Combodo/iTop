@@ -347,7 +347,12 @@ JS
 	 * @param \WebPage $oPage
 	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
 	 *
-	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
+	 * @return array{
+	 *       subtitle: \Combodo\iTop\Application\UI\Base\UIBlock[],
+	 *       toolbar: \Combodo\iTop\Application\UI\Base\UIBlock[]
+	 *    }
+	 *    blocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block.
+	 *    eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -357,6 +362,9 @@ JS
 	 * @throws \OQLException
 	 *
 	 * @since 3.0.0 $bEditMode is deprecated and no longer used
+	 * @since 3.0.0 changed signature : add return value (no more writing directly to the $oPage)
+	 *
+	 * @noinspection PhpUnusedParameterInspection
 	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
