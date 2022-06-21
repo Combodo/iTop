@@ -20,6 +20,7 @@
             <module>combodo-db-tools</module>
             <module>itop-core-update</module>
             <module>itop-hub-connector</module>
+            <module>itop-remote-authent-oauth</module>
           </modules>
           <mandatory>true</mandatory>
         </choice>

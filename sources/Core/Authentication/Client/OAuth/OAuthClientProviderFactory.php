@@ -3,6 +3,8 @@
 namespace Combodo\iTop\Core\Authentication\Client\OAuth;
 
 use CoreException;
+use DBObjectSet;
+use DBSearch;
 use Dict;
 use GuzzleHttp\Client;
 use League\OAuth2\Client\Token\AccessTokenInterface;
@@ -16,17 +18,19 @@ class OAuthClientProviderFactory
 	 */
 	public static function getProviderForSMTP()
 	{
-		$sProviderVendor = MetaModel::GetConfig()->Get('email_transport_smtp.oauth.provider'); // email_transport_smtp.oauth.provider
+		$oRemoteAuthentOAuth = self::GetRemoteAuthentOAuthForSMTP();
+
+		$sProviderVendor = $oRemoteAuthentOAuth->Get('provider');
 		$sProviderClass = self::getProviderClass($sProviderVendor);
 		$aProviderVendorParams = [
-			'clientId'     => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.client_id'),  // email_transport_smtp.oauth.client_id
-			'clientSecret' => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.client_secret'),// email_transport_smtp.oauth.client_secret
+			'clientId'     => $oRemoteAuthentOAuth->Get('client_id'),
+			'clientSecret' => $oRemoteAuthentOAuth->Get('client_secret'),
 			'redirectUri'  => $sProviderClass::GetRedirectUri(),
 			'scope'        => $sProviderClass::GetRequiredSMTPScope(),
 		];
 		$aAccessTokenParams = [
-			"access_token"  => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.access_token'), // email_transport_smtp.oauth.access_token
-			"refresh_token" => MetaModel::GetConfig()->Get('email_transport_smtp.oauth.refresh_token'), // email_transport_smtp.oauth.refresh_token
+			"access_token"  => $oRemoteAuthentOAuth->Get('token'),
+			"refresh_token" => $oRemoteAuthentOAuth->Get('refresh_token'),
 			'scope'         => $sProviderClass::GetRequiredSMTPScope(),
 		];
 		$aCollaborators = [
@@ -34,6 +38,25 @@ class OAuthClientProviderFactory
 		];
 
 		return new $sProviderClass($aProviderVendorParams, $aCollaborators, $aAccessTokenParams);
+	}
+
+	/**
+	 * @return \DBObject|null
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 * @throws \MissingQueryArgument
+	 * @throws \MySQLException
+	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
+	 */
+	public static function GetRemoteAuthentOAuthForSMTP()
+	{
+		$sUsername = MetaModel::GetConfig()->Get('email_transport_smtp.username');
+		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT RemoteAuthentOAuth WHERE name=:username', ['username' => $sUsername]));
+		if ($oSet->Count() != 1) {
+			throw new CoreException(Dict::Format('itop-remote-authent-oauth:MissingRemoteAuthentOAuth', $sUsername));
+		}
+		return $oSet->Fetch();
 	}
 
 	/**

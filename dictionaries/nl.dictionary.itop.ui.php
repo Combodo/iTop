@@ -1604,20 +1604,3 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Bekijk berichten van %1$s',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Toon maximaal %1$s berichten in het %2$s menu.',
 ));
-
-
-// OAuth
-Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
-	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
-));

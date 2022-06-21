@@ -1595,20 +1595,3 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => '显示来自 %1$s 的消息',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => '在 %2$s 菜单中最多显示 %1$s 条消息.',
 ));
-
-
-// OAuth
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
-));

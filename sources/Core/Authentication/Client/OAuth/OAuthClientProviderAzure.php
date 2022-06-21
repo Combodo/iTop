@@ -16,8 +16,7 @@ class OAuthClientProviderAzure extends OAuthClientProviderAbstract
 	static protected $sRequiredSMTPScope = 'https://outlook.office.com/SMTP.Send offline_access';
 	static protected $sRequiredIMAPScope = 'https://outlook.office.com/IMAP.AccessAsUser.All offline_access';
 	static protected $sRequiredPOPScope = 'https://outlook.office.com/POP.AccessAsUser.All offline access';
-	/** @var \League\OAuth2\Client\Provider\GenericProvider */
-	protected $oVendorProvider;
+
 	/** @var \League\OAuth2\Client\Token\AccessToken */
 	protected $oAccessToken;
 

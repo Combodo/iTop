@@ -20,6 +20,9 @@
 /**
  * Wizard to configure and initialize the iTop application
  */
+
+use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
+
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/core/email.class.inc.php');
@@ -133,13 +136,19 @@ function CheckEmailSetting($oP)
 			$sDisplayEncryption = empty($sEncryption) ? '<em>no encryption</em> ' : $sEncryption;
 			$sUserName = MetaModel::GetConfig()->Get('email_transport_smtp.username');
 			$sDisplayUserName = empty($sUserName) ? '<em>no user</em> ' : $sUserName;
-			$sProvider = MetaModel::GetConfig()->Get('email_transport_smtp.oauth.provider');
-			$sDisplayProvider = empty($sProvider) ? '<em>no Provider</em> ' : $sProvider;
-			$sClientID = MetaModel::GetConfig()->Get('email_transport_smtp.oauth.client_id');
-			$sDisplayClientID = empty($sClientID) ? '<em>no password</em> ' : $sClientID;
-			$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, provider: $sDisplayProvider, user: $sDisplayUserName, client id: $sDisplayClientID, encryption: $sDisplayEncryption.");
-			if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sClientID == '') && ($sProvider == '')) {
-				$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().').');
+			try {
+				$oRemoteAuthentOAuth = OAuthClientProviderFactory::GetRemoteAuthentOAuthForSMTP();
+				$sProvider = $oRemoteAuthentOAuth->Get('provider');
+				$sDisplayProvider = empty($sProvider) ? '<em>no Provider</em> ' : $sProvider;
+				$sClientID = $oRemoteAuthentOAuth->Get('client_id');
+				$sDisplayClientID = empty($sClientID) ? '<em>no password</em> ' : $sClientID;
+				$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, provider: $sDisplayProvider, user: $sDisplayUserName, client id: $sDisplayClientID, encryption: $sDisplayEncryption.");
+				if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sClientID == '') && ($sProvider == '')) {
+					$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().').');
+				}
+			} catch (CoreException $e) {
+				$bRet = false;
+				$oP->error($e->getMessage());
 			}
 			break;
 
@@ -194,9 +203,10 @@ function DisplayStep1(SetupPage $oP)
 			'input' => "<input id=\"to\" type=\"text\" name=\"to\" value=\"\">",
 			'help' => ' email address (e.g. john.foo@worldcompany.com)',
 		);
+		$sDefaultFrom = MetaModel::GetConfig()->Get('email_transport_smtp.username');
 		$aForm[] = array(
 			'label' => "From:",
-			'input' => "<input id=\"from\" type=\"text\" name=\"from\" value=\"\">",
+			'input' => "<input id=\"from\" type=\"text\" name=\"from\" value=\"$sDefaultFrom\">",
 			'help' => ' defaults to the configuration param "email_default_sender_address" or "To" field.',
 		);
 		$oP->form($aForm);
@@ -298,4 +308,4 @@ catch(CoreException $e)
 	$oP->error("Error: '".$e->getHtmlDesc()."'");	
 }
 $oP->output();
-?>
+

@@ -1582,20 +1582,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
 	'UI:Newsroom:DisplayMessagesFor_Provider' => 'Nachrichten von  %1$s anzeigen',
 	'UI:Newsroom:DisplayAtMost_X_Messages' => 'Zeigen Sie höchstens %1$s Beiträge im Menü (%2$s) an.',
 ));
-
-
-// OAuth
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
-));
