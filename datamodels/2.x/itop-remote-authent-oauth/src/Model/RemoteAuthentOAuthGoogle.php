@@ -57,4 +57,12 @@ class RemoteAuthentOAuthGoogle extends RemoteAuthentOAuth
 		return 'imap.gmail.com';
 	}
 
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		if ($sAttCode == 'provider' || $sAttCode == 'scope' || $sAttCode == 'redirect_url') {
+			return OPT_ATT_READONLY;
+		}
+
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
 }

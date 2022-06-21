@@ -14,12 +14,12 @@ class RemoteAuthentOAuthAzure extends RemoteAuthentOAuth
 		(
 			'category'            => 'cloud',
 			'key_type'            => 'autoincrement',
-			'name_attcode'        => ['provider','name'],
+			'name_attcode'        => ['provider', 'name'],
 			'state_attcode'       => '',
-			'reconc_keys'         => ['provider','name'],
+			'reconc_keys'         => ['provider', 'name'],
 			'db_table'            => 'priv_remote_authent_oauth_azure',
 			'db_key_field'        => 'id',
-			'icon' => utils::GetAbsoluteUrlModulesRoot().'itop-remote-authent-oauth/assets/img/icons8-azure.svg',
+			'icon'                => utils::GetAbsoluteUrlModulesRoot().'itop-remote-authent-oauth/assets/img/icons8-azure.svg',
 			'db_finalclass_field' => '',
 		);
 		MetaModel::Init_Params($aParams);
@@ -55,5 +55,14 @@ class RemoteAuthentOAuthAzure extends RemoteAuthentOAuth
 	public function GetDefaultMailServer()
 	{
 		return 'imap.office365.com';
+	}
+
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+		if ($sAttCode == 'provider' || $sAttCode == 'redirect_url') {
+			return OPT_ATT_READONLY;
+		}
+
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
 	}
 }
