@@ -5,7 +5,7 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-remote-authent-oauth/1.0.0',
+	'itop-remote-authent-oauth/2.7.7',
 	array(
 		// Identification
 		//
