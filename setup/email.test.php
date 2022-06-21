@@ -138,11 +138,12 @@ function CheckEmailSetting($oP)
 			$sDisplayUserName = empty($sUserName) ? '<em>no user</em> ' : $sUserName;
 			try {
 				$oRemoteAuthentOAuth = OAuthClientProviderFactory::GetRemoteAuthentOAuthForSMTP();
+				$sLink = MetaModel::GetHyperLink(get_class($oRemoteAuthentOAuth), $oRemoteAuthentOAuth->GetKey());
+				$oP->info("The connection used is: $sLink");
 				$sProvider = $oRemoteAuthentOAuth->Get('provider');
 				$sDisplayProvider = empty($sProvider) ? '<em>no Provider</em> ' : $sProvider;
 				$sClientID = $oRemoteAuthentOAuth->Get('client_id');
-				$sDisplayClientID = empty($sClientID) ? '<em>no password</em> ' : $sClientID;
-				$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, provider: $sDisplayProvider, user: $sDisplayUserName, client id: $sDisplayClientID, encryption: $sDisplayEncryption.");
+				$oP->info("SMTP configuration (from config-itop.php): host: $sHost, port: $sPort, provider: $sDisplayProvider, user: $sDisplayUserName, encryption: $sDisplayEncryption.");
 				if (($sHost == 'localhost') && ($sPort == '25') && ($sUserName == '') && ($sClientID == '') && ($sProvider == '')) {
 					$oP->warning("The default settings may not be suitable for your environment. You may want to adjust these values by editing iTop's configuration file (".utils::GetConfigFilePathRelative().').');
 				}

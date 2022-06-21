@@ -74,7 +74,7 @@ class AjaxRemoteAuthentOauthController extends Controller
 			$sClass,
 			$sId,
 			"$sClass:$sId:TokenCreated",
-			$bIsCreation ? Dict::S("RemoteAuthentOAuth:Message:TokenCreated") : Dict::S('RemoteAuthentOAuth:Message:TokenRecreated'),
+			$bIsCreation ? Dict::S('itop-remote-authent-oauth:Message:TokenCreated') : Dict::S('itop-remote-authent-oauth:Message:TokenRecreated'),
 			'ok',
 			1,
 			true

@@ -17,6 +17,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'itop-remote-authent-oauth:UsedForSMTP' => 'This connection is used for SMTP',
 	'itop-remote-authent-oauth:TestSMTP' => 'Email test',
 	'itop-remote-authent-oauth:MissingRemoteAuthentOAuth' => 'Missing Remote Authentication (OAuth) for user name %1$s',
+	'itop-remote-authent-oauth:Message:TokenCreated' => 'Connection token created',
+	'itop-remote-authent-oauth:Message:TokenRecreated' => 'Connection token regenerated',
 
 	'Class:RemoteAuthentOAuthGoogle' => 'Remote Google Authentication (OAuth)',
 	'Class:RemoteAuthentOAuthAzure' => 'Remote Microsoft Azure Authentication (OAuth)',
