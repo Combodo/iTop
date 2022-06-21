@@ -344,7 +344,7 @@ JS
 	 * @param \WebPage $oPage warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page !
 	 *   When writing to the page, markup will be put above the real header of the panel.
 	 *   To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
-	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see static::$sDisplayMode} and ENUM_DISPLAY_MODE_* constants instead
+	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see GetDisplayMode()} and ENUM_DISPLAY_MODE_* constants instead
 	 *
 	 * @return array{
 	 *       subtitle: \Combodo\iTop\Application\UI\Base\UIBlock[],
