@@ -189,6 +189,7 @@ class EMailLaminas extends Email
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 				break;
+
 			case 'SMTP_OAuth':
 				$sHost = self::$m_oConfig->Get('email_transport_smtp.host');
 				$sPort = self::$m_oConfig->Get('email_transport_smtp.port');
@@ -212,6 +213,7 @@ class EMailLaminas extends Email
 
 				\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::getProviderForSMTP());
 				break;
+
 			case 'Null':
 				$oTransport = new Smtp();
 				break;

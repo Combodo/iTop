@@ -137,7 +137,7 @@ function CheckEmailSetting($oP)
 			$sUserName = MetaModel::GetConfig()->Get('email_transport_smtp.username');
 			$sDisplayUserName = empty($sUserName) ? '<em>no user</em> ' : $sUserName;
 			try {
-				$oRemoteAuthentOAuth = OAuthClientProviderFactory::GetRemoteAuthentOAuthForSMTP();
+				$oRemoteAuthentOAuth = OAuthClientProviderFactory::GetOAuthClientForSMTP();
 				$sLink = MetaModel::GetHyperLink(get_class($oRemoteAuthentOAuth), $oRemoteAuthentOAuth->GetKey());
 				$oP->info("The connection used is: $sLink");
 				$sProvider = $oRemoteAuthentOAuth->Get('provider');

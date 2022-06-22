@@ -61,42 +61,9 @@ abstract class OAuthClientProviderAbstract implements IOAuthClientProvider
 	/**
 	 * @return string
 	 */
-	public static function GetVendorIcon(): string
-	{
-		return static::$sVendorIcon;
-	}
-
-	/**
-	 * @return string
-	 */
 	public static function GetVendorName(): string
 	{
 		return static::$sVendorName;
-	}
-
-
-	public static function getConfFromAccessToken($oAccessToken, $sClientId, $sClientSecret): string
-	{
-		$sAccessToken = $oAccessToken->getToken();
-		$sRefreshToken = $oAccessToken->getRefreshToken();
-		$sVendor = static::GetVendorName();
-
-		return <<<EOF
-'email_transport' => 'SMTP_OAuth',
-'email_transport_smtp.oauth.provider' => '$sVendor',
-'email_transport_smtp.oauth.client_id' => '$sClientId',
-'email_transport_smtp.oauth.client_secret' => '$sClientSecret',
-'email_transport_smtp.oauth.access_token' => '$sAccessToken',
-'email_transport_smtp.oauth.refresh_token' => '$sRefreshToken',
-EOF;
-	}
-
-	/**
-	 * @return array
-	 */
-	public static function GetVendorColors(): array
-	{
-		return static::$sVendorColors;
 	}
 
 	/**

@@ -18,19 +18,19 @@ class OAuthClientProviderFactory
 	 */
 	public static function getProviderForSMTP()
 	{
-		$oRemoteAuthentOAuth = self::GetRemoteAuthentOAuthForSMTP();
+		$oOAuthClient = self::GetOAuthClientForSMTP();
 
-		$sProviderVendor = $oRemoteAuthentOAuth->Get('provider');
+		$sProviderVendor = $oOAuthClient->Get('provider');
 		$sProviderClass = self::getProviderClass($sProviderVendor);
 		$aProviderVendorParams = [
-			'clientId'     => $oRemoteAuthentOAuth->Get('client_id'),
-			'clientSecret' => $oRemoteAuthentOAuth->Get('client_secret'),
+			'clientId'     => $oOAuthClient->Get('client_id'),
+			'clientSecret' => $oOAuthClient->Get('client_secret'),
 			'redirectUri'  => $sProviderClass::GetRedirectUri(),
 			'scope'        => $sProviderClass::GetRequiredSMTPScope(),
 		];
 		$aAccessTokenParams = [
-			"access_token"  => $oRemoteAuthentOAuth->Get('token'),
-			"refresh_token" => $oRemoteAuthentOAuth->Get('refresh_token'),
+			"access_token"  => $oOAuthClient->Get('token'),
+			"refresh_token" => $oOAuthClient->Get('refresh_token'),
 			'scope'         => $sProviderClass::GetRequiredSMTPScope(),
 		];
 		$aCollaborators = [
@@ -49,14 +49,20 @@ class OAuthClientProviderFactory
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public static function GetRemoteAuthentOAuthForSMTP()
+	public static function GetOAuthClientForSMTP()
 	{
 		$sUsername = MetaModel::GetConfig()->Get('email_transport_smtp.username');
-		$oSet = new DBObjectSet(DBSearch::FromOQL('SELECT RemoteAuthentOAuth WHERE name=:username', ['username' => $sUsername]));
-		if ($oSet->Count() != 1) {
-			throw new CoreException(Dict::Format('itop-remote-authent-oauth:MissingRemoteAuthentOAuth', $sUsername));
+		$oSet = new DBObjectSet(DBSearch::FromOQL("SELECT OAuthClient WHERE name=:username", ['username' => $sUsername]));
+		if ($oSet->Count() < 1) {
+			throw new CoreException(Dict::Format('itop-oauth-client:MissingOAuthClient', $sUsername));
 		}
-		return $oSet->Fetch();
+		while ($oOAuthClient = $oSet->Fetch()) {
+			$sScope =  $oOAuthClient->Get('scope');
+			if ($sScope == 'SMTP' || $sScope == 'EMail') {
+				return $oOAuthClient;
+			}
+		}
+		throw new CoreException(Dict::Format('itop-oauth-client:MissingOAuthClient', $sUsername));
 	}
 
 	/**
