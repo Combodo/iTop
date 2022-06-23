@@ -51,20 +51,24 @@ class OAuthClientGoogle extends OAuthClient
 		]));
 
 		MetaModel::Init_SetZListItems('details', [
-			0 => 'name',
-			1 => 'description',
-			2 => 'provider',
-			3 => 'scope',
-			4 => 'redirect_url',
-			5 => 'client_id',
-			6 => 'client_secret',
-			7 => 'mailbox_list',
+			'name',
+			'status',
+			'description',
+			'provider',
+			'scope',
+			'redirect_url',
+			'client_id',
+			'client_secret',
+			'mailbox_list',
 		]);
 		MetaModel::Init_SetZListItems('standard_search', [
-			0 => 'name',
-			2 => 'provider',
+			'name',
+			'provider',
+			'status',
 		]);
 		MetaModel::Init_SetZListItems('list', [
+			'status',
+			'provider',
 		]);
 	}
 

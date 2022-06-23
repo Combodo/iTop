@@ -37,6 +37,16 @@
           <default_value/>
           <is_null_allowed>false</is_null_allowed>
         </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>status</sql>
+          <default_value>inactive</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
         <field id="description" xsi:type="AttributeText">
           <sql>description</sql>
           <default_value/>
@@ -101,7 +111,7 @@
             if (!$bEditMode) {
               $oConfig = utils::GetConfig();
               $sScope = $this->Get('scope');
-              if (empty($this->Get('token'))) {
+              if ($this->Get('status') == 'inactive') {
                 $oPage->p('<b>'.Dict::S('itop-oauth-client:Message:MissingToken').'</b>');
               } elseif (($sScope == 'SMTP' || $sScope == 'EMail') && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
                 $sLabel = Dict::S('itop-oauth-client:UsedForSMTP');
@@ -111,6 +121,36 @@
               }
             }
        }
+        ]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+     	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+      {
+        if ($sAttCode == 'status') {
+          return OPT_ATT_READONLY;
+        }
+
+        return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+      }
+        ]]></code>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+      public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+      {
+        if ($sAttCode == 'status') {
+          return OPT_ATT_READONLY;
+        }
+
+        return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+      }
         ]]></code>
         </method>
         <method id="GetDefaultMailServer">
@@ -139,12 +179,15 @@
           <code><![CDATA[
             public function GetAccessToken()
             {
-                return new \League\OAuth2\Client\Token\AccessToken([
-                  'access_token'  => $this->Get('token'),
-                  'expires_in'    => date_format(new DateTime($this->Get('token_expiration')), 'U') - time(),
-                  'refresh_token' => $this->Get('refresh_token'),
-                  'token_type'    => 'Bearer',
-                ]);
+                if ($this->Get('status') == 'active') {
+                  return new \League\OAuth2\Client\Token\AccessToken([
+                    'access_token'  => $this->Get('token'),
+                    'expires_in'    => date_format(new DateTime($this->Get('token_expiration')), 'U') - time(),
+                    'refresh_token' => $this->Get('refresh_token'),
+                    'token_type'    => 'Bearer',
+                  ]);
+                }
+                return null;
             }
             ]]></code>
         </method>
@@ -159,6 +202,7 @@
                 if (!empty($oAccessToken->getRefreshToken())) {
                     $this->Set('refresh_token', $oAccessToken->getRefreshToken());
                 }
+                $this->Set('status', 'active');
                 $this->DBUpdate();
             }
             ]]></code>
@@ -190,6 +234,16 @@
             </item>
           </items>
         </details>
+        <list>
+          <items>
+            <item id="status">
+              <rank>1</rank>
+            </item>
+            <item id="provider">
+              <rank>3</rank>
+            </item>
+          </items>
+        </list>
         <search>
           <items>
             <item id="name">
