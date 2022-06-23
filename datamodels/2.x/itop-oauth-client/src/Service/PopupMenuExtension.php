@@ -7,7 +7,7 @@
 namespace Combodo\iTop\OAuthClient\Service;
 
 use ApplicationContext;
-use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderAbstract;
+use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 use Dict;
 use iPopupMenuExtension;
 use JSPopupMenuItem;
@@ -42,7 +42,7 @@ class PopupMenuExtension implements \iPopupMenuExtension
 					$sAjaxUri = utils::GetAbsoluteUrlModulePage(static::MODULE_CODE, 'ajax.php');
 					// Add a new menu item that triggers a custom JS function defined in our own javascript file: js/sample.js
 					$sJSFileUrl = utils::GetAbsoluteUrlModulesRoot().static::MODULE_CODE.'/assets/js/oauth_connect.js';
-					$sRedirectUri = OAuthClientProviderAbstract::GetRedirectUri();
+					$sRedirectUri = OAuthClientProviderFactory::GetRedirectUri();
 					$aResult[] = new JSPopupMenuItem(
 						$sMenu.' from '.$sObjClass,
 						Dict::S($sMenu),
@@ -52,7 +52,7 @@ class PopupMenuExtension implements \iPopupMenuExtension
 
 					if ($bHasToken) {
 						$sScope = $oObj->Get('scope');
-						if ($sScope == 'IMAP' || $sScope == 'EMail') {
+						if ($sScope == 'EMail') {
 							$aParams = $oAppContext->GetAsHash();
 							$sMenu = 'Menu:CreateMailbox';
 							$sObjClass = get_class($oObj);

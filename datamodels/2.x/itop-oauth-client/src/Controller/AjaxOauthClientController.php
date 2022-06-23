@@ -25,19 +25,15 @@ class AjaxOauthClientController extends Controller
 
 		IssueLog::Debug("GetAuthorizationUrl for $sClass::$sId", self::LOG_CHANNEL);
 
-		$oObject = MetaModel::GetObject($sClass, $sId);
+		/** @var \OAuthClient $oOAuthClient */
+		$oOAuthClient = MetaModel::GetObject($sClass, $sId);
 
 		$aResult = ['status' => 'success', 'data' => []];
-		$sProvider = $oObject->Get('provider');
-		$sClientId = $oObject->Get('client_id');
-		$sClientSecret = $oObject->Get('client_secret');
-		$sScope = $oObject->GetScope();
-		$aAdditional = [];
-		$sAuthorizationUrl = OAuthClientProviderFactory::getVendorProviderForAccessUrl($sProvider, $sClientId, $sClientSecret, $sScope, $aAdditional);
+
+		$sAuthorizationUrl = OAuthClientProviderFactory::GetAuthorizationUrl($oOAuthClient);
 		$aResult['data']['authorization_url'] = $sAuthorizationUrl;
 
 		$this->DisplayJSONPage($aResult);
-
 	}
 
 	public function OperationGetDisplayAuthenticationResults()
@@ -47,14 +43,9 @@ class AjaxOauthClientController extends Controller
 
 		IssueLog::Debug("GetDisplayAuthenticationResults for $sClass::$sId", self::LOG_CHANNEL);
 
-		$oObject = MetaModel::GetObject($sClass, $sId);
-		$bIsCreation = empty($oObject->Get('token'));
-
-		$sProvider = $oObject->Get('provider');
-		$sClientId = $oObject->Get('client_id');
-		$sClientSecret = $oObject->Get('client_secret');
-		$sScope = $oObject->GetScope();
-		$aAdditional = [];
+		/** @var \OAuthClient $oOAuthClient */
+		$oOAuthClient = MetaModel::GetObject($sClass, $sId);
+		$bIsCreation = empty($oOAuthClient->Get('token'));
 
 		$sRedirectUrl = utils::ReadParam('redirect_url', '', false, 'raw');
 
@@ -63,12 +54,9 @@ class AjaxOauthClientController extends Controller
 		$aQuery = [];
 		parse_str($sRedirectUrlQuery, $aQuery);
 		$sCode = $aQuery['code'];
-		$oProvider = OAuthClientProviderFactory::getVendorProvider($sProvider, $sClientId, $sClientSecret, $sScope, $aAdditional);
-		$oAccessToken = OAuthClientProviderFactory::getAccessTokenFromCode($oProvider, $sCode);
+		$oAccessToken = OAuthClientProviderFactory::GetAccessTokenFromCode($oOAuthClient, $sCode);
 
-		$oObject->Set('token', $oAccessToken->getToken());
-		$oObject->Set('refresh_token', $oAccessToken->getRefreshToken());
-		$oObject->DBUpdate();
+		$oOAuthClient->SetAccessToken($oAccessToken);
 
 		cmdbAbstractObject::SetSessionMessage(
 			$sClass,

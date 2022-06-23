@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderAbstract;
+use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 
 class OAuthClientGoogle extends OAuthClient
 {
@@ -72,14 +72,9 @@ class OAuthClientGoogle extends OAuthClient
 	{
 		$this->Set('provider', 'Google');
 		$this->Set('scope', 'EMail');
-		$this->Set('redirect_url', OAuthClientProviderAbstract::GetRedirectUri());
+		$this->Set('redirect_url', OAuthClientProviderFactory::GetRedirectUri());
 
 		parent::PrefillCreationForm($aContextParam);
-	}
-
-	public function GetDefaultMailServer()
-	{
-		return 'imap.gmail.com';
 	}
 
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
@@ -115,31 +110,21 @@ class OAuthClientGoogle extends OAuthClient
 			$this->Set('provider', 'Google');
 		}
 		if (empty($this->Get('redirect_url'))) {
-			$this->Set('redirect_url', OAuthClientProviderAbstract::GetRedirectUri());
+			$this->Set('redirect_url', OAuthClientProviderFactory::GetRedirectUri());
 		}
 		if (empty($this->Get('scope'))) {
 			$this->Set('scope', 'EMail');
 		}
 	}
 
+
+	public function GetDefaultMailServer()
+	{
+		return 'imap.gmail.com';
+	}
+
 	public function GetScope()
 	{
 		return 'https://mail.google.com/';
-	}
-
-	public function AfterInsert()
-	{
-		parent::AfterInsert();
-		$sClass = get_class($this);
-		$sId = $this->GetKey();
-		cmdbAbstractObject::SetSessionMessage(
-			$sClass,
-			$sId,
-			"$sClass:$sId:OAuthClientCreated",
-			Dict::S('itop-oauth-client:Message:OAuthClientCreated'),
-			'info',
-			100,
-			true
-		);
 	}
 }

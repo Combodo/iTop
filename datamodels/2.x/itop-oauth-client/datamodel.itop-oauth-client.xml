@@ -101,7 +101,9 @@
             if (!$bEditMode) {
               $oConfig = utils::GetConfig();
               $sScope = $this->Get('scope');
-              if (($sScope == 'SMTP' || $sScope == 'EMail') && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
+              if (empty($this->Get('token'))) {
+                $oPage->p('<b>'.Dict::S('itop-oauth-client:Message:MissingToken').'</b>');
+              } elseif (($sScope == 'SMTP' || $sScope == 'EMail') && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
                 $sLabel = Dict::S('itop-oauth-client:UsedForSMTP');
                 $sTestLabel = Dict::S('itop-oauth-client:TestSMTP');
                 $sTestURL = utils::GetAbsoluteUrlAppRoot().'setup/email.test.php';
@@ -128,6 +130,36 @@
             public function GetDefaultMailServerPort()
             {
                 return 993;
+            }
+            ]]></code>
+        </method>
+        <method id="GetAccessToken">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+            public function GetAccessToken()
+            {
+                return new \League\OAuth2\Client\Token\AccessToken([
+                  'access_token'  => $this->Get('token'),
+                  'expires_in'    => date_format(new DateTime($this->Get('token_expiration')), 'U') - time(),
+                  'refresh_token' => $this->Get('refresh_token'),
+                  'token_type'    => 'Bearer',
+                ]);
+            }
+            ]]></code>
+        </method>
+        <method id="SetAccessToken">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+            public function SetAccessToken(\League\OAuth2\Client\Token\AccessTokenInterface $oAccessToken)
+            {
+                $this->Set('token', $oAccessToken->getToken());
+                $this->Set('token_expiration', date(AttributeDateTime::GetSQLFormat(), $oAccessToken->getExpires()));
+                if (!empty($oAccessToken->getRefreshToken())) {
+                    $this->Set('refresh_token', $oAccessToken->getRefreshToken());
+                }
+                $this->DBUpdate();
             }
             ]]></code>
         </method>

@@ -28,7 +28,6 @@ SetupWebPage::AddModule(
 			'src/Model/OAuthClientGoogle.php',
 			'src/Model/OAuthClientAzure.php',
 			'src/Service/PopupMenuExtension.php',
-			'src/Service/ApplicationObjectExtension.php',
 		),
 		'webservice' => array(
 			

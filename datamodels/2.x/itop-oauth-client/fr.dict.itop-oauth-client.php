@@ -17,7 +17,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'itop-oauth-client:UsedForSMTP' => 'Ce client Oauth est utilisé pour SMTP',
 	'itop-oauth-client:TestSMTP' => 'Tester l\'envoi de mail',
 	'itop-oauth-client:MissingOAuthClient' => 'Il n\'y a pas de client OAuth pour l\'utilisateur %1$s',
-	'itop-oauth-client:Message:OAuthClientCreated' => 'Générez les jetons d\'accès avant d\'utiliser cd client OAuth',
+	'itop-oauth-client:Message:MissingToken' => 'Générez le jeton d\'accès avant d\'utiliser ce client OAuth',
 	'itop-oauth-client:Message:TokenCreated' => 'Le jeton d\'accès à été créé',
 	'itop-oauth-client:Message:TokenRecreated' => 'Le jeton d\'accès à été renouvelé',
 ]);

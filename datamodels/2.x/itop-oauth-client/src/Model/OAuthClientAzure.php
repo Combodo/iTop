@@ -4,7 +4,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderAbstract;
+use Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory;
 
 class OAuthClientAzure extends OAuthClient
 {
@@ -40,10 +40,10 @@ class OAuthClientAzure extends OAuthClient
 		MetaModel::Init_Params($aParams);
 		MetaModel::Init_InheritAttributes();
 		MetaModel::Init_AddAttribute(new AttributeEnum('scope', [
-			'allowed_values'        => new ValueSetEnum('SMTP,IMAP'),
+			'allowed_values'        => new ValueSetEnum('EMail'),
 			'display_style'         => 'list',
 			'sql'                   => 'scope',
-			'default_value'         => 'SMTP',
+			'default_value'         => 'EMail',
 			'is_null_allowed'       => false,
 			'depends_on'            => [],
 			'always_load_in_tables' => true,
@@ -70,7 +70,7 @@ class OAuthClientAzure extends OAuthClient
 	public function PrefillCreationForm(&$aContextParam)
 	{
 		$this->Set('provider', 'Azure');
-		$this->Set('redirect_url', OAuthClientProviderAbstract::GetRedirectUri());
+		$this->Set('redirect_url', OAuthClientProviderFactory::GetRedirectUri());
 
 		parent::PrefillCreationForm($aContextParam);
 	}
@@ -90,13 +90,8 @@ class OAuthClientAzure extends OAuthClient
 			$this->Set('provider', 'Azure');
 		}
 		if (empty($this->Get('redirect_url'))) {
-			$this->Set('redirect_url', OAuthClientProviderAbstract::GetRedirectUri());
+			$this->Set('redirect_url', OAuthClientProviderFactory::GetRedirectUri());
 		}
-	}
-
-	public function GetDefaultMailServer()
-	{
-		return 'outlook.office365.com';
 	}
 
 	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
@@ -117,31 +112,13 @@ class OAuthClientAzure extends OAuthClient
 		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
 	}
 
+	public function GetDefaultMailServer()
+	{
+		return 'outlook.office365.com';
+	}
 
 	public function GetScope()
 	{
-		$sScope = $this->Get('scope');
-		if ($sScope == 'IMAP') {
-			return 'https://outlook.office.com/IMAP.AccessAsUser.All offline_access';
-		}
-
-		// default is smtp
-		return 'https://outlook.office.com/SMTP.Send offline_access';
-	}
-
-	public function AfterInsert()
-	{
-		parent::AfterInsert();
-		$sClass = get_class($this);
-		$sId = $this->GetKey();
-		cmdbAbstractObject::SetSessionMessage(
-			$sClass,
-			$sId,
-			"$sClass:$sId:OAuthClientCreated",
-			Dict::S('itop-oauth-client:Message:OAuthClientCreated'),
-			'info',
-			100,
-			true
-		);
+		return 'https://outlook.office.com/IMAP.AccessAsUser.All https://outlook.office.com/SMTP.Send offline_access';
 	}
 }

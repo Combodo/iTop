@@ -18,7 +18,7 @@ Dict::Add('JA JP', 'Japanese', '日本語', [
 	'itop-oauth-client:UsedForSMTP' => 'This OAuth client is used for SMTP~~',
 	'itop-oauth-client:TestSMTP' => 'Email send test~~',
 	'itop-oauth-client:MissingOAuthClient' => 'Missing Oauth client for user name %1$s~~',
-	'itop-oauth-client:Message:OAuthClientCreated' => 'Generate access tokens before using this OAuth client~~',
+	'itop-oauth-client:Message:MissingToken' => 'Generate access token before using this OAuth client~~',
 	'itop-oauth-client:Message:TokenCreated' => 'Access token created~~',
 	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated~~',
 ]);

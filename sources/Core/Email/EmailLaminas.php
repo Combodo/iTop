@@ -211,7 +211,7 @@ class EMailLaminas extends Email
 				$oOptions = new SmtpOptions($aOptions);
 				$oTransport->setOptions($oOptions);
 
-				\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::getProviderForSMTP());
+				\Laminas\Mail\Protocol\Smtp\Auth\Oauth::setProvider(OAuthClientProviderFactory::GetProviderForSMTP());
 				break;
 
 			case 'Null':
