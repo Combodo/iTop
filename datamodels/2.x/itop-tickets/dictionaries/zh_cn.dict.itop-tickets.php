@@ -68,11 +68,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Ticket/Attribute:private_log' => '私信',
 	'Class:Ticket/Attribute:private_log+' => '',
 	'Class:Ticket/Attribute:contacts_list' => '联系人',
-	'Class:Ticket/Attribute:contacts_list+' => '该工单相关的所有联系人',
+	'Class:Ticket/Attribute:contacts_list+' => '此工单相关的所有联系人',
 	'Class:Ticket/Attribute:functionalcis_list' => '配置项',
-	'Class:Ticket/Attribute:functionalcis_list+' => '该工单相关的所有配置项.',
+	'Class:Ticket/Attribute:functionalcis_list+' => '此工单相关的所有配置项.',
 	'Class:Ticket/Attribute:workorders_list' => '工作任务',
-	'Class:Ticket/Attribute:workorders_list+' => '该工单相关的所有工作任务',
+	'Class:Ticket/Attribute:workorders_list+' => '此工单相关的所有工作任务',
 	'Class:Ticket/Attribute:finalclass' => '类型',
 	'Class:Ticket/Attribute:finalclass+' => '',
 	'Class:Ticket/Attribute:operational_status' => '操作状态',
@@ -232,7 +232,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:cmdbAbstractObject/Method:Copy/Param:1'                   => '目标字段',
 	'Class:cmdbAbstractObject/Method:Copy/Param:1+'                  => '填写当前对象',
 	'Class:cmdbAbstractObject/Method:Copy/Param:2'                   => '源字段',
-	'Class:cmdbAbstractObject/Method:Copy/Param:2+'                  => '该字段从当前对象获取值',
+	'Class:cmdbAbstractObject/Method:Copy/Param:2+'                  => '此字段从当前对象获取值',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus'                  => 'ApplyStimulus',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus+'                 => 'Apply the specified stimulus to the current object',
 	'Class:cmdbAbstractObject/Method:ApplyStimulus/Param:1'          => 'Stimulus code',
@@ -249,7 +249,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Document/Attribute:contracts_list' => '合同',
-	'Class:Document/Attribute:contracts_list+' => '该文档关联的所有合同',
+	'Class:Document/Attribute:contracts_list+' => '此文档关联的所有合同',
 	'Class:Document/Attribute:services_list' => '服务',
-	'Class:Document/Attribute:services_list+' => '该文档关联的所有服务',
+	'Class:Document/Attribute:services_list+' => '此文档关联的所有服务',
 ));
