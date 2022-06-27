@@ -2322,12 +2322,12 @@ EOF
 				$sMainColorScssVariableDeclaration = "$sMainColorScssVariableName: $sMainColorForCss !default;";
 				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
 
-				$sCssRegularClassMainColorDeclaration = "--ibo-main-color: $sMainColorScssVariableName;";
+				$sCssRegularClassMainColorDeclaration = "--ibo-main-color:  #{{$sMainColorScssVariableName}};";
 				// Note: We have to manually force the alpha channel in case the given color is transparent
-				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100);";
-				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900);";
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
 
-				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: $sMainColorScssVariableName;";
+				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {
 				$sMainColorScssVariableDeclaration = null;
 
@@ -2344,9 +2344,9 @@ EOF
 				$sComplementaryScssVariableDeclaration = "$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;";
 				$sComplementaryCssVariableDeclaration = "$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};";
 
-				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color: $sComplementaryColorScssVariableName;";
+				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color:  #{{$sComplementaryColorScssVariableName}};";
 
-				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color: $sComplementaryColorScssVariableName;";
+				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color:  #{{$sComplementaryColorScssVariableName}};";
 			} else {
 				$sComplementaryScssVariableDeclaration = null;
 				$sComplementaryCssVariableDeclaration = null;

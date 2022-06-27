@@ -21,6 +21,8 @@ use Combodo\iTop\Application\Helper\Session;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use ScssPhp\ScssPhp\Compiler;
+use ScssPhp\ScssPhp\OutputStyle;
+use ScssPhp\ScssPhp\ValueConverter;
 
 
 /**
@@ -1940,20 +1942,25 @@ class utils
 	 */
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
-		$oSass = new Compiler();
-		$oSass->setFormatter('ScssPhp\\ScssPhp\\Formatter\\Compressed');
+		$oSass = new Compiler();//['checkImportResolutions'=>true]);
+		$oSass->setOutputStyle(OutputStyle::EXPANDED);
 		// Setting our variables
-		$oSass->setVariables($aVariables);
+		$aCssVariable = [];
+		foreach ($aVariables as $entry=>$value) {
+				$aCssVariable[$entry] = ValueConverter::parseValue($value);
+		}
+		$oSass->addVariables($aCssVariable);
 		// Setting our imports paths
 		$oSass->setImportPaths($aImportPaths);
 		// Temporary disabling max exec time while compiling
 		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 		set_time_limit(0);
 		// Compiling SASS
-		$sCss = $oSass->compile($sSassContent);
+		//checkImportResolutions
+		$sCss = $oSass->compileString($sSassContent);
 		set_time_limit(intval($iCurrentMaxExecTime));
 
-		return $sCss;
+		return $sCss->getCss();
 	}
 	
 	public static function GetImageSize($sImageData)
