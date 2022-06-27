@@ -5,17 +5,17 @@
 
 SetupWebPage::AddModule(
 	__FILE__, // Path to the current file, all other file names are relative to the directory containing this file
-	'itop-oauth-client/2.7.7',
+	'itop-oauth-client/3.0.1',
 	array(
 		// Identification
 		//
-		'label' => 'OAuth 2.0 client',
-		'category' => 'business',
+		'label'        => 'OAuth 2.0 client',
+		'category'     => 'business',
 
 		// Setup
 		//
 		'dependencies' => array(
-			'itop-welcome-itil/2.7.7,'
+			'itop-welcome-itil/3.0.1,',
 		),
 		'mandatory' => false,
 		'visible' => true,
