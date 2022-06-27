@@ -356,7 +356,8 @@ try {
 		if (!$bSimulate)
 		{
 			// We're doing it for real, let's create a change
-			CMDBObject::SetCurrentChangeFromParams('$sUserString', CMDBChangeOrigin::CSV_INTERACTIVE);
+			$sUserString = CMDBChange::GetCurrentUserName().' (CSV)';
+			CMDBObject::SetCurrentChangeFromParams($sUserString, CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
 		CMDBObject::SetTrackOrigin('csv-interactive');

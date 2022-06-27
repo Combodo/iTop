@@ -76,7 +76,7 @@ class TicketsInstaller extends ModuleInstallerAPI
 				&& version_compare($sPreviousVersion, '3.0.0', '<'))) {
 			$oDataLoader = new XMLDataLoader();
 
-			CMDBObject::SetTrackInfo("Initialization");
+			CMDBObject::SetTrackInfo("Initialization TicketsInstaller");
 			$oMyChange = CMDBObject::GetCurrentChange();
 
 			$sLang = null;
