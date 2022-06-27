@@ -29,10 +29,5 @@
         </cells>
       </definition>
     </menu>
-    <menu id="OAuthWizardMenu" xsi:type="WebPageMenuNode" _delta="define">
-      <rank>45</rank>
-      <parent>ConfigurationTools</parent>
-      <url>$pages/oauth.wizard.php</url>
-    </menu>
   </menus>
 </itop_design>

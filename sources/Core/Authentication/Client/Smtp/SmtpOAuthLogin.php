@@ -51,7 +51,7 @@ class Oauth extends Login
 	 *
 	 * @return void
 	 */
-	public static function setProvider(OAuthClientProviderAbstract $oProvider): void
+	public static function setProvider(OAuthClientProviderAbstract $oProvider)
 	{
 		self::$oProvider = $oProvider;
 	}
@@ -73,7 +73,7 @@ class Oauth extends Login
 			}
 		}
 		catch (IdentityProviderException $e) {
-			IssueLog::Error('Failed to get oAuth credentials for outgoing mails for provider '.self::$oProvider::GetVendorName(), static::LOG_CHANNEL);
+			IssueLog::Error('Failed to get oAuth credentials for outgoing mails for provider '.self::$oProvider::GetVendorName().' '.$e->getMessage(), static::LOG_CHANNEL);
 
 			return false;
 		}
