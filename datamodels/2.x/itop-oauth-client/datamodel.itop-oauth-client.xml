@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<itop_design xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.7">
+  <constants/>
+  <classes>
+    <class id="OAuthClient" _delta="define">
+      <parent>cmdbAbstractObject</parent>
+      <properties>
+        <category>cloud,searchable</category>
+        <abstract>true</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_oauth_client</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <display_template/>
+        <icon/>
+        <reconciliation>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+      </properties>
+      <fields>
+        <field id="provider" xsi:type="AttributeString">
+          <sql>provider</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="name" xsi:type="AttributeString">
+          <sql>name</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="active">active</value>
+            <value id="inactive">inactive</value>
+          </values>
+          <sql>status</sql>
+          <default_value>inactive</default_value>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="description" xsi:type="AttributeText">
+          <sql>description</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="client_id" xsi:type="AttributeText">
+          <sql>client_id</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="client_secret" xsi:type="AttributeText">
+          <sql>client_secret</sql>
+          <default_value/>
+          <is_null_allowed>false</is_null_allowed>
+        </field>
+        <field id="refresh_token" xsi:type="AttributeText">
+          <sql>refresh_token</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="refresh_token_expiration" xsi:type="AttributeDateTime">
+          <sql>refresh_token_expiration</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="token" xsi:type="AttributeText">
+          <sql>token</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="token_expiration" xsi:type="AttributeDateTime">
+          <sql>token_expiration</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+          <tracking_level>none</tracking_level>
+        </field>
+        <field id="redirect_url" xsi:type="AttributeURL">
+          <sql>redirect_url</sql>
+          <default_value/>
+          <target>_blank</target>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="mailbox_list" xsi:type="AttributeLinkedSet">
+          <linked_class>MailInboxOAuth</linked_class>
+          <ext_key_to_me>oauth_client_id</ext_key_to_me>
+          <count_min>0</count_min>
+          <count_max>0</count_max>
+        </field>
+      </fields>
+      <methods>
+        <method id="DisplayBareHeader">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+      public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+      {
+            parent::DisplayBareHeader($oPage, $bEditMode);
+            if (!$bEditMode) {
+              $oConfig = utils::GetConfig();
+              $sScope = $this->Get('scope');
+              if ($this->Get('status') == 'inactive') {
+                $oPage->p('<b>'.Dict::S('itop-oauth-client:Message:MissingToken').'</b>');
+              } elseif (($sScope == 'SMTP' || $sScope == 'EMail') && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
+                $sLabel = Dict::S('itop-oauth-client:UsedForSMTP');
+                $sTestLabel = Dict::S('itop-oauth-client:TestSMTP');
+                $sTestURL = utils::GetAbsoluteUrlAppRoot().'setup/email.test.php';
+                $oPage->p("<b>$sLabel</b>&nbsp;<a href='$sTestURL' target='_blank'>$sTestLabel</a>");
+              }
+            }
+       }
+        ]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+     	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+      {
+        if ($sAttCode == 'status') {
+          return OPT_ATT_READONLY;
+        }
+
+        return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+      }
+        ]]></code>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+      public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+      {
+        if ($sAttCode == 'status') {
+          return OPT_ATT_READONLY;
+        }
+
+        return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+      }
+        ]]></code>
+        </method>
+        <method id="GetDefaultMailServer">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+            public function GetDefaultMailServer()
+            {
+                return 'imap.'.$this->Get('provider').'.com';
+            }
+            ]]></code>
+        </method>
+        <method id="GetDefaultMailServerPort">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+            public function GetDefaultMailServerPort()
+            {
+                return 993;
+            }
+            ]]></code>
+        </method>
+        <method id="GetAccessToken">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+            public function GetAccessToken()
+            {
+                if ($this->Get('status') == 'active') {
+                  return new \League\OAuth2\Client\Token\AccessToken([
+                    'access_token'  => $this->Get('token'),
+                    'expires_in'    => date_format(new DateTime($this->Get('token_expiration')), 'U') - time(),
+                    'refresh_token' => $this->Get('refresh_token'),
+                    'token_type'    => 'Bearer',
+                  ]);
+                }
+                return null;
+            }
+            ]]></code>
+        </method>
+        <method id="SetAccessToken">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+            public function SetAccessToken(\League\OAuth2\Client\Token\AccessTokenInterface $oAccessToken)
+            {
+                $this->Set('token', $oAccessToken->getToken());
+                $this->Set('token_expiration', date(AttributeDateTime::GetSQLFormat(), $oAccessToken->getExpires()));
+                if (!empty($oAccessToken->getRefreshToken())) {
+                    $this->Set('refresh_token', $oAccessToken->getRefreshToken());
+                }
+                $this->Set('status', 'active');
+                $this->DBUpdate();
+            }
+            ]]></code>
+        </method>
+      </methods>
+      <presentation>
+        <details>
+          <items>
+            <item id="name">
+              <rank>1</rank>
+            </item>
+            <item id="description">
+              <rank>2</rank>
+            </item>
+            <item id="provider">
+              <rank>3</rank>
+            </item>
+            <item id="redirect_url">
+              <rank>5</rank>
+            </item>
+            <item id="client_id">
+              <rank>6</rank>
+            </item>
+            <item id="client_secret">
+              <rank>7</rank>
+            </item>
+            <item id="mailbox_list">
+              <rank>8</rank>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="status">
+              <rank>1</rank>
+            </item>
+            <item id="provider">
+              <rank>3</rank>
+            </item>
+          </items>
+        </list>
+        <search>
+          <items>
+            <item id="name">
+              <rank>1</rank>
+            </item>
+            <item id="provider">
+              <rank>2</rank>
+            </item>
+          </items>
+        </search>
+        <default_search>
+          <items>
+            <item id="name">
+              <rank>1</rank>
+            </item>
+            <item id="provider">
+              <rank>2</rank>
+            </item>
+          </items>
+        </default_search>
+      </presentation>
+    </class>
+  </classes>
+  <menus>
+    <menu id="OAuthClient" xsi:type="OQLMenuNode" _delta="define">
+      <rank>100</rank>
+      <parent>ConfigurationTools</parent>
+      <oql><![CDATA[SELECT OAuthClient]]></oql>
+      <do_search>1</do_search>
+      <enable_admin_only>0</enable_admin_only>
+      <enable_class>OAuthClient</enable_class>
+      <enable_action>UR_ACTION_READ</enable_action>
+    </menu>
+  </menus>
+  <user_rights>
+    <groups>
+    </groups>
+    <profiles>
+    </profiles>
+  </user_rights>
+</itop_design>

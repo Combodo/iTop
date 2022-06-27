@@ -1667,22 +1667,6 @@ Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'Menu:ConfigurationTools'     => 'Configuration~~',
 ));
 
-// OAuth
-Dict::Add('JA JP', 'Japanese', '日本語', array(
-	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title'                   => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title'                    => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title'              => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label'     => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label'        => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label'   => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label'  => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label'      => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title'        => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description'  => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
-));
-
 // Additional language entries not present in English dict
 Dict::Add('JA JP', 'Japanese', '日本語', array(
 	'UI:Toggle:StandardDashboard' => 'Standard~~',

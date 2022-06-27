@@ -155,7 +155,7 @@ class ormCaseLog {
 					break;
 
 				case static::ENUM_FORMAT_HTML:
-					$sHtmlEntry = $sTextEntry;
+					$sHtmlEntry = InlineImage::FixUrls($sTextEntry);
 					$sTextEntry = utils::HtmlToText($sHtmlEntry);
 					break;
 			}
@@ -723,7 +723,7 @@ class ormCaseLog {
 			}
 			else
 			{
-				$sRes = $sRaw;
+				$sRes = InlineImage::FixUrls($sRaw);
 			}
 			break;
 		}
@@ -758,6 +758,6 @@ class ormCaseLog {
 		}
 		$iPos += $this->m_aIndex[$index]['separator_length'];
 		$sText = substr($this->m_sLog, $iPos, $this->m_aIndex[$index]['text_length']);
-		return $sText;
+		return InlineImage::FixUrls($sText);
 	}
 }
