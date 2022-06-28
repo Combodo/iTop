@@ -40,8 +40,22 @@
         <field id="status" xsi:type="AttributeEnum">
           <always_load_in_tables>true</always_load_in_tables>
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+              <style>
+                <main_color>$ibo-lifecycle-active-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-active-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <style>
+                <main_color>$ibo-lifecycle-inactive-state-primary-color</main_color>
+                <complementary_color>$ibo-lifecycle-inactive-state-secondary-color</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>inactive</default_value>
