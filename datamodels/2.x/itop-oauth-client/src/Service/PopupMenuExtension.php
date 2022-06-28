@@ -58,7 +58,7 @@ class PopupMenuExtension implements \iPopupMenuExtension
 							$sObjClass = get_class($oObj);
 							$aParams['class'] = $sObjClass;
 							$aParams['id'] = $oObj->GetKey();
-							$aParams['operation'] = 'CreateMailBox';
+							$aParams['operation'] = 'CreateMailbox';
 							$aResult[] = new URLPopupMenuItem(
 								$sMenu.' from '.$sObjClass,
 								Dict::S($sMenu),
