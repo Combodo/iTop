@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '6550a4fd2c2024f20270c230ffcac622eac81788',
+        'reference' => 'b4f827f399a5d20dbe01c4da84a7dba41aaecb15',
         'name' => '__root__',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '6550a4fd2c2024f20270c230ffcac622eac81788',
+            'reference' => 'b4f827f399a5d20dbe01c4da84a7dba41aaecb15',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -321,12 +321,12 @@
             ),
         ),
         'scssphp/scssphp' => array(
-            'pretty_version' => '1.0.6',
-            'version' => '1.0.6.0',
+            'pretty_version' => 'v1.10.3',
+            'version' => '1.10.3.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../scssphp/scssphp',
             'aliases' => array(),
-            'reference' => '5b3c9d704950d8f9637f5110c36c281ec47dc13c',
+            'reference' => '0f1e1516ed2412ad43e42a6a319e77624ba1f713',
             'dev_requirement' => false,
         ),
         'symfony/cache' => array(

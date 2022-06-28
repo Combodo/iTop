@@ -89,7 +89,7 @@ $ibo-panel--collapsible-toggler--color: $ibo-color-grey-700 !default;
 
 
 .ibo-panel {
-  --ibo-main-color: map-get($ibo-panel-colors, 'neutral'); /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
+  --ibo-main-color: map-get(#{$ibo-panel-colors}, 'neutral'); /* --ibo-main-color is to allow overload from custom dynamic value from the DM. The overload will be done through an additional CSS class of a particular DM class or DM attribute */
 
   position: relative;
 
