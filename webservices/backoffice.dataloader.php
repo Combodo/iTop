@@ -90,48 +90,37 @@ try
 	// Note: the data model must be loaded first
 	$oDataLoader = new XMLDataLoader();
 
-	if (empty($sFileName))
-	{
+	if (empty($sFileName)) {
 		throw(new Exception("Missing argument 'file'"));
 	}
-	if (!file_exists($sFileName))
-	{
+	if (!file_exists($sFileName)) {
 		throw(new Exception("File $sFileName does not exist"));
 	}
 
 	SetMemoryLimit($oP);
-	
+
 
 	// The XMLDataLoader constructor has initialized the DB, let's start a transaction 
 	CMDBSource::Query('START TRANSACTION');
-	
-	$oChange = MetaModel::NewObject("CMDBChange");
-	$oChange->Set("date", time());
-	$oChange->Set("userinfo", "Initialization");
-	$iChangeId = $oChange->DBInsert();
-	$oP->p("Starting data load.");		
-	$oDataLoader->StartSession($oChange);
-	
+
+	$oP->p("Starting data load.");
+	CMDBObject::SetCurrentChangeFromParams('Initialization WS');
+	$oDataLoader->StartSession(CMDBObject::GetCurrentChange());
 	$oDataLoader->LoadFile($sFileName);
-	
+
 	$oP->p("Ending data load session");
-	if ($oDataLoader->EndSession(true /* strict */))
-	{
+	if ($oDataLoader->EndSession(true /* strict */)) {
 		$iCountCreated = $oDataLoader->GetCountCreated();
 		CMDBSource::Query('COMMIT');
 
 		$oP->p("Data successfully written into the DB: $iCountCreated objects created");
-	}
-	else
-	{
+	} else {
 		CMDBSource::Query('ROLLBACK');
 		$oP->p("Some issues have been encountered, changes will not be recorded, please review the source data");
 		$aErrors = $oDataLoader->GetErrors();
-		if (count($aErrors) > 0)
-		{
+		if (count($aErrors) > 0) {
 			$oP->p('Errors ('.count($aErrors).')');
-			foreach ($aErrors as $sMsg)
-			{
+			foreach ($aErrors as $sMsg) {
 				$oP->p(' * '.$sMsg);
 			}
 		}

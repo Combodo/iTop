@@ -360,7 +360,6 @@ try {
 			CMDBObject::SetCurrentChangeFromParams($sUserString, CMDBChangeOrigin::CSV_INTERACTIVE);
 			$oMyChange = CMDBObject::GetCurrentChange();
 		}
-		CMDBObject::SetTrackOrigin('csv-interactive');
 	
 		$oBulk = new BulkChange(
 			$sClassName,
