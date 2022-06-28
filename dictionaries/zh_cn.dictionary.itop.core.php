@@ -22,7 +22,7 @@
  */
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:DeletedObjectLabel' => '%1s (已删除)',
-	'Core:DeletedObjectTip'   => 'The object has been deleted on %1$s (%2$s)',
+	'Core:DeletedObjectTip'   => '对象已被删除于 %1$s (%2$s)',
 
 	'Core:UnknownObjectLabel' => '对象找不到 (class: %1$s, id: %2$d)',
 	'Core:UnknownObjectTip'   => 'The object could not be found. It may have been deleted some time ago and the log has been purged since.',
@@ -75,7 +75,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'Core:AttributeArchiveFlag' => '是否归档',
 	'Core:AttributeArchiveFlag/Value:yes' => '是',
-	'Core:AttributeArchiveFlag/Value:yes+' => '该对象仅在归档模式可见',
+	'Core:AttributeArchiveFlag/Value:yes+' => '此对象仅在归档模式可见',
 	'Core:AttributeArchiveFlag/Value:no' => '否',
 	'Core:AttributeArchiveFlag/Label' => '已归档',
 	'Core:AttributeArchiveFlag/Label+' => '',
@@ -115,18 +115,18 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeText+' => '多行字符串',
 
 	'Core:AttributeHTML' => 'HTML',
-	'Core:AttributeHTML+' => 'HTML string',
+	'Core:AttributeHTML+' => 'HTML字符串',
 
 	'Core:AttributeEmailAddress' => '邮箱地址',
 	'Core:AttributeEmailAddress+' => '邮箱地址',
 
-	'Core:AttributeIPAddress' => 'IP 地址',
-	'Core:AttributeIPAddress+' => 'IP 地址',
+	'Core:AttributeIPAddress' => 'IP地址',
+	'Core:AttributeIPAddress+' => 'IP地址',
 
 	'Core:AttributeOQL' => 'OQL',
 	'Core:AttributeOQL+' => 'Object Query Langage expression',
 
-	'Core:AttributeEnum' => 'Enum',
+	'Core:AttributeEnum' => '列举',
 	'Core:AttributeEnum+' => 'List of predefined alphanumeric strings',
 
 	'Core:AttributeTemplateString' => '字符模板',
@@ -135,11 +135,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:AttributeTemplateText' => '文字模板',
 	'Core:AttributeTemplateText+' => '包含占位符的文本',
 
-	'Core:AttributeTemplateHTML' => 'HTML 模板',
+	'Core:AttributeTemplateHTML' => 'HTML模板',
 	'Core:AttributeTemplateHTML+' => 'HTML containing placeholders',
 
 	'Core:AttributeDateTime' => '日期/时间',
-	'Core:AttributeDateTime+' => 'Date and time (year-month-day hh:mm:ss)',
+	'Core:AttributeDateTime+' => 'Date and time (年-月-日 时:分:秒)',
 	'Core:AttributeDateTime?SmartSearch' => '
 <p>
 	日期格式:<br/>
@@ -180,7 +180,7 @@ Operators:<br/>
 	'Core:AttributeHierarchicalKey' => 'Hierarchical Key',
 	'Core:AttributeHierarchicalKey+' => 'External (or foreign) key to the parent',
 
-	'Core:AttributeExternalField' => 'External field',
+	'Core:AttributeExternalField' => '外部字段',
 	'Core:AttributeExternalField+' => 'Field mapped to an external key',
 
 	'Core:AttributeURL' => 'URL',
@@ -192,8 +192,8 @@ Operators:<br/>
 	'Core:AttributeOneWayPassword' => '单向密码',
 	'Core:AttributeOneWayPassword+' => '单向加密(或哈希) 的密码',
 
-	'Core:AttributeTable' => 'Table',
-	'Core:AttributeTable+' => 'Indexed array having two dimensions',
+	'Core:AttributeTable' => '表',
+	'Core:AttributeTable+' => '带索引的二维数组',
 
 	'Core:AttributePropertySet' => '属性',
 	'Core:AttributePropertySet+' => 'List of untyped properties (name and value)',
@@ -208,10 +208,10 @@ Operators:<br/>
 	'Core:AttributeTag+' => '标签',
 	
 	'Core:Context=REST/JSON' => 'REST',
-	'Core:Context=Synchro' => 'Synchro~~',
+	'Core:Context=Synchro' => '同步',
 	'Core:Context=Setup' => '安装向导',
-	'Core:Context=GUI:Console' => 'Console~~',
-	'Core:Context=CRON' => 'cron~~',
+	'Core:Context=GUI:Console' => '命令行',
+	'Core:Context=CRON' => '定时任务',
 	'Core:Context=GUI:Portal' => '门户',
 ));
 
@@ -230,11 +230,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChange+' => '变更跟踪',
 	'Class:CMDBChange/Attribute:date' => '日期',
 	'Class:CMDBChange/Attribute:date+' => '变更被记录的日期和时间',
-	'Class:CMDBChange/Attribute:userinfo' => '杂项. 信息',
+	'Class:CMDBChange/Attribute:userinfo' => '杂项信息',
 	'Class:CMDBChange/Attribute:userinfo+' => '呼叫者已定义的信息',
-	'Class:CMDBChange/Attribute:origin/Value:interactive' => 'User interaction in the GUI~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => 'CSV import script~~',
-	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => 'CSV import in the GUI~~',
+	'Class:CMDBChange/Attribute:origin/Value:interactive' => '图形界面交互',
+	'Class:CMDBChange/Attribute:origin/Value:csv-import.php' => '使用脚本导入CSV',
+	'Class:CMDBChange/Attribute:origin/Value:csv-interactive' => '使用图形界面导入CSV',
 	'Class:CMDBChange/Attribute:origin/Value:email-processing' => 'Email processing~~',
 	'Class:CMDBChange/Attribute:origin/Value:synchro-data-source' => 'Synchro. data source~~',
 	'Class:CMDBChange/Attribute:origin/Value:webservice-rest' => 'REST/JSON webservices~~',
@@ -300,7 +300,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeScalar' => '属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar+' => '对象属性更改跟踪',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue' => '旧值',
-	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '以前该属性的值',
+	'Class:CMDBChangeOpSetAttributeScalar/Attribute:oldvalue+' => '以前此属性的值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue' => '新值',
 	'Class:CMDBChangeOpSetAttributeScalar/Attribute:newvalue+' => '属性的新值',
 ));
@@ -332,7 +332,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeBlob' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob+' => '数据变更跟踪',
 	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata' => '之前的值',
-	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '该数据之前的内容',
+	'Class:CMDBChangeOpSetAttributeBlob/Attribute:prevdata+' => '此数据之前的内容',
 ));
 
 //
@@ -343,7 +343,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:CMDBChangeOpSetAttributeText' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText+' => '文本变更跟踪',
 	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata' => '旧值',
-	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '该文本之前的内容',
+	'Class:CMDBChangeOpSetAttributeText/Attribute:prevdata+' => '此文本之前的内容',
 ));
 
 //
@@ -414,10 +414,10 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventIssue/Attribute:impact+' => '重要性如何',
 	'Class:EventIssue/Attribute:page' => 'Page',
 	'Class:EventIssue/Attribute:page+' => 'HTTP entry point',
-	'Class:EventIssue/Attribute:arguments_post' => 'POST 参数',
-	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST 参数',
-	'Class:EventIssue/Attribute:arguments_get' => 'URL 参数',
-	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET 参数',
+	'Class:EventIssue/Attribute:arguments_post' => 'POST参数',
+	'Class:EventIssue/Attribute:arguments_post+' => 'HTTP POST参数',
+	'Class:EventIssue/Attribute:arguments_get' => 'URL参数',
+	'Class:EventIssue/Attribute:arguments_get+' => 'HTTP GET参数',
 	'Class:EventIssue/Attribute:callstack' => '调用栈',
 	'Class:EventIssue/Attribute:callstack+' => 'Call stack',
 	'Class:EventIssue/Attribute:data' => '数据',
@@ -457,9 +457,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:EventRestService/Attribute:code' => '代码',
 	'Class:EventRestService/Attribute:code+' => '返回代码',
 	'Class:EventRestService/Attribute:json_output' => '响应',
-	'Class:EventRestService/Attribute:json_output+' => 'HTTP 响应 (json)',
-	'Class:EventRestService/Attribute:provider' => 'Provider',
-	'Class:EventRestService/Attribute:provider+' => 'PHP class implementing the expected operation',
+	'Class:EventRestService/Attribute:json_output+' => 'HTTP响应 (json)',
+	'Class:EventRestService/Attribute:provider' => '提供者',
+	'Class:EventRestService/Attribute:provider+' => '实现此功能的PHP类',
 ));
 
 //
@@ -497,7 +497,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Action/Attribute:status/Value:disabled' => '停用',
 	'Class:Action/Attribute:status/Value:disabled+' => '停用',
 	'Class:Action/Attribute:trigger_list' => '相关的触发器',
-	'Class:Action/Attribute:trigger_list+' => '该操作关联的触发器',
+	'Class:Action/Attribute:trigger_list+' => '此操作关联的触发器',
 	'Class:Action/Attribute:finalclass' => 'Action sub-class',
 	'Class:Action/Attribute:finalclass+' => 'Name of the final class',
 	'Action:WarningNoTriggerLinked' => 'Warning, no trigger is linked to the action. It will not be active until it has at least 1.~~',
@@ -744,7 +744,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:Synchro:ModifiedLabel' => '已修改',
 	'Core:Synchro:UnchangedLabel' => '保持不变',
 	'Core:Synchro:ReconciledErrorsLabel' => '错误',
-	'Core:Synchro:ReconciledLabel' => 'Reconciled',
+	'Core:Synchro:ReconciledLabel' => '已核对',
 	'Core:Synchro:ReconciledNewLabel' => '已创建',
 	'Core:SynchroReconcile:Yes' => '是',
 	'Core:SynchroReconcile:No' => '否',
@@ -841,13 +841,13 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:SynchroDataSource/Attribute:delete_policy/Value:update_then_delete' => '先更新再删除',
 	'Class:SynchroDataSource/Attribute:attribute_list' => '属性列表',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:administrators' => '仅限管理员',
-	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => 'Everybody allowed to delete such objects',
+	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:everybody' => '允许所有人删除此对象',
 	'Class:SynchroDataSource/Attribute:user_delete_policy/Value:nobody' => 'Nobody',
 	'Class:SynchroAttribute' => '同步属性',
 	'Class:SynchroAttribute/Attribute:sync_source_id' => '同步数据源',
 	'Class:SynchroAttribute/Attribute:attcode' => '属性代码',
 	'Class:SynchroAttribute/Attribute:update' => '更新',
-	'Class:SynchroAttribute/Attribute:reconcile' => 'Reconcile',
+	'Class:SynchroAttribute/Attribute:reconcile' => '核对',
 	'Class:SynchroAttribute/Attribute:update_policy' => '更新策略',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_locked' => '加锁',
 	'Class:SynchroAttribute/Attribute:update_policy/Value:master_unlocked' => '解锁',
@@ -926,7 +926,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:HTMLFormat' => '网页 (*.html)',
 	'Core:BulkExport:CSVFormat' => 'CSV (*.csv)',
 	'Core:BulkExport:XLSXFormat' => 'Excel 2007+ (*.xlsx)',
-	'Core:BulkExport:PDFFormat' => 'PDF 文档 (*.pdf)',
+	'Core:BulkExport:PDFFormat' => 'PDF文档 (*.pdf)',
 	'Core:BulkExport:DragAndDropHelp' => '可拖动或删除列头进行排序. 正在预览 %1$s 行. 一共需要导出: %2$s 行.',
 	'Core:BulkExport:EmptyPreview' => '请选择要导出的列',
 	'Core:BulkExport:ColumnsOrder' => '列顺序',
@@ -935,9 +935,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:CheckAll' => '全选',
 	'Core:BulkExport:UncheckAll' => '反选',
 	'Core:BulkExport:ExportCancelledByUser' => '导出被用户取消',
-	'Core:BulkExport:CSVOptions' => 'CSV 选项',
+	'Core:BulkExport:CSVOptions' => 'CSV选项',
 	'Core:BulkExport:CSVLocalization' => '本地化',
-	'Core:BulkExport:PDFOptions' => 'PDF 选项',
+	'Core:BulkExport:PDFOptions' => 'PDF选项',
 	'Core:BulkExport:PDFPageFormat' => '页面格式',
 	'Core:BulkExport:PDFPageSize' => '页面大小:',
 	'Core:BulkExport:PageSize-A4' => 'A4',
@@ -954,14 +954,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Core:BulkExport:OptionLinkSets' => '包含外链的对象',
 	'Core:BulkExport:OptionFormattedText' => '保持文本格式',
 	'Core:BulkExport:ScopeDefinition' => '定义要导出的对象',
-	'Core:BulkExportLabelOQLExpression' => 'OQL 查询:',
+	'Core:BulkExportLabelOQLExpression' => 'OQL查询:',
 	'Core:BulkExportLabelPhrasebookEntry' => 'Query Phrasebook Entry:',
-	'Core:BulkExportMessageEmptyOQL' => '请输入有效的OQL 查询.',
+	'Core:BulkExportMessageEmptyOQL' => '请输入有效的OQL查询.',
 	'Core:BulkExportMessageEmptyPhrasebookEntry' => 'Please select a valid phrasebook entry.',
-	'Core:BulkExportQueryPlaceholder' => '请在这里输入OQL 查询...',
+	'Core:BulkExportQueryPlaceholder' => '请在这里输入OQL查询...',
 	'Core:BulkExportCanRunNonInteractive' => '点击这里运行非交互式导出.',
 	'Core:BulkExportLegacyExport' => '点击这里进入旧版导出.',
-	'Core:BulkExport:XLSXOptions' => 'Excel 选项',
+	'Core:BulkExport:XLSXOptions' => 'Excel选项',
 	'Core:BulkExport:TextFormat' => '文本中包含一些HTML 标记',
 	'Core:BulkExport:DateTimeFormat' => '日期和时间格式',
 	'Core:BulkExport:DateTimeFormatDefault_Example' => '默认格式 (%1$s), e.g. %2$s',
@@ -1020,7 +1020,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 // Class: DBProperty
 //
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Class:DBProperty' => 'DB 属性',
+	'Class:DBProperty' => '数据库属性',
 	'Class:DBProperty+' => '~~',
 	'Class:DBProperty/Attribute:name' => '名称',
 	'Class:DBProperty/Attribute:name+' => '',
