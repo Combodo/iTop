@@ -698,7 +698,7 @@ abstract class LogAPI
 
 		if (isset($sLogLevelMin[static::CHANNEL_DEFAULT]))
 		{
-			return $sLogLevelMin[$sChannel];
+			return $sLogLevelMin[static::CHANNEL_DEFAULT];
 		}
 
 		return static::LEVEL_DEFAULT;
