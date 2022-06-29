@@ -12,7 +12,7 @@ use Dict;
 use Metamodel;
 use Serializable;
 
-class DataTableSettings implements Serializable
+class DataTableSettings
 {
     public $aClassAliases;
     public $sTableId;
@@ -33,7 +33,22 @@ class DataTableSettings implements Serializable
         $this->iDefaultPageSize = 10;
         $this->aColumns = array();
     }
-
+	public function __serialize() {
+		return serialize([
+			$this->aClassAliases,
+			$this->sTableId,
+			$this->iDefaultPageSize,
+			$this->aColumns
+			]);
+	}
+	public function __unserialize($data) {
+		list(
+			$this->aClassAliases,
+			$this->sTableId,
+			$this->iDefaultPageSize,
+			$this->aColumns
+			) = unserialize($data);
+	}
     /**
      * @param $iDefaultPageSize
      * @param $aSortOrder
