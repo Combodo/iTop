@@ -1843,7 +1843,7 @@ class utils
 	public static function EscapeHtml($sValue)
 	{
 		return htmlspecialchars(
-			$sValue,
+			$sValue ?? '',
 			ENT_QUOTES | ENT_DISALLOWED | ENT_HTML5,
 			WebPage::PAGES_CHARSET,
 			false

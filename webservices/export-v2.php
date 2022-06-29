@@ -134,7 +134,7 @@ function DisplayExpressionForm(WebPage $oP, $sAction, $sExpression = '', $sExcep
 	$oPanel->AddSubBlock(InputUIBlockFactory::MakeForHidden('interactive', '1'));
 
 	$oFieldQuery = FieldUIBlockFactory::MakeStandard('<input type="radio" name="query_mode" value="oql" id="radio_oql" checked><label for="radio_oql">'.Dict::S('Core:BulkExportLabelOQLExpression').'</label>');
-	$oTextArea = new TextArea('expression', htmlentities($sExpression, ENT_QUOTES, 'UTF-8'), "textarea_oql", 70, 8);
+	$oTextArea = new TextArea('expression', utils::EscapeHtml($sExpression), "textarea_oql", 70, 8);
 	$oTextArea->SetPlaceholder(Dict::S('Core:BulkExportQueryPlaceholder'));
 	$oTextArea->AddCSSClasses(["ibo-input-text", "ibo-query-oql", "ibo-is-code"]);
 	$oFieldQuery->AddSubBlock($oTextArea);
@@ -267,14 +267,14 @@ EOF
 	}
 
 	if ($sExpression !== '') {
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", htmlentities($sExpression, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("expression", utils::EscapeHtml($sExpression)));
 		$oExportSearch = DBObjectSearch::FromOQL($sExpression);
 		$oExportSearch->UpdateContextFromUser();
 	} else {
 		$oQuery = MetaModel::GetObject('QueryOQL', $sQueryId);
 		$oExportSearch = DBObjectSearch::FromOQL($oQuery->Get('oql'));
 		$oExportSearch->UpdateContextFromUser();
-		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", htmlentities($sQueryId, ENT_QUOTES, 'UTF-8')));
+		$oForm->AddSubBlock(InputUIBlockFactory::MakeForHidden("query", utils::EscapeHtml($sQueryId)));
 	}
 	$aFormPartsByFormat = array();
 	$aAllFormParts = array();
@@ -302,7 +302,7 @@ EOF
 
 	} else {
 		// One specific format was chosen
-		$oSelect = InputUIBlockFactory::MakeForHidden("format", htmlentities($sFormat, ENT_QUOTES, 'UTF-8'));
+		$oSelect = InputUIBlockFactory::MakeForHidden("format", utils::EscapeHtml($sFormat));
 		$oForm->AddSubBlock($oSelect);
 
 		$oExporter = BulkExport::FindExporter($sFormat, $oExportSearch);
@@ -362,7 +362,7 @@ function InteractiveShell($sExpression, $sQueryId, $sFormat, $sFileName, $sMode)
 {
 	if ($sMode == 'dialog') {
 		$sExportBtnLabel = json_encode(Dict::S('UI:Button:Export'));
-		$sJSTitle = json_encode(htmlentities(utils::ReadParam('dialog_title', '', false, 'raw_data'), ENT_QUOTES, 'UTF-8'));
+		$sJSTitle = json_encode(utils::EscapeHtml(utils::ReadParam('dialog_title', '', false, 'raw_data')));
 		$oP = new AjaxPage($sJSTitle);
 		$oP->add('<div id="interactive_export_dlg">');
 		$oP->add_ready_script(

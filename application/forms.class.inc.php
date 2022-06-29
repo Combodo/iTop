@@ -1450,8 +1450,8 @@ class DesignerHiddenField extends DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		$sChecked = $this->defaultValue ? 'checked' : '';
-		return array('label' =>'', 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
+
+		return array('label' => '', 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\">");
 	}
 }
 
