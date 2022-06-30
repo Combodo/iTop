@@ -121,7 +121,6 @@ class UserRightsMatrix extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Maybe we should check that no other user with userid == 0 exists
-		CMDBObject::SetTrackInfo('Initialization');
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);

@@ -203,7 +203,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:parent_change_ref' => '变更编号',
 	'Class:UserRequest/Attribute:parent_change_ref+' => '',
 	'Class:UserRequest/Attribute:related_request_list' => '衍生事件',
-	'Class:UserRequest/Attribute:related_request_list+' => '该事件相关的所有子事件',
+	'Class:UserRequest/Attribute:related_request_list+' => '此事件相关的所有子事件',
 	'Class:UserRequest/Attribute:public_log' => '评论',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
@@ -278,7 +278,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Organization:Overview:UserRequests' => '来自该组织的用户需求',
+	'Organization:Overview:UserRequests' => '来自此组织的用户需求',
 	'Organization:Overview:MyUserRequests' => 'My User Requests for this organization~~',
-	'Organization:Overview:Tickets' => '来自该组织的工单',
+	'Organization:Overview:Tickets' => '来自此组织的工单',
 ));

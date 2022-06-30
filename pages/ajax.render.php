@@ -562,7 +562,7 @@ try
 						if (!$oAttDef->IsWritable() || ($oWizardHelper->GetReturnNotEditableFields()))
 						{
 							// Even non-writable fields (like AttributeExternal) can be refreshed
-							$sHTMLValue = $oObj->GetAsHTML($sAttCode);
+							$sHTMLValue =  "<div id=\"field_{$sId}\" class=\"field_value_container\"><div class=\"attribute-edit\" data-attcode=\"$sAttCode\">".$oObj->GetAsHTML($sAttCode)."</div></div>";
 						}
 						else
 						{

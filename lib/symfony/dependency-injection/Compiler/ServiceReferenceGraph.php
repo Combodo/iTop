@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Compiler;
 
 use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * This is a directed graph of your services.
@@ -21,7 +22,7 @@ use Symfony\Component\DependencyInjection\Exception\InvalidArgumentException;
  *
  * @author Johannes M. Schmitt <schmittjoh@gmail.com>
  *
- * @final since version 3.4
+ * @final
  */
 class ServiceReferenceGraph
 {
@@ -30,14 +31,7 @@ class ServiceReferenceGraph
      */
     private $nodes = [];
 
-    /**
-     * Checks if the graph has a specific node.
-     *
-     * @param string $id Id to check
-     *
-     * @return bool
-     */
-    public function hasNode($id)
+    public function hasNode(string $id): bool
     {
         return isset($this->nodes[$id]);
     }
@@ -45,13 +39,9 @@ class ServiceReferenceGraph
     /**
      * Gets a node by identifier.
      *
-     * @param string $id The id to retrieve
-     *
-     * @return ServiceReferenceGraphNode
-     *
      * @throws InvalidArgumentException if no node matches the supplied identifier
      */
-    public function getNode($id)
+    public function getNode(string $id): ServiceReferenceGraphNode
     {
         if (!isset($this->nodes[$id])) {
             throw new InvalidArgumentException(sprintf('There is no node with id "%s".', $id));
@@ -65,7 +55,7 @@ class ServiceReferenceGraph
      *
      * @return ServiceReferenceGraphNode[]
      */
-    public function getNodes()
+    public function getNodes(): array
     {
         return $this->nodes;
     }
@@ -83,19 +73,9 @@ class ServiceReferenceGraph
 
     /**
      * Connects 2 nodes together in the Graph.
-     *
-     * @param string $sourceId
-     * @param mixed  $sourceValue
-     * @param string $destId
-     * @param mixed  $destValue
-     * @param string $reference
      */
-    public function connect($sourceId, $sourceValue, $destId, $destValue = null, $reference = null/*, bool $lazy = false, bool $weak = false, bool $byConstructor = false*/)
+    public function connect(?string $sourceId, $sourceValue, ?string $destId, $destValue = null, Reference $reference = null, bool $lazy = false, bool $weak = false, bool $byConstructor = false)
     {
-        $lazy = \func_num_args() >= 6 ? func_get_arg(5) : false;
-        $weak = \func_num_args() >= 7 ? func_get_arg(6) : false;
-        $byConstructor = \func_num_args() >= 8 ? func_get_arg(7) : false;
-
         if (null === $sourceId || null === $destId) {
             return;
         }
@@ -108,15 +88,7 @@ class ServiceReferenceGraph
         $destNode->addInEdge($edge);
     }
 
-    /**
-     * Creates a graph node.
-     *
-     * @param string $id
-     * @param mixed  $value
-     *
-     * @return ServiceReferenceGraphNode
-     */
-    private function createNode($id, $value)
+    private function createNode(string $id, $value): ServiceReferenceGraphNode
     {
         if (isset($this->nodes[$id]) && $this->nodes[$id]->getValue() === $value) {
             return $this->nodes[$id];

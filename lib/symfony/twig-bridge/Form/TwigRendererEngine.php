@@ -19,7 +19,7 @@ use Twig\Template;
 /**
  * @author Bernhard Schussek <bschussek@gmail.com>
  */
-class TwigRendererEngine extends AbstractRendererEngine implements TwigRendererEngineInterface
+class TwigRendererEngine extends AbstractRendererEngine
 {
     /**
      * @var Environment
@@ -31,34 +31,16 @@ class TwigRendererEngine extends AbstractRendererEngine implements TwigRendererE
      */
     private $template;
 
-    public function __construct(array $defaultThemes = [], Environment $environment = null)
+    public function __construct(array $defaultThemes, Environment $environment)
     {
-        if (null === $environment) {
-            @trigger_error(sprintf('Not passing a Twig Environment as the second argument for "%s" constructor is deprecated since Symfony 3.2 and won\'t be possible in 4.0.', static::class), \E_USER_DEPRECATED);
-        }
-
         parent::__construct($defaultThemes);
         $this->environment = $environment;
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @deprecated since version 3.3, to be removed in 4.0
      */
-    public function setEnvironment(Environment $environment)
-    {
-        if ($this->environment) {
-            @trigger_error(sprintf('The "%s()" method is deprecated since Symfony 3.3 and will be removed in 4.0. Pass the Twig Environment as second argument of the constructor instead.', __METHOD__), \E_USER_DEPRECATED);
-        }
-
-        $this->environment = $environment;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function renderBlock(FormView $view, $resource, $blockName, array $variables = [])
+    public function renderBlock(FormView $view, $resource, string $blockName, array $variables = [])
     {
         $cacheKey = $view->vars[self::CACHE_KEY_VAR];
 
@@ -88,13 +70,9 @@ class TwigRendererEngine extends AbstractRendererEngine implements TwigRendererE
      *
      * @see getResourceForBlock()
      *
-     * @param string   $cacheKey  The cache key of the form view
-     * @param FormView $view      The form view for finding the applying themes
-     * @param string   $blockName The name of the block to load
-     *
-     * @return bool True if the resource could be loaded, false otherwise
+     * @return bool
      */
-    protected function loadResourceForBlockName($cacheKey, FormView $view, $blockName)
+    protected function loadResourceForBlockName(string $cacheKey, FormView $view, string $blockName)
     {
         // The caller guarantees that $this->resources[$cacheKey][$block] is
         // not set, but it doesn't have to check whether $this->resources[$cacheKey]
@@ -161,18 +139,17 @@ class TwigRendererEngine extends AbstractRendererEngine implements TwigRendererE
     /**
      * Loads the resources for all blocks in a theme.
      *
-     * @param string $cacheKey The cache key for storing the resource
-     * @param mixed  $theme    The theme to load the block from. This parameter
-     *                         is passed by reference, because it might be necessary
-     *                         to initialize the theme first. Any changes made to
-     *                         this variable will be kept and be available upon
-     *                         further calls to this method using the same theme.
+     * @param mixed $theme The theme to load the block from. This parameter
+     *                     is passed by reference, because it might be necessary
+     *                     to initialize the theme first. Any changes made to
+     *                     this variable will be kept and be available upon
+     *                     further calls to this method using the same theme.
      */
-    protected function loadResourcesFromTheme($cacheKey, &$theme)
+    protected function loadResourcesFromTheme(string $cacheKey, &$theme)
     {
         if (!$theme instanceof Template) {
             /* @var Template $theme */
-            $theme = $this->environment->loadTemplate($theme);
+            $theme = $this->environment->load($theme)->unwrap();
         }
 
         if (null === $this->template) {

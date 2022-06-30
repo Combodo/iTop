@@ -461,6 +461,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceTitle' => 'Wartung',
 	'UI:Error:InvalidToken' => 'Error: The angeforderte Operation wurde bereits ausgeführt (CSRF-Token nicht gefunden)',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => 'Anzahl',
 	'UI:GroupBy:Count+' => 'Anzahl der Elemente',
 	'UI:CountOfObjects' => '%1$d Objekte, die das Kriterium erfüllen.',
@@ -1672,18 +1674,3 @@ Dict::Add('DE DE', 'German', 'Deutsch', array(
  'UI:Dashboard:Revert' => 'Auf Originalversion zurücksetzen...',
 ));
 
-// OAuth
-Dict::Add('DE DE', 'German', 'Deutsch', array(
-	'Menu:OAuthWizardMenu' => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title' => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label' => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label' => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label' => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label' => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label' => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title' => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description' => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
-));

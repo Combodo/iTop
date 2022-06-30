@@ -602,15 +602,18 @@ EOF;
 				{
 					// Write the code into the given module as model.<module>.php
 					//
-					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/model.'.$sModuleName.'.php';
+					$sModelFileName = 'model.'.$sModuleName.'.php';
+					$sResultFile = $sTempTargetDir.'/'.$sRelativeDir.'/'.$sModelFileName;
 					$this->WritePHPFile($sResultFile, $sModuleName, $sModuleVersion, $sCompiledCode);
+					// In case the model file wasn't present in the module file, we're adding it ! (N°4875)
+					$oModule->AddFileToInclude('business', $sModelFileName);
 				}
 				else
 				{
 					// Write the code into core/main.php
 					//
 					$this->sMainPHPCode .=
-					<<<EOF
+						<<<EOF
 /**
  * Data model from the delta file
  */
@@ -618,20 +621,31 @@ EOF;
 EOF;
 					$this->sMainPHPCode .= $sCompiledCode;
 				}
-			}
-			else
-			{
-					$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
+			} else {
+				$this->Log("Compilation of module $sModuleName in version $sModuleVersion produced not code at all. No file written.");
 			}
 
 			// files to include (PHP datamodels)
 			foreach($oModule->GetFilesToInclude('business') as $sRelFileName)
 			{
-				$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				if (file_exists("{$sTempTargetDir}/{$sRelativeDir}/{$sRelFileName}")) {
+					$aDataModelFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
+				} else {
+					/** @noinspection NestedPositiveIfStatementsInspection */
+					if (utils::IsDevelopmentEnvironment()) {
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file : check the module.php "datamodel" key !';
+						$aContext = [
+							'moduleId'       => $oModule->GetId(),
+							'moduleLocation' => $oModule->GetRootDir(),
+							'includedFile'   => $sRelFileName,
+						];
+						SetupLog::Error($sMissingBusinessFileMessage, null, $aContext);
+						throw new CoreException($sMissingBusinessFileMessage, $aContext);
+					}
+				}
 			}
 			// files to include (PHP webservices providers)
-			foreach($oModule->GetFilesToInclude('webservices') as $sRelFileName)
-			{
+			foreach ($oModule->GetFilesToInclude('webservices') as $sRelFileName) {
 				$aWebservicesFiles[] = "MetaModel::IncludeModule(MODULESROOT.'/$sRelativeDir/$sRelFileName');";
 			}
 		} // foreach module
@@ -2393,12 +2407,12 @@ EOF
 				$sMainColorScssVariableDeclaration = "$sMainColorScssVariableName: $sMainColorForCss !default;";
 				$sMainColorCssVariableDeclaration = "$sMainColorCssVariableName: #{{$sMainColorScssVariableName}};";
 
-				$sCssRegularClassMainColorDeclaration = "--ibo-main-color: $sMainColorScssVariableName;";
+				$sCssRegularClassMainColorDeclaration = "--ibo-main-color:  #{{$sMainColorScssVariableName}};";
 				// Note: We have to manually force the alpha channel in case the given color is transparent
-				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100);";
-				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900);";
+				$sCssRegularClassMainColor100Declaration = "--ibo-main-color--100: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-100), \$ibo-color-base-opacity-for-lightness-100)};";
+				$sCssRegularClassMainColor900Declaration = "--ibo-main-color--900: #{ibo-adjust-alpha(ibo-adjust-lightness($sMainColorScssVariableName, \$ibo-color-base-lightness-900), \$ibo-color-base-opacity-for-lightness-900)};";
 
-				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: $sMainColorScssVariableName;";
+				$sCssAlternativeClassComplementaryColorDeclaration = "--ibo-complementary-color: #{{$sMainColorScssVariableName}};";
 			} else {
 				$sMainColorScssVariableDeclaration = null;
 
@@ -2415,9 +2429,9 @@ EOF
 				$sComplementaryScssVariableDeclaration = "$sComplementaryColorScssVariableName: $sComplementaryColorForCss !default;";
 				$sComplementaryCssVariableDeclaration = "$sComplementaryColorCssVariableName: #{{$sComplementaryColorScssVariableName}};";
 
-				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color: $sComplementaryColorScssVariableName;";
+				$sCssRegularClassComplementaryColorDeclaration = "--ibo-complementary-color:  #{{$sComplementaryColorScssVariableName}};";
 
-				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color: $sComplementaryColorScssVariableName;";
+				$sCssAlternativeClassMainColorDeclaration = "--ibo-main-color:  #{{$sComplementaryColorScssVariableName}};";
 			} else {
 				$sComplementaryScssVariableDeclaration = null;
 				$sComplementaryCssVariableDeclaration = null;

@@ -713,17 +713,12 @@ try
 	}
 	else
 	{
-		if (strlen($sComment) > 0)
-		{
+		if (strlen($sComment) > 0) {
 			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV) - '.$sComment;
-		}
-		else
-		{
+		} else {
 			$sMoreInfo = CMDBChange::GetCurrentUserName().', Web Service (CSV)';
 		}
-		CMDBObject::SetTrackInfo($sMoreInfo);
-		CMDBObject::SetTrackOrigin('csv-import.php');
-		
+		CMDBObject::SetCurrentChangeFromParams($sMoreInfo, 'csv-import.php');
 		$oMyChange = CMDBObject::GetCurrentChange();
 	}
 

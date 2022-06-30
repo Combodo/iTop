@@ -139,7 +139,15 @@ class MFModule
 	 */
 	protected $sAutoSelect;
 	/**
-	 * @var array
+	 * @see ModelFactory::FindModules init of this structure from the module.*.php files
+	 * @var array{
+	 *          business: string[],
+	 *          webservices: string[],
+	 *          addons: string[],
+	 *     }
+	 * Warning, there are naming mismatches between this structure and the module.*.php :
+	 * - `business` here correspond to `datamodel` in module.*.php
+	 * - `webservices` here correspond to `webservice` in module.*.php
 	 */
 	protected $aFilesToInclude;
 
@@ -318,6 +326,14 @@ class MFModule
 	public function GetFilesToInclude($sCategory)
 	{
 		return $this->aFilesToInclude[$sCategory];
+	}
+
+	public function AddFileToInclude($sCategory, $sFile)
+	{
+		if (in_array($sFile, $this->aFilesToInclude[$sCategory], true)) {
+			return;
+		}
+		$this->aFilesToInclude[$sCategory][] = $sFile;
 	}
 
 }

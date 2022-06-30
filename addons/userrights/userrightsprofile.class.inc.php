@@ -435,20 +435,18 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	// Installation: create the very first user
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
-		CMDBObject::SetTrackInfo('Initialization');
+		CMDBObject::SetCurrentChangeFromParams('Initialization create administrator');
 
 		$iContactId = 0;
 		// Support drastic data model changes: no organization class (or not writable)!
-		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
-		{
+		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization')) {
 			$oOrg = MetaModel::NewObject('Organization');
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
 			$iOrgId = $oOrg->DBInsertNoReload();
 
 			// Support drastic data model changes: no Person class  (or not writable)!
-			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
-			{
+			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person')) {
 				$oContact = MetaModel::NewObject('Person');
 				$oContact->Set('name', 'My last name');
 				$oContact->Set('first_name', 'My first name');

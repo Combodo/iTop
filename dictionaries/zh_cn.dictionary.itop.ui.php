@@ -25,11 +25,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditCategory/Attribute:name' => '类别名称',
 	'Class:AuditCategory/Attribute:name+' => '类别简称',
 	'Class:AuditCategory/Attribute:description' => '审计类别描述',
-	'Class:AuditCategory/Attribute:description+' => '该审计类别的详细描述',
+	'Class:AuditCategory/Attribute:description+' => '此审计类别的详细描述',
 	'Class:AuditCategory/Attribute:definition_set' => '定义',
 	'Class:AuditCategory/Attribute:definition_set+' => '定义用于审计的对象的OQL表达式',
 	'Class:AuditCategory/Attribute:rules_list' => '审计规则',
-	'Class:AuditCategory/Attribute:rules_list+' => '该类别的审计规则',
+	'Class:AuditCategory/Attribute:rules_list+' => '此类别的审计规则',
 ));
 
 //
@@ -43,11 +43,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditRule/Attribute:name+' => '规则名称',
 	'Class:AuditRule/Attribute:description' => '审计规则描述',
 	'Class:AuditRule/Attribute:description+' => '审计规则详细描述',
-	'Class:TagSetFieldData/Attribute:finalclass' => 'Tag class~~',
-	'Class:TagSetFieldData/Attribute:obj_class' => 'Object class~~',
+	'Class:TagSetFieldData/Attribute:finalclass' => '标签类',
+	'Class:TagSetFieldData/Attribute:obj_class' => '对象类',
 	'Class:TagSetFieldData/Attribute:obj_attcode' => 'Field code~~',
 	'Class:AuditRule/Attribute:query' => '要运行的查询',
-	'Class:AuditRule/Attribute:query+' => '要运行的OQL 表达式',
+	'Class:AuditRule/Attribute:query+' => '要运行的OQL表达式',
 	'Class:AuditRule/Attribute:valid_flag' => '是否有效?',
 	'Class:AuditRule/Attribute:valid_flag+' => '若规则返回有效对象则True,否则False',
 	'Class:AuditRule/Attribute:valid_flag/Value:true' => 'true',
@@ -55,9 +55,9 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:AuditRule/Attribute:valid_flag/Value:false' => 'false',
 	'Class:AuditRule/Attribute:valid_flag/Value:false+' => 'false',
 	'Class:AuditRule/Attribute:category_id' => '类别',
-	'Class:AuditRule/Attribute:category_id+' => '该规则对应的类别',
+	'Class:AuditRule/Attribute:category_id+' => '从规则对应的类别',
 	'Class:AuditRule/Attribute:category_name' => '类别',
-	'Class:AuditRule/Attribute:category_name+' => '该规则对应类别的名称',
+	'Class:AuditRule/Attribute:category_name+' => '此规则对应类别的名称',
 ));
 
 //
@@ -70,17 +70,17 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:Query/Attribute:name' => '名称',
 	'Class:Query/Attribute:name+' => '查询的名称',
 	'Class:Query/Attribute:description' => '描述',
-	'Class:Query/Attribute:description+' => '请描述此查询 (目的、用法等等.)',
-	'Class:Query/Attribute:is_template' => 'Template for OQL fields~~',
+	'Class:Query/Attribute:description+' => '请描述此查询 (目的,用法等等.)',
+	'Class:Query/Attribute:is_template' => 'OQL模板',
 	'Class:Query/Attribute:is_template+' => 'Usable as source for recipient OQL in Notifications~~',
 	'Class:Query/Attribute:is_template/Value:yes' => '是',
 	'Class:Query/Attribute:is_template/Value:no' => '否',
 	'Class:QueryOQL/Attribute:fields' => '区域',
 	'Class:QueryOQL/Attribute:fields+' => '属性之间使用逗号分隔 (or alias.attribute) to export~~',
-	'Class:QueryOQL' => 'OQL 查询',
-	'Class:QueryOQL+' => 'A query based on the Object Query Language',
+	'Class:QueryOQL' => 'OQL查询',
+	'Class:QueryOQL+' => '一种基于对象查询的语言',
 	'Class:QueryOQL/Attribute:oql' => '表达式',
-	'Class:QueryOQL/Attribute:oql+' => 'OQL 表达式',
+	'Class:QueryOQL/Attribute:oql+' => 'OQL表达式',
 ));
 
 //////////////////////////////////////////////////////////////////////
@@ -112,11 +112,11 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:User/Attribute:language' => '语言',
 	'Class:User/Attribute:language+' => '用户语言',
 	'Class:User/Attribute:language/Value:EN US' => '英语',
-	'Class:User/Attribute:language/Value:EN US+' => '英语 (U.S.)',
+	'Class:User/Attribute:language/Value:EN US+' => '英语(U.S.)',
 	'Class:User/Attribute:language/Value:FR FR' => '法语',
-	'Class:User/Attribute:language/Value:FR FR+' => '法语 (France)',
+	'Class:User/Attribute:language/Value:FR FR+' => '法语(France)',
 	'Class:User/Attribute:profile_list' => '角色',
-	'Class:User/Attribute:profile_list+' => '授予该用户的角色',
+	'Class:User/Attribute:profile_list+' => '授予此用户的角色',
 	'Class:User/Attribute:allowed_org_list' => '可访问的组织',
 	'Class:User/Attribute:allowed_org_list+' => '目标用户可以看到以下组织的数据. 如果没有指定,则无限制.',
 	'Class:User/Attribute:status' => '状态',
@@ -125,14 +125,14 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:User/Attribute:status/Value:disabled' => '停用',
 
 	'Class:User/Error:LoginMustBeUnique' => '登录名必须唯一 - "%1s" 已经被使用.',
-	'Class:User/Error:AtLeastOneProfileIsNeeded' => '必须指定至少一个角色给该用户.',
+	'Class:User/Error:AtLeastOneProfileIsNeeded' => '必须指定至少一个角色给此用户.',
 	'Class:User/Error:ProfileNotAllowed' => 'Profile "%1$s" cannot be added it will deny the access to backoffice~~',
 	'Class:User/Error:StatusChangeIsNotAllowed' => 'Changing status is not allowed for your own User~~',
 	'Class:User/Error:AllowedOrgsMustContainUserOrg' => 'Allowed organizations must contain User organization~~',
 	'Class:User/Error:CurrentProfilesHaveInsufficientRights' => 'The current list of profiles does not give sufficient access rights (Users are not modifiable anymore)~~',
-	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => '必须为该用户指定一个组织.',
-	'Class:User/Error:OrganizationNotAllowed' => '该组织不被允许.',
-	'Class:User/Error:UserOrganizationNotAllowed' => '该用户账户不属于那个组织.',
+	'Class:User/Error:AtLeastOneOrganizationIsNeeded' => '必须为此用户指定一个组织.',
+	'Class:User/Error:OrganizationNotAllowed' => '此组织不被允许.',
+	'Class:User/Error:UserOrganizationNotAllowed' => '此用户账户不属于那个组织.',
 	'Class:User/Error:PersonIsMandatory' => '联系人必填.',
 	'Class:UserInternal' => '内部用户',
 	'Class:UserInternal+' => ITOP_APPLICATION_SHORT.' 内部定义的用户',
@@ -150,7 +150,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_Profiles/Attribute:description' => '描述',
 	'Class:URP_Profiles/Attribute:description+' => '单行描述',
 	'Class:URP_Profiles/Attribute:user_list' => '用户',
-	'Class:URP_Profiles/Attribute:user_list+' => '拥有该角色的用户',
+	'Class:URP_Profiles/Attribute:user_list+' => '拥有此角色的用户',
 ));
 
 //
@@ -175,7 +175,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserProfile' => '角色目标用户',
 	'Class:URP_UserProfile+' => '用户的角色',
-	'Class:URP_UserProfile/Name' => '链接 %1$s 和 %2$s',
+	'Class:URP_UserProfile/Name' => '关联 %1$s 和 %2$s',
 	'Class:URP_UserProfile/Attribute:userid' => '用户',
 	'Class:URP_UserProfile/Attribute:userid+' => '用户帐户',
 	'Class:URP_UserProfile/Attribute:userlogin' => '登录名',
@@ -185,7 +185,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserProfile/Attribute:profile' => '角色',
 	'Class:URP_UserProfile/Attribute:profile+' => '角色名称',
 	'Class:URP_UserProfile/Attribute:reason' => '原因',
-	'Class:URP_UserProfile/Attribute:reason+' => '解释为什么此用户需要拥有该角色',
+	'Class:URP_UserProfile/Attribute:reason+' => '解释为什么此用户需要拥有此角色',
 ));
 
 //
@@ -196,7 +196,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserOrg' => '用户组织',
 	'Class:URP_UserOrg+' => '可以访问的组织',
-	'Class:URP_UserOrg/Name' => '链接 %1$s 和 %2$s',
+	'Class:URP_UserOrg/Name' => '关联 %1$s 和 %2$s',
 	'Class:URP_UserOrg/Attribute:userid' => '用户',
 	'Class:URP_UserOrg/Attribute:userid+' => '用户帐户',
 	'Class:URP_UserOrg/Attribute:userlogin' => '登录名',
@@ -206,7 +206,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_UserOrg/Attribute:allowed_org_name' => '组织',
 	'Class:URP_UserOrg/Attribute:allowed_org_name+' => '可以访问的组织',
 	'Class:URP_UserOrg/Attribute:reason' => '原因',
-	'Class:URP_UserOrg/Attribute:reason+' => '解释为什么此用户可以访问该组织的数据',
+	'Class:URP_UserOrg/Attribute:reason+' => '解释为什么此用户可以访问此组织的数据',
 ));
 
 //
@@ -225,7 +225,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_ProfileProjection/Attribute:profile' => '角色',
 	'Class:URP_ProfileProjection/Attribute:profile+' => '角色名称',
 	'Class:URP_ProfileProjection/Attribute:value' => '值表达式',
-	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL 表达式 (using $user) | constant |  | +attribute code',
+	'Class:URP_ProfileProjection/Attribute:value+' => 'OQL表达式 (using $user) | constant |  | +attribute code',
 	'Class:URP_ProfileProjection/Attribute:attribute' => '属性',
 	'Class:URP_ProfileProjection/Attribute:attribute+' => '目标属性编码 (可选)',
 ));
@@ -244,7 +244,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:URP_ClassProjection/Attribute:class' => '类',
 	'Class:URP_ClassProjection/Attribute:class+' => '目标类',
 	'Class:URP_ClassProjection/Attribute:value' => '值表达式',
-	'Class:URP_ClassProjection/Attribute:value+' => 'OQL 表达式 (using $this) | constant |  | +attribute code',
+	'Class:URP_ClassProjection/Attribute:value+' => 'OQL表达式 (using $this) | constant |  | +attribute code',
 	'Class:URP_ClassProjection/Attribute:attribute' => '属性',
 	'Class:URP_ClassProjection/Attribute:attribute+' => '目标属性编码 (可选)',
 ));
@@ -347,12 +347,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:WelcomeMenuPage+' => '欢迎使用 '.ITOP_APPLICATION_SHORT, // Duplicated into itop-welcome-itil (will be removed from here...)
 	'UI:WelcomeMenu:Title' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
 
-	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' 是完全开源的IT 操作门户.</p>
+	'UI:WelcomeMenu:LeftBlock' => '<p>'.ITOP_APPLICATION_SHORT.' 是完全开源的IT操作门户.</p>
 <ul>它包括:
-<li>完整的CMDB(Configuration management database)，用于登记和管理您的IT 资产.</li>
-<li>事件管理模块用于跟踪和传递所有发生在IT 系统中的事件.</li>
-<li>变更管理模块用于规划和跟踪IT 环境中发生的变化.</li>
-<li>已知错误数据库可加速事件的处理.</li>
+<li>完整的CMDB(配置管理数据库),用于登记和管理您的IT资产.</li>
+<li>事件管理模块用于跟踪和传递所有发生在IT系统中的事件.</li>
+<li>变更管理模块用于规划和跟踪IT环境中发生的变化.</li>
+<li>已知问题数据库可加速事件的处理.</li>
 <li>停机模块记录所有计划内的停机并通知对应的联系人.</li>
 <li>通过仪表盘快速获得您的IT概况.</li>
 </ul>
@@ -360,27 +360,27 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 
 	'UI:WelcomeMenu:RightBlock' => '<p>'.ITOP_APPLICATION_SHORT.' 是面向服务供应商的, 它使得IT 工程师能够更方便地管理多客户和多组织.
 <ul>'.ITOP_APPLICATION_SHORT.' 提供功能丰富的业务处理流程:
-<li>提高IT 管理效率</li> 
-<li>提升IT 可操作能力</li> 
+<li>提高IT管理效率</li> 
+<li>提升IT可操作能力</li> 
 <li>提高用户满意度,提升业务能力.</li>
 </ul>
 </p>
-<p>'.ITOP_APPLICATION_SHORT.' 是完全开放的,可被集成到现有的IT 管理架构之中.</p>
+<p>'.ITOP_APPLICATION_SHORT.' 是完全开放的,可被集成到现有的IT管理架构之中.</p>
 <p>
-<ul>利用这个新一代的IT 操作门户, 可以帮助您:
-<li>更好地管理越来越复杂的IT 环境.</li>
-<li>逐步实现ITIL 流程.</li>
+<ul>利用这个新一代的IT操作门户, 可以帮助您:
+<li>更好地管理越来越复杂的IT环境.</li>
+<li>逐步实现ITIL流程.</li>
 <li>管理IT 中最重要的资产: 文档.</li>
 </ul>
 </p>',
-	'UI:WelcomeMenu:Text'=> '<div>Congratulations, you landed on '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
+	'UI:WelcomeMenu:Text'=> '<div>恭喜, 您运行的是 '.ITOP_APPLICATION.' '.ITOP_VERSION_NAME.'!</div>
 
-<div>This version features a brand new modern and accessible backoffice design.</div>
+<div>此版本全新设计了一个现代且易用的后台界面.</div>
 
-<div>We kept '.ITOP_APPLICATION.' core functions that you liked and modernized them to make you love them.
-We hope you’ll enjoy this version as much as we enjoyed imagining and creating it.</div>
+<div>我们不仅保留 '.ITOP_APPLICATION.' 中您所喜爱的核心功能,同时使其更具现代化.
+我们衷心地希望您喜爱此版本,正如我们在设计和实现它的时候一样.</div>
 
-<div>Customize your '.ITOP_APPLICATION.' preferences for a personalized experience.</div>',
+<div>定制化您的 '.ITOP_APPLICATION.' 设置,实现个性化体验.</div>',
 	'UI:WelcomeMenu:AllOpenRequests' => '所有打开的需求: %1$d',
 	'UI:WelcomeMenu:MyCalls' => '我办理的需求',
 	'UI:WelcomeMenu:OpenIncidents' => '所有打开的事件: %1$d',
@@ -395,7 +395,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:Search' => '搜索',
 	'UI:Button:Clear' => ' 清空',
 	'UI:Button:SearchInHierarchy' => ' 递归搜索',
-	'UI:Button:Query' => ' 查询 ',
+	'UI:Button:Query' => '查询',
 	'UI:Button:Ok' => 'OK',
 	'UI:Button:Save' => '保存',
 	'UI:Button:SaveAnd' => '保存并 %1$s',
@@ -404,31 +404,31 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:Apply' => '应用',
 	'UI:Button:Send' => '发送',
 	'UI:Button:SendAnd' => '发送并 %1$s',
-	'UI:Button:Back' => ' << 上一步 ',
-	'UI:Button:Restart' => ' |<< 重来 ',
-	'UI:Button:Next' => ' 下一步 >> ',
-	'UI:Button:Finish' => ' 结束 ',
+	'UI:Button:Back' => '<< 上一步',
+	'UI:Button:Restart' => '|<< 重来',
+	'UI:Button:Next' => '下一步 >>',
+	'UI:Button:Finish' => '结束',
 	'UI:Button:DoImport' => ' 执行导入 ! ',
-	'UI:Button:Done' => ' 完成 ',
-	'UI:Button:SimulateImport' => ' 开始导入 ',
+	'UI:Button:Done' => '完成',
+	'UI:Button:SimulateImport' => '开始导入',
 	'UI:Button:Test' => '测试!',
-	'UI:Button:Evaluate' => ' 测试 ',
-	'UI:Button:Evaluate:Title' => ' 评估 (Ctrl+Enter)',
-	'UI:Button:AddObject' => ' 添加... ',
-	'UI:Button:BrowseObjects' => ' 浏览... ',
-	'UI:Button:Add' => ' 添加 ',
-	'UI:Button:AddToList' => ' << 添加 ',
-	'UI:Button:RemoveFromList' => ' 移除 >> ',
-	'UI:Button:FilterList' => ' 过滤... ',
-	'UI:Button:Create' => ' 创建 ',
-	'UI:Button:Delete' => ' 删除 ! ',
-	'UI:Button:Rename' => ' 重命名... ',
-	'UI:Button:ChangePassword' => ' 修改密码 ',
-	'UI:Button:ResetPassword' => ' 重置密码 ',
+	'UI:Button:Evaluate' => '测试',
+	'UI:Button:Evaluate:Title' => '评估 (Ctrl+Enter)',
+	'UI:Button:AddObject' => '添加... ',
+	'UI:Button:BrowseObjects' => '浏览...',
+	'UI:Button:Add' => '添加',
+	'UI:Button:AddToList' => '<< 添加',
+	'UI:Button:RemoveFromList' => '移除 >>',
+	'UI:Button:FilterList' => '过滤...',
+	'UI:Button:Create' => '创建',
+	'UI:Button:Delete' => '删除!',
+	'UI:Button:Rename' => '重命名...',
+	'UI:Button:ChangePassword' => '修改密码',
+	'UI:Button:ResetPassword' => '重置密码',
 	'UI:Button:Insert' => '插入',
 	'UI:Button:More' => '更多',
 	'UI:Button:Less' => '更少',
-	'UI:Button:Wait' => '正在更新字段，请稍候',
+	'UI:Button:Wait' => '正在更新字段,请稍候',
 	'UI:Treeview:CollapseAll' => '全部收起',
 	'UI:Treeview:ExpandAll' => '全部展开',
 	'UI:UserPref:DoNotShowAgain' => '不再显示',
@@ -455,27 +455,29 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:UploadStoppedByExtension_FileName' => '上传因为扩展名被停止. (Original file name = "%1$s").',
 	'UI:Error:UploadFailedUnknownCause_Code' => '文件上传失败, 原因未知. (Error code = "%1$s").',
 
-	'UI:Error:1ParametersMissing' => '错误: 必须为该操作指定以下参数: %1$s.',
-	'UI:Error:2ParametersMissing' => '错误: 必须为该操作指定以下参数: %1$s and %2$s.',
-	'UI:Error:3ParametersMissing' => '错误: 必须为该操作指定以下参数: %1$s, %2$s and %3$s.',
-	'UI:Error:4ParametersMissing' => '错误: 必须为该操作指定以下参数: %1$s, %2$s, %3$s and %4$s.',
-	'UI:Error:IncorrectOQLQuery_Message' => '错误: 错误的 OQL 查询: %1$s',
-	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => '运行该查询时发生了一个错误: %1$s',
-	'UI:Error:ObjectAlreadyUpdated' => '错误: 该对象已更新.',
+	'UI:Error:1ParametersMissing' => '错误: 必须为此操作指定以下参数: %1$s.',
+	'UI:Error:2ParametersMissing' => '错误: 必须为此操作指定以下参数: %1$s and %2$s.',
+	'UI:Error:3ParametersMissing' => '错误: 必须为此操作指定以下参数: %1$s, %2$s and %3$s.',
+	'UI:Error:4ParametersMissing' => '错误: 必须为此操作指定以下参数: %1$s, %2$s, %3$s and %4$s.',
+	'UI:Error:IncorrectOQLQuery_Message' => '错误: 错误的OQL查询: %1$s',
+	'UI:Error:AnErrorOccuredWhileRunningTheQuery_Message' => '运行此查询时发生了一个错误: %1$s',
+	'UI:Error:ObjectAlreadyUpdated' => '错误: 此对象已更新.',
 	'UI:Error:ObjectCannotBeUpdated' => '错误: 对象无法更新.',
 	'UI:Error:ObjectsAlreadyDeleted' => '错误: 对象已被删除!',
 	'UI:Error:BulkDeleteNotAllowedOn_Class' => '您无权进行 %1$s 类对象的批量删除',
 	'UI:Error:DeleteNotAllowedOn_Class' => '您无权删除 %1$s 类的对象',
 	'UI:Error:ReadNotAllowedOn_Class' => '您无权查看对象的 %1$s',
 	'UI:Error:BulkModifyNotAllowedOn_Class' => '您无权进行 %1$s 类对象的批量更新',
-	'UI:Error:ObjectAlreadyCloned' => '错误: 该对象已被克隆!',
-	'UI:Error:ObjectAlreadyCreated' => '错误: 该对象已被创建!',
+	'UI:Error:ObjectAlreadyCloned' => '错误: 此对象已被克隆!',
+	'UI:Error:ObjectAlreadyCreated' => '错误: 此对象已被创建!',
 	'UI:Error:Invalid_Stimulus_On_Object_In_State' => '错误: 在对象 %2$s 的 "%3$s" 状态上的无效刺激 "%1$s" .',
 	'UI:Error:InvalidDashboardFile' => 'Error: 无效的仪表盘文件',
 	'UI:Error:InvalidDashboard' => 'Error: 无效的仪表盘',
 	'UI:Error:MaintenanceMode' => '应用正处于维护中',
 	'UI:Error:MaintenanceTitle' => '维护',
 	'UI:Error:InvalidToken' => 'Error: 所请求的操作已执行 (未发现 CSRF token )',
+
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
 
 	'UI:GroupBy:Count' => '个数',
 	'UI:GroupBy:Count+' => '项目数',
@@ -493,7 +495,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:History:User' => '用户',
 	'UI:History:User+' => '造成变更的用户',
 	'UI:History:Changes' => '变更',
-	'UI:History:Changes+' => '对该对象所做的变更',
+	'UI:History:Changes+' => '对此对象所做的变更',
 	'UI:History:StatsCreations' => '已创建',
 	'UI:History:StatsCreations+' => '已创建的对象个数',
 	'UI:History:StatsModifs' => '已修改',
@@ -509,7 +511,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Menu:Add' => '添加...',
 	'UI:Menu:Manage' => '管理...',
 	'UI:Menu:EMail' => '邮件',
-	'UI:Menu:CSVExport' => 'CSV 导出...',
+	'UI:Menu:CSVExport' => 'CSV导出...',
 	'UI:Menu:Modify' => '修改...',
 	'UI:Menu:Delete' => '删除...',
 	'UI:Menu:BulkDelete' => '删除...',
@@ -517,15 +519,15 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Document:OpenInNewWindow:Download' => '在新窗口打开: %1$s, 下载: %2$s',
 	'UI:SplitDateTime-Date' => '日期',
 	'UI:SplitDateTime-Time' => '时间',
-	'UI:TruncatedResults' => '显示 %1$d 个对象，共 %2$d 个',
+	'UI:TruncatedResults' => '显示 %1$d 个对象,共 %2$d 个',
 	'UI:DisplayAll' => '全部显示',
 	'UI:CollapseList' => '收起',
 	'UI:CountOfResults' => '%1$d 个对象',
 	'UI:ChangesLogTitle' => '变更记录 (%1$d):',
 	'UI:EmptyChangesLogTitle' => '变更记录为空',
 	'UI:SearchFor_Class_Objects' => '搜索 %1$s ',
-	'UI:OQLQueryBuilderTitle' => 'OQL 查询构建器',
-	'UI:OQLQueryTab' => 'OQL 查询',
+	'UI:OQLQueryBuilderTitle' => 'OQL查询构建器',
+	'UI:OQLQueryTab' => 'OQL查询',
 	'UI:SimpleSearchTab' => '简单搜索',
 	'UI:Details+' => '详情',
 	'UI:SearchValue:Any' => '* 任何 *',
@@ -548,9 +550,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:ResetPwd-Error-WrongLogin' => '\'%1$s\' 用户名无效',
 	'UI:ResetPwd-Error-NotPossible' => '外部账户不允许重置密码.',
-	'UI:ResetPwd-Error-FixedPwd' => '该账户不允许重置密码.',
-	'UI:ResetPwd-Error-NoContact' => '该账户没有关联到个人.',
-	'UI:ResetPwd-Error-NoEmailAtt' => '该账户未关联邮箱地址，请联系管理员.',
+	'UI:ResetPwd-Error-FixedPwd' => '此账户不允许重置密码.',
+	'UI:ResetPwd-Error-NoContact' => '此账户没有关联到个人.',
+	'UI:ResetPwd-Error-NoEmailAtt' => '此账户未关联邮箱地址,请联系管理员.',
 	'UI:ResetPwd-Error-NoEmail' => '缺少邮箱地址. 请联系管理员.',
 	'UI:ResetPwd-Error-Send' => '邮件发送存在技术原因. 请联系管理员.',
 	'UI:ResetPwd-EmailSent' => '请检查您的收件箱并根据指引进行操作. 如果您没有收到邮件, 请检查您登录时的输入是否存在错误.',
@@ -585,7 +587,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Login:Error:MultipleContactsHaveSameEmail' => '多个联系人存在相同的邮箱',
 	'UI:Login:Error:NoValidProfiles'               => '无效的资料',
 	'UI:CSVImport:MappingSelectOne'                => '-- 请选择 --',
-	'UI:CSVImport:MappingNotApplicable'            => '-- 忽略该栏 --',
+	'UI:CSVImport:MappingNotApplicable'            => '-- 忽略此栏 --',
 	'UI:CSVImport:NoData'                          => '数据为空..., 请提供数据!',
 	'UI:Title:DataPreview'                         => '数据预览',
 	'UI:CSVImport:ErrorOnlyOneColumn'              => '错误: 数据仅包含一列. 您选择了合适的分隔符了吗?',
@@ -594,7 +596,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:DataLine2'                       => '数据行 2',
 	'UI:CSVImport:idField'                         => 'id (主键)',
 	'UI:Title:BulkImport'                          => ITOP_APPLICATION_SHORT.' - 批量导入',
-	'UI:Title:BulkImport+'                         => 'CSV 导入向导',
+	'UI:Title:BulkImport+'                         => 'CSV导入向导',
 	'UI:Title:BulkSynchro_nbItem_ofClass_class'    => '同步 %2$s 个对象中的 %1$d',
 	'UI:CSVImport:ClassesSelectOne'                => '-- 请选择 --',
 	'UI:CSVImport:ErrorExtendedAttCode'            => '内部错误: "%1$s" 是错误的编码, 因为 "%2$s" 不是类 "%3$s" 的外键',
@@ -634,7 +636,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVImport:SelectClass' => '选择要导入的类别:',
 	'UI:CSVImport:AdvancedMode' => '高级模式',
 	'UI:CSVImport:AdvancedMode+' => '在高级模式中,对象的"id" (主键) 可以被用来修改和重命名对象. 不管怎样,列 "id" (如果存在) 只能被用做一个搜索条件,不能与其它搜索条件混用.',
-	'UI:CSVImport:SelectAClassFirst' => '要配置映射，请先选择一个类.',
+	'UI:CSVImport:SelectAClassFirst' => '要配置映射,请先选择一个类.',
 	'UI:CSVImport:HeaderFields' => '栏目',
 	'UI:CSVImport:HeaderMappings' => '映射',
 	'UI:CSVImport:HeaderSearch' => '搜索?',
@@ -683,7 +685,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CSVReport-Icon-Error' => '错误',
 	'UI:CSVReport-Object-Error' => '错误: %1$s',
 	'UI:CSVReport-Object-Ambiguous' => 'AMBIGUOUS: %1$s',
-	'UI:CSVReport-Stats-Errors' => '%1$.0f %% 已加载的对象包含错误，它们将会被忽略.',
+	'UI:CSVReport-Stats-Errors' => '%1$.0f %% 已加载的对象包含错误,它们将会被忽略.',
 	'UI:CSVReport-Stats-Created' => '%1$.0f %% 已加载的对象将会被创建.',
 	'UI:CSVReport-Stats-Modified' => '%1$.0f %% 已加载的对象将会被修改.',
 
@@ -711,31 +713,31 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Audit:AuditCategory:Subtitle' => '%2$s 个中有 %1$s 个错误 - %3$s%%',
 
 
-	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL 查询评估',
+	'UI:RunQuery:Title' => ITOP_APPLICATION_SHORT.' - OQL查询评估',
 	'UI:RunQuery:QueryExamples' => '示例查询',
 	'UI:RunQuery:QueryResults' => '查询结果',
 	'UI:RunQuery:HeaderPurpose' => '目的',
-	'UI:RunQuery:HeaderPurpose+' => '该查询的解释',
+	'UI:RunQuery:HeaderPurpose+' => '此查询的解释',
 	'UI:RunQuery:HeaderOQLExpression' => 'OQL 表达式',
 	'UI:RunQuery:HeaderOQLExpression+' => 'OQL 语法表示的查询',
 	'UI:RunQuery:ExpressionToEvaluate' => '请输入表达式: ',
 	'UI:RunQuery:QueryArguments' => '查询参数',
-	'UI:RunQuery:MoreInfo' => '该查询的更多信息: ',
+	'UI:RunQuery:MoreInfo' => '此查询的更多信息: ',
 	'UI:RunQuery:DevelopedQuery' => '重新开发的查询表达式: ',
 	'UI:RunQuery:SerializedFilter' => '序列化的过滤器: ',
 	'UI:RunQuery:DevelopedOQL' => '优化的 OQL',
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
 	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
-	'UI:RunQuery:Error' => '运行该查询时发生了一个错误',
+	'UI:RunQuery:Error' => '运行此查询时发生了一个错误',
 	'UI:Query:UrlForExcel' => 'URL to use for MS-Excel web queries',
 	'UI:Query:UrlV1' => 'The list of fields has been left unspecified. The page <em>export-V2.php</em> cannot be invoked without this information. Therefore, the URL suggested here below points to the legacy page: <em>export.php</em>. This legacy version of the export has the following limitation: the list of exported fields may vary depending on the output format and the data model of '.ITOP_APPLICATION_SHORT.'. <br/>Should you want to garantee that the list of exported columns will remain stable on the long run, then you must specify a value for the attribute "Fields" and use the page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' 对象模型',
 	'UI:Schema:TitleForClass' => '%1$s schema~~',
 	'UI:Schema:CategoryMenuItem' => '类别 <b>%1$s</b>',
 	'UI:Schema:Relationships' => '关联',
-	'UI:Schema:AbstractClass' => '抽象类: 该类不能实例化对象.',
-	'UI:Schema:NonAbstractClass' => '非抽象类: 该类可以实例化对象.',
+	'UI:Schema:AbstractClass' => '抽象类: 此类不能实例化对象.',
+	'UI:Schema:NonAbstractClass' => '非抽象类: 此类可以实例化对象.',
 	'UI:Schema:ClassHierarchyTitle' => '类层级',
 	'UI:Schema:AllClasses' => '所有类',
 	'UI:Schema:ExternalKey_To' => '%1$s的外键',
@@ -752,20 +754,20 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:Schema:Type+' => '属性的数据类型',
 	'UI:Schema:Origin' => '来自',
-	'UI:Schema:Origin+' => '该属性被定义的基类',
+	'UI:Schema:Origin+' => '此属性被定义的基类',
 	'UI:Schema:Description' => '描述',
 	'UI:Schema:Description+' => '属性的描述',
 	'UI:Schema:AllowedValues' => '允许值',
-	'UI:Schema:AllowedValues+' => '该属性取值的限制',
+	'UI:Schema:AllowedValues+' => '此属性取值的限制',
 	'UI:Schema:MoreInfo' => '更多信息',
-	'UI:Schema:MoreInfo+' => '该栏目在数据库中被定义的更多信息',
+	'UI:Schema:MoreInfo+' => '此栏目在数据库中被定义的更多信息',
 	'UI:Schema:SearchCriteria' => '搜索条件',
 	'UI:Schema:FilterCode' => '过滤器编码',
-	'UI:Schema:FilterCode+' => '该搜索条件的编码',
+	'UI:Schema:FilterCode+' => '此搜索条件的编码',
 	'UI:Schema:FilterDescription' => '描述',
-	'UI:Schema:FilterDescription+' => '该搜索条件的描述',
+	'UI:Schema:FilterDescription+' => '此搜索条件的描述',
 	'UI:Schema:AvailOperators' => '可用的运算符',
-	'UI:Schema:AvailOperators+' => '该搜索条件可能的运算符',
+	'UI:Schema:AvailOperators+' => '此搜索条件可能的运算符',
 	'UI:Schema:ChildClasses' => '子类',
 	'UI:Schema:ReferencingClasses' => '相关类',
 	'UI:Schema:RelatedClasses' => '相关类',
@@ -779,9 +781,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Schema:Class_ReferencingClasses_From_By' => '%1$s 被类 %2$s 参照, 通过栏目 %3$s',
 	'UI:Schema:Class_IsLinkedTo_Class_Via_ClassAndAttribute' => '%1$s 被链接到 %2$s 通过 %3$s::<em>%4$s</em>',
 	'UI:Schema:Links:1-n' => '类指向 %1$s (1:n 链接):',
-	'UI:Schema:Links:n-n' => '类链接到 %1$s (n:n 链接):',
+	'UI:Schema:Links:n-n' => '类关联到 %1$s (n:n 链接):',
 	'UI:Schema:Links:All' => '全部相关类的图',
-	'UI:Schema:NoLifeCyle' => '该类没有生命周期的定义.',
+	'UI:Schema:NoLifeCyle' => '此类没有生命周期的定义.',
 	'UI:Schema:LifeCycleTransitions' => '状态和转换',
 	'UI:Schema:LifeCyleAttributeOptions' => '属性选项',
 	'UI:Schema:LifeCycleHiddenAttribute' => '隐藏',
@@ -804,7 +806,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Label:SelectedObjects' => '被选的对象: ',
 	'UI:Label:AvailableObjects' => '可用的对象: ',
 	'UI:Link_Class_Attributes' => '%1$s 属性',
-	'UI:SelectAllToggle+' => '全选 / 反选',
+	'UI:SelectAllToggle+' => '全选/反选',
 	'UI:AddObjectsOf_Class_LinkedWith_Class_Instance' => '添加 %1$s 个对象, 链接 %2$s: %3$s',
 	'UI:AddObjectsOf_Class_LinkedWith_Class' => ' %1$s ',
 	'UI:ManageObjectsOf_Class_LinkedWith_Class_Instance' => '管理 %1$s 个对象, 链接 %2$s: %3$s',
@@ -815,13 +817,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Wizard:FinalStepTitle' => '最后一步: 确认',
 	'UI:Title:DeletionOf_Object' => '删除 %1$s',
 	'UI:Title:BulkDeletionOf_Count_ObjectsOf_Class' => '批量删除 %1$d 个 %2$s 类的对象',
-	'UI:Delete:NotAllowedToDelete' => '您无权删除该对象',
+	'UI:Delete:NotAllowedToDelete' => '您无权删除此对象',
 	'UI:Delete:NotAllowedToUpdate_Fields' => '您无权更新以下栏目: %1$s',
 	'UI:Error:ActionNotAllowed' => '您无权进行操作',
-	'UI:Error:NotEnoughRightsToDelete' => '无法删除该对象, 因为当前用户没有足够的权限',
-	'UI:Error:CannotDeleteBecause' => '无法删除该对象，因为: %1$s',
-	'UI:Error:CannotDeleteBecauseOfDepencies' => '无法删除该对象, 因为必须事先完成一些手动操作',
-	'UI:Error:CannotDeleteBecauseManualOpNeeded' => '无法删除该对象，必须事先完成一些手动操作',
+	'UI:Error:NotEnoughRightsToDelete' => '无法删除此对象, 因为当前用户没有足够的权限',
+	'UI:Error:CannotDeleteBecause' => '无法删除此对象,因为: %1$s',
+	'UI:Error:CannotDeleteBecauseOfDepencies' => '无法删除此对象, 因为必须事先完成一些手动操作',
+	'UI:Error:CannotDeleteBecauseManualOpNeeded' => '无法删除此对象,必须事先完成一些手动操作',
 	'UI:Archive_User_OnBehalfOf_User' => '%1$s on behalf of %2$s',
 	'UI:Delete:Deleted' => '已删除',
 	'UI:Delete:AutomaticallyDeleted' => '已自动删除',
@@ -834,7 +836,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:ConfirmDeletionOf_Count_ObjectsOf_Class' => '删除 %2$s 类的 %1$d 个对象',
 	'UI:Delete:CannotDeleteBecause' => '无法删除: %1$s',
 	'UI:Delete:ShouldBeDeletedAtomaticallyButNotPossible' => '应该自动删除, 但您无权这样做',
-	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '必须手动删除 - 但您无权删除该对象, 请联系管理员',
+	'UI:Delete:MustBeDeletedManuallyButNotPossible' => '必须手动删除 - 但您无权删除此对象, 请联系管理员',
 	'UI:Delete:WillBeDeletedAutomatically' => '将被自动删除',
 	'UI:Delete:MustBeDeletedManually' => '必须手动删除',
 	'UI:Delete:CannotUpdateBecause_Issue' => '应该被自动更新, 但是: %1$s',
@@ -843,14 +845,14 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Delete:Count_Objects/LinksReferencingTheObjects' => '%1$d 个对象/链接 关联了一些即将要删除的对象',
 	'UI:Delete:ReferencesMustBeDeletedToEnsureIntegrity' => '为了确保数据库的完整性, 任何与之关联的项目也会被删除',
 	'UI:Delete:Consequence+' => '要做什么',
-	'UI:Delete:SorryDeletionNotAllowed' => '抱歉, 您无权删除该对象, 请看上述详细解释',
-	'UI:Delete:PleaseDoTheManualOperations' => '在删除该对象之前, 请先手工完成上述列出的操作',
+	'UI:Delete:SorryDeletionNotAllowed' => '抱歉, 您无权删除此对象, 请看上述详细解释',
+	'UI:Delete:PleaseDoTheManualOperations' => '在删除此对象之前, 请先手工完成上述列出的操作',
 	'UI:Delect:Confirm_Object' => '请确认要删除 %1$s.',
 	'UI:Delect:Confirm_Count_ObjectsOf_Class' => '请确认要删除下列 %2$s 类的 %1$d 个对象.',
 	'UI:WelcomeToITop' => '欢迎使用 '.ITOP_APPLICATION_SHORT,
 	'UI:DetailsPageTitle' => ITOP_APPLICATION_SHORT.' - %1$s - %2$s 详细内容',
 	'UI:ErrorPageTitle' => ITOP_APPLICATION_SHORT.' - 错误',
-	'UI:ObjectDoesNotExist' => '抱歉, 该对象不存在 (或无权浏览该对象).',
+	'UI:ObjectDoesNotExist' => '抱歉, 此对象不存在 (或无权浏览此对象).',
 	'UI:ObjectArchived' => '对象已被归档. 请启用归档模式或联系管理员.',
 	'Tag:Archived' => '已归档',
 	'Tag:Archived+' => '仅能在归档模式下访问',
@@ -896,7 +898,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:ProjectedObject+' => '被映射的对象',
 	'UI:UserManagement:AnyObject' => '* 任何 *',
 	'UI:UserManagement:User' => '用户',
-	'UI:UserManagement:User+' => '与该映射相关的用户',
+	'UI:UserManagement:User+' => '与此映射相关的用户',
 	'UI:UserManagement:Action:Read' => '读',
 	'UI:UserManagement:Action:Read+' => '读/显示 对象',
 	'UI:UserManagement:Action:Modify' => '修改',
@@ -906,13 +908,13 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:Action:BulkRead' => '批量读取(导出)',
 	'UI:UserManagement:Action:BulkRead+' => '列出对象或批量导出',
 	'UI:UserManagement:Action:BulkModify' => '批量修改',
-	'UI:UserManagement:Action:BulkModify+' => '批量创建/编辑 (CSV 导入)',
+	'UI:UserManagement:Action:BulkModify+' => '批量创建/编辑 (CSV导入)',
 	'UI:UserManagement:Action:BulkDelete' => '批量删除',
 	'UI:UserManagement:Action:BulkDelete+' => '批量删除对象',
 	'UI:UserManagement:Action:Stimuli' => 'Stimuli',
 	'UI:UserManagement:Action:Stimuli+' => '许可的 (复合的) 操作',
 	'UI:UserManagement:Action' => '操作',
-	'UI:UserManagement:Action+' => '该用户进行的操作',
+	'UI:UserManagement:Action+' => '此用户进行的操作',
 	'UI:UserManagement:TitleActions' => '操作',
 	'UI:UserManagement:Permission' => '许可',
 	'UI:UserManagement:Permission+' => '用户的许可',
@@ -921,7 +923,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UserManagement:ActionAllowed:No' => '否',
 	'UI:UserManagement:AdminProfile+' => '管理员拥有数据库中所有对象完整的读/写/访问权限.',
 	'UI:UserManagement:NoLifeCycleApplicable' => 'N/A',
-	'UI:UserManagement:NoLifeCycleApplicable+' => '该类未定义生命周期',
+	'UI:UserManagement:NoLifeCycleApplicable+' => '此类未定义生命周期',
 	'UI:UserManagement:GrantMatrix' => '授权矩阵',
 
 	'Menu:AdminTools' => '管理工具',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -972,7 +974,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI-ContactsMenu-ContactsByType' => '按类别划分联系人',
 	'UI-ContactsMenu-ContactsByStatus' => '按状态划分联系人',
 
-	'Menu:CSVImportMenu' => 'CSV 导入',// Duplicated into itop-welcome-itil (will be removed from here...)
+	'Menu:CSVImportMenu' => 'CSV导入',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Menu:CSVImportMenu+' => '批量创建或修改',// Duplicated into itop-welcome-itil (will be removed from here...)
 
 	'Menu:DataModelMenu' => '数据模型',// Duplicated into itop-welcome-itil (will be removed from here...)
@@ -1057,7 +1059,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:OpenDocumentInNewWindow_' => '打开',
 	'UI:DownloadDocument_' => '下载',
-	'UI:Document:NoPreview' => '该类文档无法预览',
+	'UI:Document:NoPreview' => '此类文档无法预览',
 	'UI:Download-CSV' => '下载 %1$s',
 
 	'UI:DeadlineMissedBy_duration' => '超过 %1$s',
@@ -1067,7 +1069,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Deadline_Days_Hours_Minutes' => '%1$dd %2$dh %3$dmin',
 	'UI:Help' => '帮助',
 	'UI:PasswordConfirm' => '确认',
-	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '在添加更多 %1$s 之前, 保存该对象.',
+	'UI:BeforeAdding_Class_ObjectsSaveThisObject' => '在添加更多 %1$s 之前, 保存此对象.',
 	'UI:DisplayThisMessageAtStartup' => '在启动时显示此消息',
 	'UI:RelationshipGraph' => '图览',
 	'UI:RelationshipList' => '列表',
@@ -1082,7 +1084,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Relation:Zoom' => '放大',
 	'UI:Relation:ExportAsAttachment' => '导出为附件...',
 	'UI:Relation:DrillDown' => '详情...',
-	'UI:Relation:PDFExportOptions' => 'PDF 导出选项',
+	'UI:Relation:PDFExportOptions' => 'PDF导出选项',
 	'UI:Relation:AttachmentExportOptions_Name' => 'Options for Attachment to %1$s',
 	'UI:RelationOption:Untitled' => '无标题',
 	'UI:Relation:Key' => 'Key',
@@ -1123,12 +1125,12 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'Portal:PleaseSelectAServiceSubCategory' => '请选择子类',
 	'Portal:DescriptionOfTheRequest' => '请输入描述:',
 	'Portal:TitleRequestDetailsFor_Request' => '需求详情 %1$s:',
-	'Portal:NoOpenRequest' => '该类别中没有打开的需求.',
-	'Portal:NoClosedRequest' => '该分类中没有需求',
+	'Portal:NoOpenRequest' => '此类别中没有打开的需求.',
+	'Portal:NoClosedRequest' => '此分类中没有需求',
 	'Portal:Button:ReopenTicket' => '重新打开这个工单',
 	'Portal:Button:CloseTicket' => '关闭这个工单',
 	'Portal:Button:UpdateRequest' => '更新需求',
-	'Portal:EnterYourCommentsOnTicket' => '请点评该工单的解决方案:',
+	'Portal:EnterYourCommentsOnTicket' => '请点评此工单的解决方案:',
 	'Portal:ErrorNoContactForThisUser' => '错误: 当前用户没有与任何联系人关联. 请联系管理员.',
 	'Portal:Attachments' => '附件',
 	'Portal:AddAttachment' => ' 添加附件 ',
@@ -1161,7 +1163,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:CaseLogTypeYourTextHere' => '请在这里输入内容...',
 	'UI:CaseLog:Header_Date_UserName' => '%1$s - %2$s:',
 	'UI:CaseLog:InitialValue' => '初始值:',
-	'UI:AttemptingToSetASlaveAttribute_Name' => '字段 %1$s 不可写，因为它由数据同步管理. 值未设置.',
+	'UI:AttemptingToSetASlaveAttribute_Name' => '字段 %1$s 不可写,因为它由数据同步管理. 值未设置.',
 	'UI:ActionNotAllowed' => '您无权操作这些对象.',
 	'UI:BulkAction:NoObjectSelected' => '请至少选择一个对象进行操作',
 	'UI:AttemptingToChangeASlaveAttribute_Name' => 'The field %1$s is not writable because it is mastered by the data synchronization. Value remains unchanged.',
@@ -1177,7 +1179,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:ArchiveMode:Banner' => '归档模式',
 	'UI:ArchiveMode:Banner+' => '已归档的对象可见但不允许修改',
 	'UI:FavoriteOrganizations' => '快速访问',
-	'UI:FavoriteOrganizations+' => '进入组织下的列表，可实现通过下拉菜单快速访问. 请注意，这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
+	'UI:FavoriteOrganizations+' => '进入组织下的列表,可实现通过下拉菜单快速访问. 请注意,这并不是一个安全设置, 其他组织的对象依然可以通过选择 "所有组织" 下拉列表看到.',
 	'UI:FavoriteLanguage' => '语言',
 	'UI:Favorites:SelectYourLanguage' => '选择语言',
 	'UI:FavoriteOtherSettings' => '其他设置',
@@ -1384,7 +1386,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 
 	'UI:Menu:ShortcutList' => '创建快捷方式...',
 	'UI:ShortcutRenameDlg:Title' => '重命名快捷方式',
-	'UI:ShortcutListDlg:Title' => '为该列表创建快捷方式',
+	'UI:ShortcutListDlg:Title' => '为此列表创建快捷方式',
 	'UI:ShortcutDelete:Confirm' => '请确认是否删除这个(些)快捷方式.',
 	'Menu:MyShortcuts' => '我的快捷方式',// Duplicated into itop-welcome-itil (will be removed from here...)
 	'Class:Shortcut' => '快捷方式',
@@ -1446,17 +1448,17 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:About:Extension_Version' => '版本: %1$s',
 	'UI:About:RemoteExtensionSource' => '数据',
 
-	'UI:DisconnectedDlgMessage' => '您已断开. 要继续使用，需要重新验证您的用户名和密码.',
+	'UI:DisconnectedDlgMessage' => '您已断开. 要继续使用,需要重新验证您的用户名和密码.',
 	'UI:DisconnectedDlgTitle' => '警告!',
 	'UI:LoginAgain' => '再次登录',
 	'UI:StayOnThePage' => '保持在当前页面',
 
-	'ExcelExporter:ExportMenu' => 'Excel 导出...',
-	'ExcelExporter:ExportDialogTitle' => 'Excel 导出',
+	'ExcelExporter:ExportMenu' => 'Excel导出...',
+	'ExcelExporter:ExportDialogTitle' => 'Excel导出',
 	'ExcelExporter:ExportButton' => '导出',
 	'ExcelExporter:DownloadButton' => '下载 %1$s',
 	'ExcelExporter:RetrievingData' => '正在检索数据...',
-	'ExcelExporter:BuildingExcelFile' => '正在创建Excel 文件...',
+	'ExcelExporter:BuildingExcelFile' => '正在创建Excel文件...',
 	'ExcelExporter:Done' => '完成.',
 	'ExcelExport:AutoDownload' => '导出准备好之后自动开始下载',
 	'ExcelExport:PreparingExport' => '正在准备导出...',
@@ -1465,7 +1467,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'portal:backoffice' => ITOP_APPLICATION_SHORT.' 后台用户界面',
 
 	'UI:CurrentObjectIsLockedBy_User' => '对象被锁住,因为正在修改 %1$s.',
-	'UI:CurrentObjectIsLockedBy_User_Explanation' => '该对象正在被 %1$s 修改. 您的修改无法提交因为它们会冲突.',
+	'UI:CurrentObjectIsLockedBy_User_Explanation' => '此对象正在被 %1$s 修改. 您的修改无法提交因为它们会冲突.',
 	'UI:CurrentObjectIsSoftLockedBy_User' => 'The object is currently being modified by %1$s. You\'ll be able to submit your modifications once they have finished.~~',
 	'UI:CurrentObjectLockExpired' => '并发修改的锁定期已过.',
 	'UI:CurrentObjectLockExpired_Explanation' => 'The lock to prevent concurrent modifications of the object has expired. You can no longer submit your modification since other users are now allowed to modify this object.',
@@ -1479,9 +1481,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UploadInlineImageLegend' => '上传新图片',
 	'UI:SelectInlineImageToUpload' => '选择要上传的图片',
 	'UI:AvailableInlineImagesLegend' => '可用的图片',
-	'UI:NoInlineImage' => '服务器上没有图片. 使用上面的 "浏览" 按钮，从您的电脑上选择并上传到服务器.',
+	'UI:NoInlineImage' => '服务器上没有图片. 使用上面的 "浏览" 按钮,从您的电脑上选择并上传到服务器.',
 
-	'UI:ToggleFullScreen' => '切换 最大化 / 最小化',
+	'UI:ToggleFullScreen' => '切换 最大化/最小化',
 	'UI:Button:ResetImage' => '恢复之前的图片',
 	'UI:Button:RemoveImage' => '移除图片',
 	'UI:Button:UploadImage' => '从硬盘上传图像',
@@ -1490,10 +1492,10 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Button:RemoveDocument' => '移除文档',
 
 	// Search form
-	'UI:Search:Toggle' => '折叠 / 展开',
-	'UI:Search:AutoSubmit:DisabledHint' => '该类别已禁用自动提交',
+	'UI:Search:Toggle' => '折叠/展开',
+	'UI:Search:AutoSubmit:DisabledHint' => '此类别已禁用自动提交',
 	'UI:Search:Obsolescence:DisabledHint' => '根据您的设置, 废弃的数据会被隐藏',
-	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则，或者单击对象按钮查看对象.',
+	'UI:Search:NoAutoSubmit:ExplainText' => '在搜索框中添加规则,或者单击对象按钮查看对象.',
 	'UI:Search:Criterion:MoreMenu:AddCriteria' => '添加条件',
 	// - Add new criteria button
 	'UI:Search:AddCriteria:List:RecentlyUsed:Title' => '最近使用',
@@ -1502,7 +1504,7 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:AddCriteria:List:RecentlyUsed:Placeholder' => '还没有.',
 
 	// - Criteria header actions
-	'UI:Search:Criteria:Toggle' => '折叠 / 展开',
+	'UI:Search:Criteria:Toggle' => '折叠/展开',
 	'UI:Search:Criteria:Remove' => '移除',
 	'UI:Search:Criteria:Locked' => '已锁定',
 
@@ -1568,9 +1570,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	//   - Numeric widget
 	'UI:Search:Criteria:Operator:Numeric:Equals' => '等于',// => '=',
 	'UI:Search:Criteria:Operator:Numeric:GreaterThan' => '大于',// => '>',
-	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '大于 / 等于',// > '>=',
+	'UI:Search:Criteria:Operator:Numeric:GreaterThanOrEquals' => '大于/等于',// > '>=',
 	'UI:Search:Criteria:Operator:Numeric:LessThan' => '小于',// => '<',
-	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '小于 / 等于',// > '<=',
+	'UI:Search:Criteria:Operator:Numeric:LessThanOrEquals' => '小于/等于',// > '<=',
 	'UI:Search:Criteria:Operator:Numeric:Different' => '不同',// => '≠',
 	//   - Tag Set Widget
 	'UI:Search:Criteria:Operator:TagSet:Matches' => '匹配',
@@ -1581,8 +1583,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Search:Value:Autocomplete:StartTyping' => '开始输入值.',
 	'UI:Search:Value:Autocomplete:Wait' => '请稍后...',
 	'UI:Search:Value:Autocomplete:NoResult' => '没有找到结果.',
-	'UI:Search:Value:Toggler:CheckAllNone' => '全选 / 不选',
-	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => '全选 / 不选',
+	'UI:Search:Value:Toggler:CheckAllNone' => '全选/不选',
+	'UI:Search:Value:Toggler:CheckAllNoneFiltered' => '全选/不选',
 
 	// - Widget other translations
 	'UI:Search:Criteria:Numeric:From' => '从',
@@ -1679,22 +1681,6 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:UserManagement'         => '用户管理',
 	'Menu:Queries'                => '查询',
 	'Menu:ConfigurationTools'     => '配置',
-));
-
-// OAuth
-Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title'                   => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title'                    => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title'              => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label'     => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label'        => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label'   => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label'  => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label'      => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title'        => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description'  => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));
 
 // Additional language entries not present in English dict

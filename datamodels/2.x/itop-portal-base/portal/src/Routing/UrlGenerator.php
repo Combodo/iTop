@@ -19,43 +19,72 @@
 
 namespace Combodo\iTop\Portal\Routing;
 
+use Symfony\Component\Routing\RequestContext;
+use Symfony\Component\Routing\RouterInterface;
 use utils;
-use Symfony\Component\Routing\Generator\UrlGenerator as BaseUrlGenerator;
 
 /**
  * Class UrlGenerator
  *
+ * @author Benjamin Dalsass <benjamin.dalsass@combodo.com>
  * @package Combodo\iTop\Portal\Routing
- * @since   2.7.0
- * @author  Bruno Da Silva <bruno.dasilva@combodo.com>
- * @author  Guillaume Lajarige <guillaume.lajarige@combodo.com>
+ * @since   3.1.0
  */
-class UrlGenerator extends BaseUrlGenerator
+class UrlGenerator implements RouterInterface
 {
-	/** @noinspection PhpTooManyParametersInspection */
+	/** @var \Symfony\Component\Routing\RouterInterface $router */
+	private $router;
+
 	/**
-	 * Overloading of the parent function to add the $_REQUEST parameters to the url parameters.
-	 * This is used to keep additional parameters in the url, especially when portal is accessed from the /pages/exec.php
+	 * Constructor.
 	 *
-	 * Note: As of now, it only adds the exec_module/exec_page/portal_id/env_switch/debug parameters. Any other parameter will be ignored.
-	 *
-	 * @param       $variables
-	 * @param       $defaults
-	 * @param       $requirements
-	 * @param       $tokens
-	 * @param       $parameters
-	 * @param       $name
-	 * @param       $referenceType
-	 * @param       $hostTokens
-	 * @param array $requiredSchemes
-	 *
-	 * @return string
+	 * @param \Symfony\Component\Routing\RouterInterface $router
 	 */
-	protected function doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, array $requiredSchemes = array())
+	public function __construct(RouterInterface $router)
+	{
+		$this->router = $router;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
 	{
 		$parameters = $this->getExtraParams($parameters);
 
-		return parent::doGenerate($variables, $defaults, $requirements, $tokens, $parameters, $name, $referenceType, $hostTokens, $requiredSchemes);
+		return $this->router->generate($name, $parameters, $referenceType);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function setContext(RequestContext $context)
+	{
+		$this->router->setContext($context);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getContext()
+	{
+		return $this->router->getContext();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function getRouteCollection()
+	{
+		return $this->router->getRouteCollection();
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	public function match($pathinfo)
+	{
+		return $this->router->match($pathinfo);
 	}
 
 	/**
@@ -67,26 +96,22 @@ class UrlGenerator extends BaseUrlGenerator
 	{
 		$sExecModule = utils::ReadParam('exec_module', '', false, 'string');
 		$sExecPage = utils::ReadParam('exec_page', '', false, 'string');
-		if ($sExecModule !== '' && $sExecPage !== '')
-		{
+		if ($sExecModule !== '' && $sExecPage !== '') {
 			$aParameters['exec_module'] = $sExecModule;
 			$aParameters['exec_page'] = $sExecPage;
 		}
 
 		// Optional parameters
 		$sPortalId = utils::ReadParam('portal_id', '', false, 'string');
-		if ($sPortalId !== '')
-		{
+		if ($sPortalId !== '') {
 			$aParameters['portal_id'] = $sPortalId;
 		}
 		$sEnvSwitch = utils::ReadParam('env_switch', '', false, 'string');
-		if ($sEnvSwitch !== '')
-		{
+		if ($sEnvSwitch !== '') {
 			$aParameters['env_switch'] = $sEnvSwitch;
 		}
 		$sDebug = utils::ReadParam('debug', '', false, 'string');
-		if ($sDebug !== '')
-		{
+		if ($sDebug !== '') {
 			$aParameters['debug'] = $sDebug;
 		}
 

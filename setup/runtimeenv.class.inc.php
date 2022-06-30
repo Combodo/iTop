@@ -1109,29 +1109,24 @@ class RunTimeEnvironment
 	 */
 	public function LoadData($aAvailableModules, $aSelectedModules, $bSampleData)
 	{
-	    $oDataLoader = new XMLDataLoader();
-	    
-	    CMDBObject::SetTrackInfo("Initialization");
-	    $oMyChange = CMDBObject::GetCurrentChange();
+		$oDataLoader = new XMLDataLoader();
+
+		CMDBObject::SetCurrentChangeFromParams("Initialization from XML files for the selected modules ");
+		$oMyChange = CMDBObject::GetCurrentChange();
 
 		SetupLog::Info("starting data load session");
-	    $oDataLoader->StartSession($oMyChange);
-	    
-	    $aFiles = array();
-	    $aPreviouslyLoadedFiles = array();
-	    foreach($aAvailableModules as $sModuleId => $aModule)
-	    {
-	        if (($sModuleId != ROOT_MODULE))
-	        {
-	            $sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
-	            // Load data only for selected AND newly installed modules
-	            if (in_array($sModuleId, $aSelectedModules))
-	            {
-	                if ($aModule['version_db'] != '')
-	                {
-	                    // Simulate the load of the previously loaded XML files to get the mapping of the keys
-	                    if ($bSampleData)
-	                    {
+		$oDataLoader->StartSession($oMyChange);
+
+		$aFiles = array();
+		$aPreviouslyLoadedFiles = array();
+		foreach ($aAvailableModules as $sModuleId => $aModule) {
+			if (($sModuleId != ROOT_MODULE)) {
+				$sRelativePath = 'env-'.$this->sTargetEnv.'/'.basename($aModule['root_dir']);
+				// Load data only for selected AND newly installed modules
+				if (in_array($sModuleId, $aSelectedModules)) {
+					if ($aModule['version_db'] != '') {
+						// Simulate the load of the previously loaded XML files to get the mapping of the keys
+						if ($bSampleData) {
 	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.struct']);
 	                        $aPreviouslyLoadedFiles = static::MergeWithRelativeDir($aPreviouslyLoadedFiles, $sRelativePath, $aAvailableModules[$sModuleId]['data.sample']);
 	                    }

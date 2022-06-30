@@ -614,7 +614,9 @@ abstract class CMDBObject extends DBObject
 	{
 		return $this->DBCloneTracked_Internal();
 	}
-
+	/*
+	 * @deprecated 3.1.0 not used  N°5232
+	*/
 	public function DBCloneTracked(CMDBChange $oChange, $newKey = null)
 	{
 		self::SetCurrentChange($oChange);

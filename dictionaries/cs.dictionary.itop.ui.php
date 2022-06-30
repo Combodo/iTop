@@ -472,6 +472,8 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:Error:MaintenanceTitle' => 'Maintenance~~',
 	'UI:Error:InvalidToken' => 'Error: the requested operation has already been performed (CSRF token not found)~~',
 
+	'UI:Error:SMTP:UnknownVendor' => 'OAuth SMTP provider %1$s does not exist  (email_transport_smtp.oauth.provider)~~',
+
 	'UI:GroupBy:Count' => 'Množství',
 	'UI:GroupBy:Count+' => 'Množství prvků',
 	'UI:CountOfObjects' => 'Počet objektů odpovídajícíh ktritériím: %1$d',
@@ -1672,22 +1674,6 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'Menu:UserManagement'         => 'User Management~~',
 	'Menu:Queries'                => 'Queries~~',
 	'Menu:ConfigurationTools'     => 'Configuration~~',
-));
-
-// OAuth
-Dict::Add('CS CZ', 'Czech', 'Čeština', array(
-	'Menu:OAuthWizardMenu'                          => 'OAuth 2.0~~',
-	'core/Operation:Wizard/Title'                   => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Page:Title'                    => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Panel:Title'              => 'OAuth 2.0 Configuration~~',
-	'UI:OAuth:Wizard:Form:Input:ClientId:Label'     => 'Client Id~~',
-	'UI:OAuth:Wizard:Form:Input:ClientSecret:Label' => 'Client Secret~~',
-	'UI:OAuth:Wizard:Form:Input:Scope:Label'        => 'Scope~~',
-	'UI:OAuth:Wizard:Form:Input:Additional:Label'   => 'Additional parameters~~',
-	'UI:OAuth:Wizard:Form:Input:RedirectUri:Label'  => 'Redirect Uri~~',
-	'UI:OAuth:Wizard:Form:Button:Submit:Label'      => 'Authentication~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Title'        => 'Configuration for SMTP~~',
-	'UI:OAuth:Wizard:ResultConf:Panel:Description'  => 'Paste this content into your configuration file to use this OAuth connection for your outgoing emails~~',
 ));
 
 // Additional language entries not present in English dict

@@ -27,24 +27,15 @@ class Configuration implements ConfigurationInterface
     /**
      * Generates the configuration tree builder.
      *
-     * @return TreeBuilder The tree builder
+     * @return TreeBuilder
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('web_profiler');
+        $treeBuilder = new TreeBuilder('web_profiler');
 
-        $rootNode
+        $treeBuilder->getRootNode()
             ->children()
                 ->booleanNode('toolbar')->defaultFalse()->end()
-                ->scalarNode('position')
-                    ->defaultValue('bottom')
-                    ->setDeprecated('The "web_profiler.position" configuration key has been deprecated in Symfony 3.4 and it will be removed in 4.0.')
-                    ->validate()
-                        ->ifNotInArray(['bottom', 'top'])
-                        ->thenInvalid('The CSS position %s is not supported')
-                    ->end()
-                ->end()
                 ->booleanNode('intercept_redirects')->defaultFalse()->end()
                 ->scalarNode('excluded_ajax_paths')->defaultValue('^/((index|app(_[\w]+)?)\.php/)?_wdt')->end()
             ->end()

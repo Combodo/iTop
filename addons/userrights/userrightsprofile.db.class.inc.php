@@ -508,24 +508,18 @@ class UserRightsProfile extends UserRightsAddOnAPI
 	public function CreateAdministrator($sAdminUser, $sAdminPwd, $sLanguage = 'EN US')
 	{
 		// Create a change to record the history of the User object
-		/** @var \CMDBChange $oChange */
-		$oChange = MetaModel::NewObject("CMDBChange");
-		$oChange->Set("date", time());
-		$oChange->Set("userinfo", "Initialization");
+		CMDBObject::SetCurrentChangeFromParams('Initialization : create first user admin profile');
 
 		$iContactId = 0;
 		// Support drastic data model changes: no organization class (or not writable)!
-		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization'))
-		{
+		if (MetaModel::IsValidClass('Organization') && !MetaModel::IsAbstract('Organization')) {
 			$oOrg = MetaModel::NewObject('Organization');
 			$oOrg->Set('name', 'My Company/Department');
 			$oOrg->Set('code', 'SOMECODE');
-			$oOrg::SetCurrentChange($oChange);
 			$iOrgId = $oOrg->DBInsertNoReload();
 
 			// Support drastic data model changes: no Person class  (or not writable)!
-			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person'))
-			{
+			if (MetaModel::IsValidClass('Person') && !MetaModel::IsAbstract('Person')) {
 				$oContact = MetaModel::NewObject('Person');
 				$oContact->Set('name', 'My last name');
 				$oContact->Set('first_name', 'My first name');
@@ -534,7 +528,6 @@ class UserRightsProfile extends UserRightsAddOnAPI
 					$oContact->Set('org_id', $iOrgId);
 				}
 				$oContact->Set('email', 'my.email@foo.org');
-				$oContact::SetCurrentChange($oChange);
 				$iContactId = $oContact->DBInsertNoReload();
 			}
 		}
@@ -543,24 +536,22 @@ class UserRightsProfile extends UserRightsAddOnAPI
 		$oUser = new UserLocal();
 		$oUser->Set('login', $sAdminUser);
 		$oUser->Set('password', $sAdminPwd);
-		if (MetaModel::IsValidAttCode('UserLocal', 'contactid') && ($iContactId != 0))
-		{
+		if (MetaModel::IsValidAttCode('UserLocal', 'contactid') && ($iContactId != 0)) {
 			$oUser->Set('contactid', $iContactId);
 		}
 		$oUser->Set('language', $sLanguage); // Language was chosen during the installation
 
 		// Add this user to the very specific 'admin' profile
 		$oAdminProfile = MetaModel::GetObjectFromOQL("SELECT URP_Profiles WHERE name = :name", array('name' => ADMIN_PROFILE_NAME), true /*all data*/);
-		if (is_object($oAdminProfile))
-		{
+		if (is_object($oAdminProfile)) {
 			$oUserProfile = new URP_UserProfile();
 			$oUserProfile->Set('profileid', $oAdminProfile->GetKey());
 			$oUserProfile->Set('reason', 'By definition, the administrator must have the administrator profile');
 			$oSet = DBObjectSet::FromObject($oUserProfile);
 			$oUser->Set('profile_list', $oSet);
 		}
-		$oUser::SetCurrentChange($oChange);
-		$iUserId = $oUser->DBInsertNoReload();
+		$oUser->DBInsertNoReload();
+
 		return true;
 	}
 

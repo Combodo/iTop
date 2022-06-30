@@ -36,7 +36,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Twig_Environment;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 use Twig_Loader_Array;
 use URLButtonItem;
 use UserRights;
@@ -420,7 +421,7 @@ class ObjectFormHandlerHelper
 	public function RenderFormFromTwig($sId, $sTwigString, $aData)
 	{
 		// Creating sandbox twig env. to load and test the custom form template
-		$oTwig = new Twig_Environment(new Twig_Loader_Array(array($sId => $sTwigString)));
+		$oTwig = new Environment(new ArrayLoader(array($sId => $sTwigString)));
 
 		// Manually registering filters and functions as we didn't find how to do it automatically
 		$aFilters = $this->oAppExtension->getFilters();

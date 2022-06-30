@@ -7,8 +7,8 @@
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Menu:RequestManagement' => '服务台',
 	'Menu:RequestManagement+' => '服务台',
-	'Menu:RequestManagementProvider' => 'Helpdesk provider',
-	'Menu:RequestManagementProvider+' => 'Helpdesk provider',
+	'Menu:RequestManagementProvider' => '服务台提供者',
+	'Menu:RequestManagementProvider+' => '服务台提供者',
 	'Menu:UserRequest:Provider' => 'Open request transfered to provider',
 	'Menu:UserRequest:Provider+' => 'Open request transfered to provider',
 	'Menu:UserRequest:Overview' => '概况',
@@ -168,8 +168,8 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:resolution_code+' => '',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance' => '帮助',
 	'Class:UserRequest/Attribute:resolution_code/Value:assistance+' => '帮助',
-	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => 'bug修复',
-	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => 'bug修复',
+	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed' => '缺陷修复',
+	'Class:UserRequest/Attribute:resolution_code/Value:bug fixed+' => '缺陷修复',
 	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair' => '硬件维修',
 	'Class:UserRequest/Attribute:resolution_code/Value:hardware repair+' => '硬件维修',
 	'Class:UserRequest/Attribute:resolution_code/Value:other' => '其它',
@@ -201,7 +201,7 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Attribute:parent_incident_ref' => '父级事件编号',
 	'Class:UserRequest/Attribute:parent_incident_ref+' => '~~',
 	'Class:UserRequest/Attribute:related_request_list' => '子需求',
-	'Class:UserRequest/Attribute:related_request_list+' => '该父级需求相关的所有子需求',
+	'Class:UserRequest/Attribute:related_request_list+' => '此父级需求相关的所有子需求',
 	'Class:UserRequest/Attribute:public_log' => '评论',
 	'Class:UserRequest/Attribute:public_log+' => '',
 	'Class:UserRequest/Attribute:user_satisfaction' => '用户满意度',
@@ -245,12 +245,12 @@ Dict::Add('ZH CN', 'Chinese', '简体中文', array(
 	'Class:UserRequest/Error:CannotAssignParentRequestIdToSelf' => '无法分配父级需求到本身',
 
 	'Class:UserRequest/Method:ResolveChildTickets' => '解决子工单',
-	'Class:UserRequest/Method:ResolveChildTickets+' => '将该解决方案直接挪给子需求(自动解决), 包括下列字段: 服务, 团队, 办理人, 解决方案信息',
+	'Class:UserRequest/Method:ResolveChildTickets+' => '将此解决方案直接挪给子需求(自动解决), 包括下列字段: 服务, 团队, 办理人, 解决方案信息',
 ));
 
 
 Dict::Add('ZH CN', 'Chinese', '简体中文', array(
-	'Organization:Overview:UserRequests' => '该组织的所有用户需求',
-	'Organization:Overview:MyUserRequests' => '我在该组织内发起的需求',
-	'Organization:Overview:Tickets' => '该组织内的所有工单',
+	'Organization:Overview:UserRequests' => '此组织的所有用户需求',
+	'Organization:Overview:MyUserRequests' => '我在此组织内发起的需求',
+	'Organization:Overview:Tickets' => '此组织内的所有工单',
 ));

@@ -12,7 +12,6 @@
 namespace Symfony\Bundle\FrameworkBundle\CacheWarmer;
 
 use Doctrine\Common\Annotations\AnnotationException;
-use Psr\Cache\CacheItemPoolInterface;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Serializer\Mapping\Factory\CacheClassMetadataFactory;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactory;
@@ -31,20 +30,19 @@ class SerializerCacheWarmer extends AbstractPhpFileCacheWarmer
     private $loaders;
 
     /**
-     * @param LoaderInterface[]      $loaders      The serializer metadata loaders
-     * @param string                 $phpArrayFile The PHP file where metadata are cached
-     * @param CacheItemPoolInterface $fallbackPool The pool where runtime-discovered metadata are cached
+     * @param LoaderInterface[] $loaders      The serializer metadata loaders
+     * @param string            $phpArrayFile The PHP file where metadata are cached
      */
-    public function __construct(array $loaders, $phpArrayFile, CacheItemPoolInterface $fallbackPool)
+    public function __construct(array $loaders, string $phpArrayFile)
     {
-        parent::__construct($phpArrayFile, $fallbackPool);
+        parent::__construct($phpArrayFile);
         $this->loaders = $loaders;
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function doWarmUp($cacheDir, ArrayAdapter $arrayAdapter)
+    protected function doWarmUp(string $cacheDir, ArrayAdapter $arrayAdapter)
     {
         if (!class_exists(CacheClassMetadataFactory::class) || !method_exists(XmlFileLoader::class, 'getMappedClasses') || !method_exists(YamlFileLoader::class, 'getMappedClasses')) {
             return false;
@@ -72,7 +70,7 @@ class SerializerCacheWarmer extends AbstractPhpFileCacheWarmer
      *
      * @return XmlFileLoader[]|YamlFileLoader[]
      */
-    private function extractSupportedLoaders(array $loaders)
+    private function extractSupportedLoaders(array $loaders): array
     {
         $supportedLoaders = [];
 

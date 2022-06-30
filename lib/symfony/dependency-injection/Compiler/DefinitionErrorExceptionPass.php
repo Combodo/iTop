@@ -11,8 +11,10 @@
 
 namespace Symfony\Component\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Exception\RuntimeException;
+use Symfony\Component\DependencyInjection\Reference;
 
 /**
  * Throws an exception for any Definitions that have errors and still exist.
@@ -24,10 +26,25 @@ class DefinitionErrorExceptionPass extends AbstractRecursivePass
     /**
      * {@inheritdoc}
      */
-    protected function processValue($value, $isRoot = false)
+    protected function processValue($value, bool $isRoot = false)
     {
-        if (!$value instanceof Definition || empty($value->getErrors())) {
+        if (!$value instanceof Definition || !$value->hasErrors()) {
             return parent::processValue($value, $isRoot);
+        }
+
+        if ($isRoot && !$value->isPublic()) {
+            $graph = $this->container->getCompiler()->getServiceReferenceGraph();
+            $runtimeException = false;
+            foreach ($graph->getNode($this->currentId)->getInEdges() as $edge) {
+                if (!$edge->getValue() instanceof Reference || ContainerInterface::RUNTIME_EXCEPTION_ON_INVALID_REFERENCE !== $edge->getValue()->getInvalidBehavior()) {
+                    $runtimeException = false;
+                    break;
+                }
+                $runtimeException = true;
+            }
+            if ($runtimeException) {
+                return parent::processValue($value, $isRoot);
+            }
         }
 
         // only show the first error so the user can focus on it

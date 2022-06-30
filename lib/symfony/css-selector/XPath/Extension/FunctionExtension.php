@@ -33,7 +33,7 @@ class FunctionExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getFunctionTranslators()
+    public function getFunctionTranslators(): array
     {
         return [
             'nth-child' => [$this, 'translateNthChild'],
@@ -46,17 +46,12 @@ class FunctionExtension extends AbstractExtension
     }
 
     /**
-     * @param bool $last
-     * @param bool $addNameTest
-     *
-     * @return XPathExpr
-     *
      * @throws ExpressionErrorException
      */
-    public function translateNthChild(XPathExpr $xpath, FunctionNode $function, $last = false, $addNameTest = true)
+    public function translateNthChild(XPathExpr $xpath, FunctionNode $function, bool $last = false, bool $addNameTest = true): XPathExpr
     {
         try {
-            list($a, $b) = Parser::parseSeries($function->getArguments());
+            [$a, $b] = Parser::parseSeries($function->getArguments());
         } catch (SyntaxErrorException $e) {
             throw new ExpressionErrorException(sprintf('Invalid series: "%s".', implode('", "', $function->getArguments())), 0, $e);
         }
@@ -108,28 +103,20 @@ class FunctionExtension extends AbstractExtension
         // -1n+6 means elements 6 and previous
     }
 
-    /**
-     * @return XPathExpr
-     */
-    public function translateNthLastChild(XPathExpr $xpath, FunctionNode $function)
+    public function translateNthLastChild(XPathExpr $xpath, FunctionNode $function): XPathExpr
     {
         return $this->translateNthChild($xpath, $function, true);
     }
 
-    /**
-     * @return XPathExpr
-     */
-    public function translateNthOfType(XPathExpr $xpath, FunctionNode $function)
+    public function translateNthOfType(XPathExpr $xpath, FunctionNode $function): XPathExpr
     {
         return $this->translateNthChild($xpath, $function, false, false);
     }
 
     /**
-     * @return XPathExpr
-     *
      * @throws ExpressionErrorException
      */
-    public function translateNthLastOfType(XPathExpr $xpath, FunctionNode $function)
+    public function translateNthLastOfType(XPathExpr $xpath, FunctionNode $function): XPathExpr
     {
         if ('*' === $xpath->getElement()) {
             throw new ExpressionErrorException('"*:nth-of-type()" is not implemented.');
@@ -139,11 +126,9 @@ class FunctionExtension extends AbstractExtension
     }
 
     /**
-     * @return XPathExpr
-     *
      * @throws ExpressionErrorException
      */
-    public function translateContains(XPathExpr $xpath, FunctionNode $function)
+    public function translateContains(XPathExpr $xpath, FunctionNode $function): XPathExpr
     {
         $arguments = $function->getArguments();
         foreach ($arguments as $token) {
@@ -159,11 +144,9 @@ class FunctionExtension extends AbstractExtension
     }
 
     /**
-     * @return XPathExpr
-     *
      * @throws ExpressionErrorException
      */
-    public function translateLang(XPathExpr $xpath, FunctionNode $function)
+    public function translateLang(XPathExpr $xpath, FunctionNode $function): XPathExpr
     {
         $arguments = $function->getArguments();
         foreach ($arguments as $token) {
@@ -181,7 +164,7 @@ class FunctionExtension extends AbstractExtension
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'function';
     }

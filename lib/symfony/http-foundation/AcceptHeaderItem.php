@@ -23,10 +23,7 @@ class AcceptHeaderItem
     private $index = 0;
     private $attributes = [];
 
-    /**
-     * @param string $value
-     */
-    public function __construct($value, array $attributes = [])
+    public function __construct(string $value, array $attributes = [])
     {
         $this->value = $value;
         foreach ($attributes as $name => $value) {
@@ -37,30 +34,16 @@ class AcceptHeaderItem
     /**
      * Builds an AcceptHeaderInstance instance from a string.
      *
-     * @param string $itemValue
-     *
      * @return self
      */
-    public static function fromString($itemValue)
+    public static function fromString(?string $itemValue)
     {
-        $bits = preg_split('/\s*(?:;*("[^"]+");*|;*(\'[^\']+\');*|;+)\s*/', $itemValue, 0, \PREG_SPLIT_NO_EMPTY | \PREG_SPLIT_DELIM_CAPTURE);
-        $value = array_shift($bits);
-        $attributes = [];
+        $parts = HeaderUtils::split($itemValue ?? '', ';=');
 
-        $lastNullAttribute = null;
-        foreach ($bits as $bit) {
-            if (($start = substr($bit, 0, 1)) === ($end = substr($bit, -1)) && ('"' === $start || '\'' === $start)) {
-                $attributes[$lastNullAttribute] = substr($bit, 1, -1);
-            } elseif ('=' === $end) {
-                $lastNullAttribute = $bit = substr($bit, 0, -1);
-                $attributes[$bit] = null;
-            } else {
-                $parts = explode('=', $bit);
-                $attributes[$parts[0]] = isset($parts[1]) && \strlen($parts[1]) > 0 ? $parts[1] : '';
-            }
-        }
+        $part = array_shift($parts);
+        $attributes = HeaderUtils::combine($parts);
 
-        return new self(($start = substr($value, 0, 1)) === ($end = substr($value, -1)) && ('"' === $start || '\'' === $start) ? substr($value, 1, -1) : $value, $attributes);
+        return new self($part[0], $attributes);
     }
 
     /**
@@ -72,9 +55,7 @@ class AcceptHeaderItem
     {
         $string = $this->value.($this->quality < 1 ? ';q='.$this->quality : '');
         if (\count($this->attributes) > 0) {
-            $string .= ';'.implode(';', array_map(function ($name, $value) {
-                return sprintf(preg_match('/[,;=]/', $value) ? '%s="%s"' : '%s=%s', $name, $value);
-            }, array_keys($this->attributes), $this->attributes));
+            $string .= '; '.HeaderUtils::toString($this->attributes, ';');
         }
 
         return $string;
@@ -83,11 +64,9 @@ class AcceptHeaderItem
     /**
      * Set the item value.
      *
-     * @param string $value
-     *
      * @return $this
      */
-    public function setValue($value)
+    public function setValue(string $value)
     {
         $this->value = $value;
 
@@ -107,11 +86,9 @@ class AcceptHeaderItem
     /**
      * Set the item quality.
      *
-     * @param float $quality
-     *
      * @return $this
      */
-    public function setQuality($quality)
+    public function setQuality(float $quality)
     {
         $this->quality = $quality;
 
@@ -131,11 +108,9 @@ class AcceptHeaderItem
     /**
      * Set the item index.
      *
-     * @param int $index
-     *
      * @return $this
      */
-    public function setIndex($index)
+    public function setIndex(int $index)
     {
         $this->index = $index;
 
@@ -155,11 +130,9 @@ class AcceptHeaderItem
     /**
      * Tests if an attribute exists.
      *
-     * @param string $name
-     *
      * @return bool
      */
-    public function hasAttribute($name)
+    public function hasAttribute(string $name)
     {
         return isset($this->attributes[$name]);
     }
@@ -167,14 +140,13 @@ class AcceptHeaderItem
     /**
      * Returns an attribute by its name.
      *
-     * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      *
      * @return mixed
      */
-    public function getAttribute($name, $default = null)
+    public function getAttribute(string $name, $default = null)
     {
-        return isset($this->attributes[$name]) ? $this->attributes[$name] : $default;
+        return $this->attributes[$name] ?? $default;
     }
 
     /**
@@ -190,17 +162,14 @@ class AcceptHeaderItem
     /**
      * Set an attribute.
      *
-     * @param string $name
-     * @param string $value
-     *
      * @return $this
      */
-    public function setAttribute($name, $value)
+    public function setAttribute(string $name, string $value)
     {
         if ('q' === $name) {
             $this->quality = (float) $value;
         } else {
-            $this->attributes[$name] = (string) $value;
+            $this->attributes[$name] = $value;
         }
 
         return $this;

@@ -19,14 +19,17 @@ namespace Symfony\Component\Routing;
  */
 class RouteCompiler implements RouteCompilerInterface
 {
-    const REGEX_DELIMITER = '#';
+    /**
+     * @deprecated since Symfony 5.1, to be removed in 6.0
+     */
+    public const REGEX_DELIMITER = '#';
 
     /**
      * This string defines the characters that are automatically considered separators in front of
      * optional placeholders (with default and no static text following). Such a single separator
      * can be left out together with the optional placeholder from matching and generating URLs.
      */
-    const SEPARATORS = '/,;.:-_~+*=@|';
+    public const SEPARATORS = '/,;.:-_~+*=@|';
 
     /**
      * The maximum supported length of a PCRE subpattern name
@@ -34,7 +37,7 @@ class RouteCompiler implements RouteCompilerInterface
      *
      * @internal
      */
-    const VARIABLE_MAXIMUM_LENGTH = 32;
+    public const VARIABLE_MAXIMUM_LENGTH = 32;
 
     /**
      * {@inheritdoc}
@@ -59,6 +62,14 @@ class RouteCompiler implements RouteCompilerInterface
 
             $hostTokens = $result['tokens'];
             $hostRegex = $result['regex'];
+        }
+
+        $locale = $route->getDefault('_locale');
+        if (null !== $locale && null !== $route->getDefault('_canonical_route') && preg_quote($locale) === $route->getRequirement('_locale')) {
+            $requirements = $route->getRequirements();
+            unset($requirements['_locale']);
+            $route->setRequirements($requirements);
+            $route->setPath(str_replace('{_locale}', $locale, $route->getPath()));
         }
 
         $path = $route->getPath();
@@ -92,7 +103,7 @@ class RouteCompiler implements RouteCompilerInterface
         );
     }
 
-    private static function compilePattern(Route $route, $pattern, $isHost)
+    private static function compilePattern(Route $route, string $pattern, bool $isHost): array
     {
         $tokens = [];
         $variables = [];
@@ -103,8 +114,7 @@ class RouteCompiler implements RouteCompilerInterface
         $needsUtf8 = $route->getOption('utf8');
 
         if (!$needsUtf8 && $useUtf8 && preg_match('/[\x80-\xFF]/', $pattern)) {
-            $needsUtf8 = true;
-            @trigger_error(sprintf('Using UTF-8 route patterns without setting the "utf8" option is deprecated since Symfony 3.2 and will throw a LogicException in 4.0. Turn on the "utf8" route option for pattern "%s".', $pattern), \E_USER_DEPRECATED);
+            throw new \LogicException(sprintf('Cannot use UTF-8 route patterns without setting the "utf8" option for route "%s".', $route->getPath()));
         }
         if (!$useUtf8 && $needsUtf8) {
             throw new \LogicException(sprintf('Cannot mix UTF-8 requirements with non-UTF-8 pattern "%s".', $pattern));
@@ -112,9 +122,10 @@ class RouteCompiler implements RouteCompilerInterface
 
         // Match all variables enclosed in "{}" and iterate over them. But we only want to match the innermost variable
         // in case of nested "{}", e.g. {foo{bar}}. This in ensured because \w does not match "{" or "}" itself.
-        preg_match_all('#\{\w+\}#', $pattern, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
+        preg_match_all('#\{(!)?(\w+)\}#', $pattern, $matches, \PREG_OFFSET_CAPTURE | \PREG_SET_ORDER);
         foreach ($matches as $match) {
-            $varName = substr($match[0][0], 1, -1);
+            $important = $match[1][1] >= 0;
+            $varName = $match[2][0];
             // get all static text preceding the current variable
             $precedingText = substr($pattern, $pos, $match[0][1] - $pos);
             $pos = $match[0][1] + \strlen($match[0][0]);
@@ -127,7 +138,7 @@ class RouteCompiler implements RouteCompilerInterface
             } else {
                 $precedingChar = substr($precedingText, -1);
             }
-            $isSeparator = '' !== $precedingChar && false !== strpos(static::SEPARATORS, $precedingChar);
+            $isSeparator = '' !== $precedingChar && str_contains(static::SEPARATORS, $precedingChar);
 
             // A PCRE subpattern name must start with a non-digit. Also a PHP variable cannot start with a digit so the
             // variable would not be usable as a Controller action argument.
@@ -144,7 +155,7 @@ class RouteCompiler implements RouteCompilerInterface
 
             if ($isSeparator && $precedingText !== $precedingChar) {
                 $tokens[] = ['text', substr($precedingText, 0, -\strlen($precedingChar))];
-            } elseif (!$isSeparator && \strlen($precedingText) > 0) {
+            } elseif (!$isSeparator && '' !== $precedingText) {
                 $tokens[] = ['text', $precedingText];
             }
 
@@ -161,8 +172,8 @@ class RouteCompiler implements RouteCompilerInterface
                 $nextSeparator = self::findNextSeparator($followingPattern, $useUtf8);
                 $regexp = sprintf(
                     '[^%s%s]+',
-                    preg_quote($defaultSeparator, self::REGEX_DELIMITER),
-                    $defaultSeparator !== $nextSeparator && '' !== $nextSeparator ? preg_quote($nextSeparator, self::REGEX_DELIMITER) : ''
+                    preg_quote($defaultSeparator),
+                    $defaultSeparator !== $nextSeparator && '' !== $nextSeparator ? preg_quote($nextSeparator) : ''
                 );
                 if (('' !== $nextSeparator && !preg_match('#^\{\w+\}#', $followingPattern)) || '' === $followingPattern) {
                     // When we have a separator, which is disallowed for the variable, we can optimize the regex with a possessive
@@ -176,15 +187,21 @@ class RouteCompiler implements RouteCompilerInterface
                 if (!preg_match('//u', $regexp)) {
                     $useUtf8 = false;
                 } elseif (!$needsUtf8 && preg_match('/[\x80-\xFF]|(?<!\\\\)\\\\(?:\\\\\\\\)*+(?-i:X|[pP][\{CLMNPSZ]|x\{[A-Fa-f0-9]{3})/', $regexp)) {
-                    $needsUtf8 = true;
-                    @trigger_error(sprintf('Using UTF-8 route requirements without setting the "utf8" option is deprecated since Symfony 3.2 and will throw a LogicException in 4.0. Turn on the "utf8" route option for variable "%s" in pattern "%s".', $varName, $pattern), \E_USER_DEPRECATED);
+                    throw new \LogicException(sprintf('Cannot use UTF-8 route requirements without setting the "utf8" option for variable "%s" in pattern "%s".', $varName, $pattern));
                 }
                 if (!$useUtf8 && $needsUtf8) {
                     throw new \LogicException(sprintf('Cannot mix UTF-8 requirement with non-UTF-8 charset for variable "%s" in pattern "%s".', $varName, $pattern));
                 }
+                $regexp = self::transformCapturingGroupsToNonCapturings($regexp);
             }
 
-            $tokens[] = ['variable', $isSeparator ? $precedingChar : '', $regexp, $varName];
+            if ($important) {
+                $token = ['variable', $isSeparator ? $precedingChar : '', $regexp, $varName, false, true];
+            } else {
+                $token = ['variable', $isSeparator ? $precedingChar : '', $regexp, $varName];
+            }
+
+            $tokens[] = $token;
             $variables[] = $varName;
         }
 
@@ -197,7 +214,8 @@ class RouteCompiler implements RouteCompilerInterface
         if (!$isHost) {
             for ($i = \count($tokens) - 1; $i >= 0; --$i) {
                 $token = $tokens[$i];
-                if ('variable' === $token[0] && $route->hasDefault($token[3])) {
+                // variable is optional when it is not important and has a default value
+                if ('variable' === $token[0] && !($token[5] ?? false) && $route->hasDefault($token[3])) {
                     $firstOptional = $i;
                 } else {
                     break;
@@ -210,14 +228,14 @@ class RouteCompiler implements RouteCompilerInterface
         for ($i = 0, $nbToken = \count($tokens); $i < $nbToken; ++$i) {
             $regexp .= self::computeRegexp($tokens, $i, $firstOptional);
         }
-        $regexp = self::REGEX_DELIMITER.'^'.$regexp.'$'.self::REGEX_DELIMITER.'sD'.($isHost ? 'i' : '');
+        $regexp = '{^'.$regexp.'$}sD'.($isHost ? 'i' : '');
 
         // enable Utf8 matching if really required
         if ($needsUtf8) {
             $regexp .= 'u';
             for ($i = 0, $nbToken = \count($tokens); $i < $nbToken; ++$i) {
                 if ('variable' === $tokens[$i][0]) {
-                    $tokens[$i][] = true;
+                    $tokens[$i][4] = true;
                 }
             }
         }
@@ -232,10 +250,8 @@ class RouteCompiler implements RouteCompilerInterface
 
     /**
      * Determines the longest static prefix possible for a route.
-     *
-     * @return string The leading static part of a route's path
      */
-    private static function determineStaticPrefix(Route $route, array $tokens)
+    private static function determineStaticPrefix(Route $route, array $tokens): string
     {
         if ('text' !== $tokens[0][0]) {
             return ($route->hasDefault($tokens[0][3]) || '/' === $tokens[0][1]) ? '' : $tokens[0][1];
@@ -251,14 +267,9 @@ class RouteCompiler implements RouteCompilerInterface
     }
 
     /**
-     * Returns the next static character in the Route pattern that will serve as a separator.
-     *
-     * @param string $pattern The route pattern
-     * @param bool   $useUtf8 Whether the character is encoded in UTF-8 or not
-     *
-     * @return string The next static character that functions as separator (or empty string when none available)
+     * Returns the next static character in the Route pattern that will serve as a separator (or the empty string when none available).
      */
-    private static function findNextSeparator($pattern, $useUtf8)
+    private static function findNextSeparator(string $pattern, bool $useUtf8): string
     {
         if ('' == $pattern) {
             // return empty string if pattern is empty or false (false which can be returned by substr)
@@ -272,7 +283,7 @@ class RouteCompiler implements RouteCompilerInterface
             preg_match('/^./u', $pattern, $pattern);
         }
 
-        return false !== strpos(static::SEPARATORS, $pattern[0]) ? $pattern[0] : '';
+        return str_contains(static::SEPARATORS, $pattern[0]) ? $pattern[0] : '';
     }
 
     /**
@@ -281,22 +292,20 @@ class RouteCompiler implements RouteCompilerInterface
      * @param array $tokens        The route tokens
      * @param int   $index         The index of the current token
      * @param int   $firstOptional The index of the first optional token
-     *
-     * @return string The regexp pattern for a single token
      */
-    private static function computeRegexp(array $tokens, $index, $firstOptional)
+    private static function computeRegexp(array $tokens, int $index, int $firstOptional): string
     {
         $token = $tokens[$index];
         if ('text' === $token[0]) {
             // Text tokens
-            return preg_quote($token[1], self::REGEX_DELIMITER);
+            return preg_quote($token[1]);
         } else {
             // Variable tokens
             if (0 === $index && 0 === $firstOptional) {
                 // When the only token is an optional variable token, the separator is required
-                return sprintf('%s(?P<%s>%s)?', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
+                return sprintf('%s(?P<%s>%s)?', preg_quote($token[1]), $token[3], $token[2]);
             } else {
-                $regexp = sprintf('%s(?P<%s>%s)', preg_quote($token[1], self::REGEX_DELIMITER), $token[3], $token[2]);
+                $regexp = sprintf('%s(?P<%s>%s)', preg_quote($token[1]), $token[3], $token[2]);
                 if ($index >= $firstOptional) {
                     // Enclose each optional token in a subpattern to make it optional.
                     // "?:" means it is non-capturing, i.e. the portion of the subject string that
@@ -312,5 +321,26 @@ class RouteCompiler implements RouteCompilerInterface
                 return $regexp;
             }
         }
+    }
+
+    private static function transformCapturingGroupsToNonCapturings(string $regexp): string
+    {
+        for ($i = 0; $i < \strlen($regexp); ++$i) {
+            if ('\\' === $regexp[$i]) {
+                ++$i;
+                continue;
+            }
+            if ('(' !== $regexp[$i] || !isset($regexp[$i + 2])) {
+                continue;
+            }
+            if ('*' === $regexp[++$i] || '?' === $regexp[$i]) {
+                ++$i;
+                continue;
+            }
+            $regexp = substr_replace($regexp, '?:', $i, 0);
+            ++$i;
+        }
+
+        return $regexp;
     }
 }

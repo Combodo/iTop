@@ -27,11 +27,14 @@ If you have an idea you're sure would benefit to all of iTop users, you may
 [create a corresponding ticket](https://sourceforge.net/p/itop/tickets/new/) to submit it, but be warned that there are lots of good 
 reasons to refuse such changes.
 
-### 📄 License
+### 📄 License and copyright
 iTop is distributed under the AGPL-3.0 license (see the [license.txt] file),
 your code must comply with this license.
 
-If you want to use another license, you may [create an extension][wiki new ext].
+Combodo has the copyright on each and every source file in the iTop repository: please do not modify the existing file copyrights.  
+Anyhow, you are encouraged to signal your contribution by the mean of `@author` annotations.
+
+If you want to use another license or keep the code ownership (copyright), you may [create an extension][wiki new ext].
 
 [license.txt]: https://github.com/Combodo/iTop/blob/develop/license.txt
 [wiki new ext]: https://www.itophub.io/wiki/page?id=latest%3Acustomization%3Astart#by_writing_your_own_extension
@@ -141,9 +144,9 @@ Detailed procedure to work on fork and create PR is available [in GitHub help pa
 
 ### 🙏 We are thankful
 
-We are thankful for all your contributions to the iTop universe! As a thank you gift, we will send stickers to every iTop (& extensions) contributors! 
+We are thankful for all your contributions to the iTop universe! As a thank you gift, we will send stickers to every iTop (& extensions) contributors!
 
-Stickers' design might change from one year to another. For the first year we wanted to try a "craft beer label" look, see examples below: 
+We have one sticker per contribution type. You might get multiple stickers with one contribution though :)
 
 * Bug hunter: Fix a bug
 * Translator: Add/update translations
@@ -155,4 +158,6 @@ Stickers' design might change from one year to another. For the first year we wa
 * Beta tester: Test and give feedback on beta releases
 * Extension developer: Develop and publish an extension
 
-![](.doc/contributing-guide/contributing-stickers-side-by-side.png)
+Here is the design of each stickers for year 2022:
+
+![iTop stickers 2022](.doc/contributing-guide/contributing-stickers-side-by-side.png)

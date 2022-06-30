@@ -342,13 +342,17 @@ JS
 	}
 
 	/**
-	 * Important: For compatibility reasons, this function still allows to manipulate the $oPage. In that case, markup will be put above the real header of the panel.
-	 * To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 * @param \WebPage $oPage warning, since 3.0.0 this parameter was kept for compatibility reason. You shouldn't write directly on the page !
+	 *   When writing to the page, markup will be put above the real header of the panel.
+	 *   To insert something IN the panel, we now need to add UIBlocks in either the "subtitle" or "toolbar" sections of the array that will be returned.
+	 * @param bool $bEditMode Deprecated parameter in iTop 3.0.0, use {@see GetDisplayMode()} and ENUM_DISPLAY_MODE_* constants instead
 	 *
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode Note that this parameter is no longer used in this method. Use {@see static::$sDisplayMode} instead
-	 *
-	 * @return array UIBlocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block. eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
+	 * @return array{
+	 *       subtitle: \Combodo\iTop\Application\UI\Base\UIBlock[],
+	 *       toolbar: \Combodo\iTop\Application\UI\Base\UIBlock[]
+	 *    }
+	 *    blocks to be inserted in the "subtitle" and the "toolbar" sections of the ObjectDetails block.
+	 *    eg. ['subtitle' => [<BLOCK1>, <BLOCK2>], 'toolbar' => [<BLOCK3>]]
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -357,7 +361,10 @@ JS
 	 * @throws \MySQLException
 	 * @throws \OQLException
 	 *
-	 * @since 3.0.0 $bEditMode is deprecated and no longer used
+	 * @since 3.0.0 $bEditMode is deprecated, see param documentation above
+	 * @since 3.0.0 changed signature : method must return header content in an array (no more writing directly to the $oPage)
+	 *
+	 * @noinspection PhpUnusedParameterInspection
 	 */
 	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
 	{
