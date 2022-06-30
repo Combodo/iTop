@@ -4179,20 +4179,21 @@ class AttributeText extends AttributeString
 
 	public function GetEditValue($sValue, $oHostObj = null)
 	{
-		if ($this->GetFormat() == 'text')
-		{
-			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
-			{
-				foreach($aAllMatches as $iPos => $aMatches)
-				{
+		// N°4517 - PHP 8.1 compatibility: str_replace call with null cause deprecated message
+		if ($sValue == null) {
+			return '';
+		}
+
+		if ($this->GetFormat() == 'text') {
+			if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER)) {
+				foreach ($aAllMatches as $iPos => $aMatches) {
 					$sClass = trim($aMatches[1]);
 					$sName = trim($aMatches[2]);
 					$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-					if (MetaModel::IsValidClass($sClass))
-					{
+					if (MetaModel::IsValidClass($sClass)) {
 						$sClassLabel = MetaModel::GetName($sClass);
-						$sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+						$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 						$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 					}
 				}
@@ -4229,31 +4230,30 @@ class AttributeText extends AttributeString
 	public function MakeRealValue($proposedValue, $oHostObj)
 	{
 		$sValue = $proposedValue;
-		switch ($this->GetFormat())
-		{
+
+		if ($sValue == null) {
+			return null;
+		}
+
+		switch ($this->GetFormat()) {
 			case 'html':
-				if (($sValue !== null) && ($sValue !== ''))
-				{
+				if (($sValue !== null) && ($sValue !== '')) {
 					$sValue = HTMLSanitizer::Sanitize($sValue);
 				}
 				break;
 
 			case 'text':
 			default:
-				if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER))
-				{
-					foreach($aAllMatches as $iPos => $aMatches)
-					{
+				if (preg_match_all(WIKI_OBJECT_REGEXP, $sValue, $aAllMatches, PREG_SET_ORDER)) {
+					foreach ($aAllMatches as $iPos => $aMatches) {
 						$sClassLabel = trim($aMatches[1]);
 						$sName = trim($aMatches[2]);
-                        $sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
+						$sLabel = (!empty($aMatches[4])) ? trim($aMatches[4]) : null;
 
-						if (!MetaModel::IsValidClass($sClassLabel))
-						{
+						if (!MetaModel::IsValidClass($sClassLabel)) {
 							$sClass = MetaModel::GetClassFromLabel($sClassLabel);
-							if ($sClass)
-							{
-                                $sReplacement = "[[$sClassLabel:$sName" . (!empty($sLabel) ? " | $sLabel" : "") . "]]";
+							if ($sClass) {
+								$sReplacement = "[[$sClassLabel:$sName".(!empty($sLabel) ? " | $sLabel" : "")."]]";
 								$sValue = str_replace($aMatches[0], $sReplacement, $sValue);
 							}
 						}
