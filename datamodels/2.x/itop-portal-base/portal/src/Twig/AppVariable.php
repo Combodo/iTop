@@ -81,8 +81,7 @@ class AppVariable implements ArrayAccess
         if ($this->container->has($offset)) {
             return $this->container->get($offset);
         }
-
-        return;
+        return null;
     }
 
     /**
@@ -107,7 +106,6 @@ class AppVariable implements ArrayAccess
         }
 
         $this->container->setParameter($offset, $value);
-        return;
     }
 
     /**
@@ -117,12 +115,8 @@ class AppVariable implements ArrayAccess
     {
         if ($this->container->hasParameter($offset)) {
             $this->container->setParameter($offset, null);
-            return;
-        }
-
-        if ($this->container->has($offset)) {
-            $this->container->set($offset, null);
-            return;
+        } else if ($this->container->has($offset)) {
+	        $this->container->set($offset, null);
         }
     }
 
