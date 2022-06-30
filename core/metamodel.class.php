@@ -2246,17 +2246,14 @@ abstract class MetaModel
 				$aNeighbourData['sFromClass'] = $aNeighbourData['sDefinedInClass'];
 				try
 				{
-					if (strlen($aNeighbourData['sQueryDown']) == 0)
-					{
+					if (Utils::StrLen($aNeighbourData['sQueryDown']) == 0) {
 						$oAttDef = self::GetAttributeDef($sClass, $aNeighbourData['sAttribute']);
-						if ($oAttDef instanceof AttributeExternalKey)
-						{
+						if ($oAttDef instanceof AttributeExternalKey) {
 							$sTargetClass = $oAttDef->GetTargetClass();
 							$aNeighbourData['sToClass'] = $sTargetClass;
 							$aNeighbourData['sQueryDown'] = 'SELECT '.$sTargetClass.' AS o WHERE o.id = :this->'.$aNeighbourData['sAttribute'];
 							$aNeighbourData['sQueryUp'] = 'SELECT '.$aNeighbourData['sFromClass'].' AS o WHERE o.'.$aNeighbourData['sAttribute'].' = :this->id';
-						}
-						elseif ($oAttDef instanceof AttributeLinkedSet)
+						} elseif ($oAttDef instanceof AttributeLinkedSet)
 						{
 							$sLinkedClass = $oAttDef->GetLinkedClass();
 							$sExtKeyToMe = $oAttDef->GetExtKeyToMe();
