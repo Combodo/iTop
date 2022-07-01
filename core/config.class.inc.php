@@ -512,14 +512,6 @@ class Config
 			'source_of_value'     => '',
 			'show_in_conf_sample' => true,
 		],
-		'cron_task_max_execution_time' => [
-			'type' => 'integer',
-			'description' => 'Background tasks will use this value (integer) multiplicated by its periodicity (in seconds) as max duration per cron execution. 0 is unlimited time',
-			'default' => 0,
-			'value' => 0,
-			'source_of_value' => '',
-			'show_in_conf_sample' => false,
-		],
 		'cron_sleep' => [
 			'type' => 'integer',
 			'description' => 'Duration (seconds) before cron.php checks again if something must be done',
@@ -527,6 +519,14 @@ class Config
 			'value' => 2,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
+		],
+		'cron.max_process' => [
+			'type' => 'integer',
+			'description' => 'Maximum number of cron process to run',
+			'default' => 10,
+			'value' => 10,
+			'source_of_value' => '',
+			'show_in_conf_sample' => true,
 		],
 		'async_task_retries' => [
 			'type' => 'array',
