@@ -813,21 +813,20 @@ class utils
 	 */
 	public static function StringToTime($sDate, $sFormat)
 	{
-	   // Source: http://php.net/manual/fr/function.strftime.php
+		// Source: http://php.net/manual/fr/function.strftime.php
 		// (alternative: http://www.php.net/manual/fr/datetime.formats.date.php)
 		static $aDateTokens = null;
 		static $aDateRegexps = null;
-		if (is_null($aDateTokens))
-		{
-		   $aSpec = array(
-				'%d' =>'(?<day>[0-9]{2})',
+		if (is_null($aDateTokens)) {
+			$aSpec = array(
+				'%d' => '(?<day>[0-9]{2})',
 				'%m' => '(?<month>[0-9]{2})',
 				'%y' => '(?<year>[0-9]{2})',
 				'%Y' => '(?<year>[0-9]{4})',
 				'%H' => '(?<hour>[0-2][0-9])',
 				'%i' => '(?<minute>[0-5][0-9])',
 				'%s' => '(?<second>[0-5][0-9])',
-				);
+			);
 			$aDateTokens = array_keys($aSpec);
 			$aDateRegexps = array_values($aSpec);
 		}
@@ -1892,7 +1891,8 @@ class utils
 	{
 		$sText = str_replace("\r\n", "\n", $sText);
 		$sText = str_replace("\r", "\n", $sText);
-		return str_replace("\n", '<br/>', htmlentities($sText, ENT_QUOTES, 'UTF-8'));
+
+		return str_replace("\n", '<br/>', utils::EscapeHtml($sText));
 	}
 	
 	/**

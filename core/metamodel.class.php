@@ -4997,27 +4997,23 @@ abstract class MetaModel
 	 */
 	public static function DBShowApplyForm($sRepairUrl, $sSQLStatementArgName, $aSQLFixes)
 	{
-		if (empty($sRepairUrl))
-		{
+		if (empty($sRepairUrl)) {
 			return;
 		}
 
 		// By design, some queries might be blank, we have to ignore them
 		$aCleanFixes = array();
-		foreach($aSQLFixes as $sSQLFix)
-		{
-			if (!empty($sSQLFix))
-			{
+		foreach ($aSQLFixes as $sSQLFix) {
+			if (!empty($sSQLFix)) {
 				$aCleanFixes[] = $sSQLFix;
 			}
 		}
-		if (count($aCleanFixes) == 0)
-		{
+		if (count($aCleanFixes) == 0) {
 			return;
 		}
 
 		echo "<form action=\"$sRepairUrl\" method=\"POST\">\n";
-		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".htmlentities(implode("##SEP##", $aCleanFixes), ENT_QUOTES, 'UTF-8')."\">\n";
+		echo "   <input type=\"hidden\" name=\"$sSQLStatementArgName\" value=\"".utils::EscapeHtml(implode("##SEP##", $aCleanFixes))."\">\n";
 		echo "   <input type=\"submit\" value=\" Apply changes (".count($aCleanFixes)." queries) \">\n";
 		echo "</form>\n";
 	}
@@ -5263,24 +5259,21 @@ abstract class MetaModel
 		$sRes = '';
 
 		$sRes .= "// Dictionnay conventions\n";
-		$sRes .= htmlentities("// Class:<class_name>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>+\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>+\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>\n", ENT_QUOTES, 'UTF-8');
-		$sRes .= htmlentities("// Class:<class_name>/Stimulus:<stimulus_code>+\n", ENT_QUOTES, 'UTF-8');
+		$sRes .= utils::EscapeHtml("// Class:<class_name>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>+\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>+\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Attribute:<attribute_code>/Value:<value>+\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Stimulus:<stimulus_code>\n");
+		$sRes .= utils::EscapeHtml("// Class:<class_name>/Stimulus:<stimulus_code>+\n");
 		$sRes .= "\n";
 
 		// Note: I did not use EnumCategories(), because a given class maybe found in several categories
 		// Need to invent the "module", to characterize the origins of a class
-		if (strlen($sModules) == 0)
-		{
+		if (strlen($sModules) == 0) {
 			$aModules = array('bizmodel', 'core/cmdb', 'gui', 'application', 'addon/userrights');
-		}
-		else
-		{
+		} else {
 			$aModules = explode(', ', $sModules);
 		}
 
@@ -5288,17 +5281,14 @@ abstract class MetaModel
 		$sRes .= "// Note: The classes have been grouped by categories: ".implode(', ', $aModules)."\n";
 		$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 
-		foreach($aModules as $sCategory)
-		{
+		foreach ($aModules as $sCategory) {
 			$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 			$sRes .= "// Classes in '<em>$sCategory</em>'\n";
 			$sRes .= "//////////////////////////////////////////////////////////////////////\n";
 			$sRes .= "//\n";
 			$sRes .= "\n";
-			foreach(self::GetClasses($sCategory) as $sClass)
-			{
-				if (!self::HasTable($sClass))
-				{
+			foreach (self::GetClasses($sCategory) as $sClass) {
+				if (!self::HasTable($sClass)) {
 					continue;
 				}
 
@@ -7022,30 +7012,26 @@ abstract class MetaModel
 	 */
 	public static function GetHyperLink($sTargetClass, $iKey)
 	{
-		if ($iKey < 0)
-		{
+		if ($iKey < 0) {
 			return "$sTargetClass: $iKey (invalid value)";
 		}
 		$oObj = self::GetObject($sTargetClass, $iKey, false);
-		if (is_null($oObj))
-		{
+		if (is_null($oObj)) {
 			// Whatever we are looking for, the root class is the key to search for
 			$sRootClass = self::GetRootClass($sTargetClass);
 			$oSearch = DBObjectSearch::FromOQL('SELECT CMDBChangeOpDelete WHERE objclass = :objclass AND objkey = :objkey', array('objclass' => $sRootClass, 'objkey' => $iKey));
 			$oSet = new DBObjectSet($oSearch);
 			$oRecord = $oSet->Fetch();
 			// An empty fname is obtained with iTop < 2.0
-			if (is_null($oRecord) || (strlen(trim($oRecord->Get('fname'))) == 0))
-			{
+			if (is_null($oRecord) || (strlen(trim($oRecord->Get('fname'))) == 0)) {
 				$sName = Dict::Format('Core:UnknownObjectLabel', $sTargetClass, $iKey);
 				$sTitle = Dict::S('Core:UnknownObjectTip');
-			}
-			else
-			{
+			} else {
 				$sName = $oRecord->Get('fname');
 				$sTitle = Dict::Format('Core:DeletedObjectTip', $oRecord->Get('date'), $oRecord->Get('userinfo'));
 			}
-			return '<span class="itop-deleted-object" title="'.htmlentities($sTitle, ENT_QUOTES, 'UTF-8').'">'.htmlentities($sName, ENT_QUOTES, 'UTF-8').'</span>';
+
+			return '<span class="itop-deleted-object" title="'.utils::EscapeHtml($sTitle).'">'.utils::EscapeHtml($sName).'</span>';
 		}
 		return $oObj->GetHyperLink();
 	}

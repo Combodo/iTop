@@ -93,13 +93,12 @@ class DesignDocument extends DOMDocument
 	public function Dump($bReturnRes = false)
 	{
 		$sXml = $this->saveXML();
-		if ($bReturnRes)
-		{
+		if ($bReturnRes) {
 			return $sXml;
 		}
 
 		echo "<pre>\n";
-		echo htmlentities($sXml);
+		echo utils::EscapeHtml($sXml);
 		echo "</pre>\n";
 
 		return '';
@@ -192,13 +191,13 @@ class DesignElement extends \DOMElement
 		$oDoc->appendChild($oClone);
 
 		$sXml = $oDoc->saveXML($oClone);
-		if ($bReturnRes)
-		{
+		if ($bReturnRes) {
 			return $sXml;
 		}
 		echo "<pre>\n";
-		echo htmlentities($sXml);
+		echo utils::EscapeHtml($sXml);
 		echo "</pre>\n";
+
 		return '';
 	}
 	/**

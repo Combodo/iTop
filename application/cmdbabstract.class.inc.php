@@ -987,10 +987,8 @@ HTML
 												$this->GetSynchroReplicaFlags($sAttCode, $aReasons);
 												$sTip = '';
 												foreach ($aReasons as $aRow) {
-													$sDescription = htmlentities($aRow['description'], ENT_QUOTES,
-														'UTF-8');
-													$sDescription = str_replace(array("\r\n", "\n"), "<br/>",
-														$sDescription);
+													$sDescription = utils::EscapeHtml($aRow['description']);
+													$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 													$sTip .= "<div class='synchro-source'>";
 													$sTip .= "<div class='synchro-source-title'>Synchronized with {$aRow['name']}</div>";
 													$sTip .= "<div class='synchro-source-description'>$sDescription</div>";
@@ -1403,7 +1401,7 @@ HTML
 						} else {
 							if ($oAttDef instanceof AttributeCaseLog) {
 								$rawValue = $oObj->Get($sAttCodeEx);
-								$outputValue = str_replace("\n", "<br/>", htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+								$outputValue = str_replace("\n", "<br/>", utils::EscapeHtml($rawValue->__toString()));
 								// Trick for Excel: treat the content as text even if it begins with an equal sign
 								$aRow[$oAttDef->GetCode()] = $outputValue;
 							} else {
@@ -1417,9 +1415,9 @@ HTML
 									}
 								}
 								if ($bLocalize) {
-									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES, 'UTF-8');
+									$outputValue = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
 								} else {
-									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+									$outputValue = utils::EscapeHtml($rawValue);
 								}
 								$aRow[$oAttDef->GetCode()] = $outputValue;
 							}
@@ -1895,7 +1893,7 @@ HTML
 							{
 								$rawValue = $oObj->Get($sAttCodeEx);
 								$outputValue = str_replace("\n", "<br/>",
-									htmlentities($rawValue->__toString(), ENT_QUOTES, 'UTF-8'));
+									utils::EscapeHtml($rawValue->__toString()));
 								// Trick for Excel: treat the content as text even if it begins with an equal sign
 								$aRow[] = '<td x:str>'.$outputValue.'</td>';
 							}
@@ -1912,14 +1910,11 @@ HTML
 										$rawValue = '';
 									}
 								}
-								if ($bLocalize)
-								{
-									$outputValue = htmlentities($oFinalAttDef->GetEditValue($rawValue), ENT_QUOTES,
-										'UTF-8');
+								if ($bLocalize) {
+									$outputValue = utils::EscapeHtml($oFinalAttDef->GetEditValue($rawValue));
 								}
-								else
-								{
-									$outputValue = htmlentities($rawValue, ENT_QUOTES, 'UTF-8');
+								else {
+									$outputValue = utils::EscapeHtml($rawValue);
 								}
 								$aRow[] = '<td>'.$outputValue.'</td>';
 							}
@@ -2156,7 +2151,7 @@ HTML;
 					$sHours = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[h]{$sNameSuffix}\" value=\"{$aVal['hours']}\" id=\"{$iId}_h\"/>";
 					$sMinutes = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[m]{$sNameSuffix}\" value=\"{$aVal['minutes']}\" id=\"{$iId}_m\"/>";
 					$sSeconds = "<input class=\"ibo-input ibo-input-duration\" title=\"$sHelpText\" type=\"text\" size=\"2\" name=\"attr_{$sFieldPrefix}{$sAttCode}[s]{$sNameSuffix}\" value=\"{$aVal['seconds']}\" id=\"{$iId}_s\"/>";
-					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".htmlentities($value, ENT_QUOTES, 'UTF-8')."\"/>";
+					$sHidden = "<input type=\"hidden\" id=\"{$iId}\" value=\"".utils::EscapeHtml($value)."\"/>";
 					$sHTMLValue = Dict::Format('UI:DurationForm_Days_Hours_Minutes_Seconds', $sDays, $sHours, $sMinutes, $sSeconds).$sHidden."&nbsp;".$sValidationSpan.$sReloadSpan;
 					$oPage->add_ready_script("$('#{$iId}').on('update', function(evt, sFormId) { return ToggleDurationField('$iId'); });");
 					break;
@@ -2166,8 +2161,7 @@ HTML;
 					$aEventsList[] = 'validate';
 					$aEventsList[] = 'keyup';
 					$aEventsList[] = 'change';
-					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".htmlentities($value,
-							ENT_QUOTES, 'UTF-8')."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
+					$sHTMLValue = "<div class=\"field_input_zone field_input_password ibo-input-wrapper ibo-input-password-wrapper\" data-validation=\"untouched\"><input class=\"ibo-input ibo-input-password\" title=\"$sHelpText\" type=\"password\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" value=\"".utils::EscapeHtml($value)."\" id=\"$iId\"/></div>{$sValidationSpan}{$sReloadSpan}";
 					break;
 
 				case 'OQLExpression':
@@ -2319,13 +2313,13 @@ EOF
 
 					$sHeader = '<div class="ibo-caselog-entry-form--actions"><div class="""ibo-caselog-entry-form--actions" data-role="ibo-caselog-entry-form--action-buttons--extra-actions"></div></div>'; // will be hidden in CSS (via :empty) if it remains empty
 					$sEditValue = is_object($value) ? $value->GetModifiedEntry('html') : '';
-					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */,  array('AttributeText', 'RenderWikiHtml')) : '';
+					$sPreviousLog = is_object($value) ? $value->GetAsHTML($oPage, true /* bEditMode */, array('AttributeText', 'RenderWikiHtml')) : '';
 					$iEntriesCount = is_object($value) ? count($value->GetIndex()) : 0;
 					$sHidden = "<input type=\"hidden\" id=\"{$iId}_count\" value=\"$iEntriesCount\"/>"; // To know how many entries the case log already contains
 
 					$sHTMLValue = "$sHeader<div class=\"ibo-caselog-entry-form--text-input\" $sStyle data-role=\"ibo-caselog-entry-form--text-input\">";
-					$sHTMLValue .=	"<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".htmlentities($sEditValue,ENT_QUOTES,'UTF-8')."</textarea>";
-					$sHTMLValue .=	"$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
+					$sHTMLValue .= "<textarea class=\"htmlEditor ibo-input-richtext-placeholder\" style=\"border:0;width:100%\" title=\"$sHelpText\" name=\"attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}\" rows=\"8\" cols=\"40\" id=\"$iId\">".utils::EscapeHtml($sEditValue)."</textarea>";
+					$sHTMLValue .= "$sPreviousLog</div>{$sValidationSpan}{$sReloadSpan}$sHidden";
 
 					// Note: This should be refactored for all types of attribute (see at the end of this function) but as we are doing this for a maintenance release, we are scheduling it for the next main release in to order to avoid regressions as much as possible.
 					$sNullValue = $oAttDef->GetNullValue();
@@ -2570,16 +2564,16 @@ JS
 
 				case 'Set':
 				case 'TagSet':
-					$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
-					$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
-					$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
+				$sInputType = self::ENUM_INPUT_TYPE_TAGSET;
+				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/selectize.min.js');
+				$oPage->add_linked_stylesheet(utils::GetAbsoluteUrlAppRoot().'css/selectize.default.css');
+				$oPage->add_linked_script(utils::GetAbsoluteUrlAppRoot().'js/jquery.itop-set-widget.js');
 
-					$oPage->add_dict_entry('Core:AttributeSet:placeholder');
+				$oPage->add_dict_entry('Core:AttributeSet:placeholder');
 
-					/** @var \ormSet $value */
+				/** @var \ormSet $value */
 				$sJson = $oAttDef->GetJsonForWidget($value, $aArgs);
-				$sEscapedJson = htmlentities($sJson, ENT_QUOTES, 'UTF-8');
+				$sEscapedJson = utils::EscapeHtml($sJson);
 				$sSetInputName = "attr_{$sFormPrefix}{$sAttCode}";
 
 				// handle form validation
@@ -3692,8 +3686,7 @@ HTML;
 						break;
 
 					default:
-						$oPage->add("<pre>".htmlentities(MyHelpers::beautifulstr($data, 1000, true), ENT_QUOTES,
-								'UTF-8')."</pre>\n");
+						$oPage->add("<pre>".utils::EscapeHtml(MyHelpers::beautifulstr($data, 1000, true))."</pre>\n");
 				}
 				break;
 
@@ -4734,9 +4727,8 @@ HTML;
 				{
 					$aReasons = array();
 					$sTip = '';
-					foreach($aReasons as $aRow)
-					{
-						$sDescription = htmlentities($aRow['description'], ENT_QUOTES, 'UTF-8');
+					foreach($aReasons as $aRow) {
+						$sDescription = utils::EscapeHtml($aRow['description']);
 						$sDescription = str_replace(array("\r\n", "\n"), "<br/>", $sDescription);
 						$sTip .= "<div class=\"synchro-source\">";
 						$sTip .= "<div class=\"synchro-source-title\">Synchronized with {$aRow['name']}</div>";
@@ -4748,8 +4740,7 @@ HTML;
 
 				// Attribute is read-only
 				$sHTMLValue = $this->GetAsHTML($sAttCode);
-				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.htmlentities($this->GetEditValue($sAttCode),
-						ENT_QUOTES, 'UTF-8').'"/>';
+				$sHTMLValue .= '<input type="hidden" id="'.$sInputId.'" name="attr_'.$sPrefix.$sAttCode.'" value="'.utils::EscapeHtml($this->GetEditValue($sAttCode)).'"/>';
 				$aFieldsMap[$sAttCode] = $sInputId;
 			}
 			else

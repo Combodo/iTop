@@ -12776,7 +12776,7 @@ class AttributeCustomFields extends AttributeDefinition
 			$sRet = $value->GetAsHTML($bLocalize);
 		} catch (Exception $e)
 		{
-			$sRet = 'Custom field error: '.htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8');
+			$sRet = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 		}
 
 		return $sRet;

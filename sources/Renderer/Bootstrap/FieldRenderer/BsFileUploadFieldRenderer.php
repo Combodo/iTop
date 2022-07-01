@@ -397,14 +397,13 @@ HTML
 
 				/** @var \ormDocument $oDoc */
 				$oDoc = $oAttachment->Get('contents');
-				$sFileName = htmlentities($oDoc->GetFileName(), ENT_QUOTES, 'UTF-8');
+				$sFileName = utils::EscapeHtml($oDoc->GetFileName());
 
 				$sDocDownloadUrl = str_replace('-sAttachmentId-', $iAttId, $this->oField->GetDownloadEndpoint());
 
 				$sAttachmentThumbUrl = utils::GetAbsoluteUrlAppRoot().AttachmentPlugIn::GetFileIcon($sFileName);
 				$bHasPreview = false;
-				if ($oDoc->IsPreviewAvailable())
-				{
+				if ($oDoc->IsPreviewAvailable()) {
 					$bHasPreview = true;
 					$iMaxSizeForPreview = MetaModel::GetModuleSetting('itop-attachments', 'icon_preview_max_size', AbstractAttachmentsRenderer::DEFAULT_MAX_SIZE_FOR_PREVIEW);
 					if ($oDoc->GetSize() <= $iMaxSizeForPreview)

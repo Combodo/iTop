@@ -632,17 +632,17 @@ try
 					$oP->SetBreadCrumbEntry($sPageId, $sLabel, $sDescription, '', 'fas fa-search', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 					$oP->add("<div style=\"padding: 10px;\">\n");
 					$oP->add("<div class=\"header_message\" id=\"full_text_progress\" style=\"position: fixed; background-color: #cccccc; opacity: 0.7; padding: 1.5em;\">\n");
-					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', htmlentities($sFullText, ENT_QUOTES, 'UTF-8')).'</span>');
+					$oP->add('<img id="full_text_indicator" src="../images/indicator.gif">&nbsp;<span style="padding: 1.5em;">'.Dict::Format('UI:Search:Ongoing', utils::EscapeHtml($sFullText)).'</span>');
 					$oP->add("</div>\n");
 					$oP->add("<div id=\"full_text_results\">\n");
 					$oP->add("<div id=\"full_text_progress_placeholder\" style=\"padding: 1.5em;\">&nbsp;</div>\n");
-					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', htmlentities($sFullText, ENT_QUOTES, 'UTF-8'))."</h2>");
+					$oP->add("<h2>".Dict::Format('UI:FullTextSearchTitle_Text', utils::EscapeHtml($sFullText))."</h2>");
 					$oP->add("</div>\n");
 					$oP->add("</div>\n");
 					$sJSClass = addslashes($sClassName);
 					$sJSNeedles = json_encode($aFullTextNeedles);
 					$oP->add_ready_script(
-<<<EOF
+						<<<EOF
 						var oParams = {operation: 'full_text_search', position: 0, 'classname': '$sJSClass', needles: $sJSNeedles, tune: $iTune};
 						$.post(GetAbsoluteUrlAppRoot()+'pages/ajax.render.php', oParams, function(data) {
 							$('#full_text_results').append(data);
@@ -1951,7 +1951,7 @@ class UI
 		$oFullSetFilter->UpdateContextFromUser();
 		$aSelectedObj = utils::ReadMultipleSelection($oFullSetFilter);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
-		$aContext = array('filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'));
+		$aContext = array('filter' => utils::EscapeHtml($sFilter));
 		cmdbAbstractObject::DisplayBulkModifyForm($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $sCancelUrl, array(), $aContext);
 	}
 
@@ -1986,7 +1986,7 @@ class UI
 		$aSelectedObj = explode(',', $sSelectedObj);
 		$sCancelUrl = "./UI.php?operation=search&filter=".urlencode($sFilter)."&".$oAppContext->GetForLink();
 		$aContext = array(
-			'filter' => htmlentities($sFilter, ENT_QUOTES, 'UTF-8'),
+			'filter'    => utils::EscapeHtml($sFilter),
 			'selectObj' => $sSelectedObj,
 		);
 		cmdbAbstractObject::DoBulkModify($oP, $sClass, $aSelectedObj, 'preview_or_modify_all', $bPreview, $sCancelUrl, $aContext);

@@ -838,7 +838,8 @@ class DesignerFormField
 	{
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
+
+		return array('label' => $this->sLabel, 'value' => "<input type=\"text\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\">");
 	}
 
 	/**
@@ -1012,9 +1013,8 @@ class DesignerTextField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		if ($this->IsReadOnly())
-		{
-			$sHtmlValue = "<span>".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\"/></span>";
+		if ($this->IsReadOnly()) {
+			$sHtmlValue = "<span>".utils::EscapeHtml($this->defaultValue)."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\"/></span>";
 		}
 		else
 		{
@@ -1038,11 +1038,10 @@ $('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', 
 EOF
 			);
 			$sCSSClasses = '';
-			if (count($this->aCSSClasses) > 0)
-			{
+			if (count($this->aCSSClasses) > 0) {
 				$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 			}
-			$sHtmlValue = "<input type=\"text\" $sCSSClasses id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">";
+			$sHtmlValue = "<input type=\"text\" $sCSSClasses id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\">";
 		}
 		return array('label' => $this->sLabel, 'value' => $sHtmlValue);
 	}
@@ -1101,10 +1100,9 @@ class DesignerLongTextField extends DesignerTextField
 		{
 			$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 		}
-		if (!$this->IsReadOnly())
-		{
+		if (!$this->IsReadOnly()) {
 			$oP->add_ready_script(
-<<<EOF
+				<<<EOF
 $('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', $sMandatory, '$sPattern',  $(this).closest('form').attr('id'), $sForbiddenValues); } );
 {
 	var myTimer = null;
@@ -1112,11 +1110,10 @@ $('#$sId').on('change keyup validate', function() { ValidateWithPattern('$sId', 
 }
 EOF
 			);
-			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</textarea>";
+			$sValue = "<textarea $sCSSClasses id=\"$sId\" name=\"$sName\">".utils::EscapeHtml($this->defaultValue)."</textarea>";
 		}
-		else
-		{
-			$sValue = "<div $sCSSClasses id=\"$sId\">".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."</div>";
+		else {
+			$sValue = "<div $sCSSClasses id=\"$sId\">".utils::EscapeHtml($this->defaultValue)."</div>";
 		}
 		return array('label' => $this->sLabel, 'value' => $sValue);
 	}
@@ -1145,9 +1142,8 @@ class DesignerIntegerField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		
 		$sName = $this->oForm->GetFieldName($this->sCode);
-		if ($this->IsReadOnly())
-		{
-			$sHtmlValue = "<span>".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\"/></span>";
+		if ($this->IsReadOnly()) {
+			$sHtmlValue = "<span>".utils::EscapeHtml($this->defaultValue)."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\"/></span>";
 		}
 		else
 		{
@@ -1164,11 +1160,10 @@ $('#$sId').on('change keyup validate', function() { ValidateInteger('$sId', $sMa
 EOF
 			);
 			$sCSSClasses = '';
-			if (count($this->aCSSClasses) > 0)
-			{
+			if (count($this->aCSSClasses) > 0) {
 				$sCSSClasses = 'class="'.implode(' ', $this->aCSSClasses).'"';
 			}
-			$sHtmlValue = "<input type=\"text\" $sCSSClasses id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">";
+			$sHtmlValue = "<input type=\"text\" $sCSSClasses id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\">";
 		}
 		return array('label' => $this->sLabel, 'value' => $sHtmlValue);
 	}
@@ -1289,22 +1284,18 @@ class DesignerComboField extends DesignerFormField
 			{
 				if ($this->bMultipleSelection)
 				{
-					if(in_array($sKey, $this->defaultValue))
-					{
+					if(in_array($sKey, $this->defaultValue)) {
 						$aSelected[] = $sDisplayValue;
-						$aHiddenValues[] = "<input type=\"hidden\" name=\"{$sName}[]\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
+						$aHiddenValues[] = "<input type=\"hidden\" name=\"{$sName}[]\" value=\"".utils::EscapeHtml($sKey)."\"/>";
 					}
-				}
-				else
-				{
-					if ($sKey == $this->defaultValue)
-					{
+				} else {
+					if ($sKey == $this->defaultValue) {
 						$aSelected[] = $sDisplayValue;
-						$aHiddenValues[] = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\"/>";
+						$aHiddenValues[] = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($sKey)."\"/>";
 					}
 				}
 			}
-			$sHtml = "<span $sCSSClasses>".htmlentities(implode(', ', $aSelected), ENT_QUOTES, 'UTF-8').implode($aHiddenValues)."</span>";
+			$sHtml = "<span $sCSSClasses>".utils::EscapeHtml(implode(', ', $aSelected)).implode($aHiddenValues)."</span>";
 		}
 		else
 		{
@@ -1328,7 +1319,7 @@ class DesignerComboField extends DesignerFormField
 				}
 				// Quick and dirty: display the menu parents as a tree
 				$sHtmlValue = str_replace(' ', '&nbsp;', $sDisplayValue);
-				$sHtml .= "<option value=\"".htmlentities($sKey, ENT_QUOTES, 'UTF-8')."\" $sSelected>$sHtmlValue</option>";
+				$sHtml .= "<option value=\"".utils::EscapeHtml($sKey)."\" $sSelected>$sHtmlValue</option>";
 			}
 			$sHtml .= "</select></span>";
 			if ($this->bOtherChoices)
@@ -1379,10 +1370,9 @@ class DesignerBooleanField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sChecked = $this->defaultValue ? 'checked' : '';
-		if ($this->IsReadOnly())
-		{
+		if ($this->IsReadOnly()) {
 			$sLabel = $this->defaultValue ? Dict::S('UI:UserManagement:ActionAllowed:Yes') : Dict::S('UI:UserManagement:ActionAllowed:No'); //TODO use our own yes/no translations
-			$sHtmlValue = "<span>".htmlentities($sLabel)."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\"/></span>";
+			$sHtmlValue = "<span>".utils::EscapeHtml($sLabel)."<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($this->defaultValue)."\"/></span>";
 		}
 		else
 		{
@@ -1518,7 +1508,7 @@ class DesignerIconSelectionField extends DesignerFormField
 EOF
 			);
 		} else {
-			$sValue = '<span style="display:inline-block;line-height:48px;height:48px;"><span><img style="vertical-align:middle" src="'.$this->aAllowedValues[$idx]['icon'].'" />&nbsp;'.htmlentities($this->aAllowedValues[$idx]['label'], ENT_QUOTES, 'UTF-8').'</span></span>';
+			$sValue = '<span style="display:inline-block;line-height:48px;height:48px;"><span><img style="vertical-align:middle" src="'.$this->aAllowedValues[$idx]['icon'].'" />&nbsp;'.utils::EscapeHtml($this->aAllowedValues[$idx]['label']).'</span></span>';
 		}
 		$sReadOnly = $this->IsReadOnly() ? 'disabled' : '';
 		return array('label' => $this->sLabel, 'value' => $sValue);
@@ -1665,14 +1655,14 @@ class DesignerSortableField extends DesignerFormField
 		$sId = $this->oForm->GetFieldId($this->sCode);
 		$sName = $this->oForm->GetFieldName($this->sCode);
 		$sReadOnly = $this->IsReadOnly() ? 'readonly="readonly"' : '';
-		$aResult = array('label' => $this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" $sReadOnly value=\"".htmlentities($this->defaultValue, ENT_QUOTES, 'UTF-8')."\">");
-		
+		$aResult = array('label' => $this->sLabel, 'value' => "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" $sReadOnly value=\"".utils::EscapeHtml($this->defaultValue)."\">");
+
 
 		$sJSFields = json_encode(array_keys($this->aAllowedValues));
 		$oP->add_ready_script(
 			"$('#$sId').sortable_field({aAvailableFields: $sJSFields});"
 		);
-		
+
 		return $aResult;
 	}
 }
@@ -1761,8 +1751,8 @@ class DesignerFormSelectorField extends DesignerFormField
 			foreach ($this->aSubForms as $iKey => $aFormData) {
 				if ($iKey == $this->defaultValue) // Default value is actually the index
 				{
-					$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
-					$sHiddenValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".htmlentities($iKey, ENT_QUOTES, 'UTF-8')."\"/>";
+					$sDisplayValue = utils::EscapeHtml($aFormData['label']);
+					$sHiddenValue = "<input type=\"hidden\" id=\"$sId\" name=\"$sName\" value=\"".utils::EscapeHtml($iKey)."\"/>";
 					break;
 				}
 			}
@@ -1770,8 +1760,8 @@ class DesignerFormSelectorField extends DesignerFormField
 		} else {
 			$sHtml = "<span class=\"ibo-input-select-wrapper\"><select $sCSSClasses id=\"$sId\" name=\"$sName\" $sReadOnly>";
 			foreach ($this->aSubForms as $iKey => $aFormData) {
-				$sDisplayValue = htmlentities($aFormData['label'], ENT_QUOTES, 'UTF-8');
-				$sValue = htmlentities($aFormData['value'], ENT_QUOTES, 'UTF-8');
+				$sDisplayValue = utils::EscapeHtml($aFormData['label']);
+				$sValue = utils::EscapeHtml($aFormData['value']);
 				$sSelected = ($iKey == $this->defaultValue) ? 'selected' : '';
 				$sHtml .= "<option data-value=\"$sValue\" value=\"$iKey\" $sSelected>".$sDisplayValue."</option>";
 			}

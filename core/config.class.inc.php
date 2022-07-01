@@ -1879,7 +1879,7 @@ class Config
 		{
 			// Note: sNoise is an html output, but so far it was ok for me (e.g. showing the entire call stack) 
 			throw new ConfigException('Syntax error in configuration file',
-				array('file' => $sConfigFile, 'error' => '<tt>'.htmlentities($sNoise, ENT_QUOTES, 'UTF-8').'</tt>'));
+				array('file' => $sConfigFile, 'error' => '<tt>'.utils::EscapeHtml($sNoise, ENT_QUOTES).'</tt>'));
 		}
 
 		if (!isset($MySettings) || !is_array($MySettings))

@@ -1088,9 +1088,10 @@ abstract class DBObject implements iDisplay
 			}
 			else
 			{
-				$sHtmlLabel = htmlentities($this->Get($sAttCode.'_friendlyname'), ENT_QUOTES, 'UTF-8');
+				$sHtmlLabel = utils::EscapeHtml($this->Get($sAttCode.'_friendlyname'));
 				$bArchived = $this->IsArchived($sAttCode);
 				$bObsolete = $this->IsObsolete($sAttCode);
+
 				return $this->MakeHyperLink($sTargetClass, $iTargetKey, $sHtmlLabel, null, true, $bArchived, $bObsolete);
 			}
 		}
@@ -1588,7 +1589,7 @@ abstract class DBObject implements iDisplay
 	 */
 	public function GetName($sType = FriendlyNameType::SHORT)
 	{
-		return htmlentities($this->GetRawName($sType), ENT_QUOTES, 'UTF-8');
+		return utils::EscapeHtml($this->GetRawName($sType));
 	}
 
 	/**

@@ -527,7 +527,7 @@ abstract class User extends cmdbAbstractObject
 				{
 					if (UserRights::IsStimulusAllowed($sClass, $sStimulusCode, null, $this))
 					{
-						$aStimuli[] = '<span title="'.$sStimulusCode.': '.htmlentities($oStimulus->GetDescription(), ENT_QUOTES, 'UTF-8').'">'.htmlentities($oStimulus->GetLabel(), ENT_QUOTES, 'UTF-8').'</span>';
+						$aStimuli[] = '<span title="'.$sStimulusCode.': '.utils::EscapeHtml($oStimulus->GetDescription()).'">'.utils::EscapeHtml($oStimulus->GetLabel()).'</span>';
 					}
 				}
 				$sStimuli = implode(', ', $aStimuli);

@@ -875,7 +875,7 @@ class CMDBChangeOpSetAttributeCaseLog extends CMDBChangeOpSetAttribute
 	 */
 	protected function ToHtml($sRawText)
 	{
-		return str_replace(array("\r\n", "\n", "\r"), "<br/>", htmlentities($sRawText, ENT_QUOTES, 'UTF-8'));
+		return str_replace(array("\r\n", "\n", "\r"), "<br/>", utils::EscapeHtml($sRawText));
 	}
 }
 
@@ -1167,9 +1167,8 @@ class CMDBChangeOpSetAttributeCustomFields extends CMDBChangeOpSetAttribute
 					$oHandler = $oAttDef->GetHandler($aValues);
 					$sValueDesc = $oHandler->GetAsHTML($aValues);
 				}
-				catch (Exception $e)
-				{
-					$sValueDesc = 'Custom field error: '.htmlentities($e->getMessage(), ENT_QUOTES, 'UTF-8');
+				catch (Exception $e) {
+					$sValueDesc = 'Custom field error: '.utils::EscapeHtml($e->getMessage());
 				}
 				$sTextView = '<div>'.$sValueDesc.'</div>';
 
