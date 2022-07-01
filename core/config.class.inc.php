@@ -509,7 +509,7 @@ class Config
 		),
 		'email_transport' => array(
 			'type' => 'string',
-			'description' => 'Mean to send emails: PHPMail (uses the function mail()) or SMTP (implements the client protocol)',
+			'description' => 'Mean to send emails: PHPMail (uses the function mail()), SMTP (implements the client protocol) or SMTP_OAuth (connect to the server using OAuth 2.0)',
 			'default' => "PHPMail",
 			'value' => "PHPMail",
 			'source_of_value' => '',
