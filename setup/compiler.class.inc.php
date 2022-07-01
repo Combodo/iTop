@@ -2058,8 +2058,7 @@ EOF
 			if ($oListNode)
 			{
 				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
-				if(!is_array($aAttributes))
-				{
+				if (!is_array($aAttributes)) {
 					$aAttributes = array();
 				}
 				$this->ArrayOfItemsToZList($aAttributes);
@@ -2068,19 +2067,32 @@ EOF
 				$sZlists .= "		MetaModel::Init_SetZListItems('$sListCode', $sZAttributes);\n";
 			}
 		}
+		//Add presentation for apply stimuli
+		$oListStimuli = $oPresentation->GetOptionalElement("stimuli");
+		if ($oListStimuli) {
+			foreach ($oListStimuli->getElementsByTagName('stimulus') as $oListNode) {
+				$sStimulusCode = $oListNode->getAttribute('id');
+
+				$aAttributes = $oListNode->GetNodeAsArrayOfItems();
+				if (!is_array($aAttributes)) {
+					$aAttributes = array();
+				}
+				$this->ArrayOfItemsToZList($aAttributes);
+
+				$sZAttributes = var_export($aAttributes, true);
+				$sZlists .= "		MetaModel::Init_SetZListItems('$sStimulusCode', $sZAttributes);\n";
+			}
+		}
+
 
 		// Methods
 		$sMethods = "";
 		$oMethods = $oClass->GetUniqueElement('methods');
-		foreach($oMethods->getElementsByTagName('method') as $oMethod)
-		{
+		foreach ($oMethods->getElementsByTagName('method') as $oMethod) {
 			$sMethodCode = $oMethod->GetChildText('code');
-			if ($sMethodComment = $oMethod->GetChildText('comment', null))
-			{
+			if ($sMethodComment = $oMethod->GetChildText('comment', null)) {
 				$sMethods .= "\n\t$sMethodComment\n".$sMethodCode."\n";
-			}
-			else
-			{
+			} else {
 				$sMethods .= "\n\n".$sMethodCode."\n";
 			}
 		}

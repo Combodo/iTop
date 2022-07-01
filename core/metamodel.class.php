@@ -3570,13 +3570,15 @@ abstract class MetaModel
 	 */
 	public static function Init_SetZListItems($sListCode, $aItems, $sTargetClass = null)
 	{
-		MyHelpers::CheckKeyInArray('list code', $sListCode, self::$m_aListInfos);
 
-		if (!$sTargetClass)
-		{
+		if (!$sTargetClass) {
 			$sTargetClass = self::GetCallersPHPClass("Init");
 		}
-
+		if (isset(self::$m_aStimuli[$sTargetClass])) {
+			MyHelpers::CheckKeyInArray('list code', $sListCode, array_merge(self::$m_aListInfos, self::$m_aStimuli[$sTargetClass]));
+		} else {
+			MyHelpers::CheckKeyInArray('list code', $sListCode, self::$m_aListInfos);
+		}
 		// Discard attributes that do not make sense
 		// (missing classes in the current module combination, resulting in irrelevant ext key or link set)
 		//
