@@ -661,9 +661,9 @@ We hope you’ll enjoy this version as much as we enjoyed imagining and creating
 	'UI:UniversalSearch:LabelSelectTheClass' => 'Aranacak sınıfı seçiniz: ',
 
 	'UI:CSVReport-Value-Modified' => 'Değiştiridi',
-	'UI:CSVReport-Value-SetIssue' => 'Değiştirilemedi - Sebep: %1$s',
-	'UI:CSVReport-Value-ChangeIssue' => '%1$s olarak değiştirilemedi - Sebep: %2$s',
-	'UI:CSVReport-Value-NoMatch' => 'Eşleşme yok',
+	'UI:CSVReport-Value-SetIssue' => 'invalid value for attribute~~',
+	'UI:CSVReport-Value-ChangeIssue' => '\'%1$s\' is an invalid value~~',
+	'UI:CSVReport-Value-NoMatch' => 'No match for value \'%1$s\'~~',
 	'UI:CSVReport-Value-Missing' => 'Eksik Zorunlu Değer',
 	'UI:CSVReport-Value-Ambiguous' => 'Belirsiz: %1$s nesnelerini buldum',
 	'UI:CSVReport-Row-Unchanged' => 'Değiştirilmedi',

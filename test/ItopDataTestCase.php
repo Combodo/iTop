@@ -69,7 +69,7 @@ define('TAG_ATTCODE', 'domains');
  */
 class ItopDataTestCase extends ItopTestCase
 {
-	private $iTestOrgId;
+	protected $iTestOrgId;
 	// For cleanup
 	private $aCreatedObjects = array();
 
@@ -835,7 +835,7 @@ class ItopDataTestCase extends ItopTestCase
 	}
 
 	/**
-	 * Import a consistent set of iTop objects from the specified XML text string 
+	 * Import a consistent set of iTop objects from the specified XML text string
 	 * @param string $sXmlDataset
 	 * @param boolean $bSearch If true, a search will be performed on each object (based on its reconciliation keys)
 	 *                         before trying to import it (existing objects will be updated)
