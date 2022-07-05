@@ -187,7 +187,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 	$iMaxDuration = MetaModel::GetConfig()->Get('cron_max_execution_time');
 	$iTimeLimit = $iStarted + $iMaxDuration;
 	$iCronSleep = MetaModel::GetConfig()->Get('cron_sleep');
-	$iMaxCronProcess = MetaModel::GetConfig()->Get('cron.max_process');
+	$iMaxCronProcess = MetaModel::GetConfig()->Get('cron.max_processes');
 
 	if ($bVerbose)
 	{

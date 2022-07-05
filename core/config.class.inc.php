@@ -520,9 +520,9 @@ class Config
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
-		'cron.max_process' => [
+		'cron.max_processes' => [
 			'type' => 'integer',
-			'description' => 'Maximum number of cron process to run',
+			'description' => 'Maximum number of cron processes to run',
 			'default' => 10,
 			'value' => 10,
 			'source_of_value' => '',

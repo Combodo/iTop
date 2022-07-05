@@ -2052,7 +2052,7 @@ JS
 				return;
 			}
 			// Limit the number of cron process to run in parallel
-			$iMaxCronProcess = $oConfig->Get('cron.max_process');
+			$iMaxCronProcess = $oConfig->Get('cron.max_processes');
 			$iCount = 1;
 			$iMaxDuration = $oConfig->Get('cron_max_execution_time');
 			$iTimeLimit = time() + $iMaxDuration;
