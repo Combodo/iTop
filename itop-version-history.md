@@ -1,7 +1,7 @@
 # iTop version history
 
 ```mermaid
-%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'showBranches': true,'mainBranchName': 'develop'}} }%%
+%%{init: { 'logLevel': 'debug', 'theme': 'base', 'gitGraph': {'showBranches': true,'mainBranchName': 'develop','rotateCommitLabel': true}} }%%
 gitGraph
     commit id: "2016-07-06" tag: "2.3.0"
     branch support/2.3 order: 900
