@@ -49,7 +49,7 @@ iTop also offers mass import tools to help you being even more efficient.
 [4]: https://www.itophub.io/wiki/page?id=latest:install:upgrading_itop
 [5]: https://www.itophub.io/wiki
 [6]: https://store.itophub.io/en_US/
-[7]: itop-version-history.md
+[7]: .doc/itop-version-history.md
 
 [10]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#configuration_management_cmdb
 [11]: https://www.itophub.io/wiki/page?id=latest%3Adatamodel%3Astart#ticketing
