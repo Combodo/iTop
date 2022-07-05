@@ -10,7 +10,6 @@ gitGraph
     commit id: "2017-04-14" tag: "2.3.4"
     checkout develop
     commit id: "2017-07-12" tag: "2.4.0-beta" type: REVERSE
-    commit id: "2017-11-15" tag: "2.4.0"
     commit id: "2017-11-16" tag: "2.4.0"
     branch support/2.4 order: 890
     commit id: "2018-02-14" tag: "2.4.1"
