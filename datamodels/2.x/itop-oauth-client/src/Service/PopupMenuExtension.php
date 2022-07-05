@@ -51,8 +51,8 @@ class PopupMenuExtension implements \iPopupMenuExtension
 					);
 
 					if ($bHasToken) {
-						$sScope = $oObj->Get('scope');
-						if ($sScope == 'EMail') {
+						$aScopes = $oObj->Get('scope')->GetValues();
+						if (in_array('IMAP', $aScopes)) {
 							$aParams = $oAppContext->GetAsHash();
 							$sMenu = 'Menu:CreateMailbox';
 							$sObjClass = get_class($oObj);

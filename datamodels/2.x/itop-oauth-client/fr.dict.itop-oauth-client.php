@@ -20,6 +20,9 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'itop-oauth-client:Message:MissingToken' => 'Générez le jeton d\'accès avant d\'utiliser ce client OAuth',
 	'itop-oauth-client:Message:TokenCreated' => 'Le jeton d\'accès à été créé',
 	'itop-oauth-client:Message:TokenRecreated' => 'Le jeton d\'accès à été renouvelé',
+
+	'OAuthClient:baseinfo' => 'Information',
+	'OAuthClient:scope' => 'Scope',
 ]);
 
 //
@@ -32,8 +35,10 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',
 	'Class:OAuthClient/Attribute:name+' => '',
-	'Class:OAuthClient/Attribute:scope' => 'Niveaux d\'accès',
-	'Class:OAuthClient/Attribute:scope+' => '',
+	'Class:OAuthClient/Attribute:status' => 'Statut',
+	'Class:OAuthClient/Attribute:status+' => '',
+	'Class:OAuthClient/Attribute:status/Value:active' => 'Jeton d\'accès créé',
+	'Class:OAuthClient/Attribute:status/Value:inactive' => 'Pas de jeton d\'accès',
 	'Class:OAuthClient/Attribute:description' => 'Description',
 	'Class:OAuthClient/Attribute:description+' => '',
 	'Class:OAuthClient/Attribute:client_id' => 'ID Client',
@@ -57,22 +62,44 @@ Dict::Add('FR FR', 'French', 'Français', [
 //
 // Class: OAuthClientAzure
 //
-Dict::Add('FR FR', 'French', 'Français', [
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientAzure' => 'Client OAuth pour Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-
-]);
+	'Class:OAuthClientAzure/Attribute:scope' => 'Niveaux d\'accès',
+	'Class:OAuthClientAzure/Attribute:scope+' => '',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP' => 'SMTP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP+' => '',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP' => 'IMAP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP+' => '',
+	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Niveaux d\'accès avancé',
+	'Class:OAuthClientAzure/Attribute:advanced_scope+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope' => 'Niveaux d\'accès utilisés',
+	'Class:OAuthClientAzure/Attribute:used_scope+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Simple',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Avancé',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '',
+));
 
 //
 // Class: OAuthClientGoogle
 //
-Dict::Add('FR FR', 'French', 'Français', [
+
+Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientGoogle' => 'Client OAuth pour Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
-]);
-
-
-// Additional language entries not present in English dict
-Dict::Add('FR FR', 'French', 'Français', array(
- 'Class:OAuthClient/Name' => '%1$s-%%2$~',
+	'Class:OAuthClientGoogle/Attribute:scope' => 'Niveaux d\'accès',
+	'Class:OAuthClientGoogle/Attribute:scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP' => 'SMTP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP+' => '',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP' => 'IMAP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP+' => '',
+	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Niveaux d\'accès avancé',
+	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope' => 'Niveaux d\'accès utilisés',
+	'Class:OAuthClientGoogle/Attribute:used_scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple' => 'Simple',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Avancé',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
 ));

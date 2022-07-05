@@ -21,6 +21,9 @@ Dict::Add('EN US', 'English', 'English', [
 	'itop-oauth-client:Message:MissingToken' => 'Generate access token before using this OAuth client',
 	'itop-oauth-client:Message:TokenCreated' => 'Access token created',
 	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated',
+
+	'OAuthClient:baseinfo' => 'Base Information',
+	'OAuthClient:scope' => 'Scope',
 ]);
 
 //
@@ -33,8 +36,6 @@ Dict::Add('EN US', 'English', 'English', [
 	'Class:OAuthClient/Attribute:provider+' => '',
 	'Class:OAuthClient/Attribute:name' => 'Login',
 	'Class:OAuthClient/Attribute:name+' => '',
-	'Class:OAuthClient/Attribute:scope' => 'Scope',
-	'Class:OAuthClient/Attribute:scope+' => '',
 	'Class:OAuthClient/Attribute:status' => 'Status',
 	'Class:OAuthClient/Attribute:status+' => '',
 	'Class:OAuthClient/Attribute:status/Value:active' => 'Access token generated',
@@ -62,17 +63,45 @@ Dict::Add('EN US', 'English', 'English', [
 //
 // Class: OAuthClientAzure
 //
-Dict::Add('EN US', 'English', 'English', [
+
+Dict::Add('EN US', 'English', 'English', array(
 	'Class:OAuthClientAzure' => 'OAuth client for Microsoft Azure',
 	'Class:OAuthClientAzure/Name' => '%1$s (%2$s)',
-
-]);
+	'Class:OAuthClientAzure/Attribute:scope' => 'Scope',
+	'Class:OAuthClientAzure/Attribute:scope+' => '',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP' => 'SMTP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:SMTP+' => '',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP' => 'IMAP',
+	'Class:OAuthClientAzure/Attribute:scope/Value:IMAP+' => '',
+	'Class:OAuthClientAzure/Attribute:advanced_scope' => 'Advanced scope',
+	'Class:OAuthClientAzure/Attribute:advanced_scope+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope' => 'Used scope',
+	'Class:OAuthClientAzure/Attribute:used_scope+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple' => 'Simple',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Advanced',
+	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '',
+));
 
 //
 // Class: OAuthClientGoogle
 //
-Dict::Add('EN US', 'English', 'English', [
+
+Dict::Add('EN US', 'English', 'English', array(
 	'Class:OAuthClientGoogle' => 'OAuth client for Google',
 	'Class:OAuthClientGoogle/Name' => '%1$s (%2$s)',
-]);
-
+	'Class:OAuthClientGoogle/Attribute:scope' => 'Scope',
+	'Class:OAuthClientGoogle/Attribute:scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP' => 'SMTP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:SMTP+' => '',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP' => 'IMAP',
+	'Class:OAuthClientGoogle/Attribute:scope/Value:IMAP+' => '',
+	'Class:OAuthClientGoogle/Attribute:advanced_scope' => 'Advanced scope',
+	'Class:OAuthClientGoogle/Attribute:advanced_scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope' => 'Used scope',
+	'Class:OAuthClientGoogle/Attribute:used_scope+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple' => 'Simple',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Advanced',
+	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
+));

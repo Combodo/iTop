@@ -43,8 +43,8 @@ class OAuthClientProviderFactory
 			throw new CoreException(Dict::Format('itop-oauth-client:MissingOAuthClient', $sUsername));
 		}
 		while ($oOAuthClient = $oSet->Fetch()) {
-			$sScope =  $oOAuthClient->Get('scope');
-			if ($sScope == 'EMail') {
+			$aScopes =  $oOAuthClient->Get('scope')->GetValues();
+			if (in_array('SMTP', $aScopes)) {
 				return $oOAuthClient;
 			}
 		}
