@@ -1,6 +1,8 @@
 {
+  "name": "combodo/itop",
+  "description": "IT Operations Portal",
   "type": "project",
-  "license": "AGPLv3",
+  "license": "AGPL-3.0-or-later",
   "require": {
     "php": ">=7.0.8",
     "ext-ctype": "*",
