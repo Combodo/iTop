@@ -88,9 +88,16 @@ class SetupUtils
 		self::CheckPhpVersion($aResult);
 
 		// Check the common directories
+		$aWritableApprootDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
+		$aResult = array_merge($aResult, $aWritableApprootDirsErrors);
+		// check temp dir (N°5235)
 		$sTmpDir = static::GetTmpDir();
-		$aWritableDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data', $sTmpDir));
-		$aResult = array_merge($aResult, $aWritableDirsErrors);
+		clearstatcache(true, $sTmpDir);
+		if (is_writable($sTmpDir)) {
+			$aResult[] = new CheckResult(CheckResult::INFO, "The temp directory is writable by the application.");
+		} else {
+			$aResult[] = new CheckResult(CheckResult::ERROR, "The temp directory <b>'".$sTmpDir."'</b> is not writable for the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
+		}
 
 		$aMandatoryExtensions = array(
 			'mysqli',
