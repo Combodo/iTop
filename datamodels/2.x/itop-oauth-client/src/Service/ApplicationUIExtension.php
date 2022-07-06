@@ -14,14 +14,16 @@ class ApplicationUIExtension extends AbstractApplicationUIExtension
 
 	public function GetHilightClass($oObject)
 	{
-		// Possible return values are:
-		// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
-		$oConfig = utils::GetConfig();
-		$aScopes = $oObject->Get('scope')->GetValues();
-		if ($oObject->Get('status') == 'inactive') {
-			return HILIGHT_CLASS_WARNING;
-		} elseif (in_array('SMTP', $aScopes) && $oConfig->Get('email_transport_smtp.username') == $oObject->Get('name')) {
-			return HILIGHT_CLASS_OK;
+		if ($oObject instanceof OAuthClient) {
+			// Possible return values are:
+			// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
+			$oConfig = utils::GetConfig();
+			$aScopes = $oObject->Get('scope')->GetValues();
+			if ($oObject->Get('status') == 'inactive') {
+				return HILIGHT_CLASS_WARNING;
+			} elseif (in_array('SMTP', $aScopes) && $oConfig->Get('email_transport_smtp.username') == $oObject->Get('name')) {
+				return HILIGHT_CLASS_OK;
+			}
 		}
 
 		return HILIGHT_CLASS_NONE;
