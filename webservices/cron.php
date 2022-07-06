@@ -302,7 +302,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 			}
 
 			// Tasks to run later
-			if ($bVerbose && $aTasks == [])
+			if ($bVerbose && count($aTasks) == 0)
 			{
 				$oP->p('--');
 				$oSearch = new DBObjectSearch('BackgroundTask');
@@ -318,7 +318,7 @@ function CronExec($oP, $bVerbose, $bDebug=false)
 				}
 			}
 		}
-		if ($aTasks == []) {
+		if (count($aTasks) == 0) {
 			if ($bVerbose) {
 				$oP->p("Sleeping...\n");
 			}
