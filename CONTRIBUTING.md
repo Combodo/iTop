@@ -28,10 +28,10 @@ If you have an idea you're sure would benefit to all of iTop users, you may
 reasons to refuse such changes.
 
 ### 📄 License and copyright
-iTop is distributed under the AGPL-3.0 license (see the [license.txt] file),
-your code must comply with this license.
+iTop is distributed under the AGPL-3.0 license (see the [license.txt] file).
 
-Combodo has the copyright on each and every source file in the iTop repository: please do not modify the existing file copyrights.  
+The iTop repository is divided in three parts: iTop (mainly PHP/JS/XML sources and dictionaries), images, and third-party libraries.
+Combodo has the copyright on most of the source files in the iTop part of the repository: please do not modify the existing file copyrights.  
 Anyhow, you are encouraged to signal your contribution by the mean of `@author` annotations.
 
 If you want to use another license or keep the code ownership (copyright), you may [create an extension][wiki new ext].
