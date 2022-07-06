@@ -7,6 +7,7 @@
 namespace Combodo\iTop\OAuthClient\Service;
 
 use AbstractApplicationUIExtension;
+use OAuthClient;
 use utils;
 
 class ApplicationUIExtension extends AbstractApplicationUIExtension
