@@ -110,10 +110,9 @@
         parent::DisplayBareHeader($oPage, $bEditMode);
         if (!$bEditMode) {
           $oConfig = utils::GetConfig();
-          $aScopes = $this->Get('scope')->GetValues();
           if ($this->Get('status') == 'inactive') {
             $oPage->p('<b>'.Dict::S('itop-oauth-client:Message:MissingToken').'</b>');
-          } elseif (in_array('SMTP', $aScopes) && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
+          } elseif ($this->Get('used_for_smtp') == 'yes' && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
             $sLabel = Dict::S('itop-oauth-client:UsedForSMTP');
             $sTestLabel = Dict::S('itop-oauth-client:TestSMTP');
             $sTestURL = utils::GetAbsoluteUrlAppRoot().'setup/email.test.php';
@@ -290,12 +289,6 @@
           </attributes>
         </reconciliation>
         <uniqueness_rules>
-          <rule id="name">
-            <attributes>
-              <attribute id="name"/>
-            </attributes>
-            <is_blocking>true</is_blocking>
-          </rule>
           <rule id="server">
             <attributes>
               <attribute id="provider"/>
@@ -335,6 +328,16 @@
             <attribute id="scope"/>
             <attribute id="advanced_scope"/>
           </dependencies>
+        </field>
+        <field id="used_for_smtp" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <sql>used_for_smtp</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
       <presentation>
@@ -389,6 +392,9 @@
                     <item id="advanced_scope">
                       <rank>30</rank>
                     </item>
+                    <item id="used_for_smtp">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -434,6 +440,30 @@
     parent::PrefillCreationForm($aContextParam);
   }
             ]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		$aChanges = $this->ListChanges();
+		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges))
+		{
+			$sNewName = $this->Get('name');
+			$sNewUseForSMTP = $this->Get('used_for_smtp');
+			if ($sNewUseForSMTP == 'yes') {
+        $oSearch = DBObjectSearch::FromOQL_AllData("SELECT OAuthClientGoogle WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id UNION SELECT OAuthClientAzure WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id");
+        $oSet = new DBObjectSet($oSearch, array(), ['id' => $this->GetKey(), 'newname' => $sNewName, 'newuseforsmtp' => $sNewUseForSMTP]);
+        if ($oSet->Count() > 0)
+        {
+            $this->m_aCheckIssues[] = Dict::Format('OAuthClient:Name/UseForSMTPMustBeUnique', $sNewName, $sNewUseForSMTP);
+        }
+			}
+		}
+	}	]]></code>
         </method>
         <method id="ComputeValues">
           <static>false</static>
@@ -559,12 +589,6 @@
           </attributes>
         </reconciliation>
         <uniqueness_rules>
-          <rule id="name">
-            <attributes>
-              <attribute id="name"/>
-            </attributes>
-            <is_blocking>true</is_blocking>
-          </rule>
           <rule id="server">
             <attributes>
               <attribute id="provider"/>
@@ -604,6 +628,16 @@
             <attribute id="scope"/>
             <attribute id="advanced_scope"/>
           </dependencies>
+        </field>
+        <field id="used_for_smtp" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="yes">yes</value>
+            <value id="no">no</value>
+          </values>
+          <sql>used_for_smtp</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>true</is_null_allowed>
         </field>
       </fields>
       <presentation>
@@ -658,6 +692,9 @@
                     <item id="advanced_scope">
                       <rank>30</rank>
                     </item>
+                    <item id="used_for_smtp">
+                      <rank>40</rank>
+                    </item>
                   </items>
                 </item>
               </items>
@@ -703,6 +740,30 @@
 		parent::PrefillCreationForm($aContextParam);
 	}
             ]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		$aChanges = $this->ListChanges();
+		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges))
+		{
+			$sNewName = $this->Get('name');
+			$sNewUseForSMTP = $this->Get('used_for_smtp');
+			if ($sNewUseForSMTP == 'yes') {
+        $oSearch = DBObjectSearch::FromOQL_AllData("SELECT OAuthClientGoogle WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id UNION SELECT OAuthClientAzure WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id");
+        $oSet = new DBObjectSet($oSearch, array(), ['id' => $this->GetKey(), 'newname' => $sNewName, 'newuseforsmtp' => $sNewUseForSMTP]);
+        if ($oSet->Count() > 0)
+        {
+            $this->m_aCheckIssues[] = Dict::Format('OAuthClient:Name/UseForSMTPMustBeUnique', $sNewName, $sNewUseForSMTP);
+        }
+			}
+		}
+	}	]]></code>
         </method>
         <method id="ComputeValues">
           <static>false</static>

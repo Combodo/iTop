@@ -5,6 +5,7 @@
  * @copyright   Copyright (C) 2013 XXXXX
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
+
 Dict::Add('FR FR', 'French', 'Français', [
 	'Menu:CreateMailbox' => 'Créer une boite mail...',
 	'Menu:OAuthClient' => 'Client OAuth',
@@ -20,6 +21,8 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'itop-oauth-client:Message:MissingToken' => 'Générez le jeton d\'accès avant d\'utiliser ce client OAuth',
 	'itop-oauth-client:Message:TokenCreated' => 'Le jeton d\'accès à été créé',
 	'itop-oauth-client:Message:TokenRecreated' => 'Le jeton d\'accès à été renouvelé',
+
+	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'La combinaison Login (%1$s) and Utilisé pour SMTP (%2$s) a déjà été utilisée pour OAuth Client',
 
 	'OAuthClient:baseinfo' => 'Information',
 	'OAuthClient:scope' => 'Scope',
@@ -80,6 +83,10 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Avancé',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp' => 'Utilisé pour SMTP',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => '',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Oui',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'Non',
 ));
 
 //
@@ -102,4 +109,8 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple' => 'Simple',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Avancé',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp' => 'Utilisé pour SMTP',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Oui',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'Non',
 ));

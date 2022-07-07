@@ -19,10 +19,9 @@ class ApplicationUIExtension extends AbstractApplicationUIExtension
 			// Possible return values are:
 			// HILIGHT_CLASS_CRITICAL, HILIGHT_CLASS_WARNING, HILIGHT_CLASS_OK, HILIGHT_CLASS_NONE
 			$oConfig = utils::GetConfig();
-			$aScopes = $oObject->Get('scope')->GetValues();
 			if ($oObject->Get('status') == 'inactive') {
 				return HILIGHT_CLASS_WARNING;
-			} elseif (in_array('SMTP', $aScopes) && $oConfig->Get('email_transport_smtp.username') == $oObject->Get('name')) {
+			} elseif ($oObject->Get('used_for_smtp') == 'yes' && $oConfig->Get('email_transport_smtp.username') == $oObject->Get('name')) {
 				return HILIGHT_CLASS_OK;
 			}
 		}

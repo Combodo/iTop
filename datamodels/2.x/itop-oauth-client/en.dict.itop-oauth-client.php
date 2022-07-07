@@ -22,6 +22,8 @@ Dict::Add('EN US', 'English', 'English', [
 	'itop-oauth-client:Message:TokenCreated' => 'Access token created',
 	'itop-oauth-client:Message:TokenRecreated' => 'Access token regenerated',
 
+	'OAuthClient:Name/UseForSMTPMustBeUnique' => 'The combination Login (%1$s) and Use for SMTP (%2$s) has already be used for OAuth Client',
+
 	'OAuthClient:baseinfo' => 'Base Information',
 	'OAuthClient:scope' => 'Scope',
 ]);
@@ -81,6 +83,10 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:simple+' => '',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Advanced',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp' => 'Used for SMTP',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => '',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Yes',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'No',
 ));
 
 //
@@ -104,4 +110,8 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:simple+' => '',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Advanced',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp' => 'Used for SMTP',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => '',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Yes',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'No',
 ));
