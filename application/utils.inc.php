@@ -1942,7 +1942,7 @@ class utils
 	 */
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
-		$oSass = new Compiler();//['checkImportResolutions'=>true]);
+		$oSass = new Compiler();
 		$oSass->setOutputStyle(OutputStyle::COMPRESSED);
 		// Setting our variables
 		$aCssVariable = [];
