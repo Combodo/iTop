@@ -874,7 +874,7 @@
       <do_search>1</do_search>
       <enable_admin_only>0</enable_admin_only>
       <enable_class>OAuthClient</enable_class>
-      <enable_action>UR_ACTION_READ</enable_action>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
   <user_rights>
