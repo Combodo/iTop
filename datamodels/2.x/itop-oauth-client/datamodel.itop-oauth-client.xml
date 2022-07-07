@@ -5,7 +5,7 @@
     <class id="OAuthClient" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <category>cloud,searchable</category>
+        <category>grant_by_profile,application</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>priv_oauth_client</db_table>
@@ -269,7 +269,7 @@
     <class id="OAuthClientAzure" _delta="define">
       <parent>OAuthClient</parent>
       <properties>
-        <category>cloud,searchable</category>
+        <category>grant_by_profile,application</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>priv_oauth_client_azure</db_table>
@@ -538,7 +538,7 @@
     <class id="OAuthClientGoogle" _delta="define">
       <parent>OAuthClient</parent>
       <properties>
-        <category>cloud,searchable</category>
+        <category>grant_by_profile,application</category>
         <abstract>false</abstract>
         <key_type>autoincrement</key_type>
         <db_table>priv_oauth_client_google</db_table>
@@ -818,6 +818,11 @@
   </menus>
   <user_rights>
     <groups>
+      <group id="OauthConnection" _delta="define">
+        <classes>
+          <class id="OAuthClient"/>
+        </classes>
+      </group>
     </groups>
     <profiles>
     </profiles>
