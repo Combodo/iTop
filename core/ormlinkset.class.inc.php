@@ -732,6 +732,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 					$oLink->DBClone();
 				}
 			}
+			$oLink->SetLinkHostObject($oHostObject);
 			$oLink->DBWrite();
 
 			$this->aPreserved[$oLink->GetKey()] = $oLink;

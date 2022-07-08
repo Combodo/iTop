@@ -153,6 +153,9 @@ abstract class DBObject implements iDisplay
 	protected $m_bIsReadOnly = false;
 	protected $m_sReadOnlyMessage = '';
 
+	/** @var \DBObject Source object when updating links */
+	protected $m_oLinkHostObject = null;
+
 	/**
      * DBObject constructor.
      *
@@ -689,7 +692,37 @@ abstract class DBObject implements iDisplay
 		$this->Set($sAttCode, $sValue);
 	}
 
-    /**
+	/**
+	 * Compute (and optionally start) the StopWatches deadlines
+	 *
+	 * @param string $sClass
+	 * @param bool $bStartStopWatches
+	 *
+	 * @throws \ArchivedObjectException
+	 * @throws \CoreException
+	 * @throws \CoreUnexpectedValue
+	 */
+	private function ComputeStopWatchesDeadline(bool $bStartStopWatches)
+	{
+		$sState = $this->GetState();
+		if ($sState != '') {
+			foreach (MetaModel::ListAttributeDefs(get_class($this)) as $sAttCode => $oAttDef) {
+				if ($oAttDef instanceof AttributeStopWatch) {
+					if (in_array($sState, $oAttDef->GetStates())) {
+						/** @var \ormStopWatch $oSW */
+						$oSW = $this->Get($sAttCode);
+						if ($bStartStopWatches) {
+							$oSW->Start($this, $oAttDef);
+						}
+						$oSW->ComputeDeadlines($this, $oAttDef);
+						$this->Set($sAttCode, $oSW);
+					}
+				}
+			}
+		}
+	}
+
+	/**
      * Get the label of an attribute.
      * 
      * Shortcut to the field's AttributeDefinition->GetLabel()
@@ -2929,8 +2962,8 @@ abstract class DBObject implements iDisplay
 
 		// Ensure the update of the values (we are accessing the data directly)
 		$this->DoComputeValues();
-		$this->OnInsert();
 		$this->EventInsertRequested();
+		$this->OnInsert();
 
 		if ($this->m_iKey < 0) {
 			// This was a temporary "memory" key: discard it so that DBInsertSingleTable will not try to use it!
@@ -2951,23 +2984,7 @@ abstract class DBObject implements iDisplay
 		if (!$bRes) {
 			throw new CoreCannotSaveObjectException(array('issues' => $aIssues, 'class' => get_class($this), 'id' => $this->GetKey()));
 		}
-
-		// Stop watches
-		$sState = $this->GetState();
-		if ($sState != '') {
-			foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef) {
-				if ($oAttDef instanceof AttributeStopWatch) {
-					if (in_array($sState, $oAttDef->GetStates())) {
-						// Start the stop watch and compute the deadlines
-						/** @var \ormStopWatch $oSW */
-						$oSW = $this->Get($sAttCode);
-						$oSW->Start($this, $oAttDef);
-						$oSW->ComputeDeadlines($this, $oAttDef);
-						$this->Set($sAttCode, $oSW);
-					}
-				}
-			}
-		}
+		$this->ComputeStopWatchesDeadline(true);
 
 		$this->SetReadOnly('No modification allowed during The Event :'.EVENT_SERVICE_DB_ABOUT_TO_INSERT);
 		$this->EventInsertBefore();
@@ -3050,9 +3067,8 @@ abstract class DBObject implements iDisplay
 		// Prevent DBUpdate at this point (reentrance protection)
 		MetaModel::StartReentranceProtection(Metamodel::REENTRANCE_TYPE_UPDATE, $this);
 
-		$this->AfterInsert();
-
 		$this->EventInsertAfter();
+		$this->AfterInsert();
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3151,27 +3167,9 @@ abstract class DBObject implements iDisplay
 		try
 		{
 			$this->DoComputeValues();
-			// Stop watches
-			$sState = $this->GetState();
-			if ($sState != '')
-			{
-				foreach (MetaModel::ListAttributeDefs($sClass) as $sAttCode => $oAttDef)
-				{
-					if ($oAttDef instanceof AttributeStopWatch)
-					{
-						if (in_array($sState, $oAttDef->GetStates()))
-						{
-							// Compute or recompute the deadlines
-							/** @var \ormStopWatch $oSW */
-							$oSW = $this->Get($sAttCode);
-							$oSW->ComputeDeadlines($this, $oAttDef);
-							$this->Set($sAttCode, $oSW);
-						}
-					}
-				}
-			}
-			$this->OnUpdate();
+			$this->ComputeStopWatchesDeadline(false);
 			$this->EventUpdateRequested();
+			$this->OnUpdate();
 
 			// Freeze the changes at this point
 			$this->InitPreviousValuesForUpdatedAttributes();
@@ -3364,9 +3362,8 @@ abstract class DBObject implements iDisplay
 					}
 				}
 
-				$this->AfterUpdate();
-
 				$this->EventUpdateAfter(['changes' => $aChanges]);
+				$this->AfterUpdate();
 
 				// - TriggerOnObjectUpdate
 				$aParams = array('class_list' => MetaModel::EnumParentClasses($sClass, ENUM_PARENT_CLASSES_ALL));
@@ -3606,8 +3603,8 @@ abstract class DBObject implements iDisplay
 			return;
 		}
 
-		$this->OnDelete();
 		$this->EventDeleteBefore();
+		$this->OnDelete();
 
 		// Activate any existing trigger
 		$sClass = get_class($this);
@@ -3717,8 +3714,8 @@ abstract class DBObject implements iDisplay
 			}
 		}
 
-		$this->AfterDelete();
 		$this->EventDeleteAfter();
+		$this->AfterDelete();
 
 
 		$this->m_bIsInDB = false;
@@ -3794,7 +3791,7 @@ abstract class DBObject implements iDisplay
 
 		foreach ($oDeletionPlan->ListUpdates() as $sClass => $aToUpdate)
 		{
-			foreach ($aToUpdate as $iId => $aData)
+			foreach ($aToUpdate as $aData)
 			{
 				$oToUpdate = $aData['to_reset'];
 				/** @var \DBObject $oToUpdate */
@@ -5608,6 +5605,7 @@ abstract class DBObject implements iDisplay
 		$this->DBWriteArchiveFlag(true);
 		$this->m_aCurrValues['archive_flag'] = true;
 		$this->m_aOrigValues['archive_flag'] = true;
+		$this->EventArchive();
 	}
 
     /**
@@ -5621,6 +5619,7 @@ abstract class DBObject implements iDisplay
 		$this->m_aOrigValues['archive_flag'] = false;
 		$this->m_aCurrValues['archive_date'] = null;
 		$this->m_aOrigValues['archive_date'] = null;
+		$this->EventUnarchive();
 	}
 
 
@@ -5800,6 +5799,22 @@ abstract class DBObject implements iDisplay
 	}
 
 	/**
+	 * @param \DBObject|null $m_oLinkHostObject
+	 */
+	public function SetLinkHostObject(?DBObject $m_oLinkHostObject): void
+	{
+		$this->m_oLinkHostObject = $m_oLinkHostObject;
+	}
+
+	/**
+	 * @return \DBObject
+	 */
+	public function GetLinkHostObject(): ?DBObject
+	{
+		return $this->m_oLinkHostObject;
+	}
+
+	/**
 	 * @param $sEvent
 	 * @param array $aEventData
 	 *
@@ -5858,6 +5873,15 @@ abstract class DBObject implements iDisplay
 	}
 
 	protected function EventDeleteAfter()
+	{
+	}
+
+	protected function EventArchive()
+	{
+		
+	}
+
+	protected function EventUnarchive()
 	{
 	}
 }

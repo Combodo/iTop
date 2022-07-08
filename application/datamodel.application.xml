@@ -497,6 +497,38 @@
         </event_datum>
       </event_data>
     </event>
+    <event id="EVENT_SERVICE_DB_ARCHIVE" _delta="define">
+      <description>An object has been archived</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The object archived</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
+    <event id="EVENT_SERVICE_DB_UNARCHIVE" _delta="define">
+      <description>An object has been unarchived</description>
+      <sources>
+        <source id="cmdbAbstractObject">cmdbAbstractObject</source>
+      </sources>
+      <event_data>
+        <event_datum id="object">
+          <description>The object unarchived</description>
+          <type>DBObject</type>
+        </event_datum>
+        <event_datum id="debug_info">
+          <description>Debug string</description>
+          <type>string</type>
+        </event_datum>
+      </event_data>
+    </event>
     <event id="EVENT_SERVICE_DOWNLOAD_DOCUMENT" _delta="define">
       <description>A document has been downloaded from the GUI</description>
       <sources>

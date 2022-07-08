@@ -5825,4 +5825,15 @@ JS
 		$this->FireEvent(EVENT_SERVICE_DB_DELETE_DONE);
 	}
 
+
+	final protected function EventArchive()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_ARCHIVE);
+	}
+
+	final protected function EventUnarchive()
+	{
+		$this->FireEvent(EVENT_SERVICE_DB_UNARCHIVE);
+	}
+
 }
