@@ -605,14 +605,30 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		$aAdded = $this->aAdded;
 		$aModified = $this->aModified;
 		$aRemoved = array();
-		if (count($this->aRemoved) > 0)
-		{
+		if (count($this->aRemoved) > 0) {
 			$oSearch = new DBObjectSearch($this->sClass);
 			$oSearch->AddCondition('id', $this->aRemoved, 'IN');
 			$oSet = new DBObjectSet($oSearch);
 			$aRemoved = $oSet->ToArray();
 		}
+
 		return array_merge($aAdded, $aModified, $aRemoved);
+	}
+
+	/**
+	 * Get the list of all modified (added, modified and removed) links
+	 *
+	 * @return array of link objects
+	 * @throws \Exception
+	 */
+	public function GetModified($sExtKeyToMe)
+	{
+		$aModified = [];
+		foreach ($this->aModified as $oObj) {
+			$aModified[$oObj->GetKey()] = $oObj->Get($sExtKeyToMe);
+		}
+
+		return $aModified;
 	}
 
 	/**
@@ -658,8 +674,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 		{
 			$aCheckLinks[] = $iLinkId;
 		}
-		foreach ($this->aModified as $iLinkId => $oLink)
-		{
+		foreach ($this->aModified as $iLinkId => $oLink) {
 			$aCheckLinks[] = $oLink->GetKey();
 		}
 
@@ -695,8 +710,7 @@ class ormLinkSet implements iDBObjectSetIterator, Iterator, SeekableIterator
 
 		// Write the links according to the existing links
 		//
-		foreach ($this->aAdded as $oLink)
-		{
+		foreach ($this->aAdded as $oLink) {
 			// Make sure that the objects in the set point to "this"
 			$oLink->Set($sExtKeyToMe, $oHostObject->GetKey());
 

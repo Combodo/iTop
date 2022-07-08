@@ -676,33 +676,26 @@ HTML
 				$sTargetClass = $oLinkingAttDef->GetTargetClass();
 				// n:n links => must be allowed to modify the linking class AND  read the target class in order to edit the linkedset
 				if (!UserRights::IsActionAllowed($sLinkedClass,
-						UR_ACTION_MODIFY) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
-				{
+						UR_ACTION_MODIFY) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ)) {
 					$iFlags |= OPT_ATT_READONLY;
 				}
 				// n:n links => must be allowed to read the linking class AND  the target class in order to display the linkedset
 				if (!UserRights::IsActionAllowed($sLinkedClass,
-						UR_ACTION_READ) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ))
-				{
+						UR_ACTION_READ) || !UserRights::IsActionAllowed($sTargetClass, UR_ACTION_READ)) {
 					$iFlags |= OPT_ATT_HIDDEN;
 				}
-			}
-			else
-			{
+			} else {
 				// 1:n links => must be allowed to modify the linked class in order to edit the linkedset
-				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_MODIFY))
-				{
+				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_MODIFY)) {
 					$iFlags |= OPT_ATT_READONLY;
 				}
 				// 1:n links => must be allowed to read the linked class in order to display the linkedset
-				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_READ))
-				{
+				if (!UserRights::IsActionAllowed($sLinkedClass, UR_ACTION_READ)) {
 					$iFlags |= OPT_ATT_HIDDEN;
 				}
 			}
 			// Non-readable/hidden linkedset... don't display anything
-			if ($iFlags & OPT_ATT_HIDDEN)
-			{
+			if ($iFlags & OPT_ATT_HIDDEN) {
 				continue;
 			}
 
@@ -711,27 +704,23 @@ HTML
 
 			$aArgs = array('this' => $this);
 			$bReadOnly = ($iFlags & (OPT_ATT_READONLY | OPT_ATT_SLAVE));
-			if ($bEditMode && (!$bReadOnly))
-			{
+			if ($bEditMode && (!$bReadOnly)) {
 				$sInputId = $this->m_iFormId.'_'.$sAttCode;
 
-				if ($oAttDef->IsIndirect())
-				{
+				if ($oAttDef->IsIndirect()) {
 					$oLinkingAttDef = MetaModel::GetAttributeDef($sLinkedClass, $oAttDef->GetExtKeyToRemote());
 					$sTargetClass = $oLinkingAttDef->GetTargetClass();
-				}
-				else
-				{
+				} else {
 					$sTargetClass = $sLinkedClass;
 				}
 
 				$oClassIcon = new MedallionIcon(MetaModel::GetClassIcon($sTargetClass, false));
 				$oClassIcon->SetDescription($oAttDef->GetDescription())->AddCSSClass('ibo-block-list--medallion');
 				$oPage->AddUiBlock($oClassIcon);
-				
+
 				$sDisplayValue = ''; // not used
 				$sHTMLValue = "<span id=\"field_{$sInputId}\">".self::GetFormElementForField($oPage, $sClass, $sAttCode,
-						$oAttDef, $oLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
+						$oAttDef, $oOrmLinkSet, $sDisplayValue, $sInputId, '', $iFlags, $aArgs).'</span>';
 				$this->AddToFieldsMap($sAttCode, $sInputId);
 				$oPage->add($sHTMLValue);
 			}
@@ -2382,8 +2371,7 @@ EOF
 				case 'LinkedSet':
 					$sInputType = self::ENUM_INPUT_TYPE_LINKEDSET;
 					if ($oAttDef->IsIndirect()) {
-						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix,
-							$oAttDef->DuplicatesAllowed());
+						$oWidget = new UILinksWidget($sClass, $sAttCode, $iId, $sNameSuffix, $oAttDef->DuplicatesAllowed());
 					} else {
 						$oWidget = new UILinksWidgetDirect($sClass, $sAttCode, $iId, $sNameSuffix);
 					}
@@ -4031,18 +4019,14 @@ HTML;
 					$this->Set($sAttCode, $value);
 					break;
 				case 'LinkedSet':
-					if ($this->IsValueModified($value))
-					{
+					if ($this->IsValueModified($value)) {
 						$oLinkSet = $this->Get($sAttCode);
 						$sLinkedClass = $oAttDef->GetLinkedClass();
-						if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0))
-						{
+						if (array_key_exists('to_be_created', $value) && (count($value['to_be_created']) > 0)) {
 							// Now handle the links to be created
-							foreach ($value['to_be_created'] as $aData)
-							{
+							foreach ($value['to_be_created'] as $aData) {
 								$sSubClass = $aData['class'];
-								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass)))
-								{
+								if (($sLinkedClass == $sSubClass) || (is_subclass_of($sSubClass, $sLinkedClass))) {
 									$aObjData = $aData['data'];
 									$oLink = MetaModel::NewObject($sSubClass);
 									$oLink->UpdateObjectFromArray($aObjData);
@@ -4254,28 +4238,20 @@ HTML;
 
 			case 'LinkedSet':
 				/** @var AttributeLinkedSet $oAttDef */
-				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}',
-					'raw_data'), true);
+				$aRawToBeCreated = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbc", '{}', 'raw_data'), true);
 				$aToBeCreated = array();
-				foreach($aRawToBeCreated as $aData)
-				{
+				foreach ($aRawToBeCreated as $aData) {
 					$sSubFormPrefix = $aData['formPrefix'];
 					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
+					foreach ($aData as $sKey => $value) {
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches)) {
 							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-							if ($oLinkAttDef instanceof AttributeDateTime)
-							{
-								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
-									$aMatches[1], $sObjClass, $aData);
-							}
-							else
-							{
+							if ($oLinkAttDef instanceof AttributeDateTime) {
+								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix, $aMatches[1], $sObjClass, $aData);
+							} else {
 								$aObjData[$aMatches[1]] = $value;
 							}
 						}
@@ -4283,28 +4259,20 @@ HTML;
 					$aToBeCreated[] = array('class' => $sObjClass, 'data' => $aObjData);
 				}
 
-				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}',
-					'raw_data'), true);
+				$aRawToBeModified = json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbm", '{}', 'raw_data'), true);
 				$aToBeModified = array();
-				foreach($aRawToBeModified as $iObjKey => $aData)
-				{
+				foreach ($aRawToBeModified as $iObjKey => $aData) {
 					$sSubFormPrefix = $aData['formPrefix'];
 					$sObjClass = isset($aData['class']) ? $aData['class'] : $oAttDef->GetLinkedClass();
 					$aObjData = array();
-					foreach($aData as $sKey => $value)
-					{
-						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches))
-						{
+					foreach ($aData as $sKey => $value) {
+						if (preg_match("/^attr_$sSubFormPrefix(.*)$/", $sKey, $aMatches)) {
 							$oLinkAttDef = MetaModel::GetAttributeDef($sObjClass, $aMatches[1]);
 							// Recursing over n:n link datetime attributes
 							// Note: We might need to do it with other attribute types, like Document or redundancy setting.
-							if ($oLinkAttDef instanceof AttributeDateTime)
-							{
-								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix,
-									$aMatches[1], $sObjClass, $aData);
-							}
-							else
-							{
+							if ($oLinkAttDef instanceof AttributeDateTime) {
+								$aObjData[$aMatches[1]] = $this->PrepareValueFromPostedForm($sSubFormPrefix, $aMatches[1], $sObjClass, $aData);
+							} else {
 								$aObjData[$aMatches[1]] = $value;
 							}
 						}
@@ -4313,14 +4281,11 @@ HTML;
 				}
 
 				$value = array(
-					'to_be_created' => $aToBeCreated,
+					'to_be_created'  => $aToBeCreated,
 					'to_be_modified' => $aToBeModified,
-					'to_be_deleted' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]',
-						'raw_data'), true),
-					'to_be_added' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]',
-						'raw_data'), true),
-					'to_be_removed' => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]',
-						'raw_data'), true),
+					'to_be_deleted'  => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbd", '[]', 'raw_data'), true),
+					'to_be_added'    => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tba", '[]', 'raw_data'), true),
+					'to_be_removed'  => json_decode(utils::ReadPostedParam("attr_{$sFormPrefix}{$sAttCode}_tbr", '[]', 'raw_data'), true),
 				);
 				break;
 
