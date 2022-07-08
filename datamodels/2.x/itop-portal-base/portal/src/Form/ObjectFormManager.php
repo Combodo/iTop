@@ -93,7 +93,7 @@ class ObjectFormManager extends FormManager
 	 * @since 2.7.6 3.0.0 N°4384 method creation : factorize as this is used twice now
 	 * @since 2.7.7 3.0.1 N°4867 now only used once, but we decided to keep this method anyway
 	 */
-	protected static function DecodeFormManagerData($formManagerData)
+	public static function DecodeFormManagerData($formManagerData)
 	{
 		if (is_array($formManagerData)) {
 			return $formManagerData;
