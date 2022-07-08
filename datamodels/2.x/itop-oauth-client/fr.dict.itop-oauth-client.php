@@ -39,7 +39,7 @@ Dict::Add('FR FR', 'French', 'Français', [
 	'Class:OAuthClient/Attribute:name' => 'Login',
 	'Class:OAuthClient/Attribute:name+' => 'L\'adresse email à utiliser chez ce fournisseur',
 	'Class:OAuthClient/Attribute:status' => 'Statut',
-	'Class:OAuthClient/Attribute:status+' => 'Après la création, effectuer l\'action "Créer un jeton d\'accès..." pour activer ce client OAuth',
+	'Class:OAuthClient/Attribute:status+' => 'Après la création, effectuer l\'action \'Créer un jeton d\'accès...\' pour activer ce client OAuth',
 	'Class:OAuthClient/Attribute:status/Value:active' => 'Jeton d\'accès créé',
 	'Class:OAuthClient/Attribute:status/Value:inactive' => 'Pas de jeton d\'accès',
 	'Class:OAuthClient/Attribute:description' => 'Description',
@@ -84,7 +84,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced' => 'Avancé',
 	'Class:OAuthClientAzure/Attribute:used_scope/Value:advanced+' => '',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp' => 'Utilisé pour SMTP',
-	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => 'Le Client OAuth utilisé pour l\'envoi d\'emails doit être à "Oui"',
+	'Class:OAuthClientAzure/Attribute:used_for_smtp+' => 'Le Client OAuth utilisé pour l\'envoi d\'emails doit être à \'Oui\'',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:yes' => 'Oui',
 	'Class:OAuthClientAzure/Attribute:used_for_smtp/Value:no' => 'Non',
 ));
@@ -110,7 +110,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced' => 'Avancé',
 	'Class:OAuthClientGoogle/Attribute:used_scope/Value:advanced+' => '',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp' => 'Utilisé pour SMTP',
-	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Le Client OAuth utilisé pour l\'envoi d\'emails doit être à "Oui"',
+	'Class:OAuthClientGoogle/Attribute:used_for_smtp+' => 'Le Client OAuth utilisé pour l\'envoi d\'emails doit être à \'Oui\'',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:yes' => 'Oui',
 	'Class:OAuthClientGoogle/Attribute:used_for_smtp/Value:no' => 'Non',
 ));
