@@ -967,6 +967,7 @@ return array(
     'Laminas\\Validator\\Timezone' => $vendorDir . '/laminas/laminas-validator/src/Timezone.php',
     'Laminas\\Validator\\Translator\\TranslatorAwareInterface' => $vendorDir . '/laminas/laminas-validator/src/Translator/TranslatorAwareInterface.php',
     'Laminas\\Validator\\Translator\\TranslatorInterface' => $vendorDir . '/laminas/laminas-validator/src/Translator/TranslatorInterface.php',
+    'Laminas\\Validator\\UndisclosedPassword' => $vendorDir . '/laminas/laminas-validator/src/UndisclosedPassword.php',
     'Laminas\\Validator\\Uri' => $vendorDir . '/laminas/laminas-validator/src/Uri.php',
     'Laminas\\Validator\\Uuid' => $vendorDir . '/laminas/laminas-validator/src/Uuid.php',
     'Laminas\\Validator\\ValidatorChain' => $vendorDir . '/laminas/laminas-validator/src/ValidatorChain.php',
