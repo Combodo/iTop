@@ -5,7 +5,7 @@
     <class id="OAuthClient" _delta="define">
       <parent>cmdbAbstractObject</parent>
       <properties>
-        <category>cloud,searchable</category>
+        <category>grant_by_profile,application</category>
         <abstract>true</abstract>
         <key_type>autoincrement</key_type>
         <db_table>priv_oauth_client</db_table>
@@ -17,14 +17,15 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <display_template/>
-        <icon/>
         <reconciliation>
           <attributes>
             <attribute id="provider"/>
             <attribute id="name"/>
           </attributes>
         </reconciliation>
+        <style>
+          <icon/>
+        </style>
       </properties>
       <fields>
         <field id="provider" xsi:type="AttributeString">
@@ -119,22 +120,35 @@
           <access>public</access>
           <type>Overload-DBObject</type>
           <code><![CDATA[
-      public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
-      {
-            parent::DisplayBareHeader($oPage, $bEditMode);
-            if (!$bEditMode) {
-              $oConfig = utils::GetConfig();
-              $sScope = $this->Get('scope');
-              if ($this->Get('status') == 'inactive') {
-                $oPage->p('<b>'.Dict::S('itop-oauth-client:Message:MissingToken').'</b>');
-              } elseif (($sScope == 'SMTP' || $sScope == 'EMail') && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
-                $sLabel = Dict::S('itop-oauth-client:UsedForSMTP');
-                $sTestLabel = Dict::S('itop-oauth-client:TestSMTP');
-                $sTestURL = utils::GetAbsoluteUrlAppRoot().'setup/email.test.php';
-                $oPage->p("<b>$sLabel</b>&nbsp;<a href='$sTestURL' target='_blank'>$sTestLabel</a>");
-              }
-            }
-       }
+  public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+  {
+        $aHeaderBlocks = parent::DisplayBareHeader($oPage, $bEditMode);
+        $aTags = [];
+        if (!$bEditMode) {
+          $oConfig = utils::GetConfig();
+          if ($this->Get('status') == 'inactive') {
+            $sLabel = Dict::S('itop-oauth-client:Message:MissingToken');
+            $sTitle = '';
+            $aTags['oauth-message'] = ['title' => $sTitle, 'css_classes' => 'ibo-object-details--tag--oauth-message', 'decoration_classes' => 'fas fa-exclamation-triangle', 'label' => $sLabel];
+          } elseif ($this->Get('used_for_smtp') == 'yes' && $oConfig->Get('email_transport_smtp.username') == $this->Get('name')) {
+            $sLabel = Dict::S('itop-oauth-client:UsedForSMTP');
+            $sTestLabel = Dict::S('itop-oauth-client:TestSMTP');
+            $sTestURL = utils::GetAbsoluteUrlAppRoot().'setup/email.test.php';
+            $sLabel = Dict::S('itop-oauth-client:UsedForSMTP')."&nbsp;<a href='$sTestURL' target='_blank'>$sTestLabel</a>";
+            $sTitle = '';
+            $aTags['oauth-message'] = ['title' => $sTitle, 'css_classes' => 'ibo-object-details--tag--oauth-message', 'decoration_classes' => 'far fa-envelope', 'label' => $sLabel];
+          }
+        }
+        foreach ($aTags as $sIconId => $aIconData) {
+          $sTagTooltipContent = utils::EscapeHtml($aIconData['title']);
+          $aHeaderBlocks['subtitle'][static::HEADER_BLOCKS_SUBTITLE_TAG_PREFIX.$sIconId] = new Combodo\iTop\Application\UI\Base\Component\Html\Html(<<<HTML
+    <span id="{$sIconId}" class="ibo-object-details--tag {$aIconData['css_classes']}" data-tooltip-content="{$sTagTooltipContent}" data-tooltip-html-enabled="true"><span class="ibo-object-details--tag-icon"><span class="{$aIconData['decoration_classes']}"></span></span>{$aIconData['label']}</span>
+    HTML
+          );
+        }
+
+        return $aHeaderBlocks;
+   }
         ]]></code>
         </method>
         <method id="GetAttributeFlags">
@@ -142,14 +156,14 @@
           <access>public</access>
           <type>Overload-DBObject</type>
           <code><![CDATA[
-     	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
-      {
-        if ($sAttCode == 'status') {
-          return OPT_ATT_READONLY;
-        }
+  public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+  {
+    if ($sAttCode == 'status') {
+      return OPT_ATT_READONLY;
+    }
 
-        return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
-      }
+    return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+  }
         ]]></code>
         </method>
         <method id="GetInitialStateAttributeFlags">
@@ -157,68 +171,68 @@
           <access>public</access>
           <type>Overload-DBObject</type>
           <code><![CDATA[
-      public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
-      {
-        if ($sAttCode == 'status') {
-          return OPT_ATT_READONLY;
-        }
+  public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+  {
+    if ($sAttCode == 'status') {
+      return OPT_ATT_READONLY;
+    }
 
-        return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
-      }
+    return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+  }
         ]]></code>
         </method>
         <method id="GetDefaultMailServer">
           <static>false</static>
           <access>public</access>
           <code><![CDATA[
-            public function GetDefaultMailServer()
-            {
-                return 'imap.'.$this->Get('provider').'.com';
-            }
+  public function GetDefaultMailServer()
+  {
+      return 'imap.'.$this->Get('provider').'.com';
+  }
             ]]></code>
         </method>
         <method id="GetDefaultMailServerPort">
           <static>false</static>
           <access>public</access>
           <code><![CDATA[
-            public function GetDefaultMailServerPort()
-            {
-                return 993;
-            }
+  public function GetDefaultMailServerPort()
+  {
+      return 993;
+  }
             ]]></code>
         </method>
         <method id="GetAccessToken">
           <static>false</static>
           <access>public</access>
           <code><![CDATA[
-            public function GetAccessToken()
-            {
-                if ($this->Get('status') == 'active') {
-                  return new \League\OAuth2\Client\Token\AccessToken([
-                    'access_token'  => $this->Get('token'),
-                    'expires_in'    => date_format(new DateTime($this->Get('token_expiration')), 'U') - time(),
-                    'refresh_token' => $this->Get('refresh_token'),
-                    'token_type'    => 'Bearer',
-                  ]);
-                }
-                return null;
-            }
+    public function GetAccessToken()
+    {
+        if ($this->Get('status') == 'active') {
+          return new \League\OAuth2\Client\Token\AccessToken([
+            'access_token'  => $this->Get('token'),
+            'expires_in'    => date_format(new DateTime($this->Get('token_expiration')), 'U') - time(),
+            'refresh_token' => $this->Get('refresh_token'),
+            'token_type'    => 'Bearer',
+          ]);
+        }
+        return null;
+    }
             ]]></code>
         </method>
         <method id="SetAccessToken">
           <static>false</static>
           <access>public</access>
           <code><![CDATA[
-            public function SetAccessToken(\League\OAuth2\Client\Token\AccessTokenInterface $oAccessToken)
-            {
-                $this->Set('token', $oAccessToken->getToken());
-                $this->Set('token_expiration', date(AttributeDateTime::GetSQLFormat(), $oAccessToken->getExpires()));
-                if (!empty($oAccessToken->getRefreshToken())) {
-                    $this->Set('refresh_token', $oAccessToken->getRefreshToken());
-                }
-                $this->Set('status', 'active');
-                $this->DBUpdate();
-            }
+    public function SetAccessToken(\League\OAuth2\Client\Token\AccessTokenInterface $oAccessToken)
+    {
+        $this->Set('token', $oAccessToken->getToken());
+        $this->Set('token_expiration', date(AttributeDateTime::GetSQLFormat(), $oAccessToken->getExpires()));
+        if (!empty($oAccessToken->getRefreshToken())) {
+            $this->Set('refresh_token', $oAccessToken->getRefreshToken());
+        }
+        $this->Set('status', 'active');
+        $this->DBUpdate();
+    }
             ]]></code>
         </method>
       </methods>
@@ -280,6 +294,632 @@
         </default_search>
       </presentation>
     </class>
+    <class id="OAuthClientAzure" _delta="define">
+      <parent>OAuthClient</parent>
+      <properties>
+        <category>grant_by_profile,application</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_oauth_client_azure</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="server">
+            <attributes>
+              <attribute id="provider"/>
+              <attribute id="client_id"/>
+              <attribute id="client_secret"/>
+            </attributes>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+        <style>
+          <icon/>
+        </style>
+      </properties>
+      <fields>
+        <field id="scope" xsi:type="AttributeEnumSet">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="SMTP">
+              <code>SMTP</code>
+            </value>
+            <value id="IMAP">
+              <code>IMAP</code>
+            </value>
+          </values>
+          <sql>scope</sql>
+          <default_value>SMTP,IMAP</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="advanced_scope" xsi:type="AttributeString">
+          <sql>advanced_scope</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="used_scope" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="simple">
+              <code>simple</code>
+            </value>
+            <value id="advanced">
+              <code>advanced</code>
+            </value>
+          </values>
+          <sql>used_scope</sql>
+          <default_value>simple</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <dependencies>
+            <attribute id="scope"/>
+            <attribute id="advanced_scope"/>
+          </dependencies>
+        </field>
+        <field id="used_for_smtp" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
+          </values>
+          <sql>used_for_smtp</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:OAuthClient:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                    <item id="provider">
+                      <rank>40</rank>
+                    </item>
+                    <item id="redirect_url">
+                      <rank>50</rank>
+                    </item>
+                    <item id="client_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="client_secret">
+                      <rank>70</rank>
+                    </item>
+                    <item id="mailbox_list">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>20</rank>
+              <items>
+                <item id="fieldset:OAuthClient:scope">
+                  <rank>10</rank>
+                  <items>
+                    <item id="used_scope">
+                      <rank>10</rank>
+                    </item>
+                    <item id="scope">
+                      <rank>20</rank>
+                    </item>
+                    <item id="advanced_scope">
+                      <rank>30</rank>
+                    </item>
+                    <item id="used_for_smtp">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <standard_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+          </items>
+        </standard_search>
+      </presentation>
+      <methods>
+        <method id="PrefillCreationForm">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+  public function PrefillCreationForm(&$aContextParam)
+  {
+    $this->Set('provider', 'Azure');
+    $this->Set('redirect_url', Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory::GetRedirectUri());
+    $this->Set('scope', 'SMTP, IMAP');
+
+    parent::PrefillCreationForm($aContextParam);
+  }
+            ]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		$aChanges = $this->ListChanges();
+		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges))
+		{
+			$sNewName = $this->Get('name');
+			$sNewUseForSMTP = $this->Get('used_for_smtp');
+			if ($sNewUseForSMTP == 'yes') {
+        $oSearch = DBObjectSearch::FromOQL_AllData("SELECT OAuthClientGoogle WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id UNION SELECT OAuthClientAzure WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id");
+        $oSet = new DBObjectSet($oSearch, array(), ['id' => $this->GetKey(), 'newname' => $sNewName, 'newuseforsmtp' => $sNewUseForSMTP]);
+        if ($oSet->Count() > 0)
+        {
+            $this->m_aCheckIssues[] = Dict::Format('OAuthClient:Name/UseForSMTPMustBeUnique', $sNewName, $sNewUseForSMTP);
+        }
+			}
+		}
+	}	]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+  public function ComputeValues()
+  {
+    parent::ComputeValues();
+    if (empty($this->Get('provider'))) {
+      $this->Set('provider', 'Azure');
+    }
+    if (empty($this->Get('redirect_url'))) {
+      $this->Set('redirect_url', Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory::GetRedirectUri());
+    }
+    if (empty($this->Get('advanced_scope'))) {
+		    $this->Set('used_scope', 'simple');
+		    if (count($this->Get('scope')->GetValues()) == 0) {
+			      $this->Set('scope', 'SMTP, IMAP');
+		    }
+		} else {
+		    $this->Set('used_scope', 'advanced');
+		    $this->Set('scope', '');
+		}
+  }
+            ]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+  public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+  {
+    switch ($sAttCode) {
+        case 'provider':
+        case 'redirect_url':
+        case 'used_scope':
+            return OPT_ATT_READONLY;
+    }
+
+    return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+  }
+            ]]></code>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+  public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+  {
+    switch ($sAttCode) {
+        case 'provider':
+        case 'redirect_url':
+        case 'used_scope':
+            return OPT_ATT_READONLY;
+    }
+
+    return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+  }
+            ]]></code>
+        </method>
+        <method id="GetDefaultMailServer">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+  public function GetDefaultMailServer()
+  {
+    return 'outlook.office365.com';
+  }
+            ]]></code>
+        </method>
+        <method id="GetScope">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+  public function GetScope()
+  {
+    if (!empty($this->Get('advanced_scope'))) {
+        return $this->Get('advanced_scope');
+    }
+    $aScopes = $this->Get('scope')->GetValues();
+    $aRawScopes = ['offline_access'];
+    foreach ($aScopes as $sScope) {
+        switch ($sScope) {
+            case 'SMTP':
+                $aRawScopes[] = 'https://outlook.office.com/SMTP.Send';
+                break;
+
+            case 'IMAP':
+                $aRawScopes[] = 'https://outlook.office.com/IMAP.AccessAsUser.All';
+                break;
+        }
+    }
+    return implode(' ', $aRawScopes);
+  }
+            ]]></code>
+        </method>
+      </methods>
+    </class>
+    <class id="OAuthClientGoogle" _delta="define">
+      <parent>OAuthClient</parent>
+      <properties>
+        <category>grant_by_profile,application</category>
+        <abstract>false</abstract>
+        <key_type>autoincrement</key_type>
+        <db_table>priv_oauth_client_google</db_table>
+        <db_key_field>id</db_key_field>
+        <db_final_class_field/>
+        <naming>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="name"/>
+          </attributes>
+        </naming>
+        <reconciliation>
+          <attributes>
+            <attribute id="provider"/>
+            <attribute id="name"/>
+          </attributes>
+        </reconciliation>
+        <uniqueness_rules>
+          <rule id="server">
+            <attributes>
+              <attribute id="provider"/>
+              <attribute id="client_id"/>
+              <attribute id="client_secret"/>
+            </attributes>
+            <is_blocking>true</is_blocking>
+          </rule>
+        </uniqueness_rules>
+        <style>
+          <icon/>
+        </style>
+      </properties>
+      <fields>
+        <field id="scope" xsi:type="AttributeEnumSet">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="SMTP">
+              <code>SMTP</code>
+            </value>
+            <value id="IMAP">
+              <code>IMAP</code>
+            </value>
+          </values>
+          <sql>scope</sql>
+          <default_value>SMTP,IMAP</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="advanced_scope" xsi:type="AttributeString">
+          <sql>advanced_scope</sql>
+          <default_value/>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+        <field id="used_scope" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="simple">
+              <code>simple</code>
+            </value>
+            <value id="advanced">
+              <code>advanced</code>
+            </value>
+          </values>
+          <sql>used_scope</sql>
+          <default_value>simple</default_value>
+          <is_null_allowed>false</is_null_allowed>
+          <dependencies>
+            <attribute id="scope"/>
+            <attribute id="advanced_scope"/>
+          </dependencies>
+        </field>
+        <field id="used_for_smtp" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
+          </values>
+          <sql>used_for_smtp</sql>
+          <default_value>no</default_value>
+          <is_null_allowed>true</is_null_allowed>
+        </field>
+      </fields>
+      <presentation>
+        <details>
+          <items>
+            <item id="col:col1">
+              <rank>10</rank>
+              <items>
+                <item id="fieldset:OAuthClient:baseinfo">
+                  <rank>10</rank>
+                  <items>
+                    <item id="name">
+                      <rank>10</rank>
+                    </item>
+                    <item id="status">
+                      <rank>20</rank>
+                    </item>
+                    <item id="description">
+                      <rank>30</rank>
+                    </item>
+                    <item id="provider">
+                      <rank>40</rank>
+                    </item>
+                    <item id="redirect_url">
+                      <rank>50</rank>
+                    </item>
+                    <item id="client_id">
+                      <rank>60</rank>
+                    </item>
+                    <item id="client_secret">
+                      <rank>70</rank>
+                    </item>
+                    <item id="mailbox_list">
+                      <rank>80</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+            <item id="col:col2">
+              <rank>20</rank>
+              <items>
+                <item id="fieldset:OAuthClient:scope">
+                  <rank>10</rank>
+                  <items>
+                    <item id="used_scope">
+                      <rank>10</rank>
+                    </item>
+                    <item id="scope">
+                      <rank>20</rank>
+                    </item>
+                    <item id="advanced_scope">
+                      <rank>30</rank>
+                    </item>
+                    <item id="used_for_smtp">
+                      <rank>40</rank>
+                    </item>
+                  </items>
+                </item>
+              </items>
+            </item>
+          </items>
+        </details>
+        <list>
+          <items>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+          </items>
+        </list>
+        <standard_search>
+          <items>
+            <item id="name">
+              <rank>10</rank>
+            </item>
+            <item id="provider">
+              <rank>10</rank>
+            </item>
+            <item id="status">
+              <rank>10</rank>
+            </item>
+          </items>
+        </standard_search>
+      </presentation>
+      <methods>
+        <method id="PrefillCreationForm">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+	public function PrefillCreationForm(&$aContextParam)
+	{
+		$this->Set('provider', 'Google');
+		$this->Set('redirect_url', Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory::GetRedirectUri());
+    $this->Set('scope', 'SMTP, IMAP');
+
+		parent::PrefillCreationForm($aContextParam);
+	}
+            ]]></code>
+        </method>
+        <method id="DoCheckToWrite">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[	public function DoCheckToWrite()
+	{
+		parent::DoCheckToWrite();
+
+		$aChanges = $this->ListChanges();
+		if (array_key_exists('name', $aChanges) || array_key_exists('used_for_smtp', $aChanges))
+		{
+			$sNewName = $this->Get('name');
+			$sNewUseForSMTP = $this->Get('used_for_smtp');
+			if ($sNewUseForSMTP == 'yes') {
+        $oSearch = DBObjectSearch::FromOQL_AllData("SELECT OAuthClientGoogle WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id UNION SELECT OAuthClientAzure WHERE name = :newname AND used_for_smtp = :newuseforsmtp AND id != :id");
+        $oSet = new DBObjectSet($oSearch, array(), ['id' => $this->GetKey(), 'newname' => $sNewName, 'newuseforsmtp' => $sNewUseForSMTP]);
+        if ($oSet->Count() > 0)
+        {
+            $this->m_aCheckIssues[] = Dict::Format('OAuthClient:Name/UseForSMTPMustBeUnique', $sNewName, $sNewUseForSMTP);
+        }
+			}
+		}
+	}	]]></code>
+        </method>
+        <method id="ComputeValues">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+	public function ComputeValues()
+	{
+		parent::ComputeValues();
+		if (empty($this->Get('provider'))) {
+			$this->Set('provider', 'Google');
+		}
+		if (empty($this->Get('redirect_url'))) {
+			$this->Set('redirect_url', Combodo\iTop\Core\Authentication\Client\OAuth\OAuthClientProviderFactory::GetRedirectUri());
+		}
+		if (empty($this->Get('advanced_scope'))) {
+		    $this->Set('used_scope', 'simple');
+		    if (count($this->Get('scope')->GetValues()) == 0) {
+			      $this->Set('scope', 'SMTP, IMAP');
+		    }
+		} else {
+		    $this->Set('used_scope', 'advanced');
+		    $this->Set('scope', '');
+		}
+	}
+            ]]></code>
+        </method>
+        <method id="GetAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+	public function GetAttributeFlags($sAttCode, &$aReasons = array(), $sTargetState = '')
+	{
+    switch ($sAttCode) {
+        case 'provider':
+        case 'redirect_url':
+        case 'used_scope':
+            return OPT_ATT_READONLY;
+    }
+
+		return parent::GetAttributeFlags($sAttCode, $aReasons, $sTargetState);
+	}
+            ]]></code>
+        </method>
+        <method id="GetInitialStateAttributeFlags">
+          <static>false</static>
+          <access>public</access>
+          <type>Overload-DBObject</type>
+          <code><![CDATA[
+	public function GetInitialStateAttributeFlags($sAttCode, &$aReasons = array())
+	{
+    switch ($sAttCode) {
+        case 'provider':
+        case 'redirect_url':
+        case 'used_scope':
+            return OPT_ATT_READONLY;
+    }
+
+		return parent::GetInitialStateAttributeFlags($sAttCode, $aReasons);
+	}
+            ]]></code>
+        </method>
+        <method id="GetDefaultMailServer">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+	public function GetDefaultMailServer()
+	{
+		return 'imap.gmail.com';
+	}
+            ]]></code>
+        </method>
+        <method id="GetScope">
+          <static>false</static>
+          <access>public</access>
+          <code><![CDATA[
+  public function GetScope()
+  {
+    if (!empty($this->Get('advanced_scope'))) {
+        return $this->Get('advanced_scope');
+    }
+    $aScopes = $this->Get('scope')->GetValues();
+    $aRawScopes = [];
+    foreach ($aScopes as $sScope) {
+        switch ($sScope) {
+            case 'SMTP':
+                $aRawScopes['https://mail.google.com/'] = 'https://mail.google.com/';
+                break;
+
+            case 'IMAP':
+                $aRawScopes['https://mail.google.com/'] = 'https://mail.google.com/';
+                break;
+        }
+    }
+    return implode(' ', $aRawScopes);
+  }
+            ]]></code>
+        </method>
+      </methods>
+    </class>
   </classes>
   <menus>
     <menu id="OAuthClient" xsi:type="OQLMenuNode" _delta="define">
@@ -289,13 +929,16 @@
       <do_search>1</do_search>
       <enable_admin_only>0</enable_admin_only>
       <enable_class>OAuthClient</enable_class>
-      <enable_action>UR_ACTION_READ</enable_action>
+      <enable_action>UR_ACTION_MODIFY</enable_action>
     </menu>
   </menus>
   <user_rights>
     <groups>
+      <group id="OauthConnection" _delta="define">
+        <classes>
+          <class id="OAuthClient"/>
+        </classes>
+      </group>
     </groups>
-    <profiles>
-    </profiles>
   </user_rights>
 </itop_design>

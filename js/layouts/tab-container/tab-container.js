@@ -156,7 +156,7 @@ $(function()
 		                });
                 		me._updateExtraTabsList();
 	                }, {
-                		root: $('.ibo-tab-container--tabs-list')[0],
+                		root: this.element.find(this.js_selectors.tabs_list)[0],
 		                threshold: [0.9] // N°4783 Should be completely visible, but lowering the threshold prevents a bug in the JS Observer API when the window is zoomed in/out, in which case all items respond as being hidden even when they are not.
 	                });
                 	this.element.find(this.js_selectors.tab_header).each(function(){

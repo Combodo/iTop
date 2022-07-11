@@ -453,7 +453,7 @@ class ObjectFormHandlerHelper
 	 * @throws \OQLException
 	 */
 	public function CheckReadFormDataAllowed($sFormManagerData){
-		$aJsonFromData = json_decode($sFormManagerData, true);
+		$aJsonFromData = ObjectFormManager::DecodeFormManagerData($sFormManagerData);
 		if(isset($aJsonFromData['formobject_class'])
 			&& isset($aJsonFromData['formobject_id'])
 			&& !$this->oSecurityHelper->IsActionAllowed(UR_ACTION_READ, $aJsonFromData['formobject_class'], $aJsonFromData['formobject_id'])){

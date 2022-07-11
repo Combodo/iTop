@@ -461,7 +461,7 @@ abstract class MetaModel
 			$oStyle = self::$m_aClassParams[$sClass]['style'];
 			$sIcon = $oStyle->GetIconAsAbsUrl();
 		}
-		if (utils::StrLen($sIcon) == 0) {
+		if (utils::IsNullOrEmptyString($sIcon)) {
 			$sParentClass = self::GetParentPersistentClass($sClass);
 			if (strlen($sParentClass) > 0) {
 				return self::GetClassIcon($sParentClass, $bImgTag, $sMoreStyles);
@@ -494,7 +494,7 @@ abstract class MetaModel
 			$oStyle = new ormStyle("ibo-class-style--$sClass", "ibo-class-style-alt--$sClass");
 		}
 
-		if ((utils::StrLen($oStyle->GetMainColor()) > 0) && (utils::StrLen($oStyle->GetComplementaryColor()) > 0) && (utils::StrLen($oStyle->GetIconAsRelPath()) > 0)) {
+		if (utils::IsNotNullOrEmptyString($oStyle->GetMainColor()) && utils::IsNotNullOrEmptyString($oStyle->GetComplementaryColor()) && utils::IsNotNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 			// all the parameters are set, no need to search in the parent classes
 			return $oStyle;
 		}
@@ -504,18 +504,18 @@ abstract class MetaModel
 		while (strlen($sParentClass) > 0) {
 			$oParentStyle = self::GetClassStyle($sParentClass);
 			if (!is_null($oParentStyle)) {
-				if (utils::StrLen($oStyle->GetMainColor()) == 0) {
+				if (utils::IsNullOrEmptyString($oStyle->GetMainColor())) {
 					$oStyle->SetMainColor($oParentStyle->GetMainColor());
 					$oStyle->SetStyleClass($oParentStyle->GetStyleClass());
 				}
-				if (utils::StrLen($oStyle->GetComplementaryColor()) == 0) {
+				if (utils::IsNullOrEmptyString($oStyle->GetComplementaryColor())) {
 					$oStyle->SetComplementaryColor($oParentStyle->GetComplementaryColor());
 					$oStyle->SetAltStyleClass($oParentStyle->GetAltStyleClass());
 				}
-				if (utils::StrLen($oStyle->GetIconAsRelPath()) == 0) {
+				if (utils::IsNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 					$oStyle->SetIcon($oParentStyle->GetIconAsRelPath());
 				}
-				if ((utils::StrLen($oStyle->GetMainColor()) > 0) && (utils::StrLen($oStyle->GetComplementaryColor()) > 0) && (utils::StrLen($oStyle->GetIconAsRelPath()) > 0)) {
+				if (utils::IsNotNullOrEmptyString($oStyle->GetMainColor()) && utils::IsNotNullOrEmptyString($oStyle->GetComplementaryColor()) && utils::IsNotNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 					// all the parameters are set, no need to search in the parent classes
 					return $oStyle;
 				}
@@ -523,7 +523,7 @@ abstract class MetaModel
 			$sParentClass = self::GetParentPersistentClass($sParentClass);
 		}
 
-		if ((utils::StrLen($oStyle->GetMainColor()) == 0) && (utils::StrLen($oStyle->GetComplementaryColor()) == 0) && (utils::StrLen($oStyle->GetIconAsRelPath()) == 0)) {
+		if (utils::IsNullOrEmptyString($oStyle->GetMainColor()) && utils::IsNullOrEmptyString($oStyle->GetComplementaryColor()) && utils::IsNullOrEmptyString($oStyle->GetIconAsRelPath())) {
 			return null;
 		}
 

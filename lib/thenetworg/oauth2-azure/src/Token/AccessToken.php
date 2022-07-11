@@ -19,6 +19,8 @@ class AccessToken extends \League\OAuth2\Client\Token\AccessToken
         if (!empty($options['id_token'])) {
             $this->idToken = $options['id_token'];
 
+            unset($this->values['id_token']);
+
             $keys          = $provider->getJwtVerificationKeys();
             $idTokenClaims = null;
             try {
@@ -45,8 +47,27 @@ class AccessToken extends \League\OAuth2\Client\Token\AccessToken
         }
     }
 
+    public function getIdToken()
+    {
+        return $this->idToken;
+    }
+
     public function getIdTokenClaims()
     {
         return $this->idTokenClaims;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function jsonSerialize()
+    {
+        $parameters = parent::jsonSerialize();
+
+        if ($this->idToken) {
+            $parameters['id_token'] = $this->idToken;
+        }
+
+        return $parameters;
     }
 }

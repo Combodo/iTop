@@ -5,8 +5,6 @@
  */
 
 use Combodo\iTop\Application\Helper\WebResourcesHelper;
-use Combodo\iTop\Application\UI\Base\Component\Title\Title;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 
 require_once(APPROOT.'/application/utils.inc.php');
 require_once(APPROOT.'/application/template.class.inc.php');
@@ -655,8 +653,7 @@ abstract class MenuNode
 		$this->sMenuId = $sMenuId;
 		$this->iParentIndex = $iParentIndex;
 		$this->aReflectionProperties = array();
-		if (utils::StrLen($sEnableClass) > 0)
-		{
+		if (utils::IsNotNullOrEmptyString($sEnableClass)) {
 			$this->aReflectionProperties['enable_class'] = $sEnableClass;
 			$this->aReflectionProperties['enable_action'] = $iActionCode;
 			$this->aReflectionProperties['enable_permission'] = $iAllowedResults;

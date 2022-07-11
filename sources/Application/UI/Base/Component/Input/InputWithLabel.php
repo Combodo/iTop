@@ -135,7 +135,7 @@ class InputWithLabel extends UIBlock
 	 */
 	public function HasDescription(): bool
 	{
-		return utils::StrLen($this->sDescription) > 0;
+		return utils::IsNotNullOrEmptyString($this->sDescription);
 	}
 
 }
