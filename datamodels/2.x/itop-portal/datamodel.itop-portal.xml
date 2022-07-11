@@ -149,4 +149,10 @@
       </navigation_rules>
 		</module_design>
 	</module_designs>
+  <module_parameters>
+    <parameters id="itop-portal" _delta="define">
+      <lazy_loading_threshold>500</lazy_loading_threshold><!-- Will be placed in the conf/<env>/config-itop.php file under the itop-portal module's settings  -->
+      <enable_formmanager_content_check type="boolean">true</enable_formmanager_content_check>
+    </parameters>
+  </module_parameters>
 </itop_design>
