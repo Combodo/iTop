@@ -684,6 +684,7 @@ class SetupUtils
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
 	 *
 	 * @return string Path to the system's temp directory
+	 * @uses \sys_get_temp_dir()
 	 */
 	public static function GetTmpDir() {
 		return realpath(sys_get_temp_dir());

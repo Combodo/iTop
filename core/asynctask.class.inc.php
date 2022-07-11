@@ -293,7 +293,7 @@ abstract class AsyncTask extends DBObject
 			$this->Set('remaining_retries', $this->GetMaxRetries($iErrorCode));
 		}
 
-		$this->Set('last_error', $sErrorMessage);
+		$this->SetTrim('last_error', $sErrorMessage);
 		$this->Set('last_error_code', $iErrorCode); // Note: can be ZERO !!!
 		$this->Set('last_attempt', time());
 
