@@ -439,9 +439,9 @@ class ObjectFormHandlerHelper
 	/**
 	 * Check if read object include in form data is allowed, throw an exception otherwise.
 	 *
-	 * @since 2.7.7
+	 * @since 2.7.7 3.0.2 3.1.0
 	 *
-	 * @param $sFormManagerData form data to check
+	 * @param string $sFormManagerData form data to check
 	 *
 	 * @return void
 	 * @throws \CoreException
@@ -450,7 +450,8 @@ class ObjectFormHandlerHelper
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
 	 */
-	public function CheckReadFormDataAllowed($sFormManagerData){
+	public function CheckReadFormDataAllowed($sFormManagerData)
+	{
 		$aJsonFromData = ObjectFormManager::DecodeFormManagerData($sFormManagerData);
 		if(isset($aJsonFromData['formobject_class'])
 			&& isset($aJsonFromData['formobject_id'])
