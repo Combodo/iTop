@@ -2862,10 +2862,10 @@ HTML;
 	 *
 	 * @param string|null $sString
 	 *
-	 * @return boolean if string null or empty
+	 * @return bool if string null or empty
 	 * @since 3.0.2 N°5302
 	 */
-	public static function IsNullOrEmptyString(?string $sString): boolean
+	public static function IsNullOrEmptyString(?string $sString): bool
 	{
 		return $sString == null || strlen($sString) == 0;
 	}
@@ -2877,10 +2877,10 @@ HTML;
 	 *
 	 * @param string|null $sString
 	 *
-	 * @return boolean if string is not null and not empty
+	 * @return bool if string is not null and not empty
 	 * @since 3.0.2 N°5302
 	 */
-	public static function IsNotNullOrEmptyString(?string $sString): boolean
+	public static function IsNotNullOrEmptyString(?string $sString): bool
 	{
 		return !static::IsNullOrEmptyString($sString);
 	}
