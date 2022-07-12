@@ -16,6 +16,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+/*********************************************************************************/
+/*                                                                               */
+/* Deprecated since 3.0.0 as the backoffice now uses files from css/backoffice/* */
+/*                                                                               */
+/*********************************************************************************/
+
 // Beware the version number MUST be enclosed with quotes otherwise v2.3.0 becomes v2 0.3 .0
 $version: "v2.7.7";
 $approot-relative: "../../../../" !default; // relative to env-***/branding/themes/***/main.css
