@@ -222,7 +222,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 		index = 0;
 		this.ResetQuery();
 		this.UpdateWizard();
-		var fieldForm=null;
+		var fieldForm = null;
 		while(index < aFieldNames.length )
 		{
 			sAttCode = aFieldNames[index];
@@ -233,7 +233,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 					message: '',
 					overlayCSS: {backgroundColor: '#f1f1f1', opacity: 0.3}
 				});
-				fieldForm=$('#field_' + sFieldId).closest('form');
+				fieldForm = $('#field_' + sFieldId).closest('form');
 				this.RequestAllowedValues(sAttCode);
 			}
 			index++;
