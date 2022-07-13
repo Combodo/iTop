@@ -81,8 +81,6 @@ class ObjectFormHandlerHelper
 	private $sPortalId;
 	/** @var \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension */
 	private $oAppExtension;
-	/** @var \Symfony\Component\DependencyInjection\ContainerInterface $oContainer */
-	private $oContainer;
 
 	/**
 	 * ObjectFormHandlerHelper constructor.
@@ -96,9 +94,11 @@ class ObjectFormHandlerHelper
 	 * @param array $aCombodoPortalInstanceConf
 	 * @param string $sPortalId
 	 * @param \Combodo\iTop\Portal\Twig\AppExtension $oAppExtension
-	 * @param \Symfony\Component\DependencyInjection\ContainerInterface $oContainer
 	 */
-	public function __construct(RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, NavigationRuleHelper $oNavigationRuleHelper, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId, AppExtension $oAppExtension, ContainerInterface $oContainer)
+	public function __construct(
+		RequestManipulatorHelper $oRequestManipulator, ContextManipulatorHelper $oContextManipulator, NavigationRuleHelper $oNavigationRuleHelper, ScopeValidatorHelper $oScopeValidator, SecurityHelper $oSecurityHelper, UrlGeneratorInterface $oUrlGenerator, $aCombodoPortalInstanceConf, $sPortalId,
+		AppExtension $oAppExtension
+	)
 	{
 		$this->oRequestManipulator = $oRequestManipulator;
 		$this->oContextManipulator = $oContextManipulator;
@@ -109,7 +109,6 @@ class ObjectFormHandlerHelper
 		$this->aCombodoPortalInstanceConf = $aCombodoPortalInstanceConf;
 		$this->sPortalId = $sPortalId;
 		$this->oAppExtension = $oAppExtension;
-		$this->oContainer = $oContainer;
 	}
 
 	/**
@@ -271,13 +270,13 @@ class ObjectFormHandlerHelper
 			}
 
 			$oFormRenderer = new BsFormRenderer();
-			if($sFormEndpoint !== null)
-			{
+			if ($sFormEndpoint !== null) {
 				$oFormRenderer->SetEndpoint($sFormEndpoint);
 			}
 
 			$oFormManager = new ObjectFormManager();
-			$oFormManager->SetContainer($this->oContainer)
+			$oFormManager
+				->SetObjectFormHandlerHelper($this)
 				->SetObject($oObject)
 				->SetMode($sMode)
 				->SetActionRulesToken($sActionRulesToken)
@@ -301,7 +300,7 @@ class ObjectFormHandlerHelper
 
 			$this->CheckReadFormDataAllowed($sFormManagerData);
 			$oFormManager = $sFormManagerClass::FromJSON($sFormManagerData);
-			$oFormManager->SetContainer($this->oContainer);
+			$oFormManager->SetObjectFormHandlerHelper($this);
 
 			// Applying action rules if present
 			if (($oFormManager->GetActionRulesToken() !== null) && ($oFormManager->GetActionRulesToken() !== '')) {
@@ -474,5 +473,45 @@ class ObjectFormHandlerHelper
 			static::ENUM_MODE_EDIT,
 			static::ENUM_MODE_CREATE,
 		);
+	}
+
+	/**
+	 * @return \Combodo\iTop\Portal\Routing\UrlGenerator|\Symfony\Component\Routing\Generator\UrlGeneratorInterface
+	 * @since 3.1
+	 *
+	 */
+	public function getUrlGenerator()
+	{
+		return $this->oUrlGenerator;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Portal\Helper\SecurityHelper
+	 * @since 3.1
+	 *
+	 */
+	public function getSecurityHelper(): SecurityHelper
+	{
+		return $this->oSecurityHelper;
+	}
+
+	/**
+	 * @return \Combodo\iTop\Portal\Helper\ScopeValidatorHelper
+	 * @since 3.1
+	 *
+	 */
+	public function getScopeValidator(): ScopeValidatorHelper
+	{
+		return $this->oScopeValidator;
+	}
+
+	/**
+	 * @return array
+	 * @since 3.1
+	 *
+	 */
+	public function getCombodoPortalConf(): array
+	{
+		return $this->aCombodoPortalInstanceConf;
 	}
 }

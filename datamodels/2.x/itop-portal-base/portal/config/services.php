@@ -28,7 +28,7 @@ use Combodo\iTop\Portal\Routing\ItopExtensionsExtraRoutes;
  * @since 3.1.0
  * @package Symfony\Component\DependencyInjection\Loader\Configurator
  */
-return static function (ContainerConfigurator $container) {
+return static function (ContainerConfigurator $oContainer) {
 
 	// retrieve extension controller classes
 	$aControllersClasses = ItopExtensionsExtraRoutes::GetControllersClasses();
@@ -37,7 +37,7 @@ return static function (ContainerConfigurator $container) {
 	foreach ($aControllersClasses as $sController) {
 
 		// register as service
-		$container->services()->set($sController, $sController)
+		$oContainer->services()->set($sController, $sController)
 			->public()
 			->tag('controller.service_arguments')
 			->tag('container.service_suscriber')
