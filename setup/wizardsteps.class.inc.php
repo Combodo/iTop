@@ -695,6 +695,11 @@ class WizStepLicense extends WizardStep
 		return array('class' => 'WizStepDBParams', 'state' => '');
 	}
 
+	/**
+	 * @return bool
+	 * @throws \Exception
+	 * @since 2.7.7 3.0.2 3.1.0
+	 */
 	private function NeedsRgpdConsent()
 	{
 		$sMode = $this->oWizard->GetParameter('install_mode');
