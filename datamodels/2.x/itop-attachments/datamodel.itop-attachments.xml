@@ -176,18 +176,18 @@
 		$aCallSpec = array($sClass, 'MapContextParam');
 		if (is_callable($aCallSpec))
 		{
-			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
+			$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
 			if (MetaModel::IsValidAttCode($sClass, $sAttCode))
 			{
 				// Second: check that the organization CAN be fetched from the current user
 				//
 				if (MetaModel::IsValidClass('Person'))
 				{
-					$aCallSpec = array($sClass, 'MapContextParam');
+					$aCallSpec = array('Person', 'MapContextParam');
 					if (is_callable($aCallSpec))
 					{
-						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter					
-						if (MetaModel::IsValidAttCode($sClass, $sAttCode))
+						$sAttCode = call_user_func($aCallSpec, 'org_id'); // Returns null when there is no mapping for this parameter
+						if (MetaModel::IsValidAttCode('Person', $sAttCode))
 						{
 							// OK - try it
 							//
