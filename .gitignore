@@ -51,6 +51,7 @@ test/vendor/*
 
 # Jetbrains
 /.idea/**
+!/.idea/IntelliLang.xml
 
 # doc. generation
 /.doc/vendor
