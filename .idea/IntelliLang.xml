@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="LanguageInjectionConfiguration">
+    <injection language="InjectablePHP" injector-id="xml">
+      <display-name>iTop - Class method code</display-name>
+      <place><![CDATA[xmlTag().withLocalName(string().equalTo("code"))]]></place>
+      <xpath-condition>name(..) = 'method' and count(/itop_design) = 1</xpath-condition>
+    </injection>
+    <injection language="InjectablePHP" injector-id="xml">
+      <display-name>iTop - Snippet code</display-name>
+      <place><![CDATA[xmlTag().withLocalName(string().equalTo("snippet"))]]></place>
+      <xpath-condition>name(..) = 'snippets' and count(/itop_design) = 1</xpath-condition>
+    </injection>
+  </component>
+</project>
