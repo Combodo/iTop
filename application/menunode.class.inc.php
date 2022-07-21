@@ -265,6 +265,14 @@ class ApplicationMenu
 			/** @var \MenuGroup $oMenuNode */
 			$oMenuNode = static::GetMenuNode($sMenuGroupIdx);
 
+			if (!($oMenuNode instanceof MenuGroup)) {
+				IssueLog::Error('Menu node was not displayed as a menu group as it is actually not a menu group', LogChannels::CONSOLE, [
+					'menu_node_class' => get_class($oMenuNode),
+					'menu_node_label' => $oMenuNode->GetLabel(),
+				]);
+				continue;
+			}
+
 			$aMenuGroups[] = [
 				'sId' => $oMenuNode->GetMenuID(),
 				'sIconCssClasses' => $oMenuNode->GetDecorationClasses(),
