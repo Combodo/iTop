@@ -507,7 +507,7 @@ class ObjectFormHandlerHelper
 
 	/**
 	 * @return array
-	 * @since 3.1
+	 * @since 3.1.0
 	 *
 	 */
 	public function getCombodoPortalConf(): array
