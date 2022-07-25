@@ -66,6 +66,7 @@ class ItopExtensionsExtraRoutes
 	 * @param array $extraControllersClasses
 	 *
 	 * @throws Exception
+	 * @since 3.1.0
 	 */
 	public static function AddControllersClasses($extraControllersClasses)
 	{
