@@ -735,7 +735,7 @@ class ObjectFormManager extends FormManager
 						array('Combodo\\iTop\\Form\\Field\\SelectObjectField', 'Combodo\\iTop\\Form\\Field\\LinkedSetField'))) {
 						/** @var \Combodo\iTop\Form\Field\SelectObjectField|\Combodo\iTop\Form\Field\LinkedSetField $oField */
 						if ($this->oFormHandlerHelper !== null) {
-							$sSearchEndpoint = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_search_generic', array(
+							$sSearchEndpoint = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_search_generic', array(
 								'sTargetAttCode'   => $oAttDef->GetCode(),
 								'sHostObjectClass' => get_class($this->oObject),
 								'sHostObjectId'    => ($this->oObject->IsNew()) ? null : $this->oObject->GetKey(),
