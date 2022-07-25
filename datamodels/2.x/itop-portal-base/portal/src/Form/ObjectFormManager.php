@@ -759,7 +759,7 @@ class ObjectFormManager extends FormManager
 							$oScopeOriginal = ($oField->GetSearch() !== null) ? $oField->GetSearch() : DBSearch::FromOQL($oAttDef->GetValuesDef()->GetFilterExpression());
 
 							/** @var \DBSearch $oScopeSearch */
-							$oScopeSearch = $this->oFormHandlerHelper->getScopeValidator()->GetScopeFilterForProfiles(UserRights::ListProfiles(),
+							$oScopeSearch = $this->oFormHandlerHelper->GetScopeValidator()->GetScopeFilterForProfiles(UserRights::ListProfiles(),
 								$oScopeOriginal->GetClass(), UR_ACTION_READ);
 							if ($oScopeSearch === null) {
 								IssueLog::Info(__METHOD__.' at line '.__LINE__.' : User #'.UserRights::GetUserId().' has no scope query for '.$oScopeOriginal->GetClass().' class.');
