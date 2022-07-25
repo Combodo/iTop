@@ -84,10 +84,8 @@ class ObjectFormManager extends FormManager
 	protected $aHiddenFieldsId = array();
 
 	/**
-	 * Replace container. Allow access to others applications services.
-	 *
 	 * @var ObjectFormHandlerHelper $oFormHandlerHelper
-	 * @since 3.1
+	 * @since 3.1.0 Replace container. Allow access to others applications services.
 	 */
 	private $oFormHandlerHelper;
 
