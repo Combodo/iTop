@@ -510,7 +510,7 @@ class ObjectFormHandlerHelper
 	 * @since 3.1.0
 	 *
 	 */
-	public function getCombodoPortalConf(): array
+	public function GetCombodoPortalConf(): array
 	{
 		return $this->aCombodoPortalInstanceConf;
 	}
