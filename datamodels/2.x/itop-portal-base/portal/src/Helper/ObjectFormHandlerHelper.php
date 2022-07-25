@@ -497,7 +497,7 @@ class ObjectFormHandlerHelper
 
 	/**
 	 * @return \Combodo\iTop\Portal\Helper\ScopeValidatorHelper
-	 * @since 3.1
+	 * @since 3.1.0
 	 *
 	 */
 	public function getScopeValidator(): ScopeValidatorHelper
