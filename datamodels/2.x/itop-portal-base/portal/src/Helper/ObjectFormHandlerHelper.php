@@ -500,7 +500,7 @@ class ObjectFormHandlerHelper
 	 * @since 3.1.0
 	 *
 	 */
-	public function getScopeValidator(): ScopeValidatorHelper
+	public function GetScopeValidator(): ScopeValidatorHelper
 	{
 		return $this->oScopeValidator;
 	}
