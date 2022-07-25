@@ -803,7 +803,7 @@ class ObjectFormManager extends FormManager
 										/** @var \Combodo\iTop\Form\Field\SelectObjectField $oCustomField */
 										if ($this->oFormHandlerHelper->getUrlGenerator() !== null) {
 
-											$sSearchEndpoint = $this->oFormHandlerHelper->getUrlGenerator()->generate('p_object_search_generic',
+											$sSearchEndpoint = $this->oFormHandlerHelper->GetUrlGenerator()->generate('p_object_search_generic',
 												array(
 													'sTargetAttCode'   => $oAttDef->GetCode(),
 													'sHostObjectClass' => get_class($this->oObject),
