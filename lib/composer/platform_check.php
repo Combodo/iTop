@@ -15,6 +15,7 @@ extension_loaded('iconv') || $missingExtensions[] = 'iconv';
 extension_loaded('json') || $missingExtensions[] = 'json';
 extension_loaded('libxml') || $missingExtensions[] = 'libxml';
 extension_loaded('mysqli') || $missingExtensions[] = 'mysqli';
+extension_loaded('openssl') || $missingExtensions[] = 'openssl';
 extension_loaded('soap') || $missingExtensions[] = 'soap';
 extension_loaded('tokenizer') || $missingExtensions[] = 'tokenizer';
 extension_loaded('xml') || $missingExtensions[] = 'xml';
