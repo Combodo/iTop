@@ -2866,7 +2866,7 @@ HTML;
 	 */
 	public static function IsNullOrEmptyString(?string $sString): bool
 	{
-		return $sString == null || strlen($sString) == 0;
+		return $sString === null || strlen($sString) === 0;
 	}
 
 	/**
