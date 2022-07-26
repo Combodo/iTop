@@ -13,7 +13,7 @@
     "ext-mysqli": "*",
     "ext-soap": "*",
     "combodo/tcpdf": "~6.4.4",
-    "guzzlehttp/guzzle": "^6.5.8",
+    "guzzlehttp/guzzle": "^7.4.5",
     "laminas/laminas-mail": "^2.11",
     "laminas/laminas-servicemanager": "^3.5",
     "league/oauth2-google": "^3.0",
