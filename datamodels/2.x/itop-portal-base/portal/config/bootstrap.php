@@ -85,12 +85,6 @@ if (file_exists(dirname(__DIR__).'/.env.local.php')) {
 	}
 }
 
-// Set debug mode only when necessary
-if (utils::ReadParam('debug', 'false') === 'true')
-{
-	$_SERVER['APP_DEBUG'] = true;
-}
-
 $_SERVER += $_ENV;
 $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = (isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : (isset($_ENV['APP_ENV']) ? $_ENV['APP_ENV'] : null)) ?: 'prod';
 $_SERVER['APP_DEBUG'] = isset($_SERVER['APP_DEBUG']) ? $_SERVER['APP_DEBUG'] : (isset($_ENV['APP_DEBUG']) ? $_ENV['APP_DEBUG'] : ('prod' !== $_SERVER['APP_ENV']));
