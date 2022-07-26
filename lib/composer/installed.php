@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => 'd93a0b698b20940082f2c866981620199654e689',
+        'reference' => 'a329c57b34cee6a4829a80b19696284d7966bd7e',
         'name' => 'combodo/itop',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => 'd93a0b698b20940082f2c866981620199654e689',
+            'reference' => 'a329c57b34cee6a4829a80b19696284d7966bd7e',
             'dev_requirement' => false,
         ),
         'combodo/tcpdf' => array(
@@ -215,12 +215,12 @@
             'dev_requirement' => false,
         ),
         'pelago/emogrifier' => array(
-            'pretty_version' => 'v3.1.0',
-            'version' => '3.1.0.0',
+            'pretty_version' => 'v6.0.0',
+            'version' => '6.0.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../pelago/emogrifier',
             'aliases' => array(),
-            'reference' => 'f6a5c7d44612d86c3901c93f1592f5440e6b2cd8',
+            'reference' => 'aa72d5407efac118f3896bcb995a2cba793df0ae',
             'dev_requirement' => false,
         ),
         'psr/cache' => array(
@@ -319,6 +319,15 @@
             'replaced' => array(
                 0 => 'v1.10.11',
             ),
+        ),
+        'sabberworm/php-css-parser' => array(
+            'pretty_version' => '8.4.0',
+            'version' => '8.4.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../sabberworm/php-css-parser',
+            'aliases' => array(),
+            'reference' => 'e41d2140031d533348b2192a83f02d8dd8a71d30',
+            'dev_requirement' => false,
         ),
         'scssphp/scssphp' => array(
             'pretty_version' => 'v1.10.3',
