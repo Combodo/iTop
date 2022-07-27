@@ -141,8 +141,8 @@ class Extension
 		// @see https://www.php.net/manual/fr/function.var-export.php
 		$aFilters[] = new TwigFilter('var_export', 'var_export');
 
-		//since 2.7.7 3.0.2 3.1.0 N°4867 "Twig content not allowed" error when use the extkey widget search icon in the user portal
-		//overwrite native twig filter : disable use of 'system' filter
+		// @since 2.7.7 3.0.2 3.1.0 N°4867 "Twig content not allowed" error when use the extkey widget search icon in the user portal
+		// Overwrite native twig filter: disable use of 'system' filter
 		$aFilters[] = new TwigFilter('filter', function ($array, $arrow) {
 			if ($arrow == 'system') {
 				return json_encode($array);
