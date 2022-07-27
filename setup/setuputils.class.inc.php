@@ -90,7 +90,7 @@ class SetupUtils
 		// Check the common directories
 		$aWritableApprootDirsErrors = self::CheckWritableDirs(array('log', 'env-production', 'env-production-build', 'conf', 'data'));
 		$aResult = array_merge($aResult, $aWritableApprootDirsErrors);
-		// check temp dir (N°5235)
+		// Check temp dir (N°5235)
 		$sTmpDir = static::GetTmpDir();
 		clearstatcache(true, $sTmpDir);
 		if (is_writable($sTmpDir)) {
