@@ -96,7 +96,7 @@ class SetupUtils
 		if (is_writable($sTmpDir)) {
 			$aResult[] = new CheckResult(CheckResult::INFO, "The temp directory is writable by the application.");
 		} else {
-			$aResult[] = new CheckResult(CheckResult::ERROR, "The temp directory <b>'".$sTmpDir."'</b> is not writable for the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
+			$aResult[] = new CheckResult(CheckResult::ERROR, "The temp directory <b>'".$sTmpDir."'</b> is not writable by the application. Change its permission or use another dir (sys_temp_dir option in php.ini).");
 		}
 
 		$aMandatoryExtensions = array(
