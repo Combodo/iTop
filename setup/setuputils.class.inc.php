@@ -1035,7 +1035,7 @@ class SetupUtils
 		$oPage->add('<div class="message message-error" style="display:none;">Before configuring MySQL with TLS encryption, read the documentation <a href="'.$sMysqlTlsWikiPageUrl.'" target="_blank">on Combodo\'s Wiki</a></div>');
 		$oPage->add('<label style="display:none;"><input id="db_tls_enabled" type="checkbox" '.$sTlsEnabledChecked.' name="db_tls_enabled" value="1"> Encrypted connection enabled</label>');
 		$oPage->add('<div class="setup-tls--input--container" style="display:none">SSL CA:');
-		$oPage->add('<input id="db_tls_ca" class="ibo-input" autocomplete="off" type="text" name="db_tls_ca" value="'.utils::EscapeHtml($sTlsCA,).'" size="15"'.$sTlsCaDisabled.'>');
+		$oPage->add('<input id="db_tls_ca" class="ibo-input" autocomplete="off" type="text" name="db_tls_ca" value="'.utils::EscapeHtml($sTlsCA).'" size="15"'.$sTlsCaDisabled.'>');
 		$oPage->add('Path to certificate authority file for SSL</div>');
 		$oPage->add('</div>');
 
