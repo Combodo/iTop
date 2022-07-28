@@ -3000,7 +3000,7 @@ EOF;
 	 */
 	protected function CompileLogo($oBrandingNode, $sTempTargetDir, $sFinalTargetDir, $sNodeName, $sTargetFile)
 	{
-		$sIcon = trim($oBrandingNode->GetChildText($sNodeName));
+		$sIcon = trim($oBrandingNode->GetChildText($sNodeName) ?? '');
 		if (strlen($sIcon) > 0) {
 			$sSourceFile = $sTempTargetDir.'/'.$sIcon;
 			$aIconName=explode(".", $sIcon);
@@ -3635,7 +3635,7 @@ EOF;
 		{
 			@unlink($sFilename);
 		}
-		$ret = file_put_contents($sFilename, $sContent, $flags);
+		$ret = file_put_contents($sFilename, $sContent, $flags ?? 0);
 		if ($ret === false)
 		{
 			$iLen = strlen($sContent);
