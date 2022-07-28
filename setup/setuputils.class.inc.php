@@ -1954,7 +1954,7 @@ JS
 	 */
 	public static function GetSetupQueriesFilePath()
 	{
-		return APPROOT.'log/setup-queries-'.strftime('%Y-%m-%d_%H_%M').'.sql';
+		return APPROOT.'log/setup-queries-'.date('Y-m-d_H_i').'.sql';
 	}
 
 	/**
