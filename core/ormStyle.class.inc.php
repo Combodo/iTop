@@ -50,7 +50,7 @@ class ormStyle
 	 */
 	public function HasMainColor(): bool
 	{
-		return utils::StrLen($this->sMainColor) > 0;
+		return utils::IsNotNullOrEmptyString($this->sMainColor);
 	}
 
 	/**
@@ -68,7 +68,7 @@ class ormStyle
 	 */
 	public function SetMainColor(?string $sMainColor)
 	{
-		$this->sMainColor = (utils::StrLen($sMainColor) === 0) ? null : $sMainColor;
+		$this->sMainColor = utils::IsNullOrEmptyString($sMainColor) ? null : $sMainColor;
 		return $this;
 	}
 
@@ -78,7 +78,7 @@ class ormStyle
 	 */
 	public function HasComplementaryColor(): bool
 	{
-		return utils::StrLen($this->sComplementaryColor) > 0;
+		return utils::IsNotNullOrEmptyString($this->sComplementaryColor);
 	}
 
 	/**
@@ -96,7 +96,7 @@ class ormStyle
 	 */
 	public function SetComplementaryColor(?string $sComplementaryColor)
 	{
-		$this->sComplementaryColor = (utils::StrLen($sComplementaryColor) === 0) ? null : $sComplementaryColor;
+		$this->sComplementaryColor = utils::IsNullOrEmptyString($sComplementaryColor) ? null : $sComplementaryColor;
 		return $this;
 	}
 
@@ -116,7 +116,7 @@ class ormStyle
 	 */
 	public function HasStyleClass(): bool
 	{
-		return utils::StrLen($this->sStyleClass) > 0;
+		return utils::IsNotNullOrEmptyString($this->sStyleClass);
 	}
 
 	/**
@@ -134,7 +134,7 @@ class ormStyle
 	 */
 	public function SetStyleClass(?string $sStyleClass)
 	{
-		$this->sStyleClass = (utils::StrLen($sStyleClass) === 0) ? null : $sStyleClass;
+		$this->sStyleClass = utils::IsNullOrEmptyString($sStyleClass) ? null : $sStyleClass;
 		return $this;
 	}
 
@@ -144,7 +144,7 @@ class ormStyle
 	 */
 	public function HasAltStyleClass(): bool
 	{
-		return utils::StrLen($this->sAltStyleClass) > 0;
+		return utils::IsNotNullOrEmptyString($this->sAltStyleClass);
 	}
 
 	/**
@@ -162,7 +162,7 @@ class ormStyle
 	 */
 	public function SetAltStyleClass(?string $sAltStyleClass)
 	{
-		$this->sAltStyleClass = (utils::StrLen($sAltStyleClass) === 0) ? null : $sAltStyleClass;
+		$this->sAltStyleClass = utils::IsNullOrEmptyString($sAltStyleClass) ? null : $sAltStyleClass;
 		return $this;
 	}
 
@@ -172,7 +172,7 @@ class ormStyle
 	 */
 	public function HasDecorationClasses(): bool
 	{
-		return utils::StrLen($this->sDecorationClasses) > 0;
+		return utils::IsNotNullOrEmptyString($this->sDecorationClasses);
 	}
 
 	/**
@@ -190,7 +190,7 @@ class ormStyle
 	 */
 	public function SetDecorationClasses(?string $sDecorationClasses)
 	{
-		$this->sDecorationClasses = (utils::StrLen($sDecorationClasses) === 0) ? null : $sDecorationClasses;
+		$this->sDecorationClasses = utils::IsNullOrEmptyString($sDecorationClasses) ? null : $sDecorationClasses;
 		return $this;
 	}
 
@@ -200,7 +200,7 @@ class ormStyle
 	 */
 	public function HasIcon(): bool
 	{
-		return utils::StrLen($this->sIcon) > 0;
+		return utils::IsNotNullOrEmptyString($this->sIcon);
 	}
 
 	/**
@@ -210,7 +210,7 @@ class ormStyle
 	 */
 	public function SetIcon(?string $sIcon)
 	{
-		$this->sIcon = (utils::StrLen($sIcon) === 0) ? null : $sIcon;
+		$this->sIcon = utils::IsNullOrEmptyString($sIcon) ? null : $sIcon;
 		return $this;
 	}
 

@@ -6,16 +6,8 @@ use TheNetworg\OAuth2\Client\Provider\Azure;
 
 class OAuthClientProviderAzure extends OAuthClientProviderAbstract
 {
-//	/** @var string */
-//	static protected $sVendorName = 'Azure';
-//	/** @var array */
-//	static protected $sVendorColors = ['#0766b7', '#0d396b', '#2893df', '#3ccbf4'];
-//	/** @var string */
-//	static protected $sVendorIcon = '../images/icons/icons8-azure.svg';
-//	static protected $sRequiredSMTPScope = 'https://outlook.office.com/SMTP.Send offline_access';
-//	static protected $sRequiredIMAPScope = 'https://outlook.office.com/IMAP.AccessAsUser.All offline_access';
-//	static protected $sRequiredPOPScope = 'https://outlook.office.com/POP.AccessAsUser.All offline access';
-
+	/** @var string */
+	static protected $sVendorName = 'Azure';
 
 	public function __construct($oOAuthClient, array $collaborators = [])
 	{

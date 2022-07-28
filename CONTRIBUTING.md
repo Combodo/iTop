@@ -28,10 +28,10 @@ If you have an idea you're sure would benefit to all of iTop users, you may
 reasons to refuse such changes.
 
 ### 📄 License and copyright
-iTop is distributed under the AGPL-3.0 license (see the [license.txt] file),
-your code must comply with this license.
+iTop is distributed under the AGPL-3.0 license (see the [license.txt] file).
 
-Combodo has the copyright on each and every source file in the iTop repository: please do not modify the existing file copyrights.  
+The iTop repository is divided in three parts: iTop (mainly PHP/JS/XML sources and dictionaries), images, and third-party libraries.
+Combodo has the copyright on most of the source files in the iTop part of the repository: please do not modify the existing file copyrights.  
 Anyhow, you are encouraged to signal your contribution by the mean of `@author` annotations.
 
 If you want to use another license or keep the code ownership (copyright), you may [create an extension][wiki new ext].
@@ -114,9 +114,9 @@ Our tests are located in the `test/` directory, containing a PHPUnit config file
 * Use the present tense ("Add feature" not "Added feature")
 * Use the imperative mood ("Move cursor to..." not "Moves cursor to...")
 * Limit the first line to 72 characters or less
-* Please start the commit message with an applicable emoji code (following the [Gitmoji guide](https://gitmoji.carloscuesta.me/)).  
- Beware to use the code (for example `:bug:`) and not the character (🐛) as Unicode support in git clients is very poor for now...  
- Emoji examples :
+* Please start the commit message with an applicable emoji code (following the [Gitmoji guide](https://gitmoji.dev/)).  
+  Beware to use the code (for example `:bug:`) and not the character (🐛) as Unicode support in git clients is very poor for now...  
+  Emoji examples :
     * 🌐 `:globe_with_meridians:` for translations
     * 🎨 `:art:` when improving the format/structure of the code
     * ⚡️ `:zap:` when improving performance

@@ -623,7 +623,7 @@ EOF;
 				} else {
 					/** @noinspection NestedPositiveIfStatementsInspection */
 					if (utils::IsDevelopmentEnvironment()) {
-						$sMissingBusinessFileMessage = 'A module embeds a non existing file : check the module.php "datamodel" key !';
+						$sMissingBusinessFileMessage = 'A module embeds a non existing file: Check the module.php "datamodel" key!';
 						$aContext = [
 							'moduleId'       => $oModule->GetId(),
 							'moduleLocation' => $oModule->GetRootDir(),

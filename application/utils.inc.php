@@ -1942,21 +1942,20 @@ class utils
 	 */
 	public static function CompileCSSFromSASS($sSassContent, $aImportPaths = array(), $aVariables = array())
 	{
-		$oSass = new Compiler();//['checkImportResolutions'=>true]);
+		$oSass = new Compiler();
 		$oSass->setOutputStyle(OutputStyle::COMPRESSED);
 		// Setting our variables
-		$aCssVariable = [];
-		foreach ($aVariables as $entry=>$value) {
-				$aCssVariable[$entry] = ValueConverter::parseValue($value);
+		$aScssVariables = [];
+		foreach ($aVariables as $entry => $value) {
+			$aScssVariables[$entry] = ValueConverter::parseValue($value);
 		}
-		$oSass->addVariables($aCssVariable);
+		$oSass->addVariables($aScssVariables);
 		// Setting our imports paths
 		$oSass->setImportPaths($aImportPaths);
 		// Temporary disabling max exec time while compiling
 		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 		set_time_limit(0);
 		// Compiling SASS
-		//checkImportResolutions
 		$sCss = $oSass->compileString($sSassContent);
 		set_time_limit(intval($iCurrentMaxExecTime));
 
@@ -2843,6 +2842,36 @@ HTML;
 	public static function StrLen(?string $sString): int
 	{
 		return strlen($sString ?? '');
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string for null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string null or empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNullOrEmptyString(?string $sString): bool
+	{
+		return $sString === null || strlen($sString) === 0;
+	}
+
+	/**
+	 * Helper around the native strlen() PHP method to test a string not null or empty value
+	 *
+	 * @link https://www.php.net/releases/8.1/en.php#deprecations_and_bc_breaks "Passing null to non-nullable internal function parameters is deprecated"
+	 *
+	 * @param string|null $sString
+	 *
+	 * @return bool if string is not null and not empty
+	 * @since 3.0.2 N°5302
+	 */
+	public static function IsNotNullOrEmptyString(?string $sString): bool
+	{
+		return !static::IsNullOrEmptyString($sString);
 	}
 
 	//----------------------------------------------

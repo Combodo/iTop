@@ -102,7 +102,7 @@ class SetupUtils
 	const PHP_NEXT_MIN_VERSION   = '7.4.0'; // Allow us to use more modern libs / code; will be default PHP version on main Linux distrib LTS
 	const MYSQL_NEXT_MIN_VERSION = ''; // no new MySQL requirement for next iTop version
 	// -- First recent version that is not yet validated by Combodo (warning)
-	const PHP_NOT_VALIDATED_VERSION = '8.0.0';
+	const PHP_NOT_VALIDATED_VERSION = '8.2.0';
 
 	const MIN_MEMORY_LIMIT             = '32M';
 	const SUHOSIN_GET_MAX_VALUE_LENGTH = 2048;
@@ -684,6 +684,7 @@ class SetupUtils
 	 * Emulates sys_get_temp_dir if needed (PHP < 5.2.1)
 	 *
 	 * @return string Path to the system's temp directory
+	 * @uses \sys_get_temp_dir()
 	 */
 	public static function GetTmpDir() {
 		return realpath(sys_get_temp_dir());
