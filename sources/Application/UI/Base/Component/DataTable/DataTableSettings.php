@@ -33,6 +33,11 @@ class DataTableSettings
         $this->iDefaultPageSize = 10;
         $this->aColumns = array();
     }
+
+	/**
+	 * @return string
+	 * @since 3.1.0
+	 */
 	public function __serialize() {
 		return serialize([
 			$this->aClassAliases,
@@ -41,6 +46,11 @@ class DataTableSettings
 			$this->aColumns
 			]);
 	}
+
+	/**
+	 * @param $data
+	 * @since 3.1.0
+	 */
 	public function __unserialize($data) {
 		list(
 			$this->aClassAliases,
@@ -49,6 +59,7 @@ class DataTableSettings
 			$this->aColumns
 			) = unserialize($data);
 	}
+
     /**
      * @param $iDefaultPageSize
      * @param $aSortOrder
