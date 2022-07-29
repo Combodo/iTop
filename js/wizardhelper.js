@@ -238,7 +238,7 @@ function WizardHelper(sClass, sFormPrefix, sState, sInitialState, sStimulus)
 			}
 			index++;
 		}
-		if($('.blockUI').length > 0) {
+		if ((fieldForm !== null) && ($('.blockUI').length > 0)) {
 			fieldForm.find('button[type=submit]:not(:disabled)').prop("disabled", true).addClass('disabledDuringFieldLoading');
 		}
 		this.AjaxQueryServer();
