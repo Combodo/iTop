@@ -403,7 +403,7 @@ JS
 		$oBlock->iMaxAddedId = (int) $iMaxAddedId;
 
 		$oDataTable = DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $this->m_aTableConfig, $aForm);
-		$oDataTable->SetOptions(['select_mode' => 'custom']);
+		$oDataTable->SetOptions(['select_mode' => 'custom', 'disable_hyperlinks' => true]);
 		$oBlock->AddSubBlock($oDataTable);
 
 		$oBlock->AddControls();

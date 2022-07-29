@@ -104,10 +104,14 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         }
 
         $(this).closest('.dataTables_wrapper').unblock();
+
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is not same as false %}
         $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
-            //disable select action when there is a link
-            e.stopPropagation();
-        });
+                e.preventDefault();
+            });
+        {% endif %}
+        
     },
     {% else %}
     drawCallback: function (settings) {
@@ -125,6 +129,13 @@ var oTable{{ sListIDForVarSuffix }} = $('#{{ oUIBlock.GetId() }}').DataTable({
         {
             $(this).closest('.dataTables_wrapper').find('.dataTables_paginate, .dataTables_info').show();
         }
+        
+        // Disable hyperlinks if necessary
+        {% if oUIBlock.GetOption("disable_hyperlinks") is same as true %}
+        $("#{{ oUIBlock.GetId() }} a").on('click', function (e) {
+            e.preventDefault();
+        });
+        {% endif %}
     },
     {% endif %}
     rowId: "id",
