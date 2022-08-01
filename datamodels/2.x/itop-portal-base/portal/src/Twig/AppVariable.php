@@ -73,15 +73,16 @@ class AppVariable implements ArrayAccess
     /**
      * @inheritDoc
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet($offset)
     {
-        if ($this->container->hasParameter($offset)) {
-            return $this->container->getParameter($offset);
-        }
-        if ($this->container->has($offset)) {
-            return $this->container->get($offset);
-        }
-        return null;
+	    if ($this->container->hasParameter($offset)) {
+		    return $this->container->getParameter($offset);
+	    }
+	    if ($this->container->has($offset)) {
+		    return $this->container->get($offset);
+	    }
+
+	    return null;
     }
 
     /**
