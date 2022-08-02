@@ -53,5 +53,7 @@ gitGraph
     commit id: "2022-01-04" tag: "3.0.0"
     branch support/3.0 order: 850
     commit id: "2022-04-08" tag: "3.0.1"
+    checkout support/2.7
+    commit id: "2022-07-11" tag: "2.7.7"
     checkout develop
 ```
