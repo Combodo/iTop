@@ -2166,7 +2166,7 @@ HTML;
 					$sDisplayValueForHtml = utils::EscapeHtml($sDisplayValue);
 					$sHTMLValue = <<<HTML
 <div class="field_input_zone field_input_datetime ibo-input-wrapper ibo-input-datetime-wrapper" data-validation="untouched">
-	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autoomplete="off" />
+	<input title="{$sHelpText}" class="datetime-pick ibo-input ibo-input-datetime" type="text" size="19" {$sPlaceholderValue} name="attr_{$sFieldPrefix}{$sAttCode}{$sNameSuffix}" value="{$sDisplayValueForHtml}" id="{$iId}" autocomplete="off" />
 </div>{$sValidationSpan}{$sReloadSpan}
 HTML;
 					break;
