@@ -73,6 +73,7 @@ class AppVariable implements ArrayAccess
     /**
      * @inheritDoc
      */
+	#[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
 	    if ($this->container->hasParameter($offset)) {
