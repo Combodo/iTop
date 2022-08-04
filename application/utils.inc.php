@@ -1956,10 +1956,10 @@ class utils
 		$iCurrentMaxExecTime = (int) ini_get('max_execution_time');
 		set_time_limit(0);
 		// Compiling SASS
-		$sCss = $oSass->compileString($sSassContent);
+		$oCompilationRes = $oSass->compileString($sSassContent);
 		set_time_limit(intval($iCurrentMaxExecTime));
 
-		return $sCss->getCss();
+		return $oCompilationRes->getCss();
 	}
 
 	/**
