@@ -1623,7 +1623,7 @@ abstract class DBSearch
 		$oSet = new DBObjectSet($this);
 		if (MetaModel::IsStandaloneClass($sClass))
 		{
-			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array('')));
+			$oSet->OptimizeColumnLoad(array($this->GetClassAlias() => array()));
 			$aIds = array($sClass => $oSet->GetColumnAsArray('id'));
 		}
 		else
