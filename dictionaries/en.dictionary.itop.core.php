@@ -356,9 +356,9 @@ Dict::Add('EN US', 'English', 'English', array(
 	'Class:EventNotification' => 'Notification event',
 	'Class:EventNotification+' => 'Trace of a notification that has been sent',
 	'Class:EventNotification/Attribute:trigger_id' => 'Trigger',
-	'Class:EventNotification/Attribute:trigger_id+' => 'user account',
-	'Class:EventNotification/Attribute:action_id' => 'user',
-	'Class:EventNotification/Attribute:action_id+' => 'user account',
+	'Class:EventNotification/Attribute:trigger_id+' => '',
+	'Class:EventNotification/Attribute:action_id' => 'action',
+	'Class:EventNotification/Attribute:action_id+' => '',
 	'Class:EventNotification/Attribute:object_id' => 'Object id',
 	'Class:EventNotification/Attribute:object_id+' => 'object id (class defined by the trigger ?)',
 ));
