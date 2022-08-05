@@ -15,6 +15,6 @@
 {% block ready_script %}
     {{ parent() }}
 
-    // Redirect after 2s so the user has time to read the message
+    // Redirect after 1s so the user has time to read the message
     setTimeout(function() { window.location.href = '{{ sUrl }}'; }, 1000);
 {% endblock %}
