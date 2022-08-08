@@ -1614,7 +1614,7 @@ EOF
 								}
 								else
 								{
-									$sError = '<p>'.implode('</p></p>',$aErrors)."</p>\n";
+									$sError = '<p>'.utils::HtmlEntities(implode('</p></p>',$aErrors))."</p>\n";
 								}
 							}
 							else

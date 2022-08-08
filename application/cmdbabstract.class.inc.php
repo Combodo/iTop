@@ -4739,7 +4739,7 @@ EOF
 				'form::select' => "<input type=\"checkbox\" class=\"selectList\" $sChecked $sDisabled\"></input>",
 				'object' => $oObj->GetHyperlink(),
 				'status' => $sStatus,
-				'errors' => '<p>'.($bResult ? '' : implode('</p><p>', $aErrors)).'</p>',
+				'errors' => '<p>'.($bResult ? '' : utils::HtmlEntities(implode('</p><p>', $aErrors))).'</p>',
 				'@class' => $sCSSClass,
 			);
 			if ($bResult && (!$bPreview))
