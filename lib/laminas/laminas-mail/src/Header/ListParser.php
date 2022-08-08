@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Header;
 
 use function in_array;
@@ -15,9 +9,9 @@ use function in_array;
  */
 class ListParser
 {
-    const CHAR_QUOTES = ['\'', '"'];
-    const CHAR_DELIMS = [',', ';'];
-    const CHAR_ESCAPE = '\\';
+    public const CHAR_QUOTES = ['\'', '"'];
+    public const CHAR_DELIMS = [',', ';'];
+    public const CHAR_ESCAPE = '\\';
 
     /**
      * @param string $value

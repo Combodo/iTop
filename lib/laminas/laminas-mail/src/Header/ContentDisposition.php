@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-mail for the canonical source repository
- * @copyright https://github.com/laminas/laminas-mail/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-mail/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\Mail\Header;
 
 use Laminas\Mail\Headers;
@@ -18,7 +12,7 @@ class ContentDisposition implements UnstructuredInterface
      *
      * @var int
      */
-    const MAX_PARAMETER_LENGTH = 76;
+    public const MAX_PARAMETER_LENGTH = 76;
 
     /**
      * @var string
@@ -95,7 +89,7 @@ class ContentDisposition implements UnstructuredInterface
 
             foreach ($continuedValues as $name => $values) {
                 $value = '';
-                for ($i = 0; $i < count($values); $i++) {
+                for ($i = 0, $iMax = count($values); $i < $iMax; $i++) {
                     if (! isset($values[$i])) {
                         throw new Exception\InvalidArgumentException(
                             'Invalid header line for Content-Disposition string - incomplete continuation'.
@@ -154,26 +148,34 @@ class ContentDisposition implements UnstructuredInterface
                 }
             } else {
                 // Use 'continuation' per RFC 2231
-                $maxValueLength = strlen($value);
-                do {
-                    $maxValueLength = ceil(0.6 * $maxValueLength);
-                } while ($maxValueLength > self::MAX_PARAMETER_LENGTH);
-
                 if ($valueIsEncoded) {
-                    $encodedLength = strlen($value);
                     $value = HeaderWrap::mimeDecodeValue($value);
-                    $decodedLength = strlen($value);
-                    $maxValueLength -= ($encodedLength - $decodedLength);
                 }
 
-                $valueParts = str_split($value, $maxValueLength);
                 $i = 0;
-                foreach ($valueParts as $valuePart) {
-                    $attributePart = $attribute . '*' . $i++;
-                    if ($valueIsEncoded) {
-                        $valuePart = $this->getEncodedValue($valuePart);
+                $fullLength = mb_strlen($value, 'UTF-8');
+                while ($fullLength > 0) {
+                    $attributePart = $attribute . '*' . $i++ . '="';
+                    $attLen = mb_strlen($attributePart, 'UTF-8');
+
+                    $subPos = 1;
+                    $valuePart = '';
+                    while ($subPos <= $fullLength) {
+                        $sub = mb_substr($value, 0, $subPos, 'UTF-8');
+                        if ($valueIsEncoded) {
+                            $sub = $this->getEncodedValue($sub);
+                        }
+                        if ($attLen + mb_strlen($sub, 'UTF-8') >= self::MAX_PARAMETER_LENGTH) {
+                            $subPos--;
+                            break;
+                        }
+                        $subPos++;
+                        $valuePart = $sub;
                     }
-                    $result .= sprintf(';%s%s="%s"', Headers::FOLDING, $attributePart, $valuePart);
+
+                    $value = mb_substr($value, $subPos, null, 'UTF-8');
+                    $fullLength = mb_strlen($value, 'UTF-8');
+                    $result .= ';' . Headers::FOLDING . $attributePart . $valuePart . '"';
                 }
             }
         }
