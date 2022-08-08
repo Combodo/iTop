@@ -3768,7 +3768,7 @@ abstract class DBObject implements iDisplay
 	}
 
      /**
-     * @internal
+     * @overwritable-hook You can extend this method in order to provide your own logic.
      *
      * @return array
      *
