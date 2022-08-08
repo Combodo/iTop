@@ -12,6 +12,7 @@
     "ext-json": "*",
     "ext-mysqli": "*",
     "ext-soap": "*",
+    "apereo/phpcas" : "~1.3",
     "combodo/tcpdf": "~6.4.4",
     "guzzlehttp/guzzle": "^7.4.5",
     "laminas/laminas-mail": "^2.11",
