@@ -7,6 +7,7 @@
 namespace Combodo\iTop\Controller;
 
 use appUserPreferences;
+use CoreUnexpectedValue;
 use Exception;
 use MetaModel;
 use ormDocument;
@@ -38,9 +39,14 @@ class PreferencesController
 		appUserPreferences::SetPref('user_picture_placeholder', $sImageFilename);
 
 		$sUserPicturesFolder = 'images/user-pictures/';
-		$sImageAbsPath = APPROOT.$sUserPicturesFolder.$sImageFilename;
+		$sImageAbsPath = utils::RealPath(APPROOT.$sUserPicturesFolder.$sImageFilename, APPROOT.$sUserPicturesFolder);
 		$sImageAbsUrl = utils::GetAbsoluteUrlAppRoot().$sUserPicturesFolder.$sImageFilename;
-
+		
+		// Check if we're still in the right folder
+		if($sImageAbsPath === false){
+			throw new CoreUnexpectedValue('Error while updating user image, invalid image path "'.$sUserPicturesFolder.$sImageFilename.'"');
+		}
+		
 		// Check file can be read
 		$sImageData = file_get_contents($sImageAbsPath);
 		if (false === $sImageData) {
