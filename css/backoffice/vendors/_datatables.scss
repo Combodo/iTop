@@ -46,6 +46,8 @@ $ibo-vendors-datatables--row-highlight--colors:(
         'warning': ($ibo-color-orange-200),
         'blue': ($ibo-color-blue-200),
         'info': ($ibo-color-blue-200),
+        'green': ($ibo-color-green-100),
+        'success': ($ibo-color-green-200),
 ) !default;
 
 .dataTables_paginate {
