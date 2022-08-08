@@ -211,7 +211,7 @@ class UIExtKeyWidget
 			$sClassAllowed = $oAllowedValues->GetClass();
 			$bAddingValue = false;
 
-			// #4792 - load only the required fields
+			// N°4792 - load only the required fields
 			$aFieldsToLoad = [];
 
 			$aComplementAttributeSpec = MetaModel::GetNameSpec($oAllowedValues->GetClass(), FriendlyNameType::COMPLEMENTARY);
@@ -220,7 +220,7 @@ class UIExtKeyWidget
 
 			if (count($aAdditionalField) > 0) {
 				$bAddingValue = true;
-				$aFieldsToLoad = $aComplementAttributeSpec;
+				$aFieldsToLoad[$sClassAllowed] = $aAdditionalField;
 			}
 			$sObjectImageAttCode = MetaModel::GetImageAttributeCode($sClassAllowed);
 			if (!empty($sObjectImageAttCode)) {
