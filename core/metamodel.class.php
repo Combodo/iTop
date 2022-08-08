@@ -7168,32 +7168,41 @@ abstract class MetaModel
 	 */
 	public static function PurgeData($oFilter)
 	{
+		$iMaxBufferSize = MetaModel::GetConfig()->GetMaxBufferSize();
 		$sTargetClass = $oFilter->GetClass();
-		$oSet = new DBObjectSet($oFilter);
-		$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
-		$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
+		$iNbIdsDeleted = 0;
+		$bExecuteQuery = true;
 
-		$aIds = array_keys($aIdToClass);
-		if (count($aIds) > 0)
-		{
-			$aQuotedIds = CMDBSource::Quote($aIds);
-			$sIdList = implode(',', $aQuotedIds);
-			$aTargetClasses = array_merge(
-				self::EnumChildClasses($sTargetClass, ENUM_CHILD_CLASSES_ALL),
-				self::EnumParentClasses($sTargetClass, ENUM_PARENT_CLASSES_EXCLUDELEAF)
-			);
-			foreach($aTargetClasses as $sSomeClass)
-			{
-				$sTable = MetaModel::DBGetTable($sSomeClass);
-				$sPKField = MetaModel::DBGetKey($sSomeClass);
+		while ($bExecuteQuery) {
+			$oSet = new DBObjectSet($oFilter, array(), array(), null, $iMaxBufferSize);
+			$oSet->OptimizeColumnLoad(array($sTargetClass => array('finalclass')));
+			$aIdToClass = $oSet->GetColumnAsArray('finalclass', true);
 
-				$sDeleteSQL = "DELETE FROM `$sTable` WHERE `$sPKField` IN ($sIdList)";
-				CMDBSource::DeleteFrom($sDeleteSQL);
+			$aIds = array_keys($aIdToClass);
+			$iNbIds = count($aIds);
+			if ($iNbIds > 0) {
+				$aQuotedIds = CMDBSource::Quote($aIds);
+				$sIdList = implode(',', $aQuotedIds);
+				$aTargetClasses = array_merge(
+					self::EnumChildClasses($sTargetClass, ENUM_CHILD_CLASSES_ALL),
+					self::EnumParentClasses($sTargetClass, ENUM_PARENT_CLASSES_EXCLUDELEAF)
+				);
+				foreach ($aTargetClasses as $sSomeClass) {
+					$sTable = MetaModel::DBGetTable($sSomeClass);
+					$sPKField = MetaModel::DBGetKey($sSomeClass);
+
+					$sDeleteSQL = "DELETE FROM `$sTable` WHERE `$sPKField` IN ($sIdList)";
+					CMDBSource::DeleteFrom($sDeleteSQL);
+				}
+				$iNbIdsDeleted += $iNbIds;
+			}
+			if ($iNbIds == 0 || $iNbIds < $iMaxBufferSize) {
+				$bExecuteQuery = false;
 			}
 		}
-		return count($aIds);
-	}
 
+		return $iNbIdsDeleted;
+	}
 	// Links
 	//
 	//
