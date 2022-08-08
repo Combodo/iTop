@@ -300,6 +300,7 @@ $ibo-vendors-jqueryui--ui-slider--ui-slider-handle--hover--border-color: $ibo-co
 // Date picker
 .ui-datepicker {
   /* Note: We can't put the padding directly here as the jQuery JS code will position it regarding its inner width, not taking the padding here into account, so it is placed in the header/calendar elements */
+  display: none;
   background-color: $ibo-vendors-jqueryui--ui-datepicker--background-color;
   border-radius: $ibo-vendors-jqueryui--ui-datepicker--border-radius;
   box-shadow: $ibo-vendors-jqueryui--ui-datepicker--box-shadow;
