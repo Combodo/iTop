@@ -1479,7 +1479,9 @@
             <attribute id="volume_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="volume_id"/>
@@ -1569,7 +1571,9 @@
             <attribute id="san_id"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="san_id"/>

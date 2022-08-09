@@ -248,7 +248,9 @@
         <naming>
           <attributes/>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="functionalci_id"/>
@@ -341,7 +343,9 @@
             <attribute id="link_type"/>
           </attributes>
         </naming>
-        <icon/>
+        <style>
+          <icon/>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="document_id"/>
