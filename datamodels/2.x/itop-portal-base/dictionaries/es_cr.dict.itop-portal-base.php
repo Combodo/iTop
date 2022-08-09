@@ -69,10 +69,10 @@ Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
 
 // Object form
 Dict::Add('ES CR', 'Spanish', 'Español, Castellano', array(
-	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Close this entry~~',
-	'Portal:Form:Close:Warning' => '¿Desea abandorar esta forma? Datos modificados se perderan',
-	'Portal:Error:ObjectCannotBeCreated' => 'Error: object cannot be created. Check associated objects and attachments before submitting again this form.~~',
-	'Portal:Error:ObjectCannotBeUpdated' => 'Error: object cannot be updated. Check associated objects and attachments before submitting again this form.~~',
+	'Portal:Form:Caselog:Entry:Close:Tooltip' => 'Cerrar este registro',
+	'Portal:Form:Close:Warning' => '¿Desea abandorar este formulario? Datos modificados se perderan',
+	'Portal:Error:ObjectCannotBeCreated' => 'Error: no se puede crear el objeto. Verifique los objetos asociados y archivos adjuntos antes de enviar nuevamente este formulario.',
+	'Portal:Error:ObjectCannotBeUpdated' => 'Error: no se puede actualizar el objeto. Verifique los objetos asociados y archivos adjuntos antes de enviar nuevamente este formulario.',
 ));
 
 // UserProfile brick
